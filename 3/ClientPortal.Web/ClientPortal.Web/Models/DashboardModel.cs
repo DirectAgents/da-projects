@@ -40,7 +40,7 @@ namespace ClientPortal.Web.Models
         {
             Culture = userInfo.Culture;
 
-            var dates = new Dates(userInfo.UseYesterdayAsLatest, userInfo.WeekStartDay);
+            var dates = new Dates(userInfo.UseYesterdayAsLatest, userInfo.StartDayOfWeek);
             Dates = new DatesModel(dates, this.CultureInfo);
         }
     }

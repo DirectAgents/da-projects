@@ -67,6 +67,12 @@ namespace ClientPortal.Web.Models
         public bool HasSearch
         {
             get { return (Advertiser == null) ? false : Advertiser.HasSearch; }
+            //get { return (UserProfile != null && UserProfile.SearchProfile != null); }
+        }
+
+        public SearchProfile SearchProfile
+        {
+            get { return UserProfile.SearchProfile; }
         }
 
         public bool ShowSearchChannels
@@ -84,14 +90,6 @@ namespace ClientPortal.Web.Models
             get { return Advertiser == null ? null : Advertiser.Logo; }
         }
 
-        public DayOfWeek WeekStartDay
-        {
-            get { return (DayOfWeek)UserProfile.SearchWeekStartDay; }
-        }
-        //TODO: move Week start & end properties to Advertiser. change to WeekStartDay? (same for search & non-search?)
-
-        //public DayOfWeek SearchWeekEndDay // compute this from StartDay ?
-
         public DateTime? LatestDaySums
         {
             get { return (Advertiser == null) ? null : Advertiser.LatestDaySums; }
@@ -101,19 +99,10 @@ namespace ClientPortal.Web.Models
             get { return (Advertiser == null) ? null : Advertiser.LatestClicks; }
         }
 
-        private Dates _dates;
-        internal Dates Dates
+        public bool UseYesterdayAsLatest
         {
             get
             {
-                if (_dates == null) _dates = new Dates(this.UseYesterdayAsLatest, this.WeekStartDay);
-                return _dates;
-            }
-        }
-
-        public bool UseYesterdayAsLatest
-        {
-            get {
                 bool useYesterdayAsLatest;
                 if (Boolean.TryParse(WebConfigurationManager.AppSettings["UseYesterdayAsLatest"], out useYesterdayAsLatest))
                     return useYesterdayAsLatest;
@@ -121,6 +110,31 @@ namespace ClientPortal.Web.Models
                     return true; // (if not specified)
             }
         }
+
+        public DayOfWeek StartDayOfWeek
+        {
+            get { return (Advertiser == null) ? DayOfWeek.Sunday : (DayOfWeek)Advertiser.StartDayOfWeek; }
+        }
+
+        public DayOfWeek SearchStartDayOfWeek
+        {
+            get { return (SearchProfile == null) ? DayOfWeek.Sunday : (DayOfWeek)SearchProfile.StartDayOfWeek; }
+        }
+
+        private Dates _dates;
+        internal Dates Dates
+        {
+            get
+            {
+                if (_dates == null) _dates = new Dates(this.UseYesterdayAsLatest, this.StartDayOfWeek);
+                return _dates;
+            }
+        }
+        public Dates DatesForSearch()
+        {
+            return new Dates(this.UseYesterdayAsLatest, this.SearchStartDayOfWeek);
+        }
+
 
         public bool HasTradingDesk(bool only = false)
         {

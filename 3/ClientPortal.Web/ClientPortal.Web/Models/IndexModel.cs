@@ -21,7 +21,7 @@ namespace ClientPortal.Web.Models
             HasLogo = (userInfo.Logo != null);
             ShowCPMRep = userInfo.ShowCPMRep;
 
-            var dates = new Dates(userInfo.UseYesterdayAsLatest, userInfo.WeekStartDay);
+            var dates = new Dates(userInfo.UseYesterdayAsLatest, userInfo.StartDayOfWeek);
             Dates = new DatesModel(dates, this.CultureInfo);
         }
     }

@@ -16,6 +16,7 @@ namespace ClientPortal.Data.Contexts
     {
         public Advertiser()
         {
+            this.StartDayOfWeek = 1;
             this.ScheduledReports = new HashSet<ScheduledReport>();
             this.AdvertiserContacts = new HashSet<AdvertiserContact>();
             this.FileUploads = new HashSet<FileUpload>();
@@ -44,6 +45,7 @@ namespace ClientPortal.Data.Contexts
         public Nullable<int> AccountManagerId { get; set; }
         public Nullable<System.DateTime> LatestDaySums { get; set; }
         public Nullable<System.DateTime> LatestClicks { get; set; }
+        public int StartDayOfWeek { get; set; }
     
         public virtual ICollection<ScheduledReport> ScheduledReports { get; set; }
         public virtual ICollection<AdvertiserContact> AdvertiserContacts { get; set; }

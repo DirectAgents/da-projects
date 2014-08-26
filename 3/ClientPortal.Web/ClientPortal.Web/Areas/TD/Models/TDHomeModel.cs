@@ -1,5 +1,6 @@
 ﻿using ClientPortal.Web.Controllers;
 using ClientPortal.Web.Models;
+using System;
 using System.Globalization;
 
 namespace ClientPortal.Web.Areas.TD.Models
@@ -15,7 +16,8 @@ namespace ClientPortal.Web.Areas.TD.Models
         {
             Culture = userInfo.Culture;
             bool useYesterdayAsLatest = true; // for TradingDesk
-            var dates = new Dates(useYesterdayAsLatest, userInfo.WeekStartDay);
+            var startDayOfWeek = DayOfWeek.Monday; // TODO: make a config or profile setting
+            var dates = new Dates(useYesterdayAsLatest, startDayOfWeek);
             Dates = new DatesModel(dates, this.CultureInfo);
         }
 

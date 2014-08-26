@@ -201,6 +201,7 @@
           <Property Name="AccountManagerId" Type="int" />
           <Property Name="LatestDaySums" Type="datetime" />
           <Property Name="LatestClicks" Type="datetime" />
+          <Property Name="StartDayOfWeek" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="AdvertiserContact">
           <Key>
@@ -624,8 +625,6 @@
           <Property Name="CakeAdvertiserId" Type="int" />
           <Property Name="QuickBooksCompanyId" Type="int" />
           <Property Name="QuickBooksAdvertiserId" Type="int" />
-          <Property Name="SearchWeekStartDay" Type="int" Nullable="false" />
-          <Property Name="SearchWeekEndDay" Type="int" Nullable="false" />
           <Property Name="TradingDeskAccountId" Type="int" />
           <Property Name="SearchProfileId" Type="int" />
         </EntityType>
@@ -1503,8 +1502,6 @@
           <Property Type="Int32" Name="CakeAdvertiserId" />
           <Property Type="Int32" Name="QuickBooksCompanyId" />
           <Property Type="Int32" Name="QuickBooksAdvertiserId" />
-          <Property Type="Int32" Name="SearchWeekStartDay" Nullable="false" />
-          <Property Type="Int32" Name="SearchWeekEndDay" Nullable="false" />
           <NavigationProperty Name="UserEvents" Relationship="ClientPortalModel.FK_UserEvent_UserProfile" FromRole="UserProfile" ToRole="UserEvent" />
           <Property Type="Int32" Name="TradingDeskAccountId" />
           <Property Type="Int32" Name="SearchProfileId" />
@@ -1574,6 +1571,7 @@
           <NavigationProperty Name="AccountManager" Relationship="ClientPortalModel.FK_Advertiser_CakeContact" FromRole="Advertiser" ToRole="CakeContact" />
           <Property Type="DateTime" Name="LatestDaySums" Precision="3" />
           <Property Type="DateTime" Name="LatestClicks" Precision="3" />
+          <Property Type="Int32" Name="StartDayOfWeek" Nullable="false" DefaultValue="1" />
         </EntityType>
         <Association Name="FK_AdvertiserScheduledReport">
           <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
@@ -2294,8 +2292,6 @@
               <MappingFragment StoreEntitySet="UserProfile">
                 <ScalarProperty Name="SearchProfileId" ColumnName="SearchProfileId" />
                 <ScalarProperty Name="TradingDeskAccountId" ColumnName="TradingDeskAccountId" />
-                <ScalarProperty Name="SearchWeekEndDay" ColumnName="SearchWeekEndDay" />
-                <ScalarProperty Name="SearchWeekStartDay" ColumnName="SearchWeekStartDay" />
                 <ScalarProperty Name="QuickBooksAdvertiserId" ColumnName="QuickBooksAdvertiserId" />
                 <ScalarProperty Name="QuickBooksCompanyId" ColumnName="QuickBooksCompanyId" />
                 <ScalarProperty Name="CakeAdvertiserId" ColumnName="CakeAdvertiserId" />
@@ -2324,6 +2320,7 @@
           <EntitySetMapping Name="Advertisers">
             <EntityTypeMapping TypeName="ClientPortalModel.Advertiser">
               <MappingFragment StoreEntitySet="Advertiser">
+                <ScalarProperty Name="StartDayOfWeek" ColumnName="StartDayOfWeek" />
                 <ScalarProperty Name="LatestClicks" ColumnName="LatestClicks" />
                 <ScalarProperty Name="LatestDaySums" ColumnName="LatestDaySums" />
                 <ScalarProperty Name="AccountManagerId" ColumnName="AccountManagerId" />

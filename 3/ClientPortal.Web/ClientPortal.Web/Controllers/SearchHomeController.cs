@@ -44,11 +44,12 @@ namespace ClientPortal.Web.Controllers
         public PartialViewResult CampaignPerf()
         {
             var userInfo = GetUserInfo();
+            var dates = userInfo.DatesForSearch();
 
             var model = new SearchReportModel()
             {
-                StartDate = userInfo.Dates.FirstOfMonth.ToString("d", userInfo.CultureInfo),
-                EndDate = userInfo.Dates.Latest.ToString("d", userInfo.CultureInfo)
+                StartDate = dates.FirstOfMonth.ToString("d", userInfo.CultureInfo),
+                EndDate = dates.Latest.ToString("d", userInfo.CultureInfo)
             };
             return PartialView(model);
         }
@@ -56,11 +57,12 @@ namespace ClientPortal.Web.Controllers
         public PartialViewResult CampaignWeekly()
         {
             var userInfo = GetUserInfo();
+            var dates = userInfo.DatesForSearch();
 
             return PartialView(new SearchReportModel
             {
-                StartDate = userInfo.Dates.FirstOfMonth.AddMonths(-2).ToString("d", userInfo.CultureInfo),
-                EndDate = userInfo.Dates.Latest.ToString("d", userInfo.CultureInfo)
+                StartDate = dates.FirstOfMonth.AddMonths(-2).ToString("d", userInfo.CultureInfo),
+                EndDate = dates.Latest.ToString("d", userInfo.CultureInfo)
             });
         }
 
