@@ -1,0 +1,28 @@
+﻿@model IEnumerable<ClientPortal.Data.Contexts.SearchProfile>
+
+@{
+    var ajaxOptions = new AjaxOptions()
+    {
+        UpdateTargetId = "searchProfilesTab"
+    };
+}
+
+<table border="1">
+    <tr>
+        <th>SearchProfile</th>
+        <th>Login</th>
+    </tr>
+@foreach (var profile in Model)
+{
+    <tr>
+        <td>@profile.SearchProfileName</td>
+        <td>
+            @if (profile.UserProfiles.Count > 0) {
+                @(String.Join(", ", profile.UserProfiles.Select(u => u.UserName).ToArray()))
+            } else {
+                @Ajax.ActionLink("create", "CreateUserProfile", new { spId = profile.SearchProfileId }, ajaxOptions)
+            }
+        </td>
+    </tr>
+}
+</table>

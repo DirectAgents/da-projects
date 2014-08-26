@@ -9,6 +9,18 @@ namespace ClientPortal.Data.Services
 {
     public partial class ClientPortalRepository
     {
+        public IQueryable<SearchProfile> SearchProfiles()
+        {
+            var searchProfiles = context.SearchProfiles;
+            return searchProfiles;
+        }
+
+        public SearchProfile GetSearchProfile(int searchProfileId)
+        {
+            var searchProfile = context.SearchProfiles.Find(searchProfileId);
+            return searchProfile;
+        }
+
         public SearchStat GetSearchStats(int? advertiserId, DateTime? start, DateTime? end, bool includeToday = true)
         {
             var summaries = GetSearchDailySummaries(advertiserId, null, null, null, null, start, end, includeToday);

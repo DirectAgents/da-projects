@@ -48,11 +48,15 @@
               | Vertical Tabs |
               +---------------+-->*@
         <dl class="vertical tabs">
-            <dd class="@(Model.TradingDesk ? "" : "active")"><a href="#vertical1" id="vertNav_Home">Admin</a></dd>
+            <dd class="@(Model.Search || Model.TradingDesk ? "" : "active")"><a href="#vertical1" id="vertNav_Home">Admin</a></dd>
             <dd><a href="#cpm" id="vertNav_CPM">CPM Reports</a></dd>
+            @if (Model.Search)
+            {
+                <dd class="active"><a href="#search" id="vertNav_Search">Search</a></dd>
+            }
             @if (Model.TradingDesk)
             {
-                <dd class="active"><a href="#td" id="vertNav_TD">Trading Desk</a></dd>
+                <dd class="@(Model.Search ? "" : "active")"><a href="#td" id="vertNav_TD">Trading Desk</a></dd>
             }
         </dl>
         <!-- /VTabs -->
@@ -68,7 +72,7 @@
         @*<!--+-----------+
               | Home VTab |
               +-----------+-->*@
-        <li id="vertical1Tab" class="@(Model.TradingDesk ? "" : "active")">
+        <li id="vertical1Tab" class="@(Model.Search || Model.TradingDesk ? "" : "active")">
             <div class="ten columns portaltabs-h">
 
                 @*<!--+----------------+
@@ -118,20 +122,40 @@
             </div>
         </li>
 
+    @if (Model.Search)
+    {
+        <li id="searchTab" class="active">
+            <div class="ten columns portaltabs-h">
+                @*<!--+--------------+
+                      | Search HTabs |
+                      +--------------+-->*@
+                <dl class="tabs">
+                    <dd class="active"><a href="#searchProfiles" id="navSearchProfiles">Profiles</a></dd>
+                </dl>
+                @*<!--+----------------------+
+                      | Search HTabs Content |
+                      +----------------------+-->*@
+                <ul class="tabs-content">
+                    <li id="searchProfilesTab" class="active"></li>
+                </ul>
+            </div>
+        </li>
+    }
+
     @if (Model.TradingDesk)
     {
-        <li id="tdTab" class="active">
+        <li id="tdTab" class="@(Model.Search ? "" : "active")">
             <div class="ten columns portaltabs-h">
-                @*<!--+---------------+
-                        | TD HTabs    |
-                        +-------------+-->*@
+                @*<!--+-------------+
+                      | TD HTabs    |
+                      +-------------+-->*@
                 <dl class="tabs">
                     <dd class="active"><a href="#tdAccounts" id="navTDAccounts">Accounts</a></dd>
                     <dd><a href="#tdUpload" id ="navTDUpload">Upload</a></dd>
                 </dl>
-                @*<!--+-----------------------+
-                        | TD HTabs Content    |
-                        +---------------------+-->*@
+                @*<!--+---------------------+
+                      | TD HTabs Content    |
+                      +---------------------+-->*@
                 <ul class="tabs-content">
                     <li id="tdAccountsTab" class="active"></li>
                     <li id="tdUploadTab"></li>
@@ -183,10 +207,16 @@
 
         // ready function
         $(function () {
-            @if (Model.TradingDesk)
+            @if (Model.Search)
+            {
+                <text>LoadSearchProfiles();</text>
+            }
+            else if (Model.TradingDesk)
             {
                 <text>LoadTDAccounts();</text>
-            } else {
+            }
+            else
+            {
                 <text>LoadAdvertisers();</text>
             }
             SetupTabs();
@@ -202,6 +232,16 @@
             });
         }
 
+        function LoadSearchProfiles() {
+            $("#searchProfilesTab").html("Loading...");
+            $.ajax({
+                url: '@Url.Action("SearchProfiles", "SearchAdmin")',
+                cache: false
+            }).done(function (html) {
+                $("#searchProfilesTab").html(html);
+            });
+        }
+
         function LoadTDAccounts() {
             $("#tdAccountsTab").html("Loading...");
             $.ajax({
@@ -213,13 +253,24 @@
         }
 
         function SetupTabs() {
-            @if (Model.TradingDesk)
+            @if (Model.Search || Model.TradingDesk)
             {<text>
                 // Home
                 $("#vertNav_Home").one("click", function () {
                     LoadAdvertisers();
                 });
+            </text>}
 
+            @if (Model.Search && Model.TradingDesk)
+            {<text>
+                // Trading Desk
+                $("#vertNav_TD").one("click", function () {
+                    LoadTDAccounts();
+                });
+            </text>}
+
+            @if (Model.TradingDesk)
+            {<text>
                 // TD Upload
                 $("#navTDUpload").one("click", function() {
                     $.ajax({
@@ -240,6 +291,7 @@
                     $("#contactsTab").html(html);
                 });
             });
+
             // CPM interface
             $("#vertNav_CPM").one("click", function () {
                 $.ajax({
@@ -249,7 +301,7 @@
                     $("#cpmOffersTab").html(html);
                 });
             });
-            // Offer Summary tab
+            // CPM - Offer Summary tab
             $('#navCPMSummary').click(function () {
                 var offerId = $('#cpmSummaryTab').data('offerId');
                 if (typeof (offerId) != 'undefined') {
@@ -264,6 +316,7 @@
             });
         }
 
+        // For CPM Admin
         function LoadOfferTabs(offerId) {
             $("#cpmSummaryTab").data('offerId', offerId).html("Loading...");
             $('#navCPMSummary').click();

@@ -101,6 +101,9 @@ namespace ClientPortal.Data.Contracts
         IQueryable<ConversionData> ConversionData { get; }
 
         // Search
+        IQueryable<SearchProfile> SearchProfiles();
+        SearchProfile GetSearchProfile(int searchProfileId);
+
         SearchStat GetSearchStats(int? advertiserId, DateTime? start, DateTime? end, bool includeToday = true);
         IQueryable<SearchStat> GetWeekStats(int? advertiserId, string channel, int? searchAccountId, string channelPrefix, string device, int? numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday);
         IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int? advertiserId, DateTime start, DateTime end, DayOfWeek startDayOfWeek, bool useAnalytics);
