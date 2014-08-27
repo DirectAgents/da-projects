@@ -23,7 +23,7 @@ namespace ClientPortal.Data.Services
 
         public SearchStat GetSearchStats(int? advertiserId, DateTime? start, DateTime? end, bool includeToday = true)
         {
-            var summaries = GetSearchDailySummaries(advertiserId, null, null, null, null, start, end, includeToday);
+            var summaries = GetSearchDailySummaries(advertiserId, null, null, null, null, null, start, end, includeToday);
             var searchStat = new SearchStat
             {
                 EndDate = end.Value,
@@ -38,12 +38,14 @@ namespace ClientPortal.Data.Services
             return searchStat;
         }
 
-        private IQueryable<SearchCampaign> GetSearchCampaigns(int? advertiserId, string channel, int? searchAccountId, string channelPrefix)
+        private IQueryable<SearchCampaign> GetSearchCampaigns(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix)
         {
             var searchCampaigns = context.SearchCampaigns.AsQueryable();
 
             if (advertiserId.HasValue)
                 searchCampaigns = searchCampaigns.Where(c => c.SearchAccount.AdvertiserId == advertiserId.Value);
+            if (searchProfileId.HasValue)
+                searchCampaigns = searchCampaigns.Where(c => c.SearchAccount.SearchProfileId == searchProfileId.Value);
             if (channel != null)
                 searchCampaigns = searchCampaigns.Where(c => c.SearchAccount.Channel == channel);
             if (searchAccountId.HasValue)
@@ -54,9 +56,9 @@ namespace ClientPortal.Data.Services
             return searchCampaigns;
         }
 
-        private IQueryable<SearchDailySummary2> GetSearchDailySummaries(int? advertiserId, string channel, int? searchAccountId, string channelPrefix, string device, DateTime? start, DateTime? end, bool includeToday)
+        private IQueryable<SearchDailySummary2> GetSearchDailySummaries(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, DateTime? start, DateTime? end, bool includeToday)
         {
-            var searchCampaigns = GetSearchCampaigns(advertiserId, channel, searchAccountId, channelPrefix);
+            var searchCampaigns = GetSearchCampaigns(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix);
             var summaries = searchCampaigns.SelectMany(c => c.SearchDailySummaries2);
 
             if (!String.IsNullOrEmpty(device))
@@ -82,9 +84,9 @@ namespace ClientPortal.Data.Services
             return summaries;
         }
 
-        private IQueryable<GoogleAnalyticsSummary> GetGoogleAnalyticsSummaries(int? advertiserId, string channel, int? searchAccountId, string channelPrefix, DateTime? start, DateTime? end, bool includeToday)
+        private IQueryable<GoogleAnalyticsSummary> GetGoogleAnalyticsSummaries(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, DateTime? start, DateTime? end, bool includeToday)
         {
-            var searchCampaigns = GetSearchCampaigns(advertiserId, channel, searchAccountId, channelPrefix);
+            var searchCampaigns = GetSearchCampaigns(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix);
             var summaries = searchCampaigns.SelectMany(c => c.GoogleAnalyticsSummaries);
 
             if (start.HasValue) summaries = summaries.Where(s => s.Date >= start);
@@ -115,7 +117,13 @@ namespace ClientPortal.Data.Services
         //        });
         //    return stats;
         //}
-        public IQueryable<SearchStat> GetWeekStats(int? advertiserId, string channel, int? searchAccountId, string channelPrefix, string device, int? numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday)
+
+        public IQueryable<SearchStat> GetWeekStats(int searchProfileId, int? numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday)
+        {
+            return GetWeekStats(null, searchProfileId, null, null, null, null, numWeeks, startDayOfWeek, useAnalytics, includeToday);
+        }
+
+        private IQueryable<SearchStat> GetWeekStats(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, int? numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday)
         {
             if (!String.IsNullOrWhiteSpace(device) && useAnalytics)
                 throw new Exception("specifying a device and useAnalytics not supported");
@@ -136,7 +144,7 @@ namespace ClientPortal.Data.Services
             var latestDate = includeToday ? today : today.AddDays(-1);
 
             var daySums =
-                GetSearchDailySummaries(advertiserId, channel, searchAccountId, channelPrefix, device, start, null, includeToday)
+                GetSearchDailySummaries(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix, device, start, null, includeToday)
 
                     // Group by the Date
                     .GroupBy(s => s.Date)
@@ -157,7 +165,7 @@ namespace ClientPortal.Data.Services
 
             if (useAnalytics)
             {
-                var gaSums = GetGoogleAnalyticsSummaries(advertiserId, channel, searchAccountId, channelPrefix, start, null, includeToday)
+                var gaSums = GetGoogleAnalyticsSummaries(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix, start, null, includeToday)
                     .GroupBy(s => s.Date)
                     .Select(g => new AnalyticsSummary
                     {
@@ -251,10 +259,10 @@ namespace ClientPortal.Data.Services
         }
 
         // (used for Campaign Weekly report)
-        public IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int? advertiserId, DateTime startDate, DateTime endDate, DayOfWeek startDayOfWeek, bool useAnalytics)
+        public IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int searchProfileId, DateTime startDate, DateTime endDate, DayOfWeek startDayOfWeek, bool useAnalytics)
         {
             var weeks = CalenderWeek.Generate(startDate, endDate, startDayOfWeek);
-            var sums = GetSearchDailySummaries(advertiserId, null, null, null, null, startDate, endDate, true)
+            var sums = GetSearchDailySummaries(null, searchProfileId, null, null, null, null, startDate, endDate, true)
                 .Select(s => new
                 {
                     s.Date,
@@ -286,7 +294,7 @@ namespace ClientPortal.Data.Services
 
             if (useAnalytics)
             {
-                var gaStats = GetGoogleAnalyticsSummaries(advertiserId, null, null, null, startDate, endDate, true)
+                var gaStats = GetGoogleAnalyticsSummaries(null, searchProfileId, null, null, null, startDate, endDate, true)
                     .AsEnumerable()
                     .GroupBy(s => new
                     {
@@ -330,7 +338,7 @@ namespace ClientPortal.Data.Services
             return stats.AsQueryable();
         }
 
-        public IQueryable<SearchStat> GetMonthStats(int? advertiserId, int? numMonths, bool useAnalytics, bool includeToday)
+        public IQueryable<SearchStat> GetMonthStats(int searchProfileId, int? numMonths, bool useAnalytics, bool includeToday)
         {
             DateTime start;
             if (numMonths.HasValue)
@@ -340,7 +348,7 @@ namespace ClientPortal.Data.Services
 
             start = new DateTime(start.Year, start.Month, 1);
 
-            var stats = GetSearchDailySummaries(advertiserId, null, null, null, null, start, null, includeToday)
+            var stats = GetSearchDailySummaries(null, searchProfileId, null, null, null, null, start, null, includeToday)
                 .GroupBy(s => new { s.Date.Year, s.Date.Month })
                 .Select(g =>
                 new SearchStat
@@ -356,7 +364,7 @@ namespace ClientPortal.Data.Services
 
             if (useAnalytics)
             {
-                var gaStats = GetGoogleAnalyticsSummaries(advertiserId, null, null, null, start, null, includeToday)
+                var gaStats = GetGoogleAnalyticsSummaries(null, searchProfileId, null, null, null, start, null, includeToday)
                     .GroupBy(s => new { s.Date.Year, s.Date.Month })
                     .ToList()
                     .Select(g => new SearchSummary
@@ -382,48 +390,45 @@ namespace ClientPortal.Data.Services
             return stats.OrderBy(s => s.StartDate);
         }
 
-        public IQueryable<SearchStat> GetChannelStats(int? advertiserId, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday, bool includeAccountBreakdown, bool includeSearchChannels)
+        public IQueryable<SearchStat> GetChannelStats(int searchProfileId, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday, bool includeAccountBreakdown, bool includeSearchChannels)
         {
-            var googleStats = GetWeekStats(advertiserId, "Google", null, null, null, null, startDayOfWeek, useAnalytics, includeToday);
-            var bingStats = GetWeekStats(advertiserId, "Bing", null, null, null, null, startDayOfWeek, useAnalytics, includeToday);
+            var googleStats = GetWeekStats(null, searchProfileId, "Google", null, null, null, null, startDayOfWeek, useAnalytics, includeToday);
+            var bingStats = GetWeekStats(null, searchProfileId, "Bing", null, null, null, null, startDayOfWeek, useAnalytics, includeToday);
             var stats = googleStats.Concat(bingStats).AsQueryable();
 
-            if (advertiserId.HasValue)
+            var searchProfile = GetSearchProfile(searchProfileId);
+            if (includeAccountBreakdown)
             {
-                var advertiser = context.Advertisers.SingleOrDefault(a => a.AdvertiserId == advertiserId.Value);
-                if (advertiser != null && includeAccountBreakdown)
+                var channels = new string[] { "Google", "Bing" };
+                foreach (var channel in channels)
                 {
-                    var channels = new string[] { "Google", "Bing" };
-                    foreach (var channel in channels)
+                    var searchAccounts = searchProfile.SearchAccounts.Where(sa => sa.Channel == channel);
+                    if (searchAccounts.Count() > 1)
                     {
-                        var searchAccounts = advertiser.SearchAccounts.Where(sa => sa.Channel == channel);
-                        if (searchAccounts.Count() > 1)
+                        foreach (var searchAccount in searchAccounts)
                         {
-                            foreach (var searchAccount in searchAccounts)
-                            {
-                                var accountStats = GetWeekStats(advertiserId, channel, searchAccount.SearchAccountId, null, null, null, startDayOfWeek, useAnalytics, includeToday);
-                                stats = stats.Concat(accountStats);
-                            }
+                            var accountStats = GetWeekStats(null, searchProfileId, channel, searchAccount.SearchAccountId, null, null, null, startDayOfWeek, useAnalytics, includeToday);
+                            stats = stats.Concat(accountStats);
                         }
                     }
                 }
-                if (advertiser != null && includeSearchChannels)
+            }
+            if (includeSearchChannels)
+            {
+                foreach (var searchChannel in this.SearchChannels)
                 {
-                    foreach (var searchChannel in this.SearchChannels)
-                    {
-                        if (!String.IsNullOrWhiteSpace(searchChannel.Device) && useAnalytics)
-                            continue; // specifying device and useAnalytics not supported; analytics summaries are not broken down by device
+                    if (!String.IsNullOrWhiteSpace(searchChannel.Device) && useAnalytics)
+                        continue; // specifying device and useAnalytics not supported; analytics summaries are not broken down by device
 
-                        var channelStats = GetWeekStats(advertiserId, null, null, searchChannel.Prefix, searchChannel.Device, null, startDayOfWeek, useAnalytics, includeToday);
-                        if (channelStats.Count() > 0)
-                            stats = stats.Concat(channelStats);
-                    }
+                    var channelStats = GetWeekStats(null, searchProfileId, null, null, searchChannel.Prefix, searchChannel.Device, null, startDayOfWeek, useAnalytics, includeToday);
+                    if (channelStats.Count() > 0)
+                        stats = stats.Concat(channelStats);
                 }
             }
             return stats;
         }
 
-        public IQueryable<SearchStat> GetCampaignStats(int? advertiserId, string channel, DateTime? start, DateTime? end, bool breakdown, bool useAnalytics)
+        public IQueryable<SearchStat> GetCampaignStats(int searchProfileId, string channel, DateTime? start, DateTime? end, bool breakdown, bool useAnalytics)
         {
             if (!start.HasValue)
                 start = new DateTime(DateTime.Today.Year, 1, 1);
@@ -465,7 +470,7 @@ namespace ClientPortal.Data.Services
                 }
             }
 
-            var summaries = GetSearchDailySummaries(advertiserId, channel, searchAccountId, channelPrefix, device, start, end, true).ToList();
+            var summaries = GetSearchDailySummaries(null, searchProfileId, channel, searchAccountId, channelPrefix, device, start, end, true).ToList();
             IQueryable<SearchStat> stats;
             if (breakdown)
             {
@@ -521,7 +526,7 @@ namespace ClientPortal.Data.Services
                 }
                 else // using Analytics...
                 {
-                    var gaSums = GetGoogleAnalyticsSummaries(advertiserId, channel, searchAccountId, channelPrefix, start, end, true)
+                    var gaSums = GetGoogleAnalyticsSummaries(null, searchProfileId, channel, searchAccountId, channelPrefix, start, end, true)
                         .GroupBy(s => s.SearchCampaignId)
                         .Select(g => new AnalyticsSummary
                         {

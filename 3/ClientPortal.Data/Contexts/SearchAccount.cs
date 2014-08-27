@@ -20,13 +20,15 @@ namespace ClientPortal.Data.Contexts
         }
     
         public int SearchAccountId { get; set; }
-        public int AdvertiserId { get; set; }
+        public Nullable<int> AdvertiserId { get; set; }
         public string Name { get; set; }
         public string Channel { get; set; }
         public string AccountCode { get; set; }
         public string ExternalId { get; set; }
+        public Nullable<int> SearchProfileId { get; set; }
     
         public virtual Advertiser Advertiser { get; set; }
         public virtual ICollection<SearchCampaign> SearchCampaigns { get; set; }
+        public virtual SearchProfile SearchProfile { get; set; }
     }
 }

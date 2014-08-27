@@ -40,7 +40,7 @@ namespace CakeExtracter.UnitTests
             Logger.Instance = new CakeExtracter.Logging.Loggers.ConsoleLogger();
             var dateRange = new DateRange(new DateTime(2013, 8, 1), new DateTime(2013, 8, 7));
             var extracter = new CakeExtracter.Etl.SearchMarketing.Extracters.AdWordsApiExtracter("999-213-1770", dateRange);
-            var loader = new CakeExtracter.Etl.SearchMarketing.Loaders.AdWordsApiLoader();
+            var loader = new CakeExtracter.Etl.SearchMarketing.Loaders.AdWordsApiLoader(9);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
@@ -177,8 +177,8 @@ namespace CakeExtracter.UnitTests
         public void Etl_DailySummariesExtracter()
         {
             var dateRange = new DateRange(new DateTime(2013, 6, 1), new DateTime(2013, 6, 3));
-            var extracter = new DailySummariesExtracter(dateRange, 278);
-            var loader = new MockLoader<OfferDailySummary>();
+            var extracter = new DailySummariesExtracter(dateRange, 278, null, false, false);
+            var loader = new MockLoader<OfferAffiliateDailySummary>();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();

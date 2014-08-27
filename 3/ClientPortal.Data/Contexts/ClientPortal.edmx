@@ -152,6 +152,10 @@
             <End Role="Advertiser" EntitySet="Advertiser" />
             <End Role="SearchAccount" EntitySet="SearchAccount" />
           </AssociationSet>
+          <AssociationSet Name="FK_SearchAccount_SearchProfile" Association="ClientPortalModel.Store.FK_SearchAccount_SearchProfile">
+            <End Role="SearchProfile" EntitySet="SearchProfile" />
+            <End Role="SearchAccount" EntitySet="SearchAccount" />
+          </AssociationSet>
           <AssociationSet Name="FK_SearchCampaign_Advertiser" Association="ClientPortalModel.Store.FK_SearchCampaign_Advertiser">
             <End Role="Advertiser" EntitySet="Advertiser" />
             <End Role="SearchCampaign" EntitySet="SearchCampaign" />
@@ -539,11 +543,12 @@
             <PropertyRef Name="SearchAccountId" />
           </Key>
           <Property Name="SearchAccountId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="AdvertiserId" Type="int" Nullable="false" />
+          <Property Name="AdvertiserId" Type="int" />
           <Property Name="Name" Type="nvarchar" MaxLength="255" />
           <Property Name="Channel" Type="nvarchar" MaxLength="50" />
           <Property Name="AccountCode" Type="nvarchar" MaxLength="50" />
           <Property Name="ExternalId" Type="nvarchar" MaxLength="50" />
+          <Property Name="SearchProfileId" Type="int" />
         </EntityType>
         <EntityType Name="SearchCampaign">
           <Key>
@@ -945,7 +950,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SearchAccount_Advertiser">
-          <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="1" />
+          <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="0..1" />
           <End Role="SearchAccount" Type="ClientPortalModel.Store.SearchAccount" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Advertiser">
@@ -953,6 +958,18 @@
             </Principal>
             <Dependent Role="SearchAccount">
               <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SearchAccount_SearchProfile">
+          <End Role="SearchProfile" Type="ClientPortalModel.Store.SearchProfile" Multiplicity="0..1" />
+          <End Role="SearchAccount" Type="ClientPortalModel.Store.SearchAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchProfile">
+              <PropertyRef Name="SearchProfileId" />
+            </Principal>
+            <Dependent Role="SearchAccount">
+              <PropertyRef Name="SearchProfileId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1197,6 +1214,10 @@
           <AssociationSet Name="FK_UserProfile_SearchProfile" Association="ClientPortalModel.FK_UserProfile_SearchProfile">
             <End Role="SearchProfile" EntitySet="SearchProfiles" />
             <End Role="UserProfile" EntitySet="UserProfiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchAccount_SearchProfile" Association="ClientPortalModel.FK_SearchAccount_SearchProfile">
+            <End Role="SearchProfile" EntitySet="SearchProfiles" />
+            <End Role="SearchAccount" EntitySet="SearchAccounts" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -1663,16 +1684,18 @@
             <PropertyRef Name="SearchAccountId" />
           </Key>
           <Property Type="Int32" Name="SearchAccountId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
+          <Property Type="Int32" Name="AdvertiserId" />
           <Property Type="String" Name="Name" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Channel" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="AccountCode" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="ExternalId" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_SearchAccount_Advertiser" FromRole="SearchAccount" ToRole="Advertiser" />
           <NavigationProperty Name="SearchCampaigns" Relationship="ClientPortalModel.FK_SearchCampaign_SearchAccount" FromRole="SearchAccount" ToRole="SearchCampaign" />
+          <Property Type="Int32" Name="SearchProfileId" />
+          <NavigationProperty Name="SearchProfile" Relationship="ClientPortalModel.FK_SearchAccount_SearchProfile" FromRole="SearchAccount" ToRole="SearchProfile" />
         </EntityType>
         <Association Name="FK_SearchAccount_Advertiser">
-          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
+          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="0..1" />
           <End Type="ClientPortalModel.SearchAccount" Role="SearchAccount" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Advertiser">
@@ -2097,6 +2120,7 @@
           <Property Type="String" Name="SearchProfileName" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="UserProfiles" Relationship="ClientPortalModel.FK_UserProfile_SearchProfile" FromRole="SearchProfile" ToRole="UserProfile" />
           <Property Type="Int32" Name="StartDayOfWeek" Nullable="false" DefaultValue="1" />
+          <NavigationProperty Name="SearchAccounts" Relationship="ClientPortalModel.FK_SearchAccount_SearchProfile" FromRole="SearchProfile" ToRole="SearchAccount" />
         </EntityType>
         <Association Name="FK_UserProfile_SearchProfile">
           <End Type="ClientPortalModel.SearchProfile" Role="SearchProfile" Multiplicity="0..1" />
@@ -2106,6 +2130,18 @@
               <PropertyRef Name="SearchProfileId" />
             </Principal>
             <Dependent Role="UserProfile">
+              <PropertyRef Name="SearchProfileId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SearchAccount_SearchProfile">
+          <End Type="ClientPortalModel.SearchProfile" Role="SearchProfile" Multiplicity="0..1" />
+          <End Type="ClientPortalModel.SearchAccount" Role="SearchAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchProfile">
+              <PropertyRef Name="SearchProfileId" />
+            </Principal>
+            <Dependent Role="SearchAccount">
               <PropertyRef Name="SearchProfileId" />
             </Dependent>
           </ReferentialConstraint>
@@ -2357,6 +2393,7 @@
           <EntitySetMapping Name="SearchAccounts">
             <EntityTypeMapping TypeName="ClientPortalModel.SearchAccount">
               <MappingFragment StoreEntitySet="SearchAccount">
+                <ScalarProperty Name="SearchProfileId" ColumnName="SearchProfileId" />
                 <ScalarProperty Name="ExternalId" ColumnName="ExternalId" />
                 <ScalarProperty Name="AccountCode" ColumnName="AccountCode" />
                 <ScalarProperty Name="Channel" ColumnName="Channel" />

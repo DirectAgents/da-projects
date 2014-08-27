@@ -12,14 +12,14 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchSearchDailySummariesAdWordsCommand : ConsoleCommand
     {
-        public int AdvertiserId { get; set; }
+        public int? SearchProfileId { get; set; }
         public string ClientId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
         public override void ResetProperties()
         {
-            AdvertiserId = 0;
+            SearchProfileId = null;
             ClientId = null;
             StartDate = null;
             EndDate = null;
@@ -28,7 +28,7 @@ namespace CakeExtracter.Commands
         public SynchSearchDailySummariesAdWordsCommand()
         {
             IsCommand("synchSearchDailySummariesAdWords", "synch SearchDailySummaries for AdWords");
-            HasOption<int>("a|advertiserId=", "Advertiser Id (default is 0, meaning all search advertisers, unless Client Id specified)", c => AdvertiserId = c);
+            HasOption<int>("p|searchProfileId=", "SearchProfile Id (default = all)", c => SearchProfileId = c);
             HasOption<string>("v|clientId=", "Client Id", c => ClientId = c);
             HasOption<DateTime>("s|startDate=", "Start Date (default is one month ago)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
@@ -61,8 +61,8 @@ namespace CakeExtracter.Commands
                 if (this.ClientId == null) // ClientId not specified
                 {
                     var searchAccountsQ = db.SearchAccounts.Where(sa => sa.Channel == "Google"); // all google SearchAccounts
-                    if (this.AdvertiserId > 0)
-                        searchAccountsQ = searchAccountsQ.Where(sa => sa.AdvertiserId == this.AdvertiserId); // ...for the specified advertiser
+                    if (this.SearchProfileId.HasValue)
+                        searchAccountsQ = searchAccountsQ.Where(sa => sa.SearchProfileId == this.SearchProfileId.Value); // ...for the specified SearchProfile
 
                     searchAccounts = searchAccountsQ.ToList();
                 }
@@ -71,18 +71,18 @@ namespace CakeExtracter.Commands
                     var searchAccount = db.SearchAccounts.SingleOrDefault(sa => sa.AccountCode == ClientId && sa.Channel == "Google");
                     if (searchAccount != null)
                     {
-                        if (AdvertiserId > 0 && searchAccount.AdvertiserId != AdvertiserId)
-                            Logger.Info("AdvertiserId does not match that of SearchAccount specified by ClientId");
+                        if (SearchProfileId.HasValue && searchAccount.SearchProfileId != SearchProfileId.Value)
+                            Logger.Info("SearchProfileId does not match that of SearchAccount specified by ClientId");
 
                         searchAccounts.Add(searchAccount);
                     }
                     else // didn't find a matching SearchAccount; see about creating a new one
                     {
-                        if (AdvertiserId > 0)
+                        if (SearchProfileId.HasValue)
                         {
                             searchAccount = new SearchAccount()
                             {
-                                AdvertiserId = this.AdvertiserId,
+                                SearchProfileId = this.SearchProfileId.Value,
                                 Channel = "Google",
                                 AccountCode = ClientId
                                 // to fill in later: Name, ExternalId
@@ -93,7 +93,7 @@ namespace CakeExtracter.Commands
                         }
                         else
                         {
-                            Logger.Info("SearchAccount with AccountCode {0} not found and no AdvertiserId specified", ClientId);
+                            Logger.Info("SearchAccount with AccountCode {0} not found and no SearchProfileId specified", ClientId);
                         }
                     }
                 }
