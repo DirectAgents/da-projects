@@ -16,7 +16,7 @@
     <div>
         @Html.DropDownList("selectAdRollProfile", profileSelectList, "Select AdRollProfile...", new { onchange = "ProfileChange()" })
     </div>
-    <div>
+    <div id="divFileUpload" style="display:none">
         <br />
         <input id="fileUpload" name="file" type="file" />
     </div>
@@ -37,9 +37,11 @@
         var profileId = $('#selectAdRollProfile').val();
         if (profileId) {
             $.get('@Url.Action("StatsRollup")', { profileid: profileId }, function (result) {
+                $('#divFileUpload').show();
                 $('#divStatsRollup').html(result);
             });
         } else {
+            $('#divFileUpload').hide();
             $('#divStatsRollup').html("");
         }
     }

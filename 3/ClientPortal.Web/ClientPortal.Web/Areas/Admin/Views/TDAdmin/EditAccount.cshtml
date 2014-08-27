@@ -37,3 +37,41 @@
             &nbsp;@Ajax.ActionLink("cancel", "TradingDeskAccounts", ajaxOptions)
     </fieldset>
 }
+
+<b>Compute SpendMultiplier:</b><br />
+Specify a management fee and desired margin (both as percents). Then click "Recompute".
+<table>
+    <tr>
+        <td>ManagementFee%</td>
+        <td><input id="inputMgmtFeePct" type="text" /></td>
+    </tr>
+    <tr>
+        <td>DesiredMargin%</td>
+        <td><input id="inputDesiredMarginPct" type="text" /></td>
+    </tr>
+    <tr>
+        <td>SpendMultiplier:</td>
+        <td id="tdSpendMult"></td>
+    </tr>
+    <tr>
+        <td colspan="2"><input type="button" value="Recompute" onclick="ComputeSpendMult()" /></td>
+    </tr>
+</table>
+<br />
+
+<script>
+    function ComputeSpendMult() {
+        var mgmtFeePct = $('#inputMgmtFeePct').val();
+        var desiredMarginPct = $('#inputDesiredMarginPct').val();
+        if ($.trim(mgmtFeePct).length === 0 || isNaN(mgmtFeePct) ||
+            $.trim(desiredMarginPct).length === 0 || isNaN(desiredMarginPct))
+        {
+            $('#tdSpendMult').html('?');
+        } else {
+            var onePlusMgmtFee = 1 + (mgmtFeePct / 100);
+            var oneMinusMargin = 1 - (desiredMarginPct / 100);
+            var spendMult = 1 / (onePlusMgmtFee * oneMinusMargin);
+            $('#tdSpendMult').html(spendMult);
+        }
+    }
+</script>
