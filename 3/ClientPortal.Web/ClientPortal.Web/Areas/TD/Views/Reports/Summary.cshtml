@@ -1,7 +1,4 @@
 ﻿@model ClientPortal.Web.Areas.TD.Models.TDReportModel
-@{
-    var metrics = Model.MetricsToGraph;
-}
 
 <div style="height: 35px">
     <select style="width: 140px" id="summary_dateRangeSel" onchange="ChangeDateRange('summary', true)">@* show all in USD for now *@
@@ -28,36 +25,29 @@
 
 <h3>Totals</h3>
 <table>
-@foreach (var metric in Model.AllMetrics)
-{
-    if (metric == "Spend")
-    {
-        continue;
-    }
     <tr>
-        <td>@metric:</td>
-        <td id="td@(metric)" style="text-align:right"></td>
-        @if (metric == "Impressions")
-        {
-            <td>eCPM:</td>
-            <td id="tdCPM" style="text-align:right"></td>
-        }
-        else if (metric == "Clicks")
-        {
-            <td>eCPC:</td>
-            <td id="tdCPC" style="text-align:right"></td>
-            <td>CTR:</td>
-            <td id="tdCTR" style="text-align:right"></td>
-        }
-        else if (metric == "Conversions")
-        {
-            <td>eCPA:</td>
-            <td id="tdCPA" style="text-align:right"></td>
-            <td>ConvRate:</td>
-            <td id="tdConvRate" style="text-align:right"></td>
-        }
+        <td>Impressions:</td>
+        <td id="tdImpressions" style="text-align:right"></td>
+        <td>eCPM:</td>
+        <td id="tdCPM" style="text-align:right"></td>
     </tr>
-}
+    <tr>
+        <td>Clicks:</td>
+        <td id="tdClicks" style="text-align:right"></td>
+        <td>eCPC:</td>
+        <td id="tdCPC" style="text-align:right"></td>
+        <td>CTR:</td>
+        <td id="tdCTR" style="text-align:right"></td>
+    </tr>
+    <tr>
+        <td>Conversions:</td>
+        <td id="tdConversions" style="text-align:right"></td>
+        <td>eCPA:</td>
+        <td id="tdCPA" style="text-align:right"></td>
+        <td>ConvRate:</td>
+        <td id="tdConvRate" style="text-align:right"></td>
+    </tr>
+
     <tr>
         <td>Media Spend:</td>
         <td id="tdSpend" style="text-align:right"></td>
@@ -117,25 +107,27 @@
         var datasource = CreateSummaryDataSource();
         CreateSummaryChart(datasource);
         datasource.read();
-        datasource.bind("change", function () {
-            var aggs = this.aggregates();
-            $('#tdImpressions').html(kendo.toString(aggs.Impressions.sum, 'N0'));
-            $('#tdCPM').html(kendo.toString(aggs.CPM.agg, 'C3'));
+        datasource.bind("change", SummaryDataSource_OnChange);
+    });
 
-            $('#tdClicks').html(kendo.toString(aggs.Clicks.sum, 'N0'));
-            $('#tdCPC').html(kendo.toString(aggs.CPC.agg, 'C3'));
-            $('#tdCTR').html(kendo.toString(aggs.CTR.agg, 'P'));
+    function SummaryDataSource_OnChange() {
+        var aggs = this.aggregates();
+        $('#tdImpressions').html(kendo.toString(aggs.Impressions.sum, 'N0'));
+        $('#tdCPM').html(kendo.toString(aggs.CPM.agg, 'C3'));
+
+        $('#tdClicks').html(kendo.toString(aggs.Clicks.sum, 'N0'));
+        $('#tdCPC').html(kendo.toString(aggs.CPC.agg, 'C3'));
+        $('#tdCTR').html(kendo.toString(aggs.CTR.agg, 'P'));
 @if (Model.ShouldShowMetric("Conversions"))
 {
     <text>$('#tdConversions').html(kendo.toString(aggs.Conversions.sum, 'N0'));</text>
     <text>$('#tdCPA').html(kendo.toString(aggs.CPA.agg, 'C'));</text>
     <text>$('#tdConvRate').html(kendo.toString(aggs.ConvRate.agg, 'P'));</text>
 }
-            $('#tdSpend').html(kendo.toString(aggs.Spend.sum, 'C'));
-            $('#tdMgmtFee').html(kendo.toString(aggs.Spend.fee, 'C'));
-            $('#tdTotalSpend').html(kendo.toString(aggs.Spend.total, 'C'));
-        });
-    });
+        $('#tdSpend').html(kendo.toString(aggs.Spend.sum, 'C'));
+        $('#tdMgmtFee').html(kendo.toString(aggs.Spend.fee, 'C'));
+        $('#tdTotalSpend').html(kendo.toString(aggs.Spend.total, 'C'));
+    }
 
     function CreateSummaryDataSource() {
         return new kendo.data.DataSource({
@@ -169,7 +161,12 @@
                         Impressions: { type: 'number' },
                         Clicks: { type: 'number' },
                         Conversions: { type: 'number' },
-                        Spend: { type: 'number' }
+                        Spend: { type: 'number' },
+                        CTR: { type: 'number' },
+                        ConvRate: { type: 'number' },
+                        CPM: { type: 'number' },
+                        CPC: { type: 'number' },
+                        CPA: { type: 'number' }
                     }
                 }
             },
@@ -196,9 +193,9 @@
 
     function CreateSummaryChart(dataSource) {
         var metrics = [
-@for (int i = 0; i < metrics.Length; i++)
+@for (int i = 0; i < Model.MetricsToGraph.Length; i++)
 {
-    <text>"@(metrics[i])"@(i < metrics.Length -1 ? "," : "")</text>
+    <text>"@(Model.MetricsToGraph[i])"@(i < Model.MetricsToGraph.Length -1 ? "," : "")</text>
 }
         ];
         var a = ConstructSummaryChartArrays(metrics);
@@ -206,15 +203,26 @@
     }
 
     function ConstructSummaryChartArrays(metrics) {
-        var format;
+        var format, display;
         var seriesArray = [], valueAxisArray = [];
-        for (var i = 0; i < metrics.length; i++) {
-            if (metrics[i] == "Spend")
-                format = "C";
+        for (var i = 0; i < metrics.length; i++)
+        {
+            if ($.inArray(metrics[i], nMetrics) > -1)
+                format = "n0";
+            else if ($.inArray(metrics[i], rMetrics) > -1)
+                format = "p";
             else
-                format = "N0";
-            seriesArray.push({ type: "line", field: metrics[i], name: metrics[i], axis: metrics[i], markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}', category) #: #= kendo.format('{0:" + format + "}',value) #" } });
-            valueAxisArray.push({ name: metrics[i], labels: { format: format, step: 2 }, title: { text: metrics[i] } });
+                format = "c";
+
+            if ($.inArray(metrics[i], eMetrics) > -1)
+                display = "e" + metrics[i];
+            else if (metrics[i] == "Spend")
+                display = "Media Spend";
+            else
+                display = metrics[i];
+
+            seriesArray.push({ type: "line", field: metrics[i], name: display, axis: metrics[i], markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}',category) #: #= kendo.format('{0:" + format + "}',value) #" } });
+            valueAxisArray.push({ name: metrics[i], labels: { format: format, step: 2 }, title: { text: display } });
         }
         return {
             SeriesArray: seriesArray,

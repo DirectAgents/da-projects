@@ -3,7 +3,7 @@
 <script>
     function DateChanged(report) {
         $('#' + report + '_dateRangeSel').data('kendoDropDownList').value('custom');
-        $('#' + report + '_filterBtn').attr('disabled', false);
+        //$('#' + report + '_filterBtn').attr('disabled', false);
     }
 
     function ChangeDateRange(report, useUS) {
@@ -63,6 +63,6 @@
             if (chartDataSource !== gridDataSource)
                 chartDataSource.read();
         }
-        $('#' + report + '_filterBtn').attr('disabled', true);
+        //$('#' + report + '_filterBtn').attr('disabled', true);
     }
 </script>

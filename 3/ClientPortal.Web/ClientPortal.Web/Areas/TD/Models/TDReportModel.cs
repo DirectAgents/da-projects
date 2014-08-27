@@ -29,6 +29,15 @@ namespace ClientPortal.Web.Areas.TD.Models
                 metricsList.Add("Conversions");
             metricsList.Add("Spend");
 
+            metricsList.Add("CPM");
+            metricsList.Add("CPC");
+            if (UserInfo.TDAccount.ShowConversions)
+                metricsList.Add("CPA");
+
+            metricsList.Add("CTR");
+            if (UserInfo.TDAccount.ShowConversions)
+                metricsList.Add("ConvRate");
+
             AllMetrics = metricsList.ToArray();
         }
 
