@@ -1,11 +1,18 @@
 ﻿using ClientPortal.Web.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 
 namespace ClientPortal.Web.Areas.TD.Models
 {
     public class TDReportModel
     {
+        private UserInfo UserInfo { get; set; }
+
+        public SelectListItem[] AllMetricsSelectItems { get; set; }
+        private string[] AllMetrics { get; set; }
+        public string[] MetricsToGraph { get; set; } // e.g. the two metrics to graph on the summary page
+
         public string StartDate { get; set; }
         public string EndDate { get; set; }
 
@@ -21,24 +28,25 @@ namespace ClientPortal.Web.Areas.TD.Models
 
         public void SetupMetrics()
         {
-            List<string> metricsList = new List<string>();
+            var metricsItemsList = new List<SelectListItem>();
 
-            metricsList.Add("Impressions");
-            metricsList.Add("Clicks");
+            metricsItemsList.Add(new SelectListItem { Text = "Impressions", Value = "Impressions" });
+            metricsItemsList.Add(new SelectListItem { Text = "Clicks", Value = "Clicks" });
             if (UserInfo.TDAccount.ShowConversions)
-                metricsList.Add("Conversions");
-            metricsList.Add("Spend");
+                metricsItemsList.Add(new SelectListItem { Text = "Conversions", Value = "Conversions" });
+            metricsItemsList.Add(new SelectListItem { Text = "Media Spend", Value = "Spend" });
 
-            metricsList.Add("CPM");
-            metricsList.Add("CPC");
+            metricsItemsList.Add(new SelectListItem { Text = "eCPM", Value = "CPM" });
+            metricsItemsList.Add(new SelectListItem { Text = "eCPC", Value = "CPC" });
             if (UserInfo.TDAccount.ShowConversions)
-                metricsList.Add("CPA");
+                metricsItemsList.Add(new SelectListItem { Text = "eCPA", Value = "CPA" });
 
-            metricsList.Add("CTR");
+            metricsItemsList.Add(new SelectListItem { Text = "CTR", Value = "CTR" });
             if (UserInfo.TDAccount.ShowConversions)
-                metricsList.Add("ConvRate");
+                metricsItemsList.Add(new SelectListItem { Text = "ConvRate", Value = "ConvRate" });
 
-            AllMetrics = metricsList.ToArray();
+            AllMetricsSelectItems = metricsItemsList.ToArray();
+            AllMetrics = metricsItemsList.Select(m => m.Value).ToArray();
         }
 
         public void SetMetricsToGraph(string metricToGraph1, string metricToGraph2)
@@ -59,11 +67,6 @@ namespace ClientPortal.Web.Areas.TD.Models
 
             MetricsToGraph = metricsToGraphList.ToArray();
         }
-
-        private UserInfo UserInfo { get; set; }
-
-        public string[] AllMetrics { get; set; }
-        public string[] MetricsToGraph { get; set; } // e.g. the two metrics to graph on the summary page
 
         public bool ShouldShowMetric(string metric)
         {
