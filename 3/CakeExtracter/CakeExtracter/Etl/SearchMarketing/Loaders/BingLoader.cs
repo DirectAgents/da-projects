@@ -42,7 +42,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                     var searchAccount = passedInAccount;
                     if (searchAccount.AccountCode != accountCode)
-                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.AccountCode == accountCode && sa.Channel == bingChannel);
+                        searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.AccountCode == accountCode && sa.Channel == bingChannel);
 
                     var pk1 = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId;
                     var pk2 = DateTime.Parse(item["GregorianDate"]);
@@ -104,14 +104,14 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     }
                     else
                     {   // See if there are any sibling SearchAccounts that match by accountCode... or finally, by name
-                        existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.AccountCode == accountCode && sa.Channel == bingChannel);
+                        existing = searchAccount.SearchProfile.SearchAccounts.SingleOrDefault(sa => sa.AccountCode == accountCode && sa.Channel == bingChannel);
                         if (existing == null)
-                            existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.Name == accountName && sa.Channel == bingChannel);
+                            existing = searchAccount.SearchProfile.SearchAccounts.SingleOrDefault(sa => sa.Name == accountName && sa.Channel == bingChannel);
                     }
 
                     if (existing == null)
                     {
-                        searchAccount.Advertiser.SearchAccounts.Add(new SearchAccount
+                        searchAccount.SearchProfile.SearchAccounts.Add(new SearchAccount
                         {
                             Name = accountName,
                             Channel = bingChannel,
@@ -151,7 +151,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                     var searchAccount = passedInAccount;
                     if (searchAccount.AccountCode != accountCode)
-                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.AccountCode == accountCode && sa.Channel == bingChannel);
+                        searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.AccountCode == accountCode && sa.Channel == bingChannel);
 
                     var existing = searchAccount.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignId);
 
