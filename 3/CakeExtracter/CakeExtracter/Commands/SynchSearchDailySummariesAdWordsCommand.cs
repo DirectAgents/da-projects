@@ -63,6 +63,8 @@ namespace CakeExtracter.Commands
                     var searchAccountsQ = db.SearchAccounts.Where(sa => sa.Channel == "Google"); // all google SearchAccounts
                     if (this.SearchProfileId.HasValue)
                         searchAccountsQ = searchAccountsQ.Where(sa => sa.SearchProfileId == this.SearchProfileId.Value); // ...for the specified SearchProfile
+                    else
+                        searchAccountsQ = searchAccountsQ.Where(sa => sa.SearchProfileId.HasValue); // ...that are children of a SearchProfile
 
                     searchAccounts = searchAccountsQ.ToList();
                 }

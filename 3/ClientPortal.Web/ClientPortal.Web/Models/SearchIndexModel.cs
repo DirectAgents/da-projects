@@ -17,8 +17,7 @@ namespace ClientPortal.Web.Models
             Culture = userInfo.Culture;
             HasLogo = (userInfo.Logo != null);
 
-            var dates = new Dates(userInfo.UseYesterdayAsLatest, userInfo.SearchStartDayOfWeek);
-            Dates = new DatesModel(dates, this.CultureInfo);
+            Dates = new DatesModel(userInfo.Search_Dates, this.CultureInfo);
         }
     }
 }

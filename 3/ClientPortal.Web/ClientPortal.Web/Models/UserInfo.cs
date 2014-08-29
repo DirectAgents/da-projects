@@ -113,13 +113,24 @@ namespace ClientPortal.Web.Models
                     return true; // (if not specified)
             }
         }
+        public bool Search_UseYesterdayAsLatest
+        {
+            get
+            {
+                bool useYesterdayAsLatest;
+                if (Boolean.TryParse(WebConfigurationManager.AppSettings["Search_UseYesterdayAsLatest"], out useYesterdayAsLatest))
+                    return useYesterdayAsLatest;
+                else
+                    return true; // (if not specified)
+            }
+        }
 
         public DayOfWeek StartDayOfWeek
         {
             get { return (Advertiser == null) ? DayOfWeek.Sunday : (DayOfWeek)Advertiser.StartDayOfWeek; }
         }
 
-        public DayOfWeek SearchStartDayOfWeek
+        public DayOfWeek Search_StartDayOfWeek
         {
             get { return (SearchProfile == null) ? DayOfWeek.Sunday : (DayOfWeek)SearchProfile.StartDayOfWeek; }
         }
@@ -133,11 +144,15 @@ namespace ClientPortal.Web.Models
                 return _dates;
             }
         }
-        public Dates DatesForSearch()
+        private Dates _searchDates;
+        internal Dates Search_Dates
         {
-            return new Dates(this.UseYesterdayAsLatest, this.SearchStartDayOfWeek);
+            get
+            {
+                if (_searchDates == null) _searchDates = new Dates(this.Search_UseYesterdayAsLatest, this.Search_StartDayOfWeek);
+                return _searchDates;
+            }
         }
-
 
         public bool HasTradingDesk(bool only = false)
         {
