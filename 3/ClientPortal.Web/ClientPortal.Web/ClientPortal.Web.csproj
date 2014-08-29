@@ -718,6 +718,7 @@
     <Content Include="Areas\Admin\Views\TDAdmin\StatsRollup.cshtml" />
     <Content Include="Areas\Admin\Views\SearchAdmin\SearchProfiles.cshtml" />
     <Content Include="Areas\Admin\Views\SearchAdmin\CreateUserProfile.cshtml" />
+    <Content Include="Areas\Admin\Views\SearchAdmin\EditSearchProfileContacts.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

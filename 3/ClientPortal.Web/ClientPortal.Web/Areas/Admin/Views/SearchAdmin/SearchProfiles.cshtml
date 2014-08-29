@@ -23,6 +23,7 @@
                 @Ajax.ActionLink("create", "CreateUserProfile", new { spId = profile.SearchProfileId }, ajaxOptions)
             }
         </td>
+        <td>@Ajax.ActionLink("Edit Contacts", "EditSearchProfileContacts", new { spId = profile.SearchProfileId }, ajaxOptions)</td>
     </tr>
 }
 </table>

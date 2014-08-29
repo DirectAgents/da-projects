@@ -52,6 +52,7 @@ namespace ClientPortal.Data.Contracts
         void AddAdvertiser(Advertiser entity);
         void AddContact(Contact entity);
         Advertiser GetAdvertiser(int id);
+        Contact GetContact(int id);
         Contact GetContact(string search);
 
         IQueryable<ScheduledReport> GetScheduledReports(int advertiserId);

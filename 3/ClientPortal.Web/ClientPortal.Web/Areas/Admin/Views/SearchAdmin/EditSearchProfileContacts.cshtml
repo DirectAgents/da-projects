@@ -1,0 +1,57 @@
+﻿@model ClientPortal.Data.Contexts.SearchProfile
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("searchProfilesTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("searchProfilesTab", null, "Post");
+}
+
+@using (Ajax.BeginForm("EditSearchProfileContacts", null, ajaxOpts_Post, new { onsubmit = "OnSubmitEditSearchProfileContacts()" }))
+{
+    <input type="hidden" name="spid" value="@Model.SearchProfileId" />
+    <input type="hidden" id="searchprofile_contactids" name="contactids" />
+    <fieldset>
+        <legend>Edit SearchProfile Contacts</legend>
+        <table>
+            <tr>
+                <td>@Html.LabelFor(m => m.SearchProfileName, "SearchProfile:")</td>
+                <td>@Html.DisplayFor(m => m.SearchProfileName)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.SearchProfileContacts, "Contacts")</td>
+                <td><select id="searchprofile_selectContacts" multiple="multiple" data-placeholder="Select contacts..." /></td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" value="Save" />
+    </fieldset>
+}
+<div>
+    @Ajax.ActionLink("Back to SearchProfiles", "SearchProfiles", ajaxOptions)
+</div>
+
+<script>
+    SetupEditSearchProfileContacts();
+
+    function SetupEditSearchProfileContacts() {
+        var url = '@Url.Action("NameList", "Contacts")';
+        $("#searchprofile_selectContacts").kendoMultiSelect({
+//            placeholder: "Select contacts...",
+            dataTextField: "Name",
+            dataValueField: "ContactId",
+            dataSource: {
+                transport: {
+                    read: { url: url, dataType: "json" }
+                }
+            },
+            value: [
+@foreach(var sc in Model.SearchProfileContactsOrdered) {
+    <text>{ ContactId: "@sc.ContactId", Name: "@(sc.Contact.FullName)" },</text>
+}
+            ]
+        });
+    }
+
+    function OnSubmitEditSearchProfileContacts() {
+        var sel = $('#searchprofile_selectContacts').data('kendoMultiSelect');
+        $('#searchprofile_contactids').val(sel.value());
+    }
+</script>

@@ -42,6 +42,7 @@
           <EntitySet Name="SearchDailySummary" EntityType="ClientPortalModel.Store.SearchDailySummary" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SearchDailySummary2" EntityType="ClientPortalModel.Store.SearchDailySummary2" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SearchProfile" EntityType="ClientPortalModel.Store.SearchProfile" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="SearchProfileContact" EntityType="ClientPortalModel.Store.SearchProfileContact" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="UserEvent" EntityType="ClientPortalModel.Store.UserEvent" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="UserProfile" EntityType="ClientPortalModel.Store.UserProfile" store:Type="Tables" Schema="dbo" />
           <AssociationSet Name="FK_Advertiser_CakeContact" Association="ClientPortalModel.Store.FK_Advertiser_CakeContact">
@@ -171,6 +172,14 @@
           <AssociationSet Name="FK_SearchDailySummary2_SearchCampaign" Association="ClientPortalModel.Store.FK_SearchDailySummary2_SearchCampaign">
             <End Role="SearchCampaign" EntitySet="SearchCampaign" />
             <End Role="SearchDailySummary2" EntitySet="SearchDailySummary2" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchProfileContact_Contact" Association="ClientPortalModel.Store.FK_SearchProfileContact_Contact">
+            <End Role="Contact" EntitySet="Contact" />
+            <End Role="SearchProfileContact" EntitySet="SearchProfileContact" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchProfileContact_SearchProfile" Association="ClientPortalModel.Store.FK_SearchProfileContact_SearchProfile">
+            <End Role="SearchProfile" EntitySet="SearchProfile" />
+            <End Role="SearchProfileContact" EntitySet="SearchProfileContact" />
           </AssociationSet>
           <AssociationSet Name="FK_UserEvent_UserProfile" Association="ClientPortalModel.Store.FK_UserEvent_UserProfile">
             <End Role="UserProfile" EntitySet="UserProfile" />
@@ -612,6 +621,15 @@
           <Property Name="SearchProfileName" Type="nvarchar(max)" />
           <Property Name="StartDayOfWeek" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="SearchProfileContact">
+          <Key>
+            <PropertyRef Name="SearchProfileId" />
+            <PropertyRef Name="ContactId" />
+          </Key>
+          <Property Name="SearchProfileId" Type="int" Nullable="false" />
+          <Property Name="ContactId" Type="int" Nullable="false" />
+          <Property Name="Order" Type="int" />
+        </EntityType>
         <EntityType Name="UserEvent">
           <Key>
             <PropertyRef Name="EventId" />
@@ -1021,6 +1039,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SearchProfileContact_Contact">
+          <End Role="Contact" Type="ClientPortalModel.Store.Contact" Multiplicity="1" />
+          <End Role="SearchProfileContact" Type="ClientPortalModel.Store.SearchProfileContact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contact">
+              <PropertyRef Name="ContactId" />
+            </Principal>
+            <Dependent Role="SearchProfileContact">
+              <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SearchProfileContact_SearchProfile">
+          <End Role="SearchProfile" Type="ClientPortalModel.Store.SearchProfile" Multiplicity="1" />
+          <End Role="SearchProfileContact" Type="ClientPortalModel.Store.SearchProfileContact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchProfile">
+              <PropertyRef Name="SearchProfileId" />
+            </Principal>
+            <Dependent Role="SearchProfileContact">
+              <PropertyRef Name="SearchProfileId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UserEvent_UserProfile">
           <End Role="UserProfile" Type="ClientPortalModel.Store.UserProfile" Multiplicity="0..1" />
           <End Role="UserEvent" Type="ClientPortalModel.Store.UserEvent" Multiplicity="*" />
@@ -1218,6 +1260,15 @@
           <AssociationSet Name="FK_SearchAccount_SearchProfile" Association="ClientPortalModel.FK_SearchAccount_SearchProfile">
             <End Role="SearchProfile" EntitySet="SearchProfiles" />
             <End Role="SearchAccount" EntitySet="SearchAccounts" />
+          </AssociationSet>
+          <EntitySet Name="SearchProfileContacts" EntityType="ClientPortalModel.SearchProfileContact" />
+          <AssociationSet Name="FK_SearchProfileContact_Contact" Association="ClientPortalModel.FK_SearchProfileContact_Contact">
+            <End Role="Contact" EntitySet="Contacts" />
+            <End Role="SearchProfileContact" EntitySet="SearchProfileContacts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchProfileContact_SearchProfile" Association="ClientPortalModel.FK_SearchProfileContact_SearchProfile">
+            <End Role="SearchProfile" EntitySet="SearchProfiles" />
+            <End Role="SearchProfileContact" EntitySet="SearchProfileContacts" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -2121,6 +2172,7 @@
           <NavigationProperty Name="UserProfiles" Relationship="ClientPortalModel.FK_UserProfile_SearchProfile" FromRole="SearchProfile" ToRole="UserProfile" />
           <Property Type="Int32" Name="StartDayOfWeek" Nullable="false" DefaultValue="1" />
           <NavigationProperty Name="SearchAccounts" Relationship="ClientPortalModel.FK_SearchAccount_SearchProfile" FromRole="SearchProfile" ToRole="SearchAccount" />
+          <NavigationProperty Name="SearchProfileContacts" Relationship="ClientPortalModel.FK_SearchProfileContact_SearchProfile" FromRole="SearchProfile" ToRole="SearchProfileContact" />
         </EntityType>
         <Association Name="FK_UserProfile_SearchProfile">
           <End Type="ClientPortalModel.SearchProfile" Role="SearchProfile" Multiplicity="0..1" />
@@ -2142,6 +2194,41 @@
               <PropertyRef Name="SearchProfileId" />
             </Principal>
             <Dependent Role="SearchAccount">
+              <PropertyRef Name="SearchProfileId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SearchProfileContact">
+          <Key>
+            <PropertyRef Name="SearchProfileId" />
+            <PropertyRef Name="ContactId" />
+          </Key>
+          <Property Type="Int32" Name="SearchProfileId" Nullable="false" />
+          <Property Type="Int32" Name="ContactId" Nullable="false" />
+          <Property Type="Int32" Name="Order" />
+          <NavigationProperty Name="Contact" Relationship="ClientPortalModel.FK_SearchProfileContact_Contact" FromRole="SearchProfileContact" ToRole="Contact" />
+          <NavigationProperty Name="SearchProfile" Relationship="ClientPortalModel.FK_SearchProfileContact_SearchProfile" FromRole="SearchProfileContact" ToRole="SearchProfile" />
+        </EntityType>
+        <Association Name="FK_SearchProfileContact_Contact">
+          <End Type="ClientPortalModel.Contact" Role="Contact" Multiplicity="1" />
+          <End Type="ClientPortalModel.SearchProfileContact" Role="SearchProfileContact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contact">
+              <PropertyRef Name="ContactId" />
+            </Principal>
+            <Dependent Role="SearchProfileContact">
+              <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SearchProfileContact_SearchProfile">
+          <End Type="ClientPortalModel.SearchProfile" Role="SearchProfile" Multiplicity="1" />
+          <End Type="ClientPortalModel.SearchProfileContact" Role="SearchProfileContact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchProfile">
+              <PropertyRef Name="SearchProfileId" />
+            </Principal>
+            <Dependent Role="SearchProfileContact">
               <PropertyRef Name="SearchProfileId" />
             </Dependent>
           </ReferentialConstraint>
@@ -2623,6 +2710,15 @@
               <MappingFragment StoreEntitySet="SearchProfile">
                 <ScalarProperty Name="StartDayOfWeek" ColumnName="StartDayOfWeek" />
                 <ScalarProperty Name="SearchProfileName" ColumnName="SearchProfileName" />
+                <ScalarProperty Name="SearchProfileId" ColumnName="SearchProfileId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SearchProfileContacts">
+            <EntityTypeMapping TypeName="ClientPortalModel.SearchProfileContact">
+              <MappingFragment StoreEntitySet="SearchProfileContact">
+                <ScalarProperty Name="Order" ColumnName="Order" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
                 <ScalarProperty Name="SearchProfileId" ColumnName="SearchProfileId" />
               </MappingFragment>
             </EntityTypeMapping>

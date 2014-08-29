@@ -239,6 +239,9 @@
     <Compile Include="Contexts\SearchProfile.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\SearchProfileContact.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\TDContext.cs" />
     <Compile Include="Contexts\UserEvent.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
@@ -272,6 +275,7 @@
     <Compile Include="Entities\CreativeStat.cs" />
     <Compile Include="Entities\Goal.cs" />
     <Compile Include="Entities\Offer.cs" />
+    <Compile Include="Entities\SearchProfile.cs" />
     <Compile Include="Entities\TD\AdRoll\AdDailySummary.cs" />
     <Compile Include="Entities\TD\AdRoll\AdRollAd.cs">
       <SubType>Code</SubType>

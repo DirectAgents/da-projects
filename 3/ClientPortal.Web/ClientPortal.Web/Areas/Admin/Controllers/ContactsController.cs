@@ -17,7 +17,9 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public JsonResult NameList()
         {
-            var contacts = db.Contacts.Select(c => new ContactVM() { ContactId = c.ContactId, Name = c.FirstName + " " + c.LastName }).ToList();
+            var contacts = db.Contacts
+                .OrderBy(c => c.FirstName).ThenBy(c => c.LastName)
+                .Select(c => new ContactVM() { ContactId = c.ContactId, Name = c.FirstName + " " + c.LastName }).ToList();
 
             var result = new JsonResult
             {

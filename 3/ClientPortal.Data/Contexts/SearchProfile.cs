@@ -19,6 +19,7 @@ namespace ClientPortal.Data.Contexts
             this.StartDayOfWeek = 1;
             this.UserProfiles = new HashSet<UserProfile>();
             this.SearchAccounts = new HashSet<SearchAccount>();
+            this.SearchProfileContacts = new HashSet<SearchProfileContact>();
         }
     
         public int SearchProfileId { get; set; }
@@ -27,5 +28,6 @@ namespace ClientPortal.Data.Contexts
     
         public virtual ICollection<UserProfile> UserProfiles { get; set; }
         public virtual ICollection<SearchAccount> SearchAccounts { get; set; }
+        public virtual ICollection<SearchProfileContact> SearchProfileContacts { get; set; }
     }
 }

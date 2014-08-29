@@ -590,6 +590,12 @@ namespace ClientPortal.Data.Services
             var advertiser = context.Advertisers.Find(id);
             return advertiser;
         }
+
+        public Contact GetContact(int id)
+        {
+            var contact = context.Contacts.Find(id);
+            return contact;
+        }
         public Contact GetContact(string search) // search by last name, for now
         {
             var contact = context.Contacts.Where(c => c.LastName == search).FirstOrDefault();

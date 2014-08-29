@@ -62,5 +62,6 @@ namespace ClientPortal.Data.Contexts
         public DbSet<OfferDailySummary> OfferDailySummaries { get; set; }
         public DbSet<DailySummary> DailySummaries { get; set; }
         public DbSet<SearchProfile> SearchProfiles { get; set; }
+        public DbSet<SearchProfileContact> SearchProfileContacts { get; set; }
     }
 }
