@@ -811,6 +811,8 @@
       <SubType>Code</SubType>
     </Build>
     <Build Include="dbo\Tables\MarginApproval.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Views\MediaBuyerConfirmation_MarkG.view.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Views\MediaBuyerConfirmation_Megan.view.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Database Level Objects\Assemblies\SqlServerProjectForDADatabaseR3.dll">
