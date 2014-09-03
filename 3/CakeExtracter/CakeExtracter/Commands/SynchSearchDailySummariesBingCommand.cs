@@ -61,7 +61,8 @@ namespace CakeExtracter.Commands
             {
                 if (this.AccountId == 0) // AccountId not specified
                 {
-                    var searchAccountsQ = db.SearchAccounts.Where(sa => sa.Channel == "Bing"); // all bing SearchAccounts
+                    // Start with all bing SearchAccounts with an account code
+                    var searchAccountsQ = db.SearchAccounts.Where(sa => sa.Channel == "Bing" && !String.IsNullOrEmpty(sa.AccountCode));
                     if (this.SearchProfileId.HasValue)
                         searchAccountsQ = searchAccountsQ.Where(sa => sa.SearchProfileId == this.SearchProfileId.Value); // ...for the specified SearchProfile
                     else

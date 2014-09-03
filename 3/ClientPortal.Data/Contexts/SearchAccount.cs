@@ -17,6 +17,7 @@ namespace ClientPortal.Data.Contexts
         public SearchAccount()
         {
             this.SearchCampaigns = new HashSet<SearchCampaign>();
+            this.AltSearchCampaigns = new HashSet<SearchCampaign>();
         }
     
         public int SearchAccountId { get; set; }
@@ -30,5 +31,6 @@ namespace ClientPortal.Data.Contexts
         public virtual Advertiser Advertiser { get; set; }
         public virtual ICollection<SearchCampaign> SearchCampaigns { get; set; }
         public virtual SearchProfile SearchProfile { get; set; }
+        public virtual ICollection<SearchCampaign> AltSearchCampaigns { get; set; }
     }
 }

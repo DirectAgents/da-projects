@@ -49,7 +49,12 @@ namespace ClientPortal.Data.Services
             if (channel != null)
                 searchCampaigns = searchCampaigns.Where(c => c.SearchAccount.Channel == channel);
             if (searchAccountId.HasValue)
-                searchCampaigns = searchCampaigns.Where(c => c.SearchAccount.SearchAccountId == searchAccountId.Value);
+            {
+                searchCampaigns = searchCampaigns.Where(c =>
+                                    (!c.AltSearchAccountId.HasValue && c.SearchAccountId.HasValue && c.SearchAccountId.Value == searchAccountId.Value)
+                                 || (c.AltSearchAccountId.HasValue && c.AltSearchAccountId.Value == searchAccountId.Value));
+                // (if an AltSearchAccountId is specified, use that instead of the campaign's SearchAccountId)
+            }
             if (!String.IsNullOrWhiteSpace(channelPrefix))
                 searchCampaigns = searchCampaigns.Where(c => c.SearchCampaignName.StartsWith(channelPrefix));
 
@@ -390,13 +395,25 @@ namespace ClientPortal.Data.Services
             return stats.OrderBy(s => s.StartDate);
         }
 
+        // Get a SearchStat summary for each channel (Google/Bing)... and, if includeAccountBreakdown, each SearchAccount
         public IQueryable<SearchStat> GetChannelStats(int searchProfileId, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday, bool includeAccountBreakdown, bool includeSearchChannels)
         {
-            var googleStats = GetWeekStats(null, searchProfileId, "Google", null, null, null, null, startDayOfWeek, useAnalytics, includeToday);
-            var bingStats = GetWeekStats(null, searchProfileId, "Bing", null, null, null, null, startDayOfWeek, useAnalytics, includeToday);
-            var stats = googleStats.Concat(bingStats).AsQueryable();
-
             var searchProfile = GetSearchProfile(searchProfileId);
+
+            bool includeMainChannels = true; // (e.g. Google and Bing)
+            //if (includeAccountBreakdown)
+            //{ // Don't include main channels if we're including a breakdown by account and there is only one main channel
+            //    var mainChannels = searchProfile.SearchAccounts.Select(sa => sa.Channel).Distinct();
+            //    if (mainChannels.Count() <= 1)
+            //        includeMainChannels = false;
+            //}
+            IQueryable<SearchStat> stats = new List<SearchStat>().AsQueryable();
+            if (includeMainChannels)
+            {
+                var googleStats = GetWeekStats(null, searchProfileId, "Google", null, null, null, null, startDayOfWeek, useAnalytics, includeToday);
+                var bingStats = GetWeekStats(null, searchProfileId, "Bing", null, null, null, null, startDayOfWeek, useAnalytics, includeToday);
+                stats = googleStats.Concat(bingStats).AsQueryable();
+            }
             if (includeAccountBreakdown)
             {
                 var channels = new string[] { "Google", "Bing" };
@@ -428,6 +445,7 @@ namespace ClientPortal.Data.Services
             return stats;
         }
 
+        // Get a SearchStat summary for each individual campaign (or if breakdown, one for each Network/Device/ClickType combo)
         public IQueryable<SearchStat> GetCampaignStats(int searchProfileId, string channel, DateTime? start, DateTime? end, bool breakdown, bool useAnalytics)
         {
             if (!start.HasValue)

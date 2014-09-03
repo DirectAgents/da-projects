@@ -27,11 +27,13 @@ namespace ClientPortal.Data.Contexts
         public string Channel { get; set; }
         public Nullable<int> ExternalId { get; set; }
         public Nullable<int> SearchAccountId { get; set; }
+        public Nullable<int> AltSearchAccountId { get; set; }
     
         public virtual ICollection<SearchDailySummary> SearchDailySummaries { get; set; }
         public virtual Advertiser Advertiser { get; set; }
         public virtual ICollection<GoogleAnalyticsSummary> GoogleAnalyticsSummaries { get; set; }
         public virtual ICollection<SearchDailySummary2> SearchDailySummaries2 { get; set; }
         public virtual SearchAccount SearchAccount { get; set; }
+        public virtual SearchAccount AltSearchAccount { get; set; }
     }
 }

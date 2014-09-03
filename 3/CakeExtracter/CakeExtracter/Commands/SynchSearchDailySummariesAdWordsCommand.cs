@@ -60,7 +60,8 @@ namespace CakeExtracter.Commands
             {
                 if (this.ClientId == null) // ClientId not specified
                 {
-                    var searchAccountsQ = db.SearchAccounts.Where(sa => sa.Channel == "Google"); // all google SearchAccounts
+                    // Start with all google SearchAccounts with an account code
+                    var searchAccountsQ = db.SearchAccounts.Where(sa => sa.Channel == "Google" && !String.IsNullOrEmpty(sa.AccountCode));
                     if (this.SearchProfileId.HasValue)
                         searchAccountsQ = searchAccountsQ.Where(sa => sa.SearchProfileId == this.SearchProfileId.Value); // ...for the specified SearchProfile
                     else
