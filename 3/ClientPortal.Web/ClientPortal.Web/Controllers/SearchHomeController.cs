@@ -1,6 +1,7 @@
 ﻿using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Models;
 using System;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace ClientPortal.Web.Controllers
@@ -79,5 +80,11 @@ namespace ClientPortal.Web.Controllers
             return PartialView(model);
         }
 
+        public ActionResult Contact()
+        {
+            var userInfo = GetUserInfo();
+            var contacts = userInfo.SearchProfile.SearchProfileContactsOrdered.Select(spc => spc.Contact);
+            return PartialView("_Contact", contacts);
+        }
     }
 }

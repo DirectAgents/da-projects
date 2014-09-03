@@ -1601,7 +1601,7 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Shared\_Contact.cshtml" />
     <Content Include="Views\Home\Foundation.cshtml" />
     <Content Include="Views\Files\Index.cshtml" />
     <Content Include="Views\Files\List.cshtml" />

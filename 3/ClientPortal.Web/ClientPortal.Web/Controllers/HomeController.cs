@@ -92,7 +92,7 @@ namespace ClientPortal.Web.Controllers
                 contacts = advertiser.AdvertiserContacts.OrderBy(ac => ac.Order).Select(ac => ac.Contact);
 
             ViewBag.ShowTitle = showtitle;
-            return PartialView(contacts);
+            return PartialView("_Contact", contacts);
         }
 
         public ActionResult SetDashboardDateRange(string type, string startdate, string enddate)

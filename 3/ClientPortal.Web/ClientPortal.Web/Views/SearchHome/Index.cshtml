@@ -193,7 +193,7 @@
             $('#nav_Contact').one('click', function () {
                 $('#divContact').html('Loading...');
                 $.ajax({
-                    url: '@Url.Action("Contact", "Home", new { showtitle = false })',
+                    url: '@Url.Action("Contact", "SearchHome")',
                     cache: false
                 }).done(function (html) {
                     $('#divContact').html(html);

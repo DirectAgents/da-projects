@@ -1,11 +1,11 @@
 ﻿@model IEnumerable<ClientPortal.Data.Contexts.Contact>
 
-@if (ViewBag.ShowTitle) {
+@if (ViewBag.ShowTitle ?? false) {
     <h3>Contact</h3>
 }
 
 <div class="panel four columns">
-    <table>
+    <table style="width:100%">
         <tr>
             <td>
                 Direct Agents<br />
@@ -21,7 +21,8 @@
                     <div style="float: left; width: 65px; padding: 5px; padding-top: 0px; padding-left: 10px;">
                         <img style="border: 2px solid #000;" width="65" src="~/Images/avatar.png">
                     </div>
-                    <text>@contact.FirstName @contact.LastName, @contact.Title</text><br />
+                    <span style="white-space:nowrap">@contact.FirstName @contact.LastName</span><br />
+                    <span style="white-space:nowrap">@contact.Title</span><br />
                     <a href="mailto:@contact.Email">@contact.Email</a>
                 }
             </td>
