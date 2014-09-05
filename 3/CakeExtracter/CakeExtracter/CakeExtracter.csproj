@@ -108,6 +108,9 @@
     <Reference Include="Google.Apis.Core">
       <HintPath>..\..\ClientPortal.Web\packages\Google.Apis.Core.1.8.2\lib\portable-net4+sl4+wp71+win8\Google.Apis.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Google.Apis.DoubleClickBidManager.v1">
+      <HintPath>..\..\ClientPortal.Web\packages\Google.Apis.DoubleClickBidManager.v1.1.8.1.230\lib\portable-net4+sl4+wp71+win8\Google.Apis.DoubleClickBidManager.v1.dll</HintPath>
+    </Reference>
     <Reference Include="Google.Apis.PlatformServices, Version=1.8.2.23765, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ClientPortal.Web\packages\Google.Apis.1.8.2\lib\net40\Google.Apis.PlatformServices.dll</HintPath>
@@ -288,6 +291,7 @@
     <Compile Include="Commands\TDSynchAdDailySummariesAdrollCsv.cs" />
     <Compile Include="Commands\TDSynchCreativeDailySummariesDbmCsv.cs" />
     <Compile Include="Commands\TDSynchDailySummariesDbmCsv.cs" />
+    <Compile Include="Commands\TestDbmCommand.cs" />
     <Compile Include="Common\CopyPropertiesUtility.cs" />
     <Compile Include="Common\EmailUtility.cs" />
     <Compile Include="Common\EntityFrameworkExtensions.cs" />
