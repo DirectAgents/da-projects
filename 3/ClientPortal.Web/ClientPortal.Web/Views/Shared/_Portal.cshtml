@@ -1,6 +1,7 @@
 ﻿@using StackExchange.Profiling;
 @{
     var title = String.IsNullOrWhiteSpace(ViewBag.Title) ? "" : ViewBag.Title + " - ";
+    bool includeGoogleVis = ViewBag.IncludeGoogleVis ?? false;
 }
 <!DOCTYPE html>
 
@@ -41,10 +42,12 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/foundation")
+    @if (includeGoogleVis) {
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
         google.load('visualization', '1', { 'packages': ['geochart'] });
     </script>
+    }
     @RenderSection("scripts", required: false)
     @MiniProfiler.RenderIncludes()
     <script type="text/javascript">
