@@ -58,9 +58,14 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
+            int numWeeks = 8;
+            DateTime start = DateTime.Today.AddDays(-7 * numWeeks + 6);
+            while (start.DayOfWeek != userInfo.Search_StartDayOfWeek)
+                start = start.AddDays(-1);
+
             return PartialView(new SearchReportModel
             {
-                StartDate = userInfo.Search_Dates.FirstOfMonth.AddMonths(-2).ToString("d", userInfo.CultureInfo),
+                StartDate = start.ToString("d", userInfo.CultureInfo),
                 EndDate = userInfo.Search_Dates.Latest.ToString("d", userInfo.CultureInfo)
             });
         }

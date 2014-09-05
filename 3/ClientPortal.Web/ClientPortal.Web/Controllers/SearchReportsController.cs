@@ -77,11 +77,11 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult ChannelPerfData(KendoGridRequest request) //, string startdate, string enddate)
+        public JsonResult ChannelPerfData(KendoGridRequest request, int numweeks = 8) //, string startdate, string enddate)
         {
             var userInfo = GetUserInfo();
 
-            var channelStats = cpRepo.GetChannelStats(userInfo.SearchProfile.SearchProfileId, userInfo.Search_StartDayOfWeek, userInfo.UseAnalytics, !userInfo.Search_UseYesterdayAsLatest, true, userInfo.ShowSearchChannels);
+            var channelStats = cpRepo.GetChannelStats(userInfo.SearchProfile.SearchProfileId, numweeks, userInfo.Search_StartDayOfWeek, userInfo.UseAnalytics, !userInfo.Search_UseYesterdayAsLatest, true, userInfo.ShowSearchChannels);
             var kgrid = new KendoGrid<SearchStat>(request, channelStats);
             if (channelStats.Any())
                 kgrid.aggregates = Aggregates(channelStats);
@@ -90,11 +90,11 @@ namespace ClientPortal.Web.Controllers
             return json;
         }
 
-        public FileResult ChannelPerfExport()
+        public FileResult ChannelPerfExport(int numweeks = 8)
         {
             var userInfo = GetUserInfo();
 
-            var stats = cpRepo.GetChannelStats(userInfo.SearchProfile.SearchProfileId, userInfo.Search_StartDayOfWeek, userInfo.UseAnalytics, !userInfo.Search_UseYesterdayAsLatest, true, userInfo.ShowSearchChannels);
+            var stats = cpRepo.GetChannelStats(userInfo.SearchProfile.SearchProfileId, numweeks, userInfo.Search_StartDayOfWeek, userInfo.UseAnalytics, !userInfo.Search_UseYesterdayAsLatest, true, userInfo.ShowSearchChannels);
             var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(stats);
 
             string filename = "ChannelPerformance" + ControllerHelpers.DateStamp() + ".csv";

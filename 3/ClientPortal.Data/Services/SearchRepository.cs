@@ -140,7 +140,7 @@ namespace ClientPortal.Data.Services
             //else if (today.Month == 12)
             //    start = new DateTime(today.Year, 1, 1);
             else
-                start = today.AddMonths(-11); // Otherwise set the start date to 11 months ago
+                start = today.AddMonths(-6); // Otherwise set the start date to 6 months ago
 
             // Now move start date back to the closest startDayOfWeek
             while (start.DayOfWeek != startDayOfWeek)
@@ -264,6 +264,19 @@ namespace ClientPortal.Data.Services
         }
 
         // (used for Campaign Weekly report)
+        public IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int searchProfileId, int numWeeks, bool includeToday, DayOfWeek startDayOfWeek, bool useAnalytics)
+        {
+            DateTime start = DateTime.Today.AddDays(-7 * numWeeks + 6); // Set start date to numWeeks weeks ago, plus 6
+            // Now move start date back to the closest startDayOfWeek
+            while (start.DayOfWeek != startDayOfWeek)
+                start = start.AddDays(-1);
+
+            DateTime end = DateTime.Today;
+            if (!includeToday)
+                end = end.AddDays(-1);
+
+            return GetCampaignWeekStats2(searchProfileId, start, end, startDayOfWeek, useAnalytics);
+        }
         public IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int searchProfileId, DateTime startDate, DateTime endDate, DayOfWeek startDayOfWeek, bool useAnalytics)
         {
             var weeks = CalenderWeek.Generate(startDate, endDate, startDayOfWeek);
@@ -395,8 +408,8 @@ namespace ClientPortal.Data.Services
             return stats.OrderBy(s => s.StartDate);
         }
 
-        // Get a SearchStat summary for each channel (Google/Bing)... and, if includeAccountBreakdown, each SearchAccount
-        public IQueryable<SearchStat> GetChannelStats(int searchProfileId, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday, bool includeAccountBreakdown, bool includeSearchChannels)
+        // Get a SearchStat summary for each week for each channel (Google/Bing)... and, if includeAccountBreakdown, each SearchAccount
+        public IQueryable<SearchStat> GetChannelStats(int searchProfileId, int? numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday, bool includeAccountBreakdown, bool includeSearchChannels)
         {
             var searchProfile = GetSearchProfile(searchProfileId);
 
@@ -410,8 +423,8 @@ namespace ClientPortal.Data.Services
             IQueryable<SearchStat> stats = new List<SearchStat>().AsQueryable();
             if (includeMainChannels)
             {
-                var googleStats = GetWeekStats(null, searchProfileId, "Google", null, null, null, null, startDayOfWeek, useAnalytics, includeToday);
-                var bingStats = GetWeekStats(null, searchProfileId, "Bing", null, null, null, null, startDayOfWeek, useAnalytics, includeToday);
+                var googleStats = GetWeekStats(null, searchProfileId, "Google", null, null, null, numWeeks, startDayOfWeek, useAnalytics, includeToday);
+                var bingStats = GetWeekStats(null, searchProfileId, "Bing", null, null, null, numWeeks, startDayOfWeek, useAnalytics, includeToday);
                 stats = googleStats.Concat(bingStats).AsQueryable();
             }
             if (includeAccountBreakdown)
@@ -424,7 +437,7 @@ namespace ClientPortal.Data.Services
                     {
                         foreach (var searchAccount in searchAccounts)
                         {
-                            var accountStats = GetWeekStats(null, searchProfileId, channel, searchAccount.SearchAccountId, null, null, null, startDayOfWeek, useAnalytics, includeToday);
+                            var accountStats = GetWeekStats(null, searchProfileId, channel, searchAccount.SearchAccountId, null, null, numWeeks, startDayOfWeek, useAnalytics, includeToday);
                             stats = stats.Concat(accountStats);
                         }
                     }
@@ -437,7 +450,7 @@ namespace ClientPortal.Data.Services
                     if (!String.IsNullOrWhiteSpace(searchChannel.Device) && useAnalytics)
                         continue; // specifying device and useAnalytics not supported; analytics summaries are not broken down by device
 
-                    var channelStats = GetWeekStats(null, searchProfileId, null, null, searchChannel.Prefix, searchChannel.Device, null, startDayOfWeek, useAnalytics, includeToday);
+                    var channelStats = GetWeekStats(null, searchProfileId, null, null, searchChannel.Prefix, searchChannel.Device, numWeeks, startDayOfWeek, useAnalytics, includeToday);
                     if (channelStats.Count() > 0)
                         stats = stats.Concat(channelStats);
                 }
