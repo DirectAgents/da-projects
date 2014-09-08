@@ -10,6 +10,7 @@ using System.Configuration;
 using System.Linq;
 using System.Globalization;
 using System.Security.Cryptography.X509Certificates;
+using Google.Apis.Auth.OAuth2;
 
 namespace CakeExtracter.Etl.SearchMarketing.Extracters
 {
@@ -35,17 +36,26 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
 
         private IEnumerable<AnalyticsRow> EnumerateAnalyticsRows(string profileId)
         {
+            string serviceEmail = ConfigurationManager.AppSettings["GoogleAPI_ServiceEmail"];
             string certPath = ConfigurationManager.AppSettings["GoogleAPI_Certificate"];
             var certificate = new X509Certificate2(certPath, "notasecret", X509KeyStorageFlags.Exportable);
-            var provider = new AssertionFlowClient(GoogleAuthenticationServer.Description, certificate)
-            {
-                ServiceAccountId = ConfigurationManager.AppSettings["GoogleAPI_ServiceEmail"],
-                Scope = AnalyticsService.Scopes.AnalyticsReadonly.GetStringValue()
-            };
-            var auth = new OAuth2Authenticator<AssertionFlowClient>(provider, AssertionFlowClient.GetState);
+            //var provider = new AssertionFlowClient(GoogleAuthenticationServer.Description, certificate)
+            //{
+            //    ServiceAccountId = serviceEmail,
+            //    //Scope = AnalyticsService.Scopes.AnalyticsReadonly.GetStringValue()
+            //    Scope = AnalyticsService.Scopes.AnalyticsReadonly.ToString().ToLower()
+            //};
+            //var auth = new OAuth2Authenticator<AssertionFlowClient>(provider, AssertionFlowClient.GetState);
+            var credential = new ServiceAccountCredential(
+                new ServiceAccountCredential.Initializer(serviceEmail)
+                {
+                    Scopes = new[] { AnalyticsService.Scope.AnalyticsReadonly }
+                }.FromCertificate(certificate));
+
             var service = new AnalyticsService(new BaseClientService.Initializer()
             {
-                Authenticator = auth,
+                //Authenticator = auth,
+                HttpClientInitializer = credential,
                 ApplicationName = "DA Client Portal"
             });
             string startDate = this.startDate.ToString("yyyy-MM-dd");
