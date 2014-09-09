@@ -1,7 +1,6 @@
 ﻿using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.Loaders;
-using System;
 using System.ComponentModel.Composition;
 
 namespace CakeExtracter.Commands

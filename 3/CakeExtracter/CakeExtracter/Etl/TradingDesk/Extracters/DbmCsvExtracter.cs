@@ -11,6 +11,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     public class DbmCsvExtracter : Extracter<DbmRowBase>
     {
         private readonly string csvFilePath;
+        private readonly StreamReader streamReader;
+        // if streamReader is not null, use it. otherwise use csvFilePath.
+
         private readonly bool wantCreativeDailySummaries;
 
         public DbmCsvExtracter(string csvFilePath, bool wantCreativeDailySummaries)
@@ -19,9 +22,15 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             this.wantCreativeDailySummaries = wantCreativeDailySummaries;
         }
 
+        public DbmCsvExtracter(StreamReader streamReader, bool wantCreativeDailySummaries)
+        {
+            this.streamReader = streamReader;
+            this.wantCreativeDailySummaries = wantCreativeDailySummaries;
+        }
+
         protected override void Extract()
         {
-            Logger.Info("Extracting DailySummaries from {0}", csvFilePath);
+            Logger.Info("Extracting DailySummaries from {0}", csvFilePath ?? "StreamReader");
             var items = EnumerateRows();
             Add(items);
             End();
@@ -29,25 +38,39 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         private IEnumerable<DbmRowBase> EnumerateRows()
         {
-            using (StreamReader reader = File.OpenText(csvFilePath))
+            if (streamReader != null)
             {
-                using (CsvReader csv = new CsvReader(reader))
+                foreach (var row in EnumerateRowsInner(streamReader))
+                    yield return row;
+            }
+            else
+            {
+                using (StreamReader reader = File.OpenText(csvFilePath))
                 {
-                    if (wantCreativeDailySummaries)
+                    foreach (var row in EnumerateRowsInner(reader))
+                        yield return row;
+                }
+            }
+        }
+
+        private IEnumerable<DbmRowBase> EnumerateRowsInner(StreamReader reader)
+        {
+            using (CsvReader csv = new CsvReader(reader))
+            {
+                if (wantCreativeDailySummaries)
+                {
+                    var csvRows = csv.GetRecords<DbmRowWithCreative>().ToList();
+                    for (int i = 0; i < csvRows.Count && !String.IsNullOrWhiteSpace(csvRows[i].InsertionOrder); i++)
                     {
-                        var csvRows = csv.GetRecords<DbmRowWithCreative>().ToList();
-                        for (int i = 0; i < csvRows.Count && !String.IsNullOrWhiteSpace(csvRows[i].InsertionOrder); i++)
-                        {
-                            yield return csvRows[i];
-                        }
+                        yield return csvRows[i];
                     }
-                    else
+                }
+                else
+                {
+                    var csvRows = csv.GetRecords<DbmRow>().ToList();
+                    for (int i = 0; i < csvRows.Count && !String.IsNullOrWhiteSpace(csvRows[i].InsertionOrder); i++)
                     {
-                        var csvRows = csv.GetRecords<DbmRow>().ToList();
-                        for (int i = 0; i < csvRows.Count && !String.IsNullOrWhiteSpace(csvRows[i].InsertionOrder); i++)
-                        {
-                            yield return csvRows[i];
-                        }
+                        yield return csvRows[i];
                     }
                 }
             }
@@ -63,15 +86,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         [CsvField(Name = "Insertion Order ID")]
         public string InsertionOrderID { get; set; } // int
 
-        [CsvField(Name = "Advertiser Currency")]
-        public string AdvertiserCurrency { get; set; }
-
         public string Impressions { get; set; } // int
         public string Clicks { get; set; } // int
         [CsvField(Name = "Total Conversions")]
         public string TotalConversions { get; set; } // int
 
-        [CsvField(Name = "Revenue (Adv Currency)")]
+        [CsvField(Name = "Revenue (USD)")]
         public string Revenue { get; set; } // decimal
     }
 

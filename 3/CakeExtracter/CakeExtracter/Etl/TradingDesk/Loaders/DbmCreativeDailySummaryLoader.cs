@@ -35,7 +35,6 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                     {
                         Date = date,
                         CreativeID = creativeID,
-                        AdvertiserCurrency = item.AdvertiserCurrency,
                         Impressions = int.Parse(item.Impressions),
                         Clicks = int.Parse(item.Clicks),
                         Conversions = (int)decimal.Parse(item.TotalConversions),

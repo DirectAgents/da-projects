@@ -10,6 +10,8 @@ using System;
 using System.ComponentModel.Composition;
 using System.Configuration;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 
 namespace CakeExtracter.Commands
@@ -82,11 +84,32 @@ namespace CakeExtracter.Commands
                 //string bucketName = "gdbm-479-320231"; //"uspto-pair"; (ok) //"gdbm-public"; *forbidden*
                 //string bucketName = "151075984680687222131403708138869_report";
                 //string bucketName = "099700104058925463911409777269032_report";
-                string bucketName = "151075984680687222131409855651304_report"; // test123 (2:34)
+                //string bucketName = "151075984680687222131409855651304_report"; // test123 (2:34)
                 //string bucketName = "151075984680687222131409861541653_report"; // ui_created
-                //var request = service.Objects.List(bucketName);
-                var request = service.Buckets.Get(bucketName);
+                string bucketName = "151075984680687222131410283081521_report"; // Betterment_creative
+
+                //var request = service.Buckets.Get(bucketName);
+                var request = service.Objects.List(bucketName);
                 var results = request.Execute();
+
+                string dateString = DateTime.Today.ToString("yyyy-MM-dd");
+                var reportObject = results.Items.Where(i => i.Name.Contains(dateString)).FirstOrDefault();
+
+                //var x = service.Objects.Get(bucketName, reportObject.Name).Execute();
+                HttpWebRequest req = createRequest(reportObject.MediaLink, credential);
+                HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
+
+                // Handle redirects manully to ensure that the Authorization header is present if
+                // our request is redirected.
+                if (resp.StatusCode == HttpStatusCode.TemporaryRedirect)
+                {
+                    req = createRequest(resp.Headers["Location"], credential);
+                    resp = (HttpWebResponse)req.GetResponse();
+                }
+
+                Stream stream = resp.GetResponseStream();
+                StreamReader reader = new StreamReader(stream);
+                String data = reader.ReadToEnd();
 
                 //var results = service.Objects.Get(bucketName, bucketObjectName).Fetch();
                 //HttpWebRequest request = createRequest(results.Media.Link, auth);
@@ -97,6 +120,19 @@ namespace CakeExtracter.Commands
                 Console.WriteLine("Unexpected exception caught: " + e.Message);
                 Console.Write(e.StackTrace);
             }
+        }
+
+        /// <summary>
+        /// Generate a HttpWebRequest for the given URL with the appropriate OAuth2 authorization
+        /// header applied.  The HttpWebRequest object returned has its AllowAutoRedirect option
+        /// disabled to allow us to manually handle redirects.
+        /// </summary>
+        private static HttpWebRequest createRequest(string url, ServiceAccountCredential credential)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Headers.Add("Authorization", "Bearer " + credential.Token.AccessToken);
+            request.AllowAutoRedirect = false;
+            return request;
         }
 
     }

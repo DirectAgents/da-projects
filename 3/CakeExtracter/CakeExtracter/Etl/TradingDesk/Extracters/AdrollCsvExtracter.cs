@@ -21,7 +21,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            Logger.Info("Extracting DailySummaries from {0}", csvFilePath);
+            Logger.Info("Extracting DailySummaries from {0}", csvFilePath ?? "StreamReader");
             var items = EnumerateRows();
             Add(items);
             End();
