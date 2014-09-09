@@ -6,3 +6,4 @@ m.name as [Media Buyer],
 '' as [Correct Media Buyer]
 FROM affiliate a JOIN mediabuyer m on m.id=a.media_buyer_id
 WHERE m.id not in (9,33,50,22,27,10,1,15,44,11,45,3,38,52,41,55)
+and a.affid in (select distinct affid from item)
