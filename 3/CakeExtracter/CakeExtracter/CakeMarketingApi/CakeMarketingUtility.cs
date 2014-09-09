@@ -86,6 +86,11 @@ namespace CakeExtracter.CakeMarketingApi
                 advertiser_id = advertiserId
             };
             var response = client.OfferSummaries(request);
+            if (response == null || response.Offers == null)
+            {
+                Logger.Info("Unable to retrieve offers summaries. Trying again...");
+                response = client.OfferSummaries(request);
+            }
             return response.Offers;
         }
 
