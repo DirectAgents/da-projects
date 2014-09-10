@@ -28,12 +28,17 @@ namespace ClientPortal.Data.Entities.TD
             modelBuilder.Entity<DBMDailySummary>()
                 .HasKey(ds => new { ds.Date, ds.InsertionOrderID })
                 .ToTable("DailySummary", dbmSchema);
+            modelBuilder.Entity<DBMDailySummary>()
+                .Property(ds => ds.Revenue).HasPrecision(18, 6);
             modelBuilder.Entity<CreativeDailySummary>()
                 .HasKey(cds => new { cds.Date, cds.CreativeID })
                 .ToTable("CreativeDailySummary", dbmSchema);
+            modelBuilder.Entity<CreativeDailySummary>()
+                .Property(cds => cds.Revenue).HasPrecision(18, 6);
 
             //Trading Desk - general
-            modelBuilder.Entity<TradingDeskAccount>().Property(m => m.FixedMetricValue).HasPrecision(18, 6);
+            modelBuilder.Entity<TradingDeskAccount>()
+                .Property(m => m.FixedMetricValue).HasPrecision(18, 6);
         }
 
         public DbSet<AdRollProfile> AdRollProfiles { get; set; }

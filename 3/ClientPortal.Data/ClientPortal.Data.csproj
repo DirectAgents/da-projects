@@ -320,6 +320,10 @@
     <Compile Include="Migrations\201408141549089_Mig_ManagementFeePct.Designer.cs">
       <DependentUpon>201408141549089_Mig_ManagementFeePct.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201409092206193_Mig_ModDbmDailySummaries.cs" />
+    <Compile Include="Migrations\201409092206193_Mig_ModDbmDailySummaries.Designer.cs">
+      <DependentUpon>201409092206193_Mig_ModDbmDailySummaries.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ClientPortalRepository.cs" />
@@ -392,6 +396,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201408141549089_Mig_ManagementFeePct.resx">
       <DependentUpon>201408141549089_Mig_ManagementFeePct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201409092206193_Mig_ModDbmDailySummaries.resx">
+      <DependentUpon>201409092206193_Mig_ModDbmDailySummaries.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

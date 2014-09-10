@@ -40,15 +40,25 @@ namespace ClientPortal.Data.Services
 
         private IEnumerable<StatsSummary> GetDailyStatsSummariesDBM(DateTime? start, DateTime? end, int insertionOrderID)
         {
-            var dailySummaries = GetDailySummaries(start, end, insertionOrderID);
-            var statsSummaries = dailySummaries.Select(s => new StatsSummary
-            {
-                Date = s.Date,
-                Impressions = s.Impressions,
-                Clicks = s.Clicks,
-                Conversions = s.Conversions,
-                Spend = s.Revenue
-            }).ToList();
+            //var dailySummaries = GetDailySummaries(start, end, insertionOrderID);
+            //var statsSummaries = dailySummaries.Select(s => new StatsSummary
+            //{
+            //    Date = s.Date,
+            //    Impressions = s.Impressions,
+            //    Clicks = s.Clicks,
+            //    Conversions = s.Conversions,
+            //    Spend = s.Revenue
+            //}).ToList();
+            var dailySummaries = GetCreativeDailySummaries(start, end, insertionOrderID);
+            var statsSummaries = dailySummaries.GroupBy(cds => cds.Date).Select(g =>
+                new StatsSummary
+                {
+                    Date = g.Key,
+                    Impressions = g.Sum(s => s.Impressions),
+                    Clicks = g.Sum(s => s.Clicks),
+                    Conversions = g.Sum(s => s.Conversions),
+                    Spend = g.Sum(s => s.Revenue)
+                }).ToList();
             return statsSummaries;
         }
 

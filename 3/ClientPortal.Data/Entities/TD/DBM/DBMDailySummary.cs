@@ -8,7 +8,6 @@ namespace ClientPortal.Data.Entities.TD.DBM
         public int InsertionOrderID { get; set; }
         public virtual InsertionOrder InsertionOrder { get; set; }
 
-        public string AdvertiserCurrency { get; set; }
         public int Impressions { get; set; }
         public int Clicks { get; set; }
         public int Conversions { get; set; }
