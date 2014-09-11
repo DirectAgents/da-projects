@@ -86,7 +86,8 @@
 
                     columns.push({
                         field: col,
-                        format: (isDateCol ? '{0:n2}%' : '{0}'),
+                        @*format: (isDateCol ? '{0:n2}' : '{0}'),*@
+                        attributes: { style: 'text-align: center' },
                         title: col 
                                 // Substitute formatting tokens
                                 .replace(/_space_/g, ' ') // space

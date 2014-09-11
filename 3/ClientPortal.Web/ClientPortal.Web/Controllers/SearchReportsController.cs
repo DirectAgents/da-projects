@@ -87,6 +87,7 @@ namespace ClientPortal.Web.Controllers
                 kgrid.aggregates = Aggregates(channelStats);
 
             var json = Json(kgrid);
+//            var json = Json(kgrid, JsonRequestBehavior.AllowGet); // testing bug across new year's (comment out HttpPost decorator)
             return json;
         }
 
@@ -193,7 +194,7 @@ namespace ClientPortal.Web.Controllers
             foreach (var group in groups)
             {
                 var dataRow = dataTable.NewRow();
-                var showing = group.All(c => c.ROAS == 0) ? "CPO" : "ROAS";
+                var showing = group.All(c => c.ROAS == 0) ? "CPO($)" : "ROAS(%)";
                 var isActive = true; // TODO: make real
 
                 dataRow.SetField("colChannel", group.Key.Channel);
@@ -204,7 +205,7 @@ namespace ClientPortal.Web.Controllers
                 foreach (var item in group)
                 {
                     var columnName = strinfifyDates(item.StartDate, item.EndDate);
-                    var columnValue = (showing == "ROAS") ? item.ROAS: item.CPO;
+                    var columnValue = (showing == "ROAS(%)") ? item.ROAS: item.CPO;
                     dataRow.SetField(columnName, columnValue);
                 }
 
