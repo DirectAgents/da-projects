@@ -15,12 +15,14 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
         private readonly string clientCustomerId;
         private readonly DateTime beginDate;
         private readonly DateTime endDate;
+        private readonly bool includeBreakdown;
 
-        public AdWordsApiExtracter(string clientCustomerId, CakeExtracter.Common.DateRange dateRange)
+        public AdWordsApiExtracter(string clientCustomerId, CakeExtracter.Common.DateRange dateRange, bool includeBreakdown = false)
         {
             this.clientCustomerId = clientCustomerId;
             this.beginDate = dateRange.FromDate;
             this.endDate = dateRange.ToDate;
+            this.includeBreakdown = includeBreakdown;
         }
 
         protected override void Extract()
@@ -36,7 +38,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
 
         private void DownloadAdWordsXmlReport()
         {
-            var fieldsArray = new string[]
+            var fieldsList = new List<string>(new string[]
             {
                 "AccountDescriptiveName",
                 "AccountCurrencyCode",
@@ -46,22 +48,26 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 "CampaignName",
                 "CampaignStatus",
                 "Date",
-                "AdNetworkType1",
-                "Device",
-                "ClickType",
                 "Impressions",
+
                 "Clicks",
                 "Conversions",
                 "Cost",
                 "Ctr",
-                "ConversionValue",
-            };
+                "ConversionValue"
+            });
+            if (includeBreakdown)
+            {
+                fieldsList.Add("AdNetworkType1");
+                fieldsList.Add("Device");
+                fieldsList.Add("ClickType");
+            }
 
             string duringString = string.Format("DURING {0},{1}", this.beginDate.ToString("yyyyMMdd"), this.endDate.ToString("yyyyMMdd"));
 
             string queryFormat = "SELECT {0} FROM CAMPAIGN_PERFORMANCE_REPORT WHERE Impressions > 0 AND CampaignStatus IN [ENABLED, PAUSED] {1}";
 
-            string query = string.Format(queryFormat, string.Join(",", fieldsArray), duringString);
+            string query = string.Format(queryFormat, string.Join(",", fieldsList), duringString);
 
             try
             {

@@ -10,10 +10,12 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
     {
         private const string googleChannel = "Google";
         private readonly int searchAccountId;
+        private readonly bool includeBreakdown;
 
-        public AdWordsApiLoader(int searchAccountId)
+        public AdWordsApiLoader(int searchAccountId, bool includeBreakdown = false)
         {
             this.searchAccountId = searchAccountId;
+            this.includeBreakdown = includeBreakdown;
         }
 
         protected override int Load(List<Dictionary<string, string>> items)
@@ -43,18 +45,10 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     if (searchAccount.ExternalId != customerId)
                         searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == googleChannel);
 
-                    var pk1 = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId;
-                    var pk2 = DateTime.Parse(item["day"].Replace('-', '/'));
-                    var pk3 = item["network"].Substring(0, 1);
-                    var pk4 = item["device"].Substring(0, 1);
-                    var pk5 = item["clickType"].Substring(0, 1);
-                    var source = new SearchDailySummary2
+                    var sds = new SearchDailySummary
                     {
-                        SearchCampaignId = pk1,
-                        Date = pk2,
-                        Network = pk3,
-                        Device = pk4,
-                        ClickType = pk5,
+                        SearchCampaignId = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId,
+                        Date = DateTime.Parse(item["day"].Replace('-', '/')),
                         Revenue = decimal.Parse(item["totalConvValue"]),
                         Cost = decimal.Parse(item["cost"]) / 1000000, // convert from mincrons to dollars
                         Orders = int.Parse(item["convertedClicks"]),
@@ -63,31 +57,73 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         CurrencyId = (!item.Keys.Contains("currency") || item["currency"] == "USD") ? 1 : -1 // NOTE: non USD (if exists) -1 for now
                     };
 
-                    // HACK: ignoring impressions for rows that do not have H as click type
-                    if (source.ClickType != "H")
-                    {
-                        source.Impressions = 0;
-                    }
-
-                    var target = db.Set<SearchDailySummary2>().Find(pk1, pk2, pk3, pk4, pk5);
-                    if (target == null)
-                    {
-                        db.SearchDailySummary2.Add(source);
-                        addedCount++;
-                    }
+                    bool added;
+                    if (includeBreakdown)
+                        added = UpsertSearchDailySummary2(db, sds, item["network"].Substring(0, 1), item["device"].Substring(0, 1), item["clickType"].Substring(0, 1));
                     else
-                    {
-                        db.Entry(target).State = EntityState.Detached;
-                        target = AutoMapper.Mapper.Map(source, target);
-                        db.Entry(target).State = EntityState.Modified;
+                        added = UpsertSearchDailySummary(db, sds);
+
+                    if (added)
+                        addedCount++;
+                    else
                         updatedCount++;
-                    }
+
                     itemCount++;
                 }
                 Logger.Info("Saving {0} SearchDailySummaries ({1} updates, {2} additions)", itemCount, updatedCount, addedCount);
                 db.SaveChanges();
             }
             return itemCount;
+        }
+
+        // return true if added; false if updated
+        private bool UpsertSearchDailySummary(ClientPortalContext db, SearchDailySummary sds)
+        {
+            var target = db.Set<SearchDailySummary>().Find(sds.SearchCampaignId, sds.Date);
+            if (target == null)
+            {
+                db.SearchDailySummaries.Add(sds);
+                return true;
+            }
+            else
+            {
+                db.Entry(target).State = EntityState.Detached;
+                target = AutoMapper.Mapper.Map(sds, target);
+                db.Entry(target).State = EntityState.Modified;
+                return false;
+            }
+        }
+        private bool UpsertSearchDailySummary2(ClientPortalContext db, SearchDailySummary sds, string network, string device, string clickType)
+        {
+            var sds2 = new SearchDailySummary2
+            {
+                SearchCampaignId = sds.SearchCampaignId,
+                Date = sds.Date,
+                Network = network,
+                Device = device,
+                ClickType = clickType,
+                Revenue = sds.Revenue,
+                Cost = sds.Cost,
+                Orders = sds.Orders,
+                Clicks = sds.Clicks,
+                // HACK: ignoring impressions for rows that do not have H as click type
+                Impressions = (clickType == "H") ? sds.Impressions : 0,
+                CurrencyId = sds.CurrencyId
+            };
+
+            var target = db.Set<SearchDailySummary2>().Find(sds2.SearchCampaignId, sds2.Date, sds2.Network, sds2.Device, sds2.ClickType);
+            if (target == null)
+            {
+                db.SearchDailySummary2.Add(sds2);
+                return true;
+            }
+            else
+            {
+                db.Entry(target).State = EntityState.Detached;
+                target = AutoMapper.Mapper.Map(sds2, target);
+                db.Entry(target).State = EntityState.Modified;
+                return false;
+            }
         }
 
         private void AddUpdateDependentSearchAccounts(List<Dictionary<string, string>> items)

@@ -16,6 +16,7 @@ namespace CakeExtracter.Commands
         public string ClientId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        //public bool IncludeBreakdown { get; set; } // breakdown == network/device/clicktype (SearchDailySummary2's)
 
         public override void ResetProperties()
         {
@@ -23,6 +24,7 @@ namespace CakeExtracter.Commands
             ClientId = null;
             StartDate = null;
             EndDate = null;
+            //IncludeBreakdown = false;
         }
 
         public SynchSearchDailySummariesAdWordsCommand()
@@ -32,6 +34,7 @@ namespace CakeExtracter.Commands
             HasOption<string>("v|clientId=", "Client Id", c => ClientId = c);
             HasOption<DateTime>("s|startDate=", "Start Date (default is one month ago)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
+            //HasOption("b|includeBreakdown=", "Include Breakdown (default is false)", c => IncludeBreakdown = bool.Parse(c));
         }
 
         public override int Execute(string[] remainingArguments)
@@ -40,10 +43,11 @@ namespace CakeExtracter.Commands
             var yesterday = DateTime.Today.AddDays(-1);
             var dateRange = new DateRange(StartDate ?? oneMonthAgo, EndDate ?? yesterday);
 
+            bool IncludeBreakdown = true;
             foreach (var searchAccount in GetSearchAccounts())
             {
-                var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, dateRange);
-                var loader = new AdWordsApiLoader(searchAccount.SearchAccountId);
+                var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, dateRange, IncludeBreakdown);
+                var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, IncludeBreakdown);
                 var extracterThread = extracter.Start();
                 var loaderThread = loader.Start(extracter);
                 extracterThread.Join();
