@@ -80,8 +80,9 @@ namespace ClientPortal.Web.Models
 
         public bool ShowSearchChannels
         {
-            get { return (Advertiser == null) ? false : Advertiser.ShowSearchChannels; }
+            get { return (SearchProfile == null) ? false : SearchProfile.ShowSearchChannels; }
         }
+
 
         public bool UseAnalytics
         {

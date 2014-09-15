@@ -25,6 +25,7 @@ namespace ClientPortal.Data.Contexts
         public int SearchProfileId { get; set; }
         public string SearchProfileName { get; set; }
         public int StartDayOfWeek { get; set; }
+        public bool ShowSearchChannels { get; set; }
     
         public virtual ICollection<UserProfile> UserProfiles { get; set; }
         public virtual ICollection<SearchAccount> SearchAccounts { get; set; }

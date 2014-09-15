@@ -625,6 +625,7 @@
           <Property Name="SearchProfileId" Type="int" Nullable="false" />
           <Property Name="SearchProfileName" Type="nvarchar(max)" />
           <Property Name="StartDayOfWeek" Type="int" Nullable="false" />
+          <Property Name="ShowSearchChannels" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchProfileContact">
           <Key>
@@ -2197,6 +2198,7 @@
           <Property Type="Int32" Name="StartDayOfWeek" Nullable="false" DefaultValue="1" />
           <NavigationProperty Name="SearchAccounts" Relationship="ClientPortalModel.FK_SearchAccount_SearchProfile" FromRole="SearchProfile" ToRole="SearchAccount" />
           <NavigationProperty Name="SearchProfileContacts" Relationship="ClientPortalModel.FK_SearchProfileContact_SearchProfile" FromRole="SearchProfile" ToRole="SearchProfileContact" />
+          <Property Type="Boolean" Name="ShowSearchChannels" Nullable="false" />
         </EntityType>
         <Association Name="FK_UserProfile_SearchProfile">
           <End Type="ClientPortalModel.SearchProfile" Role="SearchProfile" Multiplicity="0..1" />
@@ -2745,6 +2747,7 @@
           <EntitySetMapping Name="SearchProfiles">
             <EntityTypeMapping TypeName="ClientPortalModel.SearchProfile">
               <MappingFragment StoreEntitySet="SearchProfile">
+                <ScalarProperty Name="ShowSearchChannels" ColumnName="ShowSearchChannels" />
                 <ScalarProperty Name="StartDayOfWeek" ColumnName="StartDayOfWeek" />
                 <ScalarProperty Name="SearchProfileName" ColumnName="SearchProfileName" />
                 <ScalarProperty Name="SearchProfileId" ColumnName="SearchProfileId" />
