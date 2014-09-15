@@ -1,0 +1,32 @@
+﻿@model ClientPortal.Data.Contexts.SearchProfile
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("searchProfilesTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("searchProfilesTab", null, "Post");
+}
+
+@using (Ajax.BeginForm(ajaxOpts_Post))
+{
+    @Html.ValidationSummary()
+    <fieldset>
+        <legend>Edit Search Profile</legend>
+        @Html.HiddenFor(m => m.SearchProfileId)
+        @Html.HiddenFor(m => m.SearchProfileName)
+        <table>
+            <tr>
+                <td>@Html.LabelFor(m => m.SearchProfileName, "Profile Name:")</td>
+                <td>@Html.DisplayFor(m => m.SearchProfileName)</td>
+            </tr>
+@*            <tr>
+                <td>@Html.LabelFor(m => m.StartDayOfWeek)</td>
+                <td>@Html.EditorFor(m => m.StartDayOfWeek)</td>
+            </tr>*@
+            <tr>
+                <td>@Html.LabelFor(m => m.ShowSearchChannels)</td>
+                <td>@Html.EditorFor(m => m.ShowSearchChannels)</td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" value="Save" />
+            &nbsp;@Ajax.ActionLink("cancel", "SearchProfiles", ajaxOptions)
+    </fieldset>
+}

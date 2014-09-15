@@ -9,12 +9,14 @@
 
 <table border="1">
     <tr>
+        <th></th>
         <th>SearchProfile</th>
         <th>Login</th>
     </tr>
 @foreach (var profile in Model)
 {
     <tr>
+        <td>@Ajax.ActionLink("Edit", "EditProfile", new { spId = profile.SearchProfileId }, ajaxOptions)</td>
         <td>@profile.SearchProfileName</td>
         <td>
             @if (profile.UserProfiles.Count > 0) {

@@ -2,6 +2,7 @@
 using ClientPortal.Data.DTOs;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.Linq;
 
@@ -19,6 +20,12 @@ namespace ClientPortal.Data.Services
         {
             var searchProfile = context.SearchProfiles.Find(searchProfileId);
             return searchProfile;
+        }
+        public void SaveSearchProfile(SearchProfile searchProfile)
+        {
+            var entry = context.Entry(searchProfile);
+            entry.State = EntityState.Modified;
+            context.SaveChanges();
         }
 
         public SearchStat GetSearchStats(int? advertiserId, DateTime? start, DateTime? end, bool includeToday = true)
@@ -148,8 +155,10 @@ namespace ClientPortal.Data.Services
 
             var latestDate = includeToday ? today : today.AddDays(-1);
 
+            DateTime? end = null;
+            // TODO: Test with start-end == 12/1/13-1/31/13
             var daySums =
-                GetSearchDailySummaries(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix, device, start, null, includeToday)
+                GetSearchDailySummaries(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix, device, start, end, includeToday)
 
                     // Group by the Date
                     .GroupBy(s => s.Date)

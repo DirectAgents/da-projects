@@ -44,6 +44,26 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return RedirectToAction("SearchProfiles");
         }
 
+        public ActionResult EditProfile(int spId)
+        {
+            var searchProfile = cpRepo.GetSearchProfile(spId);
+            if (searchProfile == null)
+                return HttpNotFound();
+            return View(searchProfile);
+        }
+
+        [HttpPost]
+        public ActionResult EditProfile(SearchProfile profile)
+        {
+            if (ModelState.IsValid)
+            {
+                cpRepo.SaveSearchProfile(profile);
+                return RedirectToAction("SearchProfiles");
+            }
+            return View(profile);
+        }
+
+
         public ActionResult EditSearchProfileContacts(int spId)
         {
             var searchProfile = cpRepo.GetSearchProfile(spId);

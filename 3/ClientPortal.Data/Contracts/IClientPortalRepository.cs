@@ -104,6 +104,7 @@ namespace ClientPortal.Data.Contracts
         // Search
         IQueryable<SearchProfile> SearchProfiles();
         SearchProfile GetSearchProfile(int searchProfileId);
+        void SaveSearchProfile(SearchProfile searchProfile);
 
         SearchStat GetSearchStats(int? advertiserId, DateTime? start, DateTime? end, bool includeToday = true);
         IQueryable<SearchStat> GetWeekStats(int searchProfileId, int? numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday);
