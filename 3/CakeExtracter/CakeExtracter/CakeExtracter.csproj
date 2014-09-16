@@ -292,6 +292,7 @@
     <Compile Include="Commands\TDSynchCreativeDailySummariesDbm.cs" />
     <Compile Include="Commands\TDSynchCreativeDailySummariesDbmCsv.cs" />
     <Compile Include="Commands\TDSynchDailySummariesDbmCsv.cs" />
+    <Compile Include="Commands\TestCriteoCommand.cs" />
     <Compile Include="Commands\TestDbmCommand.cs" />
     <Compile Include="Common\CopyPropertiesUtility.cs" />
     <Compile Include="Common\EmailUtility.cs" />
@@ -449,6 +450,10 @@
     <ProjectReference Include="..\..\ClientPortal.Data\ClientPortal.Data.csproj">
       <Project>{2e621b59-9455-4fa5-b9bd-6bdc418ffbfa}</Project>
       <Name>ClientPortal.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Criteo\Criteo.csproj">
+      <Project>{d96a10b3-8700-45c1-ada4-96cac22cbd5c}</Project>
+      <Name>Criteo</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
