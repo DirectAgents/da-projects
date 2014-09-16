@@ -417,12 +417,12 @@ namespace ClientPortal.Data.Services
             return stats.OrderBy(s => s.StartDate);
         }
 
-        // Get a SearchStat summary for each week for each channel (Google/Bing)... and, if includeAccountBreakdown, each SearchAccount
+        // Get a SearchStat summary for each week for each channel (Google/Bing/etc)... and, if includeAccountBreakdown, each SearchAccount
         public IQueryable<SearchStat> GetChannelStats(int searchProfileId, int? numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday, bool includeAccountBreakdown, bool includeSearchChannels)
         {
             var searchProfile = GetSearchProfile(searchProfileId);
 
-            bool includeMainChannels = true; // (e.g. Google and Bing)
+            bool includeMainChannels = true; // (e.g. Google/Bing/etc)
             //if (includeAccountBreakdown)
             //{ // Don't include main channels if we're including a breakdown by account and there is only one main channel
             //    var mainChannels = searchProfile.SearchAccounts.Select(sa => sa.Channel).Distinct();
@@ -434,11 +434,12 @@ namespace ClientPortal.Data.Services
             {
                 var googleStats = GetWeekStats(null, searchProfileId, "Google", null, null, null, numWeeks, startDayOfWeek, useAnalytics, includeToday);
                 var bingStats = GetWeekStats(null, searchProfileId, "Bing", null, null, null, numWeeks, startDayOfWeek, useAnalytics, includeToday);
-                stats = googleStats.Concat(bingStats).AsQueryable();
+                var criteoStats = GetWeekStats(null, searchProfileId, "Criteo", null, null, null, numWeeks, startDayOfWeek, useAnalytics, includeToday);
+                stats = googleStats.Concat(bingStats).Concat(criteoStats).AsQueryable();
             }
             if (includeAccountBreakdown)
             {
-                var channels = new string[] { "Google", "Bing" };
+                var channels = new string[] { "Google", "Bing", "Criteo" };
                 foreach (var channel in channels)
                 {
                     var searchAccounts = searchProfile.SearchAccounts.Where(sa => sa.Channel == channel);

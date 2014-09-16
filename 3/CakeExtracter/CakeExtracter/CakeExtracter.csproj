@@ -288,6 +288,7 @@
     <Compile Include="Commands\SynchSearchDailySummariesAnalyticsCommand.cs" />
     <Compile Include="Commands\SynchSearchDailySummariesBingCommand.cs" />
     <Compile Include="Commands\SynchSearchDailySummariesBingCsvCommand.cs" />
+    <Compile Include="Commands\SynchSearchDailySummariesCriteoCommand.cs" />
     <Compile Include="Commands\TDSynchAdDailySummariesAdrollCsv.cs" />
     <Compile Include="Commands\TDSynchCreativeDailySummariesDbm.cs" />
     <Compile Include="Commands\TDSynchCreativeDailySummariesDbmCsv.cs" />
@@ -354,9 +355,11 @@
     <Compile Include="Etl\SearchMarketing\Extracters\AnalyticsApiExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingCsvReportExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingDailySummaryExtracter.cs" />
+    <Compile Include="Etl\SearchMarketing\Extracters\CriteoApiExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AdWordsApiLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AnalyticsApiLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\BingLoader.cs" />
+    <Compile Include="Etl\SearchMarketing\Loaders\CriteoDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollCsvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmCsvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Loaders\AdrollAdDailySummaryLoader.cs" />

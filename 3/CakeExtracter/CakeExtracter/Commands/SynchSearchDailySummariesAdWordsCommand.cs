@@ -79,7 +79,7 @@ namespace CakeExtracter.Commands
                     if (searchAccount != null)
                     {
                         if (SearchProfileId.HasValue && searchAccount.SearchProfileId != SearchProfileId.Value)
-                            Logger.Info("SearchProfileId does not match that of SearchAccount specified by ClientId");
+                            Logger.Warn("SearchProfileId does not match that of SearchAccount specified by ClientId");
 
                         searchAccounts.Add(searchAccount);
                     }
