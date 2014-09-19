@@ -16,10 +16,12 @@ namespace ClientPortal.Web.Controllers
     public class HomeController : CPController
     {
         public HomeController(IClientPortalRepository cpRepository, ITDRepository tdRepository)
+        //public HomeController(IClientPortalRepository cpRepository)
         {
             this.cpRepo = cpRepository;
             this.tdRepo = tdRepository;
         }
+        //TODO: handle the case when a non-cake user arrives... currently there's a null reference exception loading Dashboard.
 
         // after login, if no route specified
         public ActionResult Go()
