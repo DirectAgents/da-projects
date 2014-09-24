@@ -15,14 +15,14 @@
 </div>
 
 <div class="row">
-    <div class="six columns">
+    <div class="large-6 columns">
         <div id="creativeBarChartSection" class="k-content">
             <div class="chart-wrapper">
                 <div id="creativeBarChart"></div>
             </div>
         </div>
     </div>
-    <div class="six columns">
+    <div class="large-6 columns nosidepadding">
         <div id="creativeScatterChartSection" class="k-content">
             <div class="chart-wrapper">
                 <div id="creativeScatterChart"></div>
@@ -30,7 +30,7 @@
         </div>
     </div>
 </div>
-<div id="creativeGrid"></div>
+<div id="creativeGrid" style="margin-top: 10px"></div>
 <br />
 
 <script>
@@ -46,6 +46,8 @@
         datasource.bind('change', CreativeDataSourceChange);
         datasource.read();
     });
+
+    chartColors = ['#007bc3', '#76b800', '#ffae00', '#ef4c00', '#a419b7', '#430b62'];
 
     function CreativeDataSourceChange() {
         @* Determine the metric for the bar chart based on what's sorted on *@
@@ -84,7 +86,7 @@
         var maxValue = 0;
         for (var i = 0; i < 5 && i < data.length; i++) {
             chart.options.categoryAxis.categories[i] = data[i].CreativeName;
-            chart.options.series[0].data[i] = data[i][metricForBarChart];
+            chart.options.series[0].data[i] = { value: data[i][metricForBarChart], color: chartColors[i] };
             if (data[i][metricForBarChart] > maxValue)
                 maxValue = data[i][metricForBarChart];
         }
@@ -190,6 +192,7 @@
 
     function CreateCreativeCharts(datasource) {
         $("#creativeBarChart").kendoChart({
+            theme: $(document).data("kendoSkin") || "default",
             title: {
                 text: "Top Creatives"
             },
@@ -216,6 +219,7 @@
         $("#creativeScatterChart").kendoChart({
             dataSource: datasource,
             autoBind: false,
+            theme: $(document).data("kendoSkin") || "default",
             tooltip: {
                 visible: true,
                 //format: "Impressions: {1:n0} / CTR: {0:p}"

@@ -1,29 +1,58 @@
-/* Artfully masterminded by ZURB  */
+﻿.fullWidth {
+   width: 100%;
+   margin-left: auto;
+   margin-right: auto;
+   max-width: initial;
+}
 
-/* -------------------------------------------------- 
-   Table of Contents
------------------------------------------------------
-:: Shared Styles
-:: Page Name 1
-:: Page Name 2
-*/
+html {
+    font-size: 14px;
+}
 
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+}
 
-/* -----------------------------------------
-   Shared Styles
------------------------------------------ */
+table thead tr th,
+table tfoot tr th, table tfoot tr td,
+table tbody tr th, table tbody tr td,
+table tr td {
+    line-height: inherit;
+    border: none;
+}
 
+table tr th, table tr td {
+    font-size: 1rem;
+}
 
+select {
+    padding: 0;
+}
 
-/* -----------------------------------------
-   Page Name 1
------------------------------------------ */
+.button {
+    padding: 10px 20px 11px;
+    margin: 0;
+    font-weight: bold;
+}
 
+.portaltabs-v {
+    margin: 0 15px;
+}
 
+.row div.portaltabs-v dl {
+    width: 15%;
+}
 
+.portaltabs-v + .tabs-content {
+    width: 83%;
+    float: left;
+}
 
-/* -----------------------------------------
-   Page Name 2
------------------------------------------ */
+.tabs dd.active, .tabs li.active {
+    border-top: 3px solid #2ba6cb;
+    margin-top: -3px;
+}
 
-
+.tabs.vertical dd, .tabs.vertical .tab-title {
+    margin-top: 0;
+}

@@ -6,14 +6,14 @@
 @*<!--+---------+
       | Top Bar |
       +---------+-->*@
-<div class="row">
-    <div class="five columns toplogo">
+<div class="row fullWidth">
+    <div class="large-5 columns toplogo">
         <img src="~/Images/logo1a.png" />
     </div>
-    <div class="two columns topinfo">
+    <div class="large-2 columns topinfo">
         @Html.Partial("_HelloPartial", Model.HasLogo)
     </div>
-    <div class="five columns logout">
+    <div class="large-5 columns logout">
         <div style="float: right">
             @Html.Partial("_LoginPartial", Model.HasLogo)
         </div>
@@ -24,8 +24,8 @@
 @*<!--+--------------------------------------+
       | Gray Band/HTabs Background/Container | 
       +--------------------------------------+-->*@
-<div class="row">
-    <div class="twelve columns grayband">
+<div class="row fullWidth">
+    <div class="grayband">
     </div>
 </div>
 <!-- /GrayBandForHTabs -->
@@ -33,25 +33,26 @@
 @*<!--+--------------+
       | Main Content |
       +--------------+-->*@
-<div class="row" id="main">
+<div class="row fullWidth" id="main">
 
     @*<!--+---------+
           | Sidebar |
           +---------+-->*@
-    <div class="two columns portaltabs-v">
+    <div class="portaltabs-v">
 
         @*<!--+---------------+
               | Vertical Tabs |
               +---------------+-->*@
-        <dl class="vertical tabs">
-            <dd class="active"><a href="#vertical1" id="vertNav_Dashboard">Dashboard</a></dd>
-            <dd><a href="#vertical2" id="vertNav_Reports">Reports</a></dd>
-            <dd><a href="#vertical3" data-bind="click: loadMyAccount">My Account</a></dd>
-            @*<dd><a href="#vertical4" id="vertNav_Notifications">Notifications</a></dd>*@
+        <dl class="vertical tabs" data-tab>
+            <dd class="active"><a href="#dashboardTab" id="vertNav_Dashboard">Dashboard</a></dd>
+            <dd><a href="#vertical2Tab" id="vertNav_Reports">Reports</a></dd>
+            <dd><a href="#vertical3Tab" data-bind="click: loadMyAccount">My Account</a></dd>
+            @*<dd><a href="#vertical4Tab" id="vertNav_Notifications">Notifications</a></dd>*@
+            <dd style="margin-top: 20px">
+@Html.Partial("_MainContacts")
+            </dd>
         </dl>
         <!-- /VTabs -->
-
-        @Html.Partial("_MainContacts")
 
     </div>
     <!-- /Sidebar -->
@@ -64,33 +65,31 @@
         @*<!--+-----------
               | Dashboard VTab
               +------------->*@
-        <li id="vertical1Tab" class="active">
-            <div class="ten columns" id="dashboardTab">
-            </div>
+        <li id="dashboardTab" class="content active">
         </li>
         <!-- /DashboardVTabContent   -->
 
         @*<!--+----------
               | Reports VTab
               +------------>*@
-        <li id="vertical2Tab">
-            <div class="ten columns portaltabs-h">
+        <li id="vertical2Tab" class="content">
+            <div class="portaltabs-h">
 
                 @*<!--+----------------+
                       | Reports HTabs  |
                       +----------------+-->*@
-                <dl class="tabs">
-                    <dd class="active"><a href="#repOffSum" id="repNav_OffSum">Offer Summary</a></dd>
-                    <dd><a href="#repDaySum" id="repNav_DaySum">Daily Summary</a></dd>
-                    <dd><a href="#repConversions" id="repNav_Conversions">Conversion Report</a></dd>
+                <dl class="tabs" data-tab>
+                    <dd class="active"><a href="#repOffSumTab" id="repNav_OffSum">Offer Summary</a></dd>
+                    <dd><a href="#repDaySumTab" id="repNav_DaySum">Daily Summary</a></dd>
+                    <dd><a href="#repConversionsTab" id="repNav_Conversions">Conversion Report</a></dd>
                     @if (Model.ShowCPMRep)
                     {
-                        <dd><a href="#repCPM" id="repNav_CPM">CPM</a></dd>
+                        <dd><a href="#repCPMTab" id="repNav_CPM">CPM</a></dd>
                     }
-                    <dd><a href="#repAff" id="repNav_Aff">Affiliates</a></dd>
+                    <dd><a href="#repAffTab" id="repNav_Aff">Affiliates</a></dd>
                     @if (false)
                     {
-                        <dd><a href="#repScheduled" id="repNav_Scheduled">Scheduled</a></dd>
+                        <dd><a href="#repScheduledTab" id="repNav_Scheduled">Scheduled</a></dd>
                     }
                 </dl>
                 <!-- /ReportsHTabs  -->
@@ -98,21 +97,21 @@
                 @*<!--+------------------------+
                       | Reports HTabs Content  |
                       +------------------------+-->*@
-                <ul class="tabs-content">
-                    <li id="repOffSumTab" class="active">
+                <div class="tabs-content">
+                    <div id="repOffSumTab" class="content active">
                         <div id="offsumNotLoaded"></div>
-                    </li>
-                    <li id="repDaySumTab"></li>
-                    <li id="repConversionsTab"></li>
+                    </div>
+                    <div id="repDaySumTab" class="content"></div>
+                    <div id="repConversionsTab" class="content"></div>
                     @if (Model.ShowCPMRep)
                     {
-                        <li id="repCPMTab"></li>
+                        <div id="repCPMTab" class="content"></div>
                     }
-                    <li id="repAffTab"></li>
-                    <li id="repScheduledTab">
+                    <div id="repAffTab" class="content"></div>
+                    <div id="repScheduledTab" class="content">
                         <div id="divScheduledReports"></div>
-                    </li>
-                </ul>
+                    </div>
+                </div>
                 <!-- /ReportsContent  -->
 
             </div>
@@ -122,17 +121,17 @@
         @*<!--+------------
               | My Account VTab
               +-------------->*@
-        <li id="vertical3Tab">
+        <li id="vertical3Tab" class="content">
+            <div class="portaltabs-h">
 
-            @*<!--+-----------------+
-                  | My Account Tabs |
-                  +-----------------+-->*@
-            <div class="ten columns portaltabs-h">
-                <dl class="tabs">
-                    <dd class="active"><a href="#goals" id="navGoals">Goals</a></dd>
-                    @*<dd><a href="#files" id="navFiles">Files</a></dd>
-                    <dd><a href="#invoices" id="navInvoices">Invoices</a></dd>*@
-                    <dd><a href="#contact" id="navContact">Contact</a></dd>
+                @*<!--+-----------------+
+                      | My Account Tabs |
+                      +-----------------+-->*@
+                <dl class="tabs" data-tab>
+                    <dd class="active"><a href="#goalsTab" id="navGoals">Goals</a></dd>
+                    @*<dd><a href="#filesTab" id="navFiles">Files</a></dd>
+                    <dd><a href="#invoicesTab" id="navInvoices">Invoices</a></dd>*@
+                    <dd><a href="#contactTab" id="navContact">Contact</a></dd>
                 </dl>
                 <!-- /MyAccountTabs  -->
 
@@ -140,20 +139,20 @@
                 @*<!--+-------------------------+
                       | My Account Tabs Content |
                       +-------------------------+-->*@
-                <ul class="tabs-content">
-                    <li id="goalsTab" class="active">
+                <div class="tabs-content">
+                    <div id="goalsTab" class="content active">
                         <div id="divGoals"></div>
-                    </li>
-                    <li id="filesTab">
+                    </div>
+                    <div id="filesTab" class="content">
                         <div id="divFiles"></div>
-                    </li>
-                    <li id="invoicesTab">
+                    </div>
+                    <div id="invoicesTab" class="content">
                         <div id="divInvoices"></div>
-                    </li>
-                    <li id="contactTab">
+                    </div>
+                    <div id="contactTab" class="content">
                         <div id="divContact"></div>
-                    </li>
-                </ul>
+                    </div>
+                </div>
                 <!-- /MyAccountContent  -->
 
             </div>
@@ -163,7 +162,7 @@
         @*<!--+--------------
               | Notifications VTab
               +-------------- -->*@
-        <li id="vertical4Tab">
+        <li id="vertical4Tab" class="content">
             <h3>Notifications</h3>
         </li>
         <!-- /Notifications  -->
@@ -177,13 +176,13 @@
 @*<!--+---------------------+
       | Footer / Bottom Bar |
       +---------------------+-->*@
-<footer class="row">
-    <div class="twelve columns">
+<footer class="row fullWidth">
+    <div class="large-12 columns">
         <div class="row">
-            <div class="six columns">
+            <div class="large-6 columns">
                 <p>&copy; 2014 Direct Agents</p>
             </div>
-            <div class="six columns">
+            <div class="large-6 columns">
             </div>
         </div>
     </div>
@@ -194,16 +193,16 @@
 @Html.Partial("~/Views/Goals/_Infrastructure.cshtml")
 
 @section head {
-    <link href="~/Content/kendo/2012.3.1114/kendo.common.min.css" rel="stylesheet" />
-    <link href="~/Content/kendo/2012.3.1114/kendo.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2014.2.903/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2014.2.903/kendo.bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/index.css" rel="stylesheet" />
 }
 
 @section scripts {
-    <script src="~/Scripts/kendo/2012.3.1114/kendo.all.min.js"></script>
-    <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.de-DE.min.js"></script>
-    <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.en-GB.min.js"></script>
-    <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.en-AU.min.js"></script>
+    <script src="~/Scripts/kendo/2014.2.903/kendo.all.min.js"></script>
+    <script src="~/Scripts/kendo/2014.2.903/cultures/kendo.culture.de-DE.min.js"></script>
+    <script src="~/Scripts/kendo/2014.2.903/cultures/kendo.culture.en-GB.min.js"></script>
+    <script src="~/Scripts/kendo/2014.2.903/cultures/kendo.culture.en-AU.min.js"></script>
     @Html.Partial("_DateFuncs", Model.Dates)
     <script>
 

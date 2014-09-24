@@ -31,6 +31,10 @@ label.checkbox {
     font-size: 11px;
 }
 
+.k-picker-wrap > .k-input {
+    height: 28px;
+}
+
 .k-datepicker {
     width: 110px;
 }
@@ -91,6 +95,15 @@ fieldset {
     width: 100%;
 }
 
+.portaltabs-v + .tabs-content .row {
+    margin-right: 0; /* overwrites negative margin */
+}
+
+.nosidepadding {
+    padding-left: 0;
+    padding-right: 0;
+}
+
 footer.row {
     color: white;
     background-color: #25579D;
@@ -101,13 +114,13 @@ footer.row {
 
 .row div.grayband {
     background-color: #F3F3F3;
-    height: 43px;
+    height: 53px;
     border-top: 1px solid #e6e6e6;
     border-bottom: 1px solid #e6e6e6;
 }
 
 .row div.portaltabs-h {
-    margin-top: -40px;
+    margin-top: -63px;
 }
 
 .row div.portaltabs-v {
@@ -139,6 +152,10 @@ footer.row {
     background-color: #3195F3;
 }
 
+    .tabs dd.active a, .tabs li.active a {
+        font-weight: bold;
+    }
+
 .tabs.vertical dd.active, .tabs.vertical li.active {
     border-left: none;
     border-right: 4px solid #3195F3;
@@ -146,8 +163,6 @@ footer.row {
 }
 
     .tabs.vertical dd.active a, .tabs.vertical li.active a {
-        background-color: white;
-        color: black;
         font-weight: bold;
     }
 

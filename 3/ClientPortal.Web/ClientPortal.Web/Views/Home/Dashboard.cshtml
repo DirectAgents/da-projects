@@ -2,7 +2,7 @@
 
 <!-- Timeframe -->
 <div class="row">
-    <div class="twelve columns" style="top: -35px; height: 15px">
+    <div class="large-12 columns" style="top: -54px; height: 0">
         <span>Timeframe:</span>
         <select style="width: 125px" id="dash_dateRangeSel" onchange="ChangeDashboardDateRange()">
             <option value="yesterday">Yesterday</option>
@@ -25,14 +25,14 @@
 <div class="row">
 
     <!-- Column 1 -->
-    <div class="six columns">
+    <div class="large-6 columns">
         <div class="panel" style="min-height: 237px" id="panelSumRep">
             @Html.Partial("SummaryVis")
         </div>
     </div>
 
     <!-- Column 2 -->
-    <div class="six columns panel" id="panelPerfChart">
+    <div class="large-6 columns panel" id="panelPerfChart">
         <div id="perfChartOuter">
             <b>Performance</b>
             @Html.Partial("PerformanceVis")
@@ -45,8 +45,8 @@
 <div class="row">
 
     <!-- Column 1 -->
-    <div class="six columns">
-        <div class="panel" style="min-height: 263px" id="projChartOuter">
+    <div class="large-6 columns">
+        <div class="panel" style="min-height: 256px" id="projChartOuter">
             <span><b>Projection</b></span>
             <span id="projNote" style="float: right"></span>
             @Html.Partial("ProjectionVis")
@@ -55,16 +55,16 @@
     </div>
 
     <!-- Column 2 -->
-    <div class="six columns panel">
+    <div class="large-6 columns panel">
         <div class="row">
-            <div class="six columns">
+            <div class="large-6 columns">
                 <div id="heatMapOuter">
                     <b>Conversions by State</b>
                     @Html.Partial("_HeatMap")
                     <span class="subtext" style="float: left">(stats updated daily)</span>
                 </div>
             </div>
-            <div class="six columns">
+            <div class="large-6 columns">
                 <div id="topStatesOuter">
                     <b>Top <span id="topNStatesNumLabel" /> States</b>
                     <div id="divTopStates"></div>
@@ -79,8 +79,8 @@
 <div class="row">
 
     <!-- Column 1 -->
-    <div class="six columns">
-        <div class="panel" style="min-height: 283px" id="spendChartOuter">
+    <div class="large-6 columns">
+        <div class="panel" style="min-height: 276px" id="spendChartOuter">
             <b>Budget</b>
             @Html.Partial("SpendVis")
         </div>
@@ -88,16 +88,16 @@
 
     <!-- Column 2 -->
 
-    <div class="six columns panel">
+    <div class="large-6 columns panel">
         <div class="row">
-            <div class="six columns">
+            <div class="large-6 columns">
                 <div id="clicksByDeviceOuter">
                     <b>Mobile Clicks</b>
                     @Html.Partial("_ClicksByDevice")
                     <span class="subtext" style="float: left">(stats updated daily)</span>
                 </div>
             </div>
-            <div class="six columns">
+            <div class="large-6 columns">
                 <div id="clicksByDeviceChartOuter">
                     <b>Top Devices</b>
                     <div id="divClicksByDeviceChart"></div>
@@ -109,7 +109,7 @@
 
 <!-- clicks by device (todo: properly position in the dash) -->
 @*<div class="row">
-    <div class="six columns panel">
+    <div class="large-6 columns panel">
         
     </div>
 </div>*@

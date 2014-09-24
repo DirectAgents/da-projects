@@ -7,19 +7,22 @@
     .searchpanel {
         padding: 10px;
     }
+    #main {
+        line-height: 1.6;@* matches style of ul (class="tabs-content") in portals with vert nav *@
+    }
 </style>
 
 @*<!--+---------+
       | Top Bar |
       +---------+-->*@
-<div class="row" style="height: 100px">
-    <div class="five columns toplogo">
+<div class="row fullWidth" style="height: 100px">
+    <div class="large-5 columns toplogo">
         <img src="~/Images/logo1a.png" />
     </div>
-    <div class="two columns topinfo">
+    <div class="large-2 columns topinfo">
         @Html.Partial("_HelloPartial", Model.HasLogo)
     </div>
-    <div class="five columns logout">
+    <div class="large-5 columns logout">
         <div style="float: right">
             @Html.Partial("_LoginPartial", Model.HasLogo)
         </div>
@@ -30,19 +33,18 @@
 @*<!--+--------------------------------------+
       | Gray Band/HTabs Background/Container | 
       +--------------------------------------+-->*@
-<div class="row">
-    <div class="twelve columns grayband">
+<div class="row fullWidth">
+    <div class="grayband">
         @*<!--+---------------+
               | Top Tabs      |
               +---------------+-->*@
-        <dl class="tabs">
-            <dd class="active"><a href="#navDashboard" id="nav_Dashboard">Weekly</a></dd>
-            <dd><a href="#navMonthly" id="nav_Monthly">Monthly</a></dd>
-            <dd><a href="#navChannelPerf" id="nav_ChannelPerf">Channel Performance</a></dd>
-            <dd><a href="#navCampaignPerf" id="nav_CampaignPerf">Campaign Performance</a></dd>
-            @* (add a report tab) 1. Add top tab *@
-            <dd><a href="#navCampaignWeekly" id="nav_CampaignWeekly">Campaign Weekly</a></dd>
-            <dd><a href="#navContact" id="nav_Contact">Contact</a></dd>
+        <dl class="tabs" data-tab>
+            <dd class="active"><a href="#navDashboardTab" id="nav_Dashboard">Weekly</a></dd>
+            <dd><a href="#navMonthlyTab" id="nav_Monthly">Monthly</a></dd>
+            <dd><a href="#navChannelPerfTab" id="nav_ChannelPerf">Channel Performance</a></dd>
+            <dd><a href="#navCampaignPerfTab" id="nav_CampaignPerf">Campaign Performance</a></dd>
+            <dd><a href="#navCampaignWeeklyTab" id="nav_CampaignWeekly">Campaign Weekly</a></dd>
+            <dd><a href="#navContactTab" id="nav_Contact">Contact</a></dd>
         </dl>
         <!-- /Tabs -->
     </div>
@@ -52,34 +54,33 @@
 @*<!--+--------------+
       | Main Content |
       +--------------+-->*@
-<div class="row" id="main">
+<div class="row fullWidth" id="main">
 
     @*<!--+---------------+
           | Tabs Content  |
           +---------------+-->*@
-    <ul class="tabs-content">
+    <div class="tabs-content">
 
-        <li id="navDashboardTab" class="active">
+        <div id="navDashboardTab" class="content active">
             <div id="divDashboard" class="searchdiv"></div>
-        </li>
-        <li id="navMonthlyTab">
+        </div>
+        <div id="navMonthlyTab" class="content">
             <div id="divMonthly" class="searchdiv"></div>
-        </li>
-        <li id="navChannelPerfTab">
+        </div>
+        <div id="navChannelPerfTab" class="content">
             <div id="divChannelPerf" class="searchdiv"></div>
-        </li>
-        <li id="navCampaignPerfTab">
+        </div>
+        <div id="navCampaignPerfTab" class="content">
             <div id="divCampaignPerf" class="searchdiv"></div>
-        </li>
-        @* (add a report tab) 2. Add tab content (giving the li tag id the same value as the top tab's a tag, adding 'Tab' to it) *@
-        <li id="navCampaignWeeklyTab">
+        </div>
+        <div id="navCampaignWeeklyTab" class="content">
             <div id="divCampaignWeekly" class="searchdiv"></div>
-        </li>
-        <li id="navContactTab">
+        </div>
+        <div id="navContactTab" class="content">
             <div id="divContact" class="searchdiv"></div>
-        </li>
+        </div>
 
-    </ul>
+    </div>
     <!-- /Tabs -->
 
 </div>
@@ -88,13 +89,13 @@
 @*<!--+---------------------+
       | Footer / Bottom Bar |
       +---------------------+-->*@
-<footer class="row">
-    <div class="twelve columns">
+<footer class="row fullWidth">
+    <div class="large-12 columns">
         <div class="row">
-            <div class="six columns">
+            <div class="large-6 columns">
                 <p>&copy; 2014 Direct Agents</p>
             </div>
-            <div class="six columns">
+            <div class="large-6 columns">
             </div>
         </div>
     </div>
@@ -102,8 +103,8 @@
 <!-- /BottomBar  -->
 
 @section head {
-    <link href="~/Content/kendo/2013.1.514/kendo.common.min.css" rel="stylesheet" />
-    <link href="~/Content/kendo/2013.1.514/kendo.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2014.2.903/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2014.2.903/kendo.bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/index.css" rel="stylesheet" />
     <style>
         .k-grid tbody .k-grid .k-grid-header, .k-detail-cell .k-pager-wrap, .k-detail-cell .k-grid-footer
@@ -118,10 +119,10 @@
 }
 
 @section scripts {
-    <script src="~/Scripts/kendo/2013.1.514/kendo.all.min.js"></script>
-    <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.de-DE.min.js"></script>
-    <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.en-GB.min.js"></script>
-    <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.en-AU.min.js"></script>
+    <script src="~/Scripts/kendo/2014.2.903/kendo.all.min.js"></script>
+    <script src="~/Scripts/kendo/2014.2.903/cultures/kendo.culture.de-DE.min.js"></script>
+    <script src="~/Scripts/kendo/2014.2.903/cultures/kendo.culture.en-GB.min.js"></script>
+    <script src="~/Scripts/kendo/2014.2.903/cultures/kendo.culture.en-AU.min.js"></script>
     <script src="~/Scripts/search_grids_charts.js"></script>
     @Html.Partial("_DateFuncs", Model.Dates)
 

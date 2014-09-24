@@ -49,18 +49,18 @@
     <img style="margin-top: 15px; margin-left: 15px" src="~/Images/logo1.png" />
 </div>
 
-<div class="row">
-    <div class="eight columns" style="padding: 40px">
+<div class="row fullWidth">
+    <div class="large-8 columns" style="padding: 40px">
         <h4>Direct Agents Client Portal</h4>
         <div class="row" style="border: 4px solid #f7f7f7">
-            <div class="six columns icondiv">
+            <div class="large-6 columns icondiv">
                 <img src="~/Images/icon_reports.gif" class="icon" />
                 <div class="icontext">Access real-time reports showing campaign effectiveness and spend</div>
                 <br style="clear: both" /><br /><br />
                 <img src="~/Images/icon_mobile.gif" class="icon" />
                 <div class="icontext">See details on devices and demographics instantly</div>
             </div>
-            <div class="six columns icondiv">
+            <div class="large-6 columns icondiv">
                 <img src="~/Images/icon_track.gif" class="icon" />
                 <div class="icontext">Track your top performing affiliates and creatives</div>
                 <br style="clear: both" /><br /><br />
@@ -69,7 +69,7 @@
             </div>
         </div>
     </div>
-    <div class="four columns" style="padding: 40px">
+    <div class="large-4 columns" style="padding: 40px">
         <div class="logindiv">
 
         @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
@@ -79,39 +79,39 @@
             <fieldset class="loginfieldset">
                 <legend style="display:none"></legend>
                 <div class="row">
-                    <div class="twelve columns" style="text-align: center">
+                    <div style="text-align: center">
                         <h5>SIGN IN</h5>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="four columns labeldiv">
+                    <div class="large-4 columns labeldiv">
                         @Html.LabelFor(m => m.UserName, new { @class = "inline" } )
                     </div>
-                    <div class="eight columns" style="padding-right: 25px">
+                    <div class="large-8 columns" style="padding-right: 25px">
                         @Html.TextBoxFor(m => m.UserName)
                         @Html.ValidationMessageFor(m => m.UserName)
                     </div>
                 </div>
                 <div class="row">
-                    <div class="four columns labeldiv">
+                    <div class="large-4 columns labeldiv">
                         @Html.LabelFor(m => m.Password)
                     </div>
-                    <div class="eight columns" style="padding-right: 25px">
+                    <div class="large-8 columns" style="padding-right: 25px">
                         @Html.PasswordFor(m => m.Password)
                         @Html.ValidationMessageFor(m => m.Password)
                     </div>
                 </div>
                 <div class="row">
-                    <div class="four columns">
+                    <div class="large-4 columns">
                     </div>
-                    <div class="eight columns">
+                    <div class="large-8 columns">
                         @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
                         @Html.CheckBoxFor(m => m.RememberMe)
                     </div>
                 </div>
             </fieldset>
             <div class="row">
-                <div class="twelve columns" style="text-align: center; margin: 20px 0px">
+                <div style="text-align: center; margin: 20px 0px">
                     <input type="submit" class="button" value="LOG IN" style="width: 200px" />
                 </div>
             </div>

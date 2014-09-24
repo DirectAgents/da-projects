@@ -85,10 +85,11 @@ namespace ClientPortal.Web.Controllers
             return PartialView(model);
         }
 
-        public ActionResult Contact()
+        public ActionResult Contact(bool showtitle = true)
         {
             var userInfo = GetUserInfo();
             var contacts = userInfo.SearchProfile.SearchProfileContactsOrdered.Select(spc => spc.Contact);
+            ViewBag.ShowTitle = showtitle;
             return PartialView("_Contact", contacts);
         }
     }

@@ -4,28 +4,25 @@
     <h3>Contact</h3>
 }
 
-<div class="panel four columns">
-    <table style="width:100%">
-        <tr>
-            <td>
-                Direct Agents<br />
-                740 Broadway, Suite 701<br />
-                New York, NY 10003<br />
-                <b>P:</b> 212-925-6558<br />
-                <b>F:</b> 212-412-9061<br />
-                <br />
-                <b>Account Team</b>
-
-                @foreach(var contact in Model) {
-                    <br style="clear: both" />
-                    <div style="float: left; width: 65px; padding: 5px; padding-top: 0px; padding-left: 10px;">
-                        <img style="border: 2px solid #000;" width="65" src="~/Images/avatar.png">
-                    </div>
-                    <span style="white-space:nowrap">@contact.FirstName @contact.LastName</span><br />
-                    <span style="white-space:nowrap">@contact.Title</span><br />
-                    <a href="mailto:@contact.Email">@contact.Email</a>
-                }
-            </td>
-        </tr>
-    </table>
+<div class="panel large-4 columns">
+    <div class="panel" style="background:#fff">
+        Direct Agents<br />
+        740 Broadway, Suite 701<br />
+        New York, NY 10003<br />
+        <b>P:</b> 212-925-6558<br />
+        <b>F:</b> 212-412-9061<br />
+        <br />
+        <b>Account Team</b>
+        <div style="line-height:normal">
+        @foreach(var contact in Model) {
+            <br style="clear: both" />
+            <div style="float: left; width: 65px; padding: 5px; padding-top: 0px; padding-left: 10px;">
+                <img style="border: 2px solid #000;" width="65" src="~/Images/avatar.png">
+            </div>
+            <span style="white-space:nowrap">@contact.FirstName @contact.LastName</span><br />
+            <span style="white-space:nowrap">@contact.Title</span><br />
+            <a href="mailto:@contact.Email">@contact.Email</a>
+        }
+        </div>
+    </div>
 </div>

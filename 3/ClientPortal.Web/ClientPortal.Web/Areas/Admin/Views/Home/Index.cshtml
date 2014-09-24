@@ -7,13 +7,13 @@
 @*<!--+---------+
       | Top Bar |
       +---------+-->*@
-<div class="row">
-    <div class="five columns toplogo">
+<div class="row fullWidth">
+    <div class="large-5 columns toplogo">
         <img src="~/Images/logo1a.png" />
     </div>
-    <div class="two columns topinfo">
+    <div class="large-2 columns topinfo">
     </div>
-    <div class="five columns logout">
+    <div class="large-5 columns logout">
         <div style="float: right">
         @using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutForm" }))
         {
@@ -28,8 +28,8 @@
 @*<!--+--------------------------------------+
       | Gray Band/HTabs Background/Container | 
       +--------------------------------------+-->*@
-<div class="row">
-    <div class="twelve columns grayband">
+<div class="row fullWidth">
+    <div class="grayband">
     </div>
 </div>
 <!-- /GrayBandForHTabs -->
@@ -37,26 +37,26 @@
 @*<!--+--------------+
       | Main Content |
       +--------------+-->*@
-<div class="row" id="main">
+<div class="row fullWidth" id="main">
 
     @*<!--+---------+
           | Sidebar |
           +---------+-->*@
-    <div class="two columns portaltabs-v">
+    <div class="portaltabs-v">
 
         @*<!--+---------------+
               | Vertical Tabs |
               +---------------+-->*@
-        <dl class="vertical tabs">
-            <dd class="@(Model.Search || Model.TradingDesk ? "" : "active")"><a href="#vertical1" id="vertNav_Home">Admin</a></dd>
-            <dd><a href="#cpm" id="vertNav_CPM">CPM Reports</a></dd>
+        <dl class="vertical tabs" data-tab>
+            <dd class="@(Model.Search || Model.TradingDesk ? "" : "active")"><a href="#vertical1Tab" id="vertNav_Home">Admin</a></dd>
+            <dd><a href="#cpmTab" id="vertNav_CPM">CPM Reports</a></dd>
             @if (Model.Search)
             {
-                <dd class="active"><a href="#search" id="vertNav_Search">Search</a></dd>
+                <dd class="active"><a href="#searchTab" id="vertNav_Search">Search</a></dd>
             }
             @if (Model.TradingDesk)
             {
-                <dd class="@(Model.Search ? "" : "active")"><a href="#td" id="vertNav_TD">Trading Desk</a></dd>
+                <dd class="@(Model.Search ? "" : "active")"><a href="#tdTab" id="vertNav_TD">Trading Desk</a></dd>
             }
         </dl>
         <!-- /VTabs -->
@@ -72,94 +72,94 @@
         @*<!--+-----------+
               | Home VTab |
               +-----------+-->*@
-        <li id="vertical1Tab" class="@(Model.Search || Model.TradingDesk ? "" : "active")">
-            <div class="ten columns portaltabs-h">
+        <li id="vertical1Tab" class="content @(Model.Search || Model.TradingDesk ? "" : "active")">
+            <div class="portaltabs-h">
 
                 @*<!--+----------------+
                       | Home HTabs     |
                       +----------------+-->*@
-                <dl class="tabs">
-                    <dd class="active"><a href="#advertisers" id="navAdvertisers">Advertisers</a></dd>
-                    <dd><a href="#contacts" id="navContacts">Contacts</a></dd>
+                <dl class="tabs" data-tab>
+                    <dd class="active"><a href="#advertisersTab" id="navAdvertisers">Advertisers</a></dd>
+                    <dd><a href="#contactsTab" id="navContacts">Contacts</a></dd>
                 </dl>
                 <!-- /Home HTabs  -->
 
                 @*<!--+------------------------+
                       | Home HTabs Content     |
                       +------------------------+-->*@
-                <ul class="tabs-content">
-                    <li id="advertisersTab" class="active"></li>
-                    <li id="contactsTab"></li>
-                </ul>
+                <div class="tabs-content">
+                    <div id="advertisersTab" class="content active"></div>
+                    <div id="contactsTab" class="content"></div>
+                </div>
                 <!-- /Home Content  -->
 
             </div>
         </li>
         <!-- /Home -->
 
-        <li id="cpmTab">
-            <div class="ten columns portaltabs-h">
+        <li id="cpmTab" class="content">
+            <div class="portaltabs-h">
                 @*<!--+---------------+
                       | CPM HTabs     |
                       +---------------+-->*@
-                <dl class="tabs">
-                    <dd class="active"><a href="#cpmOffers" id="navCPMOffers">CPM Offers</a></dd>
-                    <dd><a href="#cpmSummary" id="navCPMSummary">Summary</a></dd>
-                    <dd><a href="#cpmReports" id="navCPMReports">Report</a></dd>
-                    <dd><a href="#cpmDrops" id="navCPMDrops">Drop</a></dd>
-                    <dd><a href="#cpmCreatives" id="navCPMCreatives">Creatives</a></dd>
+                <dl class="tabs" data-tab>
+                    <dd class="active"><a href="#cpmOffersTab" id="navCPMOffers">CPM Offers</a></dd>
+                    <dd><a href="#cpmSummaryTab" id="navCPMSummary">Summary</a></dd>
+                    <dd><a href="#cpmReportsTab" id="navCPMReports">Report</a></dd>
+                    <dd><a href="#cpmDropsTab" id="navCPMDrops">Drop</a></dd>
+                    <dd><a href="#cpmCreativesTab" id="navCPMCreatives">Creatives</a></dd>
                 </dl>
                 @*<!--+-----------------------+
                       | CPM HTabs Content     |
                       +-----------------------+-->*@
-                <ul class="tabs-content">
-                    <li id="cpmOffersTab" class="active"></li>
-                    <li id="cpmSummaryTab">Please <a href="#" onclick="$('#navCPMOffers').click(); return false">select an offer</a>.</li>
-                    <li id="cpmReportsTab">Please <a href="#" onclick="$('#navCPMOffers').click(); return false">select an offer</a>.</li>
-                    <li id="cpmDropsTab">Please <a href="#" onclick="$('#navCPMOffers').click(); return false">select an offer</a>.</li>
-                    <li id="cpmCreativesTab">Please <a href="#" onclick="$('#navCPMOffers').click(); return false">select an offer</a>.</li>
-                </ul>
+                <div class="tabs-content">
+                    <div id="cpmOffersTab" class="content active"></div>
+                    <div id="cpmSummaryTab" class="content">Please <a href="#" onclick="$('#navCPMOffers').click(); return false">select an offer</a>.</div>
+                    <div id="cpmReportsTab" class="content">Please <a href="#" onclick="$('#navCPMOffers').click(); return false">select an offer</a>.</div>
+                    <div id="cpmDropsTab" class="content">Please <a href="#" onclick="$('#navCPMOffers').click(); return false">select an offer</a>.</div>
+                    <div id="cpmCreativesTab" class="content">Please <a href="#" onclick="$('#navCPMOffers').click(); return false">select an offer</a>.</div>
+                </div>
             </div>
         </li>
 
     @if (Model.Search)
     {
-        <li id="searchTab" class="active">
-            <div class="ten columns portaltabs-h">
+        <li id="searchTab" class="content active">
+            <div class="portaltabs-h">
                 @*<!--+--------------+
                       | Search HTabs |
                       +--------------+-->*@
-                <dl class="tabs">
-                    <dd class="active"><a href="#searchProfiles" id="navSearchProfiles">Profiles</a></dd>
+                <dl class="tabs" data-tab>
+                    <dd class="active"><a href="#searchProfilesTab" id="navSearchProfiles">Profiles</a></dd>
                 </dl>
                 @*<!--+----------------------+
                       | Search HTabs Content |
                       +----------------------+-->*@
-                <ul class="tabs-content">
-                    <li id="searchProfilesTab" class="active"></li>
-                </ul>
+                <div class="tabs-content">
+                    <div id="searchProfilesTab" class="content active"></div>
+                </div>
             </div>
         </li>
     }
 
     @if (Model.TradingDesk)
     {
-        <li id="tdTab" class="@(Model.Search ? "" : "active")">
-            <div class="ten columns portaltabs-h">
+        <li id="tdTab" class="content @(Model.Search ? "" : "active")">
+            <div class="portaltabs-h">
                 @*<!--+-------------+
                       | TD HTabs    |
                       +-------------+-->*@
-                <dl class="tabs">
-                    <dd class="active"><a href="#tdAccounts" id="navTDAccounts">Accounts</a></dd>
-                    <dd><a href="#tdUpload" id ="navTDUpload">Upload</a></dd>
+                <dl class="tabs" data-tab>
+                    <dd class="active"><a href="#tdAccountsTab" id="navTDAccounts">Accounts</a></dd>
+                    <dd><a href="#tdUploadTab" id ="navTDUpload">Upload</a></dd>
                 </dl>
                 @*<!--+---------------------+
                       | TD HTabs Content    |
                       +---------------------+-->*@
-                <ul class="tabs-content">
-                    <li id="tdAccountsTab" class="active"></li>
-                    <li id="tdUploadTab"></li>
-                </ul>
+                <div class="tabs-content">
+                    <div id="tdAccountsTab" class="content active"></div>
+                    <div id="tdUploadTab" class="content"></div>
+                </div>
             </div>
         </li>
     }
@@ -173,13 +173,13 @@
 @*<!--+---------------------+
       | Footer / Bottom Bar |
       +---------------------+-->*@
-<footer class="row">
-    <div class="twelve columns">
+<footer class="row fullWidth">
+    <div class="large-12 columns">
         <div class="row">
-            <div class="six columns">
+            <div class="large-6 columns">
                 <p>&copy; 2014 Direct Agents</p>
             </div>
-            <div class="six columns">
+            <div class="large-6 columns">
             </div>
         </div>
     </div>
@@ -187,8 +187,8 @@
 <!-- /BottomBar  -->
 
 @section head {
-    <link href="~/Content/kendo/2013.1.514/kendo.common.min.css" rel="stylesheet" />
-    <link href="~/Content/kendo/2013.1.514/kendo.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2014.2.903/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2014.2.903/kendo.bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/index.css" rel="stylesheet" />
     <style>
         th a {
@@ -199,10 +199,10 @@
 }
 
 @section scripts {
-    <script src="~/Scripts/kendo/2013.1.514/kendo.all.min.js"></script>
-    <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.de-DE.min.js"></script>
-    <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.en-GB.min.js"></script>
-    <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.en-AU.min.js"></script>
+    <script src="~/Scripts/kendo/2014.2.903/kendo.all.min.js"></script>
+    <script src="~/Scripts/kendo/2014.2.903/cultures/kendo.culture.de-DE.min.js"></script>
+    <script src="~/Scripts/kendo/2014.2.903/cultures/kendo.culture.en-GB.min.js"></script>
+    <script src="~/Scripts/kendo/2014.2.903/cultures/kendo.culture.en-AU.min.js"></script>
     <script>
 
         // ready function

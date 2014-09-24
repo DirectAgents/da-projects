@@ -3,15 +3,15 @@
 @*<!--+---------+
       | Top Bar |
       +---------+-->*@
-<div class="row">
-    <div class="five columns toplogo">
+<div class="row fullWidth">
+    <div class="large-5 columns toplogo">
         <img src="~/Images/logo1a.png" />
     </div>
-    <div class="two columns topinfo">
+    <div class="large-2 columns topinfo">
         @*Html.Partial("_HelloPartial", false)*@
         <p style="text-align: center; margin-top: 30px"><span>Hello, @User.Identity.Name!</span></p>
     </div>
-    <div class="five columns logout">
+    <div class="large-5 columns logout">
         <div style="float: right">
             @Html.Partial("_LoginPartial", false)
         </div>
@@ -22,8 +22,8 @@
 @*<!--+--------------------------------------+
       | Gray Band/HTabs Background/Container | 
       +--------------------------------------+-->*@
-<div class="row">
-    <div class="twelve columns grayband">
+<div class="row fullWidth">
+    <div class="grayband">
     </div>
 </div>
 <!-- /GrayBandForHTabs -->
@@ -31,19 +31,19 @@
 @*<!--+--------------+
       | Main Content |
       +--------------+-->*@
-<div class="row" id="main">
+<div class="row fullWidth" id="main">
 
     @*<!--+---------+
           | Sidebar |
           +---------+-->*@
-    <div class="two columns portaltabs-v">
+    <div class="portaltabs-v">
 
         @*<!--+---------------+
               | Vertical Tabs |
               +---------------+-->*@
-        <dl class="vertical tabs">
-            <dd class="active"><a href="#mainReports" id="mainNav_Reports">Reports</a></dd>
-            <dd><a href="#mainSample" id="mainNav_Sample">Sample - Daily</a></dd>
+        <dl class="vertical tabs" data-tab>
+            <dd class="active"><a href="#mainReportsTab" id="mainNav_Reports">Reports</a></dd>
+            <dd><a href="#mainSampleTab" id="mainNav_Sample">Sample - Daily</a></dd>
         </dl>
         <!-- /VTabs -->
 
@@ -60,27 +60,27 @@
         @*<!--+----------
               | Reports VTab
               +------------>*@
-        <li id="mainReportsTab" class="active">
-            <div class="ten columns portaltabs-h">
+        <li id="mainReportsTab" class="content active">
+            <div class="portaltabs-h">
 
                 @*<!--+----------------+
                       | Reports HTabs  |
                       +----------------+-->*@
-                <dl class="tabs">
-                    <dd class="active"><a href="#repSum" id="repNav_Summary">Summary</a></dd>
-                    <dd><a href="#repCreative" id="repNav_Creative">Creative</a></dd>
+                <dl class="tabs" data-tab>
+                    <dd class="active"><a href="#repSumTab" id="repNav_Summary">Summary</a></dd>
+                    <dd><a href="#repCreativeTab" id="repNav_Creative">Creative</a></dd>
                 </dl>
                 <!-- /ReportsHTabs  -->
 
                 @*<!--+------------------------+
                       | Reports HTabs Content  |
                       +------------------------+-->*@
-                <ul class="tabs-content">
-                    <li id="repSumTab" class="active">
+                <div class="tabs-content">
+                    <div id="repSumTab" class="content active">
                         <div id="sumNotLoaded"></div>
-                    </li>
-                    <li id="repCreativeTab"></li>
-                </ul>
+                    </div>
+                    <div id="repCreativeTab" class="content"></div>
+                </div>
                 <!-- /ReportsContent  -->
 
             </div>
@@ -90,8 +90,8 @@
         @*<!--+----------
               | Sample VTab
               +------------>*@
-        <li id="mainSampleTab">
-            <div class="ten columns" id="sampleTab">
+        <li id="mainSampleTab" class="content">
+            <div id="sampleTab">
                 Loading...
             </div>
         </li>
@@ -106,13 +106,13 @@
 @*<!--+---------------------+
       | Footer / Bottom Bar |
       +---------------------+-->*@
-<footer class="row">
-    <div class="twelve columns">
+<footer class="row fullWidth">
+    <div class="large-12 columns">
         <div class="row">
-            <div class="six columns">
+            <div class="large-6 columns">
                 <p>&copy; 2014 Direct Agents</p>
             </div>
-            <div class="six columns">
+            <div class="large-6 columns">
             </div>
         </div>
     </div>
@@ -120,21 +120,24 @@
 <!-- /BottomBar  -->
 
 @section head {
-    <link href="~/Content/kendo/2012.3.1114/kendo.common.min.css" rel="stylesheet" />
-    <link href="~/Content/kendo/2012.3.1114/kendo.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2014.2.903/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2014.2.903/kendo.silver.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2014.2.903/kendo.dataviz.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2014.2.903/kendo.dataviz.silver.min.css" rel="stylesheet" />
     <link href="~/Content/index.css" rel="stylesheet" />
 }
 
 @section scripts {
-    <script src="~/Scripts/kendo/2012.3.1114/kendo.all.min.js"></script>
-    <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.de-DE.min.js"></script>
-    <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.en-GB.min.js"></script>
-    <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.en-AU.min.js"></script>
+    <script src="~/Scripts/kendo/2014.2.903/kendo.all.min.js"></script>
+    <script src="~/Scripts/kendo/2014.2.903/cultures/kendo.culture.de-DE.min.js"></script>
+    <script src="~/Scripts/kendo/2014.2.903/cultures/kendo.culture.en-GB.min.js"></script>
+    <script src="~/Scripts/kendo/2014.2.903/cultures/kendo.culture.en-AU.min.js"></script>
     @Html.Partial("_TDDateFuncs", Model.Dates)
     <script>
 
         // ready function
         $(function () {
+            $(document).data('kendoSkin', 'silver');
             LoadSummary();
             SetupTabs();
             $(window).bind('resize', WindowResize);

@@ -21,7 +21,7 @@
 </div>
 
 <div class="row">
-<div class="eight columns">
+<div class="large-8 columns">
 
 <h3>Totals</h3>
 <table>
@@ -68,16 +68,16 @@
 @{
     string secondSelectedValue = (Model.AllMetricsSelectItems.Length > 1) ? Model.AllMetricsSelectItems[1].Value : null;
 }
-<div class="four columns">
+<div class="large-4 columns">
     <h3>Chart Setup</h3>
     <table>
         <tr>
             <td>First Metric:</td>
-            <td>@Html.DropDownList("selMetric1", Model.AllMetricsSelectItems, new { style = "width:auto"})</td>
+            <td>@Html.DropDownList("selMetric1", Model.AllMetricsSelectItems, new { style = "width:auto; padding-right:15px"})</td>
         </tr>
         <tr>
             <td>Second Metric:</td>
-            <td>@Html.DropDownList("selMetric2", new SelectList(Model.AllMetricsSelectItems, "Value", "Text", secondSelectedValue), new { style = "width:auto"})</td>
+            <td>@Html.DropDownList("selMetric2", new SelectList(Model.AllMetricsSelectItems, "Value", "Text", secondSelectedValue), new { style = "width:auto; padding-right:15px"})</td>
         </tr>
         <tr>
             <td colspan="2"><input type="button" value="Redraw Chart" onclick="ChangeChartMetrics()" /></td>
