@@ -1234,6 +1234,30 @@ namespace EomTool.Domain.Entities
         private global::System.String _prev_open_balance;
         partial void Onprev_open_balanceChanging(global::System.String value);
         partial void Onprev_open_balanceChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String qb_name
+        {
+            get
+            {
+                return _qb_name;
+            }
+            set
+            {
+                Onqb_nameChanging(value);
+                ReportPropertyChanging("qb_name");
+                _qb_name = StructuralObject.SetValidValue(value, true, "qb_name");
+                ReportPropertyChanged("qb_name");
+                Onqb_nameChanged();
+            }
+        }
+        private global::System.String _qb_name;
+        partial void Onqb_nameChanging(global::System.String value);
+        partial void Onqb_nameChanged();
 
         #endregion
 

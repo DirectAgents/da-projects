@@ -1,5 +1,5 @@
 ﻿CREATE VIEW [dbo].[AccountingView2] AS
-SELECT     dbo.AccountingView1.Publisher, dbo.AccountingView1.Advertiser, dbo.AccountingView1.[Campaign Number], dbo.AccountingView1.[Campaign Name], 
+SELECT     dbo.AccountingView1.Publisher, dbo.AccountingView1.Advertiser, dbo.AccountingView1.[Adv QB Name] AS [QB Name], dbo.AccountingView1.[Campaign Number], dbo.AccountingView1.[Campaign Name], 
                       dbo.AccountingView1.[Rev Currency], dbo.AccountingView1.[Cost Currency], dbo.AccountingView1.[Rev/Unit], dbo.AccountingView1.[Rev/Unit USD], 
                       dbo.AccountingView1.[Cost/Unit], dbo.AccountingView1.[Cost/Unit USD], dbo.AccountingView1.Units,
                       dbo.AccountingView1.[Unit Type], dbo.AccountingView1.Revenue, dbo.AccountingView1.[Revenue USD], dbo.AccountingView1.Cost, dbo.AccountingView1.[Cost USD],

@@ -324,6 +324,7 @@
           <Property Name="invoicing_status" Type="varchar" MaxLength="50" />
           <Property Name="comments" Type="varchar" MaxLength="255" />
           <Property Name="prev_open_balance" Type="varchar" MaxLength="100" />
+          <Property Name="qb_name" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
       warning 6035: The relationship 'FK_InvoiceItem_Affiliate' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
@@ -1392,6 +1393,7 @@
           <Property Type="String" Name="invoicing_status" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="comments" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="prev_open_balance" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="qb_name" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Affiliate">
           <Key>
@@ -2286,6 +2288,7 @@
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="EomModelStoreContainer" CdmEntityContainer="EomEntities">
           <EntitySetMapping Name="Advertisers"><EntityTypeMapping TypeName="EomModel.Advertiser"><MappingFragment StoreEntitySet="Advertiser">
+                <ScalarProperty Name="qb_name" ColumnName="qb_name" />
                 <ScalarProperty Name="prev_open_balance" ColumnName="prev_open_balance" />
                 <ScalarProperty Name="comments" ColumnName="comments" />
                 <ScalarProperty Name="invoicing_status" ColumnName="invoicing_status" />

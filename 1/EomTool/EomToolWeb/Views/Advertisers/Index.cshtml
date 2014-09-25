@@ -19,6 +19,7 @@ Accounting Period:
         <th>InvoicingStatus</th>
         <th>Comments</th>
         <th>PreviousPeriodsOpenBalance</th>
+        <th>QBName</th>
     </tr>
 @foreach (var adv in Model)
 {
@@ -31,6 +32,7 @@ Accounting Period:
         <td>@adv.invoicing_status</td>
         <td>@adv.comments</td>
         <td>@adv.prev_open_balance</td>
+        <td>@adv.qb_name</td>
     </tr>
 }
 </table>
