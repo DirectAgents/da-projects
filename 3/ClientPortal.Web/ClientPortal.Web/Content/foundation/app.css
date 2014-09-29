@@ -53,6 +53,7 @@ select {
     margin-top: -3px;
 }
 
-.tabs.vertical dd, .tabs.vertical .tab-title {
+.tabs.vertical dd, .tabs.vertical .tab-title,
+.grayband .tabs dd.active, .grayband .tabs li.active {
     margin-top: 0;
 }
