@@ -156,7 +156,6 @@ namespace ClientPortal.Data.Services
             var latestDate = includeToday ? today : today.AddDays(-1);
 
             DateTime? end = null;
-            // TODO: Test with start-end == 12/1/13-1/31/13
             var daySums =
                 GetSearchDailySummaries(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix, device, start, end, includeToday)
 
@@ -223,13 +222,19 @@ namespace ClientPortal.Data.Services
                 title += (searchChannel != null) ? searchChannel.Name : (channelPrefix ?? ".") + "/" + (device ?? ".");
             }
 
+            var adjuster = new YearWeekAdjuster
+            {
+                StartDayOfWeek = startDayOfWeek,
+                CalendarWeekRule = CalendarWeekRule.FirstFullWeek
+            };
+
             var stats = daySums
                     // Reproject with members that break date up into Year and Week
                     .Select(s => new
                     {
                         Date = s.Date,
-                        Year = s.Date.Year,
-                        Week = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(s.Date, CalendarWeekRule.FirstFourDayWeek, startDayOfWeek),
+                        Year = adjuster.GetYearAdjustedByWeek(s.Date),
+                        Week = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(s.Date, adjuster.CalendarWeekRule, startDayOfWeek),
                         Impressions = s.Impressions,
                         Clicks = s.Clicks,
                         Orders = s.Orders,
@@ -239,9 +244,6 @@ namespace ClientPortal.Data.Services
 
                     // Now group by Year and Week
                     .GroupBy(x => new { x.Year, x.Week })
-                    // NOTE / TODO: There's an issue when a week is part in one year and part in another
-                    // After constructing a SearchStat, we could group by Range (or StartDate,EndDate)
-                    // but maybe there's another way, like a projection where Year=Year+1 and Week=1 when Week=53 ?
 
                     // Order by Year then Week
                     .OrderBy(g => g.Key.Year)
@@ -626,6 +628,24 @@ namespace ClientPortal.Data.Services
                 new SearchStat(true, 2013, 6, 2, 1295, 11, 0, 0m, 17.31m, "Apple RAM"),
             };
             return stats.AsQueryable();
+        }
+    }
+
+    class YearWeekAdjuster
+    {
+        public DayOfWeek StartDayOfWeek { get; set; }
+        public CalendarWeekRule CalendarWeekRule { get; set; }
+
+        public int GetYearAdjustedByWeek(DateTime date)
+        {
+            int year = date.Year;
+            if (date.Month == 1) // adjustment only needed in January
+            {
+                int week = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(date, this.CalendarWeekRule, this.StartDayOfWeek);
+                if (week >= 52)
+                    year = year - 1;
+            }
+            return year;
         }
     }
 
