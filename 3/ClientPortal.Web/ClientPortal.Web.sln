@@ -53,6 +53,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{8C4D0722-32E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Criteo", "..\Criteo\Criteo.csproj", "{D96A10B3-8700-45C1-ADA4-96CAC22CBD5C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSCharting", "MSCharting\MSCharting.csproj", "{B47050A5-F84E-44CE-92C1-8415A198568B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -249,6 +251,16 @@ Global
 		{D96A10B3-8700-45C1-ADA4-96CAC22CBD5C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D96A10B3-8700-45C1-ADA4-96CAC22CBD5C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D96A10B3-8700-45C1-ADA4-96CAC22CBD5C}.Release|x86.ActiveCfg = Release|Any CPU
+		{B47050A5-F84E-44CE-92C1-8415A198568B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B47050A5-F84E-44CE-92C1-8415A198568B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B47050A5-F84E-44CE-92C1-8415A198568B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B47050A5-F84E-44CE-92C1-8415A198568B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B47050A5-F84E-44CE-92C1-8415A198568B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B47050A5-F84E-44CE-92C1-8415A198568B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B47050A5-F84E-44CE-92C1-8415A198568B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B47050A5-F84E-44CE-92C1-8415A198568B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B47050A5-F84E-44CE-92C1-8415A198568B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B47050A5-F84E-44CE-92C1-8415A198568B}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -265,6 +277,7 @@ Global
 		{350E2A08-D268-4DBB-BAA8-8CD3C63CB5C1} = {FEB043C3-405F-4ADE-8F17-F68ADE913936}
 		{E2EA8AB5-ABAF-4007-A446-09624CB159E6} = {8C4D0722-32E6-4E1D-A607-8BDA368988BB}
 		{D96A10B3-8700-45C1-ADA4-96CAC22CBD5C} = {8C4D0722-32E6-4E1D-A607-8BDA368988BB}
+		{B47050A5-F84E-44CE-92C1-8415A198568B} = {8C4D0722-32E6-4E1D-A607-8BDA368988BB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45

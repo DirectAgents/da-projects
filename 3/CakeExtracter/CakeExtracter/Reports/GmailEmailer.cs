@@ -8,9 +8,24 @@ namespace CakeExtracter.Reports
 {
     public class GmailEmailer
     {
+        public NetworkCredential Credential { get; set; }
+
         public GmailEmailer(NetworkCredential credential)
         {
             this.Credential = credential;
+        }
+
+        private void SendMailMessage(MailMessage message)
+        {
+            var client = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                Timeout = 50000,
+                EnableSsl = true,
+                Credentials = this.Credential
+            };
+            client.Send(message);
         }
 
         /// <summary>
@@ -24,11 +39,28 @@ namespace CakeExtracter.Reports
         /// <param name="isHTML"></param>
         public void SendEmail(string fromAddress, string[] toAddresses, string[] ccAddresses, string subject, string body, bool isHTML)
         {
+            var message = CreateMailMessage(fromAddress, toAddresses, ccAddresses, subject);
+            message.Body = body;
+            message.IsBodyHtml = isHTML;
+
+            SendMailMessage(message);
+        }
+
+        public void SendEmail(string fromAddress, string[] toAddresses, string[] ccAddresses, string subject, AlternateView plainView, AlternateView htmlView)
+        {
+            var message = CreateMailMessage(fromAddress, toAddresses, ccAddresses, subject);
+            message.AlternateViews.Add(plainView);
+            message.AlternateViews.Add(htmlView);
+
+            SendMailMessage(message);
+        }
+
+
+        private MailMessage CreateMailMessage(string fromAddress, string[] toAddresses, string[] ccAddresses, string subject)
+        {
             MailMessage message = new MailMessage
             {
                 Subject = subject,
-                Body = body,
-                IsBodyHtml = isHTML,
                 From = new MailAddress(fromAddress),
             };
 
@@ -44,19 +76,8 @@ namespace CakeExtracter.Reports
                     message.CC.Add(ccAddress);
                 }
             }
-
-            var client = new SmtpClient
-            {
-                Host = "smtp.gmail.com",
-                Port = 587,
-                Timeout = 50000,
-                EnableSsl = true,
-                Credentials = this.Credential
-            };
-
-            client.Send(message);
+            return message;
         }
 
-        public NetworkCredential Credential { get; set; }
     }
 }

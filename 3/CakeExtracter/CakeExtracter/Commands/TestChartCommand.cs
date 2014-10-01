@@ -1,0 +1,117 @@
+﻿using CakeExtracter.Common;
+using CakeExtracter.Reports;
+using ClientPortal.Data.Contexts;
+using ClientPortal.Data.Services;
+using MSCharting;
+using System;
+using System.ComponentModel.Composition;
+using System.Configuration;
+using System.Drawing;
+using System.IO;
+using System.Net;
+using System.Net.Mail;
+using System.Windows.Forms.DataVisualization.Charting;
+
+namespace CakeExtracter.Commands
+{
+    [Export(typeof(ConsoleCommand))]
+    public class TestChartCommand : ConsoleCommand
+    {
+        public override void ResetProperties()
+        {
+        }
+
+        public TestChartCommand()
+        {
+            IsCommand("testChart");
+        }
+
+        public override int Execute(string[] remainingArguments)
+        {
+            //var chart = CreateAChart();
+            var chart = CreateAChartWithBuilder();
+
+            SaveToDisk(chart);
+            //SendViaEmail(chart);
+
+            return 0;
+        }
+
+        private Chart CreateAChart()
+        {
+            var chart = new Chart();
+            //chart.Width = 400;
+            //chart.Height = 400;
+            //chart.BackColor = Color.LightSalmon;
+
+            var series = new Series("bla");
+            series.ChartType = SeriesChartType.FastLine;
+
+            for (int x = 0; x <= 5; x++)
+                series.Points.AddXY("hi" + x, (x * 5));
+            chart.Series.Add(series);
+
+            ChartArea ca = new ChartArea("ca1");
+            ca.BackColor = Color.Gray;
+            chart.ChartAreas.Add(ca);
+
+            return chart;
+        }
+
+        private Chart CreateAChartWithBuilder()
+        {
+            var builder = new TwoSeriesChartBuilder("Orders vs. CPO", "Orders", "CPO");
+            builder.Chart.Width = 1000;
+            builder.LeftSeries.ChartType = SeriesChartType.Column;
+            builder.RightSeries.ChartType = SeriesChartType.Line;
+            builder.RightSeries.BorderWidth = 4;
+            builder.MainChartArea.BackColor = Color.LightGray;
+            builder.MainChartArea.AxisY2.LabelStyle.Format = "C";
+
+            int profileId = 6; //schol printables
+            //int profileId = 7; //schol teacher express
+            int numWeeks = 19;
+            bool useAnalytics = false;
+            bool includeToday = false;
+            using (var db = new ClientPortalContext())
+            {
+                var cpRepo = new ClientPortalRepository(db);
+                var searchProfile = cpRepo.GetSearchProfile(profileId);
+                var stats = cpRepo.GetWeekStats(profileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, useAnalytics, includeToday);
+                builder.LeftSeries.Points.DataBind(stats, "Title", "Orders", null);
+                builder.RightSeries.Points.DataBind(stats, "Title", "CPO", null);
+            }
+            return builder.Chart;
+        }
+
+        private void SaveToDisk(Chart chart)
+        {
+            chart.SaveImage("c:\\users\\kslesinsky\\downloads\\test123.png", ChartImageFormat.Png);
+        }
+
+        private void SendViaEmail(Chart chart)
+        {
+            var sendTo = "kevin@directagents.com";
+
+            var gmailUsername = ConfigurationManager.AppSettings["GmailEmailer_Username"];
+            var gmailPassword = ConfigurationManager.AppSettings["GmailEmailer_Password"];
+            var emailer = new GmailEmailer(new NetworkCredential(gmailUsername, gmailPassword));
+
+            var plainView = AlternateView.CreateAlternateViewFromString("this is the plain view", null, "text/plain");
+            var htmlView = AlternateView.CreateAlternateViewFromString("here's an embedded image:<br/><img src=cid:test123>", null, "text/html");
+
+            //var resource = new LinkedResource("c:\\users\\kslesinsky\\downloads\\test123.png");
+            using (var ms = new MemoryStream())
+            {
+                chart.SaveImage(ms, ChartImageFormat.Png);
+                ms.Seek(0, SeekOrigin.Begin);
+
+                var resource = new LinkedResource(ms);
+                resource.ContentId = "test123";
+                htmlView.LinkedResources.Add(resource);
+
+                emailer.SendEmail("ignored@directagents.com", new[] { sendTo }, null, "test image", plainView, htmlView);
+            }
+        }
+    }
+}
