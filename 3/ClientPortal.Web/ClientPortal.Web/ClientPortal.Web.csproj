@@ -242,7 +242,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InvoicesController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
-    <Compile Include="Controllers\ScheduledReportsController.cs" />
     <Compile Include="Controllers\SearchHomeController.cs" />
     <Compile Include="Controllers\SearchReportsController.cs" />
     <Compile Include="Global.asax.cs">
@@ -263,7 +262,6 @@
     <Compile Include="Models\IndexModel.cs" />
     <Compile Include="Models\QuickBooksModels.cs" />
     <Compile Include="Models\ReportModel.cs" />
-    <Compile Include="Models\ScheduledReportVM.cs" />
     <Compile Include="Models\SearchIndexModel.cs" />
     <Compile Include="Models\SearchReportModel.cs" />
     <Compile Include="Models\UserInfo.cs" />
@@ -2309,10 +2307,6 @@
     <Content Include="Views\Home\DashboardGoals.cshtml" />
     <Content Include="Views\Shared\_ClicksByDevice.cshtml" />
     <Content Include="Views\Shared\_MainContacts.cshtml" />
-    <Content Include="Views\ScheduledReports\Index.cshtml" />
-    <Content Include="Views\ScheduledReports\List.cshtml" />
-    <Content Include="Views\ScheduledReports\_Infrastructure.cshtml" />
-    <Content Include="Views\ScheduledReports\Edit.cshtml" />
     <Content Include="Views\SearchHome\Index.cshtml" />
     <Content Include="Views\SearchHome\Dashboard.cshtml" />
     <Content Include="Views\SearchHome\CampaignPerf.cshtml" />

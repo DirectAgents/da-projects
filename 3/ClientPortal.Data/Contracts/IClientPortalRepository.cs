@@ -55,13 +55,6 @@ namespace ClientPortal.Data.Contracts
         Contact GetContact(int id);
         Contact GetContact(string search);
 
-        IQueryable<ScheduledReport> GetScheduledReports(int advertiserId);
-        ScheduledReport GetScheduledReport(int id);
-        void AddScheduledReport(ScheduledReport scheduledReport);
-        //void SaveScheduledReport(ScheduledReport scheduledReport);
-        bool DeleteScheduledReport(int id, int? advertiserId);
-        void DeleteScheduledReportRecipient(ScheduledReportRecipient recipient);
-
         IQueryable<FileUpload> GetFileUploads(int? advertiserId);
         FileUpload GetFileUpload(int id);
         void AddFileUpload(FileUpload fileUpload, bool saveChanges = false);

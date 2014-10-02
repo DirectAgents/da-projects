@@ -164,9 +164,6 @@
     <Compile Include="Contexts\DimRegion.cs">
       <DependentUpon>ClientPortalDW.tt</DependentUpon>
     </Compile>
-    <Compile Include="Contexts\EmailedReport.cs">
-      <DependentUpon>ClientPortal.tt</DependentUpon>
-    </Compile>
     <Compile Include="Contexts\EmailStatus.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
@@ -177,9 +174,6 @@
       <DependentUpon>ClientPortalDW.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\FileUpload.cs">
-      <DependentUpon>ClientPortal.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Contexts\GeneratedReport.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\Goal.cs">
@@ -213,12 +207,6 @@
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\ReportType.cs">
-      <DependentUpon>ClientPortal.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Contexts\ScheduledReport.cs">
-      <DependentUpon>ClientPortal.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Contexts\ScheduledReportRecipient.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\SearchAccount.cs">

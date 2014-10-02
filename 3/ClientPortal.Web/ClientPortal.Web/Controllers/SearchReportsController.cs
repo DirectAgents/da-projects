@@ -1,17 +1,15 @@
-﻿using System;
+﻿using AutoMapper;
+using ClientPortal.Data.Contracts;
+using ClientPortal.Data.DTOs;
+using ClientPortal.Web.Models;
+using DirectAgents.Mvc.KendoGridBinder;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using AutoMapper;
-using ClientPortal.Data.Contexts;
-using ClientPortal.Data.Contracts;
-using ClientPortal.Data.DTOs;
-using ClientPortal.Data.Services;
-using ClientPortal.Web.Models;
-using DirectAgents.Mvc.KendoGridBinder;
-using Newtonsoft.Json;
 
 namespace ClientPortal.Web.Controllers
 {

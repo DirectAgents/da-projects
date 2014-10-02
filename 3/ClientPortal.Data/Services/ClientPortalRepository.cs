@@ -605,52 +605,6 @@ namespace ClientPortal.Data.Services
         #endregion
 
         #region ScheduledReports
-        public IQueryable<ScheduledReport> GetScheduledReports(int advertiserId)
-        {
-            var scheduledReports = context.ScheduledReports.Where(sr => sr.AdvertiserId == advertiserId);
-            return scheduledReports;
-        }
-
-        public ScheduledReport GetScheduledReport(int id)
-        {
-            var rep = context.ScheduledReports.Find(id);
-            return rep;
-        }
-
-        public void AddScheduledReport(ScheduledReport scheduledReport)
-        {
-            context.ScheduledReports.Add(scheduledReport);
-        }
-
-        //public void SaveScheduledReport(ScheduledReport scheduledReport)
-        //{
-        //    var entry = context.Entry(scheduledReport);
-        //    entry.State = EntityState.Modified;
-        //    context.SaveChanges();
-        //}
-
-        public bool DeleteScheduledReport(int id, int? advertiserId)
-        {
-            bool deleted = false;
-            var rep = context.ScheduledReports.Find(id);
-            if (rep != null && (advertiserId == null || rep.AdvertiserId == advertiserId.Value))
-            {
-                for (int i = rep.ScheduledReportRecipients.Count - 1; i >= 0; i--)
-                {
-                    var recipient = rep.ScheduledReportRecipients.ElementAt(i);
-                    context.ScheduledReportRecipients.Remove(recipient);
-                }
-                context.ScheduledReports.Remove(rep);
-                context.SaveChanges();
-                deleted = true;
-            }
-            return deleted;
-        }
-
-        public void DeleteScheduledReportRecipient(ScheduledReportRecipient recipient)
-        {
-            context.ScheduledReportRecipients.Remove(recipient);
-        }
         #endregion
 
         #region Files
