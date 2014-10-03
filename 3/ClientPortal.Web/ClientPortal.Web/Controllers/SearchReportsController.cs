@@ -26,7 +26,8 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var weekStats = cpRepo.GetWeekStats(userInfo.SearchProfile.SearchProfileId, numweeks, userInfo.Search_StartDayOfWeek, userInfo.UseAnalytics, !userInfo.Search_UseYesterdayAsLatest);
+            var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
+            var weekStats = cpRepo.GetWeekStats(userInfo.SearchProfile.SearchProfileId, numweeks, userInfo.Search_StartDayOfWeek, endDate, userInfo.UseAnalytics);
             var kgrid = new KendoGrid<SearchStat>(request, weekStats);
             if (weekStats.Any())
                 kgrid.aggregates = Aggregates(weekStats);
@@ -39,7 +40,8 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var weekStats = cpRepo.GetWeekStats(userInfo.SearchProfile.SearchProfileId, numweeks, userInfo.Search_StartDayOfWeek, userInfo.UseAnalytics, !userInfo.Search_UseYesterdayAsLatest);
+            var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
+            var weekStats = cpRepo.GetWeekStats(userInfo.SearchProfile.SearchProfileId, numweeks, userInfo.Search_StartDayOfWeek, endDate, userInfo.UseAnalytics);
             var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(weekStats);
 
             string filename = "WeeklySummary" + ControllerHelpers.DateStamp() + ".csv";

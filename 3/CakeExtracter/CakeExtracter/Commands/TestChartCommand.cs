@@ -31,8 +31,8 @@ namespace CakeExtracter.Commands
             //var chart = CreateAChart();
             var chart = CreateAChartWithBuilder();
 
-            SaveToDisk(chart);
-            //SendViaEmail(chart);
+            //SaveToDisk(chart);
+            SendViaEmail(chart);
 
             return 0;
         }
@@ -70,14 +70,13 @@ namespace CakeExtracter.Commands
 
             int profileId = 6; //schol printables
             //int profileId = 7; //schol teacher express
-            int numWeeks = 19;
+            int numWeeks = 10;
             bool useAnalytics = false;
-            bool includeToday = false;
             using (var db = new ClientPortalContext())
             {
                 var cpRepo = new ClientPortalRepository(db);
                 var searchProfile = cpRepo.GetSearchProfile(profileId);
-                var stats = cpRepo.GetWeekStats(profileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, useAnalytics, includeToday);
+                var stats = cpRepo.GetWeekStats(profileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, null, useAnalytics);
                 builder.LeftSeries.Points.DataBind(stats, "Title", "Orders", null);
                 builder.RightSeries.Points.DataBind(stats, "Title", "CPO", null);
             }

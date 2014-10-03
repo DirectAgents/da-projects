@@ -160,34 +160,35 @@ namespace ClientPortal.Data.Services
         //    return stats;
         //}
 
-        public IQueryable<SearchStat> GetWeekStats(int searchProfileId, int? numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday)
+        // if endDate is null, goes up to the latest complete week
+        public IQueryable<SearchStat> GetWeekStats(int searchProfileId, int numWeeks, DayOfWeek startDayOfWeek, DateTime? endDate, bool useAnalytics)
         {
-            return GetWeekStats(null, searchProfileId, null, null, null, null, numWeeks, startDayOfWeek, useAnalytics, includeToday);
+            return GetWeekStats(null, searchProfileId, null, null, null, null, numWeeks, startDayOfWeek, endDate, useAnalytics);
         }
 
-        private IQueryable<SearchStat> GetWeekStats(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, int? numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday)
+        private IQueryable<SearchStat> GetWeekStats(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, int numWeeks, DayOfWeek startDayOfWeek, DateTime? endDate, bool useAnalytics)
         {
             if (!String.IsNullOrWhiteSpace(device) && useAnalytics)
                 throw new Exception("specifying a device and useAnalytics not supported");
 
-            DateTime today = DateTime.Today;
-            DateTime start;
-            if (numWeeks.HasValue) // If the number of weeks is present
-                start = today.AddDays(-7 * numWeeks.Value + 6); // Then set start date to numWeeks weeks ago, plus 6 (works with leap year?)
-            //else if (today.Month == 12)
-            //    start = new DateTime(today.Year, 1, 1);
-            else
-                start = today.AddMonths(-6); // Otherwise set the start date to 6 months ago
+            if (!endDate.HasValue)
+            {
+                // Start with yesterday and go back until it's the end of the latest full week
+                endDate = DateTime.Today.AddDays(-1);
+                while (endDate.Value.AddDays(1).DayOfWeek != startDayOfWeek)
+                    endDate = endDate.Value.AddDays(-1);
+            }
 
-            // Now move start date back to the closest startDayOfWeek
-            while (start.DayOfWeek != startDayOfWeek)
-                start = start.AddDays(-1);
+            // Go back 7 weeks from endDate, then forward 1 day, so it's the right number of weeks, inclusive of start and endDate
+            DateTime startDate = endDate.Value.AddDays(-7 * numWeeks + 1);
 
-            var latestDate = includeToday ? today : today.AddDays(-1);
+            // Now move start date back to the closest startDayOfWeek (there may be a partial week now, at the end)
+            // (Will only apply if endDate was set to a day other than at the end of the week)
+            while (startDate.DayOfWeek != startDayOfWeek)
+                startDate = startDate.AddDays(-1);
 
-            DateTime? end = null;
             var daySums =
-                GetSearchDailySummaries(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix, device, start, end, includeToday)
+                GetSearchDailySummaries(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix, device, startDate, endDate, true)
 
                     // Group by the Date
                     .GroupBy(s => s.Date)
@@ -208,7 +209,7 @@ namespace ClientPortal.Data.Services
 
             if (useAnalytics)
             {
-                var gaSums = GetGoogleAnalyticsSummaries(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix, start, null, includeToday)
+                var gaSums = GetGoogleAnalyticsSummaries(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix, startDate, endDate, true)
                     .GroupBy(s => s.Date)
                     .Select(g => new AnalyticsSummary
                     {
@@ -283,7 +284,7 @@ namespace ClientPortal.Data.Services
                     .Select((g, i) => new SearchStat
                     {
                         WeekStartDay = startDayOfWeek,
-                        FillToLatest = latestDate,
+                        FillToLatest = endDate, // Acts as a boolean except for the most recent week
                         WeekByMaxDate = g.Max(s => s.Date), // Supply the latest date in the group of dates (which are all part of a week)
                         TitleIfNotNull = title, // (if null, Title is "Range")
 
@@ -450,9 +451,10 @@ namespace ClientPortal.Data.Services
         }
 
         // Get a SearchStat summary for each week for each channel (Google/Bing/etc)... and, if includeAccountBreakdown, each SearchAccount
-        public IQueryable<SearchStat> GetChannelStats(int searchProfileId, int? numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday, bool includeAccountBreakdown, bool includeSearchChannels)
+        public IQueryable<SearchStat> GetChannelStats(int searchProfileId, int numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday, bool includeAccountBreakdown, bool includeSearchChannels)
         {
             var searchProfile = GetSearchProfile(searchProfileId);
+            DateTime endDate = includeToday ? DateTime.Today : DateTime.Today.AddDays(-1);
 
             bool includeMainChannels = true; // (e.g. Google/Bing/etc)
             //if (includeAccountBreakdown)
@@ -464,9 +466,9 @@ namespace ClientPortal.Data.Services
             IQueryable<SearchStat> stats = new List<SearchStat>().AsQueryable();
             if (includeMainChannels)
             {
-                var googleStats = GetWeekStats(null, searchProfileId, "Google", null, null, null, numWeeks, startDayOfWeek, useAnalytics, includeToday);
-                var bingStats = GetWeekStats(null, searchProfileId, "Bing", null, null, null, numWeeks, startDayOfWeek, useAnalytics, includeToday);
-                var criteoStats = GetWeekStats(null, searchProfileId, "Criteo", null, null, null, numWeeks, startDayOfWeek, useAnalytics, includeToday);
+                var googleStats = GetWeekStats(null, searchProfileId, "Google", null, null, null, numWeeks, startDayOfWeek, endDate, useAnalytics);
+                var bingStats = GetWeekStats(null, searchProfileId, "Bing", null, null, null, numWeeks, startDayOfWeek, endDate, useAnalytics);
+                var criteoStats = GetWeekStats(null, searchProfileId, "Criteo", null, null, null, numWeeks, startDayOfWeek, endDate, useAnalytics);
                 stats = googleStats.Concat(bingStats).Concat(criteoStats).AsQueryable();
             }
             if (includeAccountBreakdown)
@@ -479,7 +481,7 @@ namespace ClientPortal.Data.Services
                     {
                         foreach (var searchAccount in searchAccounts)
                         {
-                            var accountStats = GetWeekStats(null, searchProfileId, channel, searchAccount.SearchAccountId, null, null, numWeeks, startDayOfWeek, useAnalytics, includeToday);
+                            var accountStats = GetWeekStats(null, searchProfileId, channel, searchAccount.SearchAccountId, null, null, numWeeks, startDayOfWeek, endDate, useAnalytics);
                             stats = stats.Concat(accountStats);
                         }
                     }
@@ -492,7 +494,7 @@ namespace ClientPortal.Data.Services
                     if (!String.IsNullOrWhiteSpace(searchChannel.Device) && useAnalytics)
                         continue; // specifying device and useAnalytics not supported; analytics summaries are not broken down by device
 
-                    var channelStats = GetWeekStats(null, searchProfileId, null, null, searchChannel.Prefix, searchChannel.Device, numWeeks, startDayOfWeek, useAnalytics, includeToday);
+                    var channelStats = GetWeekStats(null, searchProfileId, null, null, searchChannel.Prefix, searchChannel.Device, numWeeks, startDayOfWeek, endDate, useAnalytics);
                     if (channelStats.Count() > 0)
                         stats = stats.Concat(channelStats);
                 }

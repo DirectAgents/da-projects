@@ -158,13 +158,16 @@ namespace ClientPortal.Data.DTOs
             set
             {
                 var startDate = value;
+                // Stretch back until we reach a WeekStartDay
                 while (startDate.DayOfWeek != this.WeekStartDay)
                     startDate = startDate.AddDays(-1);
 
                 this.EndDate = value;
                 if (this.FillToLatest.HasValue)
                 {
-                    while (this.EndDate < this.FillToLatest.Value && this.EndDate.DayOfWeek != this.WeekEndDay)
+                    // Stretch forward until we reach a WeekEndDay (or FillToLatest, whichever comes first)
+                    var weekEndDay = this.WeekEndDay;
+                    while (this.EndDate < this.FillToLatest.Value && this.EndDate.DayOfWeek != weekEndDay)
                         this.EndDate = this.EndDate.AddDays(1);
                 }
                 this.Days = (this.EndDate - startDate).Days + 1;
