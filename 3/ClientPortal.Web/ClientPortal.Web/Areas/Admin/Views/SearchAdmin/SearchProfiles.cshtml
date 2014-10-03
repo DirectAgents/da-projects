@@ -12,6 +12,7 @@
         <th></th>
         <th>SearchProfile</th>
         <th>Login</th>
+        <th>Reports</th>
     </tr>
 @foreach (var profile in Model)
 {
@@ -19,10 +20,17 @@
         <td>@Ajax.ActionLink("Edit", "EditProfile", new { spId = profile.SearchProfileId }, ajaxOptions)</td>
         <td>@profile.SearchProfileName</td>
         <td>
-            @if (profile.UserProfiles.Count > 0) {
+            @if (profile.UserProfiles.Any()) {
                 @(String.Join(", ", profile.UserProfiles.Select(u => u.UserName).ToArray()))
             } else {
                 @Ajax.ActionLink("create", "CreateUserProfile", new { spId = profile.SearchProfileId }, ajaxOptions)
+            }
+        </td>
+        <td>
+            @if (profile.SimpleReports.Any()) {
+                <text>yes</text>
+            } else {
+                @Ajax.ActionLink("enable", "EnableReports", new { spId = profile.SearchProfileId }, ajaxOptions )
             }
         </td>
         <td>@Ajax.ActionLink("Edit Contacts", "EditSearchProfileContacts", new { spId = profile.SearchProfileId }, ajaxOptions)</td>

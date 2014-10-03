@@ -70,20 +70,19 @@ namespace ClientPortal.Web.Controllers
             });
         }
 
-        // UNDER CONSTRUCTION (TODO:)
-        public PartialViewResult AdgroupPerf()
-        {
-            var userInfo = GetUserInfo();
+        //public PartialViewResult AdgroupPerf()
+        //{
+        //    var userInfo = GetUserInfo();
 
-            var start = new DateTime(2013, 6, 17);
-            var end = new DateTime(2013, 6, 23);
-            var model = new SearchReportModel()
-            {
-                StartDate = start.ToString("d", userInfo.CultureInfo),
-                EndDate = end.ToString("d", userInfo.CultureInfo)
-            };
-            return PartialView(model);
-        }
+        //    var start = new DateTime(2013, 6, 17);
+        //    var end = new DateTime(2013, 6, 23);
+        //    var model = new SearchReportModel()
+        //    {
+        //        StartDate = start.ToString("d", userInfo.CultureInfo),
+        //        EndDate = end.ToString("d", userInfo.CultureInfo)
+        //    };
+        //    return PartialView(model);
+        //}
 
         public ActionResult Contact(bool showtitle = true)
         {

@@ -217,18 +217,17 @@ namespace ClientPortal.Web.Controllers
             return json;
         }
 
-        // ? unused ?
-        [HttpPost]
-        public JsonResult AdgroupPerfData(KendoGridRequest request, string startdate, string enddate)
-        {
-            var stats = cpRepo.GetAdgroupStats(); // note: this gives dummy data
-            var kgrid = new KendoGrid<SearchStat>(request, stats);
-            if (stats.Any())
-                kgrid.aggregates = Aggregates(stats);
+        //[HttpPost]
+        //public JsonResult AdgroupPerfData(KendoGridRequest request, string startdate, string enddate)
+        //{
+        //    var stats = cpRepo.GetAdgroupStats(); // note: this gives dummy data
+        //    var kgrid = new KendoGrid<SearchStat>(request, stats);
+        //    if (stats.Any())
+        //        kgrid.aggregates = Aggregates(stats);
 
-            var json = Json(kgrid);
-            return json;
-        }
+        //    var json = Json(kgrid);
+        //    return json;
+        //}
 
         // --- private methods ---
 

@@ -28,6 +28,36 @@ namespace ClientPortal.Data.Services
             context.SaveChanges();
         }
 
+        // by default, report goes to first contact
+        public bool EnableSearchProfileSimpleReport(int searchProfileId, string email = null)
+        {
+            bool success = false;
+            var searchProfile = GetSearchProfile(searchProfileId);
+            if (searchProfile != null && !searchProfile.SimpleReports.Any())
+            {
+                if (String.IsNullOrWhiteSpace(email))
+                {
+                    var spContacts = searchProfile.SearchProfileContactsOrdered;
+                    if (spContacts.Any())
+                        email = spContacts.First().Contact.Email;
+                }
+                if (!String.IsNullOrWhiteSpace(email))
+                {
+                    var simpleReport = new SimpleReport
+                    {
+                        Email = email,
+                        Enabled = true
+                    };
+                    searchProfile.SimpleReports.Add(simpleReport);
+                    context.SaveChanges();
+                    success = true;
+                }
+            }
+            return success;
+        }
+
+        // --- Search Stats ---
+
         public SearchStat GetSearchStats(int searchProfileId, DateTime? start, DateTime? end, bool includeToday = true)
         {
             var summaries = GetSearchDailySummaries(null, searchProfileId, null, null, null, null, start, end, includeToday);
@@ -597,6 +627,20 @@ namespace ClientPortal.Data.Services
             return stats.OrderByDescending(s => s.Revenue);
         }
 
+        //public IQueryable<SearchStat> GetAdgroupStats()
+        //{
+        //    var stats = new List<SearchStat>
+        //    {
+        //        new SearchStat(true, 2013, 6, 2, 1281, 34, 2, 230m, 31.49m, "Apple Computer Ram"),
+        //        new SearchStat(true, 2013, 6, 2, 1002, 23, 0, 0m, 14.13m, "Apple Memory"),
+        //        new SearchStat(true, 2013, 6, 2, 1819, 20, 1, 80m, 15.96m, "Apple Memory Module"),
+        //        new SearchStat(true, 2013, 6, 2, 1295, 11, 0, 0m, 17.31m, "Apple RAM"),
+        //    };
+        //    return stats.AsQueryable();
+        //}
+
+        // --- Private methods ---
+
         private List<SearchChannel> _searchChannels;
         private List<SearchChannel> SearchChannels
         {
@@ -618,17 +662,6 @@ namespace ClientPortal.Data.Services
             return searchChannel;
         }
 
-        public IQueryable<SearchStat> GetAdgroupStats()
-        {
-            var stats = new List<SearchStat>
-            {
-                new SearchStat(true, 2013, 6, 2, 1281, 34, 2, 230m, 31.49m, "Apple Computer Ram"),
-                new SearchStat(true, 2013, 6, 2, 1002, 23, 0, 0m, 14.13m, "Apple Memory"),
-                new SearchStat(true, 2013, 6, 2, 1819, 20, 1, 80m, 15.96m, "Apple Memory Module"),
-                new SearchStat(true, 2013, 6, 2, 1295, 11, 0, 0m, 17.31m, "Apple RAM"),
-            };
-            return stats.AsQueryable();
-        }
     }
 
     class YearWeekAdjuster

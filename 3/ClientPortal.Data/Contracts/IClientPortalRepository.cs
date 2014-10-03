@@ -101,6 +101,8 @@ namespace ClientPortal.Data.Contracts
         SearchProfile GetSearchProfile(int searchProfileId);
         void SaveSearchProfile(SearchProfile searchProfile);
 
+        bool EnableSearchProfileSimpleReport(int searchProfileId, string email = null);
+
         SearchStat GetSearchStats(int searchProfileId, DateTime? start, DateTime? end, bool includeToday = true);
         IQueryable<SearchStat> GetWeekStats(int searchProfileId, int? numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday);
         IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int searchProfileId, int numWeeks, bool includeToday, DayOfWeek startDayOfWeek, bool useAnalytics);
@@ -108,6 +110,6 @@ namespace ClientPortal.Data.Contracts
         IQueryable<SearchStat> GetMonthStats(int searchProfileId, int? numMonths, bool useAnalytics, bool includeToday);
         IQueryable<SearchStat> GetChannelStats(int searchProfileId, int? numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday, bool includeAccountBreakdown, bool includeSearchChannels);
         IQueryable<SearchStat> GetCampaignStats(int searchProfileId, string channel, DateTime? start, DateTime? end, bool breakdown, bool useAnalytics);
-        IQueryable<SearchStat> GetAdgroupStats();
+        //IQueryable<SearchStat> GetAdgroupStats();
     }
 }
