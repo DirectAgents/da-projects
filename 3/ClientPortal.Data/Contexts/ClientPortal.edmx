@@ -585,7 +585,7 @@
           <Key>
             <PropertyRef Name="SimpleReportId" />
           </Key>
-          <Property Name="SimpleReportId" Type="int" Nullable="false" />
+          <Property Name="SimpleReportId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="AdvertiserId" Type="int" />
           <Property Name="SearchProfileId" Type="int" />
           <Property Name="Enabled" Type="bit" Nullable="false" />
@@ -2103,7 +2103,7 @@
           <Key>
             <PropertyRef Name="SimpleReportId" />
           </Key>
-          <Property Type="Int32" Name="SimpleReportId" Nullable="false" />
+          <Property Type="Int32" Name="SimpleReportId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="Int32" Name="AdvertiserId" />
           <Property Type="Int32" Name="SearchProfileId" />
           <Property Type="Boolean" Name="Enabled" Nullable="false" />

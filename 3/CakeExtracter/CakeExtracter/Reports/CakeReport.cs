@@ -1,7 +1,6 @@
-﻿using System;
-using System.Linq;
-using ClientPortal.Data.Contexts;
+﻿using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
+using System;
 
 namespace CakeExtracter.Reports
 {
@@ -9,28 +8,35 @@ namespace CakeExtracter.Reports
     {
         private readonly IClientPortalRepository cpRepo;
         private readonly Advertiser advertiser;
+        private readonly DateTime EndDate;
+        private readonly int PeriodDays;
 
-        public CakeReport(IClientPortalRepository cpRepo, Advertiser advertiser)
+        public CakeReport(IClientPortalRepository cpRepo, Advertiser advertiser, DateTime endDate, int periodDays)
         {
             this.cpRepo = cpRepo;
             this.advertiser = advertiser;
+            this.EndDate = endDate;
+            this.PeriodDays = periodDays;
+        }
+
+        public string Subject
+        {
+            get { return "Direct Agents Client Portal Automated Report"; }
         }
 
         public string Generate()
         {
-            var toDate = advertiser.AutomatedReportsNextSendAfter.Value;
-            var fromDate = toDate.AddDays(-1 * advertiser.AutomatedReportsPeriodDays + 1);
-            var dateRangeSummary = this.cpRepo.GetDateRangeSummary(fromDate, toDate, advertiser.AdvertiserId, null, advertiser.ShowConversionData);
+            var startDate = EndDate.AddDays(-1 * PeriodDays + 1);
+            var dateRangeSummary = this.cpRepo.GetDateRangeSummary(startDate, EndDate, advertiser.AdvertiserId, null, advertiser.ShowConversionData);
             if (dateRangeSummary == null)
             {
-                var msg = "Cannot generate report for advertiser id {0}, stats not synched?";
-                Logger.Warn(msg);
+                var msg = String.Format("Cannot generate report for advertiser id {0}, stats not synched?", advertiser.AdvertiserId);
                 throw new Exception(msg);
             }
 
             var template = new CakeReportRuntimeTextTemplate();
             template.AdvertiserName = advertiser.AdvertiserName ?? "";
-            template.Week = string.Format("{0} - {1}", fromDate.ToShortDateString(), toDate.ToShortDateString());
+            template.Week = string.Format("{0} - {1}", startDate.ToShortDateString(), EndDate.ToShortDateString());
             template.Clicks = dateRangeSummary.Clicks;
             template.Leads = dateRangeSummary.Conversions;
             template.Rate = dateRangeSummary.ConversionRate;

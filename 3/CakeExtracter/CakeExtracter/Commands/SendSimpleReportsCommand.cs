@@ -8,31 +8,32 @@ using System.Configuration;
 namespace CakeExtracter.Commands
 {
     [Export(typeof(ConsoleCommand))]
-    public class SendAutomatedReportsCommand : ConsoleCommand
+    public class SendSimpleReportsCommand : ConsoleCommand
     {
         public override void ResetProperties()
         {
         }
 
-        public SendAutomatedReportsCommand()
+        public SendSimpleReportsCommand()
         {
-            IsCommand("sendAutomatedReports", "send automated reports");
+            IsCommand("sendSimpleReports", "send simple reports");
         }
 
-        // TODO: IoC
         public override int Execute(string[] remainingArguments)
         {
             var gmailUsername = ConfigurationManager.AppSettings["GmailEmailer_Username"];
             var gmailPassword = ConfigurationManager.AppSettings["GmailEmailer_Password"];
 
+            int numReportsSent;
             using (var db = new ClientPortalContext())
             {
-                var reportManager = new ReportManager(
+                var reportManager = new SimpleReportManager(
                                             new ClientPortalRepository(db),
                                             new GmailEmailer(new System.Net.NetworkCredential(gmailUsername, gmailPassword))
                                         );
-                reportManager.CatchUp();
+                numReportsSent = reportManager.CatchUp();
             }
+            Logger.Info("{0} reports sent", numReportsSent);
             return 0;
         }
     }

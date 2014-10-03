@@ -12,15 +12,11 @@ namespace CakeExtracter.Reports
     {
         private readonly IClientPortalRepository cpRepo;
         private readonly GmailEmailer emailer;
-        private readonly string reportEmailFromAddress;
-        private readonly string reportEmailSubject;
 
-        public ReportManager(IClientPortalRepository cpRepo, GmailEmailer emailer, string reportEmailFromAddress, string reportEmailSubject)
+        public ReportManager(IClientPortalRepository cpRepo, GmailEmailer emailer)
         {
             this.cpRepo = cpRepo;
             this.emailer = emailer;
-            this.reportEmailFromAddress = reportEmailFromAddress;
-            this.reportEmailSubject = reportEmailSubject;
         }
 
         /// <summary>
@@ -46,8 +42,11 @@ namespace CakeExtracter.Reports
                     else
                     {
                         var report = this.SelectReport(adv);
-                        this.SendReport(adv, report);
-                        this.UpdateAdvertiser(adv);
+
+                        if (this.SendReport(adv, report))
+                            this.UpdateAdvertiser(adv);
+                        else
+                            adv.AutomatedReportsEnabled = false;
                     }
                     cpRepo.SaveChanges();
                 }
@@ -69,26 +68,36 @@ namespace CakeExtracter.Reports
         private IReport SelectReport(Advertiser advertiser)
         {
             IReport report = null;
-            if (advertiser.HasSearch)
-            {
-                report = new SearchReport(cpRepo, advertiser);
-            }
-            else
-            {
-                report = new CakeReport(cpRepo, advertiser);
-            }
+            //if (advertiser.HasSearch)
+            //{
+            //    report = new SearchReport(cpRepo, advertiser);
+            //}
+            //else
+            //{
+                report = new CakeReport(cpRepo, advertiser, advertiser.AutomatedReportsNextSendAfter.Value, advertiser.AutomatedReportsPeriodDays);
+            //}
             return report;
         }
 
-        private void SendReport(Advertiser advertiser, IReport report)
+        private bool SendReport(Advertiser advertiser, IReport report)
         {
-            this.emailer.SendEmail(
-                            this.reportEmailFromAddress,
-                            new[] { advertiser.AutomatedReportsDestinationEmail },
-                            null,
-                            this.reportEmailSubject,
-                            report.Generate(),
-                            true);
+            try
+            {
+                var reportString = report.Generate();
+                this.emailer.SendEmail(
+                                emailer.Credential.UserName,
+                                new[] { advertiser.AutomatedReportsDestinationEmail },
+                                null,
+                                report.Subject,
+                                reportString,
+                                true);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return false;
+            }
         }
 
         // TODO: switch to a day of the week instead of a constant period

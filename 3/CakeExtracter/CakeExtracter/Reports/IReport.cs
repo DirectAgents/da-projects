@@ -2,6 +2,7 @@
 {
     interface IReport
     {
+        string Subject { get; }
         string Generate();
     }
 }

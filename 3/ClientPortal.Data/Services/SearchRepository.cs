@@ -28,9 +28,9 @@ namespace ClientPortal.Data.Services
             context.SaveChanges();
         }
 
-        public SearchStat GetSearchStats(int? advertiserId, DateTime? start, DateTime? end, bool includeToday = true)
+        public SearchStat GetSearchStats(int searchProfileId, DateTime? start, DateTime? end, bool includeToday = true)
         {
-            var summaries = GetSearchDailySummaries(advertiserId, null, null, null, null, null, start, end, includeToday);
+            var summaries = GetSearchDailySummaries(null, searchProfileId, null, null, null, null, start, end, includeToday);
             var searchStat = new SearchStat
             {
                 EndDate = end.Value,

@@ -1,29 +1,38 @@
-﻿using System;
-using System.Linq;
-using ClientPortal.Data.Contexts;
+﻿using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
+using System;
+using System.Linq;
 
 namespace CakeExtracter.Reports
 {
     class SearchReport : IReport
     {
         private readonly IClientPortalRepository cpRepo;
-        private readonly Advertiser advertiser;
+        private readonly SimpleReport simpleReport;
 
-        public SearchReport(IClientPortalRepository cpRepo, Advertiser advertiser)
+        public SearchReport(IClientPortalRepository cpRepo, SimpleReport simpleReport)
         {
             this.cpRepo = cpRepo;
-            this.advertiser = advertiser;
+            this.simpleReport = simpleReport;
+        }
+
+        public string Subject
+        {
+            get { return "Direct Agents Search Report"; }
         }
 
         public string Generate()
         {
-            var toDate = advertiser.AutomatedReportsNextSendAfter.Value;
-            var fromDate = toDate.AddDays(-1 * advertiser.AutomatedReportsPeriodDays + 1);
-            var stat = this.cpRepo.GetSearchStats(advertiser.AdvertiserId, fromDate, toDate);
+            if (simpleReport.SearchProfile == null)
+                throw new Exception("Cannot generate search report without a searchProfile");
+            var searchProfile = simpleReport.SearchProfile;
+
+            var fromDate = simpleReport.GetStatsStartDate();
+            var toDate = simpleReport.GetStatsEndDate();
+            var stat = this.cpRepo.GetSearchStats(searchProfile.SearchProfileId, fromDate, toDate);
 
             var template = new SearchReportRuntimeTextTemplate();
-            template.AdvertiserName = advertiser.AdvertiserName ?? "";
+            template.AdvertiserName = searchProfile.SearchProfileName ?? "";
             template.Week = string.Format("{0} - {1}", fromDate.ToShortDateString(), toDate.ToShortDateString());
             template.Revenue = stat.Revenue;
             template.Cost = stat.Cost;
@@ -35,12 +44,12 @@ namespace CakeExtracter.Reports
             template.AcctMgrName = "";
             template.AcctMgrEmail = "";
 
-            var advContacts = advertiser.AdvertiserContactsOrdered.ToList();
-            if (advContacts.Count > 0)
+            var searchProfileContacts = searchProfile.SearchProfileContactsOrdered;
+            if (searchProfileContacts.Count() > 0)
             {
-                var advContact = (advContacts.Count > 1) ? advContacts[1] : advContacts[0];
-                template.AcctMgrName = advContact.Contact.FullName ?? "";
-                template.AcctMgrEmail = advContact.Contact.Email ?? "";
+                var contact = searchProfileContacts.First().Contact;
+                template.AcctMgrName = contact.FullName ?? "";
+                template.AcctMgrEmail = contact.Email ?? "";
             }
 
             string content = template.TransformText();

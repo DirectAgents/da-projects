@@ -277,6 +277,7 @@
     <Compile Include="Commands\ScheduledCommand.cs" />
     <Compile Include="Commands\ScheduledJob.cs" />
     <Compile Include="Commands\SendAutomatedReportsCommand.cs" />
+    <Compile Include="Commands\SendSimpleReportsCommand.cs" />
     <Compile Include="Commands\SynchAdvertisersCommand.cs" />
     <Compile Include="Commands\SynchCampaignsCommand.cs" />
     <Compile Include="Commands\SynchClicksCommand2.cs" />
@@ -403,6 +404,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SearchReportRuntimeTextTemplate.tt</DependentUpon>
     </Compile>
+    <Compile Include="Reports\SimpleReportManager.cs" />
     <Compile Include="Syncher.cs" />
     <Compile Include="Data\UsersContext.cs" />
     <Compile Include="Common\RetryUtility.cs" />
