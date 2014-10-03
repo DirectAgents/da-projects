@@ -39,6 +39,7 @@
           <EntitySet Name="SearchDailySummary2" EntityType="ClientPortalModel.Store.SearchDailySummary2" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SearchProfile" EntityType="ClientPortalModel.Store.SearchProfile" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SearchProfileContact" EntityType="ClientPortalModel.Store.SearchProfileContact" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="SimpleReport" EntityType="ClientPortalModel.Store.SimpleReport" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="UserEvent" EntityType="ClientPortalModel.Store.UserEvent" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="UserProfile" EntityType="ClientPortalModel.Store.UserProfile" store:Type="Tables" Schema="dbo" />
           <AssociationSet Name="FK_Advertiser_CakeContact" Association="ClientPortalModel.Store.FK_Advertiser_CakeContact">
@@ -164,6 +165,14 @@
           <AssociationSet Name="FK_SearchProfileContact_SearchProfile" Association="ClientPortalModel.Store.FK_SearchProfileContact_SearchProfile">
             <End Role="SearchProfile" EntitySet="SearchProfile" />
             <End Role="SearchProfileContact" EntitySet="SearchProfileContact" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SimpleReport_Advertiser" Association="ClientPortalModel.Store.FK_SimpleReport_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="SimpleReport" EntitySet="SimpleReport" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SimpleReport_SearchProfile" Association="ClientPortalModel.Store.FK_SimpleReport_SearchProfile">
+            <End Role="SearchProfile" EntitySet="SearchProfile" />
+            <End Role="SimpleReport" EntitySet="SimpleReport" />
           </AssociationSet>
           <AssociationSet Name="FK_UserEvent_UserProfile" Association="ClientPortalModel.Store.FK_UserEvent_UserProfile">
             <End Role="UserProfile" EntitySet="UserProfile" />
@@ -572,6 +581,22 @@
           <Property Name="ContactId" Type="int" Nullable="false" />
           <Property Name="Order" Type="int" />
         </EntityType>
+        <EntityType Name="SimpleReport">
+          <Key>
+            <PropertyRef Name="SimpleReportId" />
+          </Key>
+          <Property Name="SimpleReportId" Type="int" Nullable="false" />
+          <Property Name="AdvertiserId" Type="int" />
+          <Property Name="SearchProfileId" Type="int" />
+          <Property Name="Enabled" Type="bit" Nullable="false" />
+          <Property Name="Email" Type="nvarchar(max)" />
+          <Property Name="EmailCC" Type="nvarchar(max)" />
+          <Property Name="NextSend" Type="datetime" />
+          <Property Name="PeriodDays" Type="int" Nullable="false" />
+          <Property Name="PeriodMonths" Type="int" Nullable="false" />
+          <Property Name="LastSend" Type="datetime" />
+          <Property Name="LastStatsDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="UserEvent">
           <Key>
             <PropertyRef Name="EventId" />
@@ -969,6 +994,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SimpleReport_Advertiser">
+          <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="0..1" />
+          <End Role="SimpleReport" Type="ClientPortalModel.Store.SimpleReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="SimpleReport">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SimpleReport_SearchProfile">
+          <End Role="SearchProfile" Type="ClientPortalModel.Store.SearchProfile" Multiplicity="0..1" />
+          <End Role="SimpleReport" Type="ClientPortalModel.Store.SimpleReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchProfile">
+              <PropertyRef Name="SearchProfileId" />
+            </Principal>
+            <Dependent Role="SimpleReport">
+              <PropertyRef Name="SearchProfileId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UserEvent_UserProfile">
           <End Role="UserProfile" Type="ClientPortalModel.Store.UserProfile" Multiplicity="0..1" />
           <End Role="UserEvent" Type="ClientPortalModel.Store.UserEvent" Multiplicity="*" />
@@ -1159,6 +1208,15 @@
           <AssociationSet Name="FK_SearchCampaign_SearchAccount1" Association="ClientPortalModel.FK_SearchCampaign_SearchAccount1">
             <End Role="SearchAccount" EntitySet="SearchAccounts" />
             <End Role="SearchCampaign" EntitySet="SearchCampaigns" />
+          </AssociationSet>
+          <EntitySet Name="SimpleReports" EntityType="ClientPortalModel.SimpleReport" />
+          <AssociationSet Name="FK_SimpleReport_Advertiser" Association="ClientPortalModel.FK_SimpleReport_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="SimpleReport" EntitySet="SimpleReports" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SimpleReport_SearchProfile" Association="ClientPortalModel.FK_SimpleReport_SearchProfile">
+            <End Role="SearchProfile" EntitySet="SearchProfiles" />
+            <End Role="SimpleReport" EntitySet="SimpleReports" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -1448,6 +1506,7 @@
           <Property Type="DateTime" Name="LatestDaySums" Precision="3" />
           <Property Type="DateTime" Name="LatestClicks" Precision="3" />
           <Property Type="Int32" Name="StartDayOfWeek" Nullable="false" DefaultValue="1" />
+          <NavigationProperty Name="SimpleReports" Relationship="ClientPortalModel.FK_SimpleReport_Advertiser" FromRole="Advertiser" ToRole="SimpleReport" />
         </EntityType>
         <Association Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
           <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1">
@@ -1967,6 +2026,7 @@
           <NavigationProperty Name="SearchAccounts" Relationship="ClientPortalModel.FK_SearchAccount_SearchProfile" FromRole="SearchProfile" ToRole="SearchAccount" />
           <NavigationProperty Name="SearchProfileContacts" Relationship="ClientPortalModel.FK_SearchProfileContact_SearchProfile" FromRole="SearchProfile" ToRole="SearchProfileContact" />
           <Property Type="Boolean" Name="ShowSearchChannels" Nullable="false" />
+          <NavigationProperty Name="SimpleReports" Relationship="ClientPortalModel.FK_SimpleReport_SearchProfile" FromRole="SearchProfile" ToRole="SimpleReport" />
         </EntityType>
         <Association Name="FK_UserProfile_SearchProfile">
           <End Type="ClientPortalModel.SearchProfile" Role="SearchProfile" Multiplicity="0..1" />
@@ -2036,6 +2096,48 @@
             </Principal>
             <Dependent Role="SearchCampaign">
               <PropertyRef Name="AltSearchAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SimpleReport">
+          <Key>
+            <PropertyRef Name="SimpleReportId" />
+          </Key>
+          <Property Type="Int32" Name="SimpleReportId" Nullable="false" />
+          <Property Type="Int32" Name="AdvertiserId" />
+          <Property Type="Int32" Name="SearchProfileId" />
+          <Property Type="Boolean" Name="Enabled" Nullable="false" />
+          <Property Type="String" Name="Email" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="EmailCC" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="NextSend" Precision="3" />
+          <Property Type="Int32" Name="PeriodDays" Nullable="false" />
+          <Property Type="Int32" Name="PeriodMonths" Nullable="false" />
+          <Property Type="DateTime" Name="LastSend" Precision="3" />
+          <Property Type="DateTime" Name="LastStatsDate" Precision="3" />
+          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_SimpleReport_Advertiser" FromRole="SimpleReport" ToRole="Advertiser" />
+          <NavigationProperty Name="SearchProfile" Relationship="ClientPortalModel.FK_SimpleReport_SearchProfile" FromRole="SimpleReport" ToRole="SearchProfile" />
+        </EntityType>
+        <Association Name="FK_SimpleReport_Advertiser">
+          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="0..1" />
+          <End Type="ClientPortalModel.SimpleReport" Role="SimpleReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="SimpleReport">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SimpleReport_SearchProfile">
+          <End Type="ClientPortalModel.SearchProfile" Role="SearchProfile" Multiplicity="0..1" />
+          <End Type="ClientPortalModel.SimpleReport" Role="SimpleReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchProfile">
+              <PropertyRef Name="SearchProfileId" />
+            </Principal>
+            <Dependent Role="SimpleReport">
+              <PropertyRef Name="SearchProfileId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2480,6 +2582,23 @@
                 <ScalarProperty Name="Order" ColumnName="Order" />
                 <ScalarProperty Name="ContactId" ColumnName="ContactId" />
                 <ScalarProperty Name="SearchProfileId" ColumnName="SearchProfileId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SimpleReports">
+            <EntityTypeMapping TypeName="ClientPortalModel.SimpleReport">
+              <MappingFragment StoreEntitySet="SimpleReport">
+                <ScalarProperty Name="LastStatsDate" ColumnName="LastStatsDate" />
+                <ScalarProperty Name="LastSend" ColumnName="LastSend" />
+                <ScalarProperty Name="PeriodMonths" ColumnName="PeriodMonths" />
+                <ScalarProperty Name="PeriodDays" ColumnName="PeriodDays" />
+                <ScalarProperty Name="NextSend" ColumnName="NextSend" />
+                <ScalarProperty Name="EmailCC" ColumnName="EmailCC" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Enabled" ColumnName="Enabled" />
+                <ScalarProperty Name="SearchProfileId" ColumnName="SearchProfileId" />
+                <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
+                <ScalarProperty Name="SimpleReportId" ColumnName="SimpleReportId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -22,6 +22,7 @@ namespace ClientPortal.Data.Contexts
             this.Goals = new HashSet<Goal>();
             this.SearchCampaigns = new HashSet<SearchCampaign>();
             this.SearchAccounts = new HashSet<SearchAccount>();
+            this.SimpleReports = new HashSet<SimpleReport>();
         }
     
         public int AdvertiserId { get; set; }
@@ -52,5 +53,6 @@ namespace ClientPortal.Data.Contexts
         public virtual ICollection<SearchCampaign> SearchCampaigns { get; set; }
         public virtual ICollection<SearchAccount> SearchAccounts { get; set; }
         public virtual CakeContact AccountManager { get; set; }
+        public virtual ICollection<SimpleReport> SimpleReports { get; set; }
     }
 }

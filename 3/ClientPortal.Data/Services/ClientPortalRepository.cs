@@ -604,7 +604,11 @@ namespace ClientPortal.Data.Services
 
         #endregion
 
-        #region ScheduledReports
+        #region SimpleReports
+        public IQueryable<SimpleReport> SimpleReports
+        {
+            get { return context.SimpleReports; }
+        }
         #endregion
 
         #region Files

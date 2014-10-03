@@ -230,6 +230,9 @@
     <Compile Include="Contexts\SearchProfileContact.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\SimpleReport.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\TDContext.cs" />
     <Compile Include="Contexts\UserEvent.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>

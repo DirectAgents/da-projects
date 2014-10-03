@@ -60,6 +60,8 @@ namespace ClientPortal.Data.Contracts
         void AddFileUpload(FileUpload fileUpload, bool saveChanges = false);
         void DeleteFileUpload(FileUpload fileUpload, bool saveChanges = false);
 
+        IQueryable<SimpleReport> SimpleReports { get; }
+
         IQueryable<Goal> Goals { get; }
         IQueryable<Goal> GetGoals(int advertiserId);
         Goal GetGoal(int id);
