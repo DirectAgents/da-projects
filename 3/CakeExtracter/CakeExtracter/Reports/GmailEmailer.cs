@@ -46,12 +46,13 @@ namespace CakeExtracter.Reports
             SendMailMessage(message);
         }
 
-        public void SendEmail(string fromAddress, string[] toAddresses, string[] ccAddresses, string subject, AlternateView plainView, AlternateView htmlView)
+        public void SendEmail(string fromAddress, string[] toAddresses, string[] ccAddresses, string subject, AlternateView[] alternateViews)
         {
             var message = CreateMailMessage(fromAddress, toAddresses, ccAddresses, subject);
-            message.AlternateViews.Add(plainView);
-            message.AlternateViews.Add(htmlView);
-
+            foreach (var alternateView in alternateViews)
+            {
+                message.AlternateViews.Add(alternateView);
+            }
             SendMailMessage(message);
         }
 

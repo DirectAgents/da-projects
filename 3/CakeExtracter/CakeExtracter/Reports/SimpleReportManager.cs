@@ -1,8 +1,13 @@
 ﻿using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
+using MSCharting;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net.Mail;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace CakeExtracter.Reports
 {
@@ -124,7 +129,85 @@ namespace CakeExtracter.Reports
             return iReports;
         }
 
+        // FOR TESTING
         private bool SendReport(SimpleReport simpleReport, IReport report)
+        {
+            var searchProfile = simpleReport.SearchProfile;
+            var stats = cpRepo.GetWeekStats(searchProfile.SearchProfileId, 8, (DayOfWeek)searchProfile.StartDayOfWeek, null, false);
+            var ordersCPOChart = new OrdersCPOChart(stats);
+
+            try
+            {
+                var contentId = "chart1";
+                var reportString = report.Generate();
+                var htmlView = AlternateView.CreateAlternateViewFromString(reportString + "<table width=\"100%\"><tr><td style=\"text-align:center\"><img src=cid:" + contentId + "></td></tr></table>", null, "text/html");
+
+                var linkedResource = ordersCPOChart.GetAsLinkedResource(contentId);
+                htmlView.LinkedResources.Add(linkedResource);
+
+                emailer.SendEmail(
+                            emailer.Credential.UserName,
+                            new[] { simpleReport.Email },
+                            simpleReport.EmailCC == null ? null : new[] { simpleReport.EmailCC },
+                            report.Subject,
+                            new[] { htmlView });
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return false;
+            }
+            finally
+            {
+                ordersCPOChart.DisposeResources();
+            }
+        }
+        private bool SendReportY(SimpleReport simpleReport, IReport report)
+        {
+            var builder = new TwoSeriesChartBuilder("Orders vs. CPO", "Orders", "CPO");
+            builder.Chart.Width = 800;
+            builder.LeftSeries.ChartType = SeriesChartType.Column;
+            builder.RightSeries.ChartType = SeriesChartType.Line;
+            builder.RightSeries.BorderWidth = 4;
+            builder.MainChartArea.BackColor = Color.LightGray;
+            builder.MainChartArea.AxisY2.LabelStyle.Format = "C";
+            var searchProfile = simpleReport.SearchProfile;
+            var stats = cpRepo.GetWeekStats(searchProfile.SearchProfileId, 8, (DayOfWeek)searchProfile.StartDayOfWeek, null, false);
+            builder.LeftSeries.Points.DataBind(stats, "Title", "Orders", null);
+            builder.RightSeries.Points.DataBind(stats, "Title", "CPO", null);
+            var chart = builder.Chart;
+
+            try
+            {
+                var reportString = report.Generate();
+                //var plainView = AlternateView.CreateAlternateViewFromString("this is the plain view", null, "text/plain");
+                var htmlView = AlternateView.CreateAlternateViewFromString(reportString + "<br/><img src=cid:chart1>", null, "text/html");
+                using (var ms = new MemoryStream())
+                {
+                    chart.SaveImage(ms, ChartImageFormat.Png);
+                    ms.Seek(0, SeekOrigin.Begin);
+
+                    var resource = new LinkedResource(ms);
+                    resource.ContentId = "chart1";
+                    htmlView.LinkedResources.Add(resource);
+
+                    emailer.SendEmail(
+                                emailer.Credential.UserName,
+                                new[] { simpleReport.Email },
+                                simpleReport.EmailCC == null ? null : new[] { simpleReport.EmailCC },
+                                report.Subject,
+                                new[] { htmlView });
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return false;
+            }
+        }
+        private bool SendReportX(SimpleReport simpleReport, IReport report)
         {
             try
             {

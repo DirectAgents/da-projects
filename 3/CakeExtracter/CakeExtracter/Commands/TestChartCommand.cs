@@ -1,9 +1,11 @@
 ﻿using CakeExtracter.Common;
 using CakeExtracter.Reports;
 using ClientPortal.Data.Contexts;
+using ClientPortal.Data.DTOs;
 using ClientPortal.Data.Services;
 using MSCharting;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Configuration;
 using System.Drawing;
@@ -29,10 +31,11 @@ namespace CakeExtracter.Commands
         public override int Execute(string[] remainingArguments)
         {
             //var chart = CreateAChart();
-            var chart = CreateAChartWithBuilder();
+            //var chart = CreateAChartWithBuilder();
+            var chart = CreateAChartWithChartBase();
 
-            //SaveToDisk(chart);
-            SendViaEmail(chart);
+            SaveToDisk(chart);
+            //SendViaEmail(chart);
 
             return 0;
         }
@@ -58,29 +61,45 @@ namespace CakeExtracter.Commands
             return chart;
         }
 
+        private Chart CreateAChartWithChartBase()
+        {
+            var stats = GetStats();
+            var ordersCPOChart = new OrdersCPOChart(stats);
+            return ordersCPOChart.ChartBuilder.Chart;
+        }
+
         private Chart CreateAChartWithBuilder()
         {
             var builder = new TwoSeriesChartBuilder("Orders vs. CPO", "Orders", "CPO");
-            builder.Chart.Width = 1000;
+            builder.Chart.Width = 880;
             builder.LeftSeries.ChartType = SeriesChartType.Column;
             builder.RightSeries.ChartType = SeriesChartType.Line;
             builder.RightSeries.BorderWidth = 4;
             builder.MainChartArea.BackColor = Color.LightGray;
             builder.MainChartArea.AxisY2.LabelStyle.Format = "C";
 
+            var stats = GetStats();
+            builder.LeftSeries.Points.DataBind(stats, "Title", "Orders", null);
+            builder.RightSeries.Points.DataBind(stats, "Title", "CPO", null);
+
+            return builder.Chart;
+        }
+
+        private IEnumerable<SearchStat> GetStats()
+        {
             int profileId = 6; //schol printables
             //int profileId = 7; //schol teacher express
-            int numWeeks = 10;
+            int numWeeks = 5;
             bool useAnalytics = false;
+
+            IEnumerable<SearchStat> stats;
             using (var db = new ClientPortalContext())
             {
                 var cpRepo = new ClientPortalRepository(db);
                 var searchProfile = cpRepo.GetSearchProfile(profileId);
-                var stats = cpRepo.GetWeekStats(profileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, null, useAnalytics);
-                builder.LeftSeries.Points.DataBind(stats, "Title", "Orders", null);
-                builder.RightSeries.Points.DataBind(stats, "Title", "CPO", null);
+                stats = cpRepo.GetWeekStats(profileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, null, useAnalytics);
             }
-            return builder.Chart;
+            return stats;
         }
 
         private void SaveToDisk(Chart chart)
@@ -109,7 +128,7 @@ namespace CakeExtracter.Commands
                 resource.ContentId = "test123";
                 htmlView.LinkedResources.Add(resource);
 
-                emailer.SendEmail("ignored@directagents.com", new[] { sendTo }, null, "test image", plainView, htmlView);
+                emailer.SendEmail("ignored@directagents.com", new[] { sendTo }, null, "test image", new[] { plainView, htmlView });
             }
         }
     }

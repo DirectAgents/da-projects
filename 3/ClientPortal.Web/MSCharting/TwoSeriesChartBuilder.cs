@@ -3,9 +3,16 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MSCharting
 {
-    public class TwoSeriesChartBuilder
+    public class TwoSeriesChartBuilder : IChartBuilder
     {
+        // Implement from IChartBuilder
         public Chart Chart { get; set; }
+        public ChartArea MainChartArea
+        {
+            get { return Chart.ChartAreas[0]; }
+        }
+
+        // Other properties
         public Series LeftSeries
         {
             get { return Chart.Series[0]; }
@@ -13,10 +20,6 @@ namespace MSCharting
         public Series RightSeries
         {
             get { return Chart.Series[1]; }
-        }
-        public ChartArea MainChartArea
-        {
-            get { return Chart.ChartAreas[0]; }
         }
 
         public TwoSeriesChartBuilder(string titleText, string leftSeriesName, string rightSeriesName)

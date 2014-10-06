@@ -42,6 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IChartBuilder.cs" />
+    <Compile Include="ChartBase.cs" />
+    <Compile Include="OrdersCPOChart.cs" />
     <Compile Include="TwoSeriesChartBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
