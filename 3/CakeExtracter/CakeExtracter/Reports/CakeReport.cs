@@ -1,6 +1,7 @@
 ﻿using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using System;
+using System.Net.Mail;
 
 namespace CakeExtracter.Reports
 {
@@ -67,6 +68,17 @@ namespace CakeExtracter.Reports
             string content = template.TransformText();
 
             return content;
+        }
+
+        public AlternateView GenerateView()
+        {
+            var reportString = this.Generate();
+            var htmlView = AlternateView.CreateAlternateViewFromString(reportString, null, "text/html");
+            return htmlView;
+        }
+
+        public void DisposeResources()
+        {
         }
     }
 }
