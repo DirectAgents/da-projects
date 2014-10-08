@@ -216,6 +216,7 @@
     <Compile Include="Areas\Admin\Controllers\CreativeFilesController.cs" />
     <Compile Include="Areas\Admin\Controllers\CreativesController.cs" />
     <Compile Include="Areas\Admin\Controllers\CreativeStatsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SimpleReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\OffersController.cs" />
     <Compile Include="Areas\Admin\Controllers\SearchAdminController.cs" />
@@ -887,6 +888,8 @@
     <Content Include="Content\kendo\2014.2.903\images\kendoui.ttf" />
     <Content Include="Content\kendo\2014.2.903\images\kendoui.woff" />
     <Content Include="App_Readme\Foundation_readme.md" />
+    <Content Include="Areas\Admin\Views\SimpleReports\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\SimpleReports\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

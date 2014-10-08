@@ -1,0 +1,63 @@
+﻿@model ClientPortal.Data.Contexts.SimpleReport
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("searchReportsTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("searchReportsTab", null, "Post");
+}
+
+@using (Ajax.BeginForm(ajaxOpts_Post))
+{
+    @Html.ValidationSummary()
+    <fieldset>
+        <legend>Edit Report</legend>
+        @Html.HiddenFor(m => m.SimpleReportId)
+        @Html.HiddenFor(m => m.AdvertiserId)
+        @Html.HiddenFor(m => m.SearchProfileId)
+        @Html.HiddenFor(m => m.LastSend)
+        @Html.HiddenFor(m => m.LastStatsDate)
+        @Html.Hidden("redirectAction", (string)ViewBag.RedirectAction)
+        <table>
+            <tr>
+                <td>@Html.LabelFor(m => m.ParentName, "Account")</td>
+                <td>@Html.DisplayFor(m => m.ParentName)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.Enabled)</td>
+                <td>@Html.EditorFor(m => m.Enabled)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.Email)</td>
+                <td>@Html.EditorFor(m => m.Email)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.EmailCC)</td>
+                <td>@Html.EditorFor(m => m.EmailCC)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.NextSend)</td>
+                <td>@Html.TextBoxFor(m => m.NextSend, "{0:d}")</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.PeriodMonths, "Timeframe-Months")</td>
+                <td>@Html.EditorFor(m => m.PeriodMonths)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.PeriodDays, "Timeframe-Days")</td>
+                <td>@Html.EditorFor(m => m.PeriodDays)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.LastSend)</td>
+                <td>@Html.DisplayFor(m => m.LastSend)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.LastStatsDate)</td>
+                <td>@Html.DisplayFor(m => m.LastStatsDate, "Date")</td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" value="Save" />
+            &nbsp;@Ajax.ActionLink("cancel", "IndexSearch", ajaxOptions)
+    </fieldset>
+}
+Notes:<br />
+Separate email addresses with commas.<br />
+If Timeframe-Months is greater than 0, Timeframe-Days is ignored.

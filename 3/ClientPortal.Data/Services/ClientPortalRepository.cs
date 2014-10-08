@@ -609,6 +609,25 @@ namespace ClientPortal.Data.Services
         {
             get { return context.SimpleReports; }
         }
+
+        public IQueryable<SimpleReport> SearchSimpleReports
+        {
+            get { return context.SimpleReports.Where(sr => sr.SearchProfile != null); }
+        }
+
+        public SimpleReport GetSimpleReport(int id)
+        {
+            var simpleReport = context.SimpleReports.Find(id);
+            return simpleReport;
+        }
+
+        public void FillExtended_SimpleReport(SimpleReport report)
+        {
+            if (report.Advertiser == null && report.AdvertiserId.HasValue)
+                report.Advertiser = GetAdvertiser(report.AdvertiserId.Value);
+            if (report.SearchProfile == null && report.SearchProfileId.HasValue)
+                report.SearchProfile = GetSearchProfile(report.SearchProfileId.Value);
+        }
         #endregion
 
         #region Files

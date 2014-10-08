@@ -1,0 +1,34 @@
+﻿@model IEnumerable<ClientPortal.Data.Contexts.SimpleReport>
+
+@{
+    var ajaxOptions = new AjaxOptions()
+    {
+        UpdateTargetId = "searchReportsTab"
+    };
+}
+
+<table border="1">
+    <tr>
+        <th></th>
+        <th>Account</th>
+        <th>Enabled</th>
+        <th>Email</th>
+        <th>NextSend</th>
+        <th>Timeframe</th>
+        <th>LastSend</th>
+        <th>LastStatsDate</th>
+    </tr>
+@foreach (var rep in Model)
+{
+    <tr>
+        <td>@Ajax.ActionLink("Edit", "Edit", new { id = rep.SimpleReportId }, ajaxOptions)</td>
+        <td>@rep.ParentName</td>
+        <td>@rep.Enabled</td>
+        <td>@rep.Email@(String.IsNullOrWhiteSpace(rep.EmailCC) ? "" : "<br>CC: " + rep.EmailCC)</td>
+        <td>@(rep.NextSend.HasValue ? rep.NextSend.Value.ToShortDateString() : "")</td>
+        <td>@rep.TimeframeString</td>
+        <td>@rep.LastSend</td>
+        <td>@(rep.LastStatsDate.HasValue ? rep.LastStatsDate.Value.ToShortDateString() : "")</td>
+    </tr>
+}
+</table>

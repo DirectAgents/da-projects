@@ -131,12 +131,14 @@
                       +--------------+-->*@
                 <dl class="tabs" data-tab>
                     <dd class="active"><a href="#searchProfilesTab" id="navSearchProfiles">Profiles</a></dd>
+                    <dd><a href="#searchReportsTab" id="navSearchReports">Reports</a></dd>
                 </dl>
                 @*<!--+----------------------+
                       | Search HTabs Content |
                       +----------------------+-->*@
                 <div class="tabs-content">
                     <div id="searchProfilesTab" class="content active"></div>
+                    <div id="searchReportsTab" class="content"></div>
                 </div>
             </div>
         </li>
@@ -210,6 +212,7 @@
             @if (Model.Search)
             {
                 <text>LoadSearchProfiles();</text>
+                <text>LoadSearchReports();</text>
             }
             else if (Model.TradingDesk)
             {
@@ -239,6 +242,16 @@
                 cache: false
             }).done(function (html) {
                 $("#searchProfilesTab").html(html);
+            });
+        }
+
+        function LoadSearchReports() {
+            $("#searchReportsTab").html("Loading...");
+            $.ajax({
+                url: '@Url.Action("IndexSearch", "SimpleReports")',
+                cache: false
+            }).done(function (html) {
+                $("#searchReportsTab").html(html);
             });
         }
 

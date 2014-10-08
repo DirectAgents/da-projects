@@ -29,6 +29,26 @@ select {
     padding: 0;
 }
 
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+input[type="file"],
+input[type="checkbox"],
+input[type="radio"],
+textarea {
+    margin: 0.5rem 0;
+}
+
 .button {
     padding: 10px 20px 11px;
     margin: 0;
