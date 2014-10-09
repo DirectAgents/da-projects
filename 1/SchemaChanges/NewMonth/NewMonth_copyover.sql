@@ -1,4 +1,5 @@
 -- *TODO: SET APPROPRIATE DATABASES!*
+-- USE...
 
 --Disable triggers
 DISABLE TRIGGER tr_Affiliate_IU ON Affiliate
@@ -22,7 +23,7 @@ delete from NetTermType
 delete from AffiliatePaymentMethod
 
 --Copy from previous month; *SET DATABASES!*
-exec DAMain1.dbo.EOMcopy 'DADatabase1','DADatabase2'
+exec DAMain1.dbo.EOMcopy 'DADatabaseA...2014','DADatabaseB...2014'
 
 --Clear affiliate dates
 UPDATE Affiliate SET date_created=NULL, date_modified=NULL
@@ -36,6 +37,7 @@ WHERE (campaign_status_id = 2) OR (campaign_status_id = 4)
 ENABLE TRIGGER tr_Affiliate_IU ON Affiliate
 
 --TODO: Set from menu... Query -> SQLCMD Mode
+--also, make sure correct database is still set, particularly if executing one script at a time
 
 --Initialize audit
 :r "C:\GitHub\da-projects-kevin\1\SchemaChanges\AuditScripts\autoaudit 2.00h.sql"

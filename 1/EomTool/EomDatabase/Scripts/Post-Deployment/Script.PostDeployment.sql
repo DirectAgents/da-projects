@@ -65,6 +65,13 @@ GRANT EXECUTE ON [dbo].[tousd3] TO [DIRECTAGENTS\Account Managers]
 GO
 GRANT CONNECT TO [DIRECTAGENTS\Account Managers]
 GO
+ALTER USER [DIRECTAGENTS\Account Managers] WITH DEFAULT_SCHEMA=[dbo]
+GO
+
+GRANT SELECT ON [dbo].[MediaBuyerConfirmation_Megan] TO [DIRECTAGENTS\MConahan]
+GO
+GRANT SELECT ON [dbo].[MediaBuyerConfirmation_MarkG] TO [DIRECTAGENTS\MGlauberson]
+GO
 
 /*
 ALTER TABLE dbo.Item ADD

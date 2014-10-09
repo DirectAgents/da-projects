@@ -813,6 +813,8 @@
     <Build Include="dbo\Tables\MarginApproval.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Views\MediaBuyerConfirmation_MarkG.view.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Views\MediaBuyerConfirmation_Megan.view.sql" />
+    <Build Include="Schema Objects\Database Level Objects\Security\Users\DIRECTAGENTS_MGlauberson.user.sql" />
+    <Build Include="Schema Objects\Database Level Objects\Security\Users\DIRECTAGENTS_MConahan.user.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Database Level Objects\Assemblies\SqlServerProjectForDADatabaseR3.dll">
