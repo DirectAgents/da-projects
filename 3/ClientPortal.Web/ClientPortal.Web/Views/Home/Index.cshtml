@@ -87,10 +87,6 @@
                         <dd><a href="#repCPMTab" id="repNav_CPM">CPM</a></dd>
                     }
                     <dd><a href="#repAffTab" id="repNav_Aff">Affiliates</a></dd>
-                    @if (false)
-                    {
-                        <dd><a href="#repScheduledTab" id="repNav_Scheduled">Scheduled</a></dd>
-                    }
                 </dl>
                 <!-- /ReportsHTabs  -->
 
@@ -108,9 +104,6 @@
                         <div id="repCPMTab" class="content"></div>
                     }
                     <div id="repAffTab" class="content"></div>
-                    <div id="repScheduledTab" class="content">
-                        <div id="divScheduledReports"></div>
-                    </div>
                 </div>
                 <!-- /ReportsContent  -->
 
@@ -189,7 +182,6 @@
 </footer>
 <!-- /BottomBar  -->
 
-@Html.Partial("~/Views/ScheduledReports/_Infrastructure.cshtml")
 @Html.Partial("~/Views/Goals/_Infrastructure.cshtml")
 
 @section head {
@@ -212,7 +204,6 @@
             LoadMainContacts();
             LoadDashboard();
             SetupTabs();
-            SetupScheduledReportWindow();
             SetupGoalWindow();
             $(window).bind('resize', WindowResize);
         });
@@ -220,6 +211,7 @@
         function jumpToOffSumRep(timeFrame) {
             $('#vertNav_Reports').trigger('click');
             $('#repNav_OffSum').trigger('click');
+            @* todo: set timeframe *@
         }
 
         function WindowResize() {
@@ -394,16 +386,6 @@
                 } else {
                     setTimeout(function () { ResizeChart('affrep', true); }, 100);@* note: there's no affrep grid but keep this for future use *@
                 }
-            });
-
-            // Scheduled Reports
-            $("#repNav_Scheduled").click(function () {
-                $.ajax({
-                    url: '@Url.Action("Index", "ScheduledReports")',
-                    cache: false
-                }).done(function (html) {
-                    $("#divScheduledReports").html(html);
-                });
             });
         } // SetupTabs
 
