@@ -3,14 +3,14 @@
   <Class Name="ClientPortal.Web.Controllers.SearchReportsController">
     <Position X="44.25" Y="6.25" Width="6.75" />
     <TypeIdentifier>
-      <HashCode>CAAMIAAAAAAAgIAAAAACAEAAAAAAAAAAEAAAAAAAAAA=</HashCode>
+      <HashCode>CAAMIAAAAAAAgIAABAACAEAAAAAAAAAAEAAAAAAAAAA=</HashCode>
       <FileName>Controllers\SearchReportsController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ClientPortal.Web.Controllers.SearchHomeController">
     <Position X="39.75" Y="6.25" Width="4" />
     <TypeIdentifier>
-      <HashCode>AgAAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAIEAAAAAAgA=</HashCode>
+      <HashCode>AgAgAAAAAAAAEAAACAAAAAAAAAAAAAAAAIEAAAAAAgA=</HashCode>
       <FileName>Controllers\SearchHomeController.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -29,21 +29,21 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAQAAAAAABAREAEgAAAAABACAAAAAREAQAIAA=</HashCode>
+      <HashCode>AAAAAAAAQAAAAAABAAAAAAAAAAABAAAAAAAQEAQAIAA=</HashCode>
       <FileName>Controllers\AccountController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ClientPortal.Web.Controllers.ControllerHelpers">
     <Position X="26.5" Y="0.5" Width="7" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAIAAGAAAAAAAAAAgAAAAACAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAIAAGAAAAAAAAgAgAAAAACAAAAAAAAAAA=</HashCode>
       <FileName>Controllers\ControllerHelpers.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ClientPortal.Web.Controllers.CPController">
     <Position X="19.25" Y="0.5" Width="3.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAABAAEAAIAARAAAAAAEAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAACAAAAAAIAEABAAEAAIAARQAAAIAEAAAAAA=</HashCode>
       <FileName>Controllers\CPController.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -71,15 +71,15 @@
   <Class Name="ClientPortal.Web.Controllers.HomeController">
     <Position X="25.75" Y="6.25" Width="8" />
     <TypeIdentifier>
-      <HashCode>AIAEAQAgAAAAEAAACAAAABAAAAAIAAAAAAEgAEAAEAE=</HashCode>
+      <HashCode>AIAEAwAgEAAAEAAACAAAAAACEAAIAAAAAAEgAAAAEAE=</HashCode>
       <FileName>Controllers\HomeController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ClientPortal.Web.Controllers.Dates">
     <Position X="45.5" Y="0.5" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAIAAABAAAAAAAAACCABAAAAAQAAAAAAAA=</HashCode>
-      <FileName>Controllers\HomeController.cs</FileName>
+      <HashCode>AAAAAIAAAgCIAAABEQAAAAAAACCABAAAAAQEAAIAAAA=</HashCode>
+      <FileName>Controllers\ControllerHelpers.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ClientPortal.Web.Controllers.InvoicesController">
@@ -91,24 +91,9 @@
   </Class>
   <Class Name="ClientPortal.Web.Controllers.ReportsController">
     <Position X="16.75" Y="6.25" Width="8.75" />
-    <NestedTypes>
-      <Class Name="ClientPortal.Web.Controllers.ReportsController.Comparer">
-        <TypeIdentifier>
-          <NewMemberFileName>Controllers\ReportsController.cs</NewMemberFileName>
-        </TypeIdentifier>
-        <Lollipop Position="0.2" />
-      </Class>
-    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>CAAAAABAgAAAAAAAEAAgABAICAIAAIKAAAAAAAAASAA=</HashCode>
+      <HashCode>CAAAAABAgAAQAAAAEAAgADAICAIAAIKAAAAAAAAASAA=</HashCode>
       <FileName>Controllers\ReportsController.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="ClientPortal.Web.Controllers.ScheduledReportsController">
-    <Position X="34.5" Y="6.25" Width="4.5" />
-    <TypeIdentifier>
-      <HashCode>AAIAAIAAAAAAAAAAAAAAAAAQAAEAAAACAAEAAAAAAAI=</HashCode>
-      <FileName>Controllers\ScheduledReportsController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
