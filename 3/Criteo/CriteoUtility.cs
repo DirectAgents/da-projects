@@ -68,6 +68,7 @@ namespace Criteo
                     campaignIDs = campaignIDs,
                     //campaignStatus = new[] { CampaignStatus.RUNNING }
                 };
+                var x = _service.getAccount(_apiHeader);
                 campaigns = _service.getCampaigns(_apiHeader, sel);
 
                 _service.Close();
@@ -86,14 +87,14 @@ namespace Criteo
         }
 
         // returns url of report
-        public string GetCampaignReport(DateTime start, DateTime end)
+        public string GetCampaignReport(DateTime start, DateTime end, bool hourly = false)
         {
             string url = null;
             bool closed = false;
             try
             {
                 StartServiceAndLogin();
-                url = GetCampaignReportInner(start, end);
+                url = GetCampaignReportInner(start, end, hourly);
 
                 _service.Close();
                 closed = true;
@@ -126,15 +127,16 @@ namespace Criteo
         }
 
         // returns url of report
-        private string GetCampaignReportInner(DateTime start, DateTime end)
+        private string GetCampaignReportInner(DateTime start, DateTime end, bool hourly)
         {
-            LogInfo(String.Format("Generating campaign report for {0:d} to {1:d}", start, end));
+            LogInfo(String.Format("Generating {0} campaign report for {1:d} to {2:d}",
+                (hourly ? "hourly" : "daily"), start, end));
 
             var reportJob = new ReportJob()
             {
                 //reportSelector =
                 reportType = ReportType.Campaign,
-                aggregationType = AggregationType.Daily,
+                aggregationType = (hourly ? AggregationType.Hourly : AggregationType.Daily),
                 startDate = start.ToString("yyyy-MM-dd"),
                 endDate = end.ToString("yyyy-MM-dd"),
                 selectedColumns = new ReportColumn[] { ReportColumn.clicks, ReportColumn.cost, ReportColumn.impressions, ReportColumn.orderValue, ReportColumn.sales }

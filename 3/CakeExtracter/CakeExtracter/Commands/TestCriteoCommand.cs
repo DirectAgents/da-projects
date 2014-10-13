@@ -23,7 +23,7 @@ namespace CakeExtracter.Commands
         {
             var criteoUtility = new CriteoUtility(m => Logger.Info(m), m => Logger.Warn(m));
             //var campaigns = criteoUtility.GetCampaigns(25296);
-            var reportUrl = criteoUtility.GetCampaignReport(new DateTime(2014, 8, 20), new DateTime(2014, 8, 26));
+            var reportUrl = criteoUtility.GetCampaignReport(new DateTime(2014, 10, 8), new DateTime(2014, 10, 8));
             GetReport(reportUrl);
             return 0;
         }

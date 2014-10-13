@@ -38,14 +38,18 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            var oneMonthAgo = DateTime.Today.AddMonths(-1);
+            //var oneMonthAgo = DateTime.Today.AddMonths(-1);
+            var sixDaysAgo = DateTime.Today.AddDays(-6);
             var yesterday = DateTime.Today.AddDays(-1);
-            var dateRange = new DateRange(StartDate ?? oneMonthAgo, EndDate ?? yesterday);
+            //var dateRange = new DateRange(StartDate ?? oneMonthAgo, EndDate ?? yesterday);
+            var dateRange = new DateRange(StartDate ?? sixDaysAgo, EndDate ?? yesterday);
 
             foreach (var searchAccount in GetSearchAccounts())
             {
-                var extracter = new CriteoApiExtracter(searchAccount.AccountCode, dateRange);
-                var loader = new CriteoDailySummaryLoader(searchAccount.SearchAccountId);
+                //var extracter = new CriteoApiExtracter(searchAccount.AccountCode, dateRange);
+                //var loader = new CriteoDailySummaryLoader(searchAccount.SearchAccountId);
+                var extracter = new CriteoApiExtracter2(searchAccount.AccountCode, dateRange);
+                var loader = new CriteoDailySummaryLoader2(searchAccount.SearchAccountId);
 
                 loader.AddUpdateSearchCampaigns(extracter.GetCampaigns());
 

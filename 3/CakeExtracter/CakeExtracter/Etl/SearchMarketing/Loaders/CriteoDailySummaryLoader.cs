@@ -1,9 +1,9 @@
-﻿using System;
+﻿using ClientPortal.Data.Contexts;
+using Criteo.CriteoAPI;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using ClientPortal.Data.Contexts;
-using Criteo.CriteoAPI;
 
 namespace CakeExtracter.Etl.SearchMarketing.Loaders
 {
@@ -19,13 +19,17 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
         public void AddUpdateSearchCampaigns(campaign[] campaigns)
         {
+            AddUpdateSearchCampaigns(campaigns, this.searchAccountId);
+        }
+        public static void AddUpdateSearchCampaigns(campaign[] campaigns, int searchAccountId)
+        {
             using (var db = new ClientPortalContext())
             {
-                var searchAccount = db.SearchAccounts.Find(this.searchAccountId);
+                var searchAccount = db.SearchAccounts.Find(searchAccountId);
 
                 foreach (var campaign in campaigns)
                 {
-                    var searchCampaign = db.SearchCampaigns.SingleOrDefault(sc => sc.SearchCampaignId == campaign.campaignID);
+                    var searchCampaign = db.SearchCampaigns.SingleOrDefault(sc => sc.ExternalId == campaign.campaignID);
                     if (searchCampaign == null)
                     {
                         searchAccount.SearchCampaigns.Add(new SearchCampaign
