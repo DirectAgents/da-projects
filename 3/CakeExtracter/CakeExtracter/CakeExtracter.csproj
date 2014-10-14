@@ -80,6 +80,9 @@
     <Reference Include="EntityFramework.Extended">
       <HintPath>..\..\ClientPortal.Web\packages\EntityFramework.Extended.5.0.0.73\lib\net45\EntityFramework.Extended.dll</HintPath>
     </Reference>
+    <Reference Include="EPPlus">
+      <HintPath>..\..\ClientPortal.Web\packages\EPPlus.3.1.3.3\lib\net35\EPPlus.dll</HintPath>
+    </Reference>
     <Reference Include="Google.Ads.Common, Version=3.2.0.0, Culture=neutral, PublicKeyToken=52807268f2b614dc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ClientPortal.Web\packages\Google.Ads.Common.3.2.0\lib\net40\Google.Ads.Common.dll</HintPath>
@@ -300,6 +303,7 @@
     <Compile Include="Commands\TestChartCommand.cs" />
     <Compile Include="Commands\TestCriteoCommand.cs" />
     <Compile Include="Commands\TestDbmCommand.cs" />
+    <Compile Include="Commands\TestExcelCommand.cs" />
     <Compile Include="Common\CopyPropertiesUtility.cs" />
     <Compile Include="Common\EmailUtility.cs" />
     <Compile Include="Common\EntityFrameworkExtensions.cs" />

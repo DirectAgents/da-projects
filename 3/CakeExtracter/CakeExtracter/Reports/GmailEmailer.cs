@@ -37,18 +37,18 @@ namespace CakeExtracter.Reports
         /// <param name="subject"></param>
         /// <param name="body"></param>
         /// <param name="isHTML"></param>
-        public void SendEmail(string fromAddress, string[] toAddresses, string[] ccAddresses, string subject, string body, bool isHTML)
+        public void SendEmail(string fromAddress, string[] toAddresses, string[] ccAddresses, string subject, string body, bool isHTML, Attachment attachment = null)
         {
-            var message = CreateMailMessage(fromAddress, toAddresses, ccAddresses, subject);
+            var message = CreateMailMessage(fromAddress, toAddresses, ccAddresses, subject, attachment);
             message.Body = body;
             message.IsBodyHtml = isHTML;
 
             SendMailMessage(message);
         }
 
-        public void SendEmail(string fromAddress, string[] toAddresses, string[] ccAddresses, string subject, AlternateView[] alternateViews)
+        public void SendEmail(string fromAddress, string[] toAddresses, string[] ccAddresses, string subject, AlternateView[] alternateViews, Attachment attachment = null)
         {
-            var message = CreateMailMessage(fromAddress, toAddresses, ccAddresses, subject);
+            var message = CreateMailMessage(fromAddress, toAddresses, ccAddresses, subject, attachment);
             foreach (var alternateView in alternateViews)
             {
                 message.AlternateViews.Add(alternateView);
@@ -57,7 +57,7 @@ namespace CakeExtracter.Reports
         }
 
 
-        private MailMessage CreateMailMessage(string fromAddress, string[] toAddresses, string[] ccAddresses, string subject)
+        private MailMessage CreateMailMessage(string fromAddress, string[] toAddresses, string[] ccAddresses, string subject, Attachment attachment)
         {
             MailMessage message = new MailMessage
             {
@@ -69,7 +69,6 @@ namespace CakeExtracter.Reports
             {
                 message.To.Add(item.Trim());
             }
-
             if (ccAddresses != null)
             {
                 foreach (var ccAddress in ccAddresses.SelectMany(c => c.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries)))
@@ -77,6 +76,9 @@ namespace CakeExtracter.Reports
                     message.CC.Add(ccAddress);
                 }
             }
+            if (attachment != null)
+                message.Attachments.Add(attachment);
+
             return message;
         }
 
