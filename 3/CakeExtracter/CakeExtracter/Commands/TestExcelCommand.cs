@@ -1,16 +1,13 @@
 ﻿using CakeExtracter.Common;
 using CakeExtracter.Reports;
 using OfficeOpenXml;
+using Spreadsheets;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Configuration;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CakeExtracter.Commands
 {
@@ -28,7 +25,8 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            Test();
+            //Test();
+            TestWithSpreadsheets();
             return 0;
         }
 
@@ -50,6 +48,14 @@ namespace CakeExtracter.Commands
             }
         }
 
+        private void TestWithSpreadsheets()
+        {
+            var spreadsheet = new TestSpreadSheet();
+            var attachment = spreadsheet.GetAsAttachment("report123.xlsx");
+            SendViaEmail(attachment);
+            spreadsheet.DisposeResources();
+        }
+
         private void SaveToFile(ExcelPackage p)
         {
             Byte[] bin = p.GetAsByteArray();
@@ -59,8 +65,18 @@ namespace CakeExtracter.Commands
 
         private void SendViaEmail(ExcelPackage p)
         {
-            var sendTo = "kevin@directagents.com";
+            using (var ms = new MemoryStream())
+            {
+                p.SaveAs(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+                var attachment = new Attachment(ms, "report.xlsx", "application/vnd.ms-excel");
+                SendViaEmail(attachment);
+            }
+        }
 
+        private void SendViaEmail(Attachment attachment)
+        {
+            var sendTo = "kevin@directagents.com";
             var gmailUsername = ConfigurationManager.AppSettings["GmailEmailer_Username"];
             var gmailPassword = ConfigurationManager.AppSettings["GmailEmailer_Password"];
             var emailer = new GmailEmailer(new NetworkCredential(gmailUsername, gmailPassword));
@@ -68,14 +84,7 @@ namespace CakeExtracter.Commands
             var plainView = AlternateView.CreateAlternateViewFromString("this is the plain view", null, "text/plain");
             var htmlView = AlternateView.CreateAlternateViewFromString("this is the <b>html</b> view", null, "text/html");
 
-            using (var ms = new MemoryStream())
-            {
-                p.SaveAs(ms);
-                ms.Seek(0, SeekOrigin.Begin);
-                Attachment attachment = new Attachment(ms, "report.xlsx", "application/vnd.ms-excel");
-
-                emailer.SendEmail("ignored@directagents.com", new[] { sendTo }, null, "test excel attachment", new[] { plainView, htmlView }, attachment);
-            }
+            emailer.SendEmail("ignored@directagents.com", new[] { sendTo }, null, "test excel attachment", new[] { plainView, htmlView }, attachment);
         }
     }
 }

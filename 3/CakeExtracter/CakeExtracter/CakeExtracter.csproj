@@ -470,6 +470,10 @@
       <Project>{b47050a5-f84e-44ce-92c1-8415a198568b}</Project>
       <Name>MSCharting</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\ClientPortal.Web\Spreadsheets\Spreadsheets.csproj">
+      <Project>{81c36d2d-faf4-45fc-bb8d-2eabeef8807b}</Project>
+      <Name>Spreadsheets</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Criteo\Criteo.csproj">
       <Project>{d96a10b3-8700-45c1-ada4-96cac22cbd5c}</Project>
       <Name>Criteo</Name>
