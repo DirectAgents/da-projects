@@ -1,10 +1,8 @@
 ﻿@model IEnumerable<ClientPortal.Data.Contexts.SearchProfile>
 
 @{
-    var ajaxOptions = new AjaxOptions()
-    {
-        UpdateTargetId = "searchProfilesTab"
-    };
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("searchProfilesTab");
+    var ajaxOpts_Reports = RazorHelpers.GetAjaxOptions("searchReportsTab", "navSearchReports");
 }
 
 <table border="1">
@@ -16,6 +14,7 @@
     </tr>
 @foreach (var profile in Model)
 {
+	int numReports = profile.SimpleReports.Count();
     <tr>
         <td>@Ajax.ActionLink("Edit", "EditProfile", new { spId = profile.SearchProfileId }, ajaxOptions)</td>
         <td>@profile.SearchProfileName</td>
@@ -27,8 +26,10 @@
             }
         </td>
         <td>
-            @if (profile.SimpleReports.Any()) {
-                <text>yes</text>
+            @if (numReports > 1) {
+                @Ajax.ActionLink("edit", "IndexSearch", "SimpleReports", new { spId = profile.SearchProfileId }, ajaxOpts_Reports )
+			} else if (numReports == 1) {
+                @Ajax.ActionLink("edit", "Edit", "SimpleReports", new { id = profile.SimpleReports.First().SimpleReportId }, ajaxOpts_Reports )
             } else {
                 @Ajax.ActionLink("enable", "EnableReports", new { spId = profile.SearchProfileId }, ajaxOptions )
             }

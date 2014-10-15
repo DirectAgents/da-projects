@@ -22,9 +22,14 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return View(simpleReports);
         }
 
-        public ActionResult IndexSearch()
+        public ActionResult IndexSearch(int? spId)
         {
-            var simpleReports = cpRepo.SearchSimpleReports.OrderBy(sr => sr.SearchProfile.SearchProfileName).ToList();
+            var simpleReportsQ = cpRepo.SearchSimpleReports;
+            if (spId.HasValue)
+                simpleReportsQ = simpleReportsQ.Where(sr => sr.SearchProfileId == spId.Value);
+            var simpleReports = simpleReportsQ.OrderBy(sr => sr.SearchProfile.SearchProfileName).ToList();
+
+            ViewBag.RefreshAction = "IndexSearch";
             return View("Index", simpleReports);
         }
 

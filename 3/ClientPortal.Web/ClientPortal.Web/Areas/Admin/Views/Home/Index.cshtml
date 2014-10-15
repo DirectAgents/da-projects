@@ -266,34 +266,34 @@
         }
 
         function SetupTabs() {
-            @if (Model.Search || Model.TradingDesk)
-            {<text>
-                // Home
-                $("#vertNav_Home").one("click", function () {
-                    LoadAdvertisers();
-                });
-            </text>}
+        @if (Model.Search || Model.TradingDesk)
+        {<text>
+            // Home
+            $("#vertNav_Home").one("click", function () {
+                LoadAdvertisers();
+            });
+        </text>}
 
-            @if (Model.Search && Model.TradingDesk)
-            {<text>
-                // Trading Desk
-                $("#vertNav_TD").one("click", function () {
-                    LoadTDAccounts();
-                });
-            </text>}
+        @if (Model.Search && Model.TradingDesk)
+        {<text>
+            // Trading Desk
+            $("#vertNav_TD").one("click", function () {
+                LoadTDAccounts();
+            });
+        </text>}
 
-            @if (Model.TradingDesk)
-            {<text>
-                // TD Upload
-                $("#navTDUpload").one("click", function() {
-                    $.ajax({
-                        url: '@Url.Action("Upload", "TDAdmin")',
-                        cache: false
-                    }).done(function (html) {
-                        $("#tdUploadTab").html(html);
-                    });
+        @if (Model.TradingDesk)
+        {<text>
+            // TD Upload
+            $("#navTDUpload").one("click", function () {
+                $.ajax({
+                    url: '@Url.Action("Upload", "TDAdmin")',
+                    cache: false
+                }).done(function (html) {
+                    $("#tdUploadTab").html(html);
                 });
-            </text>}
+            });
+        </text>}
 
             // Contacts
             $("#navContacts").one("click", function () {

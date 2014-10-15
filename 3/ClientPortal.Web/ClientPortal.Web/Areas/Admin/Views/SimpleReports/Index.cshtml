@@ -1,11 +1,10 @@
 ﻿@model IEnumerable<ClientPortal.Data.Contexts.SimpleReport>
 
 @{
-    var ajaxOptions = new AjaxOptions()
-    {
-        UpdateTargetId = "searchReportsTab"
-    };
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("searchReportsTab");
 }
+
+@Ajax.ActionLink("Refresh", (string)ViewBag.RefreshAction ?? "Index", ajaxOptions)
 
 <table border="1">
     <tr>
