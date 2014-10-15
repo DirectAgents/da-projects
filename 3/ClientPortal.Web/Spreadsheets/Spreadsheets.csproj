@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SearchReportPPC.cs" />
     <Compile Include="SpreadsheetBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestSpreadSheet.cs" />

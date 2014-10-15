@@ -26,7 +26,9 @@ namespace CakeExtracter.Commands
         public override int Execute(string[] remainingArguments)
         {
             //Test();
-            TestWithSpreadsheets();
+            //TestWithSpreadsheets();
+            //TestWithLoad();
+            TestWithTemplate();
             return 0;
         }
 
@@ -38,21 +40,39 @@ namespace CakeExtracter.Commands
 
                 p.Workbook.Worksheets.Add("sample worksheet");
                 var ws = p.Workbook.Worksheets[1];
-                ws.Cells.Style.Font.Size = 11;
-                ws.Cells.Style.Font.Name = "Calibri";
-
                 ws.Cells[1, 1].Value = "hello";
 
                 //SaveToFile(p);
                 SendViaEmail(p);
             }
         }
-
         private void TestWithSpreadsheets()
         {
             var spreadsheet = new TestSpreadSheet();
-            var attachment = spreadsheet.GetAsAttachment("report123.xlsx");
+
+            SaveToFile(spreadsheet.ExcelPackage);
+            //var attachment = spreadsheet.GetAsAttachment("report123.xlsx");
+            //SendViaEmail(attachment);
+            spreadsheet.DisposeResources();
+        }
+        private void TestWithLoad()
+        {
+            string filename = ConfigurationManager.AppSettings["ExcelTemplate_SearchPPC"]; // SearchPPCtemplate.xlsx
+            var file = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename));
+            using (var p = new ExcelPackage(file))
+            {
+                var worksheet = p.Workbook.Worksheets[1];
+            }
+        }
+        private void TestWithTemplate()
+        {
+            string filename = ConfigurationManager.AppSettings["ExcelTemplate_SearchPPC"]; // SearchPPCtemplate.xlsx
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename);
+
+            var spreadsheet = new SearchReportPPC(path);
+            var attachment = spreadsheet.GetAsAttachment("reportABC.xlsx");
             SendViaEmail(attachment);
+
             spreadsheet.DisposeResources();
         }
 
