@@ -1,8 +1,12 @@
 ﻿using CakeExtracter.Common;
 using CakeExtracter.Reports;
+using ClientPortal.Data.Contexts;
+using ClientPortal.Data.DTOs;
+using ClientPortal.Data.Services;
 using OfficeOpenXml;
 using Spreadsheets;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Configuration;
 using System.IO;
@@ -70,10 +74,42 @@ namespace CakeExtracter.Commands
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename);
 
             var spreadsheet = new SearchReportPPC(path);
-            var attachment = spreadsheet.GetAsAttachment("reportABC.xlsx");
-            SendViaEmail(attachment);
+            var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue" };
+            var stats = GetStats(true);
+            spreadsheet.LoadWeeklyStats(stats, propertyNames);
+            stats = GetStats(false);
+            spreadsheet.LoadMonthlyStats(stats, propertyNames);
 
+            SaveToFile(spreadsheet.ExcelPackage);
+            //var attachment = spreadsheet.GetAsAttachment("reportABC.xlsx");
+            //SendViaEmail(attachment);
             spreadsheet.DisposeResources();
+        }
+
+        private IEnumerable<SearchStat> GetStats(bool weeklyNotMonthly)
+        {
+            //int profileId = 6; //schol printables
+            //int profileId = 7; //schol teacher express
+            int profileId = 11; //schol class mags
+            bool useAnalytics = false;
+
+            IEnumerable<SearchStat> stats;
+            using (var cpRepo = new ClientPortalRepository(new ClientPortalContext()))
+            {
+                var searchProfile = cpRepo.GetSearchProfile(profileId);
+                if (weeklyNotMonthly)
+                {
+                    int numWeeks = 8;
+                    stats = cpRepo.GetWeekStats(profileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, null, useAnalytics);
+                }
+                else
+                {
+                    int numMonths = 6;
+                    bool includeToday = false;
+                    stats = cpRepo.GetMonthStats(profileId, numMonths, useAnalytics, includeToday);
+                }
+            }
+            return stats;
         }
 
         private void SaveToFile(ExcelPackage p)

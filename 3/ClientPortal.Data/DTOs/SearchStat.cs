@@ -71,6 +71,10 @@ namespace ClientPortal.Data.DTOs
         public decimal Revenue { get; set; }
         public decimal Cost { get; set; }
 
+        //public int ROI
+        //{
+        //    get { return Cost == 0 ? 0 : (int)Math.Round(100 * Revenue / Cost) - 100; }
+        //}
         public int ROAS
         {
             get { return Cost == 0 ? 0 : (int)Math.Round(100 * Revenue / Cost); }

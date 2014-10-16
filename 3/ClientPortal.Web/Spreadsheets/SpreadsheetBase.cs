@@ -16,6 +16,7 @@ namespace Spreadsheets
             this.ExcelPackage.SaveAs(this.MemoryStream);
             this.MemoryStream.Seek(0, SeekOrigin.Begin);
             var attachment = new Attachment(this.MemoryStream, filename, "application/vnd.ms-excel");
+            //var attachment = new Attachment(this.MemoryStream, filename, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             return attachment;
         }
 
