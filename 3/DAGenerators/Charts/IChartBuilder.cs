@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms.DataVisualization.Charting;
 
-namespace MSCharting
+namespace DAGenerators.Charts
 {
     public interface IChartBuilder
     {

@@ -1,6 +1,6 @@
 ﻿using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
-using MSCharting;
+using DAGenerators.Charts;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

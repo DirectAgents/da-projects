@@ -1,7 +1,7 @@
 ﻿using OfficeOpenXml;
 using OfficeOpenXml.Style;
 
-namespace Spreadsheets
+namespace DAGenerators.Spreadsheets
 {
     public class TestSpreadSheet : SpreadsheetBase
     {

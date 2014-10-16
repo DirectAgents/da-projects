@@ -3,7 +3,7 @@ using System.IO;
 using System.Net.Mail;
 using System.Windows.Forms.DataVisualization.Charting;
 
-namespace MSCharting
+namespace DAGenerators.Charts
 {
     public abstract class ChartBase
     {

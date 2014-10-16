@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MSCharting")]
+[assembly: AssemblyTitle("DAGenerators")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MSCharting")]
+[assembly: AssemblyProduct("DAGenerators")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("e8c99757-cd3b-4efa-951d-1685c9e13c08")]
+[assembly: Guid("cc19405f-fd52-4a11-805d-7f5796bb8e8d")]
 
 // Version information for an assembly consists of the following four values:
 //

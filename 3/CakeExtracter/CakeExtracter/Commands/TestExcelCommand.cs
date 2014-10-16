@@ -3,8 +3,8 @@ using CakeExtracter.Reports;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Data.DTOs;
 using ClientPortal.Data.Services;
+using DAGenerators.Spreadsheets;
 using OfficeOpenXml;
-using Spreadsheets;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -99,7 +99,7 @@ namespace CakeExtracter.Commands
                 var searchProfile = cpRepo.GetSearchProfile(profileId);
                 if (weeklyNotMonthly)
                 {
-                    int numWeeks = 8;
+                    int numWeeks = 6;
                     stats = cpRepo.GetWeekStats(profileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, null, useAnalytics);
                 }
                 else

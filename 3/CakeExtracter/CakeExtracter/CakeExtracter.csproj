@@ -466,17 +466,13 @@
       <Project>{2e621b59-9455-4fa5-b9bd-6bdc418ffbfa}</Project>
       <Name>ClientPortal.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\ClientPortal.Web\MSCharting\MSCharting.csproj">
-      <Project>{b47050a5-f84e-44ce-92c1-8415a198568b}</Project>
-      <Name>MSCharting</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\ClientPortal.Web\Spreadsheets\Spreadsheets.csproj">
-      <Project>{81c36d2d-faf4-45fc-bb8d-2eabeef8807b}</Project>
-      <Name>Spreadsheets</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Criteo\Criteo.csproj">
       <Project>{d96a10b3-8700-45c1-ada4-96cac22cbd5c}</Project>
       <Name>Criteo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DAGenerators\DAGenerators.csproj">
+      <Project>{70f3e367-5f86-4718-9a27-6edc9fef9ec9}</Project>
+      <Name>DAGenerators</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

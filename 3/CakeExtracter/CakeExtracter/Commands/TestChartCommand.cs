@@ -3,7 +3,7 @@ using CakeExtracter.Reports;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Data.DTOs;
 using ClientPortal.Data.Services;
-using MSCharting;
+using DAGenerators.Charts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;

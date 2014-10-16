@@ -2,7 +2,7 @@
 using System.IO;
 using System.Net.Mail;
 
-namespace Spreadsheets
+namespace DAGenerators.Spreadsheets
 {
     public abstract class SpreadsheetBase
     {

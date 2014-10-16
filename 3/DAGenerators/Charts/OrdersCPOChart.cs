@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Windows.Forms.DataVisualization.Charting;
 
-namespace MSCharting
+namespace DAGenerators.Charts
 {
     public class OrdersCPOChart : ChartBase
     {

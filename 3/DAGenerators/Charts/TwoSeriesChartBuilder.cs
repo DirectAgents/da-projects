@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms.DataVisualization.Charting;
 
-namespace MSCharting
+namespace DAGenerators.Charts
 {
     public class TwoSeriesChartBuilder : IChartBuilder
     {
