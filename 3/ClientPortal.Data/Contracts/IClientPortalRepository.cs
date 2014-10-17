@@ -104,7 +104,7 @@ namespace ClientPortal.Data.Contracts
         SearchProfile GetSearchProfile(int searchProfileId);
         void SaveSearchProfile(SearchProfile searchProfile);
 
-        bool EnableSearchProfileSimpleReport(int searchProfileId, string email = null);
+        bool InitializeSearchProfileSimpleReport(int searchProfileId, string email = null);
 
         SearchStat GetSearchStats(int searchProfileId, DateTime? start, DateTime? end, bool includeToday = true);
         IQueryable<SearchStat> GetWeekStats(int searchProfileId, int numWeeks, DayOfWeek startDayOfWeek, DateTime? endDate, bool useAnalytics);

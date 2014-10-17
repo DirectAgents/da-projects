@@ -29,9 +29,11 @@
             @if (numReports > 1) {
                 @Ajax.ActionLink("edit", "IndexSearch", "SimpleReports", new { spId = profile.SearchProfileId }, ajaxOpts_Reports )
 			} else if (numReports == 1) {
-                @Ajax.ActionLink("edit", "Edit", "SimpleReports", new { id = profile.SimpleReports.First().SimpleReportId }, ajaxOpts_Reports )
+				var rep = profile.SimpleReports.First();
+				@(rep.Enabled ? "ON " : "OFF ")
+                @Ajax.ActionLink("(edit)", "Edit", "SimpleReports", new { id = rep.SimpleReportId }, ajaxOpts_Reports )
             } else {
-                @Ajax.ActionLink("enable", "EnableReports", new { spId = profile.SearchProfileId }, ajaxOptions )
+                @Ajax.ActionLink("initialize", "InitializeReport", new { spId = profile.SearchProfileId }, ajaxOptions )
             }
         </td>
         <td>@Ajax.ActionLink("Edit Contacts", "EditSearchProfileContacts", new { spId = profile.SearchProfileId }, ajaxOptions)</td>

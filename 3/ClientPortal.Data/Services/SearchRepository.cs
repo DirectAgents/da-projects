@@ -29,7 +29,7 @@ namespace ClientPortal.Data.Services
         }
 
         // by default, report goes to first contact
-        public bool EnableSearchProfileSimpleReport(int searchProfileId, string email = null)
+        public bool InitializeSearchProfileSimpleReport(int searchProfileId, string email = null)
         {
             bool success = false;
             var searchProfile = GetSearchProfile(searchProfileId);
@@ -46,7 +46,8 @@ namespace ClientPortal.Data.Services
                     var simpleReport = new SimpleReport
                     {
                         Email = email,
-                        Enabled = true
+                        PeriodDays = 7,
+                        Enabled = false
                     };
                     searchProfile.SimpleReports.Add(simpleReport);
                     context.SaveChanges();
@@ -61,15 +62,16 @@ namespace ClientPortal.Data.Services
         public SearchStat GetSearchStats(int searchProfileId, DateTime? start, DateTime? end, bool includeToday = true)
         {
             var summaries = GetSearchDailySummaries(null, searchProfileId, null, null, null, null, start, end, includeToday);
+            bool any = summaries.Any();
             var searchStat = new SearchStat
             {
                 EndDate = end.Value,
                 CustomByStartDate = start.Value,
-                Impressions = summaries.Sum(s => s.Impressions),
-                Clicks = summaries.Sum(s => s.Clicks),
-                Orders = summaries.Sum(s => s.Orders),
-                Revenue = summaries.Sum(s => s.Revenue),
-                Cost = summaries.Sum(s => s.Cost)
+                Impressions = !any ? 0 : summaries.Sum(s => s.Impressions),
+                Clicks = !any ? 0 : summaries.Sum(s => s.Clicks),
+                Orders = !any ? 0 : summaries.Sum(s => s.Orders),
+                Revenue = !any ? 0 : summaries.Sum(s => s.Revenue),
+                Cost = !any ? 0 : summaries.Sum(s => s.Cost)
             };
 
             return searchStat;

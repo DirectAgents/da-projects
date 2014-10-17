@@ -96,9 +96,9 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return View(searchProfile);
         }
 
-        public ActionResult EnableReports(int spId)
+        public ActionResult InitializeReport(int spId)
         {
-            var searchProfile = cpRepo.EnableSearchProfileSimpleReport(spId);
+            var success = cpRepo.InitializeSearchProfileSimpleReport(spId);
             return RedirectToAction("SearchProfiles");
         }
 
