@@ -73,7 +73,7 @@ namespace CakeExtracter.Commands
             string filename = ConfigurationManager.AppSettings["ExcelTemplate_SearchPPC"]; // SearchPPCtemplate.xlsx
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename);
 
-            var spreadsheet = new SearchReportPPC(path);
+            var spreadsheet = new SearchReportPPC(path, "Acme, Inc.");
             var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue" };
             var stats = GetStats(true);
             spreadsheet.LoadWeeklyStats(stats, propertyNames);

@@ -1,4 +1,6 @@
 ﻿using OfficeOpenXml;
+using OfficeOpenXml.Drawing;
+using OfficeOpenXml.Drawing.Chart;
 using OfficeOpenXml.Table;
 using System;
 using System.Collections.Generic;
@@ -10,29 +12,66 @@ namespace DAGenerators.Spreadsheets
 {
     public class SearchReportPPC : SpreadsheetBase
     {
+        private const int StartRow_Weekly = 12;
+        private const int StartRow_Monthly = 27;
+        private const int Row_WeeklyHeader = 11;
+        private const int Col_StatsTitle = 2;
+        private const int Col_Clicks = 3;
+        private const int Col_Revenue = 8;
+
         ExcelWorksheet WS { get { return this.ExcelPackage.Workbook.Worksheets[1]; } }
 
-        public SearchReportPPC(string templatePath)
+        public SearchReportPPC(string templatePath, string clientName)
         {
             var fileInfo = new FileInfo(templatePath);
             this.ExcelPackage = new ExcelPackage(fileInfo);
 
             SetReportDate(DateTime.Today);
+            SetClientName(clientName);
         }
 
         public void SetReportDate(DateTime date)
         {
             WS.Cells[8, 2].Value = "Weekly Summary " + date.ToShortDateString();
         }
+        public void SetClientName(string clientName)
+        {
+            WS.Cells[45, 2].Value = "Direct Agents | " + clientName;
+        }
 
         public void LoadWeeklyStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
         {
-            LoadWeeklyMonthlyStats(stats, propertyNames, 12);
+            LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Weekly);
+            CreateWeeklyChart(stats.Count());
+        }
+        public void CreateWeeklyChart(int numWeeks)
+        {
+            var chart = WS.Drawings.AddChart("chartWeekly", eChartType.ColumnClustered);
+            chart.SetPosition(46, 0, 1, 0);
+            chart.SetSize(1071, 217);
+
+            chart.Title.Text = "Weekly Performance"; // TODO: add year; remember: handle when it's two years
+            chart.Title.Font.Bold = true;
+            //chart.Title.Anchor = eTextAnchoringType.Bottom;
+            //chart.Title.AnchorCtr = false;
+
+            var series = chart.Series.Add(new ExcelAddress(StartRow_Weekly, Col_Revenue, StartRow_Weekly + numWeeks - 1, Col_Revenue).Address,
+                                          new ExcelAddress(StartRow_Weekly, Col_StatsTitle, StartRow_Weekly + numWeeks - 1, Col_StatsTitle).Address);
+            //series.HeaderAddress = new ExcelAddress(Row_WeeklyHeader, Col_Revenue, Row_WeeklyHeader, Col_Revenue);
+            series.Header = "Revenue";
+
+            var chartType2 = chart.PlotArea.ChartTypes.Add(eChartType.LineMarkers);
+            chartType2.UseSecondaryAxis = true;
+            chartType2.XAxis.Deleted = true;
+            var series2 = chartType2.Series.Add(new ExcelAddress(StartRow_Weekly, Col_Clicks, StartRow_Weekly + numWeeks - 1, Col_Clicks).Address,
+                                                new ExcelAddress(StartRow_Weekly, Col_StatsTitle, StartRow_Weekly + numWeeks - 1, Col_StatsTitle).Address);
+            //series2.HeaderAddress = new ExcelAddress(Row_WeeklyHeader, Col_Clicks, Row_WeeklyHeader, Col_Clicks);
+            series2.Header = "Clicks";
         }
 
         public void LoadMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
         {
-            LoadWeeklyMonthlyStats(stats, propertyNames, 27);
+            LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Monthly);
         }
 
         // propertyNames for: title, clicks, impressions, orders, cost, revenue
