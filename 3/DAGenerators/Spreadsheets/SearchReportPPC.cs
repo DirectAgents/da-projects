@@ -12,6 +12,7 @@ namespace DAGenerators.Spreadsheets
 {
     public class SearchReportPPC : SpreadsheetBase
     {
+        private const string TemplateFilename = "SearchPPCtemplate.xlsx";
         private const int StartRow_Weekly = 12;
         private const int StartRow_Monthly = 27;
         private const int Row_WeeklyHeader = 11;
@@ -21,9 +22,9 @@ namespace DAGenerators.Spreadsheets
 
         ExcelWorksheet WS { get { return this.ExcelPackage.Workbook.Worksheets[1]; } }
 
-        public SearchReportPPC(string templatePath, string clientName)
+        public SearchReportPPC(string templateFolder, string clientName)
         {
-            var fileInfo = new FileInfo(templatePath);
+            var fileInfo = new FileInfo(Path.Combine(templateFolder, TemplateFilename));
             this.ExcelPackage = new ExcelPackage(fileInfo);
 
             SetReportDate(DateTime.Today);

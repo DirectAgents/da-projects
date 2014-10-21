@@ -890,6 +890,7 @@
     <Content Include="App_Readme\Foundation_readme.md" />
     <Content Include="Areas\Admin\Views\SimpleReports\Index.cshtml" />
     <Content Include="Areas\Admin\Views\SimpleReports\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\SearchAdmin\TestReports.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />
@@ -2445,6 +2446,10 @@
     <ProjectReference Include="..\..\ClientPortal.Data\ClientPortal.Data.csproj">
       <Project>{2e621b59-9455-4fa5-b9bd-6bdc418ffbfa}</Project>
       <Name>ClientPortal.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DAGenerators\DAGenerators.csproj">
+      <Project>{70f3e367-5f86-4718-9a27-6edc9fef9ec9}</Project>
+      <Name>DAGenerators</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\DirectAgents.Mvc\DirectAgents.Mvc.csproj">
       <Project>{bf827e4b-b65d-42ae-98ad-441626532f00}</Project>

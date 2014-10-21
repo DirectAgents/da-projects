@@ -10,7 +10,8 @@
         <th></th>
         <th>SearchProfile</th>
         <th>Login</th>
-        <th>Reports</th>
+        <th>Reports-</th>
+        <th>Email</th>
     </tr>
 @foreach (var profile in Model)
 {
@@ -25,15 +26,16 @@
                 @Ajax.ActionLink("create", "CreateUserProfile", new { spId = profile.SearchProfileId }, ajaxOptions)
             }
         </td>
+		<td>@Ajax.ActionLink("Test", "TestReports", new { spId = profile.SearchProfileId }, ajaxOpts_Reports)</td>
         <td>
             @if (numReports > 1) {
-                @Ajax.ActionLink("edit", "IndexSearch", "SimpleReports", new { spId = profile.SearchProfileId }, ajaxOpts_Reports )
+                @Ajax.ActionLink("edit", "IndexSearch", "SimpleReports", new { spId = profile.SearchProfileId }, ajaxOpts_Reports)
 			} else if (numReports == 1) {
 				var rep = profile.SimpleReports.First();
 				@(rep.Enabled ? "ON " : "OFF ")
-                @Ajax.ActionLink("(edit)", "Edit", "SimpleReports", new { id = rep.SimpleReportId }, ajaxOpts_Reports )
+                @Ajax.ActionLink("(edit)", "Edit", "SimpleReports", new { id = rep.SimpleReportId }, ajaxOpts_Reports)
             } else {
-                @Ajax.ActionLink("initialize", "InitializeReport", new { spId = profile.SearchProfileId }, ajaxOptions )
+                @Ajax.ActionLink("initialize", "InitializeReport", new { spId = profile.SearchProfileId }, ajaxOptions)
             }
         </td>
         <td>@Ajax.ActionLink("Edit Contacts", "EditSearchProfileContacts", new { spId = profile.SearchProfileId }, ajaxOptions)</td>

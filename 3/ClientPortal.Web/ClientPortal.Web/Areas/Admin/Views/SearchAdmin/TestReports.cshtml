@@ -1,0 +1,38 @@
+﻿@model ClientPortal.Data.Contexts.SearchProfile
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("searchReportsTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("searchReportsTab", null, "Post");
+}
+
+<h2>Test Spreadsheet</h2>
+
+SearchProfile: @Model.SearchProfileName<br />
+Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)
+<br /><br />
+
+@using (Html.BeginForm("GenerateSpreadsheet", "SearchAdmin"))
+{
+    @Html.ValidationSummary()
+    <fieldset>
+        <legend>Generate Spreadsheet</legend>
+        @Html.HiddenFor(m => m.SearchProfileId)
+        <table>
+            <tr>
+                <td>@Html.Label("Weeks to include:")</td>
+                <td><input type="text" name="numweeks" value="14" /></td>
+            </tr>
+            <tr>
+                <td>@Html.Label("Months to include:")</td>
+                <td><input type="text" name="nummonths" value="10" /></td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" value="Generate" />
+    </fieldset>
+}
+Notes:<br />
+Stats will include the most recent complete week.<br />
+The current partial month will be included (as of yesterday).<br />
+If today is the first, last month will be the most recent included.<br />
+<br />
+@Ajax.ActionLink("Main Reports List", "IndexSearch", "SimpleReports", ajaxOptions)
