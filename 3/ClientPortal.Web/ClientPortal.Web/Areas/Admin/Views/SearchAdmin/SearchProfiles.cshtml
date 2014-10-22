@@ -8,16 +8,19 @@
 <table border="1">
     <tr>
         <th></th>
+        <th>Id</th>
         <th>SearchProfile</th>
         <th>Login</th>
-        <th>Reports-</th>
+        <th>Reports-></th>
         <th>Email</th>
+        <th>DA Contacts</th>
     </tr>
 @foreach (var profile in Model)
 {
 	int numReports = profile.SimpleReports.Count();
     <tr>
         <td>@Ajax.ActionLink("Edit", "EditProfile", new { spId = profile.SearchProfileId }, ajaxOptions)</td>
+        <td style="text-align:right">@profile.SearchProfileId</td>
         <td>@profile.SearchProfileName</td>
         <td>
             @if (profile.UserProfiles.Any()) {
@@ -42,3 +45,5 @@
     </tr>
 }
 </table>
+<br />
+@Ajax.ActionLink("New Profile", "CreateSearchProfile", ajaxOptions)

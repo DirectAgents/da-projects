@@ -16,16 +16,39 @@ namespace ClientPortal.Data.Services
             return searchProfiles;
         }
 
+        public int MaxSearchProfileId()
+        {
+            int maxId = -1;
+            if (context.SearchProfiles.Any())
+                maxId = context.SearchProfiles.Max(sp => sp.SearchProfileId);
+            return maxId;
+        }
+
         public SearchProfile GetSearchProfile(int searchProfileId)
         {
             var searchProfile = context.SearchProfiles.Find(searchProfileId);
             return searchProfile;
         }
-        public void SaveSearchProfile(SearchProfile searchProfile)
+        public bool SaveSearchProfile(SearchProfile searchProfile)
         {
-            var entry = context.Entry(searchProfile);
-            entry.State = EntityState.Modified;
+            if (context.SearchProfiles.Any(sp => sp.SearchProfileId == searchProfile.SearchProfileId))
+            {
+                var entry = context.Entry(searchProfile);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            else
+                return false;
+        }
+        public bool CreateSearchProfile(SearchProfile searchProfile)
+        {
+            if (context.SearchProfiles.Any(sp => sp.SearchProfileId == searchProfile.SearchProfileId))
+                return false;
+
+            context.SearchProfiles.Add(searchProfile);
             context.SaveChanges();
+            return true;
         }
 
         // by default, report goes to first contact

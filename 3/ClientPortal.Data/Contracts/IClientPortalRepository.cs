@@ -101,8 +101,10 @@ namespace ClientPortal.Data.Contracts
 
         // Search
         IQueryable<SearchProfile> SearchProfiles();
+        int MaxSearchProfileId();
         SearchProfile GetSearchProfile(int searchProfileId);
-        void SaveSearchProfile(SearchProfile searchProfile);
+        bool SaveSearchProfile(SearchProfile searchProfile);
+        bool CreateSearchProfile(SearchProfile searchProfile);
 
         bool InitializeSearchProfileSimpleReport(int searchProfileId, string email = null);
 

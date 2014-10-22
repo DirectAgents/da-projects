@@ -8,12 +8,11 @@
 {
     @Html.ValidationSummary()
     <fieldset>
-        <legend>Edit Search Profile</legend>
-        @Html.HiddenFor(m => m.SearchProfileId)
+        <legend>New Search Profile</legend>
         <table>
             <tr>
                 <td>@Html.LabelFor(m => m.SearchProfileId, "Id")</td>
-                <td>@Html.DisplayFor(m => m.SearchProfileId)</td>
+                <td>@Html.EditorFor(m => m.SearchProfileId)</td>
             </tr>
             <tr>
                 <td>@Html.LabelFor(m => m.SearchProfileName, "Profile Name")</td>

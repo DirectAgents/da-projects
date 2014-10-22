@@ -18,11 +18,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             cpRepo = cpRepository;
         }
 
-        public ActionResult SearchProfiles()
-        {
-            var searchProfiles = cpRepo.SearchProfiles();
-            return View(searchProfiles.ToList());
-        }
+        // ---
 
         public ActionResult CreateUserProfile(int spId)
         {
@@ -31,7 +27,6 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 return HttpNotFound();
             return View(searchProfile);
         }
-
         [HttpPost]
         public ActionResult CreateUserProfile(int spId, string username, string password)
         {
@@ -46,6 +41,34 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return RedirectToAction("SearchProfiles");
         }
 
+        // ---
+
+        public ActionResult SearchProfiles()
+        {
+            var searchProfiles = cpRepo.SearchProfiles();
+            return View(searchProfiles.ToList());
+        }
+
+        public ActionResult CreateSearchProfile()
+        {
+            var profile = new SearchProfile
+            {
+                SearchProfileId = cpRepo.MaxSearchProfileId() + 1
+            };
+            return View(profile);
+        }
+        [HttpPost]
+        public ActionResult CreateSearchProfile(SearchProfile profile)
+        {
+            if (ModelState.IsValid)
+            {
+                if (cpRepo.CreateSearchProfile(profile))
+                    return RedirectToAction("SearchProfiles");
+                ModelState.AddModelError("", "Profile could not be saved.");
+            }
+            return View(profile);
+        }
+
         public ActionResult EditProfile(int spId)
         {
             var searchProfile = cpRepo.GetSearchProfile(spId);
@@ -53,14 +76,14 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 return HttpNotFound();
             return View(searchProfile);
         }
-
         [HttpPost]
         public ActionResult EditProfile(SearchProfile profile)
         {
             if (ModelState.IsValid)
             {
-                cpRepo.SaveSearchProfile(profile);
-                return RedirectToAction("SearchProfiles");
+                if (cpRepo.SaveSearchProfile(profile))
+                    return RedirectToAction("SearchProfiles");
+                ModelState.AddModelError("", "Profile could not be saved.");
             }
             return View(profile);
         }
@@ -97,6 +120,8 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             cpRepo.SaveChanges();
             return View(searchProfile);
         }
+
+        // ---
 
         public ActionResult InitializeReport(int spId)
         {
