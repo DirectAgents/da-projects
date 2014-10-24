@@ -1,4 +1,5 @@
-﻿using ClientPortal.Data.Contexts;
+﻿using CakeExtracter.Reports;
+using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Controllers;
 using System;
@@ -68,6 +69,42 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             }
             cpRepo.FillExtended_SimpleReport(inReport);
             return View(inReport);
+        }
+
+        public ActionResult Test(int id, string redirectAction)
+        {
+            return GenerateTestView(id, "@directagents.com", redirectAction);
+        }
+        private ActionResult GenerateTestView(int id, string sendTo, string redirectAction)
+        {
+            var simpleReport = cpRepo.GetSimpleReport(id);
+            if (simpleReport == null)
+                return HttpNotFound();
+            ViewBag.SendTo = sendTo;
+            ViewBag.RedirectAction = redirectAction;
+            return View("Test", simpleReport);
+        }
+
+        [HttpPost]
+        public ActionResult Test(int id, string sendTo, string redirectAction)
+        {
+            if (String.IsNullOrWhiteSpace(sendTo) || sendTo.StartsWith("@") | !sendTo.Contains("@") | !sendTo.Contains("."))
+                ModelState.AddModelError("", "Please enter a valid email address.");
+            else
+            {
+                var simpleReport = cpRepo.GetSimpleReport(id);
+                if (simpleReport == null)
+                    return HttpNotFound();
+                //var iReports = SimpleReportManager.CreateIReports(simpleReport, cpRepo);
+
+                //send email, then...
+
+                if (!String.IsNullOrWhiteSpace(redirectAction))
+                    return RedirectToAction(redirectAction);
+                else
+                    return RedirectToAction("Index");
+            }
+            return GenerateTestView(id, sendTo, redirectAction);
         }
     }
 }

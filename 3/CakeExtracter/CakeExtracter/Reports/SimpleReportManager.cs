@@ -25,6 +25,22 @@ namespace CakeExtracter.Reports
             this.emailer = emailer;
         }
 
+        // This can be called to send test reports (without updating Last and NextSend)
+        public int SendReports(SimpleReport simpleReport) //allow to override nextsend, perioddays, periodmonths...
+        {
+            int reportsSent = 0;
+            if (AbleToSend(simpleReport))
+            {
+                var iReports = CreateIReports(simpleReport);
+                foreach (var iReport in iReports)
+                {
+                    if (SendReport(simpleReport, iReport))
+                        reportsSent++;
+                }
+            }
+            return reportsSent;
+        }
+
         // returns # of reports sent
         public int CatchUp()
         {
@@ -36,22 +52,12 @@ namespace CakeExtracter.Reports
                 {
                     CheckInitialize(simpleReport);
 
-                    bool sentSomething = false;
-                    if (AbleToSend(simpleReport))
-                    {
-                        var iReports = GetIReports(simpleReport);
-                        foreach (var iReport in iReports)
-                        {
-                            if (SendReport(simpleReport, iReport))
-                            {
-                                sentSomething = true;
-                                totalReportsSent++;
-                            }
-                        }
-                        if (sentSomething)
-                            UpdateLastAndNextSend(simpleReport);
-                    }
-                    if (!sentSomething)
+                    int reportsSent = SendReports(simpleReport);
+                    totalReportsSent = totalReportsSent + reportsSent;
+
+                    if (reportsSent > 0)
+                        UpdateLastAndNextSend(simpleReport);
+                    else
                     {
                         // Couldn't send. Disable.
                         simpleReport.Enabled = false;
@@ -114,13 +120,14 @@ namespace CakeExtracter.Reports
         }
 
         // the IReports are the objects used to generate the report text
-        private IEnumerable<IReport> GetIReports(SimpleReport simpleReport)
+        private IEnumerable<IReport> CreateIReports(SimpleReport simpleReport)
         {
             List<IReport> iReports = new List<IReport>();
 
             if (simpleReport.Advertiser != null)
             {
                 iReports.Add(new CakeReport(cpRepo, simpleReport.Advertiser, simpleReport.NextSend.Value.AddDays(-1), simpleReport.PeriodDays));
+                                 //TODO: Handle the case where PeriodDays==0 and PeriodMonths>0
             }
             if (simpleReport.SearchProfile != null)
             {
@@ -129,18 +136,11 @@ namespace CakeExtracter.Reports
             return iReports;
         }
 
-        private bool SendReport(SimpleReport simpleReport, IReport report)
+        private bool SendReport(SimpleReport simpleReport, IReport iReport)
         {
             try
             {
-                var htmlView = report.GenerateView();
-                emailer.SendEmail(
-                            emailer.Credential.UserName,
-                            new[] { simpleReport.Email },
-                            simpleReport.EmailCC == null ? null : new[] { simpleReport.EmailCC },
-                            report.Subject,
-                            new[] { htmlView });
-
+                emailer.GenerateAndSendSimpleReport(simpleReport, iReport);
                 return true;
             }
             catch (Exception ex)
@@ -150,7 +150,7 @@ namespace CakeExtracter.Reports
             }
             finally
             {
-                report.DisposeResources();
+                iReport.DisposeResources();
             }
         }
 

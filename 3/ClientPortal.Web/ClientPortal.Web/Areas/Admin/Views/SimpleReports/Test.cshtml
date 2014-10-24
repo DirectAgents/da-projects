@@ -1,0 +1,39 @@
+﻿@model ClientPortal.Data.Contexts.SimpleReport
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("searchReportsTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("searchReportsTab", null, "Post");
+    var start = Model.GetStatsStartDate();
+    var end = Model.GetStatsEndDate();
+    string redirectAction = ViewBag.RedirectAction;
+}
+
+@using (Ajax.BeginForm(ajaxOpts_Post))
+{
+    @Html.ValidationSummary()
+    <fieldset>
+        <legend>Test Email Report</legend>
+        @Html.Hidden("redirectAction", redirectAction)
+        <table>
+            <tr>
+                <td>@Html.LabelFor(m => m.ParentName, "Account")</td>
+                <td>@Html.DisplayFor(m => m.ParentName)</td>
+            </tr>
+            <tr>
+                <td>@Html.Label("Timeframe")</td>
+                <td>@(start.ToShortDateString()) - @(end.ToShortDateString())</td>
+            </tr>
+            <tr>
+                <td>@Html.Label("Duration")</td>
+                <td>@Html.DisplayFor(m => m.DurationString)</td>
+            </tr>
+            <tr>
+                <td>@Html.Label("Send To")</td>
+                <td>@Html.Editor("sendto")</td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" value="Send Email" />
+        &nbsp;@Ajax.ActionLink("cancel", (String.IsNullOrWhiteSpace(redirectAction) ? "Index" : redirectAction), ajaxOptions)
+    </fieldset>
+}
+(NOT WORKING YET)

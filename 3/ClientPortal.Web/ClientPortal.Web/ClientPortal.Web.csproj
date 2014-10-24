@@ -273,6 +273,9 @@
     <Content Include="App_Data\manual-migration-02142013-userProfiles.sql" />
     <Content Include="App_Data\manual-migration-03142013-fileUploads.sql" />
     <Content Include="App_Readme\blackbird_example.html" />
+    <Content Include="Areas\Admin\Views\SimpleReports\Test.cshtml">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="Content\blackbird.css" />
     <Content Include="Content\blackbird_icons.png" />
     <Content Include="Content\blackbird_panel.png" />

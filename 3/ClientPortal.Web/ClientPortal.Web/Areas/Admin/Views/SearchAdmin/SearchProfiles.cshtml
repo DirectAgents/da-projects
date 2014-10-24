@@ -5,6 +5,7 @@
     var ajaxOpts_Reports = RazorHelpers.GetAjaxOptions("searchReportsTab", "navSearchReports");
 }
 
+@Ajax.ActionLink("Refresh", "SearchProfiles", ajaxOptions)
 <table border="1">
     <tr>
         <th></th>
@@ -29,7 +30,7 @@
                 @Ajax.ActionLink("create", "CreateUserProfile", new { spId = profile.SearchProfileId }, ajaxOptions)
             }
         </td>
-		<td>@Ajax.ActionLink("Test", "TestReports", new { spId = profile.SearchProfileId }, ajaxOpts_Reports)</td>
+		<td>@Ajax.ActionLink("Test", "TestReports", new { spId = profile.SearchProfileId }, ajaxOptions)</td>
         <td>
             @if (numReports > 1) {
                 @Ajax.ActionLink("edit", "IndexSearch", "SimpleReports", new { spId = profile.SearchProfileId }, ajaxOpts_Reports)

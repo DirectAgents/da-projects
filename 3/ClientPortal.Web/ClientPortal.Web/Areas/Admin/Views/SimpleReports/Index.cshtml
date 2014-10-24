@@ -2,10 +2,12 @@
 
 @{
     var ajaxOptions = RazorHelpers.GetAjaxOptions("searchReportsTab");
+    string refreshAction = ViewBag.RefreshAction;
 }
 
-@Ajax.ActionLink("Refresh", (string)ViewBag.RefreshAction ?? "Index", ajaxOptions)
+<h3>Email Reports</h3>
 
+@Ajax.ActionLink("Refresh", (String.IsNullOrWhiteSpace(refreshAction) ? "Index" : refreshAction), ajaxOptions)
 <table border="1">
     <tr>
         <th></th>
@@ -13,19 +15,22 @@
         <th>Enabled</th>
         <th>Email</th>
         <th>NextSend</th>
-        <th>Timeframe</th>
+        <th>Duration</th>
         <th>LastSend</th>
         <th>LastStatsDate</th>
     </tr>
 @foreach (var rep in Model)
 {
     <tr>
-        <td>@Ajax.ActionLink("Edit", "Edit", new { id = rep.SimpleReportId }, ajaxOptions)</td>
+        <td>
+            @Ajax.ActionLink("Edit", "Edit", new { id = rep.SimpleReportId }, ajaxOptions) |
+            @Ajax.ActionLink("Test", "Test", new { id = rep.SimpleReportId, redirectAction = refreshAction }, ajaxOptions)
+        </td>
         <td>@rep.ParentName</td>
         <td>@rep.Enabled</td>
         <td>@rep.Email@(String.IsNullOrWhiteSpace(rep.EmailCC) ? "" : "<br>CC: " + rep.EmailCC)</td>
         <td>@(rep.NextSend.HasValue ? rep.NextSend.Value.ToShortDateString() : "")</td>
-        <td>@rep.TimeframeString</td>
+        <td>@rep.DurationString</td>
         <td>@rep.LastSend</td>
         <td>@(rep.LastStatsDate.HasValue ? rep.LastStatsDate.Value.ToShortDateString() : "")</td>
     </tr>

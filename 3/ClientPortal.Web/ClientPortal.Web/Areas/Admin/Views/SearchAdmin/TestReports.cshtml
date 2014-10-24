@@ -1,10 +1,11 @@
 ﻿@model ClientPortal.Data.Contexts.SearchProfile
 @{
-    var ajaxOptions = RazorHelpers.GetAjaxOptions("searchReportsTab");
+    var ajaxOpts_Profiles = RazorHelpers.GetAjaxOptions("searchProfilesTab", "navSearchProfiles");
+    //var ajaxOpts_Reports = RazorHelpers.GetAjaxOptions("searchReportsTab");
     var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("searchReportsTab", null, "Post");
 }
 
-<h2>Test Spreadsheet</h2>
+<h3>Test Spreadsheet</h3>
 
 SearchProfile: @Model.SearchProfileName<br />
 Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)
@@ -31,8 +32,10 @@ Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)
     </fieldset>
 }
 Notes:<br />
-Stats will include the most recent complete week.<br />
-The current partial month will be included (as of yesterday).<br />
-If today is the first, last month will be the most recent included.<br />
+Weekly stats will include the most recent complete week.<br />
+The current partial month (up to yesterday) will be included in the monthly stats.<br />
+If today is the first of the month, the monthly stats will go through last month.<br />
 <br />
-@Ajax.ActionLink("Main Reports List", "IndexSearch", "SimpleReports", ajaxOptions)
+Back to:
+@Ajax.ActionLink("Profiles", "SearchProfiles", "SearchAdmin", ajaxOpts_Profiles)
+@*| @Ajax.ActionLink("Email Reports", "IndexSearch", "SimpleReports", ajaxOpts_Reports)*@

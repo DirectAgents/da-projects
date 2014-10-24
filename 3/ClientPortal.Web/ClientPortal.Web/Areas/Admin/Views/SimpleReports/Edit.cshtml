@@ -8,7 +8,7 @@
 {
     @Html.ValidationSummary()
     <fieldset>
-        <legend>Edit Report</legend>
+        <legend>Edit Email Report</legend>
         @Html.HiddenFor(m => m.SimpleReportId)
         @Html.HiddenFor(m => m.AdvertiserId)
         @Html.HiddenFor(m => m.SearchProfileId)
@@ -55,7 +55,7 @@
         </table>
         <br />
         <input type="submit" value="Save" />
-            &nbsp;@Ajax.ActionLink("cancel", "IndexSearch", ajaxOptions)
+        &nbsp;@Ajax.ActionLink("cancel", "IndexSearch", ajaxOptions)
     </fieldset>
 }
 Notes:<br />

@@ -1,7 +1,8 @@
 ﻿using System.Net.Mail;
+
 namespace CakeExtracter.Reports
 {
-    interface IReport
+    public interface IReport
     {
         string Subject { get; }
         string Generate();

@@ -28,7 +28,7 @@ namespace ClientPortal.Data.Contexts
         }
 
         [NotMapped]
-        public string TimeframeString
+        public string DurationString
         {
             get
             {
@@ -41,6 +41,7 @@ namespace ClientPortal.Data.Contexts
             }
         }
 
+        // for the next report that's sent...
         public DateTime GetStatsStartDate()
         {
             DateTime dayAfterEnd = this.NextSend ?? DateTime.Today;
@@ -49,7 +50,6 @@ namespace ClientPortal.Data.Contexts
             else
                 return dayAfterEnd.AddDays(-1 * this.PeriodDays);
         }
-
         public DateTime GetStatsEndDate()
         {
             DateTime dayAfterEnd = this.NextSend ?? DateTime.Today;

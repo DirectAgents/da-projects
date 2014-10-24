@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClientPortal.Data.Contexts;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -28,15 +29,17 @@ namespace CakeExtracter.Reports
             client.Send(message);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="fromAddress"></param>
-        /// <param name="toAddresses">An array of strings representing destination addresses.  Each string may optionally be a comma separated list.</param>
-        /// <param name="ccAddresses"></param>
-        /// <param name="subject"></param>
-        /// <param name="body"></param>
-        /// <param name="isHTML"></param>
+        public void GenerateAndSendSimpleReport(SimpleReport simpleReport, IReport iReport)
+        {
+            var htmlView = iReport.GenerateView();
+            SendEmail(
+                this.Credential.UserName,
+                new[] { simpleReport.Email },
+                simpleReport.EmailCC == null ? null : new[] { simpleReport.EmailCC },
+                iReport.Subject,
+                new[] { htmlView });
+        }
+
         public void SendEmail(string fromAddress, string[] toAddresses, string[] ccAddresses, string subject, string body, bool isHTML, Attachment attachment = null)
         {
             var message = CreateMailMessage(fromAddress, toAddresses, ccAddresses, subject, attachment);
@@ -45,7 +48,6 @@ namespace CakeExtracter.Reports
 
             SendMailMessage(message);
         }
-
         public void SendEmail(string fromAddress, string[] toAddresses, string[] ccAddresses, string subject, AlternateView[] alternateViews, Attachment attachment = null)
         {
             var message = CreateMailMessage(fromAddress, toAddresses, ccAddresses, subject, attachment);
