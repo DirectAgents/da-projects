@@ -18,6 +18,7 @@ namespace CakeExtracter.Commands
         public string AccountCode { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public int TimeZoneOffset { get; set; }
 
         public override void ResetProperties()
         {
@@ -25,6 +26,7 @@ namespace CakeExtracter.Commands
             AccountCode = null;
             StartDate = null;
             EndDate = null;
+            TimeZoneOffset = 0;
         }
 
         public SynchSearchDailySummariesCriteoCommand()
@@ -32,23 +34,48 @@ namespace CakeExtracter.Commands
             IsCommand("synchSearchDailySummariesCriteo", "synch SearchDailySummaries for Criteo");
             HasOption<int>("p|searchProfileId=", "SearchProfile Id (default = all)", c => SearchProfileId = c);
             HasOption<string>("v|accountCode=", "Account Code", c => AccountCode = c);
-            HasOption<DateTime>("s|startDate=", "Start Date (default is one month ago)", c => StartDate = c);
+            HasOption<DateTime>("s|startDate=", "Start Date (default is one month ago if no timeZoneOffet; otherwise 6 days ago)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
+            HasOption<int>("t|timeZoneOffset=", "TimeZoneOffset from GMT for stats (default = 0)", c => TimeZoneOffset = c); // -8 for Pacific Time
         }
 
         public override int Execute(string[] remainingArguments)
         {
-            //var oneMonthAgo = DateTime.Today.AddMonths(-1);
+            if (TimeZoneOffset != 0)
+            {
+                ExecuteHourly();
+            }
+            else
+            {
+                var oneMonthAgo = DateTime.Today.AddMonths(-1);
+                var yesterday = DateTime.Today.AddDays(-1);
+                var dateRange = new DateRange(StartDate ?? oneMonthAgo, EndDate ?? yesterday);
+
+                foreach (var searchAccount in GetSearchAccounts())
+                {
+                    var extracter = new CriteoApiExtracter(searchAccount.AccountCode, dateRange);
+                    var loader = new CriteoDailySummaryLoader(searchAccount.SearchAccountId);
+
+                    loader.AddUpdateSearchCampaigns(extracter.GetCampaigns());
+
+                    var extracterThread = extracter.Start();
+                    var loaderThread = loader.Start(extracter);
+                    extracterThread.Join();
+                    loaderThread.Join();
+                }
+            }
+            return 0;
+        }
+
+        public void ExecuteHourly()
+        {
             var sixDaysAgo = DateTime.Today.AddDays(-6);
             var yesterday = DateTime.Today.AddDays(-1);
-            //var dateRange = new DateRange(StartDate ?? oneMonthAgo, EndDate ?? yesterday);
             var dateRange = new DateRange(StartDate ?? sixDaysAgo, EndDate ?? yesterday);
 
             foreach (var searchAccount in GetSearchAccounts())
             {
-                //var extracter = new CriteoApiExtracter(searchAccount.AccountCode, dateRange);
-                //var loader = new CriteoDailySummaryLoader(searchAccount.SearchAccountId);
-                var extracter = new CriteoApiExtracter2(searchAccount.AccountCode, dateRange);
+                var extracter = new CriteoApiExtracter2(searchAccount.AccountCode, dateRange, TimeZoneOffset);
                 var loader = new CriteoDailySummaryLoader2(searchAccount.SearchAccountId);
 
                 loader.AddUpdateSearchCampaigns(extracter.GetCampaigns());
@@ -58,7 +85,6 @@ namespace CakeExtracter.Commands
                 extracterThread.Join();
                 loaderThread.Join();
             }
-            return 0;
         }
 
         public IEnumerable<SearchAccount> GetSearchAccounts()

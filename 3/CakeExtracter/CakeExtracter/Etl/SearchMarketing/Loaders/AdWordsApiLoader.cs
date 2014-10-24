@@ -32,6 +32,11 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             var addedCount = 0;
             var updatedCount = 0;
             var itemCount = 0;
+            //var networks = items.Select(i => i["network"]).Distinct();
+            //var devices = items.Select(i => i["device"]).Distinct();
+            //var clickTypes = items.Select(i => i["clickType"]).Distinct();
+            //var pla = items.Where(i => i["clickType"] == "Product listing ad").OrderBy(i => i["campaignID"]);
+            //var plac = items.Where(i => i["clickType"] == "Product Listing Ad - Coupon").OrderBy(i => i["campaignID"]);
             using (var db = new ClientPortalContext())
             {
                 var passedInAccount = db.SearchAccounts.Find(this.searchAccountId);
@@ -59,7 +64,12 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                     bool added;
                     if (includeBreakdown)
-                        added = UpsertSearchDailySummary2(db, sds, item["network"].Substring(0, 1), item["device"].Substring(0, 1), item["clickType"].Substring(0, 1));
+                    {
+                        var clickTypeAbbrev = item["clickType"].Substring(0, 1);
+                        if (item["clickType"].ToLower() == "product listing ad - coupon") // started on 10/18/14 for Folica|Search (conflict with "Product listing ad")
+                            clickTypeAbbrev = "Q";
+                        added = UpsertSearchDailySummary2(db, sds, item["network"].Substring(0, 1), item["device"].Substring(0, 1), clickTypeAbbrev);
+                    }
                     else
                         added = UpsertSearchDailySummary(db, sds);
 

@@ -17,7 +17,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
 
         private CriteoUtility _criteoUtility;
 
-        public CriteoApiExtracter2(string accountCode, CakeExtracter.Common.DateRange dateRange, int timezoneOffset = -8)
+        public CriteoApiExtracter2(string accountCode, CakeExtracter.Common.DateRange dateRange, int timezoneOffset)
         {
             this.accountCode = accountCode;
             this.beginDate = dateRange.FromDate;
@@ -36,8 +36,14 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             Logger.Info("Extracting SearchDailySummaries from Criteo API for {0} from {1:d} to {2:d}",
                         this.accountCode, this.beginDate, this.endDate);
 
-            var adjustedEndDate = this.endDate.AddDays(1); // get an additional day because of the timezone adjustment
-            var reportUrl = _criteoUtility.GetCampaignReport(beginDate, adjustedEndDate, true);
+            var adjustedBeginDate = this.beginDate;
+            var adjustedEndDate = this.endDate;
+            if (this.timezoneOffset < 0)
+                adjustedEndDate = adjustedEndDate.AddDays(1);
+            else if (this.timezoneOffset > 0)
+                adjustedBeginDate = adjustedBeginDate.AddDays(-1);
+
+            var reportUrl = _criteoUtility.GetCampaignReport(adjustedBeginDate, adjustedEndDate, true);
 
             var dailySummaries = EnumerateDailySummaries(reportUrl);
             Add(dailySummaries);

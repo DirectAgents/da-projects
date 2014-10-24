@@ -11,13 +11,40 @@ namespace BingAds
 {
     public class Reports
     {
+        private static ReportingServiceClient _service;
+
         private readonly string _developerToken = ConfigurationManager.AppSettings["BingApiToken"];
         private readonly string _userName = ConfigurationManager.AppSettings["BingApiUsername"];
         private readonly string _password = ConfigurationManager.AppSettings["BingApiPassword"];
         private readonly string _folder = ConfigurationManager.AppSettings["BingReportFolder"];
         private readonly string _filename = ConfigurationManager.AppSettings["BingReportFilename"];
 
-        private static ReportingServiceClient _service;
+        private string DeveloperToken { get; set; }
+        private string UserName { get; set; }
+        private string Password { get; set; }
+
+        private void ResetCredentials()
+        {
+            DeveloperToken = _developerToken;
+            UserName = _userName;
+            Password = _password;
+        }
+        private void SetCredentials(long accountId)
+        {
+            ResetCredentials();
+
+            string token = ConfigurationManager.AppSettings["BingApiToken" + accountId];
+            if (!String.IsNullOrWhiteSpace(token))
+                DeveloperToken = token;
+
+            string username = ConfigurationManager.AppSettings["BingApiUsername" + accountId];
+            if (!String.IsNullOrWhiteSpace(username))
+                UserName = username;
+
+            string password = ConfigurationManager.AppSettings["BingApiPassword" + accountId];
+            if (!String.IsNullOrWhiteSpace(password))
+                Password = password;
+        }
 
         // --- Logging ---
         private Action<string> _LogInfo;
@@ -42,23 +69,27 @@ namespace BingAds
         // --- Constructors ---
         public Reports()
         {
+            ResetCredentials();
         }
         public Reports(Action<string> logInfo, Action<string> logError)
         {
             _LogInfo = logInfo;
             _LogError = logError;
+            ResetCredentials();
         }
 
         // --- public methods ---
         public string GetKeywordPerformance(long accountId, long campaignId)
         {
             ReportRequest reportRequest = GetReportRequest_KeywordPerf(accountId, campaignId);
+            SetCredentials(accountId);
             var filepath = GetReport(reportRequest);
             return filepath;
         }
         public string GetDailySummaries(long accountId, DateTime startDate, DateTime endDate)
         {
             ReportRequest reportRequest = GetReportRequest_DailySums(accountId, startDate, endDate);
+            SetCredentials(accountId);
             var filepath = GetReport(reportRequest);
             return filepath;
         }
@@ -276,9 +307,9 @@ namespace BingAds
             {
                 // Set the header information.
 
-                request.DeveloperToken = _developerToken;
-                request.UserName = _userName;
-                request.Password = _password;
+                request.DeveloperToken = this.DeveloperToken;
+                request.UserName = this.UserName;
+                request.Password = this.Password;
 
                 // Set the request information.
 
@@ -389,9 +420,9 @@ namespace BingAds
             {
                 // Set the header information.
 
-                request.DeveloperToken = _developerToken;
-                request.UserName = _userName;
-                request.Password = _password;
+                request.DeveloperToken = this.DeveloperToken;
+                request.UserName = this.UserName;
+                request.Password = this.Password;
 
                 // Set the request information.
 
