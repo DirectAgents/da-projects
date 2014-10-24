@@ -138,26 +138,27 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return View(searchProfile);
         }
 
-        public ActionResult GenerateSpreadsheet(int searchProfileId, int numWeeks = 8, int numMonths = 6)
+        public ActionResult GenerateSpreadsheet(int searchProfileId, int numWeeks = 8, int numMonths = 6, string filename = "report.xlsx")
         {
             var searchProfile = cpRepo.GetSearchProfile(searchProfileId);
             if (searchProfile == null)
                 return HttpNotFound();
 
             string templateFolder = ConfigurationManager.AppSettings["PATH_Search"];
-            var spreadsheet = new SearchReportPPC(templateFolder, searchProfile.SearchProfileName);
+            var spreadsheet = new SearchReportPPC(templateFolder);
             var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue" };
 
             bool useAnalytics = false; //TODO: get from searchProfile when implemented
-            var weeklyStats = cpRepo.GetWeekStats(searchProfileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, null, useAnalytics);
             bool includeToday = false;
             var monthlyStats = cpRepo.GetMonthStats(searchProfileId, numMonths, useAnalytics, includeToday);
+            var weeklyStats = cpRepo.GetWeekStats(searchProfileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, null, useAnalytics);
 
-            spreadsheet.LoadWeeklyStats(weeklyStats, propertyNames);
             spreadsheet.LoadMonthlyStats(monthlyStats, propertyNames);
+            spreadsheet.LoadWeeklyStats(weeklyStats, propertyNames);
+            spreadsheet.SetClientName(searchProfile.SearchProfileName);
 
             var fsr = new FileStreamResult(spreadsheet.GetAsMemoryStream(), SpreadsheetBase.ContentType);
-            fsr.FileDownloadName = "TestReport.xlsx";
+            fsr.FileDownloadName = filename;
             return fsr;
             //spreadsheet.DisposeResources();
         }

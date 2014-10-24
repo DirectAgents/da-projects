@@ -9,8 +9,8 @@ namespace DAGenerators.Spreadsheets
         public ExcelPackage ExcelPackage { get; set; }
         private MemoryStream MemoryStream { get; set; }
 
-        public static string ContentType { get { return "application/vnd.ms-excel"; } }
-        //public static string ContentType { get { return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; } }
+        //public static string ContentType { get { return "application/vnd.ms-excel"; } }
+        public static string ContentType { get { return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; } }
 
         // NOTE: Be sure to call DisposeResources after calling this (i.e. after sending email)
         public Attachment GetAsAttachment(string filename)

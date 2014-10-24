@@ -14,41 +14,53 @@ namespace DAGenerators.Spreadsheets
     {
         private const string TemplateFilename = "SearchPPCtemplate.xlsx";
         private const int StartRow_Weekly = 12;
-        private const int StartRow_Monthly = 27;
+        private const int StartRow_Monthly = 13;
+        private const int Row_SummaryDate = 8;
         private const int Row_WeeklyHeader = 11;
+        private const int Row_ClientNameBottom = 14;
+        private const int Row_WeeklyChart = 15;
         private const int Col_StatsTitle = 2;
         private const int Col_Clicks = 3;
         private const int Col_Revenue = 8;
 
         ExcelWorksheet WS { get { return this.ExcelPackage.Workbook.Worksheets[1]; } }
+        int NumWeeksAdded { get; set; }
+        int NumMonthsAdded { get; set; }
 
-        public SearchReportPPC(string templateFolder, string clientName)
+        public SearchReportPPC(string templateFolder)
         {
             var fileInfo = new FileInfo(Path.Combine(templateFolder, TemplateFilename));
             this.ExcelPackage = new ExcelPackage(fileInfo);
 
             SetReportDate(DateTime.Today);
-            SetClientName(clientName);
         }
 
         public void SetReportDate(DateTime date)
         {
-            WS.Cells[8, 2].Value = "Weekly Summary " + date.ToShortDateString();
-        }
-        public void SetClientName(string clientName)
-        {
-            WS.Cells[45, 2].Value = "Direct Agents | " + clientName;
+            WS.Cells[Row_SummaryDate, 2].Value = "Report Summary " + date.ToShortDateString();
         }
 
+        // Load monthly stats first, so we know where to put the weekly chart and the client name text.
+        public void LoadMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
+        {
+            LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Monthly);
+            NumMonthsAdded = stats.Count();
+        }
         public void LoadWeeklyStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
         {
             LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Weekly);
-            CreateWeeklyChart(stats.Count());
+            NumWeeksAdded = stats.Count();
+            CreateWeeklyChart(NumWeeksAdded);
         }
+        public void SetClientName(string clientName)
+        {
+            WS.Cells[Row_ClientNameBottom + NumWeeksAdded + NumMonthsAdded, 2].Value = "Direct Agents | " + clientName;
+        }
+
         public void CreateWeeklyChart(int numWeeks)
         {
             var chart = WS.Drawings.AddChart("chartWeekly", eChartType.ColumnClustered);
-            chart.SetPosition(46, 0, 1, 0);
+            chart.SetPosition(Row_WeeklyChart + NumWeeksAdded + NumMonthsAdded, 0, 1, 0);
             chart.SetSize(1071, 217);
 
             chart.Title.Text = "Weekly Performance"; // TODO: add year; remember: handle when it's two years
@@ -70,17 +82,14 @@ namespace DAGenerators.Spreadsheets
             series2.Header = "Clicks";
         }
 
-        public void LoadMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
-        {
-            LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Monthly);
-        }
-
         // propertyNames for: title, clicks, impressions, orders, cost, revenue
         private void LoadWeeklyMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames, int startingRow)
         {
             int numRows = stats.Count();
             if (numRows > 0)
             {
+                WS.InsertRow(startingRow, numRows, startingRow);
+
                 var type = stats.First().GetType();
                 var members1 = propertyNames.Take(4).Select(p => type.GetProperty(p)).ToArray();
                 var members2 = propertyNames.Skip(4).Select(p => type.GetProperty(p)).ToArray();

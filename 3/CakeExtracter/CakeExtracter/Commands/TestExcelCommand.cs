@@ -72,12 +72,13 @@ namespace CakeExtracter.Commands
         {
             string templateFolder = ConfigurationManager.AppSettings["PATH_Search"];
 
-            var spreadsheet = new SearchReportPPC(templateFolder, "Scholastic, Inc.");
+            var spreadsheet = new SearchReportPPC(templateFolder);
             var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue" };
-            var stats = GetStats(true);
-            spreadsheet.LoadWeeklyStats(stats, propertyNames);
-            stats = GetStats(false);
+            var stats = GetStats(false);
             spreadsheet.LoadMonthlyStats(stats, propertyNames);
+            stats = GetStats(true);
+            spreadsheet.LoadWeeklyStats(stats, propertyNames);
+            //spreadsheet.SetClientName("Scholastic, Inc.");
 
             SaveToFile(spreadsheet.ExcelPackage);
             //var attachment = spreadsheet.GetAsAttachment("reportABC.xlsx");
