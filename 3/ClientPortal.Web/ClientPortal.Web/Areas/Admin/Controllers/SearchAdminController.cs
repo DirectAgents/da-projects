@@ -145,14 +145,14 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 return HttpNotFound();
 
             string templateFolder = ConfigurationManager.AppSettings["PATH_Search"];
-            var spreadsheet = new SearchReportPPC(templateFolder);
-            var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue" };
+            var spreadsheet = new SearchReportPPC(templateFolder, searchProfile.SearchProfileName.Replace(" ", ""));
 
             bool useAnalytics = false; //TODO: get from searchProfile when implemented
             bool includeToday = false;
             var monthlyStats = cpRepo.GetMonthStats(searchProfileId, numMonths, useAnalytics, includeToday);
             var weeklyStats = cpRepo.GetWeekStats(searchProfileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, null, useAnalytics);
 
+            var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue" };
             spreadsheet.LoadMonthlyStats(monthlyStats, propertyNames);
             spreadsheet.LoadWeeklyStats(weeklyStats, propertyNames);
             spreadsheet.SetClientName(searchProfile.SearchProfileName);

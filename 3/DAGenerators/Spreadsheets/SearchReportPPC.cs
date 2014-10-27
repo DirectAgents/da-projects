@@ -10,23 +10,8 @@ using System.Reflection;
 
 namespace DAGenerators.Spreadsheets
 {
-    public class Metric
+    public partial class SearchReportPPC : SpreadsheetBase
     {
-        public Metric(int colNum, string displayName, bool show = true)
-        {
-            this.ColNum = colNum;
-            this.DisplayName = displayName;
-            this.Show = show;
-        }
-
-        public int ColNum { get; set; }
-        public string DisplayName { get; set; }
-        public bool Show { get; set; }
-    }
-
-    public class SearchReportPPC : SpreadsheetBase
-    {
-        private const string TemplateFilename = "SearchPPCtemplate.xlsx";
         private const int Row_SummaryDate = 8;
         private const int Row_StatsHeader = 11;
         private const int StartRow_Weekly = 12;
@@ -34,35 +19,38 @@ namespace DAGenerators.Spreadsheets
         private const int Row_ClientNameBottom = 14;
         private const int Row_WeeklyChart = 15;
 
+        protected string TemplateFilename = "SearchPPCtemplate.xlsx";
+
         private const int Col_StatsTitle = 2;
 
-        public Metric Metric_Clicks = new Metric(3, "Clicks");
-        public Metric Metric_Impressions = new Metric(4, "Impressions");
-        public Metric Metric_Orders = new Metric(5, "Orders");
-        public Metric Metric_Cost = new Metric(7, "Cost");
-        public Metric Metric_Revenue = new Metric(8, "Revenue");
+        public Metric Metric_Clicks = new Metric(0, null, false);
+        public Metric Metric_Impressions = new Metric(0, null, false);
+        public Metric Metric_Orders = new Metric(0, null, false);
+        public Metric Metric_Cost = new Metric(0, null, false);
+        public Metric Metric_Revenue = new Metric(0, null, false);
 
-        public Metric Metric_OrderRate = new Metric(6, "Order Rate");
-        public Metric Metric_Net = new Metric(9, "Net");
-        public Metric Metric_RevPerOrder = new Metric(10, "Revenue/Order");
-        public Metric Metric_CTR = new Metric(11, "CTR");
-        public Metric Metric_CPC = new Metric(12, "CPC");
-        public Metric Metric_CPO = new Metric(13, "CPO");
-        public Metric Metric_ROAS = new Metric(14, "ROAS");
-        public Metric Metric_ROI = new Metric(15, "ROI");
+        // Computed metrics
+        public Metric Metric_OrderRate = new Metric(0, null, false);
+        public Metric Metric_Net = new Metric(0, null, false);
+        public Metric Metric_RevPerOrder = new Metric(0, null, false);
+        public Metric Metric_CTR = new Metric(0, null, false);
+        public Metric Metric_CPC = new Metric(0, null, false);
+        public Metric Metric_CPO = new Metric(0, null, false);
+        public Metric Metric_ROAS = new Metric(0, null, false);
+        public Metric Metric_ROI = new Metric(0, null, false);
 
         ExcelWorksheet WS { get { return this.ExcelPackage.Workbook.Worksheets[1]; } }
         int NumWeeksAdded { get; set; }
         int NumMonthsAdded { get; set; }
 
-        public SearchReportPPC(string templateFolder)
+        public SearchReportPPC(string templateFolder, string templateName = null)
         {
+            Setup(templateName);
             var fileInfo = new FileInfo(Path.Combine(templateFolder, TemplateFilename));
             this.ExcelPackage = new ExcelPackage(fileInfo);
 
             SetReportDate(DateTime.Today);
-
-            //SetColumnHeaders(); // do this after showing/hiding metrics
+            SetColumnHeaders(); // do this after showing/hiding metrics
         }
 
         public void SetReportDate(DateTime date)
@@ -133,11 +121,11 @@ namespace DAGenerators.Spreadsheets
                 WS.InsertRow(startingRow, numRows, startingRow); // # rows inserted == size of the stats enumerable
 
                 LoadColumnFromStats(stats, startingRow, Col_StatsTitle, propertyNames[0]);
-                LoadColumnFromStats(stats, startingRow, Metric_Clicks.ColNum, propertyNames[1]);
-                LoadColumnFromStats(stats, startingRow, Metric_Impressions.ColNum, propertyNames[2]);
-                LoadColumnFromStats(stats, startingRow, Metric_Orders.ColNum, propertyNames[3]);
-                LoadColumnFromStats(stats, startingRow, Metric_Cost.ColNum, propertyNames[4]);
-                LoadColumnFromStats(stats, startingRow, Metric_Revenue.ColNum, propertyNames[5]);
+                LoadColumnFromStats(stats, startingRow, Metric_Clicks.ColNum, propertyNames[1], Metric_Clicks);
+                LoadColumnFromStats(stats, startingRow, Metric_Impressions.ColNum, propertyNames[2], Metric_Impressions);
+                LoadColumnFromStats(stats, startingRow, Metric_Orders.ColNum, propertyNames[3], Metric_Orders);
+                LoadColumnFromStats(stats, startingRow, Metric_Cost.ColNum, propertyNames[4], Metric_Cost);
+                LoadColumnFromStats(stats, startingRow, Metric_Revenue.ColNum, propertyNames[5], Metric_Revenue);
 
                 for (int i = 0; i < numRows; i++)
                 {
@@ -145,23 +133,30 @@ namespace DAGenerators.Spreadsheets
                 }
             }
         }
-
-        private void LoadColumnFromStats<T>(IEnumerable<T> stats, int startingRow, int iColumn, string propertyName)
+        private void LoadColumnFromStats<T>(IEnumerable<T> stats, int startingRow, int iColumn, string propertyName, Metric metric = null)
         {
-            var type = stats.First().GetType();
-            WS.Cells[startingRow, iColumn].LoadFromCollection(stats, false, TableStyles.None, BindingFlags.Default, new[] { type.GetProperty(propertyName) });
+            if (metric == null || metric.Show)
+            {
+                var type = stats.First().GetType();
+                WS.Cells[startingRow, iColumn].LoadFromCollection(stats, false, TableStyles.None, BindingFlags.Default, new[] { type.GetProperty(propertyName) });
+            }
         }
 
         private void LoadStatsRowFormulas(int iRow)
         {
-            WS.Cells[iRow, Metric_OrderRate.ColNum].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Metric_Orders.ColNum - Metric_OrderRate.ColNum, Metric_Clicks.ColNum - Metric_OrderRate.ColNum); // OrderRate (Orders/Clicks)
-            WS.Cells[iRow, Metric_Net.ColNum].FormulaR1C1 = String.Format("RC[{0}]-RC[{1}]", Metric_Revenue.ColNum - Metric_Net.ColNum, Metric_Cost.ColNum - Metric_Net.ColNum); // Net (Rev-Cost)
-            WS.Cells[iRow, Metric_RevPerOrder.ColNum].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Metric_Revenue.ColNum - Metric_RevPerOrder.ColNum, Metric_Orders.ColNum - Metric_RevPerOrder.ColNum); // Revenue/Orders
-            WS.Cells[iRow, Metric_CTR.ColNum].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Metric_Clicks.ColNum - Metric_CTR.ColNum, Metric_Impressions.ColNum - Metric_CTR.ColNum); // CTR (Clicks/Impressions)
-            WS.Cells[iRow, Metric_CPC.ColNum].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Metric_Cost.ColNum - Metric_CPC.ColNum, Metric_Clicks.ColNum - Metric_CPC.ColNum); // CPC (Cost/Clicks)
-            WS.Cells[iRow, Metric_CPO.ColNum].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Metric_Cost.ColNum - Metric_CPO.ColNum, Metric_Orders.ColNum - Metric_CPO.ColNum); // CPO (Cost/Orders)
-            WS.Cells[iRow, Metric_ROAS.ColNum].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Metric_Revenue.ColNum - Metric_ROAS.ColNum, Metric_Cost.ColNum - Metric_ROAS.ColNum); // ROAS (Rev/Cost)
-            WS.Cells[iRow, Metric_ROI.ColNum].FormulaR1C1 = String.Format("(RC[{0}]-RC[{1}])/RC[{1}]", Metric_Revenue.ColNum - Metric_ROI.ColNum, Metric_Cost.ColNum - Metric_ROI.ColNum); // ROI ((Rev-Cost)/Cost)
+            CheckLoadStatsRowFormula(iRow, Metric_OrderRate, String.Format("RC[{0}]/RC[{1}]", Metric_Orders.ColNum - Metric_OrderRate.ColNum, Metric_Clicks.ColNum - Metric_OrderRate.ColNum)); // OrderRate (Orders/Clicks)
+            CheckLoadStatsRowFormula(iRow, Metric_Net, String.Format("RC[{0}]-RC[{1}]", Metric_Revenue.ColNum - Metric_Net.ColNum, Metric_Cost.ColNum - Metric_Net.ColNum)); // Net (Rev-Cost)
+            CheckLoadStatsRowFormula(iRow, Metric_RevPerOrder, String.Format("RC[{0}]/RC[{1}]", Metric_Revenue.ColNum - Metric_RevPerOrder.ColNum, Metric_Orders.ColNum - Metric_RevPerOrder.ColNum)); // Revenue/Orders
+            CheckLoadStatsRowFormula(iRow, Metric_CTR, String.Format("RC[{0}]/RC[{1}]", Metric_Clicks.ColNum - Metric_CTR.ColNum, Metric_Impressions.ColNum - Metric_CTR.ColNum)); // CTR (Clicks/Impressions)
+            CheckLoadStatsRowFormula(iRow, Metric_CPC, String.Format("RC[{0}]/RC[{1}]", Metric_Cost.ColNum - Metric_CPC.ColNum, Metric_Clicks.ColNum - Metric_CPC.ColNum)); // CPC (Cost/Clicks)
+            CheckLoadStatsRowFormula(iRow, Metric_CPO, String.Format("RC[{0}]/RC[{1}]", Metric_Cost.ColNum - Metric_CPO.ColNum, Metric_Orders.ColNum - Metric_CPO.ColNum)); // CPO (Cost/Orders)
+            CheckLoadStatsRowFormula(iRow, Metric_ROAS, String.Format("RC[{0}]/RC[{1}]", Metric_Revenue.ColNum - Metric_ROAS.ColNum, Metric_Cost.ColNum - Metric_ROAS.ColNum)); // ROAS (Rev/Cost)
+            CheckLoadStatsRowFormula(iRow, Metric_ROI, String.Format("(RC[{0}]-RC[{1}])/RC[{1}]", Metric_Revenue.ColNum - Metric_ROI.ColNum, Metric_Cost.ColNum - Metric_ROI.ColNum)); // ROI ((Rev-Cost)/Cost)
+        }
+        private void CheckLoadStatsRowFormula(int iRow, Metric metric, string formula)
+        {
+            if (metric.Show)
+                WS.Cells[iRow, metric.ColNum].FormulaR1C1 = formula;
         }
 
         public IEnumerable<Metric> GetMetrics(bool shownOnly)
@@ -188,5 +183,19 @@ namespace DAGenerators.Spreadsheets
             if (!onlyIfShown || metric.Show)
                 metrics.Add(metric);
         }
+    }
+
+    public class Metric
+    {
+        public Metric(int colNum, string displayName, bool show = true)
+        {
+            this.ColNum = colNum;
+            this.DisplayName = displayName;
+            this.Show = show;
+        }
+
+        public int ColNum { get; set; }
+        public string DisplayName { get; set; }
+        public bool Show { get; set; }
     }
 }

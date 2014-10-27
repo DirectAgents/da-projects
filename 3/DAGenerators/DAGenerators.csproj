@@ -51,6 +51,7 @@
     <Compile Include="Charts\TwoSeriesChartBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Spreadsheets\SearchReportPPC.cs" />
+    <Compile Include="Spreadsheets\SearchReports.cs" />
     <Compile Include="Spreadsheets\SpreadsheetBase.cs" />
     <Compile Include="Spreadsheets\TestSpreadSheet.cs" />
   </ItemGroup>
