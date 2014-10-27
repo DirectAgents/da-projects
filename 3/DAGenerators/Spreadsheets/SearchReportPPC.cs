@@ -19,9 +19,22 @@ namespace DAGenerators.Spreadsheets
         private const int Row_WeeklyHeader = 11;
         private const int Row_ClientNameBottom = 14;
         private const int Row_WeeklyChart = 15;
+
         private const int Col_StatsTitle = 2;
         private const int Col_Clicks = 3;
+        private const int Col_Impressions = 4;
+        private const int Col_Orders = 5;
+        private const int Col_Cost = 7;
         private const int Col_Revenue = 8;
+
+        private const int Col_OrderRate = 6;
+        private const int Col_Net = 9;
+        private const int Col_RevPerOrder = 10;
+        private const int Col_CTR = 11;
+        private const int Col_CPC = 12;
+        private const int Col_CPO = 13;
+        private const int Col_ROAS = 14;
+        private const int Col_ROI = 15;
 
         ExcelWorksheet WS { get { return this.ExcelPackage.Workbook.Worksheets[1]; } }
         int NumWeeksAdded { get; set; }
@@ -50,14 +63,18 @@ namespace DAGenerators.Spreadsheets
         {
             LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Weekly);
             NumWeeksAdded = stats.Count();
-            CreateWeeklyChart(NumWeeksAdded);
+            CreateWeeklyChart_RevenueVsClicks();
         }
         public void SetClientName(string clientName)
         {
             WS.Cells[Row_ClientNameBottom + NumWeeksAdded + NumMonthsAdded, 2].Value = "Direct Agents | " + clientName;
         }
 
-        public void CreateWeeklyChart(int numWeeks)
+        public void CreateWeeklyChart_RevenueVsClicks()
+        {
+            CreateWeeklyChart(NumWeeksAdded, Col_Revenue, "Revenue", Col_Clicks, "Clicks");
+        }
+        private void CreateWeeklyChart(int numWeeks, int series1column, string series1name, int series2column, string series2name)
         {
             var chart = WS.Drawings.AddChart("chartWeekly", eChartType.ColumnClustered);
             chart.SetPosition(Row_WeeklyChart + NumWeeksAdded + NumMonthsAdded, 0, 1, 0);
@@ -68,18 +85,18 @@ namespace DAGenerators.Spreadsheets
             //chart.Title.Anchor = eTextAnchoringType.Bottom;
             //chart.Title.AnchorCtr = false;
 
-            var series = chart.Series.Add(new ExcelAddress(StartRow_Weekly, Col_Revenue, StartRow_Weekly + numWeeks - 1, Col_Revenue).Address,
+            var series = chart.Series.Add(new ExcelAddress(StartRow_Weekly, series1column, StartRow_Weekly + numWeeks - 1, series1column).Address,
                                           new ExcelAddress(StartRow_Weekly, Col_StatsTitle, StartRow_Weekly + numWeeks - 1, Col_StatsTitle).Address);
-            //series.HeaderAddress = new ExcelAddress(Row_WeeklyHeader, Col_Revenue, Row_WeeklyHeader, Col_Revenue);
-            series.Header = "Revenue";
+            //series.HeaderAddress = new ExcelAddress(Row_WeeklyHeader, column1, Row_WeeklyHeader, column1);
+            series.Header = series1name;
 
             var chartType2 = chart.PlotArea.ChartTypes.Add(eChartType.LineMarkers);
             chartType2.UseSecondaryAxis = true;
             chartType2.XAxis.Deleted = true;
-            var series2 = chartType2.Series.Add(new ExcelAddress(StartRow_Weekly, Col_Clicks, StartRow_Weekly + numWeeks - 1, Col_Clicks).Address,
+            var series2 = chartType2.Series.Add(new ExcelAddress(StartRow_Weekly, series2column, StartRow_Weekly + numWeeks - 1, series2column).Address,
                                                 new ExcelAddress(StartRow_Weekly, Col_StatsTitle, StartRow_Weekly + numWeeks - 1, Col_StatsTitle).Address);
-            //series2.HeaderAddress = new ExcelAddress(Row_WeeklyHeader, Col_Clicks, Row_WeeklyHeader, Col_Clicks);
-            series2.Header = "Clicks";
+            //series2.HeaderAddress = new ExcelAddress(Row_WeeklyHeader, column2, Row_WeeklyHeader, column2);
+            series2.Header = series2name;
         }
 
         // propertyNames for: title, clicks, impressions, orders, cost, revenue
@@ -88,14 +105,14 @@ namespace DAGenerators.Spreadsheets
             int numRows = stats.Count();
             if (numRows > 0)
             {
-                WS.InsertRow(startingRow, numRows, startingRow);
+                WS.InsertRow(startingRow, numRows, startingRow); // # rows inserted == size of the stats enumerable
 
-                var type = stats.First().GetType();
-                var members1 = propertyNames.Take(4).Select(p => type.GetProperty(p)).ToArray();
-                var members2 = propertyNames.Skip(4).Select(p => type.GetProperty(p)).ToArray();
-
-                WS.Cells[startingRow, 2].LoadFromCollection(stats, false, TableStyles.None, BindingFlags.Default, members1);
-                WS.Cells[startingRow, 7].LoadFromCollection(stats, false, TableStyles.None, BindingFlags.Default, members2);
+                LoadColumnFromStats(stats, startingRow, Col_StatsTitle, propertyNames[0]);
+                LoadColumnFromStats(stats, startingRow, Col_Clicks, propertyNames[1]);
+                LoadColumnFromStats(stats, startingRow, Col_Impressions, propertyNames[2]);
+                LoadColumnFromStats(stats, startingRow, Col_Orders, propertyNames[3]);
+                LoadColumnFromStats(stats, startingRow, Col_Cost, propertyNames[4]);
+                LoadColumnFromStats(stats, startingRow, Col_Revenue, propertyNames[5]);
 
                 for (int i = 0; i < numRows; i++)
                 {
@@ -104,15 +121,22 @@ namespace DAGenerators.Spreadsheets
             }
         }
 
+        private void LoadColumnFromStats<T>(IEnumerable<T> stats, int startingRow, int iColumn, string propertyName)
+        {
+            var type = stats.First().GetType();
+            WS.Cells[startingRow, iColumn].LoadFromCollection(stats, false, TableStyles.None, BindingFlags.Default, new[] { type.GetProperty(propertyName) });
+        }
+
         private void LoadStatsRowFormulas(int iRow)
         {
-            WS.Cells[iRow, 6].Formula = "E" + iRow + "/C" + iRow; // Order Rate
-            WS.Cells[iRow, 9].Formula = "H" + iRow + "-G" + iRow; // Net
-            WS.Cells[iRow, 10].Formula = "H" + iRow + "/E" + iRow; // Revenue/Order
-            WS.Cells[iRow, 11].Formula = "C" + iRow + "/D" + iRow; // CTR
-            WS.Cells[iRow, 12].Formula = "G" + iRow + "/C" + iRow; // CPC
-            WS.Cells[iRow, 13].Formula = "H" + iRow + "/G" + iRow; // ROAS
-            WS.Cells[iRow, 14].Formula = "(H" + iRow + "-G" + iRow + ")/G" + iRow; // ROI
+            WS.Cells[iRow, Col_OrderRate].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Col_Orders - Col_OrderRate, Col_Clicks - Col_OrderRate); // OrderRate (Orders/Clicks)
+            WS.Cells[iRow, Col_Net].FormulaR1C1 = String.Format("RC[{0}]-RC[{1}]", Col_Revenue - Col_Net, Col_Cost - Col_Net); // Net (Rev-Cost)
+            WS.Cells[iRow, Col_RevPerOrder].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Col_Revenue - Col_RevPerOrder, Col_Orders - Col_RevPerOrder); // Revenue/Orders
+            WS.Cells[iRow, Col_CTR].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Col_Clicks - Col_CTR, Col_Impressions - Col_CTR); // CTR (Clicks/Impressions)
+            WS.Cells[iRow, Col_CPC].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Col_Cost - Col_CPC, Col_Clicks - Col_CPC); // CPC (Cost/Clicks)
+            WS.Cells[iRow, Col_CPO].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Col_Cost - Col_CPO, Col_Orders - Col_CPO); // CPO (Cost/Orders)
+            WS.Cells[iRow, Col_ROAS].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Col_Revenue - Col_ROAS, Col_Cost - Col_ROAS); // ROAS (Rev/Cost)
+            WS.Cells[iRow, Col_ROI].FormulaR1C1 = String.Format("(RC[{0}]-RC[{1}])/RC[{1}]", Col_Revenue - Col_ROI, Col_Cost - Col_ROI); // ROI ((Rev-Cost)/Cost)
         }
     }
 }
