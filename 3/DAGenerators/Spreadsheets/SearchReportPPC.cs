@@ -10,31 +10,46 @@ using System.Reflection;
 
 namespace DAGenerators.Spreadsheets
 {
+    public class Metric
+    {
+        public Metric(int colNum, string displayName, bool show = true)
+        {
+            this.ColNum = colNum;
+            this.DisplayName = displayName;
+            this.Show = show;
+        }
+
+        public int ColNum { get; set; }
+        public string DisplayName { get; set; }
+        public bool Show { get; set; }
+    }
+
     public class SearchReportPPC : SpreadsheetBase
     {
         private const string TemplateFilename = "SearchPPCtemplate.xlsx";
+        private const int Row_SummaryDate = 8;
+        private const int Row_StatsHeader = 11;
         private const int StartRow_Weekly = 12;
         private const int StartRow_Monthly = 13;
-        private const int Row_SummaryDate = 8;
-        private const int Row_WeeklyHeader = 11;
         private const int Row_ClientNameBottom = 14;
         private const int Row_WeeklyChart = 15;
 
         private const int Col_StatsTitle = 2;
-        private const int Col_Clicks = 3;
-        private const int Col_Impressions = 4;
-        private const int Col_Orders = 5;
-        private const int Col_Cost = 7;
-        private const int Col_Revenue = 8;
 
-        private const int Col_OrderRate = 6;
-        private const int Col_Net = 9;
-        private const int Col_RevPerOrder = 10;
-        private const int Col_CTR = 11;
-        private const int Col_CPC = 12;
-        private const int Col_CPO = 13;
-        private const int Col_ROAS = 14;
-        private const int Col_ROI = 15;
+        public Metric Metric_Clicks = new Metric(3, "Clicks");
+        public Metric Metric_Impressions = new Metric(4, "Impressions");
+        public Metric Metric_Orders = new Metric(5, "Orders");
+        public Metric Metric_Cost = new Metric(7, "Cost");
+        public Metric Metric_Revenue = new Metric(8, "Revenue");
+
+        public Metric Metric_OrderRate = new Metric(6, "Order Rate");
+        public Metric Metric_Net = new Metric(9, "Net");
+        public Metric Metric_RevPerOrder = new Metric(10, "Revenue/Order");
+        public Metric Metric_CTR = new Metric(11, "CTR");
+        public Metric Metric_CPC = new Metric(12, "CPC");
+        public Metric Metric_CPO = new Metric(13, "CPO");
+        public Metric Metric_ROAS = new Metric(14, "ROAS");
+        public Metric Metric_ROI = new Metric(15, "ROI");
 
         ExcelWorksheet WS { get { return this.ExcelPackage.Workbook.Worksheets[1]; } }
         int NumWeeksAdded { get; set; }
@@ -46,11 +61,21 @@ namespace DAGenerators.Spreadsheets
             this.ExcelPackage = new ExcelPackage(fileInfo);
 
             SetReportDate(DateTime.Today);
+
+            //SetColumnHeaders(); // do this after showing/hiding metrics
         }
 
         public void SetReportDate(DateTime date)
         {
             WS.Cells[Row_SummaryDate, 2].Value = "Report Summary " + date.ToShortDateString();
+        }
+        public void SetColumnHeaders()
+        {
+            var metrics = GetMetrics(true);
+            foreach (var metric in metrics)
+            {
+                WS.Cells[Row_StatsHeader, metric.ColNum].Value = metric.DisplayName;
+            }
         }
 
         // Load monthly stats first, so we know where to put the weekly chart and the client name text.
@@ -72,7 +97,7 @@ namespace DAGenerators.Spreadsheets
 
         public void CreateWeeklyChart_RevenueVsClicks()
         {
-            CreateWeeklyChart(NumWeeksAdded, Col_Revenue, "Revenue", Col_Clicks, "Clicks");
+            CreateWeeklyChart(NumWeeksAdded, Metric_Revenue.ColNum, Metric_Revenue.DisplayName, Metric_Clicks.ColNum, Metric_Clicks.DisplayName);
         }
         private void CreateWeeklyChart(int numWeeks, int series1column, string series1name, int series2column, string series2name)
         {
@@ -87,7 +112,7 @@ namespace DAGenerators.Spreadsheets
 
             var series = chart.Series.Add(new ExcelAddress(StartRow_Weekly, series1column, StartRow_Weekly + numWeeks - 1, series1column).Address,
                                           new ExcelAddress(StartRow_Weekly, Col_StatsTitle, StartRow_Weekly + numWeeks - 1, Col_StatsTitle).Address);
-            //series.HeaderAddress = new ExcelAddress(Row_WeeklyHeader, column1, Row_WeeklyHeader, column1);
+            //series.HeaderAddress = new ExcelAddress(Row_StatsHeader, column1, Row_StatsHeader, column1);
             series.Header = series1name;
 
             var chartType2 = chart.PlotArea.ChartTypes.Add(eChartType.LineMarkers);
@@ -95,7 +120,7 @@ namespace DAGenerators.Spreadsheets
             chartType2.XAxis.Deleted = true;
             var series2 = chartType2.Series.Add(new ExcelAddress(StartRow_Weekly, series2column, StartRow_Weekly + numWeeks - 1, series2column).Address,
                                                 new ExcelAddress(StartRow_Weekly, Col_StatsTitle, StartRow_Weekly + numWeeks - 1, Col_StatsTitle).Address);
-            //series2.HeaderAddress = new ExcelAddress(Row_WeeklyHeader, column2, Row_WeeklyHeader, column2);
+            //series2.HeaderAddress = new ExcelAddress(Row_StatsHeader, column2, Row_StatsHeader, column2);
             series2.Header = series2name;
         }
 
@@ -108,11 +133,11 @@ namespace DAGenerators.Spreadsheets
                 WS.InsertRow(startingRow, numRows, startingRow); // # rows inserted == size of the stats enumerable
 
                 LoadColumnFromStats(stats, startingRow, Col_StatsTitle, propertyNames[0]);
-                LoadColumnFromStats(stats, startingRow, Col_Clicks, propertyNames[1]);
-                LoadColumnFromStats(stats, startingRow, Col_Impressions, propertyNames[2]);
-                LoadColumnFromStats(stats, startingRow, Col_Orders, propertyNames[3]);
-                LoadColumnFromStats(stats, startingRow, Col_Cost, propertyNames[4]);
-                LoadColumnFromStats(stats, startingRow, Col_Revenue, propertyNames[5]);
+                LoadColumnFromStats(stats, startingRow, Metric_Clicks.ColNum, propertyNames[1]);
+                LoadColumnFromStats(stats, startingRow, Metric_Impressions.ColNum, propertyNames[2]);
+                LoadColumnFromStats(stats, startingRow, Metric_Orders.ColNum, propertyNames[3]);
+                LoadColumnFromStats(stats, startingRow, Metric_Cost.ColNum, propertyNames[4]);
+                LoadColumnFromStats(stats, startingRow, Metric_Revenue.ColNum, propertyNames[5]);
 
                 for (int i = 0; i < numRows; i++)
                 {
@@ -129,14 +154,39 @@ namespace DAGenerators.Spreadsheets
 
         private void LoadStatsRowFormulas(int iRow)
         {
-            WS.Cells[iRow, Col_OrderRate].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Col_Orders - Col_OrderRate, Col_Clicks - Col_OrderRate); // OrderRate (Orders/Clicks)
-            WS.Cells[iRow, Col_Net].FormulaR1C1 = String.Format("RC[{0}]-RC[{1}]", Col_Revenue - Col_Net, Col_Cost - Col_Net); // Net (Rev-Cost)
-            WS.Cells[iRow, Col_RevPerOrder].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Col_Revenue - Col_RevPerOrder, Col_Orders - Col_RevPerOrder); // Revenue/Orders
-            WS.Cells[iRow, Col_CTR].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Col_Clicks - Col_CTR, Col_Impressions - Col_CTR); // CTR (Clicks/Impressions)
-            WS.Cells[iRow, Col_CPC].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Col_Cost - Col_CPC, Col_Clicks - Col_CPC); // CPC (Cost/Clicks)
-            WS.Cells[iRow, Col_CPO].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Col_Cost - Col_CPO, Col_Orders - Col_CPO); // CPO (Cost/Orders)
-            WS.Cells[iRow, Col_ROAS].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Col_Revenue - Col_ROAS, Col_Cost - Col_ROAS); // ROAS (Rev/Cost)
-            WS.Cells[iRow, Col_ROI].FormulaR1C1 = String.Format("(RC[{0}]-RC[{1}])/RC[{1}]", Col_Revenue - Col_ROI, Col_Cost - Col_ROI); // ROI ((Rev-Cost)/Cost)
+            WS.Cells[iRow, Metric_OrderRate.ColNum].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Metric_Orders.ColNum - Metric_OrderRate.ColNum, Metric_Clicks.ColNum - Metric_OrderRate.ColNum); // OrderRate (Orders/Clicks)
+            WS.Cells[iRow, Metric_Net.ColNum].FormulaR1C1 = String.Format("RC[{0}]-RC[{1}]", Metric_Revenue.ColNum - Metric_Net.ColNum, Metric_Cost.ColNum - Metric_Net.ColNum); // Net (Rev-Cost)
+            WS.Cells[iRow, Metric_RevPerOrder.ColNum].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Metric_Revenue.ColNum - Metric_RevPerOrder.ColNum, Metric_Orders.ColNum - Metric_RevPerOrder.ColNum); // Revenue/Orders
+            WS.Cells[iRow, Metric_CTR.ColNum].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Metric_Clicks.ColNum - Metric_CTR.ColNum, Metric_Impressions.ColNum - Metric_CTR.ColNum); // CTR (Clicks/Impressions)
+            WS.Cells[iRow, Metric_CPC.ColNum].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Metric_Cost.ColNum - Metric_CPC.ColNum, Metric_Clicks.ColNum - Metric_CPC.ColNum); // CPC (Cost/Clicks)
+            WS.Cells[iRow, Metric_CPO.ColNum].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Metric_Cost.ColNum - Metric_CPO.ColNum, Metric_Orders.ColNum - Metric_CPO.ColNum); // CPO (Cost/Orders)
+            WS.Cells[iRow, Metric_ROAS.ColNum].FormulaR1C1 = String.Format("RC[{0}]/RC[{1}]", Metric_Revenue.ColNum - Metric_ROAS.ColNum, Metric_Cost.ColNum - Metric_ROAS.ColNum); // ROAS (Rev/Cost)
+            WS.Cells[iRow, Metric_ROI.ColNum].FormulaR1C1 = String.Format("(RC[{0}]-RC[{1}])/RC[{1}]", Metric_Revenue.ColNum - Metric_ROI.ColNum, Metric_Cost.ColNum - Metric_ROI.ColNum); // ROI ((Rev-Cost)/Cost)
+        }
+
+        public IEnumerable<Metric> GetMetrics(bool shownOnly)
+        {
+            var metrics = new List<Metric>();
+            PossiblyAddMetric(metrics, Metric_Clicks, shownOnly);
+            PossiblyAddMetric(metrics, Metric_Impressions, shownOnly);
+            PossiblyAddMetric(metrics, Metric_Orders, shownOnly);
+            PossiblyAddMetric(metrics, Metric_Cost, shownOnly);
+            PossiblyAddMetric(metrics, Metric_Revenue, shownOnly);
+            PossiblyAddMetric(metrics, Metric_OrderRate, shownOnly);
+            PossiblyAddMetric(metrics, Metric_Net, shownOnly);
+            PossiblyAddMetric(metrics, Metric_RevPerOrder, shownOnly);
+            PossiblyAddMetric(metrics, Metric_CTR, shownOnly);
+            PossiblyAddMetric(metrics, Metric_CPC, shownOnly);
+            PossiblyAddMetric(metrics, Metric_CPO, shownOnly);
+            PossiblyAddMetric(metrics, Metric_ROAS, shownOnly);
+            PossiblyAddMetric(metrics, Metric_ROI, shownOnly);
+
+            return metrics;
+        }
+        public void PossiblyAddMetric(IList<Metric> metrics, Metric metric, bool onlyIfShown)
+        {
+            if (!onlyIfShown || metric.Show)
+                metrics.Add(metric);
         }
     }
 }
