@@ -27,25 +27,25 @@ namespace DAGenerators.Spreadsheets
             get { return StartRow_Weekly <= StartRow_Monthly; }
         }
 
-        public Metric Metric_Clicks = new Metric(0, null, false);
-        public Metric Metric_Impressions = new Metric(0, null, false);
-        public Metric Metric_Orders = new Metric(0, null, false);
-        public Metric Metric_Cost = new Metric(0, null, false);
-        public Metric Metric_Revenue = new Metric(0, null, false);
+        public Metric Metric_Clicks = new Metric(0, null, false, false);
+        public Metric Metric_Impressions = new Metric(0, null, false, false);
+        public Metric Metric_Orders = new Metric(0, null, false, false);
+        public Metric Metric_Cost = new Metric(0, null, false, false);
+        public Metric Metric_Revenue = new Metric(0, null, false, false);
 
         // Computed metrics
-        public Metric Metric_OrderRate = new Metric(0, null, false);
-        public Metric Metric_Net = new Metric(0, null, false);
-        public Metric Metric_RevPerOrder = new Metric(0, null, false);
-        public Metric Metric_CTR = new Metric(0, null, false);
-        public Metric Metric_CPC = new Metric(0, null, false);
-        public Metric Metric_CPO = new Metric(0, null, false);
-        public Metric Metric_ROAS = new Metric(0, null, false);
-        public Metric Metric_ROI = new Metric(0, null, false);
+        public Metric Metric_OrderRate = new Metric(0, null, true, false);
+        public Metric Metric_Net = new Metric(0, null, true, false);
+        public Metric Metric_RevPerOrder = new Metric(0, null, true, false);
+        public Metric Metric_CTR = new Metric(0, null, true, false);
+        public Metric Metric_CPC = new Metric(0, null, true, false);
+        public Metric Metric_CPO = new Metric(0, null, true, false);
+        public Metric Metric_ROAS = new Metric(0, null, true, false);
+        public Metric Metric_ROI = new Metric(0, null, true, false);
 
         protected ExcelWorksheet WS { get { return this.ExcelPackage.Workbook.Worksheets[1]; } }
-        int NumWeeksAdded { get; set; }
-        int NumMonthsAdded { get; set; }
+        protected int NumWeeksAdded { get; set; }
+        protected int NumMonthsAdded { get; set; }
 
         public void Setup(string templateFolder)
         {
@@ -115,13 +115,16 @@ namespace DAGenerators.Spreadsheets
         //}
 
         // propertyNames for: title, clicks, impressions, orders, cost, revenue
-        private void LoadWeeklyMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames, int startingRow)
+        protected void LoadWeeklyMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames, int startingRow, int blankRowsInTemplate = 0)
         {
             int numRows = stats.Count();
             if (numRows > 0)
             {
-                WS.InsertRowZ(startingRow, numRows, startingRow); // # rows inserted == size of the stats enumerable
-
+                int blankRowsToInsert = numRows - blankRowsInTemplate;
+                if (blankRowsToInsert > 0)
+                {
+                    WS.InsertRowZ(startingRow + (blankRowsInTemplate > 1 ? 1 : 0), blankRowsToInsert, startingRow);
+                }
                 LoadColumnFromStats(stats, startingRow, Col_StatsTitle, propertyNames[0]);
                 LoadColumnFromStats(stats, startingRow, Metric_Clicks.ColNum, propertyNames[1], Metric_Clicks);
                 LoadColumnFromStats(stats, startingRow, Metric_Impressions.ColNum, propertyNames[2], Metric_Impressions);
@@ -129,9 +132,25 @@ namespace DAGenerators.Spreadsheets
                 LoadColumnFromStats(stats, startingRow, Metric_Cost.ColNum, propertyNames[4], Metric_Cost);
                 LoadColumnFromStats(stats, startingRow, Metric_Revenue.ColNum, propertyNames[5], Metric_Revenue);
 
-                for (int i = 0; i < numRows; i++)
+                // if there are blank rows in the template, assume the formulas are there
+                if (blankRowsInTemplate > 0)
                 {
-                    LoadStatsRowFormulas(startingRow + i);
+                    // if only one row was added, assume the formula is already in the blank row
+                    if (numRows > 1)
+                    {
+                        var computedMetrics = GetComputedMetrics(true);
+                        // TODO: copy from one cell to a range?
+                        for (int iRow = startingRow + 1; iRow < startingRow + numRows; iRow++)
+                        {
+                            foreach (var metric in computedMetrics)
+                                WS.Cells[startingRow, metric.ColNum].Copy(WS.Cells[iRow, metric.ColNum]);
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < numRows; i++)
+                        LoadStatsRowFormulas(startingRow + i);
                 }
             }
         }
@@ -146,6 +165,7 @@ namespace DAGenerators.Spreadsheets
 
         private void LoadStatsRowFormulas(int iRow)
         {
+            // TODO: use IFERROR in formulas for div-by-0 checking
             CheckLoadStatsRowFormula(iRow, Metric_OrderRate, String.Format("RC[{0}]/RC[{1}]", Metric_Orders.ColNum - Metric_OrderRate.ColNum, Metric_Clicks.ColNum - Metric_OrderRate.ColNum)); // OrderRate (Orders/Clicks)
             CheckLoadStatsRowFormula(iRow, Metric_Net, String.Format("RC[{0}]-RC[{1}]", Metric_Revenue.ColNum - Metric_Net.ColNum, Metric_Cost.ColNum - Metric_Net.ColNum)); // Net (Rev-Cost)
             CheckLoadStatsRowFormula(iRow, Metric_RevPerOrder, String.Format("RC[{0}]/RC[{1}]", Metric_Revenue.ColNum - Metric_RevPerOrder.ColNum, Metric_Orders.ColNum - Metric_RevPerOrder.ColNum)); // Revenue/Orders
@@ -192,6 +212,10 @@ namespace DAGenerators.Spreadsheets
             series2.Header = series2name;
         }
 
+        public IEnumerable<Metric> GetComputedMetrics(bool shownOnly)
+        {
+            return GetMetrics(shownOnly).Where(m => m.IsComputed);
+        }
         public IEnumerable<Metric> GetMetrics(bool shownOnly)
         {
             var metrics = new List<Metric>();
@@ -220,15 +244,17 @@ namespace DAGenerators.Spreadsheets
 
     public class Metric
     {
-        public Metric(int colNum, string displayName, bool show = true)
+        public Metric(int colNum, string displayName, bool isComputed = false, bool show = true)
         {
             this.ColNum = colNum;
             this.DisplayName = displayName;
+            this.IsComputed = isComputed;
             this.Show = show;
         }
 
         public int ColNum { get; set; }
         public string DisplayName { get; set; }
+        public bool IsComputed { get; set; }
         public bool Show { get; set; }
     }
 }

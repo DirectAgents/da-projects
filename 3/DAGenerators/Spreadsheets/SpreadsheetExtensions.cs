@@ -11,6 +11,9 @@ namespace DAGenerators.Spreadsheets
         {
             workSheet.InsertRow(rowStart, count, copyStylesFromRow);
 
+            UpdateRangesForInsert(workSheet, rowStart, count);
+
+            // Update Drawings
             foreach (ExcelDrawing drawing in workSheet.Drawings)
             {
                 if (drawing.From.Row >= rowStart)
@@ -21,10 +24,8 @@ namespace DAGenerators.Spreadsheets
         }
 
         // From: https://epplus.codeplex.com/workitem/13628
-        public static void InsertRowX(this ExcelWorksheet workSheet, int rowStart, int count, int copyStylesFromRow)
+        private static void UpdateRangesForInsert(this ExcelWorksheet workSheet, int rowStart, int count)
         {
-            workSheet.InsertRow(rowStart, count, copyStylesFromRow);
-
             // key: NamedRange, value: Is named range encompassing inserted rows
             var rangesToUpdate = new Dictionary<ExcelNamedRange, bool>();
             foreach (ExcelNamedRange range in workSheet.Names)

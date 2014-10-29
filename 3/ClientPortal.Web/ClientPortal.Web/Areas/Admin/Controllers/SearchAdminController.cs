@@ -5,6 +5,7 @@ using DAGenerators.Spreadsheets;
 using System;
 using System.Configuration;
 using System.Linq;
+using System.Reflection;
 using System.Web.Mvc;
 using WebMatrix.WebData;
 
@@ -145,7 +146,22 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 return HttpNotFound();
 
             string templateFolder = ConfigurationManager.AppSettings["PATH_Search"];
-            var spreadsheet = new SearchReportPPC(templateFolder, searchProfile.SearchProfileName.Replace(" ", ""));
+            var profileAbbrev = searchProfile.SearchProfileName.Replace(" ", "");
+            var className = "SearchReport_" + profileAbbrev;
+
+            SearchReportPPC spreadsheet;
+            //var assembly = Assembly.GetAssembly(typeof(SearchReportPPC));
+            //var type = assembly.GetType("SearchReport_" + profileAbbrev, false);
+            var baseType = typeof(SearchReportPPC);
+            var type = baseType.Assembly.GetTypes().FirstOrDefault(t => t.IsSubclassOf(baseType) && t.Name == className);
+
+            if (type == null)
+                spreadsheet = new SearchReportPPC();
+            else
+                spreadsheet = (SearchReportPPC)Activator.CreateInstance(type);
+
+            spreadsheet.Setup(templateFolder);
+            spreadsheet.SetClientName(searchProfile.SearchProfileName);
 
             bool useAnalytics = false; //TODO: get from searchProfile when implemented
             bool includeToday = false;
@@ -155,7 +171,16 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue" };
             spreadsheet.LoadMonthlyStats(monthlyStats, propertyNames);
             spreadsheet.LoadWeeklyStats(weeklyStats, propertyNames);
-            spreadsheet.SetClientName(searchProfile.SearchProfileName);
+
+            // TODO: determine from the report which stats are needed
+            if (spreadsheet is SearchReport_ScholasticTeacherExpress)
+            {
+                var yesterday = DateTime.Now.AddDays(-1);
+                var monthStart = new DateTime(yesterday.Year, yesterday.Month, 1);
+                var monthEnd = monthStart.AddMonths(1).AddDays(-1);
+                var latestMonthStats = cpRepo.GetCampaignStats(searchProfileId, null, monthStart, monthEnd, false, useAnalytics);
+                ((SearchReport_ScholasticTeacherExpress)spreadsheet).LoadLatestMonthCampaignStats(latestMonthStats, propertyNames);
+            }
 
             var fsr = new FileStreamResult(spreadsheet.GetAsMemoryStream(), SpreadsheetBase.ContentType);
             fsr.FileDownloadName = filename;
