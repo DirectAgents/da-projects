@@ -53,6 +53,7 @@
     <Compile Include="Spreadsheets\SearchReportPPC.cs" />
     <Compile Include="Spreadsheets\SearchReports.cs" />
     <Compile Include="Spreadsheets\SpreadsheetBase.cs" />
+    <Compile Include="Spreadsheets\SpreadsheetExtensions.cs" />
     <Compile Include="Spreadsheets\TestSpreadSheet.cs" />
   </ItemGroup>
   <ItemGroup>
