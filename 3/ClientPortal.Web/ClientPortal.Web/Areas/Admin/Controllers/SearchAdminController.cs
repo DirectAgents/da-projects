@@ -150,8 +150,6 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             var className = "SearchReport_" + profileAbbrev;
 
             SearchReportPPC spreadsheet;
-            //var assembly = Assembly.GetAssembly(typeof(SearchReportPPC));
-            //var type = assembly.GetType("SearchReport_" + profileAbbrev, false);
             var baseType = typeof(SearchReportPPC);
             var type = baseType.Assembly.GetTypes().FirstOrDefault(t => t.IsSubclassOf(baseType) && t.Name == className);
 
@@ -175,11 +173,17 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             // TODO: determine from the report which stats are needed
             if (spreadsheet is SearchReport_ScholasticTeacherExpress)
             {
+                var periodStart = DateTime.Today.AddDays(-7);
+                while (periodStart.DayOfWeek != (DayOfWeek)searchProfile.StartDayOfWeek)
+                    periodStart = periodStart.AddDays(-1);
+                var periodEnd = periodStart.AddDays(6);
+                spreadsheet.SetReportingPeriod(periodStart, periodEnd);
+
                 var yesterday = DateTime.Now.AddDays(-1);
                 var monthStart = new DateTime(yesterday.Year, yesterday.Month, 1);
                 var monthEnd = monthStart.AddMonths(1).AddDays(-1);
                 var latestMonthStats = cpRepo.GetCampaignStats(searchProfileId, null, monthStart, monthEnd, false, useAnalytics);
-                ((SearchReport_ScholasticTeacherExpress)spreadsheet).LoadLatestMonthCampaignStats(latestMonthStats, propertyNames);
+                ((SearchReport_ScholasticTeacherExpress)spreadsheet).LoadLatestMonthCampaignStats(latestMonthStats, propertyNames, monthStart);
             }
 
             var fsr = new FileStreamResult(spreadsheet.GetAsMemoryStream(), SpreadsheetBase.ContentType);

@@ -3,6 +3,7 @@ using OfficeOpenXml.Drawing.Chart;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using OfficeOpenXml.Drawing;
 
 namespace DAGenerators.Spreadsheets
 {
@@ -43,10 +44,18 @@ namespace DAGenerators.Spreadsheets
         {
         }
 
-        public void LoadLatestMonthCampaignStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
+        public void LoadLatestMonthCampaignStats<T>(IEnumerable<T> stats, IList<string> propertyNames, DateTime monthStart)
         {
             LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_LatestMonthCampaigns + NumMonthsAdded, 2);
             //NumCampaignsAdded += stats.Count();
+
+            var monthName = monthStart.ToString("MMMM");
+            var drawingsToUpdate = WS.Drawings.Where(d => d is ExcelShape && ((ExcelShape)d).Text.Contains("Latest Month"));
+            foreach (var drawing in drawingsToUpdate)
+            {
+                var shape = (ExcelShape)drawing;
+                shape.Text = shape.Text.Replace("Latest Month", monthName);
+            }
         }
 
         public override void LoadWeeklyStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
