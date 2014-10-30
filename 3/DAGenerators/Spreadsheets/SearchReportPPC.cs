@@ -123,8 +123,25 @@ namespace DAGenerators.Spreadsheets
                 int blankRowsToInsert = numRows - blankRowsInTemplate;
                 if (blankRowsToInsert > 0)
                 {
-                    WS.InsertRowZ(startingRow + (blankRowsInTemplate > 1 ? 1 : 0), blankRowsToInsert, startingRow);
+                    WS.InsertRowZ(startingRow + (blankRowsInTemplate > 0 ? 1 : 0), blankRowsToInsert, startingRow);
+
+                    if (blankRowsInTemplate > 0)
+                    {   // copy the formulas from the blank row
+                        //WS.Cells[startingRow.ToString()].Copy(WS.Cells[(startingRow + 1).ToString()]);
+                        //WS.Cells[startingRow.ToString()].Copy(WS.Cells[(startingRow + 1) + ":" + (startingRow + blankRowsToInsert)]);
+                        //WS.Cells[startingRow + ":" + startingRow].Copy(WS.Cells[(startingRow + 1) + ":" + (startingRow + blankRowsToInsert)]);
+                        for (int iRow = startingRow + 1; iRow < startingRow + numRows - (blankRowsInTemplate >= 2 ? 1 : 0); iRow++)
+                        {
+                            WS.Cells[startingRow + ":" + startingRow].Copy(WS.Cells[iRow + ":" + iRow]);
+                        }
+                    }
+                    else
+                    {   // generate the formulas if there were no blank rows
+                        for (int i = 0; i < numRows; i++)
+                            LoadStatsRowFormulas(startingRow + i);
+                    }
                 }
+
                 LoadColumnFromStats(stats, startingRow, Col_StatsTitle, propertyNames[0]);
                 LoadColumnFromStats(stats, startingRow, Metric_Clicks.ColNum, propertyNames[1], Metric_Clicks);
                 LoadColumnFromStats(stats, startingRow, Metric_Impressions.ColNum, propertyNames[2], Metric_Impressions);
@@ -133,25 +150,25 @@ namespace DAGenerators.Spreadsheets
                 LoadColumnFromStats(stats, startingRow, Metric_Revenue.ColNum, propertyNames[5], Metric_Revenue);
 
                 // if there are blank rows in the template, assume the formulas are there
-                if (blankRowsInTemplate > 0)
-                {
-                    // if only one row was added, assume the formula is already in the blank row
-                    if (numRows > 1)
-                    {
-                        var computedMetrics = GetComputedMetrics(true);
-                        // TODO: copy from one cell to a range?
-                        for (int iRow = startingRow + 1; iRow < startingRow + numRows; iRow++)
-                        {
-                            foreach (var metric in computedMetrics)
-                                WS.Cells[startingRow, metric.ColNum].Copy(WS.Cells[iRow, metric.ColNum]);
-                        }
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < numRows; i++)
-                        LoadStatsRowFormulas(startingRow + i);
-                }
+                //if (blankRowsInTemplate > 0)
+                //{
+                //    // if only one row was added, assume the formula is already in the blank row
+                //    if (numRows > 1)
+                //    {
+                //        var computedMetrics = GetComputedMetrics(true);
+                //        // TODO: copy from one cell to a range?
+                //        for (int iRow = startingRow + 1; iRow < startingRow + numRows - (blankRowsInTemplate >= 2 ? 1 : 0); iRow++)
+                //        {
+                //            foreach (var metric in computedMetrics)
+                //                WS.Cells[startingRow, metric.ColNum].Copy(WS.Cells[iRow, metric.ColNum]);
+                //        }
+                //    }
+                //}
+                //else
+                //{
+                //    for (int i = 0; i < numRows; i++)
+                //        LoadStatsRowFormulas(startingRow + i);
+                //}
             }
         }
         private void LoadColumnFromStats<T>(IEnumerable<T> stats, int startingRow, int iColumn, string propertyName, Metric metric = null)

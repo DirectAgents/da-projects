@@ -10,6 +10,10 @@ namespace DAGenerators.Spreadsheets
     public class SearchReport_ScholasticTeacherExpress : SearchReportPPC
     {
         const int StartRow_LatestMonthCampaigns = 14;
+        const int StartRow_LatestWeekly1 = 21;
+        const int StartRow_LatestWeekly0 = 24;
+
+        protected int NumLatestMonthCampaignRowsAdded = 0; // not including preexisting blank rows
 
         protected override void Setup()
         {
@@ -44,10 +48,16 @@ namespace DAGenerators.Spreadsheets
         {
         }
 
+        public override void LoadWeeklyStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
+        {
+        }
+
         public void LoadLatestMonthCampaignStats<T>(IEnumerable<T> stats, IList<string> propertyNames, DateTime monthStart)
         {
             LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_LatestMonthCampaigns + NumMonthsAdded, 2);
-            //NumCampaignsAdded += stats.Count();
+            int numCampaigns = stats.Count();
+            if (numCampaigns > 2)
+                NumLatestMonthCampaignRowsAdded += numCampaigns;
 
             var monthName = monthStart.ToString("MMMM");
             var drawingsToUpdate = WS.Drawings.Where(d => d is ExcelShape && ((ExcelShape)d).Text.Contains("Latest Month"));
@@ -58,8 +68,17 @@ namespace DAGenerators.Spreadsheets
             }
         }
 
-        public override void LoadWeeklyStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
+        // Do in this order: latest, second-latest, etc...
+        public void LoadLatestWeekCampaignStats<T>(IEnumerable<T> stats, IList<string> propertyNames, DateTime weekStart, int whichLatestWeek = 0)
         {
+            whichLatestWeek = Math.Abs(whichLatestWeek);
+            if (whichLatestWeek > 1) return;
+
+            int startRow = (whichLatestWeek == 0 ? StartRow_LatestWeekly0 : StartRow_LatestWeekly1) + NumMonthsAdded + NumLatestMonthCampaignRowsAdded;
+            var weekEnd = weekStart.AddDays(6);
+            WS.Cells[startRow + 2, 2].Value = String.Format("{0:M/d} - {1:M/d}", weekStart, weekEnd);
+
+            LoadWeeklyMonthlyStats(stats, propertyNames, startRow, 2);
         }
 
     }

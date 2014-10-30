@@ -179,6 +179,13 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 var periodEnd = periodStart.AddDays(6);
                 spreadsheet.SetReportingPeriod(periodStart, periodEnd);
 
+                var latestWeekStats = cpRepo.GetCampaignStats(searchProfileId, null, periodStart, periodEnd, false, useAnalytics);
+                ((SearchReport_ScholasticTeacherExpress)spreadsheet).LoadLatestWeekCampaignStats(latestWeekStats, propertyNames, periodStart);
+                periodStart = periodStart.AddDays(-7);
+                periodEnd = periodEnd.AddDays(-7);
+                latestWeekStats = cpRepo.GetCampaignStats(searchProfileId, null, periodStart, periodEnd, false, useAnalytics);
+                ((SearchReport_ScholasticTeacherExpress)spreadsheet).LoadLatestWeekCampaignStats(latestWeekStats, propertyNames, periodStart, 1);
+
                 var yesterday = DateTime.Now.AddDays(-1);
                 var monthStart = new DateTime(yesterday.Year, yesterday.Month, 1);
                 var monthEnd = monthStart.AddMonths(1).AddDays(-1);
