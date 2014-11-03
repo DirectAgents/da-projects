@@ -274,7 +274,7 @@ namespace EomTool.Domain.Concrete
                                       .GroupBy(i => new { i.revenue_currency_id, i.revenue_per_unit, i.unit_type_id });
                 foreach (var itemGroup in itemGroups) // usually just one (currency/revenue_per_unit/unit_type)
                 {
-                    var invoiceItem = new InvoiceItem()
+                    var ii = new InvoiceItem()
                     {
                         pid = campAffId.pid,
                         affid = campAffId.affid,
@@ -285,12 +285,20 @@ namespace EomTool.Domain.Concrete
                         UnitTypeName = UnitTypeName(itemGroup.Key.unit_type_id),
                         num_units = (int)itemGroup.Sum(i => i.num_units)
                     };
-                    invoiceItem.total_amount = invoiceItem.amount_per_unit * invoiceItem.num_units;
-                    invoice.InvoiceItems.Add(invoiceItem);
+                    // check if any amounts for this pid/affid/currency/amount_per_unit/unit_type_id have already been invoiced
+                    var existingInvoiceItems = context.InvoiceItems.Where(i =>
+                        i.pid == ii.pid && i.affid == ii.affid && i.currency_id == ii.currency_id &&
+                        i.amount_per_unit == ii.amount_per_unit && i.unit_type_id == ii.unit_type_id);
+                    if (existingInvoiceItems.Any())
+                    {   // if so, subtract that many units
+                        int numUnits = existingInvoiceItems.Sum(i => i.num_units);
+                        ii.num_units -= numUnits;
+                    }
+
+                    ii.total_amount = ii.amount_per_unit * ii.num_units;
+                    invoice.InvoiceItems.Add(ii);
                 }
             }
-            //TODO: check for invoiceitem amounts that have already been invoiced. Remove or reduce the amounts accordingly.
-
             GenerateInvoiceLineItems(invoice, true);
 
             return invoice;
