@@ -179,12 +179,23 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 var periodEnd = periodStart.AddDays(6);
                 spreadsheet.SetReportingPeriod(periodStart, periodEnd);
 
-                var latestWeekStats = cpRepo.GetCampaignStats(searchProfileId, null, periodStart, periodEnd, false, useAnalytics);
-                ((SearchReport_ScholasticTeacherExpress)spreadsheet).LoadLatestWeekCampaignStats(latestWeekStats, propertyNames, periodStart);
-                periodStart = periodStart.AddDays(-7);
-                periodEnd = periodEnd.AddDays(-7);
-                latestWeekStats = cpRepo.GetCampaignStats(searchProfileId, null, periodStart, periodEnd, false, useAnalytics);
-                ((SearchReport_ScholasticTeacherExpress)spreadsheet).LoadLatestWeekCampaignStats(latestWeekStats, propertyNames, periodStart, 1);
+                // load the weekly campaign stats, starting with the most recent and going back the number of weeks specified
+                for (int i = 0; i < numWeeks; i++)
+                {
+                    var weeklyCampaignStats = cpRepo.GetCampaignStats(searchProfileId, null, periodStart, periodEnd, false, useAnalytics);
+                    bool collapse = (i > 0);
+                    ((SearchReport_ScholasticTeacherExpress)spreadsheet).LoadWeeklyCampaignStats(weeklyCampaignStats, propertyNames, periodStart, collapse);
+                    if (i + 1 < numWeeks)
+                    {   // not the last week
+                        periodStart = periodStart.AddDays(-7);
+                        periodEnd = periodEnd.AddDays(-7);
+                    }
+                    else
+                    {
+                        // after the last week was loaded... remove the template rows
+                        ((SearchReport_ScholasticTeacherExpress)spreadsheet).RemoveWeeklyCampaignStatsTemplateRows();
+                    }
+                }
 
                 var yesterday = DateTime.Now.AddDays(-1);
                 var monthStart = new DateTime(yesterday.Year, yesterday.Month, 1);

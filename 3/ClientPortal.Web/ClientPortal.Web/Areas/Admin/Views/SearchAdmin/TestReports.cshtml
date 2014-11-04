@@ -21,19 +21,19 @@ Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)
         <table>
             <tr>
                 <td>@Html.Label("Weeks to include:")</td>
-                <td><input type="text" name="numweeks" value="14" /></td>
+                <td><input type="text" name="numweeks" value="14" onfocus="EnableSubmitGenSpreadsheet()" /></td>
             </tr>
             <tr>
                 <td>@Html.Label("Months to include:")</td>
-                <td><input type="text" name="nummonths" value="10" /></td>
+                <td><input type="text" name="nummonths" value="10" onfocus="EnableSubmitGenSpreadsheet()" /></td>
             </tr>
             <tr>
                 <td>@Html.Label("Filename:")</td>
-                <td><input type="text" name="filename" value="@filename" style="min-width:300px" /></td>
+                <td><input type="text" name="filename" value="@filename" style="min-width:300px" onfocus="EnableSubmitGenSpreadsheet()" /></td>
             </tr>
         </table>
         <br />
-        <input type="submit" value="Generate" />
+        <input id="submitGenSpreadsheet" type="submit" value="Generate" onClick="this.form.submit(); this.disabled=true" />
     </fieldset>
 }
 Notes:<br />
@@ -44,3 +44,17 @@ If today is the first of the month, the monthly stats will go through last month
 Back to:
 @Ajax.ActionLink("Profiles", "SearchProfiles", "SearchAdmin", ajaxOpts_Profiles)
 @*| @Ajax.ActionLink("Email Reports", "IndexSearch", "SimpleReports", ajaxOpts_Reports)*@
+
+<script>
+    function EnableSubmitGenSpreadsheet() {
+        $('#submitGenSpreadsheet').prop('disabled', false); //.prop('value', 'Generate');
+    }
+    //$(document).ready(function () {
+    //    $('input[type="submit"]').attr('disabled', 'disabled');
+    //    $('input[type="text"]').keyup(function () {
+    //        if ($(this).val() != '') {
+    //            $('input[type="submit"]').removeAttr('disabled');
+    //        }
+    //    });
+    //});
+</script>

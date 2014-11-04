@@ -10,8 +10,8 @@ namespace DAGenerators.Spreadsheets
     public class SearchReport_ScholasticTeacherExpress : SearchReportPPC
     {
         const int StartRow_LatestMonthCampaigns = 14;
-        const int StartRow_LatestWeekly1 = 21;
-        const int StartRow_LatestWeekly0 = 24;
+        const int StartRow_WeeklyByCampaignTemplate = 21;
+        const int StartRow_WeeklyByCampaign = 24;
 
         protected int NumLatestMonthCampaignRowsAdded = 0; // not including preexisting blank rows
 
@@ -52,9 +52,17 @@ namespace DAGenerators.Spreadsheets
         {
         }
 
+        public override void LoadMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
+        {
+            int numBlankRows = 1;
+            LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Monthly + (WeeklyFirst ? NumWeeksAdded : 0), numBlankRows);
+            if (stats.Count() > numBlankRows)
+                NumMonthRowsAdded += stats.Count() - numBlankRows;
+        }
+
         public void LoadLatestMonthCampaignStats<T>(IEnumerable<T> stats, IList<string> propertyNames, DateTime monthStart)
         {
-            LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_LatestMonthCampaigns + NumMonthsAdded, 2);
+            LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_LatestMonthCampaigns + NumMonthRowsAdded, 2);
             int numCampaigns = stats.Count();
             if (numCampaigns > 2)
                 NumLatestMonthCampaignRowsAdded += numCampaigns;
@@ -69,16 +77,42 @@ namespace DAGenerators.Spreadsheets
         }
 
         // Do in this order: latest, second-latest, etc...
-        public void LoadLatestWeekCampaignStats<T>(IEnumerable<T> stats, IList<string> propertyNames, DateTime weekStart, int whichLatestWeek = 0)
+        public void LoadWeeklyCampaignStats<T>(IEnumerable<T> stats, IList<string> propertyNames, DateTime weekStart, bool collapse)
         {
-            whichLatestWeek = Math.Abs(whichLatestWeek);
-            if (whichLatestWeek > 1) return;
+            int startRowTemplate = StartRow_WeeklyByCampaignTemplate + NumMonthRowsAdded + NumLatestMonthCampaignRowsAdded;
+            int startRowStats = StartRow_WeeklyByCampaign + NumMonthRowsAdded + NumLatestMonthCampaignRowsAdded;
 
-            int startRow = (whichLatestWeek == 0 ? StartRow_LatestWeekly0 : StartRow_LatestWeekly1) + NumMonthsAdded + NumLatestMonthCampaignRowsAdded;
+            // insert rows (below the template rows)
+            WS.InsertRowZ(startRowStats, 3, startRowTemplate);
+
+            // copy the template rows to the newly inserted rows
+            WS.Cells[startRowTemplate + ":" + (startRowTemplate + 2)].Copy(WS.Cells[startRowStats + ":" + (startRowStats + 2)]);
+
+            // set the title of the total row (e.g. "10/1 - 10/8")
             var weekEnd = weekStart.AddDays(6);
-            WS.Cells[startRow + 2, 2].Value = String.Format("{0:M/d} - {1:M/d}", weekStart, weekEnd);
+            WS.Cells[startRowStats + 2, 2].Value = String.Format("{0:M/d} - {1:M/d}", weekStart, weekEnd);
 
-            LoadWeeklyMonthlyStats(stats, propertyNames, startRow, 2);
+            // populate the campaign rows (if needed, will insert more blank rows for the stats)
+            LoadWeeklyMonthlyStats(stats, propertyNames, startRowStats, 2);
+
+            int count = stats.Count();
+            for (int i = 0; i < count; i++)
+            {
+                WS.Row(startRowStats + i).OutlineLevel = 1;
+            }
+            if (collapse)
+            {
+                for (int i = 0; i < count; i++)
+                    WS.Row(startRowStats + i).Collapsed = true;
+            }
+        }
+
+        // TODO: method to remove the template rows (called after adding all weekly campaign stats)
+        public void RemoveWeeklyCampaignStatsTemplateRows()
+        {
+            int startRowTemplate = StartRow_WeeklyByCampaignTemplate + NumMonthRowsAdded + NumLatestMonthCampaignRowsAdded;
+            WS.DeleteRowZ(startRowTemplate, 3);
+            // TODO? Update drawings and ranges - like in InsertRowZ() ?
         }
 
     }

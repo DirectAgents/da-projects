@@ -11,20 +11,33 @@ namespace DAGenerators.Spreadsheets
         {
             workSheet.InsertRow(rowStart, count, copyStylesFromRow);
 
-            UpdateRangesForInsert(workSheet, rowStart, count);
+            UpdateRangesForRowInsert(workSheet, rowStart, count);
+            UpdateDrawingsForRowInsertDelete(workSheet, rowStart, count);
+        }
 
-            // Update Drawings
+        public static void DeleteRowZ(this ExcelWorksheet workSheet, int rowFrom, int rows)
+        {
+            workSheet.DeleteRow(rowFrom, rows);
+
+            //UpdateRangesForRowInsertDelete(workSheet, rowFrom, -rows); // TODO
+            UpdateDrawingsForRowInsertDelete(workSheet, rowFrom, -rows);
+        }
+
+        private static void UpdateDrawingsForRowInsertDelete(this ExcelWorksheet workSheet, int rowStart, int count)
+        {
             foreach (ExcelDrawing drawing in workSheet.Drawings)
             {
-                if (drawing.From.Row >= rowStart)
+                if (drawing.From.Row + 1 >= rowStart) // From.Row is 0-based, so add one for the comparison
                 {
                     drawing.SetPosition(drawing.From.Row + count, drawing.From.RowOff, drawing.From.Column, drawing.From.ColumnOff);
+                    // NOTE: doesn't work well when RowOff or ColumnOff are not zero
                 }
             }
         }
 
+        // TODO: also update ranges for RowDelete (when count is negative)
         // From: https://epplus.codeplex.com/workitem/13628
-        private static void UpdateRangesForInsert(this ExcelWorksheet workSheet, int rowStart, int count)
+        private static void UpdateRangesForRowInsert(this ExcelWorksheet workSheet, int rowStart, int count)
         {
             // key: NamedRange, value: Is named range encompassing inserted rows
             var rangesToUpdate = new Dictionary<ExcelNamedRange, bool>();

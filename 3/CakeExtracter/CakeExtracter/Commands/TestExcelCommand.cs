@@ -72,7 +72,8 @@ namespace CakeExtracter.Commands
         {
             string templateFolder = ConfigurationManager.AppSettings["PATH_Search"];
 
-            var spreadsheet = new SearchReportPPC(templateFolder);
+            var spreadsheet = new SearchReportPPC();
+            spreadsheet.Setup(templateFolder);
             var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue" };
             var stats = GetStats(false);
             spreadsheet.LoadMonthlyStats(stats, propertyNames);

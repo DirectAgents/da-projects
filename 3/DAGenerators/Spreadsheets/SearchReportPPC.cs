@@ -22,7 +22,7 @@ namespace DAGenerators.Spreadsheets
         protected string TemplateFilename = "SearchPPCtemplate.xlsx";
         protected int StartRow_Weekly = 12;
         protected int StartRow_Monthly = 13;
-        private bool WeeklyFirst
+        protected bool WeeklyFirst
         {
             get { return StartRow_Weekly <= StartRow_Monthly; }
         }
@@ -45,7 +45,7 @@ namespace DAGenerators.Spreadsheets
 
         protected ExcelWorksheet WS { get { return this.ExcelPackage.Workbook.Worksheets[1]; } }
         protected int NumWeeksAdded { get; set; }
-        protected int NumMonthsAdded { get; set; }
+        protected int NumMonthRowsAdded { get; set; }
 
         public void Setup(string templateFolder)
         {
@@ -94,20 +94,20 @@ namespace DAGenerators.Spreadsheets
 
         public virtual void SetClientName(string clientName)
         {
-            WS.Cells[Row_ClientNameBottom + NumWeeksAdded + NumMonthsAdded, 2].Value = "Direct Agents | " + clientName;
+            WS.Cells[Row_ClientNameBottom + NumWeeksAdded + NumMonthRowsAdded, 2].Value = "Direct Agents | " + clientName;
         }
 
         public virtual void LoadWeeklyStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
         {
-            LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Weekly + (WeeklyFirst ? 0 : NumMonthsAdded));
+            LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Weekly + (WeeklyFirst ? 0 : NumMonthRowsAdded));
             NumWeeksAdded += stats.Count();
             CreateWeeklyChart_RevenueVsClicks();
         }
 
-        public void LoadMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
+        public virtual void LoadMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
         {
             LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Monthly + (WeeklyFirst ? NumWeeksAdded : 0));
-            NumMonthsAdded += stats.Count();
+            NumMonthRowsAdded += stats.Count();
         }
         //public void LoadMonthlyCampaignStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
         //{
@@ -126,10 +126,7 @@ namespace DAGenerators.Spreadsheets
                     WS.InsertRowZ(startingRow + (blankRowsInTemplate > 0 ? 1 : 0), blankRowsToInsert, startingRow);
 
                     if (blankRowsInTemplate > 0)
-                    {   // copy the formulas from the blank row
-                        //WS.Cells[startingRow.ToString()].Copy(WS.Cells[(startingRow + 1).ToString()]);
-                        //WS.Cells[startingRow.ToString()].Copy(WS.Cells[(startingRow + 1) + ":" + (startingRow + blankRowsToInsert)]);
-                        //WS.Cells[startingRow + ":" + startingRow].Copy(WS.Cells[(startingRow + 1) + ":" + (startingRow + blankRowsToInsert)]);
+                    {   // copy the formulas from the "blank row" to the newly inserted rows
                         for (int iRow = startingRow + 1; iRow < startingRow + numRows - (blankRowsInTemplate >= 2 ? 1 : 0); iRow++)
                         {
                             WS.Cells[startingRow + ":" + startingRow].Copy(WS.Cells[iRow + ":" + iRow]);
@@ -148,27 +145,6 @@ namespace DAGenerators.Spreadsheets
                 LoadColumnFromStats(stats, startingRow, Metric_Orders.ColNum, propertyNames[3], Metric_Orders);
                 LoadColumnFromStats(stats, startingRow, Metric_Cost.ColNum, propertyNames[4], Metric_Cost);
                 LoadColumnFromStats(stats, startingRow, Metric_Revenue.ColNum, propertyNames[5], Metric_Revenue);
-
-                // if there are blank rows in the template, assume the formulas are there
-                //if (blankRowsInTemplate > 0)
-                //{
-                //    // if only one row was added, assume the formula is already in the blank row
-                //    if (numRows > 1)
-                //    {
-                //        var computedMetrics = GetComputedMetrics(true);
-                //        // TODO: copy from one cell to a range?
-                //        for (int iRow = startingRow + 1; iRow < startingRow + numRows - (blankRowsInTemplate >= 2 ? 1 : 0); iRow++)
-                //        {
-                //            foreach (var metric in computedMetrics)
-                //                WS.Cells[startingRow, metric.ColNum].Copy(WS.Cells[iRow, metric.ColNum]);
-                //        }
-                //    }
-                //}
-                //else
-                //{
-                //    for (int i = 0; i < numRows; i++)
-                //        LoadStatsRowFormulas(startingRow + i);
-                //}
             }
         }
         private void LoadColumnFromStats<T>(IEnumerable<T> stats, int startingRow, int iColumn, string propertyName, Metric metric = null)
@@ -205,7 +181,7 @@ namespace DAGenerators.Spreadsheets
         private void CreateWeeklyChart(int numWeeks, int series1column, string series1name, int series2column, string series2name)
         {
             var chart = WS.Drawings.AddChart("chartWeekly", eChartType.ColumnClustered);
-            chart.SetPosition(Row_WeeklyChart + NumWeeksAdded + NumMonthsAdded, 0, 1, 0);
+            chart.SetPosition(Row_WeeklyChart + NumWeeksAdded + NumMonthRowsAdded, 0, 1, 0);
             chart.SetSize(1071, 217);
 
             chart.Title.Text = "Weekly Performance"; // TODO: add year; remember: handle when it's two years
@@ -213,7 +189,7 @@ namespace DAGenerators.Spreadsheets
             //chart.Title.Anchor = eTextAnchoringType.Bottom;
             //chart.Title.AnchorCtr = false;
 
-            int startRow_Weekly = this.StartRow_Weekly + (WeeklyFirst ? 0 : NumMonthsAdded);
+            int startRow_Weekly = this.StartRow_Weekly + (WeeklyFirst ? 0 : NumMonthRowsAdded);
 
             var series = chart.Series.Add(new ExcelAddress(startRow_Weekly, series1column, startRow_Weekly + numWeeks - 1, series1column).Address,
                                           new ExcelAddress(startRow_Weekly, Col_StatsTitle, startRow_Weekly + numWeeks - 1, Col_StatsTitle).Address);
