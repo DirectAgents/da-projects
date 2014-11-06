@@ -227,6 +227,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                         periodEnd = periodEnd.AddDays(-7);
                     }
                 }
+                spreadsheet.RemoveWeeklyChannelRollupStatsTemplate();
             }
 
             var fsr = new FileStreamResult(spreadsheet.GetAsMemoryStream(), SpreadsheetBase.ContentType);

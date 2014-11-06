@@ -97,7 +97,6 @@ namespace DAGenerators.Spreadsheets
             }
         }
 
-        // TODO: method to remove the template rows (called after adding all weekly campaign stats)
         public void RemoveWeeklyCampaignStatsTemplateRows()
         {
             int startRowTemplate = StartRow_WeeklyByCampaignTemplate + NumMonthRowsAdded + NumLatestMonthCampaignRowsAdded;

@@ -20,6 +20,8 @@ namespace DAGenerators.Spreadsheets
         private const int Col_StatsTitle = 2;
         private const int Col_LeftChart = 2;
         private const int Col_RightChart = 9;
+        private const int ChartWidth = 590;
+        private const int ChartHeight = 280;
 
         protected string TemplateFilename = "SearchPPCtemplate.xlsx";
         protected int StartRow_Weekly = 12;
@@ -31,7 +33,6 @@ namespace DAGenerators.Spreadsheets
 
         private const int StartRow_WeeklyChannelCampaignTemplate = 39;
         private const int NumRows_WeeklyChannelCampaignTemplate = 4;
-        private const int RowOffset_WeeklyChannelRollupTemplate = 0;
         private const int NumRows_WeeklyChannelRollupTemplate = 3;
 
         public Metric Metric_Clicks = new Metric(0, null, false, false);
@@ -122,25 +123,24 @@ namespace DAGenerators.Spreadsheets
         //}
 
         // propertyNames for: title, clicks, impressions, orders, cost, revenue
-        // returns: # of additional rows added (not counting blankRowsInTemplate)
+        // returns: # of rows added (in addition to blankRowsInTemplate); negative means blankRows deleted
         protected int LoadWeeklyMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames, int startingRow, int blankRowsInTemplate = 0)
         {
-            int blankRowsToInsert = 0;
             int numRows = stats.Count();
+            int blankRowsToInsert = numRows - blankRowsInTemplate;
+            if (blankRowsToInsert < 0)
+            {
+                WS.DeleteRowZ(startingRow, -blankRowsToInsert);
+            }
             if (numRows > 0)
             {
-                blankRowsToInsert = numRows - blankRowsInTemplate;
-                if (blankRowsToInsert <= 0)
-                {
-                    blankRowsToInsert = 0;
-                }
-                else
+                if (blankRowsToInsert > 0)
                 {
                     WS.InsertRowZ(startingRow + (blankRowsInTemplate > 0 ? 1 : 0), blankRowsToInsert, startingRow);
 
                     if (blankRowsInTemplate > 0)
                     {   // copy the formulas from the "blank row" to the newly inserted rows
-                        for (int iRow = startingRow + 1; iRow < startingRow + numRows - (blankRowsInTemplate >= 2 ? 1 : 0); iRow++)
+                        for (int iRow = startingRow + 1; iRow < startingRow + 1 + blankRowsToInsert; iRow++)
                         {
                             WS.Cells[startingRow + ":" + startingRow].Copy(WS.Cells[iRow + ":" + iRow]);
                         }
@@ -189,7 +189,7 @@ namespace DAGenerators.Spreadsheets
         }
 
         // Do in this order: latest, second-latest, etc...
-        // channelStats should have one key for each channel and one for "Total" (whose enumerable has one element)
+        // channelStatsDict should have one key for each channel
         public void LoadWeeklyChannelRollupStats<T>(Dictionary<string, IEnumerable<T>> channelStatsDict, IList<string> propertyNames, DateTime weekStart, bool collapse)
         {
             int startRowTemplate = StartRow_WeeklyChannelCampaignTemplate + NumWeekRowsAdded + NumMonthRowsAdded;
@@ -203,22 +203,13 @@ namespace DAGenerators.Spreadsheets
             WS.Cells[startRowTemplate + ":" + (startRowTemplate + NumRows_WeeklyChannelCampaignTemplate - 1)]
                 .Copy(WS.Cells[startRowStats + ":" + (startRowStats + NumRows_WeeklyChannelCampaignTemplate - 1)]);
 
-            // Set the title of the total row (e.g. "10/1 - 10/8")
-            int totalRow = startRowStats + NumRows_WeeklyChannelCampaignTemplate - 1;
-            //var weekEnd = weekStart.AddDays(6);
-            //WS.Cells[totalRow, 2].Value = String.Format("{0:M/d} - {1:M/d}", weekStart, weekEnd);
-
-            // NOTE: the "Total" enumerable should contain one element - the title of which should be the name of the week (e.g. "10/1 - 10/8")
-
-            // Populate the grand total row
-            if (channelStatsDict.ContainsKey("Total"))
-                numRowsAdded += LoadWeeklyMonthlyStats(channelStatsDict["Total"], propertyNames, totalRow, 1); // should return 0
-
             // Populate the rows for each channel...
-            int startRowChannelRollupTemplate = startRowStats + RowOffset_WeeklyChannelRollupTemplate;
+            var channelSummaryOffsets = new List<int>(); // used to generate grand total sums
+            int totalRollupRows = 0;
+            int startRowChannelRollupTemplate = startRowStats;
             int startRowChannelRollup = startRowChannelRollupTemplate + NumRows_WeeklyChannelRollupTemplate;
-            var channelKeys = channelStatsDict.Keys.Where(k => k != "Total").OrderBy(k => k != "Google").ThenByDescending(k => k);
-            foreach (string channelKey in channelKeys)
+            var channelKeys = channelStatsDict.Keys.Where(k => k != "Total").OrderBy(k => k == "Google").ThenByDescending(k => k);
+            foreach (string channelKey in channelKeys) // in reverse order (so we end up with Google, then others alphabetically)
             {
                 bool lastChannel = (channelKey == channelKeys.Last());
 
@@ -237,21 +228,46 @@ namespace DAGenerators.Spreadsheets
                         .Copy(WS.Cells[startRowChannelRollup + ":" + (startRowChannelRollup + NumRows_WeeklyChannelRollupTemplate - 1)]);
                 }
 
+                // set the channel title
+                WS.Cells[startRowChannelRollup + NumRows_WeeklyChannelRollupTemplate - 1, 2].Value = channelKey;
+
                 // populate the campaign rows for this channel
                 numRowsAdded += LoadWeeklyMonthlyStats(channelStatsDict[channelKey], propertyNames, startRowChannelRollup, NumRows_WeeklyChannelRollupTemplate - 1);
+
+                channelSummaryOffsets.Add(-1 - totalRollupRows);
+                totalRollupRows += channelStatsDict[channelKey].Count() + 1; // add one for the channel summary row
+            }
+
+            // Populate grand total row
+            int grandTotalRow = startRowStats + totalRollupRows;
+            var weekEnd = weekStart.AddDays(6);
+            WS.Cells[grandTotalRow, 2].Value = String.Format("{0:M/d} - {1:M/d} TOTALS", weekStart, weekEnd);
+
+            // grand total row sums
+            var nonComputedMetrics = GetNonComputedMetrics(true);
+            string sumFormula = "SUM(" + String.Join(",", channelSummaryOffsets.Select(offset => String.Format("R[{0}]C", offset))) + ")";
+            foreach (var metric in nonComputedMetrics)
+            {
+                WS.Cells[grandTotalRow, metric.ColNum].FormulaR1C1 = sumFormula;
             }
 
             // make rows collapsible
-            int numRows = NumRows_WeeklyChannelCampaignTemplate + numRowsAdded - 1; // don't include grand total row
-            for (int i = 0; i < numRows; i++)
+            for (int iRow = startRowStats; iRow < grandTotalRow; iRow++)
             {
-                WS.Row(startRowStats + i).OutlineLevel = 1;
+                WS.Row(iRow).OutlineLevel = 1;
             }
             if (collapse)
             {
-                for (int i = 0; i < numRows; i++)
-                    WS.Row(startRowStats + i).Collapsed = true;
+                for (int iRow = startRowStats; iRow < grandTotalRow; iRow++)
+                    WS.Row(iRow).Collapsed = true;
             }
+        }
+
+        public void RemoveWeeklyChannelRollupStatsTemplate()
+        {
+            int startRowTemplate = StartRow_WeeklyChannelCampaignTemplate + NumWeekRowsAdded + NumMonthRowsAdded;
+            WS.DeleteRowZ(startRowTemplate, NumRows_WeeklyChannelCampaignTemplate);
+            // TODO? Update drawings and ranges - like in InsertRowZ() ?
         }
 
 
@@ -259,7 +275,7 @@ namespace DAGenerators.Spreadsheets
         {
             var chart = WS.Drawings.AddChart("chartWeekly" + (rightSide ? "Right" : "Left"), eChartType.ColumnClustered);
             chart.SetPosition(Row_WeeklyChart + NumWeekRowsAdded + NumMonthRowsAdded - 1, 0, (rightSide ? Col_RightChart : Col_LeftChart) - 1, 0); // row & column are 0-based
-            chart.SetSize(640, 280);
+            chart.SetSize(ChartWidth, ChartHeight);
 
             chart.Title.Text = "Weekly " + metric1.DisplayName + " vs. " + metric2.DisplayName;
             chart.Title.Font.Bold = true;
@@ -287,6 +303,10 @@ namespace DAGenerators.Spreadsheets
         public IEnumerable<Metric> GetComputedMetrics(bool shownOnly)
         {
             return GetMetrics(shownOnly).Where(m => m.IsComputed);
+        }
+        public IEnumerable<Metric> GetNonComputedMetrics(bool shownOnly)
+        {
+            return GetMetrics(shownOnly).Where(m => !m.IsComputed);
         }
         public IEnumerable<Metric> GetMetrics(bool shownOnly)
         {
