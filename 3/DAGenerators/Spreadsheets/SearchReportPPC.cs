@@ -32,8 +32,8 @@ namespace DAGenerators.Spreadsheets
         }
 
         private const int StartRow_WeeklyChannelCampaignTemplate = 39;
-        private const int NumRows_WeeklyChannelCampaignTemplate = 4;
-        private const int NumRows_WeeklyChannelRollupTemplate = 3;
+        private const int NumRows_WeeklyChannelCampaignTemplate = 3;
+        private const int NumRows_WeeklyChannelRollupTemplate = 2;
 
         public Metric Metric_Clicks = new Metric(0, null, false, false);
         public Metric Metric_Impressions = new Metric(0, null, false, false);
@@ -195,6 +195,8 @@ namespace DAGenerators.Spreadsheets
             int startRowTemplate = StartRow_WeeklyChannelCampaignTemplate + NumWeekRowsAdded + NumMonthRowsAdded;
             int startRowStats = startRowTemplate + NumRows_WeeklyChannelCampaignTemplate;
             int numRowsAdded = 0;
+            var nonComputedMetrics = GetNonComputedMetrics(true);
+            string sumFormula;
 
             // Insert rows (below the template rows)
             WS.InsertRowZ(startRowStats, NumRows_WeeklyChannelCampaignTemplate, startRowTemplate);
@@ -211,6 +213,7 @@ namespace DAGenerators.Spreadsheets
             var channelKeys = channelStatsDict.Keys.Where(k => k != "Total").OrderBy(k => k == "Google").ThenByDescending(k => k);
             foreach (string channelKey in channelKeys) // in reverse order (so we end up with Google, then others alphabetically)
             {
+                int numCampaigns = channelStatsDict[channelKey].Count();
                 bool lastChannel = (channelKey == channelKeys.Last());
 
                 if (lastChannel)
@@ -228,14 +231,22 @@ namespace DAGenerators.Spreadsheets
                         .Copy(WS.Cells[startRowChannelRollup + ":" + (startRowChannelRollup + NumRows_WeeklyChannelRollupTemplate - 1)]);
                 }
 
-                // set the channel title
-                WS.Cells[startRowChannelRollup + NumRows_WeeklyChannelRollupTemplate - 1, 2].Value = channelKey;
-
                 // populate the campaign rows for this channel
                 numRowsAdded += LoadWeeklyMonthlyStats(channelStatsDict[channelKey], propertyNames, startRowChannelRollup, NumRows_WeeklyChannelRollupTemplate - 1);
 
+                // set the channel title
+                int channelTotalRow = startRowChannelRollup + numCampaigns;
+                WS.Cells[channelTotalRow, 2].Value = channelKey;
+
+                // fill in channel sum formulas
+                sumFormula = String.Format("SUM(R[{0}]C:R[{1}]C)", -numCampaigns, -1);
+                foreach (var metric in nonComputedMetrics)
+                {
+                    WS.Cells[channelTotalRow, metric.ColNum].FormulaR1C1 = sumFormula;
+                }
+
                 channelSummaryOffsets.Add(-1 - totalRollupRows);
-                totalRollupRows += channelStatsDict[channelKey].Count() + 1; // add one for the channel summary row
+                totalRollupRows += numCampaigns + 1; // add one for the channel summary row
             }
 
             // Populate grand total row
@@ -244,8 +255,8 @@ namespace DAGenerators.Spreadsheets
             WS.Cells[grandTotalRow, 2].Value = String.Format("{0:M/d} - {1:M/d} TOTALS", weekStart, weekEnd);
 
             // grand total row sums
-            var nonComputedMetrics = GetNonComputedMetrics(true);
-            string sumFormula = "SUM(" + String.Join(",", channelSummaryOffsets.Select(offset => String.Format("R[{0}]C", offset))) + ")";
+            channelSummaryOffsets.Reverse();
+            sumFormula = "SUM(" + String.Join(",", channelSummaryOffsets.Select(offset => String.Format("R[{0}]C", offset))) + ")";
             foreach (var metric in nonComputedMetrics)
             {
                 WS.Cells[grandTotalRow, metric.ColNum].FormulaR1C1 = sumFormula;
