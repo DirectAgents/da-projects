@@ -84,6 +84,7 @@ namespace DAGenerators.Spreadsheets
             // populate the campaign rows (if needed, will insert more blank rows for the stats)
             LoadWeeklyMonthlyStats(stats, propertyNames, startRowStats, 2);
 
+            // make rows collapsible
             int count = stats.Count();
             for (int i = 0; i < count; i++)
             {
