@@ -52,20 +52,9 @@ namespace DAGenerators.Spreadsheets
         {
         }
 
-        public override void LoadMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
-        {
-            int numBlankRows = 1;
-            LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Monthly + (WeeklyFirst ? NumWeeksAdded : 0), numBlankRows);
-            if (stats.Count() > numBlankRows)
-                NumMonthRowsAdded += stats.Count() - numBlankRows;
-        }
-
         public void LoadLatestMonthCampaignStats<T>(IEnumerable<T> stats, IList<string> propertyNames, DateTime monthStart)
         {
-            LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_LatestMonthCampaigns + NumMonthRowsAdded, 2);
-            int numCampaigns = stats.Count();
-            if (numCampaigns > 2)
-                NumLatestMonthCampaignRowsAdded += numCampaigns;
+            NumLatestMonthCampaignRowsAdded += LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_LatestMonthCampaigns + NumMonthRowsAdded, 2);
 
             var monthName = monthStart.ToString("MMMM");
             var drawingsToUpdate = WS.Drawings.Where(d => d is ExcelShape && ((ExcelShape)d).Text.Contains("Latest Month"));

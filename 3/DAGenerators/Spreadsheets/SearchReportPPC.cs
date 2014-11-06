@@ -14,14 +14,14 @@ namespace DAGenerators.Spreadsheets
     {
         protected int Row_SummaryDate = 8;
         protected int Row_StatsHeader = 11;
-        private const int Row_ClientNameBottom = 14;
-        private const int Row_WeeklyChart = 15;
+        private const int Row_ClientNameBottom = 18;
+        private const int Row_WeeklyChart = 21;
 
         private const int Col_StatsTitle = 2;
 
         protected string TemplateFilename = "SearchPPCtemplate.xlsx";
         protected int StartRow_Weekly = 12;
-        protected int StartRow_Monthly = 13;
+        protected int StartRow_Monthly = 16;
         protected bool WeeklyFirst
         {
             get { return StartRow_Weekly <= StartRow_Monthly; }
@@ -45,7 +45,8 @@ namespace DAGenerators.Spreadsheets
 
         protected ExcelWorksheet WS { get { return this.ExcelPackage.Workbook.Worksheets[1]; } }
         protected int NumWeeksAdded { get; set; }
-        protected int NumMonthRowsAdded { get; set; }
+        protected int NumWeekRowsAdded { get; set; }  // not including template rows
+        protected int NumMonthRowsAdded { get; set; } // not including template rows
 
         public void Setup(string templateFolder)
         {
@@ -61,18 +62,16 @@ namespace DAGenerators.Spreadsheets
         {
             Metric_Clicks = new Metric(3, "Clicks");
             Metric_Impressions = new Metric(4, "Impressions");
-            Metric_Orders = new Metric(5, "Orders");
-            Metric_Cost = new Metric(7, "Cost");
-            Metric_Revenue = new Metric(8, "Revenue");
-
-            Metric_OrderRate = new Metric(6, "Order Rate");
-            Metric_Net = new Metric(9, "Net");
-            Metric_RevPerOrder = new Metric(10, "Revenue/Order");
-            Metric_CTR = new Metric(11, "CTR");
-            Metric_CPC = new Metric(12, "CPC");
-            Metric_CPO = new Metric(13, "CPO");
-            Metric_ROAS = new Metric(14, "ROAS");
-            Metric_ROI = new Metric(15, "ROI");
+            Metric_CTR = new Metric(5, "CTR", true);
+            Metric_Cost = new Metric(6, "Spend");
+            Metric_CPC = new Metric(7, "CPC", true);
+            Metric_Orders = new Metric(8, "Orders");
+            Metric_Revenue = new Metric(9, "Revenue");
+            Metric_Net = new Metric(10, "Net", true);
+            Metric_CPO = new Metric(11, "Cost/Order", true);
+            Metric_OrderRate = new Metric(12, "Order Rate", true);
+            Metric_RevPerOrder = new Metric(13, "Rev/Order", true);
+            Metric_ROAS = new Metric(14, "ROAS", true);
         }
 
         public virtual void SetReportDate(DateTime date)
@@ -94,20 +93,20 @@ namespace DAGenerators.Spreadsheets
 
         public virtual void SetClientName(string clientName)
         {
-            WS.Cells[Row_ClientNameBottom + NumWeeksAdded + NumMonthRowsAdded, 2].Value = "Direct Agents | " + clientName;
+            WS.Cells[Row_ClientNameBottom + NumWeekRowsAdded + NumMonthRowsAdded, 2].Value = "Direct Agents | " + clientName.ToUpper();
         }
 
         public virtual void LoadWeeklyStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
         {
-            LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Weekly + (WeeklyFirst ? 0 : NumMonthRowsAdded));
+            NumWeekRowsAdded += LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Weekly + (WeeklyFirst ? 0 : NumMonthRowsAdded), 1);
             NumWeeksAdded += stats.Count();
-            CreateWeeklyChart_RevenueVsClicks();
+            //CreateWeeklyChart(NumWeeksAdded, Metric_Revenue, Metric_Clicks);
+            CreateWeeklyChart(NumWeeksAdded, Metric_Revenue, Metric_ROAS);
         }
 
         public virtual void LoadMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
         {
-            LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Monthly + (WeeklyFirst ? NumWeeksAdded : 0));
-            NumMonthRowsAdded += stats.Count();
+            NumMonthRowsAdded += LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Monthly + (WeeklyFirst ? NumWeekRowsAdded : 0), 1);
         }
         //public void LoadMonthlyCampaignStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
         //{
@@ -115,13 +114,19 @@ namespace DAGenerators.Spreadsheets
         //}
 
         // propertyNames for: title, clicks, impressions, orders, cost, revenue
-        protected void LoadWeeklyMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames, int startingRow, int blankRowsInTemplate = 0)
+        // returns: # of additional rows added (not counting blankRowsInTemplate)
+        protected int LoadWeeklyMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames, int startingRow, int blankRowsInTemplate = 0)
         {
+            int blankRowsToInsert = 0;
             int numRows = stats.Count();
             if (numRows > 0)
             {
-                int blankRowsToInsert = numRows - blankRowsInTemplate;
-                if (blankRowsToInsert > 0)
+                blankRowsToInsert = numRows - blankRowsInTemplate;
+                if (blankRowsToInsert <= 0)
+                {
+                    blankRowsToInsert = 0;
+                }
+                else
                 {
                     WS.InsertRowZ(startingRow + (blankRowsInTemplate > 0 ? 1 : 0), blankRowsToInsert, startingRow);
 
@@ -146,6 +151,7 @@ namespace DAGenerators.Spreadsheets
                 LoadColumnFromStats(stats, startingRow, Metric_Cost.ColNum, propertyNames[4], Metric_Cost);
                 LoadColumnFromStats(stats, startingRow, Metric_Revenue.ColNum, propertyNames[5], Metric_Revenue);
             }
+            return blankRowsToInsert;
         }
         private void LoadColumnFromStats<T>(IEnumerable<T> stats, int startingRow, int iColumn, string propertyName, Metric metric = null)
         {
@@ -174,35 +180,31 @@ namespace DAGenerators.Spreadsheets
                 WS.Cells[iRow, metric.ColNum].FormulaR1C1 = formula;
         }
 
-        public void CreateWeeklyChart_RevenueVsClicks()
-        {
-            CreateWeeklyChart(NumWeeksAdded, Metric_Revenue.ColNum, Metric_Revenue.DisplayName, Metric_Clicks.ColNum, Metric_Clicks.DisplayName);
-        }
-        private void CreateWeeklyChart(int numWeeks, int series1column, string series1name, int series2column, string series2name)
+        private void CreateWeeklyChart(int numWeeks, Metric metric1, Metric metric2)
         {
             var chart = WS.Drawings.AddChart("chartWeekly", eChartType.ColumnClustered);
-            chart.SetPosition(Row_WeeklyChart + NumWeeksAdded + NumMonthRowsAdded, 0, 1, 0);
+            chart.SetPosition(Row_WeeklyChart + NumWeekRowsAdded + NumMonthRowsAdded - 1, 0, 1, 0); // row & column are 0-based
             chart.SetSize(1071, 217);
 
-            chart.Title.Text = "Weekly Performance"; // TODO: add year; remember: handle when it's two years
+            chart.Title.Text = "Weekly " + metric1.DisplayName + " vs. " + metric2.DisplayName;
             chart.Title.Font.Bold = true;
             //chart.Title.Anchor = eTextAnchoringType.Bottom;
             //chart.Title.AnchorCtr = false;
 
             int startRow_Weekly = this.StartRow_Weekly + (WeeklyFirst ? 0 : NumMonthRowsAdded);
 
-            var series = chart.Series.Add(new ExcelAddress(startRow_Weekly, series1column, startRow_Weekly + numWeeks - 1, series1column).Address,
+            var series = chart.Series.Add(new ExcelAddress(startRow_Weekly, metric1.ColNum, startRow_Weekly + numWeeks - 1, metric1.ColNum).Address,
                                           new ExcelAddress(startRow_Weekly, Col_StatsTitle, startRow_Weekly + numWeeks - 1, Col_StatsTitle).Address);
             //series.HeaderAddress = new ExcelAddress(Row_StatsHeader, column1, Row_StatsHeader, column1);
-            series.Header = series1name;
+            series.Header = metric1.DisplayName;
 
             var chartType2 = chart.PlotArea.ChartTypes.Add(eChartType.LineMarkers);
             chartType2.UseSecondaryAxis = true;
             chartType2.XAxis.Deleted = true;
-            var series2 = chartType2.Series.Add(new ExcelAddress(startRow_Weekly, series2column, startRow_Weekly + numWeeks - 1, series2column).Address,
+            var series2 = chartType2.Series.Add(new ExcelAddress(startRow_Weekly, metric2.ColNum, startRow_Weekly + numWeeks - 1, metric2.ColNum).Address,
                                                 new ExcelAddress(startRow_Weekly, Col_StatsTitle, startRow_Weekly + numWeeks - 1, Col_StatsTitle).Address);
             //series2.HeaderAddress = new ExcelAddress(Row_StatsHeader, column2, Row_StatsHeader, column2);
-            series2.Header = series2name;
+            series2.Header = metric2.DisplayName;
         }
 
         public IEnumerable<Metric> GetComputedMetrics(bool shownOnly)
