@@ -3,6 +3,7 @@ using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Controllers;
 using System;
+using System.Configuration;
 using System.Linq;
 using System.Web.Mvc;
 using WebMatrix.WebData;
@@ -95,9 +96,11 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 var simpleReport = cpRepo.GetSimpleReport(id);
                 if (simpleReport == null)
                     return HttpNotFound();
-                //var iReports = SimpleReportManager.CreateIReports(simpleReport, cpRepo);
 
-                //send email, then...
+                var gmailUsername = ConfigurationManager.AppSettings["GmailEmailer_Username"];
+                var gmailPassword = ConfigurationManager.AppSettings["GmailEmailer_Password"];
+                var reportManager = new SimpleReportManager(cpRepo, new GmailEmailer(new System.Net.NetworkCredential(gmailUsername, gmailPassword)));
+                reportManager.SendReports(simpleReport, sendTo);
 
                 if (!String.IsNullOrWhiteSpace(redirectAction))
                     return RedirectToAction(redirectAction);

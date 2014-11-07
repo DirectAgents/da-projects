@@ -26,17 +26,17 @@ namespace CakeExtracter.Reports
         }
 
         // This can be called to send test reports (without updating Last and NextSend)
-        public int SendReports(SimpleReport simpleReport) //allow to override nextsend, perioddays, periodmonths...
+        public int SendReports(SimpleReport simpleReport, string overrideEmail = null) //allow to override nextsend, perioddays, periodmonths...
         {
+            if (String.IsNullOrWhiteSpace(overrideEmail) && String.IsNullOrWhiteSpace(simpleReport.Email))
+                return 0;
+
             int reportsSent = 0;
-            if (AbleToSend(simpleReport))
+            var iReports = CreateIReports(simpleReport);
+            foreach (var iReport in iReports)
             {
-                var iReports = CreateIReports(simpleReport);
-                foreach (var iReport in iReports)
-                {
-                    if (SendReport(simpleReport, iReport))
-                        reportsSent++;
-                }
+                if (SendReport(simpleReport, iReport, overrideEmail))
+                    reportsSent++;
             }
             return reportsSent;
         }
@@ -53,7 +53,7 @@ namespace CakeExtracter.Reports
                     CheckInitialize(simpleReport);
 
                     int reportsSent = SendReports(simpleReport);
-                    totalReportsSent = totalReportsSent + reportsSent;
+                    totalReportsSent += reportsSent;
 
                     if (reportsSent > 0)
                         UpdateLastAndNextSend(simpleReport);
@@ -111,14 +111,6 @@ namespace CakeExtracter.Reports
             }
         }
 
-        private bool AbleToSend(SimpleReport simpleReport)
-        {
-            if (String.IsNullOrWhiteSpace(simpleReport.Email))
-                return false;
-
-            return true;
-        }
-
         // the IReports are the objects used to generate the report text
         private IEnumerable<IReport> CreateIReports(SimpleReport simpleReport)
         {
@@ -136,11 +128,11 @@ namespace CakeExtracter.Reports
             return iReports;
         }
 
-        private bool SendReport(SimpleReport simpleReport, IReport iReport)
+        private bool SendReport(SimpleReport simpleReport, IReport iReport, string overrideEmail = null)
         {
             try
             {
-                emailer.GenerateAndSendSimpleReport(simpleReport, iReport);
+                emailer.GenerateAndSendSimpleReport(simpleReport, iReport, overrideEmail);
                 return true;
             }
             catch (Exception ex)
@@ -159,8 +151,7 @@ namespace CakeExtracter.Reports
             var today = DateTime.Today;
             rep.LastSend = DateTime.Now;
 
-            rep.LastStatsDate = rep.NextSend ?? today;
-            rep.LastStatsDate = rep.LastStatsDate.Value.AddDays(-1);
+            rep.LastStatsDate = (rep.NextSend ?? today).AddDays(-1);
 
             rep.NextSend = rep.NextSend ?? today; // to ensure it's not null
             if (rep.PeriodMonths > 0)

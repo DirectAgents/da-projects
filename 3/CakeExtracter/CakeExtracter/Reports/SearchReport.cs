@@ -77,7 +77,9 @@ namespace CakeExtracter.Reports
         private void GenerateChart() // hard-coded to an Orders/CPO chart for now
         {
             var searchProfile = simpleReport.SearchProfile;
-            var stats = cpRepo.GetWeekStats(searchProfile.SearchProfileId, 8, (DayOfWeek)searchProfile.StartDayOfWeek, null, false);
+            int numWeeks = 8;
+            var toDate = simpleReport.GetStatsEndDate();
+            var stats = cpRepo.GetWeekStats(searchProfile.SearchProfileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, toDate, false);
             this.ChartObj = new OrdersCPOChart(stats);
         }
 

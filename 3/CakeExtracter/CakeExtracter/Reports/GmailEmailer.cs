@@ -29,13 +29,16 @@ namespace CakeExtracter.Reports
             client.Send(message);
         }
 
-        public void GenerateAndSendSimpleReport(SimpleReport simpleReport, IReport iReport)
+        public void GenerateAndSendSimpleReport(SimpleReport simpleReport, IReport iReport, string overrideEmail = null)
         {
+            string email = overrideEmail ?? simpleReport.Email;
+            string emailCC = (overrideEmail == null ? simpleReport.EmailCC : null);
+
             var htmlView = iReport.GenerateView();
             SendEmail(
                 this.Credential.UserName,
-                new[] { simpleReport.Email },
-                simpleReport.EmailCC == null ? null : new[] { simpleReport.EmailCC },
+                new[] { email },
+                emailCC == null ? null : new[] { emailCC },
                 iReport.Subject,
                 new[] { htmlView });
         }
