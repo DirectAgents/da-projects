@@ -6,6 +6,36 @@ namespace ClientPortal.Data.Contexts
     public partial class SimpleReport
     {
         [NotMapped]
+        public const int DefaultPeriodMonths = 0;
+        public const int DefaultPeriodDays = 7;
+
+        public void InitializePeriodAndNextSend() // Note: be sure Advertiser or SearchProfile is set
+        {
+            this.PeriodMonths = DefaultPeriodMonths;
+            this.PeriodDays = DefaultPeriodDays;
+            this.NextSend = ComputeNextSend_Weekly();
+        }
+        // used for weekly reports (PeriodDays == 7)
+        private DateTime? ComputeNextSend_Weekly(bool includeToday = false)
+        {
+            if (Advertiser == null && SearchProfile == null)
+                return null;
+
+            var nextSend = DateTime.Today.AddYears(10);
+            if (Advertiser != null)
+            {
+                nextSend = Advertiser.GetNext_WeekStartDate(includeToday);
+            }
+            if (SearchProfile != null)
+            {
+                var searchNextSend = SearchProfile.GetNext_WeekStartDate(includeToday);
+                if (searchNextSend < nextSend)
+                    nextSend = searchNextSend;
+            }
+            return nextSend;
+        }
+
+        [NotMapped]
         public bool IsSearchOnly
         {
             get { return (Advertiser == null && SearchProfile != null); }

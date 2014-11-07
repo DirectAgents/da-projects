@@ -109,5 +109,11 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             }
             return GenerateTestView(id, sendTo, redirectAction);
         }
+
+        public ActionResult Initialize(int id)
+        {
+            bool success = cpRepo.InitializeSimpleReport(id, true);
+            return Content(success.ToString());
+        }
     }
 }

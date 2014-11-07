@@ -21,7 +21,7 @@
             </tr>
             <tr>
                 <td>@Html.LabelFor(m => m.StartDayOfWeek)</td>
-                <td>@Html.EditorFor(m => m.StartDayOfWeek)</td>
+                <td>@Html.EditorFor(m => m.StartDayOfWeek, "DayOfWeek")</td>
             </tr>
             <tr>
                 <td>@Html.LabelFor(m => m.ShowSearchChannels)</td>
@@ -33,5 +33,3 @@
             &nbsp;@Ajax.ActionLink("cancel", "SearchProfiles", ajaxOptions)
     </fieldset>
 }
-Notes:<br />
-0 = Sunday, 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday

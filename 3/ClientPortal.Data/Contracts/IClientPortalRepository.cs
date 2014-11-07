@@ -63,6 +63,7 @@ namespace ClientPortal.Data.Contracts
         IQueryable<SimpleReport> SimpleReports { get; }
         IQueryable<SimpleReport> SearchSimpleReports { get; }
         SimpleReport GetSimpleReport(int id);
+        bool InitializeSimpleReport(int id, bool saveChanges = false);
         void FillExtended_SimpleReport(SimpleReport report);
 
         IQueryable<Goal> Goals { get; }

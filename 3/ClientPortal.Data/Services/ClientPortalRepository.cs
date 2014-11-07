@@ -621,6 +621,17 @@ namespace ClientPortal.Data.Services
             return simpleReport;
         }
 
+        public bool InitializeSimpleReport(int id, bool saveChanges = false)
+        {
+            var simpleReport = GetSimpleReport(id);
+            if (simpleReport == null)
+                return false;
+
+            simpleReport.InitializePeriodAndNextSend();
+            if (saveChanges) SaveChanges();
+            return true;
+        }
+
         public void FillExtended_SimpleReport(SimpleReport report)
         {
             if (report.Advertiser == null && report.AdvertiserId.HasValue)

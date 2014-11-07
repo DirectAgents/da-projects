@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
@@ -17,6 +18,11 @@ namespace ClientPortal.Data.Contexts
         public IOrderedEnumerable<SearchProfileContact> SearchProfileContactsOrdered
         {
             get { return this.SearchProfileContacts.OrderBy(sc => sc.Order); }
+        }
+
+        public DateTime GetNext_WeekStartDate(bool includeToday = false)
+        {
+            return Common.GetNext_WeekStartDate((DayOfWeek)this.StartDayOfWeek, includeToday);
         }
     }
 }

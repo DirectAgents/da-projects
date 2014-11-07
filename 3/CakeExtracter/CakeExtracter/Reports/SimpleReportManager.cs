@@ -13,7 +13,6 @@ namespace CakeExtracter.Reports
 {
     public class SimpleReportManager
     {
-        private const int DefaultPeriodDays = 7;
         private const DayOfWeek DefaultStartDayOfWeek = DayOfWeek.Monday; //TODO: make app setting
 
         private readonly IClientPortalRepository cpRepo;
@@ -78,7 +77,7 @@ namespace CakeExtracter.Reports
             return reportsToSend.ToList();
         }
 
-        // Set NextSend to the day after the end of the last stats period.
+        // If null, set NextSend to the day after the end of the last stats period.
         // Also initializes PeriodDays if PeriodMonths and PeriodDays are both 0.
         private void CheckInitialize(SimpleReport simpleReport)
         {
@@ -92,11 +91,13 @@ namespace CakeExtracter.Reports
                 }
                 else
                 {
-                    simpleReport.NextSend = today;
-
                     if (simpleReport.PeriodDays <= 0)
-                        simpleReport.PeriodDays = DefaultPeriodDays;
+                    {
+                        simpleReport.PeriodDays = SimpleReport.DefaultPeriodDays;
+                        simpleReport.PeriodMonths = SimpleReport.DefaultPeriodMonths;
+                    }
 
+                    simpleReport.NextSend = today;
                     DayOfWeek? startDayOfWeek = simpleReport.GetStartDayOfWeek();
 
                     if (startDayOfWeek.HasValue && simpleReport.PeriodDays == 7)
@@ -158,12 +159,14 @@ namespace CakeExtracter.Reports
             {
                 rep.NextSend = rep.NextSend.Value.AddMonths(rep.PeriodMonths);
             }
-            else
+            else if (rep.PeriodDays > 0)
             {
-                int days = rep.PeriodDays;
-                if (days <= 0)
-                    days = DefaultPeriodDays;
-                rep.NextSend = rep.NextSend.Value.AddDays(days);
+                rep.NextSend = rep.NextSend.Value.AddDays(rep.PeriodDays);
+            }
+            else // both PeriodMonths and PeriodDays are unset for the report; use default period
+            {
+                rep.NextSend = rep.NextSend.Value.AddMonths(SimpleReport.DefaultPeriodMonths);
+                rep.NextSend = rep.NextSend.Value.AddDays(SimpleReport.DefaultPeriodDays);
             }
             cpRepo.SaveChanges();
         }

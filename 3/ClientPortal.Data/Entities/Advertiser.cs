@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
@@ -29,6 +30,11 @@ namespace ClientPortal.Data.Contexts
 
         [NotMapped]
         public IEnumerable<UserProfile> UserProfiles { get; set; }
+
+        public DateTime GetNext_WeekStartDate(bool includeToday = false)
+        {
+            return Common.GetNext_WeekStartDate((DayOfWeek)this.StartDayOfWeek, includeToday);
+        }
     }
 
     public class AdvertiserComparer : EqualityComparer<Advertiser>

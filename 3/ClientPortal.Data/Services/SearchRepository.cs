@@ -68,11 +68,12 @@ namespace ClientPortal.Data.Services
                 {
                     var simpleReport = new SimpleReport
                     {
+                        SearchProfile = searchProfile,
                         Email = email,
-                        PeriodDays = 7,
                         Enabled = false
                     };
-                    searchProfile.SimpleReports.Add(simpleReport);
+                    simpleReport.InitializePeriodAndNextSend();
+                    context.SimpleReports.Add(simpleReport);
                     context.SaveChanges();
                     success = true;
                 }
