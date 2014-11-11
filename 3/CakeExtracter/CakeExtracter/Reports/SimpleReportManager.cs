@@ -98,9 +98,9 @@ namespace CakeExtracter.Reports
                     }
 
                     simpleReport.NextSend = today;
-                    DayOfWeek? startDayOfWeek = simpleReport.GetStartDayOfWeek();
 
-                    if (startDayOfWeek.HasValue && simpleReport.PeriodDays == 7)
+                    DayOfWeek? startDayOfWeek = simpleReport.GetStartDayOfWeek();
+                    if (simpleReport.PeriodDays == 7 && startDayOfWeek.HasValue)
                     {   // Set to the StartDayOfWeek that's today or most recently passed
                         while (simpleReport.NextSend.Value.DayOfWeek != startDayOfWeek.Value)
                         {

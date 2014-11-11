@@ -5,9 +5,14 @@
     var start = Model.GetStatsStartDate();
     var end = Model.GetStatsEndDate();
     string redirectAction = ViewBag.RedirectAction;
+    string filename = ViewBag.Filename;
+    if (String.IsNullOrWhiteSpace(filename))
+    {
+        filename = Model.ParentName.Replace(" ", "") + "_" + DateTime.Today.ToString("yyyyMMdd") + ".xlsx";
+    }
 }
 
-@using (Ajax.BeginForm(ajaxOpts_Post))
+@using (Ajax.BeginForm("Test", null, ajaxOpts_Post, new { id = "formSimpleReportTest" }))
 {
     @Html.ValidationSummary()
     <fieldset>
@@ -30,9 +35,43 @@
                 <td>@Html.Label("Send To")</td>
                 <td style="min-width:300px">@Html.Editor("sendto")</td>
             </tr>
+            <tr>
+                <td>@Html.Label("Include Spreadsheet")</td>
+                <td>@Html.CheckBox("includeSpreadsheet")</td>
+            </tr>
+            <tr>
+                <td>@Html.Label("Weeks to include:")</td>
+                <td>@Html.Editor("numweeks")</td>
+            </tr>
+            <tr>
+                <td>@Html.Label("Months to include:")</td>
+                <td>@Html.Editor("nummonths")</td>
+            </tr>
+            <tr>
+                <td>@Html.Label("Filename:")</td>
+                <td><input type="text" id="filename" name="filename" value="@filename" style="min-width:300px" /></td>
+            </tr>
         </table>
         <br />
         <input type="submit" value="Send Email" />
         &nbsp;@Ajax.ActionLink("cancel", (String.IsNullOrWhiteSpace(redirectAction) ? "Index" : redirectAction), ajaxOptions)
     </fieldset>
 }
+@{
+    var formId = "#formSimpleReportTest";
+}
+<script>
+    $(document).ready(function () {
+        debugger;
+        var includeSpreadsheet = $('#includeSpreadsheet').attr('checked');
+        $('@formId #numweeks').prop('disabled', !includeSpreadsheet);
+        $('@formId #nummonths').prop('disabled', !includeSpreadsheet);
+        $('@formId #filename').prop('disabled', !includeSpreadsheet);
+
+        $('@formId #includeSpreadsheet').change(function () {
+            $('@formId #numweeks').prop('disabled', !this.checked);
+            $('@formId #nummonths').prop('disabled', !this.checked);
+            $('@formId #filename').prop('disabled', !this.checked);
+        });
+    });
+</script>

@@ -3,7 +3,7 @@
     var ajaxOpts_Profiles = RazorHelpers.GetAjaxOptions("searchProfilesTab", "navSearchProfiles");
     //var ajaxOpts_Reports = RazorHelpers.GetAjaxOptions("searchReportsTab");
     var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("searchReportsTab", null, "Post");
-    var filename = Model.SearchProfileName.Replace(" ", "") + "_" + DateTime.Today.ToString("yyyyMMdd") + ".xlsx";
+    string filename = Model.SearchProfileName.Replace(" ", "") + "_" + DateTime.Today.ToString("yyyyMMdd") + ".xlsx";
 }
 
 <h3>Test Spreadsheet</h3>

@@ -35,12 +35,18 @@ namespace CakeExtracter.Reports
             string emailCC = (overrideEmail == null ? simpleReport.EmailCC : null);
 
             var htmlView = iReport.GenerateView();
+            Attachment attachment = null;
+            if (simpleReport.IncludeAttachment)
+            {
+                attachment = iReport.GenerateSpreadsheetAttachment();
+            }
             SendEmail(
                 this.Credential.UserName,
                 new[] { email },
                 emailCC == null ? null : new[] { emailCC },
                 iReport.Subject,
-                new[] { htmlView });
+                new[] { htmlView },
+                attachment);
         }
 
         public void SendEmail(string fromAddress, string[] toAddresses, string[] ccAddresses, string subject, string body, bool isHTML, Attachment attachment = null)

@@ -8,6 +8,7 @@ namespace CakeExtracter.Reports
         string Generate();
 
         AlternateView GenerateView();
+        Attachment GenerateSpreadsheetAttachment();
         void DisposeResources();
     }
 }

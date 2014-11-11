@@ -1,7 +1,9 @@
 ﻿using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using DAGenerators.Charts;
+using DAGenerators.Spreadsheets;
 using System;
+using System.Configuration;
 using System.Linq;
 using System.Net.Mail;
 
@@ -60,6 +62,7 @@ namespace CakeExtracter.Reports
         }
 
         private ChartBase ChartObj { get; set; }
+        private SpreadsheetBase Spreadsheet { get; set; }
 
         public AlternateView GenerateView()
         {
@@ -83,10 +86,34 @@ namespace CakeExtracter.Reports
             this.ChartObj = new OrdersCPOChart(stats);
         }
 
+        public Attachment GenerateSpreadsheetAttachment()
+        {
+            Attachment attachment = null;
+            GenerateSpreadsheet();
+            if (this.Spreadsheet != null)
+            {
+                attachment = this.Spreadsheet.GetAsAttachment(simpleReport.Attachment_Filename);
+            }
+            return attachment;
+        }
+        private void GenerateSpreadsheet()
+        {
+            string templateFolder = ConfigurationManager.AppSettings["PATH_Search"];
+            this.Spreadsheet = DAGenerators.Spreadsheets.Generator.GenerateSearchReport(
+                cpRepo,
+                templateFolder,
+                simpleReport.SearchProfile.SearchProfileId,
+                simpleReport.Attachment_NumWeeks,
+                simpleReport.Attachment_NumMonths
+                );
+        }
+
         public void DisposeResources()
         {
             if (this.ChartObj != null)
                 this.ChartObj.DisposeResources();
+            if (this.Spreadsheet != null)
+                this.Spreadsheet.DisposeResources();
         }
     }
 }

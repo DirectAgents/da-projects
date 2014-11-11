@@ -20,7 +20,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public ActionResult Index()
         {
-            var simpleReports = cpRepo.SimpleReports.ToList().OrderBy(sr => sr.ParentName);
+            var simpleReports = cpRepo.SimpleReports.ToList().OrderBy(sr => !sr.Enabled).ThenBy(sr => sr.NextSend).ThenBy(sr => sr.ParentName);
             return View(simpleReports);
         }
 
@@ -29,7 +29,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             var simpleReportsQ = cpRepo.SearchSimpleReports;
             if (spId.HasValue)
                 simpleReportsQ = simpleReportsQ.Where(sr => sr.SearchProfileId == spId.Value);
-            var simpleReports = simpleReportsQ.OrderBy(sr => sr.SearchProfile.SearchProfileName).ToList();
+            var simpleReports = simpleReportsQ.OrderBy(sr => !sr.Enabled).ThenBy(sr => sr.NextSend).ThenBy(sr => sr.SearchProfile.SearchProfileName).ToList();
 
             ViewBag.RefreshAction = "IndexSearch";
             return View("Index", simpleReports);
@@ -74,29 +74,49 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public ActionResult Test(int id, string redirectAction)
         {
-            return GenerateTestView(id, "@directagents.com", redirectAction);
+            return GenerateTestView(id, "@directagents.com", true, 10, 10, null, redirectAction);
         }
-        private ActionResult GenerateTestView(int id, string sendTo, string redirectAction)
+        private ActionResult GenerateTestView(int id, string sendTo, bool includeSpreadsheet, int? numWeeks, int? numMonths, string filename, string redirectAction)
         {
             var simpleReport = cpRepo.GetSimpleReport(id);
             if (simpleReport == null)
                 return HttpNotFound();
             ViewBag.SendTo = sendTo;
+            ViewBag.IncludeSpreadsheet = includeSpreadsheet;
+            ViewBag.NumWeeks = numWeeks;
+            ViewBag.NumMonths = numMonths;
+            ViewBag.Filename = filename;
             ViewBag.RedirectAction = redirectAction;
             return View("Test", simpleReport);
         }
 
         [HttpPost]
-        public ActionResult Test(int id, string sendTo, string redirectAction)
+        public ActionResult Test(int id, string sendTo, string redirectAction, bool includeSpreadsheet, int? numWeeks, int? numMonths, string filename)
         {
             if (String.IsNullOrWhiteSpace(sendTo) || sendTo.StartsWith("@") | !sendTo.Contains("@") | !sendTo.Contains("."))
                 ModelState.AddModelError("", "Please enter a valid email address.");
-            else
+            if (includeSpreadsheet)
+            {
+                if (!numWeeks.HasValue || numWeeks.Value < 0)
+                    ModelState.AddModelError("", "Please specify a valid number of Weeks.");
+                if (!numMonths.HasValue || numMonths.Value < 0)
+                    ModelState.AddModelError("", "Please specify a valid number of months.");
+                if (String.IsNullOrWhiteSpace(filename))
+                    ModelState.AddModelError("", "Please specify a valid filename.");
+            }
+            if (ModelState.IsValid)
             {
                 var simpleReport = cpRepo.GetSimpleReport(id);
                 if (simpleReport == null)
                     return HttpNotFound();
 
+                if (includeSpreadsheet)
+                {
+                    simpleReport.IncludeAttachment = true;
+                    simpleReport.Attachment_NumWeeks = numWeeks.Value;
+                    simpleReport.Attachment_NumMonths = numMonths.Value;
+                    simpleReport.Attachment_Filename = filename;
+                }
                 var gmailUsername = ConfigurationManager.AppSettings["GmailEmailer_Username"];
                 var gmailPassword = ConfigurationManager.AppSettings["GmailEmailer_Password"];
                 var reportManager = new SimpleReportManager(cpRepo, new GmailEmailer(new System.Net.NetworkCredential(gmailUsername, gmailPassword)));
@@ -107,7 +127,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 else
                     return RedirectToAction("Index");
             }
-            return GenerateTestView(id, sendTo, redirectAction);
+            return GenerateTestView(id, sendTo, includeSpreadsheet, numWeeks, numMonths, filename, redirectAction);
         }
 
         public ActionResult Initialize(int id)

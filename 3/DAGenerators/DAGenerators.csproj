@@ -50,6 +50,7 @@
     <Compile Include="Charts\OrdersCPOChart.cs" />
     <Compile Include="Charts\TwoSeriesChartBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Spreadsheets\Generator.cs" />
     <Compile Include="Spreadsheets\SearchReportPPC.cs" />
     <Compile Include="Spreadsheets\SearchReports.cs" />
     <Compile Include="Spreadsheets\SpreadsheetBase.cs" />
@@ -58,6 +59,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClientPortal.Data\ClientPortal.Data.csproj">
+      <Project>{2e621b59-9455-4fa5-b9bd-6bdc418ffbfa}</Project>
+      <Name>ClientPortal.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

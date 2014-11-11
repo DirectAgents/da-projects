@@ -77,6 +77,11 @@ namespace CakeExtracter.Reports
             return htmlView;
         }
 
+        public Attachment GenerateSpreadsheetAttachment()
+        {
+            return null;
+        }
+
         public void DisposeResources()
         {
         }
