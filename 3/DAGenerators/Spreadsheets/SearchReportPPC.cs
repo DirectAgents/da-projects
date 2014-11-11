@@ -84,7 +84,7 @@ namespace DAGenerators.Spreadsheets
 
         public virtual void SetReportDate(DateTime date)
         {
-            WS.Cells[Row_SummaryDate, 2].Value = "Report Summary " + date.ToShortDateString();
+            WS.Cells[Row_SummaryDate, 2].Value = "Report Summary - through " + date.ToShortDateString();
         }
         public virtual void SetReportingPeriod(DateTime fromDate, DateTime toDate)
         {

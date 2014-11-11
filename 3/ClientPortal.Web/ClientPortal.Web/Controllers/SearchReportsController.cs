@@ -53,7 +53,8 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile.SearchProfileId, nummonths, userInfo.UseAnalytics, !userInfo.Search_UseYesterdayAsLatest)
+            var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
+            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile.SearchProfileId, nummonths, userInfo.UseAnalytics, endDate)
                 .ToList()
                 .OrderBy(s => s.StartDate)
                 .AsQueryable();
@@ -69,7 +70,8 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile.SearchProfileId, nummonths, userInfo.UseAnalytics, !userInfo.Search_UseYesterdayAsLatest);
+            var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
+            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile.SearchProfileId, nummonths, userInfo.UseAnalytics, endDate);
             var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(monthStats);
 
             string filename = "MonthlySummary" + ControllerHelpers.DateStamp() + ".csv";

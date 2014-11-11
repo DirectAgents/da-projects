@@ -106,8 +106,8 @@ namespace CakeExtracter.Commands
                 else
                 {
                     int numMonths = 6;
-                    bool includeToday = false;
-                    stats = cpRepo.GetMonthStats(profileId, numMonths, useAnalytics, includeToday);
+                    var endDate = DateTime.Today.AddDays(-1);
+                    stats = cpRepo.GetMonthStats(profileId, numMonths, useAnalytics, endDate);
                 }
             }
             return stats;

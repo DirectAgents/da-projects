@@ -8,7 +8,7 @@ namespace DAGenerators.Spreadsheets
 {
     public class Generator
     {
-        public static SearchReportPPC GenerateSearchReport(IClientPortalRepository cpRepo, string templateFolder, int searchProfileId, int numWeeks, int numMonths)
+        public static SearchReportPPC GenerateSearchReport(IClientPortalRepository cpRepo, string templateFolder, int searchProfileId, int numWeeks, int numMonths, DateTime endDate)
         {
             var searchProfile = cpRepo.GetSearchProfile(searchProfileId);
             if (searchProfile == null)
@@ -27,22 +27,24 @@ namespace DAGenerators.Spreadsheets
                 spreadsheet = (SearchReportPPC)Activator.CreateInstance(type);
 
             spreadsheet.Setup(templateFolder);
+            spreadsheet.SetReportDate(endDate);
             spreadsheet.SetClientName(searchProfile.SearchProfileName);
 
             bool useAnalytics = false; //TODO: get from searchProfile when implemented
-            bool includeToday = false;
-            var monthlyStats = cpRepo.GetMonthStats(searchProfileId, numMonths, useAnalytics, includeToday);
-            var weeklyStats = cpRepo.GetWeekStats(searchProfileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, null, useAnalytics);
+            var monthlyStats = cpRepo.GetMonthStats(searchProfileId, numMonths, useAnalytics, endDate);
+            var weeklyStats = cpRepo.GetWeekStats(searchProfileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, endDate, useAnalytics);
 
             var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue" };
             spreadsheet.LoadMonthlyStats(monthlyStats, propertyNames);
             spreadsheet.LoadWeeklyStats(weeklyStats, propertyNames);
 
-            var periodStart = DateTime.Today.AddDays(-7);
+            // Prepare for weekly channel/campaign stats
+            // Start with the week that includes endDate (could be a partial week)
+            var periodStart = endDate;
             while (periodStart.DayOfWeek != (DayOfWeek)searchProfile.StartDayOfWeek)
                 periodStart = periodStart.AddDays(-1);
             var periodEnd = periodStart.AddDays(6);
-            spreadsheet.SetReportingPeriod(periodStart, periodEnd);
+            spreadsheet.SetReportingPeriod(periodStart, periodEnd); // currently just used for Teacher Express template
 
             // TODO: determine from the report which stats are needed
             if (spreadsheet is SearchReport_ScholasticTeacherExpress)

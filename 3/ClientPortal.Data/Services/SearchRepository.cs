@@ -424,17 +424,13 @@ namespace ClientPortal.Data.Services
             return stats.AsQueryable();
         }
 
-        public IQueryable<SearchStat> GetMonthStats(int searchProfileId, int? numMonths, bool useAnalytics, bool includeToday)
+        public IQueryable<SearchStat> GetMonthStats(int searchProfileId, int? numMonths, bool useAnalytics, DateTime end)
         {
-            DateTime start;
-            if (numMonths.HasValue)
-                start = DateTime.Today.AddMonths((numMonths.Value - 1) * -1);
-            else
-                start = DateTime.Today.AddYears(-1);
+            if (!numMonths.HasValue)
+                numMonths = 13;
+            DateTime start = new DateTime(end.Year, end.Month, 1).AddMonths((numMonths.Value - 1) * -1);
 
-            start = new DateTime(start.Year, start.Month, 1);
-
-            var stats = GetSearchDailySummaries(null, searchProfileId, null, null, null, null, start, null, includeToday)
+            var stats = GetSearchDailySummaries(null, searchProfileId, null, null, null, null, start, end, true)
                 .GroupBy(s => new { s.Date.Year, s.Date.Month })
                 .Select(g =>
                 new SearchStat
@@ -450,7 +446,7 @@ namespace ClientPortal.Data.Services
 
             if (useAnalytics)
             {
-                var gaStats = GetGoogleAnalyticsSummaries(null, searchProfileId, null, null, null, start, null, includeToday)
+                var gaStats = GetGoogleAnalyticsSummaries(null, searchProfileId, null, null, null, start, end, true)
                     .GroupBy(s => new { s.Date.Year, s.Date.Month })
                     .ToList()
                     .Select(g => new SearchSummary

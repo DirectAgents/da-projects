@@ -3,6 +3,7 @@
     var ajaxOpts_Profiles = RazorHelpers.GetAjaxOptions("searchProfilesTab", "navSearchProfiles");
     //var ajaxOpts_Reports = RazorHelpers.GetAjaxOptions("searchReportsTab");
     var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("searchReportsTab", null, "Post");
+    var endDate = Model.GetLast_WeekEndDate();
     string filename = Model.SearchProfileName.Replace(" ", "") + "_" + DateTime.Today.ToString("yyyyMMdd") + ".xlsx";
 }
 
@@ -20,6 +21,10 @@ Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)
         @Html.HiddenFor(m => m.SearchProfileId)
         <table>
             <tr>
+                <td>@Html.Label("Stats End-Date:")</td>
+                <td><input type="text" name="enddate" value="@endDate.ToShortDateString()" onfocus="EnableSubmitGenSpreadsheet()" /></td>
+            </tr>
+            <tr>
                 <td>@Html.Label("Weeks to include:")</td>
                 <td><input type="text" name="numweeks" value="10" onfocus="EnableSubmitGenSpreadsheet()" /></td>
             </tr>
@@ -36,11 +41,6 @@ Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)
         <input id="submitGenSpreadsheet" type="submit" value="Generate" onClick="this.form.submit(); this.disabled=true" />
     </fieldset>
 }
-Notes:<br />
-Weekly stats will include the most recent complete week.<br />
-The current partial month (up to yesterday) will be included in the monthly stats.<br />
-If today is the first of the month, the monthly stats will go through last month.<br />
-<br />
 Back to:
 @Ajax.ActionLink("Profiles", "SearchProfiles", "SearchAdmin", ajaxOpts_Profiles)
 @*| @Ajax.ActionLink("Email Reports", "IndexSearch", "SimpleReports", ajaxOpts_Reports)*@

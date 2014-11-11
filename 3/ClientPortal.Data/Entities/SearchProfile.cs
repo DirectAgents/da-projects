@@ -24,5 +24,10 @@ namespace ClientPortal.Data.Contexts
         {
             return Common.GetNext_WeekStartDate((DayOfWeek)this.StartDayOfWeek, includeToday);
         }
+
+        public DateTime GetLast_WeekEndDate(bool includeToday = false)
+        {
+            return Common.GetLast_WeekEndDate((DayOfWeek)this.StartDayOfWeek, includeToday);
+        }
     }
 }

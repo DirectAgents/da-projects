@@ -104,7 +104,8 @@ namespace CakeExtracter.Reports
                 templateFolder,
                 simpleReport.SearchProfile.SearchProfileId,
                 simpleReport.Attachment_NumWeeks,
-                simpleReport.Attachment_NumMonths
+                simpleReport.Attachment_NumMonths,
+                simpleReport.GetStatsEndDate()
                 );
         }
 
