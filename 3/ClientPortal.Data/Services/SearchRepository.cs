@@ -566,7 +566,16 @@ namespace ClientPortal.Data.Services
                         searchAccountId = searchAccount.SearchAccountId;
                 }
             }
+            return GetCampaignStatsInner(searchProfileId, channel, searchAccountId, channelPrefix, device, start, end, breakdown, useAnalytics);
+        }
 
+        public IQueryable<SearchStat> GetCampaignStats(int searchAccountId, DateTime? start, DateTime? end, bool breakdown = false, bool useAnalytics = false)
+        {
+            return GetCampaignStatsInner(null, null, searchAccountId, null, null, start, end, breakdown, useAnalytics);
+        }
+
+        private IQueryable<SearchStat> GetCampaignStatsInner(int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, DateTime? start, DateTime? end, bool breakdown, bool useAnalytics)
+        {
             var summaries = GetSearchDailySummaries(null, searchProfileId, channel, searchAccountId, channelPrefix, device, start, end, true).ToList();
             IQueryable<SearchStat> stats;
             if (breakdown)

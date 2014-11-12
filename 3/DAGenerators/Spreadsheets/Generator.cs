@@ -78,17 +78,32 @@ namespace DAGenerators.Spreadsheets
                 for (int i = 0; i < numWeeks; i++)
                 {
                     var channelStatsDict = new Dictionary<string, IEnumerable<SearchStat>>();
-                    bool collapse = (i > 0);
-                    var campaignStats = cpRepo.GetCampaignStats(searchProfileId, null, periodStart, periodEnd, false, useAnalytics);
-                    //var totalStats = 
-                    var channels = campaignStats.Select(s => s.Channel).Distinct();
-                    foreach (string channel in channels)
+
+                    int numChannels = searchProfile.SearchAccounts.Select(sa => sa.Channel).Distinct().Count();
+                    if (numChannels == 1 && searchProfile.SearchAccounts.Count > 1)
+                    { // if there is only one channel (e.g. Google) but multiple SearchAccounts, group campaigns by SearchAccount
+                        foreach (var searchAccount in searchProfile.SearchAccounts)
+                        {
+                            var campaignStats = cpRepo.GetCampaignStats(searchAccount.SearchAccountId, periodStart, periodEnd);
+                            if (campaignStats.Any())
+                                channelStatsDict[searchAccount.Name] = campaignStats;
+                        }
+                    }
+                    else
+                    { // the "normal" way: group campaigns by channel (Google, Bing, etc)
+                        var campaignStats = cpRepo.GetCampaignStats(searchProfileId, null, periodStart, periodEnd, false, useAnalytics);
+                        var channels = campaignStats.Select(s => s.Channel).Distinct();
+                        foreach (string channel in channels)
+                        {
+                            channelStatsDict[channel] = campaignStats.Where(s => s.Channel == channel);
+                        }                               // order of campaigns?
+                    }
+
+                    if (channelStatsDict.Keys.Any()) // TODO: if empty, somehow generate a row with zeros for this week
                     {
-                        channelStatsDict[channel] = campaignStats.Where(s => s.Channel == channel);
-                    }                               // order of campaigns?
-
-                    spreadsheet.LoadWeeklyChannelRollupStats(channelStatsDict, propertyNames, periodStart, collapse);
-
+                        bool collapse = (i > 0);
+                        spreadsheet.LoadWeeklyChannelRollupStats(channelStatsDict, propertyNames, periodStart, collapse);
+                    }
                     if (i + 1 < numWeeks)
                     {   // not the last week
                         periodStart = periodStart.AddDays(-7);
