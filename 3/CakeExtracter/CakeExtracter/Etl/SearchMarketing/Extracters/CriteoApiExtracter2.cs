@@ -24,6 +24,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             this.endDate = dateRange.ToDate;
             this.timezoneOffset = timezoneOffset;
             _criteoUtility = new CriteoUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            _criteoUtility.SetCredentials(accountCode);
         }
 
         public campaign[] GetCampaigns()

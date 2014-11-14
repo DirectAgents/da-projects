@@ -70,7 +70,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     }
                     itemCount++;
                 }
-                Logger.Info("Saving {0} SearchDailySummaries ({1} updates, {2} additions, {3} skippped)", itemCount, updatedCount, addedCount, skippedCount);
+                Logger.Info("Saving {0} SearchDailySummaries ({1} updates, {2} additions, {3} skipped)", itemCount, updatedCount, addedCount, skippedCount);
                 db.SaveChanges();
             }
             return itemCount;

@@ -8,10 +8,25 @@ namespace Criteo
 {
     public class CriteoUtility
     {
-        private readonly string _username = ConfigurationManager.AppSettings["CriteoUsername"];
         private readonly string _password = ConfigurationManager.AppSettings["CriteoPassword"];
         private readonly string _source = ConfigurationManager.AppSettings["CriteoSource"];
-        private readonly long _appToken = Convert.ToInt64(ConfigurationManager.AppSettings["CriteoAppToken"]);
+
+        private string Username { get; set; }
+        private long AppToken { get; set; }
+
+        public void SetCredentials(string account)
+        {
+            this.Username = null;
+            this.AppToken = 0;
+
+            string username = ConfigurationManager.AppSettings["CriteoUsername_" + account];
+            if (!String.IsNullOrWhiteSpace(username))
+                this.Username = username;
+
+            string appToken = ConfigurationManager.AppSettings["CriteoAppToken_" + account];
+            if (!String.IsNullOrWhiteSpace(appToken))
+                this.AppToken = Convert.ToInt64(appToken);
+        }
 
         private CriteoAdvertiserAPISoapClient _service;
         private apiHeader _apiHeader;
@@ -116,12 +131,12 @@ namespace Criteo
         private void StartServiceAndLogin()
         {
             _service = new CriteoAdvertiserAPISoapClient();
-            var authToken = _service.clientLogin(_username, _password, _source);
+            var authToken = _service.clientLogin(this.Username, _password, _source);
 
             _apiHeader = new apiHeader()
             {
                 authToken = authToken,
-                appToken = _appToken,
+                appToken = this.AppToken,
                 //clientVersion = "1"
             };
         }

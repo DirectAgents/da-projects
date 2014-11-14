@@ -45,7 +45,7 @@ namespace CakeExtracter.Commands
             {
                 ExecuteHourly();
             }
-            else
+            else // Limited to a 90-day window
             {
                 var oneMonthAgo = DateTime.Today.AddMonths(-1);
                 var yesterday = DateTime.Today.AddDays(-1);
@@ -67,6 +67,7 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
+        // Limited to a 7-day window and can go back to about 2 weeks from yesterday
         public void ExecuteHourly()
         {
             var sixDaysAgo = DateTime.Today.AddDays(-6);
@@ -116,14 +117,17 @@ namespace CakeExtracter.Commands
                     }
                     else // didn't find a matching SearchAccount; see about creating a new one
                     {
+                        SearchProfile searchProfile = null;
                         if (SearchProfileId.HasValue)
+                            searchProfile = db.SearchProfiles.Find(SearchProfileId.Value);
+                        if (searchProfile != null)
                         {
                             searchAccount = new SearchAccount()
                             {
                                 SearchProfileId = this.SearchProfileId.Value,
+                                Name = criteoChannel + " " + searchProfile.SearchProfileName,
                                 Channel = criteoChannel,
-                                AccountCode = AccountCode
-                                // to fill in later: Name, ExternalId
+                                AccountCode = AccountCode,
                             };
                             db.SearchAccounts.Add(searchAccount);
                             db.SaveChanges();
@@ -131,7 +135,7 @@ namespace CakeExtracter.Commands
                         }
                         else
                         {
-                            Logger.Info("SearchAccount with AccountCode {0} not found and no SearchProfileId specified", AccountCode);
+                            Logger.Info("SearchAccount with AccountCode {0} not found and no valid SearchProfileId specified", AccountCode);
                         }
                     }
                 }

@@ -20,6 +20,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             this.beginDate = dateRange.FromDate;
             this.endDate = dateRange.ToDate;
             _criteoUtility = new CriteoUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            _criteoUtility.SetCredentials(accountCode);
         }
 
         public campaign[] GetCampaigns()
