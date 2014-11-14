@@ -134,23 +134,23 @@ function DetailInit(e, url) {
 
 function CreateRevROASChart(dataSource, elId, title) {
     var series = [
-            { field: "Revenue", axis: "revenue", tooltip: { template: "Revenue: #= kendo.format('{0:C}',value) #" }, markers: { type: "square" }, name: 'Revenue' },
-            { field: "ROAS", axis: "roas", tooltip: { template: "ROAS: #= kendo.format('{0:N0}',value) #%" }, type: "line", name: 'ROAS' }
+            { field: "Revenue", name: 'Revenue', axis: "revenue", tooltip: { template: "Revenue: #= kendo.format('{0:C}',value) #" }, type: "area", color: "#007eff" },
+            { field: "ROAS", name: 'ROAS', axis: "roas", tooltip: { template: "ROAS: #= kendo.format('{0:N0}',value) #%" }, type: "line", color: "#ff1c1c" }
     ];
     var valueAxis = [
-            { name: "roas", labels: { format: "{0:N0}%", step: 2 }, title: { text: "ROAS" }},
-            { name: "revenue", labels: { format: "C0", step: 2 }, title: { text: "Revenue" } }
+            { name: "revenue", labels: { format: "C0", step: 2 }, title: { text: "Revenue" } },
+            { name: "roas", labels: { format: "{0:N0}%", step: 2 }, title: { text: "ROAS" } }
     ];
     CreateSummaryChart(dataSource, elId, title, series, valueAxis);
 }
 function CreateOrderCPOChart(dataSource, elId, title) {
     var series = [
-            { field: "Orders", axis: "orders", tooltip: { template: "Orders: #= kendo.format('{0:N0}',value) #" }, markers: { type: 'square' }, name: 'Orders'},
-            { field: "CPO", axis: "cpo", tooltip: { template: "CPO: #= kendo.format('{0:C}',value) #" }, type: "line", name: 'CPO'}
+            { field: "Orders", name: 'Orders', axis: "orders", tooltip: { template: "Orders: #= kendo.format('{0:N0}',value) #" }, type: "area", color: "#007eff" },
+            { field: "CPO", name: 'CPO', axis: "cpo", tooltip: { template: "CPO: #= kendo.format('{0:C}',value) #" }, type: "line", color: "#ff1c1c" }
     ];
     var valueAxis = [
-            { name: "cpo", labels: { format: "C0", step: 2 }, title: { text: "CPO" } },
-            { name: "orders", labels: { format: "N0", step: 2 }, title: { text: "Orders" } }
+            { name: "orders", labels: { format: "N0", step: 2 }, title: { text: "Orders" } },
+            { name: "cpo", labels: { format: "C0", step: 2 }, title: { text: "CPO" } }
     ];
     CreateSummaryChart(dataSource, elId, title, series, valueAxis);
 }
@@ -167,7 +167,7 @@ function CreateSummaryChart(dataSource, elId, title, series, valueAxis) {
         series: series,
         categoryAxis: {
             field: "Title",
-            labels: { template: "#= value #" },
+            labels: { template: "#= value.replace(/ /g,'') #" },
             axisCrossingValue: [0, 1000]
         },
         valueAxis: valueAxis,
