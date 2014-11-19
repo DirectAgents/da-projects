@@ -16,7 +16,7 @@ namespace DAGenerators.Charts
         {
             this.ChartImageFormat = ChartImageFormat.Png;
 
-            this.ChartBuilder.Chart.Width = 880;
+            this.ChartBuilder.Chart.Width = 800;
             this.ChartBuilder.MainChartArea.BackColor = Color.LightGray;
         }
 

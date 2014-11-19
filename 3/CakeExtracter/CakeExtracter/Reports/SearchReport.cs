@@ -1,5 +1,6 @@
 ﻿using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
+using ClientPortal.Data.DTOs;
 using DAGenerators.Charts;
 using DAGenerators.Spreadsheets;
 using System;
@@ -37,13 +38,40 @@ namespace CakeExtracter.Reports
 
             var template = new SearchReportRuntimeTextTemplate();
             template.AdvertiserName = searchProfile.SearchProfileName ?? "";
-            template.Week = string.Format("{0} - {1}", fromDate.ToShortDateString(), toDate.ToShortDateString());
-            template.Revenue = stat.Revenue;
-            template.Cost = stat.Cost;
-            template.ROAS = stat.ROAS;
-            template.Margin = stat.Margin;
-            template.Orders = stat.Orders;
-            template.CPO = stat.CPO;
+            template.Line1stat = this.cpRepo.GetSearchStats(searchProfile.SearchProfileId, fromDate, toDate);
+            template.Line1stat.Title = string.Format("{0} - {1}", fromDate.ToShortDateString(), toDate.ToShortDateString());
+
+            bool showLine2stat = false;
+            if (simpleReport.PeriodMonths > 0)
+            {
+                fromDate = fromDate.AddMonths(-simpleReport.PeriodMonths);
+                toDate = toDate.AddMonths(-simpleReport.PeriodMonths);
+                showLine2stat = true;
+            }
+            else if (simpleReport.PeriodDays > 0)
+            {
+                fromDate = fromDate.AddDays(-simpleReport.PeriodDays);
+                toDate = toDate.AddDays(-simpleReport.PeriodDays);
+                showLine2stat = true;
+            }
+            if (showLine2stat)
+            {
+                template.Line2stat = this.cpRepo.GetSearchStats(searchProfile.SearchProfileId, fromDate, toDate);
+                template.Line2stat.Title = string.Format("{0} - {1}", fromDate.ToShortDateString(), toDate.ToShortDateString());
+
+                var firstStat = template.Line2stat;
+                var secondStat = template.Line1stat;
+                template.ChangeStat = new SimpleSearchStat
+                {
+                    Title = "Change",
+                    Revenue = secondStat.Revenue - firstStat.Revenue,
+                    Cost = secondStat.Cost - firstStat.Cost,
+                    ROAS = secondStat.ROAS - firstStat.ROAS,
+                    Margin = secondStat.Margin - firstStat.Margin,
+                    Orders = secondStat.Orders - firstStat.Orders,
+                    CPO = secondStat.CPO - firstStat.CPO
+                };
+            }
 
             template.AcctMgrName = "";
             template.AcctMgrEmail = "";
@@ -82,7 +110,11 @@ namespace CakeExtracter.Reports
             var searchProfile = simpleReport.SearchProfile;
             int numWeeks = 8;
             var toDate = simpleReport.GetStatsEndDate();
-            var stats = cpRepo.GetWeekStats(searchProfile.SearchProfileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, toDate, false);
+            var stats = cpRepo.GetWeekStats(searchProfile.SearchProfileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, toDate, false).ToList();
+            foreach (var stat in stats)
+            {
+                stat.Title = stat.Title.Replace(" ", "");
+            }
             this.ChartObj = new OrdersCPOChart(stats);
         }
 

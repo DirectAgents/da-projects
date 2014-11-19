@@ -31,8 +31,8 @@ namespace CakeExtracter.Commands
         public override int Execute(string[] remainingArguments)
         {
             //var chart = CreateAChart();
-            //var chart = CreateAChartWithBuilder();
-            var chart = CreateAChartWithChartBase();
+            var chart = CreateAChartWithBuilder();
+            //var chart = CreateAChartWithChartBase();
 
             SaveToDisk(chart);
             //SendViaEmail(chart);
@@ -72,10 +72,17 @@ namespace CakeExtracter.Commands
         {
             var builder = new TwoSeriesChartBuilder("Orders vs. CPO", "Orders", "CPO");
             builder.Chart.Width = 880;
-            builder.LeftSeries.ChartType = SeriesChartType.Column;
+
+            builder.LeftSeries.ChartType = SeriesChartType.Area;
+            builder.LeftSeries.Color = Color.FromArgb(175, 153, 203, 254);
+
             builder.RightSeries.ChartType = SeriesChartType.Line;
-            builder.RightSeries.BorderWidth = 4;
-            builder.MainChartArea.BackColor = Color.LightGray;
+            builder.RightSeries.Color = Color.Red;
+            builder.RightSeries.BorderWidth = 3;
+            builder.RightSeries.MarkerStyle = MarkerStyle.Circle;
+            builder.RightSeries.MarkerSize = 10;
+
+            //builder.MainChartArea.BackColor = Color.Transparent;
             builder.MainChartArea.AxisY2.LabelStyle.Format = "C";
 
             var stats = GetStats();
