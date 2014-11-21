@@ -74,7 +74,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public ActionResult Test(int id, string redirectAction)
         {
-            return GenerateTestView(id, "@directagents.com", true, 10, 10, null, redirectAction);
+            return GenerateTestView(id, "@directagents.com", true, SimpleReport.DefaultNumWeeks, SimpleReport.DefaultNumMonths, null, redirectAction);
         }
         private ActionResult GenerateTestView(int id, string sendTo, bool includeSpreadsheet, int? numWeeks, int? numMonths, string filename, string redirectAction)
         {

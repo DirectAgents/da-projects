@@ -46,10 +46,12 @@ namespace CakeExtracter.Reports
 
         public string IntegerPlusMinus(int val)
         {
-            if (val == 0)
-                return NoChangeSymbol;
-            else
+            if (val > 0)
+                return "+" + val.ToString();
+            else if (val < 0)
                 return val.ToString();
+            else
+                return NoChangeSymbol;
         }
     }
 }

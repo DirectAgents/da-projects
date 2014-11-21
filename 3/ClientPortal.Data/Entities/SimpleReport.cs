@@ -5,10 +5,24 @@ namespace ClientPortal.Data.Contexts
 {
     public partial class SimpleReport
     {
-        [NotMapped]
         public const int DefaultPeriodMonths = 0;
-        [NotMapped]
         public const int DefaultPeriodDays = 7;
+        public const int DefaultNumWeeks = 10;
+        public const int DefaultNumMonths = 12;
+
+        [NotMapped]
+        public bool IncludeAttachment { get; set; }
+        [NotMapped]
+        public int Attachment_NumWeeks { get; set; }
+        [NotMapped]
+        public int Attachment_NumMonths { get; set; }
+        [NotMapped]
+        public string Attachment_Filename { get; set; }
+
+        public string GetDefaultFilename()
+        {
+            return this.ParentName.Replace(" ", "") + "_" + GetStatsEndDate().ToString("yyyyMMdd") + ".xlsx";
+        }
 
         public void InitializePeriodAndNextSend() // Note: be sure Advertiser or SearchProfile is set
         {
@@ -106,14 +120,5 @@ namespace ClientPortal.Data.Contexts
             this.PeriodMonths = inReport.PeriodMonths;
             this.PeriodDays = inReport.PeriodDays;
         }
-
-        [NotMapped]
-        public bool IncludeAttachment { get; set; }
-        [NotMapped]
-        public int Attachment_NumWeeks { get; set; }
-        [NotMapped]
-        public int Attachment_NumMonths { get; set; }
-        [NotMapped]
-        public string Attachment_Filename { get; set; }
     }
 }

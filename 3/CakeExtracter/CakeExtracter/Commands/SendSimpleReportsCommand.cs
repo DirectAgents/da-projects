@@ -33,7 +33,7 @@ namespace CakeExtracter.Commands
                                         );
                 numReportsSent = reportManager.CatchUp();
             }
-            Logger.Info("{0} reports sent", numReportsSent);
+            Logger.Info("Total reports sent: {0}", numReportsSent);
             return 0;
         }
     }

@@ -8,7 +8,7 @@
     string filename = ViewBag.Filename;
     if (String.IsNullOrWhiteSpace(filename))
     {
-        filename = Model.ParentName.Replace(" ", "") + "_" + end.ToString("yyyyMMdd") + ".xlsx";
+        filename = Model.GetDefaultFilename();
     }
 }
 

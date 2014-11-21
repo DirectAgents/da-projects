@@ -47,18 +47,27 @@ namespace CakeExtracter.Reports
             var reportsToSend = GetReportsToSend();
             while (reportsToSend.Count() > 0)
             {
+                Logger.Info("SimpleReports this round: {0}", reportsToSend.Count());
                 foreach (var simpleReport in reportsToSend)
                 {
                     CheckInitialize(simpleReport);
 
+                    // For now... until these are added to the SimpleReport database table:
+                    simpleReport.IncludeAttachment = true;
+                    simpleReport.Attachment_NumMonths = SimpleReport.DefaultNumMonths;
+                    simpleReport.Attachment_NumWeeks = SimpleReport.DefaultNumWeeks;
+                    simpleReport.Attachment_Filename = simpleReport.GetDefaultFilename();
+
                     int reportsSent = SendReports(simpleReport);
                     totalReportsSent += reportsSent;
+
+                    Logger.Info("Sent {0} report(s) for {1}", reportsSent, simpleReport.ParentName);
 
                     if (reportsSent > 0)
                         UpdateLastAndNextSend(simpleReport);
                     else
                     {
-                        // Couldn't send. Disable.
+                        Logger.Warn("Couldn't send reports. Disabling.");
                         simpleReport.Enabled = false;
                         cpRepo.SaveChanges();
                     }
@@ -173,14 +182,14 @@ namespace CakeExtracter.Reports
 
         private void Cleanup()
         {
-            var today = DateTime.Today;
-            var disabledReportsInThePast = cpRepo.SimpleReports.Where(sr => !sr.Enabled && sr.NextSend < today);
-            foreach (var rep in disabledReportsInThePast)
-            {
-                rep.NextSend = null;
-                // so that multiple reports won't be sent unexpectedly once re-enabled
-            }
-            cpRepo.SaveChanges();
+            //var today = DateTime.Today;
+            //var disabledReportsInThePast = cpRepo.SimpleReports.Where(sr => !sr.Enabled && sr.NextSend < today);
+            //foreach (var rep in disabledReportsInThePast)
+            //{
+            //    rep.NextSend = null;
+            //    // so that multiple reports won't be sent unexpectedly once re-enabled
+            //}
+            //cpRepo.SaveChanges();
         }
     }
 }
