@@ -34,7 +34,7 @@
             </tr>
             <tr>
                 <td>@Html.LabelFor(m => m.NextSend)</td>
-                <td>@Html.TextBoxFor(m => m.NextSend, "{0:d}")</td>
+                <td>@Html.TextBoxFor(m => m.NextSend, "{0:d}", new { id = "editsimplereport_nextsend" })</td>
             </tr>
             <tr>
                 <td>@Html.LabelFor(m => m.PeriodMonths, "Timeframe-Months")</td>
@@ -63,3 +63,9 @@ The report will include stats up to the day before NextSend.<br />
 If NextSend is blank and Enabled is checked, a report for the most recent completed timeframe will be sent out tomorrow morning.<br />
 If Timeframe-Months is greater than 0, Timeframe-Days is ignored.<br />
 Multiple email addresses should be separated with commas.<br />
+
+<script>
+    $(function () {
+        $('#editsimplereport_nextsend').kendoDatePicker({ footer: ' ' });
+    });
+</script>

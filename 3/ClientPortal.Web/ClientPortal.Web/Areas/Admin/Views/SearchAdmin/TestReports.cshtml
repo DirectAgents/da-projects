@@ -22,7 +22,7 @@ Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)
         <table>
             <tr>
                 <td>@Html.Label("Stats End-Date:")</td>
-                <td><input type="text" name="enddate" value="@endDate.ToShortDateString()" onfocus="EnableSubmitGenSpreadsheet()" /></td>
+                <td><input id="spreadsheet_enddate" type="text" name="enddate" value="@endDate.ToShortDateString()" onfocus="EnableSubmitGenSpreadsheet()" /></td>
             </tr>
             <tr>
                 <td>@Html.Label("Weeks to include:")</td>
@@ -46,6 +46,10 @@ Back to:
 @*| @Ajax.ActionLink("Email Reports", "IndexSearch", "SimpleReports", ajaxOpts_Reports)*@
 
 <script>
+    $(function () {
+        $('#spreadsheet_enddate').kendoDatePicker({ footer: ' ' });
+    });
+
     function EnableSubmitGenSpreadsheet() {
         $('#submitGenSpreadsheet').prop('disabled', false); //.prop('value', 'Generate');
     }
