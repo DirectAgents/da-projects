@@ -304,6 +304,7 @@
     <Compile Include="Commands\TestCriteoCommand.cs" />
     <Compile Include="Commands\TestDbmCommand.cs" />
     <Compile Include="Commands\TestExcelCommand.cs" />
+    <Compile Include="Commands\TestLCCommand.cs" />
     <Compile Include="Common\CopyPropertiesUtility.cs" />
     <Compile Include="Common\EmailUtility.cs" />
     <Compile Include="Common\EntityFrameworkExtensions.cs" />
@@ -465,6 +466,10 @@
     <ProjectReference Include="..\..\ClientPortal.Data\ClientPortal.Data.csproj">
       <Project>{2e621b59-9455-4fa5-b9bd-6bdc418ffbfa}</Project>
       <Name>ClientPortal.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ClientPortal.Web\LocalConnex\LocalConnex.csproj">
+      <Project>{b0ed69e7-2ff1-4205-a10a-d1afb3f5f89d}</Project>
+      <Name>LocalConnex</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Criteo\Criteo.csproj">
       <Project>{d96a10b3-8700-45c1-ada4-96cac22cbd5c}</Project>
