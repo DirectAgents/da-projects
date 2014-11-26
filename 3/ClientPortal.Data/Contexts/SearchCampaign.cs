@@ -19,6 +19,7 @@ namespace ClientPortal.Data.Contexts
             this.SearchDailySummaries = new HashSet<SearchDailySummary>();
             this.GoogleAnalyticsSummaries = new HashSet<GoogleAnalyticsSummary>();
             this.SearchDailySummaries2 = new HashSet<SearchDailySummary2>();
+            this.CallDailySummaries = new HashSet<CallDailySummary>();
         }
     
         public int SearchCampaignId { get; set; }
@@ -28,6 +29,7 @@ namespace ClientPortal.Data.Contexts
         public Nullable<int> ExternalId { get; set; }
         public Nullable<int> SearchAccountId { get; set; }
         public Nullable<int> AltSearchAccountId { get; set; }
+        public string LCcmpid { get; set; }
     
         public virtual ICollection<SearchDailySummary> SearchDailySummaries { get; set; }
         public virtual Advertiser Advertiser { get; set; }
@@ -35,5 +37,6 @@ namespace ClientPortal.Data.Contexts
         public virtual ICollection<SearchDailySummary2> SearchDailySummaries2 { get; set; }
         public virtual SearchAccount SearchAccount { get; set; }
         public virtual SearchAccount AltSearchAccount { get; set; }
+        public virtual ICollection<CallDailySummary> CallDailySummaries { get; set; }
     }
 }

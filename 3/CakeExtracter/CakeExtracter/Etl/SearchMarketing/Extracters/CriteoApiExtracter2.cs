@@ -1,4 +1,5 @@
-﻿using ClientPortal.Data.Contexts;
+﻿using CakeExtracter.Common;
+using ClientPortal.Data.Contexts;
 using Criteo;
 using Criteo.CriteoAPI;
 using System;
@@ -17,7 +18,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
 
         private CriteoUtility _criteoUtility;
 
-        public CriteoApiExtracter2(string accountCode, CakeExtracter.Common.DateRange dateRange, int timezoneOffset)
+        public CriteoApiExtracter2(string accountCode, DateRange dateRange, int timezoneOffset)
         {
             this.accountCode = accountCode;
             this.beginDate = dateRange.FromDate;

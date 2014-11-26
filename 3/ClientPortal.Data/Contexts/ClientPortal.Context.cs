@@ -60,5 +60,6 @@ namespace ClientPortal.Data.Contexts
         public DbSet<SearchProfile> SearchProfiles { get; set; }
         public DbSet<SearchProfileContact> SearchProfileContacts { get; set; }
         public DbSet<SimpleReport> SimpleReports { get; set; }
+        public DbSet<CallDailySummary> CallDailySummaries { get; set; }
     }
 }

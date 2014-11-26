@@ -11,6 +11,7 @@
           <EntitySet Name="Affiliate" EntityType="ClientPortalModel.Store.Affiliate" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CakeContact" EntityType="ClientPortalModel.Store.CakeContact" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CakeRole" EntityType="ClientPortalModel.Store.CakeRole" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CallDailySummary" EntityType="ClientPortalModel.Store.CallDailySummary" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Campaign" EntityType="ClientPortalModel.Store.Campaign" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CampaignDrop" EntityType="ClientPortalModel.Store.CampaignDrop" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Contact" EntityType="ClientPortalModel.Store.Contact" store:Type="Tables" Schema="dbo" />
@@ -49,6 +50,10 @@
           <AssociationSet Name="FK_CakeContact_CakeRole" Association="ClientPortalModel.Store.FK_CakeContact_CakeRole">
             <End Role="CakeRole" EntitySet="CakeRole" />
             <End Role="CakeContact" EntitySet="CakeContact" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallDailySummary_SearchCampaign" Association="ClientPortalModel.Store.FK_CallDailySummary_SearchCampaign">
+            <End Role="SearchCampaign" EntitySet="SearchCampaign" />
+            <End Role="CallDailySummary" EntitySet="CallDailySummary" />
           </AssociationSet>
           <AssociationSet Name="FK_Campaign_Affiliate" Association="ClientPortalModel.Store.FK_Campaign_Affiliate">
             <End Role="Affiliate" EntitySet="Affiliate" />
@@ -245,6 +250,15 @@
           </Key>
           <Property Name="CakeRoleId" Type="int" Nullable="false" />
           <Property Name="RoleName" Type="nvarchar" Nullable="false" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="CallDailySummary">
+          <Key>
+            <PropertyRef Name="SearchCampaignId" />
+            <PropertyRef Name="Date" />
+          </Key>
+          <Property Name="SearchCampaignId" Type="int" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="Calls" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Campaign">
           <Key>
@@ -519,6 +533,7 @@
           <Property Name="ExternalId" Type="int" />
           <Property Name="SearchAccountId" Type="int" />
           <Property Name="AltSearchAccountId" Type="int" />
+          <Property Name="LCcmpid" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="SearchChannel">
           <Key>
@@ -571,6 +586,8 @@
           <Property Name="SearchProfileName" Type="nvarchar(max)" />
           <Property Name="StartDayOfWeek" Type="int" Nullable="false" />
           <Property Name="ShowSearchChannels" Type="bit" Nullable="false" />
+          <Property Name="LCaccid" Type="nvarchar" MaxLength="100" />
+          <Property Name="CallMinSeconds" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchProfileContact">
           <Key>
@@ -639,6 +656,18 @@
             </Principal>
             <Dependent Role="CakeContact">
               <PropertyRef Name="CakeRoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallDailySummary_SearchCampaign">
+          <End Role="SearchCampaign" Type="ClientPortalModel.Store.SearchCampaign" Multiplicity="1" />
+          <End Role="CallDailySummary" Type="ClientPortalModel.Store.CallDailySummary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchCampaign">
+              <PropertyRef Name="SearchCampaignId" />
+            </Principal>
+            <Dependent Role="CallDailySummary">
+              <PropertyRef Name="SearchCampaignId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1218,6 +1247,11 @@
             <End Role="SearchProfile" EntitySet="SearchProfiles" />
             <End Role="SimpleReport" EntitySet="SimpleReports" />
           </AssociationSet>
+          <EntitySet Name="CallDailySummaries" EntityType="ClientPortalModel.CallDailySummary" />
+          <AssociationSet Name="FK_CallDailySummary_SearchCampaign" Association="ClientPortalModel.FK_CallDailySummary_SearchCampaign">
+            <End Role="SearchCampaign" EntitySet="SearchCampaigns" />
+            <End Role="CallDailySummary" EntitySet="CallDailySummaries" />
+          </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
           <Member Name="Default" Value="1" />
@@ -1415,6 +1449,8 @@
           <NavigationProperty Name="SearchAccount" Relationship="ClientPortalModel.FK_SearchCampaign_SearchAccount" FromRole="SearchCampaign" ToRole="SearchAccount" />
           <Property Type="Int32" Name="AltSearchAccountId" />
           <NavigationProperty Name="AltSearchAccount" Relationship="ClientPortalModel.FK_SearchCampaign_SearchAccount1" FromRole="SearchCampaign" ToRole="SearchAccount" />
+          <NavigationProperty Name="CallDailySummaries" Relationship="ClientPortalModel.FK_CallDailySummary_SearchCampaign" FromRole="SearchCampaign" ToRole="CallDailySummary" />
+          <Property Type="String" Name="LCcmpid" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_SearchDailySummary_SearchCampaign">
           <End Type="ClientPortalModel.SearchCampaign" Role="SearchCampaign" Multiplicity="1" />
@@ -2027,6 +2063,8 @@
           <NavigationProperty Name="SearchProfileContacts" Relationship="ClientPortalModel.FK_SearchProfileContact_SearchProfile" FromRole="SearchProfile" ToRole="SearchProfileContact" />
           <Property Type="Boolean" Name="ShowSearchChannels" Nullable="false" />
           <NavigationProperty Name="SimpleReports" Relationship="ClientPortalModel.FK_SimpleReport_SearchProfile" FromRole="SearchProfile" ToRole="SimpleReport" />
+          <Property Type="String" Name="LCaccid" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="CallMinSeconds" Nullable="false" />
         </EntityType>
         <Association Name="FK_UserProfile_SearchProfile">
           <End Type="ClientPortalModel.SearchProfile" Role="SearchProfile" Multiplicity="0..1" />
@@ -2138,6 +2176,28 @@
             </Principal>
             <Dependent Role="SimpleReport">
               <PropertyRef Name="SearchProfileId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="CallDailySummary">
+          <Key>
+            <PropertyRef Name="SearchCampaignId" />
+            <PropertyRef Name="Date" />
+          </Key>
+          <Property Type="Int32" Name="SearchCampaignId" Nullable="false" />
+          <Property Type="DateTime" Name="Date" Nullable="false" Precision="0" />
+          <Property Type="Int32" Name="Calls" Nullable="false" />
+          <NavigationProperty Name="SearchCampaign" Relationship="ClientPortalModel.FK_CallDailySummary_SearchCampaign" FromRole="CallDailySummary" ToRole="SearchCampaign" />
+        </EntityType>
+        <Association Name="FK_CallDailySummary_SearchCampaign">
+          <End Type="ClientPortalModel.SearchCampaign" Role="SearchCampaign" Multiplicity="1" />
+          <End Type="ClientPortalModel.CallDailySummary" Role="CallDailySummary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchCampaign">
+              <PropertyRef Name="SearchCampaignId" />
+            </Principal>
+            <Dependent Role="CallDailySummary">
+              <PropertyRef Name="SearchCampaignId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2261,6 +2321,7 @@
           <EntitySetMapping Name="SearchCampaigns">
             <EntityTypeMapping TypeName="ClientPortalModel.SearchCampaign">
               <MappingFragment StoreEntitySet="SearchCampaign">
+                <ScalarProperty Name="LCcmpid" ColumnName="LCcmpid" />
                 <ScalarProperty Name="AltSearchAccountId" ColumnName="AltSearchAccountId" />
                 <ScalarProperty Name="SearchAccountId" ColumnName="SearchAccountId" />
                 <ScalarProperty Name="ExternalId" ColumnName="ExternalId" />
@@ -2569,6 +2630,8 @@
           <EntitySetMapping Name="SearchProfiles">
             <EntityTypeMapping TypeName="ClientPortalModel.SearchProfile">
               <MappingFragment StoreEntitySet="SearchProfile">
+                <ScalarProperty Name="CallMinSeconds" ColumnName="CallMinSeconds" />
+                <ScalarProperty Name="LCaccid" ColumnName="LCaccid" />
                 <ScalarProperty Name="ShowSearchChannels" ColumnName="ShowSearchChannels" />
                 <ScalarProperty Name="StartDayOfWeek" ColumnName="StartDayOfWeek" />
                 <ScalarProperty Name="SearchProfileName" ColumnName="SearchProfileName" />
@@ -2599,6 +2662,15 @@
                 <ScalarProperty Name="SearchProfileId" ColumnName="SearchProfileId" />
                 <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
                 <ScalarProperty Name="SimpleReportId" ColumnName="SimpleReportId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CallDailySummaries">
+            <EntityTypeMapping TypeName="ClientPortalModel.CallDailySummary">
+              <MappingFragment StoreEntitySet="CallDailySummary">
+                <ScalarProperty Name="Calls" ColumnName="Calls" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="SearchCampaignId" ColumnName="SearchCampaignId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -22,7 +22,7 @@ namespace CakeExtracter.Commands
             //LocalConnex.Test.Go();
 
             var lcUtility = new LCUtility(m => Logger.Info(m), m => Logger.Warn(m));
-            var accid = "CA6phEyiNYsmxgHn"; // Graebel
+            var accid = "CA6phEyiNYsmxgHn"; // Graebel; "CA6phU7rfCQQ6ADO" // Arpin
             var calls = lcUtility.GetCalls(accid, new DateTime(2014, 11, 18), new DateTime(2014, 11, 18));
 
             return 0;

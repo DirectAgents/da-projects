@@ -69,6 +69,9 @@
     <Compile Include="Contexts\CakeRole.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\CallDailySummary.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\Campaign.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
@@ -259,6 +262,7 @@
     <Compile Include="Entities\Advertiser.cs" />
     <Compile Include="Entities\Affiliate.cs" />
     <Compile Include="Entities\CakeContact.cs" />
+    <Compile Include="Entities\CallDailySummary.cs" />
     <Compile Include="Entities\Campaign.cs" />
     <Compile Include="Entities\CampaignDrop.cs" />
     <Compile Include="Entities\Contact.cs" />

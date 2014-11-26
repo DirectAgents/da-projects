@@ -49,6 +49,10 @@ namespace LocalConnex
             _client.Credentials = new NetworkCredential(_username, _password);
         }
 
+        public Call[] GetCalls(string accid, DateTime date)
+        {
+            return GetCalls(accid, date, date);
+        }
         public Call[] GetCalls(string accid, DateTime start, DateTime end)
         {
             var searchParams = new CallSearchParams

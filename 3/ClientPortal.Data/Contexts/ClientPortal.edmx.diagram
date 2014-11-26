@@ -11,24 +11,24 @@
         <EntityTypeShape EntityType="ClientPortalModel.Contact" Width="1.5" PointX="2.75" PointY="2.625" />
         <AssociationConnector Association="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Contact_ContactId" />
         <EntityTypeShape EntityType="ClientPortalModel.FileUpload" Width="1.5" PointX="8" PointY="0.5" />
-        <EntityTypeShape EntityType="ClientPortalModel.Metric" Width="1.5" PointX="2.625" PointY="15.125" />
-        <EntityTypeShape EntityType="ClientPortalModel.MetricCount" Width="1.5" PointX="2.625" PointY="12.875" />
-        <EntityTypeShape EntityType="ClientPortalModel.MetricValue" Width="1.5" PointX="0.5" PointY="13.875" />
+        <EntityTypeShape EntityType="ClientPortalModel.Metric" Width="1.5" PointX="2.625" PointY="16" />
+        <EntityTypeShape EntityType="ClientPortalModel.MetricCount" Width="1.5" PointX="2.625" PointY="13.75" />
+        <EntityTypeShape EntityType="ClientPortalModel.MetricValue" Width="1.5" PointX="0.5" PointY="14.75" />
         <AssociationConnector Association="ClientPortalModel.FK_MetricValue_Metric" />
         <AssociationConnector Association="ClientPortalModel.FK_MetricCount_MetricValue" />
-        <EntityTypeShape EntityType="ClientPortalModel.SearchDailySummary" Width="1.875" PointX="4.375" PointY="13.875" />
+        <EntityTypeShape EntityType="ClientPortalModel.SearchDailySummary" Width="1.875" PointX="4.375" PointY="14.5" />
         <EntityTypeShape EntityType="ClientPortalModel.Conversion" Width="1.625" PointX="0.5" PointY="9.375" />
         <EntityTypeShape EntityType="ClientPortalModel.SearchCampaign" Width="1.875" PointX="4.75" PointY="10.375" />
         <AssociationConnector Association="ClientPortalModel.FK_SearchDailySummary_SearchCampaign" />
         <EntityTypeShape EntityType="ClientPortalModel.UserProfile" Width="1.75" PointX="0.5" PointY="6" />
-        <EntityTypeShape EntityType="ClientPortalModel.SearchDailySummary2" Width="2" PointX="2.375" PointY="9.5" />
+        <EntityTypeShape EntityType="ClientPortalModel.SearchDailySummary2" Width="2" PointX="2.375" PointY="10.375" />
         <AssociationConnector Association="ClientPortalModel.FK_SearchDailySummary2_SearchCampaign" />
         <EntityTypeShape EntityType="ClientPortalModel.Advertiser" Width="2.375" PointX="5" PointY="0.5" />
         <AssociationConnector Association="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" />
         <AssociationConnector Association="ClientPortalModel.FK_FileUpload_Advertiser" />
         <AssociationConnector Association="ClientPortalModel.FK_Goal_Advertiser" />
         <AssociationConnector Association="ClientPortalModel.FK_SearchCampaign_Advertiser" />
-        <EntityTypeShape EntityType="ClientPortalModel.GoogleAnalyticsSummary" Width="2.125" PointX="6.375" PointY="13.875" />
+        <EntityTypeShape EntityType="ClientPortalModel.GoogleAnalyticsSummary" Width="2.125" PointX="6.375" PointY="14.5" />
         <AssociationConnector Association="ClientPortalModel.FK_GoogleAnalyticsSummary_SearchCampaign" />
         <EntityTypeShape EntityType="ClientPortalModel.SearchAccount" Width="1.5" PointX="5" PointY="7.125" />
         <AssociationConnector Association="ClientPortalModel.FK_SearchAccount_Advertiser" />
@@ -74,6 +74,8 @@
         <EntityTypeShape EntityType="ClientPortalModel.SimpleReport" Width="1.5" PointX="6.875" PointY="6.625" />
         <AssociationConnector Association="ClientPortalModel.FK_SimpleReport_Advertiser" />
         <AssociationConnector Association="ClientPortalModel.FK_SimpleReport_SearchProfile" />
+        <EntityTypeShape EntityType="ClientPortalModel.CallDailySummary" Width="1.75" PointX="7" PointY="12.125" />
+        <AssociationConnector Association="ClientPortalModel.FK_CallDailySummary_SearchCampaign" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
