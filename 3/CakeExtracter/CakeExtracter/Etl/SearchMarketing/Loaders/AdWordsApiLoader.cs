@@ -66,8 +66,11 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     if (includeBreakdown)
                     {
                         var clickTypeAbbrev = item["clickType"].Substring(0, 1);
-                        if (item["clickType"].ToLower() == "product listing ad - coupon") // started on 10/18/14 for Folica|Search (conflict with "Product listing ad")
+                        var clickType = item["clickType"].ToLower();
+                        if (clickType == "product listing ad - coupon") // started on 10/18/14 for Folica|Search (conflict with "Product listing ad")
                             clickTypeAbbrev = "Q";
+                        else if (clickType == "phone calls") // noticed for The Credit Pros -> "DA Spanish Mobile" on 11/11/17
+                            clickTypeAbbrev = "C";
                         added = UpsertSearchDailySummary2(db, sds, item["network"].Substring(0, 1), item["device"].Substring(0, 1), clickTypeAbbrev);
                     }
                     else
@@ -116,8 +119,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                 Cost = sds.Cost,
                 Orders = sds.Orders,
                 Clicks = sds.Clicks,
-                // HACK: ignoring impressions for rows that do not have H as click type
-                Impressions = (clickType == "H") ? sds.Impressions : 0,
+                // HACK: ignoring impressions for rows that do not have H or C as click type
+                Impressions = (clickType == "H" || clickType == "C") ? sds.Impressions : 0,
                 CurrencyId = sds.CurrencyId
             };
 
