@@ -31,7 +31,10 @@
         <td height="30" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">&nbsp;&nbsp;ROAS</td>
         <td height="30" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">&nbsp;&nbsp;Margin</td>
         <td height="30" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">&nbsp;&nbsp;Orders</td>
-        <td height="30" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">&nbsp;&nbsp;CPO</td>
+        <td height="30" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">&nbsp;&nbsp;CPO</td>
+      <# if (this.ShowCalls) { #>
+        <td height="30" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">&nbsp;&nbsp;Calls</td>
+      <# } #>
       </tr>
       <tr>
         <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Line1stat.Title#></td>
@@ -40,7 +43,10 @@
         <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Line1stat.ROAS#>%</td>
         <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Currency(Line1stat.Margin)#></td>
         <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Line1stat.Orders#></td>
-        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Currency(Line1stat.CPO)#></td>
+        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Currency(Line1stat.CPO)#></td>
+      <# if (this.ShowCalls) { #>
+        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Line1stat.Calls#></td>
+      <# } #>
       </tr>
 <# if (this.Line2stat != null) { #>
       <tr>
@@ -50,7 +56,10 @@
         <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Line2stat.ROAS#>%</td>
         <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Currency(Line2stat.Margin)#></td>
         <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Line2stat.Orders#></td>
-        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Currency(Line2stat.CPO)#></td>
+        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Currency(Line2stat.CPO)#></td>
+      <# if (this.ShowCalls) { #>
+        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Line2stat.Calls#></td>
+      <# } #>
       </tr>
 <# } #>
 <# if (this.ChangeStat != null) { #>
@@ -61,7 +70,10 @@
         <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #<#= ChangeStat.ROAS > 0 ? "0F0" : (ChangeStat.ROAS < 0 ? "F00" : "000") #>; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.IntegerPlusMinus(ChangeStat.ROAS)#><#= ChangeStat.ROAS == 0 ? "" : "%" #></td>
         <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #<#= ChangeStat.Margin > 0 ? "0F0" : (ChangeStat.Margin < 0 ? "F00" : "000") #>; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.CurrencyPlusMinus(ChangeStat.Margin)#></td>
         <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #<#= ChangeStat.Orders > 0 ? "0F0" : (ChangeStat.Orders < 0 ? "F00" : "000") #>; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.IntegerPlusMinus(ChangeStat.Orders)#></td>
-        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #<#= ChangeStat.CPO > 0 ? "0F0" : (ChangeStat.CPO < 0 ? "F00" : "000") #>; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.CurrencyPlusMinus(ChangeStat.CPO)#></td>
+        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #<#= ChangeStat.CPO > 0 ? "0F0" : (ChangeStat.CPO < 0 ? "F00" : "000") #>; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.CurrencyPlusMinus(ChangeStat.CPO)#></td>
+      <# if (this.ShowCalls) { #>
+        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #<#= ChangeStat.Calls > 0 ? "0F0" : (ChangeStat.Calls < 0 ? "F00" : "000") #>; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.IntegerPlusMinus(ChangeStat.Calls)#></td>
+      <# } #>
       </tr>
 <# } #>
     </table>

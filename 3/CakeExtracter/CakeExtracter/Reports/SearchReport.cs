@@ -32,13 +32,17 @@ namespace CakeExtracter.Reports
                 throw new Exception("Cannot generate search report without a searchProfile");
             var searchProfile = simpleReport.SearchProfile;
 
+            bool useAnalytics = false; // todo: get this from the SearchProfile when the column is moved there
+
             var fromDate = simpleReport.GetStatsStartDate();
             var toDate = simpleReport.GetStatsEndDate();
-            var stat = this.cpRepo.GetSearchStats(searchProfile.SearchProfileId, fromDate, toDate);
 
-            var template = new SearchReportRuntimeTextTemplate();
-            template.AdvertiserName = searchProfile.SearchProfileName ?? "";
-            template.Line1stat = this.cpRepo.GetSearchStats(searchProfile.SearchProfileId, fromDate, toDate);
+            var template = new SearchReportRuntimeTextTemplate
+            {
+                AdvertiserName = searchProfile.SearchProfileName ?? "",
+                ShowCalls = searchProfile.ShowCalls
+            };
+            template.Line1stat = this.cpRepo.GetSearchStats(searchProfile.SearchProfileId, fromDate, toDate, null, useAnalytics, searchProfile.ShowCalls);
             template.Line1stat.Title = string.Format("{0} - {1}", fromDate.ToShortDateString(), toDate.ToShortDateString());
 
             bool showLine2stat = false;
@@ -56,7 +60,7 @@ namespace CakeExtracter.Reports
             }
             if (showLine2stat)
             {
-                template.Line2stat = this.cpRepo.GetSearchStats(searchProfile.SearchProfileId, fromDate, toDate);
+                template.Line2stat = this.cpRepo.GetSearchStats(searchProfile.SearchProfileId, fromDate, toDate, null, useAnalytics, searchProfile.ShowCalls);
                 template.Line2stat.Title = string.Format("{0} - {1}", fromDate.ToShortDateString(), toDate.ToShortDateString());
 
                 var firstStat = template.Line2stat;
@@ -69,7 +73,8 @@ namespace CakeExtracter.Reports
                     ROAS = secondStat.ROAS - firstStat.ROAS,
                     Margin = secondStat.Margin - firstStat.Margin,
                     Orders = secondStat.Orders - firstStat.Orders,
-                    CPO = secondStat.CPO - firstStat.CPO
+                    CPO = secondStat.CPO - firstStat.CPO,
+                    Calls = secondStat.Calls - firstStat.Calls
                 };
             }
 

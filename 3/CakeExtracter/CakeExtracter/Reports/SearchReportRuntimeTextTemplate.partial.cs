@@ -5,6 +5,7 @@ namespace CakeExtracter.Reports
     public partial class SearchReportRuntimeTextTemplate : SearchReportRuntimeTextTemplateBase
     {
         public string AdvertiserName { get; set; }
+        public bool ShowCalls { get; set; }
         
         public SearchStat Line1stat { get; set; }
         public SearchStat Line2stat { get; set; }

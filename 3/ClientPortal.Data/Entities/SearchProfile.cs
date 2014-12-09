@@ -15,6 +15,12 @@ namespace ClientPortal.Data.Contexts
     public partial class SearchProfile
     {
         [NotMapped]
+        public bool ShowCalls
+        {
+            get { return !String.IsNullOrWhiteSpace(this.LCaccid); }
+        }
+
+        [NotMapped]
         public IOrderedEnumerable<SearchProfileContact> SearchProfileContactsOrdered
         {
             get { return this.SearchProfileContacts.OrderBy(sc => sc.Order); }

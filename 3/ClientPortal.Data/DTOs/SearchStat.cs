@@ -13,6 +13,8 @@ namespace ClientPortal.Data.DTOs
         public int Clicks { get; set; }
         public int Orders { get; set; }
         public decimal CPO { get; set; }
+
+        public int Calls { get; set; }
     }
 
     public class SearchStat
@@ -83,6 +85,8 @@ namespace ClientPortal.Data.DTOs
         public int Orders { get; set; }
         public decimal Revenue { get; set; }
         public decimal Cost { get; set; }
+
+        public int Calls { get; set; }
 
         //public int ROI
         //{

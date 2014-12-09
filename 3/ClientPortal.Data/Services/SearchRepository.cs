@@ -83,9 +83,14 @@ namespace ClientPortal.Data.Services
 
         // --- Search Stats ---
 
-        public SearchStat GetSearchStats(int searchProfileId, DateTime? start, DateTime? end, bool includeToday = true)
+        // Returns one searchstat - for that SearchProfile and timeframe.
+        public SearchStat GetSearchStats(int searchProfileId, DateTime? start, DateTime? end, bool? includeToday, bool useAnalytics, bool includeCalls)
         {
-            var summaries = GetSearchDailySummaries(null, searchProfileId, null, null, null, null, start, end, includeToday);
+            if (!includeToday.HasValue)
+                includeToday = true; // only relevant when end is null or end is >= today
+
+            var searchCampaigns = GetSearchCampaigns(null, searchProfileId, null, null, null);
+            var summaries = GetSearchDailySummaries(searchCampaigns, null, start, end, includeToday.Value);
             bool any = summaries.Any();
             var searchStat = new SearchStat
             {
@@ -93,10 +98,35 @@ namespace ClientPortal.Data.Services
                 CustomByStartDate = start.Value,
                 Impressions = !any ? 0 : summaries.Sum(s => s.Impressions),
                 Clicks = !any ? 0 : summaries.Sum(s => s.Clicks),
-                Orders = !any ? 0 : summaries.Sum(s => s.Orders),
-                Revenue = !any ? 0 : summaries.Sum(s => s.Revenue),
                 Cost = !any ? 0 : summaries.Sum(s => s.Cost)
             };
+
+            if (!useAnalytics)
+            {
+                if (any)
+                {
+                    searchStat.Orders = summaries.Sum(s => s.Orders);
+                    searchStat.Revenue = summaries.Sum(s => s.Revenue);
+                }
+            }
+            else
+            {
+                var gaSummaries = GetGoogleAnalyticsSummaries(searchCampaigns, start, end, includeToday.Value);
+                if (gaSummaries.Any())
+                {
+                    searchStat.Orders = gaSummaries.Sum(s => s.Transactions);
+                    searchStat.Revenue = gaSummaries.Sum(s => s.Revenue);
+                }
+            }
+
+            if (includeCalls)
+            {
+                var callSummaries = GetCallDailySummaries(searchCampaigns, start, end, includeToday.Value);
+                if (callSummaries.Any())
+                {
+                    searchStat.Calls = callSummaries.Sum(s => s.Calls);
+                }
+            }
 
             return searchStat;
         }
@@ -127,6 +157,10 @@ namespace ClientPortal.Data.Services
         private IQueryable<SearchDailySummary2> GetSearchDailySummaries(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, DateTime? start, DateTime? end, bool includeToday)
         {
             var searchCampaigns = GetSearchCampaigns(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix);
+            return GetSearchDailySummaries(searchCampaigns, device, start, end, includeToday);
+        }
+        private IQueryable<SearchDailySummary2> GetSearchDailySummaries(IQueryable<SearchCampaign> searchCampaigns, string device, DateTime? start, DateTime? end, bool includeToday)
+        {
             var summaries = searchCampaigns.SelectMany(c => c.SearchDailySummaries2);
 
             if (!String.IsNullOrEmpty(device))
@@ -137,7 +171,6 @@ namespace ClientPortal.Data.Services
                 summaries = summaries.Where(s => s.Date >= start);
 
             // When specifying, should the current day be included or just up until and including yesterday?
-            // By default, we only go up to yesterday.
             if (!includeToday)
             {
                 var yesterday = DateTime.Today.AddDays(-1);
@@ -146,7 +179,6 @@ namespace ClientPortal.Data.Services
                     end = yesterday; // then set end date to yesterday's date
             }
 
-            // Filter to end date, if present or includeToday logic sets it
             if (end.HasValue)
                 summaries = summaries.Where(s => s.Date <= end);
             return summaries;
@@ -155,10 +187,34 @@ namespace ClientPortal.Data.Services
         private IQueryable<GoogleAnalyticsSummary> GetGoogleAnalyticsSummaries(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, DateTime? start, DateTime? end, bool includeToday)
         {
             var searchCampaigns = GetSearchCampaigns(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix);
+            return GetGoogleAnalyticsSummaries(searchCampaigns, start, end, includeToday);
+        }
+        private IQueryable<GoogleAnalyticsSummary> GetGoogleAnalyticsSummaries(IQueryable<SearchCampaign> searchCampaigns, DateTime? start, DateTime? end, bool includeToday)
+        {
             var summaries = searchCampaigns.SelectMany(c => c.GoogleAnalyticsSummaries);
 
             if (start.HasValue) summaries = summaries.Where(s => s.Date >= start);
+            if (!includeToday)
+            {
+                var yesterday = DateTime.Today.AddDays(-1);
+                if (!end.HasValue || yesterday < end.Value) end = yesterday;
+            }
+            if (end.HasValue)
+                summaries = summaries.Where(s => s.Date <= end);
 
+            return summaries;
+        }
+
+        private IQueryable<CallDailySummary> GetCallDailySummaries(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, DateTime? start, DateTime? end, bool includeToday)
+        {
+            var searchCampaigns = GetSearchCampaigns(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix);
+            return GetCallDailySummaries(searchCampaigns, start, end, includeToday);
+        }
+        private IQueryable<CallDailySummary> GetCallDailySummaries(IQueryable<SearchCampaign> searchCampaigns, DateTime? start, DateTime? end, bool includeToday)
+        {
+            var summaries = searchCampaigns.SelectMany(c => c.CallDailySummaries);
+
+            if (start.HasValue) summaries = summaries.Where(s => s.Date >= start);
             if (!includeToday)
             {
                 var yesterday = DateTime.Today.AddDays(-1);

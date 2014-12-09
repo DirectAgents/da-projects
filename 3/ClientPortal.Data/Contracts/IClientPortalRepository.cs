@@ -109,7 +109,7 @@ namespace ClientPortal.Data.Contracts
 
         bool InitializeSearchProfileSimpleReport(int searchProfileId, string email = null);
 
-        SearchStat GetSearchStats(int searchProfileId, DateTime? start, DateTime? end, bool includeToday = true);
+        SearchStat GetSearchStats(int searchProfileId, DateTime? start, DateTime? end, bool? includeToday, bool useAnalytics, bool includeCalls);
         IQueryable<SearchStat> GetWeekStats(int searchProfileId, int numWeeks, DayOfWeek startDayOfWeek, DateTime? endDate, bool useAnalytics);
         IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int searchProfileId, int numWeeks, bool includeToday, DayOfWeek startDayOfWeek, bool useAnalytics);
         IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int searchProfileId, DateTime start, DateTime end, DayOfWeek startDayOfWeek, bool useAnalytics);
