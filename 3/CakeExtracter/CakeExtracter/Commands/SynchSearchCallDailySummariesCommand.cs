@@ -39,7 +39,7 @@ namespace CakeExtracter.Commands
             foreach (var searchProfile in GetSearchProfiles())
             {
                 var extracter = new LocalConnexApiExtracter(dateRange, searchProfile.LCaccid, searchProfile.CallMinSeconds);
-                var loader = new CallDailySummaryLoader(searchProfile);
+                var loader = new CallDailySummaryLoader(searchProfile.SearchProfileId);
                 var extracterThread = extracter.Start();
                 var loaderThread = loader.Start(extracter);
                 extracterThread.Join();
@@ -52,7 +52,7 @@ namespace CakeExtracter.Commands
         {
             using (var db = new ClientPortalContext())
             {
-                var searchProfiles = db.SearchProfiles.AsQueryable();
+                var searchProfiles = db.SearchProfiles.Include("SearchAccounts.SearchCampaigns").AsQueryable();
                 if (this.SearchProfileId.HasValue)
                     searchProfiles = searchProfiles.Where(sp => sp.SearchProfileId == this.SearchProfileId.Value);
                 return searchProfiles.ToList();

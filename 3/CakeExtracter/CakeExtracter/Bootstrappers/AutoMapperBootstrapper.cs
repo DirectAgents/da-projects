@@ -13,6 +13,7 @@ namespace CakeExtracter.Bootstrappers
             Mapper.CreateMap<SearchDailySummary2, SearchDailySummary2>();
             //Mapper.CreateMap<OfferDailySummary, OfferDailySummary>();
             Mapper.CreateMap<GoogleAnalyticsSummary, GoogleAnalyticsSummary>();
+            Mapper.CreateMap<CallDailySummary, CallDailySummary>();
             Mapper.CreateMap<ClientPortal.Data.Entities.TD.DBM.CreativeDailySummary, ClientPortal.Data.Entities.TD.DBM.CreativeDailySummary>();
             Mapper.CreateMap<ClientPortal.Data.Entities.TD.DBM.DBMDailySummary, ClientPortal.Data.Entities.TD.DBM.DBMDailySummary>();
             Mapper.CreateMap<ClientPortal.Data.Entities.TD.AdRoll.AdDailySummary, ClientPortal.Data.Entities.TD.AdRoll.AdDailySummary>();
