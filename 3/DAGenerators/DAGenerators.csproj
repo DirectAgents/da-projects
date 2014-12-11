@@ -47,10 +47,12 @@
   <ItemGroup>
     <Compile Include="Charts\ChartBase.cs" />
     <Compile Include="Charts\IChartBuilder.cs" />
+    <Compile Include="Charts\LeadsCPLChart.cs" />
     <Compile Include="Charts\OrdersCPOChart.cs" />
     <Compile Include="Charts\TwoSeriesChartBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Spreadsheets\Generator.cs" />
+    <Compile Include="Spreadsheets\SearchReportLeadGen.cs" />
     <Compile Include="Spreadsheets\SearchReportPPC.cs" />
     <Compile Include="Spreadsheets\SearchReports.cs" />
     <Compile Include="Spreadsheets\SpreadsheetBase.cs" />

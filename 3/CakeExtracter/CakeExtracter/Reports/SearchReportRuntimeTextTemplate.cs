@@ -40,70 +40,95 @@ namespace CakeExtracter.Reports
     <td width=""399"" align=""right"" valign=""top""><strong style=""font-family: Arial, Helvetica, sans-serif; text-align: center; font-size: 18px;"">Weekly Summary Report for ");
             
             #line 15 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.AdvertiserName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.SearchProfile.SearchProfileName));
             
             #line default
             #line hidden
-            this.Write("</strong></td>\r\n    <td width=\"13\" align=\"right\" valign=\"top\">&nbsp;</td>\r\n  </tr" +
-                    ">\r\n  <tr>\r\n    <td align=\"left\" valign=\"top\">&nbsp;</td>\r\n    <td colspan=\"2\" al" +
-                    "ign=\"left\" valign=\"top\" style=\"font-family: Arial, Helvetica, sans-serif; font-s" +
-                    "ize: 14px;\">Thank you for using the Direct Agents client portal. A summary of yo" +
-                    "ur campaign performance is included below. Please <a href=\"http://portal.directa" +
-                    "gents.com/\" style=\"color:#37A5F2;\"><strong>log in</strong></a> to access your co" +
-                    "mplete reports.<br><br></td>\r\n    <td align=\"right\" valign=\"top\">&nbsp;</td>\r\n  " +
-                    "</tr>\r\n  <tr>\r\n    <td colspan=\"4\" height=\"80\" align=\"center\" valign=\"middle\">\r\n" +
-                    "   \r\n    <table width=\"620\"  align=\"center\" cellpadding=\"0\" cellspacing=\"0\" styl" +
-                    "e=\"border-top:1px solid #c7c3c7; border-bottom:1px solid #c7c3c7; border-left:0p" +
-                    "x solid #c7c3c7; border-right:0px solid #c7c3c7;\">\r\n      <tr>\r\n        <td heig" +
-                    "ht=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#e5e5e5\" style=\"color: #000; borde" +
-                    "r-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size:" +
-                    " 13px;\">&nbsp;&nbsp;Week</td>\r\n        <td height=\"30\" align=\"left\" valign=\"midd" +
-                    "le\" bgcolor=\"#e5e5e5\" style=\"color: #000; border-right:1px solid #c7c3c7; font-f" +
-                    "amily: Arial, Helvetica, sans-serif; font-size: 13px;\">&nbsp;&nbsp;Revenue</td>\r" +
-                    "\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#e5e5e5\" style=\"c" +
-                    "olor: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-" +
-                    "serif; font-size: 13px;\">&nbsp;&nbsp;Cost</td>\r\n        <td height=\"30\" align=\"l" +
-                    "eft\" valign=\"middle\" bgcolor=\"#e5e5e5\" style=\"color: #000; border-right:1px soli" +
-                    "d #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;\">&nbsp;&n" +
-                    "bsp;ROAS</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#e5" +
-                    "e5e5\" style=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, He" +
-                    "lvetica, sans-serif; font-size: 13px;\">&nbsp;&nbsp;Margin</td>\r\n        <td heig" +
-                    "ht=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#e5e5e5\" style=\"color: #000; borde" +
-                    "r-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size:" +
-                    " 13px;\">&nbsp;&nbsp;Orders</td>\r\n        <td height=\"30\" align=\"left\" valign=\"mi" +
-                    "ddle\" bgcolor=\"#e5e5e5\" style=\"color: #000; border-right:1px solid #c7c3c7; font" +
-                    "-family: Arial, Helvetica, sans-serif; font-size: 13px;\">&nbsp;&nbsp;CPO</td>\r\n " +
-                    "     ");
+            this.Write(@"</strong></td>
+    <td width=""13"" align=""right"" valign=""top"">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align=""left"" valign=""top"">&nbsp;</td>
+    <td colspan=""2"" align=""left"" valign=""top"" style=""font-family: Arial, Helvetica, sans-serif; font-size: 14px;"">Thank you for using the Direct Agents client portal. A summary of your campaign performance is included below. Please <a href=""http://portal.directagents.com/"" style=""color:#37A5F2;""><strong>log in</strong></a> to access your complete reports.<br><br></td>
+    <td align=""right"" valign=""top"">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan=""4"" height=""80"" align=""center"" valign=""middle"">
+   
+    <table width=""620""  align=""center"" cellpadding=""0"" cellspacing=""0"" style=""border-top:1px solid #c7c3c7; border-bottom:1px solid #c7c3c7; border-left:0px solid #c7c3c7; border-right:0px solid #c7c3c7;"">
+      <tr>
+        <td height=""30"" align=""left"" valign=""middle"" bgcolor=""#e5e5e5"" style=""color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"">&nbsp;&nbsp;Week</td>
+      ");
             
-            #line 35 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
- if (this.ShowCalls) { 
+            #line 29 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+ if (this.SearchProfile.ShowRevenue) { 
             
             #line default
             #line hidden
-            this.Write("        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#e5e5e5\" style=\"col" +
-                    "or: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-se" +
-                    "rif; font-size: 13px;\">&nbsp;&nbsp;Calls</td>\r\n      ");
+            this.Write(@"        <td height=""30"" align=""left"" valign=""middle"" bgcolor=""#e5e5e5"" style=""color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"">&nbsp;&nbsp;Revenue</td>
+        <td height=""30"" align=""left"" valign=""middle"" bgcolor=""#e5e5e5"" style=""color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"">&nbsp;&nbsp;Cost</td>
+        <td height=""30"" align=""left"" valign=""middle"" bgcolor=""#e5e5e5"" style=""color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"">&nbsp;&nbsp;ROAS</td>
+        <td height=""30"" align=""left"" valign=""middle"" bgcolor=""#e5e5e5"" style=""color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"">&nbsp;&nbsp;Margin</td>
+        <td height=""30"" align=""left"" valign=""middle"" bgcolor=""#e5e5e5"" style=""color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"">&nbsp;&nbsp;Orders</td>
+        <td height=""30"" align=""left"" valign=""middle"" bgcolor=""#e5e5e5"" style=""color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"">&nbsp;&nbsp;CPO</td>
+      ");
             
-            #line 37 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 36 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+ } else { 
+            
+            #line default
+            #line hidden
+            this.Write(@"        <td height=""30"" align=""left"" valign=""middle"" bgcolor=""#e5e5e5"" style=""color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"">&nbsp;&nbsp;Clicks</td>
+        <td height=""30"" align=""left"" valign=""middle"" bgcolor=""#e5e5e5"" style=""color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"">&nbsp;&nbsp;Impressions</td>
+        <td height=""30"" align=""left"" valign=""middle"" bgcolor=""#e5e5e5"" style=""color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"">&nbsp;&nbsp;CTR</td>
+        <td height=""30"" align=""left"" valign=""middle"" bgcolor=""#e5e5e5"" style=""color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"">&nbsp;&nbsp;Spend</td>
+        <td height=""30"" align=""left"" valign=""middle"" bgcolor=""#e5e5e5"" style=""color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"">&nbsp;&nbsp;CPC</td>
+        <td height=""30"" align=""left"" valign=""middle"" bgcolor=""#e5e5e5"" style=""color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"">&nbsp;&nbsp;Leads</td>
+      ");
+            
+            #line 43 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
  } 
             
             #line default
             #line hidden
-            this.Write("      </tr>\r\n      <tr>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgc" +
-                    "olor=\"#FFFFFF\" style=\"color: #000; border-right:1px solid #c7c3c7; font-family: " +
-                    "Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: " +
-                    "bold;\">");
+            this.Write("      ");
             
-            #line 40 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 44 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+ if (this.SearchProfile.ShowCalls) { 
+            
+            #line default
+            #line hidden
+            this.Write(@"        <td height=""30"" align=""left"" valign=""middle"" bgcolor=""#e5e5e5"" style=""color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"">&nbsp;&nbsp;Calls</td>
+        <td height=""30"" align=""left"" valign=""middle"" bgcolor=""#e5e5e5"" style=""color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"">&nbsp;&nbsp;Total Leads</td>
+      ");
+            
+            #line 47 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+ } 
+            
+            #line default
+            #line hidden
+            this.Write("      </tr>\r\n\r\n      <tr>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" b" +
+                    "gcolor=\"#FFFFFF\" style=\"color: #000; border-right:1px solid #c7c3c7; font-family" +
+                    ": Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight" +
+                    ": bold;\">");
+            
+            #line 51 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Line1stat.Title));
             
             #line default
             #line hidden
-            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
-                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
-                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            this.Write("</td>\r\n      ");
             
-            #line 41 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 52 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+ if (this.SearchProfile.ShowRevenue) { 
+            
+            #line default
+            #line hidden
+            this.Write("        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" style=\"col" +
+                    "or: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-se" +
+                    "rif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 53 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Line1stat.Revenue)));
             
             #line default
@@ -112,7 +137,7 @@ namespace CakeExtracter.Reports
                     "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
                     "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
             
-            #line 42 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 54 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Line1stat.Cost)));
             
             #line default
@@ -121,8 +146,8 @@ namespace CakeExtracter.Reports
                     "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
                     "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
             
-            #line 43 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Line1stat.ROAS));
+            #line 55 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(Line1stat.ROAS)));
             
             #line default
             #line hidden
@@ -130,7 +155,7 @@ namespace CakeExtracter.Reports
                     "yle=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica," +
                     " sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
             
-            #line 44 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 56 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Line1stat.Margin)));
             
             #line default
@@ -139,92 +164,8 @@ namespace CakeExtracter.Reports
                     "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
                     "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
             
-            #line 45 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Line1stat.Orders));
-            
-            #line default
-            #line hidden
-            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
-                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
-                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
-            
-            #line 46 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Line1stat.CPO)));
-            
-            #line default
-            #line hidden
-            this.Write("</td>\r\n      ");
-            
-            #line 47 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
- if (this.ShowCalls) { 
-            
-            #line default
-            #line hidden
-            this.Write("        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" style=\"col" +
-                    "or: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-se" +
-                    "rif; font-size: 13px; text-align: center; font-weight: bold;\">");
-            
-            #line 48 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Line1stat.Calls));
-            
-            #line default
-            #line hidden
-            this.Write("</td>\r\n      ");
-            
-            #line 49 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
- } 
-            
-            #line default
-            #line hidden
-            this.Write("      </tr>\r\n");
-            
-            #line 51 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
- if (this.Line2stat != null) { 
-            
-            #line default
-            #line hidden
-            this.Write("      <tr>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF" +
-                    "\" style=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvet" +
-                    "ica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
-            
-            #line 53 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Line2stat.Title));
-            
-            #line default
-            #line hidden
-            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
-                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
-                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
-            
-            #line 54 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Line2stat.Revenue)));
-            
-            #line default
-            #line hidden
-            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
-                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
-                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
-            
-            #line 55 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Line2stat.Cost)));
-            
-            #line default
-            #line hidden
-            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
-                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
-                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
-            
-            #line 56 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Line2stat.ROAS));
-            
-            #line default
-            #line hidden
-            this.Write("%</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" st" +
-                    "yle=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica," +
-                    " sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
-            
             #line 57 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Line2stat.Margin)));
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(Line1stat.Orders)));
             
             #line default
             #line hidden
@@ -233,23 +174,14 @@ namespace CakeExtracter.Reports
                     "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
             
             #line 58 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Line2stat.Orders));
-            
-            #line default
-            #line hidden
-            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
-                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
-                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
-            
-            #line 59 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Line2stat.CPO)));
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Line1stat.CPO)));
             
             #line default
             #line hidden
             this.Write("</td>\r\n      ");
             
-            #line 60 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
- if (this.ShowCalls) { 
+            #line 59 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+ } else { 
             
             #line default
             #line hidden
@@ -257,27 +189,281 @@ namespace CakeExtracter.Reports
                     "or: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-se" +
                     "rif; font-size: 13px; text-align: center; font-weight: bold;\">");
             
+            #line 60 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(Line1stat.Clicks)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
+                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
             #line 61 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Line2stat.Calls));
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(Line1stat.Impressions)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
+                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 62 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Decimal(Line1stat.CTR)));
+            
+            #line default
+            #line hidden
+            this.Write("%</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" st" +
+                    "yle=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica," +
+                    " sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 63 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Line1stat.Cost)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
+                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 64 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Line1stat.CPC)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
+                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 65 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(Line1stat.Orders)));
             
             #line default
             #line hidden
             this.Write("</td>\r\n      ");
             
-            #line 62 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 66 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+ } 
+            
+            #line default
+            #line hidden
+            this.Write("      ");
+            
+            #line 67 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+ if (this.SearchProfile.ShowCalls) { 
+            
+            #line default
+            #line hidden
+            this.Write("        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" style=\"col" +
+                    "or: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-se" +
+                    "rif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 68 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(Line1stat.Calls)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
+                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 69 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(Line1stat.TotalLeads)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n      ");
+            
+            #line 70 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+ } 
+            
+            #line default
+            #line hidden
+            this.Write("      </tr>\r\n\r\n");
+            
+            #line 73 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+ if (this.Line2stat != null) { 
+            
+            #line default
+            #line hidden
+            this.Write("      <tr>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF" +
+                    "\" style=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvet" +
+                    "ica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 75 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Line2stat.Title));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n      ");
+            
+            #line 76 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+ if (this.SearchProfile.ShowRevenue) { 
+            
+            #line default
+            #line hidden
+            this.Write("        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" style=\"col" +
+                    "or: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-se" +
+                    "rif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 77 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Line2stat.Revenue)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
+                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 78 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Line2stat.Cost)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
+                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 79 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(Line2stat.ROAS)));
+            
+            #line default
+            #line hidden
+            this.Write("%</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" st" +
+                    "yle=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica," +
+                    " sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 80 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Line2stat.Margin)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
+                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 81 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(Line2stat.Orders)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
+                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 82 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Line2stat.CPO)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n      ");
+            
+            #line 83 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+ } else { 
+            
+            #line default
+            #line hidden
+            this.Write("        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" style=\"col" +
+                    "or: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-se" +
+                    "rif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 84 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(Line2stat.Clicks)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
+                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 85 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(Line2stat.Impressions)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
+                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 86 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Decimal(Line2stat.CTR)));
+            
+            #line default
+            #line hidden
+            this.Write("%</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" st" +
+                    "yle=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica," +
+                    " sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 87 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Line2stat.Cost)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
+                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 88 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Line2stat.CPC)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
+                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 89 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(Line2stat.Orders)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n      ");
+            
+            #line 90 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+ } 
+            
+            #line default
+            #line hidden
+            this.Write("      ");
+            
+            #line 91 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+ if (this.SearchProfile.ShowCalls) { 
+            
+            #line default
+            #line hidden
+            this.Write("        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" style=\"col" +
+                    "or: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-se" +
+                    "rif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 92 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(Line2stat.Calls)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
+                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 93 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(Line2stat.TotalLeads)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n      ");
+            
+            #line 94 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
  } 
             
             #line default
             #line hidden
             this.Write("      </tr>\r\n");
             
-            #line 64 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 96 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
  } 
             
             #line default
             #line hidden
             
-            #line 65 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 97 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
  if (this.ChangeStat != null) { 
             
             #line default
@@ -286,15 +472,22 @@ namespace CakeExtracter.Reports
                     "\" style=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvet" +
                     "ica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
             
-            #line 67 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 99 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.ChangeStat.Title));
             
             #line default
             #line hidden
-            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
-                    "le=\"color: #");
+            this.Write("</td>\r\n      ");
             
-            #line 68 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 100 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+ if (this.SearchProfile.ShowRevenue) { 
+            
+            #line default
+            #line hidden
+            this.Write("        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" style=\"col" +
+                    "or: #");
+            
+            #line 101 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ChangeStat.Revenue > 0 ? "0F0" : (ChangeStat.Revenue < 0 ? "F00" : "000")));
             
             #line default
@@ -302,15 +495,15 @@ namespace CakeExtracter.Reports
             this.Write("; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font" +
                     "-size: 13px; text-align: center; font-weight: bold;\">");
             
-            #line 68 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.CurrencyPlusMinus(ChangeStat.Revenue)));
+            #line 101 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(ChangeStat.Revenue,true)));
             
             #line default
             #line hidden
             this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
                     "le=\"color: #");
             
-            #line 69 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 102 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ChangeStat.Cost > 0 ? "0F0" : (ChangeStat.Cost < 0 ? "F00" : "000")));
             
             #line default
@@ -318,15 +511,15 @@ namespace CakeExtracter.Reports
             this.Write("; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font" +
                     "-size: 13px; text-align: center; font-weight: bold;\">");
             
-            #line 69 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.CurrencyPlusMinus(ChangeStat.Cost)));
+            #line 102 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(ChangeStat.Cost,true)));
             
             #line default
             #line hidden
             this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
                     "le=\"color: #");
             
-            #line 70 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 103 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ChangeStat.ROAS > 0 ? "0F0" : (ChangeStat.ROAS < 0 ? "F00" : "000")));
             
             #line default
@@ -334,13 +527,13 @@ namespace CakeExtracter.Reports
             this.Write("; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font" +
                     "-size: 13px; text-align: center; font-weight: bold;\">");
             
-            #line 70 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.IntegerPlusMinus(ChangeStat.ROAS)));
+            #line 103 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(ChangeStat.ROAS,true)));
             
             #line default
             #line hidden
             
-            #line 70 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 103 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ChangeStat.ROAS == 0 ? "" : "%"));
             
             #line default
@@ -348,7 +541,7 @@ namespace CakeExtracter.Reports
             this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
                     "le=\"color: #");
             
-            #line 71 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 104 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ChangeStat.Margin > 0 ? "0F0" : (ChangeStat.Margin < 0 ? "F00" : "000")));
             
             #line default
@@ -356,15 +549,15 @@ namespace CakeExtracter.Reports
             this.Write("; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font" +
                     "-size: 13px; text-align: center; font-weight: bold;\">");
             
-            #line 71 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.CurrencyPlusMinus(ChangeStat.Margin)));
+            #line 104 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(ChangeStat.Margin,true)));
             
             #line default
             #line hidden
             this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
                     "le=\"color: #");
             
-            #line 72 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 105 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ChangeStat.Orders > 0 ? "0F0" : (ChangeStat.Orders < 0 ? "F00" : "000")));
             
             #line default
@@ -372,15 +565,15 @@ namespace CakeExtracter.Reports
             this.Write("; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font" +
                     "-size: 13px; text-align: center; font-weight: bold;\">");
             
-            #line 72 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.IntegerPlusMinus(ChangeStat.Orders)));
+            #line 105 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(ChangeStat.Orders,true)));
             
             #line default
             #line hidden
             this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
                     "le=\"color: #");
             
-            #line 73 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 106 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ChangeStat.CPO > 0 ? "0F0" : (ChangeStat.CPO < 0 ? "F00" : "000")));
             
             #line default
@@ -388,22 +581,138 @@ namespace CakeExtracter.Reports
             this.Write("; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font" +
                     "-size: 13px; text-align: center; font-weight: bold;\">");
             
-            #line 73 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.CurrencyPlusMinus(ChangeStat.CPO)));
+            #line 106 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(ChangeStat.CPO,true)));
             
             #line default
             #line hidden
             this.Write("</td>\r\n      ");
             
-            #line 74 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
- if (this.ShowCalls) { 
+            #line 107 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+ } else { 
             
             #line default
             #line hidden
             this.Write("        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" style=\"col" +
                     "or: #");
             
-            #line 75 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 108 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ChangeStat.Clicks > 0 ? "0F0" : (ChangeStat.Clicks < 0 ? "F00" : "000")));
+            
+            #line default
+            #line hidden
+            this.Write("; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font" +
+                    "-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 108 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(ChangeStat.Clicks,true)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #");
+            
+            #line 109 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ChangeStat.Impressions > 0 ? "0F0" : (ChangeStat.Impressions < 0 ? "F00" : "000")));
+            
+            #line default
+            #line hidden
+            this.Write("; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font" +
+                    "-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 109 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(ChangeStat.Impressions,true)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #");
+            
+            #line 110 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ChangeStat.CTR > 0 ? "0F0" : (ChangeStat.CTR < 0 ? "F00" : "000")));
+            
+            #line default
+            #line hidden
+            this.Write("; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font" +
+                    "-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 110 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Decimal(ChangeStat.CTR,true)));
+            
+            #line default
+            #line hidden
+            
+            #line 110 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ChangeStat.CTR == 0 ? "" : "%"));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #");
+            
+            #line 111 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ChangeStat.Cost > 0 ? "0F0" : (ChangeStat.Cost < 0 ? "F00" : "000")));
+            
+            #line default
+            #line hidden
+            this.Write("; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font" +
+                    "-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 111 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(ChangeStat.Cost,true)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #");
+            
+            #line 112 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ChangeStat.CPC > 0 ? "0F0" : (ChangeStat.CPC < 0 ? "F00" : "000")));
+            
+            #line default
+            #line hidden
+            this.Write("; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font" +
+                    "-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 112 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(ChangeStat.CPC,true)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #");
+            
+            #line 113 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ChangeStat.Orders > 0 ? "0F0" : (ChangeStat.Orders < 0 ? "F00" : "000")));
+            
+            #line default
+            #line hidden
+            this.Write("; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font" +
+                    "-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 113 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(ChangeStat.Orders,true)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n      ");
+            
+            #line 114 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+ } 
+            
+            #line default
+            #line hidden
+            this.Write("      ");
+            
+            #line 115 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+ if (this.SearchProfile.ShowCalls) { 
+            
+            #line default
+            #line hidden
+            this.Write("        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" style=\"col" +
+                    "or: #");
+            
+            #line 116 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ChangeStat.Calls > 0 ? "0F0" : (ChangeStat.Calls < 0 ? "F00" : "000")));
             
             #line default
@@ -411,26 +720,43 @@ namespace CakeExtracter.Reports
             this.Write("; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font" +
                     "-size: 13px; text-align: center; font-weight: bold;\">");
             
-            #line 75 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.IntegerPlusMinus(ChangeStat.Calls)));
+            #line 116 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(ChangeStat.Calls,true)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #");
+            
+            #line 117 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ChangeStat.TotalLeads > 0 ? "0F0" : (ChangeStat.TotalLeads < 0 ? "F00" : "000")));
+            
+            #line default
+            #line hidden
+            this.Write("; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font" +
+                    "-size: 13px; text-align: center; font-weight: bold;\">");
+            
+            #line 117 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Integer(ChangeStat.TotalLeads,true)));
             
             #line default
             #line hidden
             this.Write("</td>\r\n      ");
             
-            #line 76 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 118 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
  } 
             
             #line default
             #line hidden
             this.Write("      </tr>\r\n");
             
-            #line 78 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 120 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
  } 
             
             #line default
             #line hidden
-            this.Write(@"    </table>
+            this.Write(@"
+    </table>
 </td>
   </tr>
   <tr>
@@ -442,21 +768,21 @@ namespace CakeExtracter.Reports
     <td width=""13"" align=""left"" valign=""top"">&nbsp;</td>
     <td colspan=""2"" align=""left"" valign=""top"" ><span style=""font-family: Arial, Helvetica, sans-serif; font-size: 14px;"" ><br>Questions? Contact your account manager, ");
             
-            #line 89 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 132 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.AcctMgrName));
             
             #line default
             #line hidden
             this.Write(": <a href=\"mailto:");
             
-            #line 89 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 132 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.AcctMgrEmail));
             
             #line default
             #line hidden
             this.Write("\" style=\"color:#37A5F2;\">");
             
-            #line 89 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            #line 132 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.AcctMgrEmail));
             
             #line default

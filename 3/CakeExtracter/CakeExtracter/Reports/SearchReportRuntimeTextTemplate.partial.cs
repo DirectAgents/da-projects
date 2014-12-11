@@ -1,11 +1,11 @@
-﻿using ClientPortal.Data.DTOs;
+﻿using ClientPortal.Data.Contexts;
+using ClientPortal.Data.DTOs;
 using System.Globalization;
 namespace CakeExtracter.Reports
 {
     public partial class SearchReportRuntimeTextTemplate : SearchReportRuntimeTextTemplateBase
     {
-        public string AdvertiserName { get; set; }
-        public bool ShowCalls { get; set; }
+        public SearchProfile SearchProfile { get; set; }
         
         public SearchStat Line1stat { get; set; }
         public SearchStat Line2stat { get; set; }
@@ -13,11 +13,6 @@ namespace CakeExtracter.Reports
 
         public string AcctMgrName { get; set; }
         public string AcctMgrEmail { get; set; }
-
-        public string Currency(decimal val)
-        {
-            return val.ToString("C");
-        }
 
         private NumberFormatInfo _noParensFormatInfo;
         public NumberFormatInfo NoParensFormatInfo
@@ -35,8 +30,11 @@ namespace CakeExtracter.Reports
 
         private string NoChangeSymbol = "~";
 
-        public string CurrencyPlusMinus(decimal val)
+        public string Currency(decimal val, bool plusMinus = false)
         {
+            if (!plusMinus)
+                return val.ToString("C");
+
             if (val > 0)
                 return "+" + val.ToString("C");
             else if (val < 0)
@@ -45,12 +43,28 @@ namespace CakeExtracter.Reports
                 return NoChangeSymbol;
         }
 
-        public string IntegerPlusMinus(int val)
+        public string Integer(int val, bool plusMinus = false)
         {
+            if (!plusMinus)
+                return val.ToString("N0");
+
             if (val > 0)
-                return "+" + val.ToString();
+                return "+" + val.ToString("N0");
             else if (val < 0)
-                return val.ToString();
+                return val.ToString("N0");
+            else
+                return NoChangeSymbol;
+        }
+
+        public string Decimal(decimal val, bool plusMinus = false, int places = 2)
+        {
+            if (!plusMinus)
+                return val.ToString("N" + places);
+
+            if (val > 0)
+                return "+" + val.ToString("N" + places);
+            else if (val < 0)
+                return val.ToString("N" + places);
             else
                 return NoChangeSymbol;
         }

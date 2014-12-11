@@ -1,5 +1,4 @@
 ﻿using OfficeOpenXml;
-using OfficeOpenXml.Drawing;
 using OfficeOpenXml.Drawing.Chart;
 using OfficeOpenXml.Table;
 using System;
@@ -10,6 +9,7 @@ using System.Reflection;
 
 namespace DAGenerators.Spreadsheets
 {
+    //TODO: make a SearchReportECom (or ...Retail) that inherits from this
     public class SearchReportPPC : SpreadsheetBase
     {
         protected int Row_SummaryDate = 8;
@@ -40,6 +40,7 @@ namespace DAGenerators.Spreadsheets
         public Metric Metric_Orders = new Metric(0, null, false, false);
         public Metric Metric_Cost = new Metric(0, null, false, false);
         public Metric Metric_Revenue = new Metric(0, null, false, false);
+        public Metric Metric_Calls = new Metric(0, null, false, false);
 
         // Computed metrics
         public Metric Metric_OrderRate = new Metric(0, null, true, false);
@@ -50,6 +51,8 @@ namespace DAGenerators.Spreadsheets
         public Metric Metric_CPO = new Metric(0, null, true, false);
         public Metric Metric_ROAS = new Metric(0, null, true, false);
         public Metric Metric_ROI = new Metric(0, null, true, false);
+        public Metric Metric_TotalLeads = new Metric(0, null, true, false);
+        public Metric Metric_CPL = new Metric(0, null, true, false);
 
         protected ExcelWorksheet WS { get { return this.ExcelPackage.Workbook.Worksheets[1]; } }
         protected int NumWeeksAdded { get; set; }
@@ -108,6 +111,10 @@ namespace DAGenerators.Spreadsheets
         {
             NumWeekRowsAdded += LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Weekly + (WeeklyFirst ? 0 : NumMonthRowsAdded), 1);
             NumWeeksAdded += stats.Count();
+            CreateWeeklyCharts();
+        }
+        public virtual void CreateWeeklyCharts()
+        {
             //CreateWeeklyChart(NumWeeksAdded, Metric_Revenue, Metric_Clicks);
             CreateWeeklyChart(NumWeeksAdded, Metric_Revenue, Metric_ROAS);
             CreateWeeklyChart(NumWeeksAdded, Metric_Orders, Metric_CPO, true);
@@ -122,7 +129,7 @@ namespace DAGenerators.Spreadsheets
         //    LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Monthly + nummon
         //}
 
-        // propertyNames for: title, clicks, impressions, orders, cost, revenue
+        // propertyNames for: title, clicks, impressions, orders, cost, revenue, calls
         // returns: # of rows added (in addition to blankRowsInTemplate); negative means blankRows deleted
         protected int LoadWeeklyMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames, int startingRow, int blankRowsInTemplate = 0)
         {
@@ -158,6 +165,7 @@ namespace DAGenerators.Spreadsheets
                 LoadColumnFromStats(stats, startingRow, Metric_Orders.ColNum, propertyNames[3], Metric_Orders);
                 LoadColumnFromStats(stats, startingRow, Metric_Cost.ColNum, propertyNames[4], Metric_Cost);
                 LoadColumnFromStats(stats, startingRow, Metric_Revenue.ColNum, propertyNames[5], Metric_Revenue);
+                LoadColumnFromStats(stats, startingRow, Metric_Calls.ColNum, propertyNames[6], Metric_Calls);
             }
             return blankRowsToInsert;
         }
@@ -170,6 +178,7 @@ namespace DAGenerators.Spreadsheets
             }
         }
 
+        //TODO: retire this - if can assume all formulas are in template rows in the spreadsheet
         private void LoadStatsRowFormulas(int iRow)
         {
             // TODO: use IFERROR in formulas for div-by-0 checking
@@ -181,6 +190,8 @@ namespace DAGenerators.Spreadsheets
             CheckLoadStatsRowFormula(iRow, Metric_CPO, String.Format("RC[{0}]/RC[{1}]", Metric_Cost.ColNum - Metric_CPO.ColNum, Metric_Orders.ColNum - Metric_CPO.ColNum)); // CPO (Cost/Orders)
             CheckLoadStatsRowFormula(iRow, Metric_ROAS, String.Format("RC[{0}]/RC[{1}]", Metric_Revenue.ColNum - Metric_ROAS.ColNum, Metric_Cost.ColNum - Metric_ROAS.ColNum)); // ROAS (Rev/Cost)
             CheckLoadStatsRowFormula(iRow, Metric_ROI, String.Format("(RC[{0}]-RC[{1}])/RC[{1}]", Metric_Revenue.ColNum - Metric_ROI.ColNum, Metric_Cost.ColNum - Metric_ROI.ColNum)); // ROI ((Rev-Cost)/Cost)
+            //CheckLoadStatsRowFormula(iRow, Metric_TotalLeads
+            //CheckLoadStatsRowFormula(iRow, Metric_CPL
         }
         private void CheckLoadStatsRowFormula(int iRow, Metric metric, string formula)
         {
@@ -282,7 +293,7 @@ namespace DAGenerators.Spreadsheets
         }
 
 
-        private void CreateWeeklyChart(int numWeeks, Metric metric1, Metric metric2, bool rightSide = false)
+        protected void CreateWeeklyChart(int numWeeks, Metric metric1, Metric metric2, bool rightSide = false)
         {
             var chart = WS.Drawings.AddChart("chartWeekly" + (rightSide ? "Right" : "Left"), eChartType.ColumnClustered);
             chart.SetPosition(Row_WeeklyChart + NumWeekRowsAdded + NumMonthRowsAdded - 1, 0, (rightSide ? Col_RightChart : Col_LeftChart) - 1, 0); // row & column are 0-based
@@ -327,6 +338,8 @@ namespace DAGenerators.Spreadsheets
             PossiblyAddMetric(metrics, Metric_Orders, shownOnly);
             PossiblyAddMetric(metrics, Metric_Cost, shownOnly);
             PossiblyAddMetric(metrics, Metric_Revenue, shownOnly);
+            PossiblyAddMetric(metrics, Metric_Calls, shownOnly);
+
             PossiblyAddMetric(metrics, Metric_OrderRate, shownOnly);
             PossiblyAddMetric(metrics, Metric_Net, shownOnly);
             PossiblyAddMetric(metrics, Metric_RevPerOrder, shownOnly);
@@ -335,6 +348,8 @@ namespace DAGenerators.Spreadsheets
             PossiblyAddMetric(metrics, Metric_CPO, shownOnly);
             PossiblyAddMetric(metrics, Metric_ROAS, shownOnly);
             PossiblyAddMetric(metrics, Metric_ROI, shownOnly);
+            PossiblyAddMetric(metrics, Metric_TotalLeads, shownOnly);
+            PossiblyAddMetric(metrics, Metric_CPL, shownOnly);
 
             return metrics;
         }

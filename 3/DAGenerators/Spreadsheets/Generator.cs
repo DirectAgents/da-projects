@@ -22,19 +22,33 @@ namespace DAGenerators.Spreadsheets
             var type = baseType.Assembly.GetTypes().FirstOrDefault(t => t.IsSubclassOf(baseType) && t.Name == className);
 
             if (type == null)
-                spreadsheet = new SearchReportPPC();
-            else
+            {
+                if (searchProfile.ShowRevenue) // eCom/Retail
+                {
+                    spreadsheet = new SearchReportPPC();
+                }
+                else // LeadGen
+                {
+                    if (searchProfile.ShowCalls)
+                        spreadsheet = new SearchReportLeadGenWithCalls();
+                    else
+                        spreadsheet = new SearchReportLeadGen();
+                }
+            }
+            else // custom
+            {
                 spreadsheet = (SearchReportPPC)Activator.CreateInstance(type);
+            }
 
             spreadsheet.Setup(templateFolder);
             spreadsheet.SetReportDate(endDate);
             spreadsheet.SetClientName(searchProfile.SearchProfileName);
 
             bool useAnalytics = false; //TODO: get from searchProfile when implemented
-            var monthlyStats = cpRepo.GetMonthStats(searchProfileId, numMonths, useAnalytics, endDate);
-            var weeklyStats = cpRepo.GetWeekStats(searchProfileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, endDate, useAnalytics);
+            var monthlyStats = cpRepo.GetMonthStats(searchProfileId, numMonths, endDate, useAnalytics, searchProfile.ShowCalls);
+            var weeklyStats = cpRepo.GetWeekStats(searchProfileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, endDate, useAnalytics, searchProfile.ShowCalls);
 
-            var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue" };
+            var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue", "Calls" };
             spreadsheet.LoadMonthlyStats(monthlyStats, propertyNames);
             spreadsheet.LoadWeeklyStats(weeklyStats, propertyNames);
 
@@ -52,7 +66,7 @@ namespace DAGenerators.Spreadsheets
                 // load the weekly campaign stats, starting with the most recent and going back the number of weeks specified
                 for (int i = 0; i < numWeeks; i++)
                 {
-                    var weeklyCampaignStats = cpRepo.GetCampaignStats(searchProfileId, null, periodStart, periodEnd, false, useAnalytics);
+                    var weeklyCampaignStats = cpRepo.GetCampaignStats(searchProfileId, null, periodStart, periodEnd, false, useAnalytics, searchProfile.ShowCalls);
                     bool collapse = (i > 0);
                     ((SearchReport_ScholasticTeacherExpress)spreadsheet).LoadWeeklyCampaignStats(weeklyCampaignStats, propertyNames, periodStart, collapse);
                     if (i + 1 < numWeeks)
@@ -70,7 +84,7 @@ namespace DAGenerators.Spreadsheets
                 var yesterday = DateTime.Now.AddDays(-1);
                 var monthStart = new DateTime(yesterday.Year, yesterday.Month, 1);
                 var monthEnd = monthStart.AddMonths(1).AddDays(-1);
-                var latestMonthStats = cpRepo.GetCampaignStats(searchProfileId, null, monthStart, monthEnd, false, useAnalytics);
+                var latestMonthStats = cpRepo.GetCampaignStats(searchProfileId, null, monthStart, monthEnd, false, useAnalytics, searchProfile.ShowCalls);
                 ((SearchReport_ScholasticTeacherExpress)spreadsheet).LoadLatestMonthCampaignStats(latestMonthStats, propertyNames, monthStart);
             }
             else
@@ -84,14 +98,14 @@ namespace DAGenerators.Spreadsheets
                     { // if there is only one channel (e.g. Google) but multiple SearchAccounts, group campaigns by SearchAccount
                         foreach (var searchAccount in searchProfile.SearchAccounts)
                         {
-                            var campaignStats = cpRepo.GetCampaignStats(searchAccount.SearchAccountId, periodStart, periodEnd);
+                            var campaignStats = cpRepo.GetCampaignStats(searchAccount.SearchAccountId, periodStart, periodEnd, false, useAnalytics, searchProfile.ShowCalls);
                             if (campaignStats.Any())
                                 channelStatsDict[searchAccount.Name] = campaignStats;
                         }
                     }
                     else
                     { // the "normal" way: group campaigns by channel (Google, Bing, etc)
-                        var campaignStats = cpRepo.GetCampaignStats(searchProfileId, null, periodStart, periodEnd, false, useAnalytics);
+                        var campaignStats = cpRepo.GetCampaignStats(searchProfileId, null, periodStart, periodEnd, false, useAnalytics, searchProfile.ShowCalls);
                         var channels = campaignStats.Select(s => s.Channel).Distinct();
                         foreach (string channel in channels)
                         {

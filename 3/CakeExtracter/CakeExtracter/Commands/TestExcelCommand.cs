@@ -74,7 +74,7 @@ namespace CakeExtracter.Commands
 
             var spreadsheet = new SearchReportPPC();
             spreadsheet.Setup(templateFolder);
-            var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue" };
+            var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue", "Calls" };
             var stats = GetStats(false);
             spreadsheet.LoadMonthlyStats(stats, propertyNames);
             stats = GetStats(true);
@@ -101,13 +101,13 @@ namespace CakeExtracter.Commands
                 if (weeklyNotMonthly)
                 {
                     int numWeeks = 6;
-                    stats = cpRepo.GetWeekStats(profileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, null, useAnalytics);
+                    stats = cpRepo.GetWeekStats(profileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, null, useAnalytics, searchProfile.ShowCalls);
                 }
                 else
                 {
                     int numMonths = 6;
                     var endDate = DateTime.Today.AddDays(-1);
-                    stats = cpRepo.GetMonthStats(profileId, numMonths, useAnalytics, endDate);
+                    stats = cpRepo.GetMonthStats(profileId, numMonths, endDate, useAnalytics, searchProfile.ShowCalls);
                 }
             }
             return stats;

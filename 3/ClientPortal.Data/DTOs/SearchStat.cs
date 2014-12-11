@@ -14,7 +14,12 @@ namespace ClientPortal.Data.DTOs
         public int Orders { get; set; }
         public decimal CPO { get; set; }
 
+        public decimal CTR { get; set; }
+        public decimal OrderRate { get; set; }
+        public decimal CPC { get; set; }
+
         public int Calls { get; set; }
+        public int TotalLeads { get; set; }
     }
 
     public class SearchStat
@@ -82,11 +87,33 @@ namespace ClientPortal.Data.DTOs
 
         public int Impressions { get; set; }
         public int Clicks { get; set; }
-        public int Orders { get; set; }
+        public int Orders { get; set; } // also used for Leads
         public decimal Revenue { get; set; }
         public decimal Cost { get; set; }
 
         public int Calls { get; set; }
+        public int TotalLeads
+        {
+            get { return Orders + Calls; }
+        }
+
+        public decimal OrderRate // TODO: replace this everywhere with ConvRate, then remove this?
+        {
+            get { return Clicks == 0 ? 0 : Math.Round((decimal)100 * Orders / Clicks, 2); }
+        }
+        public decimal ConvRate
+        {
+            get { return Clicks == 0 ? 0 : Math.Round((decimal)100 * TotalLeads / Clicks, 2); }
+        }
+
+        public decimal CPO
+        {
+            get { return Orders == 0 ? 0 : Math.Round(Cost / Orders, 2); }
+        }
+        public decimal CPL
+        {
+            get { return TotalLeads == 0 ? 0 : Math.Round(Cost / TotalLeads, 2); }
+        }
 
         //public int ROI
         //{
@@ -99,14 +126,6 @@ namespace ClientPortal.Data.DTOs
         public decimal Margin
         {
             get { return Revenue - Cost; }
-        }
-        public decimal CPO
-        {
-            get { return Orders == 0 ? 0 : Math.Round(Cost / Orders, 2); }
-        }
-        public decimal OrderRate
-        {
-            get { return Clicks == 0 ? 0 : Math.Round((decimal)100 * Orders / Clicks, 2); }
         }
         public decimal RevenuePerOrder
         {

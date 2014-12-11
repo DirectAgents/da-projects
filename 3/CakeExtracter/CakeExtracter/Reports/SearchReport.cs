@@ -39,8 +39,7 @@ namespace CakeExtracter.Reports
 
             var template = new SearchReportRuntimeTextTemplate
             {
-                AdvertiserName = searchProfile.SearchProfileName ?? "",
-                ShowCalls = searchProfile.ShowCalls
+                SearchProfile = searchProfile
             };
             template.Line1stat = this.cpRepo.GetSearchStats(searchProfile.SearchProfileId, fromDate, toDate, null, useAnalytics, searchProfile.ShowCalls);
             template.Line1stat.Title = string.Format("{0} - {1}", fromDate.ToShortDateString(), toDate.ToShortDateString());
@@ -68,13 +67,27 @@ namespace CakeExtracter.Reports
                 template.ChangeStat = new SimpleSearchStat
                 {
                     Title = "Change",
+
+                    // eCom
                     Revenue = secondStat.Revenue - firstStat.Revenue,
                     Cost = secondStat.Cost - firstStat.Cost,
                     ROAS = secondStat.ROAS - firstStat.ROAS,
                     Margin = secondStat.Margin - firstStat.Margin,
                     Orders = secondStat.Orders - firstStat.Orders,
                     CPO = secondStat.CPO - firstStat.CPO,
-                    Calls = secondStat.Calls - firstStat.Calls
+
+                    // leadgen
+                    Clicks = secondStat.Clicks - firstStat.Clicks,
+                    Impressions = secondStat.Impressions - firstStat.Impressions,
+                    CTR = secondStat.CTR - firstStat.CTR,
+                    // Spend (cost)
+                    CPC = secondStat.CPC - firstStat.CPC,
+                    // Leads (Orders)
+                    // ?CPL
+                    // ?ConvRate
+
+                    Calls = secondStat.Calls - firstStat.Calls,
+                    TotalLeads = secondStat.TotalLeads - firstStat.TotalLeads
                 };
             }
 
@@ -110,17 +123,22 @@ namespace CakeExtracter.Reports
             return htmlView;
         }
 
-        private void GenerateChart() // hard-coded to an Orders/CPO chart for now
+        private void GenerateChart()
         {
             var searchProfile = simpleReport.SearchProfile;
             int numWeeks = 8;
             var toDate = simpleReport.GetStatsEndDate();
-            var stats = cpRepo.GetWeekStats(searchProfile.SearchProfileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, toDate, false).ToList();
+            bool useAnalytics = false; // todo: get this from the SearchProfile when the column is moved there
+
+            var stats = cpRepo.GetWeekStats(searchProfile.SearchProfileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, toDate, useAnalytics, searchProfile.ShowCalls).ToList();
             foreach (var stat in stats)
             {
                 stat.Title = stat.Title.Replace(" ", "");
             }
-            this.ChartObj = new OrdersCPOChart(stats);
+            if (searchProfile.ShowRevenue)
+                this.ChartObj = new OrdersCPOChart(stats);
+            else
+                this.ChartObj = new LeadsCPLChart(stats, searchProfile.ShowCalls);
         }
 
         public Attachment GenerateSpreadsheetAttachment()

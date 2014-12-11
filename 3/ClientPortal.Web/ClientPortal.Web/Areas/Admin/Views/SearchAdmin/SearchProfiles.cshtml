@@ -6,6 +6,7 @@
 }
 
 @Ajax.ActionLink("Refresh", "SearchProfiles", ajaxOptions)
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#070">$ = Retail/eCommerce</span>
 <table border="1">
     <tr>
         <th></th>
@@ -22,7 +23,12 @@
     <tr>
         <td>@Ajax.ActionLink("Edit", "EditProfile", new { spId = profile.SearchProfileId }, ajaxOptions)</td>
         <td style="text-align:right">@profile.SearchProfileId</td>
-        <td>@profile.SearchProfileName</td>
+        @if (profile.ShowRevenue)
+        {
+            <td style="color:#070">$ @profile.SearchProfileName</td>
+        } else {
+            <td>@profile.SearchProfileName</td>
+        }
         <td>
             @if (profile.UserProfiles.Any()) {
                 @(String.Join(", ", profile.UserProfiles.Select(u => u.UserName).ToArray()))

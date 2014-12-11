@@ -588,6 +588,7 @@
           <Property Name="ShowSearchChannels" Type="bit" Nullable="false" />
           <Property Name="LCaccid" Type="nvarchar" MaxLength="100" />
           <Property Name="CallMinSeconds" Type="int" Nullable="false" />
+          <Property Name="ShowRevenue" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchProfileContact">
           <Key>
@@ -2065,6 +2066,7 @@
           <NavigationProperty Name="SimpleReports" Relationship="ClientPortalModel.FK_SimpleReport_SearchProfile" FromRole="SearchProfile" ToRole="SimpleReport" />
           <Property Type="String" Name="LCaccid" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="CallMinSeconds" Nullable="false" />
+          <Property Type="Boolean" Name="ShowRevenue" Nullable="false" />
         </EntityType>
         <Association Name="FK_UserProfile_SearchProfile">
           <End Type="ClientPortalModel.SearchProfile" Role="SearchProfile" Multiplicity="0..1" />
@@ -2630,6 +2632,7 @@
           <EntitySetMapping Name="SearchProfiles">
             <EntityTypeMapping TypeName="ClientPortalModel.SearchProfile">
               <MappingFragment StoreEntitySet="SearchProfile">
+                <ScalarProperty Name="ShowRevenue" ColumnName="ShowRevenue" />
                 <ScalarProperty Name="CallMinSeconds" ColumnName="CallMinSeconds" />
                 <ScalarProperty Name="LCaccid" ColumnName="LCaccid" />
                 <ScalarProperty Name="ShowSearchChannels" ColumnName="ShowSearchChannels" />

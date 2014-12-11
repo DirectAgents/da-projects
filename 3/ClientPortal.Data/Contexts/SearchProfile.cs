@@ -29,6 +29,7 @@ namespace ClientPortal.Data.Contexts
         public bool ShowSearchChannels { get; set; }
         public string LCaccid { get; set; }
         public int CallMinSeconds { get; set; }
+        public bool ShowRevenue { get; set; }
     
         public virtual ICollection<UserProfile> UserProfiles { get; set; }
         public virtual ICollection<SearchAccount> SearchAccounts { get; set; }

@@ -27,7 +27,7 @@ namespace ClientPortal.Web.Controllers
             var userInfo = GetUserInfo();
 
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
-            var weekStats = cpRepo.GetWeekStats(userInfo.SearchProfile.SearchProfileId, numweeks, userInfo.Search_StartDayOfWeek, endDate, userInfo.UseAnalytics);
+            var weekStats = cpRepo.GetWeekStats(userInfo.SearchProfile.SearchProfileId, numweeks, userInfo.Search_StartDayOfWeek, endDate, userInfo.UseAnalytics, userInfo.SearchProfile.ShowCalls);
             var kgrid = new KendoGrid<SearchStat>(request, weekStats);
             if (weekStats.Any())
                 kgrid.aggregates = Aggregates(weekStats);
@@ -41,7 +41,7 @@ namespace ClientPortal.Web.Controllers
             var userInfo = GetUserInfo();
 
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
-            var weekStats = cpRepo.GetWeekStats(userInfo.SearchProfile.SearchProfileId, numweeks, userInfo.Search_StartDayOfWeek, endDate, userInfo.UseAnalytics);
+            var weekStats = cpRepo.GetWeekStats(userInfo.SearchProfile.SearchProfileId, numweeks, userInfo.Search_StartDayOfWeek, endDate, userInfo.UseAnalytics, userInfo.SearchProfile.ShowCalls);
             var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(weekStats);
 
             string filename = "WeeklySummary" + ControllerHelpers.DateStamp() + ".csv";
@@ -54,7 +54,7 @@ namespace ClientPortal.Web.Controllers
             var userInfo = GetUserInfo();
 
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
-            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile.SearchProfileId, nummonths, userInfo.UseAnalytics, endDate)
+            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile.SearchProfileId, nummonths, endDate, userInfo.UseAnalytics, userInfo.SearchProfile.ShowCalls)
                 .ToList()
                 .OrderBy(s => s.StartDate)
                 .AsQueryable();
@@ -71,7 +71,7 @@ namespace ClientPortal.Web.Controllers
             var userInfo = GetUserInfo();
 
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
-            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile.SearchProfileId, nummonths, userInfo.UseAnalytics, endDate);
+            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile.SearchProfileId, nummonths, endDate, userInfo.UseAnalytics, userInfo.SearchProfile.ShowCalls);
             var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(monthStats);
 
             string filename = "MonthlySummary" + ControllerHelpers.DateStamp() + ".csv";
@@ -116,7 +116,7 @@ namespace ClientPortal.Web.Controllers
             if (!start.HasValue) start = userInfo.Search_Dates.FirstOfMonth;
             if (!end.HasValue) end = userInfo.Search_Dates.Latest;
 
-            var stats = cpRepo.GetCampaignStats(userInfo.SearchProfile.SearchProfileId, channel, start, end, breakdown, userInfo.UseAnalytics);
+            var stats = cpRepo.GetCampaignStats(userInfo.SearchProfile.SearchProfileId, channel, start, end, breakdown, userInfo.UseAnalytics, userInfo.SearchProfile.ShowCalls);
 
             var kgrid = new KendoGrid<SearchStat>(request, stats);
             if (stats.Any())
@@ -137,7 +137,7 @@ namespace ClientPortal.Web.Controllers
             if (!start.HasValue) start = userInfo.Search_Dates.FirstOfMonth;
             if (!end.HasValue) end = userInfo.Search_Dates.Latest;
 
-            var stats = cpRepo.GetCampaignStats(userInfo.SearchProfile.SearchProfileId, channel, start, end, breakdown, userInfo.UseAnalytics)
+            var stats = cpRepo.GetCampaignStats(userInfo.SearchProfile.SearchProfileId, channel, start, end, breakdown, userInfo.UseAnalytics, userInfo.SearchProfile.ShowCalls)
                 .OrderBy(s => s.EndDate).ThenByDescending(s => s.Channel).ThenBy(s => s.Title);
             var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(stats);
 
