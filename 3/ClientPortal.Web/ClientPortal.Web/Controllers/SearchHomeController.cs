@@ -29,7 +29,13 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult Dashboard()
         {
-            return PartialView();
+            var userInfo = GetUserInfo();
+
+            var model = new SearchReportModel
+            {
+                SearchProfile = userInfo.SearchProfile
+            };
+            return PartialView(model);
         }
 
         public PartialViewResult Monthly()
@@ -46,7 +52,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var model = new SearchReportModel()
+            var model = new SearchReportModel
             {
                 StartDate = userInfo.Search_Dates.FirstOfMonth.ToString("d", userInfo.CultureInfo),
                 EndDate = userInfo.Search_Dates.Latest.ToString("d", userInfo.CultureInfo)
@@ -63,11 +69,12 @@ namespace ClientPortal.Web.Controllers
             while (start.DayOfWeek != userInfo.Search_StartDayOfWeek)
                 start = start.AddDays(-1);
 
-            return PartialView(new SearchReportModel
+            var model = new SearchReportModel
             {
                 StartDate = start.ToString("d", userInfo.CultureInfo),
                 EndDate = userInfo.Search_Dates.Latest.ToString("d", userInfo.CultureInfo)
-            });
+            };
+            return PartialView(model);
         }
 
         //public PartialViewResult AdgroupPerf()

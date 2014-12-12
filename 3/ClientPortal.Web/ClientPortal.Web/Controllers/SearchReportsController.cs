@@ -242,6 +242,9 @@ namespace ClientPortal.Web.Controllers
             var sumOrders = stats.Sum(s => s.Orders);
             var sumClicks = stats.Sum(s => s.Clicks);
             var sumImpressions = stats.Sum(s => s.Impressions);
+            var sumCalls = stats.Sum(s => s.Calls);
+            var sumTotalLeads = stats.Sum(s => s.TotalLeads);
+            //var sumTotalLeads = sumOrders + sumCalls;
 
             // Determine totalDays (The stats may or may not be for the same time period.)
             var periods = stats.Select(s => new { StartDate = s.StartDate, EndDate = s.EndDate });
@@ -262,6 +265,11 @@ namespace ClientPortal.Web.Controllers
                 Impressions = new { sum = sumImpressions },
                 CTR = new { agg = sumImpressions == 0 ? 0 : Math.Round((decimal)100 * sumClicks / sumImpressions, 2) },
                 OrdersPerDay = new { agg = totalDays == 0 ? 0 : Math.Round((decimal)sumOrders / totalDays, 2) },
+
+                Calls = new { sum = sumCalls },
+                TotalLeads = new { sum = sumTotalLeads },
+                ConvRate = new { agg = sumClicks == 0 ? 0 : Math.Round((decimal)100 * sumTotalLeads / sumClicks, 2) },
+                CPL = new { agg = sumTotalLeads == 0 ? 0 : Math.Round(sumCost / sumTotalLeads, 2) },
             };
             return aggregates;
         }

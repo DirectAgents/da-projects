@@ -1,4 +1,6 @@
-﻿<div class="row">
+﻿@model ClientPortal.Web.Models.SearchReportModel
+
+<div class="row">
     <div class="large-12 columns">
         <div class="searchpanel" id="weeksumOuter">
             <b>Weekly Summary</b>
@@ -10,16 +12,16 @@
 
 <div class="row">
     <div class="large-6 columns">
-        <div id="weekrevChartSection" class="k-content">
+        <div id="weekleftChartSection" class="k-content">
             <div class="chart-wrapper">
-                <div id="weekrevChart"></div>
+                <div id="weekleftChart"></div>
             </div>
         </div>
     </div>
     <div class="large-6 columns">
-        <div id="weekorderChartSection" class="k-content">
+        <div id="weekrightChartSection" class="k-content">
             <div class="chart-wrapper">
-                <div id="weekorderChart"></div>
+                <div id="weekrightChart"></div>
             </div>
         </div>
     </div>
@@ -28,11 +30,16 @@
 <script>
     $(function () {
         var weeksumDS = CreateSummaryDataSource('@Url.Action("WeekSumData", "SearchReports")', null, false, false, 0);
-        CreateSummaryGrid(weeksumDS, $('#weeksumGrid'), 300, 'Week', 10, 2, true, false, false, null);
 
-        CreateRevROASChart(weeksumDS, 'weekrevChart', 'Weekly Revenue vs. ROAS Performance');
-        CreateOrderCPOChart(weeksumDS, 'weekorderChart', 'Weekly Orders vs. CPO Performance');
-
+    @if (Model.SearchProfile.ShowRevenue) {
+        <text>CreateSummaryGrid(weeksumDS, $('#weeksumGrid'), 300, 'Week', 10, 2, true, false, false, null);</text>
+        <text>CreateRevROASChart(weeksumDS, 'weekleftChart', 'Weekly Revenue vs. ROAS Performance');</text>
+        <text>CreateOrderCPOChart(weeksumDS, 'weekrightChart', 'Weekly Orders vs. CPO Performance');</text>
+    } else {
+        <text>CreateSummaryGridLeadGen(weeksumDS, $('#weeksumGrid'), 300, 'Week', 10, 2, true, false, false, null);</text>
+        <text>CreateCTRCPCChart(weeksumDS, 'weekleftChart', 'Weekly CTR vs. CPC Performance');</text>
+        <text>CreateTotalLeadsCPLChart(weeksumDS, 'weekrightChart', 'Weekly TotalLeads vs. CPL Performance');</text>
+    }
         weeksumDS.read();
     });
 

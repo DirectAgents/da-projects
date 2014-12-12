@@ -1,5 +1,4 @@
-﻿
-@model ClientPortal.Web.Models.SearchReportModel
+﻿@model ClientPortal.Web.Models.SearchReportModel
 
 <div style="height: 40px;">
     <select style="width: 140px" id="campaignperf_dateRangeSel" onchange="ChangeDateRange('campaignperf')">
@@ -47,9 +46,9 @@
                     breakdown: showBreakdown
                 };
             },
-            false,
-            true,
-            0);
+            false, //don't group
+            true, //sort by revenue
+            0); //default page size
         CreateSummaryGrid(campaignperfDS, $('#campaignperfGrid'), 550, 'Campaign', 20, 2, true, true, showBreakdown, null);
         campaignperfDS.read();
     }
