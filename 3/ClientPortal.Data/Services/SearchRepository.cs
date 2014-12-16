@@ -411,8 +411,8 @@ namespace ClientPortal.Data.Services
             //}
         }
 
-        // (used for Campaign Weekly report)
-        public IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int searchProfileId, int numWeeks, bool includeToday, DayOfWeek startDayOfWeek, bool useAnalytics)
+        // unused?
+        public IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int searchProfileId, int numWeeks, bool includeToday, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeCalls)
         {
             DateTime start = DateTime.Today.AddDays(-7 * numWeeks + 6); // Set start date to numWeeks weeks ago, plus 6
             // Now move start date back to the closest startDayOfWeek
@@ -423,12 +423,15 @@ namespace ClientPortal.Data.Services
             if (!includeToday)
                 end = end.AddDays(-1);
 
-            return GetCampaignWeekStats2(searchProfileId, start, end, startDayOfWeek, useAnalytics);
+            return GetCampaignWeekStats2(searchProfileId, start, end, startDayOfWeek, useAnalytics, includeCalls);
         }
-        public IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int searchProfileId, DateTime startDate, DateTime endDate, DayOfWeek startDayOfWeek, bool useAnalytics)
+
+        // (used for Campaign Weekly report)
+        public IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int searchProfileId, DateTime startDate, DateTime endDate, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeCalls)
         {
             var weeks = CalenderWeek.Generate(startDate, endDate, startDayOfWeek);
-            var sums = GetSearchDailySummaries(null, searchProfileId, null, null, null, null, startDate, endDate, true)
+            var searchCampaigns = GetSearchCampaigns(null, searchProfileId, null, null, null);
+            var sums = GetSearchDailySummaries(searchCampaigns, null, startDate, endDate, true)
                 .Select(s => new
                 {
                     s.Date,
@@ -460,7 +463,7 @@ namespace ClientPortal.Data.Services
 
             if (useAnalytics)
             {
-                var gaStats = GetGoogleAnalyticsSummaries(null, searchProfileId, null, null, null, startDate, endDate, true)
+                var gaStats = GetGoogleAnalyticsSummaries(searchCampaigns, startDate, endDate, true)
                     .AsEnumerable()
                     .GroupBy(s => new
                     {
@@ -474,19 +477,49 @@ namespace ClientPortal.Data.Services
                         Transactions = g.Sum(s => s.Transactions),
                         Revenue = g.Sum(s => s.Revenue)
                     });
-                sums = (from sum in sums
-                         join ga in gaStats on new { sum.CampaignId, sum.Week.StartDate } equals new { ga.CampaignId, ga.Week.StartDate } into gj_stats
-                         from gaStat in gj_stats.DefaultIfEmpty() // left join to gaStats
-                         select new SearchSummary
-                         {
-                             Week = sum.Week,
-                             Channel = sum.Channel,
-                             CampaignId = sum.CampaignId,
-                             CampaignName = sum.CampaignName,
-                             Orders = (gaStat == null) ? 0 : gaStat.Transactions,
-                             Revenue = (gaStat == null) ? 0 : gaStat.Revenue,
-                             Cost = sum.Cost
-                         });
+                sums = from sum in sums
+                       join ga in gaStats on new { sum.CampaignId, sum.Week.StartDate } equals new { ga.CampaignId, ga.Week.StartDate } into gj_stats
+                       from gaStat in gj_stats.DefaultIfEmpty() // left join to gaStats
+                       select new SearchSummary
+                       {
+                           Week = sum.Week,
+                           Channel = sum.Channel,
+                           CampaignId = sum.CampaignId,
+                           CampaignName = sum.CampaignName,
+                           Orders = (gaStat == null) ? 0 : gaStat.Transactions,
+                           Revenue = (gaStat == null) ? 0 : gaStat.Revenue,
+                           Cost = sum.Cost
+                       };
+            }
+            if (includeCalls)
+            {
+                var callStats = GetCallDailySummaries(searchCampaigns, startDate, endDate, true)
+                    .AsEnumerable()
+                    .GroupBy(s => new
+                    {
+                        Week = weeks.First(w => w.EndDate >= s.Date),
+                        s.SearchCampaignId
+                    })
+                    .Select(g => new CallSummary
+                    {
+                        CampaignId = g.Key.SearchCampaignId,
+                        Week = g.Key.Week,
+                        Calls = g.Sum(s => s.Calls)
+                    });
+                sums = from sum in sums
+                       join ca in callStats on new { sum.CampaignId, sum.Week.StartDate } equals new { ca.CampaignId, ca.Week.StartDate } into gj_stats
+                       from callStat in gj_stats.DefaultIfEmpty() // left join to callStats
+                       select new SearchSummary
+                       {
+                           Week = sum.Week,
+                           Channel = sum.Channel,
+                           CampaignId = sum.CampaignId,
+                           CampaignName = sum.CampaignName,
+                           Orders = sum.Orders,
+                           Revenue = sum.Revenue,
+                           Cost = sum.Cost,
+                           Calls = (callStat == null) ? 0 : callStat.Calls
+                       };
             }
 
             var stats = sums
@@ -499,7 +532,7 @@ namespace ClientPortal.Data.Services
                     Channel = s.Channel,
                     Campaign = s.CampaignName,
                     ROAS = s.Cost == 0 ? 0 : (int)Math.Round(100 * s.Revenue / s.Cost),
-                    CPO = s.Orders == 0 ? 0 : Math.Round(s.Cost / s.Orders, 2)
+                    CPL = (s.Orders + s.Calls == 0) ? 0 : Math.Round(s.Cost / (s.Orders + s.Calls), 2)
                 });
             return stats.AsQueryable();
         }

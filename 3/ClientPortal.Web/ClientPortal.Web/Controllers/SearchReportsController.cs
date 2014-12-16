@@ -159,7 +159,7 @@ namespace ClientPortal.Web.Controllers
             if (!end.HasValue) end = userInfo.Search_Dates.Latest;
 
             // Get weekly search stats
-            var rows = cpRepo.GetCampaignWeekStats2(searchProfile.SearchProfileId, start.Value, end.Value, userInfo.Search_StartDayOfWeek, userInfo.UseAnalytics);
+            var rows = cpRepo.GetCampaignWeekStats2(searchProfile.SearchProfileId, start.Value, end.Value, userInfo.Search_StartDayOfWeek, userInfo.UseAnalytics, searchProfile.ShowCalls);
 
             // Create DataTable
             var dataTable = new DataTable("data");
@@ -197,8 +197,7 @@ namespace ClientPortal.Web.Controllers
             foreach (var group in groups)
             {
                 var dataRow = dataTable.NewRow();
-                var showing = searchProfile.ShowRevenue ? "ROAS(%)" : "CPO($)";
-                //var showing = searchProfile.ShowRevenue ? "ROAS(%)" : "CPL($)";
+                var showing = searchProfile.ShowRevenue ? "ROAS(%)" : "CPL($)";
                 var isActive = true; // TODO: make real
 
                 dataRow.SetField("colChannel", group.Key.Channel);
@@ -209,8 +208,7 @@ namespace ClientPortal.Web.Controllers
                 foreach (var item in group)
                 {
                     var columnName = strinfifyDates(item.StartDate, item.EndDate);
-                    var columnValue = (showing == "ROAS(%)") ? item.ROAS : item.CPO;
-                    //var columnValue = (showing == "ROAS(%)") ? item.ROAS : item.CPL;
+                    var columnValue = (showing == "ROAS(%)") ? item.ROAS : item.CPL;
                     dataRow.SetField(columnName, columnValue);
                 }
 
