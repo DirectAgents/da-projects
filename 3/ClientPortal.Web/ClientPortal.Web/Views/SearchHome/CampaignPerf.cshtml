@@ -47,9 +47,14 @@
                 };
             },
             false, //don't group
-            true, //sort by revenue
+            '@(Model.SearchProfile.ShowRevenue ? "revenue" : "clicks")', //sort
             0); //default page size
-        CreateSummaryGrid(campaignperfDS, $('#campaignperfGrid'), 550, 'Campaign', 20, 2, true, true, showBreakdown, null);
+
+    @if (Model.SearchProfile.ShowRevenue) {
+        <text>CreateSummaryGrid(campaignperfDS, $('#campaignperfGrid'), 550, 'Campaign', 20, 2, true, true, showBreakdown, null);</text>
+    } else {
+        <text>CreateSummaryGridLeadGen(campaignperfDS, $('#campaignperfGrid'), 550, 'Campaign', 20, 2, true, true, showBreakdown, null, @(Model.SearchProfile.ShowCalls ? "true" : "false"));</text>
+    }
         campaignperfDS.read();
     }
 

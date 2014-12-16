@@ -83,7 +83,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var channelStats = cpRepo.GetChannelStats(userInfo.SearchProfile.SearchProfileId, numweeks, userInfo.Search_StartDayOfWeek, userInfo.UseAnalytics, !userInfo.Search_UseYesterdayAsLatest, true, userInfo.ShowSearchChannels);
+            var channelStats = cpRepo.GetChannelStats(userInfo.SearchProfile.SearchProfileId, numweeks, userInfo.Search_StartDayOfWeek, userInfo.UseAnalytics, !userInfo.Search_UseYesterdayAsLatest, true, userInfo.ShowSearchChannels, userInfo.SearchProfile.ShowCalls);
             var kgrid = new KendoGrid<SearchStat>(request, channelStats);
             if (channelStats.Any())
                 kgrid.aggregates = Aggregates(channelStats);
@@ -97,7 +97,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var stats = cpRepo.GetChannelStats(userInfo.SearchProfile.SearchProfileId, numweeks, userInfo.Search_StartDayOfWeek, userInfo.UseAnalytics, !userInfo.Search_UseYesterdayAsLatest, true, userInfo.ShowSearchChannels);
+            var stats = cpRepo.GetChannelStats(userInfo.SearchProfile.SearchProfileId, numweeks, userInfo.Search_StartDayOfWeek, userInfo.UseAnalytics, !userInfo.Search_UseYesterdayAsLatest, true, userInfo.ShowSearchChannels, userInfo.SearchProfile.ShowCalls);
             var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(stats);
 
             string filename = "ChannelPerformance" + ControllerHelpers.DateStamp() + ".csv";
@@ -148,6 +148,7 @@ namespace ClientPortal.Web.Controllers
         public JsonResult CampaignPerfWeeklyData(string startdate, string enddate)
         {
             var userInfo = GetUserInfo();
+            var searchProfile = userInfo.SearchProfile;
             var cultureInfo = userInfo.CultureInfo;
             DateTime? start, end;
 
@@ -158,7 +159,7 @@ namespace ClientPortal.Web.Controllers
             if (!end.HasValue) end = userInfo.Search_Dates.Latest;
 
             // Get weekly search stats
-            var rows = cpRepo.GetCampaignWeekStats2(userInfo.SearchProfile.SearchProfileId, start.Value, end.Value, userInfo.Search_StartDayOfWeek, userInfo.UseAnalytics);
+            var rows = cpRepo.GetCampaignWeekStats2(searchProfile.SearchProfileId, start.Value, end.Value, userInfo.Search_StartDayOfWeek, userInfo.UseAnalytics);
 
             // Create DataTable
             var dataTable = new DataTable("data");
@@ -196,7 +197,8 @@ namespace ClientPortal.Web.Controllers
             foreach (var group in groups)
             {
                 var dataRow = dataTable.NewRow();
-                var showing = group.All(c => c.ROAS == 0) ? "CPO($)" : "ROAS(%)";
+                var showing = searchProfile.ShowRevenue ? "ROAS(%)" : "CPO($)";
+                //var showing = searchProfile.ShowRevenue ? "ROAS(%)" : "CPL($)";
                 var isActive = true; // TODO: make real
 
                 dataRow.SetField("colChannel", group.Key.Channel);
@@ -207,7 +209,8 @@ namespace ClientPortal.Web.Controllers
                 foreach (var item in group)
                 {
                     var columnName = strinfifyDates(item.StartDate, item.EndDate);
-                    var columnValue = (showing == "ROAS(%)") ? item.ROAS: item.CPO;
+                    var columnValue = (showing == "ROAS(%)") ? item.ROAS : item.CPO;
+                    //var columnValue = (showing == "ROAS(%)") ? item.ROAS : item.CPL;
                     dataRow.SetField(columnName, columnValue);
                 }
 

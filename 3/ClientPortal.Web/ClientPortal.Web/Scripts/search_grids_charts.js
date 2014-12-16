@@ -1,4 +1,4 @@
-﻿function CreateSummaryDataSource(url, readData, group, sortByRevenue, pageSize) {
+﻿function CreateSummaryDataSource(url, readData, group, sort, pageSize) {
     if (pageSize == 0) pageSize = 100; // default
     if (pageSize == -1) pageSize = 1000; // "unlimited"
 
@@ -74,8 +74,10 @@
         };
         args.sort = { field: 'Title', dir: 'asc' };
     } else {
-        if (sortByRevenue)
+        if (sort == 'revenue')
             args.sort = [{ field: 'Revenue', dir: 'desc' }, { field: 'Cost', dir: 'desc' }, { field: 'Impressions', dir: 'desc' }];
+        else if (sort == 'clicks')
+            args.sort = [{ field: 'Clicks', dir: 'desc' }, { field: 'Impressions', dir: 'desc' }];
         else
             args.sort = { field: 'Channel', dir: 'asc' };
     }
@@ -102,7 +104,7 @@ function CreateSummaryGrid(dataSource, el, height, titleHeader, titleWidthPct, d
             { field: 'Orders', format: '{0:n0}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
             { field: 'Revenue', format: '{0:c' + decimals + '}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
             { field: 'Margin', title: 'Net', format: '{0:c' + decimals + '}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-            { field: 'CPO', title: 'Cost/Order', format: '{0:c' + decimals + '}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+            { field: 'CPO', format: '{0:c' + decimals + '}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
             { field: 'OrderRate', format: '{0:n2}%', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'n2') + '%' #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
             { field: 'RevenuePerOrder', title: 'Rev/Order', format: '{0:c' + decimals + '}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
             { field: 'ROAS', format: '{0:n0}%', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'n0') + '%' #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
@@ -122,7 +124,7 @@ function CreateSummaryGrid(dataSource, el, height, titleHeader, titleWidthPct, d
     }
     el.kendoGrid(args);
 }
-function CreateSummaryGridLeadGen(dataSource, el, height, titleHeader, titleWidthPct, decimals, sortable, showChannel, showBreakdown, detailInit) {
+function CreateSummaryGridLeadGen(dataSource, el, height, titleHeader, titleWidthPct, decimals, sortable, showChannel, showBreakdown, detailInit, showCalls) {
     var args = {
         dataSource: dataSource,
         autoBind: false,
@@ -140,8 +142,8 @@ function CreateSummaryGridLeadGen(dataSource, el, height, titleHeader, titleWidt
             { field: 'Cost', title: 'Spend', format: '{0:c' + decimals + '}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
             { field: 'CPC', format: '{0:c2}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c2') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
             { field: 'Orders', title: 'Leads', format: '{0:n0}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
-            { field: 'Calls', format: '{0:n0}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
-            { field: 'TotalLeads', format: '{0:n0}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+            { field: 'Calls', hidden: !showCalls, format: '{0:n0}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+            { field: 'TotalLeads', hidden: !showCalls, format: '{0:n0}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
             { field: 'CPL', format: '{0:c' + decimals + '}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
             { field: 'ConvRate', format: '{0:n2}%', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'n2') + '%' #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
         ],
@@ -160,7 +162,7 @@ function CreateSummaryGridLeadGen(dataSource, el, height, titleHeader, titleWidt
     el.kendoGrid(args);
 }
 
-function DetailInit(e, url) {
+function DetailInit(e, url, funcCreateSummaryGrid, showCalls, sort) {
     var readData = function () {
         return {
             channel: e.data.Title,
@@ -168,11 +170,11 @@ function DetailInit(e, url) {
             enddate: e.data.EndDate.toLocaleDateString()
         };
     }
-    var dataSource = CreateSummaryDataSource(url, readData, false, true, -1);
+    var dataSource = CreateSummaryDataSource(url, readData, false, sort, -1);
     dataSource.read();
 
     var el = $("<div/>").appendTo(e.detailCell);
-    CreateSummaryGrid(dataSource, el, null, 'Campaign', 18, 2, true, false, false, null);
+    funcCreateSummaryGrid(dataSource, el, null, 'Campaign', 18, 2, true, false, false, null, showCalls);
 }
 
 function CreateRevROASChart(dataSource, elId, title) {
@@ -193,15 +195,15 @@ function CreateOrderCPOChart(dataSource, elId, title) {
     ];
     var valueAxis = [
         { name: "orders", labels: { format: "N0", step: 2 }, title: { text: "Orders" } },
-        { name: "cpo", labels: { format: "C0", step: 2 }, title: { text: "CPO" } }
+        { name: "cpo", labels: { format: "C", step: 2 }, title: { text: "CPO" } }
     ];
     CreateSummaryChart(dataSource, elId, title, series, valueAxis);
 }
 
 function CreateCTRCPCChart(dataSource, elId, title) {
     var series = [
-        { field: "CTR", axis: "ctr", tooltip: { template: "CTR: #= kendo.format('{0:N2}%',value) #" }, type: "area", color: "#007eff" },
-        { field: "CPC", axis: "cpc", tooltip: { template: "CPC: #= kendo.format('{0:C}',value) #" }, type: "line", color: "#ff1c1c" }
+        { field: "CTR", name: "CTR", axis: "ctr", tooltip: { template: "CTR: #= kendo.format('{0:N2}%',value) #" }, type: "area", color: "#007eff" },
+        { field: "CPC", name: "CPC", axis: "cpc", tooltip: { template: "CPC: #= kendo.format('{0:C}',value) #" }, type: "line", color: "#ff1c1c" }
     ];
     var valueAxis = [
         { name: "ctr", labels: { format: "{0:N2}%", step: 2 }, title: { text: "CTR" } },
@@ -209,13 +211,13 @@ function CreateCTRCPCChart(dataSource, elId, title) {
     ];
     CreateSummaryChart(dataSource, elId, title, series, valueAxis);
 }
-function CreateTotalLeadsCPLChart(dataSource, elId, title) {
+function CreateLeadsCPLChart(dataSource, elId, title, nameForLeads) {
     var series = [
-        { field: "TotalLeads", axis: "totalleads", tooltip: { template: "TotalLeads: #= kendo.format('{0:N0}',value) #" }, type: "area", color: "#007eff" },
-        { field: "CPL", axis: "cpl", tooltip: { template: "CPL: #= kendo.format('{0:C}',value) #" }, type: "line", color: "#ff1c1c" }
+        { field: "TotalLeads", name: nameForLeads, axis: "totalleads", tooltip: { template: nameForLeads + ": #= kendo.format('{0:N0}',value) #" }, type: "area", color: "#007eff" },
+        { field: "CPL", name: "CPL", axis: "cpl", tooltip: { template: "CPL: #= kendo.format('{0:C}',value) #" }, type: "line", color: "#ff1c1c" }
     ];
     var valueAxis = [
-        { name: "totalleads", labels: { format: "N0", step: 2 }, title: { text: "TotalLeads" } },
+        { name: "totalleads", labels: { format: "N0", step: 2 }, title: { text: nameForLeads } },
         { name: "cpl", labels: { format: "C", step: 2 }, title: { text: "CPL" } }
     ];
     CreateSummaryChart(dataSource, elId, title, series, valueAxis);

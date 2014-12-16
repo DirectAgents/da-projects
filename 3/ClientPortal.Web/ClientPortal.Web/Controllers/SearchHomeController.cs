@@ -30,22 +30,22 @@ namespace ClientPortal.Web.Controllers
         public PartialViewResult Dashboard()
         {
             var userInfo = GetUserInfo();
-
-            var model = new SearchReportModel
-            {
-                SearchProfile = userInfo.SearchProfile
-            };
+            var model = new SearchReportModel { SearchProfile = userInfo.SearchProfile };
             return PartialView(model);
         }
 
         public PartialViewResult Monthly()
         {
-            return PartialView();
+            var userInfo = GetUserInfo();
+            var model = new SearchReportModel { SearchProfile = userInfo.SearchProfile };
+            return PartialView(model);
         }
 
         public PartialViewResult ChannelPerf()
         {
-            return PartialView();
+            var userInfo = GetUserInfo();
+            var model = new SearchReportModel { SearchProfile = userInfo.SearchProfile };
+            return PartialView(model);
         }
 
         public PartialViewResult CampaignPerf()
@@ -54,6 +54,7 @@ namespace ClientPortal.Web.Controllers
 
             var model = new SearchReportModel
             {
+                SearchProfile = userInfo.SearchProfile,
                 StartDate = userInfo.Search_Dates.FirstOfMonth.ToString("d", userInfo.CultureInfo),
                 EndDate = userInfo.Search_Dates.Latest.ToString("d", userInfo.CultureInfo)
             };

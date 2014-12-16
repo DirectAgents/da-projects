@@ -7,10 +7,12 @@
 
 @Ajax.ActionLink("Refresh", "SearchProfiles", ajaxOptions)
 &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#070">$ = Retail/eCommerce</span>
+&nbsp;&nbsp;&nbsp;+ = Show Calls
 <table border="1">
     <tr>
         <th></th>
         <th>Id</th>
+        <th></th>
         <th>SearchProfile</th>
         <th>Login</th>
         <th>Spreadsheet</th>
@@ -19,14 +21,17 @@
     </tr>
 @foreach (var profile in Model)
 {
+    string showCallsIcon = profile.ShowCalls ? "+" : "";
 	int numReports = profile.SimpleReports.Count();
     <tr>
         <td>@Ajax.ActionLink("Edit", "EditProfile", new { spId = profile.SearchProfileId }, ajaxOptions)</td>
         <td style="text-align:right">@profile.SearchProfileId</td>
         @if (profile.ShowRevenue)
         {
-            <td style="color:#070">$ @profile.SearchProfileName</td>
+            <td style="color:#070">$@(showCallsIcon)</td>
+            <td style="color:#070">@profile.SearchProfileName</td>
         } else {
+            <td>@showCallsIcon</td>
             <td>@profile.SearchProfileName</td>
         }
         <td>

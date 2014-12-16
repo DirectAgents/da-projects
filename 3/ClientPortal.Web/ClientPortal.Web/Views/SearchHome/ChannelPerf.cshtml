@@ -1,4 +1,6 @@
-﻿<div class="row">
+﻿@model ClientPortal.Web.Models.SearchReportModel
+
+<div class="row">
     <div class="large-12 columns">
         <div class="searchpanel" id="channelperfOuter">
             <b>Channel Performance</b>
@@ -16,12 +18,24 @@
 
 <script>
     $(function () {
-        var channelperfDS = CreateSummaryDataSource('@Url.Action("ChannelPerfData", "SearchReports")', null, true, false, 0);
-        CreateSummaryGrid(channelperfDS, $('#channelperfGrid'), 550, 'Channel', 17, 2, false, false, false, function (e) {
-            DetailInit(e, '@Url.Action("CampaignPerfData", "SearchReports")');
-        });
+        var channelperfDS = CreateSummaryDataSource('@Url.Action("ChannelPerfData", "SearchReports")', null, true, 'nosort', 0);
+
+    @if (Model.SearchProfile.ShowRevenue) {
+        <text>CreateSummaryGrid(channelperfDS, $('#channelperfGrid'), 550, 'Channel', 17, 2, false, false, false, DetailInitWrapper);</text>
+    } else {
+        <text>CreateSummaryGridLeadGen(channelperfDS, $('#channelperfGrid'), 550, 'Channel', 17, 2, false, false, false, DetailInitWrapper, @(Model.SearchProfile.ShowCalls ? "true" : "false"));</text>
+    }
         channelperfDS.read();
     });
+
+    function DetailInitWrapper(e) {
+        DetailInit(e,
+                   '@Url.Action("CampaignPerfData", "SearchReports")',
+                   @(Model.SearchProfile.ShowRevenue ? "CreateSummaryGrid" : "CreateSummaryGridLeadGen"),
+                   @(Model.SearchProfile.ShowCalls ? "true" : "false"),
+                   '@(Model.SearchProfile.ShowRevenue ? "revenue" : "clicks")'
+                   );
+    };
 
     function ExportChannelPerfCSV() {
         window.location.href = '@Url.Action("ChannelPerfExport", "SearchReports")';

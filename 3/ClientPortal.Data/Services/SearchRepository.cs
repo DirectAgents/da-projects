@@ -248,7 +248,7 @@ namespace ClientPortal.Data.Services
             return GetWeekStats(null, searchProfileId, null, null, null, null, numWeeks, startDayOfWeek, endDate, useAnalytics, includeCalls);
         }
 
-        private IQueryable<SearchStat> GetWeekStats(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, int numWeeks, DayOfWeek startDayOfWeek, DateTime? endDate, bool useAnalytics, bool includeCalls = false)
+        private IQueryable<SearchStat> GetWeekStats(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, int numWeeks, DayOfWeek startDayOfWeek, DateTime? endDate, bool useAnalytics, bool includeCalls)
         {
             if (!String.IsNullOrWhiteSpace(device) && useAnalytics)
                 throw new Exception("specifying a device and useAnalytics not supported");
@@ -579,7 +579,7 @@ namespace ClientPortal.Data.Services
         }
 
         // Get a SearchStat summary for each week for each channel (Google/Bing/etc)... and, if includeAccountBreakdown, each SearchAccount
-        public IQueryable<SearchStat> GetChannelStats(int searchProfileId, int numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday, bool includeAccountBreakdown, bool includeSearchChannels)
+        public IQueryable<SearchStat> GetChannelStats(int searchProfileId, int numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday, bool includeAccountBreakdown, bool includeSearchChannels, bool includeCalls)
         {
             var searchProfile = GetSearchProfile(searchProfileId);
             DateTime endDate = includeToday ? DateTime.Today : DateTime.Today.AddDays(-1);
@@ -594,9 +594,9 @@ namespace ClientPortal.Data.Services
             IQueryable<SearchStat> stats = new List<SearchStat>().AsQueryable();
             if (includeMainChannels)
             {
-                var googleStats = GetWeekStats(null, searchProfileId, "Google", null, null, null, numWeeks, startDayOfWeek, endDate, useAnalytics);
-                var bingStats = GetWeekStats(null, searchProfileId, "Bing", null, null, null, numWeeks, startDayOfWeek, endDate, useAnalytics);
-                var criteoStats = GetWeekStats(null, searchProfileId, "Criteo", null, null, null, numWeeks, startDayOfWeek, endDate, useAnalytics);
+                var googleStats = GetWeekStats(null, searchProfileId, "Google", null, null, null, numWeeks, startDayOfWeek, endDate, useAnalytics, includeCalls);
+                var bingStats = GetWeekStats(null, searchProfileId, "Bing", null, null, null, numWeeks, startDayOfWeek, endDate, useAnalytics, includeCalls);
+                var criteoStats = GetWeekStats(null, searchProfileId, "Criteo", null, null, null, numWeeks, startDayOfWeek, endDate, useAnalytics, includeCalls);
                 stats = googleStats.Concat(bingStats).Concat(criteoStats).AsQueryable();
             }
             if (includeAccountBreakdown)
@@ -609,7 +609,7 @@ namespace ClientPortal.Data.Services
                     {
                         foreach (var searchAccount in searchAccounts)
                         {
-                            var accountStats = GetWeekStats(null, searchProfileId, channel, searchAccount.SearchAccountId, null, null, numWeeks, startDayOfWeek, endDate, useAnalytics);
+                            var accountStats = GetWeekStats(null, searchProfileId, channel, searchAccount.SearchAccountId, null, null, numWeeks, startDayOfWeek, endDate, useAnalytics, includeCalls);
                             stats = stats.Concat(accountStats);
                         }
                     }
@@ -622,7 +622,7 @@ namespace ClientPortal.Data.Services
                     if (!String.IsNullOrWhiteSpace(searchChannel.Device) && useAnalytics)
                         continue; // specifying device and useAnalytics not supported; analytics summaries are not broken down by device
 
-                    var channelStats = GetWeekStats(null, searchProfileId, null, null, searchChannel.Prefix, searchChannel.Device, numWeeks, startDayOfWeek, endDate, useAnalytics);
+                    var channelStats = GetWeekStats(null, searchProfileId, null, null, searchChannel.Prefix, searchChannel.Device, numWeeks, startDayOfWeek, endDate, useAnalytics, includeCalls);
                     if (channelStats.Count() > 0)
                         stats = stats.Concat(channelStats);
                 }

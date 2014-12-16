@@ -1,4 +1,6 @@
-﻿<div class="row">
+﻿@model ClientPortal.Web.Models.SearchReportModel
+
+<div class="row">
     <div class="large-12 columns">
         <div class="searchpanel" id="monthsumOuter">
             <b>Monthly Summary</b>
@@ -10,16 +12,16 @@
 
 <div class="row">
     <div class="large-6 columns">
-        <div id="monthrevChartSection" class="k-content">
+        <div id="monthleftChartSection" class="k-content">
             <div class="chart-wrapper">
-                <div id="monthrevChart"></div>
+                <div id="monthleftChart"></div>
             </div>
         </div>
     </div>
     <div class="large-6 columns">
-        <div id="monthorderChartSection" class="k-content">
+        <div id="monthrightChartSection" class="k-content">
             <div class="chart-wrapper">
-                <div id="monthorderChart"></div>
+                <div id="monthrightChart"></div>
             </div>
         </div>
     </div>
@@ -27,12 +29,21 @@
 
 <script>
     $(function () {
-        var monthsumDS = CreateSummaryDataSource('@Url.Action("MonthSumData", "SearchReports")', null, false, false, 0);
-        CreateSummaryGrid(monthsumDS, $('#monthsumGrid'), 300, 'Month', 10, 2, true, false, false, null);
+        var monthsumDS = CreateSummaryDataSource('@Url.Action("MonthSumData", "SearchReports")', null, false, 'nosort', 0);
 
-        CreateRevROASChart(monthsumDS, 'monthrevChart', 'Monthly Revenue vs. ROAS Performance');
-        CreateOrderCPOChart(monthsumDS, 'monthorderChart', 'Monthly Orders vs. CPO Performance');
-
+    @if (Model.SearchProfile.ShowRevenue) {
+        <text>CreateSummaryGrid(monthsumDS, $('#monthsumGrid'), 300, 'Month', 10, 2, true, false, false, null);</text>
+        <text>CreateRevROASChart(monthsumDS, 'monthleftChart', 'Monthly Revenue vs. ROAS Performance');</text>
+        <text>CreateOrderCPOChart(monthsumDS, 'monthrightChart', 'Monthly Orders vs. CPO Performance');</text>
+    } else {
+        <text>CreateSummaryGridLeadGen(monthsumDS, $('#monthsumGrid'), 300, 'Week', 10, 2, true, false, false, null, @(Model.SearchProfile.ShowCalls ? "true" : "false"));</text>
+        <text>CreateCTRCPCChart(monthsumDS, 'monthleftChart', 'Weekly CTR vs. CPC Performance');</text>
+        if (Model.SearchProfile.ShowCalls) {
+            <text>CreateLeadsCPLChart(monthsumDS, 'monthrightChart', 'Monthly TotalLeads vs. CPL Performance', 'TotalLeads');</text>
+        } else {
+            <text>CreateLeadsCPLChart(monthsumDS, 'monthrightChart', 'Monthly Leads vs. CPL Performance', 'Leads');</text>
+        }
+    }
         monthsumDS.read();
     });
 

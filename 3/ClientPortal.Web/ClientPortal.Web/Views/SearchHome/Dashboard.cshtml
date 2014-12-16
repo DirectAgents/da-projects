@@ -29,16 +29,20 @@
 
 <script>
     $(function () {
-        var weeksumDS = CreateSummaryDataSource('@Url.Action("WeekSumData", "SearchReports")', null, false, false, 0);
+        var weeksumDS = CreateSummaryDataSource('@Url.Action("WeekSumData", "SearchReports")', null, false, 'nosort', 0);
 
     @if (Model.SearchProfile.ShowRevenue) {
         <text>CreateSummaryGrid(weeksumDS, $('#weeksumGrid'), 300, 'Week', 10, 2, true, false, false, null);</text>
         <text>CreateRevROASChart(weeksumDS, 'weekleftChart', 'Weekly Revenue vs. ROAS Performance');</text>
         <text>CreateOrderCPOChart(weeksumDS, 'weekrightChart', 'Weekly Orders vs. CPO Performance');</text>
     } else {
-        <text>CreateSummaryGridLeadGen(weeksumDS, $('#weeksumGrid'), 300, 'Week', 10, 2, true, false, false, null);</text>
+        <text>CreateSummaryGridLeadGen(weeksumDS, $('#weeksumGrid'), 300, 'Week', 10, 2, true, false, false, null, @(Model.SearchProfile.ShowCalls ? "true" : "false"));</text>
         <text>CreateCTRCPCChart(weeksumDS, 'weekleftChart', 'Weekly CTR vs. CPC Performance');</text>
-        <text>CreateTotalLeadsCPLChart(weeksumDS, 'weekrightChart', 'Weekly TotalLeads vs. CPL Performance');</text>
+        if (Model.SearchProfile.ShowCalls) {
+            <text>CreateLeadsCPLChart(weeksumDS, 'weekrightChart', 'Weekly TotalLeads vs. CPL Performance', 'TotalLeads');</text>
+        } else {
+            <text>CreateLeadsCPLChart(weeksumDS, 'weekrightChart', 'Weekly Leads vs. CPL Performance', 'Leads');</text>
+        }
     }
         weeksumDS.read();
     });
