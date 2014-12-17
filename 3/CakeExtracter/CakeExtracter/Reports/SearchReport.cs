@@ -83,7 +83,7 @@ namespace CakeExtracter.Reports
                     // Spend (cost)
                     CPC = secondStat.CPC - firstStat.CPC,
                     // Leads (Orders)
-                    // ?CPL
+                    CPL = secondStat.CPL - firstStat.CPL,
                     // ?ConvRate
 
                     Calls = secondStat.Calls - firstStat.Calls,

@@ -20,6 +20,7 @@ namespace ClientPortal.Data.DTOs
 
         public int Calls { get; set; }
         public int TotalLeads { get; set; }
+        public decimal CPL { get; set; }
     }
 
     public class SearchStat
