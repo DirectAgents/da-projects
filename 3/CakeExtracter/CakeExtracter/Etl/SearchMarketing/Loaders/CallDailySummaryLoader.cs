@@ -1,20 +1,20 @@
 ﻿using ClientPortal.Data.Contexts;
-using System;
+using LocalConnex;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CakeExtracter.Etl.SearchMarketing.Loaders
 {
     public class CallDailySummaryLoader : Loader<CallDailySummary>
     {
         private readonly int searchProfileId;
+        private LCUtility _lcUtility;
 
         public CallDailySummaryLoader(int searchProfileId)
         {
             this.searchProfileId = searchProfileId;
+            _lcUtility = new LCUtility(m => Logger.Info(m), m => Logger.Warn(m));
         }
 
         protected override int Load(List<CallDailySummary> items)
@@ -87,9 +87,11 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         }
                         else
                         {
+                            string campaignName = _lcUtility.GetCampaignName(lccmpid);
+
                             searchAccount.SearchCampaigns.Add(new SearchCampaign
                             {
-                                SearchCampaignName = "(temp)",
+                                SearchCampaignName = "(temp)" + campaignName,
                                 LCcmpid = lccmpid
                             });
                             Logger.Info("Creating (temp) SearchCampaign: {0}", lccmpid);

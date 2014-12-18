@@ -10,6 +10,9 @@ namespace LocalConnex
     {
         [XmlRpcMethod("call.search")]
         Call[] callSearch(string accid, CallSearchParams searchParams);
+
+        [XmlRpcMethod("ad.name.get")]
+        string adName(string cmpid);
     }
 
     public class LCUtility
@@ -62,6 +65,11 @@ namespace LocalConnex
             };
             var calls = _client.callSearch(accid, searchParams);
             return calls;
+        }
+
+        public string GetCampaignName(string cmpid)
+        {
+            return _client.adName(cmpid);
         }
     }
 }
