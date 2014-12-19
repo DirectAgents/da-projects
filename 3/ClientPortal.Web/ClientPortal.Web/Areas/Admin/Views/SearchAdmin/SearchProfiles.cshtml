@@ -53,7 +53,14 @@
                 @Ajax.ActionLink("initialize", "InitializeReport", new { spId = profile.SearchProfileId }, ajaxOptions)
             }
         </td>
-        <td>@Ajax.ActionLink("Edit Contacts", "EditSearchProfileContacts", new { spId = profile.SearchProfileId }, ajaxOptions)</td>
+        <td>
+            @Ajax.ActionLink("Edit", "EditSearchProfileContacts", new { spId = profile.SearchProfileId }, ajaxOptions)
+            -
+            @foreach (var spc in profile.SearchProfileContactsOrdered)
+            {
+                @(spc.Contact.FullName)<text>&nbsp;</text>
+            }
+        </td>
     </tr>
 }
 </table>

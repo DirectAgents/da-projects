@@ -121,7 +121,8 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 }
             }
             cpRepo.SaveChanges();
-            return View(searchProfile);
+            //return View(searchProfile);
+            return RedirectToAction("SearchProfiles");
         }
 
         // ---
