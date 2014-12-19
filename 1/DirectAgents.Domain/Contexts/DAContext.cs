@@ -8,13 +8,13 @@ namespace DirectAgents.Domain.Contexts
     public class DAContext : DbContext
     {
         //public DAContext() : base() { }
+        const string cakeSchema = "cake";
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-            string cakeSchema = "cake";
             modelBuilder.Entity<Advertiser>().ToTable("Advertiser", cakeSchema);
             modelBuilder.Entity<Contact>().ToTable("Contact", cakeSchema);
             modelBuilder.Entity<Role>().ToTable("Role", cakeSchema);

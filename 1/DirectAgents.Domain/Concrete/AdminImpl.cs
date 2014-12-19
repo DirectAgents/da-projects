@@ -69,13 +69,24 @@ namespace DirectAgents.Domain.Concrete
             }
         }
 
-        public void ReCreateDatabase()
+        //public void ReCreateDatabase()
+        //{
+        //    using (var context = new WikiContext())
+        //    {
+        //        if (context.Database.Exists())
+        //            context.Database.Delete();
+        //        context.Database.Create();
+        //    }
+        //}
+
+        public IEnumerable<Campaign> CampaignsNotInCake()
         {
-            using (var context = new WikiContext())
+            using (var cake = new Cake.Model.Staging.CakeStagingEntities())
+            using (wikiDomain = new WikiContext())
             {
-                if (context.Database.Exists())
-                    context.Database.Delete();
-                context.Database.Create();
+                var cakePids = cake.CakeOffers.Select(o => o.Offer_Id).ToList();
+                var campaigns = wikiDomain.Campaigns.Where(c => !cakePids.Contains(c.Pid));
+                return campaigns.ToList();
             }
         }
 

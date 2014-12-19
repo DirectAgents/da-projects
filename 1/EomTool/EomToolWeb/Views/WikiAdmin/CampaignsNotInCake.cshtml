@@ -1,0 +1,16 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.Wiki.Campaign>
+
+<h2>Campaigns Not In Cake</h2>
+
+<table>
+@foreach (var campaign in Model)
+{
+    <tr>
+        <td>@campaign.Pid</td>
+        <td>@campaign.Name</td>
+    </tr>
+}
+</table>
+
+Note: These are in the wiki.Campaigns table<br />
+* Be sure to also check the cake.Offer table

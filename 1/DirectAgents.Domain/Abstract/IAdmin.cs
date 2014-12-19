@@ -1,4 +1,7 @@
-﻿using System.Diagnostics;
+﻿using DirectAgents.Domain.Entities.Wiki;
+using System.Collections.Generic;
+using System.Diagnostics;
+
 namespace DirectAgents.Domain.Abstract
 {
     public delegate void LogEventHandler(object sender, TraceEventType severity, string messageFormat, params object[] formatArgs);
@@ -11,8 +14,11 @@ namespace DirectAgents.Domain.Abstract
         string Test2();
 
         void CreateDatabaseIfNotExists();
-        void ReCreateDatabase();
-        void LoadCampaigns();
+        //void ReCreateDatabase();
+
+        IEnumerable<Campaign> CampaignsNotInCake();
+
         void LoadSummaries();
+        void LoadCampaigns();
     }
 }

@@ -42,6 +42,13 @@ namespace EomToolWeb.Controllers
             return Content("Database re-created");
         }
  */
+
+        public ActionResult CampaignsNotInCake()
+        {
+            var campaigns = admin.CampaignsNotInCake();
+            return View(campaigns);
+        }
+
         public ActionResult LoadCampaigns()
         {
             if (!securityRepo.IsAccountantOrAdmin(User))
