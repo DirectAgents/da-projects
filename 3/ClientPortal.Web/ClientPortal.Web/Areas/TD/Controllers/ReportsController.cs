@@ -4,6 +4,7 @@ using ClientPortal.Data.Entities.TD;
 using ClientPortal.Data.Entities.TD.DBM;
 using ClientPortal.Web.Areas.TD.Models;
 using ClientPortal.Web.Controllers;
+using ClientPortal.Web.Models;
 using DirectAgents.Mvc.KendoGridBinder;
 using DirectAgents.Mvc.KendoGridBinder.Containers;
 using System;
@@ -43,39 +44,12 @@ namespace ClientPortal.Web.Areas.TD.Controllers
                 return Json(new { });
 
             var summaries = tdRepo.GetDailyStatsSummaries(start, end, userInfo.TDAccount);
-            var kgrid = new KendoGrid<StatsSummary>(request, summaries);
-            if (summaries.Any())
-            {
-                int impressions = summaries.Sum(s => s.Impressions);
-                int clicks = summaries.Sum(s => s.Clicks);
-                int conversions = summaries.Sum(s => s.Conversions);
-                decimal spend = summaries.Sum(s => s.Spend);
 
-                kgrid.aggregates = Aggregates(impressions, clicks, conversions, spend, userInfo.TDAccount.ManagementFeePct);
-            }
+            var kgrid = new KendoGrid<StatsSummary>(request, summaries);
+            kgrid.aggregates = GetAggregates(summaries, userInfo);
+
             var json = Json(kgrid, JsonRequestBehavior.AllowGet);
             return json;
-        }
-
-        private object Aggregates(int impressions, int clicks, int conversions, decimal spend, decimal? managementFeePct)
-        {
-            decimal fee = 0;
-            if (managementFeePct.HasValue)
-                fee = spend * managementFeePct.Value / 100;
-
-            var aggregates = new
-            {
-                Impressions = new { sum = impressions },
-                Clicks = new { sum = clicks },
-                CTR = new { agg = Math.Round((double)clicks / impressions, 4) },
-                Conversions = new { sum = conversions },
-                ConvRate = new { agg = Math.Round((double)conversions / clicks, 4) },
-                Spend = new { sum = spend, fee = fee, total = spend + fee },
-                CPM = new { agg = (impressions == 0) ? 0 : 1000 * spend / impressions },
-                CPC = new { agg = (clicks == 0) ? 0 : spend / clicks },
-                CPA = new { agg = (conversions == 0) ? 0 : spend / conversions }
-            };
-            return aggregates;
         }
 
         public ActionResult Sample()
@@ -123,8 +97,6 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end) || userInfo.TDAccount == null)
                 return Json(new { });
 
-            var summaries = tdRepo.GetCreativeStatsSummaries(start, end, userInfo.TDAccount);
-
             var costPerFields = new[] { "CPM", "CPC", "CPA" };
             if (request.SortObjects.Any(so => costPerFields.Contains(so.Field)))
             {
@@ -144,18 +116,65 @@ namespace ClientPortal.Web.Areas.TD.Controllers
                 }
                 request.SortObjects = sortObjects;
             }
-            var kgrid = new KendoGrid<CreativeStatsSummary>(request, summaries);
-            if (summaries.Any())
-            {
-                int impressions = summaries.Sum(s => s.Impressions);
-                int clicks = summaries.Sum(s => s.Clicks);
-                int conversions = summaries.Sum(s => s.Conversions);
-                decimal spend = summaries.Sum(s => s.Spend);
 
-                kgrid.aggregates = Aggregates(impressions, clicks, conversions, spend, userInfo.TDAccount.ManagementFeePct);
-            }
+            var summaries = tdRepo.GetCreativeStatsSummaries(start, end, userInfo.TDAccount);
+
+            var kgrid = new KendoGrid<CreativeStatsSummary>(request, summaries);
+            kgrid.aggregates = GetAggregates(summaries, userInfo);
+
             var json = Json(kgrid, JsonRequestBehavior.AllowGet);
             return json;
+        }
+
+        // ---
+
+        private object GetAggregates(IEnumerable<StatsSummary> summaries, UserInfo userInfo)
+        {
+            int impressions = 0, clicks = 0, conversions = 0;
+            decimal spend = 0;
+            if (summaries.Any())
+            {
+                impressions = summaries.Sum(s => s.Impressions);
+                clicks = summaries.Sum(s => s.Clicks);
+                conversions = summaries.Sum(s => s.Conversions);
+                spend = summaries.Sum(s => s.Spend);
+            }
+            return Aggregates(impressions, clicks, conversions, spend, userInfo.TDAccount.ManagementFeePct);
+        }
+
+        private object GetAggregates(IEnumerable<CreativeStatsSummary> summaries, UserInfo userInfo)
+        {
+            int impressions = 0, clicks = 0, conversions = 0;
+            decimal spend = 0;
+            if (summaries.Any())
+            {
+                impressions = summaries.Sum(s => s.Impressions);
+                clicks = summaries.Sum(s => s.Clicks);
+                conversions = summaries.Sum(s => s.Conversions);
+                spend = summaries.Sum(s => s.Spend);
+            }
+            return Aggregates(impressions, clicks, conversions, spend, userInfo.TDAccount.ManagementFeePct);
+        }
+
+        private object Aggregates(int impressions, int clicks, int conversions, decimal spend, decimal? managementFeePct)
+        {
+            decimal fee = 0;
+            if (managementFeePct.HasValue)
+                fee = spend * managementFeePct.Value / 100;
+
+            var aggregates = new
+            {
+                Impressions = new { sum = impressions },
+                Clicks = new { sum = clicks },
+                CTR = new { agg = (impressions == 0) ? 0 : Math.Round((double)clicks / impressions, 4) },
+                Conversions = new { sum = conversions },
+                ConvRate = new { agg = (clicks == 0) ? 0 : Math.Round((double)conversions / clicks, 4) },
+                Spend = new { sum = spend, fee = fee, total = spend + fee },
+                CPM = new { agg = (impressions == 0) ? 0 : 1000 * spend / impressions },
+                CPC = new { agg = (clicks == 0) ? 0 : spend / clicks },
+                CPA = new { agg = (conversions == 0) ? 0 : spend / conversions }
+            };
+            return aggregates;
         }
 
     }

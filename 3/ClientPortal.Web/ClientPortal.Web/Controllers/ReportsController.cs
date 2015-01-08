@@ -49,6 +49,16 @@ namespace ClientPortal.Web.Controllers
                     Revenue = new { sum = offerInfos.Sum(i => i.Revenue) }
                 };
             }
+            else
+            {
+                kgrid.aggregates = new
+                {
+                    Clicks = new { sum = 0 },
+                    Conversions = new { sum = 0 },
+                    ConvRate = new { agg = 0 },
+                    Revenue = new { sum = 0 }
+                };
+            }
             var json = Json(kgrid);
             return json;
         }
