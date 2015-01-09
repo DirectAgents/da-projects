@@ -1,6 +1,5 @@
 ﻿using System;
 using AdRoll.Entities;
-using RestSharp.Deserializers;
 
 namespace AdRoll.Clients
 {
@@ -13,8 +12,7 @@ namespace AdRoll.Clients
 
         public AdSummaryReportResponse AdSummaries(AdReportRequest request)
         {
-            var deserializer = new JsonDeserializer();
-            var result = Execute<AdSummaryReportResponse>(request, deserializer);
+            var result = Execute<AdSummaryReportResponse>(request);
             return result;
         }
     }

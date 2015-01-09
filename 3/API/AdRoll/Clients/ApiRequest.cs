@@ -9,7 +9,7 @@ namespace AdRoll.Clients
         /// <summary>
         /// Add a parameter with the name and value of each public property of the instance.
         /// </summary>
-        public virtual void AddParameters(RestRequest restRequest)
+        public virtual void AddParametersTo(RestRequest restRequest)
         {
             var propertiesWithValue = from property in GetType().GetProperties()
                                       let value = property.GetValue(this)
