@@ -301,6 +301,7 @@
     <Compile Include="Commands\TDSynchCreativeDailySummariesDbm.cs" />
     <Compile Include="Commands\TDSynchCreativeDailySummariesDbmCsv.cs" />
     <Compile Include="Commands\TDSynchDailySummariesDbmCsv.cs" />
+    <Compile Include="Commands\TestAdRollCommand.cs" />
     <Compile Include="Commands\TestChartCommand.cs" />
     <Compile Include="Commands\TestCriteoCommand.cs" />
     <Compile Include="Commands\TestDbmCommand.cs" />
@@ -461,6 +462,10 @@
     <ProjectReference Include="..\..\..\1\DirectAgents.Domain\DirectAgents.Domain.csproj">
       <Project>{278911ab-cb92-4316-843e-4571cd0c3410}</Project>
       <Name>DirectAgents.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\API\AdRoll\AdRoll.csproj">
+      <Project>{feb04d4a-cf17-43bf-bf2c-635e87a38279}</Project>
+      <Name>AdRoll</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\BingAds\BingAds.csproj">
       <Project>{e2ea8ab5-abaf-4007-a446-09624cb159e6}</Project>

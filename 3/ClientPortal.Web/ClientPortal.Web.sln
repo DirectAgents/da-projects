@@ -58,6 +58,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAGenerators", "..\DAGenera
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalConnex", "LocalConnex\LocalConnex.csproj", "{B0ED69E7-2FF1-4205-A10A-D1AFB3F5F89D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRoll", "..\API\AdRoll\AdRoll.csproj", "{FEB04D4A-CF17-43BF-BF2C-635E87A38279}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -274,6 +276,16 @@ Global
 		{B0ED69E7-2FF1-4205-A10A-D1AFB3F5F89D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{B0ED69E7-2FF1-4205-A10A-D1AFB3F5F89D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B0ED69E7-2FF1-4205-A10A-D1AFB3F5F89D}.Release|x86.ActiveCfg = Release|Any CPU
+		{FEB04D4A-CF17-43BF-BF2C-635E87A38279}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEB04D4A-CF17-43BF-BF2C-635E87A38279}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEB04D4A-CF17-43BF-BF2C-635E87A38279}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FEB04D4A-CF17-43BF-BF2C-635E87A38279}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FEB04D4A-CF17-43BF-BF2C-635E87A38279}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FEB04D4A-CF17-43BF-BF2C-635E87A38279}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEB04D4A-CF17-43BF-BF2C-635E87A38279}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEB04D4A-CF17-43BF-BF2C-635E87A38279}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FEB04D4A-CF17-43BF-BF2C-635E87A38279}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FEB04D4A-CF17-43BF-BF2C-635E87A38279}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -292,6 +304,7 @@ Global
 		{D96A10B3-8700-45C1-ADA4-96CAC22CBD5C} = {8C4D0722-32E6-4E1D-A607-8BDA368988BB}
 		{70F3E367-5F86-4718-9A27-6EDC9FEF9EC9} = {8C4D0722-32E6-4E1D-A607-8BDA368988BB}
 		{B0ED69E7-2FF1-4205-A10A-D1AFB3F5F89D} = {8C4D0722-32E6-4E1D-A607-8BDA368988BB}
+		{FEB04D4A-CF17-43BF-BF2C-635E87A38279} = {8C4D0722-32E6-4E1D-A607-8BDA368988BB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45
