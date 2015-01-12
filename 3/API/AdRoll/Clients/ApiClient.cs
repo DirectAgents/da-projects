@@ -23,6 +23,30 @@ namespace AdRoll.Clients
             Password = password;
         }
 
+        // --- Logging ---
+        public void SetLogging(Action<string> logInfo, Action<string> logError)
+        {
+            _LogInfo = logInfo;
+            _LogError = logError;
+        }
+
+        private Action<string> _LogInfo;
+        private Action<string> _LogError;
+
+        private void LogInfo(string message)
+        {
+            if (_LogInfo != null)
+                _LogInfo(message);
+        }
+
+        private void LogError(string message)
+        {
+            if (_LogError != null)
+                _LogError(message);
+        }
+
+        // ---
+
         public T Execute<T>(ApiRequest apiRequest) where T : new()
         {
             var restRequest = new RestRequest();
@@ -39,8 +63,7 @@ namespace AdRoll.Clients
 
             if (response.ErrorException != null)
             {
-                //Logger.Error(response.ErrorException);
-                //throw new ApplicationException("Error retrieving response.", response.ErrorException);
+                LogError(response.ErrorException.Message);
                 return default(T);
             }
 

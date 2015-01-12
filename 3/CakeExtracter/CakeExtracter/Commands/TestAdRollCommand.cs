@@ -19,7 +19,7 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            var arUtility = new AdRollUtility();
+            var arUtility = new AdRollUtility(m => Logger.Info(m), m => Logger.Warn(m));
             var advertisableId = "HUULCFSLCVEBHPBXVDCIEN"; // AHS
             var date = DateTime.Today.AddDays(-1);
             var adSummaries = arUtility.AdSummaries(date, advertisableId);
