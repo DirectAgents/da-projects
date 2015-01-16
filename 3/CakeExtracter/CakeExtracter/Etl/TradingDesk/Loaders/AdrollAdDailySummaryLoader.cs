@@ -95,6 +95,7 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
 
         private void AddDependentAds(List<AdrollRow> items)
         {
+            int width, height;
             using (var db = new TDContext())
             {
                 // Find the unique AdNames by grouping
@@ -105,12 +106,21 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                     if (ads.Count() == 0)
                     {   // Create new AdRollAd
                         var row = group.First(); // assume all other ad properties are the same for each group
+                        width = 0;
+                        height = 0;
+                        if (row.Size != null && row.Size.Contains('x'))
+                        {
+                            var dimensions = row.Size.Split('x');
+                            Int32.TryParse(dimensions[0], out width);
+                            Int32.TryParse(dimensions[1], out height);
+                        }
                         var ad = new AdRollAd
                         {
                             AdRollProfileId = adrollProfileId,
                             Name = row.AdName,
-                            Size = row.Size,
                             Type = row.Type,
+                            Width = width,
+                            Height = height,
                         };
                         DateTime createdDate;
                         if (DateTime.TryParse(row.CreateDate, out createdDate))

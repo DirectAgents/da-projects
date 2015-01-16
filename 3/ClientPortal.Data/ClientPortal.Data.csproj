@@ -321,6 +321,14 @@
     <Compile Include="Migrations\201409092206193_Mig_ModDbmDailySummaries.Designer.cs">
       <DependentUpon>201409092206193_Mig_ModDbmDailySummaries.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501142218058_Mig_AdSummary_update.cs" />
+    <Compile Include="Migrations\201501142218058_Mig_AdSummary_update.Designer.cs">
+      <DependentUpon>201501142218058_Mig_AdSummary_update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201501151727433_Mig_AdRollProfile_Eid.cs" />
+    <Compile Include="Migrations\201501151727433_Mig_AdRollProfile_Eid.Designer.cs">
+      <DependentUpon>201501151727433_Mig_AdRollProfile_Eid.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ClientPortalRepository.cs" />
@@ -396,6 +404,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201409092206193_Mig_ModDbmDailySummaries.resx">
       <DependentUpon>201409092206193_Mig_ModDbmDailySummaries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501142218058_Mig_AdSummary_update.resx">
+      <DependentUpon>201501142218058_Mig_AdSummary_update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501151727433_Mig_AdRollProfile_Eid.resx">
+      <DependentUpon>201501151727433_Mig_AdRollProfile_Eid.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

@@ -8,5 +8,6 @@ namespace ClientPortal.Data.Entities.TD.AdRoll
         public virtual TradingDeskAccount TradingDeskAccount { get; set; }
 
         public string Name { get; set; }
+        public string Eid { get; set; } // (Advertiseable Eid)
     }
 }

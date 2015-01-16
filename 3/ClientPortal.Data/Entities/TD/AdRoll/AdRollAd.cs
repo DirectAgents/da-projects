@@ -9,8 +9,11 @@ namespace ClientPortal.Data.Entities.TD.AdRoll
         public virtual AdRollProfile AdRollProfile { get; set; }
 
         public string Name { get; set; }
-        public string Size { get; set; }
         public string Type { get; set; }
         public DateTime? CreatedDate { get; set; }
+
+        public string Eid { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
     }
 }
