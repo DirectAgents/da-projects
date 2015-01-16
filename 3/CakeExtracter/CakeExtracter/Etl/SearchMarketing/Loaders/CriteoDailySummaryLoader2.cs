@@ -1,8 +1,8 @@
-﻿using ClientPortal.Data.Contexts;
-using Criteo.CriteoAPI;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using ClientPortal.Data.Contexts;
+using Criteo.CriteoAPI;
 
 namespace CakeExtracter.Etl.SearchMarketing.Loaders
 {
@@ -58,8 +58,10 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         }
                         else
                         {
+                            var entry = db.Entry(target);
+                            entry.State = EntityState.Detached;
                             AutoMapper.Mapper.Map(item, target);
-                            db.Entry(target).State = EntityState.Modified;
+                            entry.State = EntityState.Modified;
                             updatedCount++;
                         }
                     }

@@ -1,5 +1,5 @@
-﻿using CakeExtracter.CakeMarketingApi.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using CakeExtracter.CakeMarketingApi.Entities;
 
 namespace CakeExtracter.Etl.CakeMarketing.DALoaders
 {

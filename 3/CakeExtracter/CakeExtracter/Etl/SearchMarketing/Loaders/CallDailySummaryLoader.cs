@@ -1,8 +1,8 @@
-﻿using ClientPortal.Data.Contexts;
-using LocalConnex;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using ClientPortal.Data.Contexts;
+using LocalConnex;
 
 namespace CakeExtracter.Etl.SearchMarketing.Loaders
 {
@@ -49,8 +49,10 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         }
                         else
                         {
+                            var entry = db.Entry(target);
+                            entry.State = EntityState.Detached;
                             AutoMapper.Mapper.Map(item, target);
-                            db.Entry(target).State = EntityState.Modified;
+                            entry.State = EntityState.Modified;
                             updatedCount++;
                         }
                     }

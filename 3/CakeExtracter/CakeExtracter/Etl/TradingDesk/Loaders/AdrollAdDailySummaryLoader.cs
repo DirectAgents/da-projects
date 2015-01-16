@@ -1,11 +1,11 @@
-﻿using CakeExtracter.Etl.TradingDesk.Extracters;
-using ClientPortal.Data.Entities.TD;
-using ClientPortal.Data.Entities.TD.AdRoll;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using CakeExtracter.Etl.TradingDesk.Extracters;
+using ClientPortal.Data.Entities.TD;
+using ClientPortal.Data.Entities.TD.AdRoll;
 
 namespace CakeExtracter.Etl.TradingDesk.Loaders
 {
@@ -66,6 +66,7 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                             var entry = db.Entry(target);
                             if (entry.State == EntityState.Unchanged)
                             {
+                                entry.State = EntityState.Detached;
                                 AutoMapper.Mapper.Map(source, target);
                                 entry.State = EntityState.Modified;
                                 updatedCount++;

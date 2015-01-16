@@ -110,6 +110,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                     }
                     else
                     {
+                        // TODO: Actually check for updates to the click
                         updated++;
                     }
                     loaded++;

@@ -1,10 +1,10 @@
-﻿using CakeExtracter.Etl.TradingDesk.Extracters;
-using ClientPortal.Data.Entities.TD;
-using ClientPortal.Data.Entities.TD.DBM;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using CakeExtracter.Etl.TradingDesk.Extracters;
+using ClientPortal.Data.Entities.TD;
+using ClientPortal.Data.Entities.TD.DBM;
 
 namespace CakeExtracter.Etl.TradingDesk.Loaders
 {
@@ -48,8 +48,10 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                     }
                     else
                     {
+                        var entry = db.Entry(target);
+                        entry.State = EntityState.Detached;
                         AutoMapper.Mapper.Map(source, target);
-                        db.Entry(target).State = EntityState.Modified;
+                        entry.State = EntityState.Modified;
                         updatedCount++;
                     }
                     itemCount++;

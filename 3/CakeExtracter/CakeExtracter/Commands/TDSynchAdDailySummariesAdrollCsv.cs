@@ -37,7 +37,7 @@ namespace CakeExtracter.Commands
         {
             IsCommand("tdSynchAdDailySummariesAdrollCsv", "synch AdDailySummaries for AdRoll CSV Report");
             HasRequiredOption("f|csvFilePath=", "CSV filepath", c => CsvFilePath = c);
-            HasRequiredOption<int>("i|adrollProfileId=", "AdRollProfile id", c => AdRollProfileId = c);
+            HasRequiredOption<int>("p|adrollProfileId=", "AdRollProfile id", c => AdRollProfileId = c);
         }
 
         public override int Execute(string[] remainingArguments)

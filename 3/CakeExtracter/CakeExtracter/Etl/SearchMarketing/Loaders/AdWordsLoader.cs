@@ -59,8 +59,10 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     }
                     else
                     {
+                        var entry = db.Entry(target);
+                        entry.State = EntityState.Detached;
                         AutoMapper.Mapper.Map(source, target);
-                        db.Entry(target).State = EntityState.Modified;
+                        entry.State = EntityState.Modified;
                         updatedCount++;
                     }
                     itemCount++;

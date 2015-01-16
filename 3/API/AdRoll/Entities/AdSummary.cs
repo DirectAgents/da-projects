@@ -10,8 +10,10 @@ namespace AdRoll.Entities
 
     public class AdSummary
     {
+        public DateTime date { get; set; } // not returned from the api
+
         public string eid { get; set; }
-        public string ad { get; set; }
+        public string ad { get; set; } // ad name
         public int height { get; set; }
         public int width { get; set; }
         public DateTime created_date { get; set; }

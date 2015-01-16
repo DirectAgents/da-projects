@@ -1,10 +1,8 @@
-﻿using CakeExtracter.CakeMarketingApi.Entities;
+﻿using System.Collections.Generic;
+using System.Linq;
+using CakeExtracter.CakeMarketingApi.Entities;
 using CakeExtracter.Common;
 using MoreLinq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CakeExtracter.Etl.CakeMarketing.Loaders
 {

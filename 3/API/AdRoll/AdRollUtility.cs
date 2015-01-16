@@ -77,8 +77,13 @@ namespace AdRoll
                 LogInfo("No AdSummaries found");
                 return new List<AdSummary>();
             }
-            else
-                return response.results;
+
+            // Set the date for each summary, b/c the API doesn't include it
+            foreach (var adSum in response.results)
+            {
+                adSum.date = date;
+            }
+            return response.results;
         }
     }
 }
