@@ -46,8 +46,7 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                             Impressions = item.impressions,
                             Clicks = item.clicks,
                             Conversions = item.total_conversions,
-                            Spend = decimal.Round((decimal)item.cost_USD, 2)
-                            //TODO: increase precision of AdDailySummary.Spend in the db?
+                            Spend = (decimal)item.cost_USD
                         };
                         var target = db.Set<AdDailySummary>().Find(item.date, adId);
                         if (target == null)

@@ -21,6 +21,8 @@ namespace ClientPortal.Data.Entities.TD
             modelBuilder.Entity<AdDailySummary>()
                 .HasKey(ds => new { ds.Date, ds.AdRollAdId })
                 .ToTable("AdDailySummary", adrollSchema);
+            modelBuilder.Entity<AdDailySummary>()
+                .Property(ds => ds.Spend).HasPrecision(18, 6);
 
             //DBM
             modelBuilder.Entity<InsertionOrder>().ToTable("InsertionOrder", dbmSchema);
