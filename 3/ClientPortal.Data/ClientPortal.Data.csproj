@@ -339,6 +339,7 @@
     <Compile Include="Services\SearchRepository.cs" />
     <Compile Include="Services\StatsRepository.cs" />
     <Compile Include="Services\TDRepository.cs" />
+    <Compile Include="Services\TDStatsRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

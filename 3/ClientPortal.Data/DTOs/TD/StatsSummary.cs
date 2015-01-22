@@ -2,15 +2,18 @@
 
 namespace ClientPortal.Data.DTOs.TD
 {
-    public class StatsSummary
+    public class StatsSummary : StatsSummaryBase
     {
         public DateTime Date { get; set; }
+    }
 
+    public class StatsSummaryBase
+    {
         //public string Currency { get; set; }
         public int Impressions { get; set; }
         public int Clicks { get; set; }
         public int Conversions { get; set; }
-        public decimal Spend { get; set; }
+        public decimal Spend { get; set; } // note: we're using 6 decimal places in the db
 
         // Computed properties
         public double CTR

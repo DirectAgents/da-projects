@@ -1,10 +1,10 @@
-﻿using ClientPortal.Data.DTOs.TD;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using ClientPortal.Data.DTOs.TD;
 using ClientPortal.Data.Entities.TD;
 using ClientPortal.Data.Entities.TD.AdRoll;
 using ClientPortal.Data.Entities.TD.DBM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ClientPortal.Data.Contracts
 {

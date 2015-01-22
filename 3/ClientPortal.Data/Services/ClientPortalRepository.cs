@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
-using ClientPortal.Data.DTOs;
 
 namespace ClientPortal.Data.Services
 {
