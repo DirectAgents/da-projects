@@ -27,7 +27,7 @@ namespace ClientPortal.Web.Controllers
             return View(model);
         }
 
-        public PartialViewResult Dashboard()
+        public PartialViewResult Dashboard() // Weekly
         {
             var userInfo = GetUserInfo();
             var model = new SearchReportModel { SearchProfile = userInfo.SearchProfile };

@@ -117,6 +117,7 @@
     </Reference>
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest">
     </Reference>
@@ -126,9 +127,11 @@
     </Reference>
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20710.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.Optimization">
       <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.0.0\lib\net40\System.Web.Optimization.dll</HintPath>
@@ -229,6 +232,7 @@
     <Compile Include="Areas\Admin\Models\CPMReportVM.cs" />
     <Compile Include="Areas\Admin\Models\CPMReportWizardVM.cs" />
     <Compile Include="Areas\Admin\Models\CreativeStatVM.cs" />
+    <Compile Include="Areas\TD\Controllers\StatsController.cs" />
     <Compile Include="Areas\TD\Controllers\HomeController.cs" />
     <Compile Include="Areas\TD\Controllers\ReportsController.cs" />
     <Compile Include="Areas\TD\Models\TDReportModel.cs" />
@@ -875,7 +879,6 @@
     <Content Include="Areas\TD\Views\Reports\Sample.cshtml" />
     <Content Include="Areas\TD\Views\Home\Index.cshtml" />
     <Content Include="Areas\TD\Views\Reports\Summary.cshtml" />
-    <Content Include="Areas\TD\Views\Reports\ChartSetup.cshtml" />
     <Content Include="Areas\TD\Views\Reports\Creative.cshtml" />
     <Content Include="Areas\Admin\Views\TDAdmin\InsertionOrders.cshtml" />
     <Content Include="Areas\Admin\Views\TDAdmin\CreateUserProfile.cshtml" />

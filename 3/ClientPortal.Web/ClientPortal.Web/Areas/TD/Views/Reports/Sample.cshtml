@@ -25,7 +25,7 @@
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("SampleData", "Reports")'
+                    url: '@Url.Action("SampleData", "Stats")'
                     //,data: function () {
                     //    return {
                     //        startdate: $('#daysum_startdate').val(),
@@ -51,7 +51,7 @@
                     }
                 }
             },
-            //sort: { field: "Date", dir: "asc" },
+            sort: { field: "Date", dir: "asc" },
             aggregate: [
                 { field: "Impressions", aggregate: "sum" },
                 { field: "Clicks", aggregate: "sum" },
