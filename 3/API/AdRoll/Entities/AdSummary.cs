@@ -19,7 +19,7 @@ namespace AdRoll.Entities
         public DateTime created_date { get; set; }
         public string type { get; set; }
 
-        public decimal cost_USD { get; set; }
+        public double cost_USD { get; set; }
         public int impressions { get; set; }
         // paid_impressions
         public int total_conversions { get; set; }

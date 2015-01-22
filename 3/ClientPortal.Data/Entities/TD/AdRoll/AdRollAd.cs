@@ -1,5 +1,5 @@
-﻿
-using System;
+﻿using System;
+
 namespace ClientPortal.Data.Entities.TD.AdRoll
 {
     public class AdRollAd
