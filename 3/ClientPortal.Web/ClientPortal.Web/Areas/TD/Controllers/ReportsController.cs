@@ -33,5 +33,12 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             return PartialView(model);
         }
 
+        public ActionResult Weekly()
+        {
+            var userInfo = GetUserInfo();
+            var model = new TDReportModel(userInfo);
+            return PartialView(model);
+        }
+
     }
 }

@@ -261,7 +261,7 @@ namespace ClientPortal.Data.Services
                     endDate = endDate.Value.AddDays(-1);
             }
 
-            // Go back 7 weeks from endDate, then forward 1 day, so it's the right number of weeks, inclusive of start and endDate
+            // Go back X weeks from endDate, then forward 1 day, so it's the right number of weeks, inclusive of start and endDate
             DateTime startDate = endDate.Value.AddDays(-7 * numWeeks + 1);
 
             // Now move start date back to the closest startDayOfWeek (there may be a partial week now, at the end)
@@ -868,7 +868,7 @@ namespace ClientPortal.Data.Services
 
     }
 
-    class YearWeekAdjuster
+    public class YearWeekAdjuster
     {
         public DayOfWeek StartDayOfWeek { get; set; }
         public CalendarWeekRule CalendarWeekRule { get; set; }

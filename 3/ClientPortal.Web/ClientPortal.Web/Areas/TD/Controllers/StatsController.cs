@@ -103,6 +103,21 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             return json;
         }
 
+        [HttpPost]
+        public JsonResult WeeklyData(KendoGridRequest request, int numweeks = 8)
+        {
+            var userInfo = GetUserInfo();
+
+            var endDate = DateTime.Today.AddDays(-1); // TODO: TD_UseYesterdayAsLatest ?
+            var weekStats = tdRepo.GetWeekStats(userInfo.TDAccount, numweeks, endDate);
+            var kgrid = new KendoGrid<RangeStat>(request, weekStats);
+            if (weekStats.Any())
+                kgrid.aggregates = GetAggregates(weekStats, userInfo);
+
+            var json = Json(kgrid);
+            return json;
+        }
+
         // ---
 
         private object GetAggregates(IEnumerable<StatsSummary> summaries, UserInfo userInfo)
@@ -129,6 +144,20 @@ namespace ClientPortal.Web.Areas.TD.Controllers
                 clicks = summaries.Sum(s => s.Clicks);
                 conversions = summaries.Sum(s => s.Conversions);
                 spend = summaries.Sum(s => s.Spend);
+            }
+            return Aggregates(impressions, clicks, conversions, spend, userInfo.TDAccount.ManagementFeePct);
+        }
+
+        private object GetAggregates(IEnumerable<RangeStat> stats, UserInfo userInfo)
+        {
+            int impressions = 0, clicks = 0, conversions = 0;
+            decimal spend = 0;
+            if (stats.Any())
+            {
+                impressions = stats.Sum(s => s.Impressions);
+                clicks = stats.Sum(s => s.Clicks);
+                conversions = stats.Sum(s => s.Conversions);
+                spend = stats.Sum(s => s.Spend);
             }
             return Aggregates(impressions, clicks, conversions, spend, userInfo.TDAccount.ManagementFeePct);
         }

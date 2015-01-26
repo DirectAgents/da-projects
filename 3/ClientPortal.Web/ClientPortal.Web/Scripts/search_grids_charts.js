@@ -68,6 +68,7 @@
             { field: 'CPL', aggregate: 'agg' },
         ]
     };
+    // Note: sorting is client-side
     if (group) {
         args.group = {
             field: 'Range'
@@ -79,7 +80,7 @@
         else if (sort == 'clicks')
             args.sort = [{ field: 'Clicks', dir: 'desc' }, { field: 'Impressions', dir: 'desc' }];
         else
-            args.sort = { field: 'Channel', dir: 'asc' };
+            args.sort = { field: 'Channel', dir: 'asc' }; // for weekly & monthly... remove?
     }
     return new kendo.data.DataSource(args);
 }

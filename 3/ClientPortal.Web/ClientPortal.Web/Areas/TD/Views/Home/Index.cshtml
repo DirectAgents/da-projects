@@ -69,6 +69,7 @@
                 <dl class="tabs" data-tab>
                     <dd class="active"><a href="#repSumTab" id="repNav_Summary">Summary</a></dd>
                     <dd><a href="#repCreativeTab" id="repNav_Creative">Creative</a></dd>
+                    <dd><a href="#repWeeklyTab" id="repNav_Weekly">Weekly</a></dd>
                 </dl>
                 <!-- /ReportsHTabs  -->
 
@@ -80,6 +81,7 @@
                         <div id="sumNotLoaded"></div>
                     </div>
                     <div id="repCreativeTab" class="content"></div>
+                    <div id="repWeeklyTab" class="content"></div>
                 </div>
                 <!-- /ReportsContent  -->
 
@@ -133,6 +135,7 @@
     <script src="~/Scripts/kendo/2014.2.903/cultures/kendo.culture.en-GB.min.js"></script>
     <script src="~/Scripts/kendo/2014.2.903/cultures/kendo.culture.en-AU.min.js"></script>
     @Html.Partial("_TDDateFuncs", Model.Dates)
+    @Html.Partial("_TDKendoFuncs")
     <script>
 
         // ready function
@@ -148,6 +151,7 @@
             ResizeChart('summary', true);
             ResizeChart('creativeBar', true);
             ResizeChart('creativeScatter', true);
+            //ResizeChart('tdWeekly', true);
         }
 
         // Resize a chart, optionally refreshing it.
@@ -178,35 +182,40 @@
         }
 
         function SetupTabs() {
-            // Summary
-            $('#mainNav_Reports').click(function() {
-                CheckRefreshSummary();
-            });
-            $('#repNav_Summary').click(function () {
-                CheckRefreshSummary();
-            });
+            $('#mainNav_Reports').click(function() { CheckRefreshSummary(); });
+            $('#repNav_Summary').click(function () { CheckRefreshSummary(); });
+            $('#repNav_Creative').click(function () { CheckLoadCreative(); });
+            $('#repNav_Weekly').click(function () { CheckLoadWeekly(); });
 
-            $('#repNav_Creative').click(function () {
-                CheckLoadCreative();
-            });
-
-            $('#mainNav_Sample').click(function () {
-                CheckLoadSample();
-            });
+            $('#mainNav_Sample').click(function () { CheckLoadSample(); });
         }
 
         function CheckLoadCreative() {
-            if ($('#creativeChart').length == 0) {
+            if ($('#creativeBarChart').length == 0) {
                 $.ajax({
                     url: '@Url.Action("Creative", "Reports")',
                     cache: false
                 }).done(function (html) {
                     $('#repCreativeTab').html(html);
-                    ResizeChart('creative', false);
+                    ResizeChart('creativeBar', false);
+                    ResizeChart('creativeScatter', false);
                     //SetupCreativeGrid();
                 });
             } else {
-                setTimeout(function () { ResizeChart('creative', true); }, 100);
+                setTimeout(function () { ResizeChart('creativeBar', true); ResizeChart('creativeScatter', true); }, 100);
+            }
+        }
+
+        function CheckLoadWeekly() {
+            if ($('#weeklyChart').length == 0) {
+                $.ajax({
+                    url: '@Url.Action("Weekly", "Reports")',
+                    cache: false
+                }).done(function (html) {
+                    $('#repWeeklyTab').html(html);
+                });
+            } else {
+                setTimeout(function () { ResizeChart('tdWeekly', true); }, 100);
             }
         }
 

@@ -1,0 +1,35 @@
+﻿@model ClientPortal.Web.Areas.TD.Models.TDReportModel
+
+<div class="row">
+    <div class="large-12 columns">
+        <div id="tdWeeklyOuter">
+            <b>Weekly Summary</b>
+            <a class="button paddedbutton" style="float: right" href="#" onclick="ExportWeeklyCSV(); return false">Export CSV</a>
+            <div id="tdWeeklyGrid" style="margin-top: 10px"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="large-12 columns">
+        <div id="tdWeeklyChartSection" class="k-content">
+            <div class="chart-wrapper">
+                <div id="tdWeeklyChart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var weeklyDS = CreateTdRangeDataSource('@Url.Action("WeeklyData", "Stats")', null, false, 'nosort', 0);
+        CreateTdRangeGrid(weeklyDS, $('#tdWeeklyGrid'), 300, 'Week', 10, false, null);
+        @*CreateRevROASChart(weeksumDS, 'weekleftChart', 'Weekly Revenue vs. ROAS Performance');*@
+
+        weeklyDS.read();
+    });
+
+    function ExportWeekSumCSV() {
+        window.location.href = '@Url.Action("WeeklyExport", "Reports")';
+    }
+</script>

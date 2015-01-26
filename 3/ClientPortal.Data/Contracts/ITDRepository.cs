@@ -14,6 +14,7 @@ namespace ClientPortal.Data.Contracts
 
         IEnumerable<StatsSummary> GetDailyStatsSummaries(DateTime? start, DateTime? end, TradingDeskAccount tdAccount);
         IEnumerable<CreativeStatsSummary> GetCreativeStatsSummaries(DateTime? start, DateTime? end, TradingDeskAccount tdAccount);
+        IEnumerable<RangeStat> GetWeekStats(TradingDeskAccount tdAccount, int numWeeks, DateTime? endDate);
 
         StatsRollup AdRollStatsRollup(int profileId);
         IQueryable<AdRollProfile> AdRollProfiles();

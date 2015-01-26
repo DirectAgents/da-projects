@@ -1,0 +1,91 @@
+﻿<script>
+    function CreateTdRangeDataSource(url, readData, group, sort, pageSize) {
+        if (pageSize == 0) pageSize = 100; // default
+        if (pageSize == -1) pageSize = 1000; // "unlimited"
+
+        var args = {
+            serverAggregates: true,
+            pageSize: pageSize,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: url,
+                    data: readData
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                aggregates: 'aggregates',
+                model: {
+                    id: 'StartDate',
+                    fields: {
+                        StartDate: { type: 'date' },
+                        EndDate: { type: 'date' },
+                        Range: { type: 'string' },
+                        Title: { type: 'string' },
+                        Impressions: { type: 'number' },
+                        Clicks: { type: 'number' },
+                        Conversions: { type: 'number' },
+                        Spend: { type: 'number' },
+                        CTR: { type: 'number' },
+                        ConvRate: { type: 'number' },
+                        CPM: { type: 'number' },
+                        CPC: { type: 'number' },
+                        CPA: { type: 'number' },
+                    }
+                }
+            },
+            aggregate: [
+                { field: 'Impressions', aggregate: 'sum' },
+                { field: 'Clicks', aggregate: 'sum' },
+                { field: 'Conversions', aggregate: 'sum' },
+                { field: 'Spend', aggregate: 'sum' },@* include fee? *@
+                { field: 'CTR', aggregate: 'agg' },
+                { field: 'ConvRate', aggregate: 'agg' },
+                { field: 'CPM', aggregate: 'agg' },
+                { field: 'CPC', aggregate: 'agg' },
+                { field: 'CPA', aggregate: 'agg' },
+            ]
+        };
+        if (group) {
+            // TODO: see search version...
+        }
+        //args.sort = ...
+        return new kendo.data.DataSource(args);
+    }
+
+    function CreateTdRangeGrid(dataSource, el, height, titleHeader, titleWidthPct, sortable, detailInit) {
+        var args = {
+            dataSource: dataSource,
+            autoBind: false,
+            height: height,
+            columns: [
+                { field: 'Range', hidden: true, groupHeaderTemplate: 'Timeframe: #= value.substring(9) #' },
+                { field: 'Title', title: titleHeader, width: titleWidthPct + '%' },
+                { field: 'Impressions', format: '{0:n0}',  attributes: { style: "text-align: right" },  footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Clicks',      format: '{0:n0}',  attributes: { style: "text-align: right" },  footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'CTR',         format: '{0:p}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+                { field: 'Conversions', format: '{0:n0}',  attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+                { field: 'ConvRate',    format: '{0:p}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+                { field: 'Spend', format: '{0:c}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'CPM', title: 'eCPM', format: '{0:c3}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c3') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+                { field: 'CPC', title: 'eCPC', format: '{0:c3}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c3') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+                { field: 'CPA', title: 'eCPA', format: '{0:c}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+            ],
+            filterable: true,
+            pageable: true,
+            detailInit: detailInit
+        };
+        if (sortable) {
+            args.sortable = {
+                mode: 'single',
+                allowUnsort: false
+            };
+        } else {
+            args.sortable = false;
+        }
+        el.kendoGrid(args);
+    }
+</script>

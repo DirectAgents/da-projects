@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using ClientPortal.Data.DTOs.TD;
 using ClientPortal.Data.Entities.TD;
@@ -218,6 +219,66 @@ namespace ClientPortal.Data.Services
                     });
             }
             return summaries;
+        }
+
+        // --- Weekly/Monthly Stats
+
+        public IEnumerable<RangeStat> GetWeekStats(TradingDeskAccount tda, int numWeeks, DateTime? endDate)
+        {
+            DayOfWeek startDayOfWeek = DayOfWeek.Monday; //TODO: get from TDA
+
+            if (!endDate.HasValue)
+            {
+                // Start with yesterday and go back until it's the end of the latest full week
+                endDate = DateTime.Today.AddDays(-1);
+                while (endDate.Value.AddDays(1).DayOfWeek != startDayOfWeek)
+                    endDate = endDate.Value.AddDays(-1);
+            }
+
+            // Go back X weeks from endDate, then forward 1 day, so it's the right number of weeks, inclusive of start and endDate
+            DateTime startDate = endDate.Value.AddDays(-7 * numWeeks + 1);
+
+            // Now move start date back to the closest startDayOfWeek (there may be a partial week now, at the end)
+            // (Will only apply if endDate was set to a day other than at the end of the week)
+            while (startDate.DayOfWeek != startDayOfWeek)
+                startDate = startDate.AddDays(-1);
+
+            var daySums = GetDailyStatsSummaries(startDate, endDate, tda);
+
+            // title ?
+
+            var adjuster = new YearWeekAdjuster
+            {
+                StartDayOfWeek = startDayOfWeek,
+                CalendarWeekRule = CalendarWeekRule.FirstFullWeek
+            };
+
+            var stats = daySums
+                    .Select(s => new
+                    {
+                        Date = s.Date,
+                        Year = adjuster.GetYearAdjustedByWeek(s.Date),
+                        Week = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(s.Date, adjuster.CalendarWeekRule, startDayOfWeek),
+                        Impressions = s.Impressions,
+                        Clicks = s.Clicks,
+                        Conversions = s.Conversions,
+                        Spend = s.Spend
+                    })
+                    .GroupBy(x => new { x.Year, x.Week })
+                    .OrderBy(g => g.Key.Year)
+                    .ThenBy(g => g.Key.Week)
+                    .Select((g, i) => new RangeStat
+                    {
+                        WeekStartDay = startDayOfWeek,
+                        FillToLatest = endDate, // Acts as a boolean except for the most recent week
+                        WeekByMaxDate = g.Max(s => s.Date), // Supply the latest date in the group of dates (which are all part of a week)
+                        //TitleIfNotNull = title, // (if null, Title is "Range")
+                        Impressions = g.Sum(s => s.Impressions),
+                        Clicks = g.Sum(s => s.Clicks),
+                        Conversions = g.Sum(s => s.Conversions),
+                        Spend = g.Sum(s => s.Spend)
+                    });
+            return stats;
         }
 
         // ---

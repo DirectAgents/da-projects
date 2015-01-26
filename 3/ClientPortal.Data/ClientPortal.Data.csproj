@@ -256,6 +256,9 @@
     <Compile Include="DTOs\OfferInfo.cs" />
     <Compile Include="DTOs\SearchStat.cs" />
     <Compile Include="DTOs\TD\CreativeStatsSummary.cs" />
+    <Compile Include="DTOs\TD\RangeStat.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DTOs\TD\StatsRollup.cs" />
     <Compile Include="DTOs\TD\StatsSummary.cs" />
     <Compile Include="DTOs\WeeklySearchStat.cs" />
