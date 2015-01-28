@@ -235,6 +235,7 @@
     <Compile Include="Areas\TD\Controllers\StatsController.cs" />
     <Compile Include="Areas\TD\Controllers\HomeController.cs" />
     <Compile Include="Areas\TD\Controllers\ReportsController.cs" />
+    <Compile Include="Areas\TD\Models\TDExportModels.cs" />
     <Compile Include="Areas\TD\Models\TDReportModel.cs" />
     <Compile Include="Areas\TD\Models\TDHomeModel.cs" />
     <Compile Include="Areas\TD\TDAreaRegistration.cs" />

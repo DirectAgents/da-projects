@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using AutoMapper;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs.TD;
 using ClientPortal.Data.Entities.TD;
 using ClientPortal.Data.Entities.TD.AdRoll;
 using ClientPortal.Data.Entities.TD.DBM;
+using ClientPortal.Web.Areas.TD.Models;
 using ClientPortal.Web.Controllers;
 using ClientPortal.Web.Models;
 using DirectAgents.Mvc.KendoGridBinder;
@@ -118,7 +120,19 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             return json;
         }
 
-        // ---
+        public FileResult WeeklyExport(int numweeks = 8)
+        {
+            var userInfo = GetUserInfo();
+
+            var endDate = DateTime.Today.AddDays(-1); // TODO: TD_UseYesterdayAsLatest ?
+            var weekStats = tdRepo.GetWeekStats(userInfo.TDAccount, numweeks, endDate);
+            var rows = Mapper.Map<IEnumerable<RangeStat>, IEnumerable<RangeStatExportRow>>(weekStats);
+
+            string filename = "Weekly" + ControllerHelpers.DateStamp() + ".csv";
+            return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
+        }
+
+        // --- private methods ---
 
         private object GetAggregates(IEnumerable<StatsSummary> summaries, UserInfo userInfo)
         {

@@ -7,7 +7,9 @@ using System.Web.Routing;
 using AutoMapper;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Data.DTOs;
+using ClientPortal.Data.DTOs.TD;
 using ClientPortal.Data.Services;
+using ClientPortal.Web.Areas.TD.Models;
 using ClientPortal.Web.Models;
 using StackExchange.Profiling;
 using WebMatrix.WebData;
@@ -88,7 +90,12 @@ namespace ClientPortal.Web
                 .ForMember(dest => dest.ConversionPct, opt => opt.MapFrom(src => src.ConvRate));
             Mapper.CreateMap<MonthlyInfo, CPMReportExportRow>()
                 .ForMember(dest => dest.Spend, opt => opt.MapFrom(src => src.Revenue));
+
             Mapper.CreateMap<SearchStat, SearchStatExportRow>();
+            Mapper.CreateMap<RangeStat, RangeStatExportRow>()
+                .ForMember(dest => dest.eCPM, opt => opt.MapFrom(src => src.CPM))
+                .ForMember(dest => dest.eCPC, opt => opt.MapFrom(src => src.CPC))
+                .ForMember(dest => dest.eCPA, opt => opt.MapFrom(src => src.CPA));
 
             // add admin account if it does not exist
             if (!WebSecurity.UserExists("admin"))
