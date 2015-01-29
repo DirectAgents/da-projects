@@ -56,7 +56,8 @@
         return new kendo.data.DataSource(args);
     }
 
-    function CreateTdRangeGrid(dataSource, el, height, titleHeader, titleWidthPct, sortable, detailInit) {
+    function CreateTdRangeGrid(dataSource, el, height, titleHeader, titleWidthPct, sortable, filterable, detailInit) {
+        var cpmCPCdecimals = 2;
         var args = {
             dataSource: dataSource,
             autoBind: false,
@@ -70,11 +71,11 @@
                 { field: 'Conversions', format: '{0:n0}',  attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
                 { field: 'ConvRate',    format: '{0:p}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
                 { field: 'Spend', format: '{0:c}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'CPM', title: 'eCPM', format: '{0:c3}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c3') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
-                { field: 'CPC', title: 'eCPC', format: '{0:c3}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c3') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+                { field: 'CPM', title: 'eCPM', format: '{0:c' + cpmCPCdecimals + '}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c" + cpmCPCdecimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+                { field: 'CPC', title: 'eCPC', format: '{0:c' + cpmCPCdecimals + '}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c" + cpmCPCdecimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
                 { field: 'CPA', title: 'eCPA', format: '{0:c}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
             ],
-            filterable: true,
+            filterable: filterable,
             pageable: true,
             detailInit: detailInit
         };
@@ -83,6 +84,9 @@
                 mode: 'single',
                 allowUnsort: false
             };
+            if (titleHeader == 'Week' || titleHeader == 'Month') {
+                args.columns[1].sortable = { compare: function (a, b) { return a.StartDate - b.StartDate; } };
+            }
         } else {
             args.sortable = false;
         }

@@ -23,7 +23,7 @@
 <script>
     $(function () {
         var weeklyDS = CreateTdRangeDataSource('@Url.Action("WeeklyData", "Stats")', null, false, 'nosort', 0);
-        CreateTdRangeGrid(weeklyDS, $('#tdWeeklyGrid'), 300, 'Week', 10, false, null);
+        CreateTdRangeGrid(weeklyDS, $('#tdWeeklyGrid'), 300, 'Week', 10, true, false, null);
         @*CreateRevROASChart(weeksumDS, 'weekleftChart', 'Weekly Revenue vs. ROAS Performance');*@
 
         weeklyDS.read();
