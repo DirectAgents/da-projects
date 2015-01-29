@@ -39,13 +39,20 @@ namespace ClientPortal.Web.Controllers
         public FileResult WeekSumExport(int numweeks = 8)
         {
             var userInfo = GetUserInfo();
-
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
             var weekStats = cpRepo.GetWeekStats(userInfo.SearchProfile.SearchProfileId, numweeks, userInfo.Search_StartDayOfWeek, endDate, userInfo.UseAnalytics, userInfo.SearchProfile.ShowCalls);
-            var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(weekStats);
 
             string filename = "WeeklySummary" + ControllerHelpers.DateStamp() + ".csv";
-            return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
+            if (userInfo.SearchProfile.ShowRevenue)
+            {
+                var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow_Retail>>(weekStats);
+                return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
+            }
+            else
+            {
+                var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow_LeadGen>>(weekStats);
+                return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
+            }
         }
 
         [HttpPost]
@@ -69,13 +76,20 @@ namespace ClientPortal.Web.Controllers
         public FileResult MonthSumExport(int nummonths = 6)
         {
             var userInfo = GetUserInfo();
-
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
             var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile.SearchProfileId, nummonths, endDate, userInfo.UseAnalytics, userInfo.SearchProfile.ShowCalls);
-            var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(monthStats);
 
             string filename = "MonthlySummary" + ControllerHelpers.DateStamp() + ".csv";
-            return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
+            if (userInfo.SearchProfile.ShowRevenue)
+            {
+                var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow_Retail>>(monthStats);
+                return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
+            }
+            else
+            {
+                var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow_LeadGen>>(monthStats);
+                return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
+            }
         }
 
         [HttpPost]
@@ -96,12 +110,19 @@ namespace ClientPortal.Web.Controllers
         public FileResult ChannelPerfExport(int numweeks = 8)
         {
             var userInfo = GetUserInfo();
-
             var stats = cpRepo.GetChannelStats(userInfo.SearchProfile.SearchProfileId, numweeks, userInfo.Search_StartDayOfWeek, userInfo.UseAnalytics, !userInfo.Search_UseYesterdayAsLatest, true, userInfo.ShowSearchChannels, userInfo.SearchProfile.ShowCalls);
-            var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(stats);
 
             string filename = "ChannelPerformance" + ControllerHelpers.DateStamp() + ".csv";
-            return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
+            if (userInfo.SearchProfile.ShowRevenue)
+            {
+                var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow_Retail>>(stats);
+                return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
+            }
+            else
+            {
+                var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow_LeadGen>>(stats);
+                return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
+            }
         }
 
         [HttpPost]
@@ -139,10 +160,18 @@ namespace ClientPortal.Web.Controllers
 
             var stats = cpRepo.GetCampaignStats(userInfo.SearchProfile.SearchProfileId, channel, start, end, breakdown, userInfo.UseAnalytics, userInfo.SearchProfile.ShowCalls)
                 .OrderBy(s => s.EndDate).ThenByDescending(s => s.Channel).ThenBy(s => s.Title);
-            var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(stats);
 
             string filename = "CampaignPerformance" + ControllerHelpers.DateStamp() + ".csv";
-            return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
+            if (userInfo.SearchProfile.ShowRevenue)
+            {
+                var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow_Retail>>(stats);
+                return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
+            }
+            else
+            {
+                var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow_LeadGen>>(stats);
+                return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
+            }
         }
 
         public JsonResult CampaignPerfWeeklyData(string startdate, string enddate)

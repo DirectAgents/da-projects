@@ -91,7 +91,13 @@ namespace ClientPortal.Web
             Mapper.CreateMap<MonthlyInfo, CPMReportExportRow>()
                 .ForMember(dest => dest.Spend, opt => opt.MapFrom(src => src.Revenue));
 
-            Mapper.CreateMap<SearchStat, SearchStatExportRow>();
+            Mapper.CreateMap<SearchStat, SearchStatExportRow_Retail>()
+                .ForMember(dest => dest.Spend, opt => opt.MapFrom(src => src.Cost))
+                .ForMember(dest => dest.Net, opt => opt.MapFrom(src => src.Margin));
+            Mapper.CreateMap<SearchStat, SearchStatExportRow_LeadGen>()
+                .ForMember(dest => dest.Spend, opt => opt.MapFrom(src => src.Cost))
+                .ForMember(dest => dest.Leads, opt => opt.MapFrom(src => src.Orders));
+
             Mapper.CreateMap<RangeStat, RangeStatExportRow>()
                 .ForMember(dest => dest.eCPM, opt => opt.MapFrom(src => src.CPM))
                 .ForMember(dest => dest.eCPC, opt => opt.MapFrom(src => src.CPC))
