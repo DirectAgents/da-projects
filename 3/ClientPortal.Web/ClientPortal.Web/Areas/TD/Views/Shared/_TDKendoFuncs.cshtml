@@ -92,4 +92,43 @@
         }
         el.kendoGrid(args);
     }
+
+    function CreateClicksConversionsChart(dataSource, elId, title) {
+        var series = [
+            { field: "Clicks", name: 'Clicks', axis: "clicks", tooltip: { template: "Clicks: #= kendo.format('{0:N0}',value) #" }, type: "area", color: "#007eff" },
+            { field: "Conversions", name: 'Conversions', axis: "conversions", tooltip: { template: "Conversions: #= kendo.format('{0:N0}',value) #" }, type: "line", color: "#ff1c1c" }
+        ];
+        var valueAxis = [
+            { name: "clicks", labels: { format: "N0", step: 2 }, title: { text: "Clicks" } },
+            { name: "conversions", labels: { format: "N0", step: 2 }, title: { text: "Conversions" } }
+        ];
+        CreateTdChart(dataSource, elId, title, series, valueAxis);
+    }
+
+    function CreateTdChart(dataSource, elId, title, series, valueAxis) {
+        $('#' + elId).kendoChart({
+            title: title,
+            dataSource: dataSource,
+            autoBind: false,
+            chartArea: {
+                height: 200
+            },
+            theme: $(document).data("kendoSkin") || "default",
+            series: series,
+            categoryAxis: {
+                field: "Title",
+                labels: { template: "#= value.replace(/ /g,'') #" },
+                axisCrossingValue: [0, 1000]
+            },
+            valueAxis: valueAxis,
+            tooltip: {
+                visible: true
+            },
+            legend: {
+                position: "bottom",
+                //offsetX: 90,
+                //offsetY: 0
+            }
+        });
+    }
 </script>
