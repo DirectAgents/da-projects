@@ -1,4 +1,6 @@
-﻿<script>
+﻿@model ClientPortal.Web.Areas.TD.Models.TDHomeModel
+
+<script>
     function CreateTdRangeDataSource(url, readData, group, sort, pageSize) {
         if (pageSize == 0) pageSize = 100; // default
         if (pageSize == -1) pageSize = 1000; // "unlimited"
@@ -68,12 +70,16 @@
                 { field: 'Impressions', format: '{0:n0}',  attributes: { style: "text-align: right" },  footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                 { field: 'Clicks',      format: '{0:n0}',  attributes: { style: "text-align: right" },  footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                 { field: 'CTR',         format: '{0:p}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
-                { field: 'Conversions', format: '{0:n0}',  attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
-                { field: 'ConvRate',    format: '{0:p}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+@if (Model.UserInfo.TDAccount.ShowConversions) {
+                <text>{ field: 'Conversions', format: '{0:n0}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },</text>
+                <text>{ field: 'ConvRate',    format: '{0:p}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },</text>
+}
                 { field: 'Spend', format: '{0:c}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                 { field: 'CPM', title: 'eCPM', format: '{0:c' + cpmCPCdecimals + '}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c" + cpmCPCdecimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
                 { field: 'CPC', title: 'eCPC', format: '{0:c' + cpmCPCdecimals + '}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c" + cpmCPCdecimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
-                { field: 'CPA', title: 'eCPA', format: '{0:c}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+@if (Model.UserInfo.TDAccount.ShowConversions) {
+                <text>{ field: 'CPA', title: 'eCPA', format: '{0:c}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },</text>
+}
             ],
             filterable: filterable,
             pageable: true,

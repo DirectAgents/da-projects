@@ -5,9 +5,9 @@ namespace ClientPortal.Web.Models
 {
     public class SearchIndexModel
     {
+        // TODO: store UserInfo here; get Culture/CultureInfo from UserInfo...
         public string Culture { get; set; }
         public CultureInfo CultureInfo { get { return string.IsNullOrWhiteSpace(Culture) ? CultureInfo.InvariantCulture : CultureInfo.CreateSpecificCulture(Culture); } }
-        // TODO: make CultureInfo a singleton (on demand)
 
         public bool HasLogo { get; set; }
         public DatesModel Dates { get; set; }

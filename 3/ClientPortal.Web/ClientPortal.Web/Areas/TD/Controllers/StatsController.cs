@@ -110,7 +110,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var endDate = DateTime.Today.AddDays(-1); // TODO: TD_UseYesterdayAsLatest ?
+            var endDate = userInfo.TD_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
             var weekStats = tdRepo.GetWeekStats(userInfo.TDAccount, numweeks, endDate);
             var kgrid = new KendoGrid<RangeStat>(request, weekStats);
             if (weekStats.Any())
@@ -124,7 +124,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var endDate = DateTime.Today.AddDays(-1); // TODO: TD_UseYesterdayAsLatest ?
+            var endDate = userInfo.TD_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
             var weekStats = tdRepo.GetWeekStats(userInfo.TDAccount, numweeks, endDate);
             var rows = Mapper.Map<IEnumerable<RangeStat>, IEnumerable<RangeStatExportRow>>(weekStats);
 

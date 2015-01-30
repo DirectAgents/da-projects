@@ -225,7 +225,7 @@ namespace ClientPortal.Data.Services
 
         public IEnumerable<RangeStat> GetWeekStats(TradingDeskAccount tda, int numWeeks, DateTime? endDate)
         {
-            DayOfWeek startDayOfWeek = DayOfWeek.Monday; //TODO: get from TDA
+            DayOfWeek startDayOfWeek = tda.StartDayOfWeek;
 
             if (!endDate.HasValue)
             {

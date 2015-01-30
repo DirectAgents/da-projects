@@ -41,7 +41,7 @@ namespace ClientPortal.Web.Models
 
         public string Culture
         {
-            get { return (Advertiser == null) ? "en-US" : Advertiser.Culture; }
+            get { return (Advertiser == null) ? "en-US" : Advertiser.Culture; } // TODO: get from SearchProfile/TDAccount where appropriate
         }
         public CultureInfo CultureInfo
         {
@@ -125,15 +125,29 @@ namespace ClientPortal.Web.Models
                     return true; // (if not specified)
             }
         }
+        public bool TD_UseYesterdayAsLatest
+        {
+            get
+            {
+                bool useYesterdayAsLatest;
+                if (Boolean.TryParse(WebConfigurationManager.AppSettings["TD_UseYesterdayAsLatest"], out useYesterdayAsLatest))
+                    return useYesterdayAsLatest;
+                else
+                    return true; // (if not specified)
+            }
+        }
 
         public DayOfWeek StartDayOfWeek
         {
             get { return (Advertiser == null) ? DayOfWeek.Sunday : (DayOfWeek)Advertiser.StartDayOfWeek; }
         }
-
         public DayOfWeek Search_StartDayOfWeek
         {
             get { return (SearchProfile == null) ? DayOfWeek.Sunday : (DayOfWeek)SearchProfile.StartDayOfWeek; }
+        }
+        public DayOfWeek TD_StartDayOfWeek
+        {
+            get { return (TDAccount == null) ? DayOfWeek.Monday : (DayOfWeek)TDAccount.StartDayOfWeek; }
         }
 
         private Dates _dates;
@@ -152,6 +166,15 @@ namespace ClientPortal.Web.Models
             {
                 if (_searchDates == null) _searchDates = new Dates(this.Search_UseYesterdayAsLatest, this.Search_StartDayOfWeek);
                 return _searchDates;
+            }
+        }
+        private Dates _tdDates;
+        internal Dates TD_Dates
+        {
+            get
+            {
+                if (_tdDates == null) _tdDates = new Dates(this.TD_UseYesterdayAsLatest, this.TD_StartDayOfWeek);
+                return _tdDates;
             }
         }
 

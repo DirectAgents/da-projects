@@ -1,7 +1,7 @@
-﻿using ClientPortal.Web.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using ClientPortal.Web.Models;
 
 namespace ClientPortal.Web.Areas.TD.Models
 {
@@ -22,8 +22,8 @@ namespace ClientPortal.Web.Areas.TD.Models
             SetupMetrics();
             SetMetricsToGraph(metricToGraph1, metricToGraph2);
 
-            StartDate = userInfo.Dates.FirstOfMonth.ToString("d", userInfo.CultureInfo);
-            EndDate = userInfo.Dates.Yesterday.ToString("d", userInfo.CultureInfo);
+            StartDate = userInfo.TD_Dates.FirstOfMonth.ToString("d", userInfo.CultureInfo);
+            EndDate = userInfo.TD_Dates.Latest.ToString("d", userInfo.CultureInfo);
         }
 
         public void SetupMetrics()

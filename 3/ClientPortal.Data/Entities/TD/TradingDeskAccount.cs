@@ -1,10 +1,10 @@
-﻿using ClientPortal.Data.Contexts;
-using ClientPortal.Data.Entities.TD.AdRoll;
-using ClientPortal.Data.Entities.TD.DBM;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using ClientPortal.Data.Contexts;
+using ClientPortal.Data.Entities.TD.AdRoll;
+using ClientPortal.Data.Entities.TD.DBM;
 
 namespace ClientPortal.Data.Entities.TD
 {
@@ -23,6 +23,12 @@ namespace ClientPortal.Data.Entities.TD
         public IEnumerable<UserProfile> UserProfiles { get; set; }
         [NotMapped]
         public IEnumerable<Advertiser> Advertisers { get; set; }
+
+        [NotMapped]
+        public DayOfWeek StartDayOfWeek
+        {
+            get { return DayOfWeek.Monday; } //TODO: put in db
+        }
 
         [NotMapped]
         public string DisplayName
