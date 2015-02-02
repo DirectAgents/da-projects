@@ -906,6 +906,7 @@
     <Content Include="Areas\Admin\Views\SearchAdmin\TestReports.cshtml" />
     <Content Include="Areas\Admin\Views\SearchAdmin\CreateSearchProfile.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\DayOfWeek.cshtml" />
+    <Content Include="Areas\TD\Views\Reports\Monthly.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

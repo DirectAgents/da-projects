@@ -70,6 +70,7 @@
                     <dd class="active"><a href="#repSumTab" id="repNav_Summary">Summary</a></dd>
                     <dd><a href="#repCreativeTab" id="repNav_Creative">Creative</a></dd>
                     <dd><a href="#repWeeklyTab" id="repNav_Weekly">Weekly</a></dd>
+                    <dd><a href="#repMonthlyTab" id="repNav_Monthly">Monthly</a></dd>
                 </dl>
                 <!-- /ReportsHTabs  -->
 
@@ -82,6 +83,7 @@
                     </div>
                     <div id="repCreativeTab" class="content"></div>
                     <div id="repWeeklyTab" class="content"></div>
+                    <div id="repMonthlyTab" class="content"></div>
                 </div>
                 <!-- /ReportsContent  -->
 
@@ -152,6 +154,7 @@
             ResizeChart('creativeBar', true);
             ResizeChart('creativeScatter', true);
             ResizeChart('tdWeekly', true);
+            ResizeChart('tdMonthly', true);
         }
 
         // Resize a chart, optionally refreshing it.
@@ -186,6 +189,7 @@
             $('#repNav_Summary').click(function () { CheckRefreshSummary(); });
             $('#repNav_Creative').click(function () { CheckLoadCreative(); });
             $('#repNav_Weekly').click(function () { CheckLoadWeekly(); });
+            $('#repNav_Monthly').click(function () { CheckLoadMonthly(); });
 
             $('#mainNav_Sample').click(function () { CheckLoadSample(); });
         }
@@ -216,6 +220,18 @@
                 });
             } else {
                 setTimeout(function () { ResizeChart('tdWeekly', true); }, 100);
+            }
+        }
+        function CheckLoadMonthly() {
+            if ($('#monthlyChart').length == 0) {
+                $.ajax({
+                    url: '@Url.Action("Monthly", "Reports")',
+                    cache: false
+                }).done(function (html) {
+                    $('#repMonthlyTab').html(html);
+                });
+            } else {
+                setTimeout(function () { ResizeChart('tdMonthly', true); }, 100);
             }
         }
 

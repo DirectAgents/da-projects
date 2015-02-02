@@ -223,27 +223,27 @@ namespace ClientPortal.Data.Services
 
         // --- Weekly/Monthly Stats
 
-        public IEnumerable<RangeStat> GetWeekStats(TradingDeskAccount tda, int numWeeks, DateTime? endDate)
+        public IEnumerable<RangeStat> GetWeekStats(TradingDeskAccount tda, int numWeeks, DateTime? end)
         {
             DayOfWeek startDayOfWeek = tda.StartDayOfWeek;
 
-            if (!endDate.HasValue)
+            if (!end.HasValue)
             {
                 // Start with yesterday and go back until it's the end of the latest full week
-                endDate = DateTime.Today.AddDays(-1);
-                while (endDate.Value.AddDays(1).DayOfWeek != startDayOfWeek)
-                    endDate = endDate.Value.AddDays(-1);
+                end = DateTime.Today.AddDays(-1);
+                while (end.Value.AddDays(1).DayOfWeek != startDayOfWeek)
+                    end = end.Value.AddDays(-1);
             }
 
-            // Go back X weeks from endDate, then forward 1 day, so it's the right number of weeks, inclusive of start and endDate
-            DateTime startDate = endDate.Value.AddDays(-7 * numWeeks + 1);
+            // Go back X weeks from the end date, then forward 1 day, so it's the right number of weeks, inclusive of start and end
+            DateTime start = end.Value.AddDays(-7 * numWeeks + 1);
 
             // Now move start date back to the closest startDayOfWeek (there may be a partial week now, at the end)
-            // (Will only apply if endDate was set to a day other than at the end of the week)
-            while (startDate.DayOfWeek != startDayOfWeek)
-                startDate = startDate.AddDays(-1);
+            // (Will only apply if "end" was set to a day other than at the end of the week)
+            while (start.DayOfWeek != startDayOfWeek)
+                start = start.AddDays(-1);
 
-            var daySums = GetDailyStatsSummaries(startDate, endDate, tda);
+            var daySums = GetDailyStatsSummaries(start, end, tda);
 
             // title ?
 
@@ -270,7 +270,7 @@ namespace ClientPortal.Data.Services
                     .Select((g, i) => new RangeStat
                     {
                         WeekStartDay = startDayOfWeek,
-                        FillToLatest = endDate, // Acts as a boolean except for the most recent week
+                        FillToLatest = end, // Acts as a boolean except for the most recent week
                         WeekByMaxDate = g.Max(s => s.Date), // Supply the latest date in the group of dates (which are all part of a week)
                         //TitleIfNotNull = title, // (if null, Title is "Range")
                         Impressions = g.Sum(s => s.Impressions),
@@ -279,6 +279,25 @@ namespace ClientPortal.Data.Services
                         Spend = g.Sum(s => s.Spend)
                     });
             return stats;
+        }
+
+        public IEnumerable<RangeStat> GetMonthStats(TradingDeskAccount tda, int numMonths, DateTime end)
+        {
+            DateTime start = new DateTime(end.Year, end.Month, 1).AddMonths((numMonths - 1) * -1);
+
+            var stats = GetDailyStatsSummaries(start, end, tda)
+                .GroupBy(s => new { s.Date.Year, s.Date.Month })
+                .Select(g =>
+                new RangeStat
+                {
+                    MonthByMaxDate = g.Max(s => s.Date),
+                    Impressions = g.Sum(s => s.Impressions),
+                    Clicks = g.Sum(s => s.Clicks),
+                    Conversions = g.Sum(s => s.Conversions),
+                    Spend = g.Sum(s => s.Spend)
+                });
+
+            return stats.OrderBy(s => s.StartDate);
         }
 
         // ---

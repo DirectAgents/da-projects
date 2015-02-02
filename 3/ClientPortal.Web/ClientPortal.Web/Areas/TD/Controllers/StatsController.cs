@@ -119,7 +119,6 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             var json = Json(kgrid);
             return json;
         }
-
         public FileResult WeeklyExport(int numweeks = 8)
         {
             var userInfo = GetUserInfo();
@@ -129,6 +128,32 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             var rows = Mapper.Map<IEnumerable<RangeStat>, IEnumerable<RangeStatExportRow>>(weekStats);
 
             string filename = "Weekly" + ControllerHelpers.DateStamp() + ".csv";
+            return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
+        }
+
+        [HttpPost]
+        public JsonResult MonthlyData(KendoGridRequest request, int nummonths = 6)
+        {
+            var userInfo = GetUserInfo();
+
+            var endDate = userInfo.TD_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
+            var monthStats = tdRepo.GetMonthStats(userInfo.TDAccount, nummonths, endDate);
+            var kgrid = new KendoGrid<RangeStat>(request, monthStats);
+            if (monthStats.Any())
+                kgrid.aggregates = GetAggregates(monthStats, userInfo);
+
+            var json = Json(kgrid);
+            return json;
+        }
+        public FileResult MonthlyExport(int nummonths = 8)
+        {
+            var userInfo = GetUserInfo();
+
+            var endDate = userInfo.TD_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
+            var monthStats = tdRepo.GetMonthStats(userInfo.TDAccount, nummonths, endDate);
+            var rows = Mapper.Map<IEnumerable<RangeStat>, IEnumerable<RangeStatExportRow>>(monthStats);
+
+            string filename = "Monthly" + ControllerHelpers.DateStamp() + ".csv";
             return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
         }
 

@@ -1,0 +1,35 @@
+﻿@model ClientPortal.Web.Areas.TD.Models.TDReportModel
+
+<div class="row">
+    <div class="large-12 columns">
+        <div id="tdMonthlyOuter">
+            <b>Monthly Summary</b>
+            <a class="button paddedbutton" style="float: right" href="#" onclick="ExportMonthlyCSV(); return false">Export CSV</a>
+            <div id="tdMonthlyGrid" style="margin-top: 10px"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="large-12 columns">
+        <div id="tdMonthlyChartSection" class="k-content">
+            <div class="chart-wrapper">
+                <div id="tdMonthlyChart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var monthlyDS = CreateTdRangeDataSource('@Url.Action("MonthlyData", "Stats")', null, false, 'nosort', 0);
+        CreateTdRangeGrid(monthlyDS, $('#tdMonthlyGrid'), 300, 'Month', 10, true, false, null);
+        CreateImpressionsClicksChart(monthlyDS, 'tdMonthlyChart', 'Monthly Impressions vs. Clicks Performance');
+
+        monthlyDS.read();
+    });
+
+    function ExportMonthlyCSV() {
+        window.location.href = '@Url.Action("MonthlyExport", "Stats")';
+    }
+</script>
