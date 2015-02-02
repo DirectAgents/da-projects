@@ -110,6 +110,17 @@
         ];
         CreateTdChart(dataSource, elId, title, series, valueAxis);
     }
+    function CreateConversionsCPAChart(dataSource, elId, title) {
+        var series = [
+            { field: "Conversions", name: 'Conversions', axis: "conversions", tooltip: { template: "Conversions: #= kendo.format('{0:N0}',value) #" }, type: "line" },
+            { field: "CPA", name: 'eCPA', axis: "cpa", tooltip: { template: "eCPA: #= kendo.format('{0:C}',value) #" }, type: "line" }
+        ];
+        var valueAxis = [
+            { name: "conversions", labels: { format: "N0", step: 2 }, title: { text: "Conversions" } },
+            { name: "cpa", labels: { format: "C", step: 2 }, title: { text: "eCPA" } }
+        ];
+        CreateTdChart(dataSource, elId, title, series, valueAxis);
+    }
 
     function CreateTdChart(dataSource, elId, title, series, valueAxis) {
         $('#' + elId).kendoChart({

@@ -24,7 +24,7 @@
     $(function () {
         var monthlyDS = CreateTdRangeDataSource('@Url.Action("MonthlyData", "Stats")', null, false, 'nosort', 0);
         CreateTdRangeGrid(monthlyDS, $('#tdMonthlyGrid'), 300, 'Month', 10, true, false, null);
-        CreateImpressionsClicksChart(monthlyDS, 'tdMonthlyChart', 'Monthly Impressions vs. Clicks Performance');
+        CreateConversionsCPAChart(monthlyDS, 'tdMonthlyChart', 'Monthly Conversions vs. eCPA Performance');
 
         monthlyDS.read();
     });
