@@ -17,7 +17,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
         public ActionResult Summary(string metric1, string metric2)
         {
             var userInfo = GetUserInfo();
-            var model = new TDReportModel(userInfo, metric1, metric2);
+            var model = new TDSummaryReportModel(userInfo, metric1, metric2);
             return PartialView(model);
         }
 
@@ -29,7 +29,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
         public ActionResult Creative()
         {
             var userInfo = GetUserInfo();
-            var model = new TDReportModel(userInfo);
+            var model = new TDReportModelWithDates(userInfo);
             return PartialView(model);
         }
 

@@ -1,4 +1,4 @@
-﻿@model ClientPortal.Web.Areas.TD.Models.TDReportModel
+﻿@model ClientPortal.Web.Areas.TD.Models.TDSummaryReportModel
 
 <div style="height: 35px">
     <select style="width: 140px" id="summary_dateRangeSel" onchange="ChangeDateRange('summary', true)">@* show all in USD for now *@
@@ -39,7 +39,7 @@
         <td>CTR:</td>
         <td id="tdCTR" style="text-align:right"></td>
     </tr>
-@if (Model.ShouldShowMetric("Conversions"))
+@if (Model.UserInfo.TDAccount.ShowConversions)
 {
     <tr>
         <td>Conversions:</td>
@@ -120,7 +120,7 @@
         $('#tdClicks').html(kendo.toString(aggs.Clicks.sum, 'N0'));
         $('#tdCPC').html(kendo.toString(aggs.CPC.agg, 'C3'));
         $('#tdCTR').html(kendo.toString(aggs.CTR.agg, 'P'));
-@if (Model.ShouldShowMetric("Conversions"))
+@if (Model.UserInfo.TDAccount.ShowConversions)
 {
     <text>$('#tdConversions').html(kendo.toString(aggs.Conversions.sum, 'N0'));</text>
     <text>$('#tdCPA').html(kendo.toString(aggs.CPA.agg, 'C'));</text>
@@ -207,6 +207,7 @@
     function ConstructSummaryChartArrays(metrics) {
         var format, display;
         var seriesArray = [], valueAxisArray = [];
+        var type = "column";
         for (var i = 0; i < metrics.length; i++)
         {
             if ($.inArray(metrics[i], nMetrics) > -1)
@@ -223,7 +224,9 @@
             else
                 display = metrics[i];
 
-            seriesArray.push({ type: "line", field: metrics[i], name: display, axis: metrics[i], markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}',category) #: #= kendo.format('{0:" + format + "}',value) #" } });
+            if (i == 1)
+                type = "line";
+            seriesArray.push({ type: type, field: metrics[i], name: display, axis: metrics[i], markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}',category) #: #= kendo.format('{0:" + format + "}',value) #" } });
             valueAxisArray.push({ name: metrics[i], labels: { format: format, step: 2 }, title: { text: display } });
         }
         return {

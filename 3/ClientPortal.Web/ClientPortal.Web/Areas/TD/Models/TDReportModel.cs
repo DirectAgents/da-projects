@@ -7,23 +7,37 @@ namespace ClientPortal.Web.Areas.TD.Models
 {
     public class TDReportModel
     {
-        private UserInfo UserInfo { get; set; }
+        public UserInfo UserInfo { get; set; }
+        public TDReportModel(UserInfo userInfo)
+        {
+            UserInfo = userInfo;
+        }
+    }
 
+    public class TDReportModelWithDates : TDReportModel
+    {
+        public string StartDate { get; set; }
+        public string EndDate { get; set; }
+
+        public TDReportModelWithDates(UserInfo userInfo)
+            :base(userInfo)
+        {
+            StartDate = userInfo.TD_Dates.FirstOfMonth.ToString("d", userInfo.CultureInfo);
+            EndDate = userInfo.TD_Dates.Latest.ToString("d", userInfo.CultureInfo);
+        }
+    }
+
+    public class TDSummaryReportModel : TDReportModelWithDates
+    {
         public SelectListItem[] AllMetricsSelectItems { get; set; }
         private string[] AllMetrics { get; set; }
         public string[] MetricsToGraph { get; set; } // e.g. the two metrics to graph on the summary page
 
-        public string StartDate { get; set; }
-        public string EndDate { get; set; }
-
-        public TDReportModel(UserInfo userInfo, string metricToGraph1 = null, string metricToGraph2 = null)
+        public TDSummaryReportModel(UserInfo userInfo, string metricToGraph1 = null, string metricToGraph2 = null)
+            :base(userInfo)
         {
-            UserInfo = userInfo;
             SetupMetrics();
             SetMetricsToGraph(metricToGraph1, metricToGraph2);
-
-            StartDate = userInfo.TD_Dates.FirstOfMonth.ToString("d", userInfo.CultureInfo);
-            EndDate = userInfo.TD_Dates.Latest.ToString("d", userInfo.CultureInfo);
         }
 
         public void SetupMetrics()
@@ -68,9 +82,9 @@ namespace ClientPortal.Web.Areas.TD.Models
             MetricsToGraph = metricsToGraphList.ToArray();
         }
 
-        public bool ShouldShowMetric(string metric)
-        {
-            return AllMetrics.Contains(metric);
-        }
+        //public bool ShouldShowMetric(string metric)
+        //{
+        //    return AllMetrics.Contains(metric);
+        //}
     }
 }

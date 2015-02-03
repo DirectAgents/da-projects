@@ -24,7 +24,11 @@
     $(function () {
         var monthlyDS = CreateTdRangeDataSource('@Url.Action("MonthlyData", "Stats")', null, false, 'nosort', 0);
         CreateTdRangeGrid(monthlyDS, $('#tdMonthlyGrid'), 300, 'Month', 10, true, false, null);
-        CreateConversionsCPAChart(monthlyDS, 'tdMonthlyChart', 'Monthly Conversions vs. eCPA Performance');
+@if (Model.UserInfo.TDAccount.ShowConversions) {
+        <text>CreateConversionsCPAChart(monthlyDS, 'tdMonthlyChart', 'Monthly Conversions vs. eCPA Performance');</text>
+} else {
+        <text>CreateImpressionsClicksChart(monthlyDS, 'tdMonthlyChart', 'Monthly Impresions vs. Clicks Performance');</text>
+}
 
         monthlyDS.read();
     });

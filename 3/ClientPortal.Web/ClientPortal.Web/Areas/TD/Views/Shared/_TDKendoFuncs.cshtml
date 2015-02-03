@@ -101,7 +101,7 @@
 
     function CreateImpressionsClicksChart(dataSource, elId, title) {
         var series = [
-            { field: "Impressions", name: 'Impressions', axis: "impressions", tooltip: { template: "Impressions: #= kendo.format('{0:N0}',value) #" }, type: "line" },
+            { field: "Impressions", name: 'Impressions', axis: "impressions", tooltip: { template: "Impressions: #= kendo.format('{0:N0}',value) #" }, type: "column" },
             { field: "Clicks", name: 'Clicks', axis: "clicks", tooltip: { template: "Clicks: #= kendo.format('{0:N0}',value) #" }, type: "line" }
         ];
         var valueAxis = [
@@ -112,7 +112,7 @@
     }
     function CreateConversionsCPAChart(dataSource, elId, title) {
         var series = [
-            { field: "Conversions", name: 'Conversions', axis: "conversions", tooltip: { template: "Conversions: #= kendo.format('{0:N0}',value) #" }, type: "line" },
+            { field: "Conversions", name: 'Conversions', axis: "conversions", tooltip: { template: "Conversions: #= kendo.format('{0:N0}',value) #" }, type: "column" },
             { field: "CPA", name: 'eCPA', axis: "cpa", tooltip: { template: "eCPA: #= kendo.format('{0:C}',value) #" }, type: "line" }
         ];
         var valueAxis = [
@@ -128,7 +128,7 @@
             dataSource: dataSource,
             autoBind: false,
             chartArea: {
-                height: 200
+                height: 350
             },
             theme: $(document).data("kendoSkin") || "default",
             series: series,

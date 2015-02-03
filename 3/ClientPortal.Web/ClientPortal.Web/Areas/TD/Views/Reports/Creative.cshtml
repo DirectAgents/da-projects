@@ -1,4 +1,4 @@
-﻿@model ClientPortal.Web.Areas.TD.Models.TDReportModel
+﻿@model ClientPortal.Web.Areas.TD.Models.TDReportModelWithDates
 
 <div style="height: 35px">
     <select style="width: 140px" id="creative_dateRangeSel" onchange="ChangeDateRange('creative', true)">@* show all in USD for now *@
@@ -171,7 +171,7 @@
                 { field: 'Impressions', width: 100, attributes: { style: "text-align:right" }, format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                 { field: 'Clicks',      width:  70, attributes: { style: "text-align:right" }, format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                 { field: 'CTR',         width:  80, attributes: { style: "text-align:right" }, format: '{0:p}',  footerTemplate: "#= kendo.toString(agg, 'p') #",  footerAttributes: { style: "font-weight: bold; text-align: right" } },
-            @if (Model.ShouldShowMetric("Conversions"))
+            @if (Model.UserInfo.TDAccount.ShowConversions)
             {
                 <text>{ field: 'Conversions', width: 100, attributes: { style: "text-align:right" }, format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },</text>
                 <text>{ field: 'ConvRate',    width:  90, attributes: { style: "text-align:right" }, format: '{0:p}',  footerTemplate: "#= kendo.toString(agg, 'p') #",  footerAttributes: { style: "font-weight: bold; text-align: right" } },</text>
@@ -179,7 +179,7 @@
                 { field: 'Spend',              width: 100, attributes: { style: "text-align:right" }, format: '{0:c}', footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                 { field: 'CPM', title: 'eCPM', width:  70, attributes: { style: "text-align:right" }, format: '{0:c}', footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                 { field: 'CPC', title: 'eCPC', width:  70, attributes: { style: "text-align:right" }, format: '{0:c}', footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-            @if (Model.ShouldShowMetric("Conversions"))
+            @if (Model.UserInfo.TDAccount.ShowConversions)
             {
                 <text>{ field: 'CPA', title: 'eCPA', template: "# if(Conv==0){# N/A #}else{##= kendo.toString(CPA,'c') ##}#", width: 80, attributes: { style: "text-align:right" }, footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },</text>
             }
