@@ -172,6 +172,7 @@
         function LoadSummary() {
             $.ajax({
                 url: '@Url.Action("Summary", "Reports")',
+                data: { metric1: "Spend", metric2: "Conversions" },
                 cache: false
             }).done(function (html) {
                 $('#repSumTab').html(html);

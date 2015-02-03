@@ -66,14 +66,25 @@
 </div>
 
 @{
-    string secondSelectedValue = (Model.AllMetricsSelectItems.Length > 1) ? Model.AllMetricsSelectItems[1].Value : null;
+    string firstSelectedValue = null;
+    if (Model.MetricsToGraph.Length > 0) {
+        firstSelectedValue = Model.MetricsToGraph[0];
+    } else if (Model.AllMetricsSelectItems.Length > 0) {
+        firstSelectedValue = Model.AllMetricsSelectItems[0].Value;
+    }
+    string secondSelectedValue = null;
+    if (Model.MetricsToGraph.Length > 1) {
+        secondSelectedValue = Model.MetricsToGraph[1];
+    } else if (Model.AllMetricsSelectItems.Length > 1) {
+        secondSelectedValue = Model.AllMetricsSelectItems[1].Value;
+    }
 }
 <div class="large-4 columns">
     <h3>Chart Setup</h3>
     <table>
         <tr>
             <td>First Metric:</td>
-            <td>@Html.DropDownList("selMetric1", Model.AllMetricsSelectItems, new { style = "width:auto; padding-right:15px"})</td>
+            <td>@Html.DropDownList("selMetric1", new SelectList(Model.AllMetricsSelectItems, "Value", "Text", firstSelectedValue), new { style = "width:auto; padding-right:15px"})</td>
         </tr>
         <tr>
             <td>Second Metric:</td>
