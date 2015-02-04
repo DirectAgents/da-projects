@@ -265,8 +265,8 @@ namespace ClientPortal.Data.Services
                         Spend = s.Spend
                     })
                     .GroupBy(x => new { x.Year, x.Week })
-                    .OrderBy(g => g.Key.Year)
-                    .ThenBy(g => g.Key.Week)
+                    .OrderByDescending(g => g.Key.Year)
+                    .ThenByDescending(g => g.Key.Week)
                     .Select((g, i) => new RangeStat
                     {
                         WeekStartDay = startDayOfWeek,
@@ -297,7 +297,7 @@ namespace ClientPortal.Data.Services
                     Spend = g.Sum(s => s.Spend)
                 });
 
-            return stats.OrderBy(s => s.StartDate);
+            return stats.OrderByDescending(s => s.StartDate);
         }
 
         // ---

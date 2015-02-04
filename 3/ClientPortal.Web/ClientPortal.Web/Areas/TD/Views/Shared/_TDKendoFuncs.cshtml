@@ -66,19 +66,40 @@
             height: height,
             columns: [
                 { field: 'Range', hidden: true, groupHeaderTemplate: 'Timeframe: #= value.substring(9) #' },
-                { field: 'Title', title: titleHeader, width: titleWidthPct + '%' },
-                { field: 'Impressions', format: '{0:n0}',  attributes: { style: "text-align: right" },  footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'Clicks',      format: '{0:n0}',  attributes: { style: "text-align: right" },  footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'CTR',         format: '{0:p}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+                {
+                    field: 'Title', title: titleHeader, width: titleWidthPct + '%',
+                    sortable: { compare: function (a, b) { return b.Title - a.Title; } }
+                },
+                {
+                    field: 'Impressions', format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" },
+                    sortable: { compare: function (a, b) { return b.Impressions - a.Impressions; } }
+                },
+                {
+                    field: 'Clicks', format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" },
+                    sortable: { compare: function (a, b) { return b.Clicks - a.Clicks; } }
+                },
+                {
+                    field: 'CTR', format: '{0:p}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: center" },
+                    sortable: { compare: function (a, b) { return b.CTR - a.CTR; } }
+                },
 @if (Model.UserInfo.TDAccount.ShowConversions) {
-                <text>{ field: 'Conversions', format: '{0:n0}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },</text>
-                <text>{ field: 'ConvRate',    format: '{0:p}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },</text>
+                <text>{ field: 'Conversions', format: '{0:n0}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: center" }, sortable: { compare: function (a, b) { return b.Conversions - a.Conversions; } } },</text>
+                <text>{ field: 'ConvRate',    format: '{0:p}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: center" }, sortable: { compare: function (a, b) { return b.ConvRate - a.ConvRate; } } },</text>
 }
-                { field: 'Spend', format: '{0:c}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'CPM', title: 'eCPM', format: '{0:c' + cpmCPCdecimals + '}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c" + cpmCPCdecimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
-                { field: 'CPC', title: 'eCPC', format: '{0:c' + cpmCPCdecimals + '}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c" + cpmCPCdecimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+                {
+                    field: 'Spend', format: '{0:c}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" },
+                    sortable: { compare: function (a, b) { return b.Spend - a.Spend; } }
+                },
+                {
+                    field: 'CPM', title: 'eCPM', format: '{0:c' + cpmCPCdecimals + '}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c" + cpmCPCdecimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: center" },
+                    sortable: { compare: function (a, b) { return b.CPM - a.CPM; } }
+                },
+                {
+                    field: 'CPC', title: 'eCPC', format: '{0:c' + cpmCPCdecimals + '}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c" + cpmCPCdecimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: center" },
+                    sortable: { compare: function (a, b) { return b.CPC - a.CPC; } }
+                },
 @if (Model.UserInfo.TDAccount.ShowConversions) {
-                <text>{ field: 'CPA', title: 'eCPA', format: '{0:c}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },</text>
+                <text>{ field: 'CPA', title: 'eCPA', format: '{0:c}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: center" }, sortable: { compare: function (a, b) { return b.CPA - a.CPA; } } },</text>
 }
             ],
             filterable: filterable,
@@ -91,7 +112,7 @@
                 allowUnsort: false
             };
             if (titleHeader == 'Week' || titleHeader == 'Month') {
-                args.columns[1].sortable = { compare: function (a, b) { return a.StartDate - b.StartDate; } };
+                args.columns[1].sortable = { compare: function (a, b) { return b.StartDate - a.StartDate; } };
             }
         } else {
             args.sortable = false;

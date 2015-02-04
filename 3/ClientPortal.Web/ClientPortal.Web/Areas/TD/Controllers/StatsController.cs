@@ -77,24 +77,30 @@ namespace ClientPortal.Web.Areas.TD.Controllers
                 return Json(new { });
 
             var costPerFields = new[] { "CPM", "CPC", "CPA" };
-            if (request.SortObjects.Any(so => costPerFields.Contains(so.Field)))
+            List<SortObject> sortObjects = new List<SortObject>();
+
+            // make a new SortObjects list...
+            foreach (var sortObject in request.SortObjects)
             {
-                List<SortObject> sortObjects = new List<SortObject>();
-                foreach (var sortObject in request.SortObjects)
-                {
-                    // when sorting on eCPA, make 'N/A' rows high
-                    if (sortObject.Field == "CPA")
-                    {
-                        sortObjects.Add(new SortObject("Conv", sortObject.Direction == "asc" ? "desc" : "asc"));
-                    }
-                    sortObjects.Add(sortObject);
-                    if (costPerFields.Contains(sortObject.Field))
-                    {   // for rows with identical sort values (CPM/CPC/CPA), sort secondarily by Spend
-                        sortObjects.Add(new SortObject("Spend", sortObject.Direction));
-                    }
+                // Pre-SortObjects
+                if (sortObject.Field == "CPA")
+                {   // when sorting on eCPA, make 'N/A' rows high
+                    sortObjects.Add(new SortObject("Conv", sortObject.Direction == "asc" ? "desc" : "asc"));
                 }
-                request.SortObjects = sortObjects;
+
+                // The original SortObject (direction reversed, except for CreativeName)
+                if (sortObject.Field == "CreativeName")
+                    sortObjects.Add(sortObject);
+                else
+                    sortObjects.Add(new SortObject(sortObject.Field, sortObject.Direction == "asc" ? "desc" : "asc"));
+
+                // Post-SortObjects
+                if (costPerFields.Contains(sortObject.Field))
+                {   // for rows with identical sort values (CPM/CPC/CPA), sort secondarily by Spend
+                    sortObjects.Add(new SortObject("Spend", sortObject.Direction));
+                }
             }
+            request.SortObjects = sortObjects;
 
             var summaries = tdRepo.GetCreativeStatsSummaries(start, end, userInfo.TDAccount);
 
