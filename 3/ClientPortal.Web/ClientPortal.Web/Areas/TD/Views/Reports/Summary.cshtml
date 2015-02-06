@@ -58,14 +58,6 @@
         <td>Media Spend:</td>
         <td id="tdSpend" style="font-weight:bold; text-align:right"></td>
     </tr>
-    <tr>
-        <td>Management Fee:</td>
-        <td id="tdMgmtFee" style="font-weight:bold; text-align:right"></td>
-    </tr>
-    <tr>
-        <td>Total Spend:</td>
-        <td id="tdTotalSpend" style="font-weight:bold; text-align:right"></td>
-    </tr>
 </table>
 </div>
 
@@ -145,8 +137,6 @@
     <text>$('#tdConvRate').html(kendo.toString(aggs.ConvRate.agg, 'P'));</text>
 }
             $('#tdSpend').html(kendo.toString(aggs.Spend.sum, 'C'));
-            $('#tdMgmtFee').html(kendo.toString(aggs.Spend.fee, 'C'));
-            $('#tdTotalSpend').html(kendo.toString(aggs.Spend.total, 'C'));
         } else {
             $('#tdDateRange, #tdImpressions, #tdCPM, #tdClicks, #tdCPC, #tdCTR, #tdSpend, #tdMgmtFee, #tdTotalSpend').html('');
 @if (Model.UserInfo.TDAccount.ShowConversions)

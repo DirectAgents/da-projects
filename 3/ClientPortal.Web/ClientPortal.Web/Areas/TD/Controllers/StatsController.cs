@@ -215,9 +215,9 @@ namespace ClientPortal.Web.Areas.TD.Controllers
 
         private Aggregates Aggregates(int impressions, int clicks, int conversions, decimal spend, decimal? managementFeePct)
         {
-            decimal fee = 0;
-            if (managementFeePct.HasValue)
-                fee = spend * managementFeePct.Value / 100;
+            //decimal fee = 0;
+            //if (managementFeePct.HasValue)
+            //    fee = spend * managementFeePct.Value / 100;
 
             var aggregates = new Aggregates
             {
@@ -226,7 +226,8 @@ namespace ClientPortal.Web.Areas.TD.Controllers
                 CTR = new { agg = (impressions == 0) ? 0 : Math.Round((double)clicks / impressions, 5) },
                 Conversions = new { sum = conversions },
                 ConvRate = new { agg = (clicks == 0) ? 0 : Math.Round((double)conversions / clicks, 4) },
-                Spend = new { sum = spend, fee = fee, total = spend + fee },
+                //Spend = new { sum = spend, fee = fee, total = spend + fee },
+                Spend = new { sum = spend },
                 CPM = new { agg = (impressions == 0) ? 0 : 1000 * spend / impressions },
                 CPC = new { agg = (clicks == 0) ? 0 : spend / clicks },
                 CPA = new { agg = (conversions == 0) ? 0 : spend / conversions }
