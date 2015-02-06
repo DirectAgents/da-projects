@@ -35,7 +35,13 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             var summaries = tdRepo.GetDailyStatsSummaries(start, end, userInfo.TDAccount);
 
             var kgrid = new KendoGrid<StatsSummary>(request, summaries);
-            kgrid.aggregates = GetAggregates(summaries, userInfo);
+            var aggregates = GetAggregates(summaries, userInfo);
+            aggregates.Info = new
+            {
+                Start = (start == null) ? "" : start.Value.ToString("d", userInfo.CultureInfo),
+                End = (end == null) ? "" : end.Value.ToString("d", userInfo.CultureInfo)
+            };
+            kgrid.aggregates = aggregates;
 
             var json = Json(kgrid, JsonRequestBehavior.AllowGet);
             return json;
@@ -165,7 +171,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
 
         // --- private methods ---
 
-        private object GetAggregates(IEnumerable<StatsSummary> summaries, UserInfo userInfo)
+        private Aggregates GetAggregates(IEnumerable<StatsSummary> summaries, UserInfo userInfo)
         {
             int impressions = 0, clicks = 0, conversions = 0;
             decimal spend = 0;
@@ -179,7 +185,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             return Aggregates(impressions, clicks, conversions, spend, userInfo.TDAccount.ManagementFeePct);
         }
 
-        private object GetAggregates(IEnumerable<CreativeStatsSummary> summaries, UserInfo userInfo)
+        private Aggregates GetAggregates(IEnumerable<CreativeStatsSummary> summaries, UserInfo userInfo)
         {
             int impressions = 0, clicks = 0, conversions = 0;
             decimal spend = 0;
@@ -193,7 +199,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             return Aggregates(impressions, clicks, conversions, spend, userInfo.TDAccount.ManagementFeePct);
         }
 
-        private object GetAggregates(IEnumerable<RangeStat> stats, UserInfo userInfo)
+        private Aggregates GetAggregates(IEnumerable<RangeStat> stats, UserInfo userInfo)
         {
             int impressions = 0, clicks = 0, conversions = 0;
             decimal spend = 0;
@@ -207,13 +213,13 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             return Aggregates(impressions, clicks, conversions, spend, userInfo.TDAccount.ManagementFeePct);
         }
 
-        private object Aggregates(int impressions, int clicks, int conversions, decimal spend, decimal? managementFeePct)
+        private Aggregates Aggregates(int impressions, int clicks, int conversions, decimal spend, decimal? managementFeePct)
         {
             decimal fee = 0;
             if (managementFeePct.HasValue)
                 fee = spend * managementFeePct.Value / 100;
 
-            var aggregates = new
+            var aggregates = new Aggregates
             {
                 Impressions = new { sum = impressions },
                 Clicks = new { sum = clicks },
@@ -227,5 +233,20 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             };
             return aggregates;
         }
+    }
+
+    public class Aggregates
+    {
+        public object Impressions;
+        public object Clicks;
+        public object CTR;
+        public object Conversions;
+        public object ConvRate;
+        public object Spend;
+        public object CPM;
+        public object CPC;
+        public object CPA;
+
+        public object Info;
     }
 }
