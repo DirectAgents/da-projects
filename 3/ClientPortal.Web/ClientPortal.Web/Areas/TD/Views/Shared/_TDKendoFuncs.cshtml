@@ -79,7 +79,7 @@
                     sortable: { compare: function (a, b) { return b.Clicks - a.Clicks; } }
                 },
                 {
-                    field: 'CTR', format: '{0:p}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: center" },
+                    field: 'CTR', format: '{0:p3}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'p3') #", footerAttributes: { style: "font-weight: bold; text-align: center" },
                     sortable: { compare: function (a, b) { return b.CTR - a.CTR; } }
                 },
 @if (Model.UserInfo.TDAccount.ShowConversions) {

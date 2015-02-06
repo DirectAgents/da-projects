@@ -130,7 +130,7 @@
 
         $('#tdClicks').html(kendo.toString(aggs.Clicks.sum, 'N0'));
         $('#tdCPC').html(kendo.toString(aggs.CPC.agg, 'C3'));
-        $('#tdCTR').html(kendo.toString(aggs.CTR.agg, 'P'));
+        $('#tdCTR').html(kendo.toString(aggs.CTR.agg, 'P3'));
 @if (Model.UserInfo.TDAccount.ShowConversions)
 {
     <text>$('#tdConversions').html(kendo.toString(aggs.Conversions.sum, 'N0'));</text>
@@ -216,7 +216,7 @@
     }
 
     function ConstructSummaryChartArrays(metrics) {
-        var format, display;
+        var format, ttFormat, display;
         var seriesArray = [], valueAxisArray = [];
         var type = "column";
         for (var i = 0; i < metrics.length; i++)
@@ -228,6 +228,11 @@
             else
                 format = "c";
 
+            if (metrics[i] == "CTR")
+                ttFormat = "p3";
+            else
+                ttFormat = format;
+
             if ($.inArray(metrics[i], eMetrics) > -1)
                 display = "e" + metrics[i];
             else if (metrics[i] == "Spend")
@@ -237,7 +242,7 @@
 
             if (i == 1)
                 type = "line";
-            seriesArray.push({ type: type, field: metrics[i], name: display, axis: metrics[i], markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}',category) #: #= kendo.format('{0:" + format + "}',value) #" } });
+            seriesArray.push({ type: type, field: metrics[i], name: display, axis: metrics[i], markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}',category) #: #= kendo.format('{0:" + ttFormat + "}',value) #" } });
             valueAxisArray.push({ name: metrics[i], labels: { format: format, step: 2 }, title: { text: display } });
         }
         return {

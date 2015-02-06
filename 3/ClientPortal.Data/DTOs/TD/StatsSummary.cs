@@ -18,7 +18,7 @@ namespace ClientPortal.Data.DTOs.TD
         // Computed properties
         public double CTR
         {
-            get { return (Impressions == 0) ? 0 : Math.Round((double)Clicks / Impressions, 4); }
+            get { return (Impressions == 0) ? 0 : Math.Round((double)Clicks / Impressions, 5); }
         }
         public double ConvRate
         {

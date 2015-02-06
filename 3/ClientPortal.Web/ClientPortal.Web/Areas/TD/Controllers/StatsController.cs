@@ -217,7 +217,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             {
                 Impressions = new { sum = impressions },
                 Clicks = new { sum = clicks },
-                CTR = new { agg = (impressions == 0) ? 0 : Math.Round((double)clicks / impressions, 4) },
+                CTR = new { agg = (impressions == 0) ? 0 : Math.Round((double)clicks / impressions, 5) },
                 Conversions = new { sum = conversions },
                 ConvRate = new { agg = (clicks == 0) ? 0 : Math.Round((double)conversions / clicks, 4) },
                 Spend = new { sum = spend, fee = fee, total = spend + fee },

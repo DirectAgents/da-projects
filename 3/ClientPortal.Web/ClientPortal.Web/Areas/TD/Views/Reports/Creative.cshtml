@@ -71,7 +71,9 @@
             chart.options.series[0].name = metricForBarChart;
 
         var dataFormat = '{0:N0}';
-        if (metricForBarChart == 'CTR' || metricForBarChart == 'ConvRate')
+        if (metricForBarChart == 'CTR')
+            dataFormat = '{0:P3}';
+        else if (metricForBarChart == 'ConvRate')
             dataFormat = '{0:P}';
         else if (metricForBarChart == 'CPM')
             dataFormat = '{0:C3}';
