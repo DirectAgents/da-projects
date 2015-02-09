@@ -40,24 +40,24 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         {
             if (streamReader != null)
             {
-                foreach (var row in EnumerateRowsInner(streamReader))
+                foreach (var row in EnumerateRowsStatic(streamReader, wantCreativeDailySummaries))
                     yield return row;
             }
             else
             {
                 using (StreamReader reader = File.OpenText(csvFilePath))
                 {
-                    foreach (var row in EnumerateRowsInner(reader))
+                    foreach (var row in EnumerateRowsStatic(reader, wantCreativeDailySummaries))
                         yield return row;
                 }
             }
         }
 
-        private IEnumerable<DbmRowBase> EnumerateRowsInner(StreamReader reader)
+        public static IEnumerable<DbmRowBase> EnumerateRowsStatic(StreamReader reader, bool byCreative)
         {
             using (CsvReader csv = new CsvReader(reader))
             {
-                if (wantCreativeDailySummaries)
+                if (byCreative)
                 {
                     var csvRows = csv.GetRecords<DbmRowWithCreative>().ToList();
                     for (int i = 0; i < csvRows.Count && !String.IsNullOrWhiteSpace(csvRows[i].InsertionOrder); i++)

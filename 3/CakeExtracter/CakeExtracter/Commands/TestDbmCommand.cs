@@ -41,6 +41,7 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
+        // Try DBM API
         public void Test1()
         {
             string serviceEmail = ConfigurationManager.AppSettings["GoogleAPI_ServiceEmail"];
@@ -88,38 +89,46 @@ namespace CakeExtracter.Commands
                 //string bucketName = "151075984680687222131409861541653_report"; // ui_created
                 string bucketName = "151075984680687222131410283081521_report"; // Betterment_creative
 
-                //var request = service.Buckets.Get(bucketName);
-                var request = service.Objects.List(bucketName);
-                var results = request.Execute();
+                TestDownload(service, credential);
 
-                string dateString = DateTime.Today.ToString("yyyy-MM-dd");
-                var reportObject = results.Items.Where(i => i.Name.Contains(dateString)).FirstOrDefault();
+                //var request = service.Objects.List(bucketName);
+                //var results = request.Execute();
 
-                //var x = service.Objects.Get(bucketName, reportObject.Name).Execute();
-                HttpWebRequest req = createRequest(reportObject.MediaLink, credential);
-                HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
-
-                // Handle redirects manully to ensure that the Authorization header is present if
-                // our request is redirected.
-                if (resp.StatusCode == HttpStatusCode.TemporaryRedirect)
-                {
-                    req = createRequest(resp.Headers["Location"], credential);
-                    resp = (HttpWebResponse)req.GetResponse();
-                }
-
-                Stream stream = resp.GetResponseStream();
-                StreamReader reader = new StreamReader(stream);
-                String data = reader.ReadToEnd();
-
-                //var results = service.Objects.Get(bucketName, bucketObjectName).Fetch();
-                //HttpWebRequest request = createRequest(results.Media.Link, auth);
-                //HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                //var listRequest = service.BucketAccessControls.List(bucketName);
+                //var bucketAccessControls = listRequest.Execute();
             }
             catch (Exception e)
             {
                 Console.WriteLine("Unexpected exception caught: " + e.Message);
                 Console.Write(e.StackTrace);
             }
+        }
+        private void TestDownload(StorageService service, ServiceAccountCredential credential)
+        {
+            string bucketName = "151075984680687222131410283081521_report"; // Betterment_creative
+
+            //var request = service.Buckets.Get(bucketName);
+            var request = service.Objects.List(bucketName);
+            var results = request.Execute();
+
+            string dateString = DateTime.Today.ToString("yyyy-MM-dd");
+            var reportObject = results.Items.Where(i => i.Name.Contains(dateString)).FirstOrDefault();
+
+            //var x = service.Objects.Get(bucketName, reportObject.Name).Execute();
+            HttpWebRequest req = createRequest(reportObject.MediaLink, credential);
+            HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
+
+            // Handle redirects manully to ensure that the Authorization header is present if
+            // our request is redirected.
+            if (resp.StatusCode == HttpStatusCode.TemporaryRedirect)
+            {
+                req = createRequest(resp.Headers["Location"], credential);
+                resp = (HttpWebResponse)req.GetResponse();
+            }
+
+            Stream stream = resp.GetResponseStream();
+            StreamReader reader = new StreamReader(stream);
+            String data = reader.ReadToEnd();
         }
 
         /// <summary>

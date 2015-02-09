@@ -14,7 +14,7 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
         protected override int Load(List<DbmRowBase> items)
         {
             Logger.Info("Loading {0} DailySummaries..", items.Count);
-            AddDependentInsertionOrders(items);
+            AddUpdateDependentInsertionOrders(items);
             var count = UpsertDailySummaries(items);
             return count;
         }
@@ -61,7 +61,7 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
             return itemCount;
         }
 
-        public static void AddDependentInsertionOrders(List<DbmRowBase> items)
+        public static void AddUpdateDependentInsertionOrders(List<DbmRowBase> items)
         {
             using (var db = new TDContext())
             {
@@ -69,16 +69,27 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                 foreach (var ioTuple in ioTuples)
                 {
                     int insertionOrderID;
-                    if (Int32.TryParse(ioTuple.Item1, out insertionOrderID) && !db.InsertionOrders.Any(io => io.InsertionOrderID == insertionOrderID))
+                    string insertionOrderName = ioTuple.Item2;
+                    if (Int32.TryParse(ioTuple.Item1, out insertionOrderID))
                     {
-                        var io = new InsertionOrder
+                        InsertionOrder existing = db.InsertionOrders.Find(insertionOrderID);
+                        if (existing == null)
                         {
-                            InsertionOrderID = insertionOrderID,
-                            InsertionOrderName = ioTuple.Item2
-                        };
-                        db.InsertionOrders.Add(io);
-                        Logger.Info("Saving new InsertionOrder: {0} ({1})", io.InsertionOrderName, io.InsertionOrderID);
-                        db.SaveChanges();
+                            var io = new InsertionOrder
+                            {
+                                InsertionOrderID = insertionOrderID,
+                                InsertionOrderName = insertionOrderName
+                            };
+                            db.InsertionOrders.Add(io);
+                            Logger.Info("Saving new InsertionOrder: {0} ({1})", io.InsertionOrderName, io.InsertionOrderID);
+                            db.SaveChanges();
+                        }
+                        else if (existing.InsertionOrderName != insertionOrderName)
+                        {
+                            existing.InsertionOrderName = insertionOrderName;
+                            Logger.Info("Saving updated InsertionOrder: {0} ({1})", insertionOrderName, existing.InsertionOrderID);
+                            db.SaveChanges();
+                        }
                     }
                 }
             }
