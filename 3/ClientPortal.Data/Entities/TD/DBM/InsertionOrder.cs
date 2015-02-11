@@ -7,6 +7,7 @@ namespace ClientPortal.Data.Entities.TD.DBM
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int InsertionOrderID { get; set; }
         public string InsertionOrderName { get; set; }
+        public string Bucket { get; set; }
 
         public int? TradingDeskAccountId { get; set; }
         public virtual TradingDeskAccount TradingDeskAccount { get; set; }

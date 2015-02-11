@@ -31,7 +31,7 @@ namespace ClientPortal.Data.Entities.TD
         }
 
         [NotMapped]
-        public string DisplayName
+        public string DisplayName //TODO: use adroll / dbm (insertion order) name(s)
         {
             get
             {

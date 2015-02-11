@@ -336,6 +336,10 @@
     <Compile Include="Migrations\201501221724098_Mig_AdDailySummary_precision.Designer.cs">
       <DependentUpon>201501221724098_Mig_AdDailySummary_precision.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201502062106311_Mig_Bucket.cs" />
+    <Compile Include="Migrations\201502062106311_Mig_Bucket.Designer.cs">
+      <DependentUpon>201502062106311_Mig_Bucket.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ClientPortalRepository.cs" />
@@ -421,6 +425,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501221724098_Mig_AdDailySummary_precision.resx">
       <DependentUpon>201501221724098_Mig_AdDailySummary_precision.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502062106311_Mig_Bucket.resx">
+      <DependentUpon>201502062106311_Mig_Bucket.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
