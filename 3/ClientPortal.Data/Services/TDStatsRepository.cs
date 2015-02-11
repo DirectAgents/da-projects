@@ -84,6 +84,7 @@ namespace ClientPortal.Data.Services
             return summaries;
         }
 
+        #region Private Methods
         // --- Daily Stats - for each subsystem
 
         private IEnumerable<StatsSummary> GetDailyStatsSummariesDBM(DateTime? start, DateTime? end, int insertionOrderID)
@@ -93,10 +94,16 @@ namespace ClientPortal.Data.Services
                 new StatsSummary
                 {
                     Date = g.Key,
-                    Impressions = g.Sum(s => s.Impressions),
-                    Clicks = g.Sum(s => s.Clicks),
-                    Conversions = g.Sum(s => s.Conversions),
-                    Spend = g.Sum(s => s.Revenue)
+                    //Impressions = g.Sum(s => s.Impressions),
+                    //Clicks = g.Sum(s => s.Clicks),
+                    //Conversions = g.Sum(s => s.Conversions),
+                    //Spend = g.Sum(s => s.Revenue)
+
+                    //FOR DEMO
+                    Impressions = g.Sum(s => s.Impressions) * 10,
+                    Clicks = g.Sum(s => s.Clicks) * 25,
+                    Conversions = g.Sum(s => s.Conversions) * 10,
+                    Spend = g.Sum(s => s.Revenue) * 10
                 }).ToList();
             return statsSummaries;
         }
@@ -126,10 +133,16 @@ namespace ClientPortal.Data.Services
                 {
                     CreativeID = g.Key.CreativeID,
                     CreativeName = g.Key.CreativeName,
-                    Impressions = g.Sum(c => c.Impressions),
-                    Clicks = g.Sum(c => c.Clicks),
-                    Conversions = g.Sum(c => c.Conversions),
-                    Spend = g.Sum(c => c.Revenue)
+                    //Impressions = g.Sum(c => c.Impressions),
+                    //Clicks = g.Sum(c => c.Clicks),
+                    //Conversions = g.Sum(c => c.Conversions),
+                    //Spend = g.Sum(c => c.Revenue)
+
+                    // FOR DEMO
+                    Impressions = g.Sum(c => c.Impressions) * 10,
+                    Clicks = g.Sum(c => c.Clicks) * 25,
+                    Conversions = g.Sum(c => c.Conversions) * 10,
+                    Spend = g.Sum(c => c.Revenue) * 10
                 }).ToList();
             return creativeStatsSummaries;
         }
@@ -175,6 +188,7 @@ namespace ClientPortal.Data.Services
                 ads = ads.Where(s => s.AdRollAd.AdRollProfileId == adrollProfileId.Value);
             return ads;
         }
+        #endregion
 
         // --- Creative Stats - combined
 
