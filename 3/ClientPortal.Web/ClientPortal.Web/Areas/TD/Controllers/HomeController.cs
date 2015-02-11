@@ -17,8 +17,12 @@ namespace ClientPortal.Web.Areas.TD.Controllers
         public ActionResult Index()
         {
             var userInfo = GetUserInfo();
-            var model = new TDHomeModel(userInfo);
 
+            var result = CheckLogoutTD(userInfo);
+            if (result != null)
+                return result;
+
+            var model = new TDHomeModel(userInfo);
             return View(model);
         }
 

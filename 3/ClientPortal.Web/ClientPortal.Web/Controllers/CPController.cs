@@ -18,21 +18,36 @@ namespace ClientPortal.Web.Controllers
         protected IClientPortalRepository cpRepo;
         protected ITDRepository tdRepo;
 
+        // return a redirect if needed to logout; otherwise return null
         protected ActionResult CheckLogout(UserInfo userInfo)
         {
-            ActionResult result = null;
-            if (!userInfo.HasUserProfile)
+            if (CheckLogoutBool(userInfo))
+                return RedirectToAction("Login", "Account", new { area = "" });
+            else
+                return null;
+        }
+        protected ActionResult CheckLogoutTD(UserInfo userInfo)
+        {
+            if (CheckLogoutBool(userInfo))
+                return RedirectToAction("Login", "Account", new { area = "", ReturnUrl = "/td" });
+            else
+                return null;
+        }
+
+        // return true if needed to logout
+        private bool CheckLogoutBool(UserInfo userInfo)
+        {
+            if (userInfo.HasUserProfile)
+                return false;
+
+            try
             {
-                try
-                {
-                    LogoutAndRecordEvent();
-                }
-                catch
-                {
-                }
-                result = RedirectToAction("Login", "Account");
+                LogoutAndRecordEvent();
             }
-            return result;
+            catch
+            {
+            }
+            return true;
         }
 
         protected void LogoutAndRecordEvent() // ? have an "int? userId" parameter ?

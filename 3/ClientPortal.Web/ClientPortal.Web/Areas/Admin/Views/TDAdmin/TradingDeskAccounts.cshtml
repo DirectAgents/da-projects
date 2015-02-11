@@ -8,10 +8,7 @@
     };
 }
 
-Show:
-@*All Advertisers |*@
-@Ajax.ActionLink("Insertion Orders", "InsertionOrders", ajaxOptions)
-<br /><br />
+@Ajax.ActionLink("Refresh", "TradingDeskAccounts", ajaxOptions)
 
 <table border="1">
     <tr>
@@ -27,8 +24,11 @@ Show:
     <tr>
         <td>@Ajax.ActionLink("Edit", "EditAccount", new { tdaId = tda.TradingDeskAccountId }, ajaxOptions)</td>
         <td>
-            @if (tda.Advertisers.Count() > 0) {
-                @(String.Join(", ", tda.Advertisers.Select(a => a.AdvertiserName).ToArray()))
+            @if (tda.AdRollProfiles.Count() > 0) {
+                @(String.Join(", ", tda.AdRollProfiles.Select(a => a.Name).ToArray()))
+            }
+            @if (tda.InsertionOrders.Count() > 0) {
+                @(String.Join(", ", tda.InsertionOrders.Select(i => i.InsertionOrderName).ToArray()))
             }
         </td>
         <td>

@@ -811,6 +811,7 @@
     <Content Include="Images\logo1.png" />
     <Content Include="Images\logo1w.png" />
     <Content Include="Images\logoSelectQuote.png" />
+    <Content Include="Images\programmatic.png" />
     <Content Include="Images\spacer.gif" />
     <Content Include="Scripts\blackbird.js" />
     <Content Include="Areas\Admin\Views\Web.config" />

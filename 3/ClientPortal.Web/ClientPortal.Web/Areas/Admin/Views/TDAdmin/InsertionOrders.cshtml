@@ -19,7 +19,7 @@ Show:
         <td>@io.InsertionOrderID</td>
         <td>@io.InsertionOrderName</td>
         <td>
-            @if (io.TradingDeskAccount != null) {
+            @if (io.TradingDeskAccountId.HasValue) {
                 <text>created</text>
             } else {
                 @Ajax.ActionLink("create", "CreateAccount", new { ioID = io.InsertionOrderID }, ajaxOptions)
