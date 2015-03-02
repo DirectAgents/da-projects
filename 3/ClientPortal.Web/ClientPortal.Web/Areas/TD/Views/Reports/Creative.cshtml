@@ -33,6 +33,12 @@
 <div id="creativeGrid" style="margin-top: 10px"></div>
 <br />
 
+<style>
+    .ttCreativeBar {
+        text-align: left;
+    }
+</style>
+
 <script>
     $(document).ready(function () {
         $('#creative_dateRangeSel').kendoDropDownList();
@@ -48,6 +54,7 @@
     });
 
     chartColors = ['#007bc3', '#76b800', '#ffae00', '#ef4c00', '#a419b7', '#430b62'];
+    ttMetrics = ['Impressions', 'Spend', 'CTR', 'CPA'];
 
     function CreativeDataSourceChange() {
         @* Determine the metric for the bar chart based on what's sorted on *@
@@ -65,22 +72,31 @@
         var chart = $('#creativeBarChart').data('kendoChart');
         var isNMetric = ($.inArray(metricForBarChart, nMetrics) > -1);
         var isEMetric = ($.inArray(metricForBarChart, eMetrics) > -1);
-        if (isEMetric)
-            chart.options.series[0].name = 'e' + metricForBarChart;
-        else
-            chart.options.series[0].name = metricForBarChart;
 
-        var dataFormat = '{0:N0}';
+        var metricForBarChartDisp;
+        if (isEMetric)
+            metricForBarChartDisp = 'e' + metricForBarChart;
+        else
+            metricForBarChartDisp = metricForBarChart;
+        chart.options.series[0].name = metricForBarChartDisp;
+
+        var dataFormat = 'N0';
         if (metricForBarChart == 'CTR')
-            dataFormat = '{0:P3}';
+            dataFormat = 'P3';
         else if (metricForBarChart == 'ConvRate')
-            dataFormat = '{0:P}';
+            dataFormat = 'P';
         else if (metricForBarChart == 'CPM')
-            dataFormat = '{0:C3}';
+            dataFormat = 'C3';
         else if (metricForBarChart == 'Spend' || isEMetric)
-            dataFormat = '{0:C}';
+            dataFormat = 'C';
         chart.options.valueAxis = [{ labels: { format: dataFormat, step: 2 } }];
-        chart.options.series[0].tooltip.format = dataFormat;
+
+        @* Tooltip *@
+        var isTTMetric = ($.inArray(metricForBarChart, ttMetrics) > -1);
+        var ttPrefix = "";
+        if (!isTTMetric)
+            ttPrefix = "'" + metricForBarChartDisp + ": ' + kendo.toString(dataItem.value, '" + dataFormat + "') + '<br/>' + ";
+        chart.options.series[0].tooltip = { template: "<div class='ttCreativeBar'>#= " + ttPrefix + "'Impressions: ' + kendo.toString(dataItem.impressions, 'N0') + '<br/>Spend: ' + kendo.toString(dataItem.spend, 'C') + '<br/>CTR: ' + kendo.toString(dataItem.ctr, 'P3') + '<br/>eCPA: ' + kendo.toString(dataItem.cpa, 'C') #</div>" };
 
         @* Construct the bars (names and values) *@
         chart.options.categoryAxis.categories = new Array();
@@ -88,7 +104,7 @@
         var maxValue = 0;
         for (var i = 0; i < 5 && i < data.length; i++) {
             chart.options.categoryAxis.categories[i] = data[i].CreativeName;
-            chart.options.series[0].data[i] = { value: data[i][metricForBarChart], color: chartColors[i] };
+            chart.options.series[0].data[i] = { value: data[i][metricForBarChart], color: chartColors[i], impressions: data[i].Impressions, spend: data[i].Spend, ctr: data[i].CTR, cpa: data[i].CPA };
             if (data[i][metricForBarChart] > maxValue)
                 maxValue = data[i][metricForBarChart];
         }

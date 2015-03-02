@@ -94,8 +94,8 @@ namespace ClientPortal.Web.Areas.TD.Controllers
                     sortObjects.Add(new SortObject("Conv", sortObject.Direction == "asc" ? "desc" : "asc"));
                 }
 
-                // The original SortObject (direction reversed, except for CreativeName)
-                if (sortObject.Field == "CreativeName")
+                // The original SortObject (direction reversed, except for CreativeName and CPA)
+                if (sortObject.Field == "CreativeName" || sortObject.Field == "CPA")
                     sortObjects.Add(sortObject);
                 else
                     sortObjects.Add(new SortObject(sortObject.Field, sortObject.Direction == "asc" ? "desc" : "asc"));
