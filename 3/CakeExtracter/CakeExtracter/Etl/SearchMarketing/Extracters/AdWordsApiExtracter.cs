@@ -30,9 +30,16 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             Logger.Info("Extracting SearchDailySummaries from AdWords API for {0} from {1} to {2}",
                 this.clientCustomerId, this.beginDate.ToShortDateString(), this.endDate.ToShortDateString());
 
-            DownloadAdWordsXmlReport();
-            var reportRows = EnumerateAdWordsXmlReportRows(this.reportFilePath);
-            Add(reportRows);
+            try
+            {
+                DownloadAdWordsXmlReport();
+                var reportRows = EnumerateAdWordsXmlReportRows(this.reportFilePath);
+                Add(reportRows);
+            }
+            catch (Exception ex)
+            {
+                Logger.Info("Extraction error: {0}", ex.Message);
+            }
             End();
         }
 
