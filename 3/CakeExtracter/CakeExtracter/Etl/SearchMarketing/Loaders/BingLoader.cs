@@ -15,11 +15,12 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         {
             this.searchAccountId = searchAccountId;
         }
+        //TODO: match below on "account number" -> external id ?
 
         protected override int Load(List<Dictionary<string, string>> items)
         {
             Logger.Info("Loading {0} SearchDailySummaries..", items.Count);
-            AddUpdateDependentSearchAccounts(items);
+            //AddUpdateDependentSearchAccounts(items);
             AddUpdateDependentSearchCampaigns(items);
             var count = UpsertSearchDailySummaries(items);
             return count;
@@ -36,13 +37,13 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                 foreach (var item in items)
                 {
-                    var accountCode = item["AccountId"];
+                    //var accountCode = item["AccountId"];
                     var campaignName = item["CampaignName"];
                     var campaignId = int.Parse(item["CampaignId"]);
 
                     var searchAccount = passedInAccount;
-                    if (searchAccount.AccountCode != accountCode)
-                        searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.AccountCode == accountCode && sa.Channel == bingChannel);
+                    //if (searchAccount.AccountCode != accountCode)
+                    //    searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.AccountCode == accountCode && sa.Channel == bingChannel);
 
                     var pk1 = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId;
                     var pk2 = DateTime.Parse(item["GregorianDate"]);
@@ -145,15 +146,18 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             {
                 var passedInAccount = db.SearchAccounts.Find(this.searchAccountId);
 
-                foreach (var tuple in items.Select(c => Tuple.Create(c["AccountId"], c["CampaignName"], c["CampaignId"])).Distinct())
+                //foreach (var tuple in items.Select(c => Tuple.Create(c["AccountId"], c["CampaignName"], c["CampaignId"])).Distinct())
+                foreach (var tuple in items.Select(c => Tuple.Create(c["CampaignName"], c["CampaignId"])).Distinct())
                 {
-                    var accountCode = tuple.Item1;
-                    var campaignName = tuple.Item2;
-                    var campaignId = int.Parse(tuple.Item3);
+                    //var accountCode = tuple.Item1;
+                    //var campaignName = tuple.Item2;
+                    //var campaignId = int.Parse(tuple.Item3);
+                    var campaignName = tuple.Item1;
+                    var campaignId = int.Parse(tuple.Item2);
 
                     var searchAccount = passedInAccount;
-                    if (searchAccount.AccountCode != accountCode)
-                        searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.AccountCode == accountCode && sa.Channel == bingChannel);
+                    //if (searchAccount.AccountCode != accountCode)
+                    //    searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.AccountCode == accountCode && sa.Channel == bingChannel);
 
                     var existing = searchAccount.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignId);
 

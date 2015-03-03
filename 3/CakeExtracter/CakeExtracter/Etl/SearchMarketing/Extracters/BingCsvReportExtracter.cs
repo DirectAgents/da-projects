@@ -35,8 +35,10 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                     var csvRows = csv.GetRecords<BingRow>().ToList();
                     foreach (var csvRow in csvRows)
                     {
+                        if (csvRow.GregorianDate.ToLower().Contains("microsoft"))
+                            continue; // skip footer
+
                         var row = new Dictionary<string, string>();
-                        //row["Gregorian_date"] = csvRow.Gregorian_date;
 
                         // Use reflection to add values
                         var type = typeof(BingRow);
@@ -62,12 +64,12 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             public string Conversions { get; set; } // int
             public string Revenue { get; set; } // decimal
 
-            [CsvField(Name = "Account name")]
-            public string AccountName { get; set; }
-            [CsvField(Name = "Account ID")]
-            public string AccountId { get; set; } // int
-            [CsvField(Name = "Account number")]
-            public string AccountNumber { get; set; }
+            //[CsvField(Name = "Account name")]
+            //public string AccountName { get; set; }
+            //[CsvField(Name = "Account ID")]
+            //public string AccountId { get; set; } // int
+            //[CsvField(Name = "Account number")]
+            //public string AccountNumber { get; set; }
             [CsvField(Name = "Campaign name")]
             public string CampaignName { get; set; }
             [CsvField(Name = "Campaign ID")]

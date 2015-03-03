@@ -9,12 +9,12 @@ namespace CakeExtracter.Commands
     public class SynchSearchDailySummariesBingCsvCommand : ConsoleCommand
     {
         public string CsvFile { get; set; }
-        public int AdvertiserId { get; set; }
+        public int SearchAccountId { get; set; }
 
         public override void ResetProperties()
         {
             CsvFile = null;
-            AdvertiserId = 0;
+            SearchAccountId = 0;
         }
 
         public SynchSearchDailySummariesBingCsvCommand()
@@ -22,13 +22,13 @@ namespace CakeExtracter.Commands
             IsCommand("synchSearchDailySummariesBingCsv",
                       "synch SearchDailySummaries for Bing CSV Report");
             HasRequiredOption("f|csvFile=", "CSV File", c => CsvFile = c);
-            HasRequiredOption<int>("a|advertiserId=", "Advertiser Id", c => AdvertiserId = c);
+            HasRequiredOption<int>("a|searchAccountId=", "SearchAccount Id", c => SearchAccountId = c);
         }
 
         public override int Execute(string[] remainingArguments)
         {
             var extracter = new BingCsvReportExtracter(CsvFile);
-            var loader = new BingLoader(AdvertiserId);
+            var loader = new BingLoader(SearchAccountId);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
