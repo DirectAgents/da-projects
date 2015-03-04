@@ -1,10 +1,10 @@
-﻿using Google.Api.Ads.AdWords.Lib;
-using Google.Api.Ads.AdWords.Util.Reports;
-using Google.Api.Ads.AdWords.v201406;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Xml;
+using Google.Api.Ads.AdWords.Lib;
+using Google.Api.Ads.AdWords.Util.Reports;
+using Google.Api.Ads.AdWords.v201406;
 
 namespace CakeExtracter.Etl.SearchMarketing.Extracters
 {
@@ -15,14 +15,14 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
         private readonly string clientCustomerId;
         private readonly DateTime beginDate;
         private readonly DateTime endDate;
-        private readonly bool includeBreakdown;
+        private readonly bool includeClickType;
 
-        public AdWordsApiExtracter(string clientCustomerId, CakeExtracter.Common.DateRange dateRange, bool includeBreakdown = false)
+        public AdWordsApiExtracter(string clientCustomerId, CakeExtracter.Common.DateRange dateRange, bool includeClickType = false)
         {
             this.clientCustomerId = clientCustomerId;
             this.beginDate = dateRange.FromDate;
             this.endDate = dateRange.ToDate;
-            this.includeBreakdown = includeBreakdown;
+            this.includeClickType = includeClickType;
         }
 
         protected override void Extract()
@@ -63,10 +63,12 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 "Ctr",
                 "ConversionValue"
             });
-            if (includeBreakdown)
+
+            fieldsList.Add("AdNetworkType1");
+            fieldsList.Add("Device");
+
+            if (includeClickType)
             {
-                fieldsList.Add("AdNetworkType1");
-                fieldsList.Add("Device");
                 fieldsList.Add("ClickType");
             }
 

@@ -10,12 +10,12 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
     {
         private const string googleChannel = "Google";
         private readonly int searchAccountId;
-        private readonly bool includeBreakdown;
+        private readonly bool includeClickType;
 
-        public AdWordsApiLoader(int searchAccountId, bool includeBreakdown = false)
+        public AdWordsApiLoader(int searchAccountId, bool includeClickType = false)
         {
             this.searchAccountId = searchAccountId;
-            this.includeBreakdown = includeBreakdown;
+            this.includeClickType = includeClickType;
         }
 
         protected override int Load(List<Dictionary<string, string>> items)
@@ -59,11 +59,13 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         Orders = int.Parse(item["convertedClicks"]),
                         Clicks = int.Parse(item["clicks"]),
                         Impressions = int.Parse(item["impressions"]),
-                        CurrencyId = (!item.Keys.Contains("currency") || item["currency"] == "USD") ? 1 : -1 // NOTE: non USD (if exists) -1 for now
+                        CurrencyId = (!item.Keys.Contains("currency") || item["currency"] == "USD") ? 1 : -1, // NOTE: non USD (if exists) -1 for now
+                        Network = item["network"].Substring(0, 1),
+                        Device = item["device"].Substring(0, 1)
                     };
 
                     bool added;
-                    if (includeBreakdown)
+                    if (includeClickType)
                     {
                         var clickTypeAbbrev = item["clickType"].Substring(0, 1);
                         var clickType = item["clickType"].ToLower();
@@ -71,7 +73,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                             clickTypeAbbrev = "Q";
                         else if (clickType == "phone calls") // noticed for The Credit Pros -> "DA Spanish Mobile" on 11/11/17
                             clickTypeAbbrev = "C";
-                        added = UpsertSearchDailySummary2(db, sds, item["network"].Substring(0, 1), item["device"].Substring(0, 1), clickTypeAbbrev);
+                        added = UpsertSearchDailySummary2(db, sds, clickTypeAbbrev);
                     }
                     else
                         added = UpsertSearchDailySummary(db, sds);
@@ -92,7 +94,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         // return true if added; false if updated
         private bool UpsertSearchDailySummary(ClientPortalContext db, SearchDailySummary sds)
         {
-            var target = db.Set<SearchDailySummary>().Find(sds.SearchCampaignId, sds.Date);
+            var target = db.Set<SearchDailySummary>().Find(sds.SearchCampaignId, sds.Date, sds.Network, sds.Device);
             if (target == null)
             {
                 db.SearchDailySummaries.Add(sds);
@@ -106,14 +108,14 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                 return false;
             }
         }
-        private bool UpsertSearchDailySummary2(ClientPortalContext db, SearchDailySummary sds, string network, string device, string clickType)
+        private bool UpsertSearchDailySummary2(ClientPortalContext db, SearchDailySummary sds, string clickType)
         {
             var sds2 = new SearchDailySummary2
             {
                 SearchCampaignId = sds.SearchCampaignId,
                 Date = sds.Date,
-                Network = network,
-                Device = device,
+                Network = sds.Network,
+                Device = sds.Device,
                 ClickType = clickType,
                 Revenue = sds.Revenue,
                 Cost = sds.Cost,

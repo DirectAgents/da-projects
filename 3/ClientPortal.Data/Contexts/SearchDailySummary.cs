@@ -22,6 +22,8 @@ namespace ClientPortal.Data.Contexts
         public int Clicks { get; set; }
         public int Impressions { get; set; }
         public int CurrencyId { get; set; }
+        public string Network { get; set; }
+        public string Device { get; set; }
     
         public virtual SearchCampaign SearchCampaign { get; set; }
     }

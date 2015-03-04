@@ -548,6 +548,8 @@
           <Key>
             <PropertyRef Name="SearchCampaignId" />
             <PropertyRef Name="Date" />
+            <PropertyRef Name="Network" />
+            <PropertyRef Name="Device" />
           </Key>
           <Property Name="SearchCampaignId" Type="int" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
@@ -557,6 +559,8 @@
           <Property Name="Clicks" Type="int" Nullable="false" />
           <Property Name="Impressions" Type="int" Nullable="false" />
           <Property Name="CurrencyId" Type="int" Nullable="false" />
+          <Property Name="Network" Type="nchar" Nullable="false" MaxLength="1" />
+          <Property Name="Device" Type="nchar" Nullable="false" MaxLength="1" />
         </EntityType>
         <EntityType Name="SearchDailySummary2">
           <Key>
@@ -1409,6 +1413,8 @@
           <Key>
             <PropertyRef Name="SearchCampaignId" />
             <PropertyRef Name="Date" />
+            <PropertyRef Name="Network" />
+            <PropertyRef Name="Device" />
           </Key>
           <Property Type="Int32" Name="SearchCampaignId" Nullable="false" />
           <Property Type="DateTime" Name="Date" Nullable="false" Precision="3" />
@@ -1419,6 +1425,8 @@
           <Property Type="Int32" Name="Impressions" Nullable="false" />
           <Property Type="Int32" Name="CurrencyId" Nullable="false" />
           <NavigationProperty Name="SearchCampaign" Relationship="ClientPortalModel.FK_SearchDailySummary_SearchCampaign" FromRole="SearchDailySummary" ToRole="SearchCampaign" />
+          <Property Type="String" Name="Network" Nullable="false" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Type="String" Name="Device" Nullable="false" MaxLength="1" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityType Name="Conversion">
           <Key>
@@ -2295,6 +2303,8 @@
           <EntitySetMapping Name="SearchDailySummaries">
             <EntityTypeMapping TypeName="ClientPortalModel.SearchDailySummary">
               <MappingFragment StoreEntitySet="SearchDailySummary">
+                <ScalarProperty Name="Device" ColumnName="Device" />
+                <ScalarProperty Name="Network" ColumnName="Network" />
                 <ScalarProperty Name="CurrencyId" ColumnName="CurrencyId" />
                 <ScalarProperty Name="Impressions" ColumnName="Impressions" />
                 <ScalarProperty Name="Clicks" ColumnName="Clicks" />

@@ -1,11 +1,11 @@
-﻿using CakeExtracter.Common;
-using CakeExtracter.Etl.SearchMarketing.Extracters;
-using CakeExtracter.Etl.SearchMarketing.Loaders;
-using ClientPortal.Data.Contexts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using CakeExtracter.Common;
+using CakeExtracter.Etl.SearchMarketing.Extracters;
+using CakeExtracter.Etl.SearchMarketing.Loaders;
+using ClientPortal.Data.Contexts;
 
 namespace CakeExtracter.Commands
 {
@@ -16,7 +16,7 @@ namespace CakeExtracter.Commands
         public string ClientId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        //public bool IncludeBreakdown { get; set; } // breakdown == network/device/clicktype (SearchDailySummary2's)
+        public bool IncludeClickType { get; set; }
 
         public override void ResetProperties()
         {
@@ -24,7 +24,7 @@ namespace CakeExtracter.Commands
             ClientId = null;
             StartDate = null;
             EndDate = null;
-            //IncludeBreakdown = false;
+            IncludeClickType = false;
         }
 
         public SynchSearchDailySummariesAdWordsCommand()
@@ -34,7 +34,7 @@ namespace CakeExtracter.Commands
             HasOption<string>("v|clientId=", "Client Id", c => ClientId = c);
             HasOption<DateTime>("s|startDate=", "Start Date (default is one month ago)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
-            //HasOption("b|includeBreakdown=", "Include Breakdown (default is false)", c => IncludeBreakdown = bool.Parse(c));
+            HasOption("b|includeClickType=", "Include ClickType (default is false)", c => IncludeClickType = bool.Parse(c));
         }
 
         public override int Execute(string[] remainingArguments)
@@ -43,11 +43,10 @@ namespace CakeExtracter.Commands
             var yesterday = DateTime.Today.AddDays(-1);
             var dateRange = new DateRange(StartDate ?? oneMonthAgo, EndDate ?? yesterday);
 
-            bool IncludeBreakdown = true;
             foreach (var searchAccount in GetSearchAccounts())
             {
-                var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, dateRange, IncludeBreakdown);
-                var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, IncludeBreakdown);
+                var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, dateRange, IncludeClickType);
+                var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, IncludeClickType);
                 var extracterThread = extracter.Start();
                 var loaderThread = loader.Start(extracter);
                 extracterThread.Join();

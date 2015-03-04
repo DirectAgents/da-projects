@@ -61,6 +61,8 @@ namespace ClientPortal.Data.DTOs
                         return "Mobile";
                     case "T":
                         return "Tablet";
+                    case "O":
+                        return "Other";
                     default:
                         return _device;
                 }
@@ -80,6 +82,15 @@ namespace ClientPortal.Data.DTOs
                         return "Sitelink";
                     case "O":
                         return "Offer";
+                    case "C":
+                        return "Call";
+                    case "P":
+                        return "PLA";
+                    case "Q":
+                        return "PLA Coupon";
+                    //case "G":
+                    //case "M":
+                    //case "I":
                     default:
                         return _clickType;
                 }

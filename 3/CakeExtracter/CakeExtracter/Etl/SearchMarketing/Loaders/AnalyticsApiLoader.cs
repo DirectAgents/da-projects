@@ -75,6 +75,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         }
                         itemCount++;
 
+                        //TODO: switch back to using SearchDailySummary ?
+
                         // See if there's a search daily summary row for the same campaign & date...
                         if (!db.Set<SearchDailySummary2>().Any(s => s.SearchCampaignId == pk1 && s.Date == pk2))
                         {   // ...if not, add one, so that left-joining to it can happen later (when querying stats)
