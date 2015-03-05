@@ -92,7 +92,7 @@ namespace ClientPortal.Web.Models
 
         public string Network { get; set; }
         public string Device { get; set; }
-        public string ClickType { get; set; }
+        //public string ClickType { get; set; }
     }
 
     public class SearchStatExportRow_LeadGen
@@ -120,6 +120,6 @@ namespace ClientPortal.Web.Models
 
         public string Network { get; set; }
         public string Device { get; set; }
-        public string ClickType { get; set; }
+        //public string ClickType { get; set; }
     }
 }

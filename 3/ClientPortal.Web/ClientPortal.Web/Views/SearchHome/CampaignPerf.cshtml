@@ -15,7 +15,7 @@
     <span class="paddedlabel">End:</span>
     <input id="campaignperf_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('campaignperf')" />
     <a class="button paddedbutton" id="campaignperf_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('campaignperf'); return false">Filter</a>
-    @*&nbsp;Show Breakdown<input type="checkbox" id="campaignperf_showBreakdown" style="vertical-align: middle" />*@
+    &nbsp;Show Breakdown<input type="checkbox" id="campaignperf_showBreakdown" style="vertical-align: middle" />
     <a class="button paddedbutton" style="float: right" href="#" onclick="ExportCampaignPerfCSV(); return false">Export CSV</a>
 </div>
 <div id="campaignperfGrid"></div>
@@ -35,8 +35,8 @@
 
     function InitGrid() {
         $('#campaignperfGrid').html('');
+        var showBreakdown = $('#campaignperf_showBreakdown').is(':checked');
 
-        var showBreakdown = false; @* $('#campaignperf_showBreakdown').is(':checked');*@
         var campaignperfDS = CreateSummaryDataSource(
             '@Url.Action("CampaignPerfData", "SearchReports")',
             function () {
@@ -61,7 +61,8 @@
     function ExportCampaignPerfCSV() {
         var s = $('#campaignperf_startdate').val();
         var e = $('#campaignperf_enddate').val();
-        var showBreakdown = false; @*$('#campaignperf_showBreakdown').is(':checked');*@
+
+        var showBreakdown = $('#campaignperf_showBreakdown').is(':checked');
         window.location.href = '@Url.Action("CampaignPerfExport", "SearchReports")?startdate=' + s + '&enddate=' + e + '&breakdown=' + showBreakdown;
     }
 </script>

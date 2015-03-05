@@ -154,14 +154,14 @@ namespace ClientPortal.Data.Services
             return searchCampaigns;
         }
 
-        private IQueryable<SearchDailySummary2> GetSearchDailySummaries(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, DateTime? start, DateTime? end, bool includeToday)
+        private IQueryable<SearchDailySummary> GetSearchDailySummaries(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, DateTime? start, DateTime? end, bool includeToday)
         {
             var searchCampaigns = GetSearchCampaigns(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix);
             return GetSearchDailySummaries(searchCampaigns, device, start, end, includeToday);
         }
-        private IQueryable<SearchDailySummary2> GetSearchDailySummaries(IQueryable<SearchCampaign> searchCampaigns, string device, DateTime? start, DateTime? end, bool includeToday)
+        private IQueryable<SearchDailySummary> GetSearchDailySummaries(IQueryable<SearchCampaign> searchCampaigns, string device, DateTime? start, DateTime? end, bool includeToday)
         {
-            var summaries = searchCampaigns.SelectMany(c => c.SearchDailySummaries2);
+            var summaries = searchCampaigns.SelectMany(c => c.SearchDailySummaries);
 
             if (!String.IsNullOrEmpty(device))
                 summaries = summaries.Where(s => s.Device == device);
@@ -663,7 +663,7 @@ namespace ClientPortal.Data.Services
             return stats;
         }
 
-        // Get a SearchStat summary for each individual campaign (or if breakdown, one for each Network/Device/ClickType combo)
+        // Get a SearchStat summary for each individual campaign (or if breakdown, one for each Network/Device combo)
         public IQueryable<SearchStat> GetCampaignStats(int searchProfileId, string channel, DateTime? start, DateTime? end, bool breakdown, bool useAnalytics, bool includeCalls)
         {
             if (!start.HasValue)
@@ -722,7 +722,7 @@ namespace ClientPortal.Data.Services
             {
                 // TODO: figure out how to join to gaStats if useAnalytics==true (and callStats if includeCalls==true)
 
-                stats = summaries.GroupBy(s => new { s.SearchCampaign.SearchAccount.Channel, s.SearchCampaign.SearchCampaignName, s.Network, s.Device, s.ClickType })
+                stats = summaries.GroupBy(s => new { s.SearchCampaign.SearchAccount.Channel, s.SearchCampaign.SearchCampaignName, s.Network, s.Device })
                     .OrderBy(g => g.Key.Channel).ThenBy(g => g.Key.SearchCampaignName)
                     .Select(g => new SearchStat
                     {
@@ -732,7 +732,6 @@ namespace ClientPortal.Data.Services
                         Title = g.Key.SearchCampaignName,
                         Network = g.Key.Network,
                         Device = g.Key.Device,
-                        ClickType = g.Key.ClickType,
                         Impressions = g.Sum(s => s.Impressions),
                         Clicks = g.Sum(s => s.Clicks),
                         Orders = g.Sum(s => s.Orders),
@@ -917,10 +916,4 @@ namespace ClientPortal.Data.Services
         public decimal Cost { get; set; }
         public int Calls { get; set; }
     }
-
-    //class SummaryPair
-    //{
-    //    public SearchDailySummary2 Summary { get; set; }
-    //    public GoogleAnalyticsSummary GaSummary { get; set; }
-    //}
 }
