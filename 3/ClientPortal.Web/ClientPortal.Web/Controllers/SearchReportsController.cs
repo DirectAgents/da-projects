@@ -126,6 +126,25 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
+        public JsonResult DeviceData(KendoGridRequest request, string startdate, string enddate)
+        {
+            var userInfo = GetUserInfo();
+            var cultureInfo = userInfo.CultureInfo;
+            DateTime? start, end;
+            if (!ControllerHelpers.ParseDates(startdate, enddate, cultureInfo, out start, out end))
+                return Json(new { });
+            if (!start.HasValue || !end.HasValue)
+                return Json(new { });
+
+            //TODO: useAnalytics argument; +includeCalls?
+            var stats = cpRepo.GetDeviceStats(userInfo.SearchProfile.SearchProfileId, start.Value, end.Value);
+
+            var kgrid = new KendoGrid<SearchStat>(request, stats);
+            var json = Json(kgrid);
+            return json;
+        }
+
+        [HttpPost]
         public JsonResult CampaignPerfData(KendoGridRequest request, string startdate, string enddate, string channel, bool breakdown = false)
         {
             var userInfo = GetUserInfo();

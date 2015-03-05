@@ -611,6 +611,58 @@ namespace ClientPortal.Data.Services
             return stats.OrderBy(s => s.StartDate);
         }
 
+        // Get a SearchStat summary for each device
+        public IQueryable<SearchStat> GetDeviceStats(int searchProfileId, DateTime start, DateTime end) //, bool includeCalls) //bool useAnalytics
+        {
+            var searchCampaigns = GetSearchCampaigns(null, searchProfileId, null, null, null);
+            var stats = GetSearchDailySummaries(searchCampaigns, null, start, end, true)
+                .GroupBy(s => s.Device)
+                .Select(g =>
+                new SearchStat
+                {
+                    EndDate = end,
+                    CustomByStartDate = start,
+                    DeviceAndTitle = g.Key,
+                    Impressions = g.Sum(s => s.Impressions),
+                    Clicks = g.Sum(s => s.Clicks),
+                    Orders = g.Sum(s => s.Orders),
+                    Revenue = g.Sum(s => s.Revenue),
+                    Cost = g.Sum(s => s.Cost)
+                })
+                .ToList().AsQueryable();
+
+            //TODO: includeAnalytics
+
+            //if (includeCalls)
+            //{
+            //    var callStats = GetCallDailySummaries(searchCampaigns, start, end, true)
+            //        .GroupBy(s => s.Device)
+            //        .ToList()
+            //        .Select(g => new CallSummary
+            //        {
+            //            Device = g.Key,
+            //            Calls = g.Sum(s => s.Calls)
+            //        });
+            //    stats = (from stat in stats
+            //             join ca in callStats on stat.DeviceAbbrev equals ca.Device into gj_stats
+            //             from callStat in gj_stats.DefaultIfEmpty() // left join to callStats
+            //             select new SearchStat
+            //             {
+            //                 EndDate = stat.EndDate,
+            //                 CustomByStartDate = stat.StartDate,
+            //                 DeviceAndTitle = stat.DeviceAbbrev,
+            //                 Impressions = stat.Impressions,
+            //                 Clicks = stat.Clicks,
+            //                 Orders = stat.Orders,
+            //                 Revenue = stat.Revenue,
+            //                 Cost = stat.Cost,
+            //                 Calls = callStat.Calls
+            //             });
+            //}
+
+            return stats.OrderBy(s => s.Title);
+        }
+
         // Get a SearchStat summary for each week for each channel (Google/Bing/etc)... and, if includeAccountBreakdown, each SearchAccount
         public IQueryable<SearchStat> GetChannelStats(int searchProfileId, int numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday, bool includeAccountBreakdown, bool includeSearchChannels, bool includeCalls)
         {
@@ -899,6 +951,7 @@ namespace ClientPortal.Data.Services
         public int CampaignId { get; set; }
         public DateTime Date { get; set; }
         public CalenderWeek Week { get; set; }
+        public string Device { get; set; }
         public int Calls { get; set; }
     }
 

@@ -68,6 +68,19 @@ namespace ClientPortal.Data.DTOs
                 }
             }
         }
+        public string DeviceAbbrev
+        {
+            get { return _device; }
+        }
+        public string DeviceAndTitle
+        {
+            set
+            {
+                Device = value;
+                Title = Device; // the full name
+            }
+        }
+
         private string _clickType;
         public string ClickType
         {

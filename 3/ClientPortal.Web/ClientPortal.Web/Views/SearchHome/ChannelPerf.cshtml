@@ -33,7 +33,8 @@
                    '@Url.Action("CampaignPerfData", "SearchReports")',
                    @(Model.SearchProfile.ShowRevenue ? "CreateSummaryGrid" : "CreateSummaryGridLeadGen"),
                    @(Model.SearchProfile.ShowCalls ? "true" : "false"),
-                   '@(Model.SearchProfile.ShowRevenue ? "revenue" : "clicks")'
+                   '@(Model.SearchProfile.ShowRevenue ? "revenue" : "clicks")',
+                   18
                    );
     };
 

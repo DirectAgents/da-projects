@@ -78,8 +78,10 @@
             args.sort = [{ field: 'Revenue', dir: 'desc' }, { field: 'Cost', dir: 'desc' }, { field: 'Impressions', dir: 'desc' }];
         else if (sort == 'clicks')
             args.sort = [{ field: 'Clicks', dir: 'desc' }, { field: 'Impressions', dir: 'desc' }];
+        else if (sort == 'title')
+            args.sort = { field: 'Title', dir: 'asc' };
         else
-            args.sort = { field: 'Channel', dir: 'asc' }; // for weekly & monthly... remove?
+            args.sort = { field: 'Channel', dir: 'asc' }; // default (for weekly & monthly)
     }
     return new kendo.data.DataSource(args);
 }
@@ -160,7 +162,7 @@ function CreateSummaryGridLeadGen(dataSource, el, height, titleHeader, titleWidt
     el.kendoGrid(args);
 }
 
-function DetailInit(e, url, funcCreateSummaryGrid, showCalls, sort) {
+function DetailInit(e, url, funcCreateSummaryGrid, showCalls, sort, titleWidthPct) {
     var readData = function () {
         return {
             channel: e.data.Title,
@@ -172,7 +174,7 @@ function DetailInit(e, url, funcCreateSummaryGrid, showCalls, sort) {
     dataSource.read();
 
     var el = $("<div/>").appendTo(e.detailCell);
-    funcCreateSummaryGrid(dataSource, el, null, 'Campaign', 18, 2, true, false, false, null, showCalls);
+    funcCreateSummaryGrid(dataSource, el, null, 'Campaign', titleWidthPct, 2, true, false, false, null, showCalls);
 }
 
 function CreateRevROASChart(dataSource, elId, title) {
