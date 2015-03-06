@@ -1,15 +1,15 @@
-﻿using CakeExtracter.Common;
-using ClientPortal.Data.Contexts;
-using Criteo;
-using Criteo.CriteoAPI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using CakeExtracter.Common;
+using ClientPortal.Data.Contexts;
+using Criteo;
+using Criteo.CriteoAPI;
 
 namespace CakeExtracter.Etl.SearchMarketing.Extracters
 {
-    public class CriteoApiExtracter2 : Extracter<SearchDailySummary2>
+    public class CriteoApiExtracter2 : Extracter<SearchDailySummary>
     {
         private readonly string accountCode;
         private readonly DateTime beginDate;
@@ -52,14 +52,14 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             End();
         }
 
-        private IEnumerable<SearchDailySummary2> EnumerateDailySummaries(string reportUrl)
+        private IEnumerable<SearchDailySummary> EnumerateDailySummaries(string reportUrl)
         {
-            IEnumerable<SearchDailySummary2> hourlySummaries = EnumerateHourlyXmlReportRows(reportUrl).ToList();
+            IEnumerable<SearchDailySummary> hourlySummaries = EnumerateHourlyXmlReportRows(reportUrl).ToList();
             hourlySummaries = hourlySummaries.Where(s => s.Date >= this.beginDate && s.Date <= this.endDate);
             var dailyGroups = hourlySummaries.GroupBy(s => new { s.SearchCampaignId, s.Date });
             foreach (var group in dailyGroups)
             {
-                var sds = new SearchDailySummary2
+                var sds = new SearchDailySummary
                 {
                     SearchCampaignId = group.Key.SearchCampaignId,
                     Date = group.Key.Date,
@@ -73,7 +73,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             }
         }
 
-        private IEnumerable<SearchDailySummary2> EnumerateHourlyXmlReportRows(string reportUrl)
+        private IEnumerable<SearchDailySummary> EnumerateHourlyXmlReportRows(string reportUrl)
         {
             using (var reader = XmlReader.Create(reportUrl))
             {
@@ -103,7 +103,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                                             else
                                                 throw new Exception("could not move to column " + columnName);
                                         }
-                                        var sds = new SearchDailySummary2
+                                        var sds = new SearchDailySummary
                                         {
                                             SearchCampaignId = int.Parse(row["campaignID"]),
                                             Date = DateTime.Parse(row["dateTime"]).AddHours(timezoneOffset).Date,

@@ -78,14 +78,12 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         var pk2 = DateTime.Parse(item["dateTime"]);
                         var pk3 = ".";
                         var pk4 = ".";
-                        var pk5 = ".";
-                        var source = new SearchDailySummary2
+                        var source = new SearchDailySummary
                         {
                             SearchCampaignId = pk1,
                             Date = pk2,
                             Network = pk3,
                             Device = pk4,
-                            ClickType = pk5,
                             Revenue = decimal.Parse(item["orderValue"]),
                             Cost = decimal.Parse(item["cost"]),
                             Orders = int.Parse(item["sales"]),
@@ -93,10 +91,10 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                             Impressions = int.Parse(item["impressions"]),
                             CurrencyId = 1 // item["CurrencyCode"] == "USD" ? 1 : -1 // NOTE: non USD (if exists) -1 for now
                         };
-                        var target = db.Set<SearchDailySummary2>().Find(pk1, pk2, pk3, pk4, pk5);
+                        var target = db.Set<SearchDailySummary>().Find(pk1, pk2, pk3, pk4);
                         if (target == null)
                         {
-                            db.SearchDailySummary2.Add(source);
+                            db.SearchDailySummaries.Add(source);
                             addedCount++;
                         }
                         else

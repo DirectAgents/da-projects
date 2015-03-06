@@ -6,7 +6,7 @@ using Criteo.CriteoAPI;
 
 namespace CakeExtracter.Etl.SearchMarketing.Loaders
 {
-    public class CriteoDailySummaryLoader2 : Loader<SearchDailySummary2>
+    public class CriteoDailySummaryLoader2 : Loader<SearchDailySummary>
     {
         private const string criteoChannel = "Criteo";
         private readonly int searchAccountId;
@@ -21,7 +21,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             CriteoDailySummaryLoader.AddUpdateSearchCampaigns(campaigns, this.searchAccountId);
         }
 
-        protected override int Load(List<SearchDailySummary2> items)
+        protected override int Load(List<SearchDailySummary> items)
         {
             Logger.Info("Loading {0} SearchDailySummaries..", items.Count);
             //AddUpdateDependentSearchCampaigns(items);
@@ -29,7 +29,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             return count;
         }
 
-        private int UpsertSearchDailySummaries(List<SearchDailySummary2> items)
+        private int UpsertSearchDailySummaries(List<SearchDailySummary> items)
         {
             var addedCount = 0;
             var updatedCount = 0;
@@ -47,13 +47,12 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         item.SearchCampaignId = searchCampaign.SearchCampaignId; // replace what was the external id
                         item.Network = ".";
                         item.Device = ".";
-                        item.ClickType = ".";
                         item.CurrencyId = 1; // item["CurrencyCode"] == "USD" ? 1 : -1 // NOTE: non USD (if exists) -1 for now
 
-                        var target = db.Set<SearchDailySummary2>().Find(item.SearchCampaignId, item.Date, item.Network, item.Device, item.ClickType);
+                        var target = db.Set<SearchDailySummary>().Find(item.SearchCampaignId, item.Date, item.Network, item.Device);
                         if (target == null)
                         {
-                            db.SearchDailySummary2.Add(item);
+                            db.SearchDailySummaries.Add(item);
                             addedCount++;
                         }
                         else
