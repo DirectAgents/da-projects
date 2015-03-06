@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.BingAds.SDK</id>
+    <version>9.3.6</version>
+    <title>Bing Ads SDK</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>http://msdn.microsoft.com/en-US/library/bing-ads-net-sdk-license-agreement.aspx</licenseUrl>
+    <projectUrl>http://msdn.microsoft.com/en-US/library/bing-ads-client-libraries.aspx</projectUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>The Bing Ads SDK is a library improving developer experience when working with the Bing Ads services by providing high-level access to features such as Bulk API, OAuth Authorization and SOAP API.</description>
+    <releaseNotes>- Added the LastModifiedTime property to all bulk entities, indicating when the entity was last modified.
+
+- Added constructors to OAuthWebAuthCodeGrant and OAuthDesktopMobileAuthCodeGrant accepting a refresh token. If one of these constructors is used, there is no need to call RequestAccessAndRefreshTokensAsync explicitly (it will be done automatically when making an API call).
+
+- Made the IntentOption property read-only for location-related target bids in bulk to prevent unwanted updates to all locations under the same target.
+
+- Misc bug fixes.</releaseNotes>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+    <tags>Microsoft Bing Ads API Bulk OAuth</tags>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.ServiceModel" targetFramework="" />
+      <frameworkAssembly assemblyName="System.Runtime.Serialization" targetFramework="" />
+    </frameworkAssemblies>
+  </metadata>
+</package>

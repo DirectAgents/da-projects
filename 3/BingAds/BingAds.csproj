@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.BingAds">
+      <HintPath>..\ClientPortal.Web\packages\Microsoft.BingAds.SDK.9.3.6\lib\net45\Microsoft.BingAds.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -62,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.AddAdExtensionsResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
