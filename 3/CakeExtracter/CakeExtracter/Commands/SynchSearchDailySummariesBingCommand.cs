@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.SearchMarketing.Extracters;
 using CakeExtracter.Etl.SearchMarketing.Loaders;
 using ClientPortal.Data.Contexts;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace CakeExtracter.Commands
 {

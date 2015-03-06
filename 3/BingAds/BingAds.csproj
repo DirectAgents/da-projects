@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Reports.cs" />
+    <Compile Include="BingUtility.cs" />
     <Compile Include="Service References\Reporting\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

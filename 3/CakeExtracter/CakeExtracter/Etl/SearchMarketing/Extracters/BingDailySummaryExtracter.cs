@@ -31,8 +31,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
 
         private IEnumerable<Dictionary<string, string>> EnumerateRows()
         {
-            var bingReports = new BingAds.Reports(m => Logger.Info(m), m => Logger.Warn(m));
-            var filepath = bingReports.GetDailySummaries(accountId, startDate, endDate);
+            var bingUtility = new BingAds.BingUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            var filepath = bingUtility.GetDailySummaries(accountId, startDate, endDate);
             if (filepath == null)
                 yield break;
 

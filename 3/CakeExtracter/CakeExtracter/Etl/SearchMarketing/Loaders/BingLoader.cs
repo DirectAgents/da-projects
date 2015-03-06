@@ -10,17 +10,25 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
     {
         private const string bingChannel = "Bing";
         private readonly int searchAccountId;
+        private readonly decimal? revenuePerOrder;
+        private bool hasAccountId = false;
 
-        public BingLoader(int searchAccountId)
+        public BingLoader(int searchAccountId, decimal? revenuePerOrder = null)
         {
             this.searchAccountId = searchAccountId;
+            this.revenuePerOrder = revenuePerOrder;
         }
-        //TODO: match below on "account number" -> external id ?
+        //TODO: if !hasAccountId, match below on "account number" -> external id ?
 
         protected override int Load(List<Dictionary<string, string>> items)
         {
             Logger.Info("Loading {0} SearchDailySummaries..", items.Count);
-            //AddUpdateDependentSearchAccounts(items);
+            if (items.Count == 0) return 0;
+
+            hasAccountId = items[0].ContainsKey("AccountId");
+            if (hasAccountId)
+                AddUpdateDependentSearchAccounts(items);
+
             AddUpdateDependentSearchCampaigns(items);
             var count = UpsertSearchDailySummaries(items);
             return count;
@@ -37,13 +45,16 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                 foreach (var item in items)
                 {
-                    //var accountCode = item["AccountId"];
                     var campaignName = item["CampaignName"];
                     var campaignId = int.Parse(item["CampaignId"]);
 
                     var searchAccount = passedInAccount;
-                    //if (searchAccount.AccountCode != accountCode)
-                    //    searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.AccountCode == accountCode && sa.Channel == bingChannel);
+                    if (hasAccountId)
+                    {
+                        var accountCode = item["AccountId"];
+                        if (searchAccount.AccountCode != accountCode)
+                            searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.AccountCode == accountCode && sa.Channel == bingChannel);
+                    }
 
                     var pk1 = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId;
                     var pk2 = DateTime.Parse(item["GregorianDate"]);
@@ -64,6 +75,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         Impressions = int.Parse(item["Impressions"]),
                         CurrencyId = 1 // item["CurrencyCode"] == "USD" ? 1 : -1 // NOTE: non USD (if exists) -1 for now
                     };
+                    if (revenuePerOrder.HasValue)
+                        source.Revenue = source.Orders * revenuePerOrder.Value;
+
                     var target = db.Set<SearchDailySummary>().Find(pk1, pk2, pk3, pk4); //, pk5);
                     if (target == null)
                     {
@@ -146,39 +160,47 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             {
                 var passedInAccount = db.SearchAccounts.Find(this.searchAccountId);
 
-                //foreach (var tuple in items.Select(c => Tuple.Create(c["AccountId"], c["CampaignName"], c["CampaignId"])).Distinct())
-                foreach (var tuple in items.Select(c => Tuple.Create(c["CampaignName"], c["CampaignId"])).Distinct())
+                IEnumerable<CampaignInfo> infos;
+                if (hasAccountId)
+                    infos = items.Select(c => new CampaignInfo { CampaignName = c["CampaignName"], CampaignId = c["CampaignId"], AccountId = c["AccountId"] }).Distinct();
+                else
+                    infos = items.Select(c => new CampaignInfo { CampaignName = c["CampaignName"], CampaignId = c["CampaignId"] }).Distinct();
+                foreach (var info in infos)
                 {
-                    //var accountCode = tuple.Item1;
-                    //var campaignName = tuple.Item2;
-                    //var campaignId = int.Parse(tuple.Item3);
-                    var campaignName = tuple.Item1;
-                    var campaignId = int.Parse(tuple.Item2);
+                    var campaignId = int.Parse(info.CampaignId);
 
                     var searchAccount = passedInAccount;
-                    //if (searchAccount.AccountCode != accountCode)
-                    //    searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.AccountCode == accountCode && sa.Channel == bingChannel);
-
+                    if (hasAccountId && searchAccount.AccountCode != info.AccountId)
+                    {
+                        searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.AccountCode == info.AccountId && sa.Channel == bingChannel);
+                    }
                     var existing = searchAccount.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignId);
 
                     if (existing == null)
                     {
                         searchAccount.SearchCampaigns.Add(new SearchCampaign
                         {
-                            SearchCampaignName = campaignName,
+                            SearchCampaignName = info.CampaignName,
                             ExternalId = campaignId
                         });
-                        Logger.Info("Saving new SearchCampaign: {0} ({1})", campaignName, campaignId);
+                        Logger.Info("Saving new SearchCampaign: {0} ({1})", info.CampaignName, campaignId);
                         db.SaveChanges();
                     }
-                    else if (existing.SearchCampaignName != campaignName)
+                    else if (existing.SearchCampaignName != info.CampaignName)
                     {
-                        existing.SearchCampaignName = campaignName;
-                        Logger.Info("Saving updated SearchCampaign name: {0} ({1})", campaignName, campaignId);
+                        existing.SearchCampaignName = info.CampaignName;
+                        Logger.Info("Saving updated SearchCampaign name: {0} ({1})", info.CampaignName, campaignId);
                         db.SaveChanges();
                     }
                 }
             }
         }
+    }
+
+    class CampaignInfo
+    {
+        public string AccountId { get; set; }
+        public string CampaignName { get; set; }
+        public string CampaignId { get; set; }
     }
 }
