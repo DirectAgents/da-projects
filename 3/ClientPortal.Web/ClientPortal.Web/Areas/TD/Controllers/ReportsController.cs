@@ -21,11 +21,6 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             return PartialView(model);
         }
 
-        public ActionResult Sample()
-        {
-            return PartialView();
-        }
-
         public ActionResult Creative()
         {
             var userInfo = GetUserInfo();

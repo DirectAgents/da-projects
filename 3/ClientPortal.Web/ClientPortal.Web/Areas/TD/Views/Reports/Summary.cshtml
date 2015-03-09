@@ -1,6 +1,6 @@
 ﻿@model ClientPortal.Web.Areas.TD.Models.TDSummaryReportModel
 
-<div style="height: 35px">
+<div style="height: 40px">
     <select style="width: 140px" id="summary_dateRangeSel" onchange="ChangeDateRange('summary', true)">@* show all in USD for now *@
         <option value="mtd">Month to Date</option>
         <option value="ytd">Year to Date</option>
@@ -21,7 +21,7 @@
 </div>
 
 <div class="row">
-<div class="large-8 columns">
+<div class="large-6 columns">
 
 <h3>Totals</h3>
 <table>
@@ -75,7 +75,7 @@
         secondSelectedValue = Model.AllMetricsSelectItems[1].Value;
     }
 }
-<div class="large-4 columns">
+<div class="large-6 columns">
     <h3>Chart Setup</h3>
     <table>
         <tr>

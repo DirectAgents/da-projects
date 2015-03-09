@@ -47,34 +47,6 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             return json;
         }
 
-        public JsonResult SampleData(KendoGridRequest request)
-        {
-            //int insertionOrderID = 1286935; // Betterment
-            int adrollProfileId = 1; // AHS
-            var tda = new TradingDeskAccount
-            {
-                InsertionOrders = new InsertionOrder[] { },
-                AdRollProfiles = new[] { new AdRollProfile { Id = adrollProfileId } }
-            };
-            var start = new DateTime(2014, 12, 1);
-            var end = new DateTime(2014, 12, 31);
-
-            var summaries = tdRepo.GetDailyStatsSummaries(start, end, tda);
-            var kgrid = new KendoGrid<StatsSummary>(request, summaries);
-            if (summaries.Any())
-            {
-                kgrid.aggregates = new
-                {
-                    Impressions = new { sum = summaries.Sum(s => s.Impressions) },
-                    Clicks = new { sum = summaries.Sum(s => s.Clicks) },
-                    Conversions = new { sum = summaries.Sum(s => s.Conversions) },
-                    Spend = new { sum = summaries.Sum(s => s.Spend) }
-                };
-            }
-            var json = Json(kgrid, JsonRequestBehavior.AllowGet);
-            return json;
-        }
-
         public JsonResult CreativeData(KendoGridRequest request, string startdate, string enddate)
         {
             DateTime? start, end;

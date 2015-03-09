@@ -1,6 +1,6 @@
 ﻿@model ClientPortal.Web.Areas.TD.Models.TDReportModelWithDates
 
-<div style="height: 35px">
+<div style="height: 40px">
     <select style="width: 140px" id="creative_dateRangeSel" onchange="ChangeDateRange('creative', true)">@* show all in USD for now *@
         <option value="mtd">Month to Date</option>
         <option value="ytd">Year to Date</option>
@@ -22,7 +22,7 @@
             </div>
         </div>
     </div>
-    <div class="large-6 columns nosidepadding">
+    <div class="large-6 columns" style="padding-left: 0">
         <div id="creativeScatterChartSection" class="k-content">
             <div class="chart-wrapper">
                 <div id="creativeScatterChart"></div>
