@@ -27,16 +27,28 @@ namespace ClientPortal.Data.Entities.TD
             //DBM
             modelBuilder.Entity<InsertionOrder>().ToTable("InsertionOrder", dbmSchema);
             modelBuilder.Entity<Creative>().ToTable("Creative", dbmSchema);
+
             modelBuilder.Entity<DBMDailySummary>()
                 .HasKey(ds => new { ds.Date, ds.InsertionOrderID })
                 .ToTable("DailySummary", dbmSchema);
             modelBuilder.Entity<DBMDailySummary>()
                 .Property(ds => ds.Revenue).HasPrecision(18, 6);
+
             modelBuilder.Entity<CreativeDailySummary>()
                 .HasKey(cds => new { cds.Date, cds.CreativeID })
                 .ToTable("CreativeDailySummary", dbmSchema);
             modelBuilder.Entity<CreativeDailySummary>()
                 .Property(cds => cds.Revenue).HasPrecision(18, 6);
+
+            modelBuilder.Entity<DBMConversion>()
+                .HasKey(c => new { c.AuctionID, c.EventTime })
+                .ToTable("Conversion", dbmSchema);
+            modelBuilder.Entity<DBMConversion>()
+                .Property(c => c.EventTime).HasColumnType("datetime2");
+            modelBuilder.Entity<DBMConversion>()
+                .Property(c => c.ViewTime).HasColumnType("datetime2");
+            modelBuilder.Entity<DBMConversion>()
+                .Property(c => c.RequestTime).HasColumnType("datetime2");
 
             //Trading Desk - general
             modelBuilder.Entity<TradingDeskAccount>()
@@ -51,6 +63,7 @@ namespace ClientPortal.Data.Entities.TD
         public DbSet<Creative> Creatives { get; set; }
         public DbSet<DBMDailySummary> DBMDailySummaries { get; set; }
         public DbSet<CreativeDailySummary> CreativeDailySummaries { get; set; }
+        public DbSet<DBMConversion> Conversions { get; set; }
 
         public DbSet<TradingDeskAccount> TradingDeskAccounts { get; set; }
     }

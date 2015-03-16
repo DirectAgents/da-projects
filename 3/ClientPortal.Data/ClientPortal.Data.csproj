@@ -283,6 +283,7 @@
     <Compile Include="Entities\TD\AdRoll\AdRollProfile.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Entities\TD\DBM\Conversion.cs" />
     <Compile Include="Entities\TD\DBM\Creative.cs" />
     <Compile Include="Entities\TD\DBM\CreativeDailySummary.cs" />
     <Compile Include="Entities\TD\DBM\DBMDailySummary.cs" />
@@ -339,6 +340,10 @@
     <Compile Include="Migrations\201502062106311_Mig_Bucket.cs" />
     <Compile Include="Migrations\201502062106311_Mig_Bucket.Designer.cs">
       <DependentUpon>201502062106311_Mig_Bucket.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503132049077_Mig_DBMConversion.cs" />
+    <Compile Include="Migrations\201503132049077_Mig_DBMConversion.Designer.cs">
+      <DependentUpon>201503132049077_Mig_DBMConversion.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -428,6 +433,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502062106311_Mig_Bucket.resx">
       <DependentUpon>201502062106311_Mig_Bucket.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503132049077_Mig_DBMConversion.resx">
+      <DependentUpon>201503132049077_Mig_DBMConversion.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

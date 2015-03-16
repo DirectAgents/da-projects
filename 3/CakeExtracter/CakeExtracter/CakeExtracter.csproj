@@ -302,6 +302,7 @@
     <Compile Include="Commands\TDSynchCreativeDailySummariesDbm.cs" />
     <Compile Include="Commands\TDSynchCreativeDailySummariesDbmCsv.cs" />
     <Compile Include="Commands\TDSynchDailySummariesDbmCsv.cs" />
+    <Compile Include="Commands\TDSynchDataTransferFilesDbm.cs" />
     <Compile Include="Commands\TestAdRollCommand.cs" />
     <Compile Include="Commands\TestChartCommand.cs" />
     <Compile Include="Commands\TestCriteoCommand.cs" />
@@ -332,6 +333,7 @@
     <Compile Include="Commands\SynchDailySummariesCommand.cs" />
     <Compile Include="Commands\SynchSearchDailySummariesXmlCommand.cs" />
     <Compile Include="Common\SqlUtility.cs" />
+    <Compile Include="Common\Utility.cs" />
     <Compile Include="Common\XmlExtensions.cs" />
     <Compile Include="DataWarehouse.cs" />
     <Compile Include="Bootstrappers\EnterpriseLibraryBootstrapper.cs" />
@@ -380,9 +382,11 @@
     <Compile Include="Etl\TradingDesk\Extracters\AdrollApiExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollCsvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmCloudStorageExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\DbmConversionExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmCsvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Loaders\AdrollAdDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\Loaders\AdrollAdDailySummaryLoader2.cs" />
+    <Compile Include="Etl\TradingDesk\Loaders\DbmConversionLoader.cs" />
     <Compile Include="Etl\TradingDesk\Loaders\DbmCreativeDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\Loaders\DbmDailySummaryLoader.cs" />
     <Compile Include="Etl\Transformer.cs" />
