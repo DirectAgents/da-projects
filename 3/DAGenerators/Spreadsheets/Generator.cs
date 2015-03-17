@@ -1,8 +1,8 @@
-﻿using ClientPortal.Data.Contracts;
-using ClientPortal.Data.DTOs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ClientPortal.Data.Contracts;
+using ClientPortal.Data.DTOs;
 
 namespace DAGenerators.Spreadsheets
 {
@@ -60,72 +60,43 @@ namespace DAGenerators.Spreadsheets
             var periodEnd = periodStart.AddDays(6);
             spreadsheet.SetReportingPeriod(periodStart, periodEnd); // currently just used for Teacher Express template
 
-            // TODO: determine from the report which stats are needed
-            if (spreadsheet is SearchReport_ScholasticTeacherExpress)
+            for (int i = 0; i < numWeeks; i++)
             {
-                // load the weekly campaign stats, starting with the most recent and going back the number of weeks specified
-                for (int i = 0; i < numWeeks; i++)
+                var channelStatsDict = new Dictionary<string, IEnumerable<SearchStat>>();
+
+                int numChannels = searchProfile.SearchAccounts.Select(sa => sa.Channel).Distinct().Count();
+                if (numChannels == 1 && searchProfile.SearchAccounts.Count > 1)
+                { // if there is only one channel (e.g. Google) but multiple SearchAccounts, group campaigns by SearchAccount
+                    foreach (var searchAccount in searchProfile.SearchAccounts)
+                    {
+                        var campaignStats = cpRepo.GetCampaignStats(searchAccount.SearchAccountId, periodStart, periodEnd, false, useAnalytics, searchProfile.ShowCalls);
+                        if (campaignStats.Any())
+                            channelStatsDict[searchAccount.Name] = campaignStats;
+                    }
+                }
+                else
+                { // the "normal" way: group campaigns by channel (Google, Bing, etc)
+                    var campaignStats = cpRepo.GetCampaignStats(searchProfileId, null, periodStart, periodEnd, false, useAnalytics, searchProfile.ShowCalls);
+                    var channels = campaignStats.Select(s => s.Channel).Distinct();
+                    foreach (string channel in channels)
+                    {
+                        channelStatsDict[channel] = campaignStats.Where(s => s.Channel == channel);
+                    }                               // order of campaigns?
+                }
+
+                if (channelStatsDict.Keys.Any()) // TODO: if empty, somehow generate a row with zeros for this week
                 {
-                    var weeklyCampaignStats = cpRepo.GetCampaignStats(searchProfileId, null, periodStart, periodEnd, false, useAnalytics, searchProfile.ShowCalls);
                     bool collapse = (i > 0);
-                    ((SearchReport_ScholasticTeacherExpress)spreadsheet).LoadWeeklyCampaignStats(weeklyCampaignStats, propertyNames, periodStart, collapse);
-                    if (i + 1 < numWeeks)
-                    {   // not the last week
-                        periodStart = periodStart.AddDays(-7);
-                        periodEnd = periodEnd.AddDays(-7);
-                    }
-                    else
-                    {
-                        // after the last week was loaded... remove the template rows
-                        ((SearchReport_ScholasticTeacherExpress)spreadsheet).RemoveWeeklyCampaignStatsTemplateRows();
-                    }
+                    spreadsheet.LoadWeeklyChannelRollupStats(channelStatsDict, propertyNames, periodStart, collapse);
                 }
-
-                var yesterday = DateTime.Now.AddDays(-1);
-                var monthStart = new DateTime(yesterday.Year, yesterday.Month, 1);
-                var monthEnd = monthStart.AddMonths(1).AddDays(-1);
-                var latestMonthStats = cpRepo.GetCampaignStats(searchProfileId, null, monthStart, monthEnd, false, useAnalytics, searchProfile.ShowCalls);
-                ((SearchReport_ScholasticTeacherExpress)spreadsheet).LoadLatestMonthCampaignStats(latestMonthStats, propertyNames, monthStart);
-            }
-            else
-            {
-                for (int i = 0; i < numWeeks; i++)
-                {
-                    var channelStatsDict = new Dictionary<string, IEnumerable<SearchStat>>();
-
-                    int numChannels = searchProfile.SearchAccounts.Select(sa => sa.Channel).Distinct().Count();
-                    if (numChannels == 1 && searchProfile.SearchAccounts.Count > 1)
-                    { // if there is only one channel (e.g. Google) but multiple SearchAccounts, group campaigns by SearchAccount
-                        foreach (var searchAccount in searchProfile.SearchAccounts)
-                        {
-                            var campaignStats = cpRepo.GetCampaignStats(searchAccount.SearchAccountId, periodStart, periodEnd, false, useAnalytics, searchProfile.ShowCalls);
-                            if (campaignStats.Any())
-                                channelStatsDict[searchAccount.Name] = campaignStats;
-                        }
-                    }
-                    else
-                    { // the "normal" way: group campaigns by channel (Google, Bing, etc)
-                        var campaignStats = cpRepo.GetCampaignStats(searchProfileId, null, periodStart, periodEnd, false, useAnalytics, searchProfile.ShowCalls);
-                        var channels = campaignStats.Select(s => s.Channel).Distinct();
-                        foreach (string channel in channels)
-                        {
-                            channelStatsDict[channel] = campaignStats.Where(s => s.Channel == channel);
-                        }                               // order of campaigns?
-                    }
-
-                    if (channelStatsDict.Keys.Any()) // TODO: if empty, somehow generate a row with zeros for this week
-                    {
-                        bool collapse = (i > 0);
-                        spreadsheet.LoadWeeklyChannelRollupStats(channelStatsDict, propertyNames, periodStart, collapse);
-                    }
-                    if (i + 1 < numWeeks)
-                    {   // not the last week
-                        periodStart = periodStart.AddDays(-7);
-                        periodEnd = periodEnd.AddDays(-7);
-                    }
+                if (i + 1 < numWeeks)
+                {   // not the last week
+                    periodStart = periodStart.AddDays(-7);
+                    periodEnd = periodEnd.AddDays(-7);
                 }
-                spreadsheet.RemoveWeeklyChannelRollupStatsTemplate();
             }
+            spreadsheet.RemoveWeeklyChannelRollupStatsTemplate();
+
             return spreadsheet;
         }
         // DisposeResources when done with SearchReport?
