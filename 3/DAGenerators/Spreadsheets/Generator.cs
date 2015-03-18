@@ -52,6 +52,23 @@ namespace DAGenerators.Spreadsheets
             spreadsheet.LoadMonthlyStats(monthlyStats, propertyNames);
             spreadsheet.LoadWeeklyStats(weeklyStats, propertyNames);
 
+            // Year-Over-Year - for the most recent completed month
+            DateTime today = DateTime.Today;
+            DateTime monthStart = new DateTime(today.Year, today.Month, 1);
+            DateTime monthEnd = monthStart.AddDays(-1);
+            monthStart = monthStart.AddMonths(-1);
+
+            var monthStats = cpRepo.GetSearchStats(searchProfileId, monthStart, monthEnd, false, useAnalytics, searchProfile.ShowCalls);
+            monthStats.Title = monthStart.ToString("MMM-yy");
+
+            monthStart = monthStart.AddYears(-1);
+            monthEnd = monthStart.AddMonths(1).AddDays(-1);
+            var monthStatsLastYear = cpRepo.GetSearchStats(searchProfileId, monthStart, monthEnd, false, useAnalytics, searchProfile.ShowCalls);
+            monthStatsLastYear.Title = monthStart.ToString("MMM-yy");
+
+            var yoyStats = new[] { monthStatsLastYear, monthStats };
+            spreadsheet.LoadYearOverYearStats(yoyStats, propertyNames);
+
             // Prepare for weekly channel/campaign stats
             // Start with the week that includes endDate (could be a partial week)
             var periodStart = endDate;
@@ -60,6 +77,7 @@ namespace DAGenerators.Spreadsheets
             var periodEnd = periodStart.AddDays(6);
             spreadsheet.SetReportingPeriod(periodStart, periodEnd); // currently just used for Teacher Express template
 
+            // load the weekly campaign stats, starting with the most recent and going back the number of weeks specified
             for (int i = 0; i < numWeeks; i++)
             {
                 var channelStatsDict = new Dictionary<string, IEnumerable<SearchStat>>();

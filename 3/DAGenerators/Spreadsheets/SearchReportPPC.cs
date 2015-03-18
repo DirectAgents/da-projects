@@ -1,11 +1,11 @@
-﻿using OfficeOpenXml;
-using OfficeOpenXml.Drawing.Chart;
-using OfficeOpenXml.Table;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using OfficeOpenXml;
+using OfficeOpenXml.Drawing.Chart;
+using OfficeOpenXml.Table;
 
 namespace DAGenerators.Spreadsheets
 {
@@ -14,8 +14,8 @@ namespace DAGenerators.Spreadsheets
     {
         protected int Row_SummaryDate = 8;
         protected int Row_StatsHeader = 11;
-        private const int Row_ClientNameBottom = 18;
-        private const int Row_WeeklyChart = 21;
+        private const int Row_ClientNameBottom = 24;
+        private const int Row_WeeklyChart = 27;
 
         private const int Col_StatsTitle = 2;
         private const int Col_LeftChart = 2;
@@ -30,8 +30,9 @@ namespace DAGenerators.Spreadsheets
         {
             get { return StartRow_Weekly <= StartRow_Monthly; }
         }
+        protected int StartRow_YearOverYear = 20;
 
-        private const int StartRow_WeeklyChannelCampaignTemplate = 39;
+        private const int StartRow_WeeklyChannelCampaignTemplate = 45;
         private const int NumRows_WeeklyChannelCampaignTemplate = 3;
         private const int NumRows_WeeklyChannelRollupTemplate = 2;
 
@@ -176,6 +177,22 @@ namespace DAGenerators.Spreadsheets
                 var type = stats.First().GetType();
                 WS.Cells[startingRow, iColumn].LoadFromCollection(stats, false, TableStyles.None, BindingFlags.Default, new[] { type.GetProperty(propertyName) });
             }
+        }
+
+        // for the most recently completed month
+        public virtual void LoadYearOverYearStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
+        {
+            LoadYearOverYearStats(stats, propertyNames, StartRow_YearOverYear + NumWeekRowsAdded + NumMonthRowsAdded);
+        }
+        protected void LoadYearOverYearStats<T>(IEnumerable<T> stats, IList<string> propertyNames, int startingRow)
+        {
+            LoadColumnFromStats(stats, startingRow, Col_StatsTitle, propertyNames[0]);
+            LoadColumnFromStats(stats, startingRow, Metric_Clicks.ColNum, propertyNames[1], Metric_Clicks);
+            LoadColumnFromStats(stats, startingRow, Metric_Impressions.ColNum, propertyNames[2], Metric_Impressions);
+            LoadColumnFromStats(stats, startingRow, Metric_Orders.ColNum, propertyNames[3], Metric_Orders);
+            LoadColumnFromStats(stats, startingRow, Metric_Cost.ColNum, propertyNames[4], Metric_Cost);
+            LoadColumnFromStats(stats, startingRow, Metric_Revenue.ColNum, propertyNames[5], Metric_Revenue);
+            LoadColumnFromStats(stats, startingRow, Metric_Calls.ColNum, propertyNames[6], Metric_Calls);
         }
 
         //TODO: retire this - if can assume all formulas are in template rows in the spreadsheet
