@@ -1,7 +1,7 @@
-﻿using ClientPortal.Data.Contracts;
+﻿using System.Web.Mvc;
+using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Areas.TD.Models;
 using ClientPortal.Web.Controllers;
-using System.Web.Mvc;
 
 namespace ClientPortal.Web.Areas.TD.Controllers
 {
@@ -26,5 +26,12 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             return View(model);
         }
 
+        public ActionResult Test()
+        {
+            var userInfo = GetUserInfo();
+
+            var model = new TDHomeModel(userInfo);
+            return View(model);
+        }
     }
 }

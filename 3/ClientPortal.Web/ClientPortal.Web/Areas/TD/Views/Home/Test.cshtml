@@ -1,0 +1,75 @@
+﻿@model ClientPortal.Web.Areas.TD.Models.TDHomeModel
+@{
+    Layout = "~/Views/Shared/_Portal2015.cshtml";
+}
+
+@*<div id="tabstrip1" style="visibility:hidden">*@
+<div id="tabstrip1">
+    <ul>
+        <li class="k-state-active">first</li>
+        <li>second</li>
+        <li>Weekly</li>
+    </ul>
+    <div>
+        hello there
+    </div>
+    <div>
+        Loading...
+    </div>
+    <div></div>
+</div>
+
+@section head {
+    <link href="~/Content/kendo/2015.1.318/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2015.1.318/kendo.silver.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2015.1.318/kendo.dataviz.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2015.1.318/kendo.dataviz.silver.min.css" rel="stylesheet" />
+    <link href="~/Content/index.css" rel="stylesheet" />
+}
+
+@section scripts {
+    <script src="~/Scripts/kendo/2015.1.318/kendo.all.min.js"></script>
+    <script src="~/Scripts/kendo/2015.1.318/cultures/kendo.culture.de-DE.min.js"></script>
+    <script src="~/Scripts/kendo/2015.1.318/cultures/kendo.culture.en-GB.min.js"></script>
+    <script src="~/Scripts/kendo/2015.1.318/cultures/kendo.culture.en-AU.min.js"></script>
+    @Html.Partial("_TDDateFuncs", Model.Dates)
+    @Html.Partial("_TDKendoFuncs")
+    <script>
+        $(function () {
+            $(document).data('kendoSkin', 'silver');
+
+            $('#tabstrip1').kendoTabStrip({
+                animation: { open: { effects: 'fadeIn' } },
+                contentUrls: [
+                    null,
+                    null,
+                    "@Url.Action("Weekly", "Reports")"
+                ]
+            });
+        });
+
+        function WindowResize() {
+            //ResizeChart('summary', true);
+            //ResizeChart('creativeBar', true);
+            //ResizeChart('creativeScatter', true);
+            //ResizeChart('tdWeekly', true);
+            //ResizeChart('tdMonthly', true);
+        }
+
+        // Resize a chart, optionally refreshing it.
+        function ResizeChart(chart, refresh) {
+            if ($('#' + chart + 'ChartSection').length > 0) {
+                var width = $('#' + chart + 'ChartSection').width();
+                if (width > 0) {
+                    $('#' + chart + 'ChartSection .chart-wrapper').css('width', width);
+                    if (refresh)
+                        $('#' + chart + 'Chart').data('kendoChart').refresh();
+                }
+            }
+        }
+
+        nMetrics = ['Impressions', 'Clicks', 'Conversions'];
+        eMetrics = ['CPM', 'CPC', 'CPA'];
+        rMetrics = ['CTR', 'ConvRate'];
+    </script>
+}

@@ -59,6 +59,11 @@ namespace ClientPortal.Web.Controllers
             }
         }
 
+        public ActionResult Test()
+        {
+            return View();
+        }
+
         public FileResult Logo()
         {
             var userInfo = GetUserInfo();

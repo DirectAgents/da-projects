@@ -1105,6 +1105,7 @@
     <Content Include="Content\kendo\2015.1.318\fonts\DejaVu\DejaVuSerif.ttf" />
     <Content Include="Content\kendo\2015.1.318\images\kendoui.ttf" />
     <Content Include="Content\kendo\2015.1.318\images\kendoui.woff" />
+    <Content Include="Areas\TD\Views\Home\Test.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />
@@ -2922,6 +2923,10 @@
     <Content Include="Scripts\kendo\2015.1.318\kendo.virtuallist.min.js.map" />
     <Content Include="Scripts\kendo\2015.1.318\kendo.web.min.js.map" />
     <Content Include="Scripts\kendo\2015.1.318\kendo.window.min.js.map" />
+    <Content Include="Views\Shared\_Portal2015.cshtml" />
+    <Content Include="Views\Home\Test.cshtml">
+      <SubType>Code</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

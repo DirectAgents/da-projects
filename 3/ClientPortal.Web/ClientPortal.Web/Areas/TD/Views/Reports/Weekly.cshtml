@@ -3,8 +3,10 @@
 <div class="row">
     <div class="large-12 columns">
         <div id="tdWeeklyOuter">
-            <b>Weekly Summary</b>
-            <a class="button paddedbutton" style="float: right" href="#" onclick="ExportWeeklyCSV(); return false">Export CSV</a>
+            <div style="height:26px">
+                <b style="font-size:20px">Weekly Summary</b>
+                <button id="btnExportWeekly" class="k-primary" style="float:right;margin:0 5px" onclick="ExportWeeklyCSV()">Export CSV</button>
+            </div>
             <div id="tdWeeklyGrid" style="margin-top: 10px"></div>
         </div>
     </div>
@@ -29,8 +31,8 @@
 } else {
         <text>CreateImpressionsClicksChart(weeklyDS, 'tdWeeklyChart', 'Weekly Impressions vs. Clicks Performance');</text>
 }
-
         weeklyDS.read();
+        $('#btnExportWeekly').kendoButton();
     });
 
     function ExportWeeklyCSV() {
