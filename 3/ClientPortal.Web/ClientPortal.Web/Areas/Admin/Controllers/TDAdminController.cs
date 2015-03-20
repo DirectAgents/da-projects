@@ -32,6 +32,11 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
             return View(insertionOrders);
         }
+        public ActionResult AdRollProfiles()
+        {
+            var arps = tdRepo.AdRollProfiles();
+            return View(arps);
+        }
 
         public ActionResult CreateAccount(int ioID)
         {
@@ -101,6 +106,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 return HttpNotFound();
             return View(tdAccount);
         }
+        //TODO: check if username is already taken
 
         [HttpPost]
         public ActionResult CreateUserProfile(int tdaId, string username, string password) //, bool sendemail, string email)

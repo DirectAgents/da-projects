@@ -10,31 +10,64 @@
     <fieldset>
         <legend>Edit Account</legend>
         @Html.HiddenFor(m => m.TradingDeskAccountId)
-        <table>
-            <tr>
-                <td>@Html.LabelFor(m => m.DisplayName, "Account:")</td>
-                <td>@Html.DisplayFor(m => m.DisplayName)</td>
-            </tr>
-            <tr>
-                <td>@Html.LabelFor(m => m.ShowConversions)</td>
-                <td>@Html.EditorFor(m => m.ShowConversions)</td>
-            </tr>
-            <tr>
-                <td>@Html.LabelFor(m => m.FixedMetricName, "FixedMetric")</td>
-                <td>@Html.DropDownListFor(m => m.FixedMetricName, ViewData["FixedMetricItems"] as List<SelectListItem>)</td>
-            </tr>
-            <tr>
-                <td>@Html.LabelFor(m => m.FixedMetricValue)</td>
-                <td>@Html.TextBoxFor(m => m.FixedMetricValue, "{0:0.##########}")</td>
-            </tr>
-            <tr>
-                <td>@Html.LabelFor(m => m.ManagementFeePct)</td>
-                <td>@Html.EditorFor(m => m.ManagementFeePct)</td>
-            </tr>
-        </table>
-        <br />
-        <input type="submit" value="Save" />
+        <div style="float:left">
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(m => m.TradingDeskAccountId, "Id:")</td>
+                    <td>@Html.DisplayFor(m => m.TradingDeskAccountId)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.DisplayName, "Name:")</td>
+                    <td>@Html.DisplayFor(m => m.DisplayName)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Login)</td>
+                    <td>@Html.DisplayFor(m => m.Login)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.ShowConversions)</td>
+                    <td>@Html.EditorFor(m => m.ShowConversions)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.FixedMetricName, "FixedMetric")</td>
+                    <td>@Html.DropDownListFor(m => m.FixedMetricName, ViewData["FixedMetricItems"] as List<SelectListItem>)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.FixedMetricValue)</td>
+                    <td>@Html.TextBoxFor(m => m.FixedMetricValue, "{0:0.##########}")</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.ManagementFeePct)</td>
+                    <td>@Html.EditorFor(m => m.ManagementFeePct)</td>
+                </tr>
+            </table>
+        </div>
+        <div style="float:left; margin-left:20px">
+            DBM Insertion Orders:<br />
+            @if (Model.InsertionOrders != null && Model.InsertionOrders.Count > 0)
+            {
+                foreach (var io in Model.InsertionOrders) {
+                    <text>- </text>@io.InsertionOrderName<br />
+                }
+            } else {
+                <text> (none)</text><br />
+            }
+            <br/>
+            AdRoll Profiles:<br />
+            @if (Model.AdRollProfiles != null && Model.AdRollProfiles.Count > 0)
+            {
+                foreach (var arp in Model.AdRollProfiles) {
+                    <text>- </text>@arp.Name<br />
+                }
+            } else {
+                <text> (none)</text><br />
+            }
+        </div>
+        <br style="clear:both" />
+        <div style="margin-top:10px">
+            <input type="submit" value="Save" />
             &nbsp;@Ajax.ActionLink("cancel", "TradingDeskAccounts", ajaxOptions)
+        </div>
     </fieldset>
 }
 

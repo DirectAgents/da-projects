@@ -1,0 +1,24 @@
+﻿@model IEnumerable<ClientPortal.Data.Entities.TD.AdRoll.AdRollProfile>
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("tdAccountsTab");
+}
+
+Show:
+@Ajax.ActionLink("Accounts", "TradingDeskAccounts", ajaxOptions)
+<br /><br />
+
+<table border="1">
+    <tr>
+        <th>Id</th>
+        <th>AdRollProfile</th>
+        <th>Eid</th>
+    </tr>
+@foreach (var arp in Model)
+{
+    <tr>
+        <td>@arp.Id</td>
+        <td>@arp.Name</td>
+        <td>@arp.Eid</td>
+    </tr>
+}
+</table>

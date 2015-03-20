@@ -13,8 +13,11 @@
         <img style="width: 200px; margin-top: 10px" src="~/Images/programmatic.png" />
     </div>
     <div class="large-5 columns logout">
-        <div style="float: right">
+        <div style="float:right">
             @Html.Partial("_LoginPartial", false)
+        </div>
+        <div style="float:right; line-height:37px; margin-right:10px">
+            Hello, @Html.ActionLink(User.Identity.Name, "Manage", "Account", new { area = "" }, new { @class = "username", title = "Manage" })!
         </div>
     </div>
 </div>

@@ -31,18 +31,58 @@ namespace ClientPortal.Data.Entities.TD
         }
 
         [NotMapped]
-        public string DisplayName //TODO: use adroll / dbm (insertion order) name(s)
+        public string DisplayName
         {
             get
             {
-                if (Advertisers != null && Advertisers.Count() > 0)
-                    return String.Join(", ", Advertisers.Select(a => a.AdvertiserName).ToArray());
-                else if (UserProfiles != null && UserProfiles.Count() > 0)
-                    return String.Join(", ", UserProfiles.Select(u => u.UserName).ToArray());
-                else
-                    return TradingDeskAccountId.ToString();
+                var displayNames = this.DisplayNames;
+                return String.Join(" | ", displayNames);
             }
         }
+        [NotMapped]
+        public IEnumerable<string> DisplayNames
+        {
+            get
+            {
+                var displayNames = new List<string>();
+                if (InsertionOrders != null)
+                    foreach (var io in InsertionOrders)
+                    {
+                        if (!displayNames.Contains(io.InsertionOrderName))
+                            displayNames.Add(io.InsertionOrderName);
+                    }
+                if (AdRollProfiles != null)
+                    foreach (var arp in AdRollProfiles)
+                    {
+                        if (!displayNames.Contains(arp.Name))
+                            displayNames.Add(arp.Name);
+                    }
+                if (displayNames.Count == 0)
+                {
+                    if (UserProfiles != null)
+                        foreach (var up in UserProfiles)
+                        {
+                            displayNames.Add(up.UserName);
+                        }
+                    if (displayNames.Count == 0)
+                        displayNames.Add(TradingDeskAccountId.ToString());
+                }
+                return displayNames;
+            }
+        }
+
+        [NotMapped]
+        public string Login
+        {
+            get
+            {
+                if (UserProfiles == null)
+                    return "";
+                return String.Join(", ", UserProfiles.Select(u => u.UserName).ToArray());
+                // (normally there should be just one)
+            }
+        }
+
         [NotMapped]
         public string FixedMetricDisplay
         {
