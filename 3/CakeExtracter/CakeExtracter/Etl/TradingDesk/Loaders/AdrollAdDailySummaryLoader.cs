@@ -39,12 +39,13 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
             var itemCount = 0;
             using (var db = new TDContext())
             {
+                DateTime date;
                 foreach (var item in items)
                 {
                     int? adId = null;
                     if (adIdLookupByName.ContainsKey(item.AdName))
                     {
-                        DateTime date = DateTime.Parse(item.Date);
+                        date = DateTime.Parse(item.Date);
                         adId = adIdLookupByName[item.AdName];
                         var source = new AdDailySummary
                         {
@@ -87,6 +88,8 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                         if (!AdsAffected.ContainsKey(source.AdRollAdId))
                             AdsAffected[source.AdRollAdId] = item.AdName;
                     }
+                    else
+                        Logger.Warn("adIdLookupByName didn't contain key: {0}", item.AdName);
                 }
                 Logger.Info("Saving {0} AdDailySummaries ({1} updates, {2} additions, {3} duplicates)", itemCount, updatedCount, addedCount, skippedCount);
                 db.SaveChanges();
@@ -94,46 +97,54 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
             return itemCount;
         }
 
+        //Note: AdRoll's csv reports don't include the ad's Eid so it is difficult to match on ads in the db
+        //      So if the AdRollAds are created here, we would need a way to fill in the Eids later (i.e. when using the API)
+
         private void AddDependentAds(List<AdrollRow> items)
         {
             int width, height;
+            DateTime createDate, createDatePlusOne;
             using (var db = new TDContext())
             {
                 // Find the unique AdNames by grouping
-                var itemGroups = items.GroupBy(i => i.AdName);
+                var itemGroups = items.GroupBy(i => new { i.AdName, i.Size, i.Type, i.CreateDate });
                 foreach (var group in itemGroups)
-                {   // See if an AdRollAd with that name exists
-                    var ads = db.AdRollAds.Where(a => a.Name == group.Key);
+                {
+                    var key = group.Key;
+                    width = 0;
+                    height = 0;
+                    if (key.Size != null && key.Size.Contains('x'))
+                    {
+                        var dimensions = key.Size.Split('x');
+                        Int32.TryParse(dimensions[0], out width);
+                        Int32.TryParse(dimensions[1], out height);
+                    }
+                    createDate = new DateTime(2000, 1, 1);
+                    DateTime.TryParse(key.CreateDate, out createDate);
+                    createDatePlusOne = createDate.AddDays(1);
+
+                    // See if the Ad exists in the db
+                    var ads = db.AdRollAds.Where(a => a.Name == key.AdName && a.Width == width && a.Height == height && a.Type == key.Type
+                                                        && a.CreatedDate >= createDate && a.CreatedDate < createDatePlusOne);
                     if (ads.Count() == 0)
                     {   // Create new AdRollAd
-                        var row = group.First(); // assume all other ad properties are the same for each group
-                        width = 0;
-                        height = 0;
-                        if (row.Size != null && row.Size.Contains('x'))
-                        {
-                            var dimensions = row.Size.Split('x');
-                            Int32.TryParse(dimensions[0], out width);
-                            Int32.TryParse(dimensions[1], out height);
-                        }
                         var ad = new AdRollAd
                         {
                             AdRollProfileId = adrollProfileId,
-                            Name = row.AdName,
-                            Type = row.Type,
+                            Name = key.AdName,
+                            Type = key.Type,
                             Width = width,
                             Height = height,
+                            CreatedDate = createDate
                         };
-                        DateTime createdDate;
-                        if (DateTime.TryParse(row.CreateDate, out createdDate))
-                            ad.CreatedDate = createdDate;
                         db.AdRollAds.Add(ad);
                         db.SaveChanges();
                         Logger.Info("Saving new AdRollAd: {0} ({1})", ad.Name, ad.Id);
-                        adIdLookupByName[ad.Name] = ad.Id;
+                        adIdLookupByName[key.AdName] = ad.Id;
                     }
                     else
-                    {   // Put existing Ad id in the lookup
-                        adIdLookupByName[group.Key] = ads.First().Id;
+                    {   // Put existing Ad id in the lookup; (the first one if there's more than one)
+                        adIdLookupByName[key.AdName] = ads.First().Id;
                     }
                 }
             }

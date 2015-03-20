@@ -20,7 +20,7 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
         protected override int Load(List<AdSummary> items)
         {
             Logger.Info("Loading {0} AdrollAdDailySummaries..", items.Count);
-            AddDependentAds(items);
+            AddUpdateDependentAds(items);
             var count = UpsertAdDailySummaries(items);
             return count;
         }
@@ -86,7 +86,7 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
             return itemCount;
         }
 
-        private void AddDependentAds(List<AdSummary> items)
+        private void AddUpdateDependentAds(List<AdSummary> items)
         {
             using (var db = new TDContext())
             {

@@ -14,17 +14,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     public class DbmCloudStorageExtracter : Extracter<DbmRowBase>
     {
         private readonly DateRange dateRange;
-        private readonly string bucketName;
+        private readonly IEnumerable<string> bucketNames;
 
-        public DbmCloudStorageExtracter(DateRange dateRange, string bucketName)
+        public DbmCloudStorageExtracter(DateRange dateRange, IEnumerable<string> bucketNames)
         {
             this.dateRange = dateRange;
-            this.bucketName = bucketName;
+            this.bucketNames = bucketNames;
         }
 
         protected override void Extract()
         {
-            Logger.Info("Extracting DailySummaries reports for {0} from {1} to {2}", bucketName, dateRange.FromDate, dateRange.ToDate);
+            Logger.Info("Extracting DailySummaries reports from {0} buckets - from {1:d} to {2:d}", bucketNames.Count(), dateRange.FromDate, dateRange.ToDate);
             var items = EnumerateRows();
             Add(items);
             End();
@@ -35,31 +35,34 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             var credential = CreateCredential();
             var service = CreateStorageService(credential);
 
-            var request = service.Objects.List(bucketName);
-            var bucketObjects = request.Execute();
-
-            foreach (var date in dateRange.Dates)
+            foreach (var bucketName in bucketNames)
             {
-                string dateString = date.ToString("yyyy-MM-dd");
-                var reportObject = bucketObjects.Items.Where(i => i.Name.Contains(dateString)).FirstOrDefault();
+                var request = service.Objects.List(bucketName);
+                var bucketObjects = request.Execute();
 
-                HttpWebRequest req = CreateRequest(reportObject.MediaLink, credential);
-                HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
-
-                // Handle redirects manully to ensure that the Authorization header is present if
-                // our request is redirected.
-                if (resp.StatusCode == HttpStatusCode.TemporaryRedirect)
+                foreach (var date in dateRange.Dates)
                 {
-                    req = CreateRequest(resp.Headers["Location"], credential);
-                    resp = (HttpWebResponse)req.GetResponse();
-                }
+                    string dateString = date.ToString("yyyy-MM-dd");
+                    var reportObject = bucketObjects.Items.Where(i => i.Name.Contains(dateString)).FirstOrDefault();
 
-                bool byCreative = true;
-                Stream stream = resp.GetResponseStream();
-                using (var reader = new StreamReader(stream))
-                {
-                    foreach (var row in DbmCsvExtracter.EnumerateRowsStatic(reader, byCreative))
-                        yield return row;
+                    HttpWebRequest req = CreateRequest(reportObject.MediaLink, credential);
+                    HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
+
+                    // Handle redirects manully to ensure that the Authorization header is present if
+                    // our request is redirected.
+                    if (resp.StatusCode == HttpStatusCode.TemporaryRedirect)
+                    {
+                        req = CreateRequest(resp.Headers["Location"], credential);
+                        resp = (HttpWebResponse)req.GetResponse();
+                    }
+
+                    bool byCreative = true;
+                    Stream stream = resp.GetResponseStream();
+                    using (var reader = new StreamReader(stream))
+                    {
+                        foreach (var row in DbmCsvExtracter.EnumerateRowsStatic(reader, byCreative))
+                            yield return row;
+                    }
                 }
             }
         }

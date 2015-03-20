@@ -13,13 +13,15 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class TDSynchAdDailySummariesAdroll : ConsoleCommand
     {
-        public int? AdRollProfileId { get; set; }
+        public int? TradingDeskAccountId { get; set; }
+        //public int? AdRollProfileId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
         public override void ResetProperties()
         {
-            AdRollProfileId = null;
+            TradingDeskAccountId = null;
+            //AdRollProfileId = null;
             StartDate = null;
             EndDate = null;
         }
@@ -27,7 +29,8 @@ namespace CakeExtracter.Commands
         public TDSynchAdDailySummariesAdroll()
         {
             IsCommand("tdSynchAdDailySummariesAdroll", "synch AdDailySummaries for AdRoll");
-            HasOption<int>("p|adrollProfileId=", "AdRollProfile id (default = all)", c => AdRollProfileId = c);
+            HasOption<int>("a|tradingDeskAccountId=", "TradingDeskAccount Id (default = all)", c => TradingDeskAccountId = c);
+            //HasOption<int>("p|adrollProfileId=", "AdRollProfile id (default = all)", c => AdRollProfileId = c);
             HasOption<DateTime>("s|startDate=", "Start Date (default is 2 days ago)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
         }
@@ -55,12 +58,12 @@ namespace CakeExtracter.Commands
         {
             using (var db = new TDContext())
             {
-                var profiles = db.AdRollProfiles.AsQueryable();
-                if (this.AdRollProfileId.HasValue)
+                var tdas = db.TradingDeskAccounts.AsQueryable();
+                if (this.TradingDeskAccountId.HasValue)
                 {
-                    profiles = profiles.Where(p => p.Id == AdRollProfileId.Value);
+                    tdas = tdas.Where(t => t.TradingDeskAccountId == TradingDeskAccountId.Value);
                 }
-                return profiles.ToList();
+                return tdas.SelectMany(t => t.AdRollProfiles).ToList();
             }
         }
     }

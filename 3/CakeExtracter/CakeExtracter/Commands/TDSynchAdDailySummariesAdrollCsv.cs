@@ -1,9 +1,9 @@
-﻿using CakeExtracter.Common;
-using CakeExtracter.Etl.TradingDesk.Extracters;
-using CakeExtracter.Etl.TradingDesk.Loaders;
-using System;
+﻿using System;
 using System.ComponentModel.Composition;
 using System.IO;
+using CakeExtracter.Common;
+using CakeExtracter.Etl.TradingDesk.Extracters;
+using CakeExtracter.Etl.TradingDesk.Loaders;
 
 namespace CakeExtracter.Commands
 {
