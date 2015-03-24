@@ -2,6 +2,9 @@
 @{
     var ajaxOptions = RazorHelpers.GetAjaxOptions("searchProfilesTab");
     var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("searchProfilesTab", null, "Post");
+    var googleSearchAccounts = Model.GoogleSearchAccounts;
+    var bingSearchAccounts = Model.BingSearchAccounts;
+    var criteoSearchAccounts = Model.CriteoSearchAccounts;
 }
 
 @using (Ajax.BeginForm(ajaxOpts_Post))
@@ -10,26 +13,63 @@
     <fieldset>
         <legend>Edit Search Profile</legend>
         @Html.HiddenFor(m => m.SearchProfileId)
-        <table>
-            <tr>
-                <td>@Html.LabelFor(m => m.SearchProfileId, "Id")</td>
-                <td>@Html.DisplayFor(m => m.SearchProfileId)</td>
-            </tr>
-            <tr>
-                <td>@Html.LabelFor(m => m.SearchProfileName, "Profile Name")</td>
-                <td style="min-width:300px">@Html.EditorFor(m => m.SearchProfileName)</td>
-            </tr>
-            <tr>
-                <td>@Html.LabelFor(m => m.StartDayOfWeek)</td>
-                <td>@Html.EditorFor(m => m.StartDayOfWeek, "DayOfWeek")</td>
-            </tr>
-            <tr>
-                <td>@Html.LabelFor(m => m.ShowSearchChannels)</td>
-                <td>@Html.EditorFor(m => m.ShowSearchChannels)</td>
-            </tr>
-        </table>
-        <br />
-        <input type="submit" value="Save" />
-            &nbsp;@Ajax.ActionLink("cancel", "SearchProfiles", ajaxOptions)
+        <div style="float:left">
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(m => m.SearchProfileId, "Id")</td>
+                    <td>@Html.DisplayFor(m => m.SearchProfileId)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.SearchProfileName, "Profile Name")</td>
+                    <td style="min-width:300px">@Html.EditorFor(m => m.SearchProfileName)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.StartDayOfWeek)</td>
+                    <td>@Html.EditorFor(m => m.StartDayOfWeek, "DayOfWeek")</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.ShowSearchChannels)</td>
+                    <td>@Html.EditorFor(m => m.ShowSearchChannels) (normally leave this unchecked)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.ShowRevenue, "Retail/eCommerce")</td>
+                    <td>@Html.EditorFor(m => m.ShowRevenue)</td>
+                </tr>
+            </table>
+        </div>
+        <div style="float:left; margin-left:20px">
+            AdWords Accounts:<br />
+            @if (googleSearchAccounts != null && googleSearchAccounts.Count() > 0)
+            {
+                foreach (var sa in googleSearchAccounts) {
+                    <span>- @sa.Name [@sa.AccountCode]</span><br />
+                }
+            } else {
+                <span> (none)</span><br />
+            }
+            <br />
+            Bing Accounts:<br />
+            @if (bingSearchAccounts != null && bingSearchAccounts.Count() > 0)
+            {
+                foreach (var sa in bingSearchAccounts) {
+                    <span>- @sa.Name [@sa.AccountCode]</span><br />
+                }
+            } else {
+                <span> (none)</span><br />
+            }
+            @if (criteoSearchAccounts != null && criteoSearchAccounts.Count() > 0)
+            {
+                <br />
+                <span>Criteo Accounts:</span><br />
+                foreach (var sa in criteoSearchAccounts) {
+                    <span>- @sa.Name [@sa.AccountCode]</span><br />
+                }
+            }
+        </div>
+        <br style="clear:both" />
+        <div style="margin-top:10px">
+            <input type="submit" value="Save" />
+                &nbsp;@Ajax.ActionLink("cancel", "SearchProfiles", ajaxOptions)
+        </div>
     </fieldset>
 }

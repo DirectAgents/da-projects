@@ -57,6 +57,13 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return View(tdAccounts);
         }
 
+        [HttpGet]
+        public ActionResult NewAccount()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public ActionResult EditAccount(int tdaId)
         {
             var tdAccount = tdRepo.GetTradingDeskAccount(tdaId);

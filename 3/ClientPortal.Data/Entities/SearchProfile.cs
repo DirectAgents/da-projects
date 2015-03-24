@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -24,6 +25,22 @@ namespace ClientPortal.Data.Contexts
         public IOrderedEnumerable<SearchProfileContact> SearchProfileContactsOrdered
         {
             get { return this.SearchProfileContacts.OrderBy(sc => sc.Order); }
+        }
+
+        [NotMapped]
+        public IEnumerable<SearchAccount> GoogleSearchAccounts
+        {
+            get { return this.SearchAccounts == null ? null : this.SearchAccounts.Where(sa => sa.Channel == "Google"); }
+        }
+        [NotMapped]
+        public IEnumerable<SearchAccount> BingSearchAccounts
+        {
+            get { return this.SearchAccounts == null ? null : this.SearchAccounts.Where(sa => sa.Channel == "Bing"); }
+        }
+        [NotMapped]
+        public IEnumerable<SearchAccount> CriteoSearchAccounts
+        {
+            get { return this.SearchAccounts == null ? null : this.SearchAccounts.Where(sa => sa.Channel == "Criteo"); }
         }
 
         public DateTime GetNext_WeekStartDate(bool includeToday = false)

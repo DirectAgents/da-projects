@@ -11,6 +11,8 @@ namespace ClientPortal.Data.Services
 {
     public partial class TDRepository
     {
+        const int DEMO_IO = 1286935; //Betterment
+
         //TODO: eliminate this, remove DBMDailySummaries (in ETL code + db context)
         //      (replaced with GetDailyStatsSummaries...)
         private IQueryable<DBMDailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID)
@@ -94,17 +96,23 @@ namespace ClientPortal.Data.Services
                 new StatsSummary
                 {
                     Date = g.Key,
-                    //Impressions = g.Sum(s => s.Impressions),
-                    //Clicks = g.Sum(s => s.Clicks),
-                    //Conversions = g.Sum(s => s.Conversions),
-                    //Spend = g.Sum(s => s.Revenue)
-
-                    //FOR DEMO
-                    Impressions = g.Sum(s => s.Impressions) * 10,
-                    Clicks = g.Sum(s => s.Clicks) * 25,
-                    Conversions = g.Sum(s => s.Conversions) * 10,
-                    Spend = g.Sum(s => s.Revenue) * 10
+                    Impressions = g.Sum(s => s.Impressions),
+                    Clicks = g.Sum(s => s.Clicks),
+                    Conversions = g.Sum(s => s.Conversions),
+                    Spend = g.Sum(s => s.Revenue)
                 }).ToList();
+            if (insertionOrderID == DEMO_IO)
+            {
+                statsSummaries = statsSummaries.Select(s =>
+                    new StatsSummary
+                    {
+                        Date = s.Date,
+                        Impressions = s.Impressions * 10,
+                        Clicks = s.Clicks * 25,
+                        Conversions = s.Conversions * 10,
+                        Spend = s.Spend * 10
+                    }).ToList();
+            }
             return statsSummaries;
         }
 
@@ -133,17 +141,24 @@ namespace ClientPortal.Data.Services
                 {
                     CreativeID = g.Key.CreativeID,
                     CreativeName = g.Key.CreativeName,
-                    //Impressions = g.Sum(c => c.Impressions),
-                    //Clicks = g.Sum(c => c.Clicks),
-                    //Conversions = g.Sum(c => c.Conversions),
-                    //Spend = g.Sum(c => c.Revenue)
-
-                    // FOR DEMO
-                    Impressions = g.Sum(c => c.Impressions) * 10,
-                    Clicks = g.Sum(c => c.Clicks) * 25,
-                    Conversions = g.Sum(c => c.Conversions) * 10,
-                    Spend = g.Sum(c => c.Revenue) * 10
+                    Impressions = g.Sum(c => c.Impressions),
+                    Clicks = g.Sum(c => c.Clicks),
+                    Conversions = g.Sum(c => c.Conversions),
+                    Spend = g.Sum(c => c.Revenue)
                 }).ToList();
+            if (insertionOrderID == DEMO_IO)
+            {
+                creativeStatsSummaries = creativeStatsSummaries.Select(s =>
+                    new CreativeStatsSummary
+                    {
+                        CreativeID = s.CreativeID,
+                        CreativeName = s.CreativeName,
+                        Impressions = s.Impressions * 10,
+                        Clicks = s.Clicks * 25,
+                        Conversions = s.Conversions * 10,
+                        Spend = s.Spend * 10
+                    }).ToList();
+            }
             return creativeStatsSummaries;
         }
 
