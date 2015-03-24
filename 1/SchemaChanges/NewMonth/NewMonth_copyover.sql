@@ -4,26 +4,8 @@
 --Disable triggers
 DISABLE TRIGGER tr_Affiliate_IU ON Affiliate
 
---Prepare tables
-delete from Source
-delete from UnitType
-delete from ItemAccountingStatus
-delete from ItemReportingStatus
-delete from Campaign
-delete from Affiliate
-delete from MediaBuyer
-delete from AccountManager
-delete from AdManager
-delete from Advertiser
-delete from Vendor
-delete from CampaignStatus
-delete from DTCampaignStatus
-delete from Currency
-delete from NetTermType
-delete from AffiliatePaymentMethod
-
 --Copy from previous month; *SET DATABASES!*
-exec DAMain1.dbo.EOMcopy 'DADatabaseA...2014','DADatabaseB...2014'
+exec DAMain1.dbo.EOMcopy 'DADatabaseA...2015','DADatabaseB...2015'
 
 --Clear affiliate dates
 UPDATE Affiliate SET date_created=NULL, date_modified=NULL
@@ -41,6 +23,8 @@ ENABLE TRIGGER tr_Affiliate_IU ON Affiliate
 
 --Initialize audit
 :r "C:\GitHub\da-projects-kevin\1\SchemaChanges\AuditScripts\autoaudit 2.00h.sql"
+
+USE DADatabaseB...2015
 
 --Add audits
 :r "C:\GitHub\da-projects-kevin\1\SchemaChanges\AuditScripts\AddAuditTables.sql"

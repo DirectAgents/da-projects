@@ -55,18 +55,18 @@ SELECT id, pid, affid, source_id, unit_type_id, revenue_currency_id, cost_curren
                 </InsertCommand>
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>SELECT        Item.id, Item.pid, Item.affid, Item.source_id, Item.unit_type_id, Item.revenue_currency_id, Item.cost_currency_id, Item.revenue_per_unit, Item.cost_per_unit, 
-                         Item.num_units, Item.notes, Item.item_reporting_status_id, Item.total_revenue, Item.total_cost, Item.margin, UnitType.name, Source.name AS SourceName, 
-                         Advertiser.id AS advertiser_id, CampaignStatus.name AS campaign_status
-FROM            Item INNER JOIN
-                         Campaign ON Item.pid = Campaign.pid INNER JOIN
-                         Advertiser ON Campaign.advertiser_id = Advertiser.id INNER JOIN
-                         UnitType ON Item.unit_type_id = UnitType.id INNER JOIN
-                         Source ON Item.source_id = Source.id INNER JOIN
-                         CampaignStatus ON Item.campaign_status_id = CampaignStatus.id
-WHERE        (NOT (UnitType.name LIKE '%(DT)%')) AND (Item.item_reporting_status_id = 1 OR
-                         Item.item_reporting_status_id = 2 OR
-                         Item.item_reporting_status_id = 4) AND (Source.name &lt;&gt; 'Cake')</CommandText>
+                    <CommandText>SELECT     Item.id, Item.pid, Item.affid, Item.source_id, Item.unit_type_id, Item.revenue_currency_id, Item.cost_currency_id, Item.revenue_per_unit, Item.cost_per_unit, 
+                      Item.num_units, Item.notes, Item.item_reporting_status_id, Item.total_revenue, Item.total_cost, Item.margin, UnitType.name, Source.name AS SourceName, 
+                      Advertiser.id AS advertiser_id, CampaignStatus.name AS campaign_status, Item.campaign_status_id
+FROM         Item INNER JOIN
+                      Campaign ON Item.pid = Campaign.pid INNER JOIN
+                      Advertiser ON Campaign.advertiser_id = Advertiser.id INNER JOIN
+                      UnitType ON Item.unit_type_id = UnitType.id INNER JOIN
+                      Source ON Item.source_id = Source.id INNER JOIN
+                      CampaignStatus ON Item.campaign_status_id = CampaignStatus.id
+WHERE     (NOT (UnitType.name LIKE '%(DT)%')) AND (Item.item_reporting_status_id = 1 OR
+                      Item.item_reporting_status_id = 2 OR
+                      Item.item_reporting_status_id = 4) AND (Source.name &lt;&gt; 'Cake')</CommandText>
                     <Parameters />
                   </DbCommand>
                 </SelectCommand>
@@ -129,24 +129,25 @@ SELECT id, pid, affid, source_id, unit_type_id, revenue_currency_id, cost_curren
               <Mapping SourceColumn="SourceName" DataSetColumn="SourceName" />
               <Mapping SourceColumn="advertiser_id" DataSetColumn="advertiser_id" />
               <Mapping SourceColumn="campaign_status" DataSetColumn="campaign_status" />
+              <Mapping SourceColumn="campaign_status_id" DataSetColumn="campaign_status_id" />
             </Mappings>
             <Sources>
               <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="FillBy" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetDataBy" GeneratorSourceName="FillBy" GetMethodModifier="Public" GetMethodName="GetDataBy" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="FillBy">
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="true">
-                    <CommandText>SELECT        Item.id, Item.pid, Item.affid, Item.source_id, Item.unit_type_id, Item.revenue_currency_id, Item.cost_currency_id, Item.revenue_per_unit, Item.cost_per_unit, 
-                         Item.num_units, Item.notes, Item.item_reporting_status_id, Item.total_revenue, Item.total_cost, Item.margin, UnitType.name, Source.name AS SourceName, 
-                         Advertiser.id AS advertiser_id, CampaignStatus.name AS campaign_status
-FROM            Item INNER JOIN
-                         Campaign ON Item.pid = Campaign.pid INNER JOIN
-                         Advertiser ON Campaign.advertiser_id = Advertiser.id INNER JOIN
-                         UnitType ON Item.unit_type_id = UnitType.id INNER JOIN
-                         AccountManager ON Campaign.account_manager_id = AccountManager.id INNER JOIN
-                         Source ON Item.source_id = Source.id INNER JOIN
-                         CampaignStatus ON Item.campaign_status_id = CampaignStatus.id
-WHERE        (NOT (UnitType.name LIKE '%(DT)%')) AND (AccountManager.name = @1) AND (Item.item_reporting_status_id = 1 OR
-                         Item.item_reporting_status_id = 2 OR
-                         Item.item_reporting_status_id = 4) AND (Source.name &lt;&gt; 'Cake')</CommandText>
+                    <CommandText>SELECT     Item.id, Item.pid, Item.affid, Item.source_id, Item.unit_type_id, Item.revenue_currency_id, Item.cost_currency_id, Item.revenue_per_unit, Item.cost_per_unit, 
+                      Item.num_units, Item.notes, Item.item_reporting_status_id, Item.total_revenue, Item.total_cost, Item.margin, UnitType.name, Source.name AS SourceName, 
+                      Advertiser.id AS advertiser_id, CampaignStatus.name AS campaign_status, Item.campaign_status_id
+FROM         Item INNER JOIN
+                      Campaign ON Item.pid = Campaign.pid INNER JOIN
+                      Advertiser ON Campaign.advertiser_id = Advertiser.id INNER JOIN
+                      UnitType ON Item.unit_type_id = UnitType.id INNER JOIN
+                      AccountManager ON Campaign.account_manager_id = AccountManager.id INNER JOIN
+                      Source ON Item.source_id = Source.id INNER JOIN
+                      CampaignStatus ON Item.campaign_status_id = CampaignStatus.id
+WHERE     (NOT (UnitType.name LIKE '%(DT)%')) AND (AccountManager.name = @1) AND (Item.item_reporting_status_id = 1 OR
+                      Item.item_reporting_status_id = 2 OR
+                      Item.item_reporting_status_id = 4) AND (Source.name &lt;&gt; 'Cake')</CommandText>
                     <Parameters>
                       <Parameter AllowDbNull="false" AutogeneratedName="1" ColumnName="name" DataSourceName="DADatabaseR1.dbo.AccountManager" DataTypeServer="varchar(50)" DbType="AnsiString" Direction="Input" ParameterName="@1" Precision="0" ProviderType="VarChar" Scale="0" Size="50" SourceColumn="name" SourceColumnNullMapping="false" SourceVersion="Current" />
                     </Parameters>
@@ -610,7 +611,7 @@ SELECT id, name FROM ItemReportingStatus WHERE (id = @id)</CommandText>
   <xs:element name="ExtraItemDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="ExtraItemDataSet" msprop:Generator_UserDSName="ExtraItemDataSet">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="Item" msprop:Generator_TableClassName="ItemDataTable" msprop:Generator_TableVarName="tableItem" msprop:Generator_RowChangedName="ItemRowChanged" msprop:Generator_TablePropName="Item" msprop:Generator_RowDeletingName="ItemRowDeleting" msprop:Generator_RowChangingName="ItemRowChanging" msprop:Generator_RowEvHandlerName="ItemRowChangeEventHandler" msprop:Generator_RowDeletedName="ItemRowDeleted" msprop:Generator_RowClassName="ItemRow" msprop:Generator_UserTableName="Item" msprop:Generator_RowEvArgName="ItemRowChangeEvent">
+        <xs:element name="Item" msprop:Generator_TableClassName="ItemDataTable" msprop:Generator_TableVarName="tableItem" msprop:Generator_TablePropName="Item" msprop:Generator_RowDeletingName="ItemRowDeleting" msprop:Generator_RowChangingName="ItemRowChanging" msprop:Generator_RowEvHandlerName="ItemRowChangeEventHandler" msprop:Generator_RowDeletedName="ItemRowDeleted" msprop:Generator_UserTableName="Item" msprop:Generator_RowChangedName="ItemRowChanged" msprop:Generator_RowEvArgName="ItemRowChangeEvent" msprop:Generator_RowClassName="ItemRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
@@ -659,10 +660,11 @@ SELECT id, name FROM ItemReportingStatus WHERE (id = @id)</CommandText>
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
+              <xs:element name="campaign_status_id" msprop:Generator_ColumnVarNameInTable="columncampaign_status_id" msprop:Generator_ColumnPropNameInRow="campaign_status_id" msprop:Generator_ColumnPropNameInTable="campaign_status_idColumn" msprop:Generator_UserColumnName="campaign_status_id" type="xs:int" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="Affiliate" msprop:Generator_TableClassName="AffiliateDataTable" msprop:Generator_TableVarName="tableAffiliate" msprop:Generator_RowChangedName="AffiliateRowChanged" msprop:Generator_TablePropName="Affiliate" msprop:Generator_RowDeletingName="AffiliateRowDeleting" msprop:Generator_RowChangingName="AffiliateRowChanging" msprop:Generator_RowEvHandlerName="AffiliateRowChangeEventHandler" msprop:Generator_RowDeletedName="AffiliateRowDeleted" msprop:Generator_RowClassName="AffiliateRow" msprop:Generator_UserTableName="Affiliate" msprop:Generator_RowEvArgName="AffiliateRowChangeEvent">
+        <xs:element name="Affiliate" msprop:Generator_TableClassName="AffiliateDataTable" msprop:Generator_TableVarName="tableAffiliate" msprop:Generator_TablePropName="Affiliate" msprop:Generator_RowDeletingName="AffiliateRowDeleting" msprop:Generator_RowChangingName="AffiliateRowChanging" msprop:Generator_RowEvHandlerName="AffiliateRowChangeEventHandler" msprop:Generator_RowDeletedName="AffiliateRowDeleted" msprop:Generator_UserTableName="Affiliate" msprop:Generator_RowChangedName="AffiliateRowChanged" msprop:Generator_RowEvArgName="AffiliateRowChangeEvent" msprop:Generator_RowClassName="AffiliateRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
@@ -700,7 +702,7 @@ SELECT id, name FROM ItemReportingStatus WHERE (id = @id)</CommandText>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="Campaign" msprop:Generator_TableClassName="CampaignDataTable" msprop:Generator_TableVarName="tableCampaign" msprop:Generator_RowChangedName="CampaignRowChanged" msprop:Generator_TablePropName="Campaign" msprop:Generator_RowDeletingName="CampaignRowDeleting" msprop:Generator_RowChangingName="CampaignRowChanging" msprop:Generator_RowEvHandlerName="CampaignRowChangeEventHandler" msprop:Generator_RowDeletedName="CampaignRowDeleted" msprop:Generator_RowClassName="CampaignRow" msprop:Generator_UserTableName="Campaign" msprop:Generator_RowEvArgName="CampaignRowChangeEvent">
+        <xs:element name="Campaign" msprop:Generator_TableClassName="CampaignDataTable" msprop:Generator_TableVarName="tableCampaign" msprop:Generator_TablePropName="Campaign" msprop:Generator_RowDeletingName="CampaignRowDeleting" msprop:Generator_RowChangingName="CampaignRowChanging" msprop:Generator_RowEvHandlerName="CampaignRowChangeEventHandler" msprop:Generator_RowDeletedName="CampaignRowDeleted" msprop:Generator_UserTableName="Campaign" msprop:Generator_RowChangedName="CampaignRowChanged" msprop:Generator_RowEvArgName="CampaignRowChangeEvent" msprop:Generator_RowClassName="CampaignRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
@@ -729,7 +731,7 @@ SELECT id, name FROM ItemReportingStatus WHERE (id = @id)</CommandText>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="Advertiser" msprop:Generator_TableClassName="AdvertiserDataTable" msprop:Generator_TableVarName="tableAdvertiser" msprop:Generator_RowChangedName="AdvertiserRowChanged" msprop:Generator_TablePropName="Advertiser" msprop:Generator_RowDeletingName="AdvertiserRowDeleting" msprop:Generator_RowChangingName="AdvertiserRowChanging" msprop:Generator_RowEvHandlerName="AdvertiserRowChangeEventHandler" msprop:Generator_RowDeletedName="AdvertiserRowDeleted" msprop:Generator_RowClassName="AdvertiserRow" msprop:Generator_UserTableName="Advertiser" msprop:Generator_RowEvArgName="AdvertiserRowChangeEvent">
+        <xs:element name="Advertiser" msprop:Generator_TableClassName="AdvertiserDataTable" msprop:Generator_TableVarName="tableAdvertiser" msprop:Generator_TablePropName="Advertiser" msprop:Generator_RowDeletingName="AdvertiserRowDeleting" msprop:Generator_RowChangingName="AdvertiserRowChanging" msprop:Generator_RowEvHandlerName="AdvertiserRowChangeEventHandler" msprop:Generator_RowDeletedName="AdvertiserRowDeleted" msprop:Generator_UserTableName="Advertiser" msprop:Generator_RowChangedName="AdvertiserRowChanged" msprop:Generator_RowEvArgName="AdvertiserRowChangeEvent" msprop:Generator_RowClassName="AdvertiserRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
@@ -743,7 +745,7 @@ SELECT id, name FROM ItemReportingStatus WHERE (id = @id)</CommandText>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="Currency" msprop:Generator_TableClassName="CurrencyDataTable" msprop:Generator_TableVarName="tableCurrency" msprop:Generator_RowChangedName="CurrencyRowChanged" msprop:Generator_TablePropName="Currency" msprop:Generator_RowDeletingName="CurrencyRowDeleting" msprop:Generator_RowChangingName="CurrencyRowChanging" msprop:Generator_RowEvHandlerName="CurrencyRowChangeEventHandler" msprop:Generator_RowDeletedName="CurrencyRowDeleted" msprop:Generator_RowClassName="CurrencyRow" msprop:Generator_UserTableName="Currency" msprop:Generator_RowEvArgName="CurrencyRowChangeEvent">
+        <xs:element name="Currency" msprop:Generator_TableClassName="CurrencyDataTable" msprop:Generator_TableVarName="tableCurrency" msprop:Generator_TablePropName="Currency" msprop:Generator_RowDeletingName="CurrencyRowDeleting" msprop:Generator_RowChangingName="CurrencyRowChanging" msprop:Generator_RowEvHandlerName="CurrencyRowChangeEventHandler" msprop:Generator_RowDeletedName="CurrencyRowDeleted" msprop:Generator_UserTableName="Currency" msprop:Generator_RowChangedName="CurrencyRowChanged" msprop:Generator_RowEvArgName="CurrencyRowChangeEvent" msprop:Generator_RowClassName="CurrencyRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
@@ -758,7 +760,7 @@ SELECT id, name FROM ItemReportingStatus WHERE (id = @id)</CommandText>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="UnitType" msprop:Generator_TableClassName="UnitTypeDataTable" msprop:Generator_TableVarName="tableUnitType" msprop:Generator_RowChangedName="UnitTypeRowChanged" msprop:Generator_TablePropName="UnitType" msprop:Generator_RowDeletingName="UnitTypeRowDeleting" msprop:Generator_RowChangingName="UnitTypeRowChanging" msprop:Generator_RowEvHandlerName="UnitTypeRowChangeEventHandler" msprop:Generator_RowDeletedName="UnitTypeRowDeleted" msprop:Generator_RowClassName="UnitTypeRow" msprop:Generator_UserTableName="UnitType" msprop:Generator_RowEvArgName="UnitTypeRowChangeEvent">
+        <xs:element name="UnitType" msprop:Generator_TableClassName="UnitTypeDataTable" msprop:Generator_TableVarName="tableUnitType" msprop:Generator_TablePropName="UnitType" msprop:Generator_RowDeletingName="UnitTypeRowDeleting" msprop:Generator_RowChangingName="UnitTypeRowChanging" msprop:Generator_RowEvHandlerName="UnitTypeRowChangeEventHandler" msprop:Generator_RowDeletedName="UnitTypeRowDeleted" msprop:Generator_UserTableName="UnitType" msprop:Generator_RowChangedName="UnitTypeRowChanged" msprop:Generator_RowEvArgName="UnitTypeRowChangeEvent" msprop:Generator_RowClassName="UnitTypeRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
@@ -772,7 +774,7 @@ SELECT id, name FROM ItemReportingStatus WHERE (id = @id)</CommandText>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="Source" msprop:Generator_TableClassName="SourceDataTable" msprop:Generator_TableVarName="tableSource" msprop:Generator_RowChangedName="SourceRowChanged" msprop:Generator_TablePropName="Source" msprop:Generator_RowDeletingName="SourceRowDeleting" msprop:Generator_RowChangingName="SourceRowChanging" msprop:Generator_RowEvHandlerName="SourceRowChangeEventHandler" msprop:Generator_RowDeletedName="SourceRowDeleted" msprop:Generator_RowClassName="SourceRow" msprop:Generator_UserTableName="Source" msprop:Generator_RowEvArgName="SourceRowChangeEvent">
+        <xs:element name="Source" msprop:Generator_TableClassName="SourceDataTable" msprop:Generator_TableVarName="tableSource" msprop:Generator_TablePropName="Source" msprop:Generator_RowDeletingName="SourceRowDeleting" msprop:Generator_RowChangingName="SourceRowChanging" msprop:Generator_RowEvHandlerName="SourceRowChangeEventHandler" msprop:Generator_RowDeletedName="SourceRowDeleted" msprop:Generator_UserTableName="Source" msprop:Generator_RowChangedName="SourceRowChanged" msprop:Generator_RowEvArgName="SourceRowChangeEvent" msprop:Generator_RowClassName="SourceRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
@@ -786,7 +788,7 @@ SELECT id, name FROM ItemReportingStatus WHERE (id = @id)</CommandText>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="ItemReportingStatus" msprop:Generator_TableClassName="ItemReportingStatusDataTable" msprop:Generator_TableVarName="tableItemReportingStatus" msprop:Generator_RowChangedName="ItemReportingStatusRowChanged" msprop:Generator_TablePropName="ItemReportingStatus" msprop:Generator_RowDeletingName="ItemReportingStatusRowDeleting" msprop:Generator_RowChangingName="ItemReportingStatusRowChanging" msprop:Generator_RowEvHandlerName="ItemReportingStatusRowChangeEventHandler" msprop:Generator_RowDeletedName="ItemReportingStatusRowDeleted" msprop:Generator_RowClassName="ItemReportingStatusRow" msprop:Generator_UserTableName="ItemReportingStatus" msprop:Generator_RowEvArgName="ItemReportingStatusRowChangeEvent">
+        <xs:element name="ItemReportingStatus" msprop:Generator_TableClassName="ItemReportingStatusDataTable" msprop:Generator_TableVarName="tableItemReportingStatus" msprop:Generator_TablePropName="ItemReportingStatus" msprop:Generator_RowDeletingName="ItemReportingStatusRowDeleting" msprop:Generator_RowChangingName="ItemReportingStatusRowChanging" msprop:Generator_RowEvHandlerName="ItemReportingStatusRowChangeEventHandler" msprop:Generator_RowDeletedName="ItemReportingStatusRowDeleted" msprop:Generator_UserTableName="ItemReportingStatus" msprop:Generator_RowChangedName="ItemReportingStatusRowChanged" msprop:Generator_RowEvArgName="ItemReportingStatusRowChangeEvent" msprop:Generator_RowClassName="ItemReportingStatusRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
@@ -837,15 +839,15 @@ SELECT id, name FROM ItemReportingStatus WHERE (id = @id)</CommandText>
   </xs:element>
   <xs:annotation>
     <xs:appinfo>
-      <msdata:Relationship name="FK_Item_Affiliate" msdata:parent="Affiliate" msdata:child="Item" msdata:parentkey="affid" msdata:childkey="affid" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRows" msprop:Generator_UserRelationName="FK_Item_Affiliate" msprop:Generator_RelationVarName="relationFK_Item_Affiliate" msprop:Generator_UserParentTable="Affiliate" msprop:Generator_ParentPropName="AffiliateRow" />
-      <msdata:Relationship name="FK_Item_Campaign" msdata:parent="Campaign" msdata:child="Item" msdata:parentkey="pid" msdata:childkey="pid" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRows" msprop:Generator_UserRelationName="FK_Item_Campaign" msprop:Generator_RelationVarName="relationFK_Item_Campaign" msprop:Generator_UserParentTable="Campaign" msprop:Generator_ParentPropName="CampaignRow" />
-      <msdata:Relationship name="FK_Campaign_Advertiser" msdata:parent="Advertiser" msdata:child="Campaign" msdata:parentkey="id" msdata:childkey="advertiser_id" msprop:Generator_UserChildTable="Campaign" msprop:Generator_ChildPropName="GetCampaignRows" msprop:Generator_UserRelationName="FK_Campaign_Advertiser" msprop:Generator_RelationVarName="relationFK_Campaign_Advertiser" msprop:Generator_UserParentTable="Advertiser" msprop:Generator_ParentPropName="AdvertiserRow" />
-      <msdata:Relationship name="FK_Item_Currency" msdata:parent="Currency" msdata:child="Item" msdata:parentkey="id" msdata:childkey="revenue_currency_id" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRowsByFK_Item_Currency" msprop:Generator_UserRelationName="FK_Item_Currency" msprop:Generator_RelationVarName="relationFK_Item_Currency" msprop:Generator_UserParentTable="Currency" msprop:Generator_ParentPropName="CurrencyRowByFK_Item_Currency" />
-      <msdata:Relationship name="FK_Item_Currency1" msdata:parent="Currency" msdata:child="Item" msdata:parentkey="id" msdata:childkey="cost_currency_id" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRowsByFK_Item_Currency1" msprop:Generator_UserRelationName="FK_Item_Currency1" msprop:Generator_RelationVarName="relationFK_Item_Currency1" msprop:Generator_UserParentTable="Currency" msprop:Generator_ParentPropName="CurrencyRowByFK_Item_Currency1" />
-      <msdata:Relationship name="FK_Affiliate_Currency" msdata:parent="Currency" msdata:child="Affiliate" msdata:parentkey="id" msdata:childkey="currency_id" msprop:Generator_UserChildTable="Affiliate" msprop:Generator_ChildPropName="GetAffiliateRows" msprop:Generator_UserRelationName="FK_Affiliate_Currency" msprop:Generator_RelationVarName="relationFK_Affiliate_Currency" msprop:Generator_UserParentTable="Currency" msprop:Generator_ParentPropName="CurrencyRow" />
-      <msdata:Relationship name="FK_Item_UnitType" msdata:parent="UnitType" msdata:child="Item" msdata:parentkey="id" msdata:childkey="unit_type_id" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRows" msprop:Generator_UserRelationName="FK_Item_UnitType" msprop:Generator_RelationVarName="relationFK_Item_UnitType" msprop:Generator_UserParentTable="UnitType" msprop:Generator_ParentPropName="UnitTypeRow" />
-      <msdata:Relationship name="FK_Item_Source" msdata:parent="Source" msdata:child="Item" msdata:parentkey="id" msdata:childkey="source_id" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRows" msprop:Generator_UserRelationName="FK_Item_Source" msprop:Generator_RelationVarName="relationFK_Item_Source" msprop:Generator_UserParentTable="Source" msprop:Generator_ParentPropName="SourceRow" />
-      <msdata:Relationship name="FK_Item_ItemReportingStatus" msdata:parent="ItemReportingStatus" msdata:child="Item" msdata:parentkey="id" msdata:childkey="item_reporting_status_id" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRows" msprop:Generator_UserRelationName="FK_Item_ItemReportingStatus" msprop:Generator_RelationVarName="relationFK_Item_ItemReportingStatus" msprop:Generator_UserParentTable="ItemReportingStatus" msprop:Generator_ParentPropName="ItemReportingStatusRow" />
+      <msdata:Relationship name="FK_Item_Affiliate" msdata:parent="Affiliate" msdata:child="Item" msdata:parentkey="affid" msdata:childkey="affid" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRows" msprop:Generator_UserRelationName="FK_Item_Affiliate" msprop:Generator_ParentPropName="AffiliateRow" msprop:Generator_RelationVarName="relationFK_Item_Affiliate" msprop:Generator_UserParentTable="Affiliate" />
+      <msdata:Relationship name="FK_Item_Campaign" msdata:parent="Campaign" msdata:child="Item" msdata:parentkey="pid" msdata:childkey="pid" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRows" msprop:Generator_UserRelationName="FK_Item_Campaign" msprop:Generator_ParentPropName="CampaignRow" msprop:Generator_RelationVarName="relationFK_Item_Campaign" msprop:Generator_UserParentTable="Campaign" />
+      <msdata:Relationship name="FK_Campaign_Advertiser" msdata:parent="Advertiser" msdata:child="Campaign" msdata:parentkey="id" msdata:childkey="advertiser_id" msprop:Generator_UserChildTable="Campaign" msprop:Generator_ChildPropName="GetCampaignRows" msprop:Generator_UserRelationName="FK_Campaign_Advertiser" msprop:Generator_ParentPropName="AdvertiserRow" msprop:Generator_RelationVarName="relationFK_Campaign_Advertiser" msprop:Generator_UserParentTable="Advertiser" />
+      <msdata:Relationship name="FK_Item_Currency" msdata:parent="Currency" msdata:child="Item" msdata:parentkey="id" msdata:childkey="revenue_currency_id" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRowsByFK_Item_Currency" msprop:Generator_UserRelationName="FK_Item_Currency" msprop:Generator_ParentPropName="CurrencyRowByFK_Item_Currency" msprop:Generator_RelationVarName="relationFK_Item_Currency" msprop:Generator_UserParentTable="Currency" />
+      <msdata:Relationship name="FK_Item_Currency1" msdata:parent="Currency" msdata:child="Item" msdata:parentkey="id" msdata:childkey="cost_currency_id" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRowsByFK_Item_Currency1" msprop:Generator_UserRelationName="FK_Item_Currency1" msprop:Generator_ParentPropName="CurrencyRowByFK_Item_Currency1" msprop:Generator_RelationVarName="relationFK_Item_Currency1" msprop:Generator_UserParentTable="Currency" />
+      <msdata:Relationship name="FK_Affiliate_Currency" msdata:parent="Currency" msdata:child="Affiliate" msdata:parentkey="id" msdata:childkey="currency_id" msprop:Generator_UserChildTable="Affiliate" msprop:Generator_ChildPropName="GetAffiliateRows" msprop:Generator_UserRelationName="FK_Affiliate_Currency" msprop:Generator_ParentPropName="CurrencyRow" msprop:Generator_RelationVarName="relationFK_Affiliate_Currency" msprop:Generator_UserParentTable="Currency" />
+      <msdata:Relationship name="FK_Item_UnitType" msdata:parent="UnitType" msdata:child="Item" msdata:parentkey="id" msdata:childkey="unit_type_id" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRows" msprop:Generator_UserRelationName="FK_Item_UnitType" msprop:Generator_ParentPropName="UnitTypeRow" msprop:Generator_RelationVarName="relationFK_Item_UnitType" msprop:Generator_UserParentTable="UnitType" />
+      <msdata:Relationship name="FK_Item_Source" msdata:parent="Source" msdata:child="Item" msdata:parentkey="id" msdata:childkey="source_id" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRows" msprop:Generator_UserRelationName="FK_Item_Source" msprop:Generator_ParentPropName="SourceRow" msprop:Generator_RelationVarName="relationFK_Item_Source" msprop:Generator_UserParentTable="Source" />
+      <msdata:Relationship name="FK_Item_ItemReportingStatus" msdata:parent="ItemReportingStatus" msdata:child="Item" msdata:parentkey="id" msdata:childkey="item_reporting_status_id" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRows" msprop:Generator_UserRelationName="FK_Item_ItemReportingStatus" msprop:Generator_ParentPropName="ItemReportingStatusRow" msprop:Generator_RelationVarName="relationFK_Item_ItemReportingStatus" msprop:Generator_UserParentTable="ItemReportingStatus" />
     </xs:appinfo>
   </xs:annotation>
 </xs:schema>

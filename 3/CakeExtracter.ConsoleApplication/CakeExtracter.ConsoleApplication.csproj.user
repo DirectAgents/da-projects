@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>synchSearchDailySummariesAnalytics -s=9/1/13 -e=9/15/13</StartArguments>
+    <StartArguments>synchSearchDailySummariesBing -p=26 -s=1/1/15</StartArguments>
     <StartWorkingDirectory>C:\GitHub\da-projects-kevin\3\CakeExtracter.ConsoleApplication\bin\Debug\</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup>
@@ -13,5 +13,6 @@
     <ErrorReportUrlHistory />
     <FallbackCulture>en-US</FallbackCulture>
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
+    <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
 </Project>
