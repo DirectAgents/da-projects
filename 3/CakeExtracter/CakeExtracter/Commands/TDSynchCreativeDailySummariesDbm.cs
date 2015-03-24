@@ -27,7 +27,7 @@ namespace CakeExtracter.Commands
         public TDSynchCreativeDailySummariesDbm()
         {
             IsCommand("tdSynchCreativeDailySummariesDbm", "synch CreativeDailySummaries for DBM Report");
-            HasOption<int>("a|tradingDeskAccountId=", "TradingDeskAccount Id (default = all)", c => TradingDeskAccountId = c);
+            HasOption<int>("t|tradingDeskAccountId=", "TradingDeskAccount Id (default = all)", c => TradingDeskAccountId = c);
             //HasOption<DateTime>("s|startDate=", "Start Date (default is 2 days ago)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
             // Note: endDate is the last day of the desired stats (a report goes back one month)
@@ -68,7 +68,8 @@ namespace CakeExtracter.Commands
                 {
                     tdas = tdas.Where(t => t.TradingDeskAccountId == TradingDeskAccountId.Value);
                 }
-                return tdas.SelectMany(t => t.InsertionOrders).ToList();
+                return tdas.SelectMany(t => t.InsertionOrders).Where(io => io.Bucket != null).ToList();
+                //Note: this excludes IOs that don't have a TradingDeskAccountId or a Bucket
             }
         }
     }

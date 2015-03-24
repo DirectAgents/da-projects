@@ -181,7 +181,7 @@ namespace BingAds
                 // If the call succeeds, stop polling. If the call or 
                 // download fails, the call throws a fault.
 
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 15; i++)
                 {
                     LogInfo(String.Format("Will check if the report is ready in {0} seconds...", waitTime.Seconds));
                     Thread.Sleep(waitTime);

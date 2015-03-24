@@ -24,7 +24,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            Logger.Info("Extracting DailySummaries reports from {0} buckets - from {1:d} to {2:d}", bucketNames.Count(), dateRange.FromDate, dateRange.ToDate);
+            string toPart = (dateRange.FromDate == dateRange.ToDate) ? "" : string.Format(" to {0:d}", dateRange.ToDate);
+            Logger.Info("Extracting DailySummaries reports from {0} buckets - report date(s) {1:d}{2}", bucketNames.Count(), dateRange.FromDate, toPart);
             var items = EnumerateRows();
             Add(items);
             End();

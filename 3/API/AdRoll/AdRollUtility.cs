@@ -65,6 +65,10 @@ namespace AdRoll
         // --- Methods ---
         public List<AdSummary> AdSummaries(DateTime date, string advertisableId)
         {
+            //Note: We can only do one day at a time because the API allows either:
+            // - breakdown by ad for a specified date or daterange (and advertisable)
+            // - breakdown by day for a specified ad or group of ads (within the specified advertisable)
+            // (but not both) ... so we'd need to know the Eid for each ad and make a call for each one.
             var request = new AdReportRequest
             {
                 start_date = date.ToString("MM-dd-yyyy"),
@@ -77,13 +81,28 @@ namespace AdRoll
                 LogInfo("No AdSummaries found");
                 return new List<AdSummary>();
             }
+            var adSummaries = response.results;
+
+            //Note: As is, the API returns an adsummary for each of the advertisable's ads, even though many of them have all zeros.
+            // If we decide not to include zeros, think about the situation where an adsummary was non-zero then later because all-zeros. It wouldn't get updated.
+
+            //bool includeZeros = true;
+            //if (!includeZeros)
+            //{
+            //    adSummaries = new List<AdSummary>();
+            //    foreach (var adSum in response.results)
+            //    {
+            //        if (!adSum.AllZeros())
+            //            adSummaries.Add(adSum);
+            //    }
+            //}
 
             // Set the date for each summary, b/c the API doesn't include it
-            foreach (var adSum in response.results)
+            foreach (var adSum in adSummaries)
             {
                 adSum.date = date;
             }
-            return response.results;
+            return adSummaries;
         }
     }
 }

@@ -25,5 +25,10 @@ namespace AdRoll.Entities
         public int total_conversions { get; set; }
         // adjusted_total_conversions
         public int clicks { get; set; }
+
+        public bool AllZeros()
+        {
+            return (impressions == 0 && clicks == 0 && total_conversions == 0 && cost_USD == 0);
+        }
     }
 }

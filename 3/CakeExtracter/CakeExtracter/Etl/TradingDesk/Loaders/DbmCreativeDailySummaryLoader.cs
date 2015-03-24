@@ -73,7 +73,7 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                     string creativeName = tuple.Item2;
 
                     //FOR DEMO
-                    if (creativeName.StartsWith("Betterment "))
+                    if (creativeName.StartsWith("Betterment ") || creativeName.StartsWith("Betterment_"))
                         creativeName = creativeName.Substring(11);
 
                     if (int.TryParse(tuple.Item1, out creativeID) && int.TryParse(tuple.Item3, out insertionOrderID))

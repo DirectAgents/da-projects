@@ -29,17 +29,17 @@ namespace CakeExtracter.Commands
         public TDSynchAdDailySummariesAdroll()
         {
             IsCommand("tdSynchAdDailySummariesAdroll", "synch AdDailySummaries for AdRoll");
-            HasOption<int>("a|tradingDeskAccountId=", "TradingDeskAccount Id (default = all)", c => TradingDeskAccountId = c);
+            HasOption<int>("t|tradingDeskAccountId=", "TradingDeskAccount Id (default = all)", c => TradingDeskAccountId = c);
             //HasOption<int>("p|adrollProfileId=", "AdRollProfile id (default = all)", c => AdRollProfileId = c);
-            HasOption<DateTime>("s|startDate=", "Start Date (default is 2 days ago)", c => StartDate = c);
+            HasOption<DateTime>("s|startDate=", "Start Date (default is 3 days ago)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
         }
 
         public override int Execute(string[] remainingArguments)
         {
-            var twoDaysAgo = DateTime.Today.AddDays(-2);
+            var threeDaysAgo = DateTime.Today.AddDays(-3);
             var yesterday = DateTime.Today.AddDays(-1);
-            var dateRange = new DateRange(StartDate ?? twoDaysAgo, EndDate ?? yesterday);
+            var dateRange = new DateRange(StartDate ?? threeDaysAgo, EndDate ?? yesterday);
 
             var profiles = GetAdRollProfiles();
             foreach (var profile in profiles)
