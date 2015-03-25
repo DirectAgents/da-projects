@@ -33,9 +33,6 @@
     <Reference Include="Dynamic">
       <HintPath>..\ClientPortal.Web\packages\DynamicQuery.1.0\lib\35\Dynamic.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework">
-      <HintPath>..\ClientPortal.Web\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />

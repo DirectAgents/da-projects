@@ -75,6 +75,9 @@
     <Reference Include="Common.Logging">
       <HintPath>..\ClientPortal.Web\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\ClientPortal.Web\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="ManyConsole">
       <HintPath>..\ClientPortal.Web\packages\ManyConsole.0.4.2.16\lib\ManyConsole.dll</HintPath>
     </Reference>

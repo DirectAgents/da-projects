@@ -58,20 +58,20 @@ namespace CakeExtracter.UnitTests
             }
         }
 
-        [TestMethod]
-        public void BingAdsReport_KeywordPerformance()
-        {
-            var bingReports = new BingAds.Reports();
-            bingReports.GetKeywordPerformance(886985, 51468225);
-        }
+        //[TestMethod]
+        //public void BingAdsReport_KeywordPerformance()
+        //{
+        //    var bingReports = new BingAds.Reports();
+        //    bingReports.GetKeywordPerformance(886985, 51468225);
+        //}
 
         [TestMethod]
         public void BingAdsReport_DailySums()
         {
-            var bingReports = new BingAds.Reports();
-            var startDate = new DateTime(2013, 8, 1);
-            var endDate = new DateTime(2013, 8, 18);
-            var filepath = bingReports.GetDailySummaries(886985, startDate, endDate);
+            var bingReports = new BingAds.BingUtility();
+            var startDate = new DateTime(2015, 1, 1);
+            var endDate = new DateTime(2015, 1, 18);
+            var filepath = bingReports.GetDailySummaries(886985, startDate, endDate); // Ramjet
             Console.WriteLine("Filepath: " + filepath);
         }
 

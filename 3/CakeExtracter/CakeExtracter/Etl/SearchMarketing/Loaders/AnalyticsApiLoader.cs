@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
+using System.Data.Entity;
 using System.Linq;
 using CakeExtracter.Etl.SearchMarketing.Extracters;
 using ClientPortal.Data.Contexts;

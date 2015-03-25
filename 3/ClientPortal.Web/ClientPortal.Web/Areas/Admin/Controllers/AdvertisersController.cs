@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web.Helpers;
 using System.Web.Mvc;
 using WebMatrix.WebData;
+using System.Data.Entity;
 
 namespace ClientPortal.Web.Areas.Admin.Controllers
 {

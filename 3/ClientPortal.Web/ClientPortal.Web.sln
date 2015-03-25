@@ -21,7 +21,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeExtracter", "..\CakeExtracter\CakeExtracter\CakeExtracter.csproj", "{3B6C5433-5392-4165-A7E4-4AA431A75BB3}"
 	ProjectSection(ProjectDependencies) = postProject
 		{70F3E367-5F86-4718-9A27-6EDC9FEF9EC9} = {70F3E367-5F86-4718-9A27-6EDC9FEF9EC9}
-		{278911AB-CB92-4316-843E-4571CD0C3410} = {278911AB-CB92-4316-843E-4571CD0C3410}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StackExchange.Profiling", "..\..\..\MiniProfiler\StackExchange.Profiling\StackExchange.Profiling.csproj", "{386222BD-6B6E-480F-A342-8DE1AB516E2C}"

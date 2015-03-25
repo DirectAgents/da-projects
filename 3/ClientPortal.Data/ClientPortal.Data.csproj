@@ -30,12 +30,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\ClientPortal.Web\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.Extended, Version=5.0.0.0, Culture=neutral, PublicKeyToken=05b7e29bdd433584, processorArchitecture=MSIL">
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ClientPortal.Web\packages\EntityFramework.Extended.5.0.0.73\lib\net45\EntityFramework.Extended.dll</HintPath>
+      <HintPath>..\ClientPortal.Web\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.Extended, Version=6.0.0.0, Culture=neutral, PublicKeyToken=05b7e29bdd433584, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ClientPortal.Web\packages\EntityFramework.Extended.6.1.0.133\lib\net45\EntityFramework.Extended.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\ClientPortal.Web\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="MoreLinq">
       <HintPath>..\ClientPortal.Web\packages\morelinq.1.0.16006\lib\net35\MoreLinq.dll</HintPath>
@@ -43,7 +47,6 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
@@ -361,33 +364,33 @@
     </EntityDeploy>
     <None Include="Contexts\ClientPortal.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ClientPortal.edmx</DependentUpon>
       <LastGenOutput>ClientPortal.Context.cs</LastGenOutput>
+      <DependentUpon>ClientPortal.edmx</DependentUpon>
     </None>
     <None Include="Contexts\ClientPortal.edmx.diagram">
       <DependentUpon>ClientPortal.edmx</DependentUpon>
-    </None>
-    <None Include="Contexts\ClientPortal.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ClientPortal.edmx</DependentUpon>
-      <LastGenOutput>ClientPortal.cs</LastGenOutput>
     </None>
     <EntityDeploy Include="Contexts\ClientPortalDW.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>ClientPortalDW.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <None Include="Contexts\ClientPortal.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ClientPortal.cs</LastGenOutput>
+      <DependentUpon>ClientPortal.edmx</DependentUpon>
+    </None>
     <None Include="Contexts\ClientPortalDW.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ClientPortalDW.edmx</DependentUpon>
       <LastGenOutput>ClientPortalDW.Context.cs</LastGenOutput>
+      <DependentUpon>ClientPortalDW.edmx</DependentUpon>
     </None>
     <None Include="Contexts\ClientPortalDW.edmx.diagram">
       <DependentUpon>ClientPortalDW.edmx</DependentUpon>
     </None>
     <None Include="Contexts\ClientPortalDW.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ClientPortalDW.edmx</DependentUpon>
       <LastGenOutput>ClientPortalDW.cs</LastGenOutput>
+      <DependentUpon>ClientPortalDW.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
   </ItemGroup>

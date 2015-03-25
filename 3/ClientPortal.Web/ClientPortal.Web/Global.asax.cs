@@ -12,6 +12,7 @@ using ClientPortal.Data.Services;
 using ClientPortal.Web.Areas.TD.Models;
 using ClientPortal.Web.Models;
 using StackExchange.Profiling;
+using StackExchange.Profiling.EntityFramework6;
 using WebMatrix.WebData;
 
 namespace ClientPortal.Web
@@ -47,7 +48,7 @@ namespace ClientPortal.Web
                 MiniProfiler.Settings.PopupRenderPosition = RenderPosition.Right;
                 MiniProfiler.Settings.PopupToggleKeyboardShortcut = "F4";
                 MiniProfiler.Settings.PopupStartHidden = true;
-                MiniProfilerEF.Initialize();
+                MiniProfilerEF6.Initialize();
             }
 
             AreaRegistration.RegisterAllAreas();
