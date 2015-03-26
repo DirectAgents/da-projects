@@ -224,16 +224,19 @@ namespace CakeExtracter.CakeMarketingApi
                 else if (response.Clicks.Count == 0)
                 {
                     Logger.Warn("Clicks client returned 0 clicks. Total extracted: {0} RowCount (expected): {1}", total, response.RowCount);
-                    if (lastDateTime.HasValue)
+                    // April 2014: the api doesn't return anything beyond row 100,000 (no matter what start_at_row is) so...
+                    if (total >= 100000 && lastDateTime.HasValue)
                     {
                         Logger.Warn("Recursively calling EnumerateClicks, starting at {0}", lastDateTime.Value);
-                        DateRange newDateRange = new DateRange(lastDateTime.Value, dateRange.ToDate, false);
+                        // 3/25/15: noticed the api is now returning clicks in reverse chronological order
+                        DateRange newDateRange = new DateRange(dateRange.FromDate, lastDateTime.Value, false);
                         var moreClicks = EnumerateClicks(newDateRange, advertiserId, offerId);
                         foreach (var click in moreClicks)
                             yield return click;
                     }
                     else
-                    {   // It must have happened with startAtRow was 1; so we're not able to increase the FromDate
+                    {   // If lastDateTime==null, it must have happened with startAtRow was 1; so we're not able to decrease the dateRange.
+                        // If total<100,000, the api isn't returning all the rows it says there are for some other reason.
                         Logger.Warn("Bailing out of EnumerateClicks");
                     }
                     yield break;
