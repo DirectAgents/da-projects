@@ -1,18 +1,15 @@
-﻿using CakeExtracter.Common;
-using Google.Apis.Auth.OAuth2;
-using Google.Apis.Authentication.OAuth2;
-using Google.Apis.Authentication.OAuth2.DotNetOpenAuth;
-using Google.Apis.DoubleClickBidManager;
-using Google.Apis.DoubleClickBidManager.v1;
-using Google.Apis.Services;
-using Google.Apis.Storage.v1;
-using System;
+﻿using System;
 using System.ComponentModel.Composition;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using CakeExtracter.Common;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.DoubleClickBidManager.v1;
+using Google.Apis.Services;
+using Google.Apis.Storage.v1;
 
 namespace CakeExtracter.Commands
 {
@@ -20,16 +17,19 @@ namespace CakeExtracter.Commands
     public class TestDbmCommand : ConsoleCommand
     {
         public int Mode { get; set; }
+        public bool Download { get; set; }
 
         public override void ResetProperties()
         {
             Mode = 0;
+            Download = false;
         }
 
         public TestDbmCommand()
         {
             IsCommand("testDbm");
             HasOption<int>("m|mode=", "Mode", c => Mode = c);
+            HasOption<bool>("d|download=", "Download(true/false)", c => Download = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -42,7 +42,7 @@ namespace CakeExtracter.Commands
         }
 
         // Try DBM API
-        public void Test1()
+        public void Test0()
         {
             string serviceEmail = ConfigurationManager.AppSettings["GoogleAPI_ServiceEmail"];
             string certPath = ConfigurationManager.AppSettings["GoogleAPI_Certificate"];
@@ -62,7 +62,7 @@ namespace CakeExtracter.Commands
             var response = request.Execute();
         }
 
-        public void Test0()
+        public void Test1()
         {
             try
             {
@@ -89,7 +89,7 @@ namespace CakeExtracter.Commands
                 //string bucketName = "151075984680687222131409861541653_report"; // ui_created
                 string bucketName = "151075984680687222131410283081521_report"; // Betterment_creative
 
-                TestDownload(service, credential);
+                ListBucket(service, credential);
 
                 //var request = service.Objects.List(bucketName);
                 //var results = request.Execute();
@@ -103,14 +103,20 @@ namespace CakeExtracter.Commands
                 Console.Write(e.StackTrace);
             }
         }
-        private void TestDownload(StorageService service, ServiceAccountCredential credential)
+        private void ListBucket(StorageService service, ServiceAccountCredential credential)
         {
             string bucketName = "151075984680687222131410283081521_report"; // Betterment_creative
 
             //var request = service.Buckets.Get(bucketName);
             var request = service.Objects.List(bucketName);
             var results = request.Execute();
+            Logger.Info("Found {0} objects in the bucket.", results.Items.Count);
 
+            if (this.Download)
+                TestDownload(credential, results);
+        }
+        private void TestDownload(ServiceAccountCredential credential, Google.Apis.Storage.v1.Data.Objects results)
+        {
             string dateString = DateTime.Today.ToString("yyyy-MM-dd");
             var reportObject = results.Items.Where(i => i.Name.Contains(dateString)).FirstOrDefault();
 
