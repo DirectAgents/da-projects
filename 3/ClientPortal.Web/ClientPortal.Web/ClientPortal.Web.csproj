@@ -1107,6 +1107,9 @@
     <Content Include="Content\kendo\2015.1.318\images\kendoui.woff" />
     <Content Include="Areas\TD\Views\Home\Test.cshtml" />
     <Content Include="Areas\Admin\Views\TDAdmin\AdRollProfiles.cshtml" />
+    <Content Include="Areas\Admin\Views\TDAdmin\EditInsertionOrder.cshtml" />
+    <Content Include="Areas\Admin\Views\TDAdmin\CreateInsertionOrder.cshtml" />
+    <Content Include="Areas\Admin\Views\TDAdmin\EditAdRollProfile.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

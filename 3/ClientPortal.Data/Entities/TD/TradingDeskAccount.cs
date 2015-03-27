@@ -50,13 +50,13 @@ namespace ClientPortal.Data.Entities.TD
                 if (InsertionOrders != null)
                     foreach (var io in InsertionOrders)
                     {
-                        if (!displayNames.Contains(io.InsertionOrderName))
+                        if (!String.IsNullOrWhiteSpace(io.InsertionOrderName) && !displayNames.Contains(io.InsertionOrderName))
                             displayNames.Add(io.InsertionOrderName);
                     }
                 if (AdRollProfiles != null)
                     foreach (var arp in AdRollProfiles)
                     {
-                        if (!displayNames.Contains(arp.Name))
+                        if (!String.IsNullOrWhiteSpace(arp.Name) && !displayNames.Contains(arp.Name))
                             displayNames.Add(arp.Name);
                     }
                 if (displayNames.Count == 0)

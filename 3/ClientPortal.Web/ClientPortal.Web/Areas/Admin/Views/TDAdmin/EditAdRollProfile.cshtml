@@ -1,0 +1,39 @@
+﻿@model ClientPortal.Data.Entities.TD.AdRoll.AdRollProfile
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("tdAccountsTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("tdAccountsTab", null, "Post");
+}
+
+@using (Ajax.BeginForm(ajaxOpts_Post))
+{
+    @Html.ValidationSummary()
+    <fieldset>
+        <legend>Edit AdRoll Profile</legend>
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.TradingDeskAccountId)
+        <div>
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Id)</td>
+                    <td>@Model.Id</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Name)</td>
+                    <td>@Html.EditorFor(m => m.Name)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Eid, "EID:")</td>
+                    <td style="min-width:300px">@Html.EditorFor(m => m.Eid)</td>
+                </tr>
+            </table>
+        </div>
+        <div style="margin-top:10px">
+            <input type="submit" value="Save" />&nbsp;
+            @if (Model.TradingDeskAccountId.HasValue) {
+                @Ajax.ActionLink("cancel", "EditAccount", new {tdaId = Model.TradingDeskAccountId}, ajaxOptions)
+            } else {
+                @Ajax.ActionLink("cancel", "TradingDeskAccounts", ajaxOptions)
+            }
+        </div>
+    </fieldset>
+}

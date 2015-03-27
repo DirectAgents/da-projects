@@ -1,0 +1,39 @@
+﻿@model ClientPortal.Data.Entities.TD.DBM.InsertionOrder
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("tdAccountsTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("tdAccountsTab", null, "Post");
+}
+
+@using (Ajax.BeginForm(ajaxOpts_Post))
+{
+    @Html.ValidationSummary()
+    <fieldset>
+        <legend>Edit Insertion Order</legend>
+        @Html.HiddenFor(m => m.InsertionOrderID)
+        @Html.HiddenFor(m => m.TradingDeskAccountId)
+        <div>
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(m => m.InsertionOrderID, "Id:")</td>
+                    <td>@Model.InsertionOrderID</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.InsertionOrderName, "Name:")</td>
+                    <td>@Html.EditorFor(m => m.InsertionOrderName) <i>(Name gets updated by the syncer)</i></td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Bucket, "Cloud Storage Bucket:")</td>
+                    <td style="min-width:400px">@Html.EditorFor(m => m.Bucket)</td>
+                </tr>
+            </table>
+        </div>
+        <div style="margin-top:10px">
+            <input type="submit" value="Save" />&nbsp;
+            @if (Model.TradingDeskAccountId.HasValue) {
+                @Ajax.ActionLink("cancel", "EditAccount", new {tdaId = Model.TradingDeskAccountId}, ajaxOptions)
+            } else {
+                @Ajax.ActionLink("cancel", "TradingDeskAccounts", ajaxOptions)
+            }
+        </div>
+    </fieldset>
+}

@@ -12,21 +12,29 @@ namespace ClientPortal.Data.Contracts
     {
         void SaveChanges();
 
+        IQueryable<AdRollProfile> AdRollProfiles();
+        int MaxAdRollProfileId();
+        AdRollProfile GetAdRollProfile(int id);
+        void SaveAdRollProfile(AdRollProfile arProfile);
+
+        IQueryable<InsertionOrder> InsertionOrders();
+        InsertionOrder GetInsertionOrder(int insertionOrderID);
+        void SaveInsertionOrder(InsertionOrder insertionOrder);
+
+        bool CreateAccountForInsertionOrder(int insertionOrderID);
+
+        IQueryable<TradingDeskAccount> TradingDeskAccounts();
+        int MaxTradingDeskAccountId();
+        TradingDeskAccount GetTradingDeskAccount(int tradingDeskAccountId);
+        bool SaveTradingDeskAccount(TradingDeskAccount tdAccount);
+        bool CreateTradingDeskAccount(TradingDeskAccount tdAccount);
+
+        // --- TDStatsRepository ---
         IEnumerable<StatsSummary> GetDailyStatsSummaries(DateTime? start, DateTime? end, TradingDeskAccount tdAccount);
         IEnumerable<CreativeStatsSummary> GetCreativeStatsSummaries(DateTime? start, DateTime? end, TradingDeskAccount tdAccount);
         IEnumerable<RangeStat> GetWeekStats(TradingDeskAccount tdAccount, int numWeeks, DateTime? end);
         IEnumerable<RangeStat> GetMonthStats(TradingDeskAccount tdAccount, int numMonths, DateTime end);
 
         StatsRollup AdRollStatsRollup(int profileId);
-        IQueryable<AdRollProfile> AdRollProfiles();
-
-        IQueryable<InsertionOrder> InsertionOrders();
-        InsertionOrder GetInsertionOrder(int insertionOrderID);
-
-        bool CreateAccountForInsertionOrder(int insertionOrderID);
-
-        IQueryable<TradingDeskAccount> TradingDeskAccounts();
-        TradingDeskAccount GetTradingDeskAccount(int tradingDeskAccountId);
-        void SaveTradingDeskAccount(TradingDeskAccount tdAccount);
     }
 }

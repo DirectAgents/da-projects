@@ -22,13 +22,41 @@ namespace ClientPortal.Data.Services
             context.SaveChanges();
         }
 
-        // ---
+        // --- AdRollProfile ---
 
         public IQueryable<AdRollProfile> AdRollProfiles()
         {
             var profiles = context.AdRollProfiles;
             return profiles;
         }
+        public int MaxAdRollProfileId()
+        {
+            int maxId = -1;
+            if (context.AdRollProfiles.Any())
+                maxId = context.AdRollProfiles.Max(arp => arp.Id);
+            return maxId;
+        }
+
+        public AdRollProfile GetAdRollProfile(int id)
+        {
+            var arProfile = context.AdRollProfiles.Find(id);
+            return arProfile;
+        }
+        public void SaveAdRollProfile(AdRollProfile arProfile)
+        {
+            if (context.AdRollProfiles.Any(arp => arp.Id == arProfile.Id))
+            {
+                var entry = context.Entry(arProfile);
+                entry.State = EntityState.Modified;
+            }
+            else
+            {
+                context.AdRollProfiles.Add(arProfile);
+            }
+            context.SaveChanges();
+        }
+
+        // --- InsertionOrder ---
 
         public IQueryable<InsertionOrder> InsertionOrders()
         {
@@ -41,6 +69,19 @@ namespace ClientPortal.Data.Services
             var insertionOrder = context.InsertionOrders.Find(insertionOrderID);
             return insertionOrder;
         }
+        public void SaveInsertionOrder(InsertionOrder insertionOrder)
+        {
+            if (context.InsertionOrders.Any(io => io.InsertionOrderID == insertionOrder.InsertionOrderID))
+            {
+                var entry = context.Entry(insertionOrder);
+                entry.State = EntityState.Modified;
+            }
+            else
+            {
+                context.InsertionOrders.Add(insertionOrder);
+            }
+            context.SaveChanges();
+        }
 
         public bool CreateAccountForInsertionOrder(int insertionOrderID)
         {
@@ -48,21 +89,28 @@ namespace ClientPortal.Data.Services
             if (insertionOrder == null)
                 return false;
 
-            var tdAccount = NewTradingDeskAccount();
+            var tdAccount = new TradingDeskAccount
+            {
+                TradingDeskAccountId = MaxTradingDeskAccountId() + 1
+            };
             insertionOrder.TradingDeskAccount = tdAccount;
             context.SaveChanges();
             return true;
         }
 
-        private TradingDeskAccount NewTradingDeskAccount()
-        {
-            return new TradingDeskAccount();
-        }
+        // --- TradingDeskAccount ---
 
         public IQueryable<TradingDeskAccount> TradingDeskAccounts()
         {
             var tdAccounts = context.TradingDeskAccounts;
             return tdAccounts;
+        }
+        public int MaxTradingDeskAccountId()
+        {
+            int maxId = -1;
+            if (context.TradingDeskAccounts.Any())
+                maxId = context.TradingDeskAccounts.Max(tda => tda.TradingDeskAccountId);
+            return maxId;
         }
 
         public TradingDeskAccount GetTradingDeskAccount(int tradingDeskAccountId)
@@ -70,12 +118,26 @@ namespace ClientPortal.Data.Services
             var tdAccount = context.TradingDeskAccounts.Find(tradingDeskAccountId);
             return tdAccount;
         }
-
-        public void SaveTradingDeskAccount(TradingDeskAccount tdAccount)
+        public bool SaveTradingDeskAccount(TradingDeskAccount tdAccount)
         {
-            var entry = context.Entry(tdAccount);
-            entry.State = EntityState.Modified;
+            if (context.TradingDeskAccounts.Any(tda => tda.TradingDeskAccountId == tdAccount.TradingDeskAccountId))
+            {
+                var entry = context.Entry(tdAccount);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            else
+                return false;
+        }
+        public bool CreateTradingDeskAccount(TradingDeskAccount tdAccount)
+        {
+            if (context.TradingDeskAccounts.Any(tda => tda.TradingDeskAccountId == tdAccount.TradingDeskAccountId))
+                return false;
+
+            context.TradingDeskAccounts.Add(tdAccount);
             context.SaveChanges();
+            return true;
         }
 
         // ---

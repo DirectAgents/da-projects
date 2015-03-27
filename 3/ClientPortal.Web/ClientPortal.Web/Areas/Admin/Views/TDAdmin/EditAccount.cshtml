@@ -47,21 +47,21 @@
             @if (Model.InsertionOrders != null && Model.InsertionOrders.Count > 0)
             {
                 foreach (var io in Model.InsertionOrders) {
-                    <text>- </text>@io.InsertionOrderName<br />
+                    <text>- @io.InsertionOrderName [@io.InsertionOrderID]</text>
+                    <i>@Ajax.ActionLink("edit", "EditInsertionOrder", new { id = io.InsertionOrderID }, ajaxOptions)</i><br />
                 }
-            } else {
-                <text> (none)</text><br />
             }
+            <i>@Ajax.ActionLink("Add New...", "CreateInsertionOrder", new { tdaId = Model.TradingDeskAccountId }, ajaxOptions)</i><br />
             <br/>
             AdRoll Profiles:<br />
             @if (Model.AdRollProfiles != null && Model.AdRollProfiles.Count > 0)
             {
                 foreach (var arp in Model.AdRollProfiles) {
-                    <text>- </text>@arp.Name<br />
+                    <text>- </text>@arp.Name
+                    <i>@Ajax.ActionLink("edit", "EditAdRollProfile", new { id = arp.Id }, ajaxOptions)</i><br />
                 }
-            } else {
-                <text> (none)</text><br />
             }
+            <i>@Ajax.ActionLink("Add New", "CreateNextAdRollProfile", new { tdaId = Model.TradingDeskAccountId }, ajaxOptions)</i><br />
         </div>
         <br style="clear:both" />
         <div style="margin-top:10px">
