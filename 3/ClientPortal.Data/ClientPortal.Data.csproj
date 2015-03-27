@@ -348,6 +348,15 @@
     <Compile Include="Migrations\201503132049077_Mig_DBMConversion.Designer.cs">
       <DependentUpon>201503132049077_Mig_DBMConversion.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503261948106_Mig_RmIdentity_ARP.cs" />
+    <Compile Include="Migrations\201503261948106_Mig_RmIdentity_ARP.Designer.cs">
+      <DependentUpon>201503261948106_Mig_RmIdentity_ARP.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503262049340_Mig_RmIdentity_TDA.cs" />
+    <Compile Include="Migrations\201503262049340_Mig_RmIdentity_TDA.Designer.cs">
+      <DependentUpon>201503262049340_Mig_RmIdentity_TDA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ChangeIdentityOperation.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ClientPortalRepository.cs" />
@@ -439,6 +448,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503132049077_Mig_DBMConversion.resx">
       <DependentUpon>201503132049077_Mig_DBMConversion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503261948106_Mig_RmIdentity_ARP.resx">
+      <DependentUpon>201503261948106_Mig_RmIdentity_ARP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503262049340_Mig_RmIdentity_TDA.resx">
+      <DependentUpon>201503262049340_Mig_RmIdentity_TDA.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

@@ -10,7 +10,9 @@ namespace ClientPortal.Data.Entities.TD
 {
     public class TradingDeskAccount
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int TradingDeskAccountId { get; set; }
+
         public bool ShowConversions { get; set; }
         public string FixedMetricName { get; set; }
         public decimal? FixedMetricValue { get; set; }

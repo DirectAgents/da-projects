@@ -1,15 +1,17 @@
 namespace ClientPortal.Data.Migrations
 {
-    using System;
-    using System.Data.Entity;
+    //using System;
+    //using System.Data.Entity;
     using System.Data.Entity.Migrations;
-    using System.Linq;
+    //using System.Linq;
 
     internal sealed class Configuration : DbMigrationsConfiguration<ClientPortal.Data.Entities.TD.TDContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            ContextKey = "ClientPortal.Data.Entities.TD.TDContext";
+            SetSqlGenerator("System.Data.SqlClient", new MySqlServerMigrationSqlGenerator());
         }
 
         protected override void Seed(ClientPortal.Data.Entities.TD.TDContext context)
