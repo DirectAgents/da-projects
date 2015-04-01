@@ -61,7 +61,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         Impressions = int.Parse(item["impressions"]),
                         CurrencyId = (!item.Keys.Contains("currency") || item["currency"] == "USD") ? 1 : -1, // NOTE: non USD (if exists) -1 for now
                         Network = item["network"].Substring(0, 1),
-                        Device = item["device"].Substring(0, 1)
+                        Device = item["device"].Substring(0, 1),
+                        ViewThrus = int.Parse(item["viewThroughConv"])
                     };
 
                     bool added;

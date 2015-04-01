@@ -1,15 +1,15 @@
-﻿using AutoMapper;
-using ClientPortal.Data.Contracts;
-using ClientPortal.Data.DTOs;
-using ClientPortal.Web.Models;
-using DirectAgents.Mvc.KendoGridBinder;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using AutoMapper;
+using ClientPortal.Data.Contracts;
+using ClientPortal.Data.DTOs;
+using ClientPortal.Web.Models;
+using DirectAgents.Mvc.KendoGridBinder;
+using Newtonsoft.Json;
 
 namespace ClientPortal.Web.Controllers
 {
@@ -27,7 +27,7 @@ namespace ClientPortal.Web.Controllers
             var userInfo = GetUserInfo();
 
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
-            var weekStats = cpRepo.GetWeekStats(userInfo.SearchProfile.SearchProfileId, numweeks, userInfo.Search_StartDayOfWeek, endDate, userInfo.UseAnalytics, userInfo.SearchProfile.ShowCalls);
+            var weekStats = cpRepo.GetWeekStats(userInfo.SearchProfile, numweeks, endDate);
             var kgrid = new KendoGrid<SearchStat>(request, weekStats);
             if (weekStats.Any())
                 kgrid.aggregates = Aggregates(weekStats);
@@ -40,7 +40,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
-            var weekStats = cpRepo.GetWeekStats(userInfo.SearchProfile.SearchProfileId, numweeks, userInfo.Search_StartDayOfWeek, endDate, userInfo.UseAnalytics, userInfo.SearchProfile.ShowCalls);
+            var weekStats = cpRepo.GetWeekStats(userInfo.SearchProfile, numweeks, endDate);
 
             string filename = "WeeklySummary" + ControllerHelpers.DateStamp() + ".csv";
             if (userInfo.SearchProfile.ShowRevenue)
@@ -61,7 +61,7 @@ namespace ClientPortal.Web.Controllers
             var userInfo = GetUserInfo();
 
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
-            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile.SearchProfileId, nummonths, endDate, userInfo.UseAnalytics, userInfo.SearchProfile.ShowCalls)
+            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile, nummonths, endDate)
                 .ToList()
                 .OrderBy(s => s.StartDate)
                 .AsQueryable();
@@ -77,7 +77,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
-            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile.SearchProfileId, nummonths, endDate, userInfo.UseAnalytics, userInfo.SearchProfile.ShowCalls);
+            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile, nummonths, endDate);
 
             string filename = "MonthlySummary" + ControllerHelpers.DateStamp() + ".csv";
             if (userInfo.SearchProfile.ShowRevenue)
@@ -97,7 +97,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var channelStats = cpRepo.GetChannelStats(userInfo.SearchProfile.SearchProfileId, numweeks, userInfo.Search_StartDayOfWeek, userInfo.UseAnalytics, !userInfo.Search_UseYesterdayAsLatest, true, userInfo.ShowSearchChannels, userInfo.SearchProfile.ShowCalls);
+            var channelStats = cpRepo.GetChannelStats(userInfo.SearchProfile, numweeks, !userInfo.Search_UseYesterdayAsLatest, true, userInfo.ShowSearchChannels);
             var kgrid = new KendoGrid<SearchStat>(request, channelStats);
             if (channelStats.Any())
                 kgrid.aggregates = Aggregates(channelStats);
@@ -110,7 +110,7 @@ namespace ClientPortal.Web.Controllers
         public FileResult ChannelPerfExport(int numweeks = 8)
         {
             var userInfo = GetUserInfo();
-            var stats = cpRepo.GetChannelStats(userInfo.SearchProfile.SearchProfileId, numweeks, userInfo.Search_StartDayOfWeek, userInfo.UseAnalytics, !userInfo.Search_UseYesterdayAsLatest, true, userInfo.ShowSearchChannels, userInfo.SearchProfile.ShowCalls);
+            var stats = cpRepo.GetChannelStats(userInfo.SearchProfile, numweeks, !userInfo.Search_UseYesterdayAsLatest, true, userInfo.ShowSearchChannels);
 
             string filename = "ChannelPerformance" + ControllerHelpers.DateStamp() + ".csv";
             if (userInfo.SearchProfile.ShowRevenue)
@@ -137,7 +137,7 @@ namespace ClientPortal.Web.Controllers
                 return Json(new { });
 
             //TODO: useAnalytics argument; +includeCalls?
-            var stats = cpRepo.GetDeviceStats(userInfo.SearchProfile.SearchProfileId, start.Value, end.Value);
+            var stats = cpRepo.GetDeviceStats(userInfo.SearchProfile, start.Value, end.Value);
 
             var kgrid = new KendoGrid<SearchStat>(request, stats);
             var json = Json(kgrid);
@@ -156,7 +156,7 @@ namespace ClientPortal.Web.Controllers
             if (!start.HasValue) start = userInfo.Search_Dates.FirstOfMonth;
             if (!end.HasValue) end = userInfo.Search_Dates.Latest;
 
-            var stats = cpRepo.GetCampaignStats(userInfo.SearchProfile.SearchProfileId, channel, start, end, breakdown, userInfo.UseAnalytics, userInfo.SearchProfile.ShowCalls);
+            var stats = cpRepo.GetCampaignStats(userInfo.SearchProfile, channel, start, end, breakdown);
 
             var kgrid = new KendoGrid<SearchStat>(request, stats);
             if (stats.Any())
@@ -177,7 +177,7 @@ namespace ClientPortal.Web.Controllers
             if (!start.HasValue) start = userInfo.Search_Dates.FirstOfMonth;
             if (!end.HasValue) end = userInfo.Search_Dates.Latest;
 
-            var stats = cpRepo.GetCampaignStats(userInfo.SearchProfile.SearchProfileId, channel, start, end, breakdown, userInfo.UseAnalytics, userInfo.SearchProfile.ShowCalls)
+            var stats = cpRepo.GetCampaignStats(userInfo.SearchProfile, channel, start, end, breakdown)
                 .OrderBy(s => s.EndDate).ThenByDescending(s => s.Channel).ThenBy(s => s.Title);
 
             string filename = "CampaignPerformance" + ControllerHelpers.DateStamp() + ".csv";
@@ -207,7 +207,7 @@ namespace ClientPortal.Web.Controllers
             if (!end.HasValue) end = userInfo.Search_Dates.Latest;
 
             // Get weekly search stats
-            var rows = cpRepo.GetCampaignWeekStats2(searchProfile.SearchProfileId, start.Value, end.Value, userInfo.Search_StartDayOfWeek, userInfo.UseAnalytics, searchProfile.ShowCalls);
+            var rows = cpRepo.GetCampaignWeekStats2(searchProfile, start.Value, end.Value);
 
             // Create DataTable
             var dataTable = new DataTable("data");
@@ -289,6 +289,7 @@ namespace ClientPortal.Web.Controllers
             var sumRevenue = stats.Sum(s => s.Revenue);
             var sumCost = stats.Sum(s => s.Cost);
             var sumOrders = stats.Sum(s => s.Orders);
+            var sumViewThrus = stats.Sum(s => s.ViewThrus);
             var sumClicks = stats.Sum(s => s.Clicks);
             var sumImpressions = stats.Sum(s => s.Impressions);
             var sumCalls = stats.Sum(s => s.Calls);
@@ -306,6 +307,7 @@ namespace ClientPortal.Web.Controllers
                 ROAS = new { agg = sumCost == 0 ? 0 : (int)Math.Round(100 * sumRevenue / sumCost) },
                 Margin = new { agg = sumRevenue - sumCost },
                 Orders = new { sum = sumOrders },
+                ViewThrus = new { sum = sumViewThrus },
                 CPO = new { agg = sumOrders == 0 ? 0 : Math.Round(sumCost / sumOrders, 2) },
                 OrderRate = new { agg = sumClicks == 0 ? 0 : Math.Round((decimal)100 * sumOrders / sumClicks, 2) },
                 RevenuePerOrder = new { agg = sumOrders == 0 ? 0 : Math.Round(sumRevenue / sumOrders, 2) },

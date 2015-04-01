@@ -51,9 +51,9 @@
             0); //default page size
 
     @if (Model.SearchProfile.ShowRevenue) {
-        <text>CreateSummaryGrid(campaignperfDS, $('#campaignperfGrid'), 550, 'Campaign', 20, 2, true, true, showBreakdown, null);</text>
+        <text>CreateSummaryGrid(campaignperfDS, $('#campaignperfGrid'), 550, 'Campaign', 20, 2, true, true, showBreakdown, null, @(Model.SearchProfile.ShowViewThrus ? "true" : "false"));</text>
     } else {
-        <text>CreateSummaryGridLeadGen(campaignperfDS, $('#campaignperfGrid'), 550, 'Campaign', 20, 2, true, true, showBreakdown, null, @(Model.SearchProfile.ShowCalls ? "true" : "false"));</text>
+        <text>CreateSummaryGridLeadGen(campaignperfDS, $('#campaignperfGrid'), 550, 'Campaign', 20, 2, true, true, showBreakdown, null, @(Model.SearchProfile.ShowViewThrus ? "true" : "false"), @(Model.SearchProfile.ShowCalls ? "true" : "false"));</text>
     }
         campaignperfDS.read();
     }

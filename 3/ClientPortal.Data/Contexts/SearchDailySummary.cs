@@ -24,6 +24,7 @@ namespace ClientPortal.Data.Contexts
         public int CurrencyId { get; set; }
         public string Network { get; set; }
         public string Device { get; set; }
+        public int ViewThrus { get; set; }
     
         public virtual SearchCampaign SearchCampaign { get; set; }
     }

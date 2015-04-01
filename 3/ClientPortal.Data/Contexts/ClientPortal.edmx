@@ -4,190 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="ClientPortalModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityContainer Name="ClientPortalModelStoreContainer">
-          <EntitySet Name="Advertiser" EntityType="ClientPortalModel.Store.Advertiser" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="AdvertiserContact" EntityType="ClientPortalModel.Store.AdvertiserContact" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Affiliate" EntityType="ClientPortalModel.Store.Affiliate" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CakeContact" EntityType="ClientPortalModel.Store.CakeContact" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CakeRole" EntityType="ClientPortalModel.Store.CakeRole" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CallDailySummary" EntityType="ClientPortalModel.Store.CallDailySummary" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Campaign" EntityType="ClientPortalModel.Store.Campaign" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CampaignDrop" EntityType="ClientPortalModel.Store.CampaignDrop" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Contact" EntityType="ClientPortalModel.Store.Contact" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Conversion" EntityType="ClientPortalModel.Store.Conversion" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ConversionData" EntityType="ClientPortalModel.Store.ConversionData" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CPMReport" EntityType="ClientPortalModel.Store.CPMReport" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CPMReportCampaignDrop" EntityType="ClientPortalModel.Store.CPMReportCampaignDrop" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Creative" EntityType="ClientPortalModel.Store.Creative" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CreativeFile" EntityType="ClientPortalModel.Store.CreativeFile" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CreativeStat" EntityType="ClientPortalModel.Store.CreativeStat" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CreativeSummary" EntityType="ClientPortalModel.Store.CreativeSummary" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CreativeType" EntityType="ClientPortalModel.Store.CreativeType" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="DailySummary" EntityType="ClientPortalModel.Store.DailySummary" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="FileUpload" EntityType="ClientPortalModel.Store.FileUpload" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Goal" EntityType="ClientPortalModel.Store.Goal" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="GoogleAnalyticsSummary" EntityType="ClientPortalModel.Store.GoogleAnalyticsSummary" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Metric" EntityType="ClientPortalModel.Store.Metric" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="MetricCount" EntityType="ClientPortalModel.Store.MetricCount" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="MetricValue" EntityType="ClientPortalModel.Store.MetricValue" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Offer" EntityType="ClientPortalModel.Store.Offer" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="OfferDailySummary" EntityType="ClientPortalModel.Store.OfferDailySummary" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="SearchAccount" EntityType="ClientPortalModel.Store.SearchAccount" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="SearchCampaign" EntityType="ClientPortalModel.Store.SearchCampaign" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="SearchChannel" EntityType="ClientPortalModel.Store.SearchChannel" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="SearchDailySummary" EntityType="ClientPortalModel.Store.SearchDailySummary" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="SearchDailySummary2" EntityType="ClientPortalModel.Store.SearchDailySummary2" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="SearchProfile" EntityType="ClientPortalModel.Store.SearchProfile" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="SearchProfileContact" EntityType="ClientPortalModel.Store.SearchProfileContact" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="SimpleReport" EntityType="ClientPortalModel.Store.SimpleReport" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="UserEvent" EntityType="ClientPortalModel.Store.UserEvent" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="UserProfile" EntityType="ClientPortalModel.Store.UserProfile" store:Type="Tables" Schema="dbo" />
-          <AssociationSet Name="FK_Advertiser_CakeContact" Association="ClientPortalModel.Store.FK_Advertiser_CakeContact">
-            <End Role="CakeContact" EntitySet="CakeContact" />
-            <End Role="Advertiser" EntitySet="Advertiser" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CakeContact_CakeRole" Association="ClientPortalModel.Store.FK_CakeContact_CakeRole">
-            <End Role="CakeRole" EntitySet="CakeRole" />
-            <End Role="CakeContact" EntitySet="CakeContact" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CallDailySummary_SearchCampaign" Association="ClientPortalModel.Store.FK_CallDailySummary_SearchCampaign">
-            <End Role="SearchCampaign" EntitySet="SearchCampaign" />
-            <End Role="CallDailySummary" EntitySet="CallDailySummary" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Campaign_Affiliate" Association="ClientPortalModel.Store.FK_Campaign_Affiliate">
-            <End Role="Affiliate" EntitySet="Affiliate" />
-            <End Role="Campaign" EntitySet="Campaign" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Campaign_Offer" Association="ClientPortalModel.Store.FK_Campaign_Offer">
-            <End Role="Offer" EntitySet="Offer" />
-            <End Role="Campaign" EntitySet="Campaign" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CampaignDrop_Campaign" Association="ClientPortalModel.Store.FK_CampaignDrop_Campaign">
-            <End Role="Campaign" EntitySet="Campaign" />
-            <End Role="CampaignDrop" EntitySet="CampaignDrop" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CampaignDrop_CampaignDrop" Association="ClientPortalModel.Store.FK_CampaignDrop_CampaignDrop">
-            <End Role="CampaignDrop" EntitySet="CampaignDrop" />
-            <End Role="CampaignDrop1" EntitySet="CampaignDrop" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CPMReport_Offer" Association="ClientPortalModel.Store.FK_CPMReport_Offer">
-            <End Role="Offer" EntitySet="Offer" />
-            <End Role="CPMReport" EntitySet="CPMReport" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CPMReportCampaignDrop_CampaignDrop" Association="ClientPortalModel.Store.FK_CPMReportCampaignDrop_CampaignDrop">
-            <End Role="CampaignDrop" EntitySet="CampaignDrop" />
-            <End Role="CPMReportCampaignDrop" EntitySet="CPMReportCampaignDrop" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CPMReportCampaignDrop_CPMReport" Association="ClientPortalModel.Store.FK_CPMReportCampaignDrop_CPMReport">
-            <End Role="CPMReport" EntitySet="CPMReport" />
-            <End Role="CPMReportCampaignDrop" EntitySet="CPMReportCampaignDrop" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Creative_CreativeType" Association="ClientPortalModel.Store.FK_Creative_CreativeType">
-            <End Role="CreativeType" EntitySet="CreativeType" />
-            <End Role="Creative" EntitySet="Creative" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Creative_Offer" Association="ClientPortalModel.Store.FK_Creative_Offer">
-            <End Role="Offer" EntitySet="Offer" />
-            <End Role="Creative" EntitySet="Creative" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CreativeFile_Creative" Association="ClientPortalModel.Store.FK_CreativeFile_Creative">
-            <End Role="Creative" EntitySet="Creative" />
-            <End Role="CreativeFile" EntitySet="CreativeFile" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CreativeStat_CampaignDrop" Association="ClientPortalModel.Store.FK_CreativeStat_CampaignDrop">
-            <End Role="CampaignDrop" EntitySet="CampaignDrop" />
-            <End Role="CreativeStat" EntitySet="CreativeStat" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CreativeStat_Creative" Association="ClientPortalModel.Store.FK_CreativeStat_Creative">
-            <End Role="Creative" EntitySet="Creative" />
-            <End Role="CreativeStat" EntitySet="CreativeStat" />
-          </AssociationSet>
-          <AssociationSet Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" Association="ClientPortalModel.Store.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
-            <End Role="Advertiser" EntitySet="Advertiser" />
-            <End Role="AdvertiserContact" EntitySet="AdvertiserContact" />
-          </AssociationSet>
-          <AssociationSet Name="FK_dbo_AdvertiserContact_dbo_Contact_ContactId" Association="ClientPortalModel.Store.FK_dbo_AdvertiserContact_dbo_Contact_ContactId">
-            <End Role="Contact" EntitySet="Contact" />
-            <End Role="AdvertiserContact" EntitySet="AdvertiserContact" />
-          </AssociationSet>
-          <AssociationSet Name="FK_FileUpload_Advertiser" Association="ClientPortalModel.Store.FK_FileUpload_Advertiser">
-            <End Role="Advertiser" EntitySet="Advertiser" />
-            <End Role="FileUpload" EntitySet="FileUpload" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Goal_Advertiser" Association="ClientPortalModel.Store.FK_Goal_Advertiser">
-            <End Role="Advertiser" EntitySet="Advertiser" />
-            <End Role="Goal" EntitySet="Goal" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Goal_Offer" Association="ClientPortalModel.Store.FK_Goal_Offer">
-            <End Role="Offer" EntitySet="Offer" />
-            <End Role="Goal" EntitySet="Goal" />
-          </AssociationSet>
-          <AssociationSet Name="FK_GoogleAnalyticsSummary_SearchCampaign" Association="ClientPortalModel.Store.FK_GoogleAnalyticsSummary_SearchCampaign">
-            <End Role="SearchCampaign" EntitySet="SearchCampaign" />
-            <End Role="GoogleAnalyticsSummary" EntitySet="GoogleAnalyticsSummary" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MetricCount_MetricValue" Association="ClientPortalModel.Store.FK_MetricCount_MetricValue">
-            <End Role="MetricValue" EntitySet="MetricValue" />
-            <End Role="MetricCount" EntitySet="MetricCount" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MetricValue_Metric" Association="ClientPortalModel.Store.FK_MetricValue_Metric">
-            <End Role="Metric" EntitySet="Metric" />
-            <End Role="MetricValue" EntitySet="MetricValue" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SearchAccount_Advertiser" Association="ClientPortalModel.Store.FK_SearchAccount_Advertiser">
-            <End Role="Advertiser" EntitySet="Advertiser" />
-            <End Role="SearchAccount" EntitySet="SearchAccount" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SearchAccount_SearchProfile" Association="ClientPortalModel.Store.FK_SearchAccount_SearchProfile">
-            <End Role="SearchProfile" EntitySet="SearchProfile" />
-            <End Role="SearchAccount" EntitySet="SearchAccount" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SearchCampaign_Advertiser" Association="ClientPortalModel.Store.FK_SearchCampaign_Advertiser">
-            <End Role="Advertiser" EntitySet="Advertiser" />
-            <End Role="SearchCampaign" EntitySet="SearchCampaign" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SearchCampaign_SearchAccount" Association="ClientPortalModel.Store.FK_SearchCampaign_SearchAccount">
-            <End Role="SearchAccount" EntitySet="SearchAccount" />
-            <End Role="SearchCampaign" EntitySet="SearchCampaign" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SearchCampaign_SearchAccount1" Association="ClientPortalModel.Store.FK_SearchCampaign_SearchAccount1">
-            <End Role="SearchAccount" EntitySet="SearchAccount" />
-            <End Role="SearchCampaign" EntitySet="SearchCampaign" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SearchDailySummary_SearchCampaign" Association="ClientPortalModel.Store.FK_SearchDailySummary_SearchCampaign">
-            <End Role="SearchCampaign" EntitySet="SearchCampaign" />
-            <End Role="SearchDailySummary" EntitySet="SearchDailySummary" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SearchDailySummary2_SearchCampaign" Association="ClientPortalModel.Store.FK_SearchDailySummary2_SearchCampaign">
-            <End Role="SearchCampaign" EntitySet="SearchCampaign" />
-            <End Role="SearchDailySummary2" EntitySet="SearchDailySummary2" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SearchProfileContact_Contact" Association="ClientPortalModel.Store.FK_SearchProfileContact_Contact">
-            <End Role="Contact" EntitySet="Contact" />
-            <End Role="SearchProfileContact" EntitySet="SearchProfileContact" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SearchProfileContact_SearchProfile" Association="ClientPortalModel.Store.FK_SearchProfileContact_SearchProfile">
-            <End Role="SearchProfile" EntitySet="SearchProfile" />
-            <End Role="SearchProfileContact" EntitySet="SearchProfileContact" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SimpleReport_Advertiser" Association="ClientPortalModel.Store.FK_SimpleReport_Advertiser">
-            <End Role="Advertiser" EntitySet="Advertiser" />
-            <End Role="SimpleReport" EntitySet="SimpleReport" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SimpleReport_SearchProfile" Association="ClientPortalModel.Store.FK_SimpleReport_SearchProfile">
-            <End Role="SearchProfile" EntitySet="SearchProfile" />
-            <End Role="SimpleReport" EntitySet="SimpleReport" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserEvent_UserProfile" Association="ClientPortalModel.Store.FK_UserEvent_UserProfile">
-            <End Role="UserProfile" EntitySet="UserProfile" />
-            <End Role="UserEvent" EntitySet="UserEvent" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserProfile_SearchProfile" Association="ClientPortalModel.Store.FK_UserProfile_SearchProfile">
-            <End Role="SearchProfile" EntitySet="SearchProfile" />
-            <End Role="UserProfile" EntitySet="UserProfile" />
-          </AssociationSet>
-        </EntityContainer>
+    <Schema Namespace="ClientPortalModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Advertiser">
           <Key>
             <PropertyRef Name="AdvertiserId" />
@@ -249,7 +66,7 @@
             <PropertyRef Name="CakeRoleId" />
           </Key>
           <Property Name="CakeRoleId" Type="int" Nullable="false" />
-          <Property Name="RoleName" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="RoleName" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="CallDailySummary">
           <Key>
@@ -274,10 +91,10 @@
           <Key>
             <PropertyRef Name="CampaignDropId" />
           </Key>
-          <Property Name="CampaignDropId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CampaignDropId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CampaignId" Type="int" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
-          <Property Name="Cost" Type="decimal" Scale="2" />
+          <Property Name="Cost" Type="decimal" Precision="18" Scale="2" />
           <Property Name="Volume" Type="int" />
           <Property Name="Opens" Type="int" />
           <Property Name="Subject" Type="nvarchar" MaxLength="255" />
@@ -290,7 +107,7 @@
           <Key>
             <PropertyRef Name="ContactId" />
           </Key>
-          <Property Name="ContactId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ContactId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="FirstName" Type="nvarchar(max)" />
           <Property Name="LastName" Type="nvarchar(max)" />
           <Property Name="Title" Type="nvarchar(max)" />
@@ -300,27 +117,27 @@
           <Key>
             <PropertyRef Name="conversion_id" />
           </Key>
-          <Property Name="conversion_id" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="conversion_id" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="conversion_date" Type="datetime" Nullable="false" />
           <Property Name="affiliate_id" Type="int" Nullable="false" />
           <Property Name="advertiser_id" Type="int" Nullable="false" />
           <Property Name="offer_id" Type="int" Nullable="false" />
           <Property Name="received_currency_id" Type="tinyint" Nullable="false" />
-          <Property Name="received_amount" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="received_amount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="transaction_id" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="ConversionData">
           <Key>
             <PropertyRef Name="conversion_id" />
           </Key>
-          <Property Name="conversion_id" Type="nvarchar" Nullable="false" MaxLength="128" />
-          <Property Name="value0" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="conversion_id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="value0" Type="decimal" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
         <EntityType Name="CPMReport">
           <Key>
             <PropertyRef Name="CPMReportId" />
           </Key>
-          <Property Name="CPMReportId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CPMReportId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="OfferId" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="255" />
           <Property Name="DateSent" Type="datetime" />
@@ -371,7 +188,7 @@
           <Key>
             <PropertyRef Name="CreativeStatId" />
           </Key>
-          <Property Name="CreativeStatId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CreativeStatId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CampaignDropId" Type="int" Nullable="false" />
           <Property Name="CreativeId" Type="int" Nullable="false" />
           <Property Name="Clicks" Type="int" />
@@ -393,7 +210,7 @@
             <PropertyRef Name="CreativeTypeId" />
           </Key>
           <Property Name="CreativeTypeId" Type="int" Nullable="false" />
-          <Property Name="CreativeTypeName" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="CreativeTypeName" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="DailySummary">
           <Key>
@@ -409,14 +226,14 @@
           <Property Name="Conversions" Type="int" Nullable="false" />
           <Property Name="Paid" Type="int" Nullable="false" />
           <Property Name="Sellable" Type="int" Nullable="false" />
-          <Property Name="Cost" Type="decimal" Nullable="false" Scale="2" />
-          <Property Name="Revenue" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="Cost" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Revenue" Type="decimal" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
         <EntityType Name="FileUpload">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UploadDate" Type="datetime" Nullable="false" />
           <Property Name="Filename" Type="nvarchar(max)" />
           <Property Name="Text" Type="nvarchar(max)" />
@@ -426,13 +243,13 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="AdvertiserId" Type="int" Nullable="false" />
           <Property Name="OfferId" Type="int" />
           <Property Name="Name" Type="nvarchar(max)" />
           <Property Name="TypeId" Type="int" Nullable="false" />
           <Property Name="MetricId" Type="int" Nullable="false" />
-          <Property Name="Target" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="Target" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="StartDate" Type="datetime" />
           <Property Name="EndDate" Type="datetime" />
         </EntityType>
@@ -450,8 +267,8 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="MetricCount">
           <Key>
@@ -470,9 +287,9 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="metric_id" Type="int" Nullable="false" />
-          <Property Name="name" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="code" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Offer">
@@ -497,24 +314,24 @@
           <Property Name="date" Type="datetime" Nullable="false" />
           <Property Name="views" Type="int" Nullable="false" />
           <Property Name="clicks" Type="int" Nullable="false" />
-          <Property Name="click_thru" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="click_thru" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="conversions" Type="int" Nullable="false" />
           <Property Name="paid" Type="int" Nullable="false" />
           <Property Name="sellable" Type="int" Nullable="false" />
-          <Property Name="conversion_rate" Type="decimal" Nullable="false" Scale="2" />
-          <Property Name="cpl" Type="decimal" Nullable="false" Scale="2" />
-          <Property Name="cost" Type="decimal" Nullable="false" Scale="2" />
-          <Property Name="rpt" Type="decimal" Nullable="false" Scale="2" />
-          <Property Name="revenue" Type="decimal" Nullable="false" Scale="2" />
-          <Property Name="margin" Type="decimal" Nullable="false" Scale="2" />
-          <Property Name="profit" Type="decimal" Nullable="false" Scale="2" />
-          <Property Name="epc" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="conversion_rate" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="cpl" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="cost" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="rpt" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="revenue" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="margin" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="profit" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="epc" Type="decimal" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchAccount">
           <Key>
             <PropertyRef Name="SearchAccountId" />
           </Key>
-          <Property Name="SearchAccountId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="SearchAccountId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="AdvertiserId" Type="int" />
           <Property Name="Name" Type="nvarchar" MaxLength="255" />
           <Property Name="Channel" Type="nvarchar" MaxLength="50" />
@@ -526,8 +343,8 @@
           <Key>
             <PropertyRef Name="SearchCampaignId" />
           </Key>
-          <Property Name="SearchCampaignId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="SearchCampaignName" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="SearchCampaignId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SearchCampaignName" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="AdvertiserId" Type="int" />
           <Property Name="Channel" Type="nvarchar" MaxLength="255" />
           <Property Name="ExternalId" Type="int" />
@@ -539,7 +356,7 @@
           <Key>
             <PropertyRef Name="SearchChannelId" />
           </Key>
-          <Property Name="SearchChannelId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="SearchChannelId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Prefix" Type="nvarchar" MaxLength="5" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
           <Property Name="Device" Type="nvarchar" MaxLength="5" />
@@ -559,8 +376,9 @@
           <Property Name="Clicks" Type="int" Nullable="false" />
           <Property Name="Impressions" Type="int" Nullable="false" />
           <Property Name="CurrencyId" Type="int" Nullable="false" />
-          <Property Name="Network" Type="nchar" Nullable="false" MaxLength="1" />
-          <Property Name="Device" Type="nchar" Nullable="false" MaxLength="1" />
+          <Property Name="Network" Type="nchar" MaxLength="1" Nullable="false" />
+          <Property Name="Device" Type="nchar" MaxLength="1" Nullable="false" />
+          <Property Name="ViewThrus" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchDailySummary2">
           <Key>
@@ -578,9 +396,9 @@
           <Property Name="Clicks" Type="int" Nullable="false" />
           <Property Name="Impressions" Type="int" Nullable="false" />
           <Property Name="CurrencyId" Type="int" Nullable="false" />
-          <Property Name="Network" Type="nchar" Nullable="false" MaxLength="1" />
-          <Property Name="Device" Type="nchar" Nullable="false" MaxLength="1" />
-          <Property Name="ClickType" Type="nchar" Nullable="false" MaxLength="1" />
+          <Property Name="Network" Type="nchar" MaxLength="1" Nullable="false" />
+          <Property Name="Device" Type="nchar" MaxLength="1" Nullable="false" />
+          <Property Name="ClickType" Type="nchar" MaxLength="1" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchProfile">
           <Key>
@@ -607,7 +425,7 @@
           <Key>
             <PropertyRef Name="SimpleReportId" />
           </Key>
-          <Property Name="SimpleReportId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="SimpleReportId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="AdvertiserId" Type="int" />
           <Property Name="SearchProfileId" Type="int" />
           <Property Name="Enabled" Type="bit" Nullable="false" />
@@ -623,7 +441,7 @@
           <Key>
             <PropertyRef Name="EventId" />
           </Key>
-          <Property Name="EventId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="EventId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
           <Property Name="UserId" Type="int" />
           <Property Name="Event" Type="nvarchar" MaxLength="255" />
@@ -632,7 +450,7 @@
           <Key>
             <PropertyRef Name="UserId" />
           </Key>
-          <Property Name="UserId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserName" Type="nvarchar(max)" />
           <Property Name="CakeAdvertiserId" Type="int" />
           <Property Name="QuickBooksCompanyId" Type="int" />
@@ -641,8 +459,8 @@
           <Property Name="SearchProfileId" Type="int" />
         </EntityType>
         <Association Name="FK_Advertiser_CakeContact">
-          <End Role="CakeContact" Type="ClientPortalModel.Store.CakeContact" Multiplicity="0..1" />
-          <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="*" />
+          <End Role="CakeContact" Type="Self.CakeContact" Multiplicity="0..1" />
+          <End Role="Advertiser" Type="Self.Advertiser" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="CakeContact">
               <PropertyRef Name="CakeContactId" />
@@ -653,8 +471,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CakeContact_CakeRole">
-          <End Role="CakeRole" Type="ClientPortalModel.Store.CakeRole" Multiplicity="1" />
-          <End Role="CakeContact" Type="ClientPortalModel.Store.CakeContact" Multiplicity="*" />
+          <End Role="CakeRole" Type="Self.CakeRole" Multiplicity="1" />
+          <End Role="CakeContact" Type="Self.CakeContact" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="CakeRole">
               <PropertyRef Name="CakeRoleId" />
@@ -665,8 +483,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CallDailySummary_SearchCampaign">
-          <End Role="SearchCampaign" Type="ClientPortalModel.Store.SearchCampaign" Multiplicity="1" />
-          <End Role="CallDailySummary" Type="ClientPortalModel.Store.CallDailySummary" Multiplicity="*" />
+          <End Role="SearchCampaign" Type="Self.SearchCampaign" Multiplicity="1" />
+          <End Role="CallDailySummary" Type="Self.CallDailySummary" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="SearchCampaign">
               <PropertyRef Name="SearchCampaignId" />
@@ -677,8 +495,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Campaign_Affiliate">
-          <End Role="Affiliate" Type="ClientPortalModel.Store.Affiliate" Multiplicity="1" />
-          <End Role="Campaign" Type="ClientPortalModel.Store.Campaign" Multiplicity="*" />
+          <End Role="Affiliate" Type="Self.Affiliate" Multiplicity="1" />
+          <End Role="Campaign" Type="Self.Campaign" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Affiliate">
               <PropertyRef Name="AffiliateId" />
@@ -689,8 +507,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Campaign_Offer">
-          <End Role="Offer" Type="ClientPortalModel.Store.Offer" Multiplicity="1" />
-          <End Role="Campaign" Type="ClientPortalModel.Store.Campaign" Multiplicity="*" />
+          <End Role="Offer" Type="Self.Offer" Multiplicity="1" />
+          <End Role="Campaign" Type="Self.Campaign" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Offer">
               <PropertyRef Name="OfferId" />
@@ -701,8 +519,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CampaignDrop_Campaign">
-          <End Role="Campaign" Type="ClientPortalModel.Store.Campaign" Multiplicity="1" />
-          <End Role="CampaignDrop" Type="ClientPortalModel.Store.CampaignDrop" Multiplicity="*" />
+          <End Role="Campaign" Type="Self.Campaign" Multiplicity="1" />
+          <End Role="CampaignDrop" Type="Self.CampaignDrop" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Campaign">
               <PropertyRef Name="CampaignId" />
@@ -713,8 +531,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CampaignDrop_CampaignDrop">
-          <End Role="CampaignDrop" Type="ClientPortalModel.Store.CampaignDrop" Multiplicity="0..1" />
-          <End Role="CampaignDrop1" Type="ClientPortalModel.Store.CampaignDrop" Multiplicity="*" />
+          <End Role="CampaignDrop" Type="Self.CampaignDrop" Multiplicity="0..1" />
+          <End Role="CampaignDrop1" Type="Self.CampaignDrop" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="CampaignDrop">
               <PropertyRef Name="CampaignDropId" />
@@ -725,8 +543,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CPMReport_Offer">
-          <End Role="Offer" Type="ClientPortalModel.Store.Offer" Multiplicity="1" />
-          <End Role="CPMReport" Type="ClientPortalModel.Store.CPMReport" Multiplicity="*" />
+          <End Role="Offer" Type="Self.Offer" Multiplicity="1" />
+          <End Role="CPMReport" Type="Self.CPMReport" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Offer">
               <PropertyRef Name="OfferId" />
@@ -737,8 +555,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CPMReportCampaignDrop_CampaignDrop">
-          <End Role="CampaignDrop" Type="ClientPortalModel.Store.CampaignDrop" Multiplicity="1" />
-          <End Role="CPMReportCampaignDrop" Type="ClientPortalModel.Store.CPMReportCampaignDrop" Multiplicity="*" />
+          <End Role="CampaignDrop" Type="Self.CampaignDrop" Multiplicity="1" />
+          <End Role="CPMReportCampaignDrop" Type="Self.CPMReportCampaignDrop" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="CampaignDrop">
               <PropertyRef Name="CampaignDropId" />
@@ -749,8 +567,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CPMReportCampaignDrop_CPMReport">
-          <End Role="CPMReport" Type="ClientPortalModel.Store.CPMReport" Multiplicity="1" />
-          <End Role="CPMReportCampaignDrop" Type="ClientPortalModel.Store.CPMReportCampaignDrop" Multiplicity="*" />
+          <End Role="CPMReport" Type="Self.CPMReport" Multiplicity="1" />
+          <End Role="CPMReportCampaignDrop" Type="Self.CPMReportCampaignDrop" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="CPMReport">
               <PropertyRef Name="CPMReportId" />
@@ -761,8 +579,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Creative_CreativeType">
-          <End Role="CreativeType" Type="ClientPortalModel.Store.CreativeType" Multiplicity="1" />
-          <End Role="Creative" Type="ClientPortalModel.Store.Creative" Multiplicity="*" />
+          <End Role="CreativeType" Type="Self.CreativeType" Multiplicity="1" />
+          <End Role="Creative" Type="Self.Creative" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="CreativeType">
               <PropertyRef Name="CreativeTypeId" />
@@ -773,8 +591,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Creative_Offer">
-          <End Role="Offer" Type="ClientPortalModel.Store.Offer" Multiplicity="1" />
-          <End Role="Creative" Type="ClientPortalModel.Store.Creative" Multiplicity="*" />
+          <End Role="Offer" Type="Self.Offer" Multiplicity="1" />
+          <End Role="Creative" Type="Self.Creative" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Offer">
               <PropertyRef Name="OfferId" />
@@ -785,8 +603,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CreativeFile_Creative">
-          <End Role="Creative" Type="ClientPortalModel.Store.Creative" Multiplicity="1" />
-          <End Role="CreativeFile" Type="ClientPortalModel.Store.CreativeFile" Multiplicity="*" />
+          <End Role="Creative" Type="Self.Creative" Multiplicity="1" />
+          <End Role="CreativeFile" Type="Self.CreativeFile" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Creative">
               <PropertyRef Name="CreativeId" />
@@ -797,8 +615,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CreativeStat_CampaignDrop">
-          <End Role="CampaignDrop" Type="ClientPortalModel.Store.CampaignDrop" Multiplicity="1" />
-          <End Role="CreativeStat" Type="ClientPortalModel.Store.CreativeStat" Multiplicity="*" />
+          <End Role="CampaignDrop" Type="Self.CampaignDrop" Multiplicity="1" />
+          <End Role="CreativeStat" Type="Self.CreativeStat" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="CampaignDrop">
               <PropertyRef Name="CampaignDropId" />
@@ -809,8 +627,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_CreativeStat_Creative">
-          <End Role="Creative" Type="ClientPortalModel.Store.Creative" Multiplicity="1" />
-          <End Role="CreativeStat" Type="ClientPortalModel.Store.CreativeStat" Multiplicity="*" />
+          <End Role="Creative" Type="Self.Creative" Multiplicity="1" />
+          <End Role="CreativeStat" Type="Self.CreativeStat" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Creative">
               <PropertyRef Name="CreativeId" />
@@ -821,10 +639,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
-          <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="1">
+          <End Role="Advertiser" Type="Self.Advertiser" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="AdvertiserContact" Type="ClientPortalModel.Store.AdvertiserContact" Multiplicity="*" />
+          <End Role="AdvertiserContact" Type="Self.AdvertiserContact" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Advertiser">
               <PropertyRef Name="AdvertiserId" />
@@ -835,10 +653,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_dbo_AdvertiserContact_dbo_Contact_ContactId">
-          <End Role="Contact" Type="ClientPortalModel.Store.Contact" Multiplicity="1">
+          <End Role="Contact" Type="Self.Contact" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="AdvertiserContact" Type="ClientPortalModel.Store.AdvertiserContact" Multiplicity="*" />
+          <End Role="AdvertiserContact" Type="Self.AdvertiserContact" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Contact">
               <PropertyRef Name="ContactId" />
@@ -849,8 +667,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_FileUpload_Advertiser">
-          <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="0..1" />
-          <End Role="FileUpload" Type="ClientPortalModel.Store.FileUpload" Multiplicity="*" />
+          <End Role="Advertiser" Type="Self.Advertiser" Multiplicity="0..1" />
+          <End Role="FileUpload" Type="Self.FileUpload" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Advertiser">
               <PropertyRef Name="AdvertiserId" />
@@ -861,8 +679,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Goal_Advertiser">
-          <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="1" />
-          <End Role="Goal" Type="ClientPortalModel.Store.Goal" Multiplicity="*" />
+          <End Role="Advertiser" Type="Self.Advertiser" Multiplicity="1" />
+          <End Role="Goal" Type="Self.Goal" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Advertiser">
               <PropertyRef Name="AdvertiserId" />
@@ -873,8 +691,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Goal_Offer">
-          <End Role="Offer" Type="ClientPortalModel.Store.Offer" Multiplicity="0..1" />
-          <End Role="Goal" Type="ClientPortalModel.Store.Goal" Multiplicity="*" />
+          <End Role="Offer" Type="Self.Offer" Multiplicity="0..1" />
+          <End Role="Goal" Type="Self.Goal" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Offer">
               <PropertyRef Name="OfferId" />
@@ -885,8 +703,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_GoogleAnalyticsSummary_SearchCampaign">
-          <End Role="SearchCampaign" Type="ClientPortalModel.Store.SearchCampaign" Multiplicity="1" />
-          <End Role="GoogleAnalyticsSummary" Type="ClientPortalModel.Store.GoogleAnalyticsSummary" Multiplicity="*" />
+          <End Role="SearchCampaign" Type="Self.SearchCampaign" Multiplicity="1" />
+          <End Role="GoogleAnalyticsSummary" Type="Self.GoogleAnalyticsSummary" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="SearchCampaign">
               <PropertyRef Name="SearchCampaignId" />
@@ -897,8 +715,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_MetricCount_MetricValue">
-          <End Role="MetricValue" Type="ClientPortalModel.Store.MetricValue" Multiplicity="1" />
-          <End Role="MetricCount" Type="ClientPortalModel.Store.MetricCount" Multiplicity="*" />
+          <End Role="MetricValue" Type="Self.MetricValue" Multiplicity="1" />
+          <End Role="MetricCount" Type="Self.MetricCount" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MetricValue">
               <PropertyRef Name="id" />
@@ -909,8 +727,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_MetricValue_Metric">
-          <End Role="Metric" Type="ClientPortalModel.Store.Metric" Multiplicity="1" />
-          <End Role="MetricValue" Type="ClientPortalModel.Store.MetricValue" Multiplicity="*" />
+          <End Role="Metric" Type="Self.Metric" Multiplicity="1" />
+          <End Role="MetricValue" Type="Self.MetricValue" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Metric">
               <PropertyRef Name="id" />
@@ -921,8 +739,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SearchAccount_Advertiser">
-          <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="0..1" />
-          <End Role="SearchAccount" Type="ClientPortalModel.Store.SearchAccount" Multiplicity="*" />
+          <End Role="Advertiser" Type="Self.Advertiser" Multiplicity="0..1" />
+          <End Role="SearchAccount" Type="Self.SearchAccount" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Advertiser">
               <PropertyRef Name="AdvertiserId" />
@@ -933,8 +751,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SearchAccount_SearchProfile">
-          <End Role="SearchProfile" Type="ClientPortalModel.Store.SearchProfile" Multiplicity="0..1" />
-          <End Role="SearchAccount" Type="ClientPortalModel.Store.SearchAccount" Multiplicity="*" />
+          <End Role="SearchProfile" Type="Self.SearchProfile" Multiplicity="0..1" />
+          <End Role="SearchAccount" Type="Self.SearchAccount" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="SearchProfile">
               <PropertyRef Name="SearchProfileId" />
@@ -945,8 +763,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SearchCampaign_Advertiser">
-          <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="0..1" />
-          <End Role="SearchCampaign" Type="ClientPortalModel.Store.SearchCampaign" Multiplicity="*" />
+          <End Role="Advertiser" Type="Self.Advertiser" Multiplicity="0..1" />
+          <End Role="SearchCampaign" Type="Self.SearchCampaign" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Advertiser">
               <PropertyRef Name="AdvertiserId" />
@@ -957,8 +775,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SearchCampaign_SearchAccount">
-          <End Role="SearchAccount" Type="ClientPortalModel.Store.SearchAccount" Multiplicity="0..1" />
-          <End Role="SearchCampaign" Type="ClientPortalModel.Store.SearchCampaign" Multiplicity="*" />
+          <End Role="SearchAccount" Type="Self.SearchAccount" Multiplicity="0..1" />
+          <End Role="SearchCampaign" Type="Self.SearchCampaign" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="SearchAccount">
               <PropertyRef Name="SearchAccountId" />
@@ -969,8 +787,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SearchCampaign_SearchAccount1">
-          <End Role="SearchAccount" Type="ClientPortalModel.Store.SearchAccount" Multiplicity="0..1" />
-          <End Role="SearchCampaign" Type="ClientPortalModel.Store.SearchCampaign" Multiplicity="*" />
+          <End Role="SearchAccount" Type="Self.SearchAccount" Multiplicity="0..1" />
+          <End Role="SearchCampaign" Type="Self.SearchCampaign" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="SearchAccount">
               <PropertyRef Name="SearchAccountId" />
@@ -981,8 +799,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SearchDailySummary_SearchCampaign">
-          <End Role="SearchCampaign" Type="ClientPortalModel.Store.SearchCampaign" Multiplicity="1" />
-          <End Role="SearchDailySummary" Type="ClientPortalModel.Store.SearchDailySummary" Multiplicity="*" />
+          <End Role="SearchCampaign" Type="Self.SearchCampaign" Multiplicity="1" />
+          <End Role="SearchDailySummary" Type="Self.SearchDailySummary" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="SearchCampaign">
               <PropertyRef Name="SearchCampaignId" />
@@ -993,8 +811,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SearchDailySummary2_SearchCampaign">
-          <End Role="SearchCampaign" Type="ClientPortalModel.Store.SearchCampaign" Multiplicity="1" />
-          <End Role="SearchDailySummary2" Type="ClientPortalModel.Store.SearchDailySummary2" Multiplicity="*" />
+          <End Role="SearchCampaign" Type="Self.SearchCampaign" Multiplicity="1" />
+          <End Role="SearchDailySummary2" Type="Self.SearchDailySummary2" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="SearchCampaign">
               <PropertyRef Name="SearchCampaignId" />
@@ -1005,8 +823,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SearchProfileContact_Contact">
-          <End Role="Contact" Type="ClientPortalModel.Store.Contact" Multiplicity="1" />
-          <End Role="SearchProfileContact" Type="ClientPortalModel.Store.SearchProfileContact" Multiplicity="*" />
+          <End Role="Contact" Type="Self.Contact" Multiplicity="1" />
+          <End Role="SearchProfileContact" Type="Self.SearchProfileContact" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Contact">
               <PropertyRef Name="ContactId" />
@@ -1017,8 +835,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SearchProfileContact_SearchProfile">
-          <End Role="SearchProfile" Type="ClientPortalModel.Store.SearchProfile" Multiplicity="1" />
-          <End Role="SearchProfileContact" Type="ClientPortalModel.Store.SearchProfileContact" Multiplicity="*" />
+          <End Role="SearchProfile" Type="Self.SearchProfile" Multiplicity="1" />
+          <End Role="SearchProfileContact" Type="Self.SearchProfileContact" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="SearchProfile">
               <PropertyRef Name="SearchProfileId" />
@@ -1029,8 +847,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SimpleReport_Advertiser">
-          <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="0..1" />
-          <End Role="SimpleReport" Type="ClientPortalModel.Store.SimpleReport" Multiplicity="*" />
+          <End Role="Advertiser" Type="Self.Advertiser" Multiplicity="0..1" />
+          <End Role="SimpleReport" Type="Self.SimpleReport" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Advertiser">
               <PropertyRef Name="AdvertiserId" />
@@ -1041,8 +859,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SimpleReport_SearchProfile">
-          <End Role="SearchProfile" Type="ClientPortalModel.Store.SearchProfile" Multiplicity="0..1" />
-          <End Role="SimpleReport" Type="ClientPortalModel.Store.SimpleReport" Multiplicity="*" />
+          <End Role="SearchProfile" Type="Self.SearchProfile" Multiplicity="0..1" />
+          <End Role="SimpleReport" Type="Self.SimpleReport" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="SearchProfile">
               <PropertyRef Name="SearchProfileId" />
@@ -1053,8 +871,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UserEvent_UserProfile">
-          <End Role="UserProfile" Type="ClientPortalModel.Store.UserProfile" Multiplicity="0..1" />
-          <End Role="UserEvent" Type="ClientPortalModel.Store.UserEvent" Multiplicity="*" />
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="0..1" />
+          <End Role="UserEvent" Type="Self.UserEvent" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UserProfile">
               <PropertyRef Name="UserId" />
@@ -1065,8 +883,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UserProfile_SearchProfile">
-          <End Role="SearchProfile" Type="ClientPortalModel.Store.SearchProfile" Multiplicity="0..1" />
-          <End Role="UserProfile" Type="ClientPortalModel.Store.UserProfile" Multiplicity="*" />
+          <End Role="SearchProfile" Type="Self.SearchProfile" Multiplicity="0..1" />
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="SearchProfile">
               <PropertyRef Name="SearchProfileId" />
@@ -1076,6 +894,189 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityContainer Name="ClientPortalModelStoreContainer">
+          <EntitySet Name="Advertiser" EntityType="Self.Advertiser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AdvertiserContact" EntityType="Self.AdvertiserContact" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Affiliate" EntityType="Self.Affiliate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CakeContact" EntityType="Self.CakeContact" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CakeRole" EntityType="Self.CakeRole" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CallDailySummary" EntityType="Self.CallDailySummary" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Campaign" EntityType="Self.Campaign" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CampaignDrop" EntityType="Self.CampaignDrop" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Contact" EntityType="Self.Contact" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Conversion" EntityType="Self.Conversion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ConversionData" EntityType="Self.ConversionData" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CPMReport" EntityType="Self.CPMReport" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CPMReportCampaignDrop" EntityType="Self.CPMReportCampaignDrop" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Creative" EntityType="Self.Creative" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CreativeFile" EntityType="Self.CreativeFile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CreativeStat" EntityType="Self.CreativeStat" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CreativeSummary" EntityType="Self.CreativeSummary" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CreativeType" EntityType="Self.CreativeType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DailySummary" EntityType="Self.DailySummary" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FileUpload" EntityType="Self.FileUpload" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Goal" EntityType="Self.Goal" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GoogleAnalyticsSummary" EntityType="Self.GoogleAnalyticsSummary" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Metric" EntityType="Self.Metric" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MetricCount" EntityType="Self.MetricCount" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MetricValue" EntityType="Self.MetricValue" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Offer" EntityType="Self.Offer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OfferDailySummary" EntityType="Self.OfferDailySummary" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SearchAccount" EntityType="Self.SearchAccount" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SearchCampaign" EntityType="Self.SearchCampaign" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SearchChannel" EntityType="Self.SearchChannel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SearchDailySummary" EntityType="Self.SearchDailySummary" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SearchDailySummary2" EntityType="Self.SearchDailySummary2" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SearchProfile" EntityType="Self.SearchProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SearchProfileContact" EntityType="Self.SearchProfileContact" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SimpleReport" EntityType="Self.SimpleReport" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserEvent" EntityType="Self.UserEvent" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserProfile" EntityType="Self.UserProfile" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Advertiser_CakeContact" Association="Self.FK_Advertiser_CakeContact">
+            <End Role="CakeContact" EntitySet="CakeContact" />
+            <End Role="Advertiser" EntitySet="Advertiser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CakeContact_CakeRole" Association="Self.FK_CakeContact_CakeRole">
+            <End Role="CakeRole" EntitySet="CakeRole" />
+            <End Role="CakeContact" EntitySet="CakeContact" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallDailySummary_SearchCampaign" Association="Self.FK_CallDailySummary_SearchCampaign">
+            <End Role="SearchCampaign" EntitySet="SearchCampaign" />
+            <End Role="CallDailySummary" EntitySet="CallDailySummary" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Campaign_Affiliate" Association="Self.FK_Campaign_Affiliate">
+            <End Role="Affiliate" EntitySet="Affiliate" />
+            <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Campaign_Offer" Association="Self.FK_Campaign_Offer">
+            <End Role="Offer" EntitySet="Offer" />
+            <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CampaignDrop_Campaign" Association="Self.FK_CampaignDrop_Campaign">
+            <End Role="Campaign" EntitySet="Campaign" />
+            <End Role="CampaignDrop" EntitySet="CampaignDrop" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CampaignDrop_CampaignDrop" Association="Self.FK_CampaignDrop_CampaignDrop">
+            <End Role="CampaignDrop" EntitySet="CampaignDrop" />
+            <End Role="CampaignDrop1" EntitySet="CampaignDrop" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CPMReport_Offer" Association="Self.FK_CPMReport_Offer">
+            <End Role="Offer" EntitySet="Offer" />
+            <End Role="CPMReport" EntitySet="CPMReport" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CPMReportCampaignDrop_CampaignDrop" Association="Self.FK_CPMReportCampaignDrop_CampaignDrop">
+            <End Role="CampaignDrop" EntitySet="CampaignDrop" />
+            <End Role="CPMReportCampaignDrop" EntitySet="CPMReportCampaignDrop" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CPMReportCampaignDrop_CPMReport" Association="Self.FK_CPMReportCampaignDrop_CPMReport">
+            <End Role="CPMReport" EntitySet="CPMReport" />
+            <End Role="CPMReportCampaignDrop" EntitySet="CPMReportCampaignDrop" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Creative_CreativeType" Association="Self.FK_Creative_CreativeType">
+            <End Role="CreativeType" EntitySet="CreativeType" />
+            <End Role="Creative" EntitySet="Creative" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Creative_Offer" Association="Self.FK_Creative_Offer">
+            <End Role="Offer" EntitySet="Offer" />
+            <End Role="Creative" EntitySet="Creative" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CreativeFile_Creative" Association="Self.FK_CreativeFile_Creative">
+            <End Role="Creative" EntitySet="Creative" />
+            <End Role="CreativeFile" EntitySet="CreativeFile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CreativeStat_CampaignDrop" Association="Self.FK_CreativeStat_CampaignDrop">
+            <End Role="CampaignDrop" EntitySet="CampaignDrop" />
+            <End Role="CreativeStat" EntitySet="CreativeStat" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CreativeStat_Creative" Association="Self.FK_CreativeStat_Creative">
+            <End Role="Creative" EntitySet="Creative" />
+            <End Role="CreativeStat" EntitySet="CreativeStat" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" Association="Self.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
+            <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="AdvertiserContact" EntitySet="AdvertiserContact" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AdvertiserContact_dbo_Contact_ContactId" Association="Self.FK_dbo_AdvertiserContact_dbo_Contact_ContactId">
+            <End Role="Contact" EntitySet="Contact" />
+            <End Role="AdvertiserContact" EntitySet="AdvertiserContact" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FileUpload_Advertiser" Association="Self.FK_FileUpload_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="FileUpload" EntitySet="FileUpload" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Goal_Advertiser" Association="Self.FK_Goal_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="Goal" EntitySet="Goal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Goal_Offer" Association="Self.FK_Goal_Offer">
+            <End Role="Offer" EntitySet="Offer" />
+            <End Role="Goal" EntitySet="Goal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GoogleAnalyticsSummary_SearchCampaign" Association="Self.FK_GoogleAnalyticsSummary_SearchCampaign">
+            <End Role="SearchCampaign" EntitySet="SearchCampaign" />
+            <End Role="GoogleAnalyticsSummary" EntitySet="GoogleAnalyticsSummary" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetricCount_MetricValue" Association="Self.FK_MetricCount_MetricValue">
+            <End Role="MetricValue" EntitySet="MetricValue" />
+            <End Role="MetricCount" EntitySet="MetricCount" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetricValue_Metric" Association="Self.FK_MetricValue_Metric">
+            <End Role="Metric" EntitySet="Metric" />
+            <End Role="MetricValue" EntitySet="MetricValue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchAccount_Advertiser" Association="Self.FK_SearchAccount_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="SearchAccount" EntitySet="SearchAccount" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchAccount_SearchProfile" Association="Self.FK_SearchAccount_SearchProfile">
+            <End Role="SearchProfile" EntitySet="SearchProfile" />
+            <End Role="SearchAccount" EntitySet="SearchAccount" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchCampaign_Advertiser" Association="Self.FK_SearchCampaign_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="SearchCampaign" EntitySet="SearchCampaign" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchCampaign_SearchAccount" Association="Self.FK_SearchCampaign_SearchAccount">
+            <End Role="SearchAccount" EntitySet="SearchAccount" />
+            <End Role="SearchCampaign" EntitySet="SearchCampaign" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchCampaign_SearchAccount1" Association="Self.FK_SearchCampaign_SearchAccount1">
+            <End Role="SearchAccount" EntitySet="SearchAccount" />
+            <End Role="SearchCampaign" EntitySet="SearchCampaign" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchDailySummary_SearchCampaign" Association="Self.FK_SearchDailySummary_SearchCampaign">
+            <End Role="SearchCampaign" EntitySet="SearchCampaign" />
+            <End Role="SearchDailySummary" EntitySet="SearchDailySummary" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchDailySummary2_SearchCampaign" Association="Self.FK_SearchDailySummary2_SearchCampaign">
+            <End Role="SearchCampaign" EntitySet="SearchCampaign" />
+            <End Role="SearchDailySummary2" EntitySet="SearchDailySummary2" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchProfileContact_Contact" Association="Self.FK_SearchProfileContact_Contact">
+            <End Role="Contact" EntitySet="Contact" />
+            <End Role="SearchProfileContact" EntitySet="SearchProfileContact" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchProfileContact_SearchProfile" Association="Self.FK_SearchProfileContact_SearchProfile">
+            <End Role="SearchProfile" EntitySet="SearchProfile" />
+            <End Role="SearchProfileContact" EntitySet="SearchProfileContact" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SimpleReport_Advertiser" Association="Self.FK_SimpleReport_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="SimpleReport" EntitySet="SimpleReport" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SimpleReport_SearchProfile" Association="Self.FK_SimpleReport_SearchProfile">
+            <End Role="SearchProfile" EntitySet="SearchProfile" />
+            <End Role="SimpleReport" EntitySet="SimpleReport" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserEvent_UserProfile" Association="Self.FK_UserEvent_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="UserEvent" EntitySet="UserEvent" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserProfile_SearchProfile" Association="Self.FK_UserProfile_SearchProfile">
+            <End Role="SearchProfile" EntitySet="SearchProfile" />
+            <End Role="UserProfile" EntitySet="UserProfile" />
+          </AssociationSet>
+        </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -1427,6 +1428,7 @@
           <NavigationProperty Name="SearchCampaign" Relationship="ClientPortalModel.FK_SearchDailySummary_SearchCampaign" FromRole="SearchDailySummary" ToRole="SearchCampaign" />
           <Property Type="String" Name="Network" Nullable="false" MaxLength="1" FixedLength="true" Unicode="true" />
           <Property Type="String" Name="Device" Nullable="false" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="ViewThrus" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Conversion">
           <Key>
@@ -2303,6 +2305,7 @@
           <EntitySetMapping Name="SearchDailySummaries">
             <EntityTypeMapping TypeName="ClientPortalModel.SearchDailySummary">
               <MappingFragment StoreEntitySet="SearchDailySummary">
+                <ScalarProperty Name="ViewThrus" ColumnName="ViewThrus" />
                 <ScalarProperty Name="Device" ColumnName="Device" />
                 <ScalarProperty Name="Network" ColumnName="Network" />
                 <ScalarProperty Name="CurrencyId" ColumnName="CurrencyId" />
@@ -2703,6 +2706,7 @@
         <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->

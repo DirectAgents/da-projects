@@ -68,6 +68,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
 
             fieldsList.Add("AdNetworkType1"); // network
             fieldsList.Add("Device"); // device
+            fieldsList.Add("ViewThroughConversions"); // viewThroughConv
 
             if (includeClickType)
             {

@@ -109,14 +109,13 @@ namespace ClientPortal.Data.Contracts
 
         bool InitializeSearchProfileSimpleReport(int searchProfileId, string email = null);
 
-        SearchStat GetSearchStats(int searchProfileId, DateTime? start, DateTime? end, bool? includeToday, bool useAnalytics, bool includeCalls);
-        IQueryable<SearchStat> GetWeekStats(int searchProfileId, int numWeeks, DayOfWeek startDayOfWeek, DateTime? endDate, bool useAnalytics, bool includeCalls);
-        IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int searchProfileId, int numWeeks, bool includeToday, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeCalls);
-        IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int searchProfileId, DateTime start, DateTime end, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeCalls);
-        IQueryable<SearchStat> GetMonthStats(int searchProfileId, int? numMonths, DateTime end, bool useAnalytics, bool includeCalls);
-        IQueryable<SearchStat> GetChannelStats(int searchProfileId, int numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday, bool includeAccountBreakdown, bool includeSearchChannels, bool includeCalls);
-        IQueryable<SearchStat> GetCampaignStats(int searchProfileId, string channel, DateTime? start, DateTime? end, bool breakdown, bool useAnalytics, bool includeCalls);
-        IQueryable<SearchStat> GetCampaignStats(int searchAccountId, DateTime? start, DateTime? end, bool breakdown, bool useAnalytics, bool includeCalls);
-        IQueryable<SearchStat> GetDeviceStats(int searchProfileId, DateTime start, DateTime end);
+        SearchStat GetSearchStats(SearchProfile sp, DateTime? start, DateTime? end, bool? includeToday);
+        IQueryable<SearchStat> GetWeekStats(SearchProfile sp, int numWeeks, DateTime? endDate);
+        IQueryable<WeeklySearchStat> GetCampaignWeekStats2(SearchProfile sp, DateTime startDate, DateTime endDate);
+        IQueryable<SearchStat> GetMonthStats(SearchProfile sp, int? numMonths, DateTime end);
+        IQueryable<SearchStat> GetChannelStats(SearchProfile sp, int numWeeks, bool includeToday, bool includeAccountBreakdown, bool includeSearchChannels);
+        IQueryable<SearchStat> GetCampaignStats(SearchProfile sp, string channel, DateTime? start, DateTime? end, bool breakdown);
+        IQueryable<SearchStat> GetCampaignStats(SearchProfile sp, int searchAccountId, DateTime? start, DateTime? end, bool breakdown);
+        IQueryable<SearchStat> GetDeviceStats(SearchProfile sp, DateTime start, DateTime end);
     }
 }

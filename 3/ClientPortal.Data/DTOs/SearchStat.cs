@@ -12,6 +12,7 @@ namespace ClientPortal.Data.DTOs
         public int Impressions { get; set; }
         public int Clicks { get; set; }
         public int Orders { get; set; }
+        public int ViewThrus { get; set; }
         public decimal CPO { get; set; }
 
         public decimal CTR { get; set; }
@@ -113,6 +114,7 @@ namespace ClientPortal.Data.DTOs
         public int Impressions { get; set; }
         public int Clicks { get; set; }
         public int Orders { get; set; } // also used for Leads
+        public int ViewThrus { get; set; }
         public decimal Revenue { get; set; }
         public decimal Cost { get; set; }
 

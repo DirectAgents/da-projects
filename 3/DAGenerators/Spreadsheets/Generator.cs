@@ -44,9 +44,8 @@ namespace DAGenerators.Spreadsheets
             spreadsheet.SetReportDate(endDate);
             spreadsheet.SetClientName(searchProfile.SearchProfileName);
 
-            bool useAnalytics = false; //TODO: get from searchProfile when implemented
-            var monthlyStats = cpRepo.GetMonthStats(searchProfileId, numMonths, endDate, useAnalytics, searchProfile.ShowCalls);
-            var weeklyStats = cpRepo.GetWeekStats(searchProfileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, endDate, useAnalytics, searchProfile.ShowCalls);
+            var monthlyStats = cpRepo.GetMonthStats(searchProfile, numMonths, endDate);
+            var weeklyStats = cpRepo.GetWeekStats(searchProfile, numWeeks, endDate);
 
             var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue", "Calls" };
             spreadsheet.LoadMonthlyStats(monthlyStats, propertyNames);
@@ -58,12 +57,12 @@ namespace DAGenerators.Spreadsheets
             DateTime monthEnd = monthStart.AddDays(-1);
             monthStart = monthStart.AddMonths(-1);
 
-            var monthStats = cpRepo.GetSearchStats(searchProfileId, monthStart, monthEnd, false, useAnalytics, searchProfile.ShowCalls);
+            var monthStats = cpRepo.GetSearchStats(searchProfile, monthStart, monthEnd, false);
             monthStats.Title = monthStart.ToString("MMM-yy");
 
             monthStart = monthStart.AddYears(-1);
             monthEnd = monthStart.AddMonths(1).AddDays(-1);
-            var monthStatsLastYear = cpRepo.GetSearchStats(searchProfileId, monthStart, monthEnd, false, useAnalytics, searchProfile.ShowCalls);
+            var monthStatsLastYear = cpRepo.GetSearchStats(searchProfile, monthStart, monthEnd, false);
             monthStatsLastYear.Title = monthStart.ToString("MMM-yy");
 
             var yoyStats = new[] { monthStatsLastYear, monthStats };
@@ -87,14 +86,14 @@ namespace DAGenerators.Spreadsheets
                 { // if there is only one channel (e.g. Google) but multiple SearchAccounts, group campaigns by SearchAccount
                     foreach (var searchAccount in searchProfile.SearchAccounts)
                     {
-                        var campaignStats = cpRepo.GetCampaignStats(searchAccount.SearchAccountId, periodStart, periodEnd, false, useAnalytics, searchProfile.ShowCalls);
+                        var campaignStats = cpRepo.GetCampaignStats(searchProfile, searchAccount.SearchAccountId, periodStart, periodEnd, false);
                         if (campaignStats.Any())
                             channelStatsDict[searchAccount.Name] = campaignStats;
                     }
                 }
                 else
                 { // the "normal" way: group campaigns by channel (Google, Bing, etc)
-                    var campaignStats = cpRepo.GetCampaignStats(searchProfileId, null, periodStart, periodEnd, false, useAnalytics, searchProfile.ShowCalls);
+                    var campaignStats = cpRepo.GetCampaignStats(searchProfile, null, periodStart, periodEnd, false);
                     var channels = campaignStats.Select(s => s.Channel).Distinct();
                     foreach (string channel in channels)
                     {

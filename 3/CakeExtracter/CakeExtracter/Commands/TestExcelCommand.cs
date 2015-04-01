@@ -92,7 +92,6 @@ namespace CakeExtracter.Commands
             //int profileId = 6; //schol printables
             //int profileId = 7; //schol teacher express
             int profileId = 11; //schol class mags
-            bool useAnalytics = false;
 
             IEnumerable<SearchStat> stats;
             using (var cpRepo = new ClientPortalRepository(new ClientPortalContext()))
@@ -101,13 +100,13 @@ namespace CakeExtracter.Commands
                 if (weeklyNotMonthly)
                 {
                     int numWeeks = 6;
-                    stats = cpRepo.GetWeekStats(profileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, null, useAnalytics, searchProfile.ShowCalls);
+                    stats = cpRepo.GetWeekStats(searchProfile, numWeeks, null);
                 }
                 else
                 {
                     int numMonths = 6;
                     var endDate = DateTime.Today.AddDays(-1);
-                    stats = cpRepo.GetMonthStats(profileId, numMonths, endDate, useAnalytics, searchProfile.ShowCalls);
+                    stats = cpRepo.GetMonthStats(searchProfile, numMonths, endDate);
                 }
             }
             return stats;

@@ -21,9 +21,9 @@
         var channelperfDS = CreateSummaryDataSource('@Url.Action("ChannelPerfData", "SearchReports")', null, true, 'nosort', 0);
 
     @if (Model.SearchProfile.ShowRevenue) {
-        <text>CreateSummaryGrid(channelperfDS, $('#channelperfGrid'), 550, 'Channel', 17, 2, false, false, false, DetailInitWrapper);</text>
+        <text>CreateSummaryGrid(channelperfDS, $('#channelperfGrid'), 550, 'Channel', 17, 2, false, false, false, DetailInitWrapper, @(Model.SearchProfile.ShowViewThrus ? "true" : "false"));</text>
     } else {
-        <text>CreateSummaryGridLeadGen(channelperfDS, $('#channelperfGrid'), 550, 'Channel', 17, 2, false, false, false, DetailInitWrapper, @(Model.SearchProfile.ShowCalls ? "true" : "false"));</text>
+        <text>CreateSummaryGridLeadGen(channelperfDS, $('#channelperfGrid'), 550, 'Channel', 17, 2, false, false, false, DetailInitWrapper, @(Model.SearchProfile.ShowViewThrus ? "true" : "false"), @(Model.SearchProfile.ShowCalls ? "true" : "false"));</text>
     }
         channelperfDS.read();
     });
@@ -32,6 +32,7 @@
         DetailInit(e,
                    '@Url.Action("CampaignPerfData", "SearchReports")',
                    @(Model.SearchProfile.ShowRevenue ? "CreateSummaryGrid" : "CreateSummaryGridLeadGen"),
+                   @(Model.SearchProfile.ShowViewThrus ? "true" : "false"),
                    @(Model.SearchProfile.ShowCalls ? "true" : "false"),
                    '@(Model.SearchProfile.ShowRevenue ? "revenue" : "clicks")',
                    18

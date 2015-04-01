@@ -30,6 +30,7 @@
                     Impressions: { type: 'number' },
                     Clicks: { type: 'number' },
                     Orders: { type: 'number' },
+                    ViewThrus: { type: 'number' },
                     Revenue: { type: 'number' },
                     Cost: { type: 'number' },
                     ROAS: { type: 'number' },
@@ -51,6 +52,7 @@
             { field: 'Impressions', aggregate: 'sum' },
             { field: 'Clicks', aggregate: 'sum' },
             { field: 'Orders', aggregate: 'sum' },
+            { field: 'ViewThrus', aggregate: 'sum' },
             { field: 'Revenue', aggregate: 'sum' },
             { field: 'Cost', aggregate: 'sum' },
             { field: 'ROAS', aggregate: 'agg' },
@@ -86,7 +88,8 @@
     return new kendo.data.DataSource(args);
 }
 
-function CreateSummaryGrid(dataSource, el, height, titleHeader, titleWidthPct, decimals, sortable, showChannel, showBreakdown, detailInit) {
+function CreateSummaryGrid(dataSource, el, height, titleHeader, titleWidthPct, decimals, sortable, showChannel, showBreakdown, detailInit, showViewThrus, showCalls) {
+//ShowCalls not implemented here
     var args = {
         dataSource: dataSource,
         autoBind: false,
@@ -103,6 +106,7 @@ function CreateSummaryGrid(dataSource, el, height, titleHeader, titleWidthPct, d
             { field: 'Cost', title: 'Spend', format: '{0:c' + decimals + '}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
             { field: 'CPC', format: '{0:c2}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c2') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
             { field: 'Orders', format: '{0:n0}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+            { field: 'ViewThrus', hidden: !showViewThrus, format: '{0:n0}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
             { field: 'Revenue', format: '{0:c' + decimals + '}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
             { field: 'Margin', title: 'Net', format: '{0:c' + decimals + '}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
             { field: 'CPO', format: '{0:c' + decimals + '}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
@@ -125,7 +129,7 @@ function CreateSummaryGrid(dataSource, el, height, titleHeader, titleWidthPct, d
     }
     el.kendoGrid(args);
 }
-function CreateSummaryGridLeadGen(dataSource, el, height, titleHeader, titleWidthPct, decimals, sortable, showChannel, showBreakdown, detailInit, showCalls) {
+function CreateSummaryGridLeadGen(dataSource, el, height, titleHeader, titleWidthPct, decimals, sortable, showChannel, showBreakdown, detailInit, showViewThrus, showCalls) {
     var args = {
         dataSource: dataSource,
         autoBind: false,
@@ -142,6 +146,7 @@ function CreateSummaryGridLeadGen(dataSource, el, height, titleHeader, titleWidt
             { field: 'Cost', title: 'Spend', format: '{0:c' + decimals + '}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
             { field: 'CPC', format: '{0:c2}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c2') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
             { field: 'Orders', title: 'Leads', format: '{0:n0}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+            { field: 'ViewThrus', hidden: !showViewThrus, format: '{0:n0}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
             { field: 'Calls', hidden: !showCalls, format: '{0:n0}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
             { field: 'TotalLeads', hidden: !showCalls, format: '{0:n0}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
             { field: 'CPL', format: '{0:c' + decimals + '}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
@@ -162,7 +167,7 @@ function CreateSummaryGridLeadGen(dataSource, el, height, titleHeader, titleWidt
     el.kendoGrid(args);
 }
 
-function DetailInit(e, url, funcCreateSummaryGrid, showCalls, sort, titleWidthPct) {
+function DetailInit(e, url, funcCreateSummaryGrid, showViewThrus, showCalls, sort, titleWidthPct) {
     var readData = function () {
         return {
             channel: e.data.Title,
@@ -174,7 +179,7 @@ function DetailInit(e, url, funcCreateSummaryGrid, showCalls, sort, titleWidthPc
     dataSource.read();
 
     var el = $("<div/>").appendTo(e.detailCell);
-    funcCreateSummaryGrid(dataSource, el, null, 'Campaign', titleWidthPct, 2, true, false, false, null, showCalls);
+    funcCreateSummaryGrid(dataSource, el, null, 'Campaign', titleWidthPct, 2, true, false, false, null, showViewThrus, showCalls);
 }
 
 function CreateRevROASChart(dataSource, elId, title) {

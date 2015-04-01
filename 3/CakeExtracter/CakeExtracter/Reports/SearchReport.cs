@@ -32,8 +32,6 @@ namespace CakeExtracter.Reports
                 throw new Exception("Cannot generate search report without a searchProfile");
             var searchProfile = simpleReport.SearchProfile;
 
-            bool useAnalytics = false; // todo: get this from the SearchProfile when the column is moved there
-
             var fromDate = simpleReport.GetStatsStartDate();
             var toDate = simpleReport.GetStatsEndDate();
 
@@ -41,7 +39,7 @@ namespace CakeExtracter.Reports
             {
                 SearchProfile = searchProfile
             };
-            template.Line1stat = this.cpRepo.GetSearchStats(searchProfile.SearchProfileId, fromDate, toDate, null, useAnalytics, searchProfile.ShowCalls);
+            template.Line1stat = this.cpRepo.GetSearchStats(searchProfile, fromDate, toDate, null);
             template.Line1stat.Title = string.Format("{0} - {1}", fromDate.ToShortDateString(), toDate.ToShortDateString());
 
             bool showLine2stat = false;
@@ -59,7 +57,7 @@ namespace CakeExtracter.Reports
             }
             if (showLine2stat)
             {
-                template.Line2stat = this.cpRepo.GetSearchStats(searchProfile.SearchProfileId, fromDate, toDate, null, useAnalytics, searchProfile.ShowCalls);
+                template.Line2stat = this.cpRepo.GetSearchStats(searchProfile, fromDate, toDate, null);
                 template.Line2stat.Title = string.Format("{0} - {1}", fromDate.ToShortDateString(), toDate.ToShortDateString());
 
                 var firstStat = template.Line2stat;
@@ -130,7 +128,7 @@ namespace CakeExtracter.Reports
             var toDate = simpleReport.GetStatsEndDate();
             bool useAnalytics = false; // todo: get this from the SearchProfile when the column is moved there
 
-            var stats = cpRepo.GetWeekStats(searchProfile.SearchProfileId, numWeeks, (DayOfWeek)searchProfile.StartDayOfWeek, toDate, useAnalytics, searchProfile.ShowCalls).ToList();
+            var stats = cpRepo.GetWeekStats(searchProfile, numWeeks, toDate).ToList();
             foreach (var stat in stats)
             {
                 stat.Title = stat.Title.Replace(" ", "");
