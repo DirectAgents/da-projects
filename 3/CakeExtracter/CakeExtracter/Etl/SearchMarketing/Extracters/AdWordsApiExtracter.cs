@@ -4,12 +4,14 @@ using System.Configuration;
 using System.Xml;
 using Google.Api.Ads.AdWords.Lib;
 using Google.Api.Ads.AdWords.Util.Reports;
-using Google.Api.Ads.AdWords.v201406;
+using Google.Api.Ads.AdWords.v201502;
+using Google.Api.Ads.Common.Util.Reports;
 
 namespace CakeExtracter.Etl.SearchMarketing.Extracters
 {
     public class AdWordsApiExtracter : Extracter<Dictionary<string, string>>
     {
+        const string VERSION = "v201502";
         private readonly string reportFilePath = ConfigurationManager.AppSettings["AdWordsReportFilePath"];
 
         private readonly string clientCustomerId;
@@ -46,45 +48,65 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
         private void DownloadAdWordsXmlReport()
         {
             var fieldsList = new List<string>(new string[]
-            {
-                "AccountDescriptiveName",
-                "AccountCurrencyCode",
-                "ExternalCustomerId",
-                "AccountTimeZoneId",
-                "CampaignId",
-                "CampaignName",
-                "CampaignStatus",
-                "Date",
-                "Impressions",
-
-                "Clicks",
-                "Conversions",
-                "Cost",
-                "Ctr",
-                "ConversionValue"
+            {                             // "XML ATTRIBUTE"
+                "AccountDescriptiveName", // account
+                "AccountCurrencyCode", // currency
+                "ExternalCustomerId",  // customerID
+                "AccountTimeZoneId",   // timeZone
+                "CampaignId",    // campaignID
+                "CampaignName",  // campaign
+                "CampaignStatus",// campaignStatus
+                "Date",        // day
+                "Impressions", // impressions
+                "Clicks",      // clicks
+                "ConvertedClicks", // convertedClicks
+                "ConversionsManyPerClick", // conversions
+                "Cost", // cost
+                //"Ctr", REMOVE
+                "ConversionValue" // totalConvValue
             });
 
-            fieldsList.Add("AdNetworkType1");
-            fieldsList.Add("Device");
+            fieldsList.Add("AdNetworkType1"); // network
+            fieldsList.Add("Device"); // device
 
             if (includeClickType)
             {
-                fieldsList.Add("ClickType");
+                fieldsList.Add("ClickType"); // clickType
             }
 
-            string duringString = string.Format("DURING {0},{1}", this.beginDate.ToString("yyyyMMdd"), this.endDate.ToString("yyyyMMdd"));
-
-            string queryFormat = "SELECT {0} FROM CAMPAIGN_PERFORMANCE_REPORT WHERE Impressions > 0 AND CampaignStatus IN [ENABLED, PAUSED] {1}";
-
-            string query = string.Format(queryFormat, string.Join(",", fieldsList), duringString);
+            var definition = new ReportDefinition
+            {
+                reportName = "CAMPAIGN_PERFORMANCE_REPORT",
+                reportType = ReportDefinitionReportType.CAMPAIGN_PERFORMANCE_REPORT,
+                downloadFormat = DownloadFormat.XML,
+                dateRangeType = ReportDefinitionDateRangeType.CUSTOM_DATE,
+                selector = new Selector
+                {
+                    dateRange = new DateRange {
+                        min = this.beginDate.ToString("yyyyMMdd"),
+                        max = this.endDate.ToString("yyyyMMdd")
+                    },
+                    fields = fieldsList.ToArray(),
+                    predicates = new Predicate[] {
+                        new Predicate {
+                            field = "CampaignStatus",
+                            @operator = PredicateOperator.IN,
+                            values = new string[] { "ENABLED","PAUSED" }
+                        }
+                    }
+                },
+                includeZeroImpressions = false
+            };
 
             try
             {
                 var user = new AdWordsUser();
                 ((AdWordsAppConfig)user.Config).ClientCustomerId = this.clientCustomerId; //"999-213-1770" is RamJet
-                var utilities = new ReportUtilities(user);
-                utilities.ReportVersion = "v201406";
-                utilities.DownloadClientReport(query, DownloadFormat.XML.ToString(), this.reportFilePath);
+                var utilities = new ReportUtilities(user, VERSION, definition);
+                using (ReportResponse response = utilities.GetResponse())
+                {
+                    response.Save(this.reportFilePath);
+                }
             }
             catch (Exception ex)
             {
