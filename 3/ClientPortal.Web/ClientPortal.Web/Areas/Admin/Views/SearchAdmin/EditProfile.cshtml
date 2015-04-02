@@ -13,6 +13,8 @@
     <fieldset>
         <legend>Edit Search Profile</legend>
         @Html.HiddenFor(m => m.SearchProfileId)
+        @Html.HiddenFor(m => m.LCaccid)
+        @Html.HiddenFor(m => m.UseConvertedClicks)
         <div style="float:left">
             <table>
                 <tr>
@@ -33,7 +35,15 @@
                 </tr>
                 <tr>
                     <td>@Html.LabelFor(m => m.ShowRevenue, "Retail/eCommerce")</td>
-                    <td>@Html.EditorFor(m => m.ShowRevenue)</td>
+                    <td>@Html.EditorFor(m => m.ShowRevenue) (unchecked for LeadGen)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.ShowViewThrus)</td>
+                    <td>@Html.EditorFor(m => m.ShowViewThrus) (view-through conversions)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.UseConvertedClicks)</td>
+                    <td>@Html.DisplayFor(m => m.UseConvertedClicks) (contact KS to change)</td>
                 </tr>
             </table>
         </div>

@@ -20,16 +20,6 @@ namespace ClientPortal.Data.Contexts
         {
             get { return false; } //TODO: move column from Advertiser to SearchProfile
         }
-        [NotMapped]
-        public bool UseConvertedClicks // as opposed to "Conversions"; for AdWords only
-        {
-            get { return true; } //TODO: add column, admin UI
-        }
-        [NotMapped]
-        public bool ShowViewThrus // (View-Through Conversions)
-        {
-            get { return true; } //TODO: add column, admin UI
-        }
 
         [NotMapped]
         public bool ShowCalls
