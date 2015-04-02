@@ -10,12 +10,14 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
     {
         private const string googleChannel = "Google";
         private readonly int searchAccountId;
-        private readonly bool includeClickType;
+        private readonly bool includeClickType; // if true, we use SearchDailySummary2's
+        private readonly bool useConvertedClicks; // (instead of conversions)
 
-        public AdWordsApiLoader(int searchAccountId, bool includeClickType = false)
+        public AdWordsApiLoader(int searchAccountId, bool includeClickType, bool useConvertedClicks)
         {
             this.searchAccountId = searchAccountId;
             this.includeClickType = includeClickType;
+            this.useConvertedClicks = useConvertedClicks;
         }
 
         protected override int Load(List<Dictionary<string, string>> items)
@@ -29,6 +31,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
         private int UpsertSearchDailySummaries(List<Dictionary<string, string>> items)
         {
+            var conversionKey = useConvertedClicks ? "convertedClicks" : "conversions";
+
             var addedCount = 0;
             var updatedCount = 0;
             var itemCount = 0;
@@ -56,7 +60,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         Date = DateTime.Parse(item["day"].Replace('-', '/')),
                         Revenue = decimal.Parse(item["totalConvValue"]),
                         Cost = decimal.Parse(item["cost"]) / 1000000, // convert from mincrons to dollars
-                        Orders = int.Parse(item["convertedClicks"]),
+                        Orders = int.Parse(item[conversionKey]),
                         Clicks = int.Parse(item["clicks"]),
                         Impressions = int.Parse(item["impressions"]),
                         CurrencyId = (!item.Keys.Contains("currency") || item["currency"] == "USD") ? 1 : -1, // NOTE: non USD (if exists) -1 for now

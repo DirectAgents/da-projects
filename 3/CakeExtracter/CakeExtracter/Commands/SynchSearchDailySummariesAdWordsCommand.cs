@@ -46,7 +46,7 @@ namespace CakeExtracter.Commands
             foreach (var searchAccount in GetSearchAccounts())
             {
                 var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, dateRange, IncludeClickType);
-                var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, IncludeClickType);
+                var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, IncludeClickType, searchAccount.UseConvertedClicks);
                 var extracterThread = extracter.Start();
                 var loaderThread = loader.Start(extracter);
                 extracterThread.Join();
@@ -86,22 +86,35 @@ namespace CakeExtracter.Commands
                     {
                         if (SearchProfileId.HasValue)
                         {
-                            searchAccount = new SearchAccount()
+                            var searchProfile = db.SearchProfiles.Find(SearchProfileId.Value);
+                            if (searchProfile != null)
                             {
-                                SearchProfileId = this.SearchProfileId.Value,
-                                Channel = "Google",
-                                AccountCode = ClientId
-                                // to fill in later: Name, ExternalId
-                            };
-                            db.SearchAccounts.Add(searchAccount);
-                            db.SaveChanges();
-                            searchAccounts.Add(searchAccount);
+                                searchAccount = new SearchAccount()
+                                {
+                                    SearchProfile = searchProfile,
+                                    Channel = "Google",
+                                    AccountCode = ClientId
+                                    // to fill in later: Name, ExternalId
+                                };
+                                db.SearchAccounts.Add(searchAccount);
+                                db.SaveChanges();
+                                searchAccounts.Add(searchAccount);
+                            }
+                            else
+                            {
+                                Logger.Info("SearchAccount with AccountCode {0} not found and SearchProfileId {1} not found", ClientId, SearchProfileId);
+                            }
                         }
                         else
                         {
                             Logger.Info("SearchAccount with AccountCode {0} not found and no SearchProfileId specified", ClientId);
                         }
                     }
+                }
+                foreach (var searchAccount in searchAccounts)
+                {
+                    searchAccount.UseConvertedClicks = searchAccount.SearchProfile.UseConvertedClicks;
+                    // assign this b/c we're going to detach from the db and we'll need it later
                 }
             }
             return searchAccounts;

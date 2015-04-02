@@ -19,7 +19,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
         private readonly DateTime endDate;
         private readonly bool includeClickType;
 
-        public AdWordsApiExtracter(string clientCustomerId, CakeExtracter.Common.DateRange dateRange, bool includeClickType = false)
+        public AdWordsApiExtracter(string clientCustomerId, CakeExtracter.Common.DateRange dateRange, bool includeClickType)
         {
             this.clientCustomerId = clientCustomerId;
             this.beginDate = dateRange.FromDate;
