@@ -1110,6 +1110,7 @@
     <Content Include="Areas\Admin\Views\TDAdmin\EditInsertionOrder.cshtml" />
     <Content Include="Areas\Admin\Views\TDAdmin\CreateInsertionOrder.cshtml" />
     <Content Include="Areas\Admin\Views\TDAdmin\EditAdRollProfile.cshtml" />
+    <Content Include="Areas\Admin\Views\SearchAdmin\EditSearchAccount.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

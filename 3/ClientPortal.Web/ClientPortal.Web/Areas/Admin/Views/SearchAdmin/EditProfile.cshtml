@@ -1,4 +1,5 @@
-﻿@model ClientPortal.Data.Contexts.SearchProfile
+﻿@using ClientPortal.Data.Contexts;
+@model SearchProfile
 @{
     var ajaxOptions = RazorHelpers.GetAjaxOptions("searchProfilesTab");
     var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("searchProfilesTab", null, "Post");
@@ -18,7 +19,7 @@
         <div style="float:left">
             <table>
                 <tr>
-                    <td>@Html.LabelFor(m => m.SearchProfileId, "Id")</td>
+                    <td>@Html.LabelFor(m => m.SearchProfileId, "Id:")</td>
                     <td>@Html.DisplayFor(m => m.SearchProfileId)</td>
                 </tr>
                 <tr>
@@ -30,12 +31,8 @@
                     <td>@Html.EditorFor(m => m.StartDayOfWeek, "DayOfWeek")</td>
                 </tr>
                 <tr>
-                    <td>@Html.LabelFor(m => m.ShowSearchChannels)</td>
-                    <td>@Html.EditorFor(m => m.ShowSearchChannels) (normally leave this unchecked)</td>
-                </tr>
-                <tr>
                     <td>@Html.LabelFor(m => m.ShowRevenue, "Retail/eCommerce")</td>
-                    <td>@Html.EditorFor(m => m.ShowRevenue) (unchecked for LeadGen)</td>
+                    <td>@Html.EditorFor(m => m.ShowRevenue) (show revenue, net, rev/order, roas)</td>
                 </tr>
                 <tr>
                     <td>@Html.LabelFor(m => m.ShowViewThrus)</td>
@@ -45,6 +42,10 @@
                     <td>@Html.LabelFor(m => m.UseConvertedClicks)</td>
                     <td>@Html.DisplayFor(m => m.UseConvertedClicks) (contact KS to change)</td>
                 </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.ShowSearchChannels)</td>
+                    <td>@Html.EditorFor(m => m.ShowSearchChannels) (normally leave unchecked)</td>
+                </tr>
             </table>
         </div>
         <div style="float:left; margin-left:20px">
@@ -52,27 +53,30 @@
             @if (googleSearchAccounts != null && googleSearchAccounts.Count() > 0)
             {
                 foreach (var sa in googleSearchAccounts) {
-                    <span>- @sa.Name [@sa.AccountCode]</span><br />
+                    <span>- @sa.Name [@sa.AccountCode]</span>
+                    <i>@Ajax.ActionLink("edit", "EditSearchAccount", new { id = sa.SearchAccountId }, ajaxOptions)</i><br />
                 }
             } else {
-                <span> (none)</span><br />
+                <i>@Ajax.ActionLink("Create", "CreateSearchAccount", new { spId = Model.SearchProfileId, channel = SearchAccount.GoogleChannel }, ajaxOptions)</i><br />
             }
             <br />
             Bing Accounts:<br />
             @if (bingSearchAccounts != null && bingSearchAccounts.Count() > 0)
             {
                 foreach (var sa in bingSearchAccounts) {
-                    <span>- @sa.Name [@sa.AccountCode]</span><br />
+                    <span>- @sa.Name [@sa.AccountCode]</span>
+                    <i>@Ajax.ActionLink("edit", "EditSearchAccount", new { id = sa.SearchAccountId }, ajaxOptions)</i><br />
                 }
             } else {
-                <span> (none)</span><br />
+                <i>@Ajax.ActionLink("Create", "CreateSearchAccount", new { spId = Model.SearchProfileId, channel = SearchAccount.BingChannel }, ajaxOptions)</i><br />
             }
             @if (criteoSearchAccounts != null && criteoSearchAccounts.Count() > 0)
             {
                 <br />
                 <span>Criteo Accounts:</span><br />
                 foreach (var sa in criteoSearchAccounts) {
-                    <span>- @sa.Name [@sa.AccountCode]</span><br />
+                    <span>- @sa.Name [@sa.AccountCode]</span>
+                    <i>@Ajax.ActionLink("edit", "EditSearchAccount", new { id = sa.SearchAccountId }, ajaxOptions)</i><br />
                 }
             }
         </div>

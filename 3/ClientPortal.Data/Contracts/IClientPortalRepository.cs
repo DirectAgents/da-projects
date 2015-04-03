@@ -107,6 +107,10 @@ namespace ClientPortal.Data.Contracts
         bool SaveSearchProfile(SearchProfile searchProfile);
         bool CreateSearchProfile(SearchProfile searchProfile);
 
+        SearchAccount GetSearchAccount(int searchAccountId);
+        bool SaveSearchAccount(SearchAccount searchAccount);
+        bool CreateSearchAccount(SearchAccount searchAccount);
+
         bool InitializeSearchProfileSimpleReport(int searchProfileId, string email = null);
 
         SearchStat GetSearchStats(SearchProfile sp, DateTime? start, DateTime? end, bool? includeToday);

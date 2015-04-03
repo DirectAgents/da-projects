@@ -23,8 +23,20 @@
                 <td>@Html.EditorFor(m => m.StartDayOfWeek, "DayOfWeek")</td>
             </tr>
             <tr>
+                <td>@Html.LabelFor(m => m.ShowRevenue, "Retail/eCommerce")</td>
+                <td>@Html.EditorFor(m => m.ShowRevenue) (show revenue, net, rev/order, roas)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.ShowViewThrus)</td>
+                <td>@Html.EditorFor(m => m.ShowViewThrus) (view-through conversions)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.UseConvertedClicks)</td>
+                <td>@Html.EditorFor(m => m.UseConvertedClicks) (when pulling from AdWords)</td>
+            </tr>
+            <tr>
                 <td>@Html.LabelFor(m => m.ShowSearchChannels)</td>
-                <td>@Html.EditorFor(m => m.ShowSearchChannels)</td>
+                <td>@Html.EditorFor(m => m.ShowSearchChannels) (normally leave unchecked)</td>
             </tr>
         </table>
         <br />

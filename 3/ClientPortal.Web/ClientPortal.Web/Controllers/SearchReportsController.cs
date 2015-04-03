@@ -290,6 +290,7 @@ namespace ClientPortal.Web.Controllers
             var sumCost = stats.Sum(s => s.Cost);
             var sumOrders = stats.Sum(s => s.Orders);
             var sumViewThrus = stats.Sum(s => s.ViewThrus);
+            var sumViewThruRev = stats.Sum(s => s.ViewThruRev);
             var sumClicks = stats.Sum(s => s.Clicks);
             var sumImpressions = stats.Sum(s => s.Impressions);
             var sumCalls = stats.Sum(s => s.Calls);
@@ -308,6 +309,7 @@ namespace ClientPortal.Web.Controllers
                 Margin = new { agg = sumRevenue - sumCost },
                 Orders = new { sum = sumOrders },
                 ViewThrus = new { sum = sumViewThrus },
+                ViewThruRev = new { sum = sumViewThruRev },
                 CPO = new { agg = sumOrders == 0 ? 0 : Math.Round(sumCost / sumOrders, 2) },
                 OrderRate = new { agg = sumClicks == 0 ? 0 : Math.Round((decimal)100 * sumOrders / sumClicks, 2) },
                 RevenuePerOrder = new { agg = sumOrders == 0 ? 0 : Math.Round(sumRevenue / sumOrders, 2) },

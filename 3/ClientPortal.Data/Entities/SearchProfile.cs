@@ -16,6 +16,12 @@ namespace ClientPortal.Data.Contexts
     public partial class SearchProfile
     {
         [NotMapped]
+        public decimal RevPerViewThru
+        {
+            get { return 20; } //TODO: put col in DB + admin
+        }
+
+        [NotMapped]
         public bool UseAnalytics // Google Analytics, that is
         {
             get { return false; } //TODO: move column from Advertiser to SearchProfile
@@ -36,17 +42,17 @@ namespace ClientPortal.Data.Contexts
         [NotMapped]
         public IEnumerable<SearchAccount> GoogleSearchAccounts
         {
-            get { return this.SearchAccounts == null ? null : this.SearchAccounts.Where(sa => sa.Channel == "Google"); }
+            get { return this.SearchAccounts == null ? null : this.SearchAccounts.Where(sa => sa.Channel == SearchAccount.GoogleChannel); }
         }
         [NotMapped]
         public IEnumerable<SearchAccount> BingSearchAccounts
         {
-            get { return this.SearchAccounts == null ? null : this.SearchAccounts.Where(sa => sa.Channel == "Bing"); }
+            get { return this.SearchAccounts == null ? null : this.SearchAccounts.Where(sa => sa.Channel == SearchAccount.BingChannel); }
         }
         [NotMapped]
         public IEnumerable<SearchAccount> CriteoSearchAccounts
         {
-            get { return this.SearchAccounts == null ? null : this.SearchAccounts.Where(sa => sa.Channel == "Criteo"); }
+            get { return this.SearchAccounts == null ? null : this.SearchAccounts.Where(sa => sa.Channel == SearchAccount.CriteoChannel); }
         }
 
         public DateTime GetNext_WeekStartDate(bool includeToday = false)

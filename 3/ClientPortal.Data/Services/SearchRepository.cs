@@ -51,6 +51,33 @@ namespace ClientPortal.Data.Services
             return true;
         }
 
+        public SearchAccount GetSearchAccount(int searchAccountId)
+        {
+            var searchAccount = context.SearchAccounts.Find(searchAccountId);
+            return searchAccount;
+        }
+        public bool SaveSearchAccount(SearchAccount searchAccount)
+        {
+            if (context.SearchAccounts.Any(sa => sa.SearchAccountId == searchAccount.SearchAccountId))
+            {
+                var entry = context.Entry(searchAccount);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            else
+                return false;
+        }
+        public bool CreateSearchAccount(SearchAccount searchAccount)
+        {
+            if (context.SearchAccounts.Any(sa => sa.SearchAccountId == searchAccount.SearchAccountId))
+                return false;
+
+            context.SearchAccounts.Add(searchAccount);
+            context.SaveChanges();
+            return true;
+        }
+
         // by default, report goes to first contact
         public bool InitializeSearchProfileSimpleReport(int searchProfileId, string email = null)
         {
@@ -86,9 +113,9 @@ namespace ClientPortal.Data.Services
         // Returns one searchstat - for the specified SearchProfile and timeframe.
         public SearchStat GetSearchStats(SearchProfile sp, DateTime? start, DateTime? end, bool? includeToday)
         {
-            return GetSearchStats(sp.SearchProfileId, start, end, includeToday, sp.UseAnalytics, sp.ShowCalls);
+            return GetSearchStats(sp.SearchProfileId, start, end, includeToday, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru);
         }
-        private SearchStat GetSearchStats(int searchProfileId, DateTime? start, DateTime? end, bool? includeToday, bool useAnalytics, bool includeCalls)
+        private SearchStat GetSearchStats(int searchProfileId, DateTime? start, DateTime? end, bool? includeToday, bool useAnalytics, bool includeCalls, decimal revPerViewThru)
         {
             if (!includeToday.HasValue)
                 includeToday = true; // only relevant when end is null or end is >= today
@@ -103,7 +130,8 @@ namespace ClientPortal.Data.Services
                 Impressions = !any ? 0 : summaries.Sum(s => s.Impressions),
                 Clicks = !any ? 0 : summaries.Sum(s => s.Clicks),
                 Cost = !any ? 0 : summaries.Sum(s => s.Cost),
-                ViewThrus = !any ? 0 : summaries.Sum(s => s.ViewThrus)
+                ViewThrus = !any ? 0 : summaries.Sum(s => s.ViewThrus),
+                RevPerViewThru = revPerViewThru
             };
 
             if (!useAnalytics)
@@ -250,9 +278,9 @@ namespace ClientPortal.Data.Services
         // if endDate is null, goes up to the latest complete week
         public IQueryable<SearchStat> GetWeekStats(SearchProfile sp, int numWeeks, DateTime? endDate)
         {
-            return GetWeekStats(null, sp.SearchProfileId, null, null, null, null, numWeeks, (DayOfWeek)sp.StartDayOfWeek, endDate, sp.UseAnalytics, sp.ShowCalls);
+            return GetWeekStats(null, sp.SearchProfileId, null, null, null, null, numWeeks, (DayOfWeek)sp.StartDayOfWeek, endDate, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru);
         }
-        private IQueryable<SearchStat> GetWeekStats(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, int numWeeks, DayOfWeek startDayOfWeek, DateTime? endDate, bool useAnalytics, bool includeCalls)
+        private IQueryable<SearchStat> GetWeekStats(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, int numWeeks, DayOfWeek startDayOfWeek, DateTime? endDate, bool useAnalytics, bool includeCalls, decimal revPerViewThru)
         {
             if (!String.IsNullOrWhiteSpace(device) && useAnalytics)
                 throw new Exception("specifying a device and useAnalytics not supported");
@@ -406,6 +434,7 @@ namespace ClientPortal.Data.Services
                         Clicks = g.Sum(s => s.Clicks),
                         Orders = g.Sum(s => s.Orders),
                         ViewThrus = g.Sum(s => s.ViewThrus),
+                        RevPerViewThru = revPerViewThru,
                         Revenue = g.Sum(s => s.Revenue),
                         Cost = g.Sum(s => s.Cost),
                         Calls = g.Sum(s => s.Calls)
@@ -531,9 +560,9 @@ namespace ClientPortal.Data.Services
 
         public IQueryable<SearchStat> GetMonthStats(SearchProfile sp, int? numMonths, DateTime end)
         {
-            return GetMonthStats(sp.SearchProfileId, numMonths, end, sp.UseAnalytics, sp.ShowCalls);
+            return GetMonthStats(sp.SearchProfileId, numMonths, end, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru);
         }
-        private IQueryable<SearchStat> GetMonthStats(int searchProfileId, int? numMonths, DateTime end, bool useAnalytics, bool includeCalls)
+        private IQueryable<SearchStat> GetMonthStats(int searchProfileId, int? numMonths, DateTime end, bool useAnalytics, bool includeCalls, decimal revPerViewThru)
         {
             if (!numMonths.HasValue)
                 numMonths = 13;
@@ -550,6 +579,7 @@ namespace ClientPortal.Data.Services
                     Clicks = g.Sum(s => s.Clicks),
                     Orders = g.Sum(s => s.Orders),
                     ViewThrus = g.Sum(s => s.ViewThrus),
+                    RevPerViewThru = revPerViewThru,
                     Revenue = g.Sum(s => s.Revenue),
                     Cost = g.Sum(s => s.Cost)
                 })
@@ -576,6 +606,7 @@ namespace ClientPortal.Data.Services
                              Clicks = stat.Clicks,
                              Orders = (gaStat == null) ? 0 : gaStat.Orders,
                              ViewThrus = stat.ViewThrus,
+                             RevPerViewThru = revPerViewThru,
                              Revenue = (gaStat == null) ? 0 : gaStat.Revenue,
                              Cost = stat.Cost
                          });
@@ -601,6 +632,7 @@ namespace ClientPortal.Data.Services
                              Clicks = stat.Clicks,
                              Orders = stat.Orders,
                              ViewThrus = stat.ViewThrus,
+                             RevPerViewThru = revPerViewThru,
                              Revenue = stat.Revenue,
                              Cost = stat.Cost,
                              Calls = (callStat == null) ? 0 : callStat.Calls
@@ -626,6 +658,7 @@ namespace ClientPortal.Data.Services
                     Clicks = g.Sum(s => s.Clicks),
                     Orders = g.Sum(s => s.Orders),
                     ViewThrus = g.Sum(s => s.ViewThrus),
+                    RevPerViewThru = sp.RevPerViewThru,
                     Revenue = g.Sum(s => s.Revenue),
                     Cost = g.Sum(s => s.Cost)
                 })
@@ -655,6 +688,7 @@ namespace ClientPortal.Data.Services
             //                 Clicks = stat.Clicks,
             //                 Orders = stat.Orders,
             //                 ViewThrus = stat.ViewThrus,
+            //                 RevPerViewThru = sp.RevPerViewThru,
             //                 Revenue = stat.Revenue,
             //                 Cost = stat.Cost,
             //                 Calls = callStat.Calls
@@ -679,9 +713,9 @@ namespace ClientPortal.Data.Services
             IQueryable<SearchStat> stats = new List<SearchStat>().AsQueryable();
             if (includeMainChannels)
             {
-                var googleStats = GetWeekStats(null, sp.SearchProfileId, "Google", null, null, null, numWeeks, (DayOfWeek)sp.StartDayOfWeek, endDate, sp.UseAnalytics, sp.ShowCalls);
-                var bingStats = GetWeekStats(null, sp.SearchProfileId, "Bing", null, null, null, numWeeks, (DayOfWeek)sp.StartDayOfWeek, endDate, sp.UseAnalytics, sp.ShowCalls);
-                var criteoStats = GetWeekStats(null, sp.SearchProfileId, "Criteo", null, null, null, numWeeks, (DayOfWeek)sp.StartDayOfWeek, endDate, sp.UseAnalytics, sp.ShowCalls);
+                var googleStats = GetWeekStats(null, sp.SearchProfileId, "Google", null, null, null, numWeeks, (DayOfWeek)sp.StartDayOfWeek, endDate, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru);
+                var bingStats = GetWeekStats(null, sp.SearchProfileId, "Bing", null, null, null, numWeeks, (DayOfWeek)sp.StartDayOfWeek, endDate, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru);
+                var criteoStats = GetWeekStats(null, sp.SearchProfileId, "Criteo", null, null, null, numWeeks, (DayOfWeek)sp.StartDayOfWeek, endDate, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru);
                 stats = googleStats.Concat(bingStats).Concat(criteoStats).AsQueryable();
             }
             if (includeAccountBreakdown)
@@ -694,7 +728,7 @@ namespace ClientPortal.Data.Services
                     {
                         foreach (var searchAccount in searchAccounts)
                         {
-                            var accountStats = GetWeekStats(null, sp.SearchProfileId, channel, searchAccount.SearchAccountId, null, null, numWeeks, (DayOfWeek)sp.StartDayOfWeek, endDate, sp.UseAnalytics, sp.ShowCalls);
+                            var accountStats = GetWeekStats(null, sp.SearchProfileId, channel, searchAccount.SearchAccountId, null, null, numWeeks, (DayOfWeek)sp.StartDayOfWeek, endDate, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru);
                             stats = stats.Concat(accountStats);
                         }
                     }
@@ -707,7 +741,7 @@ namespace ClientPortal.Data.Services
                     if (!String.IsNullOrWhiteSpace(searchChannel.Device) && sp.UseAnalytics)
                         continue; // specifying device and useAnalytics not supported; analytics summaries are not broken down by device
 
-                    var channelStats = GetWeekStats(null, sp.SearchProfileId, null, null, searchChannel.Prefix, searchChannel.Device, numWeeks, (DayOfWeek)sp.StartDayOfWeek, endDate, sp.UseAnalytics, sp.ShowCalls);
+                    var channelStats = GetWeekStats(null, sp.SearchProfileId, null, null, searchChannel.Prefix, searchChannel.Device, numWeeks, (DayOfWeek)sp.StartDayOfWeek, endDate, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru);
                     if (channelStats.Count() > 0)
                         stats = stats.Concat(channelStats);
                 }
@@ -757,15 +791,15 @@ namespace ClientPortal.Data.Services
                         searchAccountId = searchAccount.SearchAccountId;
                 }
             }
-            return GetCampaignStatsInner(sp.SearchProfileId, channel, searchAccountId, channelPrefix, device, start, end, breakdown, sp.UseAnalytics, sp.ShowCalls);
+            return GetCampaignStatsInner(sp.SearchProfileId, channel, searchAccountId, channelPrefix, device, start, end, breakdown, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru);
         }
 
         public IQueryable<SearchStat> GetCampaignStats(SearchProfile sp, int searchAccountId, DateTime? start, DateTime? end, bool breakdown)
         {
-            return GetCampaignStatsInner(null, null, searchAccountId, null, null, start, end, breakdown, sp.UseAnalytics, sp.ShowCalls);
+            return GetCampaignStatsInner(null, null, searchAccountId, null, null, start, end, breakdown, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru);
         }
 
-        private IQueryable<SearchStat> GetCampaignStatsInner(int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, DateTime? start, DateTime? end, bool breakdown, bool useAnalytics, bool includeCalls)
+        private IQueryable<SearchStat> GetCampaignStatsInner(int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, DateTime? start, DateTime? end, bool breakdown, bool useAnalytics, bool includeCalls, decimal revPerViewThru)
         {
             var searchCampaigns = GetSearchCampaigns(null, searchProfileId, channel, searchAccountId, channelPrefix);
             var summaries = GetSearchDailySummaries(searchCampaigns, device, start, end, true).ToList();
@@ -788,6 +822,7 @@ namespace ClientPortal.Data.Services
                         Clicks = g.Sum(s => s.Clicks),
                         Orders = g.Sum(s => s.Orders),
                         ViewThrus = g.Sum(s => s.ViewThrus),
+                        RevPerViewThru = revPerViewThru,
                         Revenue = g.Sum(s => s.Revenue),
                         Cost = g.Sum(s => s.Cost)
                     }).AsQueryable();
@@ -820,6 +855,7 @@ namespace ClientPortal.Data.Services
                             Clicks = s.Clicks,
                             Orders = s.Orders,
                             ViewThrus = s.ViewThrus,
+                            RevPerViewThru = revPerViewThru,
                             Revenue = s.Revenue,
                             Cost = s.Cost
                         }).AsQueryable();
@@ -851,6 +887,7 @@ namespace ClientPortal.Data.Services
                                      Clicks = sum.Clicks,
                                      Orders = (gaSum == null) ? 0 : gaSum.Transactions,
                                      ViewThrus = sum.ViewThrus,
+                                     RevPerViewThru = revPerViewThru,
                                      Revenue = (gaSum == null) ? 0 : gaSum.Revenue,
                                      Cost = sum.Cost
                                  }).AsQueryable();
@@ -877,6 +914,7 @@ namespace ClientPortal.Data.Services
                                      Clicks = sum.Clicks,
                                      Orders = sum.Orders,
                                      ViewThrus = sum.ViewThrus,
+                                     RevPerViewThru = revPerViewThru,
                                      Revenue = sum.Revenue,
                                      Cost = sum.Cost,
                                      Calls = (callSum == null) ? 0 : callSum.Calls

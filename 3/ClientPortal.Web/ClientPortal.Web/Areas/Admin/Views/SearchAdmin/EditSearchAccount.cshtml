@@ -1,0 +1,46 @@
+﻿@model ClientPortal.Data.Contexts.SearchAccount
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("searchProfilesTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("searchProfilesTab", null, "Post");
+}
+
+@using (Ajax.BeginForm(ajaxOpts_Post))
+{
+    @Html.ValidationSummary()
+    <fieldset>
+        <legend>Edit SearchAccount</legend>
+        @Html.HiddenFor(m => m.SearchAccountId)
+        @Html.HiddenFor(m => m.SearchProfileId)
+        @Html.HiddenFor(m => m.Channel)
+        @* AdvertiserId not included *@
+        <div style="float:left">
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(m => m.SearchProfile.SearchProfileName, "Profile:")</td>
+                    <td>@Html.DisplayFor(m => m.SearchProfile.SearchProfileName)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Channel, "Channel:")</td>
+                    <td>@Html.DisplayFor(m => m.Channel)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.AccountCode, "AccountCode:")</td>
+                    <td>@Html.EditorFor(m => m.AccountCode)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Name, "Name:")</td>
+                    <td>@Html.EditorFor(m => m.Name) <i>(Gets updated by the syncer)</i></td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.ExternalId, "ExternalId:")</td>
+                    <td>@Html.EditorFor(m => m.ExternalId) <i>(Gets updated by the syncer)</i></td>
+                </tr>
+            </table>
+        </div>
+        <br style="clear:both" />
+        <div style="margin-top:10px">
+            <input type="submit" value="Save" />&nbsp;
+            @Ajax.ActionLink("cancel", "EditProfile", new { spId = Model.SearchProfileId }, ajaxOptions)
+        </div>
+    </fieldset>
+}
