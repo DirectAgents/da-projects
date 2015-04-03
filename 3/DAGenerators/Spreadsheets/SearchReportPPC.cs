@@ -42,6 +42,7 @@ namespace DAGenerators.Spreadsheets
         public Metric Metric_Cost = new Metric(0, null, false, false);
         public Metric Metric_Revenue = new Metric(0, null, false, false);
         public Metric Metric_Calls = new Metric(0, null, false, false);
+        public Metric Metric_ViewThrus = new Metric(0, null, false, false); // View-Through Conversions
 
         // Computed metrics
         public Metric Metric_OrderRate = new Metric(0, null, true, false);
@@ -54,6 +55,7 @@ namespace DAGenerators.Spreadsheets
         public Metric Metric_ROI = new Metric(0, null, true, false);
         public Metric Metric_TotalLeads = new Metric(0, null, true, false);
         public Metric Metric_CPL = new Metric(0, null, true, false);
+        public Metric Metric_ViewThruRev = new Metric(0, null, true, false);
 
         protected ExcelWorksheet WS { get { return this.ExcelPackage.Workbook.Worksheets[1]; } }
         protected int NumWeeksAdded { get; set; }
@@ -67,7 +69,13 @@ namespace DAGenerators.Spreadsheets
             this.ExcelPackage = new ExcelPackage(fileInfo);
 
             SetReportDate(DateTime.Today);
-            SetColumnHeaders(); // do this after showing/hiding metrics
+            SetColumnHeaders(); // do this after specifying which metrics are "shown"
+        }
+
+        //Note: the column will still exist in the spreadsheet; it will be hidden... the user can unhide it
+        public void MakeColumnHidden(int col)
+        {
+            WS.Column(col).Hidden = true;
         }
 
         protected virtual void Setup()
@@ -80,10 +88,12 @@ namespace DAGenerators.Spreadsheets
             Metric_Orders = new Metric(8, "Orders");
             Metric_Revenue = new Metric(9, "Revenue");
             Metric_Net = new Metric(10, "Net", true);
-            Metric_CPO = new Metric(11, "Cost/Order", true);
-            Metric_OrderRate = new Metric(12, "Order Rate", true);
-            Metric_RevPerOrder = new Metric(13, "Rev/Order", true);
-            Metric_ROAS = new Metric(14, "ROAS", true);
+            Metric_ViewThrus = new Metric(11, "ViewThrus");
+            Metric_ViewThruRev = new Metric(12, "ViewThruRev", true);
+            Metric_CPO = new Metric(13, "Cost/Order", true);
+            Metric_OrderRate = new Metric(14, "Order Rate", true);
+            Metric_RevPerOrder = new Metric(15, "Rev/Order", true);
+            Metric_ROAS = new Metric(16, "ROAS", true);
         }
 
         public virtual void SetReportDate(DateTime date)
@@ -130,7 +140,7 @@ namespace DAGenerators.Spreadsheets
         //    LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Monthly + nummon
         //}
 
-        // propertyNames for: title, clicks, impressions, orders, cost, revenue, calls
+        // propertyNames for: title, clicks, impressions, orders, cost, revenue, calls, viewthrus
         // returns: # of rows added (in addition to blankRowsInTemplate); negative means blankRows deleted
         protected int LoadWeeklyMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames, int startingRow, int blankRowsInTemplate = 0)
         {
@@ -167,6 +177,7 @@ namespace DAGenerators.Spreadsheets
                 LoadColumnFromStats(stats, startingRow, Metric_Cost.ColNum, propertyNames[4], Metric_Cost);
                 LoadColumnFromStats(stats, startingRow, Metric_Revenue.ColNum, propertyNames[5], Metric_Revenue);
                 LoadColumnFromStats(stats, startingRow, Metric_Calls.ColNum, propertyNames[6], Metric_Calls);
+                LoadColumnFromStats(stats, startingRow, Metric_ViewThrus.ColNum, propertyNames[7], Metric_ViewThrus);
             }
             return blankRowsToInsert;
         }
@@ -193,6 +204,7 @@ namespace DAGenerators.Spreadsheets
             LoadColumnFromStats(stats, startingRow, Metric_Cost.ColNum, propertyNames[4], Metric_Cost);
             LoadColumnFromStats(stats, startingRow, Metric_Revenue.ColNum, propertyNames[5], Metric_Revenue);
             LoadColumnFromStats(stats, startingRow, Metric_Calls.ColNum, propertyNames[6], Metric_Calls);
+            LoadColumnFromStats(stats, startingRow, Metric_ViewThrus.ColNum, propertyNames[7], Metric_ViewThrus);
         }
 
         //TODO: retire this - if can assume all formulas are in template rows in the spreadsheet
@@ -209,6 +221,7 @@ namespace DAGenerators.Spreadsheets
             CheckLoadStatsRowFormula(iRow, Metric_ROI, String.Format("(RC[{0}]-RC[{1}])/RC[{1}]", Metric_Revenue.ColNum - Metric_ROI.ColNum, Metric_Cost.ColNum - Metric_ROI.ColNum)); // ROI ((Rev-Cost)/Cost)
             //CheckLoadStatsRowFormula(iRow, Metric_TotalLeads
             //CheckLoadStatsRowFormula(iRow, Metric_CPL
+            //CheckLoadStatsRowFormula(iRow, Metric_ViewThruRev
         }
         private void CheckLoadStatsRowFormula(int iRow, Metric metric, string formula)
         {
@@ -356,6 +369,7 @@ namespace DAGenerators.Spreadsheets
             PossiblyAddMetric(metrics, Metric_Cost, shownOnly);
             PossiblyAddMetric(metrics, Metric_Revenue, shownOnly);
             PossiblyAddMetric(metrics, Metric_Calls, shownOnly);
+            PossiblyAddMetric(metrics, Metric_ViewThrus, shownOnly);
 
             PossiblyAddMetric(metrics, Metric_OrderRate, shownOnly);
             PossiblyAddMetric(metrics, Metric_Net, shownOnly);
@@ -367,6 +381,7 @@ namespace DAGenerators.Spreadsheets
             PossiblyAddMetric(metrics, Metric_ROI, shownOnly);
             PossiblyAddMetric(metrics, Metric_TotalLeads, shownOnly);
             PossiblyAddMetric(metrics, Metric_CPL, shownOnly);
+            PossiblyAddMetric(metrics, Metric_ViewThruRev, shownOnly);
 
             return metrics;
         }

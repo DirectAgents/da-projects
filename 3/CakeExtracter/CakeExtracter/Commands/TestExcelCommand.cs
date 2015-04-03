@@ -74,7 +74,7 @@ namespace CakeExtracter.Commands
 
             var spreadsheet = new SearchReportPPC();
             spreadsheet.Setup(templateFolder);
-            var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue", "Calls" };
+            var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue", "Calls", "ViewThrus" };
             var stats = GetStats(false);
             spreadsheet.LoadMonthlyStats(stats, propertyNames);
             stats = GetStats(true);
