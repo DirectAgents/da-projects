@@ -61,8 +61,12 @@
     </StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper">
-      <HintPath>..\..\ClientPortal.Web\packages\AutoMapper.2.2.1\lib\net40\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=3.3.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ClientPortal.Web\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper.Net4">
+      <HintPath>..\..\ClientPortal.Web\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging">
       <HintPath>..\..\ClientPortal.Web\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
@@ -506,4 +510,5 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\ClientPortal.Web\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\ClientPortal.Web\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
   </Target>
+  <Import Project="..\..\ClientPortal.Web\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\..\ClientPortal.Web\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
 </Project>
