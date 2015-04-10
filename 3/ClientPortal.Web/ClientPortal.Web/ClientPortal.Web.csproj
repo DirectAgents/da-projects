@@ -204,20 +204,36 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AdvertisersController.cs" />
-    <Compile Include="Areas\Admin\Controllers\CampaignDropsController.cs" />
-    <Compile Include="Areas\Admin\Controllers\CampaignDropsWizardController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CampaignDropsController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\Admin\Controllers\CampaignDropsWizardController.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Areas\Admin\Controllers\CampaignsController.cs" />
     <Compile Include="Areas\Admin\Controllers\ContactsController.cs" />
-    <Compile Include="Areas\Admin\Controllers\CPMReportsController.cs" />
-    <Compile Include="Areas\Admin\Controllers\CPMReportsWizardController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CPMReportsController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\Admin\Controllers\CPMReportsWizardController.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Areas\Admin\Controllers\CreativeFilesController.cs" />
-    <Compile Include="Areas\Admin\Controllers\CreativesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CreativesController.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Areas\Admin\Controllers\CreativeStatsController.cs" />
-    <Compile Include="Areas\Admin\Controllers\SimpleReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
-    <Compile Include="Areas\Admin\Controllers\OffersController.cs" />
+    <Compile Include="Areas\Admin\Controllers\OffersController.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Areas\Admin\Controllers\SearchAdminController.cs" />
-    <Compile Include="Areas\Admin\Controllers\TDAdminController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SimpleReportsController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\Admin\Controllers\TDAdminController.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Areas\Admin\Helpers.cs" />
     <Compile Include="Areas\Admin\Models\AdminModel.cs" />
     <Compile Include="Areas\Admin\Models\CampaignDropVM.cs" />

@@ -1,7 +1,7 @@
 ﻿using Google.Apis.Analytics.v3;
 using Google.Apis.Analytics.v3.Data;
-using Google.Apis.Authentication.OAuth2;
-using Google.Apis.Authentication.OAuth2.DotNetOpenAuth;
+//using Google.Apis.Authentication.OAuth2;
+//using Google.Apis.Authentication.OAuth2.DotNetOpenAuth;
 using Google.Apis.Services;
 using Google.Apis.Util;
 using System;
