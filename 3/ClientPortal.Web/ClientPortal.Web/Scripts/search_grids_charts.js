@@ -4,6 +4,7 @@
 
     var args = {
         serverAggregates: true,
+        serverFiltering: true,
         pageSize: pageSize,
         transport: {
             read: {
@@ -99,7 +100,7 @@ function CreateSummaryGrid(dataSource, el, height, titleHeader, titleWidthPct, d
         columns: [
             { field: 'Channel', hidden: !showChannel, filterable: { multi: true, checkAll: false } },
             { field: 'Range', hidden: true, groupHeaderTemplate: 'Timeframe: #= value.substring(9) #' },
-            { field: 'Title', title: titleHeader, width: titleWidthPct + '%', filterable: { multi: true, checkAll: false } },
+            { field: 'Title', title: titleHeader, width: titleWidthPct + '%' },
             { field: 'Network', hidden: !showBreakdown },
             { field: 'Device', hidden: !showBreakdown },
             { field: 'Clicks', format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
@@ -138,7 +139,7 @@ function CreateSummaryGridLeadGen(dataSource, el, height, titleHeader, titleWidt
         autoBind: false,
         height: height,
         columns: [
-            { field: 'Channel', hidden: !showChannel },
+            { field: 'Channel', hidden: !showChannel, filterable: { multi: true, checkAll: false } },
             { field: 'Range', hidden: true, groupHeaderTemplate: 'Timeframe: #= value.substring(9) #' },
             { field: 'Title', title: titleHeader, width: titleWidthPct + '%' },
             { field: 'Network', hidden: !showBreakdown },

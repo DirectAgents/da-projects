@@ -9,6 +9,8 @@ using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
 using ClientPortal.Web.Models;
 using DirectAgents.Mvc.KendoGridBinder;
+using KendoGridBinderEx;
+using KendoGridBinderEx.ModelBinder.Mvc;
 using Newtonsoft.Json;
 
 namespace ClientPortal.Web.Controllers
@@ -22,18 +24,16 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult WeekSumData(KendoGridRequest request, int numweeks = 8)
+        public JsonResult WeekSumData(KendoGridMvcRequest request, int numweeks = 8)
         {
+            request.AggregateObjects = null;
             var userInfo = GetUserInfo();
 
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
             var weekStats = cpRepo.GetWeekStats(userInfo.SearchProfile, numweeks, endDate);
-            var kgrid = new KendoGrid<SearchStat>(request, weekStats);
-            if (weekStats.Any())
-                kgrid.aggregates = Aggregates(weekStats);
+            var kgrid = new KendoGridEx<SearchStat>(request, weekStats);
 
-            var json = Json(kgrid);
-            return json;
+            return CreateJsonResult(kgrid);
         }
 
         public FileResult WeekSumExport(int numweeks = 8)
@@ -56,8 +56,9 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult MonthSumData(KendoGridRequest request, int nummonths = 6)
+        public JsonResult MonthSumData(KendoGridMvcRequest request, int nummonths = 6)
         {
+            request.AggregateObjects = null;
             var userInfo = GetUserInfo();
 
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
@@ -65,12 +66,9 @@ namespace ClientPortal.Web.Controllers
                 .ToList()
                 .OrderBy(s => s.StartDate)
                 .AsQueryable();
-            var kgrid = new KendoGrid<SearchStat>(request, monthStats);
-            if (monthStats.Any())
-                kgrid.aggregates = Aggregates(monthStats);
+            var kgrid = new KendoGridEx<SearchStat>(request, monthStats);
 
-            var json = Json(kgrid);
-            return json;
+            return CreateJsonResult(kgrid);
         }
 
         public FileResult MonthSumExport(int nummonths = 6)
@@ -93,18 +91,15 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult ChannelPerfData(KendoGridRequest request, int numweeks = 8) //, string startdate, string enddate)
+        public JsonResult ChannelPerfData(KendoGridMvcRequest request, int numweeks = 8) //, string startdate, string enddate)
         {
+            request.AggregateObjects = null;
             var userInfo = GetUserInfo();
 
             var channelStats = cpRepo.GetChannelStats(userInfo.SearchProfile, numweeks, !userInfo.Search_UseYesterdayAsLatest, true, userInfo.ShowSearchChannels);
-            var kgrid = new KendoGrid<SearchStat>(request, channelStats);
-            if (channelStats.Any())
-                kgrid.aggregates = Aggregates(channelStats);
+            var kgrid = new KendoGridEx<SearchStat>(request, channelStats);
 
-            var json = Json(kgrid);
-//            var json = Json(kgrid, JsonRequestBehavior.AllowGet); // testing bug across new year's (comment out HttpPost decorator)
-            return json;
+            return CreateJsonResult(kgrid);
         }
 
         public FileResult ChannelPerfExport(int numweeks = 8)
@@ -126,10 +121,12 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult DeviceData(KendoGridRequest request, string startdate, string enddate)
+        public JsonResult DeviceData(KendoGridMvcRequest request, string startdate, string enddate)
         {
+            request.AggregateObjects = null;
             var userInfo = GetUserInfo();
             var cultureInfo = userInfo.CultureInfo;
+
             DateTime? start, end;
             if (!ControllerHelpers.ParseDates(startdate, enddate, cultureInfo, out start, out end))
                 return Json(new { });
@@ -138,17 +135,18 @@ namespace ClientPortal.Web.Controllers
 
             //TODO: useAnalytics argument; +includeCalls?
             var stats = cpRepo.GetDeviceStats(userInfo.SearchProfile, start.Value, end.Value);
+            var kgrid = new KendoGridEx<SearchStat>(request, stats);
 
-            var kgrid = new KendoGrid<SearchStat>(request, stats);
-            var json = Json(kgrid);
-            return json;
+            return CreateJsonResult(kgrid);
         }
 
         [HttpPost]
-        public JsonResult CampaignPerfData(KendoGridRequest request, string startdate, string enddate, string channel, bool breakdown = false)
+        public JsonResult CampaignPerfData(KendoGridMvcRequest request, string startdate, string enddate, string channel, bool breakdown = false, bool? brandFilter = null)
         {
+            request.AggregateObjects = null;
             var userInfo = GetUserInfo();
             var cultureInfo = userInfo.CultureInfo;
+
             DateTime? start, end;
             if (!ControllerHelpers.ParseDates(startdate, enddate, cultureInfo, out start, out end))
                 return Json(new { });
@@ -157,16 +155,28 @@ namespace ClientPortal.Web.Controllers
             if (!end.HasValue) end = userInfo.Search_Dates.Latest;
 
             var stats = cpRepo.GetCampaignStats(userInfo.SearchProfile, channel, start, end, breakdown);
+            stats = FilterBrand(stats, brandFilter);
+            var kgrid = new KendoGridEx<SearchStat>(request, stats);
 
-            var kgrid = new KendoGrid<SearchStat>(request, stats);
-            if (stats.Any())
-                kgrid.aggregates = Aggregates(stats);
-
-            var json = Json(kgrid);
-            return json;
+            return CreateJsonResult(kgrid);
         }
 
-        public FileResult CampaignPerfExport(string startdate, string enddate, string channel, bool breakdown = false)
+        // used for Megabus
+        private IQueryable<SearchStat> FilterBrand(IQueryable<SearchStat> stats, bool? brandFilter)
+        {
+            if (brandFilter.HasValue)
+            {
+                if (brandFilter.Value)
+                    return stats.Where(s => s.Title.StartsWith("DAG - Branded") || s.Title.StartsWith("DAB - Branded") || s.Title == "RAIS");
+                else
+                    return stats.Where(s => !s.Title.StartsWith("DAG - Branded") && !s.Title.ToLower().Contains("remarketing") && !s.Title.ToLower().Contains("rlsa")
+                                        && !s.Title.StartsWith("DAB - Branded") && s.Title != "RAIS");
+            }
+            else
+                return stats;
+        }
+
+        public FileResult CampaignPerfExport(string startdate, string enddate, string channel, bool breakdown = false, bool? brandFilter = null)
         {
             var userInfo = GetUserInfo();
             var cultureInfo = userInfo.CultureInfo;
@@ -177,8 +187,9 @@ namespace ClientPortal.Web.Controllers
             if (!start.HasValue) start = userInfo.Search_Dates.FirstOfMonth;
             if (!end.HasValue) end = userInfo.Search_Dates.Latest;
 
-            var stats = cpRepo.GetCampaignStats(userInfo.SearchProfile, channel, start, end, breakdown)
-                .OrderBy(s => s.EndDate).ThenByDescending(s => s.Channel).ThenBy(s => s.Title);
+            var stats = cpRepo.GetCampaignStats(userInfo.SearchProfile, channel, start, end, breakdown);
+            stats = FilterBrand(stats, brandFilter)
+                        .OrderBy(s => s.EndDate).ThenByDescending(s => s.Channel).ThenBy(s => s.Title);
 
             string filename = "CampaignPerformance" + ControllerHelpers.DateStamp() + ".csv";
             if (userInfo.SearchProfile.ShowRevenue)
@@ -284,8 +295,28 @@ namespace ClientPortal.Web.Controllers
 
         // --- private methods ---
 
+        // (the aggregates are computed here)
+        private JsonResult CreateJsonResult(KendoGridEx<SearchStat> kgrid)
+        {
+            // Note: KendoGridEx<T> has a Groups property. For some reason, the grid on the client side doesn't work when the json returned
+            //       has a null Groups property.  So we convert to a KendoGrid<T> which doesn't have a Groups property.
+            KendoGrid<SearchStat> kg = new KendoGrid<SearchStat>();
+            kg.data = kgrid.Data;
+            kg.aggregates = Aggregates(kgrid.Data);
+            kg.total = kgrid.Total;
+
+            var json = Json(kg);
+            return json;
+        }
+
+        private object Aggregates(IEnumerable<SearchStat> stats)
+        {
+            return Aggregates(stats.AsQueryable());
+        }
         private object Aggregates(IQueryable<SearchStat> stats)
         {
+            if (!stats.Any()) return null;
+
             var sumRevenue = stats.Sum(s => s.Revenue);
             var sumCost = stats.Sum(s => s.Cost);
             var sumOrders = stats.Sum(s => s.Orders);

@@ -8,6 +8,8 @@ namespace DirectAgents.Mvc.KendoGridBinder
 {
     public class KendoGrid<T>
     {
+        public KendoGrid() { }
+
         public KendoGrid(KendoGridRequest request, IQueryable<T> query, bool toListBeforeOrderBy = false)
         {
             // call another method here to get filtering and sorting.
@@ -149,6 +151,10 @@ namespace DirectAgents.Mvc.KendoGridBinder
 
                 case "contains":
                     exStr = string.Format("{0}{2}.Contains({1})", field, param, caseMod);
+                    break;
+
+                case "doesnotcontain":
+                    exStr = string.Format("!{0}{2}.Contains({1})", field, param, caseMod);
                     break;
 
                 case "startswith":

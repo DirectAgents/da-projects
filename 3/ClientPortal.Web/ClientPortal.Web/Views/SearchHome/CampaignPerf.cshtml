@@ -1,5 +1,7 @@
 ﻿@model ClientPortal.Web.Models.SearchReportModel
-
+@{
+    bool showBrandFilters = Model.SearchProfile.SearchProfileId == 25; // MegaBus
+}
 <div style="height: 40px;">
     <select style="width: 140px" id="campaignperf_dateRangeSel" onchange="ChangeDateRange('campaignperf')">
         <option value="yesterday">Yesterday</option>
@@ -15,7 +17,11 @@
     <span class="paddedlabel">End:</span>
     <input id="campaignperf_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('campaignperf')" />
     <a class="button paddedbutton" id="campaignperf_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('campaignperf'); return false">Filter</a>
-    &nbsp;Show Breakdown<input type="checkbox" id="campaignperf_showBreakdown" style="vertical-align: middle" />
+    &nbsp;Show: Breakdown<input type="checkbox" id="campaignperf_showBreakdown" style="vertical-align:middle" />
+@if (showBrandFilters) {
+    <text>&nbsp;Brand</text><input type="checkbox" id="campaignperf_showBrand" style="vertical-align:middle" />
+    <text>&nbsp;Non-Brand</text><input type="checkbox" id="campaignperf_showNonBrand" style="vertical-align:middle" />
+}
     <a class="button paddedbutton" style="float: right" href="#" onclick="ExportCampaignPerfCSV(); return false">Export CSV</a>
 </div>
 <div id="campaignperfGrid"></div>
@@ -31,11 +37,28 @@
         $('#campaignperf_showBreakdown').click(function () {
             InitGrid();
         });
+@if (showBrandFilters) {<text>
+        $('#campaignperf_showBrand').click(function() {
+            $('#campaignperf_showNonBrand').prop('checked', false);
+            InitGrid();
+        });
+        $('#campaignperf_showNonBrand').click(function() {
+            $('#campaignperf_showBrand').prop('checked', false);
+            InitGrid();
+        });
+</text>}
     });
 
     function InitGrid() {
         $('#campaignperfGrid').html('');
         var showBreakdown = $('#campaignperf_showBreakdown').is(':checked');
+        var brandFilter;
+@if (showBrandFilters) {<text>
+        if ($('#campaignperf_showBrand').is(':checked'))
+            brandFilter = true;
+        if ($('#campaignperf_showNonBrand').is(':checked'))
+            brandFilter = false;
+</text>}
 
         var campaignperfDS = CreateSummaryDataSource(
             '@Url.Action("CampaignPerfData", "SearchReports")',
@@ -43,7 +66,8 @@
                 return {
                     startdate: $('#campaignperf_startdate').val(),
                     enddate: $('#campaignperf_enddate').val(),
-                    breakdown: showBreakdown
+                    breakdown: showBreakdown,
+                    brandFilter: brandFilter
                 };
             },
             false, //don't group
