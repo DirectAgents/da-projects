@@ -1,11 +1,11 @@
-﻿using EomTool.Domain.Abstract;
-using EomTool.Domain.DTOs;
-using EomTool.Domain.Entities;
-using EomToolWeb.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using EomTool.Domain.Abstract;
+using EomTool.Domain.DTOs;
+using EomTool.Domain.Entities;
+using EomToolWeb.Models;
 
 namespace EomToolWeb.Controllers
 {
@@ -66,7 +66,7 @@ namespace EomToolWeb.Controllers
             var model = new AffiliateAmountsModel
             {
                 CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
-                CampaignAmounts = mainRepo.CampaignAmounts3(null)
+                CampAffItems = mainRepo.CampAffItems(null)
             };
             return View("AffiliateCampaignAmounts", model);
         }

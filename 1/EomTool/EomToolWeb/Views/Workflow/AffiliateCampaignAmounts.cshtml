@@ -1,8 +1,8 @@
 ﻿@model AffiliateAmountsModel
 @{
     //ViewBag.Title?
-    var campaignAmounts = Model.CampaignAmounts.OrderBy(a => a.AffiliateName).ThenBy(a => a.AdvertiserName)
-                                                .ThenBy(a => a.CampaignName).ThenBy(a => a.UnitType.name).ToList();
+    var campAffItems = Model.CampAffItems.OrderBy(a => a.AffName).ThenBy(a => a.AdvName)
+                                         .ThenBy(a => a.CampName).ThenBy(a => a.UnitType.name).ToList();
     int? lastAffId = -1;
     bool grayRow = false;
     bool unitTypeEditable = true;
@@ -23,23 +23,26 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
         <th colspan="2">Revenue</th>
         <th></th>
         <th colspan="2">Cost</th>
-        @* finalization status? *@
-        @* AM? *@
+        <th>CampaignStatus</th>
+        <th>AccountingStatus</th>
+        <th>AdManager</th>
+        <th>AcctManager</th>
+        <th>MediaBuyer</th>
     </tr>
-@for (int i = 0; i < campaignAmounts.Count; i++)
+@for (int i = 0; i < campAffItems.Count; i++)
 {
-    var ca = campaignAmounts[i];
+    var ca = campAffItems[i];
     if (ca.AffId != lastAffId)
     {
         lastAffId = ca.AffId;
         grayRow = !grayRow;
     }
     <tr style="@(grayRow ? "background-color:#ddd" : "")">
-        <td>@ca.AffiliateName</td>
-        <td>@ca.AdvertiserName</td>
+        <td>@ca.AffName</td>
+        <td>@ca.AdvName</td>
         <td style="text-align:center">@ca.Pid</td>
-        <td>@ca.CampaignName</td>
-        <td style="text-align:center">@ca.NumUnits</td>
+        <td>@ca.CampName</td>
+        <td style="text-align:center">@ca.Units</td>
         <td id="tdUnitType@(i)" style="text-align:center">
             @if (unitTypeEditable)
             {
@@ -48,16 +51,22 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
                 @ca.UnitType.name
             }
         </td>
-        <td>@ca.RevenueCurrency.name</td>
-        <td style="text-align: right">@ca.Revenue.ToString("N2")</td>
+        <td>@ca.RevCurr.name</td>
+        <td style="text-align: right">@ca.Rev.ToString("N2")</td>
         <td>&nbsp;</td>
-        <td>@ca.CostCurrency.name</td>
-        <td style="text-align: right">@ca.Cost.ToString("N2")</td>
+        <td>@ca.CostCurr.name</td>
+        <td style="text-align:right">@ca.Cost.ToString("N2")</td>
+        <td style="text-align:center">@ca.CampaignStatusName</td>
+        <td style="text-align:center">@ca.AccountingStatusName</td>
+        <td>@ca.AdManagerName</td>
+        <td>@ca.AcctManagerName</td>
+        <td>@ca.MediaBuyerName</td>
     </tr>
     @Html.Hidden("ids" + i, ca.ItemIdsString)
 }
 </table>
 
+@section scripts {
 <script>
     function EditUnitType(iRow, id) {
         $.get('@Url.Action("UnitTypeDropDown")', {name: 'selectUnitType' + iRow, selected: id}, function (data) {
@@ -80,3 +89,4 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
         }
     }
 </script>
+}

@@ -4,321 +4,27 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="EomModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityContainer Name="EomModelStoreContainer">
-          <EntitySet Name="AccountManager" EntityType="EomModel.Store.AccountManager" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Advertiser" EntityType="EomModel.Store.Advertiser" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Affiliate" EntityType="EomModel.Store.Affiliate" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="AffiliatePaymentMethod" EntityType="EomModel.Store.AffiliatePaymentMethod" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Batch" EntityType="EomModel.Store.Batch" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="BatchBatchUpdate" EntityType="EomModel.Store.BatchBatchUpdate" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="BatchUpdate" EntityType="EomModel.Store.BatchUpdate" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Campaign" EntityType="EomModel.Store.Campaign" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CampaignStatus" EntityType="EomModel.Store.CampaignStatus" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Currency" EntityType="EomModel.Store.Currency" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Invoice" EntityType="EomModel.Store.Invoice" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="InvoiceItem" EntityType="EomModel.Store.InvoiceItem" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="InvoiceNote" EntityType="EomModel.Store.InvoiceNote" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="InvoiceStatus" EntityType="EomModel.Store.InvoiceStatus" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Item" EntityType="EomModel.Store.Item" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ItemAccountingStatus" EntityType="EomModel.Store.ItemAccountingStatus" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="MarginApproval" EntityType="EomModel.Store.MarginApproval" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="MediaBuyer" EntityType="EomModel.Store.MediaBuyer" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="MediaBuyerApprovalStatus" EntityType="EomModel.Store.MediaBuyerApprovalStatus" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="NetTermType" EntityType="EomModel.Store.NetTermType" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="PaymentBatch" EntityType="EomModel.Store.PaymentBatch" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="PaymentBatchState" EntityType="EomModel.Store.PaymentBatchState" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="PubAttachment" EntityType="EomModel.Store.PubAttachment" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="PubNotes" EntityType="EomModel.Store.PubNotes" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Source" EntityType="EomModel.Store.Source" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="TrackingSystem" EntityType="EomModel.Store.TrackingSystem" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="UnitType" EntityType="EomModel.Store.UnitType" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CampaignsPublisherReportDetails" EntityType="EomModel.Store.CampaignsPublisherReportDetails" store:Type="Views" store:Schema="dbo" store:Name="CampaignsPublisherReportDetails">
-            <DefiningQuery>SELECT 
-      [CampaignsPublisherReportDetails].[ItemIDs] AS [ItemIDs], 
-      [CampaignsPublisherReportDetails].[CampaignStatus] AS [CampaignStatus], 
-      [CampaignsPublisherReportDetails].[Publisher] AS [Publisher], 
-      [CampaignsPublisherReportDetails].[AddCode] AS [AddCode], 
-      [CampaignsPublisherReportDetails].[CampaignName] AS [CampaignName], 
-      [CampaignsPublisherReportDetails].[NumUnits] AS [NumUnits], 
-      [CampaignsPublisherReportDetails].[CostPerUnit] AS [CostPerUnit], 
-      [CampaignsPublisherReportDetails].[NetTerms] AS [NetTerms], 
-      [CampaignsPublisherReportDetails].[PayCurrency] AS [PayCurrency], 
-      [CampaignsPublisherReportDetails].[IsCPM] AS [IsCPM], 
-      [CampaignsPublisherReportDetails].[MediaBuyer] AS [MediaBuyer], 
-      [CampaignsPublisherReportDetails].[ToBePaid] AS [ToBePaid], 
-      [CampaignsPublisherReportDetails].[Paid] AS [Paid], 
-      [CampaignsPublisherReportDetails].[Total] AS [Total]
-      FROM [dbo].[CampaignsPublisherReportDetails] AS [CampaignsPublisherReportDetails]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="CampaignsPublisherReportSummary" EntityType="EomModel.Store.CampaignsPublisherReportSummary" store:Type="Views" store:Schema="dbo" store:Name="CampaignsPublisherReportSummary">
-            <DefiningQuery>SELECT 
-      [CampaignsPublisherReportSummary].[CampaignStatus] AS [CampaignStatus], 
-      [CampaignsPublisherReportSummary].[Publisher] AS [Publisher], 
-      [CampaignsPublisherReportSummary].[NetTerms] AS [NetTerms], 
-      [CampaignsPublisherReportSummary].[PayCurrency] AS [PayCurrency], 
-      [CampaignsPublisherReportSummary].[Unverified] AS [Unverified], 
-      [CampaignsPublisherReportSummary].[Verified] AS [Verified], 
-      [CampaignsPublisherReportSummary].[Approved] AS [Approved], 
-      [CampaignsPublisherReportSummary].[Paid] AS [Paid], 
-      [CampaignsPublisherReportSummary].[ToBePaid] AS [ToBePaid], 
-      [CampaignsPublisherReportSummary].[Total] AS [Total]
-      FROM [dbo].[CampaignsPublisherReportSummary] AS [CampaignsPublisherReportSummary]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="PublisherPayments" EntityType="EomModel.Store.PublisherPayments" store:Type="Views" store:Schema="dbo" store:Name="PublisherPayments">
-            <DefiningQuery>SELECT 
-      [PublisherPayments].[NetTermTypeId] AS [NetTermTypeId], 
-      [PublisherPayments].[NetTermType] AS [NetTermType], 
-      [PublisherPayments].[AffIds] AS [AffIds], 
-      [PublisherPayments].[Publisher] AS [Publisher], 
-      [PublisherPayments].[PubPayCurr] AS [PubPayCurr], 
-      [PublisherPayments].[PubPayout] AS [PubPayout], 
-      [PublisherPayments].[AccountingStatusId] AS [AccountingStatusId], 
-      [PublisherPayments].[AccountingStatus] AS [AccountingStatus], 
-      [PublisherPayments].[PaymentMethodId] AS [PaymentMethodId], 
-      [PublisherPayments].[PaymentMethod] AS [PaymentMethod], 
-      [PublisherPayments].[PaymentBatchId] AS [PaymentBatchId], 
-      [PublisherPayments].[PaymentBatchStateId] AS [PaymentBatchStateId], 
-      [PublisherPayments].[PaymentBatchState] AS [PaymentBatchState], 
-      [PublisherPayments].[ApproverIdentity] AS [ApproverIdentity], 
-      [PublisherPayments].[ItemIds] AS [ItemIds]
-      FROM [dbo].[PublisherPayments] AS [PublisherPayments]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="PublisherPayouts" EntityType="EomModel.Store.PublisherPayouts" store:Type="Views" store:Schema="dbo" store:Name="PublisherPayouts">
-            <DefiningQuery>SELECT 
-      [PublisherPayouts].[affid] AS [affid], 
-      [PublisherPayouts].[Publisher] AS [Publisher], 
-      [PublisherPayouts].[Advertiser] AS [Advertiser], 
-      [PublisherPayouts].[pid] AS [pid], 
-      [PublisherPayouts].[Campaign Name] AS [Campaign Name], 
-      [PublisherPayouts].[Rev Currency] AS [Rev Currency], 
-      [PublisherPayouts].[Cost Currency] AS [Cost Currency], 
-      [PublisherPayouts].[Rev/Unit] AS [Rev/Unit], 
-      [PublisherPayouts].[Rev/Unit USD] AS [Rev/Unit USD], 
-      [PublisherPayouts].[Cost/Unit] AS [Cost/Unit], 
-      [PublisherPayouts].[Cost/Unit USD] AS [Cost/Unit USD], 
-      [PublisherPayouts].[Units] AS [Units], 
-      [PublisherPayouts].[Unit Type] AS [Unit Type], 
-      [PublisherPayouts].[Revenue] AS [Revenue], 
-      [PublisherPayouts].[Revenue USD] AS [Revenue USD], 
-      [PublisherPayouts].[Cost] AS [Cost], 
-      [PublisherPayouts].[Cost USD] AS [Cost USD], 
-      [PublisherPayouts].[Margin] AS [Margin], 
-      [PublisherPayouts].[MarginPct] AS [MarginPct], 
-      [PublisherPayouts].[Media Buyer] AS [Media Buyer], 
-      [PublisherPayouts].[Ad Manager] AS [Ad Manager], 
-      [PublisherPayouts].[Account Manager] AS [Account Manager], 
-      [PublisherPayouts].[status_id] AS [status_id], 
-      [PublisherPayouts].[Status] AS [Status], 
-      [PublisherPayouts].[accounting_status_id] AS [accounting_status_id], 
-      [PublisherPayouts].[Accounting Status] AS [Accounting Status], 
-      [PublisherPayouts].[media_buyer_approval_status_id] AS [media_buyer_approval_status_id], 
-      [PublisherPayouts].[Media Buyer Approval Status] AS [Media Buyer Approval Status], 
-      [PublisherPayouts].[Net Terms] AS [Net Terms], 
-      [PublisherPayouts].[Aff Pay Method] AS [Aff Pay Method], 
-      [PublisherPayouts].[Pub Pay Curr] AS [Pub Pay Curr], 
-      [PublisherPayouts].[Pub Payout] AS [Pub Payout], 
-      [PublisherPayouts].[CampaignNotes] AS [CampaignNotes], 
-      [PublisherPayouts].[Source] AS [Source], 
-      [PublisherPayouts].[ItemIds] AS [ItemIds], 
-      [PublisherPayouts].[BatchIds] AS [BatchIds]
-      FROM [dbo].[PublisherPayouts] AS [PublisherPayouts]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="PublisherRelatedItemCounts" EntityType="EomModel.Store.PublisherRelatedItemCounts" store:Type="Views" store:Schema="dbo" store:Name="PublisherRelatedItemCounts">
-            <DefiningQuery>SELECT 
-      [PublisherRelatedItemCounts].[Id] AS [Id], 
-      [PublisherRelatedItemCounts].[Publisher] AS [Publisher], 
-      [PublisherRelatedItemCounts].[NumNotes] AS [NumNotes], 
-      [PublisherRelatedItemCounts].[NumAttachments] AS [NumAttachments]
-      FROM [dbo].[PublisherRelatedItemCounts] AS [PublisherRelatedItemCounts]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="PublisherReportDetails" EntityType="EomModel.Store.PublisherReportDetails" store:Type="Views" store:Schema="dbo" store:Name="PublisherReportDetails">
-            <DefiningQuery>SELECT 
-      [PublisherReportDetails].[PublisherName] AS [PublisherName], 
-      [PublisherReportDetails].[NetTermTypeName] AS [NetTermTypeName], 
-      [PublisherReportDetails].[AffiliateCurrencyName] AS [AffiliateCurrencyName], 
-      [PublisherReportDetails].[SumItemTotalCost] AS [SumItemTotalCost], 
-      [PublisherReportDetails].[ItemAccountingStatusName] AS [ItemAccountingStatusName], 
-      [PublisherReportDetails].[CampaignStatusName] AS [CampaignStatusName], 
-      [PublisherReportDetails].[CampaignName] AS [CampaignName], 
-      [PublisherReportDetails].[NumUnits] AS [NumUnits], 
-      [PublisherReportDetails].[CostPerUnit] AS [CostPerUnit], 
-      [PublisherReportDetails].[AffiliateAddCode] AS [AffiliateAddCode], 
-      [PublisherReportDetails].[IsCPM] AS [IsCPM], 
-      [PublisherReportDetails].[MediaBuyer] AS [MediaBuyer], 
-      [PublisherReportDetails].[ItemIDs] AS [ItemIDs]
-      FROM [dbo].[PublisherReportDetails] AS [PublisherReportDetails]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="PublisherReports" EntityType="EomModel.Store.PublisherReports" store:Type="Views" store:Schema="dbo" store:Name="PublisherReports">
-            <DefiningQuery>SELECT 
-      [PublisherReports].[ItemIDs] AS [ItemIDs], 
-      [PublisherReports].[CampaignStatus] AS [CampaignStatus], 
-      [PublisherReports].[Publisher] AS [Publisher], 
-      [PublisherReports].[AddCode] AS [AddCode], 
-      [PublisherReports].[CampaignName] AS [CampaignName], 
-      [PublisherReports].[NumUnits] AS [NumUnits], 
-      [PublisherReports].[CostPerUnit] AS [CostPerUnit], 
-      [PublisherReports].[NetTerms] AS [NetTerms], 
-      [PublisherReports].[PayCurrency] AS [PayCurrency], 
-      [PublisherReports].[IsCPM] AS [IsCPM], 
-      [PublisherReports].[MediaBuyer] AS [MediaBuyer], 
-      [PublisherReports].[ToBePaid] AS [ToBePaid], 
-      [PublisherReports].[Paid] AS [Paid], 
-      [PublisherReports].[Total] AS [Total]
-      FROM [dbo].[PublisherReports] AS [PublisherReports]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="PublisherReportSummary" EntityType="EomModel.Store.PublisherReportSummary" store:Type="Views" store:Schema="dbo" store:Name="PublisherReportSummary">
-            <DefiningQuery>SELECT 
-      [PublisherReportSummary].[Name] AS [Name], 
-      [PublisherReportSummary].[Net Terms] AS [Net Terms], 
-      [PublisherReportSummary].[Curr] AS [Curr], 
-      [PublisherReportSummary].[To Be Paid] AS [To Be Paid], 
-      [PublisherReportSummary].[Paid] AS [Paid], 
-      [PublisherReportSummary].[Total] AS [Total]
-      FROM [dbo].[PublisherReportSummary] AS [PublisherReportSummary]</DefiningQuery>
-          </EntitySet>
-          <AssociationSet Name="Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK" Association="EomModel.Store.Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK">
-            <End Role="AffiliatePaymentMethod" EntitySet="AffiliatePaymentMethod" />
-            <End Role="Affiliate" EntitySet="Affiliate" />
-          </AssociationSet>
-          <AssociationSet Name="Affiliate_Currency_id_FK_Currency_id_PK" Association="EomModel.Store.Affiliate_Currency_id_FK_Currency_id_PK">
-            <End Role="Currency" EntitySet="Currency" />
-            <End Role="Affiliate" EntitySet="Affiliate" />
-          </AssociationSet>
-          <AssociationSet Name="Affiliate_MediaBuyer_id_FK_MediaBuyer_id_PK" Association="EomModel.Store.Affiliate_MediaBuyer_id_FK_MediaBuyer_id_PK">
-            <End Role="MediaBuyer" EntitySet="MediaBuyer" />
-            <End Role="Affiliate" EntitySet="Affiliate" />
-          </AssociationSet>
-          <AssociationSet Name="Affiliate_NetTermType_id_FK_NetTermType_id_PK" Association="EomModel.Store.Affiliate_NetTermType_id_FK_NetTermType_id_PK">
-            <End Role="NetTermType" EntitySet="NetTermType" />
-            <End Role="Affiliate" EntitySet="Affiliate" />
-          </AssociationSet>
-          <AssociationSet Name="affiliate_tracking_system_fk" Association="EomModel.Store.affiliate_tracking_system_fk">
-            <End Role="TrackingSystem" EntitySet="TrackingSystem" />
-            <End Role="Affiliate" EntitySet="Affiliate" />
-          </AssociationSet>
-          <AssociationSet Name="Campaign_AccountManager_id_FK_AccountManager_id_PK" Association="EomModel.Store.Campaign_AccountManager_id_FK_AccountManager_id_PK">
-            <End Role="AccountManager" EntitySet="AccountManager" />
-            <End Role="Campaign" EntitySet="Campaign" />
-          </AssociationSet>
-          <AssociationSet Name="Campaign_Advertiser_id_FK_Advertiser_id_PK" Association="EomModel.Store.Campaign_Advertiser_id_FK_Advertiser_id_PK">
-            <End Role="Advertiser" EntitySet="Advertiser" />
-            <End Role="Campaign" EntitySet="Campaign" />
-          </AssociationSet>
-          <AssociationSet Name="Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK" Association="EomModel.Store.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK">
-            <End Role="CampaignStatus" EntitySet="CampaignStatus" />
-            <End Role="Campaign" EntitySet="Campaign" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Item__media_buye__123EB7A3" Association="EomModel.Store.FK__Item__media_buye__123EB7A3">
-            <End Role="MediaBuyerApprovalStatus" EntitySet="MediaBuyerApprovalStatus" />
-            <End Role="Item" EntitySet="Item" />
-          </AssociationSet>
-          <AssociationSet Name="FK_BatchBatchUpdate_Batch" Association="EomModel.Store.FK_BatchBatchUpdate_Batch">
-            <End Role="Batch" EntitySet="Batch" />
-            <End Role="BatchBatchUpdate" EntitySet="BatchBatchUpdate" />
-          </AssociationSet>
-          <AssociationSet Name="FK_BatchBatchUpdate_BatchUpdate" Association="EomModel.Store.FK_BatchBatchUpdate_BatchUpdate">
-            <End Role="BatchUpdate" EntitySet="BatchUpdate" />
-            <End Role="BatchBatchUpdate" EntitySet="BatchBatchUpdate" />
-          </AssociationSet>
-          <AssociationSet Name="FK_BatchUpdate_MediaBuyerApprovalStatus" Association="EomModel.Store.FK_BatchUpdate_MediaBuyerApprovalStatus">
-            <End Role="MediaBuyerApprovalStatus" EntitySet="MediaBuyerApprovalStatus" />
-            <End Role="BatchUpdate" EntitySet="BatchUpdate" />
-          </AssociationSet>
-          <AssociationSet Name="FK_BatchUpdate_MediaBuyerApprovalStatusFrom" Association="EomModel.Store.FK_BatchUpdate_MediaBuyerApprovalStatusFrom">
-            <End Role="MediaBuyerApprovalStatus" EntitySet="MediaBuyerApprovalStatus" />
-            <End Role="BatchUpdate" EntitySet="BatchUpdate" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Invoice_InvoiceStatus" Association="EomModel.Store.FK_Invoice_InvoiceStatus">
-            <End Role="InvoiceStatus" EntitySet="InvoiceStatus" />
-            <End Role="Invoice" EntitySet="Invoice" />
-          </AssociationSet>
-          <AssociationSet Name="FK_InvoiceItem_Currency" Association="EomModel.Store.FK_InvoiceItem_Currency">
-            <End Role="Currency" EntitySet="Currency" />
-            <End Role="InvoiceItem" EntitySet="InvoiceItem" />
-          </AssociationSet>
-          <AssociationSet Name="FK_InvoiceItem_Invoice" Association="EomModel.Store.FK_InvoiceItem_Invoice">
-            <End Role="Invoice" EntitySet="Invoice" />
-            <End Role="InvoiceItem" EntitySet="InvoiceItem" />
-          </AssociationSet>
-          <AssociationSet Name="FK_InvoiceItem_UnitType" Association="EomModel.Store.FK_InvoiceItem_UnitType">
-            <End Role="UnitType" EntitySet="UnitType" />
-            <End Role="InvoiceItem" EntitySet="InvoiceItem" />
-          </AssociationSet>
-          <AssociationSet Name="FK_InvoiceNote_Invoice" Association="EomModel.Store.FK_InvoiceNote_Invoice">
-            <End Role="Invoice" EntitySet="Invoice" />
-            <End Role="InvoiceNote" EntitySet="InvoiceNote" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Item_Batch" Association="EomModel.Store.FK_Item_Batch">
-            <End Role="Batch" EntitySet="Batch" />
-            <End Role="Item" EntitySet="Item" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Item_PaymentBatch" Association="EomModel.Store.FK_Item_PaymentBatch">
-            <End Role="PaymentBatch" EntitySet="PaymentBatch" />
-            <End Role="Item" EntitySet="Item" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MarginApproval_Currency" Association="EomModel.Store.FK_MarginApproval_Currency">
-            <End Role="Currency" EntitySet="Currency" />
-            <End Role="MarginApproval" EntitySet="MarginApproval" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MarginApproval_Currency1" Association="EomModel.Store.FK_MarginApproval_Currency1">
-            <End Role="Currency" EntitySet="Currency" />
-            <End Role="MarginApproval" EntitySet="MarginApproval" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PaymentBatch_AffiliatePaymentMethod" Association="EomModel.Store.FK_PaymentBatch_AffiliatePaymentMethod">
-            <End Role="AffiliatePaymentMethod" EntitySet="AffiliatePaymentMethod" />
-            <End Role="PaymentBatch" EntitySet="PaymentBatch" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PaymentBatch_PaymentBatch" Association="EomModel.Store.FK_PaymentBatch_PaymentBatch">
-            <End Role="PaymentBatch" EntitySet="PaymentBatch" />
-            <End Role="PaymentBatch1" EntitySet="PaymentBatch" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PaymentBatch_PaymentBatchState" Association="EomModel.Store.FK_PaymentBatch_PaymentBatchState">
-            <End Role="PaymentBatchState" EntitySet="PaymentBatchState" />
-            <End Role="PaymentBatch" EntitySet="PaymentBatch" />
-          </AssociationSet>
-          <AssociationSet Name="Item_CampaignStatus_id_FK_CampaignStatus_id_PK" Association="EomModel.Store.Item_CampaignStatus_id_FK_CampaignStatus_id_PK">
-            <End Role="CampaignStatus" EntitySet="CampaignStatus" />
-            <End Role="Item" EntitySet="Item" />
-          </AssociationSet>
-          <AssociationSet Name="Item_Currency_id_FK_Currency_id_PK" Association="EomModel.Store.Item_Currency_id_FK_Currency_id_PK">
-            <End Role="Currency" EntitySet="Currency" />
-            <End Role="Item" EntitySet="Item" />
-          </AssociationSet>
-          <AssociationSet Name="Item_Currency_id_FK_Currency_id_PK1" Association="EomModel.Store.Item_Currency_id_FK_Currency_id_PK1">
-            <End Role="Currency" EntitySet="Currency" />
-            <End Role="Item" EntitySet="Item" />
-          </AssociationSet>
-          <AssociationSet Name="Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK" Association="EomModel.Store.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK">
-            <End Role="ItemAccountingStatus" EntitySet="ItemAccountingStatus" />
-            <End Role="Item" EntitySet="Item" />
-          </AssociationSet>
-          <AssociationSet Name="Item_Source_id_FK_Source_id_PK" Association="EomModel.Store.Item_Source_id_FK_Source_id_PK">
-            <End Role="Source" EntitySet="Source" />
-            <End Role="Item" EntitySet="Item" />
-          </AssociationSet>
-          <AssociationSet Name="Item_UnitType_id_FK_UnitType_id_PK" Association="EomModel.Store.Item_UnitType_id_FK_UnitType_id_PK">
-            <End Role="UnitType" EntitySet="UnitType" />
-            <End Role="Item" EntitySet="Item" />
-          </AssociationSet>
-          <AssociationSet Name="tracking_system_fk" Association="EomModel.Store.tracking_system_fk">
-            <End Role="TrackingSystem" EntitySet="TrackingSystem" />
-            <End Role="Campaign" EntitySet="Campaign" />
-          </AssociationSet>
-        </EntityContainer>
+    <Schema Namespace="EomModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AccountManager">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AdManager">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Advertiser">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="status" Type="varchar" MaxLength="50" />
           <Property Name="payment_terms" Type="varchar" MaxLength="50" />
           <Property Name="invoicing_status" Type="varchar" MaxLength="50" />
@@ -326,25 +32,20 @@
           <Property Name="prev_open_balance" Type="varchar" MaxLength="100" />
           <Property Name="qb_name" Type="varchar" MaxLength="100" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6035: The relationship 'FK_InvoiceItem_Affiliate' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
-      warning 6035: The relationship 'FK_MarginApproval_Affiliate' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
-      warning 6035: The relationship 'Item_Affiliate_affid_FK_Affiliate_affid_UK' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
-      -->
         <EntityType Name="Affiliate">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="media_buyer_id" Type="int" Nullable="false" />
           <Property Name="affid" Type="int" Nullable="false" />
           <Property Name="currency_id" Type="int" Nullable="false" />
-          <Property Name="email" Type="varchar" Nullable="false" MaxLength="255" />
-          <Property Name="add_code" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="email" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="add_code" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="net_term_type_id" Type="int" />
           <Property Name="payment_method_id" Type="int" Nullable="false" />
-          <Property Name="name2" Type="varchar" Nullable="false" MaxLength="358" StoreGeneratedPattern="Computed" />
+          <Property Name="name2" Type="varchar" MaxLength="358" StoreGeneratedPattern="Computed" Nullable="false" />
           <Property Name="date_created" Type="datetime" />
           <Property Name="date_modified" Type="datetime" />
           <Property Name="tracking_system_id" Type="int" />
@@ -357,14 +58,14 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Batch">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="BatchBatchUpdate">
@@ -379,30 +80,25 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="note" Type="varchar(max)" Nullable="false" />
-          <Property Name="author" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="author" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="date_created" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
           <Property Name="media_buyer_approval_status_id" Type="int" />
           <Property Name="extra" Type="varchar" MaxLength="255" />
           <Property Name="from_media_buyer_approval_status_id" Type="int" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6035: The relationship 'FK_InvoiceItem_Campaign' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
-      warning 6035: The relationship 'FK_MarginApproval_Campaign' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
-      warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
-      -->
         <EntityType Name="Campaign">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="account_manager_id" Type="int" Nullable="false" />
           <Property Name="campaign_status_id" Type="int" Nullable="false" />
           <Property Name="ad_manager_id" Type="int" Nullable="false" />
           <Property Name="advertiser_id" Type="int" Nullable="false" />
           <Property Name="pid" Type="int" Nullable="false" />
-          <Property Name="campaign_name" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="campaign_name" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="campaign_type" Type="char" MaxLength="3" />
           <Property Name="modified" Type="datetime" />
           <Property Name="created" Type="datetime" />
@@ -423,29 +119,29 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Currency">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="to_usd_multiplier" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="to_usd_multiplier" Type="decimal" Precision="14" Scale="4" Nullable="false" />
         </EntityType>
         <EntityType Name="Invoice">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="invoice_status_id" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="InvoiceItem">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="invoice_id" Type="int" Nullable="false" />
           <Property Name="pid" Type="int" />
           <Property Name="affid" Type="int" />
@@ -459,7 +155,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="invoice_id" Type="int" Nullable="false" />
           <Property Name="note" Type="varchar(max)" Nullable="false" />
           <Property Name="added_by" Type="varchar" MaxLength="255" />
@@ -470,13 +166,13 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" Nullable="false" />
-          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Item">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="300" />
           <Property Name="pid" Type="int" Nullable="false" />
           <Property Name="affid" Type="int" Nullable="false" />
@@ -487,16 +183,16 @@
           <Property Name="cost_currency_id" Type="int" Nullable="false" />
           <Property Name="revenue_per_unit" Type="money" Nullable="false" />
           <Property Name="cost_per_unit" Type="money" Nullable="false" />
-          <Property Name="num_units" Type="decimal" Nullable="false" Precision="16" Scale="6" />
+          <Property Name="num_units" Type="decimal" Precision="16" Scale="6" Nullable="false" />
           <Property Name="notes" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="accounting_notes" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="accounting_notes" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="item_accounting_status_id" Type="int" Nullable="false" />
           <Property Name="item_reporting_status_id" Type="int" Nullable="false" />
           <Property Name="campaign_status_id" Type="int" Nullable="false" />
           <Property Name="total_revenue" Type="decimal" Precision="36" Scale="10" StoreGeneratedPattern="Computed" />
           <Property Name="total_cost" Type="decimal" Precision="36" Scale="10" StoreGeneratedPattern="Computed" />
           <Property Name="margin" Type="money" StoreGeneratedPattern="Computed" />
-          <Property Name="modified" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="modified" Type="datetime" StoreGeneratedPattern="Computed" Nullable="false" />
           <Property Name="media_buyer_approval_status_id" Type="int" Nullable="false" />
           <Property Name="batch_id" Type="int" />
           <Property Name="payment_batch_id" Type="int" />
@@ -505,14 +201,14 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="MarginApproval">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="pid" Type="int" />
           <Property Name="affid" Type="int" />
           <Property Name="revenue_currency_id" Type="int" />
@@ -529,28 +225,28 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="MediaBuyerApprovalStatus">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="NetTermType">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="PaymentBatch">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="approver_identity" Type="varchar" MaxLength="255" />
           <Property Name="payment_batch_state_id" Type="int" Nullable="false" />
           <Property Name="is_current" Type="bit" Nullable="false" />
@@ -565,15 +261,15 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" Nullable="false" />
-          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="PubAttachment">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="publisher_name" Type="varchar(max)" Nullable="false" />
-          <Property Name="name" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="description" Type="nvarchar" MaxLength="255" />
           <Property Name="binary_content" Type="varbinary(max)" Nullable="false" />
         </EntityType>
@@ -581,7 +277,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="publisher_name" Type="varchar(max)" Nullable="false" />
           <Property Name="note" Type="varchar(max)" Nullable="false" />
           <Property Name="added_by_system_user" Type="varchar" MaxLength="255" />
@@ -591,26 +287,25 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="TrackingSystem">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" Nullable="false" />
-          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="UnitType">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.CampaignsPublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
-      -->
+warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.CampaignsPublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CampaignsPublisherReportDetails">
           <Key>
             <PropertyRef Name="CampaignStatus" />
@@ -621,34 +316,33 @@
             <PropertyRef Name="IsCPM" />
             <PropertyRef Name="MediaBuyer" />
           </Key>
-          <Property Name="ItemIDs" Type="nvarchar" />
-          <Property Name="CampaignStatus" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="ItemIDs" Type="nvarchar" MaxLength="4000" />
+          <Property Name="CampaignStatus" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Publisher" Type="varchar" MaxLength="255" />
-          <Property Name="AddCode" Type="varchar" Nullable="false" MaxLength="100" />
-          <Property Name="CampaignName" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="AddCode" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CampaignName" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="NumUnits" Type="decimal" Precision="38" Scale="6" />
           <Property Name="CostPerUnit" Type="decimal" Precision="38" Scale="8" />
-          <Property Name="NetTerms" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="PayCurrency" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="IsCPM" Type="varchar" Nullable="false" MaxLength="3" />
-          <Property Name="MediaBuyer" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="NetTerms" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="PayCurrency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsCPM" Type="varchar" MaxLength="3" Nullable="false" />
+          <Property Name="MediaBuyer" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="ToBePaid" Type="decimal" Precision="38" Scale="6" />
           <Property Name="Paid" Type="decimal" Precision="38" Scale="6" />
           <Property Name="Total" Type="decimal" Precision="38" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.CampaignsPublisherReportSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
-      -->
+warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.CampaignsPublisherReportSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CampaignsPublisherReportSummary">
           <Key>
             <PropertyRef Name="CampaignStatus" />
             <PropertyRef Name="NetTerms" />
             <PropertyRef Name="PayCurrency" />
           </Key>
-          <Property Name="CampaignStatus" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="CampaignStatus" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Publisher" Type="varchar" MaxLength="255" />
-          <Property Name="NetTerms" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="PayCurrency" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="NetTerms" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="PayCurrency" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Unverified" Type="decimal" Precision="38" Scale="6" />
           <Property Name="Verified" Type="decimal" Precision="38" Scale="6" />
           <Property Name="Approved" Type="decimal" Precision="38" Scale="6" />
@@ -657,8 +351,7 @@
           <Property Name="Total" Type="decimal" Precision="38" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherPayments' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
-      -->
+warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherPayments' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PublisherPayments">
           <Key>
             <PropertyRef Name="NetTermType" />
@@ -672,24 +365,23 @@
             <PropertyRef Name="PaymentBatchState" />
           </Key>
           <Property Name="NetTermTypeId" Type="int" />
-          <Property Name="NetTermType" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="AffIds" Type="nvarchar" />
-          <Property Name="Publisher" Type="varchar" Nullable="false" MaxLength="255" />
-          <Property Name="PubPayCurr" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="NetTermType" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="AffIds" Type="nvarchar" MaxLength="4000" />
+          <Property Name="Publisher" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="PubPayCurr" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="PubPayout" Type="decimal" Precision="38" Scale="8" />
           <Property Name="AccountingStatusId" Type="int" Nullable="false" />
-          <Property Name="AccountingStatus" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="AccountingStatus" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="PaymentMethodId" Type="int" Nullable="false" />
-          <Property Name="PaymentMethod" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="PaymentMethod" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="PaymentBatchId" Type="int" />
           <Property Name="PaymentBatchStateId" Type="int" Nullable="false" />
-          <Property Name="PaymentBatchState" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="PaymentBatchState" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="ApproverIdentity" Type="varchar" MaxLength="255" />
-          <Property Name="ItemIds" Type="nvarchar" />
+          <Property Name="ItemIds" Type="nvarchar" MaxLength="4000" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherPayouts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
-      -->
+warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherPayouts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PublisherPayouts">
           <Key>
             <PropertyRef Name="affid" />
@@ -713,18 +405,18 @@
             <PropertyRef Name="Source" />
           </Key>
           <Property Name="affid" Type="int" Nullable="false" />
-          <Property Name="Publisher" Type="varchar" Nullable="false" MaxLength="358" />
-          <Property Name="Advertiser" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Publisher" Type="varchar" MaxLength="358" Nullable="false" />
+          <Property Name="Advertiser" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="pid" Type="int" Nullable="false" />
-          <Property Name="Campaign Name" Type="varchar" Nullable="false" MaxLength="255" />
-          <Property Name="Rev Currency" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="Cost Currency" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Campaign Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Rev Currency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Cost Currency" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Rev/Unit" Type="money" Nullable="false" />
           <Property Name="Rev/Unit USD" Type="money" />
           <Property Name="Cost/Unit" Type="money" Nullable="false" />
           <Property Name="Cost/Unit USD" Type="money" />
           <Property Name="Units" Type="decimal" Precision="38" Scale="6" />
-          <Property Name="Unit Type" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Unit Type" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Revenue" Type="decimal" Precision="38" Scale="10" />
           <Property Name="Revenue USD" Type="decimal" Precision="38" Scale="10" />
           <Property Name="Cost" Type="decimal" Precision="38" Scale="10" />
@@ -732,39 +424,37 @@
           <Property Name="Margin" Type="decimal" Precision="38" Scale="10" />
           <Property Name="MarginPct" Type="decimal" Precision="38" Scale="6" />
           <Property Name="Media Buyer" Type="varchar" MaxLength="50" />
-          <Property Name="Ad Manager" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="Account Manager" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Ad Manager" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Account Manager" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="status_id" Type="int" Nullable="false" />
-          <Property Name="Status" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Status" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="accounting_status_id" Type="int" Nullable="false" />
-          <Property Name="Accounting Status" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Accounting Status" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="media_buyer_approval_status_id" Type="int" Nullable="false" />
-          <Property Name="Media Buyer Approval Status" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Media Buyer Approval Status" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Net Terms" Type="varchar" MaxLength="50" />
           <Property Name="Aff Pay Method" Type="varchar" MaxLength="50" />
           <Property Name="Pub Pay Curr" Type="varchar" MaxLength="50" />
           <Property Name="Pub Payout" Type="decimal" Precision="38" Scale="6" />
-          <Property Name="CampaignNotes" Type="nvarchar" />
-          <Property Name="Source" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="ItemIds" Type="nvarchar" />
-          <Property Name="BatchIds" Type="nvarchar" />
+          <Property Name="CampaignNotes" Type="nvarchar" MaxLength="4000" />
+          <Property Name="Source" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ItemIds" Type="nvarchar" MaxLength="4000" />
+          <Property Name="BatchIds" Type="nvarchar" MaxLength="4000" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherRelatedItemCounts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
-      -->
+warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherRelatedItemCounts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PublisherRelatedItemCounts">
           <Key>
             <PropertyRef Name="Id" />
             <PropertyRef Name="Publisher" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" />
-          <Property Name="Publisher" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="Publisher" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="NumNotes" Type="int" />
           <Property Name="NumAttachments" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
-      -->
+warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PublisherReportDetails">
           <Key>
             <PropertyRef Name="NetTermTypeName" />
@@ -777,22 +467,21 @@
             <PropertyRef Name="MediaBuyer" />
           </Key>
           <Property Name="PublisherName" Type="varchar" MaxLength="255" />
-          <Property Name="NetTermTypeName" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="AffiliateCurrencyName" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="NetTermTypeName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="AffiliateCurrencyName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="SumItemTotalCost" Type="decimal" Precision="38" Scale="6" />
-          <Property Name="ItemAccountingStatusName" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="CampaignStatusName" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="CampaignName" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="ItemAccountingStatusName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CampaignStatusName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CampaignName" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="NumUnits" Type="decimal" Precision="38" Scale="6" />
           <Property Name="CostPerUnit" Type="decimal" Precision="38" Scale="8" />
-          <Property Name="AffiliateAddCode" Type="varchar" Nullable="false" MaxLength="100" />
-          <Property Name="IsCPM" Type="varchar" Nullable="false" MaxLength="3" />
-          <Property Name="MediaBuyer" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="ItemIDs" Type="nvarchar" />
+          <Property Name="AffiliateAddCode" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="IsCPM" Type="varchar" MaxLength="3" Nullable="false" />
+          <Property Name="MediaBuyer" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ItemIDs" Type="nvarchar" MaxLength="4000" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherReports' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
-      -->
+warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherReports' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PublisherReports">
           <Key>
             <PropertyRef Name="CampaignStatus" />
@@ -803,39 +492,38 @@
             <PropertyRef Name="IsCPM" />
             <PropertyRef Name="MediaBuyer" />
           </Key>
-          <Property Name="ItemIDs" Type="nvarchar" />
-          <Property Name="CampaignStatus" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="ItemIDs" Type="nvarchar" MaxLength="4000" />
+          <Property Name="CampaignStatus" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Publisher" Type="varchar" MaxLength="255" />
-          <Property Name="AddCode" Type="varchar" Nullable="false" MaxLength="100" />
-          <Property Name="CampaignName" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="AddCode" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CampaignName" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="NumUnits" Type="decimal" Precision="38" Scale="6" />
           <Property Name="CostPerUnit" Type="decimal" Precision="38" Scale="8" />
-          <Property Name="NetTerms" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="PayCurrency" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="IsCPM" Type="varchar" Nullable="false" MaxLength="3" />
-          <Property Name="MediaBuyer" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="NetTerms" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="PayCurrency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsCPM" Type="varchar" MaxLength="3" Nullable="false" />
+          <Property Name="MediaBuyer" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="ToBePaid" Type="decimal" Precision="38" Scale="6" />
           <Property Name="Paid" Type="decimal" Precision="38" Scale="6" />
           <Property Name="Total" Type="decimal" Precision="38" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherReportSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
-      -->
+warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherReportSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PublisherReportSummary">
           <Key>
             <PropertyRef Name="Net Terms" />
             <PropertyRef Name="Curr" />
           </Key>
           <Property Name="Name" Type="varchar" MaxLength="255" />
-          <Property Name="Net Terms" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="Curr" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Net Terms" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Curr" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="To Be Paid" Type="decimal" Precision="38" Scale="6" />
           <Property Name="Paid" Type="decimal" Precision="38" Scale="6" />
           <Property Name="Total" Type="decimal" Precision="38" Scale="6" />
         </EntityType>
         <Association Name="Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK">
-          <End Role="AffiliatePaymentMethod" Type="EomModel.Store.AffiliatePaymentMethod" Multiplicity="1" />
-          <End Role="Affiliate" Type="EomModel.Store.Affiliate" Multiplicity="*" />
+          <End Role="AffiliatePaymentMethod" Type="Self.AffiliatePaymentMethod" Multiplicity="1" />
+          <End Role="Affiliate" Type="Self.Affiliate" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AffiliatePaymentMethod">
               <PropertyRef Name="id" />
@@ -846,8 +534,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Affiliate_Currency_id_FK_Currency_id_PK">
-          <End Role="Currency" Type="EomModel.Store.Currency" Multiplicity="1" />
-          <End Role="Affiliate" Type="EomModel.Store.Affiliate" Multiplicity="*" />
+          <End Role="Currency" Type="Self.Currency" Multiplicity="1" />
+          <End Role="Affiliate" Type="Self.Affiliate" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Currency">
               <PropertyRef Name="id" />
@@ -858,8 +546,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Affiliate_MediaBuyer_id_FK_MediaBuyer_id_PK">
-          <End Role="MediaBuyer" Type="EomModel.Store.MediaBuyer" Multiplicity="1" />
-          <End Role="Affiliate" Type="EomModel.Store.Affiliate" Multiplicity="*" />
+          <End Role="MediaBuyer" Type="Self.MediaBuyer" Multiplicity="1" />
+          <End Role="Affiliate" Type="Self.Affiliate" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MediaBuyer">
               <PropertyRef Name="id" />
@@ -870,8 +558,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Affiliate_NetTermType_id_FK_NetTermType_id_PK">
-          <End Role="NetTermType" Type="EomModel.Store.NetTermType" Multiplicity="0..1" />
-          <End Role="Affiliate" Type="EomModel.Store.Affiliate" Multiplicity="*" />
+          <End Role="NetTermType" Type="Self.NetTermType" Multiplicity="0..1" />
+          <End Role="Affiliate" Type="Self.Affiliate" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="NetTermType">
               <PropertyRef Name="id" />
@@ -882,8 +570,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="affiliate_tracking_system_fk">
-          <End Role="TrackingSystem" Type="EomModel.Store.TrackingSystem" Multiplicity="0..1" />
-          <End Role="Affiliate" Type="EomModel.Store.Affiliate" Multiplicity="*" />
+          <End Role="TrackingSystem" Type="Self.TrackingSystem" Multiplicity="0..1" />
+          <End Role="Affiliate" Type="Self.Affiliate" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="TrackingSystem">
               <PropertyRef Name="id" />
@@ -894,8 +582,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Campaign_AccountManager_id_FK_AccountManager_id_PK">
-          <End Role="AccountManager" Type="EomModel.Store.AccountManager" Multiplicity="1" />
-          <End Role="Campaign" Type="EomModel.Store.Campaign" Multiplicity="*" />
+          <End Role="AccountManager" Type="Self.AccountManager" Multiplicity="1" />
+          <End Role="Campaign" Type="Self.Campaign" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AccountManager">
               <PropertyRef Name="id" />
@@ -905,9 +593,21 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="Campaign_AdManager_id_FK_AdManager_id_PK">
+          <End Role="AdManager" Type="Self.AdManager" Multiplicity="1" />
+          <End Role="Campaign" Type="Self.Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AdManager">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="ad_manager_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="Campaign_Advertiser_id_FK_Advertiser_id_PK">
-          <End Role="Advertiser" Type="EomModel.Store.Advertiser" Multiplicity="1" />
-          <End Role="Campaign" Type="EomModel.Store.Campaign" Multiplicity="*" />
+          <End Role="Advertiser" Type="Self.Advertiser" Multiplicity="1" />
+          <End Role="Campaign" Type="Self.Campaign" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Advertiser">
               <PropertyRef Name="id" />
@@ -918,8 +618,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK">
-          <End Role="CampaignStatus" Type="EomModel.Store.CampaignStatus" Multiplicity="1" />
-          <End Role="Campaign" Type="EomModel.Store.Campaign" Multiplicity="*" />
+          <End Role="CampaignStatus" Type="Self.CampaignStatus" Multiplicity="1" />
+          <End Role="Campaign" Type="Self.Campaign" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="CampaignStatus">
               <PropertyRef Name="id" />
@@ -930,8 +630,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK__Item__media_buye__123EB7A3">
-          <End Role="MediaBuyerApprovalStatus" Type="EomModel.Store.MediaBuyerApprovalStatus" Multiplicity="1" />
-          <End Role="Item" Type="EomModel.Store.Item" Multiplicity="*" />
+          <End Role="MediaBuyerApprovalStatus" Type="Self.MediaBuyerApprovalStatus" Multiplicity="1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MediaBuyerApprovalStatus">
               <PropertyRef Name="id" />
@@ -942,8 +642,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_BatchBatchUpdate_Batch">
-          <End Role="Batch" Type="EomModel.Store.Batch" Multiplicity="1" />
-          <End Role="BatchBatchUpdate" Type="EomModel.Store.BatchBatchUpdate" Multiplicity="*" />
+          <End Role="Batch" Type="Self.Batch" Multiplicity="1" />
+          <End Role="BatchBatchUpdate" Type="Self.BatchBatchUpdate" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Batch">
               <PropertyRef Name="id" />
@@ -954,8 +654,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_BatchBatchUpdate_BatchUpdate">
-          <End Role="BatchUpdate" Type="EomModel.Store.BatchUpdate" Multiplicity="1" />
-          <End Role="BatchBatchUpdate" Type="EomModel.Store.BatchBatchUpdate" Multiplicity="*" />
+          <End Role="BatchUpdate" Type="Self.BatchUpdate" Multiplicity="1" />
+          <End Role="BatchBatchUpdate" Type="Self.BatchBatchUpdate" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="BatchUpdate">
               <PropertyRef Name="id" />
@@ -966,8 +666,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_BatchUpdate_MediaBuyerApprovalStatus">
-          <End Role="MediaBuyerApprovalStatus" Type="EomModel.Store.MediaBuyerApprovalStatus" Multiplicity="0..1" />
-          <End Role="BatchUpdate" Type="EomModel.Store.BatchUpdate" Multiplicity="*" />
+          <End Role="MediaBuyerApprovalStatus" Type="Self.MediaBuyerApprovalStatus" Multiplicity="0..1" />
+          <End Role="BatchUpdate" Type="Self.BatchUpdate" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MediaBuyerApprovalStatus">
               <PropertyRef Name="id" />
@@ -978,8 +678,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_BatchUpdate_MediaBuyerApprovalStatusFrom">
-          <End Role="MediaBuyerApprovalStatus" Type="EomModel.Store.MediaBuyerApprovalStatus" Multiplicity="0..1" />
-          <End Role="BatchUpdate" Type="EomModel.Store.BatchUpdate" Multiplicity="*" />
+          <End Role="MediaBuyerApprovalStatus" Type="Self.MediaBuyerApprovalStatus" Multiplicity="0..1" />
+          <End Role="BatchUpdate" Type="Self.BatchUpdate" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MediaBuyerApprovalStatus">
               <PropertyRef Name="id" />
@@ -990,8 +690,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Invoice_InvoiceStatus">
-          <End Role="InvoiceStatus" Type="EomModel.Store.InvoiceStatus" Multiplicity="1" />
-          <End Role="Invoice" Type="EomModel.Store.Invoice" Multiplicity="*" />
+          <End Role="InvoiceStatus" Type="Self.InvoiceStatus" Multiplicity="1" />
+          <End Role="Invoice" Type="Self.Invoice" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="InvoiceStatus">
               <PropertyRef Name="id" />
@@ -1001,9 +701,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'FK_InvoiceItem_Affiliate' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="FK_InvoiceItem_Affiliate" />-->
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'FK_InvoiceItem_Campaign' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="FK_InvoiceItem_Campaign" />-->
         <Association Name="FK_InvoiceItem_Currency">
-          <End Role="Currency" Type="EomModel.Store.Currency" Multiplicity="1" />
-          <End Role="InvoiceItem" Type="EomModel.Store.InvoiceItem" Multiplicity="*" />
+          <End Role="Currency" Type="Self.Currency" Multiplicity="1" />
+          <End Role="InvoiceItem" Type="Self.InvoiceItem" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Currency">
               <PropertyRef Name="id" />
@@ -1014,8 +720,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_InvoiceItem_Invoice">
-          <End Role="Invoice" Type="EomModel.Store.Invoice" Multiplicity="1" />
-          <End Role="InvoiceItem" Type="EomModel.Store.InvoiceItem" Multiplicity="*" />
+          <End Role="Invoice" Type="Self.Invoice" Multiplicity="1" />
+          <End Role="InvoiceItem" Type="Self.InvoiceItem" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Invoice">
               <PropertyRef Name="id" />
@@ -1026,8 +732,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_InvoiceItem_UnitType">
-          <End Role="UnitType" Type="EomModel.Store.UnitType" Multiplicity="0..1" />
-          <End Role="InvoiceItem" Type="EomModel.Store.InvoiceItem" Multiplicity="*" />
+          <End Role="UnitType" Type="Self.UnitType" Multiplicity="0..1" />
+          <End Role="InvoiceItem" Type="Self.InvoiceItem" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UnitType">
               <PropertyRef Name="id" />
@@ -1038,8 +744,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_InvoiceNote_Invoice">
-          <End Role="Invoice" Type="EomModel.Store.Invoice" Multiplicity="1" />
-          <End Role="InvoiceNote" Type="EomModel.Store.InvoiceNote" Multiplicity="*" />
+          <End Role="Invoice" Type="Self.Invoice" Multiplicity="1" />
+          <End Role="InvoiceNote" Type="Self.InvoiceNote" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Invoice">
               <PropertyRef Name="id" />
@@ -1050,8 +756,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Item_Batch">
-          <End Role="Batch" Type="EomModel.Store.Batch" Multiplicity="0..1" />
-          <End Role="Item" Type="EomModel.Store.Item" Multiplicity="*" />
+          <End Role="Batch" Type="Self.Batch" Multiplicity="0..1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Batch">
               <PropertyRef Name="id" />
@@ -1062,8 +768,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Item_PaymentBatch">
-          <End Role="PaymentBatch" Type="EomModel.Store.PaymentBatch" Multiplicity="0..1" />
-          <End Role="Item" Type="EomModel.Store.Item" Multiplicity="*" />
+          <End Role="PaymentBatch" Type="Self.PaymentBatch" Multiplicity="0..1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="PaymentBatch">
               <PropertyRef Name="id" />
@@ -1073,9 +779,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'FK_MarginApproval_Affiliate' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="FK_MarginApproval_Affiliate" />-->
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'FK_MarginApproval_Campaign' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="FK_MarginApproval_Campaign" />-->
         <Association Name="FK_MarginApproval_Currency">
-          <End Role="Currency" Type="EomModel.Store.Currency" Multiplicity="0..1" />
-          <End Role="MarginApproval" Type="EomModel.Store.MarginApproval" Multiplicity="*" />
+          <End Role="Currency" Type="Self.Currency" Multiplicity="0..1" />
+          <End Role="MarginApproval" Type="Self.MarginApproval" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Currency">
               <PropertyRef Name="id" />
@@ -1086,8 +798,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_MarginApproval_Currency1">
-          <End Role="Currency" Type="EomModel.Store.Currency" Multiplicity="0..1" />
-          <End Role="MarginApproval" Type="EomModel.Store.MarginApproval" Multiplicity="*" />
+          <End Role="Currency" Type="Self.Currency" Multiplicity="0..1" />
+          <End Role="MarginApproval" Type="Self.MarginApproval" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Currency">
               <PropertyRef Name="id" />
@@ -1098,8 +810,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_PaymentBatch_AffiliatePaymentMethod">
-          <End Role="AffiliatePaymentMethod" Type="EomModel.Store.AffiliatePaymentMethod" Multiplicity="0..1" />
-          <End Role="PaymentBatch" Type="EomModel.Store.PaymentBatch" Multiplicity="*" />
+          <End Role="AffiliatePaymentMethod" Type="Self.AffiliatePaymentMethod" Multiplicity="0..1" />
+          <End Role="PaymentBatch" Type="Self.PaymentBatch" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AffiliatePaymentMethod">
               <PropertyRef Name="id" />
@@ -1110,8 +822,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_PaymentBatch_PaymentBatch">
-          <End Role="PaymentBatch" Type="EomModel.Store.PaymentBatch" Multiplicity="0..1" />
-          <End Role="PaymentBatch1" Type="EomModel.Store.PaymentBatch" Multiplicity="*" />
+          <End Role="PaymentBatch" Type="Self.PaymentBatch" Multiplicity="0..1" />
+          <End Role="PaymentBatch1" Type="Self.PaymentBatch" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="PaymentBatch">
               <PropertyRef Name="id" />
@@ -1122,8 +834,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_PaymentBatch_PaymentBatchState">
-          <End Role="PaymentBatchState" Type="EomModel.Store.PaymentBatchState" Multiplicity="1" />
-          <End Role="PaymentBatch" Type="EomModel.Store.PaymentBatch" Multiplicity="*" />
+          <End Role="PaymentBatchState" Type="Self.PaymentBatchState" Multiplicity="1" />
+          <End Role="PaymentBatch" Type="Self.PaymentBatch" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="PaymentBatchState">
               <PropertyRef Name="id" />
@@ -1133,9 +845,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'Item_Affiliate_affid_FK_Affiliate_affid_UK' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="Item_Affiliate_affid_FK_Affiliate_affid_UK" />-->
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="Item_Campaign_pid_FK_Campaign_pid_UK" />-->
         <Association Name="Item_CampaignStatus_id_FK_CampaignStatus_id_PK">
-          <End Role="CampaignStatus" Type="EomModel.Store.CampaignStatus" Multiplicity="1" />
-          <End Role="Item" Type="EomModel.Store.Item" Multiplicity="*" />
+          <End Role="CampaignStatus" Type="Self.CampaignStatus" Multiplicity="1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="CampaignStatus">
               <PropertyRef Name="id" />
@@ -1146,8 +864,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Item_Currency_id_FK_Currency_id_PK">
-          <End Role="Currency" Type="EomModel.Store.Currency" Multiplicity="1" />
-          <End Role="Item" Type="EomModel.Store.Item" Multiplicity="*" />
+          <End Role="Currency" Type="Self.Currency" Multiplicity="1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Currency">
               <PropertyRef Name="id" />
@@ -1158,8 +876,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Item_Currency_id_FK_Currency_id_PK1">
-          <End Role="Currency" Type="EomModel.Store.Currency" Multiplicity="1" />
-          <End Role="Item" Type="EomModel.Store.Item" Multiplicity="*" />
+          <End Role="Currency" Type="Self.Currency" Multiplicity="1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Currency">
               <PropertyRef Name="id" />
@@ -1170,8 +888,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK">
-          <End Role="ItemAccountingStatus" Type="EomModel.Store.ItemAccountingStatus" Multiplicity="1" />
-          <End Role="Item" Type="EomModel.Store.Item" Multiplicity="*" />
+          <End Role="ItemAccountingStatus" Type="Self.ItemAccountingStatus" Multiplicity="1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ItemAccountingStatus">
               <PropertyRef Name="id" />
@@ -1182,8 +900,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Item_Source_id_FK_Source_id_PK">
-          <End Role="Source" Type="EomModel.Store.Source" Multiplicity="1" />
-          <End Role="Item" Type="EomModel.Store.Item" Multiplicity="*" />
+          <End Role="Source" Type="Self.Source" Multiplicity="1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Source">
               <PropertyRef Name="id" />
@@ -1194,8 +912,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Item_UnitType_id_FK_UnitType_id_PK">
-          <End Role="UnitType" Type="EomModel.Store.UnitType" Multiplicity="1" />
-          <End Role="Item" Type="EomModel.Store.Item" Multiplicity="*" />
+          <End Role="UnitType" Type="Self.UnitType" Multiplicity="1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UnitType">
               <PropertyRef Name="id" />
@@ -1206,8 +924,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="tracking_system_fk">
-          <End Role="TrackingSystem" Type="EomModel.Store.TrackingSystem" Multiplicity="0..1" />
-          <End Role="Campaign" Type="EomModel.Store.Campaign" Multiplicity="*" />
+          <End Role="TrackingSystem" Type="Self.TrackingSystem" Multiplicity="0..1" />
+          <End Role="Campaign" Type="Self.Campaign" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="TrackingSystem">
               <PropertyRef Name="id" />
@@ -1217,6 +935,312 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityContainer Name="EomModelStoreContainer">
+          <EntitySet Name="AccountManager" EntityType="Self.AccountManager" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AdManager" EntityType="Self.AdManager" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Advertiser" EntityType="Self.Advertiser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Affiliate" EntityType="Self.Affiliate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AffiliatePaymentMethod" EntityType="Self.AffiliatePaymentMethod" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Batch" EntityType="Self.Batch" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BatchBatchUpdate" EntityType="Self.BatchBatchUpdate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BatchUpdate" EntityType="Self.BatchUpdate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Campaign" EntityType="Self.Campaign" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CampaignStatus" EntityType="Self.CampaignStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Currency" EntityType="Self.Currency" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Invoice" EntityType="Self.Invoice" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="InvoiceItem" EntityType="Self.InvoiceItem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="InvoiceNote" EntityType="Self.InvoiceNote" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="InvoiceStatus" EntityType="Self.InvoiceStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Item" EntityType="Self.Item" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemAccountingStatus" EntityType="Self.ItemAccountingStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MarginApproval" EntityType="Self.MarginApproval" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MediaBuyer" EntityType="Self.MediaBuyer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MediaBuyerApprovalStatus" EntityType="Self.MediaBuyerApprovalStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NetTermType" EntityType="Self.NetTermType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaymentBatch" EntityType="Self.PaymentBatch" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaymentBatchState" EntityType="Self.PaymentBatchState" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PubAttachment" EntityType="Self.PubAttachment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PubNotes" EntityType="Self.PubNotes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Source" EntityType="Self.Source" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TrackingSystem" EntityType="Self.TrackingSystem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UnitType" EntityType="Self.UnitType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CampaignsPublisherReportDetails" EntityType="Self.CampaignsPublisherReportDetails" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[CampaignsPublisherReportDetails].[ItemIDs] AS [ItemIDs], 
+[CampaignsPublisherReportDetails].[CampaignStatus] AS [CampaignStatus], 
+[CampaignsPublisherReportDetails].[Publisher] AS [Publisher], 
+[CampaignsPublisherReportDetails].[AddCode] AS [AddCode], 
+[CampaignsPublisherReportDetails].[CampaignName] AS [CampaignName], 
+[CampaignsPublisherReportDetails].[NumUnits] AS [NumUnits], 
+[CampaignsPublisherReportDetails].[CostPerUnit] AS [CostPerUnit], 
+[CampaignsPublisherReportDetails].[NetTerms] AS [NetTerms], 
+[CampaignsPublisherReportDetails].[PayCurrency] AS [PayCurrency], 
+[CampaignsPublisherReportDetails].[IsCPM] AS [IsCPM], 
+[CampaignsPublisherReportDetails].[MediaBuyer] AS [MediaBuyer], 
+[CampaignsPublisherReportDetails].[ToBePaid] AS [ToBePaid], 
+[CampaignsPublisherReportDetails].[Paid] AS [Paid], 
+[CampaignsPublisherReportDetails].[Total] AS [Total]
+FROM [dbo].[CampaignsPublisherReportDetails] AS [CampaignsPublisherReportDetails]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="CampaignsPublisherReportSummary" EntityType="Self.CampaignsPublisherReportSummary" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[CampaignsPublisherReportSummary].[CampaignStatus] AS [CampaignStatus], 
+[CampaignsPublisherReportSummary].[Publisher] AS [Publisher], 
+[CampaignsPublisherReportSummary].[NetTerms] AS [NetTerms], 
+[CampaignsPublisherReportSummary].[PayCurrency] AS [PayCurrency], 
+[CampaignsPublisherReportSummary].[Unverified] AS [Unverified], 
+[CampaignsPublisherReportSummary].[Verified] AS [Verified], 
+[CampaignsPublisherReportSummary].[Approved] AS [Approved], 
+[CampaignsPublisherReportSummary].[Paid] AS [Paid], 
+[CampaignsPublisherReportSummary].[ToBePaid] AS [ToBePaid], 
+[CampaignsPublisherReportSummary].[Total] AS [Total]
+FROM [dbo].[CampaignsPublisherReportSummary] AS [CampaignsPublisherReportSummary]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="PublisherPayments" EntityType="Self.PublisherPayments" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[PublisherPayments].[NetTermTypeId] AS [NetTermTypeId], 
+[PublisherPayments].[NetTermType] AS [NetTermType], 
+[PublisherPayments].[AffIds] AS [AffIds], 
+[PublisherPayments].[Publisher] AS [Publisher], 
+[PublisherPayments].[PubPayCurr] AS [PubPayCurr], 
+[PublisherPayments].[PubPayout] AS [PubPayout], 
+[PublisherPayments].[AccountingStatusId] AS [AccountingStatusId], 
+[PublisherPayments].[AccountingStatus] AS [AccountingStatus], 
+[PublisherPayments].[PaymentMethodId] AS [PaymentMethodId], 
+[PublisherPayments].[PaymentMethod] AS [PaymentMethod], 
+[PublisherPayments].[PaymentBatchId] AS [PaymentBatchId], 
+[PublisherPayments].[PaymentBatchStateId] AS [PaymentBatchStateId], 
+[PublisherPayments].[PaymentBatchState] AS [PaymentBatchState], 
+[PublisherPayments].[ApproverIdentity] AS [ApproverIdentity], 
+[PublisherPayments].[ItemIds] AS [ItemIds]
+FROM [dbo].[PublisherPayments] AS [PublisherPayments]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="PublisherPayouts" EntityType="Self.PublisherPayouts" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[PublisherPayouts].[affid] AS [affid], 
+[PublisherPayouts].[Publisher] AS [Publisher], 
+[PublisherPayouts].[Advertiser] AS [Advertiser], 
+[PublisherPayouts].[pid] AS [pid], 
+[PublisherPayouts].[Campaign Name] AS [Campaign Name], 
+[PublisherPayouts].[Rev Currency] AS [Rev Currency], 
+[PublisherPayouts].[Cost Currency] AS [Cost Currency], 
+[PublisherPayouts].[Rev/Unit] AS [Rev/Unit], 
+[PublisherPayouts].[Rev/Unit USD] AS [Rev/Unit USD], 
+[PublisherPayouts].[Cost/Unit] AS [Cost/Unit], 
+[PublisherPayouts].[Cost/Unit USD] AS [Cost/Unit USD], 
+[PublisherPayouts].[Units] AS [Units], 
+[PublisherPayouts].[Unit Type] AS [Unit Type], 
+[PublisherPayouts].[Revenue] AS [Revenue], 
+[PublisherPayouts].[Revenue USD] AS [Revenue USD], 
+[PublisherPayouts].[Cost] AS [Cost], 
+[PublisherPayouts].[Cost USD] AS [Cost USD], 
+[PublisherPayouts].[Margin] AS [Margin], 
+[PublisherPayouts].[MarginPct] AS [MarginPct], 
+[PublisherPayouts].[Media Buyer] AS [Media Buyer], 
+[PublisherPayouts].[Ad Manager] AS [Ad Manager], 
+[PublisherPayouts].[Account Manager] AS [Account Manager], 
+[PublisherPayouts].[status_id] AS [status_id], 
+[PublisherPayouts].[Status] AS [Status], 
+[PublisherPayouts].[accounting_status_id] AS [accounting_status_id], 
+[PublisherPayouts].[Accounting Status] AS [Accounting Status], 
+[PublisherPayouts].[media_buyer_approval_status_id] AS [media_buyer_approval_status_id], 
+[PublisherPayouts].[Media Buyer Approval Status] AS [Media Buyer Approval Status], 
+[PublisherPayouts].[Net Terms] AS [Net Terms], 
+[PublisherPayouts].[Aff Pay Method] AS [Aff Pay Method], 
+[PublisherPayouts].[Pub Pay Curr] AS [Pub Pay Curr], 
+[PublisherPayouts].[Pub Payout] AS [Pub Payout], 
+[PublisherPayouts].[CampaignNotes] AS [CampaignNotes], 
+[PublisherPayouts].[Source] AS [Source], 
+[PublisherPayouts].[ItemIds] AS [ItemIds], 
+[PublisherPayouts].[BatchIds] AS [BatchIds]
+FROM [dbo].[PublisherPayouts] AS [PublisherPayouts]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="PublisherRelatedItemCounts" EntityType="Self.PublisherRelatedItemCounts" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[PublisherRelatedItemCounts].[Id] AS [Id], 
+[PublisherRelatedItemCounts].[Publisher] AS [Publisher], 
+[PublisherRelatedItemCounts].[NumNotes] AS [NumNotes], 
+[PublisherRelatedItemCounts].[NumAttachments] AS [NumAttachments]
+FROM [dbo].[PublisherRelatedItemCounts] AS [PublisherRelatedItemCounts]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="PublisherReportDetails" EntityType="Self.PublisherReportDetails" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[PublisherReportDetails].[PublisherName] AS [PublisherName], 
+[PublisherReportDetails].[NetTermTypeName] AS [NetTermTypeName], 
+[PublisherReportDetails].[AffiliateCurrencyName] AS [AffiliateCurrencyName], 
+[PublisherReportDetails].[SumItemTotalCost] AS [SumItemTotalCost], 
+[PublisherReportDetails].[ItemAccountingStatusName] AS [ItemAccountingStatusName], 
+[PublisherReportDetails].[CampaignStatusName] AS [CampaignStatusName], 
+[PublisherReportDetails].[CampaignName] AS [CampaignName], 
+[PublisherReportDetails].[NumUnits] AS [NumUnits], 
+[PublisherReportDetails].[CostPerUnit] AS [CostPerUnit], 
+[PublisherReportDetails].[AffiliateAddCode] AS [AffiliateAddCode], 
+[PublisherReportDetails].[IsCPM] AS [IsCPM], 
+[PublisherReportDetails].[MediaBuyer] AS [MediaBuyer], 
+[PublisherReportDetails].[ItemIDs] AS [ItemIDs]
+FROM [dbo].[PublisherReportDetails] AS [PublisherReportDetails]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="PublisherReports" EntityType="Self.PublisherReports" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[PublisherReports].[ItemIDs] AS [ItemIDs], 
+[PublisherReports].[CampaignStatus] AS [CampaignStatus], 
+[PublisherReports].[Publisher] AS [Publisher], 
+[PublisherReports].[AddCode] AS [AddCode], 
+[PublisherReports].[CampaignName] AS [CampaignName], 
+[PublisherReports].[NumUnits] AS [NumUnits], 
+[PublisherReports].[CostPerUnit] AS [CostPerUnit], 
+[PublisherReports].[NetTerms] AS [NetTerms], 
+[PublisherReports].[PayCurrency] AS [PayCurrency], 
+[PublisherReports].[IsCPM] AS [IsCPM], 
+[PublisherReports].[MediaBuyer] AS [MediaBuyer], 
+[PublisherReports].[ToBePaid] AS [ToBePaid], 
+[PublisherReports].[Paid] AS [Paid], 
+[PublisherReports].[Total] AS [Total]
+FROM [dbo].[PublisherReports] AS [PublisherReports]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="PublisherReportSummary" EntityType="Self.PublisherReportSummary" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[PublisherReportSummary].[Name] AS [Name], 
+[PublisherReportSummary].[Net Terms] AS [Net Terms], 
+[PublisherReportSummary].[Curr] AS [Curr], 
+[PublisherReportSummary].[To Be Paid] AS [To Be Paid], 
+[PublisherReportSummary].[Paid] AS [Paid], 
+[PublisherReportSummary].[Total] AS [Total]
+FROM [dbo].[PublisherReportSummary] AS [PublisherReportSummary]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK" Association="Self.Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK">
+            <End Role="AffiliatePaymentMethod" EntitySet="AffiliatePaymentMethod" />
+            <End Role="Affiliate" EntitySet="Affiliate" />
+          </AssociationSet>
+          <AssociationSet Name="Affiliate_Currency_id_FK_Currency_id_PK" Association="Self.Affiliate_Currency_id_FK_Currency_id_PK">
+            <End Role="Currency" EntitySet="Currency" />
+            <End Role="Affiliate" EntitySet="Affiliate" />
+          </AssociationSet>
+          <AssociationSet Name="Affiliate_MediaBuyer_id_FK_MediaBuyer_id_PK" Association="Self.Affiliate_MediaBuyer_id_FK_MediaBuyer_id_PK">
+            <End Role="MediaBuyer" EntitySet="MediaBuyer" />
+            <End Role="Affiliate" EntitySet="Affiliate" />
+          </AssociationSet>
+          <AssociationSet Name="Affiliate_NetTermType_id_FK_NetTermType_id_PK" Association="Self.Affiliate_NetTermType_id_FK_NetTermType_id_PK">
+            <End Role="NetTermType" EntitySet="NetTermType" />
+            <End Role="Affiliate" EntitySet="Affiliate" />
+          </AssociationSet>
+          <AssociationSet Name="affiliate_tracking_system_fk" Association="Self.affiliate_tracking_system_fk">
+            <End Role="TrackingSystem" EntitySet="TrackingSystem" />
+            <End Role="Affiliate" EntitySet="Affiliate" />
+          </AssociationSet>
+          <AssociationSet Name="Campaign_AccountManager_id_FK_AccountManager_id_PK" Association="Self.Campaign_AccountManager_id_FK_AccountManager_id_PK">
+            <End Role="AccountManager" EntitySet="AccountManager" />
+            <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+          <AssociationSet Name="Campaign_AdManager_id_FK_AdManager_id_PK" Association="Self.Campaign_AdManager_id_FK_AdManager_id_PK">
+            <End Role="AdManager" EntitySet="AdManager" />
+            <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+          <AssociationSet Name="Campaign_Advertiser_id_FK_Advertiser_id_PK" Association="Self.Campaign_Advertiser_id_FK_Advertiser_id_PK">
+            <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+          <AssociationSet Name="Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK" Association="Self.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK">
+            <End Role="CampaignStatus" EntitySet="CampaignStatus" />
+            <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Item__media_buye__123EB7A3" Association="Self.FK__Item__media_buye__123EB7A3">
+            <End Role="MediaBuyerApprovalStatus" EntitySet="MediaBuyerApprovalStatus" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BatchBatchUpdate_Batch" Association="Self.FK_BatchBatchUpdate_Batch">
+            <End Role="Batch" EntitySet="Batch" />
+            <End Role="BatchBatchUpdate" EntitySet="BatchBatchUpdate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BatchBatchUpdate_BatchUpdate" Association="Self.FK_BatchBatchUpdate_BatchUpdate">
+            <End Role="BatchUpdate" EntitySet="BatchUpdate" />
+            <End Role="BatchBatchUpdate" EntitySet="BatchBatchUpdate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BatchUpdate_MediaBuyerApprovalStatus" Association="Self.FK_BatchUpdate_MediaBuyerApprovalStatus">
+            <End Role="MediaBuyerApprovalStatus" EntitySet="MediaBuyerApprovalStatus" />
+            <End Role="BatchUpdate" EntitySet="BatchUpdate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BatchUpdate_MediaBuyerApprovalStatusFrom" Association="Self.FK_BatchUpdate_MediaBuyerApprovalStatusFrom">
+            <End Role="MediaBuyerApprovalStatus" EntitySet="MediaBuyerApprovalStatus" />
+            <End Role="BatchUpdate" EntitySet="BatchUpdate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Invoice_InvoiceStatus" Association="Self.FK_Invoice_InvoiceStatus">
+            <End Role="InvoiceStatus" EntitySet="InvoiceStatus" />
+            <End Role="Invoice" EntitySet="Invoice" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceItem_Currency" Association="Self.FK_InvoiceItem_Currency">
+            <End Role="Currency" EntitySet="Currency" />
+            <End Role="InvoiceItem" EntitySet="InvoiceItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceItem_Invoice" Association="Self.FK_InvoiceItem_Invoice">
+            <End Role="Invoice" EntitySet="Invoice" />
+            <End Role="InvoiceItem" EntitySet="InvoiceItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceItem_UnitType" Association="Self.FK_InvoiceItem_UnitType">
+            <End Role="UnitType" EntitySet="UnitType" />
+            <End Role="InvoiceItem" EntitySet="InvoiceItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceNote_Invoice" Association="Self.FK_InvoiceNote_Invoice">
+            <End Role="Invoice" EntitySet="Invoice" />
+            <End Role="InvoiceNote" EntitySet="InvoiceNote" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_Batch" Association="Self.FK_Item_Batch">
+            <End Role="Batch" EntitySet="Batch" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_PaymentBatch" Association="Self.FK_Item_PaymentBatch">
+            <End Role="PaymentBatch" EntitySet="PaymentBatch" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MarginApproval_Currency" Association="Self.FK_MarginApproval_Currency">
+            <End Role="Currency" EntitySet="Currency" />
+            <End Role="MarginApproval" EntitySet="MarginApproval" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MarginApproval_Currency1" Association="Self.FK_MarginApproval_Currency1">
+            <End Role="Currency" EntitySet="Currency" />
+            <End Role="MarginApproval" EntitySet="MarginApproval" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentBatch_AffiliatePaymentMethod" Association="Self.FK_PaymentBatch_AffiliatePaymentMethod">
+            <End Role="AffiliatePaymentMethod" EntitySet="AffiliatePaymentMethod" />
+            <End Role="PaymentBatch" EntitySet="PaymentBatch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentBatch_PaymentBatch" Association="Self.FK_PaymentBatch_PaymentBatch">
+            <End Role="PaymentBatch" EntitySet="PaymentBatch" />
+            <End Role="PaymentBatch1" EntitySet="PaymentBatch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentBatch_PaymentBatchState" Association="Self.FK_PaymentBatch_PaymentBatchState">
+            <End Role="PaymentBatchState" EntitySet="PaymentBatchState" />
+            <End Role="PaymentBatch" EntitySet="PaymentBatch" />
+          </AssociationSet>
+          <AssociationSet Name="Item_CampaignStatus_id_FK_CampaignStatus_id_PK" Association="Self.Item_CampaignStatus_id_FK_CampaignStatus_id_PK">
+            <End Role="CampaignStatus" EntitySet="CampaignStatus" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="Item_Currency_id_FK_Currency_id_PK" Association="Self.Item_Currency_id_FK_Currency_id_PK">
+            <End Role="Currency" EntitySet="Currency" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="Item_Currency_id_FK_Currency_id_PK1" Association="Self.Item_Currency_id_FK_Currency_id_PK1">
+            <End Role="Currency" EntitySet="Currency" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK" Association="Self.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK">
+            <End Role="ItemAccountingStatus" EntitySet="ItemAccountingStatus" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="Item_Source_id_FK_Source_id_PK" Association="Self.Item_Source_id_FK_Source_id_PK">
+            <End Role="Source" EntitySet="Source" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="Item_UnitType_id_FK_UnitType_id_PK" Association="Self.Item_UnitType_id_FK_UnitType_id_PK">
+            <End Role="UnitType" EntitySet="UnitType" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="tracking_system_fk" Association="Self.tracking_system_fk">
+            <End Role="TrackingSystem" EntitySet="TrackingSystem" />
+            <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+        </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -1380,6 +1404,11 @@
             <End Role="Currency" EntitySet="Currencies" />
             <End Role="MarginApproval" EntitySet="MarginApprovals" />
           </AssociationSet>
+          <EntitySet Name="AdManagers" EntityType="EomModel.AdManager" />
+          <AssociationSet Name="Campaign_AdManager_id_FK_AdManager_id_PK" Association="EomModel.Campaign_AdManager_id_FK_AdManager_id_PK">
+            <End Role="AdManager" EntitySet="AdManagers" />
+            <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Advertiser">
           <Key>
@@ -1452,6 +1481,7 @@
           <NavigationProperty Name="TrackingSystem" Relationship="EomModel.tracking_system_fk" FromRole="Campaign" ToRole="TrackingSystem" />
           <NavigationProperty Name="AccountManagerTeam" Relationship="EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK" FromRole="Campaign" ToRole="AccountManager" />
           <Property Type="String" Name="display_name" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="AdManager" Relationship="EomModel.Campaign_AdManager_id_FK_AdManager_id_PK" FromRole="Campaign" ToRole="AdManager" />
         </EntityType>
         <EntityType Name="CampaignStatus">
           <Key>
@@ -2281,6 +2311,26 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="AdManager">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Campaigns" Relationship="EomModel.Campaign_AdManager_id_FK_AdManager_id_PK" FromRole="AdManager" ToRole="Campaign" />
+        </EntityType>
+        <Association Name="Campaign_AdManager_id_FK_AdManager_id_PK">
+          <End Type="EomModel.AdManager" Role="AdManager" Multiplicity="1" />
+          <End Type="EomModel.Campaign" Role="Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AdManager">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="ad_manager_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2697,6 +2747,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="AdManagers">
+            <EntityTypeMapping TypeName="EomModel.AdManager">
+              <MappingFragment StoreEntitySet="AdManager">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -2713,6 +2771,7 @@
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="UseLegacyProvider" Value="True" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->
@@ -2855,7 +2914,7 @@
         <EntityTypeShape EntityType="EomModel.PubAttachment" Width="1.625" PointX="13.875" PointY="9.75" />
         <EntityTypeShape EntityType="EomModel.PubNote" Width="1.75" PointX="13.75" PointY="11.75" />
         <EntityTypeShape EntityType="EomModel.PublisherRelatedItemCount" Width="2.25" PointX="13.25" PointY="15.625" />
-        <EntityTypeShape EntityType="EomModel.AccountManagerTeam" Width="2" PointX="7.75" PointY="18.25" />
+        <EntityTypeShape EntityType="EomModel.AccountManagerTeam" Width="2" PointX="7.75" PointY="18.625" />
         <AssociationConnector Association="EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK" />
         <EntityTypeShape EntityType="EomModel.Invoice" Width="1.5" PointX="10" PointY="8.375" />
         <EntityTypeShape EntityType="EomModel.InvoiceNote" Width="1.5" PointX="12" PointY="10.5" />
@@ -2872,6 +2931,8 @@
         <EntityTypeShape EntityType="EomModel.MarginApproval" Width="1.625" PointX="5.875" PointY="12.75" />
         <AssociationConnector Association="EomModel.FK_MarginApproval_Currency" />
         <AssociationConnector Association="EomModel.FK_MarginApproval_Currency1" />
+        <EntityTypeShape EntityType="EomModel.AdManager" Width="1.5" PointX="7.75" PointY="17.125" />
+        <AssociationConnector Association="EomModel.Campaign_AdManager_id_FK_AdManager_id_PK" />
         </Diagram>
     </Diagrams>
   </Designer>

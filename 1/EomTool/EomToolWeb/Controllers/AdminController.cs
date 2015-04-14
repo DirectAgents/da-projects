@@ -1,9 +1,10 @@
-﻿using EomTool.Domain.Abstract;
-using EomTool.Domain.Entities;
-using EomToolWeb.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using EomTool.Domain.Abstract;
+using EomTool.Domain.DTOs;
+using EomTool.Domain.Entities;
+using EomToolWeb.Models;
 
 namespace EomToolWeb.Controllers
 {
@@ -217,5 +218,29 @@ namespace EomToolWeb.Controllers
                 return "Existing";
             return status;
         }
+
+        // ---
+
+        public ActionResult AccountingSheet()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult AccountingSheetData()
+        {
+            var data = mainRepo.CampAffItems(null);
+            var kg = new KG<CampAffItem>
+            {
+                data = data
+            };
+            var json = Json(kg);
+            return json;
+        }
+    }
+
+    class KG<T>
+    {
+        public IEnumerable<T> data { get; set; }
     }
 }

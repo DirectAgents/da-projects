@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "Accounting Sheet";
+}
+
+<h2>Accounting Sheet</h2>
+
+<div id="grid"></div>
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+        SetupGrid();
+    });
+
+    function SetupGrid() {
+        var datasource = new kendo.data.DataSource({
+            pageSize: 100,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("AccountingSheetData")'
+                }
+            },
+            schema: {
+                data: 'data',
+                //total: 'total',
+                //aggregates: 'aggregates',
+                //model: {
+                //    id: '',
+                //    fields: {
+                //    }
+                //}
+            }
+        });
+
+        $('#grid').kendoGrid({
+            dataSource: datasource,
+            //autoBind: false,
+            height: 450,
+            sortable: true,
+            filterable: true,
+            //pageable:
+            columns: [
+                { field: 'AffName', title: 'Publisher' },
+                { field: 'AdvName', title: 'Advertiser' },
+                { field: 'Pid', width: 75, attributes: { style: "text-align:right" } },
+                { field: 'CampName', title: 'Campaign' },
+                { field: 'RevCurr.name', title: 'RC', width: 75, attributes: { style: "text-align:center" } },
+                { field: 'CostCurr.name', title: 'CC', width: 75, attributes: { style: "text-align:center" } },
+                { field: 'RevPerUnit', title: 'Rev/Unit', width: 125, format: '{0:n2}', attributes: { style: "text-align:right" } },
+                { field: 'CostPerUnit', title: 'Cost/Unit', width: 125, format: '{0:n2}', attributes: { style: "text-align:right" } },
+                { field: 'Units', width: 90, attributes: { style: "text-align:center" } },
+                { field: 'UnitType.name', title: 'UnitType', width: 150, attributes: { style: "text-align:center" } },
+                { field: 'Rev', width: 125, format: '{0:n2}', attributes: { style: "text-align:right" } },
+                { field: 'Cost', width: 125, format: '{0:n2}', attributes: { style: "text-align:right" } },
+                { field: 'MarginPct', title: '%Margin' }
+            ]
+        });
+    }
+</script>
+}

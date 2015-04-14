@@ -50,6 +50,7 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatch_AffiliatePaymentMethod", "AffiliatePaymentMethod", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.AffiliatePaymentMethod), "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatch), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_MarginApproval_Currency", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.Currency), "MarginApproval", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.MarginApproval), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_MarginApproval_Currency1", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.Currency), "MarginApproval", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.MarginApproval), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "Campaign_AdManager_id_FK_AdManager_id_PK", "AdManager", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.AdManager), "Campaign", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Campaign), true)]
 
 #endregion
 
@@ -644,6 +645,22 @@ namespace EomTool.Domain.Entities
             }
         }
         private ObjectSet<MarginApproval> _MarginApprovals;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<AdManager> AdManagers
+        {
+            get
+            {
+                if ((_AdManagers == null))
+                {
+                    _AdManagers = base.CreateObjectSet<AdManager>("AdManagers");
+                }
+                return _AdManagers;
+            }
+        }
+        private ObjectSet<AdManager> _AdManagers;
 
         #endregion
 
@@ -920,6 +937,14 @@ namespace EomTool.Domain.Entities
         {
             base.AddObject("MarginApprovals", marginApproval);
         }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the AdManagers EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToAdManagers(AdManager adManager)
+        {
+            base.AddObject("AdManagers", adManager);
+        }
 
         #endregion
 
@@ -1029,6 +1054,114 @@ namespace EomTool.Domain.Entities
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Campaign>("EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK", "Campaign", value);
+                }
+            }
+        }
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="AdManager")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class AdManager : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new AdManager object.
+        /// </summary>
+        /// <param name="id">Initial value of the id property.</param>
+        /// <param name="name">Initial value of the name property.</param>
+        public static AdManager CreateAdManager(global::System.Int32 id, global::System.String name)
+        {
+            AdManager adManager = new AdManager();
+            adManager.id = id;
+            adManager.name = name;
+            return adManager;
+        }
+
+        #endregion
+
+        #region Simple Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                if (_id != value)
+                {
+                    OnidChanging(value);
+                    ReportPropertyChanging("id");
+                    _id = StructuralObject.SetValidValue(value, "id");
+                    ReportPropertyChanged("id");
+                    OnidChanged();
+                }
+            }
+        }
+        private global::System.Int32 _id;
+        partial void OnidChanging(global::System.Int32 value);
+        partial void OnidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                OnnameChanging(value);
+                ReportPropertyChanging("name");
+                _name = StructuralObject.SetValidValue(value, false, "name");
+                ReportPropertyChanged("name");
+                OnnameChanged();
+            }
+        }
+        private global::System.String _name;
+        partial void OnnameChanging(global::System.String value);
+        partial void OnnameChanged();
+
+        #endregion
+
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "Campaign_AdManager_id_FK_AdManager_id_PK", "Campaign")]
+        public EntityCollection<Campaign> Campaigns
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Campaign>("EomModel.Campaign_AdManager_id_FK_AdManager_id_PK", "Campaign");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Campaign>("EomModel.Campaign_AdManager_id_FK_AdManager_id_PK", "Campaign", value);
                 }
             }
         }
@@ -3179,6 +3312,44 @@ namespace EomTool.Domain.Entities
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<AccountManagerTeam>("EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "Campaign_AdManager_id_FK_AdManager_id_PK", "AdManager")]
+        public AdManager AdManager
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AdManager>("EomModel.Campaign_AdManager_id_FK_AdManager_id_PK", "AdManager").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AdManager>("EomModel.Campaign_AdManager_id_FK_AdManager_id_PK", "AdManager").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<AdManager> AdManagerReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AdManager>("EomModel.Campaign_AdManager_id_FK_AdManager_id_PK", "AdManager");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<AdManager>("EomModel.Campaign_AdManager_id_FK_AdManager_id_PK", "AdManager", value);
                 }
             }
         }

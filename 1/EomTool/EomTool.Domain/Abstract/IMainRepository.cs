@@ -1,8 +1,8 @@
-﻿using EomTool.Domain.DTOs;
-using EomTool.Domain.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EomTool.Domain.DTOs;
+using EomTool.Domain.Entities;
 
 namespace EomTool.Domain.Abstract
 {
@@ -21,6 +21,7 @@ namespace EomTool.Domain.Abstract
         IEnumerable<CampaignAmount> CampaignAmounts(int? amId, int? advertiserId, bool byAffiliate, int? campaignStatus);
 
         IEnumerable<CampaignAmount> CampaignAmounts2(int? campaignStatus);
+        IEnumerable<CampAffItem> CampAffItems(int? campaignStatus);
 
         Invoice GenerateInvoice(IEnumerable<CampAffId> campAffIds);
         void SaveInvoice(Invoice invoice, bool markSentToAccounting = false);

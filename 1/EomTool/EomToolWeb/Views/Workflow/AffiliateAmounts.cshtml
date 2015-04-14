@@ -59,6 +59,7 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
 }
 </table>
 
+@section scripts {
 <script>
     function EditUnitType(iRow, id) {
         $.get('@Url.Action("UnitTypeDropDown")', {name: 'selectUnitType' + iRow, selected: id}, function (data) {
@@ -81,3 +82,4 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
         }
     }
 </script>
+}

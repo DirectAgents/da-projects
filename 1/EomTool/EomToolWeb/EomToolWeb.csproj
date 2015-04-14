@@ -4367,6 +4367,8 @@
     <Content Include="Views\Workflow\UnitTypeDropDown.cshtml" />
     <Content Include="Views\Workflow\AffiliateAmounts.cshtml" />
     <Content Include="Views\WikiAdmin\CampaignsNotInCake.cshtml" />
+    <Content Include="Views\Shared\_Layout2015.cshtml" />
+    <Content Include="Views\Admin\AccountingSheet.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

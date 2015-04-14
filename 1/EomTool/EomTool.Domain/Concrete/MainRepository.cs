@@ -182,7 +182,7 @@ namespace EomTool.Domain.Concrete
             }
             return amounts;
         }
-        // version2; no joining to invoiced amounts; include unittype and *item ids*
+        // version2: no joining to invoiced amounts; include unittype and *item ids*
         public IEnumerable<CampaignAmount> CampaignAmounts2(int? campaignStatus)
         {
             var items = Items(campaignStatus);
@@ -224,6 +224,71 @@ namespace EomTool.Domain.Concrete
                 NumAffs = 1,
                 UnitType = q.u,
                 ItemIds = q.ra.itemIds
+            });
+            return amounts;
+        }
+        // version3: include campaign and account statuses, AcctMgr
+        public IEnumerable<CampAffItem> CampAffItems(int? campaignStatus)
+        {
+            var items = Items(campaignStatus);
+            var itemGroups = items.GroupBy(i => new { i.pid, i.affid, i.revenue_currency_id, i.revenue_per_unit, i.cost_currency_id, i.cost_per_unit, i.unit_type_id, i.campaign_status_id, i.item_accounting_status_id });
+            var rawAmounts = from ig in itemGroups
+                             select new
+                             {
+                                 ig.Key.pid,
+                                 ig.Key.affid,
+                                 ig.Key.unit_type_id,
+                                 numUnits = (int)ig.Sum(g => g.num_units),
+                                 ig.Key.revenue_currency_id,
+                                 ig.Key.revenue_per_unit,
+                                 revenue = ig.Sum(g => g.total_revenue.HasValue ? g.total_revenue.Value : 0),
+                                 ig.Key.cost_currency_id,
+                                 ig.Key.cost_per_unit,
+                                 cost = ig.Sum(g => g.total_cost.HasValue ? g.total_cost.Value : 0),
+                                 itemIds = ig.Select(i => i.id),
+                                 ig.Key.campaign_status_id,
+                                 ig.Key.item_accounting_status_id
+                             };
+            var query = from ra in rawAmounts.ToList()
+                        join c in context.Campaigns on ra.pid equals c.pid
+                        join a in context.Affiliates on ra.affid equals a.affid
+                        join u in context.UnitTypes on ra.unit_type_id equals u.id
+                        join rc in context.Currencies on ra.revenue_currency_id equals rc.id
+                        join cc in context.Currencies on ra.cost_currency_id equals cc.id
+                        join cstatus in context.CampaignStatuses on ra.campaign_status_id equals cstatus.id
+                        join astatus in context.ItemAccountingStatuses on ra.item_accounting_status_id equals astatus.id
+                        //join am in context.AccountManagerTeams on c.account_manager_id equals am.id
+                        //join adm in context.AdManagers on c.ad_manager_id equals adm.id
+                        select new { ra, c, a, u, rc, cc, cstatus, astatus };
+            var amounts = query.Select(q => new CampAffItem
+            {
+                AdvId = q.c.advertiser_id,
+                AdvName = q.c.Advertiser.name,
+                Pid = q.ra.pid,
+                CampName = q.c.campaign_name,
+                CampDispName = q.c.DisplayName,
+                AffId = q.ra.affid,
+                AffName = q.a.name2,
+                RevCurr = q.rc,
+                RevPerUnit = q.ra.revenue_per_unit,
+                Rev = q.ra.revenue,
+                CostCurr = q.cc,
+                CostPerUnit = q.ra.cost_per_unit,
+                Cost = q.ra.cost,
+                Units = q.ra.numUnits,
+                NumAffs = 1,
+                UnitType = q.u,
+                ItemIds = q.ra.itemIds,
+                CampaignStatusId = q.ra.campaign_status_id,
+                CampaignStatusName = q.cstatus.name,
+                AccountingStatusId = q.ra.item_accounting_status_id,
+                AccountingStatusName = q.astatus.name,
+                AdManagerId = q.c.ad_manager_id,
+                AdManagerName = q.c.AdManager.name,
+                AcctManagerId = q.c.account_manager_id,
+                AcctManagerName = q.c.AccountManagerTeam.name,
+                MediaBuyerId = q.a.media_buyer_id,
+                MediaBuyerName = q.a.MediaBuyer.name
             });
             return amounts;
         }
