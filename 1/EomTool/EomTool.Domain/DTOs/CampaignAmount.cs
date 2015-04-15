@@ -78,8 +78,6 @@ namespace EomTool.Domain.DTOs
         public decimal RevPerUnit { get; set; }
         public decimal Rev { get; set; }
 
-        public decimal InvoicedAmount { get; set; }
-
         public Currency CostCurr { get; set; }
         public decimal CostPerUnit { get; set; }
         public decimal Cost { get; set; }
@@ -119,10 +117,10 @@ namespace EomTool.Domain.DTOs
             get { return String.Join(",", ItemIds); }
         }
 
-        public int CampaignStatusId { get; set; }
-        public string CampaignStatusName { get; set; }
-        public int AccountingStatusId { get; set; }
-        public string AccountingStatusName { get; set; }
+        public int CampStatusId { get; set; }
+        public string CampStatusName { get; set; }
+        public int AStatusId { get; set; }
+        public string AStatusName { get; set; }
 
         public int AdManagerId { get; set; }
         public string AdManagerName { get; set; }

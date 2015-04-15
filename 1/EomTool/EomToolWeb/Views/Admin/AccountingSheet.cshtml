@@ -54,7 +54,9 @@
                 { field: 'UnitType.name', title: 'UnitType', width: 150, attributes: { style: "text-align:center" } },
                 { field: 'Rev', width: 125, format: '{0:n2}', attributes: { style: "text-align:right" } },
                 { field: 'Cost', width: 125, format: '{0:n2}', attributes: { style: "text-align:right" } },
-                { field: 'MarginPct', title: '%Margin' }
+                { field: 'MarginPct', title: '%Margin', width: 110, format: "{0:p}", attributes: { style: "text-align:right" } },
+                { field: 'CampStatusName', title: 'CStatus', width: 110 },
+                { field: 'AStatusName', title: 'AStatus', width: 110 }
             ]
         });
     }
