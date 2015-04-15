@@ -1,6 +1,11 @@
 ﻿@{
     ViewBag.Title = "Accounting Sheet";
 }
+<style type="text/css">
+    .k-grid {
+        font-size: 12px;
+    }
+</style>
 
 <h2>Accounting Sheet</h2>
 
@@ -14,7 +19,10 @@
 
     function SetupGrid() {
         var datasource = new kendo.data.DataSource({
-            pageSize: 100,
+            serverAggregates: true,
+            serverFiltering: true,
+            serverPaging: true,
+            pageSize: 50,
             transport: {
                 read: {
                     type: 'post',
@@ -24,39 +32,51 @@
             },
             schema: {
                 data: 'data',
-                //total: 'total',
-                //aggregates: 'aggregates',
-                //model: {
-                //    id: '',
-                //    fields: {
-                //    }
-                //}
-            }
+                total: 'total',
+                aggregates: 'aggregates',
+                model: {
+                    id: 'ItemIdsString',
+                    fields: {
+                        ItemIdsString: { type: 'string' },
+                        Pid: { type: 'number' },
+                        RevPerUnit: { type: 'number' },
+                        CostPerUnit: { type: 'number' },
+                        Units: { type: 'number' },
+                        Rev: { type: 'number' },
+                        Cost: { type: 'number' },
+                        MarginPct: { type: 'number' }
+                    }
+                }
+            },
+            aggregate: [
+                { field: 'Rev', aggregate: 'sum' },
+                { field: 'Cost', aggregate: 'sum' }
+            ]
         });
 
         $('#grid').kendoGrid({
             dataSource: datasource,
             //autoBind: false,
-            height: 450,
+            height: 500,
             sortable: true,
             filterable: true,
-            //pageable:
+            pageable: { buttonCount: 5 },
             columns: [
                 { field: 'AffName', title: 'Publisher' },
                 { field: 'AdvName', title: 'Advertiser' },
-                { field: 'Pid', width: 75, attributes: { style: "text-align:right" } },
+                { field: 'Pid', width: 85, attributes: { style: "text-align:right" } },
                 { field: 'CampName', title: 'Campaign' },
-                { field: 'RevCurr.name', title: 'RC', width: 75, attributes: { style: "text-align:center" } },
-                { field: 'CostCurr.name', title: 'CC', width: 75, attributes: { style: "text-align:center" } },
-                { field: 'RevPerUnit', title: 'Rev/Unit', width: 125, format: '{0:n2}', attributes: { style: "text-align:right" } },
-                { field: 'CostPerUnit', title: 'Cost/Unit', width: 125, format: '{0:n2}', attributes: { style: "text-align:right" } },
-                { field: 'Units', width: 90, attributes: { style: "text-align:center" } },
-                { field: 'UnitType.name', title: 'UnitType', width: 150, attributes: { style: "text-align:center" } },
-                { field: 'Rev', width: 125, format: '{0:n2}', attributes: { style: "text-align:right" } },
-                { field: 'Cost', width: 125, format: '{0:n2}', attributes: { style: "text-align:right" } },
-                { field: 'MarginPct', title: '%Margin', width: 110, format: "{0:p}", attributes: { style: "text-align:right" } },
-                { field: 'CampStatusName', title: 'CStatus', width: 110 },
-                { field: 'AStatusName', title: 'AStatus', width: 110 }
+                { field: 'RevCurr.name', title: 'RC', width: 55, attributes: { style: "text-align:center" } },
+                { field: 'CostCurr.name', title: 'CC', width: 57, attributes: { style: "text-align:center" } },
+                { field: 'RevPerUnit', title: 'Rev/Unit', width: 90, format: '{0:n2}', attributes: { style: "text-align:right; background:lightgreen" } },
+                { field: 'CostPerUnit', title: 'Cost/Unit', width: 92, format: '{0:n2}', attributes: { style: "text-align:right; background:pink" } },
+                { field: 'Units', width: 75, attributes: { style: "text-align:center" } },
+                { field: 'UnitType.name', title: 'UnitType', width: 90, attributes: { style: "text-align:center" }, filterable: { multi: true, checkAll: false } },
+                { field: 'Rev', width: 90, format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#= kendo.toString(sum, 'n2') #", footerAttributes: { style: "font-weight:bold; text-align:right" } },
+                { field: 'Cost', width: 90, format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#= kendo.toString(sum, 'n2') #", footerAttributes: { style: "font-weight:bold; text-align:right" } },
+                { field: 'MarginPct', title: '%Margin', width: 90, format: "{0:p}", attributes: { style: "text-align:right" } },
+                { field: 'CampStatusName', title: 'CStatus', width: 85, filterable: { multi: true, checkAll: false } },
+                { field: 'AStatusName', title: 'AStatus', width: 85, filterable: { multi: true, checkAll: false } }
             ]
         });
     }

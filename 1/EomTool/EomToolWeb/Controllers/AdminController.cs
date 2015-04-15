@@ -5,6 +5,8 @@ using EomTool.Domain.Abstract;
 using EomTool.Domain.DTOs;
 using EomTool.Domain.Entities;
 using EomToolWeb.Models;
+using KendoGridBinderEx;
+using KendoGridBinderEx.ModelBinder.Mvc;
 
 namespace EomToolWeb.Controllers
 {
@@ -227,20 +229,50 @@ namespace EomToolWeb.Controllers
         }
 
         [HttpPost]
-        public JsonResult AccountingSheetData()
+        public JsonResult AccountingSheetData(KendoGridMvcRequest request)
         {
+            request.AggregateObjects = null; //bugfix
+
             var data = mainRepo.CampAffItems(null);
-            var kg = new KG<CampAffItem>
-            {
-                data = data
-            };
+            var kgrid = new KendoGridEx<CampAffItem>(request, data);
+
+            return CreateJsonResult(kgrid);
+        }
+
+        private JsonResult CreateJsonResult(KendoGridEx<CampAffItem> kgrid)
+        {
+            var kg = new KG<CampAffItem>();
+            kg.data = kgrid.Data;
+            kg.total = kgrid.Total;
+            kg.aggregates = Aggregates(kg.data);
+
             var json = Json(kg);
             return json;
+        }
+
+        //?? What if we want the aggregates for all pages?
+        //?? Maybe: create another KendoGridEx with the paging removed?
+
+        private object Aggregates(IEnumerable<CampAffItem> data)
+        {
+            if (!data.Any()) return null;
+
+            var sumRev = data.Sum(i => i.Rev);
+            var sumCost = data.Sum(i => i.Cost);
+
+            var aggs = new
+            {
+                Rev = new { sum = sumRev },
+                Cost = new { sum = sumCost }
+            };
+            return aggs;
         }
     }
 
     class KG<T>
     {
         public IEnumerable<T> data { get; set; }
+        public int total { get; set; }
+        public object aggregates { get; set; }
     }
 }
