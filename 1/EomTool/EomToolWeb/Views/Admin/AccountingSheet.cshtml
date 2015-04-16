@@ -22,6 +22,7 @@
             serverAggregates: true,
             serverFiltering: true,
             serverPaging: true,
+            serverSorting: true,
             pageSize: 50,
             transport: {
                 read: {
@@ -49,8 +50,11 @@
                 }
             },
             aggregate: [
-                { field: 'Rev', aggregate: 'sum' },
-                { field: 'Cost', aggregate: 'sum' }
+                { field: 'RevUSD', aggregate: 'sum' },
+                { field: 'RevCurr', aggregate: 'agg' },
+                { field: 'CostUSD', aggregate: 'sum' },
+                { field: 'CostCurr', aggregate: 'agg' },
+                { field: 'MarginPct', aggregate: 'agg' }
             ]
         });
 
@@ -62,19 +66,19 @@
             filterable: true,
             pageable: { buttonCount: 5 },
             columns: [
-                { field: 'AffName', title: 'Publisher' },
+                { field: 'AffName', title: 'Publisher', footerTemplate: 'Totals...' },
                 { field: 'AdvName', title: 'Advertiser' },
                 { field: 'Pid', width: 85, attributes: { style: "text-align:right" } },
                 { field: 'CampName', title: 'Campaign' },
-                { field: 'RevCurr.name', title: 'RC', width: 55, attributes: { style: "text-align:center" } },
-                { field: 'CostCurr.name', title: 'CC', width: 57, attributes: { style: "text-align:center" } },
+                { field: 'RevCurr.name', title: 'RC', width: 55, attributes: { style: "text-align:center" }, footerTemplate: "#: data.RevCurr.agg #", footerAttributes: { style: "text-align:center" }, filterable: { multi: true, checkAll: false } },
+                { field: 'CostCurr.name', title: 'CC', width: 57, attributes: { style: "text-align:center" }, footerTemplate: "#: data.CostCurr.agg #", footerAttributes: { style: "text-align:center" }, filterable: { multi: true, checkAll: false } },
                 { field: 'RevPerUnit', title: 'Rev/Unit', width: 90, format: '{0:n2}', attributes: { style: "text-align:right; background:lightgreen" } },
                 { field: 'CostPerUnit', title: 'Cost/Unit', width: 92, format: '{0:n2}', attributes: { style: "text-align:right; background:pink" } },
                 { field: 'Units', width: 75, attributes: { style: "text-align:center" } },
                 { field: 'UnitType.name', title: 'UnitType', width: 90, attributes: { style: "text-align:center" }, filterable: { multi: true, checkAll: false } },
-                { field: 'Rev', width: 90, format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#= kendo.toString(sum, 'n2') #", footerAttributes: { style: "font-weight:bold; text-align:right" } },
-                { field: 'Cost', width: 90, format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#= kendo.toString(sum, 'n2') #", footerAttributes: { style: "font-weight:bold; text-align:right" } },
-                { field: 'MarginPct', title: '%Margin', width: 90, format: "{0:p}", attributes: { style: "text-align:right" } },
+                { field: 'Rev', width: 90, format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.RevUSD.sum, 'n2') #", footerAttributes: { style: "text-align:right" } },
+                { field: 'Cost', width: 90, format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.CostUSD.sum, 'n2') #", footerAttributes: { style: "text-align:right" } },
+                { field: 'MarginPct', title: '%Margin', width: 90, format: "{0:p}", attributes: { style: "text-align:right" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "text-align:right" } },
                 { field: 'CampStatusName', title: 'CStatus', width: 85, filterable: { multi: true, checkAll: false } },
                 { field: 'AStatusName', title: 'AStatus', width: 85, filterable: { multi: true, checkAll: false } }
             ]

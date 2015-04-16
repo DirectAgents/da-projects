@@ -77,10 +77,12 @@ namespace EomTool.Domain.DTOs
         public Currency RevCurr { get; set; }
         public decimal RevPerUnit { get; set; }
         public decimal Rev { get; set; }
+        public decimal RevUSD { get { return Rev * RevCurr.to_usd_multiplier; } }
 
         public Currency CostCurr { get; set; }
         public decimal CostPerUnit { get; set; }
         public decimal Cost { get; set; }
+        public decimal CostUSD { get { return Cost * CostCurr.to_usd_multiplier; } }
 
         public decimal? Margin
         {
@@ -99,11 +101,7 @@ namespace EomTool.Domain.DTOs
                 if (Rev == 0)
                     return null;
                 else
-                {
-                    var revUSD = Rev * RevCurr.to_usd_multiplier;
-                    var costUSD = Cost * CostCurr.to_usd_multiplier;
-                    return (1 - costUSD / revUSD);
-                }
+                    return 1 - CostUSD / RevUSD;
             }
         }
 

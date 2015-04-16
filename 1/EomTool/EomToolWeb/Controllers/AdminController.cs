@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web.Mvc;
 using EomTool.Domain.Abstract;
 using EomTool.Domain.DTOs;
@@ -231,7 +233,8 @@ namespace EomToolWeb.Controllers
         [HttpPost]
         public JsonResult AccountingSheetData(KendoGridMvcRequest request)
         {
-            request.AggregateObjects = null; //bugfix
+            // The "agg" aggregates will get computed outside of KendoGridEx
+            request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
 
             var data = mainRepo.CampAffItems(null);
             var kgrid = new KendoGridEx<CampAffItem>(request, data);
@@ -244,26 +247,29 @@ namespace EomToolWeb.Controllers
             var kg = new KG<CampAffItem>();
             kg.data = kgrid.Data;
             kg.total = kgrid.Total;
-            kg.aggregates = Aggregates(kg.data);
+            kg.aggregates = Aggregates(kgrid);
 
             var json = Json(kg);
             return json;
         }
 
-        //?? What if we want the aggregates for all pages?
-        //?? Maybe: create another KendoGridEx with the paging removed?
-
-        private object Aggregates(IEnumerable<CampAffItem> data)
+        private object Aggregates(KendoGridEx<CampAffItem> kgrid)
         {
-            if (!data.Any()) return null;
+            if (kgrid.Total == 0) return null;
+            decimal sumRevUSD = ((dynamic)kgrid.Aggregates)["RevUSD"]["sum"];
+            decimal sumCostUSD = ((dynamic)kgrid.Aggregates)["CostUSD"]["sum"];
 
-            var sumRev = data.Sum(i => i.Rev);
-            var sumCost = data.Sum(i => i.Cost);
+            decimal? marginPct = null;
+            if (sumRevUSD != 0)
+                marginPct = 1 - sumCostUSD / sumRevUSD;
 
             var aggs = new
             {
-                Rev = new { sum = sumRev },
-                Cost = new { sum = sumCost }
+                RevUSD = new { sum = sumRevUSD },
+                RevCurr = new { agg = "USD" },
+                CostUSD = new { sum = sumCostUSD },
+                CostCurr = new { agg = "USD" },
+                MarginPct = new { agg = marginPct }
             };
             return aggs;
         }
