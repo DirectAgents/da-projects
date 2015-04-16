@@ -227,7 +227,13 @@ namespace EomToolWeb.Controllers
 
         public ActionResult AccountingSheet()
         {
-            return View();
+            if (!securityRepo.IsAccountantOrAdmin(User))
+                return Content("unauthorized");
+
+            var model = new AccountingSheetModel {
+                CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
+            };
+            return View(model);
         }
 
         [HttpPost]

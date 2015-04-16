@@ -74,26 +74,26 @@ namespace EomTool.Domain.DTOs
         public int? AffId { get; set; }
         public string AffName { get; set; }
 
-        public Currency RevCurr { get; set; }
+        public string RevCurr { get; set; }
         public decimal RevPerUnit { get; set; }
         public decimal Rev { get; set; }
-        public decimal RevUSD { get { return Rev * RevCurr.to_usd_multiplier; } }
+        public decimal RevUSD { get; set; }
 
-        public Currency CostCurr { get; set; }
+        public string CostCurr { get; set; }
         public decimal CostPerUnit { get; set; }
         public decimal Cost { get; set; }
-        public decimal CostUSD { get { return Cost * CostCurr.to_usd_multiplier; } }
+        public decimal CostUSD { get; set; }
 
-        public decimal? Margin
-        {
-            get
-            {
-                if (RevCurr.id == CostCurr.id)
-                    return Rev - Cost;
-                else
-                    return null;
-            }
-        }
+        //public decimal? Margin
+        //{
+        //    get
+        //    {
+        //        if (RevCurr == CostCurr)
+        //            return Rev - Cost;
+        //        else
+        //            return null;
+        //    }
+        //}
         public decimal? MarginPct
         {
             get
@@ -106,24 +106,23 @@ namespace EomTool.Domain.DTOs
         }
 
         public int Units { get; set; }
-        public int NumAffs { get; set; }
-        public UnitType UnitType { get; set; }
-        public IEnumerable<int> ItemIds { get; set; }
+        public int NumAffs { get; set; } // unused?
+        public int UnitTypeId { get; set; }
+        public string UnitTypeName { get; set; }
 
-        public string ItemIdsString
-        {
-            get { return String.Join(",", ItemIds); }
-        }
+        //note: could have a private get on ItemIds and do the computation in ItemIdsString.get
+        public IEnumerable<int> ItemIds { set { ItemIdsString = String.Join(",", value); } }
+        public string ItemIdsString { get; set; }
 
         public int CampStatusId { get; set; }
         public string CampStatusName { get; set; }
         public int AStatusId { get; set; }
         public string AStatusName { get; set; }
 
-        public int AdManagerId { get; set; }
-        public string AdManagerName { get; set; }
-        public int AcctManagerId { get; set; }
-        public string AcctManagerName { get; set; }
+        public int AdMgrId { get; set; }
+        public string AdMgrName { get; set; }
+        public int AcctMgrId { get; set; }
+        public string AcctMgrName { get; set; }
         public int MediaBuyerId { get; set; }
         public string MediaBuyerName { get; set; }
     }

@@ -201,7 +201,7 @@
     <Compile Include="Infrastructure\EomToolWebConfigSection.cs" />
     <Compile Include="Infrastructure\NinjectControllerFactory.cs" />
     <Compile Include="Infrastructure\NinjectControllerFactory.partial.cs" />
-    <Compile Include="Models\AffiliateAmountsModel.cs" />
+    <Compile Include="Models\AccountingModels.cs" />
     <Compile Include="Models\AffiliatesListViewModel.cs" />
     <Compile Include="Models\BlogPost.cs" />
     <Compile Include="Models\CampaignAffiliateAmountsModel.cs" />

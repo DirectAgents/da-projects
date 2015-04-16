@@ -9,6 +9,9 @@
 
 <h2>Accounting Sheet</h2>
 
+Accounting Period: <b>@Model.CurrentEomDateString</b><br />
+@* TODO: check every 30 secs or so if the accounting period changed. If so, prompt & refresh. *@
+
 <div id="grid"></div>
 
 @section scripts {
@@ -70,12 +73,12 @@
                 { field: 'AdvName', title: 'Advertiser' },
                 { field: 'Pid', width: 85, attributes: { style: "text-align:right" } },
                 { field: 'CampName', title: 'Campaign' },
-                { field: 'RevCurr.name', title: 'RC', width: 55, attributes: { style: "text-align:center" }, footerTemplate: "#: data.RevCurr.agg #", footerAttributes: { style: "text-align:center" }, filterable: { multi: true, checkAll: false } },
-                { field: 'CostCurr.name', title: 'CC', width: 57, attributes: { style: "text-align:center" }, footerTemplate: "#: data.CostCurr.agg #", footerAttributes: { style: "text-align:center" }, filterable: { multi: true, checkAll: false } },
+                { field: 'RevCurr', title: 'RC', width: 55, attributes: { style: "text-align:center" }, footerTemplate: "#: data.RevCurr.agg #", footerAttributes: { style: "text-align:center" }, filterable: { multi: true, checkAll: false } },
+                { field: 'CostCurr', title: 'CC', width: 57, attributes: { style: "text-align:center" }, footerTemplate: "#: data.CostCurr.agg #", footerAttributes: { style: "text-align:center" }, filterable: { multi: true, checkAll: false } },
                 { field: 'RevPerUnit', title: 'Rev/Unit', width: 90, format: '{0:n2}', attributes: { style: "text-align:right; background:lightgreen" } },
                 { field: 'CostPerUnit', title: 'Cost/Unit', width: 92, format: '{0:n2}', attributes: { style: "text-align:right; background:pink" } },
                 { field: 'Units', width: 75, attributes: { style: "text-align:center" } },
-                { field: 'UnitType.name', title: 'UnitType', width: 90, attributes: { style: "text-align:center" }, filterable: { multi: true, checkAll: false } },
+                { field: 'UnitTypeName', title: 'UnitType', width: 90, attributes: { style: "text-align:center" }, filterable: { multi: true, checkAll: false } },
                 { field: 'Rev', width: 90, format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.RevUSD.sum, 'n2') #", footerAttributes: { style: "text-align:right" } },
                 { field: 'Cost', width: 90, format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.CostUSD.sum, 'n2') #", footerAttributes: { style: "text-align:right" } },
                 { field: 'MarginPct', title: '%Margin', width: 90, format: "{0:p}", attributes: { style: "text-align:right" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "text-align:right" } },

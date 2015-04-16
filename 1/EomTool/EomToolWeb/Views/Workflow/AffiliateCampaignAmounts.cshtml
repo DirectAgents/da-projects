@@ -2,7 +2,7 @@
 @{
     //ViewBag.Title?
     var campAffItems = Model.CampAffItems.OrderBy(a => a.AffName).ThenBy(a => a.AdvName)
-                                         .ThenBy(a => a.CampName).ThenBy(a => a.UnitType.name).ToList();
+                                         .ThenBy(a => a.CampName).ThenBy(a => a.UnitTypeName).ToList();
     int? lastAffId = -1;
     bool grayRow = false;
     bool unitTypeEditable = true;
@@ -46,20 +46,20 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
         <td id="tdUnitType@(i)" style="text-align:center">
             @if (unitTypeEditable)
             {
-                <a href="#" onclick="EditUnitType(@i, @ca.UnitType.id); return false">@ca.UnitType.name</a>
+                <a href="#" onclick="EditUnitType(@i, @ca.UnitTypeId); return false">@ca.UnitTypeName</a>
             } else {
-                @ca.UnitType.name
+                @ca.UnitTypeName
             }
         </td>
-        <td>@ca.RevCurr.name</td>
+        <td>@ca.RevCurr</td>
         <td style="text-align: right">@ca.Rev.ToString("N2")</td>
         <td>&nbsp;</td>
-        <td>@ca.CostCurr.name</td>
+        <td>@ca.CostCurr</td>
         <td style="text-align:right">@ca.Cost.ToString("N2")</td>
         <td style="text-align:center">@ca.CampStatusName</td>
         <td style="text-align:center">@ca.AStatusName</td>
-        <td>@ca.AdManagerName</td>
-        <td>@ca.AcctManagerName</td>
+        <td>@ca.AdMgrName</td>
+        <td>@ca.AcctMgrName</td>
         <td>@ca.MediaBuyerName</td>
     </tr>
     @Html.Hidden("ids" + i, ca.ItemIdsString)

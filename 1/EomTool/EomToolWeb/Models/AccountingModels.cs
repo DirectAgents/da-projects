@@ -3,6 +3,11 @@ using EomTool.Domain.DTOs;
 
 namespace EomToolWeb.Models
 {
+    public class AccountingSheetModel
+    {
+        public string CurrentEomDateString { get; set; }
+    }
+
     public class AffiliateAmountsModel
     {
         public string CurrentEomDateString { get; set; }
