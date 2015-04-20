@@ -727,6 +727,10 @@ namespace EomTool.Domain.Concrete
             return context.Sources.FirstOrDefault(s => s.name == sourceName);
         }
 
+        public Item GetItem(int id)
+        {
+            return context.Items.FirstOrDefault(s => s.id == id);
+        }
         public void AddItem(Item item)
         {
             context.Items.AddObject(item);

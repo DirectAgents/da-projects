@@ -114,6 +114,11 @@ namespace EomTool.Domain.DTOs
         public IEnumerable<int> ItemIds { set { ItemIdsString = String.Join(",", value); } }
         public string ItemIdsString { get; set; }
 
+        public IEnumerable<int> GetItemIds()
+        {
+            return ItemIdsString.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id));
+        }
+
         public int CampStatusId { get; set; }
         public string CampStatusName { get; set; }
         public int AStatusId { get; set; }

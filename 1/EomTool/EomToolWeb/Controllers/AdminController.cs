@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Web.Mvc;
 using EomTool.Domain.Abstract;
 using EomTool.Domain.DTOs;
@@ -248,6 +249,47 @@ namespace EomToolWeb.Controllers
             return CreateJsonResult(kgrid);
         }
 
+        [HttpPost]
+        public ActionResult AccountingSheetUpdate(CampAffItem[] models)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    StringBuilder msgBuilder = new StringBuilder();
+                    foreach (var modelError in ModelState.Values.SelectMany(ms => ms.Errors))
+                    {
+                        msgBuilder.Append(modelError.ErrorMessage + " ");
+                    }
+                    throw new Exception(msgBuilder.ToString());
+                }
+                foreach (var row in models)
+                {
+                    var itemIds = row.GetItemIds();
+                    foreach (var id in itemIds)
+                    {
+                        // Update each item (some rows represent multiple items that were grouped together)
+                        var item = mainRepo.GetItem(id);
+                        if (item == null)
+                            throw new Exception(String.Format("Missing item {0}", id));
+
+                        item.revenue_per_unit = row.RevPerUnit;
+                        item.cost_per_unit = row.CostPerUnit;
+                    }
+                }
+                mainRepo.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return new HttpStatusCodeResult(500, ex.Message);
+                //TODO: rework. return a simpler json object with error info.
+            }
+
+            return Json(models);
+        }
+
+        // ---
+
         private JsonResult CreateJsonResult(KendoGridEx<CampAffItem> kgrid)
         {
             var kg = new KG<CampAffItem>();
@@ -258,6 +300,18 @@ namespace EomToolWeb.Controllers
             var json = Json(kg);
             return json;
         }
+        //private JsonResult CreateJsonResult(DataSourceResult result)
+        //{
+        //    result.Aggregates = Aggregates(result);
+        //    var json = Json(result);
+        //    return json;
+        //}
+        //var type2 = result.Aggregates.GetType();
+        //var revAgg = type2.GetProperty("RevUSD").GetValue(result.Aggregates);
+        //var costAgg = type2.GetProperty("CostUSD").GetValue(result.Aggregates);
+        //var type1 = revAgg.GetType();
+        //decimal sumRevUSD = (decimal)type1.GetProperty("sum").GetValue(revAgg);
+        //decimal sumCostUSD = (decimal)type1.GetProperty("sum").GetValue(costAgg);
 
         private object Aggregates(KendoGridEx<CampAffItem> kgrid)
         {

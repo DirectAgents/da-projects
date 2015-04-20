@@ -27,12 +27,19 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
             serverPaging: true,
             serverSorting: true,
             pageSize: 50,
+            batch: true,
             transport: {
                 read: {
-                    type: 'post',
-                    dataType: 'json',
-                    url: '@Url.Action("AccountingSheetData")'
-                }
+                    url: '@Url.Action("AccountingSheetData")',
+                    type: 'post', dataType: 'json'
+                },
+                update: {
+                    url: '@Url.Action("AccountingSheetUpdate")',
+                    type: 'post', dataType: 'json'
+                },
+                //parameterMap: function (data, type) {
+                //    return kendo.stringify(data);
+                //}
             },
             schema: {
                 data: 'data',
@@ -60,14 +67,17 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
                 { field: 'MarginPct', aggregate: 'agg' }
             ]
         });
+        datasource.bind('error', datasource_error);
 
         $('#grid').kendoGrid({
             dataSource: datasource,
             //autoBind: false,
             height: 500,
-            sortable: true,
+            editable: true,
             filterable: true,
-            pageable: { buttonCount: 5 },
+            pageable: true, // { buttonCount: 5 },
+            sortable: true,
+            toolbar: ["save", "cancel"],
             columns: [
                 { field: 'AffName', title: 'Publisher', footerTemplate: 'Totals...' },
                 { field: 'AdvName', title: 'Advertiser' },
@@ -86,6 +96,13 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
                 { field: 'AStatusName', title: 'AStatus', width: 85, filterable: { multi: true, checkAll: false } }
             ]
         });
+    }
+
+    function datasource_error(e) {
+        alert('Grid error:\n' + e.errorThrown);
+
+        //var grid = $("#grid").data("kendoGrid");
+        //grid.cancelChanges();
     }
 </script>
 }
