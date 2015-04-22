@@ -11,7 +11,7 @@ namespace EomTool.Domain.Abstract
         void SaveChanges();
 
         Advertiser GetAdvertiser(int id);
-        IQueryable<Advertiser> Advertisers();
+        IQueryable<Advertiser> Advertisers(bool withActivity = false);
 
         AccountManagerTeam GetAccountManagerTeam(int id);
         IQueryable<AccountManagerTeam> AccountManagerTeams(bool withActivityOnly = false);
@@ -43,10 +43,15 @@ namespace EomTool.Domain.Abstract
         UnitType GetUnitType(int unitTypeId);
         UnitType GetUnitType(string unitTypeName);
 
+        List<Currency> CurrencyList { get; }
         bool CurrencyExists(int currency);
         string CurrencyName(int currencyId);
+        int CurrencyId(string currencyName);
         Currency GetCurrency(int currencyId);
         Currency GetCurrency(string currencyName);
+
+        List<CampaignStatus> CampaignStatusList { get; }
+        List<ItemAccountingStatus> AccountingStatusList { get; }
 
         // --- Extra Item Import stuff ---
         bool CampaignExists(int pid);

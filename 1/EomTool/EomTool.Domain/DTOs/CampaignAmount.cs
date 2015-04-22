@@ -68,10 +68,16 @@ namespace EomTool.Domain.DTOs
         public string AdvName { get; set; }
 
         public int Pid { get; set; }
-        public string CampName { get; set; }
-        public string CampDispName { get; set; }
 
-        public int? AffId { get; set; }
+        public string CampName { get; set; }
+        //private string _campName;
+        //public string CampName {
+        //    set { _campName = value; }
+        //    get { return _campName + " (" + Pid + ")"; }
+        //}
+        //public string CampDispName { get; set; }
+
+        public int AffId { get; set; }
         public string AffName { get; set; }
 
         public string RevCurr { get; set; }
@@ -108,7 +114,7 @@ namespace EomTool.Domain.DTOs
         public int Units { get; set; }
         public int NumAffs { get; set; } // unused?
         public int UnitTypeId { get; set; }
-        public string UnitTypeName { get; set; }
+        //public string UnitTypeName { get; set; }
 
         //note: could have a private get on ItemIds and do the computation in ItemIdsString.get
         public IEnumerable<int> ItemIds { set { ItemIdsString = String.Join(",", value); } }
@@ -119,10 +125,10 @@ namespace EomTool.Domain.DTOs
             return ItemIdsString.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id));
         }
 
-        public int CampStatusId { get; set; }
-        public string CampStatusName { get; set; }
+        public int CStatusId { get; set; }
+        //public string CStatusName { get; set; }
         public int AStatusId { get; set; }
-        public string AStatusName { get; set; }
+        //public string AStatusName { get; set; }
 
         public int AdMgrId { get; set; }
         public string AdMgrName { get; set; }

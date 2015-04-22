@@ -26,9 +26,12 @@ namespace EomTool.Domain.Concrete
         {
             return context.Advertisers.FirstOrDefault(a => a.id == id);
         }
-        public IQueryable<Advertiser> Advertisers()
+        public IQueryable<Advertiser> Advertisers(bool withActivity = false)
         {
-            return context.Advertisers;
+            if (withActivity)
+                return Campaigns(null, null, true).Select(c => c.Advertiser).Distinct();
+            else
+                return context.Advertisers;
         }
 
 
@@ -266,7 +269,7 @@ namespace EomTool.Domain.Concrete
                 AdvName = q.c.Advertiser.name,
                 Pid = q.ra.pid,
                 CampName = q.c.campaign_name,
-                CampDispName = q.c.DisplayName,
+                //CampDispName = q.c.DisplayName,
                 AffId = q.ra.affid,
                 AffName = q.a.name2,
                 RevCurr = q.rc.name,
@@ -280,12 +283,12 @@ namespace EomTool.Domain.Concrete
                 Units = q.ra.numUnits,
                 NumAffs = 1,
                 UnitTypeId = q.u.id,
-                UnitTypeName = q.u.name,
+                //UnitTypeName = q.u.name,
                 ItemIds = q.ra.itemIds,
-                CampStatusId = q.ra.campaign_status_id,
-                CampStatusName = q.cstatus.name,
+                CStatusId = q.ra.campaign_status_id,
+                //CStatusName = q.cstatus.name,
                 AStatusId = q.ra.item_accounting_status_id,
-                AStatusName = q.astatus.name,
+                //AStatusName = q.astatus.name,
                 AdMgrId = q.c.ad_manager_id,
                 AdMgrName = q.c.AdManager.name,
                 AcctMgrId = q.c.account_manager_id,
@@ -637,8 +640,30 @@ namespace EomTool.Domain.Concrete
 
         //---
 
+        private List<CampaignStatus> _campaignStatusList;
+        public List<CampaignStatus> CampaignStatusList
+        {
+            get
+            {
+                if (_campaignStatusList == null) _campaignStatusList = context.CampaignStatuses.ToList();
+                return _campaignStatusList;
+            }
+        }
+
+        private List<ItemAccountingStatus> _accountingStatusList;
+        public List<ItemAccountingStatus> AccountingStatusList
+        {
+            get
+            {
+                if (_accountingStatusList == null) _accountingStatusList = context.ItemAccountingStatuses.ToList();
+                return _accountingStatusList;
+            }
+        }
+
+        //---
+
         private List<Currency> _currencyList;
-        private List<Currency> CurrencyList
+        public List<Currency> CurrencyList
         {
             get
             {
@@ -653,10 +678,18 @@ namespace EomTool.Domain.Concrete
         public string CurrencyName(int currencyId)
         {
             string currencyName = null;
-            var currency = CurrencyList.FirstOrDefault(c => c.id == currencyId);
+            var currency = GetCurrency(currencyId);
             if (currency != null)
                 currencyName = currency.name;
             return currencyName;
+        }
+        public int CurrencyId(string currencyName)
+        {
+            int currencyId = 0;
+            var currency = GetCurrency(currencyName);
+            if (currency != null)
+                currencyId = currency.id;
+            return currencyId;
         }
 
         public bool CurrencyExists(int currency)

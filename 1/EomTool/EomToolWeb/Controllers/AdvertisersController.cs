@@ -1,7 +1,8 @@
-﻿using EomTool.Domain.Abstract;
-using EomTool.Domain.Entities;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
+using EomTool.Domain.Abstract;
+using EomTool.Domain.Entities;
+using EomToolWeb.Models;
 
 namespace EomToolWeb.Controllers
 {
@@ -24,6 +25,13 @@ namespace EomToolWeb.Controllers
 
             SetAccountingPeriodViewData();
             return View(advertisers);
+        }
+
+        public JsonResult IdValueText(bool withActivity = false)
+        {
+            var advertisers = mainRepo.Advertisers(withActivity).OrderBy(a => a.name);
+            var valueTexts = advertisers.Select(a => new IntValueText() { value = a.id, text = a.name });
+            return Json(valueTexts, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Show(int id)

@@ -167,6 +167,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AffiliatesController.cs" />
+    <Compile Include="Controllers\TypesController.cs" />
     <Compile Include="Controllers\WikiAdminController.cs" />
     <Compile Include="Controllers\AdvertisersController.cs" />
     <Compile Include="Controllers\BatchesController.cs" />
@@ -210,6 +211,7 @@
     <Compile Include="Models\CampaignViewModel.cs" />
     <Compile Include="Models\InvoicesSummary.cs" />
     <Compile Include="Models\ListViewMode.cs" />
+    <Compile Include="Models\Models.cs" />
     <Compile Include="Models\PagingInfo.cs" />
     <Compile Include="Models\PaymentBatchesViewModel.cs" />
     <Compile Include="Models\PayoutsListViewModel.cs" />
@@ -4393,6 +4395,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Types\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\DirectAgents.Domain\DirectAgents.Domain.csproj">

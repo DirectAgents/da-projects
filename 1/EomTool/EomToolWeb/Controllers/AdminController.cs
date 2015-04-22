@@ -243,6 +243,13 @@ namespace EomToolWeb.Controllers
             // The "agg" aggregates will get computed outside of KendoGridEx
             request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
 
+            var affSort = request.SortObjects.SingleOrDefault(so => so.Field == "AffId");
+            if (affSort != null) affSort.Field = "AffName";
+            var advSort = request.SortObjects.SingleOrDefault(so => so.Field == "AdvId");
+            if (advSort != null) advSort.Field = "AdvName";
+            var unitTypeSort = request.SortObjects.SingleOrDefault(so => so.Field == "UnitTypeId");
+            if (unitTypeSort != null) unitTypeSort.Field = "UnitTypeName";
+
             var data = mainRepo.CampAffItems(null);
             var kgrid = new KendoGridEx<CampAffItem>(request, data);
 
@@ -273,8 +280,14 @@ namespace EomToolWeb.Controllers
                         if (item == null)
                             throw new Exception(String.Format("Missing item {0}", id));
 
+                        item.affid = row.AffId;
+                        item.revenue_currency_id = mainRepo.CurrencyId(row.RevCurr);
+                        item.cost_currency_id = mainRepo.CurrencyId(row.CostCurr);
                         item.revenue_per_unit = row.RevPerUnit;
                         item.cost_per_unit = row.CostPerUnit;
+                        item.unit_type_id = row.UnitTypeId;
+                        //item.campaign_status_id = row.CStatusId;
+                        //item.item_accounting_status_id = row.AStatusId;
                     }
                 }
                 mainRepo.SaveChanges();

@@ -16,11 +16,33 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
 
 @section scripts {
 <script>
+    var affLookupData, advLookupData, campLookupData, currLookupData, unitTypeLookupData, cstatusLookupData, astatusLookupData;
+    var affDict = {};
+
     $(document).ready(function () {
-        SetupGrid();
+        BeginSetup();
     });
 
-    function SetupGrid() {
+    function BeginSetup() {
+        $.when(
+            getLookupData('@Url.Action("IdValueText", "Affiliates")', function (data) { affLookupData = data; }),
+            getLookupData('@Url.Action("IdValueText", "Advertisers", new { withActivity = true })', function (data) { advLookupData = data; }),
+            getLookupData('@Url.Action("CampaignsValueText", "Types", new { withActivity = true })', function (data) { campLookupData = data; }),
+            getLookupData('@Url.Action("CurrencyCodesValueText", "Types")', function (data) { currLookupData = data; }),
+            getLookupData('@Url.Action("UnitTypesValueText", "Types")', function (data) { unitTypeLookupData = data; }),
+            getLookupData('@Url.Action("CampaignStatusValueText", "Types")', function(data) { cstatusLookupData = data; }),
+            getLookupData('@Url.Action("AccountingStatusValueText", "Types")', function(data) { astatusLookupData = data; })
+        ).then(function () {
+            //for (var i = 0; i < affLookupData.length; i++) {
+            //    affDict[affLookupData[i].value] = affLookupData[i].text;
+            //}
+            SetupDataSourceAndGrid();
+        }).fail(function () {
+            alert('Error loading lookup data.');
+        });
+    }
+
+    function SetupDataSourceAndGrid() {
         var datasource = new kendo.data.DataSource({
             serverAggregates: true,
             serverFiltering: true,
@@ -49,14 +71,24 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
                     id: 'ItemIdsString',
                     fields: {
                         ItemIdsString: { type: 'string' },
-                        Pid: { type: 'number' },
+                        AffId: { field: 'AffId', type: 'number' },
+                        //AdvId: { type: 'number' },
+                        AdvName: { type: 'string', editable: false },
+                        Pid: { type: 'number', editable: false },
+                        CampName: { editable: false },
                         RevPerUnit: { type: 'number' },
                         CostPerUnit: { type: 'number' },
-                        Units: { type: 'number' },
-                        Rev: { type: 'number' },
-                        Cost: { type: 'number' },
-                        MarginPct: { type: 'number' }
-                    }
+                        Units: { type: 'number', editable: false },
+                        UnitTypeId: { type: 'number' },
+                        Rev: { type: 'number', editable: false },
+                        Cost: { type: 'number', editable: false },
+                        MarginPct: { type: 'number', editable: false },
+                        CStatusId: { type: 'number', editable: false },
+                        AStatusId: { type: 'number', editable: false }
+                    },
+                    //AffName: function () {
+                    //    return affDict[this.get('AffId')];
+                    //}
                 }
             },
             aggregate: [
@@ -79,30 +111,71 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
             sortable: true,
             toolbar: ["save", "cancel"],
             columns: [
-                { field: 'AffName', title: 'Publisher', footerTemplate: 'Totals...' },
-                { field: 'AdvName', title: 'Advertiser' },
-                { field: 'Pid', width: 85, attributes: { style: "text-align:right" } },
-                { field: 'CampName', title: 'Campaign' },
-                { field: 'RevCurr', title: 'RC', width: 55, attributes: { style: "text-align:center" }, footerTemplate: "#: data.RevCurr.agg #", footerAttributes: { style: "text-align:center" }, filterable: { multi: true, checkAll: false } },
-                { field: 'CostCurr', title: 'CC', width: 57, attributes: { style: "text-align:center" }, footerTemplate: "#: data.CostCurr.agg #", footerAttributes: { style: "text-align:center" }, filterable: { multi: true, checkAll: false } },
+                { field: 'AffId', title: 'Publisher', values: affLookupData, footerTemplate: 'Totals...' },
+                //{ field: 'AffName()', title: 'Publisher', editor: affDropDownEditor },
+                { field: 'AdvName', title: 'Advertiser', filterable: { ui: advFilter } },
+                //{ field: 'AdvId', title: 'Advertiser', values: advLookupData },
+                { field: 'Pid', width: 85, attributes: { style: "text-align:right" } }, //filterable: { ui: pidFilter } },
+                { field: 'CampName', title: 'Campaign', filterable: { ui: campFilter } },
+                //{ title: 'Campaign', template: '#=CampName# (#=Pid#)' }, // can't sort/filter?
+                { field: 'RevCurr', title: 'RC', width: 60, attributes: { style: "text-align:center" }, values: currLookupData, footerTemplate: "#: data.RevCurr.agg #", footerAttributes: { style: "text-align:center" }, filterable: { multi: true, checkAll: false, dataSource: currLookupData } },
+                { field: 'CostCurr', title: 'CC', width: 60, attributes: { style: "text-align:center" }, values: currLookupData, footerTemplate: "#: data.CostCurr.agg #", footerAttributes: { style: "text-align:center" }, filterable: { multi: true, checkAll: false, dataSource: currLookupData } },
                 { field: 'RevPerUnit', title: 'Rev/Unit', width: 90, format: '{0:n2}', attributes: { style: "text-align:right; background:lightgreen" } },
                 { field: 'CostPerUnit', title: 'Cost/Unit', width: 92, format: '{0:n2}', attributes: { style: "text-align:right; background:pink" } },
                 { field: 'Units', width: 75, attributes: { style: "text-align:center" } },
-                { field: 'UnitTypeName', title: 'UnitType', width: 90, attributes: { style: "text-align:center" }, filterable: { multi: true, checkAll: false } },
+                { field: 'UnitTypeId', title: 'UnitType', width: 90, attributes: { style: "text-align:center" }, values: unitTypeLookupData, filterable: { multi: true, checkAll: false, dataSource: unitTypeLookupData } },
                 { field: 'Rev', width: 90, format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.RevUSD.sum, 'n2') #", footerAttributes: { style: "text-align:right" } },
                 { field: 'Cost', width: 90, format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.CostUSD.sum, 'n2') #", footerAttributes: { style: "text-align:right" } },
                 { field: 'MarginPct', title: '%Margin', width: 90, format: "{0:p}", attributes: { style: "text-align:right" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "text-align:right" } },
-                { field: 'CampStatusName', title: 'CStatus', width: 85, filterable: { multi: true, checkAll: false } },
-                { field: 'AStatusName', title: 'AStatus', width: 85, filterable: { multi: true, checkAll: false } }
+                { field: 'CStatusId', title: 'CStatus', width: 85, values: cstatusLookupData, filterable: { multi: true, checkAll: false, dataSource: cstatusLookupData } },
+                { field: 'AStatusId', title: 'AStatus', width: 85, values: astatusLookupData, filterable: { multi: true, checkAll: false, dataSource: astatusLookupData } }
             ]
         });
     }
+
+    function advFilter(element) {
+        element.kendoAutoComplete({
+            dataSource: advLookupData,
+            dataTextField: 'text'
+        });
+    }
+    //function pidFilter(element) {
+    //    element.kendoAutoComplete({
+    //        dataSource: campLookupData,
+    //        dataTextField: 'value' // doesn't work with 'value'
+    //    });
+    //}
+    function campFilter(element) {
+        element.kendoAutoComplete({
+            dataSource: campLookupData,
+            dataTextField: 'text'
+        });
+    }
+
+    //function affDropDownEditor(container, options) {
+    //    $('<input required data-text-field="text" data-value-field="value" data-bind="value:AffId"/>')
+    //    .appendTo(container)
+    //    .kendoDropDownList({
+    //        autoBind: false,
+    //        dataSource: affLookupData
+    //    });
+    //}
 
     function datasource_error(e) {
         alert('Grid error:\n' + e.errorThrown);
 
         //var grid = $("#grid").data("kendoGrid");
         //grid.cancelChanges();
+    }
+
+    function getLookupData(url, callback) {
+        return $.ajax({
+            dataType: 'json',
+            url: url,
+            success: function (data) {
+                callback(data);
+            }
+        });
     }
 </script>
 }
