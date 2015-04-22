@@ -230,6 +230,7 @@
             this._groupItemsToFirstDayOfMonthCheckBox.TabIndex = 14;
             this._groupItemsToFirstDayOfMonthCheckBox.Text = "Regroup Items";
             this._groupItemsToFirstDayOfMonthCheckBox.UseVisualStyleBackColor = true;
+            this._groupItemsToFirstDayOfMonthCheckBox.Visible = false;
             this._groupItemsToFirstDayOfMonthCheckBox.EnabledChanged += new System.EventHandler(this._groupItemsToFirstDayOfMonthCheckBox_EnabledChanged);
             // 
             // loggerBox1
@@ -253,6 +254,7 @@
             this.pictureBox2.TabStop = false;
             this.toolTip1.SetToolTip(this.pictureBox2, "In some cases when there are many affiliates, check this box to limit the number " +
         "of items created.");
+            this.pictureBox2.Visible = false;
             // 
             // SynchForm
             // 

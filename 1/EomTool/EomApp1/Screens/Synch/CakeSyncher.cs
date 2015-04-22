@@ -143,7 +143,7 @@ namespace EomApp1.Screens.Synch
 
             var existingItems = from c in this.eomEntities.Items
                                 where
-                                  (c.campaign_status_id == 1 || c.campaign_status_id == 2) &&
+                                   c.campaign_status_id == 1 &&
                                    c.item_accounting_status_id == 1 &&
                                    c.item_reporting_status_id == 1 &&
                                    c.pid == this.parameters.CampaignId &&
