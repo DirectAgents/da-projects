@@ -9,11 +9,11 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
 {
     public class DbmConversionLoader : Loader<DataTransferRow>
     {
-        private readonly int convertToTimezoneOffest;
+        private readonly int convertToTimezoneOffset;
 
         public DbmConversionLoader(int convertToTimezoneOffest = 0)
         {
-            this.convertToTimezoneOffest = convertToTimezoneOffest;
+            this.convertToTimezoneOffset = convertToTimezoneOffest;
         }
 
         protected override int Load(List<DataTransferRow> items)
@@ -36,15 +36,27 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                     var source = new DBMConversion
                     {
                         AuctionID = item.auction_id,
-                        EventTime = Utility.UnixTimeStampToDateTime(item.event_time, convertToTimezoneOffest),
+                        EventTime = Utility.UnixTimeStampToDateTime(item.event_time, convertToTimezoneOffset),
                         InsertionOrderID = item.insertion_order_id,
                         LineItemID = item.line_item_id,
-                        CreativeID = item.creative_id
+                        CreativeID = item.creative_id,
+                        EventSubType = item.event_sub_type,
+                        UserID = item.user_id,
+                        AdPosition = item.ad_position,
+                        Country = item.country,
+                        DMACode = item.dma_code,
+                        PostalCode = item.postal_code,
+                        GeoRegionID = item.geo_region_id,
+                        CityID = item.city_id,
+                        OSID = item.os_id,
+                        BrowserID = item.browser_id,
+                        BrowserTimezoneOffsetMinutes = item.browser_timezone_offset_minutes,
+                        NetSpeed = item.net_speed
                     };
                     if (item.view_time.HasValue)
-                        source.ViewTime = Utility.UnixTimeStampToDateTime(item.view_time.Value, convertToTimezoneOffest);
+                        source.ViewTime = Utility.UnixTimeStampToDateTime(item.view_time.Value, convertToTimezoneOffset);
                     if (item.request_time.HasValue)
-                        source.RequestTime = Utility.UnixTimeStampToDateTime(item.request_time.Value, convertToTimezoneOffest);
+                        source.RequestTime = Utility.UnixTimeStampToDateTime(item.request_time.Value, convertToTimezoneOffset);
 
                     var target = db.Set<DBMConversion>().Find(source.AuctionID, source.EventTime);
                     if (target == null)

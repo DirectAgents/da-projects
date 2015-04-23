@@ -357,6 +357,10 @@
     <Compile Include="Migrations\201503262049340_Mig_RmIdentity_TDA.Designer.cs">
       <DependentUpon>201503262049340_Mig_RmIdentity_TDA.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504231735446_Mig_DBMConversionFields.cs" />
+    <Compile Include="Migrations\201504231735446_Mig_DBMConversionFields.Designer.cs">
+      <DependentUpon>201504231735446_Mig_DBMConversionFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\ChangeIdentityOperation.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -455,6 +459,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503262049340_Mig_RmIdentity_TDA.resx">
       <DependentUpon>201503262049340_Mig_RmIdentity_TDA.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504231735446_Mig_DBMConversionFields.resx">
+      <DependentUpon>201504231735446_Mig_DBMConversionFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
