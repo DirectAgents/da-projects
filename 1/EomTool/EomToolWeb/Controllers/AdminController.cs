@@ -272,6 +272,8 @@ namespace EomToolWeb.Controllers
                 }
                 foreach (var row in models)
                 {
+                    var revCurr = mainRepo.GetCurrency(row.RevCurr);
+                    var costCurr = mainRepo.GetCurrency(row.CostCurr);
                     var itemIds = row.GetItemIds();
                     foreach (var id in itemIds)
                     {
@@ -281,14 +283,20 @@ namespace EomToolWeb.Controllers
                             throw new Exception(String.Format("Missing item {0}", id));
 
                         item.affid = row.AffId;
-                        item.revenue_currency_id = mainRepo.CurrencyId(row.RevCurr);
-                        item.cost_currency_id = mainRepo.CurrencyId(row.CostCurr);
+                        item.revenue_currency_id = revCurr.id;
+                        item.cost_currency_id = costCurr.id;
                         item.revenue_per_unit = row.RevPerUnit;
                         item.cost_per_unit = row.CostPerUnit;
                         item.unit_type_id = row.UnitTypeId;
                         //item.campaign_status_id = row.CStatusId;
                         //item.item_accounting_status_id = row.AStatusId;
                     }
+                    // Recompute...
+                    row.Rev = row.Units * row.RevPerUnit;
+                    row.Cost = row.Units * row.CostPerUnit;
+                    row.RevUSD = row.Rev * revCurr.to_usd_multiplier;
+                    row.CostUSD = row.Cost * costCurr.to_usd_multiplier;
+                    // (MarginPct is computed from RevUSD and CostUSD)
                 }
                 mainRepo.SaveChanges();
             }

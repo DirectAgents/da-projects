@@ -99,12 +99,13 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
                 { field: 'MarginPct', aggregate: 'agg' }
             ]
         });
+        datasource.bind('requestEnd', datasource_requestEnd);
         datasource.bind('error', datasource_error);
 
         $('#grid').kendoGrid({
             dataSource: datasource,
             //autoBind: false,
-            height: 500,
+            height: $(document).height() - 110,
             editable: true,
             filterable: true,
             pageable: true, // { buttonCount: 5 },
@@ -160,6 +161,18 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
     //        dataSource: affLookupData
     //    });
     //}
+
+    function datasource_requestEnd(e) {
+        if (e.type === 'update') {
+            for (var i = 0; i < e.response.length; i++) {
+                var respItem = e.response[i];
+                var dataItem = e.sender.get(respItem.ItemIdsString);
+                dataItem.Rev = respItem.Rev;
+                dataItem.Cost = respItem.Cost;
+                dataItem.MarginPct = respItem.MarginPct;
+            }
+        }
+    }
 
     function datasource_error(e) {
         alert('Grid error:\n' + e.errorThrown);

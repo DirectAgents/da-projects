@@ -283,7 +283,7 @@ namespace EomTool.Domain.Concrete
                 Units = q.ra.numUnits,
                 NumAffs = 1,
                 UnitTypeId = q.u.id,
-                //UnitTypeName = q.u.name,
+                UnitTypeName = q.u.name,
                 ItemIds = q.ra.itemIds,
                 CStatusId = q.ra.campaign_status_id,
                 //CStatusName = q.cstatus.name,

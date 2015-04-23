@@ -104,7 +104,7 @@ namespace EomTool.Domain.DTOs
         {
             get
             {
-                if (Rev == 0)
+                if (RevUSD == 0)
                     return null;
                 else
                     return 1 - CostUSD / RevUSD;
@@ -114,7 +114,7 @@ namespace EomTool.Domain.DTOs
         public int Units { get; set; }
         public int NumAffs { get; set; } // unused?
         public int UnitTypeId { get; set; }
-        //public string UnitTypeName { get; set; }
+        public string UnitTypeName { get; set; }
 
         //note: could have a private get on ItemIds and do the computation in ItemIdsString.get
         public IEnumerable<int> ItemIds { set { ItemIdsString = String.Join(",", value); } }
