@@ -274,14 +274,14 @@ namespace EomToolWeb.Controllers
                 {
                     var revCurr = mainRepo.GetCurrency(row.RevCurr);
                     var costCurr = mainRepo.GetCurrency(row.CostCurr);
-                    var itemIds = row.GetItemIds();
-                    foreach (var id in itemIds)
-                    {
-                        // Update each item (some rows represent multiple items that were grouped together)
-                        var item = mainRepo.GetItem(id);
-                        if (item == null)
-                            throw new Exception(String.Format("Missing item {0}", id));
 
+                    // Update each item (some rows represent multiple items that were grouped together)
+                    var itemIds = row.GetItemIds();
+                    var items = mainRepo.GetItems(itemIds);
+                    if (items.Count() < itemIds.Count())
+                        throw new Exception(String.Format("Only found {0} of {1} items", items.Count(), itemIds.Count()));
+                    foreach (var item in items)
+                    {
                         item.affid = row.AffId;
                         item.revenue_currency_id = revCurr.id;
                         item.cost_currency_id = costCurr.id;
@@ -291,6 +291,8 @@ namespace EomToolWeb.Controllers
                         //item.campaign_status_id = row.CStatusId;
                         //item.item_accounting_status_id = row.AStatusId;
                     }
+                    AdjustNumUnits(items, row);
+
                     // Recompute...
                     row.Rev = row.Units * row.RevPerUnit;
                     row.Cost = row.Units * row.CostPerUnit;
@@ -307,6 +309,57 @@ namespace EomToolWeb.Controllers
             }
 
             return Json(models);
+        }
+        private void AdjustNumUnits(IQueryable<Item> dbItems, CampAffItem row)
+        {
+            var oldNumUnits = dbItems.Sum(i => i.num_units);
+            var difference = row.Units - oldNumUnits;
+            if (difference == 0)
+                return;
+
+            // Order: extraItems first, then by name/descending(date for cake items), then by num_units/descending
+            dbItems = dbItems.OrderBy(i => i.source_id).ThenByDescending(i => i.name).ThenByDescending(i => i.num_units);
+            if (difference > 0)
+            {   // Increasing numUnits
+                var dbItem = dbItems.First();
+                dbItem.num_units += difference;
+            }
+            else
+            {   // Decreasing numUnits
+                difference *= -1; // make it positive
+                bool success = false;
+                decimal counted = 0;
+                foreach (var dbItem in dbItems)
+                {
+                    var needed = difference - counted;
+                    if (needed < 0) {
+                        throw new Exception("Error adjusting unit count. 'Needed' < 0");
+                    }
+                    else if (needed == 0)
+                    {
+                        success = true;
+                        break;
+                    }
+                    var available = dbItem.num_units;
+                    if (available > 0)
+                    {
+                        if (available >= needed)
+                        {
+                            dbItem.num_units -= needed;
+                            counted += needed;
+                            success = true;
+                            break;
+                        }
+                        else
+                        {
+                            counted += dbItem.num_units;
+                            dbItem.num_units = 0;
+                        }
+                    }
+                }
+                if (!success)
+                    throw new Exception("Failed to adjust unit count.");
+            }
         }
 
         // ---

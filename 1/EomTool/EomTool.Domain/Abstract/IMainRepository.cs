@@ -68,6 +68,7 @@ namespace EomTool.Domain.Abstract
         Source GetSource(string sourceName);
 
         Item GetItem(int id);
+        IQueryable<Item> GetItems(IEnumerable<int> ids);
         void AddItem(Item item);
         bool ItemExists(Item item);
 

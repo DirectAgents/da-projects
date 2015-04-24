@@ -762,8 +762,13 @@ namespace EomTool.Domain.Concrete
 
         public Item GetItem(int id)
         {
-            return context.Items.FirstOrDefault(s => s.id == id);
+            return context.Items.FirstOrDefault(i => i.id == id);
         }
+        public IQueryable<Item> GetItems(IEnumerable<int> ids)
+        {
+            return context.Items.Where(i => ids.Contains(i.id));
+        }
+
         public void AddItem(Item item)
         {
             context.Items.AddObject(item);
