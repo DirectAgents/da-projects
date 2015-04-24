@@ -115,6 +115,16 @@
           <Property Name="external_id" Type="int" />
           <Property Name="display_name" Type="varchar" MaxLength="255" />
         </EntityType>
+        <EntityType Name="CampaignNotes">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="campaign_id" Type="int" Nullable="false" />
+          <Property Name="note" Type="varchar(max)" Nullable="false" />
+          <Property Name="added_by_system_user" Type="varchar" MaxLength="255" />
+          <Property Name="created" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="CampaignStatus">
           <Key>
             <PropertyRef Name="id" />
@@ -629,6 +639,9 @@ warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherReportSummary'
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'CampaignNotes_Campaign_pid_FK_Campaign_pid_UK' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="CampaignNotes_Campaign_pid_FK_Campaign_pid_UK" />-->
         <Association Name="FK__Item__media_buye__123EB7A3">
           <End Role="MediaBuyerApprovalStatus" Type="Self.MediaBuyerApprovalStatus" Multiplicity="1" />
           <End Role="Item" Type="Self.Item" Multiplicity="*" />
@@ -945,6 +958,7 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
           <EntitySet Name="BatchBatchUpdate" EntityType="Self.BatchBatchUpdate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BatchUpdate" EntityType="Self.BatchUpdate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Campaign" EntityType="Self.Campaign" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CampaignNotes" EntityType="Self.CampaignNotes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CampaignStatus" EntityType="Self.CampaignStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Currency" EntityType="Self.Currency" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Invoice" EntityType="Self.Invoice" Schema="dbo" store:Type="Tables" />
@@ -1409,6 +1423,7 @@ FROM [dbo].[PublisherReportSummary] AS [PublisherReportSummary]</DefiningQuery>
             <End Role="AdManager" EntitySet="AdManagers" />
             <End Role="Campaign" EntitySet="Campaigns" />
           </AssociationSet>
+          <EntitySet Name="CampaignNotes" EntityType="EomModel.CampaignNote" />
           </EntityContainer>
         <EntityType Name="Advertiser">
           <Key>
@@ -2331,6 +2346,16 @@ FROM [dbo].[PublisherReportSummary] AS [PublisherReportSummary]</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="CampaignNote">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Name="pid" Type="Int32" Nullable="false" />
+          <Property Name="note" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="added_by_system_user" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="created" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2755,6 +2780,17 @@ FROM [dbo].[PublisherReportSummary] AS [PublisherReportSummary]</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="CampaignNotes">
+            <EntityTypeMapping TypeName="EomModel.CampaignNote">
+              <MappingFragment StoreEntitySet="CampaignNotes">
+                <ScalarProperty Name="created" ColumnName="created" />
+                <ScalarProperty Name="added_by_system_user" ColumnName="added_by_system_user" />
+                <ScalarProperty Name="note" ColumnName="note" />
+                <ScalarProperty Name="pid" ColumnName="campaign_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -2933,6 +2969,7 @@ FROM [dbo].[PublisherReportSummary] AS [PublisherReportSummary]</DefiningQuery>
         <AssociationConnector Association="EomModel.FK_MarginApproval_Currency1" />
         <EntityTypeShape EntityType="EomModel.AdManager" Width="1.5" PointX="7.75" PointY="17.125" />
         <AssociationConnector Association="EomModel.Campaign_AdManager_id_FK_AdManager_id_PK" />
+        <EntityTypeShape EntityType="EomModel.CampaignNote" Width="1.75" PointX="3.625" PointY="20.5" />
         </Diagram>
     </Diagrams>
   </Designer>

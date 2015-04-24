@@ -231,7 +231,7 @@ namespace EomTool.Domain.Concrete
             return amounts;
         }
         // version3: include campaign and account statuses, AcctMgr
-        public IEnumerable<CampAffItem> CampAffItems(int? campaignStatus)
+        public IEnumerable<CampAffItem> CampAffItems(int? campaignStatus, bool includeNotes)
         {
             var items = Items(campaignStatus);
             var itemGroups = items.GroupBy(i => new { i.pid, i.affid, i.revenue_currency_id, i.revenue_per_unit, i.cost_currency_id, i.cost_per_unit, i.unit_type_id, i.campaign_status_id, i.item_accounting_status_id });
@@ -263,7 +263,7 @@ namespace EomTool.Domain.Concrete
                         //join am in context.AccountManagerTeams on c.account_manager_id equals am.id
                         //join adm in context.AdManagers on c.ad_manager_id equals adm.id
                         select new { ra, c, a, u, rc, cc, cstatus, astatus };
-            var amounts = query.Select(q => new CampAffItem
+            var caItems = query.Select(q => new CampAffItem
             {
                 AdvId = q.c.advertiser_id,
                 AdvName = q.c.Advertiser.name,
@@ -296,7 +296,22 @@ namespace EomTool.Domain.Concrete
                 MediaBuyerId = q.a.media_buyer_id,
                 MediaBuyerName = q.a.MediaBuyer.name
             });
-            return amounts;
+            if (includeNotes)
+            {
+                caItems = caItems.ToList();
+                var allCampaignNotes = context.CampaignNotes.AsQueryable();
+                foreach (var caItemGroup in caItems.GroupBy(i => i.Pid))
+                {
+                    var campaignNotes = allCampaignNotes.Where(cn => cn.pid == caItemGroup.Key).ToList();
+                    if (campaignNotes.Count() > 0)
+                    {
+                        var noteString = CampAffItem.CampaignNotesToString(campaignNotes);
+                        foreach (var caItem in caItemGroup)
+                            caItem.Notes = noteString;
+                    }
+                }
+            }
+            return caItems;
         }
 
         // unused...

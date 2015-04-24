@@ -66,7 +66,7 @@ namespace EomToolWeb.Controllers
             var model = new AffiliateAmountsModel
             {
                 CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
-                CampAffItems = mainRepo.CampAffItems(null)
+                CampAffItems = mainRepo.CampAffItems(null, false)
             };
             return View("AffiliateCampaignAmounts", model);
         }

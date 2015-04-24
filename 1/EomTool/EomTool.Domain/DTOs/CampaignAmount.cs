@@ -136,5 +136,14 @@ namespace EomTool.Domain.DTOs
         public string AcctMgrName { get; set; }
         public int MediaBuyerId { get; set; }
         public string MediaBuyerName { get; set; }
+
+        public string Notes { get; set; }
+
+        public static string CampaignNotesToString(IEnumerable<CampaignNote> campaignNotes)
+        {
+            var notesIEnum = campaignNotes.OrderByDescending(cn => cn.created)
+                .Select(cn => String.Format("{0:M/d/yy h:mmtt}: {1}", cn.created, cn.note));
+            return String.Join(" | ", notesIEnum);
+        }
     }
 }

@@ -48,7 +48,7 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
             serverFiltering: true,
             serverPaging: true,
             serverSorting: true,
-            pageSize: 50,
+            pageSize: 100,
             batch: true,
             transport: {
                 read: {
@@ -84,7 +84,8 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
                         Cost: { type: 'number', editable: false },
                         MarginPct: { type: 'number', editable: false },
                         CStatusId: { type: 'number', editable: false },
-                        AStatusId: { type: 'number', editable: false }
+                        AStatusId: { type: 'number', editable: false },
+                        Notes: { type: 'string', editable: false }
                     },
                     //AffName: function () {
                     //    return affDict[this.get('AffId')];
@@ -112,12 +113,12 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
             sortable: true,
             toolbar: ["save", "cancel"],
             columns: [
-                { field: 'AffId', title: 'Publisher', values: affLookupData, footerTemplate: 'Totals...' },
+                { field: 'AffId', title: 'Publisher', width: 240, values: affLookupData, footerTemplate: 'Totals...' },
                 //{ field: 'AffName()', title: 'Publisher', editor: affDropDownEditor },
-                { field: 'AdvName', title: 'Advertiser', filterable: { ui: advFilter } },
+                { field: 'AdvName', title: 'Advertiser', width: 240, filterable: { ui: advFilter } },
                 //{ field: 'AdvId', title: 'Advertiser', values: advLookupData },
                 { field: 'Pid', width: 85, attributes: { style: "text-align:right" } }, //filterable: { ui: pidFilter } },
-                { field: 'CampName', title: 'Campaign', filterable: { ui: campFilter } },
+                { field: 'CampName', title: 'Campaign', width: 240, filterable: { ui: campFilter } },
                 //{ title: 'Campaign', template: '#=CampName# (#=Pid#)' }, // can't sort/filter?
                 { field: 'RevCurr', title: 'RC', width: 60, attributes: { style: "text-align:center" }, values: currLookupData, footerTemplate: "#: data.RevCurr.agg #", footerAttributes: { style: "text-align:center" }, filterable: { multi: true, checkAll: false, dataSource: currLookupData } },
                 { field: 'CostCurr', title: 'CC', width: 60, attributes: { style: "text-align:center" }, values: currLookupData, footerTemplate: "#: data.CostCurr.agg #", footerAttributes: { style: "text-align:center" }, filterable: { multi: true, checkAll: false, dataSource: currLookupData } },
@@ -129,8 +130,12 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
                 { field: 'Cost', width: 90, format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.CostUSD.sum, 'n2') #", footerAttributes: { style: "text-align:right" } },
                 { field: 'MarginPct', title: '%Margin', width: 90, format: "{0:p}", attributes: { style: "text-align:right" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "text-align:right" } },
                 { field: 'CStatusId', title: 'CStatus', width: 85, values: cstatusLookupData, filterable: { multi: true, checkAll: false, dataSource: cstatusLookupData } },
-                { field: 'AStatusId', title: 'AStatus', width: 85, values: astatusLookupData, filterable: { multi: true, checkAll: false, dataSource: astatusLookupData } }
-            ]
+                { field: 'AStatusId', title: 'AStatus', width: 85, values: astatusLookupData, filterable: { multi: true, checkAll: false, dataSource: astatusLookupData } },
+                { field: 'Notes', width: 500 }
+            ],
+            columnMenu: true,
+            reorderable: true,
+            resizable: true
         });
     }
 
