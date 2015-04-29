@@ -5,6 +5,8 @@
     var args = {
         serverAggregates: true,
         serverFiltering: true,
+        serverPaging: true,
+        serverSorting: true,
         pageSize: pageSize,
         transport: {
             read: {
@@ -72,7 +74,6 @@
             { field: 'CPL', aggregate: 'agg' },
         ]
     };
-    // Note: sorting is client-side
     if (group) {
         args.group = {
             field: 'Range'

@@ -25,8 +25,11 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public JsonResult WeekSumData(KendoGridMvcRequest request, int numweeks = 8)
         {
-            request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
             var userInfo = GetUserInfo();
+            request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
+
+            var titleSort = request.SortObjects.SingleOrDefault(so => so.Field == "Title");
+            if (titleSort != null) titleSort.Field = "StartDate";
 
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
             var weekStats = cpRepo.GetWeekStats(userInfo.SearchProfile, numweeks, endDate);
@@ -57,14 +60,14 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public JsonResult MonthSumData(KendoGridMvcRequest request, int nummonths = 6)
         {
-            request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
             var userInfo = GetUserInfo();
+            request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
+
+            var titleSort = request.SortObjects.SingleOrDefault(so => so.Field == "Title");
+            if (titleSort != null) titleSort.Field = "StartDate";
 
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
-            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile, nummonths, endDate)
-                .ToList()
-                .OrderBy(s => s.StartDate)
-                .AsQueryable();
+            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile, nummonths, endDate);
             var kgrid = new KendoGridEx<SearchStat>(request, monthStats);
 
             return CreateJsonResult(kgrid);

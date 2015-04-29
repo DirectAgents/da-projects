@@ -246,7 +246,15 @@ namespace ClientPortal.Data.Services
         private IQueryable<CallDailySummary> GetCallDailySummaries(IQueryable<SearchCampaign> searchCampaigns, DateTime? start, DateTime? end, bool includeToday)
         {
             var summaries = searchCampaigns.SelectMany(c => c.CallDailySummaries);
-
+            return GetCallDailySummariesInner(summaries, start, end, includeToday);
+        }
+        private IQueryable<CallDailySummary> GetCallDailySummaries(int searchCampaignId, DateTime? start, DateTime? end, bool includeToday)
+        {
+            var summaries = context.CallDailySummaries.Where(cds => cds.SearchCampaignId == searchCampaignId);
+            return GetCallDailySummariesInner(summaries, start, end, includeToday);
+        }
+        private IQueryable<CallDailySummary> GetCallDailySummariesInner(IQueryable<CallDailySummary> summaries, DateTime? start, DateTime? end, bool includeToday)
+        {
             if (start.HasValue) summaries = summaries.Where(s => s.Date >= start);
             if (!includeToday)
             {
@@ -662,40 +670,31 @@ namespace ClientPortal.Data.Services
                     Revenue = g.Sum(s => s.Revenue),
                     Cost = g.Sum(s => s.Cost)
                 })
-                .ToList().AsQueryable();
+                .ToList().OrderBy(s => s.Title);
+
+            if (sp.ShowCalls)
+            {
+                IQueryable<SearchCampaign> googleCampaigns = null;
+                foreach (var searchStat in stats)
+                {
+                    if (searchStat.Title == ".") // is non-Google
+                    {
+                        googleCampaigns = GetSearchCampaigns(null, sp.SearchProfileId, "Google", null, null);
+                        var googleCampaignIds = googleCampaigns.Select(c => c.SearchCampaignId).ToList();
+                        var nonGoogleCampaigns = searchCampaigns.Where(c => !googleCampaignIds.Contains(c.SearchCampaignId));
+                        searchStat.Calls = GetCallDailySummaries(nonGoogleCampaigns, start, end, true).Sum(cds => cds.Calls);
+                    }
+                    else if (searchStat.Title == "Mobile")
+                    {
+                        if (googleCampaigns != null) //means there were non-Google stats (set above; "." comes first)
+                            searchCampaigns = googleCampaigns;
+                        searchStat.Calls = GetCallDailySummaries(searchCampaigns, start, end, true).Sum(cds => cds.Calls);
+                    }
+                }
+            }
 
             //TODO: includeAnalytics
-
-            //if (includeCalls)
-            //{
-            //    var callStats = GetCallDailySummaries(searchCampaigns, start, end, true)
-            //        .GroupBy(s => s.Device)
-            //        .ToList()
-            //        .Select(g => new CallSummary
-            //        {
-            //            Device = g.Key,
-            //            Calls = g.Sum(s => s.Calls)
-            //        });
-            //    stats = (from stat in stats
-            //             join ca in callStats on stat.DeviceAbbrev equals ca.Device into gj_stats
-            //             from callStat in gj_stats.DefaultIfEmpty() // left join to callStats
-            //             select new SearchStat
-            //             {
-            //                 EndDate = stat.EndDate,
-            //                 CustomByStartDate = stat.StartDate,
-            //                 DeviceAndTitle = stat.DeviceAbbrev,
-            //                 Impressions = stat.Impressions,
-            //                 Clicks = stat.Clicks,
-            //                 Orders = stat.Orders,
-            //                 ViewThrus = stat.ViewThrus,
-            //                 RevPerViewThru = sp.RevPerViewThru,
-            //                 Revenue = stat.Revenue,
-            //                 Cost = stat.Cost,
-            //                 Calls = callStat.Calls
-            //             });
-            //}
-
-            return stats.OrderBy(s => s.Title);
+            return stats.AsQueryable();
         }
 
         // Get a SearchStat summary for each week for each channel (Google/Bing/etc)... and, if includeAccountBreakdown, each SearchAccount
@@ -806,9 +805,25 @@ namespace ClientPortal.Data.Services
             IQueryable<SearchStat> stats;
             if (breakdown)
             {
-                // TODO: figure out how to join to gaStats if useAnalytics==true (and callStats if includeCalls==true)
+                // TODO: figure out how to join to gaStats if useAnalytics==true
 
-                stats = summaries.GroupBy(s => new { s.SearchCampaign.SearchAccount.Channel, s.SearchCampaign.SearchCampaignName, s.Network, s.Device })
+                var summaryGroups = summaries.GroupBy(s => new { s.SearchCampaign.SearchAccount.Channel, s.SearchCampaignId, s.SearchCampaign.SearchCampaignName, s.Network, s.Device });
+                if (includeCalls)
+                {   // Note: This was written with the Campaign Performance tab in mind.  channel, channelPrefix and device would be null
+                    // Also assuming each campaign is under just one network.  If >1 (e.g. Search & Display), the calls will go under the first group.
+                    var campaignGroups = summaryGroups.GroupBy(sg => new { sg.Key.SearchCampaignId, sg.Key.Device })
+                        .OrderBy(cg => cg.Key.Device);
+                    foreach (var campGroup in campaignGroups)
+                    {   // "." == non-Google; "M" == Google-Mobile (For Google, we put all the calls under 'mobile')
+                        if (campGroup.Key.Device == "." || campGroup.Key.Device == "M") // M == mobile
+                        {
+                            var callSummaries = GetCallDailySummaries(campGroup.Key.SearchCampaignId, start, end, true);
+                            if (callSummaries.Any())
+                                campGroup.First().First().Calls = callSummaries.Sum(cds => cds.Calls);
+                        }
+                    }
+                }
+                stats = summaryGroups
                     .OrderBy(g => g.Key.Channel).ThenBy(g => g.Key.SearchCampaignName)
                     .Select(g => new SearchStat
                     {
@@ -824,7 +839,8 @@ namespace ClientPortal.Data.Services
                         ViewThrus = g.Sum(s => s.ViewThrus),
                         RevPerViewThru = revPerViewThru,
                         Revenue = g.Sum(s => s.Revenue),
-                        Cost = g.Sum(s => s.Cost)
+                        Cost = g.Sum(s => s.Cost),
+                        Calls = g.Sum(s => s.Calls)
                     }).AsQueryable();
             }
             else

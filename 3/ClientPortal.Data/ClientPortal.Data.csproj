@@ -278,6 +278,7 @@
     <Compile Include="Entities\Goal.cs" />
     <Compile Include="Entities\Offer.cs" />
     <Compile Include="Entities\SearchAccount.cs" />
+    <Compile Include="Entities\SearchDailySummary.cs" />
     <Compile Include="Entities\SearchProfile.cs" />
     <Compile Include="Entities\SimpleReport.cs" />
     <Compile Include="Entities\TD\AdRoll\AdDailySummary.cs" />
