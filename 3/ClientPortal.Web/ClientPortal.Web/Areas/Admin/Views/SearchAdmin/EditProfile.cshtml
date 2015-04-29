@@ -14,8 +14,10 @@
     <fieldset>
         <legend>Edit Search Profile</legend>
         @Html.HiddenFor(m => m.SearchProfileId)
-        @Html.HiddenFor(m => m.LCaccid)
         @Html.HiddenFor(m => m.UseConvertedClicks)
+        @Html.HiddenFor(m => m.ShowSearchChannels)
+        @Html.HiddenFor(m => m.LCaccid)
+        @Html.HiddenFor(m => m.CallMinSeconds)
         <div style="float:left">
             <table>
                 <tr>
@@ -44,8 +46,19 @@
                 </tr>
                 <tr>
                     <td>@Html.LabelFor(m => m.ShowSearchChannels)</td>
-                    <td>@Html.EditorFor(m => m.ShowSearchChannels) (normally leave unchecked)</td>
+                    <td>@Html.DisplayFor(m => m.ShowSearchChannels)</td>
                 </tr>
+                @if (!String.IsNullOrWhiteSpace(Model.LCaccid))
+                {
+                    <tr>
+                        <td>@Html.LabelFor(m => m.LCaccid, "LocalConnex accid")</td>
+                        <td>@Html.DisplayFor(m => m.LCaccid)</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(m => m.CallMinSeconds)</td>
+                        <td>@Html.DisplayFor(m => m.CallMinSeconds)</td>
+                    </tr>
+                }
             </table>
         </div>
         <div style="float:left; margin-left:20px">
