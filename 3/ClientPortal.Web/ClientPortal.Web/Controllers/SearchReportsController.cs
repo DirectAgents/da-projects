@@ -8,7 +8,6 @@ using AutoMapper;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
 using ClientPortal.Web.Models;
-using DirectAgents.Mvc.KendoGridBinder;
 using KendoGridBinderEx;
 using KendoGridBinderEx.ModelBinder.Mvc;
 using Newtonsoft.Json;
@@ -26,7 +25,7 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public JsonResult WeekSumData(KendoGridMvcRequest request, int numweeks = 8)
         {
-            request.AggregateObjects = null;
+            request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
             var userInfo = GetUserInfo();
 
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
@@ -58,7 +57,7 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public JsonResult MonthSumData(KendoGridMvcRequest request, int nummonths = 6)
         {
-            request.AggregateObjects = null;
+            request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
             var userInfo = GetUserInfo();
 
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
@@ -93,7 +92,7 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public JsonResult ChannelPerfData(KendoGridMvcRequest request, int numweeks = 8) //, string startdate, string enddate)
         {
-            request.AggregateObjects = null;
+            request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
             var userInfo = GetUserInfo();
 
             var channelStats = cpRepo.GetChannelStats(userInfo.SearchProfile, numweeks, !userInfo.Search_UseYesterdayAsLatest, true, userInfo.ShowSearchChannels);
@@ -123,7 +122,7 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public JsonResult DeviceData(KendoGridMvcRequest request, string startdate, string enddate)
         {
-            request.AggregateObjects = null;
+            request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
             var userInfo = GetUserInfo();
             var cultureInfo = userInfo.CultureInfo;
 
@@ -143,7 +142,7 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public JsonResult CampaignPerfData(KendoGridMvcRequest request, string startdate, string enddate, string channel, bool breakdown = false, bool? brandFilter = null)
         {
-            request.AggregateObjects = null;
+            request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
             var userInfo = GetUserInfo();
             var cultureInfo = userInfo.CultureInfo;
 
@@ -295,43 +294,43 @@ namespace ClientPortal.Web.Controllers
 
         // --- private methods ---
 
-        // (the aggregates are computed here)
         private JsonResult CreateJsonResult(KendoGridEx<SearchStat> kgrid)
         {
             // Note: KendoGridEx<T> has a Groups property. For some reason, the grid on the client side doesn't work when the json returned
-            //       has a null Groups property.  So we convert to a KendoGrid<T> which doesn't have a Groups property.
-            KendoGrid<SearchStat> kg = new KendoGrid<SearchStat>();
+            //       has a null Groups property.  So we use a KG<T> which doesn't have a Groups property.
+            var kg = new KG<SearchStat>();
             kg.data = kgrid.Data;
-            kg.aggregates = Aggregates(kgrid.Data);
             kg.total = kgrid.Total;
+
+            // Determine totalDays (The stats may or may not be for the same time period.)
+            var periods = kgrid.Data.Select(s => new { StartDate = s.StartDate, EndDate = s.EndDate });
+            var distinctPeriods = periods.Distinct();
+            var totalDays = distinctPeriods.Sum(p => (p.EndDate - p.StartDate).Days + 1);
+            kg.aggregates = Aggregates(kgrid, totalDays);
 
             var json = Json(kg);
             return json;
+
+            //TRY THIS... includes "groups"
+            //kgrid.Aggregates = kg.aggregates;
+            //var json = Json(kgrid);
+            //return json;
         }
 
-        private object Aggregates(IEnumerable<SearchStat> stats)
+        private object Aggregates(KendoGridEx<SearchStat> kgrid, int totalDays)
         {
-            return Aggregates(stats.AsQueryable());
-        }
-        private object Aggregates(IQueryable<SearchStat> stats)
-        {
-            if (!stats.Any()) return null;
+            if (kgrid.Total == 0) return null;
 
-            var sumRevenue = stats.Sum(s => s.Revenue);
-            var sumCost = stats.Sum(s => s.Cost);
-            var sumOrders = stats.Sum(s => s.Orders);
-            var sumViewThrus = stats.Sum(s => s.ViewThrus);
-            var sumViewThruRev = stats.Sum(s => s.ViewThruRev);
-            var sumClicks = stats.Sum(s => s.Clicks);
-            var sumImpressions = stats.Sum(s => s.Impressions);
-            var sumCalls = stats.Sum(s => s.Calls);
-            var sumTotalLeads = stats.Sum(s => s.TotalLeads);
-            //var sumTotalLeads = sumOrders + sumCalls;
+            decimal sumRevenue = ((dynamic)kgrid.Aggregates)["Revenue"]["sum"];
+            decimal sumCost = ((dynamic)kgrid.Aggregates)["Cost"]["sum"];
+            int sumOrders = ((dynamic)kgrid.Aggregates)["Orders"]["sum"];
+            int sumViewThrus = ((dynamic)kgrid.Aggregates)["ViewThrus"]["sum"];
+            decimal sumViewThruRev = ((dynamic)kgrid.Aggregates)["ViewThruRev"]["sum"];
+            int sumClicks = ((dynamic)kgrid.Aggregates)["Clicks"]["sum"];
+            int sumImpressions = ((dynamic)kgrid.Aggregates)["Impressions"]["sum"];
+            int sumCalls = ((dynamic)kgrid.Aggregates)["Calls"]["sum"];
+            int sumTotalLeads = ((dynamic)kgrid.Aggregates)["TotalLeads"]["sum"];
 
-            // Determine totalDays (The stats may or may not be for the same time period.)
-            var periods = stats.Select(s => new { StartDate = s.StartDate, EndDate = s.EndDate });
-            var distinctPeriods = periods.Distinct();
-            var totalDays = distinctPeriods.Sum(p => (p.EndDate - p.StartDate).Days + 1);
             var aggregates = new
             {
                 Revenue = new { sum = sumRevenue },
@@ -357,6 +356,13 @@ namespace ClientPortal.Web.Controllers
             };
             return aggregates;
         }
+    }
+
+    class KG<T>
+    {
+        public IEnumerable<T> data { get; set; }
+        public int total { get; set; }
+        public object aggregates { get; set; }
     }
 
     public class JsonNetResult : JsonResult
