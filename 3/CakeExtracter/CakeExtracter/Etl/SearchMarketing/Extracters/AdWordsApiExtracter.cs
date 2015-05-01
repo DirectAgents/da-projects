@@ -18,23 +18,31 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
         private readonly DateTime beginDate;
         private readonly DateTime endDate;
         private readonly bool includeClickType;
+        private readonly bool clickAssistConvStats;
 
-        public AdWordsApiExtracter(string clientCustomerId, CakeExtracter.Common.DateRange dateRange, bool includeClickType)
+        public AdWordsApiExtracter(string clientCustomerId, CakeExtracter.Common.DateRange dateRange, bool includeClickType, bool clickAssistConvStats)
         {
             this.clientCustomerId = clientCustomerId;
             this.beginDate = dateRange.FromDate;
             this.endDate = dateRange.ToDate;
             this.includeClickType = includeClickType;
+            this.clickAssistConvStats = clickAssistConvStats;
         }
 
         protected override void Extract()
         {
-            Logger.Info("Extracting SearchDailySummaries from AdWords API for {0} from {1} to {2}",
-                this.clientCustomerId, this.beginDate.ToShortDateString(), this.endDate.ToShortDateString());
+            string extra = "";
+            if (clickAssistConvStats || includeClickType)
+                extra = String.Format(" [{0}{1}]", clickAssistConvStats ? "ClickAssistConvStats" : "", includeClickType ? " w/ClickType" : "");
+            Logger.Info("Extracting SearchDailySummaries{0} from AdWords API for {1} from {2} to {3}",
+                extra, this.clientCustomerId, this.beginDate.ToShortDateString(), this.endDate.ToShortDateString());
 
             try
             {
-                DownloadAdWordsXmlReport();
+                if (clickAssistConvStats)
+                    DownloadClickAssistConvReport();
+                else
+                    DownloadStandardReport();
                 var reportRows = EnumerateAdWordsXmlReportRows(this.reportFilePath);
                 Add(reportRows);
             }
@@ -45,7 +53,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             End();
         }
 
-        private void DownloadAdWordsXmlReport()
+        private void DownloadStandardReport()
         {
             var fieldsList = new List<string>(new string[]
             {                             // "XML ATTRIBUTE"
@@ -62,19 +70,39 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 "ConvertedClicks", // convertedClicks
                 "ConversionsManyPerClick", // conversions
                 "Cost", // cost
-                //"Ctr", REMOVE
-                "ConversionValue" // totalConvValue
+                "ConversionValue", // totalConvValue
+                "AdNetworkType1", // network
+                "Device", // device
+                "ViewThroughConversions" // viewThroughConv
             });
-
-            fieldsList.Add("AdNetworkType1"); // network
-            fieldsList.Add("Device"); // device
-            fieldsList.Add("ViewThroughConversions"); // viewThroughConv
-
             if (includeClickType)
             {
                 fieldsList.Add("ClickType"); // clickType
             }
-
+            DownloadAdWordsXmlReport(fieldsList.ToArray());
+        }
+        private void DownloadClickAssistConvReport()
+        {
+            var fieldsList = new List<string>(new string[]
+            {
+                "AccountDescriptiveName",
+                "AccountCurrencyCode",
+                "ExternalCustomerId",
+                "CampaignId",
+                "CampaignName",
+                "Date",
+                "AdNetworkType1",
+                "ClickAssistedConversions", // clickAssistedConv
+                "ClickAssistedConversionValue" // clickAssistedConvValue
+            });
+            if (includeClickType)
+            {
+                fieldsList.Add("ClickType"); // clickType
+            }
+            DownloadAdWordsXmlReport(fieldsList.ToArray());
+        }
+        private void DownloadAdWordsXmlReport(string[] fieldsList)
+        {
             var definition = new ReportDefinition
             {
                 reportName = "CAMPAIGN_PERFORMANCE_REPORT",
@@ -87,7 +115,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                         min = this.beginDate.ToString("yyyyMMdd"),
                         max = this.endDate.ToString("yyyyMMdd")
                     },
-                    fields = fieldsList.ToArray(),
+                    fields = fieldsList,
                     predicates = new Predicate[] {
                         new Predicate {
                             field = "CampaignStatus",

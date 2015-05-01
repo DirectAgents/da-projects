@@ -28,7 +28,7 @@ namespace CakeExtracter.Commands
         {
             IsCommand("synchClicks", "synch Clicks for an advertisers offers in a date range");
             HasOption("a|advertiserId=", "Advertiser Id (0 = all)", c => AdvertiserId = int.Parse(c));
-            HasOption("s|startDate=", "Start Date (default is yesterday)", c => StartDate = DateTime.Parse(c));
+            HasOption("s|startDate=", "Start Date (default is two days ago)", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
             HasOption("c|conversions=", "synch Conversions also (default is false)", c => SynchConversionsAlso = bool.Parse(c));
         }
@@ -36,7 +36,7 @@ namespace CakeExtracter.Commands
         public override int Execute(string[] remainingArguments)
         {
             var yesterday = DateTime.Today.AddDays(-1);
-            var dateRange = new DateRange(StartDate ?? yesterday, EndDate ?? yesterday);
+            var dateRange = new DateRange(StartDate ?? yesterday.AddDays(-1), EndDate ?? yesterday);
             var advertiserIds = GetAdvertiserIds();
 
             foreach (var date in dateRange.Dates)
@@ -89,6 +89,8 @@ namespace CakeExtracter.Commands
 
         private void ExtractAndLoadConversionsForDate(DateTime date)
         {
+            // TODO: Handle "deleted" conversions.  ?Clear them out for the day, then reload?
+
             // Does all advertisers together (if AdvId 0 specified); just one if AdvId > 0
             Logger.Info("Extracting conversions for {0}..", date.ToShortDateString());
             var dateRange = new DateRange(date, date.AddDays(1));

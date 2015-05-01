@@ -17,6 +17,7 @@ namespace CakeExtracter.Commands
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public bool IncludeClickType { get; set; }
+        public string GetClickAssistConvStats { get; set; }
 
         public override void ResetProperties()
         {
@@ -25,6 +26,7 @@ namespace CakeExtracter.Commands
             StartDate = null;
             EndDate = null;
             IncludeClickType = false;
+            GetClickAssistConvStats = null;
         }
 
         public SynchSearchDailySummariesAdWordsCommand()
@@ -34,7 +36,8 @@ namespace CakeExtracter.Commands
             HasOption<string>("v|clientId=", "Client Id", c => ClientId = c);
             HasOption<DateTime>("s|startDate=", "Start Date (default is one month ago)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
-            HasOption("b|includeClickType=", "Include ClickType (default is false)", c => IncludeClickType = bool.Parse(c));
+            HasOption<bool>("b|includeClickType=", "Include ClickType (default is false)", c => IncludeClickType = c);
+            HasOption<string>("g|getClickAssistConvStats=", "Get click-assisted-conversion stats ('yes' or 'both', default = no)", c => GetClickAssistConvStats = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -45,12 +48,24 @@ namespace CakeExtracter.Commands
 
             foreach (var searchAccount in GetSearchAccounts())
             {
-                var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, dateRange, IncludeClickType);
-                var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, IncludeClickType, searchAccount.UseConvertedClicks);
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
+                if (GetClickAssistConvStats != "yes")
+                {
+                    var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, dateRange, IncludeClickType, false);
+                    var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, searchAccount.UseConvertedClicks, IncludeClickType, false);
+                    var extracterThread = extracter.Start();
+                    var loaderThread = loader.Start(extracter);
+                    extracterThread.Join();
+                    loaderThread.Join();
+                }
+                if (GetClickAssistConvStats == "yes" || GetClickAssistConvStats == "both")
+                {
+                    var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, dateRange, IncludeClickType, true);
+                    var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, searchAccount.UseConvertedClicks, IncludeClickType, true);
+                    var extracterThread = extracter.Start();
+                    var loaderThread = loader.Start(extracter);
+                    extracterThread.Join();
+                    loaderThread.Join();
+                }
             }
             return 0;
         }

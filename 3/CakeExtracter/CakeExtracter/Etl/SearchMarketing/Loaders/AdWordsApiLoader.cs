@@ -12,12 +12,14 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         private readonly int searchAccountId;
         private readonly bool includeClickType; // if true, we use SearchDailySummary2's
         private readonly bool useConvertedClicks; // (instead of conversions)
+        private readonly bool clickAssistConvStats;
 
-        public AdWordsApiLoader(int searchAccountId, bool includeClickType, bool useConvertedClicks)
+        public AdWordsApiLoader(int searchAccountId, bool useConvertedClicks, bool includeClickType, bool clickAssistConvStats)
         {
             this.searchAccountId = searchAccountId;
-            this.includeClickType = includeClickType;
             this.useConvertedClicks = useConvertedClicks;
+            this.includeClickType = includeClickType;
+            this.clickAssistConvStats = clickAssistConvStats;
         }
 
         protected override int Load(List<Dictionary<string, string>> items)
@@ -55,19 +57,29 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == googleChannel);
 
                     var sds = new SearchDailySummary
-                    {
+                    {   // the basic fields
                         SearchCampaignId = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId,
                         Date = DateTime.Parse(item["day"].Replace('-', '/')),
-                        Revenue = decimal.Parse(item["totalConvValue"]),
-                        Cost = decimal.Parse(item["cost"]) / 1000000, // convert from mincrons to dollars
-                        Orders = int.Parse(item[conversionKey]),
-                        Clicks = int.Parse(item["clicks"]),
-                        Impressions = int.Parse(item["impressions"]),
                         CurrencyId = (!item.Keys.Contains("currency") || item["currency"] == "USD") ? 1 : -1, // NOTE: non USD (if exists) -1 for now
-                        Network = item["network"].Substring(0, 1),
-                        Device = item["device"].Substring(0, 1),
-                        ViewThrus = int.Parse(item["viewThroughConv"])
+                        Network = item["network"].Substring(0, 1)
                     };
+
+                    if (clickAssistConvStats)
+                    {
+                        sds.Device = "A"; // mark for "all" devices
+                        sds.CassConvs = int.Parse(item["clickAssistedConv"]);
+                        sds.CassConVal = double.Parse(item["clickAssistedConvValue"]);
+                    }
+                    else
+                    {
+                        sds.Revenue = decimal.Parse(item["totalConvValue"]);
+                        sds.Cost = decimal.Parse(item["cost"]) / 1000000; // convert from mincrons to dollars
+                        sds.Orders = int.Parse(item[conversionKey]);
+                        sds.Clicks = int.Parse(item["clicks"]);
+                        sds.Impressions = int.Parse(item["impressions"]);
+                        sds.Device = item["device"].Substring(0, 1);
+                        sds.ViewThrus = int.Parse(item["viewThroughConv"]);
+                    }
 
                     bool added;
                     if (includeClickType)
