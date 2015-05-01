@@ -16,6 +16,9 @@ namespace ClientPortal.Data.DTOs
         public int ViewThrus { get; set; }
         public decimal ViewThruRev { get; set; }
 
+        public int CassConvs { get; set; }
+        public double CassConVal { get; set; }
+
         public decimal CPO { get; set; }
         public decimal CTR { get; set; }
         public decimal OrderRate { get; set; }
@@ -66,6 +69,8 @@ namespace ClientPortal.Data.DTOs
                         return "Tablet";
                     case "O":
                         return "Other";
+                    case "A":
+                        return "All";
                     default:
                         return _device;
                 }
@@ -113,6 +118,13 @@ namespace ClientPortal.Data.DTOs
             }
         }
 
+        public bool AllZeros() // maybe: have a parameter "includeCassConvs"
+        {
+            return (Impressions == 0 && Clicks == 0 && Orders == 0 && ViewThrus == 0 && Revenue == 0 && Cost == 0 && Calls == 0);
+            // if we end up showing CassConvs in the portal, include this:  && CassConvs == 0 && CassConVal == 0
+            // ... in device breakdown, will produce a row showing Google CassConvs, with device=="All"
+        }
+
         public int Impressions { get; set; }
         public int Clicks { get; set; }
         public int Orders { get; set; } // also used for Leads
@@ -123,6 +135,9 @@ namespace ClientPortal.Data.DTOs
         {
             get { return ViewThrus * RevPerViewThru; }
         }
+
+        public int CassConvs { get; set; }
+        public double CassConVal { get; set; }
 
         public decimal Revenue { get; set; }
         public decimal Cost { get; set; }

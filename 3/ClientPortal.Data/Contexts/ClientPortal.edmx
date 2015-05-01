@@ -379,6 +379,8 @@
           <Property Name="Network" Type="nchar" MaxLength="1" Nullable="false" />
           <Property Name="Device" Type="nchar" MaxLength="1" Nullable="false" />
           <Property Name="ViewThrus" Type="int" Nullable="false" />
+          <Property Name="CassConvs" Type="int" Nullable="false" />
+          <Property Name="CassConVal" Type="float" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchDailySummary2">
           <Key>
@@ -413,6 +415,7 @@
           <Property Name="ShowRevenue" Type="bit" Nullable="false" />
           <Property Name="UseConvertedClicks" Type="bit" Nullable="false" />
           <Property Name="ShowViewThrus" Type="bit" Nullable="false" />
+          <Property Name="ShowCassConvs" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchProfileContact">
           <Key>
@@ -1431,6 +1434,8 @@
           <Property Type="String" Name="Network" Nullable="false" MaxLength="1" FixedLength="true" Unicode="true" />
           <Property Type="String" Name="Device" Nullable="false" MaxLength="1" FixedLength="true" Unicode="true" />
           <Property Name="ViewThrus" Type="Int32" Nullable="false" />
+          <Property Name="CassConvs" Type="Int32" Nullable="false" />
+          <Property Name="CassConVal" Type="Double" Nullable="false" />
         </EntityType>
         <EntityType Name="Conversion">
           <Key>
@@ -2081,6 +2086,7 @@
           <Property Type="Boolean" Name="ShowRevenue" Nullable="false" />
           <Property Name="UseConvertedClicks" Type="Boolean" Nullable="false" />
           <Property Name="ShowViewThrus" Type="Boolean" Nullable="false" />
+          <Property Name="ShowCassConvs" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_UserProfile_SearchProfile">
           <End Type="ClientPortalModel.SearchProfile" Role="SearchProfile" Multiplicity="0..1" />
@@ -2309,6 +2315,8 @@
           <EntitySetMapping Name="SearchDailySummaries">
             <EntityTypeMapping TypeName="ClientPortalModel.SearchDailySummary">
               <MappingFragment StoreEntitySet="SearchDailySummary">
+                <ScalarProperty Name="CassConVal" ColumnName="CassConVal" />
+                <ScalarProperty Name="CassConvs" ColumnName="CassConvs" />
                 <ScalarProperty Name="ViewThrus" ColumnName="ViewThrus" />
                 <ScalarProperty Name="Device" ColumnName="Device" />
                 <ScalarProperty Name="Network" ColumnName="Network" />
@@ -2649,6 +2657,7 @@
           <EntitySetMapping Name="SearchProfiles">
             <EntityTypeMapping TypeName="ClientPortalModel.SearchProfile">
               <MappingFragment StoreEntitySet="SearchProfile">
+                <ScalarProperty Name="ShowCassConvs" ColumnName="ShowCassConvs" />
                 <ScalarProperty Name="ShowViewThrus" ColumnName="ShowViewThrus" />
                 <ScalarProperty Name="UseConvertedClicks" ColumnName="UseConvertedClicks" />
                 <ScalarProperty Name="ShowRevenue" ColumnName="ShowRevenue" />

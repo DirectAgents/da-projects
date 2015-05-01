@@ -43,6 +43,8 @@ namespace DAGenerators.Spreadsheets
         public Metric Metric_Revenue = new Metric(0, null, false, false);
         public Metric Metric_Calls = new Metric(0, null, false, false);
         public Metric Metric_ViewThrus = new Metric(0, null, false, false); // View-Through Conversions
+        public Metric Metric_CassConvs = new Metric(0, null, false, false); // Click-Assisted Conversions
+        public Metric Metric_CassConVal = new Metric(0, null, false, false);
 
         // Computed metrics
         public Metric Metric_OrderRate = new Metric(0, null, true, false);
@@ -72,12 +74,6 @@ namespace DAGenerators.Spreadsheets
             SetColumnHeaders(); // do this after specifying which metrics are "shown"
         }
 
-        //Note: the column will still exist in the spreadsheet; it will be hidden... the user can unhide it
-        public void MakeColumnHidden(int col)
-        {
-            WS.Column(col).Hidden = true;
-        }
-
         protected virtual void Setup()
         {
             Metric_Clicks = new Metric(3, "Clicks");
@@ -90,10 +86,20 @@ namespace DAGenerators.Spreadsheets
             Metric_Net = new Metric(10, "Net", true);
             Metric_ViewThrus = new Metric(11, "ViewThrus");
             Metric_ViewThruRev = new Metric(12, "ViewThruRev", true);
-            Metric_CPO = new Metric(13, "Cost/Order", true);
-            Metric_OrderRate = new Metric(14, "Order Rate", true);
-            Metric_RevPerOrder = new Metric(15, "Rev/Order", true);
-            Metric_ROAS = new Metric(16, "ROAS", true);
+            Metric_CassConvs = new Metric(13, "ClickAssistConv");
+            Metric_CassConVal = new Metric(14, "CAC Val");
+            Metric_CPO = new Metric(15, "Cost/Order", true);
+            Metric_OrderRate = new Metric(16, "Order Rate", true);
+            Metric_RevPerOrder = new Metric(17, "Rev/Order", true);
+            Metric_ROAS = new Metric(18, "ROAS", true);
+        }
+
+        // Do this after setting up the columns
+        public void MakeColumnHidden(Metric metric)
+        {   // metric.Show==true means the metric exists in this report
+            if (metric.Show)
+                WS.Column(metric.ColNum).Hidden = true;
+                //Note: the column will still exist in the spreadsheet; it will be hidden... the user can unhide it
         }
 
         public virtual void SetReportDate(DateTime date)
@@ -111,6 +117,7 @@ namespace DAGenerators.Spreadsheets
             {
                 WS.Cells[Row_StatsHeader, metric.ColNum].Value = metric.DisplayName;
             }
+            // Q: What about the headers under Monthly, YoY, Weekly Perf...?
         }
 
         public virtual void SetClientName(string clientName)
@@ -140,7 +147,7 @@ namespace DAGenerators.Spreadsheets
         //    LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Monthly + nummon
         //}
 
-        // propertyNames for: title, clicks, impressions, orders, cost, revenue, calls, viewthrus
+        // propertyNames for: title, clicks, impressions, orders, cost, revenue, calls, viewthrus, cassconvs, cassconval
         // returns: # of rows added (in addition to blankRowsInTemplate); negative means blankRows deleted
         protected int LoadWeeklyMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames, int startingRow, int blankRowsInTemplate = 0)
         {
@@ -178,6 +185,8 @@ namespace DAGenerators.Spreadsheets
                 LoadColumnFromStats(stats, startingRow, Metric_Revenue.ColNum, propertyNames[5], Metric_Revenue);
                 LoadColumnFromStats(stats, startingRow, Metric_Calls.ColNum, propertyNames[6], Metric_Calls);
                 LoadColumnFromStats(stats, startingRow, Metric_ViewThrus.ColNum, propertyNames[7], Metric_ViewThrus);
+                LoadColumnFromStats(stats, startingRow, Metric_CassConvs.ColNum, propertyNames[8], Metric_CassConvs);
+                LoadColumnFromStats(stats, startingRow, Metric_CassConVal.ColNum, propertyNames[9], Metric_CassConVal);
             }
             return blankRowsToInsert;
         }
@@ -205,6 +214,8 @@ namespace DAGenerators.Spreadsheets
             LoadColumnFromStats(stats, startingRow, Metric_Revenue.ColNum, propertyNames[5], Metric_Revenue);
             LoadColumnFromStats(stats, startingRow, Metric_Calls.ColNum, propertyNames[6], Metric_Calls);
             LoadColumnFromStats(stats, startingRow, Metric_ViewThrus.ColNum, propertyNames[7], Metric_ViewThrus);
+            LoadColumnFromStats(stats, startingRow, Metric_CassConvs.ColNum, propertyNames[8], Metric_CassConvs);
+            LoadColumnFromStats(stats, startingRow, Metric_CassConVal.ColNum, propertyNames[9], Metric_CassConVal);
         }
 
         //TODO: retire this - if can assume all formulas are in template rows in the spreadsheet
@@ -370,6 +381,8 @@ namespace DAGenerators.Spreadsheets
             PossiblyAddMetric(metrics, Metric_Revenue, shownOnly);
             PossiblyAddMetric(metrics, Metric_Calls, shownOnly);
             PossiblyAddMetric(metrics, Metric_ViewThrus, shownOnly);
+            PossiblyAddMetric(metrics, Metric_CassConvs, shownOnly);
+            PossiblyAddMetric(metrics, Metric_CassConVal, shownOnly);
 
             PossiblyAddMetric(metrics, Metric_OrderRate, shownOnly);
             PossiblyAddMetric(metrics, Metric_Net, shownOnly);

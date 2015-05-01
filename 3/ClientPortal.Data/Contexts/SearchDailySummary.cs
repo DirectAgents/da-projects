@@ -25,6 +25,8 @@ namespace ClientPortal.Data.Contexts
         public string Network { get; set; }
         public string Device { get; set; }
         public int ViewThrus { get; set; }
+        public int CassConvs { get; set; }
+        public double CassConVal { get; set; }
     
         public virtual SearchCampaign SearchCampaign { get; set; }
     }

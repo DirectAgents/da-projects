@@ -21,7 +21,7 @@
         <EntityTypeShape EntityType="ClientPortalModel.SearchCampaign" Width="1.875" PointX="4.75" PointY="10.375" />
         <AssociationConnector Association="ClientPortalModel.FK_SearchDailySummary_SearchCampaign" />
         <EntityTypeShape EntityType="ClientPortalModel.UserProfile" Width="1.75" PointX="0.5" PointY="6" />
-        <EntityTypeShape EntityType="ClientPortalModel.SearchDailySummary2" Width="2" PointX="2.375" PointY="10.375" />
+        <EntityTypeShape EntityType="ClientPortalModel.SearchDailySummary2" Width="2" PointX="2.375" PointY="10.625" />
         <AssociationConnector Association="ClientPortalModel.FK_SearchDailySummary2_SearchCampaign" />
         <EntityTypeShape EntityType="ClientPortalModel.Advertiser" Width="2.375" PointX="5" PointY="0.5" />
         <AssociationConnector Association="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" />
@@ -64,10 +64,10 @@
         <AssociationConnector Association="ClientPortalModel.CPMReportCampaignDrop" />
         <EntityTypeShape EntityType="ClientPortalModel.OfferDailySummary" Width="1.5" PointX="15.875" PointY="8.75" />
         <EntityTypeShape EntityType="ClientPortalModel.DailySummary" Width="1.5" PointX="12.125" PointY="8.375" />
-        <EntityTypeShape EntityType="ClientPortalModel.SearchProfile" Width="1.625" PointX="2.75" PointY="7.125" />
+        <EntityTypeShape EntityType="ClientPortalModel.SearchProfile" Width="1.625" PointX="2.75" PointY="7" />
         <AssociationConnector Association="ClientPortalModel.FK_UserProfile_SearchProfile" />
         <AssociationConnector Association="ClientPortalModel.FK_SearchAccount_SearchProfile" />
-        <EntityTypeShape EntityType="ClientPortalModel.SearchProfileContact" Width="1.875" PointX="2.625" PointY="5" />
+        <EntityTypeShape EntityType="ClientPortalModel.SearchProfileContact" Width="1.875" PointX="2.625" PointY="4.875" />
         <AssociationConnector Association="ClientPortalModel.FK_SearchProfileContact_Contact" />
         <AssociationConnector Association="ClientPortalModel.FK_SearchProfileContact_SearchProfile" />
         <AssociationConnector Association="ClientPortalModel.FK_SearchCampaign_SearchAccount1" />

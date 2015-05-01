@@ -14,6 +14,7 @@
     <fieldset>
         <legend>Edit Search Profile</legend>
         @Html.HiddenFor(m => m.SearchProfileId)
+        @Html.HiddenFor(m => m.ShowCassConvs)
         @Html.HiddenFor(m => m.UseConvertedClicks)
         @Html.HiddenFor(m => m.ShowSearchChannels)
         @Html.HiddenFor(m => m.LCaccid)
@@ -39,6 +40,10 @@
                 <tr>
                     <td>@Html.LabelFor(m => m.ShowViewThrus)</td>
                     <td>@Html.EditorFor(m => m.ShowViewThrus) (view-through conversions)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.ShowCassConvs)</td>
+                    <td>@Html.DisplayFor(m => m.ShowCassConvs) (click-assisted conversions - report only)</td>
                 </tr>
                 <tr>
                     <td>@Html.LabelFor(m => m.UseConvertedClicks)</td>

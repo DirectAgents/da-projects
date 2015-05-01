@@ -131,7 +131,9 @@ namespace ClientPortal.Data.Services
                 Clicks = !any ? 0 : summaries.Sum(s => s.Clicks),
                 Cost = !any ? 0 : summaries.Sum(s => s.Cost),
                 ViewThrus = !any ? 0 : summaries.Sum(s => s.ViewThrus),
-                RevPerViewThru = revPerViewThru
+                RevPerViewThru = revPerViewThru,
+                CassConvs = !any ? 0 : summaries.Sum(s => s.CassConvs),
+                CassConVal = !any ? 0 : summaries.Sum(s => s.CassConVal)
             };
 
             if (!useAnalytics)
@@ -322,6 +324,8 @@ namespace ClientPortal.Data.Services
                         Clicks = g.Sum(x => x.Clicks),
                         Orders = g.Sum(x => x.Orders),
                         ViewThrus = g.Sum(x => x.ViewThrus),
+                        CassConvs = g.Sum(x => x.CassConvs),
+                        CassConVal = g.Sum(x => x.CassConVal),
                         Revenue = g.Sum(x => x.Revenue),
                         Cost = g.Sum(x => x.Cost)
                     })
@@ -349,6 +353,8 @@ namespace ClientPortal.Data.Services
                                Clicks = daySum.Clicks,
                                Orders = (gaSum == null) ? 0 : gaSum.Transactions,
                                ViewThrus = daySum.ViewThrus,
+                               CassConvs = daySum.CassConvs,
+                               CassConVal = daySum.CassConVal,
                                Revenue = (gaSum == null) ? 0 : gaSum.Revenue,
                                Cost = daySum.Cost
                            }).ToList();
@@ -374,6 +380,8 @@ namespace ClientPortal.Data.Services
                                Clicks = daySum.Clicks,
                                Orders = daySum.Orders,
                                ViewThrus = daySum.ViewThrus,
+                               CassConvs = daySum.CassConvs,
+                               CassConVal = daySum.CassConVal,
                                Revenue = daySum.Revenue,
                                Cost = daySum.Cost,
                                Calls = (callSum == null) ? 0 : callSum.Calls
@@ -417,6 +425,8 @@ namespace ClientPortal.Data.Services
                         Clicks = s.Clicks,
                         Orders = s.Orders,
                         ViewThrus = s.ViewThrus,
+                        CassConvs = s.CassConvs,
+                        CassConVal = s.CassConVal,
                         Revenue = s.Revenue,
                         Cost = s.Cost,
                         Calls = s.Calls
@@ -443,6 +453,8 @@ namespace ClientPortal.Data.Services
                         Orders = g.Sum(s => s.Orders),
                         ViewThrus = g.Sum(s => s.ViewThrus),
                         RevPerViewThru = revPerViewThru,
+                        CassConvs = g.Sum(s => s.CassConvs),
+                        CassConVal = g.Sum(s => s.CassConVal),
                         Revenue = g.Sum(s => s.Revenue),
                         Cost = g.Sum(s => s.Cost),
                         Calls = g.Sum(s => s.Calls)
@@ -588,6 +600,8 @@ namespace ClientPortal.Data.Services
                     Orders = g.Sum(s => s.Orders),
                     ViewThrus = g.Sum(s => s.ViewThrus),
                     RevPerViewThru = revPerViewThru,
+                    CassConvs = g.Sum(s => s.CassConvs),
+                    CassConVal = g.Sum(s => s.CassConVal),
                     Revenue = g.Sum(s => s.Revenue),
                     Cost = g.Sum(s => s.Cost)
                 })
@@ -615,6 +629,8 @@ namespace ClientPortal.Data.Services
                              Orders = (gaStat == null) ? 0 : gaStat.Orders,
                              ViewThrus = stat.ViewThrus,
                              RevPerViewThru = revPerViewThru,
+                             CassConvs = stat.CassConvs,
+                             CassConVal = stat.CassConVal,
                              Revenue = (gaStat == null) ? 0 : gaStat.Revenue,
                              Cost = stat.Cost
                          });
@@ -641,6 +657,8 @@ namespace ClientPortal.Data.Services
                              Orders = stat.Orders,
                              ViewThrus = stat.ViewThrus,
                              RevPerViewThru = revPerViewThru,
+                             CassConvs = stat.CassConvs,
+                             CassConVal = stat.CassConVal,
                              Revenue = stat.Revenue,
                              Cost = stat.Cost,
                              Calls = (callStat == null) ? 0 : callStat.Calls
@@ -667,11 +685,14 @@ namespace ClientPortal.Data.Services
                     Orders = g.Sum(s => s.Orders),
                     ViewThrus = g.Sum(s => s.ViewThrus),
                     RevPerViewThru = sp.RevPerViewThru,
+                    CassConvs = g.Sum(s => s.CassConvs),
+                    CassConVal = g.Sum(s => s.CassConVal),
                     Revenue = g.Sum(s => s.Revenue),
                     Cost = g.Sum(s => s.Cost)
                 })
-                .ToList().OrderBy(s => s.Title);
+                .ToList().Where(s => !s.AllZeros()).OrderBy(s => s.Title);
 
+            // Assumption- that there aren't any campaigns that have calls but no other stats for this time period
             if (sp.ShowCalls)
             {
                 IQueryable<SearchCampaign> googleCampaigns = null;
@@ -691,7 +712,7 @@ namespace ClientPortal.Data.Services
                         searchStat.Calls = GetCallDailySummaries(searchCampaigns, start, end, true).Sum(cds => cds.Calls);
                     }
                 }
-            }
+            } // Note: searchCampaigns may have been altered at this point; consider putting the above in a GetCallStats method
 
             //TODO: includeAnalytics
             return stats.AsQueryable();
@@ -803,7 +824,8 @@ namespace ClientPortal.Data.Services
             var searchCampaigns = GetSearchCampaigns(null, searchProfileId, channel, searchAccountId, channelPrefix);
             var summaries = GetSearchDailySummaries(searchCampaigns, device, start, end, true).ToList();
             IQueryable<SearchStat> stats;
-            if (breakdown)
+
+            if (breakdown) // by Network and Device
             {
                 // TODO: figure out how to join to gaStats if useAnalytics==true
 
@@ -815,7 +837,7 @@ namespace ClientPortal.Data.Services
                         .OrderBy(cg => cg.Key.Device);
                     foreach (var campGroup in campaignGroups)
                     {   // "." == non-Google; "M" == Google-Mobile (For Google, we put all the calls under 'mobile')
-                        if (campGroup.Key.Device == "." || campGroup.Key.Device == "M") // M == mobile
+                        if (campGroup.Key.Device == "." || campGroup.Key.Device == "M")
                         {
                             var callSummaries = GetCallDailySummaries(campGroup.Key.SearchCampaignId, start, end, true);
                             if (callSummaries.Any())
@@ -824,7 +846,6 @@ namespace ClientPortal.Data.Services
                     }
                 }
                 stats = summaryGroups
-                    .OrderBy(g => g.Key.Channel).ThenBy(g => g.Key.SearchCampaignName)
                     .Select(g => new SearchStat
                     {
                         EndDate = end.Value,
@@ -838,12 +859,14 @@ namespace ClientPortal.Data.Services
                         Orders = g.Sum(s => s.Orders),
                         ViewThrus = g.Sum(s => s.ViewThrus),
                         RevPerViewThru = revPerViewThru,
+                        CassConvs = g.Sum(s => s.CassConvs),
+                        CassConVal = g.Sum(s => s.CassConVal),
                         Revenue = g.Sum(s => s.Revenue),
                         Cost = g.Sum(s => s.Cost),
                         Calls = g.Sum(s => s.Calls)
                     }).AsQueryable();
             }
-            else
+            else // no breakdown
             {
                 var sums = summaries.GroupBy(s => new { s.SearchCampaign.SearchAccount.Channel, s.SearchCampaignId, s.SearchCampaign.SearchCampaignName })
                     .Select(g => new SearchSummary
@@ -855,6 +878,8 @@ namespace ClientPortal.Data.Services
                         Clicks = g.Sum(s => s.Clicks),
                         Orders = g.Sum(s => s.Orders),
                         ViewThrus = g.Sum(s => s.ViewThrus),
+                        CassConvs = g.Sum(s => s.CassConvs),
+                        CassConVal = g.Sum(s => s.CassConVal),
                         Revenue = g.Sum(s => s.Revenue),
                         Cost = g.Sum(s => s.Cost)
                     });
@@ -872,14 +897,16 @@ namespace ClientPortal.Data.Services
                             Orders = s.Orders,
                             ViewThrus = s.ViewThrus,
                             RevPerViewThru = revPerViewThru,
+                            CassConvs = s.CassConvs,
+                            CassConVal = s.CassConVal,
                             Revenue = s.Revenue,
                             Cost = s.Cost
                         }).AsQueryable();
                 }
-                else
+                else // including analytics and/or calls...
                 {
-                    stats = null; // to satisfy the compiler; at least one of (useAnalytics and includeCalls) must be true, so stats has to get assigned
-
+                    stats = null; // to satisfy the compiler
+                                  // shouldn't be needed b/c at least one of (useAnalytics and includeCalls) is true, so stats will get assigned
                     if (useAnalytics)
                     {
                         var gaSums = GetGoogleAnalyticsSummaries(searchCampaigns, start, end, true)
@@ -904,6 +931,8 @@ namespace ClientPortal.Data.Services
                                      Orders = (gaSum == null) ? 0 : gaSum.Transactions,
                                      ViewThrus = sum.ViewThrus,
                                      RevPerViewThru = revPerViewThru,
+                                     CassConvs = sum.CassConvs,
+                                     CassConVal = sum.CassConVal,
                                      Revenue = (gaSum == null) ? 0 : gaSum.Revenue,
                                      Cost = sum.Cost
                                  }).AsQueryable();
@@ -931,6 +960,8 @@ namespace ClientPortal.Data.Services
                                      Orders = sum.Orders,
                                      ViewThrus = sum.ViewThrus,
                                      RevPerViewThru = revPerViewThru,
+                                     CassConvs = sum.CassConvs,
+                                     CassConVal = sum.CassConVal,
                                      Revenue = sum.Revenue,
                                      Cost = sum.Cost,
                                      Calls = (callSum == null) ? 0 : callSum.Calls
@@ -938,7 +969,7 @@ namespace ClientPortal.Data.Services
                     }
                 }
             }
-            return stats.OrderByDescending(s => s.Revenue);
+            return stats.Where(s => !s.AllZeros()).OrderByDescending(s => s.Revenue);
         }
 
         //public IQueryable<SearchStat> GetAdgroupStats()
@@ -1025,6 +1056,8 @@ namespace ClientPortal.Data.Services
         public int Clicks { get; set; }
         public int Orders { get; set; }
         public int ViewThrus { get; set; }
+        public int CassConvs { get; set; }
+        public double CassConVal { get; set; }
         public decimal Revenue { get; set; }
         public decimal Cost { get; set; }
         public int Calls { get; set; }

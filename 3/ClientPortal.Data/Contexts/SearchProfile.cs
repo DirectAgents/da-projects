@@ -33,6 +33,7 @@ namespace ClientPortal.Data.Contexts
         public bool ShowRevenue { get; set; }
         public bool UseConvertedClicks { get; set; }
         public bool ShowViewThrus { get; set; }
+        public bool ShowCassConvs { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserProfile> UserProfiles { get; set; }

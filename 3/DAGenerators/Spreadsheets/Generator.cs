@@ -43,8 +43,13 @@ namespace DAGenerators.Spreadsheets
             spreadsheet.Setup(templateFolder);
             if (!searchProfile.ShowViewThrus)
             {
-                spreadsheet.MakeColumnHidden(spreadsheet.Metric_ViewThrus.ColNum);
-                spreadsheet.MakeColumnHidden(spreadsheet.Metric_ViewThruRev.ColNum);
+                spreadsheet.MakeColumnHidden(spreadsheet.Metric_ViewThrus);
+                spreadsheet.MakeColumnHidden(spreadsheet.Metric_ViewThruRev);
+            }
+            if (!searchProfile.ShowCassConvs)
+            {
+                spreadsheet.MakeColumnHidden(spreadsheet.Metric_CassConvs);
+                spreadsheet.MakeColumnHidden(spreadsheet.Metric_CassConVal);
             }
             spreadsheet.SetReportDate(endDate);
             spreadsheet.SetClientName(searchProfile.SearchProfileName);
@@ -52,7 +57,7 @@ namespace DAGenerators.Spreadsheets
             var monthlyStats = cpRepo.GetMonthStats(searchProfile, numMonths, endDate);
             var weeklyStats = cpRepo.GetWeekStats(searchProfile, numWeeks, endDate);
 
-            var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue", "Calls", "ViewThrus" };
+            var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue", "Calls", "ViewThrus", "CassConvs", "CassConVal" };
             spreadsheet.LoadMonthlyStats(monthlyStats, propertyNames);
             spreadsheet.LoadWeeklyStats(weeklyStats, propertyNames);
 
