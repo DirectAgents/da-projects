@@ -1,10 +1,10 @@
-﻿using DirectAgents.Domain.Abstract;
-using DirectAgents.Domain.Contexts;
-using DirectAgents.Domain.Entities;
-using DirectAgents.Domain.Entities.Cake;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DirectAgents.Domain.Abstract;
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.DTO;
+using DirectAgents.Domain.Entities.Cake;
 
 namespace DirectAgents.Domain.Concrete
 {
@@ -111,9 +111,50 @@ namespace DirectAgents.Domain.Concrete
                 offer.BudgetUsed = 0;
         }
 
-        public IQueryable<OfferDailySummary> GetOfferDailySummaries(int offerId, DateTime? startDate = null, DateTime? endDate = null)
+        public IEnumerable<CampaignSummary> TopOffers(int num, TopCampaignsBy by) //, string trafficType)  //maybe: offerIds
         {
-            var ods = context.OfferDailySummaries.Where(o => o.OfferId == offerId);
+            int minClicks = 50;
+            var minDate = DateTime.Now.AddDays(-16);
+            var offerDailySummaries = GetOfferDailySummaries(null, minDate, null);
+            var offers = context.Offers.Where(o => !o.OfferName.Contains("pause") && !o.OfferName.Contains("not live yet")
+                                                && !o.OfferName.Contains("cpm"));
+
+            //if (trafficType != null)
+            //    offers = offers.Where(
+
+            //if (trafficType != null)
+            //    campaigns = campaigns.Where(c => c.TrafficTypes.Select(t => t.Name).Contains(trafficType));
+
+            var query = from ods in offerDailySummaries
+                        join o in offers on ods.OfferId equals o.OfferId
+                        group ods by new { o.OfferId, o.OfferName } into g
+                        select new CampaignSummary
+                        {
+                            Pid = g.Key.OfferId,
+                            CampaignName = g.Key.OfferName,
+                            Revenue = g.Sum(ds => ds.Revenue),
+                            Cost = g.Sum(ds => ds.Cost),
+                            Clicks = g.Sum(ds => ds.Clicks)
+                        };
+
+            switch (by)
+            {
+                case TopCampaignsBy.Revenue:
+                    return query.OrderByDescending(c => c.Revenue).Take(num).ToList();
+                case TopCampaignsBy.Cost:
+                    return query.OrderByDescending(c => c.Cost).Take(num).ToList();
+                case TopCampaignsBy.EPC:
+                    return query.Where(ds => ds.Clicks >= minClicks).ToList().OrderByDescending(c => c.EPC).Take(num);
+                default:
+                    throw new Exception("Invalid TopCampaignsBy: " + by.ToString());
+            }
+        }
+
+        public IQueryable<OfferDailySummary> GetOfferDailySummaries(int? offerId, DateTime? startDate = null, DateTime? endDate = null)
+        {
+            var ods = context.OfferDailySummaries.AsQueryable();
+            if (offerId.HasValue)
+                ods = ods.Where(o => o.OfferId == offerId);
             if (startDate.HasValue)
                 ods = ods.Where(o => o.Date >= startDate.Value);
             if (endDate.HasValue)

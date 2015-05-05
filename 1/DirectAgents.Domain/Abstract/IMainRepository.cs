@@ -1,8 +1,8 @@
-﻿using DirectAgents.Domain.Entities;
-using DirectAgents.Domain.Entities.Cake;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DirectAgents.Domain.DTO;
+using DirectAgents.Domain.Entities.Cake;
 
 namespace DirectAgents.Domain.Abstract
 {
@@ -19,7 +19,9 @@ namespace DirectAgents.Domain.Abstract
 
         void FillOfferBudgetStats(Offer offer);
 
-        IQueryable<OfferDailySummary> GetOfferDailySummaries(int offerId, DateTime? startDate = null, DateTime? endDate = null);
+        IEnumerable<CampaignSummary> TopOffers(int num, TopCampaignsBy by);
+
+        IQueryable<OfferDailySummary> GetOfferDailySummaries(int? offerId, DateTime? startDate = null, DateTime? endDate = null);
         IQueryable<OfferDailySummary> GetOfferDailySummariesForBudget(int offerId);
         IQueryable<OfferDailySummary> GetOfferDailySummariesForBudget(Offer offer);
     }

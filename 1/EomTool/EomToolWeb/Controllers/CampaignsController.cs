@@ -92,7 +92,7 @@ namespace EomToolWeb.Controllers
             return Session["ListViewMode"] as ListViewMode;
         }
 
-        // for Kendo
+        // for Kendo - default route...
         public ActionResult List2(string search, string pid, string country, string vertical, string traffictype, string mobilelp, string mode)
         {
             if (!string.IsNullOrWhiteSpace(mode))
@@ -279,21 +279,22 @@ namespace EomToolWeb.Controllers
             return json;
         }
 
-        public ActionResult Top(TopCampaignsBy by, string traffictype)
+        public ActionResult Top(TopCampaignsBy by) //, string traffictype)
         {
-            TrafficType trafficTypeEntity = null;
-
-            if (traffictype != null)
-                trafficTypeEntity = campaignRepo.TrafficTypes.SingleOrDefault(t => t.Name == traffictype);
+            //TrafficType trafficTypeEntity = null;
+            //if (traffictype != null)
+            //    trafficTypeEntity = campaignRepo.TrafficTypes.SingleOrDefault(t => t.Name == traffictype);
 
             IEnumerable<CampaignSummary> campaignSummaries;
 
-            if (trafficTypeEntity == null) // no matching traffic type
-                campaignSummaries = campaignRepo.TopCampaigns(20, by, null);
-            else
-                campaignSummaries = campaignRepo.TopCampaigns(20, by, traffictype);
+            //if (trafficTypeEntity == null) // no matching traffic type
+            //    campaignSummaries = campaignRepo.TopCampaigns(20, by, null);
+            //else
+            //    campaignSummaries = campaignRepo.TopCampaigns(20, by, traffictype);
+            //var model = new TopViewModel { CampaignSummaries = campaignSummaries, By = by, TrafficType = trafficTypeEntity };
 
-            var model = new TopViewModel { CampaignSummaries = campaignSummaries, By = by, TrafficType = trafficTypeEntity };
+            campaignSummaries = daMainRepo.TopOffers(20, by);
+            var model = new TopViewModel { CampaignSummaries = campaignSummaries, By = by };
 
             return View(model);
         }

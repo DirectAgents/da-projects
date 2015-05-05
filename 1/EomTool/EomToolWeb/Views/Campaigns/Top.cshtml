@@ -14,10 +14,10 @@
 
     <h2>Top Campaigns by @Model.By.ToString()</h2>
 
-    <h3>Select a Filter:</h3>
+@*    <h3>Select a Filter:</h3>
     <div>
         <input id="traffictypes" style="width: 250px; margin-top: 10px" />
-    </div>
+    </div>*@
 
     @if (Model.By == TopCampaignsBy.EPC)
     {
@@ -55,7 +55,7 @@
     string byFilter = "";
     if (Model.By != null) { byFilter = "&by=" + Model.By.ToString(); }
 }
-        function ChooseFilter() {
+@*        function ChooseFilter() {
             var dataItem = $('#traffictypes').data("kendoDropDownList").dataItem();
             var traffictype = '';
             if (dataItem.TrafficTypeId != '') traffictype = dataItem.Name;
@@ -76,6 +76,6 @@
                 },
                 change: ChooseFilter
             });
-        });
+        });*@
     </script>
 }
