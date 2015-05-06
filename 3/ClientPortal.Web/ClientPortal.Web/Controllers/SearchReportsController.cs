@@ -136,7 +136,8 @@ namespace ClientPortal.Web.Controllers
                 return Json(new { });
 
             //TODO: useAnalytics argument; +includeCalls?
-            var stats = cpRepo.GetDeviceStats(userInfo.SearchProfile, start.Value, end.Value);
+            bool showingCassConvs = false;
+            var stats = cpRepo.GetDeviceStats(userInfo.SearchProfile, start.Value, end.Value, showingCassConvs);
             var kgrid = new KendoGridEx<SearchStat>(request, stats);
 
             return CreateJsonResult(kgrid);
@@ -156,7 +157,8 @@ namespace ClientPortal.Web.Controllers
             if (!start.HasValue) start = userInfo.Search_Dates.FirstOfMonth;
             if (!end.HasValue) end = userInfo.Search_Dates.Latest;
 
-            var stats = cpRepo.GetCampaignStats(userInfo.SearchProfile, channel, start, end, breakdown);
+            bool showingCassConvs = false;
+            var stats = cpRepo.GetCampaignStats(userInfo.SearchProfile, channel, start, end, breakdown, showingCassConvs);
             stats = FilterBrand(stats, brandFilter);
             var kgrid = new KendoGridEx<SearchStat>(request, stats);
 
@@ -189,7 +191,8 @@ namespace ClientPortal.Web.Controllers
             if (!start.HasValue) start = userInfo.Search_Dates.FirstOfMonth;
             if (!end.HasValue) end = userInfo.Search_Dates.Latest;
 
-            var stats = cpRepo.GetCampaignStats(userInfo.SearchProfile, channel, start, end, breakdown);
+            bool showingCassConvs = false;
+            var stats = cpRepo.GetCampaignStats(userInfo.SearchProfile, channel, start, end, breakdown, showingCassConvs);
             stats = FilterBrand(stats, brandFilter)
                         .OrderBy(s => s.EndDate).ThenByDescending(s => s.Channel).ThenBy(s => s.Title);
 

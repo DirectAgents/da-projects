@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
 
@@ -78,55 +79,82 @@ namespace DAGenerators.Spreadsheets
             var yoyStats = new[] { monthStatsLastYear, monthStats };
             spreadsheet.LoadYearOverYearStats(yoyStats, propertyNames);
 
-            // Prepare for weekly channel/campaign stats
-            // Start with the week that includes endDate (could be a partial week)
-            var periodStart = endDate;
-            while (periodStart.DayOfWeek != (DayOfWeek)searchProfile.StartDayOfWeek)
-                periodStart = periodStart.AddDays(-1);
-            var periodEnd = periodStart.AddDays(6);
-            spreadsheet.SetReportingPeriod(periodStart, periodEnd); // currently just used for Teacher Express template
-
-            // load the weekly campaign stats, starting with the most recent and going back the number of weeks specified
-            for (int i = 0; i < numWeeks; i++)
+            // Monthly campaign performance stats...
+            // start with the most recent and go back the number of months specified
+            var periodStart = new DateTime(endDate.Year, endDate.Month, 1); // (the first could be a partial month)
+            for (int i = 0; i < numMonths; i++)
             {
-                var channelStatsDict = new Dictionary<string, IEnumerable<SearchStat>>();
+                var campaignStatsDict = GetOneCampaignStatsDict(cpRepo, searchProfile, periodStart, true);
 
-                int numChannels = searchProfile.SearchAccounts.Select(sa => sa.Channel).Distinct().Count();
-                if (numChannels == 1 && searchProfile.SearchAccounts.Count > 1)
-                { // if there is only one channel (e.g. Google) but multiple SearchAccounts, group campaigns by SearchAccount
-                    foreach (var searchAccount in searchProfile.SearchAccounts)
-                    {
-                        var campaignStats = cpRepo.GetCampaignStats(searchProfile, searchAccount.SearchAccountId, periodStart, periodEnd, false);
-                        if (campaignStats.Any())
-                            channelStatsDict[searchAccount.Name] = campaignStats;
-                    }
-                }
-                else
-                { // the "normal" way: group campaigns by channel (Google, Bing, etc)
-                    var campaignStats = cpRepo.GetCampaignStats(searchProfile, null, periodStart, periodEnd, false);
-                    var channels = campaignStats.Select(s => s.Channel).Distinct();
-                    foreach (string channel in channels)
-                    {
-                        channelStatsDict[channel] = campaignStats.Where(s => s.Channel == channel);
-                    }                               // order of campaigns?
-                }
-
-                if (channelStatsDict.Keys.Any()) // TODO: if empty, somehow generate a row with zeros for this week
+                if (campaignStatsDict.Keys.Any()) // TODO: if empty, somehow generate a row with zeros for this week
                 {
                     bool collapse = (i > 0);
-                    spreadsheet.LoadWeeklyCampaignPerfStats(channelStatsDict, propertyNames, periodStart, collapse);
+                    spreadsheet.LoadMonthlyCampaignPerfStats(campaignStatsDict, propertyNames, periodStart, collapse);
                 }
-                if (i + 1 < numWeeks)
-                {   // not the last week
-                    periodStart = periodStart.AddDays(-7);
-                    periodEnd = periodEnd.AddDays(-7);
-                }
+
+                periodStart = periodStart.AddMonths(-1);
             }
-            spreadsheet.RemoveWeeklyChannelRollupStatsTemplate();
+            spreadsheet.RemoveMonthlyCampaignPerfStatsTemplate();
+
+            // Weekly campaign performance stats...
+            periodStart = endDate; // Start with the week that includes endDate (could be a partial week)
+            while (periodStart.DayOfWeek != (DayOfWeek)searchProfile.StartDayOfWeek)
+                periodStart = periodStart.AddDays(-1);
+
+            spreadsheet.SetReportingPeriod(periodStart, periodStart.AddDays(6)); // currently just used for Teacher Express template
+            // TODO: implement showing reporting period as latest week or latest month
+
+            // Load the weekly campaign stats, starting with the most recent and going back the number of weeks specified
+            for (int i = 0; i < numWeeks; i++)
+            {
+                var campaignStatsDict = GetOneCampaignStatsDict(cpRepo, searchProfile, periodStart, false);
+
+                if (campaignStatsDict.Keys.Any()) // TODO: if empty, somehow generate a row with zeros for this week
+                {
+                    bool collapse = (i > 0);
+                    spreadsheet.LoadWeeklyCampaignPerfStats(campaignStatsDict, propertyNames, periodStart, collapse);
+                }
+
+                periodStart = periodStart.AddDays(-7);
+            }
+            spreadsheet.RemoveWeeklyCampaignPerfStatsTemplate();
 
             return spreadsheet;
         }
-        // DisposeResources when done with SearchReport?
 
+        // Get stats for one week/month - grouped by channel or searchAccount
+        private static Dictionary<string, IEnumerable<SearchStat>> GetOneCampaignStatsDict(IClientPortalRepository cpRepo, SearchProfile searchProfile, DateTime periodStart, bool monthlyNotWeekly)
+        {
+            DateTime periodEnd;
+            if (monthlyNotWeekly)
+                periodEnd = periodStart.AddMonths(1).AddDays(-1);
+            else
+                periodEnd = periodStart.AddDays(6);
+
+            var campaignStatsDict = new Dictionary<string, IEnumerable<SearchStat>>();
+
+            int numChannels = searchProfile.SearchAccounts.Select(sa => sa.Channel).Distinct().Count();
+            if (numChannels == 1 && searchProfile.SearchAccounts.Count > 1)
+            { // if there is only one channel (e.g. Google) but multiple SearchAccounts, group campaigns by SearchAccount
+                foreach (var searchAccount in searchProfile.SearchAccounts)
+                {
+                    var campaignStats = cpRepo.GetCampaignStats(searchProfile, searchAccount.SearchAccountId, periodStart, periodEnd, false, searchProfile.ShowCassConvs);
+                    if (campaignStats.Any())
+                        campaignStatsDict[searchAccount.Name] = campaignStats;
+                }
+            }
+            else
+            { // the "normal" way: group campaigns by channel (Google, Bing, etc)
+                var campaignStats = cpRepo.GetCampaignStats(searchProfile, null, periodStart, periodEnd, false, searchProfile.ShowCassConvs);
+                var channels = campaignStats.Select(s => s.Channel).Distinct();
+                foreach (string channel in channels)
+                {
+                    campaignStatsDict[channel] = campaignStats.Where(s => s.Channel == channel);
+                }                               // order of campaigns?
+            }
+            return campaignStatsDict;
+        }
+
+        // DisposeResources when done with SearchReport?
     }
 }

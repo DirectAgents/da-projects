@@ -33,6 +33,7 @@ namespace DAGenerators.Spreadsheets
         protected int StartRow_YearOverYear = 20;
 
         private const int StartRow_WeeklyCampaignPerfTemplate = 45;
+        private const int StartRow_MonthlyCampaignPerfTemplate = 51;
         private const int NumRows_CampaignPerfTemplate = 3;
         private const int NumRows_CampaignPerfSubTemplate = 2;
 
@@ -202,7 +203,16 @@ namespace DAGenerators.Spreadsheets
         // for the most recently completed month
         public virtual void LoadYearOverYearStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
         {
-            LoadYearOverYearStats(stats, propertyNames, StartRow_YearOverYear + NumWeekRowsAdded + NumMonthRowsAdded);
+            int startRow = StartRow_YearOverYear + NumWeekRowsAdded + NumMonthRowsAdded;
+            LoadYearOverYearStats(stats, propertyNames, startRow);
+
+            //YoY diff row...
+            string diffFormula = "IFERROR((R[-1]C-R[-2]C)/R[-2]C,\"-\")";
+            var metrics = GetMetrics(true);
+            foreach (var metric in metrics)
+            {
+                WS.Cells[startRow + 2, metric.ColNum].FormulaR1C1 = diffFormula;
+            }
         }
         protected void LoadYearOverYearStats<T>(IEnumerable<T> stats, IList<string> propertyNames, int startingRow)
         {
@@ -240,14 +250,20 @@ namespace DAGenerators.Spreadsheets
                 WS.Cells[iRow, metric.ColNum].FormulaR1C1 = formula;
         }
 
-        // Do in this order: latest, second-latest, etc...
-        // campaignStatsDict should have one key for each Channel/SearchAccount
+        // Load monthly rows first, then weekly.
+        // Load weeks/months in this order: latest, second-latest, etc...
+        public void LoadMonthlyCampaignPerfStats<T>(Dictionary<string, IEnumerable<T>> campaignStatsDict, IList<string> propertyNames, DateTime monthStart, bool collapse)
+        {
+            int startRowTemplate = StartRow_MonthlyCampaignPerfTemplate + NumWeekRowsAdded + NumMonthRowsAdded;
+            LoadCampaignPerfStats<T>(campaignStatsDict, propertyNames, monthStart, collapse, startRowTemplate, true);
+        }
         public void LoadWeeklyCampaignPerfStats<T>(Dictionary<string, IEnumerable<T>> campaignStatsDict, IList<string> propertyNames, DateTime weekStart, bool collapse)
         {
             int startRowTemplate = StartRow_WeeklyCampaignPerfTemplate + NumWeekRowsAdded + NumMonthRowsAdded;
             LoadCampaignPerfStats<T>(campaignStatsDict, propertyNames, weekStart, collapse, startRowTemplate, false);
         }
         // Load stats for one week/month (with subcategories: channels/searchaccounts)
+        // campaignStatsDict should have one key for each Channel/SearchAccount
         public void LoadCampaignPerfStats<T>(Dictionary<string, IEnumerable<T>> campaignStatsDict, IList<string> propertyNames, DateTime startDate, bool collapse,
                                              int startRowTemplate, bool monthlyNotWeekly)
         {
@@ -339,7 +355,13 @@ namespace DAGenerators.Spreadsheets
             }
         }
 
-        public void RemoveWeeklyChannelRollupStatsTemplate()
+        public void RemoveMonthlyCampaignPerfStatsTemplate()
+        {
+            int startRowTemplate = StartRow_MonthlyCampaignPerfTemplate + NumWeekRowsAdded + NumMonthRowsAdded;
+            WS.DeleteRowZ(startRowTemplate, NumRows_CampaignPerfTemplate);
+            // TODO? Update drawings and ranges - like in InsertRowZ() ?
+        }
+        public void RemoveWeeklyCampaignPerfStatsTemplate()
         {
             int startRowTemplate = StartRow_WeeklyCampaignPerfTemplate + NumWeekRowsAdded + NumMonthRowsAdded;
             WS.DeleteRowZ(startRowTemplate, NumRows_CampaignPerfTemplate);

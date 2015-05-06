@@ -669,7 +669,7 @@ namespace ClientPortal.Data.Services
         }
 
         // Get a SearchStat summary for each device
-        public IQueryable<SearchStat> GetDeviceStats(SearchProfile sp, DateTime start, DateTime end)
+        public IQueryable<SearchStat> GetDeviceStats(SearchProfile sp, DateTime start, DateTime end, bool showingCassConvs)
         {
             var searchCampaigns = GetSearchCampaigns(null, sp.SearchProfileId, null, null, null);
             var stats = GetSearchDailySummaries(searchCampaigns, null, start, end, true)
@@ -690,7 +690,7 @@ namespace ClientPortal.Data.Services
                     Revenue = g.Sum(s => s.Revenue),
                     Cost = g.Sum(s => s.Cost)
                 })
-                .ToList().Where(s => !s.AllZeros()).OrderBy(s => s.Title);
+                .ToList().Where(s => !s.AllZeros(showingCassConvs)).OrderBy(s => s.Title);
 
             // Assumption- that there aren't any campaigns that have calls but no other stats for this time period
             if (sp.ShowCalls)
@@ -770,7 +770,7 @@ namespace ClientPortal.Data.Services
         }
 
         // Get a SearchStat summary for each individual campaign (or if breakdown, one for each Network/Device combo)
-        public IQueryable<SearchStat> GetCampaignStats(SearchProfile sp, string channel, DateTime? start, DateTime? end, bool breakdown)
+        public IQueryable<SearchStat> GetCampaignStats(SearchProfile sp, string channel, DateTime? start, DateTime? end, bool breakdown, bool showingCassConvs)
         {
             if (!start.HasValue)
                 start = new DateTime(DateTime.Today.Year, 1, 1);
@@ -811,15 +811,15 @@ namespace ClientPortal.Data.Services
                         searchAccountId = searchAccount.SearchAccountId;
                 }
             }
-            return GetCampaignStatsInner(sp.SearchProfileId, channel, searchAccountId, channelPrefix, device, start, end, breakdown, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru);
+            return GetCampaignStatsInner(sp.SearchProfileId, channel, searchAccountId, channelPrefix, device, start, end, breakdown, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru, showingCassConvs);
         }
 
-        public IQueryable<SearchStat> GetCampaignStats(SearchProfile sp, int searchAccountId, DateTime? start, DateTime? end, bool breakdown)
+        public IQueryable<SearchStat> GetCampaignStats(SearchProfile sp, int searchAccountId, DateTime? start, DateTime? end, bool breakdown, bool showingCassConvs)
         {
-            return GetCampaignStatsInner(null, null, searchAccountId, null, null, start, end, breakdown, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru);
+            return GetCampaignStatsInner(null, null, searchAccountId, null, null, start, end, breakdown, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru, showingCassConvs);
         }
 
-        private IQueryable<SearchStat> GetCampaignStatsInner(int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, DateTime? start, DateTime? end, bool breakdown, bool useAnalytics, bool includeCalls, decimal revPerViewThru)
+        private IQueryable<SearchStat> GetCampaignStatsInner(int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, DateTime? start, DateTime? end, bool breakdown, bool useAnalytics, bool includeCalls, decimal revPerViewThru, bool showingCassConvs)
         {
             var searchCampaigns = GetSearchCampaigns(null, searchProfileId, channel, searchAccountId, channelPrefix);
             var summaries = GetSearchDailySummaries(searchCampaigns, device, start, end, true).ToList();
@@ -969,7 +969,7 @@ namespace ClientPortal.Data.Services
                     }
                 }
             }
-            return stats.Where(s => !s.AllZeros()).OrderByDescending(s => s.Revenue);
+            return stats.Where(s => !s.AllZeros(showingCassConvs)).OrderByDescending(s => s.Revenue);
         }
 
         //public IQueryable<SearchStat> GetAdgroupStats()

@@ -118,10 +118,11 @@ namespace ClientPortal.Data.DTOs
             }
         }
 
-        public bool AllZeros() // maybe: have a parameter "includeCassConvs"
+        public bool AllZeros(bool checkCassConvs)
         {
-            return (Impressions == 0 && Clicks == 0 && Orders == 0 && ViewThrus == 0 && Revenue == 0 && Cost == 0 && Calls == 0);
-            // if we end up showing CassConvs in the portal, include this:  && CassConvs == 0 && CassConVal == 0
+            return (Impressions == 0 && Clicks == 0 && Orders == 0 && ViewThrus == 0 && Revenue == 0 && Cost == 0 && Calls == 0
+                    && (!checkCassConvs || (CassConvs == 0 && CassConVal == 0)));
+            // if we end up showing CassConvs in the portal, set checkCassConvs==true
             // ... in device breakdown, will produce a row showing Google CassConvs, with device=="All"
         }
 
