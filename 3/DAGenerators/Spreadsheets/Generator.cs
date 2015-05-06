@@ -140,7 +140,7 @@ namespace DAGenerators.Spreadsheets
                 {
                     var campaignStats = cpRepo.GetCampaignStats(searchProfile, searchAccount.SearchAccountId, periodStart, periodEnd, false, searchProfile.ShowCassConvs);
                     if (campaignStats.Any())
-                        campaignStatsDict[searchAccount.Name] = campaignStats;
+                        campaignStatsDict[searchAccount.Name] = SortCampaignStats(searchProfile, campaignStats);
                 }
             }
             else
@@ -149,10 +149,18 @@ namespace DAGenerators.Spreadsheets
                 var channels = campaignStats.Select(s => s.Channel).Distinct();
                 foreach (string channel in channels)
                 {
-                    campaignStatsDict[channel] = campaignStats.Where(s => s.Channel == channel);
-                }                               // order of campaigns?
+                    campaignStatsDict[channel] = SortCampaignStats(searchProfile, campaignStats.Where(s => s.Channel == channel));
+                }
             }
             return campaignStatsDict;
+        }
+
+        private static IQueryable<SearchStat> SortCampaignStats(SearchProfile searchProfile, IQueryable<SearchStat> campaignStats)
+        {
+            if (searchProfile.ShowRevenue)
+                return campaignStats.OrderByDescending(s => s.Revenue).ThenByDescending(s => s.Cost).ThenByDescending(s => s.Impressions);
+            else
+                return campaignStats; // already ordered by title (campaign name)
         }
 
         // DisposeResources when done with SearchReport?

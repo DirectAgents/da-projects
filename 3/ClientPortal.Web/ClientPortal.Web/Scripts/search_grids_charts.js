@@ -85,7 +85,7 @@
         else if (sort == 'clicks')
             args.sort = [{ field: 'Clicks', dir: 'desc' }, { field: 'Impressions', dir: 'desc' }];
         else if (sort == 'title')
-            args.sort = { field: 'Title', dir: 'asc' };
+            args.sort = [{ field: 'Channel', dir: 'asc' }, { field: 'Title', dir: 'asc' }];
         else
             args.sort = { field: 'Channel', dir: 'asc' }; // default (for weekly & monthly)
     }

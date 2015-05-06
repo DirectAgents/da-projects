@@ -7,7 +7,7 @@
     string filename = Model.SearchProfileName.Replace(" ", "") + "_" + DateTime.Today.ToString("yyyyMMdd") + ".xlsx";
 }
 
-<h3>Test Spreadsheet</h3>
+<h3>Generate Spreadsheet</h3>
 
 SearchProfile: @Model.SearchProfileName<br />
 Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)
@@ -17,7 +17,7 @@ Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)
 {
     @Html.ValidationSummary()
     <fieldset>
-        <legend>Generate Spreadsheet</legend>
+        <legend>Report Parameters</legend>
         @Html.HiddenFor(m => m.SearchProfileId)
         <table>
             <tr>

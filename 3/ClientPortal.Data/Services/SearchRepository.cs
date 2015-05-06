@@ -969,7 +969,7 @@ namespace ClientPortal.Data.Services
                     }
                 }
             }
-            return stats.Where(s => !s.AllZeros(showingCassConvs)).OrderByDescending(s => s.Revenue);
+            return stats.Where(s => !s.AllZeros(showingCassConvs)).OrderBy(s => s.Title);
         }
 
         //public IQueryable<SearchStat> GetAdgroupStats()

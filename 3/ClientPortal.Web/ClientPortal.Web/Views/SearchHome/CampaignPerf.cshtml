@@ -71,7 +71,7 @@
                 };
             },
             false, //don't group
-            '@(Model.SearchProfile.ShowRevenue ? "revenue" : "clicks")', //sort
+            '@(Model.SearchProfile.ShowRevenue ? "revenue" : "title")', //sort
             0); //default page size
 
     @if (Model.SearchProfile.ShowRevenue) {
