@@ -114,7 +114,7 @@ namespace DAGenerators.Spreadsheets
                 if (channelStatsDict.Keys.Any()) // TODO: if empty, somehow generate a row with zeros for this week
                 {
                     bool collapse = (i > 0);
-                    spreadsheet.LoadWeeklyChannelRollupStats(channelStatsDict, propertyNames, periodStart, collapse);
+                    spreadsheet.LoadWeeklyCampaignPerfStats(channelStatsDict, propertyNames, periodStart, collapse);
                 }
                 if (i + 1 < numWeeks)
                 {   // not the last week

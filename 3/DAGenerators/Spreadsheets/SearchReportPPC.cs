@@ -13,7 +13,7 @@ namespace DAGenerators.Spreadsheets
     public class SearchReportPPC : SpreadsheetBase
     {
         protected int Row_SummaryDate = 8;
-        protected int Row_StatsHeader = 11;
+        //protected int Row_StatsHeader = 11;
         private const int Row_ClientNameBottom = 24;
         private const int Row_WeeklyChart = 27;
 
@@ -32,9 +32,9 @@ namespace DAGenerators.Spreadsheets
         }
         protected int StartRow_YearOverYear = 20;
 
-        private const int StartRow_WeeklyChannelCampaignTemplate = 45;
-        private const int NumRows_WeeklyChannelCampaignTemplate = 3;
-        private const int NumRows_WeeklyChannelRollupTemplate = 2;
+        private const int StartRow_WeeklyCampaignPerfTemplate = 45;
+        private const int NumRows_CampaignPerfTemplate = 3;
+        private const int NumRows_CampaignPerfSubTemplate = 2;
 
         public Metric Metric_Clicks = new Metric(0, null, false, false);
         public Metric Metric_Impressions = new Metric(0, null, false, false);
@@ -71,7 +71,7 @@ namespace DAGenerators.Spreadsheets
             this.ExcelPackage = new ExcelPackage(fileInfo);
 
             SetReportDate(DateTime.Today);
-            SetColumnHeaders(); // do this after specifying which metrics are "shown"
+            //SetColumnHeaders(); // do this after specifying which metrics are "shown"
         }
 
         protected virtual void Setup()
@@ -110,15 +110,15 @@ namespace DAGenerators.Spreadsheets
         {
         }
 
-        public void SetColumnHeaders()
-        {
-            var metrics = GetMetrics(true);
-            foreach (var metric in metrics)
-            {
-                WS.Cells[Row_StatsHeader, metric.ColNum].Value = metric.DisplayName;
-            }
-            // Q: What about the headers under Monthly, YoY, Weekly Perf...?
-        }
+        //public void SetColumnHeaders()
+        //{
+        //    var metrics = GetMetrics(true);
+        //    foreach (var metric in metrics)
+        //    {
+        //        WS.Cells[Row_StatsHeader, metric.ColNum].Value = metric.DisplayName;
+        //    }
+        //    // Q: What about the headers under Monthly, YoY, Weekly Perf...?
+        //}
 
         public virtual void SetClientName(string clientName)
         {
@@ -241,74 +241,87 @@ namespace DAGenerators.Spreadsheets
         }
 
         // Do in this order: latest, second-latest, etc...
-        // channelStatsDict should have one key for each channel
-        public void LoadWeeklyChannelRollupStats<T>(Dictionary<string, IEnumerable<T>> channelStatsDict, IList<string> propertyNames, DateTime weekStart, bool collapse)
+        // campaignStatsDict should have one key for each Channel/SearchAccount
+        public void LoadWeeklyCampaignPerfStats<T>(Dictionary<string, IEnumerable<T>> campaignStatsDict, IList<string> propertyNames, DateTime weekStart, bool collapse)
         {
-            int startRowTemplate = StartRow_WeeklyChannelCampaignTemplate + NumWeekRowsAdded + NumMonthRowsAdded;
-            int startRowStats = startRowTemplate + NumRows_WeeklyChannelCampaignTemplate;
+            int startRowTemplate = StartRow_WeeklyCampaignPerfTemplate + NumWeekRowsAdded + NumMonthRowsAdded;
+            LoadCampaignPerfStats<T>(campaignStatsDict, propertyNames, weekStart, collapse, startRowTemplate, false);
+        }
+        // Load stats for one week/month (with subcategories: channels/searchaccounts)
+        public void LoadCampaignPerfStats<T>(Dictionary<string, IEnumerable<T>> campaignStatsDict, IList<string> propertyNames, DateTime startDate, bool collapse,
+                                             int startRowTemplate, bool monthlyNotWeekly)
+        {
+            int startRowStats = startRowTemplate + NumRows_CampaignPerfTemplate; // start below the template
             int numRowsAdded = 0;
             var nonComputedMetrics = GetNonComputedMetrics(true);
             string sumFormula;
 
             // Insert rows (below the template rows)
-            WS.InsertRowZ(startRowStats, NumRows_WeeklyChannelCampaignTemplate, startRowTemplate);
+            WS.InsertRowZ(startRowStats, NumRows_CampaignPerfTemplate, startRowTemplate);
 
             // Copy template rows (and paste just below them)
-            WS.Cells[startRowTemplate + ":" + (startRowTemplate + NumRows_WeeklyChannelCampaignTemplate - 1)]
-                .Copy(WS.Cells[startRowStats + ":" + (startRowStats + NumRows_WeeklyChannelCampaignTemplate - 1)]);
+            WS.Cells[startRowTemplate + ":" + (startRowTemplate + NumRows_CampaignPerfTemplate - 1)]
+                .Copy(WS.Cells[startRowStats + ":" + (startRowStats + NumRows_CampaignPerfTemplate - 1)]);
 
-            // Populate the rows for each channel...
-            var channelSummaryOffsets = new List<int>(); // used to generate grand total sums
+            // Populate the rows for each Channel/SearchAccount...
+            var subgroupSummaryOffsets = new List<int>(); // used to generate grand total sums
             int totalRollupRows = 0;
-            int startRowChannelRollupTemplate = startRowStats;
-            int startRowChannelRollup = startRowChannelRollupTemplate + NumRows_WeeklyChannelRollupTemplate;
-            var channelKeys = channelStatsDict.Keys.Where(k => k != "Total").OrderBy(k => k == "Google").ThenByDescending(k => k);
-            foreach (string channelKey in channelKeys) // in reverse order (so we end up with Google, then others alphabetically)
+            int startRowSubgroupTemplate = startRowStats;
+            int startRowSubgroupStats = startRowSubgroupTemplate + NumRows_CampaignPerfSubTemplate; // (below the template)
+            var subgroupKeys = campaignStatsDict.Keys.Where(k => k != "Total").OrderBy(k => k == "Google").ThenByDescending(k => k);
+            foreach (string subgroupKey in subgroupKeys) // in reverse order (so we end up with Google, then others alphabetically)
             {
-                int numCampaigns = channelStatsDict[channelKey].Count();
-                bool lastChannel = (channelKey == channelKeys.Last());
+                int numCampaigns = campaignStatsDict[subgroupKey].Count();
+                bool lastSubgroup = (subgroupKey == subgroupKeys.Last());
 
-                if (lastChannel)
+                if (lastSubgroup)
                 {
-                    // use the template for the last channel
-                    startRowChannelRollup = startRowChannelRollupTemplate;
+                    // use the template for the last subgroup
+                    startRowSubgroupStats = startRowSubgroupTemplate;
                 }
                 else
                 {
                     // insert rows and make a copy of the template
-                    WS.InsertRowZ(startRowChannelRollup, NumRows_WeeklyChannelRollupTemplate, startRowChannelRollupTemplate);
-                    numRowsAdded += NumRows_WeeklyChannelRollupTemplate;
+                    WS.InsertRowZ(startRowSubgroupStats, NumRows_CampaignPerfSubTemplate, startRowSubgroupTemplate);
+                    numRowsAdded += NumRows_CampaignPerfSubTemplate;
 
-                    WS.Cells[startRowChannelRollupTemplate + ":" + (startRowChannelRollupTemplate + NumRows_WeeklyChannelRollupTemplate - 1)]
-                        .Copy(WS.Cells[startRowChannelRollup + ":" + (startRowChannelRollup + NumRows_WeeklyChannelRollupTemplate - 1)]);
+                    WS.Cells[startRowSubgroupTemplate + ":" + (startRowSubgroupTemplate + NumRows_CampaignPerfSubTemplate - 1)]
+                        .Copy(WS.Cells[startRowSubgroupStats + ":" + (startRowSubgroupStats + NumRows_CampaignPerfSubTemplate - 1)]);
                 }
 
-                // populate the campaign rows for this channel
-                numRowsAdded += LoadWeeklyMonthlyStats(channelStatsDict[channelKey], propertyNames, startRowChannelRollup, NumRows_WeeklyChannelRollupTemplate - 1);
+                // populate the campaign rows for this subgroup
+                numRowsAdded += LoadWeeklyMonthlyStats(campaignStatsDict[subgroupKey], propertyNames, startRowSubgroupStats, NumRows_CampaignPerfSubTemplate - 1);
 
-                // set the channel title
-                int channelTotalRow = startRowChannelRollup + numCampaigns;
-                WS.Cells[channelTotalRow, 2].Value = channelKey;
+                // set the subgroup title
+                int subgroupTotalRow = startRowSubgroupStats + numCampaigns;
+                WS.Cells[subgroupTotalRow, 2].Value = subgroupKey;
 
-                // fill in channel sum formulas
+                // fill in subgroup sum formulas
                 sumFormula = String.Format("SUM(R[{0}]C:R[{1}]C)", -numCampaigns, -1);
                 foreach (var metric in nonComputedMetrics)
                 {
-                    WS.Cells[channelTotalRow, metric.ColNum].FormulaR1C1 = sumFormula;
+                    WS.Cells[subgroupTotalRow, metric.ColNum].FormulaR1C1 = sumFormula;
                 }
 
-                channelSummaryOffsets.Add(-1 - totalRollupRows);
-                totalRollupRows += numCampaigns + 1; // add one for the channel summary row
+                subgroupSummaryOffsets.Add(-1 - totalRollupRows);
+                totalRollupRows += numCampaigns + 1; // add one for the subgroup summary row
             }
 
             // Populate grand total row
+            string grandTotalLabel;
+            if (monthlyNotWeekly)
+                grandTotalLabel = startDate.ToString("MMMM yyyy") + " TOTALS";
+            else
+            {
+                var weekEnd = startDate.AddDays(6);
+                grandTotalLabel = String.Format("{0:M/d} - {1:M/d} TOTALS", startDate, weekEnd);
+            }
             int grandTotalRow = startRowStats + totalRollupRows;
-            var weekEnd = weekStart.AddDays(6);
-            WS.Cells[grandTotalRow, 2].Value = String.Format("{0:M/d} - {1:M/d} TOTALS", weekStart, weekEnd);
+            WS.Cells[grandTotalRow, 2].Value = grandTotalLabel;
 
             // grand total row sums
-            channelSummaryOffsets.Reverse();
-            sumFormula = "SUM(" + String.Join(",", channelSummaryOffsets.Select(offset => String.Format("R[{0}]C", offset))) + ")";
+            subgroupSummaryOffsets.Reverse();
+            sumFormula = "SUM(" + String.Join(",", subgroupSummaryOffsets.Select(offset => String.Format("R[{0}]C", offset))) + ")";
             foreach (var metric in nonComputedMetrics)
             {
                 WS.Cells[grandTotalRow, metric.ColNum].FormulaR1C1 = sumFormula;
@@ -328,8 +341,8 @@ namespace DAGenerators.Spreadsheets
 
         public void RemoveWeeklyChannelRollupStatsTemplate()
         {
-            int startRowTemplate = StartRow_WeeklyChannelCampaignTemplate + NumWeekRowsAdded + NumMonthRowsAdded;
-            WS.DeleteRowZ(startRowTemplate, NumRows_WeeklyChannelCampaignTemplate);
+            int startRowTemplate = StartRow_WeeklyCampaignPerfTemplate + NumWeekRowsAdded + NumMonthRowsAdded;
+            WS.DeleteRowZ(startRowTemplate, NumRows_CampaignPerfTemplate);
             // TODO? Update drawings and ranges - like in InsertRowZ() ?
         }
 
