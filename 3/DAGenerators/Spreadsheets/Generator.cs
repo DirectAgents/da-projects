@@ -61,8 +61,10 @@ namespace DAGenerators.Spreadsheets
             spreadsheet.LoadWeeklyStats(weeklyStats, propertyNames);
             spreadsheet.LoadMonthlyStats(monthlyStats, propertyNames);
 
-            bool chartWeeklyNotMonthly = (numWeeks > 0);
-            spreadsheet.CreateCharts(chartWeeklyNotMonthly);
+            if (weeklyStats.Count() > 0)
+                spreadsheet.CreateCharts(true);
+            else if (monthlyStats.Count() > 0)
+                spreadsheet.CreateCharts(false);
 
             // Year-Over-Year - for the most recent completed month
             DateTime today = DateTime.Today;
@@ -93,10 +95,9 @@ namespace DAGenerators.Spreadsheets
                     bool collapse = (i > 0);
                     spreadsheet.LoadMonthlyCampaignPerfStats(campaignStatsDict, propertyNames, periodStart, collapse);
                 }
-
                 periodStart = periodStart.AddMonths(-1);
             }
-            spreadsheet.RemoveMonthlyCampaignPerfStatsTemplate();
+            spreadsheet.CampaignPerfStatsCleanup(true);
 
             // Weekly campaign performance stats...
             periodStart = endDate; // Start with the week that includes endDate (could be a partial week)
@@ -116,10 +117,9 @@ namespace DAGenerators.Spreadsheets
                     bool collapse = (i > 0);
                     spreadsheet.LoadWeeklyCampaignPerfStats(campaignStatsDict, propertyNames, periodStart, collapse);
                 }
-
                 periodStart = periodStart.AddDays(-7);
             }
-            spreadsheet.RemoveWeeklyCampaignPerfStatsTemplate();
+            spreadsheet.CampaignPerfStatsCleanup(false);
 
             return spreadsheet;
         }

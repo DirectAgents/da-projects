@@ -167,7 +167,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return View(searchProfile);
         }
 
-        public ActionResult GenerateSpreadsheet(int searchProfileId, DateTime? endDate, int numWeeks = 8, int numMonths = 6, string filename = "report.xlsx")
+        public ActionResult GenerateSpreadsheet(int searchProfileId, DateTime? endDate, int numWeeks = 0, int numMonths = 0, string filename = "report.xlsx")
         {
             string templateFolder = ConfigurationManager.AppSettings["PATH_Search"];
             if (!endDate.HasValue)

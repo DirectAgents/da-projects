@@ -24,6 +24,8 @@ namespace DAGenerators.Spreadsheets
         private const int ChartHeight = 280;
 
         protected string TemplateFilename = "SearchPPCtemplate.xlsx";
+        protected int NumRows_SectionHeader = 2;
+
         protected int StartRow_Weekly = 12;
         protected int StartRow_Monthly = 16;
         protected bool WeeklyFirst
@@ -65,6 +67,9 @@ namespace DAGenerators.Spreadsheets
         protected int NumMonthsAdded { get; set; }
         protected int NumWeekRowsAdded { get; set; }  // not including template rows
         protected int NumMonthRowsAdded { get; set; } // not including template rows
+
+        protected int NumCampaignPerfWeeksAdded { get; set; }
+        protected int NumCampaignPerfMonthsAdded { get; set; }
 
         public void Setup(string templateFolder)
         {
@@ -129,13 +134,29 @@ namespace DAGenerators.Spreadsheets
 
         public virtual void LoadWeeklyStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
         {
-            NumWeekRowsAdded += LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Weekly + (WeeklyFirst ? 0 : NumMonthRowsAdded), 1);
-            NumWeeksAdded += stats.Count();
+            int blankRows = 1;
+            int startRow = StartRow_Weekly + (WeeklyFirst ? 0 : NumMonthRowsAdded);
+            NumWeekRowsAdded = LoadWeeklyMonthlyStats(stats, propertyNames, startRow, blankRows);
+            NumWeeksAdded = stats.Count();
+            if (NumWeeksAdded == 0)
+            {   // Delete the entire section, including blank row above
+                int rowsToDelete = NumRows_SectionHeader + 1;
+                WS.DeleteRowZ(startRow - rowsToDelete, rowsToDelete);
+                NumWeekRowsAdded -= rowsToDelete;
+            }
         }
         public virtual void LoadMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
         {
-            NumMonthRowsAdded += LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Monthly + (WeeklyFirst ? NumWeekRowsAdded : 0), 1);
-            NumMonthsAdded += stats.Count();
+            int blankRows = 1;
+            int startRow = StartRow_Monthly + (WeeklyFirst ? NumWeekRowsAdded : 0);
+            NumMonthRowsAdded = LoadWeeklyMonthlyStats(stats, propertyNames, startRow, blankRows);
+            NumMonthsAdded = stats.Count();
+            if (NumMonthsAdded == 0)
+            {   // Delete the entire section, including blank row above
+                int rowsToDelete = NumRows_SectionHeader + 1;
+                WS.DeleteRowZ(startRow - rowsToDelete, rowsToDelete);
+                NumMonthRowsAdded -= rowsToDelete;
+            }
         }
 
         // propertyNames for: title, clicks, impressions, orders, cost, revenue, calls, viewthrus, cassconvs, cassconval
@@ -240,7 +261,7 @@ namespace DAGenerators.Spreadsheets
                 WS.Cells[iRow, metric.ColNum].FormulaR1C1 = formula;
         }
 
-        // Load monthly rows first, then weekly.
+        // Note: Load monthly CampaignPerfStats first, then weekly.
         // Load weeks/months in this order: latest, second-latest, etc...
         public void LoadMonthlyCampaignPerfStats<T>(Dictionary<string, IEnumerable<T>> campaignStatsDict, IList<string> propertyNames, DateTime monthStart, bool collapse)
         {
@@ -262,16 +283,18 @@ namespace DAGenerators.Spreadsheets
             var nonComputedMetrics = GetNonComputedMetrics(true);
             string sumFormula;
 
-            // Insert rows (below the template rows)
+            // Insert rows (below the template)
             WS.InsertRowZ(startRowStats, NumRows_CampaignPerfTemplate, startRowTemplate);
 
             // Copy template rows (and paste just below them)
             WS.Cells[startRowTemplate + ":" + (startRowTemplate + NumRows_CampaignPerfTemplate - 1)]
                 .Copy(WS.Cells[startRowStats + ":" + (startRowStats + NumRows_CampaignPerfTemplate - 1)]);
 
-            // Populate the rows for each Channel/SearchAccount...
+            // Now we use the "copy" to fill in stats for this week/month. The template remains above.
+
+            // Populate the rows for each Subgroup (Channel/SearchAccount)...
             var subgroupSummaryOffsets = new List<int>(); // used to generate grand total sums
-            int totalRollupRows = 0;
+            int totalSubgroupRows = 0;
             int startRowSubgroupTemplate = startRowStats;
             int startRowSubgroupStats = startRowSubgroupTemplate + NumRows_CampaignPerfSubTemplate; // (below the template)
             var subgroupKeys = campaignStatsDict.Keys.Where(k => k != "Total").OrderBy(k => k == "Google").ThenByDescending(k => k);
@@ -309,8 +332,8 @@ namespace DAGenerators.Spreadsheets
                     WS.Cells[subgroupTotalRow, metric.ColNum].FormulaR1C1 = sumFormula;
                 }
 
-                subgroupSummaryOffsets.Add(-1 - totalRollupRows);
-                totalRollupRows += numCampaigns + 1; // add one for the subgroup summary row
+                subgroupSummaryOffsets.Add(-1 - totalSubgroupRows);
+                totalSubgroupRows += numCampaigns + 1; // add one for the subgroup summary row
             }
 
             // Populate grand total row
@@ -322,7 +345,7 @@ namespace DAGenerators.Spreadsheets
                 var weekEnd = startDate.AddDays(6);
                 grandTotalLabel = String.Format("{0:M/d} - {1:M/d} TOTALS", startDate, weekEnd);
             }
-            int grandTotalRow = startRowStats + totalRollupRows;
+            int grandTotalRow = startRowStats + totalSubgroupRows;
             WS.Cells[grandTotalRow, 2].Value = grandTotalLabel;
 
             // grand total row sums
@@ -343,18 +366,25 @@ namespace DAGenerators.Spreadsheets
                 for (int iRow = startRowStats; iRow < grandTotalRow; iRow++)
                     WS.Row(iRow).Collapsed = true;
             }
+
+            if (monthlyNotWeekly)
+                NumCampaignPerfMonthsAdded++;
+            else
+                NumCampaignPerfWeeksAdded++;
         }
 
-        public void RemoveMonthlyCampaignPerfStatsTemplate()
+        public void CampaignPerfStatsCleanup(bool monthlyNotWeekly)
         {
-            int startRowTemplate = StartRow_MonthlyCampaignPerfTemplate + NumWeekRowsAdded + NumMonthRowsAdded;
+            int startRowTemplate = (monthlyNotWeekly ? StartRow_MonthlyCampaignPerfTemplate : StartRow_WeeklyCampaignPerfTemplate)
+                    + NumWeekRowsAdded + NumMonthRowsAdded;
             WS.DeleteRowZ(startRowTemplate, NumRows_CampaignPerfTemplate);
-            // TODO? Update drawings and ranges - like in InsertRowZ() ?
-        }
-        public void RemoveWeeklyCampaignPerfStatsTemplate()
-        {
-            int startRowTemplate = StartRow_WeeklyCampaignPerfTemplate + NumWeekRowsAdded + NumMonthRowsAdded;
-            WS.DeleteRowZ(startRowTemplate, NumRows_CampaignPerfTemplate);
+
+            bool deleteSection = monthlyNotWeekly ? (NumCampaignPerfMonthsAdded == 0) : (NumCampaignPerfWeeksAdded == 0);
+            if (deleteSection)
+            {   // Delete the entire section, including blank row above
+                int rowsToDelete = NumRows_SectionHeader + 1;
+                WS.DeleteRowZ(startRowTemplate - rowsToDelete, rowsToDelete);
+            }
             // TODO? Update drawings and ranges - like in InsertRowZ() ?
         }
 
