@@ -15,7 +15,7 @@ namespace DAGenerators.Spreadsheets
         protected int Row_SummaryDate = 8;
         //protected int Row_StatsHeader = 11;
         private const int Row_ClientNameBottom = 24;
-        private const int Row_WeeklyChart = 27;
+        private const int Row_Charts = 27;
 
         private const int Col_StatsTitle = 2;
         private const int Col_LeftChart = 2;
@@ -62,6 +62,7 @@ namespace DAGenerators.Spreadsheets
 
         protected ExcelWorksheet WS { get { return this.ExcelPackage.Workbook.Worksheets[1]; } }
         protected int NumWeeksAdded { get; set; }
+        protected int NumMonthsAdded { get; set; }
         protected int NumWeekRowsAdded { get; set; }  // not including template rows
         protected int NumMonthRowsAdded { get; set; } // not including template rows
 
@@ -130,23 +131,12 @@ namespace DAGenerators.Spreadsheets
         {
             NumWeekRowsAdded += LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Weekly + (WeeklyFirst ? 0 : NumMonthRowsAdded), 1);
             NumWeeksAdded += stats.Count();
-            CreateWeeklyCharts();
         }
-        public virtual void CreateWeeklyCharts()
-        {
-            //CreateWeeklyChart(NumWeeksAdded, Metric_Revenue, Metric_Clicks);
-            CreateWeeklyChart(NumWeeksAdded, Metric_Revenue, Metric_ROAS);
-            CreateWeeklyChart(NumWeeksAdded, Metric_Orders, Metric_CPO, true);
-        }
-
         public virtual void LoadMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
         {
             NumMonthRowsAdded += LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Monthly + (WeeklyFirst ? NumWeekRowsAdded : 0), 1);
+            NumMonthsAdded += stats.Count();
         }
-        //public void LoadMonthlyCampaignStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
-        //{
-        //    LoadWeeklyMonthlyStats(stats, propertyNames, StartRow_Monthly + nummon
-        //}
 
         // propertyNames for: title, clicks, impressions, orders, cost, revenue, calls, viewthrus, cassconvs, cassconval
         // returns: # of rows added (in addition to blankRowsInTemplate); negative means blankRows deleted
@@ -368,30 +358,52 @@ namespace DAGenerators.Spreadsheets
             // TODO? Update drawings and ranges - like in InsertRowZ() ?
         }
 
-
-        protected void CreateWeeklyChart(int numWeeks, Metric metric1, Metric metric2, bool rightSide = false)
+        public virtual void CreateCharts(bool weeklyNotMonthly)
         {
-            var chart = WS.Drawings.AddChart("chartWeekly" + (rightSide ? "Right" : "Left"), eChartType.ColumnClustered);
-            chart.SetPosition(Row_WeeklyChart + NumWeekRowsAdded + NumMonthRowsAdded - 1, 0, (rightSide ? Col_RightChart : Col_LeftChart) - 1, 0); // row & column are 0-based
+            CreateChart(Metric_Revenue, Metric_ROAS, false, weeklyNotMonthly);
+            CreateChart(Metric_Orders, Metric_CPO, true, weeklyNotMonthly);
+        }
+        //protected void CreateWeeklyChart(Metric metric1, Metric metric2, bool rightSide = false)
+        //{
+        //    CreateChart(metric1, metric2, rightSide, true);
+        //}
+        //protected void CreateMonthlyChart(Metric metric1, Metric metric2, bool rightSide = false)
+        //{
+        //    CreateChart(metric1, metric2, rightSide, false);
+        //}
+        protected void CreateChart(Metric metric1, Metric metric2, bool rightSide, bool weeklyNotMonthly)
+        {
+            string typeWM = weeklyNotMonthly ? "Weekly" : "Monthly";
+            var chart = WS.Drawings.AddChart("chart" + typeWM + (rightSide ? "Right" : "Left"), eChartType.ColumnClustered);
+            chart.SetPosition(Row_Charts + NumWeekRowsAdded + NumMonthRowsAdded - 1, 0, (rightSide ? Col_RightChart : Col_LeftChart) - 1, 0); // row & column are 0-based
             chart.SetSize(ChartWidth, ChartHeight);
 
-            chart.Title.Text = "Weekly " + metric1.DisplayName + " vs. " + metric2.DisplayName;
+            chart.Title.Text = typeWM + " " + metric1.DisplayName + " vs. " + metric2.DisplayName;
             chart.Title.Font.Bold = true;
             //chart.Title.Anchor = eTextAnchoringType.Bottom;
             //chart.Title.AnchorCtr = false;
 
-            int startRow_Weekly = this.StartRow_Weekly + (WeeklyFirst ? 0 : NumMonthRowsAdded);
-
-            var series = chart.Series.Add(new ExcelAddress(startRow_Weekly, metric1.ColNum, startRow_Weekly + numWeeks - 1, metric1.ColNum).Address,
-                                          new ExcelAddress(startRow_Weekly, Col_StatsTitle, startRow_Weekly + numWeeks - 1, Col_StatsTitle).Address);
+            int startRow_Stats, numRows_Stats;
+            if (weeklyNotMonthly)
+            {
+                startRow_Stats = this.StartRow_Weekly + (WeeklyFirst ? 0 : NumMonthRowsAdded);
+                numRows_Stats = NumWeeksAdded;
+            }
+            else
+            {
+                startRow_Stats = this.StartRow_Monthly + (WeeklyFirst ? NumWeekRowsAdded : 0);
+                numRows_Stats = NumMonthsAdded;
+            }
+            var series = chart.Series.Add(new ExcelAddress(startRow_Stats, metric1.ColNum, startRow_Stats + numRows_Stats - 1, metric1.ColNum).Address,
+                                          new ExcelAddress(startRow_Stats, Col_StatsTitle, startRow_Stats + numRows_Stats - 1, Col_StatsTitle).Address);
             //series.HeaderAddress = new ExcelAddress(Row_StatsHeader, column1, Row_StatsHeader, column1);
             series.Header = metric1.DisplayName;
 
             var chartType2 = chart.PlotArea.ChartTypes.Add(eChartType.LineMarkers);
             chartType2.UseSecondaryAxis = true;
             chartType2.XAxis.Deleted = true;
-            var series2 = chartType2.Series.Add(new ExcelAddress(startRow_Weekly, metric2.ColNum, startRow_Weekly + numWeeks - 1, metric2.ColNum).Address,
-                                                new ExcelAddress(startRow_Weekly, Col_StatsTitle, startRow_Weekly + numWeeks - 1, Col_StatsTitle).Address);
+            var series2 = chartType2.Series.Add(new ExcelAddress(startRow_Stats, metric2.ColNum, startRow_Stats + numRows_Stats - 1, metric2.ColNum).Address,
+                                                new ExcelAddress(startRow_Stats, Col_StatsTitle, startRow_Stats + numRows_Stats - 1, Col_StatsTitle).Address);
             //series2.HeaderAddress = new ExcelAddress(Row_StatsHeader, column2, Row_StatsHeader, column2);
             series2.Header = metric2.DisplayName;
 

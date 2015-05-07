@@ -55,12 +55,14 @@ namespace DAGenerators.Spreadsheets
             spreadsheet.SetReportDate(endDate);
             spreadsheet.SetClientName(searchProfile.SearchProfileName);
 
-            var monthlyStats = cpRepo.GetMonthStats(searchProfile, numMonths, endDate);
-            var weeklyStats = cpRepo.GetWeekStats(searchProfile, numWeeks, endDate);
-
             var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue", "Calls", "ViewThrus", "CassConvs", "CassConVal" };
-            spreadsheet.LoadMonthlyStats(monthlyStats, propertyNames);
+            var weeklyStats = cpRepo.GetWeekStats(searchProfile, numWeeks, endDate);
+            var monthlyStats = cpRepo.GetMonthStats(searchProfile, numMonths, endDate);
             spreadsheet.LoadWeeklyStats(weeklyStats, propertyNames);
+            spreadsheet.LoadMonthlyStats(monthlyStats, propertyNames);
+
+            bool chartWeeklyNotMonthly = (numWeeks > 0);
+            spreadsheet.CreateCharts(chartWeeklyNotMonthly);
 
             // Year-Over-Year - for the most recent completed month
             DateTime today = DateTime.Today;

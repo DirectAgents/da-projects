@@ -17,10 +17,10 @@ namespace DAGenerators.Spreadsheets
             Metric_OrderRate = new Metric(10, "Conv Rate", true);
         }
 
-        public override void CreateWeeklyCharts()
+        public override void CreateCharts(bool weeklyNotMonthly)
         {
-            CreateWeeklyChart(NumWeeksAdded, Metric_CTR, Metric_CPC);
-            CreateWeeklyChart(NumWeeksAdded, Metric_Orders, Metric_CPL, true);
+            CreateChart(Metric_CTR, Metric_CPC, false, weeklyNotMonthly);
+            CreateChart(Metric_Orders, Metric_CPL, true, weeklyNotMonthly);
         }
     }
 
@@ -42,10 +42,10 @@ namespace DAGenerators.Spreadsheets
             Metric_OrderRate = new Metric(12, "Conv Rate", true);
         }
 
-        public override void CreateWeeklyCharts()
+        public override void CreateCharts(bool weeklyNotMonthly)
         {
-            CreateWeeklyChart(NumWeeksAdded, Metric_CTR, Metric_CPC);
-            CreateWeeklyChart(NumWeeksAdded, Metric_TotalLeads, Metric_CPL, true);
+            CreateChart(Metric_CTR, Metric_CPC, false, weeklyNotMonthly);
+            CreateChart(Metric_TotalLeads, Metric_CPL, true, weeklyNotMonthly);
         }
     }
 }
