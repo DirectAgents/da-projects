@@ -263,19 +263,19 @@ namespace DAGenerators.Spreadsheets
 
         // Note: Load monthly CampaignPerfStats first, then weekly.
         // Load weeks/months in this order: latest, second-latest, etc...
-        public void LoadMonthlyCampaignPerfStats<T>(Dictionary<string, IEnumerable<T>> campaignStatsDict, IList<string> propertyNames, DateTime monthStart, bool collapse)
+        public void LoadMonthlyCampaignPerfStats<T>(Dictionary<string, IEnumerable<T>> campaignStatsDict, IList<string> propertyNames, bool collapse, DateTime monthStart, DateTime monthEnd)
         {
             int startRowTemplate = StartRow_MonthlyCampaignPerfTemplate + NumWeekRowsAdded + NumMonthRowsAdded;
-            LoadCampaignPerfStats<T>(campaignStatsDict, propertyNames, monthStart, collapse, startRowTemplate, true);
+            LoadCampaignPerfStats<T>(campaignStatsDict, propertyNames, collapse, monthStart, monthEnd, startRowTemplate, true);
         }
-        public void LoadWeeklyCampaignPerfStats<T>(Dictionary<string, IEnumerable<T>> campaignStatsDict, IList<string> propertyNames, DateTime weekStart, bool collapse)
+        public void LoadWeeklyCampaignPerfStats<T>(Dictionary<string, IEnumerable<T>> campaignStatsDict, IList<string> propertyNames, bool collapse, DateTime weekStart, DateTime weekEnd)
         {
             int startRowTemplate = StartRow_WeeklyCampaignPerfTemplate + NumWeekRowsAdded + NumMonthRowsAdded;
-            LoadCampaignPerfStats<T>(campaignStatsDict, propertyNames, weekStart, collapse, startRowTemplate, false);
+            LoadCampaignPerfStats<T>(campaignStatsDict, propertyNames, collapse, weekStart, weekEnd, startRowTemplate, false);
         }
         // Load stats for one week/month (with subcategories: channels/searchaccounts)
         // campaignStatsDict should have one key for each Channel/SearchAccount
-        public void LoadCampaignPerfStats<T>(Dictionary<string, IEnumerable<T>> campaignStatsDict, IList<string> propertyNames, DateTime startDate, bool collapse,
+        public void LoadCampaignPerfStats<T>(Dictionary<string, IEnumerable<T>> campaignStatsDict, IList<string> propertyNames, bool collapse, DateTime startDate, DateTime endDate,
                                              int startRowTemplate, bool monthlyNotWeekly)
         {
             int startRowStats = startRowTemplate + NumRows_CampaignPerfTemplate; // start below the template
@@ -339,11 +339,14 @@ namespace DAGenerators.Spreadsheets
             // Populate grand total row
             string grandTotalLabel;
             if (monthlyNotWeekly)
-                grandTotalLabel = startDate.ToString("MMMM yyyy") + " TOTALS";
+            {
+                DateTime fullMonthEnd = startDate.AddMonths(1).AddDays(-1);
+                string extra = (endDate == fullMonthEnd) ? "" : " (partial)";
+                grandTotalLabel = startDate.ToString("MMMM yyyy") + " TOTALS" + extra;
+            }
             else
             {
-                var weekEnd = startDate.AddDays(6);
-                grandTotalLabel = String.Format("{0:M/d} - {1:M/d} TOTALS", startDate, weekEnd);
+                grandTotalLabel = String.Format("{0:M/d} - {1:M/d} TOTALS", startDate, endDate);
             }
             int grandTotalRow = startRowStats + totalSubgroupRows;
             WS.Cells[grandTotalRow, 2].Value = grandTotalLabel;

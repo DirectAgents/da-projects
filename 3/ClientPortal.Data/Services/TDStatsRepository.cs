@@ -319,6 +319,9 @@ namespace ClientPortal.Data.Services
                 .Select(g =>
                 new RangeStat
                 {
+                    //TODO: what if end is the last day of the month, but Max(Date) is not?
+                    //      (e.g. no DailySummaries on the last day of the month for some reason)
+                    //      RangeStat.Days and anything based on that would be off
                     MonthByMaxDate = g.Max(s => s.Date),
                     Impressions = g.Sum(s => s.Impressions),
                     Clicks = g.Sum(s => s.Clicks),

@@ -55,6 +55,8 @@ namespace DAGenerators.Spreadsheets
             spreadsheet.SetReportDate(endDate);
             spreadsheet.SetClientName(searchProfile.SearchProfileName);
 
+            bool partialMonth = (endDate.AddDays(1).Day > 1); // it's a full month if the day after endDate is the 1st
+
             var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue", "Calls", "ViewThrus", "CassConvs", "CassConVal" };
             var weeklyStats = cpRepo.GetWeekStats(searchProfile, numWeeks, endDate);
             var monthlyStats = cpRepo.GetMonthStats(searchProfile, numMonths, endDate);
@@ -67,8 +69,7 @@ namespace DAGenerators.Spreadsheets
                 spreadsheet.CreateCharts(false);
 
             // Year-Over-Year - for the most recent completed month
-            DateTime today = DateTime.Today;
-            DateTime monthStart = new DateTime(today.Year, today.Month, 1);
+            DateTime monthStart = new DateTime(endDate.Year, endDate.Month, 1); // temp value
             DateTime monthEnd = monthStart.AddDays(-1);
             monthStart = monthStart.AddMonths(-1);
 
@@ -86,15 +87,17 @@ namespace DAGenerators.Spreadsheets
             // Monthly campaign performance stats...
             // start with the most recent and go back the number of months specified
             var periodStart = new DateTime(endDate.Year, endDate.Month, 1); // (the first could be a partial month)
+            var periodEnd = endDate;
             for (int i = 0; i < numMonths; i++)
             {
-                var campaignStatsDict = GetOneCampaignStatsDict(cpRepo, searchProfile, periodStart, true);
+                var campaignStatsDict = GetOneCampaignStatsDict(cpRepo, searchProfile, periodStart, periodEnd);
 
                 if (campaignStatsDict.Keys.Any()) // TODO: if empty, somehow generate a row with zeros for this week
                 {
                     bool collapse = (i > 0);
-                    spreadsheet.LoadMonthlyCampaignPerfStats(campaignStatsDict, propertyNames, periodStart, collapse);
+                    spreadsheet.LoadMonthlyCampaignPerfStats(campaignStatsDict, propertyNames, collapse, periodStart, periodEnd);
                 }
+                periodEnd = periodStart.AddDays(-1);
                 periodStart = periodStart.AddMonths(-1);
             }
             spreadsheet.CampaignPerfStatsCleanup(true);
@@ -103,20 +106,22 @@ namespace DAGenerators.Spreadsheets
             periodStart = endDate; // Start with the week that includes endDate (could be a partial week)
             while (periodStart.DayOfWeek != (DayOfWeek)searchProfile.StartDayOfWeek)
                 periodStart = periodStart.AddDays(-1);
+            periodEnd = endDate;
 
-            spreadsheet.SetReportingPeriod(periodStart, periodStart.AddDays(6)); // currently just used for Teacher Express template
+            spreadsheet.SetReportingPeriod(periodStart, periodEnd); // currently just used for Teacher Express template
             // TODO: implement showing reporting period as latest week or latest month
 
             // Load the weekly campaign stats, starting with the most recent and going back the number of weeks specified
             for (int i = 0; i < numWeeks; i++)
             {
-                var campaignStatsDict = GetOneCampaignStatsDict(cpRepo, searchProfile, periodStart, false);
+                var campaignStatsDict = GetOneCampaignStatsDict(cpRepo, searchProfile, periodStart, periodEnd);
 
                 if (campaignStatsDict.Keys.Any()) // TODO: if empty, somehow generate a row with zeros for this week
                 {
                     bool collapse = (i > 0);
-                    spreadsheet.LoadWeeklyCampaignPerfStats(campaignStatsDict, propertyNames, periodStart, collapse);
+                    spreadsheet.LoadWeeklyCampaignPerfStats(campaignStatsDict, propertyNames, collapse, periodStart, periodEnd);
                 }
+                periodEnd = periodStart.AddDays(-1);
                 periodStart = periodStart.AddDays(-7);
             }
             spreadsheet.CampaignPerfStatsCleanup(false);
@@ -124,15 +129,9 @@ namespace DAGenerators.Spreadsheets
             return spreadsheet;
         }
 
-        // Get stats for one week/month - grouped by channel or searchAccount
-        private static Dictionary<string, IEnumerable<SearchStat>> GetOneCampaignStatsDict(IClientPortalRepository cpRepo, SearchProfile searchProfile, DateTime periodStart, bool monthlyNotWeekly)
+        // Get stats for one week/month/etc - grouped by channel or searchAccount
+        private static Dictionary<string, IEnumerable<SearchStat>> GetOneCampaignStatsDict(IClientPortalRepository cpRepo, SearchProfile searchProfile, DateTime periodStart, DateTime periodEnd)
         {
-            DateTime periodEnd;
-            if (monthlyNotWeekly)
-                periodEnd = periodStart.AddMonths(1).AddDays(-1);
-            else
-                periodEnd = periodStart.AddDays(6);
-
             var campaignStatsDict = new Dictionary<string, IEnumerable<SearchStat>>();
 
             int numChannels = searchProfile.SearchAccounts.Select(sa => sa.Channel).Distinct().Count();

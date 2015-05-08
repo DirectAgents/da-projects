@@ -591,6 +591,9 @@ namespace ClientPortal.Data.Services
                 .Select(g =>
                 new SearchStat
                 {
+                    //Issue?: what if end is the last day of the month, but Max(Date) is not?
+                    //        (e.g. no DailySummaries on the last day of the month for some reason)
+                    //        RangeStat.Days and OrdersPerDay would be off
                     MonthByMaxDate = g.Max(s => s.Date),
                     Impressions = g.Sum(s => s.Impressions),
                     Clicks = g.Sum(s => s.Clicks),
@@ -662,7 +665,17 @@ namespace ClientPortal.Data.Services
                          });
             }
 
-            return stats.OrderBy(s => s.StartDate);
+            var orderedStats = stats.ToList().OrderBy(s => s.EndDate);
+
+            // check for partial month - if "end" is not the last of the month
+            if (end.AddDays(1).Day > 1)
+            {   // Essentially, check if there were any stats at all for the partial month
+                var lastStat = orderedStats.Last();
+                var monthStart = lastStat.StartDate;
+                if (end.Year == monthStart.Year && end.Month == monthStart.Month)
+                    lastStat.Title = lastStat.Title + " (partial)";
+            }
+            return orderedStats.AsQueryable();
         }
 
         // Get a SearchStat summary for each device
