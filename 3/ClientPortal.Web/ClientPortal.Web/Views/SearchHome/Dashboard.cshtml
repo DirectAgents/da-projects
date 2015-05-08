@@ -4,6 +4,9 @@
     <div class="large-12 columns">
         <div class="searchpanel" id="weeksumOuter">
             <b>Weekly Summary</b>
+            &nbsp;&nbsp;&nbsp;
+            Show: <input id="numweeksInput" value="8" /> weeks
+            <a class="button paddedbutton" href="#" onclick="RefreshGrid('weeksum'); return false">Refresh</a>
             <a class="button paddedbutton" style="float: right" href="#" onclick="ExportWeekSumCSV(); return false">Export CSV</a>
             <div id="weeksumGrid" style="margin-top: 10px"></div>
         </div>
@@ -29,7 +32,21 @@
 
 <script>
     $(function () {
-        var weeksumDS = CreateSummaryDataSource('@Url.Action("WeekSumData", "SearchReports")', null, false, 'nosort', 0);
+        $('#numweeksInput').kendoNumericTextBox({
+            decimals: 0,
+            format: 'n0',
+            min: 1
+        });
+        $('#numweeksInput').data('kendoNumericTextBox').wrapper.width(65);
+
+        var weeksumDS = CreateSummaryDataSource(
+            '@Url.Action("WeekSumData", "SearchReports")',
+            function() {
+                return { numweeks: $('#numweeksInput').val() };
+            },
+            false, //don't group
+            'nosort',
+            0); //default page size
 
     @if (Model.SearchProfile.ShowRevenue) {
         <text>CreateSummaryGrid(weeksumDS, $('#weeksumGrid'), 300, 'Week', 10, 2, true, false, false, DetailInitWrapperWM, @(Model.SearchProfile.ShowViewThrus ? "true" : "false"));</text>

@@ -4,6 +4,9 @@
     <div class="large-12 columns">
         <div class="searchpanel" id="monthsumOuter">
             <b>Monthly Summary</b>
+            &nbsp;&nbsp;&nbsp;
+            Show: <input id="nummonthsInput" value="6" /> months
+            <a class="button paddedbutton" href="#" onclick="RefreshGrid('monthsum'); return false">Refresh</a>
             <a class="button paddedbutton" style="float: right" href="#" onclick="ExportMonthSumCSV(); return false">Export CSV</a>
             <div id="monthsumGrid" style="margin-top: 10px"></div>
         </div>
@@ -29,7 +32,21 @@
 
 <script>
     $(function () {
-        var monthsumDS = CreateSummaryDataSource('@Url.Action("MonthSumData", "SearchReports")', null, false, 'nosort', 0);
+        $('#nummonthsInput').kendoNumericTextBox({
+            decimals: 0,
+            format: 'n0',
+            min: 1
+        });
+        $('#nummonthsInput').data('kendoNumericTextBox').wrapper.width(65);
+
+        var monthsumDS = CreateSummaryDataSource(
+            '@Url.Action("MonthSumData", "SearchReports")',
+            function() {
+                return { nummonths: $('#nummonthsInput').val() };
+            },
+            false, //don't group
+            'nosort',
+            0); //default page size
 
     @if (Model.SearchProfile.ShowRevenue) {
         <text>CreateSummaryGrid(monthsumDS, $('#monthsumGrid'), 300, 'Month', 10, 2, true, false, false, DetailInitWrapperWM, @(Model.SearchProfile.ShowViewThrus ? "true" : "false"));</text>

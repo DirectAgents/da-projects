@@ -297,19 +297,16 @@ namespace ClientPortal.Data.Services
 
             if (!endDate.HasValue)
             {
-                // Start with yesterday and go back until it's the end of the latest full week
+                // Start with yesterday and see if it's the end of a week; if not, go back until it is
                 endDate = DateTime.Today.AddDays(-1);
                 while (endDate.Value.AddDays(1).DayOfWeek != startDayOfWeek)
                     endDate = endDate.Value.AddDays(-1);
-            }
+            }   // We are now at the end of the most recent full week
 
-            // Go back X weeks from endDate, then forward 1 day, so it's the right number of weeks, inclusive of start and endDate
-            DateTime startDate = endDate.Value.AddDays(-7 * numWeeks + 1);
-
-            // Now move start date back to the closest startDayOfWeek (there may be a partial week now, at the end)
-            // (Will only apply if endDate was set to a day other than at the end of the week)
-            while (startDate.DayOfWeek != startDayOfWeek)
+            DateTime startDate = endDate.Value;
+            while (startDate.DayOfWeek != startDayOfWeek) // go to the beginning of the week
                 startDate = startDate.AddDays(-1);
+            startDate = startDate.AddDays(-7 * (numWeeks - 1)); // then back additional weeks, as needed
 
             var searchCampaigns =
                 GetSearchCampaigns(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix);

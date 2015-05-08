@@ -4,6 +4,9 @@
     <div class="large-12 columns">
         <div class="searchpanel" id="channelperfOuter">
             <b>Channel Performance</b>
+            &nbsp;&nbsp;&nbsp;
+            Show: <input id="numweeksChannelPerfInput" value="8" /> weeks
+            <a class="button paddedbutton" href="#" onclick="RefreshGrid('channelperf'); return false">Refresh</a>
             <a class="button paddedbutton" style="float: right" href="#" onclick="ExportChannelPerfCSV(); return false">Export CSV</a>
             <div id="channelperfGrid" style="margin-top: 10px"></div>
         </div>
@@ -18,7 +21,21 @@
 
 <script>
     $(function () {
-        var channelperfDS = CreateSummaryDataSource('@Url.Action("ChannelPerfData", "SearchReports")', null, true, 'nosort', 0);
+        $('#numweeksChannelPerfInput').kendoNumericTextBox({
+            decimals: 0,
+            format: 'n0',
+            min: 1
+        });
+        $('#numweeksChannelPerfInput').data('kendoNumericTextBox').wrapper.width(65);
+
+        var channelperfDS = CreateSummaryDataSource(
+            '@Url.Action("ChannelPerfData", "SearchReports")',
+            function() {
+                return { numweeks: $('#numweeksChannelPerfInput').val() };
+            },
+            true, // group
+            'nosort',
+            0); //default page size
 
     @if (Model.SearchProfile.ShowRevenue) {
         <text>CreateSummaryGrid(channelperfDS, $('#channelperfGrid'), 550, 'Channel', 17, 2, false, false, false, DetailInitWrapper, @(Model.SearchProfile.ShowViewThrus ? "true" : "false"));</text>
