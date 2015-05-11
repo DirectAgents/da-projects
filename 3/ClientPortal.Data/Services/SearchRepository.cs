@@ -713,13 +713,17 @@ namespace ClientPortal.Data.Services
                         googleCampaigns = GetSearchCampaigns(null, sp.SearchProfileId, "Google", null, null);
                         var googleCampaignIds = googleCampaigns.Select(c => c.SearchCampaignId).ToList();
                         var nonGoogleCampaigns = searchCampaigns.Where(c => !googleCampaignIds.Contains(c.SearchCampaignId));
-                        searchStat.Calls = GetCallDailySummaries(nonGoogleCampaigns, start, end, true).Sum(cds => cds.Calls);
+                        var cds = GetCallDailySummaries(nonGoogleCampaigns, start, end, true);
+                        if (cds.Any())
+                            searchStat.Calls = cds.Sum(s => s.Calls);
                     }
                     else if (searchStat.Title == "Mobile")
                     {
                         if (googleCampaigns != null) //means there were non-Google stats (set above; "." comes first)
                             searchCampaigns = googleCampaigns;
-                        searchStat.Calls = GetCallDailySummaries(searchCampaigns, start, end, true).Sum(cds => cds.Calls);
+                        var cds = GetCallDailySummaries(searchCampaigns, start, end, true);
+                        if (cds.Any())
+                            searchStat.Calls = cds.Sum(s => s.Calls);
                     }
                 }
             } // Note: searchCampaigns may have been altered at this point; consider putting the above in a GetCallStats method

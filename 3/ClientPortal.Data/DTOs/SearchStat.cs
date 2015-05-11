@@ -29,7 +29,90 @@ namespace ClientPortal.Data.DTOs
         public decimal CPL { get; set; }
     }
 
-    public class SearchStat
+    public class SearchStatVals
+    {
+        public bool AllZeros(bool checkCassConvs)
+        {
+            return (Impressions == 0 && Clicks == 0 && Orders == 0 && ViewThrus == 0 && Revenue == 0 && Cost == 0 && Calls == 0
+                    && (!checkCassConvs || (CassConvs == 0 && CassConVal == 0)));
+            // if we end up showing CassConvs in the portal, set checkCassConvs==true
+            // ... in device breakdown, will produce a row showing Google CassConvs, with device=="All"
+        }
+
+        public int Impressions { get; set; }
+        public int Clicks { get; set; }
+        public int Orders { get; set; } // also used for Leads
+        public int ViewThrus { get; set; }
+
+        public decimal RevPerViewThru { set; private get; }
+        public decimal ViewThruRev
+        {
+            get { return ViewThrus * RevPerViewThru; }
+        }
+
+        public int CassConvs { get; set; }
+        public double CassConVal { get; set; }
+
+        public decimal Revenue { get; set; }
+        public decimal Cost { get; set; }
+
+        //private readonly int _calls;
+        //public int Calls { get { return _calls; } }
+        public int Calls { get; set; }
+        public int TotalLeads
+        {
+            get { return Orders + Calls; }
+        }
+
+        public decimal OrderRate // TODO: replace this everywhere with ConvRate, then remove this?
+        {
+            get { return Clicks == 0 ? 0 : Math.Round((decimal)100 * Orders / Clicks, 2); }
+        }
+        public decimal ConvRate
+        {
+            get { return Clicks == 0 ? 0 : Math.Round((decimal)100 * TotalLeads / Clicks, 2); }
+        }
+
+        public decimal CPO
+        {
+            get { return Orders == 0 ? 0 : Math.Round(Cost / Orders, 2); }
+        }
+        public decimal CPL
+        {
+            get { return TotalLeads == 0 ? 0 : Math.Round(Cost / TotalLeads, 2); }
+        }
+
+        //public int ROI
+        //{
+        //    get { return Cost == 0 ? 0 : (int)Math.Round(100 * Revenue / Cost) - 100; }
+        //}
+        public int ROAS
+        {
+            get { return Cost == 0 ? 0 : (int)Math.Round(100 * Revenue / Cost); }
+        }
+        public decimal Margin
+        {
+            get { return Revenue - Cost; }
+        }
+        public decimal RevenuePerOrder
+        {
+            get { return Orders == 0 ? 0 : Math.Round(Revenue / Orders, 2); }
+        }
+        public decimal CPC
+        {
+            get { return Clicks == 0 ? 0 : Math.Round(Cost / Clicks, 2); }
+        }
+        public decimal CTR
+        {
+            get { return Impressions == 0 ? 0 : Math.Round((decimal)100 * Clicks / Impressions, 2); }
+        }
+        //public decimal OrdersPerDay
+        //{
+        //    get { return Days == 0 ? 0 : Math.Round((decimal)Orders / Days, 2); }
+        //}
+    }
+
+    public class SearchStat : SearchStatVals
     {
         public string Campaign { get; set; }
         public string Channel { get; set; }
@@ -118,83 +201,7 @@ namespace ClientPortal.Data.DTOs
             }
         }
 
-        public bool AllZeros(bool checkCassConvs)
-        {
-            return (Impressions == 0 && Clicks == 0 && Orders == 0 && ViewThrus == 0 && Revenue == 0 && Cost == 0 && Calls == 0
-                    && (!checkCassConvs || (CassConvs == 0 && CassConVal == 0)));
-            // if we end up showing CassConvs in the portal, set checkCassConvs==true
-            // ... in device breakdown, will produce a row showing Google CassConvs, with device=="All"
-        }
-
-        public int Impressions { get; set; }
-        public int Clicks { get; set; }
-        public int Orders { get; set; } // also used for Leads
-        public int ViewThrus { get; set; }
-
-        public decimal RevPerViewThru { set; private get; }
-        public decimal ViewThruRev
-        {
-            get { return ViewThrus * RevPerViewThru; }
-        }
-
-        public int CassConvs { get; set; }
-        public double CassConVal { get; set; }
-
-        public decimal Revenue { get; set; }
-        public decimal Cost { get; set; }
-
-        public int Calls { get; set; }
-        public int TotalLeads
-        {
-            get { return Orders + Calls; }
-        }
-
-        public decimal OrderRate // TODO: replace this everywhere with ConvRate, then remove this?
-        {
-            get { return Clicks == 0 ? 0 : Math.Round((decimal)100 * Orders / Clicks, 2); }
-        }
-        public decimal ConvRate
-        {
-            get { return Clicks == 0 ? 0 : Math.Round((decimal)100 * TotalLeads / Clicks, 2); }
-        }
-
-        public decimal CPO
-        {
-            get { return Orders == 0 ? 0 : Math.Round(Cost / Orders, 2); }
-        }
-        public decimal CPL
-        {
-            get { return TotalLeads == 0 ? 0 : Math.Round(Cost / TotalLeads, 2); }
-        }
-
-        //public int ROI
-        //{
-        //    get { return Cost == 0 ? 0 : (int)Math.Round(100 * Revenue / Cost) - 100; }
-        //}
-        public int ROAS
-        {
-            get { return Cost == 0 ? 0 : (int)Math.Round(100 * Revenue / Cost); }
-        }
-        public decimal Margin
-        {
-            get { return Revenue - Cost; }
-        }
-        public decimal RevenuePerOrder
-        {
-            get { return Orders == 0 ? 0 : Math.Round(Revenue / Orders, 2); }
-        }
-        public decimal CPC
-        {
-            get { return Clicks == 0 ? 0 : Math.Round(Cost / Clicks, 2); }
-        }
-        public decimal CTR
-        {
-            get { return Impressions == 0 ? 0 : Math.Round((decimal)100 * Clicks / Impressions, 2); }
-        }
-        public decimal OrdersPerDay
-        {
-            get { return Days == 0 ? 0 : Math.Round((decimal)Orders / Days, 2); }
-        }
+        //public SearchStatVals Val { get; set; } // use for last year's vals
 
         public int Days { get; set; }
 
@@ -293,23 +300,23 @@ namespace ClientPortal.Data.DTOs
         public SearchStat() { }
 
         // use for one day's stats, or for a week- ending on the specified date
-        public SearchStat(bool isWeekly, int year, int month, int day, int impressions, int clicks, int orders, decimal revenue, decimal cost, string title = null)
-        {
-            this.EndDate = new DateTime(year, month, day);
-            this.Range = ToRangeName(this.EndDate, isWeekly, true);
-            this.Title = title ?? ToRangeName(this.EndDate, isWeekly);
+        //public SearchStat(bool isWeekly, int year, int month, int day, int impressions, int clicks, int orders, decimal revenue, decimal cost, string title = null)
+        //{
+        //    this.EndDate = new DateTime(year, month, day);
+        //    this.Range = ToRangeName(this.EndDate, isWeekly, true);
+        //    this.Title = title ?? ToRangeName(this.EndDate, isWeekly);
 
-            if (isWeekly)
-                Days = 7;
-            else
-                Days = day;
+        //    if (isWeekly)
+        //        Days = 7;
+        //    else
+        //        Days = day;
 
-            this.Impressions = impressions;
-            this.Clicks = clicks;
-            this.Orders = orders;
-            this.Revenue = revenue;
-            this.Cost = cost;
-        }
+        //    this.Val.Impressions = impressions;
+        //    this.Val.Clicks = clicks;
+        //    this.Val.Orders = orders;
+        //    this.Val.Revenue = revenue;
+        //    this.Val.Cost = cost;
+        //}
 
         // --- Private methods ---
 
