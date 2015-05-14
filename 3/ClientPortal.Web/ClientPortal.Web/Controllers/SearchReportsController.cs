@@ -67,7 +67,8 @@ namespace ClientPortal.Web.Controllers
             if (titleSort != null) titleSort.Field = "StartDate";
 
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
-            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile, nummonths, endDate);
+            bool yoy = false;
+            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile, nummonths, endDate, yoy);
             var kgrid = new KendoGridEx<SearchStat>(request, monthStats);
 
             return CreateJsonResult(kgrid);
@@ -77,7 +78,8 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
-            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile, nummonths, endDate);
+            bool yoy = false;
+            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile, nummonths, endDate, yoy);
 
             string filename = "MonthlySummary" + ControllerHelpers.DateStamp() + ".csv";
             if (userInfo.SearchProfile.ShowRevenue)

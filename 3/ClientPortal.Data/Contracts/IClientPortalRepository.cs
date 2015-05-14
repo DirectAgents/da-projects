@@ -116,7 +116,7 @@ namespace ClientPortal.Data.Contracts
         SearchStat GetSearchStats(SearchProfile sp, DateTime? start, DateTime? end, bool? includeToday);
         IQueryable<SearchStat> GetWeekStats(SearchProfile sp, int numWeeks, DateTime? endDate);
         IQueryable<WeeklySearchStat> GetCampaignWeekStats2(SearchProfile sp, DateTime startDate, DateTime endDate);
-        IQueryable<SearchStat> GetMonthStats(SearchProfile sp, int? numMonths, DateTime end);
+        IQueryable<SearchStat> GetMonthStats(SearchProfile sp, int? numMonths, DateTime end, bool yoy);
         IQueryable<SearchStat> GetChannelStats(SearchProfile sp, int numWeeks, bool includeToday, bool includeAccountBreakdown, bool includeSearchChannels);
         IQueryable<SearchStat> GetCampaignStats(SearchProfile sp, string channel, DateTime? start, DateTime? end, bool breakdown, bool showingCassConvs);
         IQueryable<SearchStat> GetCampaignStats(SearchProfile sp, int searchAccountId, DateTime? start, DateTime? end, bool breakdown, bool showingCassConvs);

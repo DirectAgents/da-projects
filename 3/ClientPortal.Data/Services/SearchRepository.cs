@@ -575,16 +575,22 @@ namespace ClientPortal.Data.Services
             return stats.AsQueryable();
         }
 
-        public IQueryable<SearchStat> GetMonthStats(SearchProfile sp, int? numMonths, DateTime end)
+        public IQueryable<SearchStat> GetMonthStats(SearchProfile sp, int? numMonths, DateTime end, bool yoy)
         {
-            return GetMonthStats(sp.SearchProfileId, numMonths, end, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru);
+            return GetMonthStats(sp.SearchProfileId, numMonths, end, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru, yoy);
         }
-        private IQueryable<SearchStat> GetMonthStats(int searchProfileId, int? numMonths, DateTime end, bool useAnalytics, bool includeCalls, decimal revPerViewThru)
+        private IQueryable<SearchStat> GetMonthStats(int searchProfileId, int? numMonths, DateTime end, bool useAnalytics, bool includeCalls, decimal revPerViewThru, bool yoy)
         {
-            if (!numMonths.HasValue)
-                numMonths = 13;
-            DateTime start = new DateTime(end.Year, end.Month, 1).AddMonths((numMonths.Value - 1) * -1);
-
+            DateTime? start = null, origStart = null;
+            if (numMonths.HasValue)
+            {
+                start = new DateTime(end.Year, end.Month, 1).AddMonths((numMonths.Value - 1) * -1);
+                if (yoy)
+                {
+                    origStart = start;
+                    start = start.Value.AddMonths(-12);
+                }
+            }
             var searchCampaigns = GetSearchCampaigns(null, searchProfileId, null, null, null);
             var stats = GetSearchDailySummaries(searchCampaigns, null, start, end, true)
                 .GroupBy(s => new { s.Date.Year, s.Date.Month })
@@ -594,6 +600,7 @@ namespace ClientPortal.Data.Services
                     //Issue?: what if end is the last day of the month, but Max(Date) is not?
                     //        (e.g. no DailySummaries on the last day of the month for some reason)
                     //        RangeStat.Days and OrdersPerDay would be off
+                    YoY = yoy,
                     MonthByMaxDate = g.Max(s => s.Date),
                     Impressions = g.Sum(s => s.Impressions),
                     Clicks = g.Sum(s => s.Clicks),
@@ -623,6 +630,7 @@ namespace ClientPortal.Data.Services
                          from gaStat in gj_stats.DefaultIfEmpty() // left join to gaStats
                          select new SearchStat
                          {
+                             YoY = yoy,
                              MonthByMaxDate = stat.EndDate,
                              Impressions = stat.Impressions,
                              Clicks = stat.Clicks,
@@ -651,6 +659,7 @@ namespace ClientPortal.Data.Services
                          from callStat in gj_stats.DefaultIfEmpty() // left join to callStats
                          select new SearchStat
                          {
+                             YoY = yoy,
                              MonthByMaxDate = stat.EndDate,
                              Impressions = stat.Impressions,
                              Clicks = stat.Clicks,
@@ -665,17 +674,42 @@ namespace ClientPortal.Data.Services
                          });
             }
 
-            var orderedStats = stats.ToList().OrderBy(s => s.EndDate);
+            var orderedStats = stats.ToList().OrderBy(s => s.EndDate).ToList();
+            List<SearchStat> finalStats;
+            if (yoy)
+            {
+                finalStats = new List<SearchStat>();
+
+                int iPrev = 0; // for locating previous year's stats
+                for (int i = 0; i < orderedStats.Count; i++)
+                {
+                    if (origStart.HasValue && orderedStats[i].StartDate < origStart.Value)
+                        continue;
+
+                    DateTime start_OneYearPrior = orderedStats[i].StartDate.AddYears(-1);
+
+                    // Now attempt to find the previous year's stats
+                    while (iPrev < orderedStats.Count && orderedStats[iPrev].StartDate < start_OneYearPrior)
+                        iPrev++;
+                    if (iPrev < orderedStats.Count && orderedStats[iPrev].StartDate == start_OneYearPrior)
+                        orderedStats[i].Last = new SearchStatVals(orderedStats[iPrev]);
+
+                    finalStats.Add(orderedStats[i]);
+                }
+            }
+            else
+            {
+                finalStats = orderedStats;
+            }
 
             // check for partial month - if "end" is not the last of the month
-            if (end.AddDays(1).Day > 1)
+            if (end.AddDays(1).Day > 1 && finalStats.Any())
             {   // Essentially, check if there were any stats at all for the partial month
-                var lastStat = orderedStats.Last();
-                var monthStart = lastStat.StartDate;
-                if (end.Year == monthStart.Year && end.Month == monthStart.Month)
+                var lastStat = finalStats.Last();
+                if (lastStat.StartDate.Year == end.Year && lastStat.StartDate.Month == end.Month)
                     lastStat.Title = lastStat.Title + " (partial)";
             }
-            return orderedStats.AsQueryable();
+            return finalStats.AsQueryable();
         }
 
         // Get a SearchStat summary for each device

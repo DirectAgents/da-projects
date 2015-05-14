@@ -31,6 +31,21 @@ namespace ClientPortal.Data.DTOs
 
     public class SearchStatVals
     {
+        public SearchStatVals() { }
+        public SearchStatVals(SearchStatVals vals)
+        {
+            Impressions = vals.Impressions;
+            Clicks = vals.Clicks;
+            Orders = vals.Orders;
+            ViewThrus = vals.ViewThrus;
+            RevPerViewThru = vals.RevPerViewThru;
+            CassConvs = vals.CassConvs;
+            CassConVal = vals.CassConVal;
+            Revenue = vals.Revenue;
+            Cost = vals.Cost;
+            Calls = vals.Calls;
+        }
+
         public bool AllZeros(bool checkCassConvs)
         {
             return (Impressions == 0 && Clicks == 0 && Orders == 0 && ViewThrus == 0 && Revenue == 0 && Cost == 0 && Calls == 0
@@ -201,7 +216,7 @@ namespace ClientPortal.Data.DTOs
             }
         }
 
-        //public SearchStatVals Val { get; set; } // use for last year's vals
+        public SearchStatVals Last { get; set; } // for last year's stats
 
         public int Days { get; set; }
 
@@ -240,6 +255,12 @@ namespace ClientPortal.Data.DTOs
 
         // --- Initializers (monthly, weekly or custom date range) ---
 
+        private bool _yoy;
+        internal bool YoY
+        {
+            set { _yoy = value; }
+        }
+
         internal DateTime MonthByMaxDate
         {
             set
@@ -247,8 +268,8 @@ namespace ClientPortal.Data.DTOs
                 this.EndDate = value;
                 this.Days = this.EndDate.Day;
 
-                this.Range = ToRangeName(this.EndDate, false, true);
-                this.Title = ToRangeName(this.EndDate, false);
+                this.Range = ToRangeName(this.EndDate, false, true, !_yoy); // not sure if need to includeYear here
+                this.Title = ToRangeName(this.EndDate, false, false, !_yoy);
             }
         }
 
@@ -320,20 +341,24 @@ namespace ClientPortal.Data.DTOs
 
         // --- Private methods ---
 
-        private string ToRangeName(DateTime date, bool isWeekly, bool prependYMD = false)
+        private string ToRangeName(DateTime date, bool isWeekly, bool prependYMD, bool includeYear)
         {
             if (isWeekly)
             {
                 DateTime weekStart = date.AddDays(-6);
-                return ToRangeName(weekStart, date, prependYMD);
+                return ToRangeName(weekStart, date, prependYMD, includeYear);
             }
             else
-                return (prependYMD ? date.ToString("yyyyMMdd") + " " : "") + date.ToString("MMM-yy");
+            {
+                string dateFormat = includeYear ? "MMM-yy" : "MMM";
+                return (prependYMD ? date.ToString("yyyyMMdd") + " " : "") + date.ToString(dateFormat);
+            }
         }
 
-        private string ToRangeName(DateTime start, DateTime end, bool prependYMD = false)
+        private string ToRangeName(DateTime start, DateTime end, bool prependYMD = false, bool includeYear = false)
         {
-            return (prependYMD ? start.ToString("yyyyMMdd") + " " : "") + start.ToString("MM/dd") + " - " + end.ToString("MM/dd");
+            string dateFormat = includeYear ? "MM/dd/yy" : "MM/dd";
+            return (prependYMD ? start.ToString("yyyyMMdd") + " " : "") + start.ToString(dateFormat) + " - " + end.ToString(dateFormat);
         }
     }
 }

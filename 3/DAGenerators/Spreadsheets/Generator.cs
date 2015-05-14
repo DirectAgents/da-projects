@@ -59,7 +59,7 @@ namespace DAGenerators.Spreadsheets
 
             var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue", "Calls", "ViewThrus", "CassConvs", "CassConVal" };
             var weeklyStats = cpRepo.GetWeekStats(searchProfile, numWeeks, endDate);
-            var monthlyStats = cpRepo.GetMonthStats(searchProfile, numMonths, endDate);
+            var monthlyStats = cpRepo.GetMonthStats(searchProfile, numMonths, endDate, false);
             spreadsheet.LoadWeeklyStats(weeklyStats, propertyNames);
             spreadsheet.LoadMonthlyStats(monthlyStats, propertyNames);
 
