@@ -37,4 +37,20 @@ namespace DAGenerators.Spreadsheets
                 this.ExcelPackage.Dispose();
         }
     }
+
+    public class Metric
+    {
+        public Metric(int colNum, string displayName, bool isComputed = false, bool show = true)
+        {
+            this.ColNum = colNum;
+            this.DisplayName = displayName;
+            this.IsComputed = isComputed;
+            this.Show = show;
+        }
+
+        public int ColNum { get; set; }
+        public string DisplayName { get; set; }
+        public bool IsComputed { get; set; }
+        public bool Show { get; set; }
+    }
 }

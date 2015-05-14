@@ -57,11 +57,11 @@ namespace DAGenerators.Spreadsheets
 
             bool partialMonth = (endDate.AddDays(1).Day > 1); // it's a full month if the day after endDate is the 1st
 
-            var propertyNames = new[] { "Title", "Clicks", "Impressions", "Orders", "Cost", "Revenue", "Calls", "ViewThrus", "CassConvs", "CassConVal" };
             var weeklyStats = cpRepo.GetWeekStats(searchProfile, numWeeks, endDate);
-            var monthlyStats = cpRepo.GetMonthStats(searchProfile, numMonths, endDate, false);
-            spreadsheet.LoadWeeklyStats(weeklyStats, propertyNames);
-            spreadsheet.LoadMonthlyStats(monthlyStats, propertyNames);
+            bool yoy = false;
+            var monthlyStats = cpRepo.GetMonthStats(searchProfile, numMonths, endDate, yoy);
+            spreadsheet.LoadWeeklyStats(weeklyStats);
+            spreadsheet.LoadMonthlyStats(monthlyStats);
 
             if (weeklyStats.Count() > 0)
                 spreadsheet.CreateCharts(true);
@@ -82,7 +82,7 @@ namespace DAGenerators.Spreadsheets
             monthStatsLastYear.Title = monthStart.ToString("MMM-yy");
 
             var yoyStats = new[] { monthStatsLastYear, monthStats };
-            spreadsheet.LoadYearOverYearStats(yoyStats, propertyNames);
+            spreadsheet.LoadYearOverYearStats(yoyStats);
 
             // Monthly campaign performance stats...
             // start with the most recent and go back the number of months specified
@@ -95,7 +95,7 @@ namespace DAGenerators.Spreadsheets
                 if (campaignStatsDict.Keys.Any()) // TODO: if empty, somehow generate a row with zeros for this week
                 {
                     bool collapse = (i > 0);
-                    spreadsheet.LoadMonthlyCampaignPerfStats(campaignStatsDict, propertyNames, collapse, periodStart, periodEnd);
+                    spreadsheet.LoadMonthlyCampaignPerfStats(campaignStatsDict, collapse, periodStart, periodEnd);
                 }
                 periodEnd = periodStart.AddDays(-1);
                 periodStart = periodStart.AddMonths(-1);
@@ -119,7 +119,7 @@ namespace DAGenerators.Spreadsheets
                 if (campaignStatsDict.Keys.Any()) // TODO: if empty, somehow generate a row with zeros for this week
                 {
                     bool collapse = (i > 0);
-                    spreadsheet.LoadWeeklyCampaignPerfStats(campaignStatsDict, propertyNames, collapse, periodStart, periodEnd);
+                    spreadsheet.LoadWeeklyCampaignPerfStats(campaignStatsDict, collapse, periodStart, periodEnd);
                 }
                 periodEnd = periodStart.AddDays(-1);
                 periodStart = periodStart.AddDays(-7);

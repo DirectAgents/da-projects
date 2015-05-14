@@ -71,6 +71,27 @@ namespace DAGenerators.Spreadsheets
         protected int NumCampaignPerfWeeksAdded { get; set; }
         protected int NumCampaignPerfMonthsAdded { get; set; }
 
+        // The property names (of type T) for the main metrics - used when loading stats (using a collection of type T)
+        protected MetricPropertyNames PropNames { get; set; }
+
+        public SearchReportPPC()
+        {
+            PropNames = new MetricPropertyNames
+            {
+                Title = "Title",
+                Impressions = "Impressions",
+                Clicks = "Clicks",
+                Orders = "Orders",
+                Cost = "Cost",
+                Revenue = "Revenue",
+                Calls = "Calls",
+                ViewThrus = "ViewThrus",
+                CassConvs = "CassConvs",
+                CassConVal = "CassConVal"
+            };
+            //TODO: a way for the caller to specify different property names
+        }
+
         public void Setup(string templateFolder)
         {
             Setup();
@@ -132,11 +153,11 @@ namespace DAGenerators.Spreadsheets
             WS.Cells[Row_ClientNameBottom + NumWeekRowsAdded + NumMonthRowsAdded, 2].Value = "Direct Agents | " + clientName.ToUpper();
         }
 
-        public virtual void LoadWeeklyStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
+        public virtual void LoadWeeklyStats<T>(IEnumerable<T> stats)
         {
             int blankRows = 1;
             int startRow = StartRow_Weekly + (WeeklyFirst ? 0 : NumMonthRowsAdded);
-            NumWeekRowsAdded = LoadWeeklyMonthlyStats(stats, propertyNames, startRow, blankRows);
+            NumWeekRowsAdded = LoadWeeklyMonthlyStats(stats, startRow, blankRows);
             NumWeeksAdded = stats.Count();
             if (NumWeeksAdded == 0)
             {   // Delete the entire section, including blank row above
@@ -145,11 +166,11 @@ namespace DAGenerators.Spreadsheets
                 NumWeekRowsAdded -= rowsToDelete;
             }
         }
-        public virtual void LoadMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
+        public virtual void LoadMonthlyStats<T>(IEnumerable<T> stats)
         {
             int blankRows = 1;
             int startRow = StartRow_Monthly + (WeeklyFirst ? NumWeekRowsAdded : 0);
-            NumMonthRowsAdded = LoadWeeklyMonthlyStats(stats, propertyNames, startRow, blankRows);
+            NumMonthRowsAdded = LoadWeeklyMonthlyStats(stats, startRow, blankRows);
             NumMonthsAdded = stats.Count();
             if (NumMonthsAdded == 0)
             {   // Delete the entire section, including blank row above
@@ -159,9 +180,8 @@ namespace DAGenerators.Spreadsheets
             }
         }
 
-        // propertyNames for: title, clicks, impressions, orders, cost, revenue, calls, viewthrus, cassconvs, cassconval
         // returns: # of rows added (in addition to blankRowsInTemplate); negative means blankRows deleted
-        protected int LoadWeeklyMonthlyStats<T>(IEnumerable<T> stats, IList<string> propertyNames, int startingRow, int blankRowsInTemplate = 0)
+        protected int LoadWeeklyMonthlyStats<T>(IEnumerable<T> stats, int startingRow, int blankRowsInTemplate = 0)
         {
             int numRows = stats.Count();
             int blankRowsToInsert = numRows - blankRowsInTemplate;
@@ -189,33 +209,36 @@ namespace DAGenerators.Spreadsheets
                     }
                 }
 
-                LoadColumnFromStats(stats, startingRow, Col_StatsTitle, propertyNames[0]);
-                LoadColumnFromStats(stats, startingRow, Metric_Clicks.ColNum, propertyNames[1], Metric_Clicks);
-                LoadColumnFromStats(stats, startingRow, Metric_Impressions.ColNum, propertyNames[2], Metric_Impressions);
-                LoadColumnFromStats(stats, startingRow, Metric_Orders.ColNum, propertyNames[3], Metric_Orders);
-                LoadColumnFromStats(stats, startingRow, Metric_Cost.ColNum, propertyNames[4], Metric_Cost);
-                LoadColumnFromStats(stats, startingRow, Metric_Revenue.ColNum, propertyNames[5], Metric_Revenue);
-                LoadColumnFromStats(stats, startingRow, Metric_Calls.ColNum, propertyNames[6], Metric_Calls);
-                LoadColumnFromStats(stats, startingRow, Metric_ViewThrus.ColNum, propertyNames[7], Metric_ViewThrus);
-                LoadColumnFromStats(stats, startingRow, Metric_CassConvs.ColNum, propertyNames[8], Metric_CassConvs);
-                LoadColumnFromStats(stats, startingRow, Metric_CassConVal.ColNum, propertyNames[9], Metric_CassConVal);
+                LoadColumnFromStats(stats, startingRow, Col_StatsTitle, PropNames.Title);
+                LoadColumnFromStats(stats, startingRow, Metric_Clicks, PropNames.Clicks);
+                LoadColumnFromStats(stats, startingRow, Metric_Impressions, PropNames.Impressions);
+                LoadColumnFromStats(stats, startingRow, Metric_Orders, PropNames.Orders);
+                LoadColumnFromStats(stats, startingRow, Metric_Cost, PropNames.Cost);
+                LoadColumnFromStats(stats, startingRow, Metric_Revenue, PropNames.Revenue);
+                LoadColumnFromStats(stats, startingRow, Metric_Calls, PropNames.Calls);
+                LoadColumnFromStats(stats, startingRow, Metric_ViewThrus, PropNames.ViewThrus);
+                LoadColumnFromStats(stats, startingRow, Metric_CassConvs, PropNames.CassConvs);
+                LoadColumnFromStats(stats, startingRow, Metric_CassConVal, PropNames.CassConVal);
             }
             return blankRowsToInsert;
         }
-        private void LoadColumnFromStats<T>(IEnumerable<T> stats, int startingRow, int iColumn, string propertyName, Metric metric = null)
+
+        private void LoadColumnFromStats<T>(IEnumerable<T> stats, int startingRow, Metric metric, string propertyName)
         {
-            if (metric == null || metric.Show)
-            {
-                var type = stats.First().GetType();
-                WS.Cells[startingRow, iColumn].LoadFromCollection(stats, false, TableStyles.None, BindingFlags.Default, new[] { type.GetProperty(propertyName) });
-            }
+            if (metric.Show)
+                LoadColumnFromStats<T>(stats, startingRow, metric.ColNum, propertyName);
+        }
+        private void LoadColumnFromStats<T>(IEnumerable<T> stats, int startingRow, int iColumn, string propertyName)
+        {
+            var type = stats.First().GetType();
+            WS.Cells[startingRow, iColumn].LoadFromCollection(stats, false, TableStyles.None, BindingFlags.Default, new[] { type.GetProperty(propertyName) });
         }
 
         // for the most recently completed month
-        public virtual void LoadYearOverYearStats<T>(IEnumerable<T> stats, IList<string> propertyNames)
+        public virtual void LoadYearOverYearStats<T>(IEnumerable<T> stats)
         {
             int startRow = StartRow_YearOverYear + NumWeekRowsAdded + NumMonthRowsAdded;
-            LoadYearOverYearStats(stats, propertyNames, startRow);
+            LoadYearOverYearStats(stats, startRow);
 
             //YoY diff row...
             string diffFormula = "IFERROR((R[-1]C-R[-2]C)/R[-2]C,\"-\")";
@@ -225,18 +248,18 @@ namespace DAGenerators.Spreadsheets
                 WS.Cells[startRow + 2, metric.ColNum].FormulaR1C1 = diffFormula;
             }
         }
-        protected void LoadYearOverYearStats<T>(IEnumerable<T> stats, IList<string> propertyNames, int startingRow)
+        protected void LoadYearOverYearStats<T>(IEnumerable<T> stats, int startingRow)
         {
-            LoadColumnFromStats(stats, startingRow, Col_StatsTitle, propertyNames[0]);
-            LoadColumnFromStats(stats, startingRow, Metric_Clicks.ColNum, propertyNames[1], Metric_Clicks);
-            LoadColumnFromStats(stats, startingRow, Metric_Impressions.ColNum, propertyNames[2], Metric_Impressions);
-            LoadColumnFromStats(stats, startingRow, Metric_Orders.ColNum, propertyNames[3], Metric_Orders);
-            LoadColumnFromStats(stats, startingRow, Metric_Cost.ColNum, propertyNames[4], Metric_Cost);
-            LoadColumnFromStats(stats, startingRow, Metric_Revenue.ColNum, propertyNames[5], Metric_Revenue);
-            LoadColumnFromStats(stats, startingRow, Metric_Calls.ColNum, propertyNames[6], Metric_Calls);
-            LoadColumnFromStats(stats, startingRow, Metric_ViewThrus.ColNum, propertyNames[7], Metric_ViewThrus);
-            LoadColumnFromStats(stats, startingRow, Metric_CassConvs.ColNum, propertyNames[8], Metric_CassConvs);
-            LoadColumnFromStats(stats, startingRow, Metric_CassConVal.ColNum, propertyNames[9], Metric_CassConVal);
+            LoadColumnFromStats(stats, startingRow, Col_StatsTitle, PropNames.Title);
+            LoadColumnFromStats(stats, startingRow, Metric_Clicks, PropNames.Clicks);
+            LoadColumnFromStats(stats, startingRow, Metric_Impressions, PropNames.Impressions);
+            LoadColumnFromStats(stats, startingRow, Metric_Orders, PropNames.Orders);
+            LoadColumnFromStats(stats, startingRow, Metric_Cost, PropNames.Cost);
+            LoadColumnFromStats(stats, startingRow, Metric_Revenue, PropNames.Revenue);
+            LoadColumnFromStats(stats, startingRow, Metric_Calls, PropNames.Calls);
+            LoadColumnFromStats(stats, startingRow, Metric_ViewThrus, PropNames.ViewThrus);
+            LoadColumnFromStats(stats, startingRow, Metric_CassConvs, PropNames.CassConvs);
+            LoadColumnFromStats(stats, startingRow, Metric_CassConVal, PropNames.CassConVal);
         }
 
         //TODO: retire this - if can assume all formulas are in template rows in the spreadsheet
@@ -263,19 +286,19 @@ namespace DAGenerators.Spreadsheets
 
         // Note: Load monthly CampaignPerfStats first, then weekly.
         // Load weeks/months in this order: latest, second-latest, etc...
-        public void LoadMonthlyCampaignPerfStats<T>(Dictionary<string, IEnumerable<T>> campaignStatsDict, IList<string> propertyNames, bool collapse, DateTime monthStart, DateTime monthEnd)
+        public void LoadMonthlyCampaignPerfStats<T>(Dictionary<string, IEnumerable<T>> campaignStatsDict, bool collapse, DateTime monthStart, DateTime monthEnd)
         {
             int startRowTemplate = StartRow_MonthlyCampaignPerfTemplate + NumWeekRowsAdded + NumMonthRowsAdded;
-            LoadCampaignPerfStats<T>(campaignStatsDict, propertyNames, collapse, monthStart, monthEnd, startRowTemplate, true);
+            LoadCampaignPerfStats<T>(campaignStatsDict, collapse, monthStart, monthEnd, startRowTemplate, true);
         }
-        public void LoadWeeklyCampaignPerfStats<T>(Dictionary<string, IEnumerable<T>> campaignStatsDict, IList<string> propertyNames, bool collapse, DateTime weekStart, DateTime weekEnd)
+        public void LoadWeeklyCampaignPerfStats<T>(Dictionary<string, IEnumerable<T>> campaignStatsDict, bool collapse, DateTime weekStart, DateTime weekEnd)
         {
             int startRowTemplate = StartRow_WeeklyCampaignPerfTemplate + NumWeekRowsAdded + NumMonthRowsAdded;
-            LoadCampaignPerfStats<T>(campaignStatsDict, propertyNames, collapse, weekStart, weekEnd, startRowTemplate, false);
+            LoadCampaignPerfStats<T>(campaignStatsDict, collapse, weekStart, weekEnd, startRowTemplate, false);
         }
         // Load stats for one week/month (with subcategories: channels/searchaccounts)
         // campaignStatsDict should have one key for each Channel/SearchAccount
-        public void LoadCampaignPerfStats<T>(Dictionary<string, IEnumerable<T>> campaignStatsDict, IList<string> propertyNames, bool collapse, DateTime startDate, DateTime endDate,
+        public void LoadCampaignPerfStats<T>(Dictionary<string, IEnumerable<T>> campaignStatsDict, bool collapse, DateTime startDate, DateTime endDate,
                                              int startRowTemplate, bool monthlyNotWeekly)
         {
             int startRowStats = startRowTemplate + NumRows_CampaignPerfTemplate; // start below the template
@@ -319,7 +342,7 @@ namespace DAGenerators.Spreadsheets
                 }
 
                 // populate the campaign rows for this subgroup
-                numRowsAdded += LoadWeeklyMonthlyStats(campaignStatsDict[subgroupKey], propertyNames, startRowSubgroupStats, NumRows_CampaignPerfSubTemplate - 1);
+                numRowsAdded += LoadWeeklyMonthlyStats(campaignStatsDict[subgroupKey], startRowSubgroupStats, NumRows_CampaignPerfSubTemplate - 1);
 
                 // set the subgroup title
                 int subgroupTotalRow = startRowSubgroupStats + numCampaigns;
@@ -485,19 +508,17 @@ namespace DAGenerators.Spreadsheets
         }
     }
 
-    public class Metric
+    public class MetricPropertyNames
     {
-        public Metric(int colNum, string displayName, bool isComputed = false, bool show = true)
-        {
-            this.ColNum = colNum;
-            this.DisplayName = displayName;
-            this.IsComputed = isComputed;
-            this.Show = show;
-        }
-
-        public int ColNum { get; set; }
-        public string DisplayName { get; set; }
-        public bool IsComputed { get; set; }
-        public bool Show { get; set; }
+        public string Title;
+        public string Impressions;
+        public string Clicks;
+        public string Orders;
+        public string Cost;
+        public string Revenue;
+        public string Calls;
+        public string ViewThrus;
+        public string CassConvs;
+        public string CassConVal;
     }
 }
