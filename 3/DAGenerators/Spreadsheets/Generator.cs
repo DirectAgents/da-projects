@@ -44,13 +44,13 @@ namespace DAGenerators.Spreadsheets
             spreadsheet.Setup(templateFolder);
             if (!searchProfile.ShowViewThrus)
             {
-                spreadsheet.MakeColumnHidden(spreadsheet.Metric_ViewThrus);
-                spreadsheet.MakeColumnHidden(spreadsheet.Metric_ViewThruRev);
+                spreadsheet.MakeColumnHidden(spreadsheet.Metrics.ViewThrus);
+                spreadsheet.MakeColumnHidden(spreadsheet.Metrics.ViewThruRev);
             }
             if (!searchProfile.ShowCassConvs)
             {
-                spreadsheet.MakeColumnHidden(spreadsheet.Metric_CassConvs);
-                spreadsheet.MakeColumnHidden(spreadsheet.Metric_CassConVal);
+                spreadsheet.MakeColumnHidden(spreadsheet.Metrics.CassConvs);
+                spreadsheet.MakeColumnHidden(spreadsheet.Metrics.CassConVal);
             }
             spreadsheet.SetReportDate(endDate);
             spreadsheet.SetClientName(searchProfile.SearchProfileName);

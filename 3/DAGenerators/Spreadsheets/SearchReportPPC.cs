@@ -39,28 +39,7 @@ namespace DAGenerators.Spreadsheets
         private const int NumRows_CampaignPerfTemplate = 3;
         private const int NumRows_CampaignPerfSubTemplate = 2;
 
-        public Metric Metric_Clicks = new Metric(0, null, false, false);
-        public Metric Metric_Impressions = new Metric(0, null, false, false);
-        public Metric Metric_Orders = new Metric(0, null, false, false);
-        public Metric Metric_Cost = new Metric(0, null, false, false);
-        public Metric Metric_Revenue = new Metric(0, null, false, false);
-        public Metric Metric_Calls = new Metric(0, null, false, false);
-        public Metric Metric_ViewThrus = new Metric(0, null, false, false); // View-Through Conversions
-        public Metric Metric_CassConvs = new Metric(0, null, false, false); // Click-Assisted Conversions
-        public Metric Metric_CassConVal = new Metric(0, null, false, false);
-
-        // Computed metrics
-        public Metric Metric_OrderRate = new Metric(0, null, true, false);
-        public Metric Metric_Net = new Metric(0, null, true, false);
-        public Metric Metric_RevPerOrder = new Metric(0, null, true, false);
-        public Metric Metric_CTR = new Metric(0, null, true, false);
-        public Metric Metric_CPC = new Metric(0, null, true, false);
-        public Metric Metric_CPO = new Metric(0, null, true, false);
-        public Metric Metric_ROAS = new Metric(0, null, true, false);
-        public Metric Metric_ROI = new Metric(0, null, true, false);
-        public Metric Metric_TotalLeads = new Metric(0, null, true, false);
-        public Metric Metric_CPL = new Metric(0, null, true, false);
-        public Metric Metric_ViewThruRev = new Metric(0, null, true, false);
+        public MetricsHolder Metrics;
 
         protected ExcelWorksheet WS { get { return this.ExcelPackage.Workbook.Worksheets[1]; } }
         protected int NumWeeksAdded { get; set; }
@@ -76,6 +55,8 @@ namespace DAGenerators.Spreadsheets
 
         public SearchReportPPC()
         {
+            Metrics = new MetricsHolder();
+
             PropNames = new MetricPropertyNames
             {
                 Title = "Title",
@@ -104,22 +85,22 @@ namespace DAGenerators.Spreadsheets
 
         protected virtual void Setup()
         {
-            Metric_Clicks = new Metric(3, "Clicks");
-            Metric_Impressions = new Metric(4, "Impressions");
-            Metric_CTR = new Metric(5, "CTR", true);
-            Metric_Cost = new Metric(6, "Spend");
-            Metric_CPC = new Metric(7, "CPC", true);
-            Metric_Orders = new Metric(8, "Orders");
-            Metric_Revenue = new Metric(9, "Revenue");
-            Metric_Net = new Metric(10, "Net", true);
-            Metric_ViewThrus = new Metric(11, "ViewThrus");
-            Metric_ViewThruRev = new Metric(12, "ViewThruRev", true);
-            Metric_CassConvs = new Metric(13, "ClickAssistConv");
-            Metric_CassConVal = new Metric(14, "CAC Val");
-            Metric_CPO = new Metric(15, "Cost/Order", true);
-            Metric_OrderRate = new Metric(16, "Order Rate", true);
-            Metric_RevPerOrder = new Metric(17, "Rev/Order", true);
-            Metric_ROAS = new Metric(18, "ROAS", true);
+            Metrics.Clicks = new Metric(3, "Clicks");
+            Metrics.Impressions = new Metric(4, "Impressions");
+            Metrics.CTR = new Metric(5, "CTR", true);
+            Metrics.Cost = new Metric(6, "Spend");
+            Metrics.CPC = new Metric(7, "CPC", true);
+            Metrics.Orders = new Metric(8, "Orders");
+            Metrics.Revenue = new Metric(9, "Revenue");
+            Metrics.Net = new Metric(10, "Net", true);
+            Metrics.ViewThrus = new Metric(11, "ViewThrus");
+            Metrics.ViewThruRev = new Metric(12, "ViewThruRev", true);
+            Metrics.CassConvs = new Metric(13, "ClickAssistConv");
+            Metrics.CassConVal = new Metric(14, "CAC Val");
+            Metrics.CPO = new Metric(15, "Cost/Order", true);
+            Metrics.OrderRate = new Metric(16, "Order Rate", true);
+            Metrics.RevPerOrder = new Metric(17, "Rev/Order", true);
+            Metrics.ROAS = new Metric(18, "ROAS", true);
         }
 
         // Do this after setting up the columns
@@ -202,23 +183,23 @@ namespace DAGenerators.Spreadsheets
                             WS.Cells[startingRow + ":" + startingRow].Copy(WS.Cells[iRow + ":" + iRow]);
                         }
                     }
-                    else
-                    {   // generate the formulas if there were no blank rows
-                        for (int i = 0; i < numRows; i++)
-                            LoadStatsRowFormulas(startingRow + i);
-                    }
+                    //else
+                    //{   // generate the formulas if there were no blank rows
+                    //    for (int i = 0; i < numRows; i++)
+                    //        LoadStatsRowFormulas(startingRow + i);
+                    //}
                 }
 
                 LoadColumnFromStats(stats, startingRow, Col_StatsTitle, PropNames.Title);
-                LoadColumnFromStats(stats, startingRow, Metric_Clicks, PropNames.Clicks);
-                LoadColumnFromStats(stats, startingRow, Metric_Impressions, PropNames.Impressions);
-                LoadColumnFromStats(stats, startingRow, Metric_Orders, PropNames.Orders);
-                LoadColumnFromStats(stats, startingRow, Metric_Cost, PropNames.Cost);
-                LoadColumnFromStats(stats, startingRow, Metric_Revenue, PropNames.Revenue);
-                LoadColumnFromStats(stats, startingRow, Metric_Calls, PropNames.Calls);
-                LoadColumnFromStats(stats, startingRow, Metric_ViewThrus, PropNames.ViewThrus);
-                LoadColumnFromStats(stats, startingRow, Metric_CassConvs, PropNames.CassConvs);
-                LoadColumnFromStats(stats, startingRow, Metric_CassConVal, PropNames.CassConVal);
+                LoadColumnFromStats(stats, startingRow, Metrics.Clicks, PropNames.Clicks);
+                LoadColumnFromStats(stats, startingRow, Metrics.Impressions, PropNames.Impressions);
+                LoadColumnFromStats(stats, startingRow, Metrics.Orders, PropNames.Orders);
+                LoadColumnFromStats(stats, startingRow, Metrics.Cost, PropNames.Cost);
+                LoadColumnFromStats(stats, startingRow, Metrics.Revenue, PropNames.Revenue);
+                LoadColumnFromStats(stats, startingRow, Metrics.Calls, PropNames.Calls);
+                LoadColumnFromStats(stats, startingRow, Metrics.ViewThrus, PropNames.ViewThrus);
+                LoadColumnFromStats(stats, startingRow, Metrics.CassConvs, PropNames.CassConvs);
+                LoadColumnFromStats(stats, startingRow, Metrics.CassConVal, PropNames.CassConVal);
             }
             return blankRowsToInsert;
         }
@@ -251,38 +232,38 @@ namespace DAGenerators.Spreadsheets
         protected void LoadYearOverYearStats<T>(IEnumerable<T> stats, int startingRow)
         {
             LoadColumnFromStats(stats, startingRow, Col_StatsTitle, PropNames.Title);
-            LoadColumnFromStats(stats, startingRow, Metric_Clicks, PropNames.Clicks);
-            LoadColumnFromStats(stats, startingRow, Metric_Impressions, PropNames.Impressions);
-            LoadColumnFromStats(stats, startingRow, Metric_Orders, PropNames.Orders);
-            LoadColumnFromStats(stats, startingRow, Metric_Cost, PropNames.Cost);
-            LoadColumnFromStats(stats, startingRow, Metric_Revenue, PropNames.Revenue);
-            LoadColumnFromStats(stats, startingRow, Metric_Calls, PropNames.Calls);
-            LoadColumnFromStats(stats, startingRow, Metric_ViewThrus, PropNames.ViewThrus);
-            LoadColumnFromStats(stats, startingRow, Metric_CassConvs, PropNames.CassConvs);
-            LoadColumnFromStats(stats, startingRow, Metric_CassConVal, PropNames.CassConVal);
+            LoadColumnFromStats(stats, startingRow, Metrics.Clicks, PropNames.Clicks);
+            LoadColumnFromStats(stats, startingRow, Metrics.Impressions, PropNames.Impressions);
+            LoadColumnFromStats(stats, startingRow, Metrics.Orders, PropNames.Orders);
+            LoadColumnFromStats(stats, startingRow, Metrics.Cost, PropNames.Cost);
+            LoadColumnFromStats(stats, startingRow, Metrics.Revenue, PropNames.Revenue);
+            LoadColumnFromStats(stats, startingRow, Metrics.Calls, PropNames.Calls);
+            LoadColumnFromStats(stats, startingRow, Metrics.ViewThrus, PropNames.ViewThrus);
+            LoadColumnFromStats(stats, startingRow, Metrics.CassConvs, PropNames.CassConvs);
+            LoadColumnFromStats(stats, startingRow, Metrics.CassConVal, PropNames.CassConVal);
         }
 
         //TODO: retire this - if can assume all formulas are in template rows in the spreadsheet
-        private void LoadStatsRowFormulas(int iRow)
-        {
-            // TODO: use IFERROR in formulas for div-by-0 checking
-            CheckLoadStatsRowFormula(iRow, Metric_OrderRate, String.Format("RC[{0}]/RC[{1}]", Metric_Orders.ColNum - Metric_OrderRate.ColNum, Metric_Clicks.ColNum - Metric_OrderRate.ColNum)); // OrderRate (Orders/Clicks)
-            CheckLoadStatsRowFormula(iRow, Metric_Net, String.Format("RC[{0}]-RC[{1}]", Metric_Revenue.ColNum - Metric_Net.ColNum, Metric_Cost.ColNum - Metric_Net.ColNum)); // Net (Rev-Cost)
-            CheckLoadStatsRowFormula(iRow, Metric_RevPerOrder, String.Format("RC[{0}]/RC[{1}]", Metric_Revenue.ColNum - Metric_RevPerOrder.ColNum, Metric_Orders.ColNum - Metric_RevPerOrder.ColNum)); // Revenue/Orders
-            CheckLoadStatsRowFormula(iRow, Metric_CTR, String.Format("RC[{0}]/RC[{1}]", Metric_Clicks.ColNum - Metric_CTR.ColNum, Metric_Impressions.ColNum - Metric_CTR.ColNum)); // CTR (Clicks/Impressions)
-            CheckLoadStatsRowFormula(iRow, Metric_CPC, String.Format("RC[{0}]/RC[{1}]", Metric_Cost.ColNum - Metric_CPC.ColNum, Metric_Clicks.ColNum - Metric_CPC.ColNum)); // CPC (Cost/Clicks)
-            CheckLoadStatsRowFormula(iRow, Metric_CPO, String.Format("RC[{0}]/RC[{1}]", Metric_Cost.ColNum - Metric_CPO.ColNum, Metric_Orders.ColNum - Metric_CPO.ColNum)); // CPO (Cost/Orders)
-            CheckLoadStatsRowFormula(iRow, Metric_ROAS, String.Format("RC[{0}]/RC[{1}]", Metric_Revenue.ColNum - Metric_ROAS.ColNum, Metric_Cost.ColNum - Metric_ROAS.ColNum)); // ROAS (Rev/Cost)
-            CheckLoadStatsRowFormula(iRow, Metric_ROI, String.Format("(RC[{0}]-RC[{1}])/RC[{1}]", Metric_Revenue.ColNum - Metric_ROI.ColNum, Metric_Cost.ColNum - Metric_ROI.ColNum)); // ROI ((Rev-Cost)/Cost)
-            //CheckLoadStatsRowFormula(iRow, Metric_TotalLeads
-            //CheckLoadStatsRowFormula(iRow, Metric_CPL
-            //CheckLoadStatsRowFormula(iRow, Metric_ViewThruRev
-        }
-        private void CheckLoadStatsRowFormula(int iRow, Metric metric, string formula)
-        {
-            if (metric.Show)
-                WS.Cells[iRow, metric.ColNum].FormulaR1C1 = formula;
-        }
+        //private void LoadStatsRowFormulas(int iRow)
+        //{
+        //    // TODO: use IFERROR in formulas for div-by-0 checking
+        //    CheckLoadStatsRowFormula(iRow, Metric_OrderRate, String.Format("RC[{0}]/RC[{1}]", Metrics.Orders.ColNum - Metric_OrderRate.ColNum, Metrics.Clicks.ColNum - Metric_OrderRate.ColNum)); // OrderRate (Orders/Clicks)
+        //    CheckLoadStatsRowFormula(iRow, Metric_Net, String.Format("RC[{0}]-RC[{1}]", Metrics.Revenue.ColNum - Metric_Net.ColNum, Metrics.Cost.ColNum - Metric_Net.ColNum)); // Net (Rev-Cost)
+        //    CheckLoadStatsRowFormula(iRow, Metric_RevPerOrder, String.Format("RC[{0}]/RC[{1}]", Metrics.Revenue.ColNum - Metric_RevPerOrder.ColNum, Metrics.Orders.ColNum - Metric_RevPerOrder.ColNum)); // Revenue/Orders
+        //    CheckLoadStatsRowFormula(iRow, Metric_CTR, String.Format("RC[{0}]/RC[{1}]", Metrics.Clicks.ColNum - Metric_CTR.ColNum, Metrics.Impressions.ColNum - Metric_CTR.ColNum)); // CTR (Clicks/Impressions)
+        //    CheckLoadStatsRowFormula(iRow, Metric_CPC, String.Format("RC[{0}]/RC[{1}]", Metrics.Cost.ColNum - Metric_CPC.ColNum, Metrics.Clicks.ColNum - Metric_CPC.ColNum)); // CPC (Cost/Clicks)
+        //    CheckLoadStatsRowFormula(iRow, Metric_CPO, String.Format("RC[{0}]/RC[{1}]", Metrics.Cost.ColNum - Metric_CPO.ColNum, Metrics.Orders.ColNum - Metric_CPO.ColNum)); // CPO (Cost/Orders)
+        //    CheckLoadStatsRowFormula(iRow, Metric_ROAS, String.Format("RC[{0}]/RC[{1}]", Metrics.Revenue.ColNum - Metric_ROAS.ColNum, Metrics.Cost.ColNum - Metric_ROAS.ColNum)); // ROAS (Rev/Cost)
+        //    CheckLoadStatsRowFormula(iRow, Metric_ROI, String.Format("(RC[{0}]-RC[{1}])/RC[{1}]", Metrics.Revenue.ColNum - Metric_ROI.ColNum, Metrics.Cost.ColNum - Metric_ROI.ColNum)); // ROI ((Rev-Cost)/Cost)
+        //    //CheckLoadStatsRowFormula(iRow, Metric_TotalLeads
+        //    //CheckLoadStatsRowFormula(iRow, Metric_CPL
+        //    //CheckLoadStatsRowFormula(iRow, Metric_ViewThruRev
+        //}
+        //private void CheckLoadStatsRowFormula(int iRow, Metric metric, string formula)
+        //{
+        //    if (metric.Show)
+        //        WS.Cells[iRow, metric.ColNum].FormulaR1C1 = formula;
+        //}
 
         // Note: Load monthly CampaignPerfStats first, then weekly.
         // Load weeks/months in this order: latest, second-latest, etc...
@@ -416,8 +397,8 @@ namespace DAGenerators.Spreadsheets
 
         public virtual void CreateCharts(bool weeklyNotMonthly)
         {
-            CreateChart(Metric_Revenue, Metric_ROAS, false, weeklyNotMonthly);
-            CreateChart(Metric_Orders, Metric_CPO, true, weeklyNotMonthly);
+            CreateChart(Metrics.Revenue, Metrics.ROAS, false, weeklyNotMonthly);
+            CreateChart(Metrics.Orders, Metrics.CPO, true, weeklyNotMonthly);
         }
         //protected void CreateWeeklyChart(Metric metric1, Metric metric2, bool rightSide = false)
         //{
@@ -477,28 +458,14 @@ namespace DAGenerators.Spreadsheets
         public IEnumerable<Metric> GetMetrics(bool shownOnly)
         {
             var metrics = new List<Metric>();
-            PossiblyAddMetric(metrics, Metric_Clicks, shownOnly);
-            PossiblyAddMetric(metrics, Metric_Impressions, shownOnly);
-            PossiblyAddMetric(metrics, Metric_Orders, shownOnly);
-            PossiblyAddMetric(metrics, Metric_Cost, shownOnly);
-            PossiblyAddMetric(metrics, Metric_Revenue, shownOnly);
-            PossiblyAddMetric(metrics, Metric_Calls, shownOnly);
-            PossiblyAddMetric(metrics, Metric_ViewThrus, shownOnly);
-            PossiblyAddMetric(metrics, Metric_CassConvs, shownOnly);
-            PossiblyAddMetric(metrics, Metric_CassConVal, shownOnly);
-
-            PossiblyAddMetric(metrics, Metric_OrderRate, shownOnly);
-            PossiblyAddMetric(metrics, Metric_Net, shownOnly);
-            PossiblyAddMetric(metrics, Metric_RevPerOrder, shownOnly);
-            PossiblyAddMetric(metrics, Metric_CTR, shownOnly);
-            PossiblyAddMetric(metrics, Metric_CPC, shownOnly);
-            PossiblyAddMetric(metrics, Metric_CPO, shownOnly);
-            PossiblyAddMetric(metrics, Metric_ROAS, shownOnly);
-            PossiblyAddMetric(metrics, Metric_ROI, shownOnly);
-            PossiblyAddMetric(metrics, Metric_TotalLeads, shownOnly);
-            PossiblyAddMetric(metrics, Metric_CPL, shownOnly);
-            PossiblyAddMetric(metrics, Metric_ViewThruRev, shownOnly);
-
+            foreach (var ncMetric in Metrics.GetNonComputedMetrics())
+            {
+                PossiblyAddMetric(metrics, ncMetric, shownOnly);
+            }
+            foreach (var cMetric in Metrics.GetComputedMetrics())
+            {
+                PossiblyAddMetric(metrics, cMetric, shownOnly);
+            }
             return metrics;
         }
         public void PossiblyAddMetric(IList<Metric> metrics, Metric metric, bool onlyIfShown)
@@ -508,9 +475,10 @@ namespace DAGenerators.Spreadsheets
         }
     }
 
+    // maybe call this "StatsClassPropertyNames"
     public class MetricPropertyNames
     {
-        public string Title;
+        public string Title; // (not a metric)
         public string Impressions;
         public string Clicks;
         public string Orders;
@@ -520,5 +488,56 @@ namespace DAGenerators.Spreadsheets
         public string ViewThrus;
         public string CassConvs;
         public string CassConVal;
+    }
+
+    public class MetricsHolder
+    {
+        public Metric Impressions, Clicks, Orders, Cost, Revenue, Calls, ViewThrus, CassConvs, CassConVal;
+        public Metric OrderRate, Net, RevPerOrder, CTR, CPC, CPO, ROAS, ROI, TotalLeads, CPL, ViewThruRev;
+
+        public MetricsHolder()
+        {
+            // ? Put this in a base class - or just the main metrics ?
+            Impressions = new Metric(0, null, false, false);
+            Clicks = new Metric(0, null, false, false);
+            Orders = new Metric(0, null, false, false);
+            Cost = new Metric(0, null, false, false);
+            Revenue = new Metric(0, null, false, false);
+            Calls = new Metric(0, null, false, false);
+            ViewThrus = new Metric(0, null, false, false); // View-Through Conversions
+            CassConvs = new Metric(0, null, false, false); // Click-Assisted Conversions
+            CassConVal = new Metric(0, null, false, false);
+
+            // Computed metrics
+            OrderRate = new Metric(0, null, true, false);
+            Net = new Metric(0, null, true, false);
+            RevPerOrder = new Metric(0, null, true, false);
+            CTR = new Metric(0, null, true, false);
+            CPC = new Metric(0, null, true, false);
+            CPO = new Metric(0, null, true, false);
+            ROAS = new Metric(0, null, true, false);
+            ROI = new Metric(0, null, true, false);
+            TotalLeads = new Metric(0, null, true, false);
+            CPL = new Metric(0, null, true, false);
+            ViewThruRev = new Metric(0, null, true, false);
+        }
+
+        public IEnumerable<Metric> GetNonComputedMetrics()
+        {
+            var metrics = new Metric[]
+            {
+                Impressions, Clicks, Orders, Cost, Revenue, Calls, ViewThrus, CassConvs, CassConVal
+            };
+            return metrics;
+        }
+
+        public IEnumerable<Metric> GetComputedMetrics()
+        {
+            var metrics = new Metric[]
+            {
+                OrderRate, Net, RevPerOrder, CTR, CPC, CPO, ROAS, ROI, TotalLeads, CPL, ViewThruRev
+            };
+            return metrics;
+        }
     }
 }
