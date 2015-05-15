@@ -7,15 +7,15 @@ namespace DAGenerators.Spreadsheets
         {
             TemplateFilename = "SearchTemplateLeadGen.xlsx";
 
-            Metrics.Title = new Metric(2, null);
-            Metrics.Clicks = new Metric(3, "Clicks");
-            Metrics.Impressions = new Metric(4, "Impressions");
-            Metrics.CTR = new Metric(5, "CTR", true);
-            Metrics.Cost = new Metric(6, "Spend");
-            Metrics.CPC = new Metric(7, "CPC", true);
-            Metrics.Orders = new Metric(8, "Leads");
-            Metrics.CPL = new Metric(9, "CPL", true);
-            Metrics.OrderRate = new Metric(10, "Conv Rate", true);
+            Metrics.Title = new Metric(2, null) { PropName = "Title" };
+            Metrics.Clicks = new Metric(3, "Clicks") { PropName = "Clicks" };
+            Metrics.Impressions = new Metric(4, "Impressions") { PropName = "Impressions" };
+            Metrics.CTR = new Metric(5, "CTR");
+            Metrics.Cost = new Metric(6, "Spend") { PropName = "Cost" };
+            Metrics.CPC = new Metric(7, "CPC");
+            Metrics.Orders = new Metric(8, "Leads") { PropName = "Orders" };
+            Metrics.CPL = new Metric(9, "CPL");
+            Metrics.OrderRate = new Metric(10, "Conv Rate");
         }
 
         public override void CreateCharts(bool weeklyNotMonthly)
@@ -31,17 +31,17 @@ namespace DAGenerators.Spreadsheets
         {
             TemplateFilename = "SearchTemplateLeadGenWithCalls.xlsx";
 
-            Metrics.Title = new Metric(2, null);
-            Metrics.Clicks = new Metric(3, "Clicks");
-            Metrics.Impressions = new Metric(4, "Impressions");
-            Metrics.CTR = new Metric(5, "CTR", true);
-            Metrics.Cost = new Metric(6, "Spend");
-            Metrics.CPC = new Metric(7, "CPC", true);
-            Metrics.Orders = new Metric(8, "Leads");
-            Metrics.Calls = new Metric(9, "Calls");
-            Metrics.TotalLeads = new Metric(10, "Total Leads", true);
-            Metrics.CPL = new Metric(11, "CPL", true);
-            Metrics.OrderRate = new Metric(12, "Conv Rate", true);
+            Metrics.Title = new Metric(2, null) { PropName = "Title" };
+            Metrics.Clicks = new Metric(3, "Clicks") { PropName = "Clicks" };
+            Metrics.Impressions = new Metric(4, "Impressions") { PropName = "Impressions" };
+            Metrics.CTR = new Metric(5, "CTR");
+            Metrics.Cost = new Metric(6, "Spend") { PropName = "Cost" };
+            Metrics.CPC = new Metric(7, "CPC");
+            Metrics.Orders = new Metric(8, "Leads") { PropName = "Orders" };
+            Metrics.Calls = new Metric(9, "Calls") { PropName = "Calls" };
+            Metrics.TotalLeads = new Metric(10, "Total Leads");
+            Metrics.CPL = new Metric(11, "CPL");
+            Metrics.OrderRate = new Metric(12, "Conv Rate");
         }
 
         public override void CreateCharts(bool weeklyNotMonthly)

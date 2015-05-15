@@ -49,27 +49,9 @@ namespace DAGenerators.Spreadsheets
         protected int NumCampaignPerfWeeksAdded { get; set; }
         protected int NumCampaignPerfMonthsAdded { get; set; }
 
-        // The property names (of type T) for the main metrics - used when loading stats (using a collection of type T)
-        protected MetricPropertyNames PropNames { get; set; }
-
         public SearchReportPPC()
         {
             Metrics = new MetricsHolder();
-
-            PropNames = new MetricPropertyNames
-            {
-                Title = "Title",
-                Impressions = "Impressions",
-                Clicks = "Clicks",
-                Orders = "Orders",
-                Cost = "Cost",
-                Revenue = "Revenue",
-                Calls = "Calls",
-                ViewThrus = "ViewThrus",
-                CassConvs = "CassConvs",
-                CassConVal = "CassConVal"
-            };
-            //TODO: a way for the caller to specify different property names
         }
 
         public void Setup(string templateFolder)
@@ -84,23 +66,24 @@ namespace DAGenerators.Spreadsheets
 
         protected virtual void Setup()
         {
+            //TODO: a way for the caller to specify different property names
             Metrics.Title = new Metric(2, null) { PropName = "Title" };
             Metrics.Clicks = new Metric(3, "Clicks") { PropName = "Clicks" };
             Metrics.Impressions = new Metric(4, "Impressions") { PropName = "Impressions" };
-            Metrics.CTR = new Metric(5, "CTR", true);
+            Metrics.CTR = new Metric(5, "CTR");
             Metrics.Cost = new Metric(6, "Spend") { PropName = "Cost" };
-            Metrics.CPC = new Metric(7, "CPC", true);
+            Metrics.CPC = new Metric(7, "CPC");
             Metrics.Orders = new Metric(8, "Orders") { PropName = "Orders" };
             Metrics.Revenue = new Metric(9, "Revenue") { PropName = "Revenue" };
-            Metrics.Net = new Metric(10, "Net", true);
+            Metrics.Net = new Metric(10, "Net");
             Metrics.ViewThrus = new Metric(11, "ViewThrus") { PropName = "ViewThrus" };
-            Metrics.ViewThruRev = new Metric(12, "ViewThruRev", true);
+            Metrics.ViewThruRev = new Metric(12, "ViewThruRev");
             Metrics.CassConvs = new Metric(13, "ClickAssistConv") { PropName = "CassConvs" };
             Metrics.CassConVal = new Metric(14, "CAC Val") { PropName = "CassConVal" };
-            Metrics.CPO = new Metric(15, "Cost/Order", true);
-            Metrics.OrderRate = new Metric(16, "Order Rate", true);
-            Metrics.RevPerOrder = new Metric(17, "Rev/Order", true);
-            Metrics.ROAS = new Metric(18, "ROAS", true);
+            Metrics.CPO = new Metric(15, "Cost/Order");
+            Metrics.OrderRate = new Metric(16, "Order Rate");
+            Metrics.RevPerOrder = new Metric(17, "Rev/Order");
+            Metrics.ROAS = new Metric(18, "ROAS");
         }
 
         // Do this after setting up the columns
@@ -425,21 +408,6 @@ namespace DAGenerators.Spreadsheets
             chart.Legend.Position = eLegendPosition.Bottom;
         }
 
-    }
-
-    // maybe call this "StatsClassPropertyNames"
-    public class MetricPropertyNames
-    {
-        public string Title;
-        public string Impressions;
-        public string Clicks;
-        public string Orders;
-        public string Cost;
-        public string Revenue;
-        public string Calls;
-        public string ViewThrus;
-        public string CassConvs;
-        public string CassConVal;
     }
 
     public class MetricsHolder
