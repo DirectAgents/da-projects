@@ -120,7 +120,7 @@ namespace DAGenerators.Spreadsheets
         {
             int blankRows = 1;
             int startRow = StartRow_Weekly + (WeeklyFirst ? 0 : NumMonthRowsAdded);
-            NumWeekRowsAdded = LoadWeeklyMonthlyStats(stats, startRow, blankRows);
+            NumWeekRowsAdded = LoadStats(stats, startRow, blankRows);
             NumWeeksAdded = stats.Count();
             if (NumWeeksAdded == 0)
             {   // Delete the entire section, including blank row above
@@ -133,7 +133,7 @@ namespace DAGenerators.Spreadsheets
         {
             int blankRows = 1;
             int startRow = StartRow_Monthly + (WeeklyFirst ? NumWeekRowsAdded : 0);
-            NumMonthRowsAdded = LoadWeeklyMonthlyStats(stats, startRow, blankRows);
+            NumMonthRowsAdded = LoadStats(stats, startRow, blankRows);
             NumMonthsAdded = stats.Count();
             if (NumMonthsAdded == 0)
             {   // Delete the entire section, including blank row above
@@ -143,8 +143,9 @@ namespace DAGenerators.Spreadsheets
             }
         }
 
+//TODO: rename & put in base class ?
         // returns: # of rows added (in addition to blankRowsInTemplate); negative means blankRows deleted
-        protected int LoadWeeklyMonthlyStats<T>(IEnumerable<T> stats, int startingRow, int blankRowsInTemplate = 0)
+        protected int LoadStats<T>(IEnumerable<T> stats, int startingRow, int blankRowsInTemplate = 0)
         {
             int numRows = stats.Count();
             int blankRowsToInsert = numRows - blankRowsInTemplate;
@@ -172,29 +173,17 @@ namespace DAGenerators.Spreadsheets
                     //}
                 }
 
-                foreach (var metric in Metrics.GetNonComputed(true))
-                {
-                    LoadColumnFromStats(stats, startingRow, metric.ColNum, metric.PropName);
-                }
+                LoadStats(WS, startingRow, stats, Metrics);
             }
             return blankRowsToInsert;
         }
 
-        private void LoadColumnFromStatsX<T>(IEnumerable<T> stats, int startingRow, Metric metric, string propertyName)
-        {
-            LoadColumnFromStats<T>(stats, startingRow, metric.ColNum, propertyName);
-        }
-        private void LoadColumnFromStats<T>(IEnumerable<T> stats, int startingRow, int iColumn, string propertyName)
-        {
-            var type = stats.First().GetType();
-            WS.Cells[startingRow, iColumn].LoadFromCollection(stats, false, TableStyles.None, BindingFlags.Default, new[] { type.GetProperty(propertyName) });
-        }
-
-        // for the most recently completed month
+        // (for the most recently completed month)
+        // IEnumerable<T> stats should have two elements: last year's and this year's stats
         public virtual void LoadYearOverYearStats<T>(IEnumerable<T> stats)
         {
             int startRow = StartRow_YearOverYear + NumWeekRowsAdded + NumMonthRowsAdded;
-            LoadYearOverYearStats(stats, startRow);
+            LoadStats(WS, startRow, stats, Metrics);
 
             //YoY diff row...
             string diffFormula = "IFERROR((R[-1]C-R[-2]C)/R[-2]C,\"-\")";
@@ -202,13 +191,6 @@ namespace DAGenerators.Spreadsheets
             foreach (var metric in metrics)
             {
                 WS.Cells[startRow + 2, metric.ColNum].FormulaR1C1 = diffFormula;
-            }
-        }
-        protected void LoadYearOverYearStats<T>(IEnumerable<T> stats, int startingRow)
-        {
-            foreach (var metric in Metrics.GetNonComputed(true))
-            {
-                LoadColumnFromStats(stats, startingRow, metric.ColNum, metric.PropName);
             }
         }
 
@@ -292,7 +274,7 @@ namespace DAGenerators.Spreadsheets
                 }
 
                 // populate the campaign rows for this subgroup
-                numRowsAdded += LoadWeeklyMonthlyStats(campaignStatsDict[subgroupKey], startRowSubgroupStats, NumRows_CampaignPerfSubTemplate - 1);
+                numRowsAdded += LoadStats(campaignStatsDict[subgroupKey], startRowSubgroupStats, NumRows_CampaignPerfSubTemplate - 1);
 
                 // set the subgroup title
                 int subgroupTotalRow = startRowSubgroupStats + numCampaigns;
@@ -410,7 +392,7 @@ namespace DAGenerators.Spreadsheets
 
     }
 
-    public class MetricsHolder
+    public class MetricsHolder : MetricsHolderBase
     {
         // Non-computed...
         public Metric Title;
@@ -419,8 +401,7 @@ namespace DAGenerators.Spreadsheets
         // Computed...
         public Metric OrderRate, Net, RevPerOrder, CTR, CPC, CPO, ROAS, ROI, TotalLeads, CPL, ViewThruRev;
 
-        // Note: should return metrics that have 'propnames' - corresponding to properties of type T when loading
-        public IEnumerable<Metric> GetNonComputed(bool includeTitle)
+        public override IEnumerable<Metric> GetNonComputed(bool includeTitle)
         {
             var metrics = new Metric[]
             {
@@ -432,18 +413,13 @@ namespace DAGenerators.Spreadsheets
             return ncMetrics;
         }
 
-        public IEnumerable<Metric> GetComputed()
+        public override IEnumerable<Metric> GetComputed()
         {
             var metrics = new Metric[]
             {
                 OrderRate, Net, RevPerOrder, CTR, CPC, CPO, ROAS, ROI, TotalLeads, CPL, ViewThruRev
             };
             return metrics.Where(m => m != null);
-        }
-
-        public IEnumerable<Metric> GetAll(bool includeTitle)
-        {
-            return GetNonComputed(includeTitle).Concat(GetComputed());
         }
     }
 }

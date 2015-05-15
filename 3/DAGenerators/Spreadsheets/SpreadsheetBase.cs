@@ -1,6 +1,10 @@
-﻿using OfficeOpenXml;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Mail;
+using System.Reflection;
+using OfficeOpenXml;
+using OfficeOpenXml.Table;
 
 namespace DAGenerators.Spreadsheets
 {
@@ -36,6 +40,21 @@ namespace DAGenerators.Spreadsheets
             if (this.ExcelPackage != null)
                 this.ExcelPackage.Dispose();
         }
+
+        // --- Possibly for a separate class representing one tab (worksheet) ---
+
+        protected void LoadStats<T>(ExcelWorksheet ws, int startingRow, IEnumerable<T> stats, MetricsHolderBase metrics)
+        {
+            foreach (var metric in metrics.GetNonComputed(true))
+            {
+                LoadColumnFromStats(ws, startingRow, stats, metric);
+            }
+        }
+        private void LoadColumnFromStats<T>(ExcelWorksheet ws, int startingRow, IEnumerable<T> stats, Metric metric)
+        {
+            var type = stats.First().GetType();
+            ws.Cells[startingRow, metric.ColNum].LoadFromCollection(stats, false, TableStyles.None, BindingFlags.Default, new[] { type.GetProperty(metric.PropName) });
+        }
     }
 
     public class Metric
@@ -49,5 +68,18 @@ namespace DAGenerators.Spreadsheets
         public int ColNum { get; set; }
         public string DisplayName { get; set; } // mainly used for charts
         public string PropName { get; set; }
+    }
+
+    public abstract class MetricsHolderBase
+    {
+        // Should return metrics that have 'propnames' - corresponding to properties of type T when loading
+        public abstract IEnumerable<Metric> GetNonComputed(bool includeTitle);
+
+        public abstract IEnumerable<Metric> GetComputed();
+
+        public IEnumerable<Metric> GetAll(bool includeTitle)
+        {
+            return GetNonComputed(includeTitle).Concat(GetComputed());
+        }
     }
 }
