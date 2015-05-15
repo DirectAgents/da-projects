@@ -44,13 +44,13 @@ namespace DAGenerators.Spreadsheets
             spreadsheet.Setup(templateFolder);
             if (!searchProfile.ShowViewThrus)
             {
-                spreadsheet.MakeColumnHidden(spreadsheet.Metrics.ViewThrus);
-                spreadsheet.MakeColumnHidden(spreadsheet.Metrics.ViewThruRev);
+                spreadsheet.MakeColumnHidden(spreadsheet.Metrics1.ViewThrus);
+                spreadsheet.MakeColumnHidden(spreadsheet.Metrics1.ViewThruRev);
             }
             if (!searchProfile.ShowCassConvs)
             {
-                spreadsheet.MakeColumnHidden(spreadsheet.Metrics.CassConvs);
-                spreadsheet.MakeColumnHidden(spreadsheet.Metrics.CassConVal);
+                spreadsheet.MakeColumnHidden(spreadsheet.Metrics1.CassConvs);
+                spreadsheet.MakeColumnHidden(spreadsheet.Metrics1.CassConVal);
             }
             spreadsheet.SetReportDate(endDate);
             spreadsheet.SetClientName(searchProfile.SearchProfileName);
@@ -58,8 +58,7 @@ namespace DAGenerators.Spreadsheets
             bool partialMonth = (endDate.AddDays(1).Day > 1); // it's a full month if the day after endDate is the 1st
 
             var weeklyStats = cpRepo.GetWeekStats(searchProfile, numWeeks, endDate);
-            bool yoy = false;
-            var monthlyStats = cpRepo.GetMonthStats(searchProfile, numMonths, endDate, yoy);
+            var monthlyStats = cpRepo.GetMonthStats(searchProfile, numMonths, endDate, false);
             spreadsheet.LoadWeeklyStats(weeklyStats);
             spreadsheet.LoadMonthlyStats(monthlyStats);
 
@@ -67,6 +66,11 @@ namespace DAGenerators.Spreadsheets
                 spreadsheet.CreateCharts(true);
             else if (monthlyStats.Count() > 0)
                 spreadsheet.CreateCharts(false);
+
+            // YearOverYear full stats - for the YoY sheet
+            int numMonthsYoY = (numMonths > 12) ? 12 : numMonths;
+            var yoyMonthlyStats = cpRepo.GetMonthStats(searchProfile, numMonthsYoY, endDate, true);
+            spreadsheet.LoadYearOverYear_Full(yoyMonthlyStats);
 
             // Year-Over-Year - for the most recent completed month
             DateTime monthStart = new DateTime(endDate.Year, endDate.Month, 1); // temp value
@@ -81,8 +85,8 @@ namespace DAGenerators.Spreadsheets
             var monthStatsLastYear = cpRepo.GetSearchStats(searchProfile, monthStart, monthEnd, false);
             monthStatsLastYear.Title = monthStart.ToString("MMM-yy");
 
-            var yoyStats = new[] { monthStatsLastYear, monthStats };
-            spreadsheet.LoadYearOverYearStats(yoyStats);
+            var yoyStats_Summary = new[] { monthStatsLastYear, monthStats };
+            spreadsheet.LoadYearOverYear_Summary(yoyStats_Summary);
 
             // Monthly campaign performance stats...
             // start with the most recent and go back the number of months specified

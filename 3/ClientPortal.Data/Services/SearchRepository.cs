@@ -692,7 +692,7 @@ namespace ClientPortal.Data.Services
                     while (iPrev < orderedStats.Count && orderedStats[iPrev].StartDate < start_OneYearPrior)
                         iPrev++;
                     if (iPrev < orderedStats.Count && orderedStats[iPrev].StartDate == start_OneYearPrior)
-                        orderedStats[i].Last = new SearchStatVals(orderedStats[iPrev]);
+                        orderedStats[i].Prev = new SearchStatVals(orderedStats[iPrev]);
 
                     finalStats.Add(orderedStats[i]);
                 }

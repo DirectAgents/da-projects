@@ -129,6 +129,37 @@ namespace ClientPortal.Data.DTOs
 
     public class SearchStat : SearchStatVals
     {
+        // --- TEMP ---
+        public int Impressions_() { return Impressions; }
+        public int Clicks_() { return Clicks; }
+        public int Orders_() { return Orders; }
+        public int ViewThrus_() { return ViewThrus; }
+        public decimal ViewThruRev_() { return ViewThruRev; }
+        public int CassConvs_() { return CassConvs; }
+        public double CassConVal_() { return CassConVal; }
+        public decimal Revenue_() { return Revenue; }
+        public decimal Cost_() { return Cost; }
+        public int Calls_() { return Calls; }
+        public int TotalLeads_() { return TotalLeads; }
+        //public decimal OrderRate_() { return OrderRate; }
+        //public decimal ConvRate_() { return ConvRate; }
+        //public decimal CPO_() { return CPO; }
+        //public decimal CPL_() { return CPL; }
+        //public int ROAS_() { return ROAS; }
+        //public decimal Margin_() { return Margin; }
+        //public decimal RevenuePerOrder_() { return RevenuePerOrder; }
+        //public decimal CPC_() { return CPC; }
+        //public decimal CTR_() { return CTR; }
+
+        public int PrevImpressions() { return Prev.Impressions; }
+        public int PrevClicks() { return Prev.Clicks; }
+        public int PrevOrders() { return Prev.Orders; }
+        public decimal PrevCost() { return Prev.Cost; }
+        public decimal PrevRevenue() { return Prev.Revenue; }
+        // --- end TEMP ---
+
+        public SearchStatVals Prev { get; set; } // for the prev year's stats
+
         public string Campaign { get; set; }
         public string Channel { get; set; }
         public string Title { get; set; }
@@ -215,8 +246,6 @@ namespace ClientPortal.Data.DTOs
                 }
             }
         }
-
-        public SearchStatVals Last { get; set; } // for last year's stats
 
         public int Days { get; set; }
 

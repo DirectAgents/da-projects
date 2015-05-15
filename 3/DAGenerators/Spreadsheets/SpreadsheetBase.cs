@@ -45,7 +45,7 @@ namespace DAGenerators.Spreadsheets
         // --- Possibly for a separate class representing one tab (worksheet) ---
 
         // returns: # of rows added (in addition to blankRowsInTemplate); negative means blankRows deleted
-        protected static int LoadStats<T>(MetricsHolderBase metrics, ExcelWorksheet ws, int startingRow, IEnumerable<T> stats, int blankRowsInTemplate)
+        protected static int LoadStats<T>(MetricsHolderBase metrics, ExcelWorksheet ws, int startingRow, IEnumerable<T> stats, int blankRowsInTemplate = 1)
         {
             // First, prepare the worksheet-area by adding/removing blank rows - if necessary
             int numRows = stats.Count();
@@ -84,8 +84,16 @@ namespace DAGenerators.Spreadsheets
         }
         private static void LoadColumnFromStats<T>(ExcelWorksheet ws, int startingRow, IEnumerable<T> stats, Metric metric)
         {
-            var type = stats.First().GetType();
-            ws.Cells[startingRow, metric.ColNum].LoadFromCollection(stats, false, TableStyles.None, BindingFlags.Default, new[] { type.GetProperty(metric.PropName) });
+            if (!metric.PropName.Contains('.'))
+            {
+                var type = stats.First().GetType();
+                ws.Cells[startingRow, metric.ColNum].LoadFromCollection(stats, false, TableStyles.None, BindingFlags.Default, type.GetMember(metric.PropName));
+            }
+            else
+            {
+                //var props = metric.PropName.Split(new char[] { '.' }, 2);
+                //PropertyInfo pi;
+            }
         }
 
         protected static void CreateChart(ExcelWorksheet ws, int titleCol, Metric metric1, Metric metric2, int startRow_Stats, int numRows_Stats, int topRow, int leftCol, int chartWidth, int chartHeight, string typeWM, string chartNameSuffix)
@@ -131,10 +139,25 @@ namespace DAGenerators.Spreadsheets
 
     public abstract class MetricsHolderBase
     {
-        // Should return metrics that have 'propnames' - corresponding to properties of type T when loading
-        public abstract IEnumerable<Metric> GetNonComputed(bool includeTitle);
+        public Metric Title;
 
-        public abstract IEnumerable<Metric> GetComputed();
+        // Should return metrics that have 'propnames' - corresponding to properties of type T when loading
+        public virtual IEnumerable<Metric> GetNonComputed()
+        {
+            return new Metric[] { };
+        }
+        public IEnumerable<Metric> GetNonComputed(bool includeTitle)
+        {
+            var ncMetrics = GetNonComputed();
+            if (includeTitle && Title != null)
+                ncMetrics = (new Metric[] { Title }).Concat(ncMetrics);
+            return ncMetrics;
+        }
+
+        public virtual IEnumerable<Metric> GetComputed()
+        {
+            return new Metric[] { };
+        }
 
         public IEnumerable<Metric> GetAll(bool includeTitle)
         {
