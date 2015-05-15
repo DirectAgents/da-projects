@@ -84,10 +84,10 @@ namespace DAGenerators.Spreadsheets
         }
         private static void LoadColumnFromStats<T>(ExcelWorksheet ws, int startingRow, IEnumerable<T> stats, Metric metric)
         {
-            if (!metric.PropName.Contains('.'))
+            if (!metric.MemberName.Contains('.'))
             {
                 var type = stats.First().GetType();
-                ws.Cells[startingRow, metric.ColNum].LoadFromCollection(stats, false, TableStyles.None, BindingFlags.Default, type.GetMember(metric.PropName));
+                ws.Cells[startingRow, metric.ColNum].LoadFromCollection(stats, false, TableStyles.None, BindingFlags.Default, type.GetMember(metric.MemberName));
             }
             else
             {
@@ -134,7 +134,7 @@ namespace DAGenerators.Spreadsheets
 
         public int ColNum { get; set; }
         public string DisplayName { get; set; } // mainly used for charts
-        public string PropName { get; set; }
+        public string MemberName { get; set; }
     }
 
     public abstract class MetricsHolderBase

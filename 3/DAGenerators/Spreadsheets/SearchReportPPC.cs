@@ -69,35 +69,35 @@ namespace DAGenerators.Spreadsheets
         protected virtual void Setup()
         {
             //TODO: a way for the caller to specify different property names
-            Metrics1.Title = new Metric(2, null) { PropName = "Title" };
-            Metrics1.Clicks = new Metric(3, "Clicks") { PropName = "Clicks_" };
-            Metrics1.Impressions = new Metric(4, "Impressions") { PropName = "Impressions_" };
+            Metrics1.Title = new Metric(2, null) { MemberName = "Title" };
+            Metrics1.Clicks = new Metric(3, "Clicks") { MemberName = "Clicks_" };
+            Metrics1.Impressions = new Metric(4, "Impressions") { MemberName = "Impressions_" };
             Metrics1.CTR = new Metric(5, "CTR");
-            Metrics1.Cost = new Metric(6, "Spend") { PropName = "Cost_" };
+            Metrics1.Cost = new Metric(6, "Spend") { MemberName = "Cost_" };
             Metrics1.CPC = new Metric(7, "CPC");
-            Metrics1.Orders = new Metric(8, "Orders") { PropName = "Orders_" };
-            Metrics1.Revenue = new Metric(9, "Revenue") { PropName = "Revenue_" };
+            Metrics1.Orders = new Metric(8, "Orders") { MemberName = "Orders_" };
+            Metrics1.Revenue = new Metric(9, "Revenue") { MemberName = "Revenue_" };
             Metrics1.Net = new Metric(10, "Net");
-            Metrics1.ViewThrus = new Metric(11, "ViewThrus") { PropName = "ViewThrus_" };
+            Metrics1.ViewThrus = new Metric(11, "ViewThrus") { MemberName = "ViewThrus_" };
             Metrics1.ViewThruRev = new Metric(12, "ViewThruRev");
-            Metrics1.CassConvs = new Metric(13, "ClickAssistConv") { PropName = "CassConvs_" };
-            Metrics1.CassConVal = new Metric(14, "CAC Val") { PropName = "CassConVal_" };
+            Metrics1.CassConvs = new Metric(13, "ClickAssistConv") { MemberName = "CassConvs_" };
+            Metrics1.CassConVal = new Metric(14, "CAC Val") { MemberName = "CassConVal_" };
             Metrics1.CPO = new Metric(15, "Cost/Order");
             Metrics1.OrderRate = new Metric(16, "Order Rate");
             Metrics1.RevPerOrder = new Metric(17, "Rev/Order");
             Metrics1.ROAS = new Metric(18, "ROAS");
 
-            Metrics2.Title = new Metric(2, null) { PropName = "Title" };
-            Metrics2.Clicks1 = new Metric(3, "ClicksYr1") { PropName = "PrevClicks" };
-            Metrics2.Clicks2 = new Metric(4, "ClicksYr2") { PropName = "Clicks_" };
-            Metrics2.Impressions1 = new Metric(5, "ImpressionsYr1") { PropName = "PrevImpressions" };
-            Metrics2.Impressions2 = new Metric(6, "ImpressionsYr2") { PropName = "Impressions_" };
-            Metrics2.Cost1 = new Metric(7, "SpendYr1") { PropName = "PrevCost" };
-            Metrics2.Cost2 = new Metric(8, "SpendYr2") { PropName = "Cost_" };
-            Metrics2.Orders1 = new Metric(9, "OrdersYr1") { PropName = "PrevOrders" };
-            Metrics2.Orders2 = new Metric(10, "OrdersYr2") { PropName = "Orders_" };
-            Metrics2.Revenue1 = new Metric(11, "RevenueYr1") { PropName = "PrevRevenue" };
-            Metrics2.Revenue2 = new Metric(12, "RevenueYr2") { PropName = "Revenue_" };
+            Metrics2.Title = new Metric(2, null) { MemberName = "Title" };
+            Metrics2.Clicks1 = new Metric(3, "ClicksYr1") { MemberName = "PrevClicks" };
+            Metrics2.Clicks2 = new Metric(4, "ClicksYr2") { MemberName = "Clicks_" };
+            Metrics2.Impressions1 = new Metric(5, "ImpressionsYr1") { MemberName = "PrevImpressions" };
+            Metrics2.Impressions2 = new Metric(6, "ImpressionsYr2") { MemberName = "Impressions_" };
+            Metrics2.Cost1 = new Metric(7, "SpendYr1") { MemberName = "PrevCost" };
+            Metrics2.Cost2 = new Metric(8, "SpendYr2") { MemberName = "Cost_" };
+            Metrics2.Orders1 = new Metric(9, "OrdersYr1") { MemberName = "PrevOrders" };
+            Metrics2.Orders2 = new Metric(10, "OrdersYr2") { MemberName = "Orders_" };
+            Metrics2.Revenue1 = new Metric(11, "RevenueYr1") { MemberName = "PrevRevenue" };
+            Metrics2.Revenue2 = new Metric(12, "RevenueYr2") { MemberName = "Revenue_" };
         }
 
         // Do this after setting up the columns
