@@ -44,13 +44,14 @@ namespace DAGenerators.Spreadsheets
         {
             this.ColNum = colNum;
             this.DisplayName = displayName;
-            this.IsComputed = isComputed;
-            this.Show = show;
+            //this.IsComputed = isComputed;
+            //this.Show = show;
         }
 
         public int ColNum { get; set; }
-        public string DisplayName { get; set; }
-        public bool IsComputed { get; set; }
-        public bool Show { get; set; }
+        public string DisplayName { get; set; } // mainly used for charts
+        //public bool IsComputed { get; set; }
+        //public bool Show { get; set; }
+        public string PropName { get; set; }
     }
 }

@@ -17,7 +17,6 @@ namespace DAGenerators.Spreadsheets
         private const int Row_ClientNameBottom = 24;
         private const int Row_Charts = 27;
 
-        private const int Col_StatsTitle = 2;
         private const int Col_LeftChart = 2;
         private const int Col_RightChart = 9;
         private const int ChartWidth = 590;
@@ -85,18 +84,19 @@ namespace DAGenerators.Spreadsheets
 
         protected virtual void Setup()
         {
-            Metrics.Clicks = new Metric(3, "Clicks");
-            Metrics.Impressions = new Metric(4, "Impressions");
+            Metrics.Title = new Metric(2, null) { PropName = "Title" };
+            Metrics.Clicks = new Metric(3, "Clicks") { PropName = "Clicks" };
+            Metrics.Impressions = new Metric(4, "Impressions") { PropName = "Impressions" };
             Metrics.CTR = new Metric(5, "CTR", true);
-            Metrics.Cost = new Metric(6, "Spend");
+            Metrics.Cost = new Metric(6, "Spend") { PropName = "Cost" };
             Metrics.CPC = new Metric(7, "CPC", true);
-            Metrics.Orders = new Metric(8, "Orders");
-            Metrics.Revenue = new Metric(9, "Revenue");
+            Metrics.Orders = new Metric(8, "Orders") { PropName = "Orders" };
+            Metrics.Revenue = new Metric(9, "Revenue") { PropName = "Revenue" };
             Metrics.Net = new Metric(10, "Net", true);
-            Metrics.ViewThrus = new Metric(11, "ViewThrus");
+            Metrics.ViewThrus = new Metric(11, "ViewThrus") { PropName = "ViewThrus" };
             Metrics.ViewThruRev = new Metric(12, "ViewThruRev", true);
-            Metrics.CassConvs = new Metric(13, "ClickAssistConv");
-            Metrics.CassConVal = new Metric(14, "CAC Val");
+            Metrics.CassConvs = new Metric(13, "ClickAssistConv") { PropName = "CassConvs" };
+            Metrics.CassConVal = new Metric(14, "CAC Val") { PropName = "CassConVal" };
             Metrics.CPO = new Metric(15, "Cost/Order", true);
             Metrics.OrderRate = new Metric(16, "Order Rate", true);
             Metrics.RevPerOrder = new Metric(17, "Rev/Order", true);
@@ -105,10 +105,9 @@ namespace DAGenerators.Spreadsheets
 
         // Do this after setting up the columns
         public void MakeColumnHidden(Metric metric)
-        {   // metric.Show==true means the metric exists in this report
-            if (metric.Show)
-                WS.Column(metric.ColNum).Hidden = true;
-                //Note: the column will still exist in the spreadsheet; it will be hidden... the user can unhide it
+        {
+            WS.Column(metric.ColNum).Hidden = true;
+            //Note: the column will still exist in the spreadsheet; it will be hidden... the user can unhide it
         }
 
         public virtual void SetReportDate(DateTime date)
@@ -190,24 +189,17 @@ namespace DAGenerators.Spreadsheets
                     //}
                 }
 
-                LoadColumnFromStats(stats, startingRow, Col_StatsTitle, PropNames.Title);
-                LoadColumnFromStats(stats, startingRow, Metrics.Clicks, PropNames.Clicks);
-                LoadColumnFromStats(stats, startingRow, Metrics.Impressions, PropNames.Impressions);
-                LoadColumnFromStats(stats, startingRow, Metrics.Orders, PropNames.Orders);
-                LoadColumnFromStats(stats, startingRow, Metrics.Cost, PropNames.Cost);
-                LoadColumnFromStats(stats, startingRow, Metrics.Revenue, PropNames.Revenue);
-                LoadColumnFromStats(stats, startingRow, Metrics.Calls, PropNames.Calls);
-                LoadColumnFromStats(stats, startingRow, Metrics.ViewThrus, PropNames.ViewThrus);
-                LoadColumnFromStats(stats, startingRow, Metrics.CassConvs, PropNames.CassConvs);
-                LoadColumnFromStats(stats, startingRow, Metrics.CassConVal, PropNames.CassConVal);
+                foreach (var metric in Metrics.GetNonComputed(true))
+                {
+                    LoadColumnFromStats(stats, startingRow, metric.ColNum, metric.PropName);
+                }
             }
             return blankRowsToInsert;
         }
 
-        private void LoadColumnFromStats<T>(IEnumerable<T> stats, int startingRow, Metric metric, string propertyName)
+        private void LoadColumnFromStatsX<T>(IEnumerable<T> stats, int startingRow, Metric metric, string propertyName)
         {
-            if (metric.Show)
-                LoadColumnFromStats<T>(stats, startingRow, metric.ColNum, propertyName);
+            LoadColumnFromStats<T>(stats, startingRow, metric.ColNum, propertyName);
         }
         private void LoadColumnFromStats<T>(IEnumerable<T> stats, int startingRow, int iColumn, string propertyName)
         {
@@ -223,7 +215,7 @@ namespace DAGenerators.Spreadsheets
 
             //YoY diff row...
             string diffFormula = "IFERROR((R[-1]C-R[-2]C)/R[-2]C,\"-\")";
-            var metrics = GetMetrics(true);
+            var metrics = Metrics.GetAll(false);
             foreach (var metric in metrics)
             {
                 WS.Cells[startRow + 2, metric.ColNum].FormulaR1C1 = diffFormula;
@@ -231,16 +223,10 @@ namespace DAGenerators.Spreadsheets
         }
         protected void LoadYearOverYearStats<T>(IEnumerable<T> stats, int startingRow)
         {
-            LoadColumnFromStats(stats, startingRow, Col_StatsTitle, PropNames.Title);
-            LoadColumnFromStats(stats, startingRow, Metrics.Clicks, PropNames.Clicks);
-            LoadColumnFromStats(stats, startingRow, Metrics.Impressions, PropNames.Impressions);
-            LoadColumnFromStats(stats, startingRow, Metrics.Orders, PropNames.Orders);
-            LoadColumnFromStats(stats, startingRow, Metrics.Cost, PropNames.Cost);
-            LoadColumnFromStats(stats, startingRow, Metrics.Revenue, PropNames.Revenue);
-            LoadColumnFromStats(stats, startingRow, Metrics.Calls, PropNames.Calls);
-            LoadColumnFromStats(stats, startingRow, Metrics.ViewThrus, PropNames.ViewThrus);
-            LoadColumnFromStats(stats, startingRow, Metrics.CassConvs, PropNames.CassConvs);
-            LoadColumnFromStats(stats, startingRow, Metrics.CassConVal, PropNames.CassConVal);
+            foreach (var metric in Metrics.GetNonComputed(true))
+            {
+                LoadColumnFromStats(stats, startingRow, metric.ColNum, metric.PropName);
+            }
         }
 
         //TODO: retire this - if can assume all formulas are in template rows in the spreadsheet
@@ -284,7 +270,7 @@ namespace DAGenerators.Spreadsheets
         {
             int startRowStats = startRowTemplate + NumRows_CampaignPerfTemplate; // start below the template
             int numRowsAdded = 0;
-            var nonComputedMetrics = GetNonComputedMetrics(true);
+            var nonComputedMetrics = Metrics.GetNonComputed(false);
             string sumFormula;
 
             // Insert rows (below the template)
@@ -397,18 +383,10 @@ namespace DAGenerators.Spreadsheets
 
         public virtual void CreateCharts(bool weeklyNotMonthly)
         {
-            CreateChart(Metrics.Revenue, Metrics.ROAS, false, weeklyNotMonthly);
-            CreateChart(Metrics.Orders, Metrics.CPO, true, weeklyNotMonthly);
+            CreateChart(Metrics.Title.ColNum, Metrics.Revenue, Metrics.ROAS, false, weeklyNotMonthly);
+            CreateChart(Metrics.Title.ColNum, Metrics.Orders, Metrics.CPO, true, weeklyNotMonthly);
         }
-        //protected void CreateWeeklyChart(Metric metric1, Metric metric2, bool rightSide = false)
-        //{
-        //    CreateChart(metric1, metric2, rightSide, true);
-        //}
-        //protected void CreateMonthlyChart(Metric metric1, Metric metric2, bool rightSide = false)
-        //{
-        //    CreateChart(metric1, metric2, rightSide, false);
-        //}
-        protected void CreateChart(Metric metric1, Metric metric2, bool rightSide, bool weeklyNotMonthly)
+        protected void CreateChart(int titleCol, Metric metric1, Metric metric2, bool rightSide, bool weeklyNotMonthly)
         {
             string typeWM = weeklyNotMonthly ? "Weekly" : "Monthly";
             var chart = WS.Drawings.AddChart("chart" + typeWM + (rightSide ? "Right" : "Left"), eChartType.ColumnClustered);
@@ -432,7 +410,7 @@ namespace DAGenerators.Spreadsheets
                 numRows_Stats = NumMonthsAdded;
             }
             var series = chart.Series.Add(new ExcelAddress(startRow_Stats, metric1.ColNum, startRow_Stats + numRows_Stats - 1, metric1.ColNum).Address,
-                                          new ExcelAddress(startRow_Stats, Col_StatsTitle, startRow_Stats + numRows_Stats - 1, Col_StatsTitle).Address);
+                                          new ExcelAddress(startRow_Stats, titleCol, startRow_Stats + numRows_Stats - 1, titleCol).Address);
             //series.HeaderAddress = new ExcelAddress(Row_StatsHeader, column1, Row_StatsHeader, column1);
             series.Header = metric1.DisplayName;
 
@@ -440,45 +418,19 @@ namespace DAGenerators.Spreadsheets
             chartType2.UseSecondaryAxis = true;
             chartType2.XAxis.Deleted = true;
             var series2 = chartType2.Series.Add(new ExcelAddress(startRow_Stats, metric2.ColNum, startRow_Stats + numRows_Stats - 1, metric2.ColNum).Address,
-                                                new ExcelAddress(startRow_Stats, Col_StatsTitle, startRow_Stats + numRows_Stats - 1, Col_StatsTitle).Address);
+                                                new ExcelAddress(startRow_Stats, titleCol, startRow_Stats + numRows_Stats - 1, titleCol).Address);
             //series2.HeaderAddress = new ExcelAddress(Row_StatsHeader, column2, Row_StatsHeader, column2);
             series2.Header = metric2.DisplayName;
 
             chart.Legend.Position = eLegendPosition.Bottom;
         }
 
-        public IEnumerable<Metric> GetComputedMetrics(bool shownOnly)
-        {
-            return GetMetrics(shownOnly).Where(m => m.IsComputed);
-        }
-        public IEnumerable<Metric> GetNonComputedMetrics(bool shownOnly)
-        {
-            return GetMetrics(shownOnly).Where(m => !m.IsComputed);
-        }
-        public IEnumerable<Metric> GetMetrics(bool shownOnly)
-        {
-            var metrics = new List<Metric>();
-            foreach (var ncMetric in Metrics.GetNonComputedMetrics())
-            {
-                PossiblyAddMetric(metrics, ncMetric, shownOnly);
-            }
-            foreach (var cMetric in Metrics.GetComputedMetrics())
-            {
-                PossiblyAddMetric(metrics, cMetric, shownOnly);
-            }
-            return metrics;
-        }
-        public void PossiblyAddMetric(IList<Metric> metrics, Metric metric, bool onlyIfShown)
-        {
-            if (!onlyIfShown || metric.Show)
-                metrics.Add(metric);
-        }
     }
 
     // maybe call this "StatsClassPropertyNames"
     public class MetricPropertyNames
     {
-        public string Title; // (not a metric)
+        public string Title;
         public string Impressions;
         public string Clicks;
         public string Orders;
@@ -492,52 +444,38 @@ namespace DAGenerators.Spreadsheets
 
     public class MetricsHolder
     {
+        // Non-computed...
+        public Metric Title;
         public Metric Impressions, Clicks, Orders, Cost, Revenue, Calls, ViewThrus, CassConvs, CassConVal;
+
+        // Computed...
         public Metric OrderRate, Net, RevPerOrder, CTR, CPC, CPO, ROAS, ROI, TotalLeads, CPL, ViewThruRev;
 
-        public MetricsHolder()
-        {
-            // ? Put this in a base class - or just the main metrics ?
-            Impressions = new Metric(0, null, false, false);
-            Clicks = new Metric(0, null, false, false);
-            Orders = new Metric(0, null, false, false);
-            Cost = new Metric(0, null, false, false);
-            Revenue = new Metric(0, null, false, false);
-            Calls = new Metric(0, null, false, false);
-            ViewThrus = new Metric(0, null, false, false); // View-Through Conversions
-            CassConvs = new Metric(0, null, false, false); // Click-Assisted Conversions
-            CassConVal = new Metric(0, null, false, false);
-
-            // Computed metrics
-            OrderRate = new Metric(0, null, true, false);
-            Net = new Metric(0, null, true, false);
-            RevPerOrder = new Metric(0, null, true, false);
-            CTR = new Metric(0, null, true, false);
-            CPC = new Metric(0, null, true, false);
-            CPO = new Metric(0, null, true, false);
-            ROAS = new Metric(0, null, true, false);
-            ROI = new Metric(0, null, true, false);
-            TotalLeads = new Metric(0, null, true, false);
-            CPL = new Metric(0, null, true, false);
-            ViewThruRev = new Metric(0, null, true, false);
-        }
-
-        public IEnumerable<Metric> GetNonComputedMetrics()
+        // Note: should return metrics that have 'propnames' - corresponding to properties of type T when loading
+        public IEnumerable<Metric> GetNonComputed(bool includeTitle)
         {
             var metrics = new Metric[]
             {
                 Impressions, Clicks, Orders, Cost, Revenue, Calls, ViewThrus, CassConvs, CassConVal
             };
-            return metrics;
+            var ncMetrics = metrics.Where(m => m != null);
+            if (includeTitle && Title != null)
+                ncMetrics = (new Metric[] { Title }).Concat(ncMetrics);
+            return ncMetrics;
         }
 
-        public IEnumerable<Metric> GetComputedMetrics()
+        public IEnumerable<Metric> GetComputed()
         {
             var metrics = new Metric[]
             {
                 OrderRate, Net, RevPerOrder, CTR, CPC, CPO, ROAS, ROI, TotalLeads, CPL, ViewThruRev
             };
-            return metrics;
+            return metrics.Where(m => m != null);
+        }
+
+        public IEnumerable<Metric> GetAll(bool includeTitle)
+        {
+            return GetNonComputed(includeTitle).Concat(GetComputed());
         }
     }
 }

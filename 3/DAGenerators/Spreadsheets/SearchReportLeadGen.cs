@@ -7,6 +7,7 @@ namespace DAGenerators.Spreadsheets
         {
             TemplateFilename = "SearchTemplateLeadGen.xlsx";
 
+            Metrics.Title = new Metric(2, null);
             Metrics.Clicks = new Metric(3, "Clicks");
             Metrics.Impressions = new Metric(4, "Impressions");
             Metrics.CTR = new Metric(5, "CTR", true);
@@ -19,8 +20,8 @@ namespace DAGenerators.Spreadsheets
 
         public override void CreateCharts(bool weeklyNotMonthly)
         {
-            CreateChart(Metrics.CTR, Metrics.CPC, false, weeklyNotMonthly);
-            CreateChart(Metrics.Orders, Metrics.CPL, true, weeklyNotMonthly);
+            CreateChart(Metrics.Title.ColNum, Metrics.CTR, Metrics.CPC, false, weeklyNotMonthly);
+            CreateChart(Metrics.Title.ColNum, Metrics.Orders, Metrics.CPL, true, weeklyNotMonthly);
         }
     }
 
@@ -30,6 +31,7 @@ namespace DAGenerators.Spreadsheets
         {
             TemplateFilename = "SearchTemplateLeadGenWithCalls.xlsx";
 
+            Metrics.Title = new Metric(2, null);
             Metrics.Clicks = new Metric(3, "Clicks");
             Metrics.Impressions = new Metric(4, "Impressions");
             Metrics.CTR = new Metric(5, "CTR", true);
@@ -44,8 +46,8 @@ namespace DAGenerators.Spreadsheets
 
         public override void CreateCharts(bool weeklyNotMonthly)
         {
-            CreateChart(Metrics.CTR, Metrics.CPC, false, weeklyNotMonthly);
-            CreateChart(Metrics.TotalLeads, Metrics.CPL, true, weeklyNotMonthly);
+            CreateChart(Metrics.Title.ColNum, Metrics.CTR, Metrics.CPC, false, weeklyNotMonthly);
+            CreateChart(Metrics.Title.ColNum, Metrics.TotalLeads, Metrics.CPL, true, weeklyNotMonthly);
         }
     }
 }
