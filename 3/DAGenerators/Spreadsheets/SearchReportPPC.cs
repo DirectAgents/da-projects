@@ -49,8 +49,10 @@ namespace DAGenerators.Spreadsheets
         protected int NumCampaignPerfMonthsAdded { get; set; }
 
         // --- Sheet 2 ---
-
         private const int StartRow_YoYFull = 12;
+        private const int Row_YoYCharts = 15;
+        protected int NumYoYMonthsAdded { get; set; }
+        protected int NumYoYMonthRowsAdded { get; set; }
 
         public SearchReportPPC()
         {
@@ -154,10 +156,6 @@ namespace DAGenerators.Spreadsheets
                 WS1.DeleteRowZ(startRow - rowsToDelete, rowsToDelete);
                 NumMonthRowsAdded -= rowsToDelete;
             }
-        }
-        public void LoadYearOverYear_Full<T>(IEnumerable<T> stats)
-        {
-            LoadStats(Metrics2, WS2, StartRow_YoYFull, stats);
         }
 
         // (for the most recently completed month)
@@ -333,6 +331,25 @@ namespace DAGenerators.Spreadsheets
                 typeWM = "Monthly";
             }
             CreateChart(WS1, titleCol, metric1, metric2, startRow_Stats, numRows_Stats, topRow, leftCol, ChartWidth, ChartHeight, typeWM, chartNameSuffix);
+        }
+
+        public void LoadYearOverYear_Full<T>(IEnumerable<T> stats)
+        {
+            if (stats.Count() > 0)
+            {
+                NumYoYMonthRowsAdded = LoadStats(Metrics2, WS2, StartRow_YoYFull, stats);
+                NumYoYMonthsAdded = stats.Count();
+
+                CreateChart2_YOY(Metrics2.Title.ColNum, Metrics2.Revenue1, Metrics2.Revenue2, false, "YoY Revenue vs. ROAS");
+                CreateChart2_YOY(Metrics2.Title.ColNum, Metrics2.Orders1, Metrics2.Orders2, true, "YoY Orders vs. CPO");
+            }
+        }
+        protected void CreateChart2_YOY(int titleCol, Metric metric1, Metric metric2, bool rightSide, string chartTitle)
+        {
+            int topRow = Row_YoYCharts + NumYoYMonthRowsAdded - 1;
+            int leftCol = (rightSide ? Col_RightChart : Col_LeftChart) - 1;
+            string chartName = "yoy" + (rightSide ? "Right" : "Left");
+            CreateChart2(WS2, titleCol, metric1, metric2, StartRow_YoYFull, NumYoYMonthsAdded, topRow, leftCol, ChartWidth, ChartHeight, chartTitle, chartName);
         }
 
     }

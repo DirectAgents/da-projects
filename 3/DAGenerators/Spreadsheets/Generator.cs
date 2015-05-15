@@ -67,10 +67,13 @@ namespace DAGenerators.Spreadsheets
             else if (monthlyStats.Count() > 0)
                 spreadsheet.CreateCharts(false);
 
-            // YearOverYear full stats - for the YoY sheet
-            int numMonthsYoY = (numMonths > 12) ? 12 : numMonths;
-            var yoyMonthlyStats = cpRepo.GetMonthStats(searchProfile, numMonthsYoY, endDate, true);
-            spreadsheet.LoadYearOverYear_Full(yoyMonthlyStats);
+            if (searchProfile.ShowRevenue) // TODO: implement for LeadGen
+            {
+                // YearOverYear full stats - for the YoY sheet
+                int numMonthsYoY = (numMonths > 12) ? 12 : numMonths;
+                var yoyMonthlyStats = cpRepo.GetMonthStats(searchProfile, numMonthsYoY, endDate, true);
+                spreadsheet.LoadYearOverYear_Full(yoyMonthlyStats);
+            }
 
             // Year-Over-Year - for the most recent completed month
             DateTime monthStart = new DateTime(endDate.Year, endDate.Month, 1); // temp value

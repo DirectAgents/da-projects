@@ -122,6 +122,27 @@ namespace DAGenerators.Spreadsheets
 
             chart.Legend.Position = eLegendPosition.Bottom;
         }
+
+        // used for YoY
+        protected static void CreateChart2(ExcelWorksheet ws, int titleCol, Metric metric1, Metric metric2, int startRow_Stats, int numRows_Stats, int topRow, int leftCol, int chartWidth, int chartHeight, string chartTitle, string chartName)
+        {
+            var chart = ws.Drawings.AddChart(chartName, eChartType.ColumnClustered);
+            chart.SetPosition(topRow, 0, leftCol, 0); // row & column are 0-based
+            chart.SetSize(chartWidth, chartHeight);
+
+            chart.Title.Text = chartTitle;
+            chart.Title.Font.Bold = true;
+
+            var series = chart.Series.Add(new ExcelAddress(startRow_Stats, metric1.ColNum, startRow_Stats + numRows_Stats - 1, metric1.ColNum).Address,
+                                          new ExcelAddress(startRow_Stats, titleCol, startRow_Stats + numRows_Stats - 1, titleCol).Address);
+            series.Header = metric1.DisplayName;
+
+            var series2 = chart.Series.Add(new ExcelAddress(startRow_Stats, metric2.ColNum, startRow_Stats + numRows_Stats - 1, metric2.ColNum).Address,
+                                           new ExcelAddress(startRow_Stats, titleCol, startRow_Stats + numRows_Stats - 1, titleCol).Address);
+            series2.Header = metric2.DisplayName;
+
+            chart.Legend.Position = eLegendPosition.Bottom;
+        }
     }
 
     public class Metric
