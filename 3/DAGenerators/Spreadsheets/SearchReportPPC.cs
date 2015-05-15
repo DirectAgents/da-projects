@@ -2,18 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using OfficeOpenXml;
-using OfficeOpenXml.Drawing.Chart;
-using OfficeOpenXml.Table;
 
 namespace DAGenerators.Spreadsheets
 {
     //TODO: make a SearchReportECom (or ...Retail) that inherits from this
     public class SearchReportPPC : SpreadsheetBase
     {
-        protected int Row_SummaryDate = 8;
-        //protected int Row_StatsHeader = 11;
+        private const int Row_SummaryDate = 8;
+        //private const int Row_StatsHeader = 11;
         private const int Row_ClientNameBottom = 24;
         private const int Row_Charts = 27;
 
@@ -23,10 +20,10 @@ namespace DAGenerators.Spreadsheets
         private const int ChartHeight = 280;
 
         protected string TemplateFilename = "SearchPPCtemplate.xlsx";
-        protected int NumRows_SectionHeader = 2;
+        private const int NumRows_SectionHeader = 2;
 
-        protected int StartRow_Weekly = 12;
-        protected int StartRow_Monthly = 16;
+        private const int StartRow_Weekly = 12;
+        private const int StartRow_Monthly = 16;
         protected bool WeeklyFirst
         {
             get { return StartRow_Weekly <= StartRow_Monthly; }
@@ -39,8 +36,8 @@ namespace DAGenerators.Spreadsheets
         private const int NumRows_CampaignPerfSubTemplate = 2;
 
         public MetricsHolder Metrics;
-
         protected ExcelWorksheet WS { get { return this.ExcelPackage.Workbook.Worksheets[1]; } }
+
         protected int NumWeeksAdded { get; set; }
         protected int NumMonthsAdded { get; set; }
         protected int NumWeekRowsAdded { get; set; }  // not including template rows
@@ -120,7 +117,7 @@ namespace DAGenerators.Spreadsheets
         {
             int blankRows = 1;
             int startRow = StartRow_Weekly + (WeeklyFirst ? 0 : NumMonthRowsAdded);
-            NumWeekRowsAdded = LoadStats(stats, startRow, blankRows);
+            NumWeekRowsAdded = LoadStats(Metrics, WS, startRow, stats, blankRows);
             NumWeeksAdded = stats.Count();
             if (NumWeeksAdded == 0)
             {   // Delete the entire section, including blank row above
@@ -133,7 +130,7 @@ namespace DAGenerators.Spreadsheets
         {
             int blankRows = 1;
             int startRow = StartRow_Monthly + (WeeklyFirst ? NumWeekRowsAdded : 0);
-            NumMonthRowsAdded = LoadStats(stats, startRow, blankRows);
+            NumMonthRowsAdded = LoadStats(Metrics, WS, startRow, stats, blankRows);
             NumMonthsAdded = stats.Count();
             if (NumMonthsAdded == 0)
             {   // Delete the entire section, including blank row above
@@ -143,47 +140,12 @@ namespace DAGenerators.Spreadsheets
             }
         }
 
-//TODO: rename & put in base class ?
-        // returns: # of rows added (in addition to blankRowsInTemplate); negative means blankRows deleted
-        protected int LoadStats<T>(IEnumerable<T> stats, int startingRow, int blankRowsInTemplate = 0)
-        {
-            int numRows = stats.Count();
-            int blankRowsToInsert = numRows - blankRowsInTemplate;
-            if (blankRowsToInsert < 0)
-            {
-                WS.DeleteRowZ(startingRow, -blankRowsToInsert);
-            }
-            if (numRows > 0)
-            {
-                if (blankRowsToInsert > 0)
-                {
-                    WS.InsertRowZ(startingRow + (blankRowsInTemplate > 0 ? 1 : 0), blankRowsToInsert, startingRow);
-
-                    if (blankRowsInTemplate > 0)
-                    {   // copy the formulas from the "blank row" to the newly inserted rows
-                        for (int iRow = startingRow + 1; iRow < startingRow + 1 + blankRowsToInsert; iRow++)
-                        {
-                            WS.Cells[startingRow + ":" + startingRow].Copy(WS.Cells[iRow + ":" + iRow]);
-                        }
-                    }
-                    //else
-                    //{   // generate the formulas if there were no blank rows
-                    //    for (int i = 0; i < numRows; i++)
-                    //        LoadStatsRowFormulas(startingRow + i);
-                    //}
-                }
-
-                LoadStats(WS, startingRow, stats, Metrics);
-            }
-            return blankRowsToInsert;
-        }
-
         // (for the most recently completed month)
         // IEnumerable<T> stats should have two elements: last year's and this year's stats
         public virtual void LoadYearOverYearStats<T>(IEnumerable<T> stats)
         {
             int startRow = StartRow_YearOverYear + NumWeekRowsAdded + NumMonthRowsAdded;
-            LoadStats(WS, startRow, stats, Metrics);
+            LoadStats(Metrics, WS, startRow, stats, 2);
 
             //YoY diff row...
             string diffFormula = "IFERROR((R[-1]C-R[-2]C)/R[-2]C,\"-\")";
@@ -193,28 +155,6 @@ namespace DAGenerators.Spreadsheets
                 WS.Cells[startRow + 2, metric.ColNum].FormulaR1C1 = diffFormula;
             }
         }
-
-        //TODO: retire this - if can assume all formulas are in template rows in the spreadsheet
-        //private void LoadStatsRowFormulas(int iRow)
-        //{
-        //    // TODO: use IFERROR in formulas for div-by-0 checking
-        //    CheckLoadStatsRowFormula(iRow, Metric_OrderRate, String.Format("RC[{0}]/RC[{1}]", Metrics.Orders.ColNum - Metric_OrderRate.ColNum, Metrics.Clicks.ColNum - Metric_OrderRate.ColNum)); // OrderRate (Orders/Clicks)
-        //    CheckLoadStatsRowFormula(iRow, Metric_Net, String.Format("RC[{0}]-RC[{1}]", Metrics.Revenue.ColNum - Metric_Net.ColNum, Metrics.Cost.ColNum - Metric_Net.ColNum)); // Net (Rev-Cost)
-        //    CheckLoadStatsRowFormula(iRow, Metric_RevPerOrder, String.Format("RC[{0}]/RC[{1}]", Metrics.Revenue.ColNum - Metric_RevPerOrder.ColNum, Metrics.Orders.ColNum - Metric_RevPerOrder.ColNum)); // Revenue/Orders
-        //    CheckLoadStatsRowFormula(iRow, Metric_CTR, String.Format("RC[{0}]/RC[{1}]", Metrics.Clicks.ColNum - Metric_CTR.ColNum, Metrics.Impressions.ColNum - Metric_CTR.ColNum)); // CTR (Clicks/Impressions)
-        //    CheckLoadStatsRowFormula(iRow, Metric_CPC, String.Format("RC[{0}]/RC[{1}]", Metrics.Cost.ColNum - Metric_CPC.ColNum, Metrics.Clicks.ColNum - Metric_CPC.ColNum)); // CPC (Cost/Clicks)
-        //    CheckLoadStatsRowFormula(iRow, Metric_CPO, String.Format("RC[{0}]/RC[{1}]", Metrics.Cost.ColNum - Metric_CPO.ColNum, Metrics.Orders.ColNum - Metric_CPO.ColNum)); // CPO (Cost/Orders)
-        //    CheckLoadStatsRowFormula(iRow, Metric_ROAS, String.Format("RC[{0}]/RC[{1}]", Metrics.Revenue.ColNum - Metric_ROAS.ColNum, Metrics.Cost.ColNum - Metric_ROAS.ColNum)); // ROAS (Rev/Cost)
-        //    CheckLoadStatsRowFormula(iRow, Metric_ROI, String.Format("(RC[{0}]-RC[{1}])/RC[{1}]", Metrics.Revenue.ColNum - Metric_ROI.ColNum, Metrics.Cost.ColNum - Metric_ROI.ColNum)); // ROI ((Rev-Cost)/Cost)
-        //    //CheckLoadStatsRowFormula(iRow, Metric_TotalLeads
-        //    //CheckLoadStatsRowFormula(iRow, Metric_CPL
-        //    //CheckLoadStatsRowFormula(iRow, Metric_ViewThruRev
-        //}
-        //private void CheckLoadStatsRowFormula(int iRow, Metric metric, string formula)
-        //{
-        //    if (metric.Show)
-        //        WS.Cells[iRow, metric.ColNum].FormulaR1C1 = formula;
-        //}
 
         // Note: Load monthly CampaignPerfStats first, then weekly.
         // Load weeks/months in this order: latest, second-latest, etc...
@@ -274,7 +214,7 @@ namespace DAGenerators.Spreadsheets
                 }
 
                 // populate the campaign rows for this subgroup
-                numRowsAdded += LoadStats(campaignStatsDict[subgroupKey], startRowSubgroupStats, NumRows_CampaignPerfSubTemplate - 1);
+                numRowsAdded += LoadStats(Metrics, WS, startRowSubgroupStats, campaignStatsDict[subgroupKey], NumRows_CampaignPerfSubTemplate - 1);
 
                 // set the subgroup title
                 int subgroupTotalRow = startRowSubgroupStats + numCampaigns;
@@ -353,41 +293,25 @@ namespace DAGenerators.Spreadsheets
         }
         protected void CreateChart(int titleCol, Metric metric1, Metric metric2, bool rightSide, bool weeklyNotMonthly)
         {
-            string typeWM = weeklyNotMonthly ? "Weekly" : "Monthly";
-            var chart = WS.Drawings.AddChart("chart" + typeWM + (rightSide ? "Right" : "Left"), eChartType.ColumnClustered);
-            chart.SetPosition(Row_Charts + NumWeekRowsAdded + NumMonthRowsAdded - 1, 0, (rightSide ? Col_RightChart : Col_LeftChart) - 1, 0); // row & column are 0-based
-            chart.SetSize(ChartWidth, ChartHeight);
-
-            chart.Title.Text = typeWM + " " + metric1.DisplayName + " vs. " + metric2.DisplayName;
-            chart.Title.Font.Bold = true;
-            //chart.Title.Anchor = eTextAnchoringType.Bottom;
-            //chart.Title.AnchorCtr = false;
+            int topRow = Row_Charts + NumWeekRowsAdded + NumMonthRowsAdded - 1;
+            int leftCol = (rightSide ? Col_RightChart : Col_LeftChart) - 1;
+            string chartNameSuffix = (rightSide ? "Right" : "Left");
 
             int startRow_Stats, numRows_Stats;
+            string typeWM;
             if (weeklyNotMonthly)
             {
-                startRow_Stats = this.StartRow_Weekly + (WeeklyFirst ? 0 : NumMonthRowsAdded);
+                startRow_Stats = StartRow_Weekly + (WeeklyFirst ? 0 : NumMonthRowsAdded);
                 numRows_Stats = NumWeeksAdded;
+                typeWM = "Weekly";
             }
             else
             {
-                startRow_Stats = this.StartRow_Monthly + (WeeklyFirst ? NumWeekRowsAdded : 0);
+                startRow_Stats = StartRow_Monthly + (WeeklyFirst ? NumWeekRowsAdded : 0);
                 numRows_Stats = NumMonthsAdded;
+                typeWM = "Monthly";
             }
-            var series = chart.Series.Add(new ExcelAddress(startRow_Stats, metric1.ColNum, startRow_Stats + numRows_Stats - 1, metric1.ColNum).Address,
-                                          new ExcelAddress(startRow_Stats, titleCol, startRow_Stats + numRows_Stats - 1, titleCol).Address);
-            //series.HeaderAddress = new ExcelAddress(Row_StatsHeader, column1, Row_StatsHeader, column1);
-            series.Header = metric1.DisplayName;
-
-            var chartType2 = chart.PlotArea.ChartTypes.Add(eChartType.LineMarkers);
-            chartType2.UseSecondaryAxis = true;
-            chartType2.XAxis.Deleted = true;
-            var series2 = chartType2.Series.Add(new ExcelAddress(startRow_Stats, metric2.ColNum, startRow_Stats + numRows_Stats - 1, metric2.ColNum).Address,
-                                                new ExcelAddress(startRow_Stats, titleCol, startRow_Stats + numRows_Stats - 1, titleCol).Address);
-            //series2.HeaderAddress = new ExcelAddress(Row_StatsHeader, column2, Row_StatsHeader, column2);
-            series2.Header = metric2.DisplayName;
-
-            chart.Legend.Position = eLegendPosition.Bottom;
+            CreateChart(WS, titleCol, metric1, metric2, startRow_Stats, numRows_Stats, topRow, leftCol, ChartWidth, ChartHeight, typeWM, chartNameSuffix);
         }
 
     }

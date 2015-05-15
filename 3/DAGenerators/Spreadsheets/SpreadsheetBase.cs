@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Reflection;
 using OfficeOpenXml;
+using OfficeOpenXml.Drawing.Chart;
 using OfficeOpenXml.Table;
 
 namespace DAGenerators.Spreadsheets
@@ -43,17 +44,75 @@ namespace DAGenerators.Spreadsheets
 
         // --- Possibly for a separate class representing one tab (worksheet) ---
 
-        protected void LoadStats<T>(ExcelWorksheet ws, int startingRow, IEnumerable<T> stats, MetricsHolderBase metrics)
+        // returns: # of rows added (in addition to blankRowsInTemplate); negative means blankRows deleted
+        protected static int LoadStats<T>(MetricsHolderBase metrics, ExcelWorksheet ws, int startingRow, IEnumerable<T> stats, int blankRowsInTemplate)
         {
-            foreach (var metric in metrics.GetNonComputed(true))
+            // First, prepare the worksheet-area by adding/removing blank rows - if necessary
+            int numRows = stats.Count();
+            int blankRowsToInsert = numRows - blankRowsInTemplate;
+            if (blankRowsToInsert < 0)
             {
-                LoadColumnFromStats(ws, startingRow, stats, metric);
+                ws.DeleteRowZ(startingRow, -blankRowsToInsert);
             }
+            if (numRows > 0)
+            {
+                if (blankRowsToInsert > 0)
+                {
+                    ws.InsertRowZ(startingRow + (blankRowsInTemplate > 0 ? 1 : 0), blankRowsToInsert, startingRow);
+
+                    if (blankRowsInTemplate > 0)
+                    {   // copy the formulas from the "blank row" to the newly inserted rows
+                        for (int iRow = startingRow + 1; iRow < startingRow + 1 + blankRowsToInsert; iRow++)
+                        {
+                            ws.Cells[startingRow + ":" + startingRow].Copy(ws.Cells[iRow + ":" + iRow]);
+                        }
+                    }
+                    //else
+                    //{   // generate the formulas if there were no blank rows
+                    //    for (int i = 0; i < numRows; i++)
+                    //        LoadStatsRowFormulas(startingRow + i);
+                    //}
+                }
+
+                // Now, load the stats
+                foreach (var metric in metrics.GetNonComputed(true))
+                {
+                    LoadColumnFromStats(ws, startingRow, stats, metric);
+                }
+            }
+            return blankRowsToInsert;
         }
-        private void LoadColumnFromStats<T>(ExcelWorksheet ws, int startingRow, IEnumerable<T> stats, Metric metric)
+        private static void LoadColumnFromStats<T>(ExcelWorksheet ws, int startingRow, IEnumerable<T> stats, Metric metric)
         {
             var type = stats.First().GetType();
             ws.Cells[startingRow, metric.ColNum].LoadFromCollection(stats, false, TableStyles.None, BindingFlags.Default, new[] { type.GetProperty(metric.PropName) });
+        }
+
+        protected static void CreateChart(ExcelWorksheet ws, int titleCol, Metric metric1, Metric metric2, int startRow_Stats, int numRows_Stats, int topRow, int leftCol, int chartWidth, int chartHeight, string typeWM, string chartNameSuffix)
+        {
+            var chart = ws.Drawings.AddChart("chart" + typeWM + chartNameSuffix, eChartType.ColumnClustered);
+            chart.SetPosition(topRow, 0, leftCol, 0); // row & column are 0-based
+            chart.SetSize(chartWidth, chartHeight);
+
+            chart.Title.Text = typeWM + " " + metric1.DisplayName + " vs. " + metric2.DisplayName;
+            chart.Title.Font.Bold = true;
+            //chart.Title.Anchor = eTextAnchoringType.Bottom;
+            //chart.Title.AnchorCtr = false;
+
+            var series = chart.Series.Add(new ExcelAddress(startRow_Stats, metric1.ColNum, startRow_Stats + numRows_Stats - 1, metric1.ColNum).Address,
+                                          new ExcelAddress(startRow_Stats, titleCol, startRow_Stats + numRows_Stats - 1, titleCol).Address);
+            //series.HeaderAddress = new ExcelAddress(Row_StatsHeader, column1, Row_StatsHeader, column1);
+            series.Header = metric1.DisplayName;
+
+            var chartType2 = chart.PlotArea.ChartTypes.Add(eChartType.LineMarkers);
+            chartType2.UseSecondaryAxis = true;
+            chartType2.XAxis.Deleted = true;
+            var series2 = chartType2.Series.Add(new ExcelAddress(startRow_Stats, metric2.ColNum, startRow_Stats + numRows_Stats - 1, metric2.ColNum).Address,
+                                                new ExcelAddress(startRow_Stats, titleCol, startRow_Stats + numRows_Stats - 1, titleCol).Address);
+            //series2.HeaderAddress = new ExcelAddress(Row_StatsHeader, column2, Row_StatsHeader, column2);
+            series2.Header = metric2.DisplayName;
+
+            chart.Legend.Position = eLegendPosition.Bottom;
         }
     }
 
