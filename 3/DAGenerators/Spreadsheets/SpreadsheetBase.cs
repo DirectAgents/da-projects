@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
@@ -112,11 +113,11 @@ namespace DAGenerators.Spreadsheets
             //series.HeaderAddress = new ExcelAddress(Row_StatsHeader, column1, Row_StatsHeader, column1);
             series.Header = metric1.DisplayName;
 
-            var chartType2 = chart.PlotArea.ChartTypes.Add(eChartType.LineMarkers);
-            chartType2.UseSecondaryAxis = true;
-            chartType2.XAxis.Deleted = true;
-            var series2 = chartType2.Series.Add(new ExcelAddress(startRow_Stats, metric2.ColNum, startRow_Stats + numRows_Stats - 1, metric2.ColNum).Address,
-                                                new ExcelAddress(startRow_Stats, titleCol, startRow_Stats + numRows_Stats - 1, titleCol).Address);
+            var chart2 = chart.PlotArea.ChartTypes.Add(eChartType.LineMarkers);
+            chart2.UseSecondaryAxis = true;
+            chart2.XAxis.Deleted = true;
+            var series2 = chart2.Series.Add(new ExcelAddress(startRow_Stats, metric2.ColNum, startRow_Stats + numRows_Stats - 1, metric2.ColNum).Address,
+                                            new ExcelAddress(startRow_Stats, titleCol, startRow_Stats + numRows_Stats - 1, titleCol).Address);
             //series2.HeaderAddress = new ExcelAddress(Row_StatsHeader, column2, Row_StatsHeader, column2);
             series2.Header = metric2.DisplayName;
 
@@ -124,7 +125,7 @@ namespace DAGenerators.Spreadsheets
         }
 
         // used for YoY
-        protected static void CreateChart2(ExcelWorksheet ws, int titleCol, Metric metric1, Metric metric2, int startRow_Stats, int numRows_Stats, int topRow, int leftCol, int chartWidth, int chartHeight, string chartTitle, string chartName)
+        protected static void CreateChart2(ExcelWorksheet ws, int titleCol, Metric metricBar1, Metric metricBar2, Metric metricLine1, Metric metricLine2, int startRow_Stats, int numRows_Stats, int topRow, int leftCol, int chartWidth, int chartHeight, string chartTitle, string chartName)
         {
             var chart = ws.Drawings.AddChart(chartName, eChartType.ColumnClustered);
             chart.SetPosition(topRow, 0, leftCol, 0); // row & column are 0-based
@@ -133,14 +134,27 @@ namespace DAGenerators.Spreadsheets
             chart.Title.Text = chartTitle;
             chart.Title.Font.Bold = true;
 
-            var series = chart.Series.Add(new ExcelAddress(startRow_Stats, metric1.ColNum, startRow_Stats + numRows_Stats - 1, metric1.ColNum).Address,
+            var series1 = chart.Series.Add(new ExcelAddress(startRow_Stats, metricBar1.ColNum, startRow_Stats + numRows_Stats - 1, metricBar1.ColNum).Address,
                                           new ExcelAddress(startRow_Stats, titleCol, startRow_Stats + numRows_Stats - 1, titleCol).Address);
-            series.Header = metric1.DisplayName;
-
-            var series2 = chart.Series.Add(new ExcelAddress(startRow_Stats, metric2.ColNum, startRow_Stats + numRows_Stats - 1, metric2.ColNum).Address,
+            series1.Header = metricBar1.DisplayName;
+            var series2 = chart.Series.Add(new ExcelAddress(startRow_Stats, metricBar2.ColNum, startRow_Stats + numRows_Stats - 1, metricBar2.ColNum).Address,
                                            new ExcelAddress(startRow_Stats, titleCol, startRow_Stats + numRows_Stats - 1, titleCol).Address);
-            series2.Header = metric2.DisplayName;
+            series2.Header = metricBar2.DisplayName;
 
+            var chart2 = chart.PlotArea.ChartTypes.Add(eChartType.LineMarkers);
+            chart2.UseSecondaryAxis = true;
+            chart2.XAxis.Deleted = true;
+            var series3 = chart2.Series.Add(new ExcelAddress(startRow_Stats, metricLine1.ColNum, startRow_Stats + numRows_Stats - 1, metricLine1.ColNum).Address,
+                                            new ExcelAddress(startRow_Stats, titleCol, startRow_Stats + numRows_Stats - 1, titleCol).Address);
+            series3.Header = metricLine1.DisplayName;
+            var series4 = chart2.Series.Add(new ExcelAddress(startRow_Stats, metricLine2.ColNum, startRow_Stats + numRows_Stats - 1, metricLine2.ColNum).Address,
+                                            new ExcelAddress(startRow_Stats, titleCol, startRow_Stats + numRows_Stats - 1, titleCol).Address);
+            series4.Header = metricLine2.DisplayName;
+
+            //chart.SetSeriesStyle(series1, Color.FromArgb(0, 201, 87));
+            //chart.SetSeriesStyle(series2, Color.FromArgb(106, 90, 205));
+            //chart2.SetSeriesStyle(series3, Color.FromArgb(32, 178, 170), iOffset: 2);
+            //chart2.SetSeriesStyle(series4, Color.FromArgb(128, 0, 0), iOffset: 2);
             chart.Legend.Position = eLegendPosition.Bottom;
         }
     }

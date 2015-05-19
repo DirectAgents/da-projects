@@ -1,7 +1,11 @@
-﻿using OfficeOpenXml;
-using OfficeOpenXml.Drawing;
+﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using OfficeOpenXml;
+using OfficeOpenXml.Drawing;
+using OfficeOpenXml.Drawing.Chart;
 
 namespace DAGenerators.Spreadsheets
 {
@@ -88,6 +92,54 @@ namespace DAGenerators.Spreadsheets
                 var newitem = ng[i].Offset(count, 0);
                 workSheet.Workbook.Names.Add(ng[i].Name, newitem);
             }
+        }
+
+        // From: http://stackoverflow.com/questions/25623324/epplus-how-to-change-colors-of-pie-chart-in-excel
+        public static void SetSeriesStyle(this ExcelChart chart, ExcelChartSerie series, Color color, decimal? thickness = null, int iOffset = 0)
+        {
+            if (thickness < 0) throw new ArgumentOutOfRangeException("thickness");
+            var i = iOffset;
+            var found = false;
+            foreach (var s in chart.Series)
+            {
+                if (s == series)
+                {
+                    found = true;
+                    break;
+                }
+                ++i;
+            }
+            if (!found) throw new InvalidOperationException("series not found.");
+            //Get the nodes
+            var nsm = chart.WorkSheet.Drawings.NameSpaceManager;
+            var nschart = nsm.LookupNamespace("c");
+            var nsa = nsm.LookupNamespace("a");
+            var node = chart.ChartXml.SelectSingleNode(@"c:chartSpace/c:chart/c:plotArea/c:lineChart/c:ser[c:idx[@val='" + i.ToString(CultureInfo.InvariantCulture) + "']]", nsm);
+            //if (node == null)
+            //    node = chart.ChartXml.SelectSingleNode(@"c:chartSpace/c:chart/c:plotArea/c:barChart/c:ser[c:idx[@val='" + i.ToString(CultureInfo.InvariantCulture) + "']]", nsm);
+            var doc = chart.ChartXml;
+
+            //Add the solid fill node
+            var spPr = doc.CreateElement("c:spPr", nschart);
+            var ln = spPr.AppendChild(doc.CreateElement("a:ln", nsa));
+            if (thickness.HasValue)
+            {
+                var w = ln.Attributes.Append(doc.CreateAttribute("w"));
+                w.Value = Math.Round(thickness.Value * 12700).ToString(CultureInfo.InvariantCulture);
+                var cap = ln.Attributes.Append(doc.CreateAttribute("cap"));
+                cap.Value = "rnd";
+            }
+            var solidFill = ln.AppendChild(doc.CreateElement("a:solidFill", nsa));
+            var srgbClr = solidFill.AppendChild(doc.CreateElement("a:srgbClr", nsa));
+            var valattrib = srgbClr.Attributes.Append(doc.CreateAttribute("val"));
+
+            //Set the color
+            valattrib.Value = color.ToHex().Substring(1);
+            node.AppendChild(spPr);
+        }
+        public static String ToHex(this Color c)
+        {
+            return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
         }
     }
 }

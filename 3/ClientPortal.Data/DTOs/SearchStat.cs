@@ -151,11 +151,12 @@ namespace ClientPortal.Data.DTOs
         //public decimal CPC_() { return CPC; }
         //public decimal CTR_() { return CTR; }
 
-        public int PrevImpressions() { return Prev.Impressions; }
-        public int PrevClicks() { return Prev.Clicks; }
-        public int PrevOrders() { return Prev.Orders; }
-        public decimal PrevCost() { return Prev.Cost; }
-        public decimal PrevRevenue() { return Prev.Revenue; }
+        public int PrevImpressions() { return (Prev == null) ? 0 : Prev.Impressions; }
+        public int PrevClicks() { return (Prev == null) ? 0 : Prev.Clicks; }
+        public int PrevOrders() { return (Prev == null) ? 0 : Prev.Orders; }
+        public decimal PrevCost() { return (Prev == null) ? 0 : Prev.Cost; }
+        public decimal PrevRevenue() { return (Prev == null) ? 0 : Prev.Revenue; }
+        public decimal PrevTotalLeads() { return (Prev == null) ? 0 : Prev.TotalLeads; }
         // --- end TEMP ---
 
         public SearchStatVals Prev { get; set; } // for the prev year's stats

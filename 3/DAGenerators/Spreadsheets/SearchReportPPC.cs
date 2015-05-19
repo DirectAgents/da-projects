@@ -90,16 +90,20 @@ namespace DAGenerators.Spreadsheets
             Metrics1.ROAS = new Metric(18, "ROAS");
 
             Metrics2.Title = new Metric(2, null) { MemberName = "Title" };
-            Metrics2.Clicks1 = new Metric(3, "ClicksYr1") { MemberName = "PrevClicks" };
-            Metrics2.Clicks2 = new Metric(4, "ClicksYr2") { MemberName = "Clicks_" };
-            Metrics2.Impressions1 = new Metric(5, "ImpressionsYr1") { MemberName = "PrevImpressions" };
-            Metrics2.Impressions2 = new Metric(6, "ImpressionsYr2") { MemberName = "Impressions_" };
-            Metrics2.Cost1 = new Metric(7, "SpendYr1") { MemberName = "PrevCost" };
-            Metrics2.Cost2 = new Metric(8, "SpendYr2") { MemberName = "Cost_" };
-            Metrics2.Orders1 = new Metric(9, "OrdersYr1") { MemberName = "PrevOrders" };
-            Metrics2.Orders2 = new Metric(10, "OrdersYr2") { MemberName = "Orders_" };
-            Metrics2.Revenue1 = new Metric(11, "RevenueYr1") { MemberName = "PrevRevenue" };
-            Metrics2.Revenue2 = new Metric(12, "RevenueYr2") { MemberName = "Revenue_" };
+            //Metrics2.Clicks1 = new Metric(3, "ClicksYr1") { MemberName = "PrevClicks" };
+            //Metrics2.Clicks2 = new Metric(4, "ClicksYr2") { MemberName = "Clicks_" };
+            //Metrics2.Impressions1 = new Metric(5, "ImpressionsYr1") { MemberName = "PrevImpressions" };
+            //Metrics2.Impressions2 = new Metric(6, "ImpressionsYr2") { MemberName = "Impressions_" };
+            Metrics2.Cost1 = new Metric(3, "SpendYr1") { MemberName = "PrevCost" };
+            Metrics2.Cost2 = new Metric(4, "SpendYr2") { MemberName = "Cost_" };
+            Metrics2.Orders1 = new Metric(5, "OrdersYr1") { MemberName = "PrevOrders" };
+            Metrics2.Orders2 = new Metric(6, "OrdersYr2") { MemberName = "Orders_" };
+            Metrics2.Revenue1 = new Metric(7, "RevenueYr1") { MemberName = "PrevRevenue" };
+            Metrics2.Revenue2 = new Metric(8, "RevenueYr2") { MemberName = "Revenue_" };
+            Metrics2.CPO1 = new Metric(9, "CPO_Yr1");
+            Metrics2.CPO2 = new Metric(10, "CPO_Yr2");
+            Metrics2.ROAS1 = new Metric(11, "ROAS_Yr1");
+            Metrics2.ROAS2 = new Metric(12, "ROAS_Yr2");
         }
 
         // Do this after setting up the columns
@@ -340,16 +344,21 @@ namespace DAGenerators.Spreadsheets
                 NumYoYMonthRowsAdded = LoadStats(Metrics2, WS2, StartRow_YoYFull, stats);
                 NumYoYMonthsAdded = stats.Count();
 
-                CreateChart2_YOY(Metrics2.Title.ColNum, Metrics2.Revenue1, Metrics2.Revenue2, false, "YoY Revenue vs. ROAS");
-                CreateChart2_YOY(Metrics2.Title.ColNum, Metrics2.Orders1, Metrics2.Orders2, true, "YoY Orders vs. CPO");
+                CreateYearOverYear_Charts();
             }
         }
-        protected void CreateChart2_YOY(int titleCol, Metric metric1, Metric metric2, bool rightSide, string chartTitle)
+
+        public virtual void CreateYearOverYear_Charts()
+        {
+            CreateChart2_YOY(Metrics2.Title.ColNum, Metrics2.Revenue1, Metrics2.Revenue2, Metrics2.ROAS1, Metrics2.ROAS2, false, "YoY Revenue vs. ROAS");
+            CreateChart2_YOY(Metrics2.Title.ColNum, Metrics2.Orders1, Metrics2.Orders2, Metrics2.CPO1, Metrics2.CPO2, true, "YoY Orders vs. CPO");
+        }
+        protected void CreateChart2_YOY(int titleCol, Metric metricBar1, Metric metricBar2, Metric metricLine1, Metric metricLine2, bool rightSide, string chartTitle)
         {
             int topRow = Row_YoYCharts + NumYoYMonthRowsAdded - 1;
             int leftCol = (rightSide ? Col_RightChart : Col_LeftChart) - 1;
             string chartName = "yoy" + (rightSide ? "Right" : "Left");
-            CreateChart2(WS2, titleCol, metric1, metric2, StartRow_YoYFull, NumYoYMonthsAdded, topRow, leftCol, ChartWidth, ChartHeight, chartTitle, chartName);
+            CreateChart2(WS2, titleCol, metricBar1, metricBar2, metricLine1, metricLine2, StartRow_YoYFull, NumYoYMonthsAdded, topRow, leftCol, ChartWidth, ChartHeight, chartTitle, chartName);
         }
 
     }
@@ -385,12 +394,20 @@ namespace DAGenerators.Spreadsheets
         // Non-computed...
         public Metric Impressions1, Impressions2, Clicks1, Clicks2, Orders1, Orders2, Cost1, Cost2, Revenue1, Revenue2, Calls1, Calls2;
 
+        // Computed...
+        public Metric CTR1, CTR2, CPC1, CPC2, CPO1, CPO2, ROAS1, ROAS2, TotalLeads1, TotalLeads2, CPL1, CPL2;
+
         public override IEnumerable<Metric> GetNonComputed()
         {
             var metrics = new Metric[]
             {
-                Impressions1, Impressions2, Clicks1, Clicks2, Orders1, Orders2, Cost1, Cost2, Revenue1, Revenue2, Calls1, Calls2
+                Impressions1, Impressions2, Clicks1, Clicks2, Orders1, Orders2, Cost1, Cost2, Revenue1, Revenue2, Calls1, Calls2, TotalLeads1, TotalLeads2
             };
+            return metrics.Where(m => m != null);
+        }
+        public override IEnumerable<Metric> GetComputed()
+        {
+            var metrics = new Metric[] { CTR1, CTR2, CPC1, CPC2, CPO1, CPO2, ROAS1, ROAS2, CPL1, CPL2 };
             return metrics.Where(m => m != null);
         }
     }
