@@ -687,6 +687,8 @@ namespace ClientPortal.Data.Services
                         continue;
 
                     DateTime start_OneYearPrior = orderedStats[i].StartDate.AddYears(-1);
+                    orderedStats[i].Title = orderedStats[i].Title +
+                        String.Format(" '{0:yy}/'{1:yy}", start_OneYearPrior, orderedStats[i].StartDate); // e.g. "Apr 14/15"
 
                     // Now attempt to find the previous year's stats
                     while (iPrev < orderedStats.Count && orderedStats[iPrev].StartDate < start_OneYearPrior)
@@ -707,7 +709,7 @@ namespace ClientPortal.Data.Services
             {   // Essentially, check if there were any stats at all for the partial month
                 var lastStat = finalStats.Last();
                 if (lastStat.StartDate.Year == end.Year && lastStat.StartDate.Month == end.Month)
-                    lastStat.Title = lastStat.Title + " (partial)";
+                    lastStat.Title = lastStat.Title + " (MTD)";
             }
             return finalStats.AsQueryable();
         }

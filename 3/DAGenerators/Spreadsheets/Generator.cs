@@ -68,6 +68,7 @@ namespace DAGenerators.Spreadsheets
                 spreadsheet.CreateCharts(false);
 
             // YearOverYear full stats - for the YoY sheet/tab
+            //int numMonthsYoY = numMonths; // (numMonths > 12) ? 12 : numMonths;
             int numMonthsYoY = (numMonths > 12) ? 12 : numMonths;
             var yoyMonthlyStats = cpRepo.GetMonthStats(searchProfile, numMonthsYoY, endDate, true);
             spreadsheet.LoadYearOverYear_Full(yoyMonthlyStats);

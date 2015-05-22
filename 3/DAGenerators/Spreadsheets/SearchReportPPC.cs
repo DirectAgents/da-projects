@@ -259,7 +259,7 @@ namespace DAGenerators.Spreadsheets
             if (monthlyNotWeekly)
             {
                 DateTime fullMonthEnd = startDate.AddMonths(1).AddDays(-1);
-                string extra = (endDate == fullMonthEnd) ? "" : " (partial)";
+                string extra = (endDate == fullMonthEnd) ? "" : " (MTD)";
                 grandTotalLabel = startDate.ToString("MMMM yyyy") + " TOTALS" + extra;
             }
             else
