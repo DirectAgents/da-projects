@@ -23,7 +23,6 @@ namespace ClientPortal.Web.Controllers
 
         //
         // GET: /Account/Login
-
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
@@ -33,7 +32,6 @@ namespace ClientPortal.Web.Controllers
 
         //
         // POST: /Account/Login
-
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -60,9 +58,20 @@ namespace ClientPortal.Web.Controllers
             return View(model);
         }
 
+        [Authorize(Users = "admin")]
+        public ActionResult SpecialLogin(int userId)
+        {
+            var up = cpRepo.GetUserProfile(userId);
+            if (up == null) return null;
+
+            LogoutAndRecordEvent();
+            cpRepo.AddUserEvent(userId, "adminlogin", true);
+            FormsAuthentication.SetAuthCookie(up.UserName, false);
+            return RedirectToLocal(null);
+        }
+
         //
         // POST: /Account/LogOff
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
@@ -74,7 +83,6 @@ namespace ClientPortal.Web.Controllers
 
         //
         // GET: /Account/Register
-
         [AllowAnonymous]
         public ActionResult Register()
         {
@@ -83,7 +91,6 @@ namespace ClientPortal.Web.Controllers
 
         //
         // POST: /Account/Register
-
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -123,7 +130,6 @@ namespace ClientPortal.Web.Controllers
 
         //
         // POST: /Account/Disassociate
-
         //[HttpPost]
         //[ValidateAntiForgeryToken]
         //public ActionResult Disassociate(string provider, string providerUserId)
@@ -152,7 +158,6 @@ namespace ClientPortal.Web.Controllers
 
         //
         // GET: /Account/Manage
-
         public ActionResult Manage(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
@@ -168,7 +173,6 @@ namespace ClientPortal.Web.Controllers
 
         //
         // POST: /Account/Manage
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Manage(LocalPasswordModel model)
@@ -233,7 +237,6 @@ namespace ClientPortal.Web.Controllers
 /*
         //
         // POST: /Account/ExternalLogin
-
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -244,7 +247,6 @@ namespace ClientPortal.Web.Controllers
 
         //
         // GET: /Account/ExternalLoginCallback
-
         [AllowAnonymous]
         public ActionResult ExternalLoginCallback(string returnUrl)
         {
@@ -277,7 +279,6 @@ namespace ClientPortal.Web.Controllers
 
         //
         // POST: /Account/ExternalLoginConfirmation
-
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -323,7 +324,6 @@ namespace ClientPortal.Web.Controllers
 
         //
         // GET: /Account/ExternalLoginFailure
-
         [AllowAnonymous]
         public ActionResult ExternalLoginFailure()
         {

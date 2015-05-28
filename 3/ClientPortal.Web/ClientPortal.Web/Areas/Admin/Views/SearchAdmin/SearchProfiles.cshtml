@@ -14,7 +14,7 @@
         <th>Id</th>
         <th></th>
         <th>SearchProfile</th>
-        <th>Login</th>
+        <th>(Click to) Login</th>
         <th>Spreadsheet</th>
         <th>Email Reports</th>
         <th>DA Contacts</th>
@@ -36,7 +36,10 @@
         }
         <td>
             @if (profile.UserProfiles.Any()) {
-                @(String.Join(", ", profile.UserProfiles.Select(u => u.UserName).ToArray()))
+                foreach (var up in profile.UserProfiles) {
+                    @Html.ActionLink(up.UserName, "SpecialLogin", "Account", new { area = "", userId = up.UserId }, null)
+                    if (up != profile.UserProfiles.Last()) {<text>, </text>}
+                }
             } else {
                 @Ajax.ActionLink("create", "CreateUserProfile", new { spId = profile.SearchProfileId }, ajaxOptions)
             }
