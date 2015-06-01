@@ -1,8 +1,8 @@
-﻿using CsvHelper;
-using CsvHelper.Configuration;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using CsvHelper;
+using CsvHelper.Configuration;
 
 namespace CakeExtracter.Etl.SearchMarketing.Extracters
 {
@@ -32,9 +32,19 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
 
                 using (CsvReader csv = new CsvReader(reader))
                 {
-                    var csvRows = csv.GetRecords<BingRow>().ToList();
-                    foreach (var csvRow in csvRows)
+                    csv.Configuration.SkipEmptyRecords = true;
+                    csv.Configuration.RegisterClassMap<BingRowMap>();
+                    while (csv.Read())
                     {
+                        BingRow csvRow;
+                        try
+                        {
+                            csvRow = csv.GetRecord<BingRow>();
+                        }
+                        catch (Exception)
+                        {
+                            continue;
+                        }
                         if (csvRow.GregorianDate.ToLower().Contains("microsoft"))
                             continue; // skip footer
 
@@ -53,9 +63,22 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             }
         }
 
+        public sealed class BingRowMap : CsvClassMap<BingRow>
+        {
+            public BingRowMap()
+            {
+                Map(m => m.GregorianDate).Name("Gregorian date");
+                Map(m => m.Impressions);
+                Map(m => m.Clicks);
+                Map(m => m.Spend);
+                Map(m => m.Conversions);
+                Map(m => m.Revenue);
+                Map(m => m.CampaignName).Name("Campaign name");
+                Map(m => m.CampaignId).Name("Campaign ID");
+            }
+        }
         public class BingRow
         {
-            [CsvField(Name = "Gregorian date")]
             public string GregorianDate { get; set; }
 
             public string Impressions { get; set; } // int
@@ -70,10 +93,10 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             //public string AccountId { get; set; } // int
             //[CsvField(Name = "Account number")]
             //public string AccountNumber { get; set; }
-            [CsvField(Name = "Campaign name")]
+
             public string CampaignName { get; set; }
-            [CsvField(Name = "Campaign ID")]
             public string CampaignId { get; set; } // int
+
             //[CsvField(Name="Currency code")]
             //public string CurrencyCode { get; set; }
         }

@@ -1,10 +1,7 @@
-﻿using CsvHelper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CsvHelper;
 
 namespace CakeExtracter.Etl.SearchMarketing.Extracters
 {
@@ -43,11 +40,18 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
 
                 using (CsvReader csv = new CsvReader(reader))
                 {
-                    var csvRows = csv.GetRecords<BingRow>().ToList();
-                    foreach (var csvRow in csvRows)
+                    csv.Configuration.SkipEmptyRecords = true;
+                    while (csv.Read())
                     {
-                        if (csvRow.GregorianDate.ToLower().Contains("microsoft"))
-                            continue; // skip footer
+                        BingRow csvRow;
+                        try
+                        {
+                            csvRow = csv.GetRecord<BingRow>();
+                        }
+                        catch (Exception)
+                        {
+                            continue;
+                        }
 
                         var row = new Dictionary<string, string>();
 

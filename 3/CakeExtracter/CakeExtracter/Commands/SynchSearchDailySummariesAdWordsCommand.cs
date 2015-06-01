@@ -34,7 +34,7 @@ namespace CakeExtracter.Commands
             IsCommand("synchSearchDailySummariesAdWords", "synch SearchDailySummaries for AdWords");
             HasOption<int>("p|searchProfileId=", "SearchProfile Id (default = all)", c => SearchProfileId = c);
             HasOption<string>("v|clientId=", "Client Id", c => ClientId = c);
-            HasOption<DateTime>("s|startDate=", "Start Date (default is one month ago)", c => StartDate = c);
+            HasOption<DateTime>("s|startDate=", "Start Date (default is 62 days ago)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
             HasOption<bool>("b|includeClickType=", "Include ClickType (default is false)", c => IncludeClickType = c);
             HasOption<string>("g|getClickAssistConvStats=", "Get click-assisted-conversion stats ('yes' or 'both', default = no)", c => GetClickAssistConvStats = c);
@@ -42,9 +42,9 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            var oneMonthAgo = DateTime.Today.AddMonths(-1);
+            var defaultStart = DateTime.Today.AddDays(-62);
             var yesterday = DateTime.Today.AddDays(-1);
-            var dateRange = new DateRange(StartDate ?? oneMonthAgo, EndDate ?? yesterday);
+            var dateRange = new DateRange(StartDate ?? defaultStart, EndDate ?? yesterday);
 
             foreach (var searchAccount in GetSearchAccounts())
             {

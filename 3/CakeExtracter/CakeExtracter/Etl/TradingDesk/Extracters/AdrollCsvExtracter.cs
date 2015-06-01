@@ -1,9 +1,9 @@
-﻿using CsvHelper;
-using CsvHelper.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CsvHelper;
+using CsvHelper.Configuration;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
@@ -48,6 +48,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         {
             using (CsvReader csv = new CsvReader(reader))
             {
+                csv.Configuration.SkipEmptyRecords = true;
+                csv.Configuration.RegisterClassMap<AdrollRowMap>();
+
                 var csvRows = csv.GetRecords<AdrollRow>().ToList();
                 for (int i = 0; i < csvRows.Count && !String.IsNullOrWhiteSpace(csvRows[i].AdName); i++)
                 {
@@ -57,23 +60,34 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         }
 
     }
+    public sealed class AdrollRowMap : CsvClassMap<AdrollRow>
+    {
+        public AdrollRowMap()
+        {
+            Map(m => m.Date);
+            Map(m => m.AdName).Name("Ad Name");
+            Map(m => m.Size);
+            Map(m => m.Type);
+            Map(m => m.CreateDate).Name("Created Date");
+            Map(m => m.Spend).Name("Spend over Period");
+            Map(m => m.Impressions);
+            Map(m => m.Clicks);
+            Map(m => m.TotalConversions).Name("Total Conv.");
+        }
+    }
 
     public class AdrollRow
     {
         public string Date { get; set; }
 
-        [CsvField(Name = "Ad Name")]
         public string AdName { get; set; }
         public string Size { get; set; }
         public string Type { get; set; }
-        [CsvField(Name = "Created Date")]
         public string CreateDate { get; set; }
 
-        [CsvField(Name = "Spend over Period")]
         public string Spend { get; set; }
         public string Impressions { get; set; }
         public string Clicks { get; set; }
-        [CsvField(Name = "Total Conv.")]
         public string TotalConversions { get; set; }
     }
 }

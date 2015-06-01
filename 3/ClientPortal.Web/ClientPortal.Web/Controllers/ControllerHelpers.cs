@@ -56,7 +56,7 @@ namespace ClientPortal.Web.Controllers
             writer.WriteLine();
 
             var csv = new CsvWriter(writer);
-            csv.WriteRecords<T>(rows);
+            csv.WriteRecords(rows);
             writer.Flush();
             output.Position = 0;
             return output;
