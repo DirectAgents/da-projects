@@ -1,9 +1,9 @@
-﻿using CsvHelper;
-using CsvHelper.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CsvHelper;
+using CsvHelper.Configuration;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {

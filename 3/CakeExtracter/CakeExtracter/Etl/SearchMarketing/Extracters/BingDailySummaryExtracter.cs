@@ -48,9 +48,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                         {
                             csvRow = csv.GetRecord<BingRow>();
                         }
-                        catch (Exception)
+                        catch (CsvHelperException)
                         {
-                            continue;
+                            continue; // if error converting the row
                         }
 
                         var row = new Dictionary<string, string>();

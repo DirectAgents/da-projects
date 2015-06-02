@@ -41,9 +41,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                         {
                             csvRow = csv.GetRecord<BingRow>();
                         }
-                        catch (Exception)
+                        catch (CsvHelperException)
                         {
-                            continue;
+                            continue; // if error converting the row
                         }
                         if (csvRow.GregorianDate.ToLower().Contains("microsoft"))
                             continue; // skip footer
