@@ -1,0 +1,10 @@
+﻿@model ClientPortal.Web.Areas.TD.Models.TDAnalysisModel
+
+<h3>Analysis</h3>
+
+@if (Model.UserListStats != null) {
+    foreach (var uls in Model.UserListStats)
+    {
+        @uls.UserListName<br />
+    }
+}

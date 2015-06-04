@@ -36,6 +36,7 @@
             <dd><a href="#repCreativeTab" id="repNav_Creative">Creative</a></dd>
             <dd><a href="#repWeeklyTab" id="repNav_Weekly">Weekly</a></dd>
             <dd><a href="#repMonthlyTab" id="repNav_Monthly">Monthly</a></dd>
+            <dd><a href="#repAnalysisTab" id="repNav_Analysis">Analysis</a></dd>
         </dl>
         <!-- /ReportsHTabs  -->
     </div>
@@ -62,6 +63,9 @@
         </div>
         <div id="repMonthlyTab" class="content">
             <div id="divMonthly" style="padding:10px"></div>
+        </div>
+        <div id="repAnalysisTab" class="content">
+            <div id="divAnalysis" style="padding:10px"></div>
         </div>
     </div>
     <!-- /ReportsContent  -->
@@ -152,6 +156,7 @@
             $('#repNav_Creative').click(function () { CheckLoadCreative(); });
             $('#repNav_Weekly').click(function () { CheckLoadWeekly(); });
             $('#repNav_Monthly').click(function () { CheckLoadMonthly(); });
+            $('#repNav_Analysis').click(function () { CheckLoadAnalysis(); });
         }
 
         function CheckLoadCreative() {
@@ -192,6 +197,19 @@
                 });
             } else {
                 setTimeout(function () { ResizeChart('tdMonthly', true); }, 100);
+            }
+        }
+
+        function CheckLoadAnalysis() {
+            if ($('#analysisChart').length == 0) {
+                $.ajax({
+                    url: '@Url.Action("Analysis", "Reports")',
+                    cache: false
+                }).done(function (html) {
+                    $('#divAnalysis').html(html);
+                });
+            } else {
+                setTimeout(function () { ResizeChart('tdAnalysis', true); }, 100);
             }
         }
 

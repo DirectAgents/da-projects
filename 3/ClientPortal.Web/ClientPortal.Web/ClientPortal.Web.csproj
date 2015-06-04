@@ -248,6 +248,7 @@
     <Compile Include="Areas\TD\Controllers\StatsController.cs" />
     <Compile Include="Areas\TD\Controllers\HomeController.cs" />
     <Compile Include="Areas\TD\Controllers\ReportsController.cs" />
+    <Compile Include="Areas\TD\Models\TDAnalysisModel.cs" />
     <Compile Include="Areas\TD\Models\TDExportModels.cs" />
     <Compile Include="Areas\TD\Models\TDReportModel.cs" />
     <Compile Include="Areas\TD\Models\TDHomeModel.cs" />
@@ -1124,6 +1125,7 @@
     <Content Include="Content\kendo\2015.1.408\fonts\DejaVu\DejaVuSerif.ttf" />
     <Content Include="Content\kendo\2015.1.408\images\kendoui.ttf" />
     <Content Include="Content\kendo\2015.1.408\images\kendoui.woff" />
+    <Content Include="Areas\TD\Views\Reports\Analysis.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />
