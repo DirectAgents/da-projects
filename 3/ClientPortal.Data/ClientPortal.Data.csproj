@@ -291,6 +291,7 @@
     <Compile Include="Entities\TD\DBM\Conversion.cs" />
     <Compile Include="Entities\TD\DBM\Creative.cs" />
     <Compile Include="Entities\TD\DBM\CreativeDailySummary.cs" />
+    <Compile Include="Entities\TD\DBM\DailyLocationStat.cs" />
     <Compile Include="Entities\TD\DBM\DBMDailySummary.cs" />
     <Compile Include="Entities\TD\DBM\InsertionOrder.cs" />
     <Compile Include="Entities\TD\DBM\UserListStat.cs" />
@@ -366,6 +367,10 @@
     <Compile Include="Migrations\201505281601539_Mig_UserListStat.cs" />
     <Compile Include="Migrations\201505281601539_Mig_UserListStat.Designer.cs">
       <DependentUpon>201505281601539_Mig_UserListStat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201506041516483_Mig_DailyLocationStat.cs" />
+    <Compile Include="Migrations\201506041516483_Mig_DailyLocationStat.Designer.cs">
+      <DependentUpon>201506041516483_Mig_DailyLocationStat.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\ChangeIdentityOperation.cs" />
     <Compile Include="Migrations\Configuration.cs" />
@@ -471,6 +476,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505281601539_Mig_UserListStat.resx">
       <DependentUpon>201505281601539_Mig_UserListStat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506041516483_Mig_DailyLocationStat.resx">
+      <DependentUpon>201506041516483_Mig_DailyLocationStat.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

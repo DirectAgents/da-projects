@@ -40,6 +40,18 @@ namespace ClientPortal.Data.Entities.TD
             modelBuilder.Entity<CreativeDailySummary>()
                 .Property(cds => cds.Revenue).HasPrecision(18, 6);
 
+            modelBuilder.Entity<DailyLocationStat>()
+                .HasKey(dls => new { dls.Date, dls.InsertionOrderID, dls.CityID, dls.RegionID, dls.DMACode, dls.CountryAbbrev })
+                .ToTable("DailyLocationStat", dbmSchema);
+            modelBuilder.Entity<DailyLocationStat>()
+                .Property(dls => dls.Revenue).HasPrecision(18, 6);
+            modelBuilder.Entity<DailyLocationStat>()
+                .Property(dls => dls.Cost).HasPrecision(18, 6);
+
+            modelBuilder.Entity<City>().ToTable("City", dbmSchema); //TODO: CascadeOnDelete: false?
+            modelBuilder.Entity<Region>().ToTable("Region", dbmSchema);
+            modelBuilder.Entity<DMA>().ToTable("DMA", dbmSchema);
+
             modelBuilder.Entity<DBMConversion>()
                 .HasKey(c => new { c.AuctionID, c.EventTime })
                 .ToTable("Conversion", dbmSchema);
@@ -60,18 +72,26 @@ namespace ClientPortal.Data.Entities.TD
                 .Property(m => m.FixedMetricValue).HasPrecision(18, 6);
         }
 
+        //AdRoll
         public DbSet<AdRollProfile> AdRollProfiles { get; set; }
         public DbSet<AdRollAd> AdRollAds { get; set; }
         public DbSet<AdDailySummary> AdDailySummaries { get; set; }
 
+        //DBM
         public DbSet<InsertionOrder> InsertionOrders { get; set; }
         public DbSet<Creative> Creatives { get; set; }
         public DbSet<DBMDailySummary> DBMDailySummaries { get; set; }
         public DbSet<CreativeDailySummary> CreativeDailySummaries { get; set; }
+        public DbSet<DailyLocationStat> DailyLocationStats { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Region> Regions { get; set; }
+        public DbSet<DMA> DMAs { get; set; }
+        // (Countries...)
         public DbSet<DBMConversion> Conversions { get; set; }
         public DbSet<UserListRun> UserListRuns { get; set; }
         public DbSet<UserListStat> UserListStats { get; set; }
 
+        //General
         public DbSet<TradingDeskAccount> TradingDeskAccounts { get; set; }
     }
 
