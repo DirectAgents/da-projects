@@ -45,27 +45,33 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 {
                     string dateString = date.ToString("yyyy-MM-dd");
                     var reportObject = bucketObjects.Items.Where(i => i.Name.Contains(dateString)).FirstOrDefault();
-
-                    HttpWebRequest req = CreateRequest(reportObject.MediaLink, credential);
-                    HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
-
-                    // Handle redirects manully to ensure that the Authorization header is present if
-                    // our request is redirected.
-                    if (resp.StatusCode == HttpStatusCode.TemporaryRedirect)
+                    if (reportObject != null)
                     {
-                        req = CreateRequest(resp.Headers["Location"], credential);
-                        resp = (HttpWebResponse)req.GetResponse();
-                    }
-
-                    bool byCreative = true;
-                    Stream stream = resp.GetResponseStream();
-                    using (var reader = new StreamReader(stream))
-                    {
-                        foreach (var row in DbmCsvExtracter.EnumerateRowsStatic(reader, byCreative))
-                            yield return row;
+                        var stream = GetStreamForCloudStorageObject(reportObject, credential);
+                        bool byCreative = true;
+                        using (var reader = new StreamReader(stream))
+                        {
+                            foreach (var row in DbmCsvExtracter.EnumerateRowsStatic(reader, byCreative))
+                                yield return row;
+                        }
                     }
                 }
             }
+        }
+
+        public static Stream GetStreamForCloudStorageObject(Google.Apis.Storage.v1.Data.Object cloudStorageObject, ServiceAccountCredential credential)
+        {
+            HttpWebRequest req = CreateRequest(cloudStorageObject.MediaLink, credential);
+            HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
+
+            // Handle redirects manully to ensure that the Authorization header is present if
+            // our request is redirected.
+            if (resp.StatusCode == HttpStatusCode.TemporaryRedirect)
+            {
+                req = CreateRequest(resp.Headers["Location"], credential);
+                resp = (HttpWebResponse)req.GetResponse();
+            }
+            return resp.GetResponseStream();
         }
 
         public static ServiceAccountCredential CreateCredential()

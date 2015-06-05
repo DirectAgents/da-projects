@@ -56,23 +56,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
                 var request = service.Objects.Get(bucketName, filename);
                 var obj = request.Execute();
-
-                HttpWebRequest req = DbmCloudStorageExtracter.CreateRequest(obj.MediaLink, credential);
-                HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
-
-                // Handle redirects manully to ensure that the Authorization header is present if
-                // our request is redirected.
-                if (resp.StatusCode == HttpStatusCode.TemporaryRedirect)
+                if (obj != null)
                 {
-                    req = DbmCloudStorageExtracter.CreateRequest(resp.Headers["Location"], credential);
-                    resp = (HttpWebResponse)req.GetResponse();
-                }
-
-                Stream stream = resp.GetResponseStream();
-                using (var reader = new StreamReader(stream))
-                {
-                    foreach (var row in EnumerateRowsStatic(reader))
-                        yield return row;
+                    var stream = DbmCloudStorageExtracter.GetStreamForCloudStorageObject(obj, credential);
+                    using (var reader = new StreamReader(stream))
+                    {
+                        foreach (var row in EnumerateRowsStatic(reader))
+                            yield return row;
+                    }
                 }
             }
         }

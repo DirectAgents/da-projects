@@ -57,14 +57,16 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         {
             using (CsvReader csv = new CsvReader(reader))
             {
+                csv.Configuration.IgnoreHeaderWhiteSpace = true;
                 csv.Configuration.SkipEmptyRecords = true;
+                csv.Configuration.IgnoreReadingExceptions = true;
 
                 if (byCreative)
                 {
                     csv.Configuration.RegisterClassMap<DbmRowWithCreativeMap>();
 
                     var csvRows = csv.GetRecords<DbmRowWithCreative>().ToList();
-                    for (int i = 0; i < csvRows.Count && !String.IsNullOrWhiteSpace(csvRows[i].InsertionOrder) && !String.IsNullOrWhiteSpace(csvRows[i].Impressions); i++)
+                    for (int i = 0; i < csvRows.Count; i++)
                     {
                         yield return csvRows[i];
                     }
@@ -75,7 +77,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                     csv.Configuration.RegisterClassMap<DbmRowMap>();
 
                     var csvRows = csv.GetRecords<DbmRow>().ToList();
-                    for (int i = 0; i < csvRows.Count && !String.IsNullOrWhiteSpace(csvRows[i].InsertionOrder) && !String.IsNullOrWhiteSpace(csvRows[i].Impressions); i++)
+                    for (int i = 0; i < csvRows.Count; i++)
                     {
                         yield return csvRows[i];
                     }
@@ -89,12 +91,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         public DbmRowMap()
         {
             Map(m => m.Date);
-            Map(m => m.InsertionOrder).Name("Insertion Order");
-            Map(m => m.InsertionOrderID).Name("Insertion Order ID");
+            Map(m => m.InsertionOrder);
+            Map(m => m.InsertionOrderID);
             Map(m => m.Impressions);
             Map(m => m.Clicks);
-            Map(m => m.TotalConversions).Name("Total Conversions");
-            Map(m => m.Revenue).Name("Revenue (USD)");
+            Map(m => m.TotalConversions);
+            Map(m => m.Revenue).Name("Revenue(USD)");
         }
     }
     public sealed class DbmRowWithCreativeMap : CsvClassMap<DbmRowWithCreative>
@@ -102,14 +104,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         public DbmRowWithCreativeMap()
         {
             Map(m => m.Date);
-            Map(m => m.InsertionOrder).Name("Insertion Order");
-            Map(m => m.InsertionOrderID).Name("Insertion Order ID");
+            Map(m => m.InsertionOrder);
+            Map(m => m.InsertionOrderID);
             Map(m => m.Impressions);
             Map(m => m.Clicks);
-            Map(m => m.TotalConversions).Name("Total Conversions");
-            Map(m => m.Revenue).Name("Revenue (USD)");
+            Map(m => m.TotalConversions);
+            Map(m => m.Revenue).Name("Revenue(USD)");
             Map(m => m.Creative);
-            Map(m => m.CreativeID).Name("Creative ID");
+            Map(m => m.CreativeID);
         }
     }
 
@@ -118,7 +120,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         public string Date { get; set; }
 
         public string InsertionOrder { get; set; }
-        public string InsertionOrderID { get; set; } // int
+        public int InsertionOrderID { get; set; }
 
         public string Impressions { get; set; } // int
         public string Clicks { get; set; } // int

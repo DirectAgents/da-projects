@@ -29,17 +29,16 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                 foreach(var item in items)
                 {
                     DateTime date = DateTime.Parse(item.Date);
-                    int ioID = int.Parse(item.InsertionOrderID);
                     var source = new DBMDailySummary
                     {
                         Date = date,
-                        InsertionOrderID = ioID,
+                        InsertionOrderID = item.InsertionOrderID,
                         Impressions = int.Parse(item.Impressions),
                         Clicks = int.Parse(item.Clicks),
                         Conversions = (int)decimal.Parse(item.TotalConversions),
                         Revenue = decimal.Parse(item.Revenue)
                     };
-                    var target = db.Set<DBMDailySummary>().Find(date, ioID);
+                    var target = db.Set<DBMDailySummary>().Find(date, item.InsertionOrderID);
                     if (target == null)
                     {
                         db.DBMDailySummaries.Add(source);
@@ -63,36 +62,38 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
 
         public static void AddUpdateDependentInsertionOrders(List<DbmRowBase> items)
         {
+            var ioTuples = items.Select(i => Tuple.Create(i.InsertionOrderID, i.InsertionOrder)).Distinct();
+            AddUpdateInsertionOrders(ioTuples);
+        }
+        public static void AddUpdateInsertionOrders(IEnumerable<Tuple<int, string>> ioTuples)
+        {
             using (var db = new TDContext())
             {
-                var ioTuples = items.Select(i => Tuple.Create(i.InsertionOrderID, i.InsertionOrder)).Distinct();
                 foreach (var ioTuple in ioTuples)
                 {
-                    int insertionOrderID;
+                    int insertionOrderID = ioTuple.Item1;
                     string insertionOrderName = ioTuple.Item2;
-                    if (Int32.TryParse(ioTuple.Item1, out insertionOrderID))
+                    InsertionOrder existing = db.InsertionOrders.Find(insertionOrderID);
+                    if (existing == null)
                     {
-                        InsertionOrder existing = db.InsertionOrders.Find(insertionOrderID);
-                        if (existing == null)
+                        var io = new InsertionOrder
                         {
-                            var io = new InsertionOrder
-                            {
-                                InsertionOrderID = insertionOrderID,
-                                InsertionOrderName = insertionOrderName
-                            };
-                            db.InsertionOrders.Add(io);
-                            Logger.Info("Saving new InsertionOrder: {0} ({1})", io.InsertionOrderName, io.InsertionOrderID);
-                            db.SaveChanges();
-                        }
-                        else if (existing.InsertionOrderName != insertionOrderName)
-                        {
-                            existing.InsertionOrderName = insertionOrderName;
-                            Logger.Info("Saving updated InsertionOrder: {0} ({1})", insertionOrderName, existing.InsertionOrderID);
-                            db.SaveChanges();
-                        }
+                            InsertionOrderID = insertionOrderID,
+                            InsertionOrderName = insertionOrderName
+                        };
+                        db.InsertionOrders.Add(io);
+                        Logger.Info("Saving new InsertionOrder: {0} ({1})", io.InsertionOrderName, io.InsertionOrderID);
+                        db.SaveChanges();
+                    }
+                    else if (existing.InsertionOrderName != insertionOrderName)
+                    {
+                        existing.InsertionOrderName = insertionOrderName;
+                        Logger.Info("Saving updated InsertionOrder: {0} ({1})", insertionOrderName, existing.InsertionOrderID);
+                        db.SaveChanges();
                     }
                 }
             }
         }
+
     }
 }

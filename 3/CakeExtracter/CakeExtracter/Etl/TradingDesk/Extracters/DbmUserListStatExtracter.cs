@@ -38,18 +38,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
             if (reportObject != null)
             {
-                HttpWebRequest req = DbmCloudStorageExtracter.CreateRequest(reportObject.MediaLink, credential);
-                HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
-
-                // Handle redirects manully to ensure that the Authorization header is present if
-                // our request is redirected.
-                if (resp.StatusCode == HttpStatusCode.TemporaryRedirect)
-                {
-                    req = DbmCloudStorageExtracter.CreateRequest(resp.Headers["Location"], credential);
-                    resp = (HttpWebResponse)req.GetResponse();
-                }
-
-                Stream stream = resp.GetResponseStream();
+                var stream = DbmCloudStorageExtracter.GetStreamForCloudStorageObject(reportObject, credential);
                 using (var reader = new StreamReader(stream))
                 {
                     foreach (var row in EnumerateRowsStatic(reader))

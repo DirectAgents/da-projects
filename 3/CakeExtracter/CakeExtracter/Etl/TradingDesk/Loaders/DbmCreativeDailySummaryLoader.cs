@@ -69,14 +69,15 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                 var tuples = items.Select(i => Tuple.Create(((DbmRowWithCreative)i).CreativeID, ((DbmRowWithCreative)i).Creative, i.InsertionOrderID)).Distinct();
                 foreach (var tuple in tuples)
                 {
-                    int creativeID, insertionOrderID;
+                    int creativeID;
                     string creativeName = tuple.Item2;
+                    int insertionOrderID = tuple.Item3;
 
                     //FOR DEMO
                     if (creativeName.StartsWith("Betterment ") || creativeName.StartsWith("Betterment_"))
                         creativeName = creativeName.Substring(11);
 
-                    if (int.TryParse(tuple.Item1, out creativeID) && int.TryParse(tuple.Item3, out insertionOrderID))
+                    if (int.TryParse(tuple.Item1, out creativeID))
                     {
                         Creative existing = db.Creatives.Find(creativeID);
                         if (existing == null)
@@ -101,5 +102,6 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                 }
             }
         }
+
     }
 }
