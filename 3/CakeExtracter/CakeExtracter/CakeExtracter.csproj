@@ -125,8 +125,9 @@
     <Reference Include="Google.Apis.Storage.v1">
       <HintPath>..\..\ClientPortal.Web\packages\Google.Apis.Storage.v1.1.8.1.70\lib\portable-net4+sl4+wp71+win8\Google.Apis.Storage.v1.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\..\ClientPortal.Web\packages\log4net.2.0.2\lib\net40-full\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\DirectAgents.Web\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="ManyConsole">
       <HintPath>..\..\ClientPortal.Web\packages\ManyConsole.0.4.2.16\lib\ManyConsole.dll</HintPath>
