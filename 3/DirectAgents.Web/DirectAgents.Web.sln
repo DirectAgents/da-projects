@@ -2,9 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectAgents.Web", "DirectAgents.Web\DirectAgents.Web.csproj", "{6279416D-0396-434C-9D74-30C1B74FFF5B}"
-	ProjectSection(ProjectDependencies) = postProject
-		{3B6C5433-5392-4165-A7E4-4AA431A75BB3} = {3B6C5433-5392-4165-A7E4-4AA431A75BB3}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectAgents.Domain", "..\..\1\DirectAgents.Domain\DirectAgents.Domain.csproj", "{278911AB-CB92-4316-843E-4571CD0C3410}"
 EndProject
