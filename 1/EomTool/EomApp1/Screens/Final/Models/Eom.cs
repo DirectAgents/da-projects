@@ -84,7 +84,7 @@ namespace EomApp1.Screens.Final.Models
                     // Generally there will just be one row - because we're doing one affiliate at a time; but it's possible to have multiple cost currs
                     foreach (var row in rows)
                     {
-                        // Skip affiliates that are "exempt" - except for special cases
+                        // Skip entirely if the affiliate is "exempt" - EXCEPT FOR "SPECIAL CASE"...
                         if (row.MarginExempt && !affIdsRequireNegativeApproval.Contains(row.AffId))
                             continue;
 
@@ -97,11 +97,14 @@ namespace EomApp1.Screens.Final.Models
                             approvalNeeded = (marginPct < minimumMarginPct || marginPct <= 0 || marginPct >= 1);
 
                             if (row.MarginExempt && affIdsRequireNegativeApproval.Contains(row.AffId) && marginPct >= 0)
-                                approvalNeeded = false; // special cases - only exempt from negative margin approval
+                                approvalNeeded = false; // ..."SPECIAL CASE" - only requires negative margin approval
                         }
                         else if (row.TotalCost != 0 && (!row.MarginExempt || affIdsRequireNegativeApproval.Contains(row.AffId)))
                         {
-                            approvalNeeded = true; // revenue is 0; cost is not 0; requires approval
+                            approvalNeeded = true; // revenue is 0; cost is not 0 (usually positive: margin is "infinitely negative")
+                                                   // requires approval (unless: exempt && DOESN'T require negative approval)
+                            //TODO: handle the case when rev=0, cost<0, it's margin-exempt and requires-negative-approval
+                            //      (it will set approvalNeeded to true when maybe it shouldn't)
                         }
 
                         if (approvalNeeded)
