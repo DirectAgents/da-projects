@@ -76,6 +76,11 @@ namespace CakeExtracter.CakeMarketingApi
             return response.Creatives;
         }
 
+        // Basically, get the ids of offers with traffic during the specified dateRange
+        public static List<OfferSummary> OfferSummaries(DateRange dateRange)
+        {
+            return OfferSummaries(dateRange, 0); // 0 = all advertisers
+        }
         public static List<OfferSummary> OfferSummaries(DateRange dateRange, int advertiserId)
         {
             var client = new OfferSummariesClient();

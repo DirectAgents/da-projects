@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using CakeExtracter.Common;
 using CsvHelper;
+using Google;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
@@ -55,7 +56,15 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 //var reportObject = bucketObjects.Items.Where(i => i.Name == filename).FirstOrDefault();
 
                 var request = service.Objects.Get(bucketName, filename);
-                var obj = request.Execute();
+                Google.Apis.Storage.v1.Data.Object obj;
+                try
+                {
+                    obj = request.Execute();
+                }
+                catch (GoogleApiException)
+                {
+                    continue; // file not found; continue.  TODO: catch this specifically?
+                }
                 if (obj != null)
                 {
                     var stream = DbmCloudStorageExtracter.GetStreamForCloudStorageObject(obj, credential);
@@ -79,6 +88,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         continue;
                     if (!includeViewThrus && csvRows[i].event_sub_type == "postview")
                         continue;
+                    if (!includeViewThrus)
+                        Logger.Info("Extracting a conversion");
                     yield return csvRows[i];
                 }
             }

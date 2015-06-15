@@ -10,10 +10,12 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
     public class DbmConversionLoader : Loader<DataTransferRow>
     {
         private readonly int convertToTimezoneOffset;
+        private readonly DateRange daylightSavingsRange;
 
-        public DbmConversionLoader(int convertToTimezoneOffest = 0)
+        public DbmConversionLoader(int convertToTimezoneOffset, DateRange daylightSavingsRange)
         {
-            this.convertToTimezoneOffset = convertToTimezoneOffest;
+            this.convertToTimezoneOffset = convertToTimezoneOffset;
+            this.daylightSavingsRange = daylightSavingsRange;
         }
 
         protected override int Load(List<DataTransferRow> items)
@@ -53,10 +55,23 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                         BrowserTimezoneOffsetMinutes = item.browser_timezone_offset_minutes,
                         NetSpeed = item.net_speed
                     };
+                    if (source.EventTime >= daylightSavingsRange.FromDate && source.EventTime < daylightSavingsRange.ToDate)
+                        source.EventTime = source.EventTime.AddHours(1);
+
                     if (item.view_time.HasValue)
+                    {
                         source.ViewTime = Utility.UnixTimeStampToDateTime(item.view_time.Value, convertToTimezoneOffset);
+                        // Daylight savings check
+                        if (source.ViewTime.Value >= daylightSavingsRange.FromDate && source.ViewTime.Value < daylightSavingsRange.ToDate)
+                            source.ViewTime = source.ViewTime.Value.AddHours(1);
+                    }
                     if (item.request_time.HasValue)
+                    {
                         source.RequestTime = Utility.UnixTimeStampToDateTime(item.request_time.Value, convertToTimezoneOffset);
+                        // Daylight savings check
+                        if (source.RequestTime.Value >= daylightSavingsRange.FromDate && source.RequestTime.Value < daylightSavingsRange.ToDate)
+                            source.RequestTime = source.RequestTime.Value.AddHours(1);
+                    }
 
                     var target = db.Set<DBMConversion>().Find(source.AuctionID, source.EventTime);
                     if (target == null)

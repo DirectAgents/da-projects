@@ -35,14 +35,16 @@ namespace CakeExtracter.Commands
         public override int Execute(string[] remainingArguments)
         {
             string bucketName = "gdbm-479-320231"; // location of our data transfer files
-            int timezoneOffset = -4;
+            int timezoneOffset = -5;
+            //int timezoneOffset = -4; // daylight savings
+            DateRange daylightSavingsRange = new DateRange(new DateTime(2015, 3, 8), new DateTime(2015, 11, 1));
 
             var today = DateTime.Today;
             var yesterday = today.AddDays(-1);
             var dateRange = new DateRange(StartDate ?? yesterday, EndDate ?? today);
 
             var extracter = new DbmConversionExtracter(dateRange, bucketName, InsertionOrderId, IncludeViewThrus);
-            var loader = new DbmConversionLoader(timezoneOffset);
+            var loader = new DbmConversionLoader(timezoneOffset, daylightSavingsRange);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
