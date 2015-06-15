@@ -35,7 +35,7 @@ namespace DirectAgents.Domain.Concrete
             return accountManagers;
         }
 
-        public IQueryable<Advertiser> GetAdvertisers(int? acctMgrId, bool? withBudgetedOffers)
+        public IQueryable<Advertiser> GetAdvertisers(int? acctMgrId = null, bool? withBudgetedOffers = null)
         {
             var advertisers = context.Advertisers.AsQueryable();
             if (acctMgrId.HasValue)
@@ -74,11 +74,30 @@ namespace DirectAgents.Domain.Concrete
 
             if (!includeInactive)
                 offers = offers.Where(o => o.OfferStatusId != OfferStatus.Inactive);
+
             if (hidden.HasValue && hidden.Value)
                 offers = offers.Where(o => o.Hidden);
             if (hidden.HasValue && !hidden.Value)
                 offers = offers.Where(o => !o.Hidden);
 
+            return offers;
+        }
+
+        // the withBudget and offerIds criteria are UNIONed
+        public IQueryable<Offer> GetOffersUnion(bool includeExtendedInfo, bool excludeInactive, bool? withBudget, int[] offerIds)
+        {
+            var offers = GetOffers(includeExtendedInfo, null, null, null, !excludeInactive, null);
+            if (withBudget.HasValue)
+            {
+                if (withBudget.Value)
+                    offers = offers.Where(o => offerIds.Contains(o.OfferId) || o.OfferBudgets.Count > 0);
+                else
+                    offers = offers.Where(o => offerIds.Contains(o.OfferId) || o.OfferBudgets.Count == 0);
+            }
+            else
+            {
+                offers = offers.Where(o => offerIds.Contains(o.OfferId));
+            }
             return offers;
         }
 
@@ -180,6 +199,22 @@ namespace DirectAgents.Domain.Concrete
                 end = offer.BudgetEnd;
             }
             return GetOfferDailySummaries(offer.OfferId, start, end);
+        }
+
+        public StatsSummary GetStatsSummary(int? offerId, DateTime? startDate, DateTime? endDate)
+        {
+            var ods = GetOfferDailySummaries(offerId, startDate, endDate);
+            var stats = new StatsSummary
+            {
+                Views = ods.Sum(o => o.Views),
+                Clicks = ods.Sum(o => o.Clicks),
+                Conversions = ods.Sum(o => o.Conversions),
+                Paid = ods.Sum(o => o.Paid),
+                Sellable = ods.Sum(o => o.Sellable),
+                Revenue = ods.Sum(o => o.Revenue),
+                Cost = ods.Sum(o => o.Cost)
+            };
+            return stats;
         }
 
         // ---

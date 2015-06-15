@@ -1,16 +1,17 @@
-﻿using CakeExtracter.Common;
-using CakeExtracter.Etl.CakeMarketing.DALoaders;
-using CakeExtracter.Etl.CakeMarketing.Extracters;
-using DirectAgents.Domain.Contexts;
-using DirectAgents.Domain.Entities.Cake;
-using System;
-using System.Linq;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Configuration;
-using CakeExtracter.Reports;
+using System.Linq;
 using System.Text;
+using CakeExtracter.CakeMarketingApi;
+using CakeExtracter.Common;
+using CakeExtracter.Etl.CakeMarketing.DALoaders;
+using CakeExtracter.Etl.CakeMarketing.Extracters;
+using CakeExtracter.Reports;
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.Cake;
 
 namespace CakeExtracter.Commands
 {
@@ -27,19 +28,29 @@ namespace CakeExtracter.Commands
         }
 
         public int? OfferId { get; set; }
+        public bool IncludeRecent { get; set; }
+
         private GmailEmailer emailer;
         private string reportingEmail;
         private string testEmail, budgetAlertsEmail;
 
+        private const int DAYS_RECENT_ACTIVITY = 30;
+        //How far back to get stats
+        private const int MAX_DAYS_WITH_BUDGET = 93;
+        private const int MAX_DAYS_WITHOUTBUDGET = 31;
+
         public override void ResetProperties()
         {
             OfferId = null;
+            IncludeRecent = false;
         }
 
         public DASynchOfferBudgetStatsCommand()
         {
             IsCommand("daSynchOfferBudgetStats", "synch OfferDailySummaries for all offers with budgets");
             HasOption<int>("o|offerId=", "Offer Id (default = all with budgets)", c => OfferId = c);
+            HasOption<bool>("r|recent=", "Include offers with recent activity (default = false)", c => IncludeRecent = c);
+            //HasOption<int>("d|days=", "Number of days for recent activity check (default = 31)", c => Days_RecentActivity = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -51,20 +62,29 @@ namespace CakeExtracter.Commands
             testEmail = ConfigurationManager.AppSettings["BudgetAlerts_TestEmail"];
             budgetAlertsEmail = ConfigurationManager.AppSettings["BudgetAlerts_Email"];
 
-            var offers = GetOffers();
+            var offers = GetOffers(); // Fills in current budget stats ("before" values)
+
+            DateTime today = DateTime.Today;
+            DateTime minStartWithBudget = today.AddDays(-MAX_DAYS_WITH_BUDGET);
+            DateTime minStartWithoutBudget = today.AddDays(-MAX_DAYS_WITHOUTBUDGET);
+
             foreach (var offer in offers) //TODO: do several in parallel
             {
                 DateTime startDate = offer.DateCreated.Date;
-                DateTime endDate = DateTime.Today;
+                DateTime endDate = today;
                 if (offer.HasBudget)
                 {
                     if (offer.BudgetStart.HasValue)
                         startDate = offer.BudgetStart.Value;
-                    if (offer.BudgetEnd.HasValue)
-                        endDate = offer.BudgetEnd.Value;
+                    if (startDate < minStartWithBudget)
+                        startDate = minStartWithBudget;
+                }
+                else
+                {
+                    if (startDate < minStartWithoutBudget)
+                        startDate = minStartWithoutBudget;
                 }
                 var dateRange = new DateRange(startDate, endDate.AddDays(1));
-                //TODO: is there a way to know if it's "complete" and we don't need to up this one anymore?
 
                 var extracter = new OfferDailySummariesExtracter(dateRange, 0, offer.OfferId, true);
                 var loader = new DAOfferDailySummariesLoader();
@@ -73,12 +93,12 @@ namespace CakeExtracter.Commands
                 extracterThread.Join();
                 loaderThread.Join();
 
-                CheckOfferBudgetAlerts(offer);
+                CheckOfferBudgetAlerts(offer); // Updates budget stats ("after" values)
             }
             return 0;
         }
 
-        private IEnumerable<Offer> GetOffers()
+        private IEnumerable<Offer> GetOffers() // the specified offer, or: the ones with budgets + the ones with recent activity (if specified)
         {
             using (var repo = new DirectAgents.Domain.Concrete.MainRepository(new DAContext()))
             {
@@ -90,7 +110,22 @@ namespace CakeExtracter.Commands
                         ((List<Offer>)offers).Add(offer);
                 }
                 else
-                    offers = repo.GetOffers(true, null, null, true, false, null); // active offers with budget
+                {
+                    if (IncludeRecent)
+                    {   // Get the ids of offers with recent activity
+                        var today = DateTime.Today;
+                        var start = today.AddDays(-DAYS_RECENT_ACTIVITY);
+                        var dateRange = new DateRange(start, today.AddDays(1));
+                        var offerSummaries = CakeMarketingUtility.OfferSummaries(dateRange);
+                        var offerIds = offerSummaries.Select(os => os.Offer.OfferId).Where(id => id > -1).ToArray();
+
+                        offers = repo.GetOffersUnion(true, true, true, offerIds); // with budget or with one of the aforementioned ids; exclude 'inactive'
+                    }
+                    else
+                    {
+                        offers = repo.GetOffers(true, null, null, true, false, null); // 'active' offers with budget
+                    }
+                }
 
                 foreach (var offer in offers)
                 {

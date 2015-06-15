@@ -50,7 +50,8 @@ namespace DirectAgents.Domain.Entities.Cake
         [NotMapped]
         public bool HasBudget
         {
-            get { return (OfferBudgets == null || OfferBudgets.Count > 0); }
+            //get { return (OfferBudgets == null || OfferBudgets.Count > 0); }
+            get { return (OfferBudgets != null && OfferBudgets.Count > 0); }
         }
 
         [NotMapped]

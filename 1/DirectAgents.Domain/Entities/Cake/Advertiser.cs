@@ -29,5 +29,8 @@ namespace DirectAgents.Domain.Entities.Cake
             else
                 return AdvertiserName.Substring(0, maxChars) + "...";
         }
+
+        [NotMapped]
+        public StatsSummary Stats { get; set; }
     }
 }
