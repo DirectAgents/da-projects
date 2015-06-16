@@ -1,10 +1,10 @@
-﻿using EomTool.Domain.Abstract;
+﻿using System;
+using System.IO;
+using System.Web.Mvc;
+using EomTool.Domain.Abstract;
 using EomTool.Domain.Concrete;
 using EomTool.Domain.Entities;
 using EomToolWeb.Infrastructure;
-using System;
-using System.IO;
-using System.Web.Mvc;
 
 namespace EomToolWeb.Controllers
 {

@@ -121,7 +121,7 @@ namespace EomTool.Domain.Concrete
                 added_by_system_user = identity,
                 publisher_name = pubName
             };
-            context.PubNotes.AddObject(pubNote);
+            context.PubNotes.Add(pubNote);
             context.SaveChanges();
         }
 

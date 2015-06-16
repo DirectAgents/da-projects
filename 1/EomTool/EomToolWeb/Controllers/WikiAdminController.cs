@@ -1,7 +1,7 @@
-﻿using DirectAgents.Domain.Abstract;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Web.Mvc;
+using DirectAgents.Domain.Abstract;
 
 namespace EomToolWeb.Controllers
 {

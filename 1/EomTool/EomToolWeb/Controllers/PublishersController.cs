@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
-using System.Web.Mvc;
-using EomTool.Domain.Abstract;
-using EomToolWeb.Models;
-using System.Net.Mail;
-using EomTool.Domain.Entities;
-using DAgents.Common;
 using System.Web.Configuration;
+using System.Web.Mvc;
+using DAgents.Common;
+using EomTool.Domain.Abstract;
+using EomTool.Domain.Entities;
+using EomToolWeb.Models;
 
 namespace EomToolWeb.Controllers
 {

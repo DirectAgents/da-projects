@@ -1,6 +1,9 @@
-﻿using EomTool.Domain.Abstract;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity.Core.EntityClient;
+using EomTool.Domain.Abstract;
 using Ninject;
-using System.Data.EntityClient;
 
 namespace EomTool.Domain.Entities
 {
@@ -8,12 +11,12 @@ namespace EomTool.Domain.Entities
     {
         [Inject]
         public EomEntities(IEomEntitiesConfig config)
-            : this(CreateEntityConnection(config.ConnectionString))
+            : base(CreateEntityConnection(config.ConnectionString), true)
         {
         }
 
         public EomEntities(string cs, bool dummy) // dummy ignored, used for overloading
-            : this(CreateEntityConnection(cs))
+            : base(CreateEntityConnection(cs), true)
         {
         }
 
@@ -27,4 +30,146 @@ namespace EomTool.Domain.Entities
             }.ConnectionString);
         }
     }
+
+    public partial class CampaignStatus
+    {
+        public const int Default = 1;
+        public const int Finalized = 2;
+        public const int Active = 3;
+        public const int Verified = 4;
+
+        public static string DisplayVal(int? campaignStatus)
+        {
+            if (campaignStatus.HasValue)
+                return DisplayVal(campaignStatus.Value);
+            else
+                return "All";
+        }
+    }
+
+    public partial class ItemAccountingStatus
+    {
+        public const int Default = 1;
+        public const int PaymentDue = 2;
+        public const int DoNotPay = 3;
+        public const int CheckCut = 4;
+        public const int CheckSignedAndPaid = 5;
+        public const int Approved = 6;
+        public const int Hold = 7;
+        public const int Verified = 8;
+    }
+
+    public partial class MediaBuyerApprovalStatus
+    {
+        public const int Default = 1;
+        public const int Queued = 2;
+        public const int Sent = 3;
+        public const int Approved = 4;
+        public const int Held = 5;
+    }
+
+    public partial class PaymentBatchState
+    {
+        public const int Default = 1;
+        public const int Sent = 3;
+        public const int Complete = 6;
+    }
+
+    public partial class Advertiser
+    {
+        [NotMapped]
+        public AccountManagerTeam AccountManagerTeam { get; set; }
+
+        [NotMapped]
+        public Advertiser PreviousMonthAdvertiser { get; set; }
+    }
+
+    public partial class Affiliate
+    {
+        [NotMapped]
+        public Affiliate PreviousMonthAffiliate { get; set; }
+    }
+
+    public partial class Campaign
+    {
+        [NotMapped]
+        public string DisplayName
+        {
+            get { return (String.IsNullOrWhiteSpace(display_name) ? campaign_name : display_name); }
+        }
+    }
+
+    public partial class MarginApproval
+    {
+        [NotMapped]
+        public Campaign Campaign { get; set; }
+        [NotMapped]
+        public Affiliate Affiliate { get; set; }
+    }
+
+    public partial class PaymentBatch
+    {
+        [NotMapped]
+        public string AccountingPeriod { get; set; }
+
+        [NotMapped]
+        public IEnumerable<PublisherPayment> Payments { get; set; }
+
+        [NotMapped]
+        public string approver_abbrev
+        {
+            get
+            {
+                if (approver_identity != null && approver_identity.StartsWith("DIRECTAGENTS\\"))
+                    return (approver_identity.Substring(13));
+                else return approver_identity;
+            }
+        }
+    }
+
+    public partial class PublisherPayment
+    {
+        [NotMapped]
+        public string AccountingPeriod { get; set; }
+        [NotMapped]
+        public int NumNotes { get; set; }
+        [NotMapped]
+        public int NumAttachments { get; set; }
+    }
+
+    public partial class UnitType
+    {
+        public static string ToItemCode(string unitTypeName)
+        {
+            if (unitTypeName == null)
+                return null;
+            var unitTypeNameLowered = unitTypeName.ToLower();
+
+            if (unitTypeNameLowered.Contains("affiliate program"))
+                return "Affiliate Management";
+            switch (unitTypeNameLowered)
+            {
+                case "call tracking":
+                    return "Search";
+                case "gsp":
+                    return "GSP";
+                case "opm":
+                    return "Affiiate Program Management";
+                case "ppc":
+                    return "Search Marketing";
+                case "revshare":
+                    return "CPA Fee";
+                case "seo":
+                    return "Search";
+                case "trading desk":
+                    return "Trading Desk";
+                default:
+                    if (unitTypeNameLowered.Contains(" fee"))
+                        return unitTypeName;
+                    else
+                        return unitTypeName + " Fee";
+            }
+        }
+    }
+
 }

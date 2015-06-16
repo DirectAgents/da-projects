@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Web;
+using System.Net.Mime;
+using System.Web.Configuration;
 using System.Web.Mvc;
+using DAgents.Common;
 using EomTool.Domain.Abstract;
 using EomTool.Domain.Concrete;
 using EomTool.Domain.Entities;
 using EomToolWeb.Infrastructure;
 using EomToolWeb.Models;
-using System.IO;
 using Microsoft.Win32;
-using System.Net.Mime;
-using DAgents.Common;
-using System.Web.Configuration;
 
 namespace EomToolWeb.Controllers
 {

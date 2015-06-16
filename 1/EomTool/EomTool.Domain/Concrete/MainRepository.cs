@@ -1,9 +1,10 @@
-﻿using EomTool.Domain.Abstract;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using EomTool.Domain.Abstract;
 using EomTool.Domain.DTOs;
 using EomTool.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace EomTool.Domain.Concrete
 {
@@ -415,7 +416,7 @@ namespace EomTool.Domain.Concrete
                     if (subItem.affid.HasValue)
                         subItem.AffiliateName = AffiliateName(subItem.affid.Value, true);
                 }
-                context.Campaigns.Detach(lineItem.Campaign);
+                context.Entry(lineItem.Campaign).State = EntityState.Detached;
 
                 invoiceLineItems.Add(lineItem);
                 firstGroup = false;
@@ -435,10 +436,10 @@ namespace EomTool.Domain.Concrete
             if (campaign != null)
             {
                 invoice.Advertiser = campaign.Advertiser;
-                context.Advertisers.Detach(invoice.Advertiser);
+                context.Entry(invoice.Advertiser).State = EntityState.Detached;
 
                 invoice.Advertiser.AccountManagerTeam = campaign.AccountManagerTeam;
-                context.AccountManagerTeams.Detach(invoice.Advertiser.AccountManagerTeam);
+                context.Entry(invoice.Advertiser.AccountManagerTeam).State = EntityState.Detached;
             }
         }
 
@@ -447,7 +448,7 @@ namespace EomTool.Domain.Concrete
             if (markSentToAccounting)
                 invoice.invoice_status_id = InvoiceStatus.AccountingReview;
 
-            context.Invoices.AddObject(invoice);
+            context.Invoices.Add(invoice);
             SaveChanges();
         }
 
@@ -511,7 +512,7 @@ namespace EomTool.Domain.Concrete
 
         public void SaveMarginApproval(MarginApproval marginApproval)
         {
-            context.MarginApprovals.AddObject(marginApproval);
+            context.MarginApprovals.Add(marginApproval);
         }
 
         //public void SaveMarginApproval(int pid, int affid, string comment, string userIdentity)
@@ -556,7 +557,7 @@ namespace EomTool.Domain.Concrete
         //        {
         //            marginApproval.margin_pct = decimal.Round(1 - costUSD / revenueUSD, 3);
         //        }
-        //        context.MarginApprovals.AddObject(marginApproval);
+        //        context.MarginApprovals.Add(marginApproval);
         //    }
         //    context.SaveChanges();
         //}
@@ -786,7 +787,7 @@ namespace EomTool.Domain.Concrete
 
         public void AddItem(Item item)
         {
-            context.Items.AddObject(item);
+            context.Items.Add(item);
         }
         public bool ItemExists(Item item)
         {

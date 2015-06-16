@@ -1,13 +1,10 @@
-﻿using DAgents.Common;
+﻿using System.Linq;
+using System.Web.Configuration;
+using System.Web.Mvc;
+using DAgents.Common;
 using EomTool.Domain.Abstract;
 using EomTool.Domain.Entities;
 using EomToolWeb.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Configuration;
-using System.Web.Mvc;
 
 namespace EomToolWeb.Controllers
 {

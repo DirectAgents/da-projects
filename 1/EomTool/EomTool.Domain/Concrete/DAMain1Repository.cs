@@ -1,7 +1,7 @@
-﻿using EomTool.Domain.Abstract;
-using EomTool.Domain.Entities;
-using System;
+﻿using System;
 using System.Linq;
+using EomTool.Domain.Abstract;
+using EomTool.Domain.Entities;
 
 namespace EomTool.Domain.Concrete
 {
@@ -45,7 +45,7 @@ namespace EomTool.Domain.Concrete
                 added_by_system_user = identity,
                 publisher_name = pubName
             };
-            db.PublisherNotes.AddObject(pubNote);
+            db.PublisherNotes.Add(pubNote);
             db.SaveChanges();
         }
 
@@ -100,7 +100,7 @@ namespace EomTool.Domain.Concrete
                     SettingName = EomAppSettingsPrefix + name,
                     SettingValue = value
                 };
-                db.Settings.AddObject(setting);
+                db.Settings.Add(setting);
             }
             db.SaveChanges();
         }

@@ -1,6 +1,6 @@
-﻿using EomTool.Domain.Entities;
-using System;
+﻿using System;
 using System.Linq;
+using EomTool.Domain.Entities;
 
 namespace EomTool.Domain.Concrete
 {
@@ -28,7 +28,7 @@ namespace EomTool.Domain.Concrete
                 publisher_name = publisherName,
                 added_by_system_user = authorIdentity
             };
-            context.PubNotes.AddObject(note);
+            context.PubNotes.Add(note);
         }
 
         public IQueryable<PubAttachment> Attachments(string publisherName)
@@ -46,7 +46,7 @@ namespace EomTool.Domain.Concrete
                 description = attachmentDescription,
                 binary_content = binaryContent
             };
-            context.PubAttachments.AddObject(attachment);
+            context.PubAttachments.Add(attachment);
         }
 
         public PubAttachment AttachmentContentById(int attachmentID)

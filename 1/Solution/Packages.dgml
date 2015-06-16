@@ -4,8 +4,6 @@
     <Node Id="DirectAgents.Common" Label="DirectAgents.Common" Category="Project" />
     <Node Id="EnterpriseLibrary.Common 6.0.1304.0" Label="EnterpriseLibrary.Common 6.0.1304.0" Category="Package" />
     <Node Id="EnterpriseLibrary.Logging 6.0.1304.0" Label="EnterpriseLibrary.Logging 6.0.1304.0" Category="Package" />
-    <Node Id="DirectAgents.Domain" Label="DirectAgents.Domain" Category="Project" />
-    <Node Id="EntityFramework 5.0.0" Label="EntityFramework 5.0.0" Category="Package" />
     <Node Id="EomTool.Domain" Label="EomTool.Domain" Category="Project" />
     <Node Id="EntityFramework 5.0.0" Label="EntityFramework 5.0.0" Category="Package" />
     <Node Id="Ninject 3.0.1.10" Label="Ninject 3.0.1.10" Category="Package" />
@@ -44,7 +42,6 @@
   <Links>
     <Link Source="EnterpriseLibrary.Logging 6.0.1304.0" Target="EnterpriseLibrary.Common 6.0.1304.0" Category="Package Dependency" />
     <Link Source="DirectAgents.Common" Target="EnterpriseLibrary.Logging 6.0.1304.0" Category="Installed Package" />
-    <Link Source="DirectAgents.Domain" Target="EntityFramework 5.0.0" Category="Installed Package" />
     <Link Source="EomTool.Domain" Target="EntityFramework 5.0.0" Category="Installed Package" />
     <Link Source="EomTool.Domain" Target="Ninject 3.0.1.10" Category="Installed Package" />
     <Link Source="jQuery.UI.Combined 1.8.20.1" Target="jQuery 1.7.2" Category="Package Dependency" />
