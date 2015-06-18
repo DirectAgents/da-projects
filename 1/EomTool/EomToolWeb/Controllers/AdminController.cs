@@ -249,7 +249,7 @@ namespace EomToolWeb.Controllers
             var unitTypeSort = request.SortObjects.SingleOrDefault(so => so.Field == "UnitTypeId");
             if (unitTypeSort != null) unitTypeSort.Field = "UnitTypeName";
 
-            var data = mainRepo.CampAffItems(null, true);
+            var data = mainRepo.CampAffItems(true);
             var kgrid = new KendoGridEx<CampAffItem>(request, data);
 
             return CreateJsonResult(kgrid);

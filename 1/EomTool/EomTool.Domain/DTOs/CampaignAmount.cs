@@ -62,6 +62,9 @@ namespace EomTool.Domain.DTOs
         }
     }
 
+    // TODO: Make an AdvItem - with stats for an advertiser?
+    //    ...Have CampAffItem inherit from that?
+
     public class CampAffItem
     {
         public int AdvId { get; set; }
@@ -89,6 +92,11 @@ namespace EomTool.Domain.DTOs
         public decimal CostPerUnit { get; set; }
         public decimal Cost { get; set; }
         public decimal CostUSD { get; set; }
+
+        public decimal ProfitUSD
+        {
+            get { return RevUSD - CostUSD; }
+        }
 
         //public decimal? Margin
         //{

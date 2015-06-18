@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using EomTool.Domain.Abstract;
+using EomTool.Domain.DTOs;
 using EomTool.Domain.Entities;
 using EomToolWeb.Models;
 
@@ -25,6 +26,25 @@ namespace EomToolWeb.Controllers
 
             SetAccountingPeriodViewData();
             return View(advertisers);
+        }
+
+        public ActionResult Top(int? unitType) // period?
+        {
+            // get campaigns & their activity
+            var campAffItems = mainRepo.CampAffItems(false, null, unitType);
+
+            // group by advertiser
+            var advGroups = campAffItems.GroupBy(ca => new { ca.AdvId, ca.AdvName });
+            var advStats = advGroups.Select(g => new CampAffItem
+            {
+                AdvId = g.Key.AdvId,
+                AdvName = g.Key.AdvName,
+                RevUSD = g.Sum(ca => ca.RevUSD),
+                CostUSD = g.Sum(ca => ca.CostUSD)
+            });
+
+            var model = advStats.OrderByDescending(a => a.ProfitUSD).Take(10);
+            return View(model);
         }
 
         public JsonResult IdValueText(bool withActivity = false)

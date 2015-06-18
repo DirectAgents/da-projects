@@ -139,6 +139,10 @@ namespace EomTool.Domain.Entities
 
     public partial class UnitType
     {
+        public const int PPC = 15;
+        public const int TradingDesk = 18;
+        //etc...
+
         public static string ToItemCode(string unitTypeName)
         {
             if (unitTypeName == null)

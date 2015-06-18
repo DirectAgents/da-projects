@@ -21,7 +21,7 @@ namespace EomTool.Domain.Abstract
         IEnumerable<CampaignAmount> CampaignAmounts(int? amId, int? advertiserId, bool byAffiliate, int? campaignStatus);
 
         IEnumerable<CampaignAmount> CampaignAmounts2(int? campaignStatus);
-        IEnumerable<CampAffItem> CampAffItems(int? campaignStatus, bool includeNotes);
+        IEnumerable<CampAffItem> CampAffItems(bool includeNotes, int? campaignStatus = null, int? unitType = null);
 
         Invoice GenerateInvoice(IEnumerable<CampAffId> campAffIds);
         void SaveInvoice(Invoice invoice, bool markSentToAccounting = false);

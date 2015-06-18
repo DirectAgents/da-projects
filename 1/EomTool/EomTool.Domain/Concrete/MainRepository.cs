@@ -232,9 +232,9 @@ namespace EomTool.Domain.Concrete
             return amounts;
         }
         // version3: include campaign and account statuses, AcctMgr
-        public IEnumerable<CampAffItem> CampAffItems(int? campaignStatus, bool includeNotes)
+        public IEnumerable<CampAffItem> CampAffItems(bool includeNotes, int? campaignStatus = null, int? unitType = null)
         {
-            var items = Items(campaignStatus);
+            var items = Items(campaignStatus, unitType);
             var itemGroups = items.GroupBy(i => new { i.pid, i.affid, i.revenue_currency_id, i.revenue_per_unit, i.cost_currency_id, i.cost_per_unit, i.unit_type_id, i.campaign_status_id, i.item_accounting_status_id });
             var rawAmounts = from ig in itemGroups
                              select new
@@ -353,7 +353,7 @@ namespace EomTool.Domain.Concrete
             // could do a where contains using a list of distinct pids... then do aggregates
 
             //var items = Items(CampaignStatus.Default); // only unfinalized amounts will be included
-            var items = Items(null).Where(i => i.total_revenue.HasValue && i.total_revenue != 0);
+            var items = Items().Where(i => i.total_revenue.HasValue && i.total_revenue != 0);
 
             foreach (var campAffId in campAffIds)
             {
@@ -589,11 +589,13 @@ namespace EomTool.Domain.Concrete
 
         //---
 
-        private IQueryable<Item> Items(int? campaignStatus)
+        private IQueryable<Item> Items(int? campaignStatus = null, int? unitType = null)
         {
             var items = context.Items.AsQueryable();
             if (campaignStatus.HasValue)
                 items = items.Where(i => i.campaign_status_id == campaignStatus);
+            if (unitType.HasValue)
+                items = items.Where(i => i.unit_type_id == unitType);
             return items;
         }
         //private IQueryable<Item> Items(int[] campaignStatuses)
