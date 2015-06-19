@@ -52,6 +52,8 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                             updated++;
                         }
 
+                        //TODO: use AutoMapper
+
                         target.Views = source.Views;
                         target.Clicks = source.Clicks;
                         target.Conversions = source.Conversions;

@@ -78,6 +78,7 @@ namespace CakeExtracter.Commands
                         startDate = offer.BudgetStart.Value;
                     if (startDate < minStartWithBudget)
                         startDate = minStartWithBudget;
+                    //Q: Will this ever be a problem... the budget start is set to yesterday but we don't have daily stats from before that and will miss them?
                 }
                 else
                 {
