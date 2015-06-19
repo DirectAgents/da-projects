@@ -70,6 +70,8 @@
     <Compile Include="Concrete\MainRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
+    <Compile Include="Entities\AdRoll\Advertisable.cs" />
+    <Compile Include="Entities\AdRoll\AdvertisableStat.cs" />
     <Compile Include="Entities\Cake\Advertiser.cs" />
     <Compile Include="Entities\Cake\Contact.cs" />
     <Compile Include="Entities\Cake\Offer.cs" />
@@ -170,6 +172,14 @@
     <Compile Include="Migrations\201406052033250_VerticalsEtc.Designer.cs">
       <DependentUpon>201406052033250_VerticalsEtc.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506192205420_Mig_EF6.cs" />
+    <Compile Include="Migrations\201506192205420_Mig_EF6.Designer.cs">
+      <DependentUpon>201506192205420_Mig_EF6.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201506192208145_Mig_AdRoll.cs" />
+    <Compile Include="Migrations\201506192208145_Mig_AdRoll.Designer.cs">
+      <DependentUpon>201506192208145_Mig_AdRoll.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -244,6 +254,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201406052033250_VerticalsEtc.resx">
       <DependentUpon>201406052033250_VerticalsEtc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506192205420_Mig_EF6.resx">
+      <DependentUpon>201506192205420_Mig_EF6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506192208145_Mig_AdRoll.resx">
+      <DependentUpon>201506192208145_Mig_AdRoll.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

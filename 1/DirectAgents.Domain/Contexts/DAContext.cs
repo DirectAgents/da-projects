@@ -1,7 +1,8 @@
-﻿using DirectAgents.Domain.Entities;
-using DirectAgents.Domain.Entities.Cake;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using DirectAgents.Domain.Entities;
+using DirectAgents.Domain.Entities.AdRoll;
+using DirectAgents.Domain.Entities.Cake;
 
 namespace DirectAgents.Domain.Contexts
 {
@@ -9,12 +10,14 @@ namespace DirectAgents.Domain.Contexts
     {
         //public DAContext() : base() { }
         const string cakeSchema = "cake";
+        const string adrollSchema = "adr";
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
+            // Cake
             modelBuilder.Entity<Advertiser>().ToTable("Advertiser", cakeSchema);
             modelBuilder.Entity<Contact>().ToTable("Contact", cakeSchema);
             modelBuilder.Entity<Role>().ToTable("Role", cakeSchema);
@@ -26,6 +29,14 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<OfferDailySummary>()
                 .HasKey(t => new { t.OfferId, t.Date })
                 .ToTable("OfferDailySummary", cakeSchema);
+
+            // AdRoll
+            modelBuilder.Entity<Advertisable>().ToTable("Advertisable", adrollSchema);
+            modelBuilder.Entity<AdvertisableStat>()
+                .HasKey(t => new { t.Date, t.AdvertisableId })
+                .ToTable("AdvertisableStat", adrollSchema);
+            modelBuilder.Entity<AdvertisableStat>()
+                .Property(t => t.Spend).HasPrecision(18, 6);
         }
 
         public DbSet<Advertiser> Advertisers { get; set; }
@@ -38,5 +49,8 @@ namespace DirectAgents.Domain.Contexts
 
         public DbSet<OfferDailySummary> OfferDailySummaries { get; set; }
         public DbSet<OfferBudget> OfferBudgets { get; set; }
+
+        public DbSet<Advertisable> Advertisables { get; set; }
+        public DbSet<AdvertisableStat> AdvertisableStats { get; set; }
     }
 }
