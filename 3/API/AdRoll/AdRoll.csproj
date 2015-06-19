@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="AdRollUtility.cs" />
     <Compile Include="Clients\AdReportClient.cs" />
+    <Compile Include="Clients\AdvertisableReportClient.cs" />
     <Compile Include="Clients\ApiClient.cs" />
     <Compile Include="Clients\ApiRequest.cs" />
     <Compile Include="Entities\AdSummary.cs" />

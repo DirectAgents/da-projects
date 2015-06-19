@@ -55,6 +55,19 @@ namespace AdRoll
                 return _AdReportClient;
             }
         }
+        private AdvertisableReportClient _AdvertisableReportClient;
+        private AdvertisableReportClient AdvertisableReportClient
+        {
+            get
+            {
+                if (_AdvertisableReportClient == null)
+                {
+                    _AdvertisableReportClient = new AdvertisableReportClient();
+                    SetupApiClient(_AdvertisableReportClient);
+                }
+                return _AdvertisableReportClient;
+            }
+        }
 
         private void SetupApiClient(ApiClient apiClient)
         {
@@ -63,7 +76,7 @@ namespace AdRoll
         }
 
         // --- Methods ---
-        public List<AdSummary> AdSummaries(DateTime date, string advertisableId)
+        public List<AdSummary> AdSummaries(DateTime date, string advertisableEid)
         {
             //Note: We can only do one day at a time because the API allows either:
             // - breakdown by ad for a specified date or daterange (and advertisable)
@@ -73,7 +86,7 @@ namespace AdRoll
             {
                 start_date = date.ToString("MM-dd-yyyy"),
                 end_date = date.ToString("MM-dd-yyyy"),
-                advertisables = advertisableId
+                advertisables = advertisableEid
             };
             var response = this.AdReportClient.AdSummaries(request);
             if (response == null)
@@ -97,12 +110,29 @@ namespace AdRoll
             //    }
             //}
 
-            // Set the date for each summary, b/c the API doesn't include it
+            // Set the date for each summary, b/c the API doesn't include it for this query
             foreach (var adSum in adSummaries)
             {
                 adSum.date = date;
             }
             return adSummaries;
+        }
+
+        public List<DailySummary> AdvertisableSummaries(DateTime startDate, DateTime endDate, string advertisableEid)
+        {
+            var request = new AdvertisableReportRequest
+            {
+                start_date = startDate.ToString("MM-dd-yyyy"),
+                end_date = endDate.ToString("MM-dd-yyyy"),
+                advertisables = advertisableEid
+            };
+            var response = this.AdvertisableReportClient.DailySummaries(request);
+            if (response == null)
+            {
+                LogInfo("No DailySummaries found for the Advertisable");
+                return new List<DailySummary>();
+            }
+            return response.results;
         }
     }
 }
