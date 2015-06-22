@@ -3,7 +3,6 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using CakeExtracter.Commands;
-using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.Cake;
@@ -11,11 +10,8 @@ using DirectAgents.Web.Models;
 
 namespace DirectAgents.Web.Controllers
 {
-    public class BudgetsController : Controller
+    public class BudgetsController : ControllerBase
     {
-        private IMainRepository mainRepo;
-        private ISecurityRepository securityRepo;
-
         public BudgetsController()
         {
             this.mainRepo = new MainRepository(new DAContext());
@@ -255,12 +251,5 @@ namespace DirectAgents.Web.Controllers
             return Content(text.ToString());
         }
 
-        // ---
-
-        protected override void Dispose(bool disposing)
-        {
-            mainRepo.Dispose();
-            base.Dispose(disposing);
-        }
     }
 }

@@ -17,6 +17,7 @@ namespace DirectAgents.Domain.Entities.Cake
         public decimal Cost { get; set; }
     }
 
+    // DTO
     public class StatsSummary
     {
         public int Views { get; set; }

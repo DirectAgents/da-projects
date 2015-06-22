@@ -1,0 +1,46 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.AdRoll.Advertisable>
+
+<style>
+    table {
+        border-collapse: collapse;
+    }
+    table, th, td {
+        border: 1px solid black;
+    }
+</style>
+
+<h2>Programmatic</h2>
+
+ADRoll MTD Stats - @DateTime.Now.ToString()
+
+<table>
+<tr>
+    <th>Profile Name</th>
+    <th>Impressions</th>
+    <th>Clicks</th>
+    <th>CTR</th>
+    <th>CPM</th>
+    <th>CPC</th>
+    <th>CPA</th>
+    <th>VTC</th>
+    <th>CTC</th>
+    <th>TotalConv</th>
+    <th>Spend</th>
+</tr>
+@foreach (var adv in Model)
+{
+<tr>
+    <td>@adv.Name</td>
+    <td style="text-align:right">@adv.Stats.Impressions</td>
+    <td style="text-align:right">@adv.Stats.Clicks</td>
+    <td style="text-align:center">@adv.Stats.CTR</td>
+    <td style="text-align:center">@adv.Stats.CPM</td>
+    <td style="text-align:center">@adv.Stats.CPC</td>
+    <td style="text-align:center">@adv.Stats.CPA</td>
+    <td style="text-align:right">@adv.Stats.ViewThruConv</td>
+    <td style="text-align:right">@adv.Stats.ClickThruConv</td>
+    <td style="text-align:right">@adv.Stats.TotalConv</td>
+    <td style="text-align:right">@adv.Stats.Spend</td>
+</tr>
+}
+</table>

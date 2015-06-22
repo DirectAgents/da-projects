@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DirectAgents.Domain.DTO;
+using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.Cake;
 
 namespace DirectAgents.Domain.Abstract
@@ -10,6 +11,7 @@ namespace DirectAgents.Domain.Abstract
     {
         void SaveChanges();
 
+        // Cake
         Contact GetContact(int contactId);
         IQueryable<Contact> GetAccountManagers();
         IQueryable<Advertiser> GetAdvertisers(int? acctMgrId = null, bool? withBudgetedOffers = null);
@@ -27,5 +29,10 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<OfferDailySummary> GetOfferDailySummariesForBudget(Offer offer);
 
         StatsSummary GetStatsSummary(int? offerId, DateTime? startDate, DateTime? endDate);
+
+        // AdRoll
+        IQueryable<Advertisable> Advertisables();
+        IQueryable<AdvertisableStat> AdvertisableStats(int? advertisableId, DateTime? startDate, DateTime? endDate);
+        void FillStats(Advertisable adv, DateTime? startDate, DateTime? endDate);
     }
 }

@@ -134,7 +134,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\BudgetsController.cs" />
+    <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\ScreensController.cs" />
+    <Compile Include="Controllers\StatsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -873,6 +875,7 @@
     <Content Include="Views\Shared\DisplayTemplates\DecimalComma.cshtml" />
     <Content Include="Views\Budgets\Admin.cshtml" />
     <Content Include="Views\Screens\Test.cshtml" />
+    <Content Include="Views\Stats\AdRoll.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

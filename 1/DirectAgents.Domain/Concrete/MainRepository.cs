@@ -4,6 +4,7 @@ using System.Linq;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.DTO;
+using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.Cake;
 
 namespace DirectAgents.Domain.Concrete
@@ -215,6 +216,40 @@ namespace DirectAgents.Domain.Concrete
                 Cost = ods.Sum(o => o.Cost)
             };
             return stats;
+        }
+
+        // --- AdRoll ---
+
+        public IQueryable<Advertisable> Advertisables()
+        {
+            return context.Advertisables;
+        }
+
+        public IQueryable<AdvertisableStat> AdvertisableStats(int? advertisableId, DateTime? startDate, DateTime? endDate)
+        {
+            var advStats = context.AdvertisableStats.AsQueryable();
+            if (advertisableId.HasValue)
+                advStats = advStats.Where(a => a.AdvertisableId == advertisableId.Value);
+            if (startDate.HasValue)
+                advStats = advStats.Where(a => a.Date >= startDate.Value);
+            if (endDate.HasValue)
+                advStats = advStats.Where(a => a.Date <= endDate.Value);
+            return advStats;
+        }
+
+        public void FillStats(Advertisable adv, DateTime? startDate, DateTime? endDate)
+        {
+            var advStats = AdvertisableStats(adv.Id, startDate, endDate);
+            adv.Stats = new AdRollStat
+            {
+                Impressions = advStats.Sum(a => a.Impressions),
+                Clicks = advStats.Sum(a => a.Clicks),
+                ClickThruConv = advStats.Sum(a => a.CTC),
+                ViewThruConv = advStats.Sum(a => a.VTC),
+                Spend = advStats.Sum(a => a.Cost),
+                Prospects = advStats.Sum(a => a.Prospects)
+            };
+            adv.Stats.Spend = Math.Round(adv.Stats.Spend, 2);
         }
 
         // ---

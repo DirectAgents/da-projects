@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
-using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.Cake;
@@ -12,15 +11,12 @@ using DirectAgents.Web.Models;
 
 namespace DirectAgents.Web.Controllers
 {
-    public class ScreensController : Controller
+    public class ScreensController : ControllerBase
     {
-        private IMainRepository mainRepo;
-        private ISecurityRepository securityRepo;
-
         public ScreensController()
         {
             this.mainRepo = new MainRepository(new DAContext());
-            this.securityRepo = new SecurityRepository();
+            //this.securityRepo = new SecurityRepository();
         }
 
         // ---
