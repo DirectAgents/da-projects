@@ -36,7 +36,7 @@ namespace DirectAgents.Domain.Contexts
                 .HasKey(t => new { t.Date, t.AdvertisableId })
                 .ToTable("AdvertisableStat", adrollSchema);
             modelBuilder.Entity<AdvertisableStat>()
-                .Property(t => t.Spend).HasPrecision(18, 6);
+                .Property(t => t.Cost).HasPrecision(18, 6);
         }
 
         public DbSet<Advertiser> Advertisers { get; set; }

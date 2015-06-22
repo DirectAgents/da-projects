@@ -10,8 +10,9 @@ namespace DirectAgents.Domain.Entities.AdRoll
 
         public int Impressions { get; set; }
         public int Clicks { get; set; }
-        public int Conversions { get; set; }
-        public decimal Spend { get; set; }
-        //public int Prospects { get; set; }
+        public int CTC { get; set; }
+        public int VTC { get; set; }
+        public decimal Cost { get; set; }
+        public int Prospects { get; set; }
     }
 }

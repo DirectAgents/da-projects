@@ -180,6 +180,10 @@
     <Compile Include="Migrations\201506192208145_Mig_AdRoll.Designer.cs">
       <DependentUpon>201506192208145_Mig_AdRoll.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506221514396_Mig_AdRollStat.cs" />
+    <Compile Include="Migrations\201506221514396_Mig_AdRollStat.Designer.cs">
+      <DependentUpon>201506221514396_Mig_AdRollStat.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -260,6 +264,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506192208145_Mig_AdRoll.resx">
       <DependentUpon>201506192208145_Mig_AdRoll.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506221514396_Mig_AdRollStat.resx">
+      <DependentUpon>201506221514396_Mig_AdRollStat.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -37,9 +37,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         AdvertisableId = advertisableId,
                         Impressions = item.impressions,
                         Clicks = item.clicks,
-                        Conversions = item.total_conversions,
-                        //Prospects = item.prospects,
-                        Spend = (decimal)item.cost_USD
+                        CTC = item.click_through_conversions,
+                        VTC = item.view_through_conversions,
+                        Cost = (decimal)item.cost_USD,
+                        Prospects = item.prospects
                     };
                     var target = db.Set<AdvertisableStat>().Find(item.date, advertisableId);
                     if (target == null)
