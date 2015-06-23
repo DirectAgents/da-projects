@@ -121,7 +121,13 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                             field = "CampaignStatus",
                             @operator = PredicateOperator.IN,
                             values = new string[] { "ENABLED","PAUSED" }
-                        }
+                        },
+                        ////For Megabus conversion fix. Also comment out Impressions, Clicks and Cost above
+                        //new Predicate {
+                        //    field = "ConversionTypeName",
+                        //    @operator = PredicateOperator.NOT_EQUALS,
+                        //    values = new string[] { "Transactions (us.megabus.com)" }
+                        //}
                     }
                 },
                 includeZeroImpressions = false

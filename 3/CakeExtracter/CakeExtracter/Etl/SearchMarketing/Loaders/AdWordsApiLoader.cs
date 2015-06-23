@@ -120,6 +120,12 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             else
             {
                 db.Entry(target).State = EntityState.Detached;
+
+                ////For Megabus conversions fix. Also comment out sds.Cost/Clicks/Impressions assignments above.
+                //sds.Impressions = target.Impressions;
+                //sds.Clicks = target.Clicks;
+                //sds.Cost = target.Cost;
+
                 target = AutoMapper.Mapper.Map(sds, target);
                 db.Entry(target).State = EntityState.Modified;
                 return false;

@@ -5,6 +5,7 @@ using System.ComponentModel.Composition;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using CakeExtracter.CakeMarketingApi;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.CakeMarketing.DALoaders;
@@ -29,6 +30,7 @@ namespace CakeExtracter.Commands
 
         public int? OfferId { get; set; }
         public bool IncludeRecent { get; set; }
+        public int NumParallel { get; set; }
 
         private GmailEmailer emailer;
         private string reportingEmail;
@@ -38,11 +40,13 @@ namespace CakeExtracter.Commands
         //How far back to get stats
         private const int MAX_DAYS_WITH_BUDGET = 93;
         private const int MAX_DAYS_WITHOUTBUDGET = 31;
+        private const int DEFAULT_NUM_PARALLEL = 4;
 
         public override void ResetProperties()
         {
             OfferId = null;
             IncludeRecent = false;
+            NumParallel = 0;
         }
 
         public DASynchOfferBudgetStatsCommand()
@@ -51,6 +55,7 @@ namespace CakeExtracter.Commands
             HasOption<int>("o|offerId=", "Offer Id (default = all with budgets)", c => OfferId = c);
             HasOption<bool>("r|recent=", "Include offers with recent activity (default = false)", c => IncludeRecent = c);
             //HasOption<int>("d|days=", "Number of days for recent activity check (default = 31)", c => Days_RecentActivity = c);
+            HasOption<int>("p|numParallel=", "Number of offers to do in parallel (default = 4)", c => NumParallel = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -58,6 +63,8 @@ namespace CakeExtracter.Commands
             reportingEmail = ConfigurationManager.AppSettings["GmailReporting_Email"];
             var reportingPassword = ConfigurationManager.AppSettings["GmailReporting_Password"];
             emailer = new GmailEmailer(new System.Net.NetworkCredential(reportingEmail, reportingPassword));
+            if (NumParallel <= 0)
+                NumParallel = DEFAULT_NUM_PARALLEL;
 
             testEmail = ConfigurationManager.AppSettings["BudgetAlerts_TestEmail"];
             budgetAlertsEmail = ConfigurationManager.AppSettings["BudgetAlerts_Email"];
@@ -68,33 +75,36 @@ namespace CakeExtracter.Commands
             DateTime minStartWithBudget = today.AddDays(-MAX_DAYS_WITH_BUDGET);
             DateTime minStartWithoutBudget = today.AddDays(-MAX_DAYS_WITHOUTBUDGET);
 
-            foreach (var offer in offers) //TODO: do several in parallel
+            foreach (var offerBatch in offers.InBatches(NumParallel))
             {
-                DateTime startDate = offer.DateCreated.Date;
-                DateTime endDate = today;
-                if (offer.HasBudget)
+                Parallel.ForEach(offerBatch, offer =>
                 {
-                    if (offer.BudgetStart.HasValue)
-                        startDate = offer.BudgetStart.Value;
-                    if (startDate < minStartWithBudget)
-                        startDate = minStartWithBudget;
-                    //Q: Will this ever be a problem... the budget start is set to yesterday but we don't have daily stats from before that and will miss them?
-                }
-                else
-                {
-                    if (startDate < minStartWithoutBudget)
-                        startDate = minStartWithoutBudget;
-                }
-                var dateRange = new DateRange(startDate, endDate.AddDays(1));
+                    DateTime startDate = offer.DateCreated.Date;
+                    DateTime endDate = today;
+                    if (offer.HasBudget)
+                    {
+                        if (offer.BudgetStart.HasValue)
+                            startDate = offer.BudgetStart.Value;
+                        if (startDate < minStartWithBudget)
+                            startDate = minStartWithBudget;
+                        //Q: Will this ever be a problem... the budget start is set to yesterday but we don't have daily stats from before that and will miss them?
+                    }
+                    else
+                    {
+                        if (startDate < minStartWithoutBudget)
+                            startDate = minStartWithoutBudget;
+                    }
+                    var dateRange = new DateRange(startDate, endDate.AddDays(1));
 
-                var extracter = new OfferDailySummariesExtracter(dateRange, 0, offer.OfferId, true);
-                var loader = new DAOfferDailySummariesLoader();
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
+                    var extracter = new OfferDailySummariesExtracter(dateRange, 0, offer.OfferId, true);
+                    var loader = new DAOfferDailySummariesLoader();
+                    var extracterThread = extracter.Start();
+                    var loaderThread = loader.Start(extracter);
+                    extracterThread.Join();
+                    loaderThread.Join();
 
-                CheckOfferBudgetAlerts(offer); // Updates budget stats ("after" values)
+                    CheckOfferBudgetAlerts(offer); // Updates budget stats ("after" values)
+                });
             }
             return 0;
         }

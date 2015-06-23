@@ -1,12 +1,12 @@
-﻿using CakeExtracter.Common;
-using CakeExtracter.Etl.CakeMarketing.Extracters;
-using CakeExtracter.Etl.CakeMarketing.Loaders;
-using ClientPortal.Data.Contexts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
+using CakeExtracter.Common;
+using CakeExtracter.Etl.CakeMarketing.Extracters;
+using CakeExtracter.Etl.CakeMarketing.Loaders;
+using ClientPortal.Data.Contexts;
 
 namespace CakeExtracter.Commands
 {
