@@ -154,4 +154,12 @@ namespace EomTool.Domain.DTOs
             return String.Join(" | ", notesIEnum);
         }
     }
+
+    public class EOMStat
+    {
+        public decimal RevUSD { get; set; }
+        public decimal CostUSD { get; set; }
+
+        public string UnitType { get; set; }
+    }
 }

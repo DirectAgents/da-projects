@@ -137,6 +137,29 @@ namespace EomTool.Domain.Entities
         public int NumAttachments { get; set; }
     }
 
+    public partial class Source
+    {
+        public const int Cake = 9;
+        public const int Other = 8;
+
+        public static int? ToSourceId(string sourceName)
+        {
+            if (sourceName == null)
+                return null;
+            string sourceNameLowered = sourceName.Trim().ToLower();
+
+            switch (sourceNameLowered)
+            {
+                case "cake":
+                    return Source.Cake;
+                case "other":
+                    return Source.Other;
+                default:
+                    return null;
+            }
+        }
+    }
+
     public partial class UnitType
     {
         public const int PPC = 15;
@@ -147,7 +170,7 @@ namespace EomTool.Domain.Entities
         {
             if (unitTypeName == null)
                 return null;
-            var unitTypeNameLowered = unitTypeName.ToLower();
+            string unitTypeNameLowered = unitTypeName.ToLower();
 
             if (unitTypeNameLowered.Contains("affiliate program"))
                 return "Affiliate Management";

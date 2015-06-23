@@ -168,6 +168,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AffiliatesController.cs" />
+    <Compile Include="Controllers\StatsController.cs" />
     <Compile Include="Controllers\TypesController.cs" />
     <Compile Include="Controllers\WikiAdminController.cs" />
     <Compile Include="Controllers\AdvertisersController.cs" />
@@ -4398,6 +4399,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Stats\" />
     <Folder Include="Views\Types\" />
   </ItemGroup>
   <ItemGroup>

@@ -232,9 +232,9 @@ namespace EomTool.Domain.Concrete
             return amounts;
         }
         // version3: include campaign and account statuses, AcctMgr
-        public IEnumerable<CampAffItem> CampAffItems(bool includeNotes, int? campaignStatus = null, int? unitType = null)
+        public IEnumerable<CampAffItem> CampAffItems(bool includeNotes, int? campaignStatus = null, int? unitType = null, int? source = null)
         {
-            var items = Items(campaignStatus, unitType);
+            var items = Items(campaignStatus, unitType, source);
             var itemGroups = items.GroupBy(i => new { i.pid, i.affid, i.revenue_currency_id, i.revenue_per_unit, i.cost_currency_id, i.cost_per_unit, i.unit_type_id, i.campaign_status_id, i.item_accounting_status_id });
             var rawAmounts = from ig in itemGroups
                              select new
@@ -589,13 +589,15 @@ namespace EomTool.Domain.Concrete
 
         //---
 
-        private IQueryable<Item> Items(int? campaignStatus = null, int? unitType = null)
+        private IQueryable<Item> Items(int? campaignStatus = null, int? unitType = null, int? source = null)
         {
             var items = context.Items.AsQueryable();
             if (campaignStatus.HasValue)
                 items = items.Where(i => i.campaign_status_id == campaignStatus);
             if (unitType.HasValue)
                 items = items.Where(i => i.unit_type_id == unitType);
+            if (source.HasValue)
+                items = items.Where(i => i.source_id == source);
             return items;
         }
         //private IQueryable<Item> Items(int[] campaignStatuses)
