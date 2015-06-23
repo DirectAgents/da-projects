@@ -106,6 +106,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SecurityModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Entities\Variable.cs" />
     <Compile Include="Entities\WikiPartials\Campaign.cs" />
     <Compile Include="Entities\WikiPartials\Country.cs" />
     <Compile Include="Entities\WikiPartials\Status.cs" />
@@ -183,6 +184,10 @@
     <Compile Include="Migrations\201506221514396_Mig_AdRollStat.cs" />
     <Compile Include="Migrations\201506221514396_Mig_AdRollStat.Designer.cs">
       <DependentUpon>201506221514396_Mig_AdRollStat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201506231617274_Mig_Variable.cs" />
+    <Compile Include="Migrations\201506231617274_Mig_Variable.Designer.cs">
+      <DependentUpon>201506231617274_Mig_Variable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -267,6 +272,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506221514396_Mig_AdRollStat.resx">
       <DependentUpon>201506221514396_Mig_AdRollStat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506231617274_Mig_Variable.resx">
+      <DependentUpon>201506231617274_Mig_Variable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

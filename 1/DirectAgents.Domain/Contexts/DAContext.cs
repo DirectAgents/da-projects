@@ -37,6 +37,10 @@ namespace DirectAgents.Domain.Contexts
                 .ToTable("AdvertisableStat", adrollSchema);
             modelBuilder.Entity<AdvertisableStat>()
                 .Property(t => t.Cost).HasPrecision(18, 6);
+
+            // general
+            modelBuilder.Entity<Variable>()
+                .Property(t => t.DecVal).HasPrecision(18, 6);
         }
 
         public DbSet<Advertiser> Advertisers { get; set; }
@@ -46,11 +50,12 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<Vertical> Verticals { get; set; }
         public DbSet<OfferType> OfferTypes { get; set; }
         public DbSet<OfferStatus> OfferStatuses { get; set; }
-
         public DbSet<OfferDailySummary> OfferDailySummaries { get; set; }
-        public DbSet<OfferBudget> OfferBudgets { get; set; }
 
         public DbSet<Advertisable> Advertisables { get; set; }
         public DbSet<AdvertisableStat> AdvertisableStats { get; set; }
+
+        public DbSet<OfferBudget> OfferBudgets { get; set; }
+        public DbSet<Variable> Variables { get; set; }
     }
 }
