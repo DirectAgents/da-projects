@@ -4396,10 +4396,11 @@
     <Content Include="Scripts\kendo\2015.1.408\kendo.web.min.js.map" />
     <Content Include="Scripts\kendo\2015.1.408\kendo.window.min.js.map" />
     <Content Include="Views\Advertisers\Top.cshtml" />
+    <Content Include="Views\Stats\Links.cshtml" />
+    <Content Include="Views\Stats\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Stats\" />
     <Folder Include="Views\Types\" />
   </ItemGroup>
   <ItemGroup>

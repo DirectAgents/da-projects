@@ -1,6 +1,24 @@
-﻿@model IEnumerable<EomTool.Domain.DTOs.CampAffItem>
+﻿@model IEnumerable<EomTool.Domain.DTOs.EOMStat>
+@{
+    string currentEomDateString = ViewBag.CurrentEomDateString;
+}
+Accounting Period: @currentEomDateString
+<br /><br />
 
+<table>
+<tr>
+    <th>Advertiser</th>
+    <th>RevUSD</th>
+    <th>CostUSD</th>
+    <th>MarginUSD</th>
+</tr>
 @foreach (var ca in Model)
 {
-    @ca.AdvName<br />
+    <tr>
+        <td>@ca.Name</td>
+        <td style="text-align:right">@ca.RevUSD.ToString("N2")</td>
+        <td style="text-align:right">@ca.CostUSD.ToString("N2")</td>
+        <td style="text-align:right">@ca.MarginUSD.ToString("N2")</td>
+    </tr>
 }
+</table>

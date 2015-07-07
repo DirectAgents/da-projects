@@ -17,43 +17,60 @@ namespace EomToolWeb.Controllers
             this.eomEntitiesConfig = eomEntitiesConfig;
         }
 
+        public ActionResult Links()
+        {
+            SetAccountingPeriodViewData();
+            return View();
+        }
+
+        // Overall stats, by unit type...
         public ActionResult Month(string source)
         {
-            var statsDict = GetStats(mainRepo, source);
+            var statsDict = GetStatsByUnitType(mainRepo, source);
             var json = Json(statsDict, JsonRequestBehavior.AllowGet);
             return json;
         }
-
         public ActionResult MTD(string source)
         {
             var currMonthRepo = CreateMainRepository();
-            if (currMonthRepo == null) return null;
+            Dictionary<string, EOMStat> statsDict;
 
-            var statsDict = GetStats(currMonthRepo, source);
+            if (currMonthRepo == null)
+                statsDict = GetBlankStats();
+            else
+                statsDict = GetStatsByUnitType(currMonthRepo, source);
+
             var json = Json(statsDict, JsonRequestBehavior.AllowGet);
             return json.ToJsonp();
         }
 
         // TODO: make a simpler repo method - e.g. that's only USD and doesn't group by... aff, accounting status, item ids, etc ?
         //       or, just retrieve items and group here ?
-        protected static Dictionary<string, EOMStat> GetStats(IMainRepository mainRepo, string source)
+        protected static Dictionary<string, EOMStat> GetStatsByUnitType(IMainRepository mainRepo, string source)
         {
             var campAffItems = mainRepo.CampAffItems(false, null, null, Source.ToSourceId(source));
             var unitTypeGroups = campAffItems.GroupBy(ca => new { ca.UnitTypeId, ca.UnitTypeName });
             var unitTypeStats = unitTypeGroups.Select(g => new EOMStat
             {
-                UnitType = g.Key.UnitTypeName,
+                Name = g.Key.UnitTypeName,
                 RevUSD = g.Sum(ca => ca.RevUSD),
                 CostUSD = g.Sum(ca => ca.CostUSD)
             });
 
-            var statsDict = unitTypeStats.OrderBy(u => u.UnitType).ToDictionary<EOMStat, string>(i => i.UnitType.Replace(" ", ""));
+            var statsDict = unitTypeStats.OrderBy(u => u.Name).ToDictionary<EOMStat, string>(i => i.Name.Replace(" ", ""));
             statsDict["Total"] = new EOMStat
             {
-                UnitType = "Total",
+                Name = "Total",
                 RevUSD = campAffItems.Sum(ca => ca.RevUSD),
                 CostUSD = campAffItems.Sum(ca => ca.CostUSD)
             };
+            return statsDict;
+        }
+
+        protected static Dictionary<string, EOMStat> GetBlankStats()
+        {
+            var statsDict = new Dictionary<string, EOMStat>();
+            statsDict["Total"] = new EOMStat { Name = "Total" };
             return statsDict;
         }
     }

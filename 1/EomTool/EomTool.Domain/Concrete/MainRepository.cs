@@ -315,6 +315,24 @@ namespace EomTool.Domain.Concrete
             return caItems;
         }
 
+        //TODO: bypass CampAffItems() in the following method. Query just what's needed.
+
+        public IEnumerable<EOMStat> EOMStatsByAdvertiser(int? unitType)
+        {
+            // get campaigns & their activity
+            var campAffItems = CampAffItems(false, null, unitType);
+
+            // group by advertiser
+            var advGroups = campAffItems.GroupBy(ca => new { ca.AdvId, ca.AdvName });
+            var advStats = advGroups.Select(g => new EOMStat
+            {
+                Name = g.Key.AdvName,
+                RevUSD = g.Sum(ca => ca.RevUSD),
+                CostUSD = g.Sum(ca => ca.CostUSD)
+            });
+            return advStats;
+        }
+
         // unused...
         public IEnumerable<CampaignAmount> CampaignAmounts(IEnumerable<CampAffId> campAffIds)
         {

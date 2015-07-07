@@ -1,0 +1,24 @@
+﻿<h2>EOM Stats Links</h2>
+
+Accounting Period:
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+<br />
+
+Overall Stats - by UnitType
+<br />
+- @Html.ActionLink("MTD", "MTD", "Stats")
+<br />
+- @Html.ActionLink("Selected Accounting Period", "Month", "Stats")
+<br />
+<br />
+
+Top Advertisers (for selected Accounting Period)
+<br />
+- All Unit Types: @Html.ActionLink("top 10", "Top", "Advertisers")
+  | @Html.ActionLink("all", "Top", "Advertisers", new { take = 0 }, null)
+<br />
+- PPC: @Html.ActionLink("top 10", "Top", "Advertisers", new { unitType = UnitType.PPC }, null)
+  | @Html.ActionLink("all", "Top", "Advertisers", new { unitType = UnitType.PPC, take = 0 }, null)
+<br />
+- Trading Desk: @Html.ActionLink("top 10", "Top", "Advertisers", new { unitType = UnitType.TradingDesk }, null)
+  | @Html.ActionLink("all", "Top", "Advertisers", new { unitType = UnitType.TradingDesk, take = 0 }, null)

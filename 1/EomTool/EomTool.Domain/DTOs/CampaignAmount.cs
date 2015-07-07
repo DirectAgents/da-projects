@@ -159,7 +159,11 @@ namespace EomTool.Domain.DTOs
     {
         public decimal RevUSD { get; set; }
         public decimal CostUSD { get; set; }
+        public decimal MarginUSD
+        {
+            get { return RevUSD - CostUSD; }
+        }
 
-        public string UnitType { get; set; }
+        public string Name { get; set; }
     }
 }

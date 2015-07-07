@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using EomTool.Domain.Abstract;
 using EomTool.Domain.DTOs;
@@ -28,23 +29,23 @@ namespace EomToolWeb.Controllers
             return View(advertisers);
         }
 
-        public ActionResult Top(int? unitType) // period?
+        // Set take=0 for all
+        public ActionResult Top(int? unitType, int take = 10, bool jsonp = false) // period?
         {
-            // get campaigns & their activity
-            var campAffItems = mainRepo.CampAffItems(false, null, unitType);
+            ViewBag.CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString;
 
-            // group by advertiser
-            var advGroups = campAffItems.GroupBy(ca => new { ca.AdvId, ca.AdvName });
-            var advStats = advGroups.Select(g => new CampAffItem
+            var advStats = mainRepo.EOMStatsByAdvertiser(unitType);
+            advStats = advStats.OrderByDescending(a => a.MarginUSD);
+            if (take > 0)
+                advStats = advStats.Take(take);
+
+            if (jsonp)
             {
-                AdvId = g.Key.AdvId,
-                AdvName = g.Key.AdvName,
-                RevUSD = g.Sum(ca => ca.RevUSD),
-                CostUSD = g.Sum(ca => ca.CostUSD)
-            });
-
-            var model = advStats.OrderByDescending(a => a.ProfitUSD).Take(10);
-            return View(model);
+                var json = Json(advStats, JsonRequestBehavior.AllowGet);
+                return json.ToJsonp();
+            }
+            else
+                return View(advStats);
         }
 
         public JsonResult IdValueText(bool withActivity = false)
