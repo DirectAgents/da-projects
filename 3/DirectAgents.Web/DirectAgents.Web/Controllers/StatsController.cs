@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.Cake;
@@ -24,19 +25,31 @@ namespace DirectAgents.Web.Controllers
             return View();
         }
 
-        // Set numdays=-1 for MTD, top=0 for all
-        public ActionResult Cake(string sort, int numdays = -1, int take = 0)
+        // Set numdays=-1 for MTD, 0 for today (so far)
+        // Set take=0 for all
+        public ActionResult CakeAdv(string sort, int numdays = -1, int take = 0, bool jsonp = false)
         {
-            var today = DateTime.Today;
-            DateTime startDate;
-            if (numdays < 1)
-            {   // MTD
-                startDate = new DateTime(today.Year, today.Month, 1);
+            var advStats = GetAdvStats(sort, numdays, take);
+            if (jsonp)
+            {
+                var json = Json(advStats, JsonRequestBehavior.AllowGet);
+                return json.ToJsonp();
             }
             else
             {
-                startDate = today.AddDays(-numdays);
+                var model = new ScreensVM { AdvStats = advStats };
+                return View(model);
             }
+        }
+        private IEnumerable<StatsSummary> GetAdvStats(string sort, int numdays = -1, int take = 0)
+        {
+            var today = DateTime.Today;
+            DateTime startDate;
+            if (numdays < 1) // MTD
+                startDate = new DateTime(today.Year, today.Month, 1);
+            else
+                startDate = today.AddDays(-numdays);
+
             var ods = mainRepo.GetOfferDailySummaries(null, startDate);
 
             IEnumerable<StatsSummary> advStats = new List<StatsSummary>();
@@ -71,11 +84,21 @@ namespace DirectAgents.Web.Controllers
             if (take > 0)
                 advStats = advStats.Take(take);
 
-            var model = new ScreensVM
-            {
-                AdvStats = advStats
-            };
-            return View(model);
+            return advStats;
+        }
+
+        public JsonResult CakeSummary(int numdays = -1)
+        {
+            var today = DateTime.Today;
+            DateTime startDate;
+            if (numdays < 1) // default: MTD
+                startDate = new DateTime(today.Year, today.Month, 1);
+            else
+                startDate = today.AddDays(-numdays);
+            var stats = mainRepo.GetStatsSummary(null, startDate, null);
+
+            var json = Json(stats, JsonRequestBehavior.AllowGet);
+            return json.ToJsonp();
         }
 
         public ActionResult AdRoll()

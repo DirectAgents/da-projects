@@ -877,7 +877,7 @@
     <Content Include="Views\Shared\DisplayTemplates\DecimalComma.cshtml" />
     <Content Include="Views\Budgets\Admin.cshtml" />
     <Content Include="Views\Stats\AdRoll.cshtml" />
-    <Content Include="Views\Stats\Cake.cshtml" />
+    <Content Include="Views\Stats\CakeAdv.cshtml" />
     <Content Include="Views\Stats\Links.cshtml" />
   </ItemGroup>
   <PropertyGroup>

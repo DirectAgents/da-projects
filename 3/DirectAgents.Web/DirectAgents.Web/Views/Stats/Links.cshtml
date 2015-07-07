@@ -2,15 +2,15 @@
 
 Cake - by Advertiser
 <br />
-- @Html.ActionLink("Last 30 days, sort by margin", "Cake", "Stats", new { numdays = 30, sort = "margin" }, null)
+- @Html.ActionLink("Last 30 days, sort by margin", "CakeAdv", "Stats", new { numdays = 30, sort = "margin" }, null)
 <br />
-- @Html.ActionLink("...Top 10 (JSONP)", "CakeAdvStats", "Screens", new { numdays = 30, sort = "margin", top = 10 }, null)
+- @Html.ActionLink("...Top 5 (JSONP)", "CakeAdv", "Stats", new { numdays = 30, sort = "margin", take = 5, jsonp = true }, null)
 
 <br />
 <br />
-CakeStats
+CakeSummary
 <br />
-- @Html.ActionLink("MTD Summary (JSONP)", "CakeStats", "Screens")
+- @Html.ActionLink("MTD (JSONP)", "CakeSummary", "Stats")
 
 <br />
 <br />
