@@ -19,13 +19,22 @@ namespace DirectAgents.Web.Controllers
 
         // ---
 
-        public ActionResult Test()
+        // Set numdays=-1 for MTD, top=0 for all
+        public ActionResult CakeAdvStats(string sort, int numdays = -1, int top = 0)
         {
             var today = DateTime.Today;
-            var startOfMonth = new DateTime(today.Year, today.Month, 1);
-            var ods = mainRepo.GetOfferDailySummaries(null, startOfMonth);
+            DateTime startDate;
+            if (numdays < 1)
+            {   // MTD
+                startDate = new DateTime(today.Year, today.Month, 1);
+            }
+            else
+            {
+                startDate = today.AddDays(-numdays);
+            }
+            var ods = mainRepo.GetOfferDailySummaries(null, startDate);
 
-            var advList = new List<Advertiser>();
+            IEnumerable<StatsSummary> advStats = new List<StatsSummary>();
             var advertisers = mainRepo.GetAdvertisers();
             foreach (var adv in advertisers)
             {
@@ -33,8 +42,9 @@ namespace DirectAgents.Web.Controllers
                 var advDailySummaries = ods.Where(ds => offerIds.Contains(ds.OfferId));
                 if (advDailySummaries.Any())
                 {
-                    adv.Stats = new StatsSummary
+                    var stats = new StatsSummary
                     {
+                        Name = adv.AdvertiserName,
                         Views = advDailySummaries.Sum(ds => ds.Views),
                         Clicks = advDailySummaries.Sum(ds => ds.Clicks),
                         Conversions = advDailySummaries.Sum(ds => ds.Conversions),
@@ -43,14 +53,21 @@ namespace DirectAgents.Web.Controllers
                         Revenue = advDailySummaries.Sum(ds => ds.Revenue),
                         Cost = advDailySummaries.Sum(ds => ds.Cost)
                     };
-                    advList.Add(adv);
+                    ((List<StatsSummary>)advStats).Add(stats);
                 }
             }
-            var model = new ScreensVM
-            {
-                Advertisers = advList.OrderByDescending(a => a.Stats.Revenue)
-            };
-            return View(model);
+            if (sort == "margin")
+                advStats = advStats.OrderByDescending(s => s.Margin);
+            else if (sort == "cost")
+                advStats = advStats.OrderByDescending(s => s.Cost);
+            else // default: by revenue
+                advStats = advStats.OrderByDescending(s => s.Revenue);
+
+            if (top > 0)
+                advStats = advStats.Take(top);
+
+            var json = Json(advStats, JsonRequestBehavior.AllowGet);
+            return json.ToJsonp();
         }
 
         public JsonResult CakeStats() //MTD...

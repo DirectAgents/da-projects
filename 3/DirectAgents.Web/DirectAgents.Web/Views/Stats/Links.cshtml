@@ -1,0 +1,19 @@
+﻿<h2>DAWeb Stats Links</h2>
+
+Cake - by Advertiser
+<br />
+- @Html.ActionLink("Last 30 days, sort by margin", "Cake", "Stats", new { numdays = 30, sort = "margin" }, null)
+<br />
+- @Html.ActionLink("...Top 10 (JSONP)", "CakeAdvStats", "Screens", new { numdays = 30, sort = "margin", top = 10 }, null)
+
+<br />
+<br />
+CakeStats
+<br />
+- @Html.ActionLink("MTD Summary (JSONP)", "CakeStats", "Screens")
+
+<br />
+<br />
+AdRoll
+<br />
+- @Html.ActionLink("By Advertisable", "AdRoll", "Stats")
