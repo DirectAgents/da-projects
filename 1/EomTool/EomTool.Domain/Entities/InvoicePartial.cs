@@ -13,8 +13,8 @@ namespace EomTool.Domain.Entities
         public const int Generated = 3;
     }
 
-     public partial class Invoice
-     {
+    public partial class Invoice
+    {
         [NotMapped]
         public Advertiser Advertiser { get; set; }
 
@@ -169,6 +169,21 @@ namespace EomTool.Domain.Entities
         public decimal TotalAmount0
         {
             get { return (total_amount.HasValue ? total_amount.Value : 0); }
+        }
+    }
+
+    public partial class InvoiceNote
+    {
+        [NotMapped]
+        public string AddedBy_IdOnly
+        {
+            get
+            {
+                if (added_by != null && added_by.IndexOf("DIRECTAGENTS\\") == 0)
+                    return added_by.Substring(13);
+                else
+                    return added_by;
+            }
         }
     }
 }

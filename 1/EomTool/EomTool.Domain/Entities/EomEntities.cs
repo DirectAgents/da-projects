@@ -90,6 +90,22 @@ namespace EomTool.Domain.Entities
         public Affiliate PreviousMonthAffiliate { get; set; }
     }
 
+    public partial class BatchUpdate
+    {
+        [NotMapped]
+        public string Action
+        {
+            get
+            {
+                if (this.media_buyer_approval_status_id == MediaBuyerApprovalStatus.Approved
+                    && this.from_media_buyer_approval_status_id == MediaBuyerApprovalStatus.Held)
+                    return "Released";
+                else
+                    return (this.MediaBuyerApprovalStatus == null) ? null : this.MediaBuyerApprovalStatus.name;
+            }
+        }
+    }
+
     public partial class Campaign
     {
         [NotMapped]

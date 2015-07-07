@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿//using System.Net.Http.Headers;
 using System.Web.Http;
 
 namespace EomToolWeb
@@ -14,6 +12,8 @@ namespace EomToolWeb
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+            // Use to test API controllers from the browser - which requests XML; this forces it to be json:
+            //config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
         }
     }
 }
