@@ -112,6 +112,11 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             var tdAccount = tdRepo.GetTradingDeskAccount(tdaId);
             if (tdAccount != null)
             {
+                if (WebSecurity.UserExists(username))
+                {
+                    ModelState.AddModelError("", string.Format("The username '{0}' already exists.", username));
+                    return View(tdAccount);
+                }
                 WebSecurity.CreateUserAndAccount(
                     username, password,
                     new { TradingDeskAccountId = tdAccount.TradingDeskAccountId });

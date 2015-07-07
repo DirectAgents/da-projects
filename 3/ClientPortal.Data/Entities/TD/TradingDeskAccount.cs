@@ -21,6 +21,15 @@ namespace ClientPortal.Data.Entities.TD
         public virtual ICollection<AdRollProfile> AdRollProfiles { get; set; }
         public virtual ICollection<InsertionOrder> InsertionOrders { get; set; }
 
+        public bool HasDBM()
+        {
+            return InsertionOrders != null && InsertionOrders.Count > 0;
+        }
+        public bool HasAdRoll()
+        {
+            return AdRollProfiles != null && AdRollProfiles.Count > 0;
+        }
+
         [NotMapped]
         public IEnumerable<UserProfile> UserProfiles { get; set; }
         [NotMapped]

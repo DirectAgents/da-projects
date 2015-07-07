@@ -14,6 +14,7 @@
     <tr>
         <th></th>
         <th>Id</th>
+        <th>DBM/AR</th>
         <th>Name</th>
         <th>Login</th>
         <th>ShowConv?</th>
@@ -24,7 +25,8 @@
 {
     <tr>
         <td>@Ajax.ActionLink("Edit", "EditAccount", new { tdaId = tda.TradingDeskAccountId }, ajaxOptions)</td>
-        <td>@tda.TradingDeskAccountId</td>
+        <td style="text-align:right">@tda.TradingDeskAccountId</td>
+        <td style="text-align:center">@(tda.HasDBM() ? "d" : ".")@(tda.HasAdRoll() ? "a" : ".")</td>
         <td>@tda.DisplayName</td>
         <td>
             @if (tda.UserProfiles.Count() > 0) {
@@ -33,9 +35,9 @@
                 @Ajax.ActionLink("create", "CreateUserProfile", new { tdaId = tda.TradingDeskAccountId }, ajaxOptions)
             }
         </td>
-        <td>@(tda.ShowConversions ? "yes" : "no")</td>
-        <td>@tda.FixedMetricDisplay</td>
-        <td>@tda.ManagementFeePct</td>
+        <td style="text-align:center">@(tda.ShowConversions ? "yes" : "no")</td>
+        <td style="text-align:center">@tda.FixedMetricDisplay</td>
+        <td style="text-align:center">@tda.ManagementFeePct</td>
     </tr>
 }
 </table>
