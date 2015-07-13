@@ -20,8 +20,6 @@ namespace DirectAgents.Domain.Entities.Cake
     // DTO
     public class StatsSummary
     {
-        public string Name { get; set; }
-
         public int Views { get; set; }
         public int Clicks { get; set; }
         public int Conversions { get; set; }
@@ -34,5 +32,9 @@ namespace DirectAgents.Domain.Entities.Cake
         {
             get { return Revenue - Cost; }
         }
+
+        // Use whichever is needed, depending on who the stats are for:
+        public int? Id { get; set; }
+        public string Name { get; set; }
     }
 }

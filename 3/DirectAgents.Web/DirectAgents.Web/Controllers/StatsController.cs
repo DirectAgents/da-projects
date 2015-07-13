@@ -25,12 +25,24 @@ namespace DirectAgents.Web.Controllers
             return View();
         }
 
+        public ActionResult Test(bool p = false)
+        {
+            var today = DateTime.Today;
+            var startDate = new DateTime(today.Year, today.Month, 1);
+            var stats = mainRepo.GetStatsSummary(null, startDate, null);
+            var json = Json(stats, JsonRequestBehavior.AllowGet);
+            if (p)
+                return json.ToJsonp();
+            else
+                return json;
+        }
+
         // Set numdays=-1 for MTD, 0 for today (so far)
         // Set take=0 for all
-        public ActionResult CakeAdv(string sort, int numdays = -1, int take = 0, bool jsonp = false)
+        public ActionResult CakeAdv(string sort, int numdays = -1, int take = 0, string jsoncallback = null)
         {
             var advStats = GetAdvStats(sort, numdays, take);
-            if (jsonp)
+            if (!string.IsNullOrWhiteSpace(jsoncallback))
             {
                 var json = Json(advStats, JsonRequestBehavior.AllowGet);
                 return json.ToJsonp();
@@ -51,25 +63,37 @@ namespace DirectAgents.Web.Controllers
                 startDate = today.AddDays(-numdays);
 
             var ods = mainRepo.GetOfferDailySummaries(null, startDate);
+            var offerSummaries = ods.GroupBy(o => o.OfferId).Select(g =>
+                new StatsSummary
+                {
+                    Id = g.Key,
+                    Views = g.Sum(o => o.Views),
+                    Clicks = g.Sum(o => o.Clicks),
+                    Conversions = g.Sum(o => o.Conversions),
+                    Paid = g.Sum(o => o.Paid),
+                    Sellable = g.Sum(o => o.Sellable),
+                    Revenue = g.Sum(o => o.Revenue),
+                    Cost = g.Sum(o => o.Cost)
+                }).ToList();
 
             IEnumerable<StatsSummary> advStats = new List<StatsSummary>();
             var advertisers = mainRepo.GetAdvertisers();
             foreach (var adv in advertisers)
             {
                 var offerIds = adv.Offers.Select(o => o.OfferId).ToArray();
-                var advDailySummaries = ods.Where(ds => offerIds.Contains(ds.OfferId));
-                if (advDailySummaries.Any())
+                var advSummaries = offerSummaries.Where(os => offerIds.Contains(os.Id.Value));
+                if (advSummaries.Any())
                 {
                     var stats = new StatsSummary
                     {
                         Name = adv.AdvertiserName,
-                        Views = advDailySummaries.Sum(ds => ds.Views),
-                        Clicks = advDailySummaries.Sum(ds => ds.Clicks),
-                        Conversions = advDailySummaries.Sum(ds => ds.Conversions),
-                        Paid = advDailySummaries.Sum(ds => ds.Paid),
-                        Sellable = advDailySummaries.Sum(ds => ds.Sellable),
-                        Revenue = advDailySummaries.Sum(ds => ds.Revenue),
-                        Cost = advDailySummaries.Sum(ds => ds.Cost)
+                        Views = advSummaries.Sum(ds => ds.Views),
+                        Clicks = advSummaries.Sum(ds => ds.Clicks),
+                        Conversions = advSummaries.Sum(ds => ds.Conversions),
+                        Paid = advSummaries.Sum(ds => ds.Paid),
+                        Sellable = advSummaries.Sum(ds => ds.Sellable),
+                        Revenue = advSummaries.Sum(ds => ds.Revenue),
+                        Cost = advSummaries.Sum(ds => ds.Cost)
                     };
                     ((List<StatsSummary>)advStats).Add(stats);
                 }
