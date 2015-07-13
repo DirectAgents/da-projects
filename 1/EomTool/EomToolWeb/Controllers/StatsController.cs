@@ -23,6 +23,26 @@ namespace EomToolWeb.Controllers
             return View();
         }
 
+        // Set take=0 for all
+        public ActionResult TopAdvertisers(int? unitType, int take = 10, string jsoncallback = null) // period?
+        {
+            var advStats = mainRepo.EOMStatsByAdvertiser(unitType);
+            advStats = advStats.OrderByDescending(a => a.MarginUSD);
+            if (take > 0)
+                advStats = advStats.Take(take);
+
+            if (!string.IsNullOrWhiteSpace(jsoncallback))
+            {
+                var json = Json(advStats, JsonRequestBehavior.AllowGet);
+                return json.ToJsonp();
+            }
+            else
+            {
+                ViewBag.CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString;
+                return View(advStats);
+            }
+        }
+
         // Overall stats, by unit type...
         public ActionResult Month(string source)
         {

@@ -29,25 +29,6 @@ namespace EomToolWeb.Controllers
             return View(advertisers);
         }
 
-        // Set take=0 for all
-        public ActionResult Top(int? unitType, int take = 10, bool jsonp = false) // period?
-        {
-            ViewBag.CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString;
-
-            var advStats = mainRepo.EOMStatsByAdvertiser(unitType);
-            advStats = advStats.OrderByDescending(a => a.MarginUSD);
-            if (take > 0)
-                advStats = advStats.Take(take);
-
-            if (jsonp)
-            {
-                var json = Json(advStats, JsonRequestBehavior.AllowGet);
-                return json.ToJsonp();
-            }
-            else
-                return View(advStats);
-        }
-
         public JsonResult IdValueText(bool withActivity = false)
         {
             var advertisers = mainRepo.Advertisers(withActivity).OrderBy(a => a.name);

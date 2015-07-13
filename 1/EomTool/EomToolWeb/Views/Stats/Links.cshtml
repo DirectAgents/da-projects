@@ -14,11 +14,11 @@ Overall Stats - by UnitType
 
 Top Advertisers (for selected Accounting Period)
 <br />
-- All Unit Types: @Html.ActionLink("top 10", "Top", "Advertisers")
-  | @Html.ActionLink("all", "Top", "Advertisers", new { take = 0 }, null)
+- All Unit Types: @Html.ActionLink("top 10", "TopAdvertisers")
+  | @Html.ActionLink("all", "TopAdvertisers", new { take = 0 }, null)
 <br />
-- PPC: @Html.ActionLink("top 10", "Top", "Advertisers", new { unitType = UnitType.PPC }, null)
-  | @Html.ActionLink("all", "Top", "Advertisers", new { unitType = UnitType.PPC, take = 0 }, null)
+- PPC: @Html.ActionLink("top 10", "TopAdvertisers", new { unitType = UnitType.PPC }, null)
+  | @Html.ActionLink("all", "TopAdvertisers", new { unitType = UnitType.PPC, take = 0 }, null)
 <br />
-- Trading Desk: @Html.ActionLink("top 10", "Top", "Advertisers", new { unitType = UnitType.TradingDesk }, null)
-  | @Html.ActionLink("all", "Top", "Advertisers", new { unitType = UnitType.TradingDesk, take = 0 }, null)
+- Trading Desk: @Html.ActionLink("top 10", "TopAdvertisers", new { unitType = UnitType.TradingDesk }, null)
+  | @Html.ActionLink("all", "TopAdvertisers", new { unitType = UnitType.TradingDesk, take = 0 }, null)
