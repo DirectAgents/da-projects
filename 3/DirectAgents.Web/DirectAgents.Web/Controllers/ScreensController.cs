@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities;
 
 namespace DirectAgents.Web.Controllers
 {
@@ -13,15 +14,42 @@ namespace DirectAgents.Web.Controllers
             //this.securityRepo = new SecurityRepository();
         }
 
-        // TODO: retire this whole thing
-
-        public JsonResult CakeStats() //MTD...
+        public ActionResult Variables()
         {
-            var today = DateTime.Today;
-            var monthStart = new DateTime(today.Year, today.Month, 1);
-            var stats = mainRepo.GetStatsSummary(null, monthStart, null);
+            var variables = mainRepo.GetVariables();
+            return View(variables);
+        }
 
-            var json = Json(stats, JsonRequestBehavior.AllowGet);
+        [HttpGet]
+        public ActionResult Variable(string name)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+                return Content("No variable name supplied.");
+
+            var variable = mainRepo.GetVariable(name);
+            if (variable == null)
+            {
+                variable = new Variable() { Name = name };
+                mainRepo.SaveVariable(variable);
+            }
+            return View(variable);
+        }
+        [HttpPost]
+        public ActionResult Variable(Variable variable)
+        {
+            mainRepo.SaveVariable(variable);
+            return Content("Saved");
+        }
+
+        public ActionResult NewClients(string area)
+        {
+            var newClientsVar = mainRepo.GetVariable("newClients_" + area);
+            string[] newClients = new string[] { };
+            if (newClientsVar != null && newClientsVar.StringVal != null)
+            {
+                newClients = newClientsVar.StringVal.Split(new char[] { '|' });
+            }
+            var json = Json(newClients, JsonRequestBehavior.AllowGet);
             return json.ToJsonp();
         }
 

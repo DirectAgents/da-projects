@@ -4,6 +4,7 @@ using System.Linq;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.DTO;
+using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.Cake;
 
@@ -23,7 +24,33 @@ namespace DirectAgents.Domain.Concrete
             context.SaveChanges();
         }
 
-        // ---
+        public IQueryable<Variable> GetVariables()
+        {
+            return context.Variables;
+        }
+
+        public Variable GetVariable(string name)
+        {
+            return context.Variables.Find(name);
+        }
+
+        public void SaveVariable(Variable variable)
+        {
+            var existing = GetVariable(variable.Name);
+            if (existing != null)
+            {
+                existing.StringVal = variable.StringVal;
+                existing.IntVal = variable.IntVal;
+                existing.DecVal = variable.DecVal;
+            }
+            else
+            {
+                context.Variables.Add(variable);
+            }
+            SaveChanges();
+        }
+
+        // --- Cake ---
 
         public Contact GetContact(int contactId)
         {

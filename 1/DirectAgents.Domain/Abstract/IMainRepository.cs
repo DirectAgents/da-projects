@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DirectAgents.Domain.DTO;
+using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.Cake;
 
@@ -10,6 +11,10 @@ namespace DirectAgents.Domain.Abstract
     public interface IMainRepository : IDisposable
     {
         void SaveChanges();
+
+        IQueryable<Variable> GetVariables();
+        Variable GetVariable(string name);
+        void SaveVariable(Variable variable);
 
         // Cake
         Contact GetContact(int contactId);
