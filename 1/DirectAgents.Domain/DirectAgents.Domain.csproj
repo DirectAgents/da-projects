@@ -82,6 +82,8 @@
     <Compile Include="Entities\Cake\Role.cs" />
     <Compile Include="Entities\Cake\Vertical.cs" />
     <Compile Include="Entities\OfferBudget.cs" />
+    <Compile Include="Entities\Screen\Salesperson.cs" />
+    <Compile Include="Entities\Screen\SalespersonStat.cs" />
     <Compile Include="Entities\Security\Group.cs">
       <DependentUpon>SecurityModel.tt</DependentUpon>
     </Compile>
@@ -189,6 +191,10 @@
     <Compile Include="Migrations\201506231617274_Mig_Variable.Designer.cs">
       <DependentUpon>201506231617274_Mig_Variable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507152042017_Mig_Sales.cs" />
+    <Compile Include="Migrations\201507152042017_Mig_Sales.Designer.cs">
+      <DependentUpon>201507152042017_Mig_Sales.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -275,6 +281,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506231617274_Mig_Variable.resx">
       <DependentUpon>201506231617274_Mig_Variable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507152042017_Mig_Sales.resx">
+      <DependentUpon>201507152042017_Mig_Sales.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

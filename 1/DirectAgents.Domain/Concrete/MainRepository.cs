@@ -7,6 +7,7 @@ using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.Cake;
+using DirectAgents.Domain.Entities.Screen;
 
 namespace DirectAgents.Domain.Concrete
 {
@@ -48,6 +49,53 @@ namespace DirectAgents.Domain.Concrete
                 context.Variables.Add(variable);
             }
             SaveChanges();
+        }
+
+        // --- Screens ---
+
+        public IQueryable<Salesperson> Salespeople()
+        {
+            return context.Salespeople;
+        }
+
+        public IQueryable<SalespersonStat> SalespersonStats()
+        {
+            return context.SalespersonStats;
+        }
+        public IQueryable<SalespersonStat> SalespersonStats(int? salespersonId, DateTime? date)
+        {
+            var stats = context.SalespersonStats.AsQueryable();
+            if (salespersonId.HasValue)
+                stats = stats.Where(s => s.SalespersonId == salespersonId.Value);
+            if (date.HasValue)
+                stats = stats.Where(s => s.Date == date.Value);
+            return stats;
+        }
+
+        public SalespersonStat GetSalespersonStat(int salespersonId, DateTime date)
+        {
+            return context.SalespersonStats.Find(date, salespersonId);
+        }
+        public void SaveSalespersonStat(SalespersonStat stat)
+        {
+            var existing = GetSalespersonStat(stat.SalespersonId, stat.Date);
+            if (existing != null)
+            {
+                existing.EmailSent = stat.EmailSent;
+                existing.EmailTracked = stat.EmailTracked;
+                existing.EmailOpened = stat.EmailOpened;
+                existing.EmailReplied = stat.EmailReplied;
+            }
+            else
+            {
+                context.SalespersonStats.Add(stat);
+            }
+        }
+
+        public void DeleteSalespersonStats(DateTime date)
+        {
+            var stats = context.SalespersonStats.Where(s => s.Date == date);
+            context.SalespersonStats.RemoveRange(stats);
         }
 
         // --- Cake ---
@@ -232,16 +280,24 @@ namespace DirectAgents.Domain.Concrete
         public StatsSummary GetStatsSummary(int? offerId, DateTime? startDate, DateTime? endDate)
         {
             var ods = GetOfferDailySummaries(offerId, startDate, endDate);
-            var stats = new StatsSummary
+            StatsSummary stats;
+            if (ods.Any())
             {
-                Views = ods.Sum(o => o.Views),
-                Clicks = ods.Sum(o => o.Clicks),
-                Conversions = ods.Sum(o => o.Conversions),
-                Paid = ods.Sum(o => o.Paid),
-                Sellable = ods.Sum(o => o.Sellable),
-                Revenue = ods.Sum(o => o.Revenue),
-                Cost = ods.Sum(o => o.Cost)
-            };
+                stats = new StatsSummary
+                {
+                    Views = ods.Sum(o => o.Views),
+                    Clicks = ods.Sum(o => o.Clicks),
+                    Conversions = ods.Sum(o => o.Conversions),
+                    Paid = ods.Sum(o => o.Paid),
+                    Sellable = ods.Sum(o => o.Sellable),
+                    Revenue = ods.Sum(o => o.Revenue),
+                    Cost = ods.Sum(o => o.Cost)
+                };
+            }
+            else
+            {
+                stats = new StatsSummary();
+            }
             return stats;
         }
 

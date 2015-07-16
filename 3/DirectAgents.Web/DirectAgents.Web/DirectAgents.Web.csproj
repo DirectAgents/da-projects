@@ -142,6 +142,7 @@
     </Compile>
     <Compile Include="Models\BudgetsVM.cs" />
     <Compile Include="Models\OfferVM.cs" />
+    <Compile Include="Models\SalespeopleStatsVM.cs" />
     <Compile Include="Models\ScreensVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -880,6 +881,8 @@
     <Content Include="Views\Stats\Links.cshtml" />
     <Content Include="Views\Screens\Variable.cshtml" />
     <Content Include="Views\Screens\Variables.cshtml" />
+    <Content Include="Views\Screens\EditSalesStats.cshtml" />
+    <Content Include="Views\Screens\SalesStats.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

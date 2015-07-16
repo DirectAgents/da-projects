@@ -5,12 +5,20 @@ using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.Cake;
+using DirectAgents.Domain.Entities.Screen;
 
 namespace DirectAgents.Domain.Abstract
 {
     public interface IMainRepository : IDisposable
     {
         void SaveChanges();
+
+        IQueryable<Salesperson> Salespeople();
+        IQueryable<SalespersonStat> SalespersonStats();
+        IQueryable<SalespersonStat> SalespersonStats(int? salespersonId, DateTime? date);
+        SalespersonStat GetSalespersonStat(int salespersonId, DateTime date);
+        void SaveSalespersonStat(SalespersonStat stat);
+        void DeleteSalespersonStats(DateTime date);
 
         IQueryable<Variable> GetVariables();
         Variable GetVariable(string name);

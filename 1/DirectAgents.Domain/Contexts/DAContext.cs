@@ -3,6 +3,7 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.Cake;
+using DirectAgents.Domain.Entities.Screen;
 
 namespace DirectAgents.Domain.Contexts
 {
@@ -11,6 +12,7 @@ namespace DirectAgents.Domain.Contexts
         //public DAContext() : base() { }
         const string cakeSchema = "cake";
         const string adrollSchema = "adr";
+        const string screenSchema = "screen";
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -38,6 +40,12 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<AdvertisableStat>()
                 .Property(t => t.Cost).HasPrecision(18, 6);
 
+            // Screen
+            modelBuilder.Entity<Salesperson>().ToTable("Salesperson", screenSchema);
+            modelBuilder.Entity<SalespersonStat>()
+                .HasKey(t => new { t.Date, t.SalespersonId })
+                .ToTable("SalespersonStat", screenSchema);
+
             // general
             modelBuilder.Entity<Variable>()
                 .Property(t => t.DecVal).HasPrecision(18, 6);
@@ -54,6 +62,9 @@ namespace DirectAgents.Domain.Contexts
 
         public DbSet<Advertisable> Advertisables { get; set; }
         public DbSet<AdvertisableStat> AdvertisableStats { get; set; }
+
+        public DbSet<Salesperson> Salespeople { get; set; }
+        public DbSet<SalespersonStat> SalespersonStats { get; set; }
 
         public DbSet<OfferBudget> OfferBudgets { get; set; }
         public DbSet<Variable> Variables { get; set; }
