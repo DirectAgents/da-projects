@@ -14,7 +14,7 @@ namespace DirectAgents.Domain.Abstract
         void SaveChanges();
 
         IQueryable<Salesperson> Salespeople();
-        IQueryable<SalespersonStat> SalespersonStats();
+        IQueryable<SalespersonStat> SalespersonStats(DateTime? minDate = null);
         IQueryable<SalespersonStat> SalespersonStats(int? salespersonId, DateTime? date);
         SalespersonStat GetSalespersonStat(int salespersonId, DateTime date);
         void SaveSalespersonStat(SalespersonStat stat);

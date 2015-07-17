@@ -58,9 +58,12 @@ namespace DirectAgents.Domain.Concrete
             return context.Salespeople;
         }
 
-        public IQueryable<SalespersonStat> SalespersonStats()
+        public IQueryable<SalespersonStat> SalespersonStats(DateTime? minDate = null)
         {
-            return context.SalespersonStats;
+            var stats = context.SalespersonStats.AsQueryable();
+            if (minDate.HasValue)
+                stats = stats.Where(s => s.Date >= minDate.Value);
+            return stats;
         }
         public IQueryable<SalespersonStat> SalespersonStats(int? salespersonId, DateTime? date)
         {

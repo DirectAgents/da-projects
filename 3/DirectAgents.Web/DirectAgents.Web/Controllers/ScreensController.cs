@@ -18,21 +18,20 @@ namespace DirectAgents.Web.Controllers
             //this.securityRepo = new SecurityRepository();
         }
 
-        //public ActionResult SalespersonStat(int id, DateTime date)
-        //{
-        //    var stat = mainRepo.GetSalespersonStat(id, date);
-        //    return null;
-        //}
-
-        public ActionResult SalesStats(int numweeks = 2)
+        public ActionResult SalesStats(int numweeks = 4)
         {
-            var stats = mainRepo.SalespersonStats();
-            if (numweeks > 0)
-            {
-                var minDate = DateTime.Now.AddDays(-7 * numweeks);
-                stats = stats.Where(s => s.Date >= minDate);
-            }
+            var minDate = MinDateFromNumWeeks(numweeks);
+            var stats = mainRepo.SalespersonStats(minDate);
             return View(stats);
+        }
+        private DateTime? MinDateFromNumWeeks(int numweeks)
+        {
+            if (numweeks < 0)
+                return null;
+
+            var minDate = MostRecentSunday();
+            minDate = minDate.AddDays(-7 * numweeks);
+            return minDate;
         }
 
         [HttpGet]
@@ -74,11 +73,16 @@ namespace DirectAgents.Web.Controllers
             }
             else
             {
-                nextStatsDate = DateTime.Today;
-                while (nextStatsDate.DayOfWeek != DayOfWeek.Sunday)
-                    nextStatsDate = nextStatsDate.AddDays(-1);
+                nextStatsDate = MostRecentSunday();
             }
             return nextStatsDate;
+        }
+        private DateTime MostRecentSunday()
+        {
+            var date = DateTime.Today;
+            while (date.DayOfWeek != DayOfWeek.Sunday)
+                date = date.AddDays(-1);
+            return date;
         }
 
         [HttpPost]
