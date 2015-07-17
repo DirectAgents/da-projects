@@ -18,6 +18,44 @@ namespace DirectAgents.Web.Controllers
             //this.securityRepo = new SecurityRepository();
         }
 
+        public ActionResult SalesStatsJson(int numweeks = 4)
+        {
+            var minDate = MinDateFromNumWeeks(numweeks);
+            var stats = mainRepo.SalespersonStats(minDate).ToList();
+            stats = stats.Select(s => new SalespersonStat(s)).ToList();
+
+            var currWeekStart = MostRecentSunday().AddDays(-7);
+            var currWeekEnd = currWeekStart.AddDays(6);
+
+            var salespeople = mainRepo.Salespeople().ToList();
+            foreach (var salesperson in salespeople)
+            {
+                salesperson.CurrentStat = StatOrBlank(stats, salesperson.Id, currWeekStart);
+                var salespersonStats = new List<SalespersonStat>();
+                if (numweeks >= 1)
+                {
+                    for (var iDate = currWeekStart.AddDays(-7 * (numweeks - 1)); iDate <= currWeekStart; iDate = iDate.AddDays(7))
+                    {
+                        salespersonStats.Add(StatOrBlank(stats, salesperson.Id, iDate));
+                    }
+                    salesperson.Stats = salespersonStats;
+                }
+            }
+            var statsObj = new SalesStatsObj
+            {
+                WeekText = String.Format("Week of {0:M/dd} - {1:M/dd}", currWeekStart, currWeekEnd),
+                Salespeople = salespeople.OrderByDescending(s => s.CurrentStat.EmailReplied).ToList()
+            };
+            var json = Json(statsObj, JsonRequestBehavior.AllowGet);
+            return json.ToJsonp();
+        }
+        private SalespersonStat StatOrBlank(List<SalespersonStat> stats, int salespersonId, DateTime weekStart)
+        {
+            var stat = stats.Where(s => s.SalespersonId == salespersonId && s.Date == weekStart).FirstOrDefault()
+                        ?? SalespersonStat.BlankStat(salespersonId, weekStart);
+            return stat;
+        }
+
         public ActionResult SalesStats(int numweeks = 4)
         {
             var minDate = MinDateFromNumWeeks(numweeks);
@@ -40,7 +78,7 @@ namespace DirectAgents.Web.Controllers
             SalespeopleStatsVM model;
             if (date.HasValue)
             {
-                var stats = mainRepo.SalespersonStats(null, date);
+                var stats = mainRepo.SalespersonStats(null, date).OrderBy(s => s.Salesperson.FirstName).ThenBy(s => s.Salesperson.LastName);
                 model = new SalespeopleStatsVM
                 {
                     Stats = stats.ToList(),
@@ -50,7 +88,7 @@ namespace DirectAgents.Web.Controllers
             else
             {
                 var salespeople = mainRepo.Salespeople();
-                var stats = salespeople.ToList().Select(s => new SalespersonStat
+                var stats = salespeople.OrderBy(s => s.FirstName).ThenBy(s => s.LastName).ToList().Select(s => new SalespersonStat
                 {
                     Salesperson = s,
                     SalespersonId = s.Id
@@ -145,6 +183,11 @@ namespace DirectAgents.Web.Controllers
             var json = Json(newClients, JsonRequestBehavior.AllowGet);
             return json.ToJsonp();
         }
+    }
 
+    public class SalesStatsObj
+    {
+        public string WeekText { get; set; }
+        public List<Salesperson> Salespeople { get; set; }
     }
 }

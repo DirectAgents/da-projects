@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DirectAgents.Domain.Entities.Screen
 {
@@ -14,5 +15,10 @@ namespace DirectAgents.Domain.Entities.Screen
         {
             get { return FirstName + " " + LastName; }
         }
+
+        [NotMapped]
+        public IEnumerable<SalespersonStat> Stats { get; set; }
+        [NotMapped]
+        public SalespersonStat CurrentStat { get; set; }
     }
 }
