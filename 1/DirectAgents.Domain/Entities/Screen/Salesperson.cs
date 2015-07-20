@@ -20,5 +20,17 @@ namespace DirectAgents.Domain.Entities.Screen
         public IEnumerable<SalespersonStat> Stats { get; set; }
         [NotMapped]
         public SalespersonStat CurrentStat { get; set; }
+
+        public Salesperson()
+        {
+        }
+        public Salesperson(Salesperson sp)
+        {
+            this.Id = sp.Id;
+            this.FirstName = sp.FirstName;
+            this.LastName = sp.LastName;
+            this.Email = sp.Email;
+            // don't copy stats
+        }
     }
 }

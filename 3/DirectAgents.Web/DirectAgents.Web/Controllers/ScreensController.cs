@@ -27,10 +27,20 @@ namespace DirectAgents.Web.Controllers
             var currWeekStart = MostRecentSunday().AddDays(-7);
             var currWeekEnd = currWeekStart.AddDays(6);
 
-            var salespeople = mainRepo.Salespeople().ToList();
+            var salespeople = mainRepo.Salespeople().OrderBy(s => s.Id).ToList();
+            var salespeopleRanked = new List<Salesperson>();
             foreach (var salesperson in salespeople)
             {
+                salespeopleRanked.Add(new Salesperson(salesperson));
+            }
+            foreach (var salesperson in salespeopleRanked)
+            {   // include stats for most recent week
                 salesperson.CurrentStat = StatOrBlank(stats, salesperson.Id, currWeekStart);
+            }
+            salespeopleRanked = salespeopleRanked.OrderByDescending(s => s.CurrentStat.EmailReplied).ToList();
+
+            foreach (var salesperson in salespeople)
+            {   // include stats for all the requested weeks
                 var salespersonStats = new List<SalespersonStat>();
                 if (numweeks >= 1)
                 {
@@ -41,10 +51,12 @@ namespace DirectAgents.Web.Controllers
                     salesperson.Stats = salespersonStats;
                 }
             }
+
             var statsObj = new SalesStatsObj
             {
                 WeekText = String.Format("Week of {0:M/dd} - {1:M/dd}", currWeekStart, currWeekEnd),
-                Salespeople = salespeople.OrderByDescending(s => s.CurrentStat.EmailReplied).ToList()
+                SalespeopleRanked = salespeopleRanked,
+                Salespeople = salespeople
             };
             var json = Json(statsObj, JsonRequestBehavior.AllowGet);
             return json.ToJsonp();
@@ -111,7 +123,7 @@ namespace DirectAgents.Web.Controllers
             }
             else
             {
-                nextStatsDate = MostRecentSunday();
+                nextStatsDate = MostRecentSunday().AddDays(-7);
             }
             return nextStatsDate;
         }
@@ -189,5 +201,6 @@ namespace DirectAgents.Web.Controllers
     {
         public string WeekText { get; set; }
         public List<Salesperson> Salespeople { get; set; }
+        public List<Salesperson> SalespeopleRanked { get; set; }
     }
 }
