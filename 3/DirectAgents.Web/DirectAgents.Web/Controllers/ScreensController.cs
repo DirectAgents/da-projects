@@ -178,10 +178,13 @@ namespace DirectAgents.Web.Controllers
             return View(variable);
         }
         [HttpPost]
-        public ActionResult Variable(Variable variable)
+        public ActionResult Variable(Variable variable, string successAction)
         {
             mainRepo.SaveVariable(variable);
-            return Content("Saved");
+            if (!string.IsNullOrWhiteSpace(successAction))
+                return RedirectToAction(successAction);
+            else
+                return Content("Saved");
         }
 
         public ActionResult NewClients(string area)
