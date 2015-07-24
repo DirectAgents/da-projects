@@ -168,6 +168,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AffiliatesController.cs" />
+    <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\StatsController.cs" />
     <Compile Include="Controllers\TypesController.cs" />
     <Compile Include="Controllers\WikiAdminController.cs" />
@@ -4398,6 +4399,9 @@
     <Content Include="Views\Stats\Links.cshtml" />
     <Content Include="Views\Stats\_ViewStart.cshtml" />
     <Content Include="Views\Stats\TopAdvertisers.cshtml" />
+    <Content Include="Views\Audit\Summaries.cshtml" />
+    <Content Include="Views\Audit\_ViewStart.cshtml" />
+    <Content Include="Views\Audit\Entries.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

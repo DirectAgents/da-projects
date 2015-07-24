@@ -25,6 +25,10 @@ namespace EomToolWeb.Controllers
             ViewBag.ChooseMonthSelectList = daMain1Repo.ChooseMonthSelectList(eomEntitiesConfig, minDate.Value);
             ViewBag.DebugMode = eomEntitiesConfig.DebugMode;
         }
+        protected void SetAccountingPeriodViewDataSimple()
+        {
+            ViewBag.CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString;
+        }
 
         protected IMainRepository CreateMainRepository(DateTime? dateTime = null)
         {

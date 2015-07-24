@@ -72,6 +72,7 @@
     <Compile Include="Concrete\PaymentBatchRepository.cs" />
     <Compile Include="Concrete\PublisherRelatedItemsRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
+    <Compile Include="DTOs\AuditSummary.cs" />
     <Compile Include="DTOs\CampAffId.cs" />
     <Compile Include="DTOs\CampaignAmount.cs" />
     <Compile Include="Entities\AccountManagerTeam.cs">
@@ -87,6 +88,9 @@
       <DependentUpon>EomModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\AffiliatePaymentMethod.cs">
+      <DependentUpon>EomModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Audit.cs">
       <DependentUpon>EomModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Batch.cs">

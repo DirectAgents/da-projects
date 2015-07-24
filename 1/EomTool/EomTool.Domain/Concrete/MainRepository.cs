@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 using EomTool.Domain.Abstract;
 using EomTool.Domain.DTOs;
@@ -20,6 +21,11 @@ namespace EomTool.Domain.Concrete
         public void SaveChanges()
         {
             context.SaveChanges();
+        }
+
+        public void EnableLogging()
+        {
+            context.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
         }
         //---
 
@@ -824,6 +830,84 @@ namespace EomTool.Domain.Concrete
                 i.cost_per_unit == item.cost_per_unit &&
                 i.notes == item.notes &&
                 i.source_id == item.source_id);
+        }
+
+        // Are there any unfinalized items with the specified (item's) pid and affid?
+        //public bool AnyUnfinalizedItems(Item item, bool extraOnly)
+        //{
+        //    if (extraOnly) // only check extra items
+        //        return context.Items.Any(i =>
+        //            i.pid == item.pid &&
+        //            i.affid == item.affid &&
+        //            i.campaign_status_id == CampaignStatus.Default &&
+        //            i.source_id == Source.Other);
+        //    else
+        //        return context.Items.Any(i =>
+        //            i.pid == item.pid &&
+        //            i.affid == item.affid &&
+        //            i.campaign_status_id == CampaignStatus.Default);
+        //}
+
+        // --- Auditing ---
+
+        // this was slower (took about 5 secs)
+        public IQueryable<AuditSummary> AuditSummariesX()
+        {
+            var audits = context.Audits;
+            var aSums = audits.GroupBy(a => DbFunctions.TruncateTime(a.AuditDate))
+                .Select(g => new AuditSummary
+                {
+                    Date = g.Key,
+                    NumUpdates = g.Where(a => a.Operation == "u").Count(),
+                    NumInserts = g.Where(a => a.Operation == "i").Count(),
+                    NumDeletes = g.Where(a => a.Operation == "d" && a.ColumnName == "[id]").Count()
+                });
+            return aSums;
+        }
+        public IQueryable<AuditSummary> AuditSummaries()
+        {
+            var uSums = Audits(operation: "u").GroupBy(a => DbFunctions.TruncateTime(a.AuditDate))
+                .Select(g => new AuditSummary
+                {
+                    Date = g.Key,
+                    NumUpdates = g.Count(), NumInserts = 0, NumDeletes = 0
+                });
+            var iSums = Audits(operation: "i").GroupBy(a => DbFunctions.TruncateTime(a.AuditDate))
+                .Select(g => new AuditSummary
+                {
+                    Date = g.Key,
+                    NumUpdates = 0, NumInserts = g.Count(), NumDeletes = 0
+                });
+            var dSums = Audits(operation: "d").Where(a => a.ColumnName == "[id]").GroupBy(a => DbFunctions.TruncateTime(a.AuditDate))
+                .Select(g => new AuditSummary
+                {
+                    Date = g.Key,
+                    NumUpdates = 0, NumInserts = 0, NumDeletes = g.Count()
+                });
+
+            var aSums = uSums.Concat(iSums.Concat(dSums)).GroupBy(s => s.Date)
+                .Select(g => new AuditSummary
+                {
+                    Date = g.Key,
+                    NumUpdates = g.Sum(s => s.NumUpdates),
+                    NumInserts = g.Sum(s => s.NumInserts),
+                    NumDeletes = g.Sum(s => s.NumDeletes)
+                });
+            return aSums;
+        }
+
+        public IQueryable<Audit> Audits(DateTime? date = null, string operation = null, string primaryKey = null, string sysUser = null)
+        {
+            var audits = context.Audits.AsQueryable();
+            if (date.HasValue)
+                audits = audits.Where(a => DbFunctions.TruncateTime(a.AuditDate) == date);
+            if (!String.IsNullOrWhiteSpace(operation))
+                audits = audits.Where(a => a.Operation == operation);
+            if (!String.IsNullOrWhiteSpace(primaryKey))
+                audits = audits.Where(a => a.PrimaryKey == primaryKey);
+            if (!String.IsNullOrWhiteSpace(sysUser))
+                audits = audits.Where(a => a.SysUser == sysUser);
+            return audits;
         }
 
         // ---

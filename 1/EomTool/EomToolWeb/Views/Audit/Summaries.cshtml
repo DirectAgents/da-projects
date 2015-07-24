@@ -1,0 +1,63 @@
+﻿@model IEnumerable<EomTool.Domain.DTOs.AuditSummary>
+
+<b>Audit Summary</b> - @ViewBag.CurrentEomDateString
+
+<table>
+<tr>
+    <th></th>
+    <th>Updates</th>
+    <th>Inserts</th>
+    <th>Deletes</th>
+</tr>
+@foreach (var aSum in Model)
+{
+    var dateString = "";
+    if (aSum.Date.HasValue)
+    {
+        dateString = aSum.Date.Value.ToShortDateString();
+    }
+<tr>
+    <td style="text-align:center">
+        @if (aSum.Date.HasValue) {
+            @Html.ActionLink(aSum.Date.Value.ToShortDateString(), "Entries", new { date = dateString })
+        }
+    </td>
+    <td style="text-align:right">
+        @if (aSum.Date.HasValue) {
+            @Html.ActionLink(aSum.NumUpdates.ToString(), "Entries", new { date = dateString, operation = "u" })
+        } else {
+            @aSum.NumUpdates
+        }
+    </td>
+    <td style="text-align:right">
+        @if (aSum.Date.HasValue) {
+            @Html.ActionLink(aSum.NumInserts.ToString(), "Entries", new { date = dateString, operation = "i" })
+        } else {
+            @aSum.NumInserts
+        }
+    </td>
+    <td style="text-align:right">
+        @if (aSum.Date.HasValue) {
+            @Html.ActionLink(aSum.NumDeletes.ToString(), "Entries", new { date = dateString, operation = "d" })
+        } else {
+            @aSum.NumDeletes
+        }
+    </td>
+</tr>
+}
+</table>
+
+@section head {
+<style type="text/css" media="screen">
+
+table {
+    border:1px solid black;
+    border-collapse:collapse;
+}
+
+table th,td {
+    border:1px solid black;
+    padding:2px;
+}
+</style>
+}

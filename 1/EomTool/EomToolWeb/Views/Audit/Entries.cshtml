@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Audit>
+
+Accounting Period: @ViewBag.CurrentEomDateString
+<table>
+<tr>
+    <th>AuditID</th>
+    <th>Date</th>
+    <th>HostName</th>
+    <th>SysUser</th>
+    <th>Operation</th>
+    <th>PKey</th>
+    <th>Column</th>
+    <th>OldValue</th>
+    <th>NewValue</th>
+</tr>
+@foreach (var a in Model)
+{
+<tr>
+    <td style="text-align:right">@a.AuditID</td>
+    <td style="text-align:center">@a.AuditDate</td>
+    <td>@a.HostName</td>
+    <td>@Html.ActionLink(a.SysUser, "Entries", new { sysUser = a.SysUser })</td>
+    <td style="text-align:center">@a.Operation</td>
+    <td style="text-align:center">@Html.ActionLink(a.PrimaryKey, "Entries", new { primaryKey = a.PrimaryKey })</td>
+    <td>@a.ColumnName</td>
+    <td style="text-align:center">@a.OldValue</td>
+    <td style="text-align:center">@a.NewValue</td>
+</tr>
+}
+</table>
+
+<br />
+@Html.ActionLink("Back to summary", "Summaries")
+
+@section head {
+<style type="text/css" media="screen">
+
+table {
+    border:1px solid black;
+    border-collapse:collapse;
+}
+
+table th,td {
+    border:1px solid black;
+    padding:2px;
+}
+</style>
+}

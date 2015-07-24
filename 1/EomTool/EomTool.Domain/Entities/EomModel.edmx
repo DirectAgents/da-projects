@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="EomModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="EomModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AccountManager">
           <Key>
             <PropertyRef Name="id" />
@@ -60,6 +60,26 @@
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Audit">
+          <Key>
+            <PropertyRef Name="AuditID" />
+          </Key>
+          <Property Name="AuditID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AuditDate" Type="datetime" Nullable="false" />
+          <Property Name="HostName" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="SysUser" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Application" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="TableName" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Operation" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="SQLStatement" Type="varchar(max)" />
+          <Property Name="PrimaryKey" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="RowDescription" Type="varchar" MaxLength="50" />
+          <Property Name="SecondaryRow" Type="varchar" MaxLength="50" />
+          <Property Name="ColumnName" Type="nvarchar" MaxLength="128" />
+          <Property Name="OldValue" Type="varchar(max)" />
+          <Property Name="NewValue" Type="varchar(max)" />
+          <Property Name="RowVersion" Type="int" />
         </EntityType>
         <EntityType Name="Batch">
           <Key>
@@ -315,7 +335,7 @@
           <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.CampaignsPublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DADatabaseJuly2015.dbo.CampaignsPublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CampaignsPublisherReportDetails">
           <Key>
             <PropertyRef Name="CampaignStatus" />
@@ -342,7 +362,7 @@ warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.CampaignsPublisherRepor
           <Property Name="Total" Type="decimal" Precision="38" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.CampaignsPublisherReportSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DADatabaseJuly2015.dbo.CampaignsPublisherReportSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CampaignsPublisherReportSummary">
           <Key>
             <PropertyRef Name="CampaignStatus" />
@@ -361,7 +381,7 @@ warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.CampaignsPublisherRepor
           <Property Name="Total" Type="decimal" Precision="38" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherPayments' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DADatabaseJuly2015.dbo.PublisherPayments' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PublisherPayments">
           <Key>
             <PropertyRef Name="NetTermType" />
@@ -391,7 +411,7 @@ warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherPayments' does
           <Property Name="ItemIds" Type="nvarchar" MaxLength="4000" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherPayouts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DADatabaseJuly2015.dbo.PublisherPayouts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PublisherPayouts">
           <Key>
             <PropertyRef Name="affid" />
@@ -452,7 +472,7 @@ warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherPayouts' does 
           <Property Name="BatchIds" Type="nvarchar" MaxLength="4000" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherRelatedItemCounts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DADatabaseJuly2015.dbo.PublisherRelatedItemCounts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PublisherRelatedItemCounts">
           <Key>
             <PropertyRef Name="Id" />
@@ -464,7 +484,7 @@ warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherRelatedItemCou
           <Property Name="NumAttachments" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DADatabaseJuly2015.dbo.PublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PublisherReportDetails">
           <Key>
             <PropertyRef Name="NetTermTypeName" />
@@ -491,7 +511,7 @@ warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherReportDetails'
           <Property Name="ItemIDs" Type="nvarchar" MaxLength="4000" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherReports' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DADatabaseJuly2015.dbo.PublisherReports' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PublisherReports">
           <Key>
             <PropertyRef Name="CampaignStatus" />
@@ -518,7 +538,7 @@ warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherReports' does 
           <Property Name="Total" Type="decimal" Precision="38" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherReportSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DADatabaseJuly2015.dbo.PublisherReportSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PublisherReportSummary">
           <Key>
             <PropertyRef Name="Net Terms" />
@@ -642,7 +662,7 @@ warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.PublisherReportSummary'
         <!--Errors Found During Generation:
 warning 6035: The relationship 'CampaignNotes_Campaign_pid_FK_Campaign_pid_UK' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
         <Association Name="CampaignNotes_Campaign_pid_FK_Campaign_pid_UK" />-->
-        <Association Name="FK__Item__media_buye__123EB7A3">
+        <Association Name="FK__Item__media_buye__29221CFB">
           <End Role="MediaBuyerApprovalStatus" Type="Self.MediaBuyerApprovalStatus" Multiplicity="1" />
           <End Role="Item" Type="Self.Item" Multiplicity="*" />
           <ReferentialConstraint>
@@ -954,6 +974,7 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
           <EntitySet Name="Advertiser" EntityType="Self.Advertiser" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Affiliate" EntityType="Self.Affiliate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AffiliatePaymentMethod" EntityType="Self.AffiliatePaymentMethod" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Audit" EntityType="Self.Audit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Batch" EntityType="Self.Batch" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BatchBatchUpdate" EntityType="Self.BatchBatchUpdate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BatchUpdate" EntityType="Self.BatchUpdate" Schema="dbo" store:Type="Tables" />
@@ -980,147 +1001,147 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
           <EntitySet Name="UnitType" EntityType="Self.UnitType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CampaignsPublisherReportDetails" EntityType="Self.CampaignsPublisherReportDetails" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-[CampaignsPublisherReportDetails].[ItemIDs] AS [ItemIDs], 
-[CampaignsPublisherReportDetails].[CampaignStatus] AS [CampaignStatus], 
-[CampaignsPublisherReportDetails].[Publisher] AS [Publisher], 
-[CampaignsPublisherReportDetails].[AddCode] AS [AddCode], 
-[CampaignsPublisherReportDetails].[CampaignName] AS [CampaignName], 
-[CampaignsPublisherReportDetails].[NumUnits] AS [NumUnits], 
-[CampaignsPublisherReportDetails].[CostPerUnit] AS [CostPerUnit], 
-[CampaignsPublisherReportDetails].[NetTerms] AS [NetTerms], 
-[CampaignsPublisherReportDetails].[PayCurrency] AS [PayCurrency], 
-[CampaignsPublisherReportDetails].[IsCPM] AS [IsCPM], 
-[CampaignsPublisherReportDetails].[MediaBuyer] AS [MediaBuyer], 
-[CampaignsPublisherReportDetails].[ToBePaid] AS [ToBePaid], 
-[CampaignsPublisherReportDetails].[Paid] AS [Paid], 
-[CampaignsPublisherReportDetails].[Total] AS [Total]
-FROM [dbo].[CampaignsPublisherReportDetails] AS [CampaignsPublisherReportDetails]</DefiningQuery>
+    [CampaignsPublisherReportDetails].[ItemIDs] AS [ItemIDs], 
+    [CampaignsPublisherReportDetails].[CampaignStatus] AS [CampaignStatus], 
+    [CampaignsPublisherReportDetails].[Publisher] AS [Publisher], 
+    [CampaignsPublisherReportDetails].[AddCode] AS [AddCode], 
+    [CampaignsPublisherReportDetails].[CampaignName] AS [CampaignName], 
+    [CampaignsPublisherReportDetails].[NumUnits] AS [NumUnits], 
+    [CampaignsPublisherReportDetails].[CostPerUnit] AS [CostPerUnit], 
+    [CampaignsPublisherReportDetails].[NetTerms] AS [NetTerms], 
+    [CampaignsPublisherReportDetails].[PayCurrency] AS [PayCurrency], 
+    [CampaignsPublisherReportDetails].[IsCPM] AS [IsCPM], 
+    [CampaignsPublisherReportDetails].[MediaBuyer] AS [MediaBuyer], 
+    [CampaignsPublisherReportDetails].[ToBePaid] AS [ToBePaid], 
+    [CampaignsPublisherReportDetails].[Paid] AS [Paid], 
+    [CampaignsPublisherReportDetails].[Total] AS [Total]
+    FROM [dbo].[CampaignsPublisherReportDetails] AS [CampaignsPublisherReportDetails]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="CampaignsPublisherReportSummary" EntityType="Self.CampaignsPublisherReportSummary" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-[CampaignsPublisherReportSummary].[CampaignStatus] AS [CampaignStatus], 
-[CampaignsPublisherReportSummary].[Publisher] AS [Publisher], 
-[CampaignsPublisherReportSummary].[NetTerms] AS [NetTerms], 
-[CampaignsPublisherReportSummary].[PayCurrency] AS [PayCurrency], 
-[CampaignsPublisherReportSummary].[Unverified] AS [Unverified], 
-[CampaignsPublisherReportSummary].[Verified] AS [Verified], 
-[CampaignsPublisherReportSummary].[Approved] AS [Approved], 
-[CampaignsPublisherReportSummary].[Paid] AS [Paid], 
-[CampaignsPublisherReportSummary].[ToBePaid] AS [ToBePaid], 
-[CampaignsPublisherReportSummary].[Total] AS [Total]
-FROM [dbo].[CampaignsPublisherReportSummary] AS [CampaignsPublisherReportSummary]</DefiningQuery>
+    [CampaignsPublisherReportSummary].[CampaignStatus] AS [CampaignStatus], 
+    [CampaignsPublisherReportSummary].[Publisher] AS [Publisher], 
+    [CampaignsPublisherReportSummary].[NetTerms] AS [NetTerms], 
+    [CampaignsPublisherReportSummary].[PayCurrency] AS [PayCurrency], 
+    [CampaignsPublisherReportSummary].[Unverified] AS [Unverified], 
+    [CampaignsPublisherReportSummary].[Verified] AS [Verified], 
+    [CampaignsPublisherReportSummary].[Approved] AS [Approved], 
+    [CampaignsPublisherReportSummary].[Paid] AS [Paid], 
+    [CampaignsPublisherReportSummary].[ToBePaid] AS [ToBePaid], 
+    [CampaignsPublisherReportSummary].[Total] AS [Total]
+    FROM [dbo].[CampaignsPublisherReportSummary] AS [CampaignsPublisherReportSummary]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="PublisherPayments" EntityType="Self.PublisherPayments" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-[PublisherPayments].[NetTermTypeId] AS [NetTermTypeId], 
-[PublisherPayments].[NetTermType] AS [NetTermType], 
-[PublisherPayments].[AffIds] AS [AffIds], 
-[PublisherPayments].[Publisher] AS [Publisher], 
-[PublisherPayments].[PubPayCurr] AS [PubPayCurr], 
-[PublisherPayments].[PubPayout] AS [PubPayout], 
-[PublisherPayments].[AccountingStatusId] AS [AccountingStatusId], 
-[PublisherPayments].[AccountingStatus] AS [AccountingStatus], 
-[PublisherPayments].[PaymentMethodId] AS [PaymentMethodId], 
-[PublisherPayments].[PaymentMethod] AS [PaymentMethod], 
-[PublisherPayments].[PaymentBatchId] AS [PaymentBatchId], 
-[PublisherPayments].[PaymentBatchStateId] AS [PaymentBatchStateId], 
-[PublisherPayments].[PaymentBatchState] AS [PaymentBatchState], 
-[PublisherPayments].[ApproverIdentity] AS [ApproverIdentity], 
-[PublisherPayments].[ItemIds] AS [ItemIds]
-FROM [dbo].[PublisherPayments] AS [PublisherPayments]</DefiningQuery>
+    [PublisherPayments].[NetTermTypeId] AS [NetTermTypeId], 
+    [PublisherPayments].[NetTermType] AS [NetTermType], 
+    [PublisherPayments].[AffIds] AS [AffIds], 
+    [PublisherPayments].[Publisher] AS [Publisher], 
+    [PublisherPayments].[PubPayCurr] AS [PubPayCurr], 
+    [PublisherPayments].[PubPayout] AS [PubPayout], 
+    [PublisherPayments].[AccountingStatusId] AS [AccountingStatusId], 
+    [PublisherPayments].[AccountingStatus] AS [AccountingStatus], 
+    [PublisherPayments].[PaymentMethodId] AS [PaymentMethodId], 
+    [PublisherPayments].[PaymentMethod] AS [PaymentMethod], 
+    [PublisherPayments].[PaymentBatchId] AS [PaymentBatchId], 
+    [PublisherPayments].[PaymentBatchStateId] AS [PaymentBatchStateId], 
+    [PublisherPayments].[PaymentBatchState] AS [PaymentBatchState], 
+    [PublisherPayments].[ApproverIdentity] AS [ApproverIdentity], 
+    [PublisherPayments].[ItemIds] AS [ItemIds]
+    FROM [dbo].[PublisherPayments] AS [PublisherPayments]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="PublisherPayouts" EntityType="Self.PublisherPayouts" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-[PublisherPayouts].[affid] AS [affid], 
-[PublisherPayouts].[Publisher] AS [Publisher], 
-[PublisherPayouts].[Advertiser] AS [Advertiser], 
-[PublisherPayouts].[pid] AS [pid], 
-[PublisherPayouts].[Campaign Name] AS [Campaign Name], 
-[PublisherPayouts].[Rev Currency] AS [Rev Currency], 
-[PublisherPayouts].[Cost Currency] AS [Cost Currency], 
-[PublisherPayouts].[Rev/Unit] AS [Rev/Unit], 
-[PublisherPayouts].[Rev/Unit USD] AS [Rev/Unit USD], 
-[PublisherPayouts].[Cost/Unit] AS [Cost/Unit], 
-[PublisherPayouts].[Cost/Unit USD] AS [Cost/Unit USD], 
-[PublisherPayouts].[Units] AS [Units], 
-[PublisherPayouts].[Unit Type] AS [Unit Type], 
-[PublisherPayouts].[Revenue] AS [Revenue], 
-[PublisherPayouts].[Revenue USD] AS [Revenue USD], 
-[PublisherPayouts].[Cost] AS [Cost], 
-[PublisherPayouts].[Cost USD] AS [Cost USD], 
-[PublisherPayouts].[Margin] AS [Margin], 
-[PublisherPayouts].[MarginPct] AS [MarginPct], 
-[PublisherPayouts].[Media Buyer] AS [Media Buyer], 
-[PublisherPayouts].[Ad Manager] AS [Ad Manager], 
-[PublisherPayouts].[Account Manager] AS [Account Manager], 
-[PublisherPayouts].[status_id] AS [status_id], 
-[PublisherPayouts].[Status] AS [Status], 
-[PublisherPayouts].[accounting_status_id] AS [accounting_status_id], 
-[PublisherPayouts].[Accounting Status] AS [Accounting Status], 
-[PublisherPayouts].[media_buyer_approval_status_id] AS [media_buyer_approval_status_id], 
-[PublisherPayouts].[Media Buyer Approval Status] AS [Media Buyer Approval Status], 
-[PublisherPayouts].[Net Terms] AS [Net Terms], 
-[PublisherPayouts].[Aff Pay Method] AS [Aff Pay Method], 
-[PublisherPayouts].[Pub Pay Curr] AS [Pub Pay Curr], 
-[PublisherPayouts].[Pub Payout] AS [Pub Payout], 
-[PublisherPayouts].[CampaignNotes] AS [CampaignNotes], 
-[PublisherPayouts].[Source] AS [Source], 
-[PublisherPayouts].[ItemIds] AS [ItemIds], 
-[PublisherPayouts].[BatchIds] AS [BatchIds]
-FROM [dbo].[PublisherPayouts] AS [PublisherPayouts]</DefiningQuery>
+    [PublisherPayouts].[affid] AS [affid], 
+    [PublisherPayouts].[Publisher] AS [Publisher], 
+    [PublisherPayouts].[Advertiser] AS [Advertiser], 
+    [PublisherPayouts].[pid] AS [pid], 
+    [PublisherPayouts].[Campaign Name] AS [Campaign Name], 
+    [PublisherPayouts].[Rev Currency] AS [Rev Currency], 
+    [PublisherPayouts].[Cost Currency] AS [Cost Currency], 
+    [PublisherPayouts].[Rev/Unit] AS [Rev/Unit], 
+    [PublisherPayouts].[Rev/Unit USD] AS [Rev/Unit USD], 
+    [PublisherPayouts].[Cost/Unit] AS [Cost/Unit], 
+    [PublisherPayouts].[Cost/Unit USD] AS [Cost/Unit USD], 
+    [PublisherPayouts].[Units] AS [Units], 
+    [PublisherPayouts].[Unit Type] AS [Unit Type], 
+    [PublisherPayouts].[Revenue] AS [Revenue], 
+    [PublisherPayouts].[Revenue USD] AS [Revenue USD], 
+    [PublisherPayouts].[Cost] AS [Cost], 
+    [PublisherPayouts].[Cost USD] AS [Cost USD], 
+    [PublisherPayouts].[Margin] AS [Margin], 
+    [PublisherPayouts].[MarginPct] AS [MarginPct], 
+    [PublisherPayouts].[Media Buyer] AS [Media Buyer], 
+    [PublisherPayouts].[Ad Manager] AS [Ad Manager], 
+    [PublisherPayouts].[Account Manager] AS [Account Manager], 
+    [PublisherPayouts].[status_id] AS [status_id], 
+    [PublisherPayouts].[Status] AS [Status], 
+    [PublisherPayouts].[accounting_status_id] AS [accounting_status_id], 
+    [PublisherPayouts].[Accounting Status] AS [Accounting Status], 
+    [PublisherPayouts].[media_buyer_approval_status_id] AS [media_buyer_approval_status_id], 
+    [PublisherPayouts].[Media Buyer Approval Status] AS [Media Buyer Approval Status], 
+    [PublisherPayouts].[Net Terms] AS [Net Terms], 
+    [PublisherPayouts].[Aff Pay Method] AS [Aff Pay Method], 
+    [PublisherPayouts].[Pub Pay Curr] AS [Pub Pay Curr], 
+    [PublisherPayouts].[Pub Payout] AS [Pub Payout], 
+    [PublisherPayouts].[CampaignNotes] AS [CampaignNotes], 
+    [PublisherPayouts].[Source] AS [Source], 
+    [PublisherPayouts].[ItemIds] AS [ItemIds], 
+    [PublisherPayouts].[BatchIds] AS [BatchIds]
+    FROM [dbo].[PublisherPayouts] AS [PublisherPayouts]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="PublisherRelatedItemCounts" EntityType="Self.PublisherRelatedItemCounts" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-[PublisherRelatedItemCounts].[Id] AS [Id], 
-[PublisherRelatedItemCounts].[Publisher] AS [Publisher], 
-[PublisherRelatedItemCounts].[NumNotes] AS [NumNotes], 
-[PublisherRelatedItemCounts].[NumAttachments] AS [NumAttachments]
-FROM [dbo].[PublisherRelatedItemCounts] AS [PublisherRelatedItemCounts]</DefiningQuery>
+    [PublisherRelatedItemCounts].[Id] AS [Id], 
+    [PublisherRelatedItemCounts].[Publisher] AS [Publisher], 
+    [PublisherRelatedItemCounts].[NumNotes] AS [NumNotes], 
+    [PublisherRelatedItemCounts].[NumAttachments] AS [NumAttachments]
+    FROM [dbo].[PublisherRelatedItemCounts] AS [PublisherRelatedItemCounts]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="PublisherReportDetails" EntityType="Self.PublisherReportDetails" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-[PublisherReportDetails].[PublisherName] AS [PublisherName], 
-[PublisherReportDetails].[NetTermTypeName] AS [NetTermTypeName], 
-[PublisherReportDetails].[AffiliateCurrencyName] AS [AffiliateCurrencyName], 
-[PublisherReportDetails].[SumItemTotalCost] AS [SumItemTotalCost], 
-[PublisherReportDetails].[ItemAccountingStatusName] AS [ItemAccountingStatusName], 
-[PublisherReportDetails].[CampaignStatusName] AS [CampaignStatusName], 
-[PublisherReportDetails].[CampaignName] AS [CampaignName], 
-[PublisherReportDetails].[NumUnits] AS [NumUnits], 
-[PublisherReportDetails].[CostPerUnit] AS [CostPerUnit], 
-[PublisherReportDetails].[AffiliateAddCode] AS [AffiliateAddCode], 
-[PublisherReportDetails].[IsCPM] AS [IsCPM], 
-[PublisherReportDetails].[MediaBuyer] AS [MediaBuyer], 
-[PublisherReportDetails].[ItemIDs] AS [ItemIDs]
-FROM [dbo].[PublisherReportDetails] AS [PublisherReportDetails]</DefiningQuery>
+    [PublisherReportDetails].[PublisherName] AS [PublisherName], 
+    [PublisherReportDetails].[NetTermTypeName] AS [NetTermTypeName], 
+    [PublisherReportDetails].[AffiliateCurrencyName] AS [AffiliateCurrencyName], 
+    [PublisherReportDetails].[SumItemTotalCost] AS [SumItemTotalCost], 
+    [PublisherReportDetails].[ItemAccountingStatusName] AS [ItemAccountingStatusName], 
+    [PublisherReportDetails].[CampaignStatusName] AS [CampaignStatusName], 
+    [PublisherReportDetails].[CampaignName] AS [CampaignName], 
+    [PublisherReportDetails].[NumUnits] AS [NumUnits], 
+    [PublisherReportDetails].[CostPerUnit] AS [CostPerUnit], 
+    [PublisherReportDetails].[AffiliateAddCode] AS [AffiliateAddCode], 
+    [PublisherReportDetails].[IsCPM] AS [IsCPM], 
+    [PublisherReportDetails].[MediaBuyer] AS [MediaBuyer], 
+    [PublisherReportDetails].[ItemIDs] AS [ItemIDs]
+    FROM [dbo].[PublisherReportDetails] AS [PublisherReportDetails]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="PublisherReports" EntityType="Self.PublisherReports" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-[PublisherReports].[ItemIDs] AS [ItemIDs], 
-[PublisherReports].[CampaignStatus] AS [CampaignStatus], 
-[PublisherReports].[Publisher] AS [Publisher], 
-[PublisherReports].[AddCode] AS [AddCode], 
-[PublisherReports].[CampaignName] AS [CampaignName], 
-[PublisherReports].[NumUnits] AS [NumUnits], 
-[PublisherReports].[CostPerUnit] AS [CostPerUnit], 
-[PublisherReports].[NetTerms] AS [NetTerms], 
-[PublisherReports].[PayCurrency] AS [PayCurrency], 
-[PublisherReports].[IsCPM] AS [IsCPM], 
-[PublisherReports].[MediaBuyer] AS [MediaBuyer], 
-[PublisherReports].[ToBePaid] AS [ToBePaid], 
-[PublisherReports].[Paid] AS [Paid], 
-[PublisherReports].[Total] AS [Total]
-FROM [dbo].[PublisherReports] AS [PublisherReports]</DefiningQuery>
+    [PublisherReports].[ItemIDs] AS [ItemIDs], 
+    [PublisherReports].[CampaignStatus] AS [CampaignStatus], 
+    [PublisherReports].[Publisher] AS [Publisher], 
+    [PublisherReports].[AddCode] AS [AddCode], 
+    [PublisherReports].[CampaignName] AS [CampaignName], 
+    [PublisherReports].[NumUnits] AS [NumUnits], 
+    [PublisherReports].[CostPerUnit] AS [CostPerUnit], 
+    [PublisherReports].[NetTerms] AS [NetTerms], 
+    [PublisherReports].[PayCurrency] AS [PayCurrency], 
+    [PublisherReports].[IsCPM] AS [IsCPM], 
+    [PublisherReports].[MediaBuyer] AS [MediaBuyer], 
+    [PublisherReports].[ToBePaid] AS [ToBePaid], 
+    [PublisherReports].[Paid] AS [Paid], 
+    [PublisherReports].[Total] AS [Total]
+    FROM [dbo].[PublisherReports] AS [PublisherReports]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="PublisherReportSummary" EntityType="Self.PublisherReportSummary" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-[PublisherReportSummary].[Name] AS [Name], 
-[PublisherReportSummary].[Net Terms] AS [Net Terms], 
-[PublisherReportSummary].[Curr] AS [Curr], 
-[PublisherReportSummary].[To Be Paid] AS [To Be Paid], 
-[PublisherReportSummary].[Paid] AS [Paid], 
-[PublisherReportSummary].[Total] AS [Total]
-FROM [dbo].[PublisherReportSummary] AS [PublisherReportSummary]</DefiningQuery>
+    [PublisherReportSummary].[Name] AS [Name], 
+    [PublisherReportSummary].[Net Terms] AS [Net Terms], 
+    [PublisherReportSummary].[Curr] AS [Curr], 
+    [PublisherReportSummary].[To Be Paid] AS [To Be Paid], 
+    [PublisherReportSummary].[Paid] AS [Paid], 
+    [PublisherReportSummary].[Total] AS [Total]
+    FROM [dbo].[PublisherReportSummary] AS [PublisherReportSummary]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK" Association="Self.Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK">
             <End Role="AffiliatePaymentMethod" EntitySet="AffiliatePaymentMethod" />
@@ -1158,7 +1179,7 @@ FROM [dbo].[PublisherReportSummary] AS [PublisherReportSummary]</DefiningQuery>
             <End Role="CampaignStatus" EntitySet="CampaignStatus" />
             <End Role="Campaign" EntitySet="Campaign" />
           </AssociationSet>
-          <AssociationSet Name="FK__Item__media_buye__123EB7A3" Association="Self.FK__Item__media_buye__123EB7A3">
+          <AssociationSet Name="FK__Item__media_buye__29221CFB" Association="Self.FK__Item__media_buye__29221CFB">
             <End Role="MediaBuyerApprovalStatus" EntitySet="MediaBuyerApprovalStatus" />
             <End Role="Item" EntitySet="Item" />
           </AssociationSet>
@@ -1424,6 +1445,7 @@ FROM [dbo].[PublisherReportSummary] AS [PublisherReportSummary]</DefiningQuery>
             <End Role="Campaign" EntitySet="Campaigns" />
           </AssociationSet>
           <EntitySet Name="CampaignNotes" EntityType="EomModel.CampaignNote" />
+          <EntitySet Name="Audits" EntityType="EomModel.Audit" />
           </EntityContainer>
         <EntityType Name="Advertiser">
           <Key>
@@ -2356,6 +2378,26 @@ FROM [dbo].[PublisherReportSummary] AS [PublisherReportSummary]</DefiningQuery>
           <Property Name="added_by_system_user" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="created" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
+        <EntityType Name="Audit">
+          <Key>
+            <PropertyRef Name="AuditID" />
+          </Key>
+          <Property Name="AuditID" Type="Int64" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Name="AuditDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="HostName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="SysUser" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Application" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="TableName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Operation" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="SQLStatement" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="PrimaryKey" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="RowDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SecondaryRow" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ColumnName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="OldValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="NewValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="RowVersion" Type="Int32" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2791,6 +2833,27 @@ FROM [dbo].[PublisherReportSummary] AS [PublisherReportSummary]</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Audits">
+            <EntityTypeMapping TypeName="EomModel.Audit">
+              <MappingFragment StoreEntitySet="Audit">
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="NewValue" ColumnName="NewValue" />
+                <ScalarProperty Name="OldValue" ColumnName="OldValue" />
+                <ScalarProperty Name="ColumnName" ColumnName="ColumnName" />
+                <ScalarProperty Name="SecondaryRow" ColumnName="SecondaryRow" />
+                <ScalarProperty Name="RowDescription" ColumnName="RowDescription" />
+                <ScalarProperty Name="PrimaryKey" ColumnName="PrimaryKey" />
+                <ScalarProperty Name="SQLStatement" ColumnName="SQLStatement" />
+                <ScalarProperty Name="Operation" ColumnName="Operation" />
+                <ScalarProperty Name="TableName" ColumnName="TableName" />
+                <ScalarProperty Name="Application" ColumnName="Application" />
+                <ScalarProperty Name="SysUser" ColumnName="SysUser" />
+                <ScalarProperty Name="HostName" ColumnName="HostName" />
+                <ScalarProperty Name="AuditDate" ColumnName="AuditDate" />
+                <ScalarProperty Name="AuditID" ColumnName="AuditID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -2807,7 +2870,7 @@ FROM [dbo].[PublisherReportSummary] AS [PublisherReportSummary]</DefiningQuery>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
-        <DesignerProperty Name="UseLegacyProvider" Value="True" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>
     </Options>
@@ -2942,8 +3005,8 @@ FROM [dbo].[PublisherReportSummary] AS [PublisherReportSummary]</DefiningQuery>
           <ConnectorPoint PointX="10.7041015625" PointY="3.4417936197916665" />
         </AssociationConnector>
         <AssociationConnector Association="EomModel.Item_CampaignStatus_id_FK_CampaignStatus_id_PK" />
-        <EntityTypeShape EntityType="EomModel.PaymentBatch" Width="1.875" PointX="2.875" PointY="5.75" />
-        <EntityTypeShape EntityType="EomModel.PaymentBatchState" Width="1.75" PointX="0.5" PointY="5.75" />
+        <EntityTypeShape EntityType="EomModel.PaymentBatch" Width="1.875" PointX="3.625" PointY="6.875" />
+        <EntityTypeShape EntityType="EomModel.PaymentBatchState" Width="1.75" PointX="1.375" PointY="8.375" />
         <AssociationConnector Association="EomModel.FK_Item_PaymentBatch" />
         <AssociationConnector Association="EomModel.FK_PaymentBatch_PaymentBatch" />
         <AssociationConnector Association="EomModel.FK_PaymentBatch_PaymentBatchState" />
@@ -2971,6 +3034,7 @@ FROM [dbo].[PublisherReportSummary] AS [PublisherReportSummary]</DefiningQuery>
         <EntityTypeShape EntityType="EomModel.AdManager" Width="1.5" PointX="7.75" PointY="17.125" />
         <AssociationConnector Association="EomModel.Campaign_AdManager_id_FK_AdManager_id_PK" />
         <EntityTypeShape EntityType="EomModel.CampaignNote" Width="1.75" PointX="3.625" PointY="20.5" />
+        <EntityTypeShape EntityType="EomModel.Audit" Width="1.5" PointX="0.5" PointY="4" />
         </Diagram>
     </Diagrams>
   </Designer>

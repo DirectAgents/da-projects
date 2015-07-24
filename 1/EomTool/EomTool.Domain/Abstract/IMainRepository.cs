@@ -9,6 +9,7 @@ namespace EomTool.Domain.Abstract
     public interface IMainRepository : IDisposable
     {
         void SaveChanges();
+        void EnableLogging();
 
         Advertiser GetAdvertiser(int id);
         IQueryable<Advertiser> Advertisers(bool withActivity = false);
@@ -73,6 +74,10 @@ namespace EomTool.Domain.Abstract
         IQueryable<Item> GetItems(IEnumerable<int> ids);
         void AddItem(Item item);
         bool ItemExists(Item item);
+
+        // --- Auditing stuff ---
+        IQueryable<AuditSummary> AuditSummaries();
+        IQueryable<Audit> Audits(DateTime? date = null, string operation = null, string primaryKey = null, string sysUser = null);
 
         // --- Media Buyer Approval stuff ---
         IQueryable<PublisherPayout> PublisherPayouts { get; }
