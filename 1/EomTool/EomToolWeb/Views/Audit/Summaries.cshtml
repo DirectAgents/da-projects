@@ -1,6 +1,6 @@
-﻿@model IEnumerable<EomTool.Domain.DTOs.AuditSummary>
+﻿@model AuditVM
 
-<b>Audit Summary</b> - @ViewBag.CurrentEomDateString
+<b>Audit Summary</b> - @Model.CurrentEomDateString
 
 <table>
 <tr>
@@ -9,7 +9,7 @@
     <th>Inserts</th>
     <th>Deletes</th>
 </tr>
-@foreach (var aSum in Model)
+@foreach (var aSum in Model.AuditSummaries)
 {
     var dateString = "";
     if (aSum.Date.HasValue)

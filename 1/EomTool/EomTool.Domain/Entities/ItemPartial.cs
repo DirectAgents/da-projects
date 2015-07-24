@@ -24,6 +24,38 @@ namespace EomTool.Domain.Entities
         public string SourceName { get; set; }
 
         [NotMapped]
+        public string AccountManagerName { get; set; }
+        [NotMapped]
+        public string AdManagerName { get; set; }
+        [NotMapped]
+        public string MediaBuyerName { get; set; }
+
+        public string RevenuePerUnitString()
+        {
+            return this.revenue_per_unit.ToString("0.00##");
+        }
+        public string CostPerUnitString()
+        {
+            return this.cost_per_unit.ToString("0.00##");
+        }
+        public string NumUnitsString()
+        {
+            return this.num_units.ToString("0.######");
+        }
+        public string TotalRevenueString()
+        {
+            return this.total_revenue.HasValue ? this.total_revenue.Value.ToString("0.00########") : "";
+        }
+        public string TotalCostString()
+        {
+            return this.total_cost.HasValue ? this.total_cost.Value.ToString("0.00########") : "";
+        }
+        public string MarginString()
+        {
+            return this.margin.HasValue ? this.margin.Value.ToString("0.00##") : "";
+        }
+
+        [NotMapped]
         public static List<string> SettableProperties
         {
             get { return (new string[] { "pid", "affid", "revenue", "cost", "notes", "type", "units" }).ToList(); }

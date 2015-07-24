@@ -804,10 +804,37 @@ namespace EomTool.Domain.Concrete
             return context.Sources.FirstOrDefault(s => s.name == sourceName);
         }
 
-        public Item GetItem(int id)
+        public Item GetItem(int id, bool fillExtended = false)
         {
-            return context.Items.FirstOrDefault(i => i.id == id);
+            var item = context.Items.FirstOrDefault(i => i.id == id);
+            if (fillExtended) SetItemExtended(item);
+            return item;
         }
+        private void SetItemExtended(Item item)
+        {
+            if (item != null)
+            {
+                var campaign = GetCampaign(item.pid);
+                if (campaign != null)
+                {
+                    item.CampaignName = campaign.campaign_name;
+                    if (campaign.Advertiser != null)
+                        item.AdvertiserName = campaign.Advertiser.name;
+                    if (campaign.AccountManagerTeam != null)
+                        item.AccountManagerName = campaign.AccountManagerTeam.name;
+                    if (campaign.AdManager != null)
+                        item.AdManagerName = campaign.AdManager.name;
+                }
+                var affiliate = GetAffiliate(item.affid);
+                if (affiliate != null)
+                {
+                    item.AffiliateName = affiliate.name;
+                    if (affiliate.MediaBuyer != null)
+                        item.MediaBuyerName = affiliate.MediaBuyer.name;
+                }
+            }
+        }
+
         public IQueryable<Item> GetItems(IEnumerable<int> ids)
         {
             return context.Items.Where(i => ids.Contains(i.id));

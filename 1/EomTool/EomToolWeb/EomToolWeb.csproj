@@ -207,6 +207,7 @@
     <Compile Include="Infrastructure\NinjectControllerFactory.partial.cs" />
     <Compile Include="Models\AccountingModels.cs" />
     <Compile Include="Models\AffiliatesListViewModel.cs" />
+    <Compile Include="Models\AuditVM.cs" />
     <Compile Include="Models\BlogPost.cs" />
     <Compile Include="Models\CampaignAffiliateAmountsModel.cs" />
     <Compile Include="Models\CampaignsByCountryViewModel.cs" />
@@ -4402,6 +4403,7 @@
     <Content Include="Views\Audit\Summaries.cshtml" />
     <Content Include="Views\Audit\_ViewStart.cshtml" />
     <Content Include="Views\Audit\Entries.cshtml" />
+    <Content Include="Views\Audit\Item.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

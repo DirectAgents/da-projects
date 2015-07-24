@@ -1,0 +1,97 @@
+﻿@model Item
+@{
+    var item = Model;
+}
+
+<table>
+<tr>
+    <td>id:</td>
+    <td>@item.id</td>
+    <td rowspan="3">
+        ADVERTISER: @item.AdvertiserName<br />
+        ACCTMGR: @item.AccountManagerName<br />
+        ADMGR: @item.AdManagerName
+    </td>
+</tr>
+<tr>
+    <td>name:</td>
+    <td>@item.name</td>
+</tr>
+<tr>
+    <td>pid:</td>
+    <td>@item.pid (@item.CampaignName)</td>
+</tr>
+<tr>
+    <td>affid:</td>
+    <td>@item.affid (@item.AffiliateName)</td>
+    <td>MEDIABUYER: @item.MediaBuyerName</td>
+</tr>
+<tr>
+    <td>source_id:</td>
+    <td>@item.source_id (@item.Source.name)</td>
+</tr>
+<tr>
+    <td>unit_type_id:</td>
+    <td>@item.unit_type_id (@item.UnitType.name)</td>
+</tr>
+<tr>
+    <td>revenue_currency_id:</td>
+    <td>@item.revenue_currency_id (@item.RevenueCurrency.name)</td>
+</tr>
+<tr>
+    <td>cost_currency_id:</td>
+    <td>@item.cost_currency_id (@item.CostCurrency.name)</td>
+</tr>
+<tr>
+    <td>revenue_per_unit:</td>
+    <td>@item.RevenuePerUnitString()</td>
+</tr>
+<tr>
+    <td>cost_per_unit:</td>
+    <td>@item.CostPerUnitString()</td>
+</tr>
+<tr>
+    <td>num_units:</td>
+    <td>@item.NumUnitsString()</td>
+</tr>
+<tr>
+    <td>total_revenue:</td>
+    <td>@item.TotalRevenueString()</td>
+</tr>
+<tr>
+    <td>total_cost:</td>
+    <td>@item.TotalCostString()</td>
+</tr>
+<tr>
+    <td>margin:</td>
+    <td>@item.MarginString()</td>
+</tr>
+<tr>
+    <td>notes:</td>
+    <td>@item.notes</td>
+</tr>
+<tr>
+    <td>accounting_notes:</td>
+    <td>@item.accounting_notes</td>
+</tr>
+<tr>
+    <td>campaign_status_id:</td>
+    <td>@item.campaign_status_id (@item.CampaignStatus.name)</td>
+</tr>
+<tr>
+    <td>media_buyer_approval_status_id:</td>
+    <td>@item.media_buyer_approval_status_id (@item.MediaBuyerApprovalStatus.name)</td>
+</tr>
+<tr>
+    <td>batch_id:</td>
+    <td>@item.batch_id</td>
+</tr>
+<tr>
+    <td>item_accounting_status_id:</td>
+    <td>@item.item_accounting_status_id (@item.ItemAccountingStatus.name)</td>
+</tr>
+<tr>
+    <td>payment_batch_id:</td>
+    <td>@item.payment_batch_id</td>
+</tr>
+</table>

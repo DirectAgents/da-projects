@@ -70,7 +70,7 @@ namespace EomTool.Domain.Abstract
         Source GetSource(int sourceId);
         Source GetSource(string sourceName);
 
-        Item GetItem(int id);
+        Item GetItem(int id, bool fillExtended = false);
         IQueryable<Item> GetItems(IEnumerable<int> ids);
         void AddItem(Item item);
         bool ItemExists(Item item);

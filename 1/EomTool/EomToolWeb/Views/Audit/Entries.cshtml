@@ -1,6 +1,6 @@
-﻿@model IEnumerable<Audit>
+﻿@model AuditVM
 
-Accounting Period: @ViewBag.CurrentEomDateString
+Accounting Period: @Model.CurrentEomDateString
 <table>
 <tr>
     <th>AuditID</th>
@@ -13,7 +13,7 @@ Accounting Period: @ViewBag.CurrentEomDateString
     <th>OldValue</th>
     <th>NewValue</th>
 </tr>
-@foreach (var a in Model)
+@foreach (var a in Model.Audits)
 {
 <tr>
     <td style="text-align:right">@a.AuditID</td>
@@ -28,6 +28,13 @@ Accounting Period: @ViewBag.CurrentEomDateString
 </tr>
 }
 </table>
+
+@if (Model.Item != null)
+{
+    <br />
+    <b>Current State of item:</b>
+    Html.RenderPartial("Item", Model.Item);
+}
 
 <br />
 @Html.ActionLink("Back to summary", "Summaries")
