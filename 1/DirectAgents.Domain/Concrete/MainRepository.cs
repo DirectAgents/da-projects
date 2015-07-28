@@ -5,7 +5,6 @@ using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities;
-using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.Cake;
 using DirectAgents.Domain.Entities.Screen;
 
@@ -51,7 +50,7 @@ namespace DirectAgents.Domain.Concrete
             SaveChanges();
         }
 
-        // --- Screens ---
+        #region Screens
 
         public IQueryable<Salesperson> Salespeople()
         {
@@ -101,7 +100,8 @@ namespace DirectAgents.Domain.Concrete
             context.SalespersonStats.RemoveRange(stats);
         }
 
-        // --- Cake ---
+        #endregion
+        #region Cake
 
         public Contact GetContact(int contactId)
         {
@@ -304,47 +304,7 @@ namespace DirectAgents.Domain.Concrete
             return stats;
         }
 
-        // --- AdRoll ---
-
-        public IQueryable<Advertisable> Advertisables()
-        {
-            return context.Advertisables;
-        }
-
-        public IQueryable<AdvertisableStat> AdvertisableStats(int? advertisableId, DateTime? startDate, DateTime? endDate)
-        {
-            var advStats = context.AdvertisableStats.AsQueryable();
-            if (advertisableId.HasValue)
-                advStats = advStats.Where(a => a.AdvertisableId == advertisableId.Value);
-            if (startDate.HasValue)
-                advStats = advStats.Where(a => a.Date >= startDate.Value);
-            if (endDate.HasValue)
-                advStats = advStats.Where(a => a.Date <= endDate.Value);
-            return advStats;
-        }
-
-        public void FillStats(Advertisable adv, DateTime? startDate, DateTime? endDate)
-        {
-            var advStats = AdvertisableStats(adv.Id, startDate, endDate);
-            if (advStats.Any())
-            {
-                adv.Stats = new AdRollStat
-                {
-                    Impressions = advStats.Sum(a => a.Impressions),
-                    Clicks = advStats.Sum(a => a.Clicks),
-                    ClickThruConv = advStats.Sum(a => a.CTC),
-                    ViewThruConv = advStats.Sum(a => a.VTC),
-                    Spend = advStats.Sum(a => a.Cost),
-                    Prospects = advStats.Sum(a => a.Prospects)
-                };
-                adv.Stats.Spend = Math.Round(adv.Stats.Spend, 2);
-            }
-            else
-            {
-                adv.Stats = new AdRollStat();
-            }
-        }
-
+        #endregion
         // ---
 
         private bool disposed = false;

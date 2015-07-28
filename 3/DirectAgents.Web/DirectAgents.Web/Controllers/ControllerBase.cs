@@ -9,14 +9,15 @@ namespace DirectAgents.Web.Controllers
     public class ControllerBase : Controller
     {
         protected IMainRepository daRepo;
+        protected ITDRepository tdRepo;
         protected ISecurityRepository securityRepo;
-
 
         // TODO: Make SecurityRepo disposable and dispose here:
 
         protected override void Dispose(bool disposing)
         {
             daRepo.Dispose();
+            tdRepo.Dispose();
             base.Dispose(disposing);
         }
     }

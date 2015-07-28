@@ -62,6 +62,7 @@
     <Compile Include="Abstract\ICampaignRepository.cs" />
     <Compile Include="Abstract\IMainRepository.cs" />
     <Compile Include="Abstract\ISecurityRepository.cs" />
+    <Compile Include="Abstract\ITDRepository.cs" />
     <Compile Include="Abstract\TopCampaignBy.cs" />
     <Compile Include="Concrete\AdminImpl.cs" />
     <Compile Include="Concrete\CampaignRepository.cs" />
@@ -69,6 +70,8 @@
     <Compile Include="Concrete\Extensions.cs" />
     <Compile Include="Concrete\MainRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
+    <Compile Include="Concrete\TDRepository.cs" />
+    <Compile Include="Contexts\TDContext.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
     <Compile Include="Entities\AdRoll\Advertisable.cs" />
     <Compile Include="Entities\AdRoll\AdvertisableStat.cs" />

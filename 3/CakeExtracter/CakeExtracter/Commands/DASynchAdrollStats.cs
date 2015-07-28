@@ -53,7 +53,7 @@ namespace CakeExtracter.Commands
 
         public IEnumerable<Advertisable> GetAdvertisables()
         {
-            using (var db = new DAContext())
+            using (var db = new DATDContext())
             {
                 var advs = db.Advertisables.AsQueryable();
                 if (this.AdvertisableId.HasValue)

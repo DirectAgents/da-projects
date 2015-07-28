@@ -27,7 +27,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             var updatedCount = 0;
             var duplicateCount = 0;
             var itemCount = 0;
-            using (var db = new DirectAgents.Domain.Contexts.DAContext())
+            using (var db = new DirectAgents.Domain.Contexts.DATDContext())
             {
                 foreach (var item in items)
                 {

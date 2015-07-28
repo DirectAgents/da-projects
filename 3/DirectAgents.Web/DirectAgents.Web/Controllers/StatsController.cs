@@ -15,6 +15,7 @@ namespace DirectAgents.Web.Controllers
         public StatsController()
         {
             this.daRepo = new MainRepository(new DAContext()); // TODO: injection
+            this.tdRepo = new TDRepository(new DATDContext()); // TODO: injection
             //this.securityRepo = new SecurityRepository();
         }
 
@@ -130,10 +131,10 @@ namespace DirectAgents.Web.Controllers
             var today = DateTime.Today;
             var startOfMonth = new DateTime(today.Year, today.Month, 1);
 
-            var advertisables = daRepo.Advertisables();
+            var advertisables = tdRepo.Advertisables();
             foreach (var adv in advertisables)
             {
-                daRepo.FillStats(adv, startOfMonth, null); // MTD
+                tdRepo.FillStats(adv, startOfMonth, null); // MTD
             }
             var model = advertisables.OrderBy(a => a.Name).ToList();
             return View(model);

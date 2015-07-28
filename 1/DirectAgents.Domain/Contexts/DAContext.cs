@@ -11,7 +11,6 @@ namespace DirectAgents.Domain.Contexts
     {
         //public DAContext() : base() { }
         const string cakeSchema = "cake";
-        const string adrollSchema = "adr";
         const string screenSchema = "screen";
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -32,14 +31,6 @@ namespace DirectAgents.Domain.Contexts
                 .HasKey(t => new { t.OfferId, t.Date })
                 .ToTable("OfferDailySummary", cakeSchema);
 
-            // AdRoll
-            modelBuilder.Entity<Advertisable>().ToTable("Advertisable", adrollSchema);
-            modelBuilder.Entity<AdvertisableStat>()
-                .HasKey(t => new { t.Date, t.AdvertisableId })
-                .ToTable("AdvertisableStat", adrollSchema);
-            modelBuilder.Entity<AdvertisableStat>()
-                .Property(t => t.Cost).HasPrecision(18, 6);
-
             // Screen
             modelBuilder.Entity<Salesperson>().ToTable("Salesperson", screenSchema);
             modelBuilder.Entity<SalespersonStat>()
@@ -59,9 +50,6 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<OfferType> OfferTypes { get; set; }
         public DbSet<OfferStatus> OfferStatuses { get; set; }
         public DbSet<OfferDailySummary> OfferDailySummaries { get; set; }
-
-        public DbSet<Advertisable> Advertisables { get; set; }
-        public DbSet<AdvertisableStat> AdvertisableStats { get; set; }
 
         public DbSet<Salesperson> Salespeople { get; set; }
         public DbSet<SalespersonStat> SalespersonStats { get; set; }
