@@ -8,7 +8,7 @@ namespace DirectAgents.Web.Controllers
 {
     public class ControllerBase : Controller
     {
-        protected IMainRepository mainRepo;
+        protected IMainRepository daRepo;
         protected ISecurityRepository securityRepo;
 
 
@@ -16,7 +16,7 @@ namespace DirectAgents.Web.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            mainRepo.Dispose();
+            daRepo.Dispose();
             base.Dispose(disposing);
         }
     }

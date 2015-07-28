@@ -14,7 +14,7 @@ namespace DirectAgents.Web.Controllers
     {
         public StatsController()
         {
-            this.mainRepo = new MainRepository(new DAContext()); // TODO: injection
+            this.daRepo = new MainRepository(new DAContext()); // TODO: injection
             //this.securityRepo = new SecurityRepository();
         }
 
@@ -29,7 +29,7 @@ namespace DirectAgents.Web.Controllers
         {
             var today = DateTime.Today;
             var startDate = new DateTime(today.Year, today.Month, 1);
-            var stats = mainRepo.GetStatsSummary(null, startDate, null);
+            var stats = daRepo.GetStatsSummary(null, startDate, null);
             var json = Json(stats, JsonRequestBehavior.AllowGet);
             if (p)
                 return json.ToJsonp();
@@ -62,7 +62,7 @@ namespace DirectAgents.Web.Controllers
             else
                 startDate = today.AddDays(-numdays);
 
-            var ods = mainRepo.GetOfferDailySummaries(null, startDate);
+            var ods = daRepo.GetOfferDailySummaries(null, startDate);
             var offerSummaries = ods.GroupBy(o => o.OfferId).Select(g =>
                 new StatsSummary
                 {
@@ -77,7 +77,7 @@ namespace DirectAgents.Web.Controllers
                 }).ToList();
 
             IEnumerable<StatsSummary> advStats = new List<StatsSummary>();
-            var advertisers = mainRepo.GetAdvertisers();
+            var advertisers = daRepo.GetAdvertisers();
             foreach (var adv in advertisers)
             {
                 var offerIds = adv.Offers.Select(o => o.OfferId).ToArray();
@@ -119,7 +119,7 @@ namespace DirectAgents.Web.Controllers
                 startDate = new DateTime(today.Year, today.Month, 1);
             else
                 startDate = today.AddDays(-numdays);
-            var stats = mainRepo.GetStatsSummary(null, startDate, null);
+            var stats = daRepo.GetStatsSummary(null, startDate, null);
 
             var json = Json(stats, JsonRequestBehavior.AllowGet);
             return json.ToJsonp();
@@ -130,10 +130,10 @@ namespace DirectAgents.Web.Controllers
             var today = DateTime.Today;
             var startOfMonth = new DateTime(today.Year, today.Month, 1);
 
-            var advertisables = mainRepo.Advertisables();
+            var advertisables = daRepo.Advertisables();
             foreach (var adv in advertisables)
             {
-                mainRepo.FillStats(adv, startOfMonth, null); // MTD
+                daRepo.FillStats(adv, startOfMonth, null); // MTD
             }
             var model = advertisables.OrderBy(a => a.Name).ToList();
             return View(model);

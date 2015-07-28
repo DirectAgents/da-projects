@@ -14,7 +14,7 @@ namespace DirectAgents.Web.Controllers
     {
         public BudgetsController()
         {
-            this.mainRepo = new MainRepository(new DAContext());
+            this.daRepo = new MainRepository(new DAContext()); // TODO: injection
             this.securityRepo = new SecurityRepository();
         }
 
@@ -22,7 +22,7 @@ namespace DirectAgents.Web.Controllers
 
         private IEnumerable<Contact> GetAccountManagers()
         {
-            IEnumerable<Contact> accountManagers = mainRepo.GetAccountManagers().ToList();
+            IEnumerable<Contact> accountManagers = daRepo.GetAccountManagers().ToList();
             if (!securityRepo.IsAdmin(User))
             {
                 var amNames = securityRepo.AccountManagersForUser(User, true);
@@ -65,21 +65,21 @@ namespace DirectAgents.Web.Controllers
         public ActionResult Advertisers(int? am, bool showAll = false)
         {
             bool? withBudgetedOffers = showAll ? null : (bool?)true;
-            var advertisers = mainRepo.GetAdvertisers(am, withBudgetedOffers).OrderBy(a => a.AdvertiserName);
+            var advertisers = daRepo.GetAdvertisers(am, withBudgetedOffers).OrderBy(a => a.AdvertiserName);
             var model = new BudgetsVM
             {
                 Advertisers = advertisers,
                 ShowAll = showAll
             };
             if (am.HasValue)
-                model.AccountManager = mainRepo.GetContact(am.Value);
+                model.AccountManager = daRepo.GetContact(am.Value);
 
             return View(model);
         }
 
         public ActionResult AdvertiserRow(int advId)
         {
-            var advertiser = mainRepo.GetAdvertiser(advId);
+            var advertiser = daRepo.GetAdvertiser(advId);
             if (advertiser == null)
                 return null;
             return PartialView(advertiser);
@@ -98,10 +98,10 @@ namespace DirectAgents.Web.Controllers
                 IncludeInactive = includeInactive
             };
 
-            var offers = mainRepo.GetOffers(false, am, advId, withBudget, includeInactive, null);
+            var offers = daRepo.GetOffers(false, am, advId, withBudget, includeInactive, null);
             foreach (var offer in offers)
             {
-                mainRepo.FillOfferBudgetStats(offer);
+                daRepo.FillOfferBudgetStats(offer);
             }
             IEnumerable<Offer> offersList = offers.ToList();
             if (minPercent.HasValue)
@@ -128,7 +128,7 @@ namespace DirectAgents.Web.Controllers
 
         public ActionResult OfferRow(int offerId, bool? editMode)
         {
-            var offer = mainRepo.GetOffer(offerId, false, true);
+            var offer = daRepo.GetOffer(offerId, false, true);
             if (offer == null)
                 return null;
 
@@ -147,11 +147,11 @@ namespace DirectAgents.Web.Controllers
 
         public ActionResult Show(int offerId)
         {
-            var offer = mainRepo.GetOffer(offerId, false, false);
+            var offer = daRepo.GetOffer(offerId, false, false);
             if (offer == null)
                 return Content("Offer not found");
 
-            var ods = mainRepo.GetOfferDailySummariesForBudget(offer);
+            var ods = daRepo.GetOfferDailySummariesForBudget(offer);
             var model = new OfferVM(offer, ods);
             return View(model);
         }
@@ -159,7 +159,7 @@ namespace DirectAgents.Web.Controllers
         [HttpGet]
         public ActionResult Edit(int offerId)
         {
-            var offer = mainRepo.GetOffer(offerId, false, false);
+            var offer = daRepo.GetOffer(offerId, false, false);
             if (offer == null)
                 return Content("Offer not found");
 
@@ -177,7 +177,7 @@ namespace DirectAgents.Web.Controllers
 
                 ModelState.AddModelError("", "Offer Budget could not be saved");
             }
-            var offer = mainRepo.GetOffer(inOffer.OfferId, false, false);
+            var offer = daRepo.GetOffer(inOffer.OfferId, false, false);
             if (offer != null)
                 return View(offer);
             else
@@ -186,14 +186,14 @@ namespace DirectAgents.Web.Controllers
 
         private bool SaveOfferBudget(Offer inOffer)
         {
-            var offer = mainRepo.GetOffer(inOffer.OfferId, false, false);
+            var offer = daRepo.GetOffer(inOffer.OfferId, false, false);
             if (offer == null)
                 return false;
 
             offer.Budget = inOffer.Budget;
             offer.BudgetStart = inOffer.BudgetStart;
             offer.BudgetEnd = inOffer.BudgetEnd;
-            mainRepo.SaveChanges();
+            daRepo.SaveChanges();
             return true;
             //TODO: catch exceptions and return false?
         }
@@ -230,11 +230,11 @@ namespace DirectAgents.Web.Controllers
         // Set budget to 0 (only if it is doesn't exist)
         public JsonResult Initialize(int offerId)
         {
-            var offer = mainRepo.GetOffer(offerId, false, false);
+            var offer = daRepo.GetOffer(offerId, false, false);
             if (offer != null && !offer.HasBudget)
             {
                 offer.Budget = 0;
-                mainRepo.SaveChanges();
+                daRepo.SaveChanges();
             }
             return null;
         }

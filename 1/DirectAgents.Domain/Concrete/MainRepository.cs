@@ -326,16 +326,23 @@ namespace DirectAgents.Domain.Concrete
         public void FillStats(Advertisable adv, DateTime? startDate, DateTime? endDate)
         {
             var advStats = AdvertisableStats(adv.Id, startDate, endDate);
-            adv.Stats = new AdRollStat
+            if (advStats.Any())
             {
-                Impressions = advStats.Sum(a => a.Impressions),
-                Clicks = advStats.Sum(a => a.Clicks),
-                ClickThruConv = advStats.Sum(a => a.CTC),
-                ViewThruConv = advStats.Sum(a => a.VTC),
-                Spend = advStats.Sum(a => a.Cost),
-                Prospects = advStats.Sum(a => a.Prospects)
-            };
-            adv.Stats.Spend = Math.Round(adv.Stats.Spend, 2);
+                adv.Stats = new AdRollStat
+                {
+                    Impressions = advStats.Sum(a => a.Impressions),
+                    Clicks = advStats.Sum(a => a.Clicks),
+                    ClickThruConv = advStats.Sum(a => a.CTC),
+                    ViewThruConv = advStats.Sum(a => a.VTC),
+                    Spend = advStats.Sum(a => a.Cost),
+                    Prospects = advStats.Sum(a => a.Prospects)
+                };
+                adv.Stats.Spend = Math.Round(adv.Stats.Spend, 2);
+            }
+            else
+            {
+                adv.Stats = new AdRollStat();
+            }
         }
 
         // ---

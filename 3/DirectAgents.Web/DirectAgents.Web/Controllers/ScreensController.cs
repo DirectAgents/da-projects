@@ -14,20 +14,27 @@ namespace DirectAgents.Web.Controllers
     {
         public ScreensController()
         {
-            this.mainRepo = new MainRepository(new DAContext());
+            this.daRepo = new MainRepository(new DAContext()); // TODO: injection
             //this.securityRepo = new SecurityRepository();
         }
+
+        public ActionResult Admin()
+        {
+            return RedirectToAction("Variables");
+        }
+
+        #region SalesStats
 
         public ActionResult SalesStatsJson(int numweeks = 4)
         {
             var minDate = MinDateFromNumWeeks(numweeks);
-            var stats = mainRepo.SalespersonStats(minDate).ToList();
+            var stats = daRepo.SalespersonStats(minDate).ToList();
             stats = stats.Select(s => new SalespersonStat(s)).ToList();
 
             var currWeekStart = MostRecentSunday().AddDays(-7);
             var currWeekEnd = currWeekStart.AddDays(6);
 
-            var salespeople = mainRepo.Salespeople().OrderBy(s => s.Id).ToList();
+            var salespeople = daRepo.Salespeople().OrderBy(s => s.Id).ToList();
             var salespeopleRanked = new List<Salesperson>();
             foreach (var salesperson in salespeople)
             {
@@ -71,7 +78,7 @@ namespace DirectAgents.Web.Controllers
         public ActionResult SalesStats(int numweeks = 4)
         {
             var minDate = MinDateFromNumWeeks(numweeks);
-            var stats = mainRepo.SalespersonStats(minDate);
+            var stats = daRepo.SalespersonStats(minDate);
             return View(stats);
         }
         private DateTime? MinDateFromNumWeeks(int numweeks)
@@ -90,7 +97,7 @@ namespace DirectAgents.Web.Controllers
             SalespeopleStatsVM model;
             if (date.HasValue)
             {
-                var stats = mainRepo.SalespersonStats(null, date).OrderBy(s => s.Salesperson.FirstName).ThenBy(s => s.Salesperson.LastName);
+                var stats = daRepo.SalespersonStats(null, date).OrderBy(s => s.Salesperson.FirstName).ThenBy(s => s.Salesperson.LastName);
                 model = new SalespeopleStatsVM
                 {
                     Stats = stats.ToList(),
@@ -99,7 +106,7 @@ namespace DirectAgents.Web.Controllers
             }
             else
             {
-                var salespeople = mainRepo.Salespeople();
+                var salespeople = daRepo.Salespeople();
                 var stats = salespeople.OrderBy(s => s.FirstName).ThenBy(s => s.LastName).ToList().Select(s => new SalespersonStat
                 {
                     Salesperson = s,
@@ -116,7 +123,7 @@ namespace DirectAgents.Web.Controllers
         private DateTime DateForNextStats()
         {
             DateTime nextStatsDate;
-            var stats = mainRepo.SalespersonStats();
+            var stats = daRepo.SalespersonStats();
             if (stats.Any())
             {
                 nextStatsDate = stats.Max(s => s.Date).AddDays(7);
@@ -141,25 +148,26 @@ namespace DirectAgents.Web.Controllers
             foreach (var stat in stats)
             {
                 stat.Date = date;
-                mainRepo.SaveSalespersonStat(stat);
+                daRepo.SaveSalespersonStat(stat);
             }
-            mainRepo.SaveChanges();
+            daRepo.SaveChanges();
 
             return RedirectToAction("SalesStats");
         }
 
         public ActionResult DeleteSalesStats(DateTime date)
         {
-            mainRepo.DeleteSalespersonStats(date);
-            mainRepo.SaveChanges();
+            daRepo.DeleteSalespersonStats(date);
+            daRepo.SaveChanges();
             return RedirectToAction("SalesStats");
         }
 
+        #endregion
         // --- Variables ---
 
         public ActionResult Variables()
         {
-            var variables = mainRepo.GetVariables();
+            var variables = daRepo.GetVariables();
             return View(variables);
         }
 
@@ -169,18 +177,18 @@ namespace DirectAgents.Web.Controllers
             if (String.IsNullOrWhiteSpace(name))
                 return Content("No variable name supplied.");
 
-            var variable = mainRepo.GetVariable(name);
+            var variable = daRepo.GetVariable(name);
             if (variable == null)
             {
                 variable = new Variable() { Name = name };
-                mainRepo.SaveVariable(variable);
+                daRepo.SaveVariable(variable);
             }
             return View(variable);
         }
         [HttpPost]
         public ActionResult Variable(Variable variable, string successAction)
         {
-            mainRepo.SaveVariable(variable);
+            daRepo.SaveVariable(variable);
             if (!string.IsNullOrWhiteSpace(successAction))
                 return RedirectToAction(successAction);
             else
@@ -189,7 +197,7 @@ namespace DirectAgents.Web.Controllers
 
         public ActionResult NewClients(string area)
         {
-            var newClientsVar = mainRepo.GetVariable("newClients_" + area);
+            var newClientsVar = daRepo.GetVariable("newClients_" + area);
             string[] newClients = new string[] { };
             if (newClientsVar != null && newClientsVar.StringVal != null)
             {
