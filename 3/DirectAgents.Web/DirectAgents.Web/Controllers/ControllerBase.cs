@@ -16,8 +16,10 @@ namespace DirectAgents.Web.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            daRepo.Dispose();
-            tdRepo.Dispose();
+            if (daRepo != null)
+                daRepo.Dispose();
+            if (tdRepo != null)
+                tdRepo.Dispose();
             base.Dispose(disposing);
         }
     }
