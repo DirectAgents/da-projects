@@ -1,6 +1,6 @@
 ﻿@model AuditVM
 
-<b>Audit Summary</b> - @Model.CurrentEomDateString
+<b>Daily Summary</b> - @Model.CurrentEomDateString
 
 <table>
 <tr>
@@ -46,18 +46,5 @@
 </tr>
 }
 </table>
-
-@section head {
-<style type="text/css" media="screen">
-
-table {
-    border:1px solid black;
-    border-collapse:collapse;
-}
-
-table th,td {
-    border:1px solid black;
-    padding:2px;
-}
-</style>
-}
+<br />
+@Html.ActionLink("Audit Viewer Home", "Index")

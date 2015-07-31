@@ -19,9 +19,9 @@ Accounting Period: @Model.CurrentEomDateString
     <td style="text-align:right">@a.AuditID</td>
     <td style="text-align:center">@a.AuditDate</td>
     <td>@a.HostName</td>
-    <td>@Html.ActionLink(a.SysUser, "Entries", new { sysUser = a.SysUser })</td>
+    <td>@Html.ActionLink(a.SysUser, "Entries", new { sysuser = a.SysUser })</td>
     <td style="text-align:center">@a.Operation</td>
-    <td style="text-align:center">@Html.ActionLink(a.PrimaryKey, "Entries", new { primaryKey = a.PrimaryKey })</td>
+    <td style="text-align:center">@Html.ActionLink(a.PrimaryKey, "Entries", new { primarykey = a.PrimaryKey })</td>
     <td>@a.ColumnName</td>
     <td style="text-align:center">@a.OldValue</td>
     <td style="text-align:center">@a.NewValue</td>
@@ -37,19 +37,4 @@ Accounting Period: @Model.CurrentEomDateString
 }
 
 <br />
-@Html.ActionLink("Back to summary", "Summaries")
-
-@section head {
-<style type="text/css" media="screen">
-
-table {
-    border:1px solid black;
-    border-collapse:collapse;
-}
-
-table th,td {
-    border:1px solid black;
-    padding:2px;
-}
-</style>
-}
+@Html.ActionLink("Audit Viewer Home", "Index")

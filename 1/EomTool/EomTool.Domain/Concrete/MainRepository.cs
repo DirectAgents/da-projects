@@ -36,7 +36,7 @@ namespace EomTool.Domain.Concrete
         public IQueryable<Advertiser> Advertisers(bool withActivity = false)
         {
             if (withActivity)
-                return Campaigns(null, null, true).Select(c => c.Advertiser).Distinct();
+                return Campaigns(activeOnly: true).Select(c => c.Advertiser).Distinct();
             else
                 return context.Advertisers;
         }
@@ -49,25 +49,34 @@ namespace EomTool.Domain.Concrete
         public IQueryable<AccountManagerTeam> AccountManagerTeams(bool withActivityOnly = false)
         {
             if (withActivityOnly)
-                return Campaigns(null, null, true).Select(c => c.AccountManagerTeam).Distinct();
+                return Campaigns(activeOnly: true).Select(c => c.AccountManagerTeam).Distinct();
             else
                 return context.AccountManagerTeams;
         }
 
         // ---
 
-        public IQueryable<Campaign> Campaigns(int? amId, int? advertiserId, bool activeOnly = false)
+        public IQueryable<Campaign> Campaigns(int? amId = null, int? advertiserId = null, int? affId = null, bool activeOnly = false)
         {
+            // Note: specifying an affId only works when activeOnly==true
+
             var campaigns = context.Campaigns.AsQueryable();
             if (amId.HasValue)
                 campaigns = campaigns.Where(c => c.account_manager_id == amId.Value);
             if (advertiserId.HasValue)
                 campaigns = campaigns.Where(c => c.advertiser_id == advertiserId.Value);
 
-            if (activeOnly)
+            if (activeOnly && affId == null)
             {
                 return (from c in campaigns
                         join i in context.Items on c.pid equals i.pid
+                        select c).Distinct();
+            }
+            else if (activeOnly && affId.HasValue)
+            {
+                return (from c in campaigns
+                        join i in context.Items on c.pid equals i.pid
+                        where i.affid == affId.Value
                         select c).Distinct();
             }
             else
@@ -770,9 +779,16 @@ namespace EomTool.Domain.Concrete
             return true;
         }
 
-        public IQueryable<Affiliate> Affiliates()
+        public IQueryable<Affiliate> Affiliates(bool withActivity = false)
         {
-            return context.Affiliates;
+            if (withActivity)
+            {
+                return (from a in context.Affiliates
+                        join i in context.Items on a.affid equals i.affid
+                        select a).Distinct();
+            }
+            else
+                return context.Affiliates;
         }
         public bool AffiliateExists(int affId)
         {
@@ -838,6 +854,15 @@ namespace EomTool.Domain.Concrete
         public IQueryable<Item> GetItems(IEnumerable<int> ids)
         {
             return context.Items.Where(i => ids.Contains(i.id));
+        }
+        public IQueryable<Item> GetItems(int? pid = null, int? affId = null)
+        {
+            var items = context.Items.AsQueryable();
+            if (pid.HasValue)
+                items = items.Where(i => i.pid == pid.Value);
+            if (affId.HasValue)
+                items = items.Where(i => i.affid == affId.Value);
+            return items;
         }
 
         public void AddItem(Item item)

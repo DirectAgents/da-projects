@@ -1,0 +1,19 @@
+﻿
+@model AuditVM
+
+<b>Campaigns with activity</b> - @Model.CurrentEomDateString
+@if (Model.AdvId.HasValue)
+{
+    <br /><text>AdvId: </text>@Model.AdvId
+}
+@if (Model.AffId.HasValue)
+{
+    <br /><text>AffId: </text>@Model.AffId
+}
+<br /><br />
+@foreach (var camp in Model.Campaigns)
+{
+    @Html.ActionLink(camp.campaign_name, "Items", new { pid = camp.pid, affid = Model.AffId })<br />
+}
+<br />
+@Html.ActionLink("Audit Viewer Home", "Index")

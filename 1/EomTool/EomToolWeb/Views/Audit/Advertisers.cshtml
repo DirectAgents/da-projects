@@ -1,0 +1,11 @@
+﻿@model AuditVM
+
+<b>Advertisers with activity</b> - @Model.CurrentEomDateString
+<br /><br />
+
+@foreach (var adv in Model.Advertisers)
+{
+    @Html.ActionLink(adv.name, "Campaigns", new { advid = adv.id })<br />
+}
+<br />
+@Html.ActionLink("Audit Viewer Home", "Index")

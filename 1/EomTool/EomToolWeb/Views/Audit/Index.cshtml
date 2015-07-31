@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewBag.Title = "Audit Viewer";
+}
+
+<h3>Audit Viewer</h3>
+Accounting Period:
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+<br />
+
+@Html.ActionLink("Daily Summary", "Summaries")
+<br /><br />
+@Html.ActionLink("List Advertisers", "Advertisers")<br />
+@Html.ActionLink("List Affiliates", "Affiliates")

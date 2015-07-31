@@ -18,7 +18,7 @@ namespace EomToolWeb.Controllers
         // Note: this is here because the CampaignsController uses the DirectAgents domain
         public JsonResult CampaignsValueText(bool withActivity = false)
         {
-            var campaigns = mainRepo.Campaigns(null, null, withActivity).OrderBy(c => c.campaign_name);
+            var campaigns = mainRepo.Campaigns(activeOnly: withActivity).OrderBy(c => c.campaign_name);
             var valueTexts = campaigns.Select(c => new IntValueText() { value = c.pid, text = c.campaign_name });
             return Json(valueTexts, JsonRequestBehavior.AllowGet);
         }

@@ -1,0 +1,9 @@
+﻿@model AuditVM
+
+<b>Items</b> - @Model.CurrentEomDateString
+<br /><br />
+
+@foreach (var item in Model.Items)
+{
+    @Html.ActionLink(item.id.ToString(), "Entries", new { primarykey = item.id })<br />
+}

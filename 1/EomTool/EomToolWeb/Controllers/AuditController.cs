@@ -16,6 +16,12 @@ namespace EomToolWeb.Controllers
             this.eomEntitiesConfig = eomEntitiesConfig;
         }
 
+        public ActionResult Index()
+        {
+            SetAccountingPeriodViewData();
+            return View();
+        }
+
         public ActionResult Summaries()
         {
             //mainRepo.EnableLogging();
@@ -41,6 +47,53 @@ namespace EomToolWeb.Controllers
             {
                 model.Item = mainRepo.GetItem(itemId, true);
             }
+            return View(model);
+        }
+
+        public ActionResult Advertisers()
+        {
+            var model = new AuditVM
+            {
+                CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
+                Advertisers = mainRepo.Advertisers(true).OrderBy(a => a.name)
+            };
+            return View(model);
+        }
+
+        public ActionResult Campaigns(int? advId, int? affId)
+        {
+            var model = new AuditVM
+            {
+                CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
+                Campaigns = mainRepo.Campaigns(advertiserId: advId, affId: affId, activeOnly: true),
+                AdvId = advId,
+                AffId = affId
+            };
+            return View(model);
+        }
+
+        public ActionResult Affiliates()
+        {
+            var model = new AuditVM
+            {
+                CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
+                Affiliates = mainRepo.Affiliates(true).OrderBy(a => a.name2)
+            };
+            return View(model);
+        }
+
+        public ActionResult Items(string pid, string affid) // TODO? make these nullable ints (int?) ?
+        {
+            int temp;
+            int? pidInt = null, affIdInt = null;
+            if (int.TryParse(pid, out temp)) pidInt = temp;
+            if (int.TryParse(affid, out temp)) affIdInt = temp;
+
+            var model = new AuditVM
+            {
+                CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
+                Items = mainRepo.GetItems(pid: pidInt, affId: affIdInt)
+            };
             return View(model);
         }
 	}

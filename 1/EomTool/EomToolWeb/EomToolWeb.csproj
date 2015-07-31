@@ -4404,6 +4404,11 @@
     <Content Include="Views\Audit\_ViewStart.cshtml" />
     <Content Include="Views\Audit\Entries.cshtml" />
     <Content Include="Views\Audit\Item.cshtml" />
+    <Content Include="Views\Audit\Index.cshtml" />
+    <Content Include="Views\Audit\Advertisers.cshtml" />
+    <Content Include="Views\Audit\Affiliates.cshtml" />
+    <Content Include="Views\Audit\Items.cshtml" />
+    <Content Include="Views\Audit\Campaigns.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

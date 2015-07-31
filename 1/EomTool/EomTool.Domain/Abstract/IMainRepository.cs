@@ -17,7 +17,7 @@ namespace EomTool.Domain.Abstract
         AccountManagerTeam GetAccountManagerTeam(int id);
         IQueryable<AccountManagerTeam> AccountManagerTeams(bool withActivityOnly = false);
 
-        IQueryable<Campaign> Campaigns(int? amId, int? advertiserId, bool activeOnly = false);
+        IQueryable<Campaign> Campaigns(int? amId = null, int? advertiserId = null, int? affId = null, bool activeOnly = false);
         IEnumerable<CampaignAmount> CampaignAmounts(int pid, int? campaignStatus);
         IEnumerable<CampaignAmount> CampaignAmounts(int? amId, int? advertiserId, bool byAffiliate, int? campaignStatus);
 
@@ -61,7 +61,7 @@ namespace EomTool.Domain.Abstract
         Campaign GetCampaign(int pid);
         bool SaveCampaign(Campaign inCampaign);
 
-        IQueryable<Affiliate> Affiliates();
+        IQueryable<Affiliate> Affiliates(bool withActivity = false);
         bool AffiliateExists(int affId);
         Affiliate GetAffiliate(int affId);
         Affiliate GetAffiliateById(int id);
@@ -72,6 +72,7 @@ namespace EomTool.Domain.Abstract
 
         Item GetItem(int id, bool fillExtended = false);
         IQueryable<Item> GetItems(IEnumerable<int> ids);
+        IQueryable<Item> GetItems(int? pid = null, int? affId = null);
         void AddItem(Item item);
         bool ItemExists(Item item);
 
