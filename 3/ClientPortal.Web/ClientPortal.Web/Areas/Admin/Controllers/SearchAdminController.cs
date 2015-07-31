@@ -167,13 +167,13 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return View(searchProfile);
         }
 
-        public ActionResult GenerateSpreadsheet(int searchProfileId, DateTime? endDate, int numWeeks = 0, int numMonths = 0, string filename = "report.xlsx")
+        public ActionResult GenerateSpreadsheet(int searchProfileId, DateTime? endDate, int numWeeks = 0, int numMonths = 0, string filename = "report.xlsx", bool groupBySearchAccount = false)
         {
             string templateFolder = ConfigurationManager.AppSettings["PATH_Search"];
             if (!endDate.HasValue)
                 endDate = DateTime.Today.AddDays(-1);
 
-            var spreadsheet = DAGenerators.Spreadsheets.Generator.GenerateSearchReport(cpRepo, templateFolder, searchProfileId, numWeeks, numMonths, endDate.Value);
+            var spreadsheet = DAGenerators.Spreadsheets.Generator.GenerateSearchReport(cpRepo, templateFolder, searchProfileId, numWeeks, numMonths, endDate.Value, groupBySearchAccount);
             if (spreadsheet == null)
                 return HttpNotFound();
 

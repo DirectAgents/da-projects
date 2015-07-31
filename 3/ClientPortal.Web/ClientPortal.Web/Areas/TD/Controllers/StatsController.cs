@@ -14,6 +14,8 @@ using ClientPortal.Web.Models;
 using DirectAgents.Mvc.KendoGridBinder;
 using DirectAgents.Mvc.KendoGridBinder.Containers;
 
+//TODO: switch to KendoGridBinderEx
+
 namespace ClientPortal.Web.Areas.TD.Controllers
 {
     [Authorize]

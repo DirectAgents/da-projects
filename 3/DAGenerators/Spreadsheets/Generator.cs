@@ -9,7 +9,7 @@ namespace DAGenerators.Spreadsheets
 {
     public class Generator
     {
-        public static SearchReportPPC GenerateSearchReport(IClientPortalRepository cpRepo, string templateFolder, int searchProfileId, int numWeeks, int numMonths, DateTime endDate)
+        public static SearchReportPPC GenerateSearchReport(IClientPortalRepository cpRepo, string templateFolder, int searchProfileId, int numWeeks, int numMonths, DateTime endDate, bool groupBySearchAccount)
         {
             var searchProfile = cpRepo.GetSearchProfile(searchProfileId);
             if (searchProfile == null)
@@ -95,9 +95,9 @@ namespace DAGenerators.Spreadsheets
             var periodEnd = endDate;
             for (int i = 0; i < numMonths; i++)
             {
-                var campaignStatsDict = GetOneCampaignStatsDict(cpRepo, searchProfile, periodStart, periodEnd);
+                var campaignStatsDict = GetOneCampaignStatsDict(cpRepo, searchProfile, periodStart, periodEnd, groupBySearchAccount);
 
-                if (campaignStatsDict.Keys.Any()) // TODO: if empty, somehow generate a row with zeros for this week
+                if (campaignStatsDict.Keys.Any()) // TODO: if empty, somehow generate a row with zeros for this month
                 {
                     bool collapse = (i > 0);
                     spreadsheet.LoadMonthlyCampaignPerfStats(campaignStatsDict, collapse, periodStart, periodEnd);
@@ -119,7 +119,7 @@ namespace DAGenerators.Spreadsheets
             // Load the weekly campaign stats, starting with the most recent and going back the number of weeks specified
             for (int i = 0; i < numWeeks; i++)
             {
-                var campaignStatsDict = GetOneCampaignStatsDict(cpRepo, searchProfile, periodStart, periodEnd);
+                var campaignStatsDict = GetOneCampaignStatsDict(cpRepo, searchProfile, periodStart, periodEnd, groupBySearchAccount);
 
                 if (campaignStatsDict.Keys.Any()) // TODO: if empty, somehow generate a row with zeros for this week
                 {
@@ -135,13 +135,13 @@ namespace DAGenerators.Spreadsheets
         }
 
         // Get stats for one week/month/etc - grouped by channel or searchAccount
-        private static Dictionary<string, IEnumerable<SearchStat>> GetOneCampaignStatsDict(IClientPortalRepository cpRepo, SearchProfile searchProfile, DateTime periodStart, DateTime periodEnd)
+        private static Dictionary<string, IEnumerable<SearchStat>> GetOneCampaignStatsDict(IClientPortalRepository cpRepo, SearchProfile searchProfile, DateTime periodStart, DateTime periodEnd, bool groupBySearchAccount)
         {
             var campaignStatsDict = new Dictionary<string, IEnumerable<SearchStat>>();
 
-            int numChannels = searchProfile.SearchAccounts.Select(sa => sa.Channel).Distinct().Count();
-            if (numChannels == 1 && searchProfile.SearchAccounts.Count > 1)
-            { // if there is only one channel (e.g. Google) but multiple SearchAccounts, group campaigns by SearchAccount
+            //int numChannels = searchProfile.SearchAccounts.Select(sa => sa.Channel).Distinct().Count();
+            if (groupBySearchAccount)
+            {
                 foreach (var searchAccount in searchProfile.SearchAccounts)
                 {
                     var campaignStats = cpRepo.GetCampaignStats(searchProfile, searchAccount.SearchAccountId, periodStart, periodEnd, false, searchProfile.ShowCassConvs);
@@ -149,8 +149,8 @@ namespace DAGenerators.Spreadsheets
                         campaignStatsDict[searchAccount.Name] = SortCampaignStats(searchProfile, campaignStats);
                 }
             }
-            else
-            { // the "normal" way: group campaigns by channel (Google, Bing, etc)
+            else // group campaigns by channel (Google, Bing, etc)
+            {
                 var campaignStats = cpRepo.GetCampaignStats(searchProfile, null, periodStart, periodEnd, false, searchProfile.ShowCassConvs);
                 var channels = campaignStats.Select(s => s.Channel).Distinct();
                 foreach (string channel in channels)

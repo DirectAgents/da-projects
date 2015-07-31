@@ -5,6 +5,7 @@
     var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("searchReportsTab", null, "Post");
     var endDate = Model.GetLast_WeekEndDate();
     string filename = Model.SearchProfileName.Replace(" ", "") + "_" + DateTime.Today.ToString("yyyyMMdd") + ".xlsx";
+    bool groupBySearchAccount = Model.HasChannelWithMultipleSearchAccounts();
 }
 
 <h3>Generate Spreadsheet</h3>
@@ -35,6 +36,10 @@ Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)
             <tr>
                 <td>@Html.Label("Filename:")</td>
                 <td><input type="text" name="filename" value="@filename" style="min-width:300px" onfocus="EnableSubmitGenSpreadsheet()" /></td>
+            </tr>
+            <tr>
+                <td>@Html.Label("Group By SearchAccount:")</td>
+                <td>@Html.CheckBox("groupBySearchAccount", groupBySearchAccount, new { onfocus = "EnableSubmitGenSpreadsheet()"}) (leave unchecked to group by channel)</td>
             </tr>
         </table>
         <br />

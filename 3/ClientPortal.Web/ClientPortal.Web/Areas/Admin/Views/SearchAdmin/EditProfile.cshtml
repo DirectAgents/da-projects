@@ -73,9 +73,8 @@
                     <span>- @sa.Name [@sa.AccountCode]</span>
                     <i>@Ajax.ActionLink("edit", "EditSearchAccount", new { id = sa.SearchAccountId }, ajaxOptions)</i><br />
                 }
-            } else {
-                <i>@Ajax.ActionLink("Create", "CreateSearchAccount", new { spId = Model.SearchProfileId, channel = SearchAccount.GoogleChannel }, ajaxOptions)</i><br />
             }
+            <i>@Ajax.ActionLink("Add", "CreateSearchAccount", new { spId = Model.SearchProfileId, channel = SearchAccount.GoogleChannel }, ajaxOptions)</i><br />
             <br />
             Bing Accounts:<br />
             @if (bingSearchAccounts != null && bingSearchAccounts.Count() > 0)
@@ -84,9 +83,8 @@
                     <span>- @sa.Name [@sa.AccountCode]</span>
                     <i>@Ajax.ActionLink("edit", "EditSearchAccount", new { id = sa.SearchAccountId }, ajaxOptions)</i><br />
                 }
-            } else {
-                <i>@Ajax.ActionLink("Create", "CreateSearchAccount", new { spId = Model.SearchProfileId, channel = SearchAccount.BingChannel }, ajaxOptions)</i><br />
             }
+            <i>@Ajax.ActionLink("Add", "CreateSearchAccount", new { spId = Model.SearchProfileId, channel = SearchAccount.BingChannel }, ajaxOptions)</i><br />
             @if (criteoSearchAccounts != null && criteoSearchAccounts.Count() > 0)
             {
                 <br />

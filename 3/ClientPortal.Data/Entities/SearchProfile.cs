@@ -64,5 +64,11 @@ namespace ClientPortal.Data.Contexts
         {
             return Common.GetLast_WeekEndDate((DayOfWeek)this.StartDayOfWeek, includeToday);
         }
+
+        public bool HasChannelWithMultipleSearchAccounts()
+        {
+            var channelGroups = this.SearchAccounts.GroupBy(sa => sa.Channel);
+            return channelGroups.Any(g => g.Count() > 1);
+        }
     }
 }

@@ -8,6 +8,8 @@ using ClientPortal.Web.Models;
 using DirectAgents.Mvc.KendoGridBinder;
 using StackExchange.Profiling;
 
+//TODO: switch to KendoGridBinderEx
+
 namespace ClientPortal.Web.Controllers
 {
     [Authorize]
