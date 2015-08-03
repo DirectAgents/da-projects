@@ -3,8 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using CakeExtracter.Commands;
-using DirectAgents.Domain.Concrete;
-using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities.Cake;
 using DirectAgents.Web.Models;
 
@@ -12,10 +11,10 @@ namespace DirectAgents.Web.Controllers
 {
     public class BudgetsController : ControllerBase
     {
-        public BudgetsController()
+        public BudgetsController(IMainRepository mainRepository, ISecurityRepository securityRepository)
         {
-            this.daRepo = new MainRepository(new DAContext()); // TODO: injection
-            this.securityRepo = new SecurityRepository();
+            this.daRepo = mainRepository;
+            this.securityRepo = securityRepository;
         }
 
         // ---

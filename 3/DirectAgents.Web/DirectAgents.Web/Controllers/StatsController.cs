@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
-using DirectAgents.Domain.Concrete;
-using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.Cake;
 using DirectAgents.Web.Models;
 
@@ -12,11 +10,10 @@ namespace DirectAgents.Web.Controllers
 {
     public class StatsController : ControllerBase
     {
-        public StatsController()
+        public StatsController(IMainRepository mainRepository, ITDRepository tdRepository)
         {
-            this.daRepo = new MainRepository(new DAContext()); // TODO: injection
-            this.tdRepo = new TDRepository(new DATDContext()); // TODO: injection
-            //this.securityRepo = new SecurityRepository();
+            this.daRepo = mainRepository;
+            this.tdRepo = tdRepository;
         }
 
         // ---

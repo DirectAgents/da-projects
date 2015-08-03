@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using DirectAgents.Domain.Concrete;
-using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.Screen;
 using DirectAgents.Web.Models;
@@ -12,10 +11,9 @@ namespace DirectAgents.Web.Controllers
 {
     public class ScreensController : ControllerBase
     {
-        public ScreensController()
+        public ScreensController(IMainRepository mainRepository)
         {
-            this.daRepo = new MainRepository(new DAContext()); // TODO: injection
-            //this.securityRepo = new SecurityRepository();
+            this.daRepo = mainRepository;
         }
 
         public ActionResult Admin()
