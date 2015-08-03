@@ -13,6 +13,20 @@
 
     <script src="~/Scripts/kendo/2014.1.416/jquery.min.js"></script>
     <script src="~/Scripts/kendo/2014.1.416/kendo.ui.core.min.js"></script>
+    @if (ViewBag.UseTableCSS != null && ViewBag.UseTableCSS) {
+<style type="text/css" media="screen">
+
+table {
+    border:1px solid black;
+    border-collapse:collapse;
+}
+
+table th,td {
+    border:1px solid black;
+    padding:2px;
+}
+</style>
+    }
 </head>
 <body>
     @RenderBody()

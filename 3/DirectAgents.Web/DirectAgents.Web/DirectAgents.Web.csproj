@@ -753,6 +753,9 @@
     <Content Include="Scripts\kendo\2014.1.416\kendo.validator.min.js" />
     <Content Include="Scripts\kendo\2014.1.416\kendo.view.min.js" />
     <Content Include="Scripts\kendo\2014.1.416\kendo.window.min.js" />
+    <Content Include="Views\Stats\_ViewStart.cshtml">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

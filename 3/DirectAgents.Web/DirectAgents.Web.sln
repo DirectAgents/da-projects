@@ -9,6 +9,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeExtracter", "..\CakeExt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeExtracter.ConsoleApplication", "..\CakeExtracter.ConsoleApplication\CakeExtracter.ConsoleApplication.csproj", "{5C9EEBEE-1F02-47F3-92B8-700542642C7D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{9CADCD2F-2E1D-4D0D-BA87-D9A94D3F8CB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRoll", "..\API\AdRoll\AdRoll.csproj", "{FEB04D4A-CF17-43BF-BF2C-635E87A38279}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBM", "..\API\DBM\DBM.csproj", "{7B3C53ED-633B-4DDE-B925-6161F39FD9CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,8 +37,20 @@ Global
 		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEB04D4A-CF17-43BF-BF2C-635E87A38279}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEB04D4A-CF17-43BF-BF2C-635E87A38279}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEB04D4A-CF17-43BF-BF2C-635E87A38279}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEB04D4A-CF17-43BF-BF2C-635E87A38279}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B3C53ED-633B-4DDE-B925-6161F39FD9CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B3C53ED-633B-4DDE-B925-6161F39FD9CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B3C53ED-633B-4DDE-B925-6161F39FD9CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B3C53ED-633B-4DDE-B925-6161F39FD9CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FEB04D4A-CF17-43BF-BF2C-635E87A38279} = {9CADCD2F-2E1D-4D0D-BA87-D9A94D3F8CB7}
+		{7B3C53ED-633B-4DDE-B925-6161F39FD9CA} = {9CADCD2F-2E1D-4D0D-BA87-D9A94D3F8CB7}
 	EndGlobalSection
 EndGlobal

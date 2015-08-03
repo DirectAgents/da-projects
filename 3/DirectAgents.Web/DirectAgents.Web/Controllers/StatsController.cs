@@ -78,7 +78,9 @@ namespace DirectAgents.Web.Controllers
             var advertisers = daRepo.GetAdvertisers();
             foreach (var adv in advertisers)
             {
+                //Note: Multiple Active Record Sets used here; Alt. solution: Add AdvId to StatsSummary; first pass: set adv id & name
                 var offerIds = adv.Offers.Select(o => o.OfferId).ToArray();
+
                 var advSummaries = offerSummaries.Where(os => offerIds.Contains(os.Id.Value));
                 if (advSummaries.Any())
                 {
@@ -130,7 +132,7 @@ namespace DirectAgents.Web.Controllers
 
             var advertisables = tdRepo.Advertisables();
             foreach (var adv in advertisables)
-            {
+            {   //Note: Multiple Active Record Sets used here
                 tdRepo.FillStats(adv, startOfMonth, null); // MTD
             }
             var model = advertisables.OrderBy(a => a.Name).ToList();
