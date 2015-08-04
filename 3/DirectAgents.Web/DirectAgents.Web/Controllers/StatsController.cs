@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
+using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.Cake;
 using DirectAgents.Web.Models;
 
@@ -125,17 +126,31 @@ namespace DirectAgents.Web.Controllers
             return json.ToJsonp();
         }
 
-        public ActionResult AdRoll()
+        public ActionResult AdRoll(int? advId)
         {
             var today = DateTime.Today;
             var startOfMonth = new DateTime(today.Year, today.Month, 1);
+            var stats = new List<AdRollStat>();
 
-            var advertisables = tdRepo.Advertisables();
-            foreach (var adv in advertisables)
-            {   //Note: Multiple Active Record Sets used here
-                tdRepo.FillStats(adv, startOfMonth, null); // MTD
+            if (advId.HasValue)
+            {
+                var ads = tdRepo.AdRoll_Ads(advId);
+                foreach (var ad in ads)
+                {   //Note: Multiple Active Record Sets used here
+                    var stat = tdRepo.GetAdRollStat(ad, startOfMonth, null); // MTD
+                    stats.Add(stat);
+                }
             }
-            var model = advertisables.OrderBy(a => a.Name).ToList();
+            else
+            {
+                var advertisables = tdRepo.Advertisables();
+                foreach (var adv in advertisables)
+                {   //Note: Multiple Active Record Sets used here
+                    var stat = tdRepo.GetAdRollStat(adv, startOfMonth, null); // MTD
+                    stats.Add(stat);
+                }
+            }
+            var model = stats.OrderBy(a => a.Name).ToList();
             return View(model);
         }
     }

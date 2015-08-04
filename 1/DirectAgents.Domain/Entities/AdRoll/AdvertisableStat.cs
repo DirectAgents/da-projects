@@ -19,6 +19,8 @@ namespace DirectAgents.Domain.Entities.AdRoll
     // DTO
     public class AdRollStat
     {
+        public string Name { get; set; }
+
         public int Impressions { get; set; }
         public int Clicks { get; set; }
         public int ClickThruConv { get; set; }

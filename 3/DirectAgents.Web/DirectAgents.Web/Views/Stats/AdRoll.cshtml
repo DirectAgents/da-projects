@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DirectAgents.Domain.Entities.AdRoll.Advertisable>
+﻿@model IEnumerable<DirectAgents.Domain.Entities.AdRoll.AdRollStat>
 
 <h2>Programmatic</h2>
 
@@ -6,7 +6,7 @@ ADRoll MTD Stats - @DateTime.Now.ToShortDateString()
 
 <table>
 <tr>
-    <th>Profile Name</th>
+    <th>Name</th>
     <th>Impressions</th>
     <th>Clicks</th>
     <th>CTR</th>
@@ -18,20 +18,20 @@ ADRoll MTD Stats - @DateTime.Now.ToShortDateString()
     <th>TotalConv</th>
     <th>Spend</th>
 </tr>
-@foreach (var adv in Model)
+@foreach (var stat in Model)
 {
 <tr>
-    <td>@adv.Name</td>
-    <td style="text-align:right">@adv.Stats.Impressions</td>
-    <td style="text-align:right">@adv.Stats.Clicks</td>
-    <td style="text-align:center">@adv.Stats.CTR</td>
-    <td style="text-align:center">@adv.Stats.CPM</td>
-    <td style="text-align:center">@adv.Stats.CPC</td>
-    <td style="text-align:center">@adv.Stats.CPA</td>
-    <td style="text-align:right">@adv.Stats.ViewThruConv</td>
-    <td style="text-align:right">@adv.Stats.ClickThruConv</td>
-    <td style="text-align:right">@adv.Stats.TotalConv</td>
-    <td style="text-align:right">@adv.Stats.Spend</td>
+    <td>@stat.Name</td>
+    <td style="text-align:right">@stat.Impressions</td>
+    <td style="text-align:right">@stat.Clicks</td>
+    <td style="text-align:center">@stat.CTR</td>
+    <td style="text-align:center">@stat.CPM</td>
+    <td style="text-align:center">@stat.CPC</td>
+    <td style="text-align:center">@stat.CPA</td>
+    <td style="text-align:right">@stat.ViewThruConv</td>
+    <td style="text-align:right">@stat.ClickThruConv</td>
+    <td style="text-align:right">@stat.TotalConv</td>
+    <td style="text-align:right">@stat.Spend</td>
 </tr>
 }
 </table>

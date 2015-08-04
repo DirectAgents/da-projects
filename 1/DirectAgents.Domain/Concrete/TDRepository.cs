@@ -26,6 +26,13 @@ namespace DirectAgents.Domain.Concrete
         {
             return context.Advertisables;
         }
+        public IQueryable<Ad> AdRoll_Ads(int? advId)
+        {
+            var ads = context.AdRollAds.AsQueryable();
+            if (advId.HasValue)
+                ads = ads.Where(a => a.AdvertisableId == advId.Value);
+            return ads;
+        }
 
         public IQueryable<AdvertisableStat> AdvertisableStats(int? advertisableId, DateTime? startDate, DateTime? endDate)
         {
@@ -38,27 +45,61 @@ namespace DirectAgents.Domain.Concrete
                 advStats = advStats.Where(a => a.Date <= endDate.Value);
             return advStats;
         }
+        public IQueryable<AdDailySummary> AdRoll_AdDailySummaries(int? advertisableId, int? adId, DateTime? startDate, DateTime? endDate)
+        {
+            var ads = context.AdRollAdDailySummaries.AsQueryable();
+            if (advertisableId.HasValue) // TODO: check what query this translates to...
+                ads = ads.Where(a => a.Ad.AdvertisableId == advertisableId.Value);
+            if (adId.HasValue)
+                ads = ads.Where(a => a.AdId == adId.Value);
+            if (startDate.HasValue)
+                ads = ads.Where(a => a.Date >= startDate.Value);
+            if (endDate.HasValue)
+                ads = ads.Where(a => a.Date <= endDate.Value);
+            return ads;
+        }
 
         public void FillStats(Advertisable adv, DateTime? startDate, DateTime? endDate)
         {
+            var stat = GetAdRollStat(adv, startDate, endDate);
+            adv.Stats = stat;
+        }
+        public AdRollStat GetAdRollStat(Advertisable adv, DateTime? startDate, DateTime? endDate)
+        {
+            var stat = new AdRollStat
+            {
+                Name = adv.Name
+            };
             var advStats = AdvertisableStats(adv.Id, startDate, endDate);
             if (advStats.Any())
             {
-                adv.Stats = new AdRollStat
-                {
-                    Impressions = advStats.Sum(a => a.Impressions),
-                    Clicks = advStats.Sum(a => a.Clicks),
-                    ClickThruConv = advStats.Sum(a => a.CTC),
-                    ViewThruConv = advStats.Sum(a => a.VTC),
-                    Spend = advStats.Sum(a => a.Cost),
-                    Prospects = advStats.Sum(a => a.Prospects)
-                };
-                adv.Stats.Spend = Math.Round(adv.Stats.Spend, 2);
+                stat.Impressions = advStats.Sum(a => a.Impressions);
+                stat.Clicks = advStats.Sum(a => a.Clicks);
+                stat.ClickThruConv = advStats.Sum(a => a.CTC);
+                stat.ViewThruConv = advStats.Sum(a => a.VTC);
+                stat.Spend = Math.Round(advStats.Sum(a => a.Cost), 2);
+                stat.Prospects = advStats.Sum(a => a.Prospects);
             }
-            else
+            return stat;
+        }
+
+        public AdRollStat GetAdRollStat(Ad ad, DateTime? startDate, DateTime? endDate)
+        {
+            var stat = new AdRollStat
             {
-                adv.Stats = new AdRollStat();
+                Name = ad.Name
+            };
+            var ads = AdRoll_AdDailySummaries(null, ad.Id, startDate, endDate);
+            if (ads.Any())
+            {
+                stat.Impressions = ads.Sum(a => a.Impressions);
+                stat.Clicks = ads.Sum(a => a.Clicks);
+                stat.ClickThruConv = ads.Sum(a => a.CTC);
+                stat.ViewThruConv = ads.Sum(a => a.VTC);
+                stat.Spend = Math.Round(ads.Sum(a => a.Cost), 2);
+                stat.Prospects = ads.Sum(a => a.Prospects);
             }
+            return stat;
         }
         #endregion
 
