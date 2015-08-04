@@ -16,12 +16,14 @@ namespace CakeExtracter.Commands
         public int? AdvertisableId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public bool OneStatPerAdvertisable { get; set; } // (per day)
 
         public override void ResetProperties()
         {
             AdvertisableId = null;
             StartDate = null;
             EndDate = null;
+            OneStatPerAdvertisable = false;
         }
 
         public DASynchAdrollStats()
@@ -30,6 +32,7 @@ namespace CakeExtracter.Commands
             HasOption<int>("a|advertisableId=", "Advertisable Id (default = all)", c => AdvertisableId = c);
             HasOption("s|startDate=", "Start Date (default is one week ago)", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is today)", c => EndDate = DateTime.Parse(c));
+            HasOption<bool>("o|oneStatPerAdv=", "One Stat per advertisable per day (default = false / one per ad)", c => OneStatPerAdvertisable = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -41,14 +44,31 @@ namespace CakeExtracter.Commands
             var advertisables = GetAdvertisables();
             foreach (var adv in advertisables)
             {
-                var extracter = new AdrollDailySummariesExtracter(dateRange, adv.Eid);
-                var loader = new AdrollAdvertisableStatsLoader(adv.Id);
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
+                if (OneStatPerAdvertisable)
+                    DoETL_AdvertisableLevel(dateRange, adv);
+                else
+                    DoETL_AdLevel(dateRange, adv);
             }
             return 0;
+        }
+
+        private void DoETL_AdvertisableLevel(DateRange dateRange, Advertisable adv)
+        {
+            var extracter = new AdrollDailySummariesExtracter(dateRange, adv.Eid);
+            var loader = new AdrollAdvertisableStatsLoader(adv.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+        private void DoETL_AdLevel(DateRange dateRange, Advertisable adv)
+        {
+            var extracter = new AdrollApiExtracter(dateRange, adv.Eid);
+            var loader = new AdrollAdDailySummaryLoader(adv.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
         }
 
         public IEnumerable<Advertisable> GetAdvertisables()
