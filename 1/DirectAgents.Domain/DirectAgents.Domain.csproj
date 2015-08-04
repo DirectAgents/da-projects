@@ -73,6 +73,8 @@
     <Compile Include="Concrete\TDRepository.cs" />
     <Compile Include="Contexts\TDContext.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
+    <Compile Include="Entities\AdRoll\Ad.cs" />
+    <Compile Include="Entities\AdRoll\AdDailySummary.cs" />
     <Compile Include="Entities\AdRoll\Advertisable.cs" />
     <Compile Include="Entities\AdRoll\AdvertisableStat.cs" />
     <Compile Include="Entities\Cake\Advertiser.cs" />
@@ -157,6 +159,10 @@
     <Compile Include="MigrationsTD\201507282051383_Initial.cs" />
     <Compile Include="MigrationsTD\201507282051383_Initial.Designer.cs">
       <DependentUpon>201507282051383_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201507311921089_Mig_AdRollAds.cs" />
+    <Compile Include="MigrationsTD\201507311921089_Mig_AdRollAds.Designer.cs">
+      <DependentUpon>201507311921089_Mig_AdRollAds.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
@@ -266,6 +272,9 @@
   <ItemGroup>
     <EmbeddedResource Include="MigrationsTD\201507282051383_Initial.resx">
       <DependentUpon>201507282051383_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201507311921089_Mig_AdRollAds.resx">
+      <DependentUpon>201507311921089_Mig_AdRollAds.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>
