@@ -5,6 +5,7 @@ using System.ComponentModel.Composition;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CakeExtracter.CakeMarketingApi;
 using CakeExtracter.Common;
@@ -31,6 +32,7 @@ namespace CakeExtracter.Commands
         public int? OfferId { get; set; }
         public bool IncludeRecent { get; set; }
         public int NumParallel { get; set; }
+        public int SleepMilliseconds { get; set; }
 
         private GmailEmailer emailer;
         private string reportingEmail;
@@ -47,6 +49,7 @@ namespace CakeExtracter.Commands
             OfferId = null;
             IncludeRecent = false;
             NumParallel = 0;
+            SleepMilliseconds = 0;
         }
 
         public DASynchOfferBudgetStatsCommand()
@@ -56,6 +59,7 @@ namespace CakeExtracter.Commands
             HasOption<bool>("r|recent=", "Include offers with recent activity (default = false)", c => IncludeRecent = c);
             //HasOption<int>("d|days=", "Number of days for recent activity check (default = 31)", c => Days_RecentActivity = c);
             HasOption<int>("p|numParallel=", "Number of offers to do in parallel (default = 4)", c => NumParallel = c);
+            HasOption<int>("s|sleepMilliseconds=", "Number of milliseconds to pause between batches of offers (default = 0)", c => SleepMilliseconds = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -75,8 +79,13 @@ namespace CakeExtracter.Commands
             DateTime minStartWithBudget = today.AddDays(-MAX_DAYS_WITH_BUDGET);
             DateTime minStartWithoutBudget = today.AddDays(-MAX_DAYS_WITHOUTBUDGET);
 
+            bool first = true;
             foreach (var offerBatch in offers.InBatches(NumParallel))
             {
+                if (!first && SleepMilliseconds > 0)
+                    Thread.Sleep(SleepMilliseconds);
+                first = false;
+
                 Parallel.ForEach(offerBatch, offer =>
                 {
                     DateTime startDate = offer.DateCreated.Date;

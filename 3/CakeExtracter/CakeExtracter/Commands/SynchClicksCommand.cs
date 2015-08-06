@@ -43,9 +43,9 @@ namespace CakeExtracter.Commands
             {
                 try
                 {
-                    ExtractAndLoadClicksForDate(date, advertiserIds);
+                    ExtractAndLoadClicksForDate(date, advertiserIds); // When advId==0, use advIds from DB (UserProfile table, advIds<90000)
                     if (SynchConversionsAlso)
-                        ExtractAndLoadConversionsForDate(date);
+                        ExtractAndLoadConversionsForDate(date); // When advId==0, get all conversions from Cake
 
                     // Set "LatestClicks" datetime
                     using (var db = new ClientPortal.Data.Contexts.ClientPortalContext())
@@ -53,7 +53,7 @@ namespace CakeExtracter.Commands
                         var now = DateTime.Now;
                         foreach (var advertiserId in advertiserIds)
                         {
-                            var advertiser = db.Advertisers.Where(a => a.AdvertiserId == AdvertiserId).FirstOrDefault();
+                            var advertiser = db.Advertisers.Where(a => a.AdvertiserId == advertiserId).FirstOrDefault();
                             if (advertiser != null)
                                 advertiser.LatestClicks = now;
                         }

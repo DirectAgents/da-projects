@@ -133,7 +133,7 @@ namespace CakeUtility
         }
 
         [Command]
-        public void ResetStagingTables()
+        public void ResetStagingTables() // Deletes all from staging.CakeAdvertisers and staging.CakeOffers
         {
             using (var context = new Cake.Model.Staging.CakeStagingEntities())
             {

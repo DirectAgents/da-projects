@@ -21,6 +21,7 @@
         <th></th>
         <th>Spent</th>
         <th @(Model.Sort == "spentpct" ? italicStyle : "")><a href="#" onclick="ChangeSort('spentpct','@(Model.Sort != "spentpct" || !Model.SortDesc ? "true" : "false")'); return false">Spent%</a></th>
+@*        <th></th>*@
         <th>Status</th>
         <th>Hidden</th>
     </tr>
@@ -86,6 +87,16 @@
             $.get(url, data, function (data) {
                 $('#offrow' + offerId).html(data);
                 if (showDoneAlert) alert('Updated');
+            });
+        }
+
+        function SynchOfferStats(offerId) {
+            var url = '@Url.Action("SynchStats")';
+            var data = {
+                offerId: offerId
+            };
+            $.get(url, data, function (data) {
+                LoadBudgetRow(offerId, true);
             });
         }
 

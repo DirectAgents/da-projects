@@ -1,9 +1,9 @@
-﻿using CakeExtracter.CakeMarketingApi;
-using CakeExtracter.CakeMarketingApi.Entities;
-using CakeExtracter.Common;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CakeExtracter.CakeMarketingApi;
+using CakeExtracter.CakeMarketingApi.Entities;
+using CakeExtracter.Common;
 
 namespace CakeExtracter.Etl.CakeMarketing.Extracters
 {
@@ -13,28 +13,31 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
         private readonly IEnumerable<int> advertiserIds;
         private readonly int? offerId;
         private readonly bool skipDeletionsIfAll;
+        private readonly int itemsPerBatch;
 
         // Note: You can pass in null for advertiserIds - for all advertisers or if offerId is specified
 
-        public OfferDailySummariesExtracter(DateRange dateRange, IEnumerable<int> advertiserIds, int? offerId, bool skipDeletionsIfAll)
+        public OfferDailySummariesExtracter(DateRange dateRange, IEnumerable<int> advertiserIds, int? offerId, bool skipDeletionsIfAll, int itemsPerBatch = 20)
         {
             this.dateRange = dateRange;
             this.advertiserIds = advertiserIds ?? new List<int> { 0 };
             this.offerId = offerId;
             this.skipDeletionsIfAll = skipDeletionsIfAll;
+            this.itemsPerBatch = itemsPerBatch;
         }
 
-        public OfferDailySummariesExtracter(DateRange dateRange, int advertiserId, int? offerId, bool skipDeletionsIfAll)
+        public OfferDailySummariesExtracter(DateRange dateRange, int advertiserId, int? offerId, bool skipDeletionsIfAll, int itemsPerBatch = 20)
         {
             this.dateRange = dateRange;
             this.advertiserIds = new List<int> { advertiserId };
             this.offerId = offerId;
             this.skipDeletionsIfAll = skipDeletionsIfAll;
+            this.itemsPerBatch = itemsPerBatch;
         }
 
         protected override void Extract()
         {
-            foreach (var advIdBatch in advertiserIds.InBatches(20))
+            foreach (var advIdBatch in advertiserIds.InBatches(itemsPerBatch))
             {
                 Parallel.ForEach(advIdBatch, advertiserId =>
                 {
@@ -54,7 +57,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
                                     dateRange.ToDate.ToShortDateString(),
                                     string.Join(", ", offerIds));
 
-                    foreach (var offIdBatch in offerIds.InBatches(20))
+                    foreach (var offIdBatch in offerIds.InBatches(itemsPerBatch))
                     {
                         Parallel.ForEach(offIdBatch, offId =>
                         {

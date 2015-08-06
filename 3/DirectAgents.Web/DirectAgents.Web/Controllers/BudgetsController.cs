@@ -213,9 +213,12 @@ namespace DirectAgents.Web.Controllers
 
         public ActionResult SynchStats(int offerId)
         {
-            DASynchOfferBudgetStatsCommand.RunStatic(offerId);
+            var result = DASynchOfferBudgetStatsCommand.RunStatic(offerId);
 
-            return RedirectToAction("Show", new { offerId = offerId });
+            if (Request.IsAjaxRequest())
+                return Json(result, JsonRequestBehavior.AllowGet);
+            else
+                return RedirectToAction("Show", new { offerId = offerId });
         }
 
         public ActionResult SynchOffers(int advId)

@@ -39,7 +39,11 @@ namespace CakeExtracter.Common
             }
         }
 
+        //Note: I believe this is only called by the LineCommander before a command is run (because the Command object is not re-instantiated).
+        //      When a Command is first instantiated, we rely on default property values (e.g. 0 for int).
+        //TODO?: Call this from the Run() method - so it always sets the default properties
         public abstract void ResetProperties();
+
         public abstract int Execute(string[] remainingArguments);
 
         public virtual IEnumerable<PropertyInfo> GetArgumentProperties()
