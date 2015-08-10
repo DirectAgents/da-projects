@@ -34,9 +34,7 @@ namespace CakeExtracter.Commands
         public int NumParallel { get; set; }
         public int SleepMilliseconds { get; set; }
 
-        private GmailEmailer emailer;
-        private string reportingEmail;
-        private string testEmail, budgetAlertsEmail;
+        private BudgetMonitor budgetMonitor;
 
         private const int DAYS_RECENT_ACTIVITY = 30;
         //How far back to get stats
@@ -64,17 +62,59 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            reportingEmail = ConfigurationManager.AppSettings["GmailReporting_Email"];
-            var reportingPassword = ConfigurationManager.AppSettings["GmailReporting_Password"];
-            emailer = new GmailEmailer(new System.Net.NetworkCredential(reportingEmail, reportingPassword));
+            budgetMonitor = new BudgetMonitor();
+
+            var offers = GetOffers(OfferId, IncludeRecent); // Fills in current budget stats ("before" values)
+
+            UpdateDailySummariesAndCheckForAlerts(offers);
+            // Updates the specified offers' stats using CakeAPI's DailySummaryExport (one call per offer)
+
+            return 0;
+        }
+
+        // Get the specified offer, or: the ones with budgets + the ones with recent activity (if specified)
+        // Fill in current budget stats
+        protected static IEnumerable<Offer> GetOffers(int? offerId, bool includeRecent)
+        {
+            using (var repo = new DirectAgents.Domain.Concrete.MainRepository(new DAContext()))
+            {
+                IEnumerable<Offer> offers = new List<Offer>();
+                if (offerId.HasValue)
+                {
+                    var offer = repo.GetOffer(offerId.Value, true, false);
+                    if (offer != null)
+                        ((List<Offer>)offers).Add(offer);
+                }
+                else
+                {
+                    if (includeRecent)
+                    {   // Get the ids of offers with recent activity
+                        var today = DateTime.Today;
+                        var start = today.AddDays(-DAYS_RECENT_ACTIVITY);
+                        var dateRange = new DateRange(start, today.AddDays(1));
+                        var offerSummaries = CakeMarketingUtility.OfferSummaries(dateRange);
+                        var offerIds = offerSummaries.Select(os => os.Offer.OfferId).Where(id => id > -1).ToArray();
+
+                        offers = repo.GetOffersUnion(true, true, true, offerIds); // with budget or with one of the aforementioned ids; exclude 'inactive'
+                    }
+                    else
+                    {
+                        offers = repo.GetOffers(true, null, null, true, false, null); // 'active' offers with budget
+                    }
+                }
+
+                foreach (var offer in offers)
+                {
+                    repo.FillOfferBudgetStats(offer);
+                }
+                return offers.ToList();
+            }
+        }
+
+        private void UpdateDailySummariesAndCheckForAlerts(IEnumerable<Offer> offers)
+        {
             if (NumParallel <= 0)
                 NumParallel = DEFAULT_NUM_PARALLEL;
-
-            testEmail = ConfigurationManager.AppSettings["BudgetAlerts_TestEmail"];
-            budgetAlertsEmail = ConfigurationManager.AppSettings["BudgetAlerts_Email"];
-
-            var offers = GetOffers(); // Fills in current budget stats ("before" values)
-
             DateTime today = DateTime.Today;
             DateTime minStartWithBudget = today.AddDays(-MAX_DAYS_WITH_BUDGET);
             DateTime minStartWithoutBudget = today.AddDays(-MAX_DAYS_WITHOUTBUDGET);
@@ -112,50 +152,39 @@ namespace CakeExtracter.Commands
                     extracterThread.Join();
                     loaderThread.Join();
 
-                    CheckOfferBudgetAlerts(offer); // Updates budget stats ("after" values)
+                    budgetMonitor.CheckOfferBudgetAlerts(offer); // Updates offer's stats ("after" values) in order to see if an alert is needed
                 });
             }
-            return 0;
         }
 
-        private IEnumerable<Offer> GetOffers() // the specified offer, or: the ones with budgets + the ones with recent activity (if specified)
+    }
+
+    public class BudgetMonitor
+    {
+        private GmailEmailer emailer;
+        private string reportingEmail;
+        private string testEmail, budgetAlertsEmail;
+
+        public BudgetMonitor()
+        {
+            reportingEmail = ConfigurationManager.AppSettings["GmailReporting_Email"];
+            var reportingPassword = ConfigurationManager.AppSettings["GmailReporting_Password"];
+            emailer = new GmailEmailer(new System.Net.NetworkCredential(reportingEmail, reportingPassword));
+
+            testEmail = ConfigurationManager.AppSettings["BudgetAlerts_TestEmail"];
+            budgetAlertsEmail = ConfigurationManager.AppSettings["BudgetAlerts_Email"];
+        }
+
+        public void CheckOfferBudgetAlerts(IEnumerable<Offer> offers)
         {
             using (var repo = new DirectAgents.Domain.Concrete.MainRepository(new DAContext()))
             {
-                IEnumerable<Offer> offers = new List<Offer>();
-                if (OfferId.HasValue)
-                {
-                    var offer = repo.GetOffer(OfferId.Value, true, false);
-                    if (offer != null)
-                        ((List<Offer>)offers).Add(offer);
-                }
-                else
-                {
-                    if (IncludeRecent)
-                    {   // Get the ids of offers with recent activity
-                        var today = DateTime.Today;
-                        var start = today.AddDays(-DAYS_RECENT_ACTIVITY);
-                        var dateRange = new DateRange(start, today.AddDays(1));
-                        var offerSummaries = CakeMarketingUtility.OfferSummaries(dateRange);
-                        var offerIds = offerSummaries.Select(os => os.Offer.OfferId).Where(id => id > -1).ToArray();
-
-                        offers = repo.GetOffersUnion(true, true, true, offerIds); // with budget or with one of the aforementioned ids; exclude 'inactive'
-                    }
-                    else
-                    {
-                        offers = repo.GetOffers(true, null, null, true, false, null); // 'active' offers with budget
-                    }
-                }
-
                 foreach (var offer in offers)
-                {
-                    repo.FillOfferBudgetStats(offer);
-                }
-                return offers.ToList();
+                    CheckOfferBudgetAlerts(offer, repo);
             }
         }
 
-        private void CheckOfferBudgetAlerts(Offer offer)
+        public void CheckOfferBudgetAlerts(Offer offer, DirectAgents.Domain.Concrete.MainRepository mainRepo = null)
         {
             //TODO? use 1.0m ? (two places)
 
@@ -164,9 +193,16 @@ namespace CakeExtracter.Commands
             decimal oldPercentUsed = offer.BudgetUsedPercent.Value;
             decimal oldBudgetUsed = offer.BudgetUsed ?? 0;
 
-            using (var repo = new DirectAgents.Domain.Concrete.MainRepository(new DAContext()))
+            if (mainRepo == null)
             {
-                repo.FillOfferBudgetStats(offer);
+                using (var repo = new DirectAgents.Domain.Concrete.MainRepository(new DAContext()))
+                {
+                    repo.FillOfferBudgetStats(offer);
+                }
+            }
+            else
+            {
+                mainRepo.FillOfferBudgetStats(offer);
             }
             if (!offer.BudgetUsedPercent.HasValue)
                 return; // this should never happen

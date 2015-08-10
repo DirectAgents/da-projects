@@ -76,19 +76,17 @@ namespace CakeExtracter.CakeMarketingApi
             return response.Creatives;
         }
 
-        // Basically, get the ids of offers with traffic during the specified dateRange
-        public static List<OfferSummary> OfferSummaries(DateRange dateRange)
-        {
-            return OfferSummaries(dateRange, 0); // 0 = all advertisers
-        }
-        public static List<OfferSummary> OfferSummaries(DateRange dateRange, int advertiserId)
+        // Basically, get active(?) offers and their stats for the specified dateRange
+        // Remember: for one day, use from=date and end=date+1
+        public static List<OfferSummary> OfferSummaries(DateRange dateRange, int advertiserId = 0, int offerId = 0)
         {
             var client = new OfferSummariesClient();
             var request = new OfferSummariesRequest
             {
                 start_date = dateRange.FromDate.ToString("MM/dd/yyyy"),
                 end_date = dateRange.ToDate.ToString("MM/dd/yyyy"),
-                advertiser_id = advertiserId
+                advertiser_id = advertiserId,
+                offer_id = offerId
             };
             var response = client.OfferSummaries(request);
             if (response == null || response.Offers == null)

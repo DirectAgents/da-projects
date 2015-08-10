@@ -248,6 +248,7 @@ namespace DirectAgents.Domain.Concrete
             }
         }
 
+        //Note: Starting 8/1/15, includes clicks, conversions and sellable from offerid -1 (Global Redirect) and clicks from -2 (404)
         public IQueryable<OfferDailySummary> GetOfferDailySummaries(int? offerId, DateTime? startDate = null, DateTime? endDate = null)
         {
             var ods = context.OfferDailySummaries.AsQueryable();
