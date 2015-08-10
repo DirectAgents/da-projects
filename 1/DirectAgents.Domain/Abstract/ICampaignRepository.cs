@@ -20,6 +20,6 @@ namespace DirectAgents.Domain.Abstract
 
         Campaign FindById(int pid);
         void SaveCampaign(Campaign campaign);
-        IEnumerable<CampaignSummary> TopCampaigns(int num, TopCampaignsBy by, string trafficType);
+        //IEnumerable<CampaignSummary> TopCampaigns(int num, TopCampaignsBy by, string trafficType);
     }
 }

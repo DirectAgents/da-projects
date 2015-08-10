@@ -121,7 +121,7 @@ namespace DirectAgents.Web.Controllers
             else
                 startDate = today.AddDays(-numdays);
             var stats = daRepo.GetStatsSummary(null, startDate, null);
-            //Note: Starting 8/1/15, includes clicks, conversions and sellable from offerid -1 (Global Redirect) and clicks from offerid -2 (404)
+            //Note: Starting 7/1/15, includes clicks, conversions and sellable from offerid -1 (Global Redirect) and clicks from offerid -2 (404)
 
             var json = Json(stats, JsonRequestBehavior.AllowGet);
             return json.ToJsonp();

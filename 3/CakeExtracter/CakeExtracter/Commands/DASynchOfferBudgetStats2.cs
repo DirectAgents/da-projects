@@ -31,7 +31,7 @@ namespace CakeExtracter.Commands
         public DASynchOfferBudgetStats2Command()
         {
             IsCommand("daSynchOfferBudgetStats2", "synch OfferDailySummaries with one Cake API call per day");
-            HasOption("s|startDate=", "Start Date (default is yesterday)", c => StartDate = DateTime.Parse(c));
+            HasOption("s|startDate=", "Start Date (default is today)", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is startDate)", c => EndDate = DateTime.Parse(c));
             HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 0, i.e. today)", c => DaysAgoToStart = c);
             HasOption<int>("i|daysToInclude=", "Days to include, if endDate not specified (default = 1)", c => DaysToInclude = c);
