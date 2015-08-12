@@ -74,7 +74,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
 
                     if (checkCakeTraffic) // get the campaigns/affiliateIds from Cake (based on traffic)
                     {
-                        var campaignSummaries = CakeMarketingUtility.CampaignSummaries(dateRange, offerId);
+                        var campaignSummaries = CakeMarketingUtility.CampaignSummaries(dateRange, offerId: offerId);
                         affiliateIds = campaignSummaries.Select(cs => cs.Affiliate.AffiliateId).Distinct()
                                         .Where(id => id > -1).ToList();
                     }

@@ -29,7 +29,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
         {
             Logger.Info("Extracting OfferSummaries from {0:d} to {1:d}, AdvId {2}, OffId {3}",
                         dateRange.FromDate, dateRange.ToDate.AddDays(-1), advertiserId, offerId);
-            var offerSummaries = CakeMarketingUtility.OfferSummaries(dateRange, advertiserId, offerId);
+            var offerSummaries = CakeMarketingUtility.OfferSummaries(dateRange, advertiserId: advertiserId, offerId: offerId);
             Add(offerSummaries);
 
             End();

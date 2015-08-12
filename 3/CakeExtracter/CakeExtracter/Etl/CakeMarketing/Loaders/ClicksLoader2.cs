@@ -41,7 +41,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                 sb.AppendFormat("{0}\t", source.Advertiser.AdvertiserName);
                 sb.AppendFormat("{0}\t", source.Offer.OfferId);
                 sb.AppendFormat("{0}\t", source.Offer.OfferName);
-                sb.AppendFormat("{0}\t", source.Offer.DefaultOfferContractId);
+                //sb.AppendFormat("{0}\t", source.Offer.DefaultOfferContractId);
                 //sb.AppendFormat("{0}\t", source.Offer.OfferContracts[0].PriceFormat.PriceFormatId);
                 sb.AppendFormat("{0}\t", "1");
 

@@ -11,6 +11,6 @@ namespace CakeExtracter.CakeMarketingApi.Entities
 
     public class CampaignSummary
     {
-        public Affiliate Affiliate { get; set; }
+        public Affiliate1 Affiliate { get; set; }
     }
 }

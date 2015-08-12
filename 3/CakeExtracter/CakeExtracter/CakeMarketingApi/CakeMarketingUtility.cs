@@ -97,7 +97,7 @@ namespace CakeExtracter.CakeMarketingApi
             return response.Offers;
         }
 
-        public static List<CampaignSummary> CampaignSummaries(DateRange dateRange, int offerId)
+        public static List<CampaignSummary> CampaignSummaries(DateRange dateRange, int offerId = 0)
         {
             var client = new CampaignSummariesClient();
             var request = new CampaignSummariesRequest

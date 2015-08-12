@@ -24,22 +24,4 @@ namespace CakeExtracter.CakeMarketingApi.Entities
         // ClickThruPercentage, Events...
         // Pending, Rejected, Approved, Returned, Orders...
     }
-
-    public class Offer1
-    {
-        public int OfferId { get; set; }
-        //OfferName
-    }
-
-    public class Advertiser1
-    {
-        public int AdvertiserId { get; set; }
-        //AdvertiserName
-    }
-
-    public class AccountManager1
-    {
-        public int AccountManagerId { get; set; }
-        //AccountManagerName
-    }
 }

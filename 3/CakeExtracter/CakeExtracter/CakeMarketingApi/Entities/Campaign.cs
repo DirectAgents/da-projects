@@ -7,8 +7,8 @@
 
         public int CampaignId { get; set; }
         //CampaignType
-        public Affiliate Affiliate { get; set; }
-        public Offer Offer { get; set; }
+        public Affiliate1 Affiliate { get; set; }
+        public Offer1 Offer { get; set; }
         public OfferContractInfo OfferContract { get; set; }
         //etc
         public Payout Payout { get; set; }
