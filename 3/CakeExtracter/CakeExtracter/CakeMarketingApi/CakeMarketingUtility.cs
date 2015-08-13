@@ -94,7 +94,10 @@ namespace CakeExtracter.CakeMarketingApi
                 Logger.Info("Unable to retrieve offers summaries. Trying again...");
                 response = client.OfferSummaries(request);
             }
-            return response.Offers;
+            if (response != null)
+                return response.Offers;
+            else
+                return new List<OfferSummary>();
         }
 
         public static List<CampaignSummary> CampaignSummaries(DateRange dateRange, int offerId = 0)
@@ -107,6 +110,11 @@ namespace CakeExtracter.CakeMarketingApi
                 offer_id = offerId
             };
             var response = client.CampaignSummaries(request);
+            if (response == null || response.Campaigns == null)
+            {
+                Logger.Info("Unable to retrieve campaign summaries. Trying again...");
+                response = client.CampaignSummaries(request);
+            }
             if (response != null)
                 return response.Campaigns;
             else

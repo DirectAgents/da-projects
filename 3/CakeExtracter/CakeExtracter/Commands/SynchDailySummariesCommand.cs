@@ -72,21 +72,25 @@ namespace CakeExtracter.Commands
 
             // Set "LatestDaySums" datetime (if we're updating all offers to today)
             if (dateRange.ToDate > DateTime.Today && !OfferId.HasValue)
-            {
-                using (var db = new ClientPortalContext())
-                {
-                    var advertisers = db.Advertisers.AsQueryable();
-                    if (AdvertiserId != 0)
-                        advertisers = advertisers.Where(a => a.AdvertiserId == AdvertiserId);
+                SetUpdateTimeForAdvertisers(startTime, AdvertiserId);
 
-                    foreach (var advertiser in advertisers)
-                    {
-                        advertiser.LatestDaySums = startTime;
-                    }
-                    db.SaveChanges();
-                }
-            }
             return 0;
+        }
+
+        public static void SetUpdateTimeForAdvertisers(DateTime updateTime, int advertiserId = 0)
+        {
+            using (var db = new ClientPortalContext())
+            {
+                var advertisers = db.Advertisers.AsQueryable();
+                if (advertiserId != 0)
+                    advertisers = advertisers.Where(a => a.AdvertiserId == advertiserId);
+
+                foreach (var advertiser in advertisers)
+                {
+                    advertiser.LatestDaySums = updateTime;
+                }
+                db.SaveChanges();
+            }
         }
 
     }

@@ -16,6 +16,7 @@ namespace CakeExtracter.Commands
         public DateTime? EndDate { get; set; }
         public int DaysAgoToStart { get; set; }
         public int DaysToInclude { get; set; }
+        public bool SetAdvUpdateTime { get; set; }
 
         public override void ResetProperties()
         {
@@ -24,6 +25,7 @@ namespace CakeExtracter.Commands
             EndDate = null;
             DaysAgoToStart = 0;
             DaysToInclude = 0;
+            SetAdvUpdateTime = false;
         }
 
         public SynchDailySummaries2Command()
@@ -34,16 +36,21 @@ namespace CakeExtracter.Commands
             HasOption("e|endDate=", "End Date (default is startDate)", c => EndDate = DateTime.Parse(c));
             HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 0, i.e. today)", c => DaysAgoToStart = c);
             HasOption<int>("i|daysToInclude=", "Days to include, if endDate not specified (default = 1)", c => DaysToInclude = c);
+            HasOption("u|setAdvUpdateTime=", "Set the latest update time for advertisers, if offerId=0 (default is false)", c => SetAdvUpdateTime = bool.Parse(c));
         }
 
         public override int Execute(string[] remainingArguments)
         {
+            DateTime updateTime = DateTime.Now;
+
             if (DaysToInclude < 1) DaysToInclude = 1; // used if EndDate==null
             DateTime from = StartDate ?? DateTime.Today.AddDays(-DaysAgoToStart); // default: today
             DateTime to = EndDate ?? from.AddDays(DaysToInclude - 1); // default: whatever from is
             var dateRange = new DateRange(from, to);
             foreach (var date in dateRange.Dates)
             {
+                updateTime = DateTime.Now; // Will use the time when we start ETL for the last day in the dateRange
+
                 //var existingDailySummaries = DailySummaries(date);
                 var initialOffAffs = GetOffAffs(date);
 
@@ -54,13 +61,24 @@ namespace CakeExtracter.Commands
                 extracterThread.Join();
                 loaderThread.Join();
 
-                DeleteOldDailySummaries(date, initialOffAffs, loader.GetLoadedOffAffs());
+                var loadedOffAffs = loader.GetLoadedOffAffs();
+                if (loadedOffAffs.Any())
+                    DeleteOldDailySummaries(date, initialOffAffs, loadedOffAffs);
+                else
+                    Logger.Info("No CampaignSummaries loaded for {0:d}. Skipping delete", date);
             }
+
+            if (SetAdvUpdateTime && OfferId == 0)
+            {
+                // Set "LatestDaySums" datetime
+                SynchDailySummariesCommand.SetUpdateTimeForAdvertisers(updateTime);
+            }
+
             return 0;
         }
 
         // For the specified date, get a list of the existing offerId/affId combinations that have a dailySummary in the db.
-        public List<Tuple<int, int>> GetOffAffs(DateTime date)
+        public static List<Tuple<int, int>> GetOffAffs(DateTime date)
         {
             using (var db = new ClientPortal.Data.Contexts.ClientPortalContext())
             {
@@ -69,7 +87,8 @@ namespace CakeExtracter.Commands
             }
         }
 
-        public void DeleteOldDailySummaries(DateTime date, List<Tuple<int, int>> initialOffAffs, Dictionary<Tuple<int, int>, int> loadedOffAffs)
+        // "Old" just means those that were there initially but weren't updated during Loading
+        public static void DeleteOldDailySummaries(DateTime date, List<Tuple<int, int>> initialOffAffs, Dictionary<Tuple<int, int>, int> loadedOffAffs)
         {
             using (var db = new ClientPortal.Data.Contexts.ClientPortalContext())
             {
@@ -89,11 +108,5 @@ namespace CakeExtracter.Commands
                 db.SaveChanges();
             }
         }
-
-        // The plan:
-        // - one cake call per day (CampaignSummaries)
-        // - check for all off/aff combos beforehand...
-        // - compare with what's there afterward.
-        // - delete any that need to be deleted
     }
 }
