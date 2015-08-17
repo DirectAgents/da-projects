@@ -29,13 +29,13 @@ namespace ClientPortal.Data.Services
 
             if (start.HasValue || end.HasValue) // filter on offers that have daily summary data within this timeframe
             {
-                var dailySummaries = context.OfferDailySummaries.AsQueryable();
+                var dailySummaries = context.DailySummaries.AsQueryable();
                 if (start.HasValue)
-                    dailySummaries = dailySummaries.Where(ds => ds.date >= start.Value);
+                    dailySummaries = dailySummaries.Where(ds => ds.Date >= start.Value);
                 if (end.HasValue)
-                    dailySummaries = dailySummaries.Where(ds => ds.date <= end.Value);
+                    dailySummaries = dailySummaries.Where(ds => ds.Date <= end.Value);
 
-                var offerIdsWithData = dailySummaries.Select(ds => ds.offer_id).Distinct();
+                var offerIdsWithData = dailySummaries.Select(ds => ds.OfferId).Distinct();
 
                 offers = from o in offers
                          join od in offerIdsWithData
