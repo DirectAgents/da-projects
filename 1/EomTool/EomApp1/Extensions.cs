@@ -73,6 +73,7 @@ namespace EomApp1
             map.Add("GBP", "en-gb");
             map.Add("EUR", "de-de");
             map.Add("AUD", "en-AU");
+            map.Add("CAD", "en-CA");
             //return string.Join(", ", group.Select(c => string.Format(CultureInfo.CreateSpecificCulture(map[c.Key]), "{0:C} ({1})", c.Sum(d => func(d)), c.Key)));
             return string.Join(", ", group.Select(c => string.Format(CultureInfo.CreateSpecificCulture(map[c.Key]), "{0:C}", c.Sum(d => func(d)))));
         }
