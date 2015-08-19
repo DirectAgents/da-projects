@@ -44,7 +44,7 @@ namespace CakeExtracter.Commands
             var profiles = GetAdRollProfiles();
             foreach (var profile in profiles)
             {
-                var extracter = new AdrollApiExtracter(dateRange, profile.Eid);
+                var extracter = new AdrollAdDailySummariesExtracter(dateRange, profile.Eid);
                 var loader = new AdrollAdDailySummaryLoader2(profile.Id);
                 var extracterThread = extracter.Start();
                 var loaderThread = loader.Start(extracter);

@@ -2,12 +2,14 @@
 using System.Data.Entity.ModelConfiguration.Conventions;
 using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.AdRoll;
+using DirectAgents.Domain.Entities.TD;
 
 namespace DirectAgents.Domain.Contexts
 {
     public class DATDContext : DbContext
     {
         const string adrollSchema = "adr";
+        const string tdSchema = "td";
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -27,11 +29,26 @@ namespace DirectAgents.Domain.Contexts
                 .ToTable("AdDailySummary", adrollSchema);
             modelBuilder.Entity<AdDailySummary>()
                 .Property(ds => ds.Cost).HasPrecision(18, 6);
+
+            // TD
+            modelBuilder.Entity<Platform>().ToTable("Platform", tdSchema);
+            modelBuilder.Entity<Account>().ToTable("Account", tdSchema);
+            modelBuilder.Entity<DailySummary>()
+                .HasKey(ds => new { ds.Date, ds.AccountId })
+                .ToTable("DailySummary", tdSchema);
+            modelBuilder.Entity<DailySummary>()
+                .Property(t => t.Cost).HasPrecision(18, 6);
         }
 
+        // AdRoll
         public DbSet<Advertisable> Advertisables { get; set; }
         public DbSet<AdvertisableStat> AdvertisableStats { get; set; }
         public DbSet<Ad> AdRollAds { get; set; }
         public DbSet<AdDailySummary> AdRollAdDailySummaries { get; set; }
+
+        // TD
+        public DbSet<Platform> Platforms { get; set; }
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<DailySummary> DailySummaries { get; set; }
     }
 }

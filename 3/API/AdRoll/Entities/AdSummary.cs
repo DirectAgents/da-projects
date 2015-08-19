@@ -9,7 +9,7 @@ namespace AdRoll.Entities
     }
     public class DailySummaryReportResponse
     {
-        public List<DailySummary> results { get; set; }
+        public List<AdrollDailySummary> results { get; set; }
     }
 
     public class StatSummary
@@ -31,13 +31,13 @@ namespace AdRoll.Entities
     }
 
     // used for Advertisable daily report
-    public class DailySummary : StatSummary
+    public class AdrollDailySummary : StatSummary
     {
         public DateTime date { get; set; } // not always returned from the api
     }
 
     // used for Ad daily report
-    public class AdSummary : DailySummary
+    public class AdSummary : AdrollDailySummary
     {
         public string eid { get; set; }
         public string ad { get; set; } // ad name

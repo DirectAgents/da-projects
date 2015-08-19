@@ -1,51 +1,64 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 using AdRoll.Entities;
-using DirectAgents.Domain.Entities.AdRoll;
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.TD;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
-    public class AdrollAdvertisableStatsLoader : Loader<DailySummary>
+    public class AdrollDailySummaryLoader : Loader<AdrollDailySummary>
     {
-        private readonly int advertisableId;
+        private readonly int accountId;
 
-        public AdrollAdvertisableStatsLoader(int advertisableId)
+        public AdrollDailySummaryLoader(string advertisableEid)
         {
-            this.advertisableId = advertisableId;
+            using (var db = new DATDContext())
+            {
+                var account = db.Accounts.Where(a => a.ExternalId == advertisableEid && a.Platform.Code == Platform.Code_AdRoll)
+                                            .FirstOrDefault();
+                if (account != null)
+                    accountId = account.Id;
+                else
+                    accountId = -1;
+            }
         }
 
-        protected override int Load(List<DailySummary> items)
+        public bool FoundAccount()
         {
-            Logger.Info("Loading {0} Advertisable DailySummaries..", items.Count);
+            return (accountId > -1);
+        }
+
+        protected override int Load(List<AdrollDailySummary> items)
+        {
+            Logger.Info("Loading {0} AdRoll DailySummaries..", items.Count);
             var count = UpsertDailySummaries(items);
             return count;
         }
 
-        private int UpsertDailySummaries(List<DailySummary> items)
+        private int UpsertDailySummaries(List<AdrollDailySummary> items)
         {
             var addedCount = 0;
             var updatedCount = 0;
             var duplicateCount = 0;
             var itemCount = 0;
-            using (var db = new DirectAgents.Domain.Contexts.DATDContext())
+            using (var db = new DATDContext())
             {
                 foreach (var item in items)
                 {
-                    var source = new AdvertisableStat
+                    var source = new DailySummary
                     {
                         Date = item.date,
-                        AdvertisableId = advertisableId,
+                        AccountId = accountId,
                         Impressions = item.impressions,
                         Clicks = item.clicks,
-                        CTC = item.click_through_conversions,
-                        VTC = item.view_through_conversions,
-                        Cost = (decimal)item.cost_USD,
-                        Prospects = item.prospects
+                        Conversions = item.total_conversions,
+                        Cost = (decimal)item.cost_USD
                     };
-                    var target = db.Set<AdvertisableStat>().Find(item.date, advertisableId);
+                    var target = db.Set<DailySummary>().Find(item.date, accountId);
                     if (target == null)
                     {
-                        db.AdvertisableStats.Add(source);
+                        db.DailySummaries.Add(source);
                         addedCount++;
                     }
                     else
@@ -65,7 +78,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     }
                     itemCount++;
                 }
-                Logger.Info("Saving {0} AdvertisableStats ({1} updates, {2} additions, {3} duplicates)", itemCount, updatedCount, addedCount, duplicateCount);
+                Logger.Info("Saving {0} DailySummaries ({1} updates, {2} additions, {3} duplicates)", itemCount, updatedCount, addedCount, duplicateCount);
                 int numChanges = db.SaveChanges();
             }
             return itemCount;

@@ -42,6 +42,7 @@ namespace CakeExtracter.Commands
         public override int Execute(string[] remainingArguments)
         {
             DateTime updateTime = DateTime.Now;
+            bool loadedAny = false;
 
             if (DaysToInclude < 1) DaysToInclude = 1; // used if EndDate==null
             DateTime from = StartDate ?? DateTime.Today.AddDays(-DaysAgoToStart); // default: today
@@ -63,12 +64,15 @@ namespace CakeExtracter.Commands
 
                 var loadedOffAffs = loader.GetLoadedOffAffs();
                 if (loadedOffAffs.Any())
+                {
+                    loadedAny = true;
                     DeleteOldDailySummaries(date, initialOffAffs, loadedOffAffs);
+                }
                 else
                     Logger.Info("No CampaignSummaries loaded for {0:d}. Skipping delete", date);
             }
 
-            if (SetAdvUpdateTime && OfferId == 0)
+            if (SetAdvUpdateTime && OfferId == 0 && loadedAny)
             {
                 // Set "LatestDaySums" datetime
                 SynchDailySummariesCommand.SetUpdateTimeForAdvertisers(updateTime);

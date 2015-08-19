@@ -113,6 +113,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SecurityModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Entities\TD\DailySummary.cs" />
+    <Compile Include="Entities\TD\Platform.cs" />
     <Compile Include="Entities\Variable.cs" />
     <Compile Include="Entities\WikiPartials\Campaign.cs" />
     <Compile Include="Entities\WikiPartials\Country.cs" />
@@ -163,6 +165,10 @@
     <Compile Include="MigrationsTD\201507311921089_Mig_AdRollAds.cs" />
     <Compile Include="MigrationsTD\201507311921089_Mig_AdRollAds.Designer.cs">
       <DependentUpon>201507311921089_Mig_AdRollAds.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201508182009561_Mig_PlatformAccountDS.cs" />
+    <Compile Include="MigrationsTD\201508182009561_Mig_PlatformAccountDS.Designer.cs">
+      <DependentUpon>201508182009561_Mig_PlatformAccountDS.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
@@ -275,6 +281,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201507311921089_Mig_AdRollAds.resx">
       <DependentUpon>201507311921089_Mig_AdRollAds.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201508182009561_Mig_PlatformAccountDS.resx">
+      <DependentUpon>201508182009561_Mig_PlatformAccountDS.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

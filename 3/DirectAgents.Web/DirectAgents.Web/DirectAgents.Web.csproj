@@ -905,6 +905,7 @@
     <Content Include="Views\Screens\Variables.cshtml" />
     <Content Include="Views\Screens\EditSalesStats.cshtml" />
     <Content Include="Views\Screens\SalesStats.cshtml" />
+    <Content Include="Views\Stats\TDAccount.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

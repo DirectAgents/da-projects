@@ -1,15 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using DirectAgents.Domain.DTO;
-using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.AdRoll;
+using DirectAgents.Domain.Entities.TD;
 
 namespace DirectAgents.Domain.Abstract
 {
     public interface ITDRepository : IDisposable
     {
         void SaveChanges();
+
+        // TD
+        IQueryable<Account> Accounts(string platformCode);
+        IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? accountId = null);
+        TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Account account = null);
 
         // AdRoll
         IQueryable<Advertisable> Advertisables();

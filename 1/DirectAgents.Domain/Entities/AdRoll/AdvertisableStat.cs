@@ -32,6 +32,11 @@ namespace DirectAgents.Domain.Entities.AdRoll
         public decimal Spend { get; set; }
         public int Prospects { get; set; }
 
+        public bool AllZeros()
+        {
+            return (Impressions == 0 && Clicks == 0 && ClickThruConv == 0 && ViewThruConv == 0 && Spend == 0 && Prospects == 0);
+        }
+
         // Computed properties
         public double CTR
         {

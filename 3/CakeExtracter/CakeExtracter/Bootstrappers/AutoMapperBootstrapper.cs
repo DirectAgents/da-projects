@@ -21,6 +21,8 @@ namespace CakeExtracter.Bootstrappers
             Mapper.CreateMap<ClientPortal.Data.Entities.TD.DBM.UserListStat, ClientPortal.Data.Entities.TD.DBM.UserListStat>();
             Mapper.CreateMap<ClientPortal.Data.Entities.TD.AdRoll.AdDailySummary, ClientPortal.Data.Entities.TD.AdRoll.AdDailySummary>();
 
+            Mapper.CreateMap<DirectAgents.Domain.Entities.TD.DailySummary, DirectAgents.Domain.Entities.TD.DailySummary>();
+
             Mapper.CreateMap<DirectAgents.Domain.Entities.AdRoll.AdvertisableStat, DirectAgents.Domain.Entities.AdRoll.AdvertisableStat>();
             Mapper.CreateMap<DirectAgents.Domain.Entities.AdRoll.AdDailySummary, DirectAgents.Domain.Entities.AdRoll.AdDailySummary>();
         }

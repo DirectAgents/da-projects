@@ -118,7 +118,7 @@ namespace AdRoll
             return adSummaries;
         }
 
-        public List<DailySummary> AdvertisableSummaries(DateTime startDate, DateTime endDate, string advertisableEid)
+        public List<AdrollDailySummary> AdvertisableSummaries(DateTime startDate, DateTime endDate, string advertisableEid)
         {
             var request = new AdvertisableReportRequest
             {
@@ -130,7 +130,7 @@ namespace AdRoll
             if (response == null)
             {
                 LogInfo("No DailySummaries found for the Advertisable");
-                return new List<DailySummary>();
+                return new List<AdrollDailySummary>();
             }
             return response.results;
         }

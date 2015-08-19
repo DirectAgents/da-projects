@@ -4,14 +4,14 @@ using CakeExtracter.Common;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
-    public class AdrollApiExtracter : Extracter<AdSummary>
+    public class AdrollAdDailySummariesExtracter : Extracter<AdSummary>
     {
         private readonly DateRange dateRange;
         private readonly string advertisableEid;
 
         private AdRollUtility _arUtility;
 
-        public AdrollApiExtracter(DateRange dateRange, string advertiseableEid)
+        public AdrollAdDailySummariesExtracter(DateRange dateRange, string advertiseableEid)
         {
             this.dateRange = dateRange;
             this.advertisableEid = advertiseableEid;
@@ -32,7 +32,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         }
     }
 
-    public class AdrollDailySummariesExtracter : Extracter<DailySummary>
+    public class AdrollDailySummariesExtracter : Extracter<AdrollDailySummary>
     {
         private readonly DateRange dateRange;
         private readonly string advertisableEid;

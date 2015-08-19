@@ -3,6 +3,7 @@ using System.Linq;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.AdRoll;
+using DirectAgents.Domain.Entities.TD;
 
 namespace DirectAgents.Domain.Concrete
 {
@@ -20,6 +21,50 @@ namespace DirectAgents.Domain.Concrete
             context.SaveChanges();
         }
 
+        #region TD
+
+        public IQueryable<Account> Accounts(string platformCode)
+        {
+            var accounts = context.Accounts.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(platformCode))
+                accounts = accounts.Where(a => a.Platform.Code == platformCode);
+            return accounts;
+        }
+
+        public IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? accountId = null)
+        {
+            var dSums = context.DailySummaries.AsQueryable();
+            if (startDate.HasValue)
+                dSums = dSums.Where(ds => ds.Date >= startDate.Value);
+            if (endDate.HasValue)
+                dSums = dSums.Where(ds => ds.Date <= endDate.Value);
+            if (accountId.HasValue)
+                dSums = dSums.Where(ds => ds.AccountId == accountId.Value);
+            return dSums;
+        }
+
+        public TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Account account = null)
+        {
+            var stat = new TDStat
+            {
+                Account = account
+            };
+            int? accountId = (account != null) ? account.Id : (int?)null;
+            var dSums = DailySummaries(startDate, endDate, accountId: accountId);
+            //NOTE: This will sum stats for ALL accounts if none specified.
+            // Later, will we have other params, like campaign?
+
+            if (dSums.Any())
+            {
+                stat.Impressions = dSums.Sum(ds => ds.Impressions);
+                stat.Clicks = dSums.Sum(ds => ds.Clicks);
+                stat.Conversions = dSums.Sum(ds => ds.Conversions);
+                stat.Cost = Math.Round(dSums.Sum(ds => ds.Cost), 2);
+            }
+            return stat;
+        }
+
+        #endregion
         #region AdRoll
 
         public IQueryable<Advertisable> Advertisables()

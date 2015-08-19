@@ -1,0 +1,33 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.TD.TDStat>
+
+<h2>Programmatic</h2>
+
+MTD Stats - @DateTime.Now.ToShortDateString()
+
+<table>
+<tr>
+    <th>Name</th>
+    <th>Impressions</th>
+    <th>Clicks</th>
+    <th>CTR</th>
+    <th>CPM</th>
+    <th>CPC</th>
+    <th>CPA</th>
+    <th>Conv</th>
+    <th>Spend</th>
+</tr>
+@foreach (var stat in Model)
+{
+<tr>
+    <td>@stat.Name</td>
+    <td style="text-align:right">@stat.Impressions</td>
+    <td style="text-align:right">@stat.Clicks</td>
+    <td style="text-align:center">@stat.CTR</td>
+    <td style="text-align:center">@stat.CPM</td>
+    <td style="text-align:center">@stat.CPC</td>
+    <td style="text-align:center">@stat.CPA</td>
+    <td style="text-align:right">@stat.Conversions</td>
+    <td style="text-align:right">@stat.Cost</td>
+</tr>
+}
+</table>
