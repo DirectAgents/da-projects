@@ -42,31 +42,29 @@ namespace AdRoll
         }
 
         // --- Clients ---
-        private AdReportClient _AdReportClient;
         private AdReportClient AdReportClient
         {
-            get
-            {
-                if (_AdReportClient == null)
-                {
-                    _AdReportClient = new AdReportClient();
-                    SetupApiClient(_AdReportClient);
-                }
-                return _AdReportClient;
-            }
+            get { return (AdReportClient)GetClient(typeof(AdReportClient)); }
         }
-        private AdvertisableReportClient _AdvertisableReportClient;
         private AdvertisableReportClient AdvertisableReportClient
         {
-            get
+            get { return (AdvertisableReportClient)GetClient(typeof(AdvertisableReportClient)); }
+        }
+        private GetAdvertisablesClient GetAdvertisablesClient
+        {
+            get { return (GetAdvertisablesClient)GetClient(typeof(GetAdvertisablesClient)); }
+        }
+
+        private Dictionary<string, ApiClient> ClientsDict = new Dictionary<string, ApiClient>();
+        private ApiClient GetClient(Type clientType)
+        {
+            var key = clientType.Name;
+            if (!ClientsDict.ContainsKey(key))
             {
-                if (_AdvertisableReportClient == null)
-                {
-                    _AdvertisableReportClient = new AdvertisableReportClient();
-                    SetupApiClient(_AdvertisableReportClient);
-                }
-                return _AdvertisableReportClient;
+                ClientsDict[key] = (ApiClient)Activator.CreateInstance(clientType);
+                SetupApiClient(ClientsDict[key]);
             }
+            return ClientsDict[key];
         }
 
         private void SetupApiClient(ApiClient apiClient)
@@ -131,6 +129,17 @@ namespace AdRoll
             {
                 LogInfo("No DailySummaries found for the Advertisable");
                 return new List<AdrollDailySummary>();
+            }
+            return response.results;
+        }
+
+        public List<Advertisable> GetAdvertisables()
+        {
+            var response = this.GetAdvertisablesClient.Get();
+            if (response == null)
+            {
+                LogInfo("No Advertisables found");
+                return new List<Advertisable>();
             }
             return response.results;
         }

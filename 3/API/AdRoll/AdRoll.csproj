@@ -44,11 +44,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdRollUtility.cs" />
-    <Compile Include="Clients\AdReportClient.cs" />
-    <Compile Include="Clients\AdvertisableReportClient.cs" />
     <Compile Include="Clients\ApiClient.cs" />
     <Compile Include="Clients\ApiRequest.cs" />
+    <Compile Include="Clients\OrganizationClients.cs" />
+    <Compile Include="Clients\ReportClients.cs" />
     <Compile Include="Entities\AdSummary.cs" />
+    <Compile Include="Entities\Advertisable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

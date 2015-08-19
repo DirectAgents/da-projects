@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace AdRoll.Entities
 {
-    public class AdSummaryReportResponse
-    {
-        public List<AdSummary> results { get; set; }
-    }
-    public class DailySummaryReportResponse
-    {
-        public List<AdrollDailySummary> results { get; set; }
-    }
-
     public class StatSummary
     {
         public int impressions { get; set; }
