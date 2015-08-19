@@ -23,7 +23,6 @@ namespace CakeExtracter.Bootstrappers
 
             Mapper.CreateMap<DirectAgents.Domain.Entities.TD.DailySummary, DirectAgents.Domain.Entities.TD.DailySummary>();
 
-            Mapper.CreateMap<DirectAgents.Domain.Entities.AdRoll.AdvertisableStat, DirectAgents.Domain.Entities.AdRoll.AdvertisableStat>();
             Mapper.CreateMap<DirectAgents.Domain.Entities.AdRoll.AdDailySummary, DirectAgents.Domain.Entities.AdRoll.AdDailySummary>();
         }
     }

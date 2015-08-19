@@ -6,7 +6,8 @@ MTD Stats - @DateTime.Now.ToShortDateString()
 
 <table>
 <tr>
-    <th>Name</th>
+    <th>Platform</th>
+    <th>Account</th>
     <th>Impressions</th>
     <th>Clicks</th>
     <th>CTR</th>
@@ -19,7 +20,15 @@ MTD Stats - @DateTime.Now.ToShortDateString()
 @foreach (var stat in Model)
 {
 <tr>
-    <td>@stat.Name</td>
+    <td>@stat.PlatformName</td>
+    <td>
+        @if (stat.Account.Platform.Code == DirectAgents.Domain.Entities.TD.Platform.Code_AdRoll)
+        {
+            @Html.ActionLink(stat.AccountName, "AdRoll", new { advEid = stat.Account.ExternalId })
+        } else {
+            @stat.AccountName
+        }
+    </td>
     <td style="text-align:right">@stat.Impressions</td>
     <td style="text-align:right">@stat.Clicks</td>
     <td style="text-align:center">@stat.CTR</td>

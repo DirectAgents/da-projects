@@ -20,9 +20,13 @@ namespace DirectAgents.Domain.Entities.TD
     {
         //public string Name { get; set; }
         public Account Account { get; set; }
-        public string Name
+        public string AccountName
         {
             get { return (Account != null) ? Account.Name : string.Empty; }
+        }
+        public string PlatformName
+        {
+            get { return (Account != null && Account.Platform != null) ? Account.Platform.Name : string.Empty; }
         }
 
         public int Impressions { get; set; }

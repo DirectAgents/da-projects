@@ -76,7 +76,6 @@
     <Compile Include="Entities\AdRoll\Ad.cs" />
     <Compile Include="Entities\AdRoll\AdDailySummary.cs" />
     <Compile Include="Entities\AdRoll\Advertisable.cs" />
-    <Compile Include="Entities\AdRoll\AdvertisableStat.cs" />
     <Compile Include="Entities\Cake\Advertiser.cs" />
     <Compile Include="Entities\Cake\Contact.cs" />
     <Compile Include="Entities\Cake\Offer.cs" />
@@ -169,6 +168,10 @@
     <Compile Include="MigrationsTD\201508182009561_Mig_PlatformAccountDS.cs" />
     <Compile Include="MigrationsTD\201508182009561_Mig_PlatformAccountDS.Designer.cs">
       <DependentUpon>201508182009561_Mig_PlatformAccountDS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201508182124301_Mig_RmAdvertisableStat.cs" />
+    <Compile Include="MigrationsTD\201508182124301_Mig_RmAdvertisableStat.Designer.cs">
+      <DependentUpon>201508182124301_Mig_RmAdvertisableStat.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
@@ -284,6 +287,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201508182009561_Mig_PlatformAccountDS.resx">
       <DependentUpon>201508182009561_Mig_PlatformAccountDS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201508182124301_Mig_RmAdvertisableStat.resx">
+      <DependentUpon>201508182124301_Mig_RmAdvertisableStat.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

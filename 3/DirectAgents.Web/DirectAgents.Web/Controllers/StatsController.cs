@@ -144,29 +144,20 @@ namespace DirectAgents.Web.Controllers
             return View(stats);
         }
 
-        public ActionResult AdRoll(int? advId)
+        public ActionResult AdRoll(string advEid)
         {
             var today = DateTime.Today;
             var startOfMonth = new DateTime(today.Year, today.Month, 1);
             var stats = new List<AdRollStat>();
 
-            if (advId.HasValue)
+            if (!string.IsNullOrWhiteSpace(advEid))
             {
-                var ads = tdRepo.AdRoll_Ads(advId);
+                var ads = tdRepo.AdRoll_Ads(advEid: advEid);
                 foreach (var ad in ads)
                 {   //Note: Multiple Active Record Sets used here
                     var stat = tdRepo.GetAdRollStat(ad, startOfMonth, null); // MTD
                     if (!stat.AllZeros())
                         stats.Add(stat);
-                }
-            }
-            else
-            {
-                var advertisables = tdRepo.Advertisables();
-                foreach (var adv in advertisables)
-                {   //Note: Multiple Active Record Sets used here
-                    var stat = tdRepo.GetAdRollStat(adv, startOfMonth, null); // MTD
-                    stats.Add(stat);
                 }
             }
             var model = stats.OrderBy(a => a.Name).ToList();

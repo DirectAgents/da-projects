@@ -71,25 +71,17 @@ namespace DirectAgents.Domain.Concrete
         {
             return context.Advertisables;
         }
-        public IQueryable<Ad> AdRoll_Ads(int? advId)
+
+        public IQueryable<Ad> AdRoll_Ads(int? advId = null, string advEid = null)
         {
             var ads = context.AdRollAds.AsQueryable();
             if (advId.HasValue)
                 ads = ads.Where(a => a.AdvertisableId == advId.Value);
+            if (!string.IsNullOrWhiteSpace(advEid))
+                ads = ads.Where(a => a.Advertisable.Eid == advEid);
             return ads;
         }
 
-        public IQueryable<AdvertisableStat> AdvertisableStats(int? advertisableId, DateTime? startDate, DateTime? endDate)
-        {
-            var advStats = context.AdvertisableStats.AsQueryable();
-            if (advertisableId.HasValue)
-                advStats = advStats.Where(a => a.AdvertisableId == advertisableId.Value);
-            if (startDate.HasValue)
-                advStats = advStats.Where(a => a.Date >= startDate.Value);
-            if (endDate.HasValue)
-                advStats = advStats.Where(a => a.Date <= endDate.Value);
-            return advStats;
-        }
         public IQueryable<AdDailySummary> AdRoll_AdDailySummaries(int? advertisableId, int? adId, DateTime? startDate, DateTime? endDate)
         {
             var ads = context.AdRollAdDailySummaries.AsQueryable();
@@ -102,30 +94,6 @@ namespace DirectAgents.Domain.Concrete
             if (endDate.HasValue)
                 ads = ads.Where(a => a.Date <= endDate.Value);
             return ads;
-        }
-
-        public void FillStats(Advertisable adv, DateTime? startDate, DateTime? endDate)
-        {
-            var stat = GetAdRollStat(adv, startDate, endDate);
-            adv.Stats = stat;
-        }
-        public AdRollStat GetAdRollStat(Advertisable adv, DateTime? startDate, DateTime? endDate)
-        {
-            var stat = new AdRollStat
-            {
-                Name = adv.Name
-            };
-            var advStats = AdvertisableStats(adv.Id, startDate, endDate);
-            if (advStats.Any())
-            {
-                stat.Impressions = advStats.Sum(a => a.Impressions);
-                stat.Clicks = advStats.Sum(a => a.Clicks);
-                stat.ClickThruConv = advStats.Sum(a => a.CTC);
-                stat.ViewThruConv = advStats.Sum(a => a.VTC);
-                stat.Spend = Math.Round(advStats.Sum(a => a.Cost), 2);
-                stat.Prospects = advStats.Sum(a => a.Prospects);
-            }
-            return stat;
         }
 
         public AdRollStat GetAdRollStat(Ad ad, DateTime? startDate, DateTime? endDate)

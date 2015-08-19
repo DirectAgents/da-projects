@@ -16,11 +16,8 @@ namespace DirectAgents.Domain.Abstract
 
         // AdRoll
         IQueryable<Advertisable> Advertisables();
-        IQueryable<Ad> AdRoll_Ads(int? advId);
-        IQueryable<AdvertisableStat> AdvertisableStats(int? advertisableId, DateTime? startDate, DateTime? endDate);
+        IQueryable<Ad> AdRoll_Ads(int? advId = null, string advEid = null);
         IQueryable<AdDailySummary> AdRoll_AdDailySummaries(int? advertisableId, int? adId, DateTime? startDate, DateTime? endDate);
-        void FillStats(Advertisable adv, DateTime? startDate, DateTime? endDate);
-        AdRollStat GetAdRollStat(Advertisable adv, DateTime? startDate, DateTime? endDate);
         AdRollStat GetAdRollStat(Ad ad, DateTime? startDate, DateTime? endDate);
     }
 }

@@ -18,11 +18,6 @@ namespace DirectAgents.Domain.Contexts
 
             // AdRoll
             modelBuilder.Entity<Advertisable>().ToTable("Advertisable", adrollSchema);
-            modelBuilder.Entity<AdvertisableStat>()
-                .HasKey(t => new { t.Date, t.AdvertisableId })
-                .ToTable("AdvertisableStat", adrollSchema);
-            modelBuilder.Entity<AdvertisableStat>()
-                .Property(t => t.Cost).HasPrecision(18, 6);
             modelBuilder.Entity<Ad>().ToTable("Ad", adrollSchema);
             modelBuilder.Entity<AdDailySummary>()
                 .HasKey(ds => new { ds.Date, ds.AdId })
@@ -42,7 +37,6 @@ namespace DirectAgents.Domain.Contexts
 
         // AdRoll
         public DbSet<Advertisable> Advertisables { get; set; }
-        public DbSet<AdvertisableStat> AdvertisableStats { get; set; }
         public DbSet<Ad> AdRollAds { get; set; }
         public DbSet<AdDailySummary> AdRollAdDailySummaries { get; set; }
 
