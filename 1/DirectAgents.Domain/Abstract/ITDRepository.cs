@@ -10,7 +10,7 @@ namespace DirectAgents.Domain.Abstract
         void SaveChanges();
 
         // TD
-        IQueryable<Account> Accounts(string platformCode);
+        IQueryable<Account> Accounts(string platformCode = null);
         IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? accountId = null);
         TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Account account = null);
 

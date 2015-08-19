@@ -150,6 +150,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\NinjectWebCommon.cs" />
+    <Compile Include="Areas\TD\Controllers\AccountsController.cs" />
+    <Compile Include="Areas\TD\Controllers\StatsController.cs" />
+    <Compile Include="Areas\TD\TDAreaRegistration.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\ScreensController.cs" />
@@ -771,6 +774,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\TD\Models\" />
+    <Folder Include="Areas\TD\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -890,6 +895,10 @@
     <Content Include="Views\Shared\DisplayTemplates\Money.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\TD\Views\web.config" />
+    <Content Include="Areas\TD\Views\Accounts\Index.cshtml" />
+    <Content Include="Areas\TD\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\TD\Views\Stats\Account.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

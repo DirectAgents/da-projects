@@ -23,7 +23,7 @@ namespace DirectAgents.Domain.Concrete
 
         #region TD
 
-        public IQueryable<Account> Accounts(string platformCode)
+        public IQueryable<Account> Accounts(string platformCode = null)
         {
             var accounts = context.Accounts.AsQueryable();
             if (!string.IsNullOrWhiteSpace(platformCode))
