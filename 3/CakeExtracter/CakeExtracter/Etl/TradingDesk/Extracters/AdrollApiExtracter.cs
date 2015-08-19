@@ -4,6 +4,24 @@ using CakeExtracter.Common;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
+    public class AdrollAdvertisablesExtracter : Extracter<Advertisable>
+    {
+        private AdRollUtility _arUtility;
+
+        public AdrollAdvertisablesExtracter()
+        {
+            _arUtility = new AdRollUtility(m => Logger.Info(m), m => Logger.Warn(m));
+        }
+
+        protected override void Extract()
+        {
+            Logger.Info("Extracting Advertisables");
+            var advs = _arUtility.GetAdvertisables();
+            Add(advs);
+            End();
+        }
+    }
+
     public class AdrollAdDailySummariesExtracter : Extracter<AdSummary>
     {
         private readonly DateRange dateRange;
@@ -56,6 +74,5 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             End();
         }
     }
-
     //Note: Looks like we don't need to handle days with no stats? The AdRoll API always returns a record (possibly zero-filled)
 }
