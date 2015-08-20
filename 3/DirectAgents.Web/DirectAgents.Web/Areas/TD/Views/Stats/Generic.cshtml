@@ -1,34 +1,25 @@
-﻿@model IEnumerable<DirectAgents.Domain.Entities.TD.TDStat>
+﻿@model DirectAgents.Web.Areas.TD.Models.TDStatsVM
 
 <h2>Programmatic</h2>
 
-MTD Stats - @DateTime.Now.ToShortDateString()
+@Model.Name
 
 <table>
 <tr>
-    <th>Platform</th>
-    <th>Account</th>
+    <th>Name</th>
     <th>Impressions</th>
     <th>Clicks</th>
     <th>CTR</th>
     <th>CPM</th>
     <th>CPC</th>
     <th>CPA</th>
-    <th>Conv</th>
+    <th>Conversions</th>
     <th>Spend</th>
 </tr>
-@foreach (var stat in Model)
+@foreach (var stat in Model.Stats)
 {
 <tr>
-    <td>@stat.PlatformName</td>
-    <td>
-        @if (stat.Account.Platform.Code == DirectAgents.Domain.Entities.TD.Platform.Code_AdRoll)
-        {
-            @Html.ActionLink(stat.AccountName, "AdRoll", new { advEid = stat.Account.ExternalId })
-        } else {
-            @stat.AccountName
-        }
-    </td>
+    <td>@stat.Name</td>
     <td style="text-align:right">@stat.Impressions</td>
     <td style="text-align:right">@stat.Clicks</td>
     <td style="text-align:center">@stat.CTR</td>
@@ -37,6 +28,21 @@ MTD Stats - @DateTime.Now.ToShortDateString()
     <td style="text-align:center">@stat.CPA</td>
     <td style="text-align:right">@stat.Conversions</td>
     <td style="text-align:right">@stat.Cost</td>
+</tr>
+}
+@if (Model.StatsTotal != null)
+{
+    var tot = Model.StatsTotal;
+<tr>
+    <th>@tot.Name</th>
+    <th>@tot.Impressions</th>
+    <th>@tot.Clicks</th>
+    <th>@tot.CTR</th>
+    <th>@tot.CPM</th>
+    <th>@tot.CPC</th>
+    <th>@tot.CPA</th>
+    <th>@tot.Conversions</th>
+    <th>@tot.Cost</th>
 </tr>
 }
 </table>

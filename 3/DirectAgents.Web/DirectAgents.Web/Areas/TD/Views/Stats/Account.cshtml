@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DirectAgents.Domain.Entities.TD.TDStat>
+﻿@model IEnumerable<DirectAgents.Domain.Entities.TD.TDStatWithAccount>
 
 <h2>Programmatic</h2>
 
@@ -25,7 +25,13 @@ MTD Stats - @DateTime.Now.ToShortDateString()
         @if (stat.Account.Platform.Code == DirectAgents.Domain.Entities.TD.Platform.Code_AdRoll)
         {
             @Html.ActionLink(stat.AccountName, "AdRoll", new { advEid = stat.Account.ExternalId, area = "" })
-        } else {
+        }
+        else if (stat.Account.Platform.Code == DirectAgents.Domain.Entities.TD.Platform.Code_DBM)
+        {
+            @Html.ActionLink(stat.AccountName, "DBM", new { ioID = stat.Account.ExternalId })
+        }
+        else
+        {
             @stat.AccountName
         }
     </td>

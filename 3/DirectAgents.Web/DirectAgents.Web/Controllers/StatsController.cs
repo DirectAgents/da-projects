@@ -128,22 +128,6 @@ namespace DirectAgents.Web.Controllers
             return json.ToJsonp();
         }
 
-        public ActionResult TDAccount(string platformCode) // (account)id / platformId / ExternalId ?
-        {
-            var today = DateTime.Today;
-            var startOfMonth = new DateTime(today.Year, today.Month, 1);
-            var stats = new List<TDStat>();
-
-            var accounts = tdRepo.Accounts(platformCode: platformCode)
-                            .OrderBy(a => a.Platform.Code).ThenBy(a => a.Name);
-            foreach (var account in accounts)
-            {   //Note: Multiple Active Record Sets used here
-                var stat = tdRepo.GetTDStat(startOfMonth, null, account: account); // MTD
-                stats.Add(stat);
-            }
-            return View(stats);
-        }
-
         public ActionResult AdRoll(string advEid)
         {
             var today = DateTime.Today;

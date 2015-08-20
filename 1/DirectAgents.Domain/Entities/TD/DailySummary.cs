@@ -16,9 +16,8 @@ namespace DirectAgents.Domain.Entities.TD
     }
 
     // DTO
-    public class TDStat
+    public class TDStatWithAccount : TDStat
     {
-        //public string Name { get; set; }
         public Account Account { get; set; }
         public string AccountName
         {
@@ -28,6 +27,11 @@ namespace DirectAgents.Domain.Entities.TD
         {
             get { return (Account != null && Account.Platform != null) ? Account.Platform.Name : string.Empty; }
         }
+    }
+
+    public class TDStat
+    {
+        public string Name { get; set; }
 
         public int Impressions { get; set; }
         public int Clicks { get; set; }
