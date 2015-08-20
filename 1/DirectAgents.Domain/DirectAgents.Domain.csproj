@@ -85,6 +85,9 @@
     <Compile Include="Entities\Cake\OfferType.cs" />
     <Compile Include="Entities\Cake\Role.cs" />
     <Compile Include="Entities\Cake\Vertical.cs" />
+    <Compile Include="Entities\DBM\Creative.cs" />
+    <Compile Include="Entities\DBM\CreativeDailySummary.cs" />
+    <Compile Include="Entities\DBM\InsertionOrder.cs" />
     <Compile Include="Entities\OfferBudget.cs" />
     <Compile Include="Entities\Screen\Salesperson.cs" />
     <Compile Include="Entities\Screen\SalespersonStat.cs" />
@@ -172,6 +175,10 @@
     <Compile Include="MigrationsTD\201508182124301_Mig_RmAdvertisableStat.cs" />
     <Compile Include="MigrationsTD\201508182124301_Mig_RmAdvertisableStat.Designer.cs">
       <DependentUpon>201508182124301_Mig_RmAdvertisableStat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201508192107109_Mig_DBM.cs" />
+    <Compile Include="MigrationsTD\201508192107109_Mig_DBM.Designer.cs">
+      <DependentUpon>201508192107109_Mig_DBM.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
@@ -290,6 +297,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201508182124301_Mig_RmAdvertisableStat.resx">
       <DependentUpon>201508182124301_Mig_RmAdvertisableStat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201508192107109_Mig_DBM.resx">
+      <DependentUpon>201508192107109_Mig_DBM.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>
