@@ -28,7 +28,8 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
             {
                 foreach(var item in items)
                 {
-                    DateTime date = DateTime.Parse(item.Date);
+                    //DateTime date = DateTime.Parse(item.Date);
+                    var date = item.Date;
                     var source = new DBMDailySummary
                     {
                         Date = date,

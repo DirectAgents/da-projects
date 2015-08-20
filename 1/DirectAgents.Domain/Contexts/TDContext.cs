@@ -59,6 +59,6 @@ namespace DirectAgents.Domain.Contexts
         // DBM
         public DbSet<InsertionOrder> InsertionOrders { get; set; }
         public DbSet<Creative> Creatives { get; set; }
-        public DbSet<CreativeDailySummary> CreativeDailySummaries { get; set; }
+        public DbSet<CreativeDailySummary> DBMCreativeDailySummaries { get; set; }
     }
 }

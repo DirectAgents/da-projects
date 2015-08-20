@@ -117,7 +117,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
     public class DbmRowBase
     {
-        public string Date { get; set; }
+        public DateTime Date { get; set; }
 
         public string InsertionOrder { get; set; }
         public int InsertionOrderID { get; set; }

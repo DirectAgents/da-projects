@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using CakeExtracter.Etl.TradingDesk.Extracters;
-using ClientPortal.Data.Entities.TD;
-using ClientPortal.Data.Entities.TD.DBM;
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.DBM;
 
-namespace CakeExtracter.Etl.TradingDesk.Loaders
+namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
-    public class DbmCreativeDailySummaryLoader : Loader<DbmRowBase>
+    public class DBMCreativeDailySummaryLoader : Loader<DbmRowBase>
     {
-
         protected override int Load(List<DbmRowBase> items)
         {
             Logger.Info("Loading {0} CreativeDailySummaries..", items.Count);
-            DbmDailySummaryLoader.AddUpdateDependentInsertionOrders(items);
+            AddUpdateDependentInsertionOrders(items);
             AddUpdateDependentCreatives(items);
             var count = UpsertCreativeDailySummaries(items);
             return count;
@@ -25,7 +24,7 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
             var addedCount = 0;
             var updatedCount = 0;
             var itemCount = 0;
-            using (var db = new TDContext())
+            using (var db = new DATDContext())
             {
                 foreach (var item in items)
                 {
@@ -44,7 +43,7 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                     var target = db.Set<CreativeDailySummary>().Find(date, creativeID);
                     if (target == null)
                     {
-                        db.CreativeDailySummaries.Add(source);
+                        db.DBMCreativeDailySummaries.Add(source);
                         addedCount++;
                     }
                     else
@@ -63,20 +62,52 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
             return itemCount;
         }
 
-        private void AddUpdateDependentCreatives(List<DbmRowBase> items)
+        public static void AddUpdateDependentInsertionOrders(List<DbmRowBase> items)
         {
-            using (var db = new TDContext())
+            var ioTuples = items.Select(i => Tuple.Create(i.InsertionOrderID, i.InsertionOrder)).Distinct();
+            AddUpdateInsertionOrders(ioTuples);
+        }
+        public static void AddUpdateInsertionOrders(IEnumerable<Tuple<int, string>> ioTuples)
+        {
+            using (var db = new DATDContext())
             {
-                var tuples = items.Select(i => Tuple.Create(((DbmRowWithCreative)i).CreativeID, ((DbmRowWithCreative)i).Creative, i.InsertionOrderID)).Distinct();
+                foreach (var ioTuple in ioTuples)
+                {
+                    int insertionOrderID = ioTuple.Item1;
+                    string insertionOrderName = ioTuple.Item2;
+                    InsertionOrder existing = db.InsertionOrders.Find(insertionOrderID);
+                    if (existing == null)
+                    {
+                        var io = new InsertionOrder
+                        {
+                            ID = insertionOrderID,
+                            Name = insertionOrderName
+                        };
+                        db.InsertionOrders.Add(io);
+                        Logger.Info("Saving new InsertionOrder: {0} ({1})", io.Name, io.ID);
+                        db.SaveChanges();
+                    }
+                    else if (existing.Name != insertionOrderName)
+                    {
+                        existing.Name = insertionOrderName;
+                        Logger.Info("Saving updated InsertionOrder: {0} ({1})", insertionOrderName, existing.ID);
+                        db.SaveChanges();
+                    }
+                }
+            }
+        }
+
+        private static void AddUpdateDependentCreatives(List<DbmRowBase> items)
+        {
+            var tuples = items.Select(i => Tuple.Create(((DbmRowWithCreative)i).CreativeID, ((DbmRowWithCreative)i).Creative, i.InsertionOrderID)).Distinct();
+
+            using (var db = new DATDContext())
+            {
                 foreach (var tuple in tuples)
                 {
                     int creativeID;
                     string creativeName = tuple.Item2;
                     int insertionOrderID = tuple.Item3;
-
-                    //FOR DEMO
-                    if (creativeName.StartsWith("Betterment ") || creativeName.StartsWith("Betterment_"))
-                        creativeName = creativeName.Substring(11);
 
                     if (int.TryParse(tuple.Item1, out creativeID))
                     {
@@ -85,24 +116,23 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                         {
                             var creative = new Creative
                             {
-                                CreativeID = creativeID,
-                                CreativeName = creativeName,
+                                ID = creativeID,
+                                Name = creativeName,
                                 InsertionOrderID = insertionOrderID
                             };
                             db.Creatives.Add(creative);
-                            Logger.Info("Saving new Creative: {0} ({1})", creative.CreativeName, creative.CreativeID);
+                            Logger.Info("Saving new Creative: {0} ({1})", creative.Name, creative.ID);
                             db.SaveChanges();
                         }
-                        else if (existing.CreativeName != creativeName)
+                        else if (existing.Name != creativeName)
                         {
-                            existing.CreativeName = creativeName;
-                            Logger.Info("Saving updated Creative: {0} ({1})", creativeName, existing.CreativeID);
+                            existing.Name = creativeName;
+                            Logger.Info("Saving updated Creative: {0} ({1})", creativeName, existing.ID);
                             db.SaveChanges();
                         }
                     }
                 }
             }
         }
-
     }
 }
