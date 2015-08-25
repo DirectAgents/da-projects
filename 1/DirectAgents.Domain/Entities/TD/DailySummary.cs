@@ -10,9 +10,11 @@ namespace DirectAgents.Domain.Entities.TD
 
         public int Impressions { get; set; }
         public int Clicks { get; set; }
-        public int Conversions { get; set; }
-        // CTC? VTC?
+        public int PostClickConv { get; set; }
+        public int PostViewConv { get; set; }
         public decimal Cost { get; set; }
+
+        //TotalConv
     }
 
     // DTO
@@ -35,12 +37,19 @@ namespace DirectAgents.Domain.Entities.TD
 
         public int Impressions { get; set; }
         public int Clicks { get; set; }
-        public int Conversions { get; set; }
+        public int PostClickConv { get; set; }
+        public int PostViewConv { get; set; }
         public decimal Cost { get; set; }
+        //public int Prospects { get; set; }
+
+        public int TotalConv
+        {
+            get { return PostClickConv + PostViewConv; }
+        }
 
         public bool AllZeros()
         {
-            return (Impressions == 0 && Clicks == 0 && Conversions == 0 && Cost == 0);
+            return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0);
         }
 
         // Computed properties
@@ -50,7 +59,7 @@ namespace DirectAgents.Domain.Entities.TD
         }
         public double ConvRate
         {
-            get { return (Clicks == 0) ? 0 : Math.Round((double)Conversions / Clicks, 4); }
+            get { return (Clicks == 0) ? 0 : Math.Round((double)TotalConv / Clicks, 4); }
         }
 
         public decimal CPM
@@ -63,7 +72,7 @@ namespace DirectAgents.Domain.Entities.TD
         }
         public decimal CPA
         {
-            get { return (Conversions == 0) ? 0 : Math.Round(Cost / Conversions, 2); }
+            get { return (TotalConv == 0) ? 0 : Math.Round(Cost / TotalConv, 2); }
         }
     }
 }

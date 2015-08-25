@@ -1,8 +1,8 @@
-﻿@model IEnumerable<DirectAgents.Domain.Entities.AdRoll.AdRollStat>
+﻿@model DirectAgents.Web.Areas.TD.Models.TDStatsVM
 
 <h2>Programmatic</h2>
 
-ADRoll MTD Stats - @DateTime.Now.ToShortDateString()
+@Model.Name
 
 <table>
 <tr>
@@ -16,9 +16,9 @@ ADRoll MTD Stats - @DateTime.Now.ToShortDateString()
     <th>VTC</th>
     <th>CTC</th>
     <th>TotalConv</th>
-    <th>Spend</th>
+    <th>Cost</th>
 </tr>
-@foreach (var stat in Model)
+@foreach (var stat in Model.Stats)
 {
 <tr>
     <td>@stat.Name</td>
@@ -28,10 +28,27 @@ ADRoll MTD Stats - @DateTime.Now.ToShortDateString()
     <td style="text-align:center">@stat.CPM</td>
     <td style="text-align:center">@stat.CPC</td>
     <td style="text-align:center">@stat.CPA</td>
-    <td style="text-align:right">@stat.ViewThruConv</td>
-    <td style="text-align:right">@stat.ClickThruConv</td>
+    <td style="text-align:right">@stat.PostViewConv</td>
+    <td style="text-align:right">@stat.PostClickConv</td>
     <td style="text-align:right">@stat.TotalConv</td>
-    <td style="text-align:right">@stat.Spend</td>
+    <td style="text-align:right">@stat.Cost</td>
+</tr>
+}
+@if (Model.StatsTotal != null)
+{
+    var tot = Model.StatsTotal;
+<tr>
+    <th>@tot.Name</th>
+    <th>@tot.Impressions</th>
+    <th>@tot.Clicks</th>
+    <th>@tot.CTR</th>
+    <th>@tot.CPM</th>
+    <th>@tot.CPC</th>
+    <th>@tot.CPA</th>
+    <th>@tot.PostViewConv</th>
+    <th>@tot.PostClickConv</th>
+    <th>@tot.TotalConv</th>
+    <th>@tot.Cost</th>
 </tr>
 }
 </table>

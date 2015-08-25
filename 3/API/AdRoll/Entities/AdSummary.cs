@@ -8,15 +8,13 @@ namespace AdRoll.Entities
         // paid_impressions
         public int click_through_conversions { get; set; }
         public int view_through_conversions { get; set; }
-        public int total_conversions { get; set; } // TODO: remove this - if don't need it for AdDailySummaries anymore
-        // adjusted verions... ctc, vtc, total_converions
         public int clicks { get; set; }
         public double cost_USD { get; set; }
         public int prospects { get; set; }
 
         public bool AllZeros()
         {
-            return (impressions == 0 && clicks == 0 && click_through_conversions == 0 && view_through_conversions == 0 && total_conversions == 0 && cost_USD == 0 && prospects == 0);
+            return (impressions == 0 && clicks == 0 && click_through_conversions == 0 && view_through_conversions == 0 && cost_USD == 0 && prospects == 0);
         }
     }
 

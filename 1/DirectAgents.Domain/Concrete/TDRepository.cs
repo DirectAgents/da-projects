@@ -59,7 +59,8 @@ namespace DirectAgents.Domain.Concrete
             {
                 stat.Impressions = dSums.Sum(ds => ds.Impressions);
                 stat.Clicks = dSums.Sum(ds => ds.Clicks);
-                stat.Conversions = dSums.Sum(ds => ds.Conversions);
+                stat.PostClickConv = dSums.Sum(ds => ds.PostClickConv);
+                stat.PostViewConv = dSums.Sum(ds => ds.PostViewConv);
                 stat.Cost = Math.Round(dSums.Sum(ds => ds.Cost), 2);
             }
             return stat;
@@ -68,6 +69,10 @@ namespace DirectAgents.Domain.Concrete
         #endregion
         #region AdRoll
 
+        public Advertisable Advertisable(string eid)
+        {
+            return context.Advertisables.Where(a => a.Eid == eid).SingleOrDefault();
+        }
         public IQueryable<Advertisable> Advertisables()
         {
             return context.Advertisables;
@@ -97,9 +102,9 @@ namespace DirectAgents.Domain.Concrete
             return ads;
         }
 
-        public AdRollStat GetAdRollStat(Ad ad, DateTime? startDate, DateTime? endDate)
+        public TDStat GetAdRollStat(Ad ad, DateTime? startDate, DateTime? endDate)
         {
-            var stat = new AdRollStat
+            var stat = new TDStat
             {
                 Name = ad.Name
             };
@@ -108,10 +113,10 @@ namespace DirectAgents.Domain.Concrete
             {
                 stat.Impressions = ads.Sum(a => a.Impressions);
                 stat.Clicks = ads.Sum(a => a.Clicks);
-                stat.ClickThruConv = ads.Sum(a => a.CTC);
-                stat.ViewThruConv = ads.Sum(a => a.VTC);
-                stat.Spend = Math.Round(ads.Sum(a => a.Cost), 2);
-                stat.Prospects = ads.Sum(a => a.Prospects);
+                stat.PostClickConv = ads.Sum(a => a.CTC);
+                stat.PostViewConv = ads.Sum(a => a.VTC);
+                stat.Cost = Math.Round(ads.Sum(a => a.Cost), 2);
+                //stat.Prospects = ads.Sum(a => a.Prospects);
             }
             return stat;
         }
@@ -161,8 +166,8 @@ namespace DirectAgents.Domain.Concrete
             {
                 stat.Impressions = cds.Sum(c => c.Impressions);
                 stat.Clicks = cds.Sum(c => c.Clicks);
-                //stat.Conversions = cds.Sum(c => c.Conversions);
-                stat.Conversions = cds.Sum(c => c.PostClickConv) + cds.Sum(c => c.PostViewConv);
+                stat.PostClickConv = cds.Sum(c => c.PostClickConv);
+                stat.PostViewConv = cds.Sum(c => c.PostViewConv);
                 stat.Cost = cds.Sum(c => c.Revenue);
             }
             return stat;

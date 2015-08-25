@@ -14,8 +14,10 @@ MTD Stats - @DateTime.Now.ToShortDateString()
     <th>CPM</th>
     <th>CPC</th>
     <th>CPA</th>
-    <th>Conv</th>
-    <th>Spend</th>
+    <th>PostClick Conv</th>
+    <th>PostView Conv</th>
+    <th>Total Conv</th>
+    <th>Cost</th>
 </tr>
 @foreach (var stat in Model)
 {
@@ -41,7 +43,9 @@ MTD Stats - @DateTime.Now.ToShortDateString()
     <td style="text-align:center">@stat.CPM</td>
     <td style="text-align:center">@stat.CPC</td>
     <td style="text-align:center">@stat.CPA</td>
-    <td style="text-align:right">@stat.Conversions</td>
+    <td style="text-align:right">@stat.PostClickConv</td>
+    <td style="text-align:right">@stat.PostViewConv</td>
+    <td style="text-align:right">@stat.TotalConv</td>
     <td style="text-align:right">@stat.Cost</td>
 </tr>
 }

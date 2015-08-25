@@ -97,23 +97,9 @@ namespace CakeExtracter.Commands
                 foreach (var io in insertionOrders)
                 {
                     var accountId = db.Accounts.Where(a => a.ExternalId == io.ID.ToString()).First().Id;
-                    //var existingDSums = db.DailySummaries.Where(ds => ds.AccountId == accountId);
 
                     var cdSumsForIO = cdSums.Where(cds => cds.Creative.InsertionOrderID == io.ID);
                     var statDates = cdSums.Select(cds => cds.Date).Distinct().ToList();
-                    //var cdsGroups = cdSums.Where(cds => cds.Creative.InsertionOrderID == io.ID)
-                    //                    .GroupBy(cds => cds.Date);
-                    //var newDSums = cdsGroups.Select(g =>
-                    //    new DailySummary
-                    //    {
-                    //        Date = g.Key,
-                    //        AccountId = accountId,
-                    //        Impressions = g.Sum(cds => cds.Impressions),
-                    //        Clicks = g.Sum(cds => cds.Clicks),
-                    //        Conversions = g.Sum(cds => cds.Conversions),
-                    //        Cost = g.Sum(cds => cds.Revenue)
-                    //    }).ToList();
-                    //var statDates = newDSums.Select(ds => ds.Date);
                     foreach (var date in dateRange.Dates)
                     {
                         var existingDS = db.DailySummaries.Find(date, accountId);
@@ -125,7 +111,6 @@ namespace CakeExtracter.Commands
                         }
                         else
                         { // Add or update tdDailySummary
-                            //var newDS = newDSums.First(ds => ds.Date == date);
                             var cds1day = cdSumsForIO.Where(cds => cds.Date == date);
                             var newDS = new DailySummary
                             {
@@ -133,8 +118,8 @@ namespace CakeExtracter.Commands
                                 AccountId = accountId,
                                 Impressions = cds1day.Sum(cds => cds.Impressions),
                                 Clicks = cds1day.Sum(cds => cds.Clicks),
-                                //Conversions = cds1day.Sum(cds => cds.Conversions),
-                                Conversions = cds1day.Sum(cds => cds.PostClickConv) + cds1day.Sum(cds => cds.PostViewConv),
+                                PostClickConv = cds1day.Sum(cds => cds.PostClickConv),
+                                PostViewConv = cds1day.Sum(cds => cds.PostViewConv),
                                 Cost = cds1day.Sum(cds => cds.Revenue)
                             };
 

@@ -16,10 +16,11 @@ namespace DirectAgents.Domain.Abstract
         TDStatWithAccount GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, Account account = null);
 
         // AdRoll
+        Advertisable Advertisable(string eid);
         IQueryable<Advertisable> Advertisables();
         IQueryable<Ad> AdRoll_Ads(int? advId = null, string advEid = null);
         IQueryable<AdDailySummary> AdRoll_AdDailySummaries(int? advertisableId, int? adId, DateTime? startDate, DateTime? endDate);
-        AdRollStat GetAdRollStat(Ad ad, DateTime? startDate, DateTime? endDate);
+        TDStat GetAdRollStat(Ad ad, DateTime? startDate, DateTime? endDate);
 
         // DBM
         InsertionOrder InsertionOrder(int ioID);

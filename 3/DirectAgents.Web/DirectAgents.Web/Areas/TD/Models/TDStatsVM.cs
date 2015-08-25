@@ -17,7 +17,8 @@ namespace DirectAgents.Web.Areas.TD.Models
                     Name = "TOTAL",
                     Impressions = Stats.Sum(s => s.Impressions),
                     Clicks = Stats.Sum(s => s.Clicks),
-                    Conversions = Stats.Sum(s => s.Conversions),
+                    PostClickConv = Stats.Sum(s => s.PostClickConv),
+                    PostViewConv = Stats.Sum(s => s.PostViewConv),
                     Cost = Stats.Sum(s => s.Cost)
                 };
             }

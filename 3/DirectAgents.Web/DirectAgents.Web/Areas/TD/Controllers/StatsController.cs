@@ -37,19 +37,24 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             var today = DateTime.Today;
             var startOfMonth = new DateTime(today.Year, today.Month, 1);
-            var stats = new List<AdRollStat>();
+            var stats = new List<TDStat>();
 
-            if (!string.IsNullOrWhiteSpace(advEid))
-            {
-                var ads = tdRepo.AdRoll_Ads(advEid: advEid);
-                foreach (var ad in ads)
-                {   //Note: Multiple Active Record Sets used here
-                    var stat = tdRepo.GetAdRollStat(ad, startOfMonth, null); // MTD
-                    if (!stat.AllZeros())
-                        stats.Add(stat);
-                }
+            var advertisable = tdRepo.Advertisable(advEid);
+            if (advertisable == null)
+                return Content("not found");
+
+            var ads = tdRepo.AdRoll_Ads(advEid: advEid);
+            foreach (var ad in ads)
+            {   //Note: Multiple Active Record Sets used here
+                var stat = tdRepo.GetAdRollStat(ad, startOfMonth, null); // MTD
+                if (!stat.AllZeros())
+                    stats.Add(stat);
             }
-            var model = stats.OrderBy(a => a.Name).ToList();
+            var model = new TDStatsVM
+            {
+                Name = "MTD Stats - " + advertisable.Name + "(AdRoll)",
+                Stats = stats.OrderBy(a => a.Name).ToList()
+            };
             return View(model);
         }
 
@@ -60,6 +65,9 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var stats = new List<TDStat>();
 
             var insertionOrder = tdRepo.InsertionOrder(ioID);
+            if (insertionOrder == null)
+                return Content("not found");
+
             var creatives = tdRepo.DBM_Creatives(ioID);
             foreach (var creative in creatives)
             {   //Note: Multiple Active Record Sets used here
