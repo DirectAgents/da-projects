@@ -161,7 +161,8 @@ namespace DirectAgents.Domain.Concrete
             {
                 stat.Impressions = cds.Sum(c => c.Impressions);
                 stat.Clicks = cds.Sum(c => c.Clicks);
-                stat.Conversions = cds.Sum(c => c.Conversions);
+                //stat.Conversions = cds.Sum(c => c.Conversions);
+                stat.Conversions = cds.Sum(c => c.PostClickConv) + cds.Sum(c => c.PostViewConv);
                 stat.Cost = cds.Sum(c => c.Revenue);
             }
             return stat;

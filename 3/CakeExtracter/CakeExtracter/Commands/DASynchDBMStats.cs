@@ -133,7 +133,8 @@ namespace CakeExtracter.Commands
                                 AccountId = accountId,
                                 Impressions = cds1day.Sum(cds => cds.Impressions),
                                 Clicks = cds1day.Sum(cds => cds.Clicks),
-                                Conversions = cds1day.Sum(cds => cds.Conversions),
+                                //Conversions = cds1day.Sum(cds => cds.Conversions),
+                                Conversions = cds1day.Sum(cds => cds.PostClickConv) + cds1day.Sum(cds => cds.PostViewConv),
                                 Cost = cds1day.Sum(cds => cds.Revenue)
                             };
 

@@ -10,7 +10,8 @@ namespace DirectAgents.Domain.Entities.DBM
 
         public int Impressions { get; set; }
         public int Clicks { get; set; }
-        public int Conversions { get; set; }
+        public int PostClickConv { get; set; }
+        public int PostViewConv { get; set; }
         public decimal Revenue { get; set; }
     }
 }

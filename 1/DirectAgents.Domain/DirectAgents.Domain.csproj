@@ -180,6 +180,10 @@
     <Compile Include="MigrationsTD\201508192107109_Mig_DBM.Designer.cs">
       <DependentUpon>201508192107109_Mig_DBM.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsTD\201508242200333_Mig_DBM_Conv.cs" />
+    <Compile Include="MigrationsTD\201508242200333_Mig_DBM_Conv.Designer.cs">
+      <DependentUpon>201508242200333_Mig_DBM_Conv.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.Designer.cs">
@@ -300,6 +304,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201508192107109_Mig_DBM.resx">
       <DependentUpon>201508192107109_Mig_DBM.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201508242200333_Mig_DBM_Conv.resx">
+      <DependentUpon>201508242200333_Mig_DBM_Conv.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

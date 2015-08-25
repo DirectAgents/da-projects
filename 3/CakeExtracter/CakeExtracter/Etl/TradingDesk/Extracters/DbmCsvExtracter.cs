@@ -109,6 +109,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             Map(m => m.Impressions);
             Map(m => m.Clicks);
             Map(m => m.TotalConversions);
+            Map(m => m.PostClickConversions).Name("Post-ClickConversions");
+            Map(m => m.PostViewConversions).Name("Post-ViewConversions");
             Map(m => m.Revenue).Name("Revenue(USD)");
             Map(m => m.Creative);
             Map(m => m.CreativeID);
@@ -125,6 +127,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         public string Impressions { get; set; } // int
         public string Clicks { get; set; } // int
         public string TotalConversions { get; set; } // int
+        public string PostClickConversions { get; set; } // int
+        public string PostViewConversions { get; set; } // int
 
         public string Revenue { get; set; } // decimal
     }

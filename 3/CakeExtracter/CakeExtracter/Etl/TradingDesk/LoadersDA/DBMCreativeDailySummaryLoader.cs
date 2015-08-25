@@ -37,7 +37,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         CreativeID = creativeID,
                         Impressions = int.Parse(item.Impressions),
                         Clicks = int.Parse(item.Clicks),
-                        Conversions = (int)decimal.Parse(item.TotalConversions),
+                        PostClickConv = (int)decimal.Parse(item.PostClickConversions),
+                        PostViewConv = (int)decimal.Parse(item.PostViewConversions),
                         Revenue = decimal.Parse(item.Revenue)
                     };
                     var target = db.Set<CreativeDailySummary>().Find(date, creativeID);
