@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
-using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.Cake;
-using DirectAgents.Domain.Entities.TD;
 using DirectAgents.Web.Models;
 
 namespace DirectAgents.Web.Controllers
@@ -126,26 +124,6 @@ namespace DirectAgents.Web.Controllers
 
             var json = Json(stats, JsonRequestBehavior.AllowGet);
             return json.ToJsonp();
-        }
-
-        public ActionResult AdRoll(string advEid)
-        {
-            var today = DateTime.Today;
-            var startOfMonth = new DateTime(today.Year, today.Month, 1);
-            var stats = new List<AdRollStat>();
-
-            if (!string.IsNullOrWhiteSpace(advEid))
-            {
-                var ads = tdRepo.AdRoll_Ads(advEid: advEid);
-                foreach (var ad in ads)
-                {   //Note: Multiple Active Record Sets used here
-                    var stat = tdRepo.GetAdRollStat(ad, startOfMonth, null); // MTD
-                    if (!stat.AllZeros())
-                        stats.Add(stat);
-                }
-            }
-            var model = stats.OrderBy(a => a.Name).ToList();
-            return View(model);
         }
     }
 }
