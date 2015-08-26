@@ -71,6 +71,7 @@
     <Compile Include="Concrete\MainRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Concrete\TDRepository.cs" />
+    <Compile Include="Contexts\HistoryContext.cs" />
     <Compile Include="Contexts\TDContext.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
     <Compile Include="Entities\AdRoll\Ad.cs" />
@@ -115,8 +116,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SecurityModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Entities\TD\CampaignBudget.cs" />
     <Compile Include="Entities\TD\DailySummary.cs" />
-    <Compile Include="Entities\TD\Platform.cs" />
+    <Compile Include="Entities\TD\PlatformAccount.cs" />
     <Compile Include="Entities\Variable.cs" />
     <Compile Include="Entities\WikiPartials\Campaign.cs" />
     <Compile Include="Entities\WikiPartials\Country.cs" />
@@ -187,6 +189,10 @@
     <Compile Include="MigrationsTD\201508251738143_Mig_DBM_DaySumConvs.cs" />
     <Compile Include="MigrationsTD\201508251738143_Mig_DBM_DaySumConvs.Designer.cs">
       <DependentUpon>201508251738143_Mig_DBM_DaySumConvs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201508261744525_Mig_AdvCampBudg.cs" />
+    <Compile Include="MigrationsTD\201508261744525_Mig_AdvCampBudg.Designer.cs">
+      <DependentUpon>201508261744525_Mig_AdvCampBudg.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
@@ -314,6 +320,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201508251738143_Mig_DBM_DaySumConvs.resx">
       <DependentUpon>201508251738143_Mig_DBM_DaySumConvs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201508261744525_Mig_AdvCampBudg.resx">
+      <DependentUpon>201508261744525_Mig_AdvCampBudg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

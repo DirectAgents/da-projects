@@ -1,6 +1,5 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.DBM;
 using DirectAgents.Domain.Entities.TD;
@@ -17,14 +16,25 @@ namespace DirectAgents.Domain.Contexts
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            //modelBuilder.HasDefaultSchema(tdSchema); //can't do this b/c __MigrationHistory table is under dbo schema
 
             // TD
+            modelBuilder.Entity<Advertiser>().ToTable("Advertiser", tdSchema);
+            modelBuilder.Entity<Campaign>().ToTable("Campaign", tdSchema);
+            modelBuilder.Entity<BudgetInfo>().ToTable("BudgetInfo", tdSchema);
             modelBuilder.Entity<Platform>().ToTable("Platform", tdSchema);
             modelBuilder.Entity<Account>().ToTable("Account", tdSchema);
+            modelBuilder.Entity<DailySummary>().ToTable("DailySummary", tdSchema);
+            modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudget.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
+            modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudget.MgmtFeePct).HasPrecision(8, 3).HasColumnName("MgmtFeePct");
+            modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudget.MarginPct).HasPrecision(8, 3).HasColumnName("MarginPct");
+            modelBuilder.Entity<BudgetInfo>().Property(b => b.MediaSpend).HasPrecision(14, 2);
+            modelBuilder.Entity<BudgetInfo>().Property(b => b.MgmtFeePct).HasPrecision(8, 3);
+            modelBuilder.Entity<BudgetInfo>().Property(b => b.MarginPct).HasPrecision(8, 3);
+            modelBuilder.Entity<BudgetInfo>()
+                .HasKey(b => new { b.CampaignId, b.Date });
             modelBuilder.Entity<DailySummary>()
                 .HasKey(ds => new { ds.Date, ds.AccountId })
-                .ToTable("DailySummary", tdSchema);
-            modelBuilder.Entity<DailySummary>()
                 .Property(t => t.Cost).HasPrecision(18, 6);
 
             // AdRoll
@@ -47,6 +57,9 @@ namespace DirectAgents.Domain.Contexts
         }
 
         // TD
+        public DbSet<Advertiser> Advertisers { get; set; }
+        public DbSet<Campaign> Campaigns { get; set; }
+        public DbSet<BudgetInfo> BudgetInfos { get; set; }
         public DbSet<Platform> Platforms { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<DailySummary> DailySummaries { get; set; }
