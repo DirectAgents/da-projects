@@ -1,0 +1,19 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.TD.Advertiser>
+
+<h2>Advertisers</h2>
+
+<table>
+<tr>
+    <th>Id</th>
+    <th>Name</th>
+    <th>Campaigns</th>
+</tr>
+@foreach (var adv in Model)
+{
+<tr>
+    <td>@adv.Id</td>
+    <td>@Html.ActionLink(adv.Name, "Index", "Campaigns", new { advid = adv.Id }, null)</td>
+    <td style="text-align:center">@adv.Campaigns.Count</td>
+</tr>
+}
+</table>

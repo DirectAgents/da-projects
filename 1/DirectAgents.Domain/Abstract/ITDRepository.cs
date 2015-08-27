@@ -11,6 +11,8 @@ namespace DirectAgents.Domain.Abstract
         void SaveChanges();
 
         // TD
+        IQueryable<Advertiser> Advertisers();
+        IQueryable<Campaign> Campaigns(int? advId = null);
         IQueryable<Account> Accounts(string platformCode = null);
         IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? accountId = null);
         TDStatWithAccount GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, Account account = null);

@@ -1,0 +1,21 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.TD.Campaign>
+
+<h2>Campaigns</h2>
+
+<table>
+<tr>
+    <th>Advertiser</th>
+    <th>Campaign</th>
+    <th>Accounts</th>
+    <th>Platforms</th>
+</tr>
+@foreach (var camp in Model)
+{
+<tr>
+    <td>@camp.Advertiser.Name</td>
+    <td>@camp.Name</td>
+    <td style="text-align:center">@camp.Accounts.Count</td>
+    <td>@string.Join(",", camp.Accounts.Select(a => a.Platform).Distinct().Select(p => p.Name))</td>
+</tr>
+}
+</table>

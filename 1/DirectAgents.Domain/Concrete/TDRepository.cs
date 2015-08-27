@@ -24,6 +24,19 @@ namespace DirectAgents.Domain.Concrete
 
         #region TD
 
+        public IQueryable<Advertiser> Advertisers()
+        {
+            return context.Advertisers;
+        }
+
+        public IQueryable<Campaign> Campaigns(int? advId = null)
+        {
+            var campaigns = context.Campaigns.AsQueryable();
+            if (advId.HasValue)
+                campaigns = campaigns.Where(c => c.AdvertiserId == advId.Value);
+            return campaigns;
+        }
+
         public IQueryable<Account> Accounts(string platformCode = null)
         {
             var accounts = context.Accounts.AsQueryable();
