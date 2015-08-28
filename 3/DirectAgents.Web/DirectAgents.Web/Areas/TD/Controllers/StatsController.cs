@@ -16,6 +16,22 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             this.tdRepo = tdRepository;
         }
 
+        public ActionResult MTD(int campId)
+        {
+            var campaign = tdRepo.Campaign(campId);
+            if (campaign == null)
+                return Content("Campaign not found");
+
+            var today = DateTime.Today;
+            var firstOfMonth = new DateTime(today.Year, today.Month, 1);
+            tdRepo.CreateBudgetIfNotExists(campaign, firstOfMonth);
+
+            var tdStat = tdRepo.GetTDStat(firstOfMonth, null, accounts: campaign.Accounts);
+            var budgetWithStats = new BudgetWithStats(campaign.BudgetFor(firstOfMonth), tdStat);
+
+            return View(budgetWithStats);
+        }
+
         public ActionResult Account(string platformCode)
         {
             var today = DateTime.Today;

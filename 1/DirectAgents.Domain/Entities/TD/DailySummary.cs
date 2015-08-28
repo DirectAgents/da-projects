@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DirectAgents.Domain.Entities.TD
 {
@@ -50,6 +52,20 @@ namespace DirectAgents.Domain.Entities.TD
         public bool AllZeros()
         {
             return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0);
+        }
+
+        public void SetStatsFrom(IEnumerable<DailySummary> dSums, bool roundCost = false)
+        {
+            if (dSums != null && dSums.Any())
+            {
+                this.Impressions = dSums.Sum(ds => ds.Impressions);
+                this.Clicks = dSums.Sum(ds => ds.Clicks);
+                this.PostClickConv = dSums.Sum(ds => ds.PostClickConv);
+                this.PostViewConv = dSums.Sum(ds => ds.PostViewConv);
+                this.Cost = dSums.Sum(ds => ds.Cost);
+            }
+            if (roundCost)
+                this.Cost = Math.Round(this.Cost, 2);
         }
 
         // Computed properties

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.DBM;
@@ -12,9 +13,12 @@ namespace DirectAgents.Domain.Abstract
 
         // TD
         IQueryable<Advertiser> Advertisers();
+        Campaign Campaign(int campId);
         IQueryable<Campaign> Campaigns(int? advId = null);
+        void CreateBudgetIfNotExists(Campaign campaign, DateTime monthToCreate);
         IQueryable<Account> Accounts(string platformCode = null);
         IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? accountId = null);
+        TDStat GetTDStat(DateTime? startDate, DateTime? endDate, ICollection<Account> accounts = null);
         TDStatWithAccount GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, Account account = null);
 
         // AdRoll

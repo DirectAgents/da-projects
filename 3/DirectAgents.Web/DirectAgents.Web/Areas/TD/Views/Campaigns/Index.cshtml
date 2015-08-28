@@ -13,7 +13,7 @@
 {
 <tr>
     <td>@camp.Advertiser.Name</td>
-    <td>@camp.Name</td>
+    <td>@Html.ActionLink(camp.Name, "MTD", "Stats", new { campId = camp.Id }, null)</td>
     <td style="text-align:center">@camp.Accounts.Count</td>
     <td>@string.Join(",", camp.Accounts.Select(a => a.Platform).Distinct().Select(p => p.Name))</td>
 </tr>

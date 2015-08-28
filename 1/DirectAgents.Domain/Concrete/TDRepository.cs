@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Contexts;
@@ -29,6 +30,13 @@ namespace DirectAgents.Domain.Concrete
             return context.Advertisers;
         }
 
+        // --- Campaigns/Budgets ---
+
+        public Campaign Campaign(int campId)
+        {
+            return context.Campaigns.Find(campId);
+        }
+
         public IQueryable<Campaign> Campaigns(int? advId = null)
         {
             var campaigns = context.Campaigns.AsQueryable();
@@ -36,6 +44,22 @@ namespace DirectAgents.Domain.Concrete
                 campaigns = campaigns.Where(c => c.AdvertiserId == advId.Value);
             return campaigns;
         }
+
+        // monthToCreate is any day in the desired month
+        public void CreateBudgetIfNotExists(Campaign campaign, DateTime monthToCreate)
+        {
+            // Note: If you create a new Campaign, you should set Budgets to a new Collection before calling this method
+            var firstOfMonth = new DateTime(monthToCreate.Year, monthToCreate.Month, 1);
+            if (!campaign.Budgets.Where(b => b.Date == firstOfMonth).Any())
+            {
+                var budget = new BudgetInfo { Date = firstOfMonth };
+                budget.SetBudgetValsFrom(campaign.DefaultBudget);
+                campaign.Budgets.Add(budget);
+                context.SaveChanges();
+            }
+        }
+
+        // ---
 
         public IQueryable<Account> Accounts(string platformCode = null)
         {
@@ -57,6 +81,21 @@ namespace DirectAgents.Domain.Concrete
             return dSums;
         }
 
+        public TDStat GetTDStat(DateTime? startDate, DateTime? endDate, ICollection<Account> accounts = null)
+        {
+            var stat = new TDStat();
+            var dSums = DailySummaries(startDate, endDate);
+            if (accounts != null)
+            {
+                var accountIds = accounts.Select(a => a.Id).ToArray();
+                dSums = dSums.Where(ds => accountIds.Contains(ds.AccountId));
+            }
+            if (dSums.Any())
+                stat.SetStatsFrom(dSums);
+
+            return stat;
+        }
+
         public TDStatWithAccount GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, Account account = null)
         {
             var stat = new TDStatWithAccount
@@ -69,13 +108,8 @@ namespace DirectAgents.Domain.Concrete
             // Later, will we have other params, like campaign?
 
             if (dSums.Any())
-            {
-                stat.Impressions = dSums.Sum(ds => ds.Impressions);
-                stat.Clicks = dSums.Sum(ds => ds.Clicks);
-                stat.PostClickConv = dSums.Sum(ds => ds.PostClickConv);
-                stat.PostViewConv = dSums.Sum(ds => ds.PostViewConv);
-                stat.Cost = Math.Round(dSums.Sum(ds => ds.Cost), 2);
-            }
+                stat.SetStatsFrom(dSums);
+
             return stat;
         }
 

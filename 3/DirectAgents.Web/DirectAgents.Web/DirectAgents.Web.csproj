@@ -905,6 +905,7 @@
     <Content Include="Areas\TD\Views\Stats\AdRoll.cshtml" />
     <Content Include="Areas\TD\Views\Advertisers\Index.cshtml" />
     <Content Include="Areas\TD\Views\Campaigns\Index.cshtml" />
+    <Content Include="Areas\TD\Views\Stats\MTD.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

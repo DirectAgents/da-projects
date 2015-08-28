@@ -1,0 +1,97 @@
+﻿@model DirectAgents.Domain.Entities.TD.BudgetWithStats
+@{
+    var bs = Model;
+    var budg = bs.Budget;
+    var c = budg.Campaign;
+    var s = bs.Stats;
+}
+
+<h2>MTD View</h2>
+
+Month: @budg.Date.ToString("MMM yyyy")
+<br /><br />
+
+<table>
+<tr>
+    <th>Advertiser</th>
+    <td>@c.Advertiser.Name</td>
+</tr>
+<tr>
+    <th>Campaign</th>
+    <td>@c.Name</td>
+</tr>
+<tr>
+    <th>Mgmt Fee</th>
+    <td>@budg.MgmtFeePct.ToString("#.### \\%")</td>
+</tr>
+<tr>
+    <th>Margin</th>
+    <td>@budg.MarginPct.ToString("#.### \\%")</td>
+</tr>
+<tr>
+    <th>Budget</th>
+    <td>@budg.MediaSpend.ToString("C")</td>
+</tr>
+</table>
+
+<br />
+<table>
+<tr>
+    <th></th>
+    <th>MTD</th>
+    <th>Budget</th>
+    <th>% reached</th>
+</tr>
+<tr>
+    <td>Actual Cost</td>
+    <td>@s.Cost.ToString("C")</td>
+    <td>@budg.Cost().ToString("C")</td>
+    <td>@bs.FractionReached().ToString("#0.#%")</td>
+</tr>
+<tr>
+    <td>Media Spend</td>
+    <td>@bs.MediaSpend.ToString("C")</td>
+    <td>@budg.MediaSpend.ToString("C")</td>
+    <td></td>
+</tr>
+<tr>
+    <td>Mgmt Fee</td>
+    <td>@bs.MgmtFee.ToString("C")</td>
+    <td>@budg.MgmtFee().ToString("C")</td>
+    <td></td>
+</tr>
+<tr>
+    <td>Total Revenue</td>
+    <td>@bs.TotalRevenue.ToString("C")</td>
+    <td>@budg.TotalRevenue().ToString("C")</td>
+    <td></td>
+</tr>
+</table>
+
+<br />MTD Stats
+<table>
+<tr>
+    <td>Impressions</td>
+    <td>@s.Impressions.ToString("N0")</td>
+</tr>
+<tr>
+    <td>Clicks</td>
+    <td>@s.Clicks.ToString("N0")</td>
+</tr>
+<tr>
+    <td>Post-Click Conv</td>
+    <td>@s.PostClickConv.ToString("N0")</td>
+</tr>
+<tr>
+    <td>Post-View Conv</td>
+    <td>@s.PostViewConv.ToString("N0")</td>
+</tr>
+<tr>
+    <td>Total Conv</td>
+    <td>@s.TotalConv.ToString("N0")</td>
+</tr>
+<tr>
+    <td></td>
+    <td></td>
+</tr>
+</table>
