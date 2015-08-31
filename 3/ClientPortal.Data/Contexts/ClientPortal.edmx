@@ -338,6 +338,8 @@
           <Property Name="AccountCode" Type="nvarchar" MaxLength="50" />
           <Property Name="ExternalId" Type="nvarchar" MaxLength="50" />
           <Property Name="SearchProfileId" Type="int" />
+          <Property Name="RevPerOrder" Type="decimal" Precision="14" Scale="2" />
+          <Property Name="MinSynchDate" Type="date" />
         </EntityType>
         <EntityType Name="SearchCampaign">
           <Key>
@@ -1650,6 +1652,8 @@
           <Property Type="Int32" Name="SearchProfileId" />
           <NavigationProperty Name="SearchProfile" Relationship="ClientPortalModel.FK_SearchAccount_SearchProfile" FromRole="SearchAccount" ToRole="SearchProfile" />
           <NavigationProperty Name="AltSearchCampaigns" Relationship="ClientPortalModel.FK_SearchCampaign_SearchAccount1" FromRole="SearchAccount" ToRole="SearchCampaign" />
+          <Property Name="RevPerOrder" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="MinSynchDate" Type="DateTime" Precision="0" />
         </EntityType>
         <Association Name="FK_SearchAccount_Advertiser">
           <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="0..1" />
@@ -2429,6 +2433,8 @@
           <EntitySetMapping Name="SearchAccounts">
             <EntityTypeMapping TypeName="ClientPortalModel.SearchAccount">
               <MappingFragment StoreEntitySet="SearchAccount">
+                <ScalarProperty Name="MinSynchDate" ColumnName="MinSynchDate" />
+                <ScalarProperty Name="RevPerOrder" ColumnName="RevPerOrder" />
                 <ScalarProperty Name="SearchProfileId" ColumnName="SearchProfileId" />
                 <ScalarProperty Name="ExternalId" ColumnName="ExternalId" />
                 <ScalarProperty Name="AccountCode" ColumnName="AccountCode" />

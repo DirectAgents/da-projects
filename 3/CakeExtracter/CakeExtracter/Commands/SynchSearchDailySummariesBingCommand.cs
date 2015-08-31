@@ -16,6 +16,7 @@ namespace CakeExtracter.Commands
         public int AccountId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public int? DaysAgoToStart { get; set; }
 
         public override void ResetProperties()
         {
@@ -23,6 +24,7 @@ namespace CakeExtracter.Commands
             AccountId = 0;
             StartDate = null;
             EndDate = null;
+            DaysAgoToStart = null;
         }
 
         public SynchSearchDailySummariesBingCommand()
@@ -30,20 +32,28 @@ namespace CakeExtracter.Commands
             IsCommand("synchSearchDailySummariesBing", "synch SearchDailySummaries for Bing API Report");
             HasOption<int>("p|searchProfileId=", "SearchProfile Id (default = all)", c => SearchProfileId = c);
             HasOption<int>("v|accountId=", "Account Id", c => AccountId = c);
-            HasOption<DateTime>("s|startDate=", "Start Date (default is one month ago)", c => StartDate = c);
+            HasOption<DateTime>("s|startDate=", "Start Date (optional)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
+            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 62)", c => DaysAgoToStart = c);
         }
 
         public override int Execute(string[] remainingArguments)
         {
-            var oneMonthAgo = DateTime.Today.AddMonths(-1);
-            var yesterday = DateTime.Today.AddDays(-1);
-            var dates = new DateRange(StartDate ?? oneMonthAgo, EndDate ?? yesterday);
+            if (!DaysAgoToStart.HasValue)
+                DaysAgoToStart = 62; // used if StartDate==null
+            var today = DateTime.Today;
+            var yesterday = today.AddDays(-1);
+            var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
 
             foreach (var searchAccount in GetSearchAccounts())
             {
+                DateTime startDate = dateRange.FromDate;
+                DateTime endDate = dateRange.ToDate;
+                if (searchAccount.MinSynchDate.HasValue && (startDate < searchAccount.MinSynchDate.Value))
+                    startDate = searchAccount.MinSynchDate.Value;
+
                 int accountId = Int32.Parse(searchAccount.AccountCode);
-                var extracter = new BingDailySummaryExtracter(accountId, dates.FromDate, dates.ToDate);
+                var extracter = new BingDailySummaryExtracter(accountId, startDate, endDate);
                 var loader = new BingLoader(searchAccount.SearchAccountId);
                 var extracterThread = extracter.Start();
                 var loaderThread = loader.Start(extracter);

@@ -28,6 +28,8 @@ namespace ClientPortal.Data.Contexts
         public string AccountCode { get; set; }
         public string ExternalId { get; set; }
         public Nullable<int> SearchProfileId { get; set; }
+        public Nullable<decimal> RevPerOrder { get; set; }
+        public Nullable<System.DateTime> MinSynchDate { get; set; }
     
         public virtual Advertiser Advertiser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

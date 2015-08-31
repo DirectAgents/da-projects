@@ -16,6 +16,7 @@ namespace CakeExtracter.Commands
         public string ClientId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public int? DaysAgoToStart { get; set; }
         public bool IncludeClickType { get; set; }
         public string GetClickAssistConvStats { get; set; }
 
@@ -25,6 +26,7 @@ namespace CakeExtracter.Commands
             ClientId = null;
             StartDate = null;
             EndDate = null;
+            DaysAgoToStart = null;
             IncludeClickType = false;
             GetClickAssistConvStats = null;
         }
@@ -34,23 +36,31 @@ namespace CakeExtracter.Commands
             IsCommand("synchSearchDailySummariesAdWords", "synch SearchDailySummaries for AdWords");
             HasOption<int>("p|searchProfileId=", "SearchProfile Id (default = all)", c => SearchProfileId = c);
             HasOption<string>("v|clientId=", "Client Id", c => ClientId = c);
-            HasOption<DateTime>("s|startDate=", "Start Date (default is 62 days ago)", c => StartDate = c);
+            HasOption<DateTime>("s|startDate=", "Start Date (optional)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
+            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 62)", c => DaysAgoToStart = c);
             HasOption<bool>("b|includeClickType=", "Include ClickType (default is false)", c => IncludeClickType = c);
             HasOption<string>("g|getClickAssistConvStats=", "Get click-assisted-conversion stats ('yes' or 'both', default = no)", c => GetClickAssistConvStats = c);
         }
 
         public override int Execute(string[] remainingArguments)
         {
-            var defaultStart = DateTime.Today.AddDays(-62);
-            var yesterday = DateTime.Today.AddDays(-1);
-            var dateRange = new DateRange(StartDate ?? defaultStart, EndDate ?? yesterday);
+            if (!DaysAgoToStart.HasValue)
+                DaysAgoToStart = 62; // used if StartDate==null
+            var today = DateTime.Today;
+            var yesterday = today.AddDays(-1);
+            var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
 
             foreach (var searchAccount in GetSearchAccounts())
             {
+                DateTime startDate = dateRange.FromDate;
+                if (searchAccount.MinSynchDate.HasValue && (startDate < searchAccount.MinSynchDate.Value))
+                    startDate = searchAccount.MinSynchDate.Value;
+                var revisedDateRange = new DateRange(startDate, dateRange.ToDate);
+
                 if (GetClickAssistConvStats != "yes")
                 {
-                    var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, dateRange, IncludeClickType, false);
+                    var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType, false);
                     var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, searchAccount.UseConvertedClicks, IncludeClickType, false);
                     var extracterThread = extracter.Start();
                     var loaderThread = loader.Start(extracter);
@@ -59,7 +69,7 @@ namespace CakeExtracter.Commands
                 }
                 if (GetClickAssistConvStats == "yes" || GetClickAssistConvStats == "both")
                 {
-                    var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, dateRange, IncludeClickType, true);
+                    var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType, true);
                     var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, searchAccount.UseConvertedClicks, IncludeClickType, true);
                     var extracterThread = extracter.Start();
                     var loaderThread = loader.Start(extracter);

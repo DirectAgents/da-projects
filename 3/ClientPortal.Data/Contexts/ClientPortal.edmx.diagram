@@ -30,7 +30,7 @@
         <AssociationConnector Association="ClientPortalModel.FK_SearchCampaign_Advertiser" />
         <EntityTypeShape EntityType="ClientPortalModel.GoogleAnalyticsSummary" Width="2.125" PointX="6.375" PointY="14.5" />
         <AssociationConnector Association="ClientPortalModel.FK_GoogleAnalyticsSummary_SearchCampaign" />
-        <EntityTypeShape EntityType="ClientPortalModel.SearchAccount" Width="1.5" PointX="5" PointY="7.125" />
+        <EntityTypeShape EntityType="ClientPortalModel.SearchAccount" Width="1.5" PointX="5" PointY="6.625" />
         <AssociationConnector Association="ClientPortalModel.FK_SearchAccount_Advertiser" />
         <AssociationConnector Association="ClientPortalModel.FK_SearchCampaign_SearchAccount" />
         <EntityTypeShape EntityType="ClientPortalModel.SearchChannel" Width="1.5" PointX="6.875" PointY="10.375" />

@@ -79,6 +79,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         sds.Impressions = int.Parse(item["impressions"]);
                         sds.Device = item["device"].Substring(0, 1);
                         sds.ViewThrus = int.Parse(item["viewThroughConv"]);
+
+                        if (searchAccount.RevPerOrder.HasValue)
+                            sds.Revenue = sds.Orders * searchAccount.RevPerOrder.Value;
                     }
 
                     bool added;

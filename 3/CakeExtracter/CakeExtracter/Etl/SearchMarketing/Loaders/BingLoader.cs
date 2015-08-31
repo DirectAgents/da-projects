@@ -75,8 +75,12 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         Impressions = int.Parse(item["Impressions"]),
                         CurrencyId = 1 // item["CurrencyCode"] == "USD" ? 1 : -1 // NOTE: non USD (if exists) -1 for now
                     };
+
+                    // RevPerOrder: the value set in the constructor takes precedence, followed by a value in the SearchAccount
                     if (revenuePerOrder.HasValue)
                         source.Revenue = source.Orders * revenuePerOrder.Value;
+                    else if (searchAccount.RevPerOrder.HasValue)
+                        source.Revenue = source.Orders * searchAccount.RevPerOrder.Value;
 
                     var target = db.Set<SearchDailySummary>().Find(pk1, pk2, pk3, pk4); //, pk5);
                     if (target == null)
