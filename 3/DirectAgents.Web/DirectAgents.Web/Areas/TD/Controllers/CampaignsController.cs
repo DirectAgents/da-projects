@@ -38,6 +38,20 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 var budget = camp.BudgetFor(startOfMonth);
                 var tdStat = tdRepo.GetTDStat(startOfMonth, endOfMonth, campaign: camp);
                 var budgetWithStats = new BudgetWithStats(budget, tdStat, (budget == null) ? camp : null);
+
+                if (camp.ExtAccounts.Count > 1)
+                {
+                    var budgetStatsByExtAccount = new List<BudgetWithStats>();
+                    var extAccounts = camp.ExtAccounts.OrderBy(a => a.Platform.Code).ThenBy(a => a.Name);
+                    foreach (var extAccount in extAccounts)
+                    {   //Note: Multiple Active Record Sets used here
+                        var extAcctStat = tdRepo.GetTDStatWithAccount(startOfMonth, endOfMonth, extAccount: extAccount);
+                        var extAcctBudgetStat = new BudgetWithStats(budget, extAcctStat);
+                        budgetStatsByExtAccount.Add(extAcctBudgetStat);
+                    }
+                    budgetWithStats.BudgetStatsByExtAccount = budgetStatsByExtAccount;
+                }
+
                 budgetStats.Add(budgetWithStats);
             }
             var model = new CampaignPacingVM

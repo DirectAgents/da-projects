@@ -82,6 +82,8 @@ namespace DirectAgents.Domain.Entities.TD
         public BudgetInfo Budget { get; set; }
         public TDStat Stats { get; set; }
 
+        public IEnumerable<BudgetWithStats> BudgetStatsByExtAccount { get; set; }
+
         public BudgetWithStats(BudgetInfo budgetInfo, TDStat tdStat, Campaign campaign = null)
         {
             if (budgetInfo == null)

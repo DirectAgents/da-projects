@@ -47,7 +47,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                                 .OrderBy(a => a.Platform.Code).ThenBy(a => a.Name);
             foreach (var extAccount in extAccounts)
             {   //Note: Multiple Active Record Sets used here
-                var stat = tdRepo.GetTDStatWithAccount(startOfMonth, endOfMonth, extAccount: extAccount); // MTD
+                var stat = tdRepo.GetTDStatWithAccount(startOfMonth, endOfMonth, extAccount: extAccount);
                 if (!stat.AllZeros())
                     stats.Add(stat);
             }

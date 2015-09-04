@@ -31,5 +31,20 @@
     <td>@string.Join(",", cbStat.Campaign.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name))</td>
     <td>@cbStat.FractionReached().ToString("#0.##%")</td>
 </tr>
+if (cbStat.BudgetStatsByExtAccount != null)
+{
+    foreach (var extAcctBStat in cbStat.BudgetStatsByExtAccount)
+    {
+<tr>
+    <td colspan="3" style="text-align:right">@extAcctBStat.Stats.ExtAccount.Name - @extAcctBStat.Stats.ExtAccount.Platform.Name</td>
+    <td>@extAcctBStat.Stats.Cost.ToString("C")</td>
+    <td>@extAcctBStat.MediaSpend().ToString("C")</td>
+    <td>@extAcctBStat.TotalRevenue().ToString("C")</td>
+    <td>@extAcctBStat.Margin().ToString("C")</td>
+    <td></td>
+    <td>@extAcctBStat.Stats.ExtAccount.Platform.Name</td>
+</tr>
+    }
+}
 }
 </table>
