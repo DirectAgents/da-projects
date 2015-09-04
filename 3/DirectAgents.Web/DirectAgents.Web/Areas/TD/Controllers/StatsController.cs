@@ -24,12 +24,10 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
             if (!date.HasValue)
                 date = DateTime.Today;
-
             var startOfMonth = new DateTime(date.Value.Year, date.Value.Month, 1);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
-            tdRepo.CreateBudgetIfNotExists(campaign, startOfMonth);
 
-            var tdStat = tdRepo.GetTDStat(startOfMonth, endOfMonth, accounts: campaign.Accounts);
+            var tdStat = tdRepo.GetTDStat(startOfMonth, endOfMonth, campaign: campaign);
             var budgetWithStats = new BudgetWithStats(campaign.BudgetFor(startOfMonth), tdStat);
 
             return View(budgetWithStats);

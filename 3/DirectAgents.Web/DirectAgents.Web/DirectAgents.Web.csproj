@@ -154,6 +154,7 @@
     <Compile Include="Areas\TD\Controllers\AdvertisersController.cs" />
     <Compile Include="Areas\TD\Controllers\CampaignsController.cs" />
     <Compile Include="Areas\TD\Controllers\StatsController.cs" />
+    <Compile Include="Areas\TD\Models\CampaignPacingVM.cs" />
     <Compile Include="Areas\TD\Models\TDStatsVM.cs" />
     <Compile Include="Areas\TD\TDAreaRegistration.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />
@@ -907,6 +908,7 @@
     <Content Include="Areas\TD\Views\Advertisers\Index.cshtml" />
     <Content Include="Areas\TD\Views\Campaigns\Index.cshtml" />
     <Content Include="Areas\TD\Views\Stats\MTD.cshtml" />
+    <Content Include="Areas\TD\Views\Campaigns\Pacing.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

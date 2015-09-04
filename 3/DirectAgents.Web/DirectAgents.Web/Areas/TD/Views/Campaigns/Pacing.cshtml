@@ -1,0 +1,35 @@
+﻿@model DirectAgents.Web.Areas.TD.Models.CampaignPacingVM
+
+<h2>Budget and Pacing</h2>
+
+<table>
+<tr>
+    <th>Advertiser</th>
+    <th>Campaign</th>
+    <th>Budget</th>
+    <th>Actual Cost</th>
+    <th>Media Spend</th>
+    <th>Total Revenue</th>
+    <th>Margin</th>
+    <th>Margin %</th>
+    <th>Platforms</th>
+    <th>% of Goal</th>
+    <th>Sales Rep</th>
+    <th>AM</th>
+</tr>
+@foreach (var cbStat in Model.CampaignStats)
+{
+<tr>
+    <td>@cbStat.Campaign.Advertiser.Name</td>
+    <td>@cbStat.Campaign.Name</td>
+    <td>@cbStat.Budget.MediaSpend.ToString("C")</td>
+    <td>@cbStat.Stats.Cost.ToString("C")</td>
+    <td>@cbStat.MediaSpend().ToString("C")</td>
+    <td>@cbStat.TotalRevenue().ToString("C")</td>
+    <td>@cbStat.Margin().ToString("C")</td>
+    <td>@cbStat.Budget.MarginPct.ToString("#0.### \\%")</td>
+    <td>@string.Join(",", cbStat.Campaign.Accounts.Select(a => a.Platform).Distinct().Select(p => p.Name))</td>
+    <td>@cbStat.FractionReached().ToString("#0.##%")</td>
+</tr>
+}
+</table>
