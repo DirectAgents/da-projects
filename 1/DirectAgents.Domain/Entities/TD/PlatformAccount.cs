@@ -11,13 +11,13 @@ namespace DirectAgents.Domain.Entities.TD
         public string Code { get; set; }
         public string Name { get; set; }
 
-        public virtual ICollection<Account> Accounts { get; set; }
+        public virtual ICollection<ExtAccount> ExtAccounts { get; set; }
 
         public const string Code_AdRoll = "adr";
         public const string Code_DBM = "dbm";
     }
 
-    public class Account
+    public class ExtAccount
     {
         public int Id { get; set; }
         public int PlatformId { get; set; }

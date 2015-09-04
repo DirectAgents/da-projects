@@ -1,13 +1,11 @@
 ﻿@model IEnumerable<DirectAgents.Domain.Entities.TD.TDStatWithAccount>
 
-<h2>Programmatic</h2>
-
-MTD Stats
+<h2>External Account Stats</h2>
 
 <table>
 <tr>
     <th>Platform</th>
-    <th>Account</th>
+    <th>Ext Account</th>
     <th>Impressions</th>
     <th>Clicks</th>
     <th>CTR</th>
@@ -24,13 +22,13 @@ MTD Stats
 <tr>
     <td>@stat.PlatformName</td>
     <td>
-        @if (stat.Account.Platform.Code == DirectAgents.Domain.Entities.TD.Platform.Code_AdRoll)
+        @if (stat.ExtAccount.Platform.Code == DirectAgents.Domain.Entities.TD.Platform.Code_AdRoll)
         {
-            @Html.ActionLink(stat.AccountName, "AdRoll", new { advEid = stat.Account.ExternalId })
+            @Html.ActionLink(stat.AccountName, "AdRoll", new { advEid = stat.ExtAccount.ExternalId })
         }
-        else if (stat.Account.Platform.Code == DirectAgents.Domain.Entities.TD.Platform.Code_DBM)
+        else if (stat.ExtAccount.Platform.Code == DirectAgents.Domain.Entities.TD.Platform.Code_DBM)
         {
-            @Html.ActionLink(stat.AccountName, "DBM", new { ioID = stat.Account.ExternalId })
+            @Html.ActionLink(stat.AccountName, "DBM", new { ioID = stat.ExtAccount.ExternalId })
         }
         else
         {

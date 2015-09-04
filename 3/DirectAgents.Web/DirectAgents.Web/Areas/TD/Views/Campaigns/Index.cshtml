@@ -21,10 +21,10 @@
     <td>@camp.Advertiser.Name</td>
     <td>@camp.Name</td>
     <td style="text-align:center">
-        @Html.ActionLink(camp.Accounts.Count.ToString(), "Index", "Accounts", new { campId = camp.Id }, null)
-        (@Html.ActionLink("stats by account", "Account", "Stats", new { campId = camp.Id }, null))
+        @Html.ActionLink(camp.ExtAccounts.Count.ToString(), "Index", "Accounts", new { campId = camp.Id }, null)
+        (@Html.ActionLink("stats by ext acct", "Account", "Stats", new { campId = camp.Id }, null))
     </td>
-    <td>@string.Join(",", camp.Accounts.Select(a => a.Platform).Distinct().Select(p => p.Name))</td>
+    <td>@string.Join(",", camp.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name))</td>
     <td>
         @Html.ActionLink("MTD", "MTD", "Stats", new { campId = camp.Id }, null) |
         @Html.ActionLink("Last Month", "MTD", "Stats", new { campId = camp.Id, date = lastMonth.ToShortDateString() }, null)

@@ -20,7 +20,7 @@ namespace DirectAgents.Domain.Entities.TD
 
         public string Name { get; set; }
 
-        public virtual ICollection<Account> Accounts { get; set; }
+        public virtual ICollection<ExtAccount> ExtAccounts { get; set; }
         public virtual ICollection<BudgetInfo> Budgets { get; set; }
         public BudgetVals DefaultBudget { get; set; }
 

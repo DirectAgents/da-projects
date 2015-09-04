@@ -43,11 +43,11 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
             var stats = new List<TDStatWithAccount>();
 
-            var extAccounts = tdRepo.Accounts(platformCode: platformCode, campId: campId)
+            var extAccounts = tdRepo.ExtAccounts(platformCode: platformCode, campId: campId)
                                 .OrderBy(a => a.Platform.Code).ThenBy(a => a.Name);
             foreach (var extAccount in extAccounts)
             {   //Note: Multiple Active Record Sets used here
-                var stat = tdRepo.GetTDStatWithAccount(startOfMonth, endOfMonth, account: extAccount); // MTD
+                var stat = tdRepo.GetTDStatWithAccount(startOfMonth, endOfMonth, extAccount: extAccount); // MTD
                 if (!stat.AllZeros())
                     stats.Add(stat);
             }

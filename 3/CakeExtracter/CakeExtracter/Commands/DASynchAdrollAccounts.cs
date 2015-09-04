@@ -34,7 +34,7 @@ namespace CakeExtracter.Commands
                 var dbAdvEids = dbAdvertisables.Select(a => a.Eid).ToArray();
 
                 var platformId_AdRoll = db.Platforms.Where(p => p.Code == Platform.Code_AdRoll).First().Id;
-                var dbAccounts = db.Accounts.Where(a => a.PlatformId == platformId_AdRoll).ToList();
+                var dbAccounts = db.ExtAccounts.Where(a => a.PlatformId == platformId_AdRoll).ToList();
                 var dbAcctEids = dbAccounts.Select(a => a.ExternalId).ToArray();
 
                 foreach (var adv in freshAdvertisables)
@@ -60,13 +60,13 @@ namespace CakeExtracter.Commands
                     if (!dbAcctEids.Contains(adv.eid))
                     { // add
                         Logger.Info("Adding new Account '{0}' ({1})", adv.name, adv.eid);
-                        var newAcct = new Account
+                        var newAcct = new ExtAccount
                         {
                             PlatformId = platformId_AdRoll,
                             ExternalId = adv.eid,
                             Name = adv.name
                         };
-                        db.Accounts.Add(newAcct);
+                        db.ExtAccounts.Add(newAcct);
                     }
                     else
                     { // update

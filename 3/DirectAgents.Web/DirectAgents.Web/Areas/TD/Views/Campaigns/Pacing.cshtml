@@ -28,7 +28,7 @@
     <td>@cbStat.TotalRevenue().ToString("C")</td>
     <td>@cbStat.Margin().ToString("C")</td>
     <td>@cbStat.Budget.MarginPct.ToString("#0.### \\%")</td>
-    <td>@string.Join(",", cbStat.Campaign.Accounts.Select(a => a.Platform).Distinct().Select(p => p.Name))</td>
+    <td>@string.Join(",", cbStat.Campaign.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name))</td>
     <td>@cbStat.FractionReached().ToString("#0.##%")</td>
 </tr>
 }

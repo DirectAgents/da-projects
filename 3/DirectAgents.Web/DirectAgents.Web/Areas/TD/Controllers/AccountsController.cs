@@ -13,10 +13,10 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
         public ActionResult Index(int? campId)
         {
-            var accounts = tdRepo.Accounts(campId: campId)
+            var extAccounts = tdRepo.ExtAccounts(campId: campId)
                 .OrderBy(a => a.Platform.Name).ThenBy(a => a.Name);
 
-            return View(accounts);
+            return View(extAccounts);
         }
 	}
 }

@@ -77,12 +77,12 @@ namespace CakeExtracter.Commands
         // Note this will update DailySummaries for all insertion orders (Accounts) with CreativeDailySummary stats in the specified range
         public static void UpdateTDTablesFromDBMTables(DateRange dateRange, int? insertionOrderID)
         {
-            Logger.Info("Updating Accounts and DailySummaries for dateRange {0:d} to {1:d}", dateRange.FromDate, dateRange.ToDate);
+            Logger.Info("Updating (External) Accounts and DailySummaries for dateRange {0:d} to {1:d}", dateRange.FromDate, dateRange.ToDate);
 
             using (var db = new DATDContext())
             {
                 var dbmPlatformId = db.Platforms.Where(p => p.Code == Platform.Code_DBM).First().Id;
-                var dbmAccounts = db.Accounts.Where(a => a.PlatformId == dbmPlatformId);
+                var dbmAccounts = db.ExtAccounts.Where(a => a.PlatformId == dbmPlatformId);
                 var dbmExternalIds = dbmAccounts.Select(a => a.ExternalId).ToList();
 
                 // 1) InsertionOrders (with stats in this dateRange) -> Accounts
@@ -94,13 +94,13 @@ namespace CakeExtracter.Commands
                 {
                     if (!dbmExternalIds.Contains(io.ID.ToString()))
                     { // add
-                        var newAccount = new Account
+                        var newAccount = new ExtAccount
                         {
                             PlatformId = dbmPlatformId,
                             ExternalId = io.ID.ToString(),
                             Name = io.Name
                         };
-                        db.Accounts.Add(newAccount);
+                        db.ExtAccounts.Add(newAccount);
                     }
                     // Note: skipping update
                 }
@@ -109,7 +109,7 @@ namespace CakeExtracter.Commands
                 // 2) Add/Update DailySummaries
                 foreach (var io in insertionOrders)
                 {
-                    var accountId = db.Accounts.Where(a => a.ExternalId == io.ID.ToString()).First().Id;
+                    var accountId = db.ExtAccounts.Where(a => a.ExternalId == io.ID.ToString()).First().Id;
 
                     var cdSumsForIO = cdSums.Where(cds => cds.Creative.InsertionOrderID == io.ID);
                     var statDates = cdSumsForIO.Select(cds => cds.Date).Distinct().ToList();

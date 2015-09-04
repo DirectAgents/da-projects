@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace DirectAgents.Domain.Entities.TD
@@ -8,7 +9,8 @@ namespace DirectAgents.Domain.Entities.TD
     {
         public DateTime Date { get; set; }
         public int AccountId { get; set; }
-        public virtual Account Account { get; set; }
+        [ForeignKey("AccountId")]
+        public virtual ExtAccount ExtAccount { get; set; }
 
         public int Impressions { get; set; }
         public int Clicks { get; set; }
@@ -22,14 +24,14 @@ namespace DirectAgents.Domain.Entities.TD
     // DTO
     public class TDStatWithAccount : TDStat
     {
-        public Account Account { get; set; }
+        public ExtAccount ExtAccount { get; set; }
         public string AccountName
         {
-            get { return (Account != null) ? Account.Name : string.Empty; }
+            get { return (ExtAccount != null) ? ExtAccount.Name : string.Empty; }
         }
         public string PlatformName
         {
-            get { return (Account != null && Account.Platform != null) ? Account.Platform.Name : string.Empty; }
+            get { return (ExtAccount != null && ExtAccount.Platform != null) ? ExtAccount.Platform.Name : string.Empty; }
         }
     }
 
