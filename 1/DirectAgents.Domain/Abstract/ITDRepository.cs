@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.DBM;
@@ -19,7 +18,7 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<ExtAccount> ExtAccounts(string platformCode = null, int? campId = null);
         IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? accountId = null);
         TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null);
-        TDStatWithAccount GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null);
+        TDStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null);
 
         // AdRoll
         Advertisable Advertisable(string eid);

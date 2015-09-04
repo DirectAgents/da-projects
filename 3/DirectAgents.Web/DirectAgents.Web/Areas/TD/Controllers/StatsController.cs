@@ -41,7 +41,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
             var startOfMonth = new DateTime(date.Value.Year, date.Value.Month, 1);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
-            var stats = new List<TDStatWithAccount>();
+            var stats = new List<TDStat>();
 
             var extAccounts = tdRepo.ExtAccounts(platformCode: platformCode, campId: campId)
                                 .OrderBy(a => a.Platform.Code).ThenBy(a => a.Name);

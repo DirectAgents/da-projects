@@ -102,9 +102,9 @@ namespace DirectAgents.Domain.Concrete
             return stat;
         }
 
-        public TDStatWithAccount GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null)
+        public TDStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null)
         {
-            var stat = new TDStatWithAccount
+            var stat = new TDStat
             {
                 ExtAccount = extAccount
             };

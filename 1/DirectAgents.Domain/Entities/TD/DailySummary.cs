@@ -22,22 +22,10 @@ namespace DirectAgents.Domain.Entities.TD
     }
 
     // DTO
-    public class TDStatWithAccount : TDStat
-    {
-        public ExtAccount ExtAccount { get; set; }
-        public string AccountName
-        {
-            get { return (ExtAccount != null) ? ExtAccount.Name : string.Empty; }
-        }
-        public string PlatformName
-        {
-            get { return (ExtAccount != null && ExtAccount.Platform != null) ? ExtAccount.Platform.Name : string.Empty; }
-        }
-    }
-
     public class TDStat
     {
         public string Name { get; set; }
+        public ExtAccount ExtAccount { get; set; } // optional
 
         public int Impressions { get; set; }
         public int Clicks { get; set; }

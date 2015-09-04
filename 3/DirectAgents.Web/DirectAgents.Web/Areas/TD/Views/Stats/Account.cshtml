@@ -1,4 +1,5 @@
-﻿@model IEnumerable<DirectAgents.Domain.Entities.TD.TDStatWithAccount>
+﻿@using DirectAgents.Domain.Entities.TD
+@model IEnumerable<TDStat>
 
 <h2>External Account Stats</h2>
 
@@ -20,19 +21,19 @@
 @foreach (var stat in Model)
 {
 <tr>
-    <td>@stat.PlatformName</td>
+    <td>@stat.ExtAccount.Platform.Name</td>
     <td>
-        @if (stat.ExtAccount.Platform.Code == DirectAgents.Domain.Entities.TD.Platform.Code_AdRoll)
+        @if (stat.ExtAccount.Platform.Code == Platform.Code_AdRoll)
         {
-            @Html.ActionLink(stat.AccountName, "AdRoll", new { advEid = stat.ExtAccount.ExternalId })
+            @Html.ActionLink(stat.ExtAccount.Name, "AdRoll", new { advEid = stat.ExtAccount.ExternalId })
         }
-        else if (stat.ExtAccount.Platform.Code == DirectAgents.Domain.Entities.TD.Platform.Code_DBM)
+        else if (stat.ExtAccount.Platform.Code == Platform.Code_DBM)
         {
-            @Html.ActionLink(stat.AccountName, "DBM", new { ioID = stat.ExtAccount.ExternalId })
+            @Html.ActionLink(stat.ExtAccount.Name, "DBM", new { ioID = stat.ExtAccount.ExternalId })
         }
         else
         {
-            @stat.AccountName
+            @stat.ExtAccount.Name
         }
     </td>
     <td style="text-align:right">@stat.Impressions</td>

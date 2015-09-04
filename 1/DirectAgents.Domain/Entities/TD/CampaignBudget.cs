@@ -46,6 +46,7 @@ namespace DirectAgents.Domain.Entities.TD
 
     public class BudgetVals
     {
+        //The key values that define a budget...
         public decimal MediaSpend { get; set; }
         public decimal MgmtFeePct { get; set; }
         public decimal MarginPct { get; set; }
