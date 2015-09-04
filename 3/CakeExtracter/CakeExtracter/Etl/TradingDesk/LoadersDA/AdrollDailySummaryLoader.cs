@@ -46,6 +46,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 foreach (var item in items)
                 {
+                    //TODO: Check/delete if all zeros
+
                     var source = new DailySummary
                     {
                         Date = item.date,

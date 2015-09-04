@@ -10,6 +10,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class DBMCreativeDailySummaryLoader : Loader<DbmRowBase>
     {
+        public DateTime? EarliestDate { get; set; }
+
         protected override int Load(List<DbmRowBase> items)
         {
             Logger.Info("Loading {0} CreativeDailySummaries..", items.Count);
@@ -30,6 +32,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 {
                     //DateTime date = DateTime.Parse(item.Date);
                     var date = item.Date;
+                    if (EarliestDate == null || date < EarliestDate.Value)
+                        EarliestDate = date;
+
                     int creativeID = int.Parse(((DbmRowWithCreative)item).CreativeID);
                     var source = new CreativeDailySummary
                     {
@@ -125,9 +130,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                             Logger.Info("Saving new Creative: {0} ({1})", creative.Name, creative.ID);
                             db.SaveChanges();
                         }
-                        else if (existing.Name != creativeName)
+                        else if (existing.Name != creativeName || existing.InsertionOrderID != insertionOrderID)
                         {
                             existing.Name = creativeName;
+                            existing.InsertionOrderID = insertionOrderID;
                             Logger.Info("Saving updated Creative: {0} ({1})", creativeName, existing.ID);
                             db.SaveChanges();
                         }
