@@ -16,33 +16,40 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             this.tdRepo = tdRepository;
         }
 
-        public ActionResult MTD(int campId)
+        public ActionResult MTD(int campId, DateTime? date)
         {
             var campaign = tdRepo.Campaign(campId);
             if (campaign == null)
                 return Content("Campaign not found");
 
-            var today = DateTime.Today;
-            var firstOfMonth = new DateTime(today.Year, today.Month, 1);
-            tdRepo.CreateBudgetIfNotExists(campaign, firstOfMonth);
+            if (!date.HasValue)
+                date = DateTime.Today;
 
-            var tdStat = tdRepo.GetTDStat(firstOfMonth, null, accounts: campaign.Accounts);
-            var budgetWithStats = new BudgetWithStats(campaign.BudgetFor(firstOfMonth), tdStat);
+            var startOfMonth = new DateTime(date.Value.Year, date.Value.Month, 1);
+            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+            tdRepo.CreateBudgetIfNotExists(campaign, startOfMonth);
+
+            var tdStat = tdRepo.GetTDStat(startOfMonth, endOfMonth, accounts: campaign.Accounts);
+            var budgetWithStats = new BudgetWithStats(campaign.BudgetFor(startOfMonth), tdStat);
 
             return View(budgetWithStats);
         }
 
-        public ActionResult Account(string platformCode)
+        // Stats by "external account".  Either MTD or for the specified month (indicated by "date")
+        public ActionResult Account(string platformCode, int? campId, DateTime? date)
         {
-            var today = DateTime.Today;
-            var startOfMonth = new DateTime(today.Year, today.Month, 1);
+            if (!date.HasValue)
+                date = DateTime.Today;
+
+            var startOfMonth = new DateTime(date.Value.Year, date.Value.Month, 1);
+            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
             var stats = new List<TDStatWithAccount>();
 
-            var accounts = tdRepo.Accounts(platformCode: platformCode)
-                            .OrderBy(a => a.Platform.Code).ThenBy(a => a.Name);
-            foreach (var account in accounts)
+            var extAccounts = tdRepo.Accounts(platformCode: platformCode, campId: campId)
+                                .OrderBy(a => a.Platform.Code).ThenBy(a => a.Name);
+            foreach (var extAccount in extAccounts)
             {   //Note: Multiple Active Record Sets used here
-                var stat = tdRepo.GetTDStatWithAccount(startOfMonth, null, account: account); // MTD
+                var stat = tdRepo.GetTDStatWithAccount(startOfMonth, endOfMonth, account: extAccount); // MTD
                 if (!stat.AllZeros())
                     stats.Add(stat);
             }

@@ -1,12 +1,11 @@
 ﻿@model IEnumerable<DirectAgents.Domain.Entities.TD.Account>
 
-<h2>Accounts</h2>
+<h2>External Accounts</h2>
 
 <table>
 <tr>
     <th>Platform</th>
     <th>Account</th>
-    <th>@Html.ActionLink("stats", "Account", "Stats")</th>
 </tr>
 @foreach (var acct in Model)
 {
@@ -16,3 +15,6 @@
 </tr>
 }
 </table>
+
+<br />
+@Html.ActionLink("Stats for all external accounts", "Account", "Stats")

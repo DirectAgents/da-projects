@@ -61,11 +61,13 @@ namespace DirectAgents.Domain.Concrete
 
         // ---
 
-        public IQueryable<Account> Accounts(string platformCode = null)
+        public IQueryable<Account> Accounts(string platformCode = null, int? campId = null)
         {
             var accounts = context.Accounts.AsQueryable();
             if (!string.IsNullOrWhiteSpace(platformCode))
                 accounts = accounts.Where(a => a.Platform.Code == platformCode);
+            if (campId.HasValue)
+                accounts = accounts.Where(a => a.CampaignId == campId.Value);
             return accounts;
         }
 
@@ -81,7 +83,11 @@ namespace DirectAgents.Domain.Concrete
             return dSums;
         }
 
-        public TDStat GetTDStat(DateTime? startDate, DateTime? endDate, ICollection<Account> accounts = null)
+        public TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null)
+        {
+            return GetTDStat(startDate, endDate, accounts: (campaign != null) ? campaign.Accounts : null);
+        }
+        private TDStat GetTDStat(DateTime? startDate, DateTime? endDate, ICollection<Account> accounts = null)
         {
             var stat = new TDStat();
             var dSums = DailySummaries(startDate, endDate);

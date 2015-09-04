@@ -11,9 +11,9 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             this.tdRepo = tdRepository;
         }
 
-        public ActionResult Index()
+        public ActionResult Index(int? campId)
         {
-            var accounts = tdRepo.Accounts()
+            var accounts = tdRepo.Accounts(campId: campId)
                 .OrderBy(a => a.Platform.Name).ThenBy(a => a.Name);
 
             return View(accounts);

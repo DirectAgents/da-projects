@@ -63,6 +63,10 @@ namespace DirectAgents.Domain.Entities.TD
         {
             return TotalRevenue() * (100 - MarginPct) / 100;
         }
+        public decimal Margin()
+        {
+            return TotalRevenue() * MarginPct / 100;
+        }
 
         public void SetBudgetValsFrom(BudgetVals source)
         {
@@ -72,42 +76,78 @@ namespace DirectAgents.Domain.Entities.TD
         }
     }
 
-    public class BudgetWithStats
+    public class BudgetWithStats //TODO: make this a subclass of BudgetInfo? or call it StatsWithBudget?
     {
         public BudgetInfo Budget { get; set; }
         public TDStat Stats { get; set; }
 
-        public BudgetWithStats(BudgetInfo budgetInfo, TDStat tdStat)
+        public BudgetWithStats(BudgetInfo budgetInfo, TDStat tdStat, Campaign campaign = null)
         {
-            this.Budget = budgetInfo;
+            if (budgetInfo == null)
+                this.Budget = new BudgetInfo(); //TODO: set Campaign here?
+            else
+                this.Budget = budgetInfo;
             this.Stats = tdStat;
+            this.Campaign = campaign;
+        }
+
+        private Campaign _campaign; // only needed if Budget==null
+        public Campaign Campaign
+        {
+            get
+            {
+                if (_campaign != null)
+                    return _campaign;
+                return (Budget != null) ? Budget.Campaign : null;
+            }
+            set { _campaign = value; }
         }
 
         public decimal FractionReached()
         {
-            return Stats.Cost / Budget.Cost();
+            if (Budget == null)
+                return 0;
+            var budgetedCost = Budget.Cost();
+            if (budgetedCost == 0)
+                return 0;
+            else
+                return Stats.Cost / budgetedCost;
         }
 
-        //public decimal SpendMultiplier
-        //{
-        //    get { return 1 / ((1 - Budget.MarginPct / 100) * (1 + Budget.MgmtFeePct / 100)); }
-        //}
-
-        public decimal TotalRevenue
+        public decimal RevToCostMultiplier() // generally used in reverse (cost -> rev)
         {
-            get { return Stats.Cost / (1 - Budget.MarginPct / 100); }
+            if (Budget == null)
+                return 1;
+            else
+                return (1 - Budget.MarginPct / 100);
+        }
+        public decimal MediaSpendToRevMultiplier() // generally used in reverse (rev -> mediaspend)
+        {
+            if (Budget == null)
+                return 1;
+            else return (1 + Budget.MgmtFeePct / 100);
         }
 
-        public decimal MediaSpend
+        public decimal TotalRevenue()
         {
-            //get { return SpendMultiplier * Stats.Cost; }
-            get { return TotalRevenue / (1 + Budget.MgmtFeePct / 100); }
+            return Stats.Cost / RevToCostMultiplier();
+        }
+
+        public decimal MediaSpend()
+        {
+            return TotalRevenue() / MediaSpendToRevMultiplier();
         }
 
         //?compute w/o MediaSpend?
-        public decimal MgmtFee
+        public decimal MgmtFee()
         {
-            get { return TotalRevenue - MediaSpend; }
+            return TotalRevenue() - MediaSpend();
+        }
+
+        public decimal Margin()
+        {
+            //return Stats.Cost * Budget.MarginPct / (100 - Budget.MarginPct);
+            return TotalRevenue() - Stats.Cost;
         }
 
     }
