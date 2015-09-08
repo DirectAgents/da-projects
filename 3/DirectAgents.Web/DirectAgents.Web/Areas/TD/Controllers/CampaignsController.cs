@@ -34,34 +34,34 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             if (campId.HasValue)
                 campaigns = campaigns.Where(c => c.Id == campId.Value);
 
-            var budgetStats = new List<BudgetWithStats>();
+            var budgetStats = new List<TDStatWithBudget>();
             foreach (var camp in campaigns.OrderBy(c => c.Advertiser.Name).ThenBy(c => c.Name))
             {
                 var budgetInfo = camp.BudgetInfoFor(startOfMonth);
-                var tdStat = tdRepo.GetTDStat(startOfMonth, endOfMonth, campaign: camp);
-                tdStat.SetMultipliers(budgetInfo);
-                var budgetWithStats = new BudgetWithStats(budgetInfo, tdStat, (budgetInfo == null) ? camp : null);
+                var tdStat = tdRepo.GetTDStat(startOfMonth, endOfMonth, campaign: camp, marginFees: budgetInfo);
+                var statWithBudget = new TDStatWithBudget(tdStat, budgetInfo);
+                if (budgetInfo == null)
+                    statWithBudget.Campaign = camp;
 
-                // If we're viewing one particular campaign, show it's external accounts
+                // If we're viewing one particular campaign, show its external accounts
                 if (campId.HasValue)
                 {
-                    var budgetStatsByExtAccount = new List<BudgetWithStats>();
+                    var extAccountStats = new List<TDStat>();
                     var extAccounts = camp.ExtAccounts.OrderBy(a => a.Platform.Code).ThenBy(a => a.Name);
                     foreach (var extAccount in extAccounts)
                     {   //Note: Multiple Active Record Sets used here
-                        var extAcctStat = tdRepo.GetTDStatWithAccount(startOfMonth, endOfMonth, extAccount: extAccount);
-                        extAcctStat.SetMultipliers(budgetInfo);
-                        var extAcctBudgetStat = new BudgetWithStats(budgetInfo, extAcctStat);
-                        budgetStatsByExtAccount.Add(extAcctBudgetStat);
+                        var extAcctStat = tdRepo.GetTDStatWithAccount(startOfMonth, endOfMonth, extAccount: extAccount, marginFees: budgetInfo);
+                        var extAcctBudgetStat = new TDStatWithBudget(extAcctStat, budgetInfo);
+                        extAccountStats.Add(extAcctBudgetStat);
                     }
-                    budgetWithStats.BudgetStatsByExtAccount = budgetStatsByExtAccount;
+                    statWithBudget.ExtAccountStats = extAccountStats;
                 }
 
-                budgetStats.Add(budgetWithStats);
+                budgetStats.Add(statWithBudget);
             }
             var model = new CampaignPacingVM
             {
-                CampaignStats = budgetStats
+                CampaignBudgetStats = budgetStats
             };
             return View(model);
         }

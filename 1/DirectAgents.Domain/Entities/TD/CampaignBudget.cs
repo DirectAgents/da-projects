@@ -44,12 +44,10 @@ namespace DirectAgents.Domain.Entities.TD
         public virtual Campaign Campaign { get; set; }
     }
 
-    public class BudgetVals
+    public class BudgetVals : MarginFeeVals
     {
         //The key values that define a budget...
         public decimal MediaSpend { get; set; }
-        public decimal MgmtFeePct { get; set; }
-        public decimal MarginPct { get; set; }
 
         //Computed vals
         public decimal MgmtFee()
@@ -76,40 +74,10 @@ namespace DirectAgents.Domain.Entities.TD
             MarginPct = source.MarginPct;
         }
     }
-
-    //TODO: call it StatsWithBudget
-    public class BudgetWithStats : TDStat
+    public class MarginFeeVals
     {
-        public TDMoneyStat Budget { get; set; }
-        public DateTime Date { get; set; } // the month of the budget
-
-        public IEnumerable<BudgetWithStats> BudgetStatsByExtAccount { get; set; }
-
-        public BudgetWithStats(BudgetInfo budgetInfo, TDStat tdStat, Campaign campaign = null)
-        {
-            if (budgetInfo != null)
-            {
-                this.Budget = new TDMoneyStat(budgetInfo.MgmtFeePct, budgetInfo.MarginPct, budgetInfo.MediaSpend);
-                this.Date = budgetInfo.Date;
-                this.Campaign = budgetInfo.Campaign;
-            }
-            else
-            {
-                this.Budget = new TDMoneyStat();
-                this.Campaign = campaign;
-            }
-            CopyFrom(tdStat);
-        }
-
-        //private Campaign _campaign; // only needed if Budget==null
-        public Campaign Campaign { get; set; }
-
-        public decimal FractionReached()
-        {
-            if (Budget == null || Budget.Cost == 0)
-                return 0;
-            return this.Cost / Budget.Cost;
-        }
-
+        public decimal MgmtFeePct { get; set; }
+        public decimal MarginPct { get; set; }
     }
+
 }

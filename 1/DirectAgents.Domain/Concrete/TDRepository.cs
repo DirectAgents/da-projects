@@ -83,26 +83,29 @@ namespace DirectAgents.Domain.Concrete
             return dSums;
         }
 
-        public TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null)
+        //NOTE: This will sum stats for ALL campaigns if none specified.
+        public TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null)
         {
-            return GetTDStat(startDate, endDate, extAccounts: (campaign != null) ? campaign.ExtAccounts : null);
-        }
-        private TDStat GetTDStat(DateTime? startDate, DateTime? endDate, ICollection<ExtAccount> extAccounts = null)
-        {
-            var stat = new TDStat();
-            var dSums = DailySummaries(startDate, endDate);
-            if (extAccounts != null)
+            var stat = new TDStat()
             {
-                var accountIds = extAccounts.Select(a => a.Id).ToArray();
+                Campaign = campaign
+            };
+            var dSums = DailySummaries(startDate, endDate);
+            if (campaign != null)
+            {
+                var accountIds = campaign.ExtAccounts.Select(a => a.Id).ToArray();
                 dSums = dSums.Where(ds => accountIds.Contains(ds.AccountId));
             }
             if (dSums.Any())
                 stat.SetStatsFrom(dSums);
+            if (marginFees != null)
+                stat.SetMarginFees(marginFees);
 
             return stat;
         }
 
-        public TDStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null)
+        //NOTE: This will sum stats for ALL accounts if none specified.
+        public TDStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null, MarginFeeVals marginFees = null)
         {
             var stat = new TDStat
             {
@@ -110,11 +113,11 @@ namespace DirectAgents.Domain.Concrete
             };
             int? accountId = (extAccount != null) ? extAccount.Id : (int?)null;
             var dSums = DailySummaries(startDate, endDate, accountId: accountId);
-            //NOTE: This will sum stats for ALL accounts if none specified.
-            // Later, will we have other params, like campaign?
 
             if (dSums.Any())
                 stat.SetStatsFrom(dSums);
+            if (marginFees != null)
+                stat.SetMarginFees(marginFees);
 
             return stat;
         }

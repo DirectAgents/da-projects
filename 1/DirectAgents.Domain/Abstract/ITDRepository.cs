@@ -17,8 +17,8 @@ namespace DirectAgents.Domain.Abstract
         void CreateBudgetIfNotExists(Campaign campaign, DateTime monthToCreate);
         IQueryable<ExtAccount> ExtAccounts(string platformCode = null, int? campId = null);
         IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? accountId = null);
-        TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null);
-        TDStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null);
+        TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null);
+        TDStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null, MarginFeeVals marginFees = null);
 
         // AdRoll
         Advertisable Advertisable(string eid);

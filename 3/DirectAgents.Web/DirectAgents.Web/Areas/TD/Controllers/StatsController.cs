@@ -28,9 +28,8 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
 
             var budgetInfo = campaign.BudgetInfoFor(startOfMonth);
-            var tdStat = tdRepo.GetTDStat(startOfMonth, endOfMonth, campaign: campaign);
-            tdStat.SetMultipliers(budgetInfo);
-            var budgetWithStats = new BudgetWithStats(budgetInfo, tdStat);
+            var tdStat = tdRepo.GetTDStat(startOfMonth, endOfMonth, campaign: campaign, marginFees: budgetInfo);
+            var budgetWithStats = new TDStatWithBudget(tdStat, budgetInfo);
 
             return View(budgetWithStats);
         }

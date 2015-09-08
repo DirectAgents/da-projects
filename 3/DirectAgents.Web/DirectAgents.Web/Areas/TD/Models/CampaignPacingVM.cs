@@ -5,6 +5,6 @@ namespace DirectAgents.Web.Areas.TD.Models
 {
     public class CampaignPacingVM
     {
-        public IEnumerable<BudgetWithStats> CampaignStats { get; set; }
+        public IEnumerable<TDStatWithBudget> CampaignBudgetStats { get; set; }
     }
 }

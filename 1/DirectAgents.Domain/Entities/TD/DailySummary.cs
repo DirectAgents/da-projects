@@ -22,10 +22,43 @@ namespace DirectAgents.Domain.Entities.TD
     }
 
     // DTOs:
+    public class TDStatWithBudget : TDStat
+    {
+        public TDMoneyStat Budget { get; set; }
+        public DateTime Date { get; set; } // the month of the budget
+
+        public IEnumerable<TDStat> ExtAccountStats { get; set; }
+
+        public TDStatWithBudget(TDStat tdStat, BudgetInfo budgetInfo)
+        {
+            CopyFrom(tdStat);
+            if (budgetInfo != null)
+            {
+                this.Budget = new TDMoneyStat(budgetInfo.MgmtFeePct, budgetInfo.MarginPct, budgetInfo.MediaSpend);
+                this.Date = budgetInfo.Date;
+                this.Campaign = budgetInfo.Campaign;
+            }
+            else
+            {
+                this.Budget = new TDMoneyStat();
+            }
+        }
+
+        public decimal FractionReached()
+        {
+            if (Budget == null || Budget.Cost == 0)
+                return 0;
+            return this.Cost / Budget.Cost;
+        }
+
+    }
+
     public class TDStat : TDMoneyStat
     {
+        // Possible ways to identify the stats...
         public string Name { get; set; }
-        public ExtAccount ExtAccount { get; set; } // optional
+        public Campaign Campaign { get; set; }
+        public ExtAccount ExtAccount { get; set; }
 
         public int Impressions { get; set; }
         public int Clicks { get; set; }
@@ -53,8 +86,8 @@ namespace DirectAgents.Domain.Entities.TD
             this.Clicks = tdStat.Clicks;
             this.PostClickConv = tdStat.PostClickConv;
             this.PostViewConv = tdStat.PostViewConv;
-            this.Cost = tdStat.Cost;
 
+            this.Cost = tdStat.Cost;
             this.MgmtFeePct = tdStat.MgmtFeePct;
             this.MarginPct = tdStat.MarginPct;
         }
@@ -111,10 +144,14 @@ namespace DirectAgents.Domain.Entities.TD
             SetMediaSpend(mediaSpend);
         }
 
-        public void SetMultipliers(BudgetInfo budgetInfo)
+        public void SetMarginFees(MarginFeeVals marginFees)
         {
-            this.MgmtFeePct = budgetInfo.MgmtFeePct;
-            this.MarginPct = budgetInfo.MarginPct;
+            if (marginFees != null)
+            {
+                this.MgmtFeePct = marginFees.MgmtFeePct;
+                this.MarginPct = marginFees.MarginPct;
+            }
+            // else set to 0?
         }
 
         // Compute and set Cost based on the specified MediaSpend

@@ -22,7 +22,7 @@
     <th>Sales Rep</th>
     <th>AM</th>
 </tr>
-@foreach (var cbStat in Model.CampaignStats)
+@foreach (var cbStat in Model.CampaignBudgetStats)
 {
     string expandText = (oneCamp ? "" : "+") + cbStat.Campaign.ExtAccounts.Count.ToString();
 <tr>
@@ -38,18 +38,18 @@
     <td>@string.Join(",", cbStat.Campaign.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name))</td>
     <td>@cbStat.FractionReached().ToString("#0.##%")</td>
 </tr>
-if (cbStat.BudgetStatsByExtAccount != null)
+if (cbStat.ExtAccountStats != null)
 {
-    foreach (var extAcctBStat in cbStat.BudgetStatsByExtAccount)
+    foreach (var extAcctStat in cbStat.ExtAccountStats)
     {
 <tr>
-    <td colspan="4" style="text-align:right">@extAcctBStat.ExtAccount.Name - @extAcctBStat.ExtAccount.Platform.Name</td>
-    <td>@extAcctBStat.Cost.ToString("C")</td>
-    <td>@extAcctBStat.MediaSpend().ToString("C")</td>
-    <td>@extAcctBStat.TotalRevenue().ToString("C")</td>
-    <td>@extAcctBStat.Margin().ToString("C")</td>
+    <td colspan="4" style="text-align:right">@extAcctStat.ExtAccount.Name - @extAcctStat.ExtAccount.Platform.Name</td>
+    <td>@extAcctStat.Cost.ToString("C")</td>
+    <td>@extAcctStat.MediaSpend().ToString("C")</td>
+    <td>@extAcctStat.TotalRevenue().ToString("C")</td>
+    <td>@extAcctStat.Margin().ToString("C")</td>
     <td></td>
-    <td>@extAcctBStat.ExtAccount.Platform.Name</td>
+    <td>@extAcctStat.ExtAccount.Platform.Name</td>
 </tr>
     }
 }
