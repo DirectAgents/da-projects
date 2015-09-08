@@ -1,24 +1,22 @@
 ﻿@model DirectAgents.Domain.Entities.TD.BudgetWithStats
 @{
-    var bs = Model;
-    var budg = bs.Budget;
-    var c = budg.Campaign;
-    var s = bs.Stats;
+    var m = Model; // stats
+    var budg = Model.Budget;
 }
 
 <h2>MTD View</h2>
 
-Month: @budg.Date.ToString("MMM yyyy")
+Month: @m.Date.ToString("MMM yyyy")
 <br /><br />
 
 <table>
 <tr>
     <th>Advertiser</th>
-    <td>@c.Advertiser.Name</td>
+    <td>@m.Campaign.Advertiser.Name</td>
 </tr>
 <tr>
     <th>Campaign</th>
-    <td>@c.Name</td>
+    <td>@m.Campaign.Name</td>
 </tr>
 <tr>
     <th>Mgmt Fee</th>
@@ -30,7 +28,7 @@ Month: @budg.Date.ToString("MMM yyyy")
 </tr>
 <tr>
     <th>Budget</th>
-    <td>@budg.MediaSpend.ToString("C")</td>
+    <td>@budg.MediaSpend().ToString("C")</td>
 </tr>
 </table>
 
@@ -44,31 +42,31 @@ Month: @budg.Date.ToString("MMM yyyy")
 </tr>
 <tr>
     <td>Actual Cost</td>
-    <td>@s.Cost.ToString("C")</td>
-    <td>@budg.Cost().ToString("C")</td>
-    <td>@bs.FractionReached().ToString("#0.##%")</td>
+    <td>@m.Cost.ToString("C")</td>
+    <td>@budg.Cost.ToString("C")</td>
+    <td>@m.FractionReached().ToString("#0.##%")</td>
 </tr>
 <tr>
     <td>Media Spend</td>
-    <td>@bs.MediaSpend().ToString("C")</td>
-    <td>@budg.MediaSpend.ToString("C")</td>
+    <td>@m.MediaSpend().ToString("C")</td>
+    <td>@budg.MediaSpend().ToString("C")</td>
     <td></td>
 </tr>
 <tr>
     <td>Mgmt Fee</td>
-    <td>@bs.MgmtFee().ToString("C")</td>
+    <td>@m.MgmtFee().ToString("C")</td>
     <td>@budg.MgmtFee().ToString("C")</td>
     <td></td>
 </tr>
 <tr>
     <td>Total Revenue</td>
-    <td>@bs.TotalRevenue().ToString("C")</td>
+    <td>@m.TotalRevenue().ToString("C")</td>
     <td>@budg.TotalRevenue().ToString("C")</td>
     <td></td>
 </tr>
 <tr>
     <td>Margin</td>
-    <td>@bs.Margin().ToString("C")</td>
+    <td>@m.Margin().ToString("C")</td>
     <td>@budg.Margin().ToString("C")</td>
     <td></td>
 </tr>
@@ -78,23 +76,23 @@ Month: @budg.Date.ToString("MMM yyyy")
 <table>
 <tr>
     <td>Impressions</td>
-    <td>@s.Impressions.ToString("N0")</td>
+    <td>@m.Impressions.ToString("N0")</td>
 </tr>
 <tr>
     <td>Clicks</td>
-    <td>@s.Clicks.ToString("N0")</td>
+    <td>@m.Clicks.ToString("N0")</td>
 </tr>
 <tr>
     <td>Post-Click Conv</td>
-    <td>@s.PostClickConv.ToString("N0")</td>
+    <td>@m.PostClickConv.ToString("N0")</td>
 </tr>
 <tr>
     <td>Post-View Conv</td>
-    <td>@s.PostViewConv.ToString("N0")</td>
+    <td>@m.PostViewConv.ToString("N0")</td>
 </tr>
 <tr>
     <td>Total Conv</td>
-    <td>@s.TotalConv.ToString("N0")</td>
+    <td>@m.TotalConv.ToString("N0")</td>
 </tr>
 <tr>
     <td></td>

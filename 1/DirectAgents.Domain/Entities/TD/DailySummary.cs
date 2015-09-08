@@ -21,8 +21,8 @@ namespace DirectAgents.Domain.Entities.TD
         //TotalConv
     }
 
-    // DTO
-    public class TDStat
+    // DTOs:
+    public class TDStat : TDMoneyStat
     {
         public string Name { get; set; }
         public ExtAccount ExtAccount { get; set; } // optional
@@ -31,7 +31,7 @@ namespace DirectAgents.Domain.Entities.TD
         public int Clicks { get; set; }
         public int PostClickConv { get; set; }
         public int PostViewConv { get; set; }
-        public decimal Cost { get; set; }
+        //public decimal Cost { get; set; } // (inherited)
         //public int Prospects { get; set; }
 
         public int TotalConv
@@ -42,6 +42,21 @@ namespace DirectAgents.Domain.Entities.TD
         public bool AllZeros()
         {
             return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0);
+        }
+
+        public void CopyFrom(TDStat tdStat)
+        {
+            this.Name = tdStat.Name;
+            this.ExtAccount = tdStat.ExtAccount;
+
+            this.Impressions = tdStat.Impressions;
+            this.Clicks = tdStat.Clicks;
+            this.PostClickConv = tdStat.PostClickConv;
+            this.PostViewConv = tdStat.PostViewConv;
+            this.Cost = tdStat.Cost;
+
+            this.MgmtFeePct = tdStat.MgmtFeePct;
+            this.MarginPct = tdStat.MarginPct;
         }
 
         public void SetStatsFrom(IEnumerable<DailySummary> dSums, bool roundCost = false)
@@ -79,6 +94,62 @@ namespace DirectAgents.Domain.Entities.TD
         public decimal CPA
         {
             get { return (TotalConv == 0) ? 0 : Math.Round(Cost / TotalConv, 2); }
+        }
+    }
+
+    //Allows for the computation of MediaSpend, MgmtFee, TotalRevenue, Margin...
+    public class TDMoneyStat
+    {
+        public decimal Cost { get; set; }
+        public decimal MgmtFeePct { get; set; }
+        public decimal MarginPct { get; set; }
+
+        public TDMoneyStat(decimal mgmtFeePct = 0, decimal marginPct = 0, decimal mediaSpend = 0)
+        {
+            this.MgmtFeePct = mgmtFeePct;
+            this.MarginPct = marginPct;
+            SetMediaSpend(mediaSpend);
+        }
+
+        public void SetMultipliers(BudgetInfo budgetInfo)
+        {
+            this.MgmtFeePct = budgetInfo.MgmtFeePct;
+            this.MarginPct = budgetInfo.MarginPct;
+        }
+
+        // Compute and set Cost based on the specified MediaSpend
+        public void SetMediaSpend(decimal mediaSpend)
+        {
+            this.Cost = mediaSpend * MediaSpendToRevMultiplier() * RevToCostMultiplier();
+        }
+
+        public decimal RevToCostMultiplier() // usually used in reverse (cost -> rev)
+        {
+            return (1 - MarginPct / 100);
+        }
+        public decimal MediaSpendToRevMultiplier() // usually used in reverse (rev -> mediaspend)
+        {
+            return (1 + MgmtFeePct / 100);
+        }
+
+        public decimal TotalRevenue()
+        {
+            return this.Cost / RevToCostMultiplier();
+        }
+
+        public decimal MediaSpend()
+        {
+            return TotalRevenue() / MediaSpendToRevMultiplier();
+        }
+
+        public decimal MgmtFee()
+        {
+            return TotalRevenue() - MediaSpend();
+        }
+
+        public decimal Margin()
+        {
+            return TotalRevenue() - this.Cost;
         }
     }
 }

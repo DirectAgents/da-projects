@@ -23,30 +23,35 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View(campaigns);
         }
 
-        public ActionResult Pacing(DateTime? date)
+        public ActionResult Pacing(DateTime? date, int? campId)
         {
             if (!date.HasValue)
                 date = DateTime.Today;
             var startOfMonth = new DateTime(date.Value.Year, date.Value.Month, 1);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
 
-            var campaigns = tdRepo.Campaigns()
-                .OrderBy(c => c.Advertiser.Name).ThenBy(c => c.Name);
-            var budgetStats = new List<BudgetWithStats>();
-            foreach (var camp in campaigns)
-            {
-                var budget = camp.BudgetFor(startOfMonth);
-                var tdStat = tdRepo.GetTDStat(startOfMonth, endOfMonth, campaign: camp);
-                var budgetWithStats = new BudgetWithStats(budget, tdStat, (budget == null) ? camp : null);
+            var campaigns = tdRepo.Campaigns();
+            if (campId.HasValue)
+                campaigns = campaigns.Where(c => c.Id == campId.Value);
 
-                if (camp.ExtAccounts.Count > 1)
+            var budgetStats = new List<BudgetWithStats>();
+            foreach (var camp in campaigns.OrderBy(c => c.Advertiser.Name).ThenBy(c => c.Name))
+            {
+                var budgetInfo = camp.BudgetInfoFor(startOfMonth);
+                var tdStat = tdRepo.GetTDStat(startOfMonth, endOfMonth, campaign: camp);
+                tdStat.SetMultipliers(budgetInfo);
+                var budgetWithStats = new BudgetWithStats(budgetInfo, tdStat, (budgetInfo == null) ? camp : null);
+
+                // If we're viewing one particular campaign, show it's external accounts
+                if (campId.HasValue)
                 {
                     var budgetStatsByExtAccount = new List<BudgetWithStats>();
                     var extAccounts = camp.ExtAccounts.OrderBy(a => a.Platform.Code).ThenBy(a => a.Name);
                     foreach (var extAccount in extAccounts)
                     {   //Note: Multiple Active Record Sets used here
                         var extAcctStat = tdRepo.GetTDStatWithAccount(startOfMonth, endOfMonth, extAccount: extAccount);
-                        var extAcctBudgetStat = new BudgetWithStats(budget, extAcctStat);
+                        extAcctStat.SetMultipliers(budgetInfo);
+                        var extAcctBudgetStat = new BudgetWithStats(budgetInfo, extAcctStat);
                         budgetStatsByExtAccount.Add(extAcctBudgetStat);
                     }
                     budgetWithStats.BudgetStatsByExtAccount = budgetStatsByExtAccount;

@@ -24,7 +24,7 @@ namespace DirectAgents.Domain.Entities.TD
         public virtual ICollection<BudgetInfo> Budgets { get; set; }
         public BudgetVals DefaultBudget { get; set; }
 
-        public BudgetInfo BudgetFor(DateTime desiredMonth)
+        public BudgetInfo BudgetInfoFor(DateTime desiredMonth)
         {
             if (Budgets == null)
                 return null;
@@ -77,80 +77,38 @@ namespace DirectAgents.Domain.Entities.TD
         }
     }
 
-    public class BudgetWithStats //TODO: make this a subclass of BudgetInfo? or call it StatsWithBudget?
+    //TODO: call it StatsWithBudget
+    public class BudgetWithStats : TDStat
     {
-        public BudgetInfo Budget { get; set; }
-        public TDStat Stats { get; set; }
+        public TDMoneyStat Budget { get; set; }
+        public DateTime Date { get; set; } // the month of the budget
 
         public IEnumerable<BudgetWithStats> BudgetStatsByExtAccount { get; set; }
 
         public BudgetWithStats(BudgetInfo budgetInfo, TDStat tdStat, Campaign campaign = null)
         {
-            if (budgetInfo == null)
-                this.Budget = new BudgetInfo(); //TODO: set Campaign here?
+            if (budgetInfo != null)
+            {
+                this.Budget = new TDMoneyStat(budgetInfo.MgmtFeePct, budgetInfo.MarginPct, budgetInfo.MediaSpend);
+                this.Date = budgetInfo.Date;
+                this.Campaign = budgetInfo.Campaign;
+            }
             else
-                this.Budget = budgetInfo;
-            this.Stats = tdStat;
-            this.Campaign = campaign;
+            {
+                this.Budget = new TDMoneyStat();
+                this.Campaign = campaign;
+            }
+            CopyFrom(tdStat);
         }
 
-        private Campaign _campaign; // only needed if Budget==null
-        public Campaign Campaign
-        {
-            get
-            {
-                if (_campaign != null)
-                    return _campaign;
-                return (Budget != null) ? Budget.Campaign : null;
-            }
-            set { _campaign = value; }
-        }
+        //private Campaign _campaign; // only needed if Budget==null
+        public Campaign Campaign { get; set; }
 
         public decimal FractionReached()
         {
-            if (Budget == null)
+            if (Budget == null || Budget.Cost == 0)
                 return 0;
-            var budgetedCost = Budget.Cost();
-            if (budgetedCost == 0)
-                return 0;
-            else
-                return Stats.Cost / budgetedCost;
-        }
-
-        public decimal RevToCostMultiplier() // generally used in reverse (cost -> rev)
-        {
-            if (Budget == null)
-                return 1;
-            else
-                return (1 - Budget.MarginPct / 100);
-        }
-        public decimal MediaSpendToRevMultiplier() // generally used in reverse (rev -> mediaspend)
-        {
-            if (Budget == null)
-                return 1;
-            else return (1 + Budget.MgmtFeePct / 100);
-        }
-
-        public decimal TotalRevenue()
-        {
-            return Stats.Cost / RevToCostMultiplier();
-        }
-
-        public decimal MediaSpend()
-        {
-            return TotalRevenue() / MediaSpendToRevMultiplier();
-        }
-
-        //?compute w/o MediaSpend?
-        public decimal MgmtFee()
-        {
-            return TotalRevenue() - MediaSpend();
-        }
-
-        public decimal Margin()
-        {
-            //return Stats.Cost * Budget.MarginPct / (100 - Budget.MarginPct);
-            return TotalRevenue() - Stats.Cost;
+            return this.Cost / Budget.Cost;
         }
 
     }
