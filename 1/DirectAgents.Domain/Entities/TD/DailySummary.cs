@@ -118,15 +118,15 @@ namespace DirectAgents.Domain.Entities.TD
 
         public decimal CPM
         {
-            get { return (Impressions == 0) ? 0 : Math.Round(1000 * Cost / Impressions, 2); }
+            get { return (Impressions == 0) ? 0 : Math.Round(1000 * MediaSpend() / Impressions, 2); }
         }
         public decimal CPC
         {
-            get { return (Clicks == 0) ? 0 : Math.Round(Cost / Clicks, 2); }
+            get { return (Clicks == 0) ? 0 : Math.Round(MediaSpend() / Clicks, 2); }
         }
         public decimal CPA
         {
-            get { return (TotalConv == 0) ? 0 : Math.Round(Cost / TotalConv, 2); }
+            get { return (TotalConv == 0) ? 0 : Math.Round(MediaSpend() / TotalConv, 2); }
         }
     }
 

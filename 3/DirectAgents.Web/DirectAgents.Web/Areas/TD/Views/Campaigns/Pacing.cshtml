@@ -19,14 +19,25 @@
     <th>Margin %</th>
     <th>Platforms</th>
     <th>% of Goal</th>
+@if (!Model.ShowPerfStats)
+{
     <th>Sales Rep</th>
     <th>AM</th>
+} else {
+    <th>Impressions</th>
+    <th>Clicks</th>
+    <th>Total Conv</th>
+    <th>Post-Click Conv</th>
+    <th>Post-View Conv</th>
+    <th>Click Rate (CTR)</th>
+    <th>eCPA</th>
+}
 </tr>
 @foreach (var cbStat in Model.CampaignBudgetStats)
 {
     string expandText = (oneCamp ? "" : "+") + cbStat.Campaign.ExtAccounts.Count.ToString();
 <tr>
-    <td>@Html.ActionLink(expandText, "Pacing", new { campId = cbStat.Campaign.Id, date = date })</td>
+    <td>@Html.ActionLink(expandText, "Pacing", new { campId = cbStat.Campaign.Id, date = date, showPerfStats = Model.ShowPerfStats })</td>
     <td>@cbStat.Campaign.Advertiser.Name</td>
     <td>@cbStat.Campaign.Name</td>
     <td>@cbStat.Budget.MediaSpend().ToString("C")</td>
@@ -37,6 +48,18 @@
     <td>@cbStat.Budget.MarginPct.ToString("#0.### \\%")</td>
     <td>@string.Join(",", cbStat.Campaign.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name))</td>
     <td>@cbStat.FractionReached().ToString("#0.##%")</td>
+@if (!Model.ShowPerfStats)
+{
+    // SalesRep, AM
+} else {
+    <td>@cbStat.Impressions.ToString("N0")</td>
+    <td>@cbStat.Clicks.ToString("N0")</td>
+    <td>@cbStat.TotalConv.ToString("N0")</td>
+    <td>@cbStat.PostClickConv.ToString("N0")</td>
+    <td>@cbStat.PostViewConv.ToString("N0")</td>
+    <td>@cbStat.CTR.ToString("#0.##%")</td>
+    <td>@cbStat.CPA.ToString("C")</td>
+}
 </tr>
 if (cbStat.ExtAccountStats != null)
 {
@@ -50,6 +73,17 @@ if (cbStat.ExtAccountStats != null)
     <td>@extAcctStat.Margin().ToString("C")</td>
     <td></td>
     <td>@extAcctStat.ExtAccount.Platform.Name</td>
+@if (Model.ShowPerfStats)
+{
+    <td></td>@* "% Of Goal" column *@
+    <td>@extAcctStat.Impressions.ToString("N0")</td>
+    <td>@extAcctStat.Clicks.ToString("N0")</td>
+    <td>@extAcctStat.TotalConv.ToString("N0")</td>
+    <td>@extAcctStat.PostClickConv.ToString("N0")</td>
+    <td>@extAcctStat.PostViewConv.ToString("N0")</td>
+    <td>@extAcctStat.CTR.ToString("#0.##%")</td>
+    <td>@extAcctStat.CPA.ToString("C")</td>
+}
 </tr>
     }
 }

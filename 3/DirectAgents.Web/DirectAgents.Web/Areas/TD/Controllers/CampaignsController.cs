@@ -23,7 +23,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View(campaigns);
         }
 
-        public ActionResult Pacing(DateTime? date, int? campId)
+        public ActionResult Pacing(DateTime? date, int? campId, bool showPerfStats = false)
         {
             if (!date.HasValue)
                 date = DateTime.Today;
@@ -61,7 +61,8 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             }
             var model = new CampaignPacingVM
             {
-                CampaignBudgetStats = budgetStats
+                CampaignBudgetStats = budgetStats,
+                ShowPerfStats = showPerfStats
             };
             return View(model);
         }
