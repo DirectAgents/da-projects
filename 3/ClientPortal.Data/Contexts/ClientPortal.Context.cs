@@ -61,5 +61,7 @@ namespace ClientPortal.Data.Contexts
         public virtual DbSet<SearchProfileContact> SearchProfileContacts { get; set; }
         public virtual DbSet<SimpleReport> SimpleReports { get; set; }
         public virtual DbSet<CallDailySummary> CallDailySummaries { get; set; }
+        public virtual DbSet<Currency> Currencies { get; set; }
+        public virtual DbSet<CurrencyConversion> CurrencyConversions { get; set; }
     }
 }

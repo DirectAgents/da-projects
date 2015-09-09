@@ -141,6 +141,12 @@
     <Compile Include="Contexts\CreativeType.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\Currency.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\CurrencyConversion.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\DailySummary.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>

@@ -14,6 +14,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         private readonly bool useConvertedClicks; // (instead of conversions)
         private readonly bool clickAssistConvStats;
 
+        private Dictionary<string, Dictionary<DateTime, decimal>> currencyMultipliers = new Dictionary<string, Dictionary<DateTime, decimal>>();
+
         public AdWordsApiLoader(int searchAccountId, bool useConvertedClicks, bool includeClickType, bool clickAssistConvStats)
         {
             this.searchAccountId = searchAccountId;
@@ -25,6 +27,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         protected override int Load(List<Dictionary<string, string>> items)
         {
             Logger.Info("Loading {0} SearchDailySummaries..", items.Count);
+            SetCurrencyMultipliers(items);
             AddUpdateDependentSearchAccounts(items);
             AddUpdateDependentSearchCampaigns(items);
             var count = UpsertSearchDailySummaries(items);
@@ -82,6 +85,23 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                         if (searchAccount.RevPerOrder.HasValue)
                             sds.Revenue = sds.Orders * searchAccount.RevPerOrder.Value;
+                    }
+
+                    if (!item.Keys.Contains("currency") || item["currency"] == "USD")
+                        sds.CurrencyId = 1; // USD or not specified
+                    else
+                    {
+                        var code = item["currency"];
+                        var firstOfMonth = new DateTime(sds.Date.Year, sds.Date.Month, 1);
+                        if (!currencyMultipliers.ContainsKey(code) || !currencyMultipliers[code].ContainsKey(firstOfMonth))
+                            sds.CurrencyId = -1;
+                        else
+                        {
+                            sds.CurrencyId = 1;
+                            var toUSDmult = currencyMultipliers[code][firstOfMonth];
+                            sds.Revenue = sds.Revenue * toUSDmult;
+                            sds.Cost = sds.Cost * toUSDmult;
+                        }
                     }
 
                     bool added;
@@ -164,6 +184,56 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                 target = AutoMapper.Mapper.Map(sds2, target);
                 db.Entry(target).State = EntityState.Modified;
                 return false;
+            }
+        }
+
+        private void SetCurrencyMultipliers(List<Dictionary<string, string>> items)
+        {
+            if (!items.Any() || !items[0].Keys.Contains("currency"))
+                return;
+
+            var currencyTuples1 = items.Where(i => i["currency"] != "USD")
+                                       .Select(i => Tuple.Create(i["currency"], DateTime.Parse(i["day"].Replace('-', '/')))).Distinct();
+            var currencyTuples = currencyTuples1.Select(t => Tuple.Create(t.Item1, new DateTime(t.Item2.Year, t.Item2.Month, 1))).Distinct().ToList();
+            var currencyGroups = currencyTuples.GroupBy(ct => ct.Item1); // group by currency code
+
+            foreach (var cg in currencyGroups) // (foreach currency code)
+            {
+                if (currencyMultipliers.ContainsKey(cg.Key))
+                { // See if dictionary values are already set
+                    var monthsWithoutMultiplier = cg.Where(t => !currencyMultipliers[cg.Key].ContainsKey(t.Item2));
+                    if (!monthsWithoutMultiplier.Any())
+                        continue; // they're all there already
+                }
+                else
+                {
+                    currencyMultipliers.Add(cg.Key, new Dictionary<DateTime, decimal>());
+                }
+                var singleCurrencyMultipliers = currencyMultipliers[cg.Key];
+
+                using (var db = new ClientPortalContext())
+                {
+                    var currConversions = db.CurrencyConversions.Where(c => c.Currency.Code == cg.Key).OrderBy(c => c.Date).ToList();
+                    if (!currConversions.Any())
+                        continue;
+
+                    DateTime earliestConvDate = currConversions.First().Date;
+                    foreach (var currTuple in cg) // (foreach month)
+                    {
+                        if (singleCurrencyMultipliers.ContainsKey(currTuple.Item2))
+                            continue;
+
+                        if (currTuple.Item2 < earliestConvDate)
+                        { // Use the oldest CurrencyConversion
+                            singleCurrencyMultipliers.Add(currTuple.Item2, currConversions.First().ToUSDmultiplier);
+                        }
+                        else
+                        { // Use the most recent CurrencyConversion that's <= the currTuple's date
+                            var currConv = currConversions.Where(c => c.Date <= currTuple.Item2).OrderBy(c => c.Date).Last();
+                            singleCurrencyMultipliers.Add(currTuple.Item2, currConv.ToUSDmultiplier);
+                        }
+                    }
+                }
             }
         }
 

@@ -212,6 +212,23 @@
           <Property Name="CreativeTypeId" Type="int" Nullable="false" />
           <Property Name="CreativeTypeName" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="Currency">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="CurrencyConversion">
+          <Key>
+            <PropertyRef Name="CurrencyId" />
+            <PropertyRef Name="Date" />
+          </Key>
+          <Property Name="CurrencyId" Type="int" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="ToUSDmultiplier" Type="decimal" Precision="16" Scale="6" Nullable="false" />
+        </EntityType>
         <EntityType Name="DailySummary">
           <Key>
             <PropertyRef Name="Date" />
@@ -645,6 +662,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_CurrencyConversion_Currency">
+          <End Role="Currency" Type="Self.Currency" Multiplicity="1" />
+          <End Role="CurrencyConversion" Type="Self.CurrencyConversion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CurrencyConversion">
+              <PropertyRef Name="CurrencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
           <End Role="Advertiser" Type="Self.Advertiser" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -920,6 +949,8 @@
           <EntitySet Name="CreativeStat" EntityType="Self.CreativeStat" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CreativeSummary" EntityType="Self.CreativeSummary" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CreativeType" EntityType="Self.CreativeType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Currency" EntityType="Self.Currency" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CurrencyConversion" EntityType="Self.CurrencyConversion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DailySummary" EntityType="Self.DailySummary" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FileUpload" EntityType="Self.FileUpload" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Goal" EntityType="Self.Goal" Schema="dbo" store:Type="Tables" />
@@ -998,6 +1029,10 @@
           <AssociationSet Name="FK_CreativeStat_Creative" Association="Self.FK_CreativeStat_Creative">
             <End Role="Creative" EntitySet="Creative" />
             <End Role="CreativeStat" EntitySet="CreativeStat" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CurrencyConversion_Currency" Association="Self.FK_CurrencyConversion_Currency">
+            <End Role="Currency" EntitySet="Currency" />
+            <End Role="CurrencyConversion" EntitySet="CurrencyConversion" />
           </AssociationSet>
           <AssociationSet Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" Association="Self.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
             <End Role="Advertiser" EntitySet="Advertiser" />
@@ -1264,6 +1299,12 @@
           <AssociationSet Name="FK_CallDailySummary_SearchCampaign" Association="ClientPortalModel.FK_CallDailySummary_SearchCampaign">
             <End Role="SearchCampaign" EntitySet="SearchCampaigns" />
             <End Role="CallDailySummary" EntitySet="CallDailySummaries" />
+          </AssociationSet>
+          <EntitySet Name="Currencies" EntityType="ClientPortalModel.Currency" />
+          <EntitySet Name="CurrencyConversions" EntityType="ClientPortalModel.CurrencyConversion" />
+          <AssociationSet Name="FK_CurrencyConversion_Currency" Association="ClientPortalModel.FK_CurrencyConversion_Currency">
+            <End Role="Currency" EntitySet="Currencies" />
+            <End Role="CurrencyConversion" EntitySet="CurrencyConversions" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -2227,6 +2268,37 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Currency">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CurrencyConversions" Relationship="ClientPortalModel.FK_CurrencyConversion_Currency" FromRole="Currency" ToRole="CurrencyConversion" />
+        </EntityType>
+        <EntityType Name="CurrencyConversion">
+          <Key>
+            <PropertyRef Name="CurrencyId" />
+            <PropertyRef Name="Date" />
+          </Key>
+          <Property Name="CurrencyId" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ToUSDmultiplier" Type="Decimal" Nullable="false" Precision="16" Scale="6" />
+          <NavigationProperty Name="Currency" Relationship="ClientPortalModel.FK_CurrencyConversion_Currency" FromRole="CurrencyConversion" ToRole="Currency" />
+        </EntityType>
+        <Association Name="FK_CurrencyConversion_Currency">
+          <End Type="ClientPortalModel.Currency" Role="Currency" Multiplicity="1" />
+          <End Type="ClientPortalModel.CurrencyConversion" Role="CurrencyConversion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CurrencyConversion">
+              <PropertyRef Name="CurrencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2708,6 +2780,24 @@
                 <ScalarProperty Name="Calls" ColumnName="Calls" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="SearchCampaignId" ColumnName="SearchCampaignId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Currencies">
+            <EntityTypeMapping TypeName="ClientPortalModel.Currency">
+              <MappingFragment StoreEntitySet="Currency">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CurrencyConversions">
+            <EntityTypeMapping TypeName="ClientPortalModel.CurrencyConversion">
+              <MappingFragment StoreEntitySet="CurrencyConversion">
+                <ScalarProperty Name="ToUSDmultiplier" ColumnName="ToUSDmultiplier" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="CurrencyId" ColumnName="CurrencyId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
