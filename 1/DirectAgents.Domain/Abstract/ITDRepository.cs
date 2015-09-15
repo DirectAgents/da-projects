@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.DBM;
 using DirectAgents.Domain.Entities.TD;

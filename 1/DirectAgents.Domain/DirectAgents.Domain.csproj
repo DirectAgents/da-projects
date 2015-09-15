@@ -74,6 +74,7 @@
     <Compile Include="Contexts\HistoryContext.cs" />
     <Compile Include="Contexts\TDContext.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
+    <Compile Include="DTO\TDStat.cs" />
     <Compile Include="Entities\AdRoll\Ad.cs" />
     <Compile Include="Entities\AdRoll\AdDailySummary.cs" />
     <Compile Include="Entities\AdRoll\Advertisable.cs" />

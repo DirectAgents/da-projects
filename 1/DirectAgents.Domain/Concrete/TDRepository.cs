@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.DBM;
 using DirectAgents.Domain.Entities.TD;

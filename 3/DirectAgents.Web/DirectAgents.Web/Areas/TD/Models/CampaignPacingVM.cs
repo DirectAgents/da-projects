@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.DTO;
 
 namespace DirectAgents.Web.Areas.TD.Models
 {
