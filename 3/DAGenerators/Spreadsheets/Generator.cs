@@ -55,7 +55,7 @@ namespace DAGenerators.Spreadsheets
             spreadsheet.SetReportDate(endDate);
             spreadsheet.SetClientName(searchProfile.SearchProfileName);
 
-            bool partialMonth = (endDate.AddDays(1).Day > 1); // it's a full month if the day after endDate is the 1st
+            //bool partialMonth = (endDate.AddDays(1).Day > 1); // it's a full month if the day after endDate is the 1st
 
             var weeklyStats = cpRepo.GetWeekStats(searchProfile, numWeeks, endDate);
             var monthlyStats = cpRepo.GetMonthStats(searchProfile, numMonths, endDate, false);
@@ -74,9 +74,9 @@ namespace DAGenerators.Spreadsheets
             spreadsheet.LoadYearOverYear_Full(yoyMonthlyStats);
 
             // Year-Over-Year - for the most recent completed month
-            DateTime monthStart = new DateTime(endDate.Year, endDate.Month, 1); // temp value
-            DateTime monthEnd = monthStart.AddDays(-1);
-            monthStart = monthStart.AddMonths(-1);
+            var monthToUse = endDate.AddDays(1).AddMonths(-1); // handles the case where endDate is the last of the month
+            DateTime monthStart = new DateTime(monthToUse.Year, monthToUse.Month, 1);
+            DateTime monthEnd = monthStart.AddMonths(1).AddDays(-1);
 
             var monthStats = cpRepo.GetSearchStats(searchProfile, monthStart, monthEnd, false);
             monthStats.Title = monthStart.ToString("MMM-yy");
