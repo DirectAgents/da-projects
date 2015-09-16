@@ -26,7 +26,7 @@ namespace DirectAgents.Domain.Entities.TD
                 return null;
             return budgets.First();
         }
-        // flight dates, goal, AM, salesperson
+        // flight dates, goal...
     }
 
     public class BudgetInfo : BudgetVals

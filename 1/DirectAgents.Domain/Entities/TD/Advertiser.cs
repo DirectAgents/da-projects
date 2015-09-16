@@ -10,12 +10,21 @@ namespace DirectAgents.Domain.Entities.TD
 
         public int? SalesRepId { get; set; }
         [ForeignKey("SalesRepId")]
-        public Employee SalesRep { get; set; }
+        public virtual Employee SalesRep { get; set; }
 
         public int? AMId { get; set; }
         [ForeignKey("AMId")]
-        public Employee AM { get; set; }
+        public virtual Employee AM { get; set; }
 
         public virtual ICollection<Campaign> Campaigns { get; set; }
+
+        public string SalesRepName()
+        {
+            return (SalesRep == null) ? null : SalesRep.FullName();
+        }
+        public string AMName()
+        {
+            return (AM == null) ? null : AM.FullName();
+        }
     }
 }

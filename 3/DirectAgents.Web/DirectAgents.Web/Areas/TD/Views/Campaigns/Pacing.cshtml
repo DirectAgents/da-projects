@@ -50,7 +50,8 @@
     <td>@cbStat.FractionReached().ToString("#0.##%")</td>
 @if (!Model.ShowPerfStats)
 {
-    // SalesRep, AM
+    <td>@cbStat.Campaign.Advertiser.SalesRepName()</td>
+    <td>@cbStat.Campaign.Advertiser.AMName()</td>
 } else {
     <td>@cbStat.Impressions.ToString("N0")</td>
     <td>@cbStat.Clicks.ToString("N0")</td>

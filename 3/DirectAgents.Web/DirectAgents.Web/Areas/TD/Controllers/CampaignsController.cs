@@ -28,6 +28,20 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             if (!date.HasValue)
                 date = DateTime.Today;
             var startOfMonth = new DateTime(date.Value.Year, date.Value.Month, 1);
+
+            var budgetStats = GetCampaignStatsWithBudget(startOfMonth, campId);
+
+            var model = new CampaignPacingVM
+            {
+                CampaignBudgetStats = budgetStats,
+                ShowPerfStats = showPerfStats
+            };
+            return View(model);
+        }
+
+        // Fills in external account stats if campId is specified
+        private List<TDStatWithBudget> GetCampaignStatsWithBudget(DateTime startOfMonth, int? campId)
+        {
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
 
             var campaigns = tdRepo.Campaigns();
@@ -43,7 +57,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 if (budgetInfo == null)
                     statWithBudget.Campaign = camp;
 
-                // If we're viewing one particular campaign, show its external accounts
+                // If we're viewing one particular campaign, get its external accounts stats
                 if (campId.HasValue)
                 {
                     var extAccountStats = new List<TDStat>();
@@ -59,12 +73,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
                 budgetStats.Add(statWithBudget);
             }
-            var model = new CampaignPacingVM
-            {
-                CampaignBudgetStats = budgetStats,
-                ShowPerfStats = showPerfStats
-            };
-            return View(model);
+            return budgetStats;
         }
 	}
 }
