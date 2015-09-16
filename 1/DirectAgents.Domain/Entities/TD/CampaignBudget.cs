@@ -4,14 +4,6 @@ using System.Linq;
 
 namespace DirectAgents.Domain.Entities.TD
 {
-    public class Advertiser
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-
-        public virtual ICollection<Campaign> Campaigns { get; set; }
-    }
-
     public class Campaign
     {
         public int Id { get; set; }

@@ -5,9 +5,8 @@ using System.Linq;
 using Cake.Data.Wsdl.ExportService;
 using Cake.Model.Staging;
 using DirectAgents.Domain.Abstract;
-using DirectAgents.Domain.Entities.Wiki;
 using DirectAgents.Domain.Contexts;
-using DirectAgents.Domain.Entities;
+using DirectAgents.Domain.Entities.Wiki;
 
 namespace DirectAgents.Domain.Concrete
 {

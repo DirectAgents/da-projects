@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.DBM;
 using DirectAgents.Domain.Entities.TD;
@@ -17,6 +18,8 @@ namespace DirectAgents.Domain.Contexts
             base.OnModelCreating(modelBuilder);
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             //modelBuilder.HasDefaultSchema(tdSchema); //can't do this b/c __MigrationHistory table is under dbo schema
+
+            modelBuilder.Entity<Employee>().ToTable("Employee", "dbo");
 
             // TD
             modelBuilder.Entity<Advertiser>().ToTable("Advertiser", tdSchema);
@@ -55,6 +58,8 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<CreativeDailySummary>()
                 .Property(cds => cds.Revenue).HasPrecision(18, 6);
         }
+
+        public DbSet<Employee> Employees { get; set; }
 
         // TD
         public DbSet<Advertiser> Advertisers { get; set; }

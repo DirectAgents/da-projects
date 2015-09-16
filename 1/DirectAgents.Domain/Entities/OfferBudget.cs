@@ -8,7 +8,7 @@ namespace DirectAgents.Domain.Entities
         public int OfferBudgetId { get; set; }
 
         public int OfferId { get; set; }
-        public virtual Offer Offer { get; set; } 
+        public virtual Offer Offer { get; set; }
 
         public decimal Budget { get; set; }
         public DateTime Start { get; set; }

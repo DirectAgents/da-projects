@@ -91,6 +91,7 @@
     <Compile Include="Entities\DBM\CreativeDailySummary.cs" />
     <Compile Include="Entities\DBM\InsertionOrder.cs" />
     <Compile Include="Entities\OfferBudget.cs" />
+    <Compile Include="Entities\Employee.cs" />
     <Compile Include="Entities\Screen\Salesperson.cs" />
     <Compile Include="Entities\Screen\SalespersonStat.cs" />
     <Compile Include="Entities\Security\Group.cs">
@@ -117,6 +118,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SecurityModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Entities\TD\Advertiser.cs" />
     <Compile Include="Entities\TD\CampaignBudget.cs" />
     <Compile Include="Entities\TD\DailySummary.cs" />
     <Compile Include="Entities\TD\PlatformAccount.cs" />
@@ -194,6 +196,10 @@
     <Compile Include="MigrationsTD\201508261744525_Mig_AdvCampBudg.cs" />
     <Compile Include="MigrationsTD\201508261744525_Mig_AdvCampBudg.Designer.cs">
       <DependentUpon>201508261744525_Mig_AdvCampBudg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201509152158477_Mig_Employee.cs" />
+    <Compile Include="MigrationsTD\201509152158477_Mig_Employee.Designer.cs">
+      <DependentUpon>201509152158477_Mig_Employee.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
@@ -324,6 +330,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201508261744525_Mig_AdvCampBudg.resx">
       <DependentUpon>201508261744525_Mig_AdvCampBudg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201509152158477_Mig_Employee.resx">
+      <DependentUpon>201509152158477_Mig_Employee.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>
