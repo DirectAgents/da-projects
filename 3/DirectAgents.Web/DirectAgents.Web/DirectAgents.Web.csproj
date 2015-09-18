@@ -929,6 +929,8 @@
     <Content Include="Areas\TD\Views\Campaigns\Index.cshtml" />
     <Content Include="Areas\TD\Views\Stats\MTD.cshtml" />
     <Content Include="Areas\TD\Views\Campaigns\Pacing.cshtml" />
+    <Content Include="Areas\TD\Views\Campaigns\PacingGrid.cshtml" />
+    <Content Include="Areas\TD\Views\Campaigns\PerformanceGrid.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

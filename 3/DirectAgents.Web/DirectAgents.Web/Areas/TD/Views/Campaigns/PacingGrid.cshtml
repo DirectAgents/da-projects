@@ -1,0 +1,108 @@
+﻿
+<style type="text/css">
+    .k-grid {
+        font-size: 12px;
+    }
+</style>
+
+<h2>Budget and Pacing</h2>
+
+<div id="grid"></div>
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+        SetupDataSourceAndGrid();
+    });
+
+    function SetupDataSourceAndGrid() {
+        var datasource = new kendo.data.DataSource({
+            serverAggregates: true,
+            serverFiltering: true,
+            serverPaging: true,
+            serverSorting: true,
+            pageSize: 100,
+            batch: true,
+            transport: {
+                read: {
+                    url: '@Url.Action("PacingData")',
+                    type: 'post', dataType: 'json'
+                },
+                //parameterMap: function (data, type) {
+                //    return kendo.stringify(data);
+                //}
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                aggregates: 'aggregates',
+                model: {
+                    id: 'CampaignId',
+                    fields: {
+                        CampaignId: { type: 'number' },
+                        NumExtAccts: { type: 'number' },
+                        Advertiser: { type: 'string' },
+                        Campaign: { type: 'string' },
+                        Budget: { type: 'number' },
+                        Cost: { type: 'number' },
+                        MediaSpend: { type: 'number' },
+                        TotalRev: { type: 'number' },
+                        Margin: { type: 'number' },
+                        MarginPct: { type: 'number' },
+                        PlatformNames: { type: 'string' },
+                        PctOfGoal: { type: 'number' },
+                        SalesRep: { type: 'string' },
+                        AM: { type: 'string' }
+                    }
+                }
+            },
+            aggregate: [
+                { field: 'NumExtAccts', aggregate: 'sum' },
+                { field: 'Budget', aggregate: 'sum' },
+                { field: 'Cost', aggregate: 'sum' },
+                { field: 'MediaSpend', aggregate: 'sum' },
+                { field: 'TotalRev', aggregate: 'sum' },
+                { field: 'Margin', aggregate: 'sum' },
+                { field: 'MarginPct', aggregate: 'agg' },
+                { field: 'PctOfGoal', aggregate: 'agg' }
+            ]
+        });
+        datasource.bind('error', datasource_error);
+
+        $('#grid').kendoGrid({
+            dataSource: datasource,
+            //autoBind: false,
+            height: $(document).height() - 110,
+            filterable: true,
+            pageable: true,
+            sortable: true,
+            columns: [
+                { field: 'NumExtAccts', title: '#Accts', width: 80, attributes: { style: "text-align:center" }, footerTemplate: "#: data.NumExtAccts.sum #", footerAttributes: { style: "text-align:center" } },
+                { field: 'Advertiser' },
+                { field: 'Campaign' },
+                { field: 'CampaignId', title: 'ID', width: 50, attributes: { style: "text-align:center" } },
+                { field: 'Budget', format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.Budget.sum, 'n2') #", footerAttributes: { style: "text-align:right" } },
+                { field: 'Cost', format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.Cost.sum, 'n2') #", footerAttributes: { style: "text-align:right" } },
+                { field: 'MediaSpend', format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.MediaSpend.sum, 'n2') #", footerAttributes: { style: "text-align:right" } },
+                { field: 'TotalRev', format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.TotalRev.sum, 'n2') #", footerAttributes: { style: "text-align:right" } },
+                { field: 'Margin', format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.Margin.sum, 'n2') #", footerAttributes: { style: "text-align:right" } },
+                { field: 'MarginPct', format: "{0:p}", attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.MarginPct.agg, 'p') #", footerAttributes: { style: "text-align:right" } },
+                { field: 'PlatformNames', title: 'Platforms' },
+                { field: 'PctOfGoal', title: '%Goal', width: 80, format: "{0:p}", attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.PctOfGoal.agg, 'p') #", footerAttributes: { style: "text-align:right" } },
+                { field: 'SalesRep' },
+                { field: 'AM' }
+            ],
+            columnMenu: true,
+            reorderable: true,
+            resizable: true
+        });
+    }
+
+    function datasource_error(e) {
+        alert('Grid error:\n' + e.errorThrown);
+
+        //var grid = $("#grid").data("kendoGrid");
+        //grid.cancelChanges();
+    }
+</script>
+}

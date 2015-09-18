@@ -104,4 +104,11 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View("Generic", model);
         }
 	}
+
+    class KG<T>
+    {
+        public IEnumerable<T> data { get; set; }
+        public int total { get; set; }
+        public object aggregates { get; set; }
+    }
 }
