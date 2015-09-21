@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.DTO;
+using DirectAgents.Domain.Entities.TD;
 using DirectAgents.Web.Areas.TD.Models;
 using KendoGridBinderEx;
 using KendoGridBinderEx.ModelBinder.Mvc;
@@ -25,9 +26,26 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View(campaigns);
         }
 
-
-        // create/edit/view ?
-
+        [HttpGet]
+        public ActionResult Edit(int id)
+        {
+            var campaign = tdRepo.Campaign(id);
+            if (campaign == null)
+                return HttpNotFound();
+            return View(campaign);
+        }
+        [HttpPost]
+        public ActionResult Edit(Campaign camp)
+        {
+            if (ModelState.IsValid)
+            {
+                if (tdRepo.SaveCampaign(camp))
+                    return RedirectToAction("Index");
+                ModelState.AddModelError("", "Campaign could not be saved.");
+            }
+            tdRepo.FillExtended(camp);
+            return View(camp);
+        }
 
         // Non-Kendo version
         public ActionResult Pacing(DateTime? date, int? campId, bool showPerfStats = false)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Contexts;
@@ -45,6 +46,26 @@ namespace DirectAgents.Domain.Concrete
             return campaigns;
         }
 
+        public bool SaveCampaign(Campaign camp)
+        {
+            if (context.Campaigns.Any(c => c.Id == camp.Id))
+            {
+                var entry = context.Entry(camp);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public void FillExtended(Campaign camp)
+        {
+            if (camp.Advertiser == null)
+                camp.Advertiser = context.Advertisers.Find(camp.AdvertiserId);
+            if (camp.Budgets == null)
+                camp.Budgets = BudgetInfos(campId: camp.Id).ToList();
+        }
+
         // monthToCreate is any day in the desired month
         public void CreateBudgetIfNotExists(Campaign campaign, DateTime monthToCreate)
         {
@@ -57,6 +78,16 @@ namespace DirectAgents.Domain.Concrete
                 campaign.Budgets.Add(budget);
                 context.SaveChanges();
             }
+        }
+
+        public IQueryable<BudgetInfo> BudgetInfos(int? campId = null, DateTime? date = null)
+        {
+            var budgetInfos = context.BudgetInfos.AsQueryable();
+            if (campId.HasValue)
+                budgetInfos = budgetInfos.Where(b => b.CampaignId == campId.Value);
+            if (date.HasValue)
+                budgetInfos = budgetInfos.Where(b => b.Date == date.Value);
+            return budgetInfos;
         }
 
         // ---

@@ -1,0 +1,64 @@
+﻿@model DirectAgents.Domain.Entities.TD.Campaign
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary()
+    <fieldset>
+        <legend>Edit Campaign</legend>
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.AdvertiserId)
+        <div style="float:left">
+            Advertiser: @Model.Advertiser.Name
+            <br /><br />
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Id, "Campaign ID")</td>
+                    <td>@Html.DisplayFor(m => m.Id)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Name, "Campaign Name")</td>
+                    <td>@Html.EditorFor(m => m.Name)</td>
+                </tr>
+            </table>
+            <br />
+            Default Budget
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(m => m.DefaultBudget.MediaSpend)</td>
+                    <td>@Html.EditorFor(m => m.DefaultBudget.MediaSpend)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.DefaultBudget.MgmtFeePct)</td>
+                    <td>@Html.EditorFor(m => m.DefaultBudget.MgmtFeePct)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.DefaultBudget.MarginPct)</td>
+                    <td>@Html.EditorFor(m => m.DefaultBudget.MarginPct)</td>
+                </tr>
+            </table>
+            <br />
+            <input type="submit" value="Save" />
+            &nbsp;@Html.ActionLink("cancel", "Index")
+            <br />
+            <br />
+            Recent Budgets
+            <table>
+                <tr>
+                    <th>Month</th>
+                    <th>MediaSpend</th>
+                    <th>MgmtFeePct</th>
+                    <th>MarginPct</th>
+                </tr>
+            @foreach (var bi in Model.Budgets.OrderByDescending(b => b.Date).Take(6))
+            {
+                <tr>
+                    <td>@bi.Date.ToString("MMM yyyy")</td>
+                    <td style="text-align:right">@bi.MediaSpend.ToString("C")</td>
+                    <td style="text-align:center">@bi.MgmtFeePct.ToString("#0.### \\%")</td>
+                    <td style="text-align:center">@bi.MarginPct.ToString("#0.### \\%")</td>
+                </tr>
+            }
+            </table>
+        </div>
+    </fieldset>
+}

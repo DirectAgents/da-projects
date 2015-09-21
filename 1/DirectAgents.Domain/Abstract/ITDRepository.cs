@@ -15,7 +15,10 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<Advertiser> Advertisers();
         Campaign Campaign(int campId);
         IQueryable<Campaign> Campaigns(int? advId = null);
+        bool SaveCampaign(Campaign camp);
+        void FillExtended(Campaign camp);
         void CreateBudgetIfNotExists(Campaign campaign, DateTime monthToCreate);
+        IQueryable<BudgetInfo> BudgetInfos(int? campId = null, DateTime? date = null);
         IQueryable<ExtAccount> ExtAccounts(string platformCode = null, int? campId = null);
         IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? accountId = null);
         TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null);
