@@ -39,6 +39,8 @@ namespace DAGenerators.Spreadsheets
         public Sheet1Metrics Metrics1 = new Sheet1Metrics();
         private ExcelWorksheet WS2 { get { return this.ExcelPackage.Workbook.Worksheets[2]; } }
         public Sheet2Metrics Metrics2 = new Sheet2Metrics();
+        private ExcelWorksheet WS3 { get { return this.ExcelPackage.Workbook.Worksheets[3]; } }
+        // Metrics1 also used for WS3
 
         protected int NumWeeksAdded { get; set; }
         protected int NumMonthsAdded { get; set; }
@@ -53,6 +55,13 @@ namespace DAGenerators.Spreadsheets
         private const int Row_YoYCharts = 15;
         protected int NumYoYMonthsAdded { get; set; }
         protected int NumYoYMonthRowsAdded { get; set; }
+
+        // --- Sheet 3 ---
+        private const int StartRow_DisplayWeeks = 4;
+        private const int StartRow_SearchWeeks = 8;
+        protected int NumDisplayWeeksAdded { get; set; }
+        protected int NumSearchWeeksAdded { get; set; }
+
 
         public SearchReportPPC()
         {
@@ -110,8 +119,11 @@ namespace DAGenerators.Spreadsheets
         public void MakeColumnHidden(Metric metric)
         {
             if (metric != null)
+            {
                 WS1.Column(metric.ColNum).Hidden = true;
-                //Note: the column will still exist in the spreadsheet; it will be hidden... the user can unhide it
+                WS3.Column(metric.ColNum).Hidden = true;
+            }
+            //Note: the column will still exist in the spreadsheet; it will be hidden... the user can unhide it
         }
 
         public virtual void SetReportDate(DateTime date)
@@ -160,6 +172,16 @@ namespace DAGenerators.Spreadsheets
                 WS1.DeleteRowZ(startRow - rowsToDelete, rowsToDelete);
                 NumMonthRowsAdded -= rowsToDelete;
             }
+        }
+
+        public void LoadWeeklyDisplayStats<T>(IEnumerable<T> stats)
+        {
+            NumDisplayWeeksAdded = LoadStats(Metrics1, WS3, StartRow_DisplayWeeks, stats);
+        }
+        public void LoadWeeklySearchStats<T>(IEnumerable<T> stats)
+        {
+            int startRow = StartRow_SearchWeeks + NumDisplayWeeksAdded;
+            NumSearchWeeksAdded = LoadStats(Metrics1, WS3, startRow, stats);
         }
 
         // (for the most recently completed month)

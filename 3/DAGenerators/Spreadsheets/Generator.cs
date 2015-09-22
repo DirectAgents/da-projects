@@ -67,11 +67,13 @@ namespace DAGenerators.Spreadsheets
             else if (monthlyStats.Count() > 0)
                 spreadsheet.CreateCharts(false);
 
+
             // YearOverYear full stats - for the YoY sheet/tab
             //int numMonthsYoY = numMonths; // (numMonths > 12) ? 12 : numMonths;
             int numMonthsYoY = (numMonths > 12) ? 12 : numMonths;
             var yoyMonthlyStats = cpRepo.GetMonthStats(searchProfile, numMonthsYoY, endDate, true);
             spreadsheet.LoadYearOverYear_Full(yoyMonthlyStats);
+
 
             // Year-Over-Year - for the most recent completed month
             var monthToUse = endDate.AddDays(1).AddMonths(-1); // handles the case where endDate is the last of the month
@@ -130,6 +132,13 @@ namespace DAGenerators.Spreadsheets
                 periodStart = periodStart.AddDays(-7);
             }
             spreadsheet.CampaignPerfStatsCleanup(false);
+
+
+            // Display vs Search tab
+            var weeklyStats_Display = cpRepo.GetWeekStats(searchProfile, numWeeks, endDate, campaignNameInclude: "display");
+            var weeklyStats_Search = cpRepo.GetWeekStats(searchProfile, numWeeks, endDate, campaignNameExclude: "display");
+            spreadsheet.LoadWeeklyDisplayStats(weeklyStats_Display);
+            spreadsheet.LoadWeeklySearchStats(weeklyStats_Search);
 
             return spreadsheet;
         }

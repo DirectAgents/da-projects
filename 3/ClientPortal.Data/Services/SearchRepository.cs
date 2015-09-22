@@ -166,7 +166,7 @@ namespace ClientPortal.Data.Services
             return searchStat;
         }
 
-        private IQueryable<SearchCampaign> GetSearchCampaigns(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix)
+        private IQueryable<SearchCampaign> GetSearchCampaigns(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string nameInclude = null, string nameExclude = null)
         {
             var searchCampaigns = context.SearchCampaigns.AsQueryable();
 
@@ -185,6 +185,11 @@ namespace ClientPortal.Data.Services
             }
             if (!String.IsNullOrWhiteSpace(channelPrefix))
                 searchCampaigns = searchCampaigns.Where(c => c.SearchCampaignName.StartsWith(channelPrefix));
+
+            if (!String.IsNullOrWhiteSpace(nameInclude))
+                searchCampaigns = searchCampaigns.Where(c => c.SearchCampaignName.Contains(nameInclude));
+            if (!String.IsNullOrWhiteSpace(nameExclude))
+                searchCampaigns = searchCampaigns.Where(c => !c.SearchCampaignName.Contains(nameExclude));
 
             return searchCampaigns;
         }
@@ -286,11 +291,11 @@ namespace ClientPortal.Data.Services
         //}
 
         // if endDate is null, goes up to the latest complete week
-        public IQueryable<SearchStat> GetWeekStats(SearchProfile sp, int numWeeks, DateTime? endDate)
+        public IQueryable<SearchStat> GetWeekStats(SearchProfile sp, int numWeeks, DateTime? endDate, string campaignNameInclude = null, string campaignNameExclude = null)
         {
-            return GetWeekStats(null, sp.SearchProfileId, null, null, null, null, numWeeks, (DayOfWeek)sp.StartDayOfWeek, endDate, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru);
+            return GetWeekStats(null, sp.SearchProfileId, null, null, null, null, numWeeks, (DayOfWeek)sp.StartDayOfWeek, endDate, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru, campaignNameInclude, campaignNameExclude);
         }
-        private IQueryable<SearchStat> GetWeekStats(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, int numWeeks, DayOfWeek startDayOfWeek, DateTime? endDate, bool useAnalytics, bool includeCalls, decimal revPerViewThru)
+        private IQueryable<SearchStat> GetWeekStats(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, int numWeeks, DayOfWeek startDayOfWeek, DateTime? endDate, bool useAnalytics, bool includeCalls, decimal revPerViewThru, string campaignNameInclude = null, string campaignNameExclude = null)
         {
             if (!String.IsNullOrWhiteSpace(device) && useAnalytics)
                 throw new Exception("specifying a device and useAnalytics not supported");
@@ -309,7 +314,7 @@ namespace ClientPortal.Data.Services
             startDate = startDate.AddDays(-7 * (numWeeks - 1)); // then back additional weeks, as needed
 
             var searchCampaigns =
-                GetSearchCampaigns(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix);
+                GetSearchCampaigns(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix, campaignNameInclude, campaignNameExclude);
 
             var daySums =
                 GetSearchDailySummaries(searchCampaigns, device, startDate, endDate, true)
