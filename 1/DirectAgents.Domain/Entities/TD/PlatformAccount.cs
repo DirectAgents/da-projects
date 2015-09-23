@@ -28,5 +28,11 @@ namespace DirectAgents.Domain.Entities.TD
 
         public string ExternalId { get; set; }
         public string Name { get; set; }
+
+        [NotMapped]
+        public string DisplayName1
+        {
+            get { return "(" + Platform.Name + ") " + Name + " [" + ExternalId + "]"; }
+        }
     }
 }

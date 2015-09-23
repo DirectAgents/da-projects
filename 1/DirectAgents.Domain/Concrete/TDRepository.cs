@@ -37,7 +37,6 @@ namespace DirectAgents.Domain.Concrete
         {
             return context.Campaigns.Find(campId);
         }
-
         public IQueryable<Campaign> Campaigns(int? advId = null)
         {
             var campaigns = context.Campaigns.AsQueryable();
@@ -57,13 +56,36 @@ namespace DirectAgents.Domain.Concrete
             }
             return false;
         }
-
         public void FillExtended(Campaign camp)
         {
             if (camp.Advertiser == null)
                 camp.Advertiser = context.Advertisers.Find(camp.AdvertiserId);
             if (camp.Budgets == null)
                 camp.Budgets = BudgetInfos(campId: camp.Id).ToList();
+        }
+
+        public bool AddExtAccountToCampaign(int campId, int acctId)
+        {
+            var campaign = context.Campaigns.Find(campId);
+            var extAcct = context.ExtAccounts.Find(acctId);
+            if (campaign == null || extAcct == null)
+                return false;
+            campaign.ExtAccounts.Add(extAcct);
+            context.SaveChanges();
+            return true;
+        }
+        public bool RemoveExtAccountFromCampaign(int campId, int acctId)
+        {
+            var campaign = context.Campaigns.Find(campId);
+            if (campaign == null)
+                return false;
+            var extAcct = campaign.ExtAccounts.Where(a => a.Id == acctId).FirstOrDefault();
+            if (extAcct == null)
+                return false;
+
+            campaign.ExtAccounts.Remove(extAcct);
+            context.SaveChanges();
+            return true;
         }
 
         // monthToCreate is any day in the desired month
@@ -80,6 +102,10 @@ namespace DirectAgents.Domain.Concrete
             }
         }
 
+        public BudgetInfo BudgetInfo(int campId, DateTime date)
+        {
+            return context.BudgetInfos.Find(campId, date);
+        }
         public IQueryable<BudgetInfo> BudgetInfos(int? campId = null, DateTime? date = null)
         {
             var budgetInfos = context.BudgetInfos.AsQueryable();
@@ -88,6 +114,32 @@ namespace DirectAgents.Domain.Concrete
             if (date.HasValue)
                 budgetInfos = budgetInfos.Where(b => b.Date == date.Value);
             return budgetInfos;
+        }
+
+        public bool AddBudgetInfo(BudgetInfo bi)
+        {
+            if (context.BudgetInfos.Any(b => b.CampaignId == bi.CampaignId && b.Date == bi.Date))
+                return false;
+
+            context.BudgetInfos.Add(bi);
+            context.SaveChanges();
+            return true;
+        }
+        public bool SaveBudgetInfo(BudgetInfo bi)
+        {
+            if (context.BudgetInfos.Any(b => b.CampaignId == bi.CampaignId && b.Date == bi.Date))
+            {
+                var entry = context.Entry(bi);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public void FillExtended(BudgetInfo bi)
+        {
+            if (bi.Campaign == null)
+                bi.Campaign = context.Campaigns.Find(bi.CampaignId);
         }
 
         // ---
@@ -99,6 +151,18 @@ namespace DirectAgents.Domain.Concrete
                 extAccounts = extAccounts.Where(a => a.Platform.Code == platformCode);
             if (campId.HasValue)
                 extAccounts = extAccounts.Where(a => a.CampaignId == campId.Value);
+            return extAccounts;
+        }
+
+        public IQueryable<ExtAccount> ExtAccountsNotInCampaign(int campId)
+        {
+            var extAccounts = context.ExtAccounts.AsQueryable();
+            var campaign = context.Campaigns.Find(campId);
+            if (campaign != null)
+            {
+                var campaignAcctIds = campaign.ExtAccounts.Select(a => a.Id).ToArray();
+                extAccounts = extAccounts.Where(a => !campaignAcctIds.Contains(a.Id));
+            }
             return extAccounts;
         }
 

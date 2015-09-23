@@ -26,6 +26,22 @@ namespace DirectAgents.Domain.Entities.TD
                 return null;
             return budgets.First();
         }
+
+        // returns months in reverse chronological order
+        public DateTime[] MonthsWithoutBudgets(int monthsToCheck = 12)
+        {
+            var months = new List<DateTime>();
+            var iMonth = DateTime.Today.AddMonths(1);
+            iMonth = new DateTime(iMonth.Year, iMonth.Month, 1); // start with next month (the 1st of)
+            for (int i = 0; i < monthsToCheck; i++)
+            {
+                if (Budgets == null || !Budgets.Any(b => b.Date == iMonth))
+                    months.Add(iMonth);
+                iMonth = iMonth.AddMonths(-1);
+            }
+            return months.ToArray();
+        }
+
         // flight dates, goal...
     }
 

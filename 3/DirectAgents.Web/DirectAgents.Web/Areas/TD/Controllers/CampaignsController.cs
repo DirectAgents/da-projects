@@ -32,6 +32,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var campaign = tdRepo.Campaign(id);
             if (campaign == null)
                 return HttpNotFound();
+            SetupForEdit(id);
             return View(campaign);
         }
         [HttpPost]
@@ -44,7 +45,24 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 ModelState.AddModelError("", "Campaign could not be saved.");
             }
             tdRepo.FillExtended(camp);
+            SetupForEdit(camp.Id);
             return View(camp);
+        }
+        private void SetupForEdit(int campId)
+        {
+            ViewBag.ExtAccounts = tdRepo.ExtAccountsNotInCampaign(campId)
+                .OrderBy(a => a.Platform.Name).ThenBy(a => a.Name).ThenBy(a => a.ExternalId);
+        }
+
+        public ActionResult AddAccount(int id, int acctId)
+        {
+            tdRepo.AddExtAccountToCampaign(id, acctId);
+            return RedirectToAction("Edit", new { id = id });
+        }
+        public ActionResult RemoveAccount(int id, int acctId)
+        {
+            tdRepo.RemoveExtAccountFromCampaign(id, acctId);
+            return RedirectToAction("Edit", new { id = id });
         }
 
         // Non-Kendo version

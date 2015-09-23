@@ -1,0 +1,36 @@
+﻿@model DirectAgents.Domain.Entities.TD.BudgetInfo
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary()
+    <fieldset>
+        <legend>Edit Budget</legend>
+        @Html.HiddenFor(m => m.CampaignId)
+        @Html.HiddenFor(m => m.Date)
+        <div style="float:left">
+            Campaign: @Model.Campaign.Name
+            <br /><br />
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Date, "Month")</td>
+                    <td>@Model.Date.ToString("MMM yyyy")</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.MediaSpend)</td>
+                    <td>@Html.EditorFor(m => m.MediaSpend)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.MgmtFeePct)</td>
+                    <td>@Html.EditorFor(m => m.MgmtFeePct)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.MarginPct)</td>
+                    <td>@Html.EditorFor(m => m.MarginPct)</td>
+                </tr>
+            </table>
+            <br />
+            <input type="submit" value="Save" />
+            &nbsp;@Html.ActionLink("cancel", "Edit", "Campaigns", new { id = @Model.CampaignId }, null)
+        </div>
+    </fieldset>
+}

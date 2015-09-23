@@ -1,10 +1,10 @@
 ﻿@model DirectAgents.Domain.Entities.TD.Campaign
 
-@using (Html.BeginForm())
-{
-    @Html.ValidationSummary()
-    <fieldset>
-        <legend>Edit Campaign</legend>
+<fieldset>
+    <legend>Edit Campaign</legend>
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary()
         @Html.HiddenFor(m => m.Id)
         @Html.HiddenFor(m => m.AdvertiserId)
         <div style="float:left">
@@ -39,26 +39,77 @@
             <br />
             <input type="submit" value="Save" />
             &nbsp;@Html.ActionLink("cancel", "Index")
-            <br />
-            <br />
-            Recent Budgets
-            <table>
-                <tr>
-                    <th>Month</th>
-                    <th>MediaSpend</th>
-                    <th>MgmtFeePct</th>
-                    <th>MarginPct</th>
-                </tr>
-            @foreach (var bi in Model.Budgets.OrderByDescending(b => b.Date).Take(6))
-            {
-                <tr>
-                    <td>@bi.Date.ToString("MMM yyyy")</td>
-                    <td style="text-align:right">@bi.MediaSpend.ToString("C")</td>
-                    <td style="text-align:center">@bi.MgmtFeePct.ToString("#0.### \\%")</td>
-                    <td style="text-align:center">@bi.MarginPct.ToString("#0.### \\%")</td>
-                </tr>
-            }
-            </table>
         </div>
-    </fieldset>
+    }
+    <br style="clear:both" />
+    <div style="float:left">
+        <br />
+        Recent Budgets
+        <table>
+            <tr>
+                <th></th>
+                <th>Month</th>
+                <th>MediaSpend</th>
+                <th>MgmtFeePct</th>
+                <th>MarginPct</th>
+            </tr>
+        @foreach (var bi in Model.Budgets.OrderByDescending(b => b.Date).Take(6))
+        {
+            <tr>
+                <td>@Html.ActionLink("Edit", "Edit", "BudgetInfos", new { campId = bi.CampaignId, date = bi.Date.ToShortDateString() }, null)</td>
+                <td>@bi.Date.ToString("MMM yyyy")</td>
+                <td style="text-align:right">@bi.MediaSpend.ToString("C")</td>
+                <td style="text-align:center">@bi.MgmtFeePct.ToString("#0.### \\%")</td>
+                <td style="text-align:center">@bi.MarginPct.ToString("#0.### \\%")</td>
+            </tr>
+        }
+        </table>
+        @{
+            var months = Model.MonthsWithoutBudgets(3);
+            if (months.Count() > 0)
+            {
+                <br />
+                <text>Create Budget For:</text>
+                <br />
+                foreach (var month in months)
+                {
+                    @Html.ActionLink(month.ToString("MMM yyyy"), "Create", "BudgetInfos", new { campId = Model.Id, date = month.ToShortDateString() }, null)
+                    <text><br /></text>
+                }
+            }
+        }
+        <br />
+        External Accounts
+        <table>
+            <tr>
+                <th>Platform</th>
+                <th>Account</th>
+                <th></th>
+            </tr>
+        @foreach (var acct in Model.ExtAccounts)
+        {
+            <tr>
+                <td>@acct.Platform.Name</td>
+                <td>@acct.Name (@acct.ExternalId)</td>
+                <td>@Html.ActionLink("Remove from Campaign", "RemoveAccount", "Campaigns", new { id = Model.Id, acctId = acct.Id }, null)</td>
+            </tr>
+        }
+        </table>
+@{
+    var extAccts = (IEnumerable<DirectAgents.Domain.Entities.TD.ExtAccount>)ViewBag.ExtAccounts;
+    if (extAccts.Any())
+    {
+        <br />
+        using (Html.BeginForm("AddAccount", "Campaigns", new { id = Model.Id }))
+        {
+            var extAcctSelectList = new SelectList(extAccts, "Id", "DisplayName1");
+            <text>Add External Account:</text>
+            <table><tr><td>
+                @Html.DropDownList("acctId", extAcctSelectList)
+            </td></tr></table>
+            <input type="submit" value="Add" />
+        }
+    }
 }
+    </div>
+</fieldset>

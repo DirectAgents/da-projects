@@ -5,13 +5,15 @@
 <table>
 <tr>
     <th>Platform</th>
-    <th>Ext Account</th>
+    <th>AccountName</th>
+    <th>ExternalId</th>
 </tr>
 @foreach (var acct in Model)
 {
 <tr>
     <td>@acct.Platform.Name</td>
     <td>@acct.Name</td>
+    <td>@acct.ExternalId</td>
 </tr>
 }
 </table>

@@ -172,6 +172,7 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="Areas\TD\Controllers\AccountsController.cs" />
     <Compile Include="Areas\TD\Controllers\AdvertisersController.cs" />
+    <Compile Include="Areas\TD\Controllers\BudgetInfosController.cs" />
     <Compile Include="Areas\TD\Controllers\CampaignsController.cs" />
     <Compile Include="Areas\TD\Controllers\StatsController.cs" />
     <Compile Include="Areas\TD\Models\CampaignPacingVM.cs" />
@@ -932,6 +933,7 @@
     <Content Include="Areas\TD\Views\Campaigns\PacingGrid.cshtml" />
     <Content Include="Areas\TD\Views\Campaigns\PerformanceGrid.cshtml" />
     <Content Include="Areas\TD\Views\Campaigns\Edit.cshtml" />
+    <Content Include="Areas\TD\Views\BudgetInfos\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
