@@ -34,7 +34,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         }
 
         // Stats by "external account".  Either MTD or for the specified month (indicated by "date")
-        public ActionResult Account(string platformCode, int? campId, DateTime? date)
+        public ActionResult Account(string platform, int? campId, DateTime? date)
         {
             if (!date.HasValue)
                 date = DateTime.Today;
@@ -43,7 +43,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
             var stats = new List<TDStat>();
 
-            var extAccounts = tdRepo.ExtAccounts(platformCode: platformCode, campId: campId)
+            var extAccounts = tdRepo.ExtAccounts(platformCode: platform, campId: campId)
                                 .OrderBy(a => a.Platform.Code).ThenBy(a => a.Name);
             foreach (var extAccount in extAccounts)
             {   //Note: Multiple Active Record Sets used here

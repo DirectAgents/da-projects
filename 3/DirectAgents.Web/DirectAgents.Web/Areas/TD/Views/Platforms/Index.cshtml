@@ -1,0 +1,22 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.TD.Platform>
+
+<h2>Platforms</h2>
+
+<table>
+<tr>
+    <th>Code</th>
+    <th>Name</th>
+    <th>Show...</th>
+</tr>
+@foreach (var plat in Model)
+{
+<tr>
+    <td>@plat.Code</td>
+    <td>@plat.Name</td>
+    <td>
+        @Html.ActionLink("ExtAccounts", "Index", "Accounts", new { platform = plat.Code }, null) |
+        @Html.ActionLink("Stats", "Account", "Stats", new { platform = plat.Code }, null)
+    </td>
+</tr>
+}
+</table>

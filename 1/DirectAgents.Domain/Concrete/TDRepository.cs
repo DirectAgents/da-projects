@@ -34,6 +34,17 @@ namespace DirectAgents.Domain.Concrete
 
         #region TD
 
+        // --- Platforms/Advertisers ---
+
+        public Platform Platform(int id)
+        {
+            return context.Platforms.Find(id);
+        }
+        public IQueryable<Platform> Platforms()
+        {
+            return context.Platforms;
+        }
+
         public Advertiser Advertiser(int id)
         {
             return context.Advertisers.Find(id);

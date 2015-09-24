@@ -15,6 +15,8 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<Employee> Employees();
 
         // TD
+        Platform Platform(int id);
+        IQueryable<Platform> Platforms();
         Advertiser Advertiser(int id);
         IQueryable<Advertiser> Advertisers();
         bool SaveAdvertiser(Advertiser adv);
