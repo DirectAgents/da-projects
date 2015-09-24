@@ -4,8 +4,11 @@
     string date = Request["date"]; // null if current month
 }
 
-<h2>Budget and Pacing</h2>
-
+@if (!Model.ShowPerfStats) {
+    <h2>Budget and Pacing</h2>
+} else {
+    <h2>Performance</h2>
+}
 <table>
 <tr>
     <th>ExtAccts</th>
@@ -90,3 +93,10 @@ if (cbStat.ExtAccountStats != null)
 }
 }
 </table>
+
+<br />
+@Html.ActionLink("BudgetAndPacing", "Pacing") |
+@Html.ActionLink("Performance", "Pacing", new { showPerfStats = true })
+<br /><br />
+@Html.ActionLink("BudgetAndPacingGrid", "PacingGrid") |
+@Html.ActionLink("PerformanceGrid", "PerformanceGrid")

@@ -12,7 +12,6 @@
     <th></th>
     <th>Advertiser</th>
     <th>Campaign</th>
-    <th>ID</th>
     <th>External Accounts</th>
     <th>Platforms</th>
     <th>Stats</th>
@@ -23,7 +22,6 @@
     <td>@Html.ActionLink("Edit", "Edit", new { id = camp.Id })</td>
     <td>@camp.Advertiser.Name</td>
     <td>@camp.Name</td>
-    <td>@camp.Id</td>
     <td style="text-align:center">
         @Html.ActionLink(camp.ExtAccounts.Count.ToString(), "Index", "Accounts", new { campId = camp.Id }, null)
         (@Html.ActionLink("stats by ext acct", "Account", "Stats", new { campId = camp.Id }, null))

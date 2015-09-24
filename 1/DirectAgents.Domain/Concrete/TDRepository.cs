@@ -4,6 +4,7 @@ using System.Linq;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.DTO;
+using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.DBM;
 using DirectAgents.Domain.Entities.TD;
@@ -24,18 +25,41 @@ namespace DirectAgents.Domain.Concrete
             context.SaveChanges();
         }
 
+        // ---
+
+        public IQueryable<Employee> Employees()
+        {
+            return context.Employees;
+        }
+
         #region TD
 
+        public Advertiser Advertiser(int id)
+        {
+            return context.Advertisers.Find(id);
+        }
         public IQueryable<Advertiser> Advertisers()
         {
             return context.Advertisers;
         }
 
+        public bool SaveAdvertiser(Advertiser adv)
+        {
+            if (context.Advertisers.Any(a => a.Id == adv.Id))
+            {
+                var entry = context.Entry(adv);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
         // --- Campaigns/Budgets ---
 
-        public Campaign Campaign(int campId)
+        public Campaign Campaign(int id)
         {
-            return context.Campaigns.Find(campId);
+            return context.Campaigns.Find(id);
         }
         public IQueryable<Campaign> Campaigns(int? advId = null)
         {

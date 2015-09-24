@@ -20,11 +20,11 @@ namespace DirectAgents.Domain.Entities.TD
 
         public string SalesRepName()
         {
-            return (SalesRep == null) ? null : SalesRep.FullName();
+            return (SalesRep == null) ? null : SalesRep.FullName;
         }
         public string AMName()
         {
-            return (AM == null) ? null : AM.FullName();
+            return (AM == null) ? null : AM.FullName;
         }
     }
 }

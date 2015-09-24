@@ -934,6 +934,7 @@
     <Content Include="Areas\TD\Views\Campaigns\PerformanceGrid.cshtml" />
     <Content Include="Areas\TD\Views\Campaigns\Edit.cshtml" />
     <Content Include="Areas\TD\Views\BudgetInfos\Edit.cshtml" />
+    <Content Include="Areas\TD\Views\Advertisers\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

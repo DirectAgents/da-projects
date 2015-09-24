@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using DirectAgents.Domain.DTO;
+using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.DBM;
 using DirectAgents.Domain.Entities.TD;
@@ -11,9 +12,13 @@ namespace DirectAgents.Domain.Abstract
     {
         void SaveChanges();
 
+        IQueryable<Employee> Employees();
+
         // TD
+        Advertiser Advertiser(int id);
         IQueryable<Advertiser> Advertisers();
-        Campaign Campaign(int campId);
+        bool SaveAdvertiser(Advertiser adv);
+        Campaign Campaign(int id);
         IQueryable<Campaign> Campaigns(int? advId = null);
         bool SaveCampaign(Campaign camp);
         void FillExtended(Campaign camp);

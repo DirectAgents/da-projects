@@ -1,4 +1,5 @@
-﻿
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
 namespace DirectAgents.Domain.Entities
 {
     public class Employee
@@ -7,9 +8,10 @@ namespace DirectAgents.Domain.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
-        public string FullName()
+        [NotMapped]
+        public string FullName
         {
-            return FirstName + " " + LastName;
+            get { return FirstName + " " + LastName; }
         }
     }
 }

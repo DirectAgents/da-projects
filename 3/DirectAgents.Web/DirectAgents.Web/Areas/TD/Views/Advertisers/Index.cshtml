@@ -4,16 +4,20 @@
 
 <table>
 <tr>
-    <th>Id</th>
+    <th></th>
     <th>Name</th>
-    <th>Campaigns</th>
+    <th>Sales Rep</th>
+    <th>AM</th>
+    <th>#Campaigns</th>
 </tr>
 @foreach (var adv in Model)
 {
 <tr>
-    <td>@adv.Id</td>
-    <td>@Html.ActionLink(adv.Name, "Index", "Campaigns", new { advid = adv.Id }, null)</td>
-    <td style="text-align:center">@adv.Campaigns.Count</td>
+    <td>@Html.ActionLink("Edit", "Edit", new { id = adv.Id })</td>
+    <td>@adv.Name</td>
+    <td>@adv.SalesRepName()</td>
+    <td>@adv.AMName()</td>
+    <td style="text-align:center">@Html.ActionLink(adv.Campaigns.Count.ToString(), "Index", "Campaigns", new { advid = adv.Id }, null)</td>
 </tr>
 }
 </table>
