@@ -12,6 +12,7 @@ namespace DirectAgents.Domain.Abstract
     {
         void SaveChanges();
 
+        Employee Employee(int id);
         IQueryable<Employee> Employees();
 
         // TD
@@ -22,6 +23,8 @@ namespace DirectAgents.Domain.Abstract
         bool SaveAdvertiser(Advertiser adv);
         Campaign Campaign(int id);
         IQueryable<Campaign> Campaigns(int? advId = null);
+        bool AddCampaign(Campaign camp);
+        bool DeleteCampaign(int id);
         bool SaveCampaign(Campaign camp);
         void FillExtended(Campaign camp);
         bool AddExtAccountToCampaign(int campId, int acctId);

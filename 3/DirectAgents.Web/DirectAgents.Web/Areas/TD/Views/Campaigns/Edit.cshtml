@@ -1,4 +1,7 @@
 ﻿@model DirectAgents.Domain.Entities.TD.Campaign
+@{
+    string advId = Request["advid"];
+}
 
 <fieldset>
     <legend>Edit Campaign</legend>
@@ -38,7 +41,7 @@
             </table>
             <br />
             <input type="submit" value="Save" />
-            &nbsp;@Html.ActionLink("cancel", "Index")
+            &nbsp;@Html.ActionLink("cancel", "Index", new { advId = advId })
         </div>
     }
     <br style="clear:both" />
@@ -111,5 +114,7 @@
         }
     }
 }
+        <br />
+        @Html.ActionLink("Back to Campaign List", "Index", new { advId = advId })
     </div>
 </fieldset>

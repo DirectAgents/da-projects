@@ -26,6 +26,25 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View(campaigns);
         }
 
+        public ActionResult CreateNew(int advId)
+        {
+            var campaign = new Campaign
+            {
+                AdvertiserId = advId,
+                Name = "New",
+                DefaultBudget = new BudgetVals()
+            };
+            if (tdRepo.AddCampaign(campaign))
+                return RedirectToAction("Index", new { advId = advId });
+            else
+                return Content("Error creating Campaign");
+        }
+        public ActionResult Delete(int id, int? advId)
+        {
+            tdRepo.DeleteCampaign(id);
+            return RedirectToAction("Index", new { advId = advId });
+        }
+
         [HttpGet]
         public ActionResult Edit(int id)
         {
@@ -64,6 +83,8 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             tdRepo.RemoveExtAccountFromCampaign(id, acctId);
             return RedirectToAction("Edit", new { id = id });
         }
+
+        // --- Stats ---
 
         // Non-Kendo version
         public ActionResult Pacing(DateTime? date, int? campId, bool showPerfStats = false)

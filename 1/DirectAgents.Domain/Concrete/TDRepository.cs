@@ -27,6 +27,10 @@ namespace DirectAgents.Domain.Concrete
 
         // ---
 
+        public Employee Employee(int id)
+        {
+            return context.Employees.Find(id);
+        }
         public IQueryable<Employee> Employees()
         {
             return context.Employees;
@@ -78,6 +82,25 @@ namespace DirectAgents.Domain.Concrete
             if (advId.HasValue)
                 campaigns = campaigns.Where(c => c.AdvertiserId == advId.Value);
             return campaigns;
+        }
+
+        public bool AddCampaign(Campaign camp)
+        {
+            if (context.Campaigns.Any(c => c.Id == camp.Id))
+                return false;
+
+            context.Campaigns.Add(camp);
+            context.SaveChanges();
+            return true;
+        }
+        public bool DeleteCampaign(int id)
+        {
+            var campaign = context.Campaigns.Find(id);
+            if (campaign == null)
+                return false;
+            context.Campaigns.Remove(campaign);
+            context.SaveChanges();
+            return true;
         }
 
         public bool SaveCampaign(Campaign camp)

@@ -8,7 +8,7 @@
     <th>Name</th>
     <th>Sales Rep</th>
     <th>AM</th>
-    <th>#Campaigns</th>
+    <th>Campaigns</th>
 </tr>
 @foreach (var adv in Model)
 {
@@ -17,7 +17,7 @@
     <td>@adv.Name</td>
     <td>@adv.SalesRepName()</td>
     <td>@adv.AMName()</td>
-    <td style="text-align:center">@Html.ActionLink(adv.Campaigns.Count.ToString(), "Index", "Campaigns", new { advid = adv.Id }, null)</td>
+    <td style="text-align:center">@Html.ActionLink("show(" + adv.Campaigns.Count + ")", "Index", "Campaigns", new { advid = adv.Id }, null)</td>
 </tr>
 }
 </table>
