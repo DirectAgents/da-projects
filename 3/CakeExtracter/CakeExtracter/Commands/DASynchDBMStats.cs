@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using CakeExtracter.Common;
@@ -15,6 +16,16 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchDBMStats : ConsoleCommand
     {
+        public static int RunStatic(int insertionOrderID, DateTime? endDate = null)
+        {
+            var cmd = new DASynchDBMStats
+            {
+                InsertionOrderID = insertionOrderID,
+                EndDate = endDate
+            };
+            return cmd.Run();
+        }
+
         const int DaysPerReport = 30;
 
         public int? InsertionOrderID { get; set; }
@@ -35,7 +46,9 @@ namespace CakeExtracter.Commands
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
             // Note: endDate is the last day of the desired stats (a report goes back 'DaysPerReport' days)
             HasOption<bool>("u|useEarliest=", "Use earliest stats date for update (default is false)", c => UseEarliestDateForUpdate = c);
+            // (Determines how far back to go when updating TD tables from DBM tables)
         }
+        // Loads DBM tables (CreativeDailySummaries) from the DBM API.  Then updates TD tables (one daySum per account) from the DBM tables.
 
         public override int Execute(string[] remainingArguments)
         {
@@ -44,10 +57,9 @@ namespace CakeExtracter.Commands
             var reportDate = endDate.AddDays(1);
             var dateRange = new DateRange(reportDate, reportDate);
 
-            var insertionOrders = GetInsertionOrders();
-            var bucketNames = insertionOrders.Select(i => i.Bucket);
+            var buckets = GetBuckets();
 
-            var extracter = new DbmCloudStorageExtracter(dateRange, bucketNames);
+            var extracter = new DbmCloudStorageExtracter(dateRange, buckets);
             var loader = new DBMCreativeDailySummaryLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -63,18 +75,41 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
-        public IEnumerable<InsertionOrder> GetInsertionOrders()
+        public IEnumerable<string> GetBuckets()
         {
-            using (var db = new DATDContext())
+            var buckets = new List<string>();
+            if (InsertionOrderID.HasValue)
             {
-                var IOs = db.InsertionOrders.AsQueryable();
-                if (InsertionOrderID.HasValue)
-                    IOs = IOs.Where(io => io.ID == InsertionOrderID.Value);
-                return IOs.Where(io => io.Bucket != null).ToList();
+                using (var db = new DATDContext())
+                {
+                    var IOs = db.InsertionOrders.Where(io => io.ID == InsertionOrderID.Value);
+                    foreach (var io in IOs) // should be just one
+                    {
+                        if (!string.IsNullOrWhiteSpace(io.Bucket))
+                            buckets.Add(io.Bucket);
+                    }
+                }
             }
+            else
+            {
+                buckets.Add(ConfigurationManager.AppSettings["DBM_AllCreativeBucket"]);
+            }
+            return buckets;
         }
 
-        // Note this will update DailySummaries for all insertion orders (Accounts) with CreativeDailySummary stats in the specified range
+        //public IEnumerable<InsertionOrder> GetInsertionOrders()
+        //{
+        //    using (var db = new DATDContext())
+        //    {
+        //        var IOs = db.InsertionOrders.AsQueryable();
+        //        if (InsertionOrderID.HasValue)
+        //            IOs = IOs.Where(io => io.ID == InsertionOrderID.Value);
+        //        return IOs.Where(io => !string.IsNullOrEmpty(io.Bucket)).ToList();
+        //    }
+        //}
+
+        // Note this will update DailySummaries for all insertion orders (Accounts) with CreativeDailySummary stats in the specified range.
+        // (unless insertionOrderID is specified)
         public static void UpdateTDTablesFromDBMTables(DateRange dateRange, int? insertionOrderID)
         {
             Logger.Info("Updating (External) Accounts and DailySummaries for dateRange {0:d} to {1:d}", dateRange.FromDate, dateRange.ToDate);
@@ -85,7 +120,7 @@ namespace CakeExtracter.Commands
                 var dbmAccounts = db.ExtAccounts.Where(a => a.PlatformId == dbmPlatformId);
                 var dbmExternalIds = dbmAccounts.Select(a => a.ExternalId).ToList();
 
-                // 1) InsertionOrders (with stats in this dateRange) -> Accounts
+                // 1) InsertionOrders (with stats in this dateRange) -> add Account(s) if necessary
                 var cdSums = db.DBMCreativeDailySummaries.Where(cds => cds.Date >= dateRange.FromDate && cds.Date <= dateRange.ToDate);
                 if (insertionOrderID.HasValue)
                     cdSums = cdSums.Where(cds => cds.Creative.InsertionOrderID == insertionOrderID.Value);

@@ -202,6 +202,10 @@ namespace DirectAgents.Domain.Concrete
 
         // ---
 
+        public ExtAccount ExtAccount(int id)
+        {
+            return context.ExtAccounts.Find(id);
+        }
         public IQueryable<ExtAccount> ExtAccounts(string platformCode = null, int? campId = null)
         {
             var extAccounts = context.ExtAccounts.AsQueryable();
@@ -224,15 +228,23 @@ namespace DirectAgents.Domain.Concrete
             return extAccounts;
         }
 
-        public IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? accountId = null)
+        public DateTime? LatestStatDate(int? acctId = null)
+        {
+            var dSums = DailySummaries(null, null, acctId: acctId);
+            if (!dSums.Any())
+                return null;
+            return dSums.Max(ds => ds.Date);
+        }
+
+        public IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? acctId = null)
         {
             var dSums = context.DailySummaries.AsQueryable();
             if (startDate.HasValue)
                 dSums = dSums.Where(ds => ds.Date >= startDate.Value);
             if (endDate.HasValue)
                 dSums = dSums.Where(ds => ds.Date <= endDate.Value);
-            if (accountId.HasValue)
-                dSums = dSums.Where(ds => ds.AccountId == accountId.Value);
+            if (acctId.HasValue)
+                dSums = dSums.Where(ds => ds.AccountId == acctId.Value);
             return dSums;
         }
 
@@ -265,7 +277,7 @@ namespace DirectAgents.Domain.Concrete
                 ExtAccount = extAccount
             };
             int? accountId = (extAccount != null) ? extAccount.Id : (int?)null;
-            var dSums = DailySummaries(startDate, endDate, accountId: accountId);
+            var dSums = DailySummaries(startDate, endDate, acctId: accountId);
 
             if (dSums.Any())
                 stat.SetStatsFrom(dSums);

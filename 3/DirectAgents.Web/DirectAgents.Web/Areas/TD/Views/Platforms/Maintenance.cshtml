@@ -1,0 +1,72 @@
+﻿@using DirectAgents.Domain.Entities.TD;
+@model Platform
+
+<h2>@Model.Name - Maintenance</h2>
+
+External Accounts:
+<div id="grid"></div>
+
+@if (Model.Code == Platform.Code_AdRoll)
+{
+}
+@if (Model.Code == Platform.Code_DBM)
+{
+}
+
+@section scripts {
+<script type="text/x-kendo-template" id="acctDetailTemplate">
+    hello detail #= Name #
+    <a href="@Url.Action("Test")?theid=#= Id #">clicky</a>
+</script>
+<script>
+    $(document).ready(function () {
+        SetupGrid();
+    });
+
+    function SetupGrid() {
+        var datasource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: '@Url.Action("IndexData", "Accounts", new { platform = Model.Code })',
+                    type: 'POST', dataType: 'json'
+                }
+            },
+            schema: {
+                data: 'data'
+            }
+        });
+
+        $('#grid').kendoGrid({
+            dataSource: datasource,
+            height: 350,
+            filterable: true,
+            sortable: true,
+            //detailTemplate: kendo.template($('#acctDetailTemplate').html()),
+            detailInit: detailInit,
+            columns: [
+                { field: 'Id', width: 50 },
+                { field: 'Name' },
+                { field: 'Platform', width: 100 },
+                { field: 'ExternalId', width: 300 },
+            ]
+        });
+    }
+
+    function detailInit(e) {
+        var divId = 'divAcctMaint' + e.data.Id;
+        $('<div id="' + divId + '" />').appendTo(e.detailCell);
+        LoadMaintenanceDetail(e.data.Id);
+    }
+
+    function SynchAccount(acctId, synchUrl) {
+        $('#divAcctMaint' + acctId).html('Synching...');
+        $.post(synchUrl, function (data) {
+            LoadMaintenanceDetail(acctId);
+        });
+    }
+
+    function LoadMaintenanceDetail(acctId) {
+        $('#divAcctMaint' + acctId).load('@Url.Action("MaintenanceDetail", "Accounts", new { id = 0 })'.replace('0', acctId));
+    }
+</script>
+}

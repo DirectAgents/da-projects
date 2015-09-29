@@ -7,6 +7,7 @@
     <th>Code</th>
     <th>Name</th>
     <th>Show...</th>
+    <th></th>
 </tr>
 @foreach (var plat in Model)
 {
@@ -14,9 +15,10 @@
     <td>@plat.Code</td>
     <td>@plat.Name</td>
     <td>
-        @Html.ActionLink("ExtAccounts", "Index", "Accounts", new { platform = plat.Code }, null) |
+        @Html.ActionLink("ExtAccounts(" + plat.ExtAccounts.Count + ")", "Index", "Accounts", new { platform = plat.Code }, null) |
         @Html.ActionLink("Stats", "Account", "Stats", new { platform = plat.Code }, null)
     </td>
+    <td>@Html.ActionLink("Maintenance", "Maintenance", new { id = plat.Id })</td>
 </tr>
 }
 </table>

@@ -46,14 +46,28 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         }
 
         [HttpGet]
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id, string advId)
         {
             var campaign = tdRepo.Campaign(id);
             if (campaign == null)
                 return HttpNotFound();
+            SetAdvId(advId);
             SetupForEdit(id);
             return View(campaign);
         }
+        private void SetAdvId(string advId)
+        {
+            if (!string.IsNullOrWhiteSpace(advId))
+            {
+                int advIdInt;
+                if (int.TryParse(advId, out advIdInt))
+                    Session["advId"] = advId;
+                else
+                    Session["advId"] = null; // (all advertisers)
+            }
+            // (otherwise, leave it as is)
+        }
+
         [HttpPost]
         public ActionResult Edit(Campaign camp)
         {

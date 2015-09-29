@@ -35,9 +35,11 @@ namespace DirectAgents.Domain.Abstract
         bool AddBudgetInfo(BudgetInfo bi);
         bool SaveBudgetInfo(BudgetInfo bi);
         void FillExtended(BudgetInfo bi);
+        ExtAccount ExtAccount(int id);
         IQueryable<ExtAccount> ExtAccounts(string platformCode = null, int? campId = null);
         IQueryable<ExtAccount> ExtAccountsNotInCampaign(int campId);
-        IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? accountId = null);
+        DateTime? LatestStatDate(int? acctId = null);
+        IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? acctId = null);
         TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null);
         TDStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null, MarginFeeVals marginFees = null);
 

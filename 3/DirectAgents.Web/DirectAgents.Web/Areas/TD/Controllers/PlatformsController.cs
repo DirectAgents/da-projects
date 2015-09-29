@@ -18,5 +18,14 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 .OrderBy(p => p.Name);
             return View(platforms);
         }
+
+        public ActionResult Maintenance(int id)
+        {
+            var platform = tdRepo.Platform(id);
+            if (platform == null)
+                return HttpNotFound();
+
+            return View(platform);
+        }
 	}
 }

@@ -1,6 +1,6 @@
 ﻿@model DirectAgents.Domain.Entities.TD.Campaign
 @{
-    string advId = Request["advid"];
+    string advId = (string)Session["advid"];
 }
 
 <fieldset>
