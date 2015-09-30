@@ -27,7 +27,6 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         public JsonResult IndexData(string platform)
         {
             var extAccounts = tdRepo.ExtAccounts(platformCode: platform)
-                //.OrderBy(a => a.Platform.Name).ThenBy(a => a.Name)
                 .Select(a => new
                 {
                     a.Id,
@@ -45,7 +44,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             if (extAcct == null)
                 return HttpNotFound();
 
-            bool synchable = extAcct.Platform.Code == Platform.Code_AdRoll;
+            bool syncable = extAcct.Platform.Code == Platform.Code_AdRoll;
             if (extAcct.Platform.Code == Platform.Code_DBM)
             {
                 int ioID;
@@ -53,23 +52,32 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 {
                     var io = tdRepo.InsertionOrder(ioID);
                     if (io != null)
-                        synchable = !string.IsNullOrWhiteSpace(io.Bucket);
+                        syncable = !string.IsNullOrWhiteSpace(io.Bucket);
                 }
             }
             var model = new AccountMaintenanceVM
             {
                 ExtAccount = extAcct,
                 LatestStatDate = tdRepo.LatestStatDate(extAcct.Id),
-                Synchable = synchable
+                Syncable = syncable
             };
             return PartialView(model);
         }
 
-        public JsonResult Synch(int id, DateTime? start)
+        public JsonResult Sync(int id, DateTime? start)
         {
             var extAcct = tdRepo.ExtAccount(id);
             if (extAcct == null)
                 return null;
+
+            var firstOfMonth = Common.FirstOfMonth();
+            var firstOfLastMonth = firstOfMonth.AddMonths(-1);
+            if (!start.HasValue)
+                start = firstOfLastMonth;
+            else if (start >= firstOfMonth)
+                start = firstOfMonth;
+            else if (start > firstOfLastMonth)
+                start = firstOfLastMonth;
 
             if (extAcct.Platform.Code == Platform.Code_AdRoll)
             {

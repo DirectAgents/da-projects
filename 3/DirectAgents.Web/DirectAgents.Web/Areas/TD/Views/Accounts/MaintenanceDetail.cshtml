@@ -1,11 +1,11 @@
 ﻿@model DirectAgents.Web.Areas.TD.Models.AccountMaintenanceVM
 @{
     string latestStatString = Model.LatestStatDate.HasValue ? Model.LatestStatDate.Value.ToShortDateString() : null;
-    string synchUrl = Url.Action("Synch", new { id = Model.ExtAccount.Id, start = latestStatString });
+    string syncUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, start = latestStatString });
 }
 
 Latest Stats: @(latestStatString ?? "(none)")
-@if (Model.Synchable) {
+@if (Model.Syncable) {
     <text>&nbsp;&nbsp;</text>
-    <a href="#" onclick="SynchAccount(@Model.ExtAccount.Id, '@synchUrl'); return false">Synch</a>
+    <a href="#" onclick="SyncAccount(@Model.ExtAccount.Id, '@syncUrl'); return false">Sync</a>
 }

@@ -41,13 +41,13 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             var addedCount = 0;
             var updatedCount = 0;
             var duplicateCount = 0;
+            var deletedCount = 0;
+            var alreadyDeletedCount = 0;
             var itemCount = 0;
             using (var db = new DATDContext())
             {
                 foreach (var item in items)
                 {
-                    //TODO: Check/delete if all zeros
-
                     var source = new DailySummary
                     {
                         Date = item.date,
@@ -61,18 +61,28 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     var target = db.Set<DailySummary>().Find(item.date, accountId);
                     if (target == null)
                     {
-                        db.DailySummaries.Add(source);
-                        addedCount++;
+                        if (!item.AllZeros())
+                        {
+                            db.DailySummaries.Add(source);
+                            addedCount++;
+                        }
+                        else
+                            alreadyDeletedCount++;
                     }
                     else
                     {
                         var entry = db.Entry(target);
                         if (entry.State == EntityState.Unchanged)
                         {
-                            entry.State = EntityState.Detached;
-                            AutoMapper.Mapper.Map(source, target);
-                            entry.State = EntityState.Modified;
-                            updatedCount++;
+                            if (!item.AllZeros())
+                            {
+                                entry.State = EntityState.Detached;
+                                AutoMapper.Mapper.Map(source, target);
+                                entry.State = EntityState.Modified;
+                                updatedCount++;
+                            }
+                            else
+                                entry.State = EntityState.Deleted;
                         }
                         else
                         {
@@ -81,7 +91,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     }
                     itemCount++;
                 }
-                Logger.Info("Saving {0} DailySummaries ({1} updates, {2} additions, {3} duplicates)", itemCount, updatedCount, addedCount, duplicateCount);
+                Logger.Info("Saving {0} DailySummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted)",
+                            itemCount, updatedCount, addedCount, duplicateCount, deletedCount, alreadyDeletedCount);
                 int numChanges = db.SaveChanges();
             }
             return itemCount;

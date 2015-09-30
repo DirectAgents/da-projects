@@ -29,7 +29,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View(platform);
         }
 
-        public ActionResult Synch(int id)
+        public ActionResult Sync(int id)
         {
             var platform = tdRepo.Platform(id);
             if (platform == null)

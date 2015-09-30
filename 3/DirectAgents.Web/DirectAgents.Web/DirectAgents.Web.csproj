@@ -181,6 +181,7 @@
     <Compile Include="Areas\TD\Models\CampaignPacingVM.cs" />
     <Compile Include="Areas\TD\Models\TDStatsVM.cs" />
     <Compile Include="Areas\TD\TDAreaRegistration.cs" />
+    <Compile Include="Common.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\ScreensController.cs" />

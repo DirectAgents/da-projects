@@ -41,7 +41,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     if (adIdLookupByEid.ContainsKey(item.eid))
                     {
                         int adId = adIdLookupByEid[item.eid];
-                        if (!item.AllZeros())
+                        if (!item.AllZeros(includeProspects: true))
                         {
                             var source = new AdDailySummary
                             {
