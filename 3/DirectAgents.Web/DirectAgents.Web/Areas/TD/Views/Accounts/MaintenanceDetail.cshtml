@@ -5,5 +5,7 @@
 }
 
 Latest Stats: @(latestStatString ?? "(none)")
-&nbsp;&nbsp;
-<a href="#" onclick="SynchAccount(@Model.ExtAccount.Id, '@synchUrl'); return false">Synch</a>
+@if (Model.Synchable) {
+    <text>&nbsp;&nbsp;</text>
+    <a href="#" onclick="SynchAccount(@Model.ExtAccount.Id, '@synchUrl'); return false">Synch</a>
+}

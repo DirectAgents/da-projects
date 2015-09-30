@@ -45,10 +45,22 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             if (extAcct == null)
                 return HttpNotFound();
 
+            bool synchable = extAcct.Platform.Code == Platform.Code_AdRoll;
+            if (extAcct.Platform.Code == Platform.Code_DBM)
+            {
+                int ioID;
+                if (int.TryParse(extAcct.ExternalId, out ioID))
+                {
+                    var io = tdRepo.InsertionOrder(ioID);
+                    if (io != null)
+                        synchable = !string.IsNullOrWhiteSpace(io.Bucket);
+                }
+            }
             var model = new AccountMaintenanceVM
             {
                 ExtAccount = extAcct,
-                LatestStatDate = tdRepo.LatestStatDate(extAcct.Id)
+                LatestStatDate = tdRepo.LatestStatDate(extAcct.Id),
+                Synchable = synchable
             };
             return PartialView(model);
         }
@@ -67,7 +79,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             {
                 int ioID;
                 if (int.TryParse(extAcct.ExternalId, out ioID))
-                    DASynchDBMStats.RunStatic(ioID); // gets report with stats up to yesterday (and back 30 days)
+                    DASynchDBMStats.RunStatic(ioID); // gets report with stats up to yesterday (and back ?30? days)
             }
             //else
             return null;

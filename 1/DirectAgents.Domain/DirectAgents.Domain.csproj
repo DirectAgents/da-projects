@@ -201,6 +201,10 @@
     <Compile Include="MigrationsTD\201509152158477_Mig_Employee.Designer.cs">
       <DependentUpon>201509152158477_Mig_Employee.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsTD\201509292053368_Mig_DBM_CDS_AddIOID.cs" />
+    <Compile Include="MigrationsTD\201509292053368_Mig_DBM_CDS_AddIOID.Designer.cs">
+      <DependentUpon>201509292053368_Mig_DBM_CDS_AddIOID.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.Designer.cs">
@@ -333,6 +337,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201509152158477_Mig_Employee.resx">
       <DependentUpon>201509152158477_Mig_Employee.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201509292053368_Mig_DBM_CDS_AddIOID.resx">
+      <DependentUpon>201509292053368_Mig_DBM_CDS_AddIOID.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

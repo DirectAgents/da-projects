@@ -53,7 +53,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<InsertionOrder>().ToTable("InsertionOrder", dbmSchema);
             modelBuilder.Entity<Creative>().ToTable("Creative", dbmSchema);
             modelBuilder.Entity<CreativeDailySummary>()
-                .HasKey(cds => new { cds.Date, cds.CreativeID })
+                .HasKey(cds => new { cds.Date, cds.InsertionOrderID, cds.CreativeID })
                 .ToTable("CreativeDailySummary", dbmSchema);
             modelBuilder.Entity<CreativeDailySummary>()
                 .Property(cds => cds.Revenue).HasPrecision(18, 6);

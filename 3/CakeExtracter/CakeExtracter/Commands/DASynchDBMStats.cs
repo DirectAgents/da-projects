@@ -8,7 +8,6 @@ using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using DirectAgents.Domain.Contexts;
-using DirectAgents.Domain.Entities.DBM;
 using DirectAgents.Domain.Entities.TD;
 
 namespace CakeExtracter.Commands
@@ -26,29 +25,27 @@ namespace CakeExtracter.Commands
             return cmd.Run();
         }
 
-        const int DaysPerReport = 30;
-
         public int? InsertionOrderID { get; set; }
         public DateTime? EndDate { get; set; }
-        public bool UseEarliestDateForUpdate { get; set; }
+        public int DaysPerReport { get; set; }
 
         public override void ResetProperties()
         {
             InsertionOrderID = null;
             EndDate = null;
-            UseEarliestDateForUpdate = false;
+            DaysPerReport = 0; // 0 means determine from the loader
+            // (Determines how far back to go when updating TD tables from DBM tables)
         }
 
+        // Loads DBM tables (CreativeDailySummaries) from the DBM API.  Then updates TD tables (one daySum per account) from the DBM tables.
         public DASynchDBMStats()
         {
             IsCommand("daSynchDBMStats", "synch DBM Stats");
             HasOption<int>("i|insertionOrderID=", "InsertionOrder ID (default = all)", c => InsertionOrderID = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
-            // Note: endDate is the last day of the desired stats (a report goes back 'DaysPerReport' days)
-            HasOption<bool>("u|useEarliest=", "Use earliest stats date for update (default is false)", c => UseEarliestDateForUpdate = c);
-            // (Determines how far back to go when updating TD tables from DBM tables)
+            // Note: endDate is the last day of the desired stats (a report goes back X days)
+            HasOption<int>("d|daysPerReport=", "Days Per Report (0 (default) means determine from loader", c => DaysPerReport = c);
         }
-        // Loads DBM tables (CreativeDailySummaries) from the DBM API.  Then updates TD tables (one daySum per account) from the DBM tables.
 
         public override int Execute(string[] remainingArguments)
         {
@@ -67,7 +64,7 @@ namespace CakeExtracter.Commands
             loaderThread.Join();
 
             var updateStart = endDate.AddDays(1 - DaysPerReport);
-            if (UseEarliestDateForUpdate && loader.EarliestDate.HasValue)
+            if (DaysPerReport <= 0 && loader.EarliestDate.HasValue)
                 updateStart = loader.EarliestDate.Value;
             var updateDateRange = new DateRange(updateStart, endDate);
             UpdateTDTablesFromDBMTables(updateDateRange, InsertionOrderID);
@@ -97,17 +94,6 @@ namespace CakeExtracter.Commands
             return buckets;
         }
 
-        //public IEnumerable<InsertionOrder> GetInsertionOrders()
-        //{
-        //    using (var db = new DATDContext())
-        //    {
-        //        var IOs = db.InsertionOrders.AsQueryable();
-        //        if (InsertionOrderID.HasValue)
-        //            IOs = IOs.Where(io => io.ID == InsertionOrderID.Value);
-        //        return IOs.Where(io => !string.IsNullOrEmpty(io.Bucket)).ToList();
-        //    }
-        //}
-
         // Note this will update DailySummaries for all insertion orders (Accounts) with CreativeDailySummary stats in the specified range.
         // (unless insertionOrderID is specified)
         public static void UpdateTDTablesFromDBMTables(DateRange dateRange, int? insertionOrderID)
@@ -123,8 +109,8 @@ namespace CakeExtracter.Commands
                 // 1) InsertionOrders (with stats in this dateRange) -> add Account(s) if necessary
                 var cdSums = db.DBMCreativeDailySummaries.Where(cds => cds.Date >= dateRange.FromDate && cds.Date <= dateRange.ToDate);
                 if (insertionOrderID.HasValue)
-                    cdSums = cdSums.Where(cds => cds.Creative.InsertionOrderID == insertionOrderID.Value);
-                var insertionOrders = cdSums.Select(cds => cds.Creative.InsertionOrder).Distinct().ToList();
+                    cdSums = cdSums.Where(cds => cds.InsertionOrderID == insertionOrderID.Value);
+                var insertionOrders = cdSums.Select(cds => cds.InsertionOrder).Distinct().ToList();
                 foreach (var io in insertionOrders)
                 {
                     if (!dbmExternalIds.Contains(io.ID.ToString()))
@@ -146,7 +132,7 @@ namespace CakeExtracter.Commands
                 {
                     var accountId = db.ExtAccounts.Where(a => a.ExternalId == io.ID.ToString()).First().Id;
 
-                    var cdSumsForIO = cdSums.Where(cds => cds.Creative.InsertionOrderID == io.ID);
+                    var cdSumsForIO = cdSums.Where(cds => cds.InsertionOrderID == io.ID);
                     var statDates = cdSumsForIO.Select(cds => cds.Date).Distinct().ToList();
                     foreach (var date in dateRange.Dates)
                     {

@@ -354,19 +354,19 @@ namespace DirectAgents.Domain.Concrete
             return context.InsertionOrders;
         }
 
-        public IQueryable<Creative> DBM_Creatives(int? ioID)
-        {
-            var creatives = context.Creatives.AsQueryable();
-            if (ioID.HasValue)
-                creatives = creatives.Where(c => c.InsertionOrderID == ioID);
-            return creatives;
-        }
+        //public IQueryable<Creative> DBM_Creatives(int? ioID)
+        //{
+        //    var creatives = context.Creatives.AsQueryable();
+        //    if (ioID.HasValue)
+        //        creatives = creatives.Where(c => c.InsertionOrderID == ioID);
+        //    return creatives;
+        //}
 
         public IQueryable<CreativeDailySummary> DBM_CreativeDailySummaries(DateTime? startDate, DateTime? endDate, int? ioID = null, int? creativeID = null)
         {
             var cds = context.DBMCreativeDailySummaries.AsQueryable();
             if (ioID.HasValue)
-                cds = cds.Where(c => c.Creative.InsertionOrderID == ioID.Value);
+                cds = cds.Where(c => c.InsertionOrderID == ioID.Value);
             if (creativeID.HasValue)
                 cds = cds.Where(c => c.CreativeID == creativeID.Value);
             if (startDate.HasValue)
@@ -374,6 +374,22 @@ namespace DirectAgents.Domain.Concrete
             if (endDate.HasValue)
                 cds = cds.Where(c => c.Date <= endDate.Value);
             return cds;
+        }
+
+        public IQueryable<TDStat> GetDBMStatsByCreative(int ioID, DateTime? startDate, DateTime? endDate)
+        {
+            var cds = DBM_CreativeDailySummaries(startDate, endDate, ioID: ioID);
+            var groups = cds.GroupBy(c => c.Creative);
+            var stats = groups.Select(g => new TDStat
+            {
+                Name = g.Key.Name,
+                Impressions = g.Sum(c => c.Impressions),
+                Clicks = g.Sum(c => c.Clicks),
+                PostClickConv = g.Sum(c => c.PostClickConv),
+                PostViewConv = g.Sum(c => c.PostViewConv),
+                Cost = g.Sum(c => c.Revenue)
+            });
+            return stats;
         }
 
         public TDStat GetDBMStat(Creative creative, DateTime? startDate, DateTime? endDate)

@@ -39,6 +39,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     var source = new CreativeDailySummary
                     {
                         Date = date,
+                        InsertionOrderID = item.InsertionOrderID,
                         CreativeID = creativeID,
                         Impressions = int.Parse(item.Impressions),
                         Clicks = int.Parse(item.Clicks),
@@ -46,7 +47,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         PostViewConv = (int)decimal.Parse(item.PostViewConversions),
                         Revenue = decimal.Parse(item.Revenue)
                     };
-                    var target = db.Set<CreativeDailySummary>().Find(date, creativeID);
+                    var target = db.Set<CreativeDailySummary>().Find(date, item.InsertionOrderID, creativeID);
                     if (target == null)
                     {
                         db.DBMCreativeDailySummaries.Add(source);
@@ -105,7 +106,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         private static void AddUpdateDependentCreatives(List<DbmRowBase> items)
         {
-            var tuples = items.Select(i => Tuple.Create(((DbmRowWithCreative)i).CreativeID, ((DbmRowWithCreative)i).Creative, i.InsertionOrderID)).Distinct();
+            var tuples = items.Select(i => Tuple.Create(((DbmRowWithCreative)i).CreativeID, ((DbmRowWithCreative)i).Creative)).Distinct();
 
             using (var db = new DATDContext())
             {
@@ -113,7 +114,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 {
                     int creativeID;
                     string creativeName = tuple.Item2;
-                    int insertionOrderID = tuple.Item3;
 
                     if (int.TryParse(tuple.Item1, out creativeID))
                     {
@@ -123,17 +123,15 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                             var creative = new Creative
                             {
                                 ID = creativeID,
-                                Name = creativeName,
-                                InsertionOrderID = insertionOrderID
+                                Name = creativeName
                             };
                             db.Creatives.Add(creative);
                             Logger.Info("Saving new Creative: {0} ({1})", creative.Name, creative.ID);
                             db.SaveChanges();
                         }
-                        else if (existing.Name != creativeName || existing.InsertionOrderID != insertionOrderID)
+                        else if (existing.Name != creativeName)
                         {
                             existing.Name = creativeName;
-                            existing.InsertionOrderID = insertionOrderID;
                             Logger.Info("Saving updated Creative: {0} ({1})", creativeName, existing.ID);
                             db.SaveChanges();
                         }
