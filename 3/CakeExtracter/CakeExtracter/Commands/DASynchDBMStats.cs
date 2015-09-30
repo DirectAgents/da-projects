@@ -15,7 +15,7 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchDBMStats : ConsoleCommand
     {
-        public static int RunStatic(int insertionOrderID, DateTime? endDate = null)
+        public static int RunStatic(int? insertionOrderID = null, DateTime? endDate = null)
         {
             var cmd = new DASynchDBMStats
             {

@@ -35,7 +35,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                     a.Name,
                     Platform = a.Platform.Name
                 });
-            var json = Json(new { data = extAccounts });
+            var json = Json(new { data = extAccounts, total = extAccounts.Count() });
             return json;
         }
 
@@ -79,7 +79,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             {
                 int ioID;
                 if (int.TryParse(extAcct.ExternalId, out ioID))
-                    DASynchDBMStats.RunStatic(ioID); // gets report with stats up to yesterday (and back ?30? days)
+                    DASynchDBMStats.RunStatic(insertionOrderID: ioID); // gets report with stats up to yesterday (and back ?30? days)
             }
             //else
             return null;

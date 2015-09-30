@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using CakeExtracter.Commands;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities.TD;
 
@@ -26,6 +27,19 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 return HttpNotFound();
 
             return View(platform);
+        }
+
+        public ActionResult Synch(int id)
+        {
+            var platform = tdRepo.Platform(id);
+            if (platform == null)
+                return HttpNotFound();
+
+            if (platform.Code == Platform.Code_DBM)
+            {
+                DASynchDBMStats.RunStatic();
+            }
+            return RedirectToAction("Maintenance", new { id = id });
         }
 	}
 }
