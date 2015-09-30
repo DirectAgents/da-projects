@@ -50,4 +50,8 @@
 {
     @Html.ActionLink("New Campaign", "CreateNew", new { advId = advId })
     <br />
+} else {
+    <text>To create a campaign, go to</text>
+    @Html.ActionLink("Advertisers", "Index", "Advertisers")
+    <text>and click "show" under "Campaigns" for the desired Advertiser.</text>
 }

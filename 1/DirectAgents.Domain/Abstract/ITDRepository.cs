@@ -12,14 +12,18 @@ namespace DirectAgents.Domain.Abstract
     {
         void SaveChanges();
 
+        // (dbo)
         Employee Employee(int id);
         IQueryable<Employee> Employees();
+        bool AddEmployee(Employee emp);
+        bool SaveEmployee(Employee emp);
 
         // TD
         Platform Platform(int id);
         IQueryable<Platform> Platforms();
         Advertiser Advertiser(int id);
         IQueryable<Advertiser> Advertisers();
+        bool AddAdvertiser(Advertiser adv);
         bool SaveAdvertiser(Advertiser adv);
         Campaign Campaign(int id);
         IQueryable<Campaign> Campaigns(int? advId = null);

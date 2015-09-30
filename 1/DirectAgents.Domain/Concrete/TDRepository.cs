@@ -25,7 +25,7 @@ namespace DirectAgents.Domain.Concrete
             context.SaveChanges();
         }
 
-        // ---
+        #region DBO
 
         public Employee Employee(int id)
         {
@@ -36,6 +36,27 @@ namespace DirectAgents.Domain.Concrete
             return context.Employees;
         }
 
+        public bool AddEmployee(Employee emp)
+        {
+            if (context.Employees.Any(e => e.Id == emp.Id))
+                return false;
+            context.Employees.Add(emp);
+            context.SaveChanges();
+            return true;
+        }
+        public bool SaveEmployee(Employee emp)
+        {
+            if (context.Employees.Any(e => e.Id == emp.Id))
+            {
+                var entry = context.Entry(emp);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        #endregion
         #region TD
 
         // --- Platforms/Advertisers ---
@@ -58,6 +79,14 @@ namespace DirectAgents.Domain.Concrete
             return context.Advertisers;
         }
 
+        public bool AddAdvertiser(Advertiser adv)
+        {
+            if (context.Advertisers.Any(a => a.Id == adv.Id))
+                return false;
+            context.Advertisers.Add(adv);
+            context.SaveChanges();
+            return true;
+        }
         public bool SaveAdvertiser(Advertiser adv)
         {
             if (context.Advertisers.Any(a => a.Id == adv.Id))
@@ -88,7 +117,6 @@ namespace DirectAgents.Domain.Concrete
         {
             if (context.Campaigns.Any(c => c.Id == camp.Id))
                 return false;
-
             context.Campaigns.Add(camp);
             context.SaveChanges();
             return true;
@@ -102,7 +130,6 @@ namespace DirectAgents.Domain.Concrete
             context.SaveChanges();
             return true;
         }
-
         public bool SaveCampaign(Campaign camp)
         {
             if (context.Campaigns.Any(c => c.Id == camp.Id))

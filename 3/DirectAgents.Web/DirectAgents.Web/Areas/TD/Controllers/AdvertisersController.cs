@@ -20,6 +20,18 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View(advertisers);
         }
 
+        public ActionResult CreateNew()
+        {
+            var advertiser = new Advertiser
+            {
+                Name = "zNew"
+            };
+            if (tdRepo.AddAdvertiser(advertiser))
+                return RedirectToAction("Index");
+            else
+                return Content("Error creating Advertiser");
+        }
+
         [HttpGet]
         public ActionResult Edit(int id)
         {
