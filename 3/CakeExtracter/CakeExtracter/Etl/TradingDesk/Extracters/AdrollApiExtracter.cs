@@ -43,7 +43,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
             foreach (var date in dateRange.Dates)
             {
-                var adSums = _arUtility.AdSummaries(date, this.advertisableEid);
+                var adSums = _arUtility.AdDailySummaries(date, this.advertisableEid);
                 Add(adSums);
             }
             End();
@@ -69,7 +69,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             Logger.Info("Extracting DailySummaries from AdRoll API for {0} from {1:d} to {2:d}",
                         this.advertisableEid, this.dateRange.FromDate, this.dateRange.ToDate);
 
-            var advSums = _arUtility.AdvertisableSummaries(dateRange.FromDate, dateRange.ToDate, advertisableEid);
+            var advSums = _arUtility.AdvertisableDailySummaries(dateRange.FromDate, dateRange.ToDate, advertisableEid);
             Add(advSums);
             End();
         }

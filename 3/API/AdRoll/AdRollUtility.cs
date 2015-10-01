@@ -74,7 +74,9 @@ namespace AdRoll
         }
 
         // --- Methods ---
-        public List<AdSummary> AdSummaries(DateTime date, string advertisableEid)
+
+        // Daily Summaries by Ad
+        public List<AdSummary> AdDailySummaries(DateTime date, string advertisableEid)
         {
             //Note: We can only do one day at a time because the API allows either:
             // - breakdown by ad for a specified date or daterange (and advertisable)
@@ -116,13 +118,15 @@ namespace AdRoll
             return adSummaries;
         }
 
-        public List<AdrollDailySummary> AdvertisableSummaries(DateTime startDate, DateTime endDate, string advertisableEid)
+        // DailySummaries for an Advertisable
+        public List<AdrollDailySummary> AdvertisableDailySummaries(DateTime startDate, DateTime endDate, string advertisableEid)
         {
             var request = new AdvertisableReportRequest
             {
                 start_date = startDate.ToString("MM-dd-yyyy"),
                 end_date = endDate.ToString("MM-dd-yyyy"),
-                advertisables = advertisableEid
+                advertisables = advertisableEid,
+                data_format = "date"
             };
             var response = this.AdvertisableReportClient.DailySummaries(request);
             if (response == null)
