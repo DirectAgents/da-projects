@@ -125,7 +125,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     {   // Ad doesn't exist in the db; so create it and put an entry in the lookup
                         var ad = new Ad
                         {
-                            AdvertisableId = advertisableId,
+                            AdvertisableId = this.advertisableId,
                             Eid = group.Key.eid,
                             Name = group.Key.ad,
 

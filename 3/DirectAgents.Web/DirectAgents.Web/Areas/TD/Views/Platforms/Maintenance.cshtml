@@ -3,16 +3,17 @@
 
 <h2>@Model.Name - Maintenance</h2>
 
+<div id="divPlatformUpdate">
 @if (Model.Code == Platform.Code_AdRoll)
 {
+    @Html.ActionLink("Sync Accounts", "SyncAccounts", new { id = Model.Id }, new { onclick = "$('#divPlatformUpdate').html('Syncing...')" })
 }
 @if (Model.Code == Platform.Code_DBM)
 {
-    <div id="divSyncPlatform">
-        @Html.ActionLink("Sync All Accounts", "Sync", new { id = Model.Id }, new { onclick = "$('#divSyncPlatform').html('Syncing...')" })
-    </div>
-    <br />
+    @Html.ActionLink("Sync All Accounts", "SyncStats", new { id = Model.Id }, new { onclick = "$('#divPlatformUpdate').html('Syncing...')" })
 }
+</div>
+<br />
 
 External Accounts:
 <div id="grid"></div>

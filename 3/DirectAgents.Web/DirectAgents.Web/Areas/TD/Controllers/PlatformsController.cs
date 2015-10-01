@@ -29,12 +29,23 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View(platform);
         }
 
-        public ActionResult Sync(int id)
+        public ActionResult SyncAccounts(int id)
         {
             var platform = tdRepo.Platform(id);
             if (platform == null)
                 return HttpNotFound();
+            if (platform.Code == Platform.Code_AdRoll)
+            {
+                DASynchAdrollAccounts.RunStatic();
+            }
+            return RedirectToAction("Maintenance", new { id = id });
+        }
 
+        public ActionResult SyncStats(int id)
+        {
+            var platform = tdRepo.Platform(id);
+            if (platform == null)
+                return HttpNotFound();
             if (platform.Code == Platform.Code_DBM)
             {
                 DASynchDBMStats.RunStatic();

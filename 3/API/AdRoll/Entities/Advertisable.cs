@@ -6,9 +6,10 @@ namespace AdRoll.Entities
     {
         public string eid { get; set; }
         public string name { get; set; }
+        public string currency { get; set; }
+        public bool is_active { get; set; }
+        public string status { get; set; }
         public DateTime created_date { get; set; }
-        // currency, status, is_active
-        // created_date, updated_date
-        // ...etc...
+        public DateTime updated_date { get; set; }
     }
 }

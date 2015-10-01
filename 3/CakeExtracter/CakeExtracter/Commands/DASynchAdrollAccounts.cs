@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using System.Linq;
 using AdRoll;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.TradingDesk.Extracters;
-using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.TD;
@@ -15,6 +11,12 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchAdrollAccounts : ConsoleCommand
     {
+        public static int RunStatic()
+        {
+            var cmd = new DASynchAdrollAccounts();
+            return cmd.Run();
+        }
+
         public override void ResetProperties()
         {
         }
@@ -46,7 +48,11 @@ namespace CakeExtracter.Commands
                         var newAdv = new Advertisable
                         {
                             Eid = adv.eid,
-                            Name = adv.name
+                            Name = adv.name,
+                            Active = adv.is_active,
+                            Status = adv.status,
+                            CreatedDate = adv.created_date,
+                            UpdatedDate = adv.updated_date
                         };
                         db.Advertisables.Add(newAdv);
                     }
@@ -54,9 +60,15 @@ namespace CakeExtracter.Commands
                     { // update
                         var dbAdv = dbAdvertisables.First(a => a.Eid == adv.eid);
                         dbAdv.Name = adv.name;
+                        dbAdv.Active = adv.is_active;
+                        dbAdv.Status = adv.status;
+                        dbAdv.CreatedDate = adv.created_date;
+                        dbAdv.UpdatedDate = adv.updated_date;
                     }
 
-                    // Check/update td.Account table
+                    // Check/update td.Account table ("ExtAccount")
+                    string name = adv.name + (adv.is_active ? "" : " (INACTIVE)");
+
                     if (!dbAcctEids.Contains(adv.eid))
                     { // add
                         Logger.Info("Adding new Account '{0}' ({1})", adv.name, adv.eid);
@@ -64,14 +76,14 @@ namespace CakeExtracter.Commands
                         {
                             PlatformId = platformId_AdRoll,
                             ExternalId = adv.eid,
-                            Name = adv.name
+                            Name = name
                         };
                         db.ExtAccounts.Add(newAcct);
                     }
                     else
                     { // update
                         var dbAcct = dbAccounts.First(a => a.ExternalId == adv.eid);
-                        dbAcct.Name = adv.name;
+                        dbAcct.Name = name;
                     }
                 }
                 db.SaveChanges();
