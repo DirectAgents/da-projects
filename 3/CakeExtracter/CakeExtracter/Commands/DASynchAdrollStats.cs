@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using AdRoll;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
@@ -13,11 +14,13 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchAdrollStats : ConsoleCommand
     {
-        public static int RunStatic(string advertisableEid, DateTime? startDate = null, DateTime? endDate = null)
+        // if Eid not specified, will ask AdRoll for all Advertisables that have stats
+        public static int RunStatic(string advertisableEid = null, DateTime? startDate = null, DateTime? endDate = null)
         {
             var cmd = new DASynchAdrollStats
             {
                 AdvertisableEid = advertisableEid,
+                CheckActiveAdvertisables = string.IsNullOrWhiteSpace(advertisableEid),
                 StartDate = startDate,
                 EndDate = endDate
             };
@@ -28,6 +31,7 @@ namespace CakeExtracter.Commands
 
         public int? AdvertisableId { get; set; }
         public string AdvertisableEid { get; set; }
+        public bool CheckActiveAdvertisables { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public bool OneStatPerAdvertisable { get; set; } // (per day)
@@ -36,6 +40,7 @@ namespace CakeExtracter.Commands
         {
             AdvertisableId = null;
             AdvertisableEid = null;
+            CheckActiveAdvertisables = false;
             StartDate = null;
             EndDate = null;
             OneStatPerAdvertisable = false;
@@ -46,50 +51,63 @@ namespace CakeExtracter.Commands
             IsCommand("daSynchAdrollStats", "synch AdRoll Stats");
             HasOption("a|advertisableEid=", "Advertisable Eid (default = all)", c => AdvertisableEid = c);
             HasOption<int>("i|advertisableId=", "Advertisable Id (default = all)", c => AdvertisableId = c);
-            HasOption("s|startDate=", "Start Date (default is one week ago)", c => StartDate = DateTime.Parse(c));
+            HasOption("c|checkActive=", "Check AdRoll for Advertisables with stats (if none specified)", c => bool.Parse(c));
+            HasOption("s|startDate=", "Start Date (default is one month ago)", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
             HasOption<bool>("o|oneStatPerAdv=", "One Stat per advertisable per day (default = false / one per ad)", c => OneStatPerAdvertisable = c);
         }
 
         public override int Execute(string[] remainingArguments)
         {
-            var yesterday = DateTime.Today.AddDays(-1);
-            var sevenDaysAgo = yesterday.AddDays(-6);
-            var dateRange = new DateRange(StartDate ?? sevenDaysAgo, EndDate ?? yesterday);
+            var today = DateTime.Today;
+            var oneMonthAgo = today.AddMonths(-1);
+            var dateRange = new DateRange(StartDate ?? oneMonthAgo, EndDate ?? today.AddDays(-1));
 
-            var advertisables = GetAdvertisables();
-            foreach (var adv in advertisables)
-            {
-                if (OneStatPerAdvertisable)
-                    DoETL_AdvertisableLevel(dateRange, adv);
-                else
-                    DoETL_AdLevel(dateRange, adv);
-            }
+            var arUtility = new AdRollUtility(m => Logger.Info(m), m => Logger.Warn(m));
+
+            IEnumerable<Advertisable> advertisables;
+            if (CheckActiveAdvertisables && string.IsNullOrWhiteSpace(AdvertisableEid) && !AdvertisableId.HasValue)
+                advertisables = GetAdvertisablesThatHaveStats(dateRange, arUtility);
+            else
+                advertisables = GetAdvertisables();
+
+            if (OneStatPerAdvertisable)
+                DoETL_AdvertisableLevel(dateRange, advertisables);
+            else
+                DoETL_AdLevel(dateRange, advertisables);
+
             return 0;
         }
 
-        private void DoETL_AdvertisableLevel(DateRange dateRange, Advertisable adv)
+        private void DoETL_AdvertisableLevel(DateRange dateRange, IEnumerable<Advertisable> advertisables, AdRollUtility arUtility = null)
         {
-            var extracter = new AdrollDailySummariesExtracter(dateRange, adv.Eid);
-            var loader = new AdrollDailySummaryLoader(adv.Eid);
-            if (loader.FoundAccount())
+            foreach (var adv in advertisables)
             {
+                var extracter = new AdrollDailySummariesExtracter(dateRange, adv.Eid, arUtility);
+                var loader = new AdrollDailySummaryLoader(adv.Eid);
+                if (loader.FoundAccount())
+                {
+                    var extracterThread = extracter.Start();
+                    var loaderThread = loader.Start(extracter);
+                    extracterThread.Join();
+                    loaderThread.Join();
+                }
+                else
+                    Logger.Warn("AdRoll Account did not exist for Advertisable with Eid {0}. Cannot do ETL.", adv.Eid);
+            }
+        }
+
+        private void DoETL_AdLevel(DateRange dateRange, IEnumerable<Advertisable> advertisables, AdRollUtility arUtility = null)
+        {
+            foreach (var adv in advertisables)
+            {
+                var extracter = new AdrollAdDailySummariesExtracter(dateRange, adv.Eid, arUtility);
+                var loader = new AdrollAdDailySummaryLoader(adv.Id);
                 var extracterThread = extracter.Start();
                 var loaderThread = loader.Start(extracter);
                 extracterThread.Join();
                 loaderThread.Join();
             }
-            else
-                Logger.Warn("AdRoll Account did not exist for Advertisable with Eid {0}. Cannot do ETL.", adv.Eid);
-        }
-        private void DoETL_AdLevel(DateRange dateRange, Advertisable adv)
-        {
-            var extracter = new AdrollAdDailySummariesExtracter(dateRange, adv.Eid);
-            var loader = new AdrollAdDailySummaryLoader(adv.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
         }
 
         public IEnumerable<Advertisable> GetAdvertisables()
@@ -111,6 +129,20 @@ namespace CakeExtracter.Commands
                 }
                 return advs.ToList();
             }
+        }
+
+        public IEnumerable<Advertisable> GetAdvertisablesThatHaveStats(DateRange dateRange, AdRollUtility arUtility)
+        {
+            IEnumerable<Advertisable> advertisables;
+            using (var db = new DATDContext())
+            {
+                advertisables = db.Advertisables.ToList();
+            }
+            var dbAdvEids = advertisables.Select(a => a.Eid).ToArray();
+            var advSums = arUtility.AdvertisableSummaries(dateRange.FromDate, dateRange.ToDate, dbAdvEids);
+            var advEidsThatHaveStats = advSums.Where(s => !s.AllZeros(includeProspects: true)).Select(s => s.eid).ToArray();
+            advertisables = advertisables.Where(a => advEidsThatHaveStats.Contains(a.Eid));
+            return advertisables;
         }
     }
 }

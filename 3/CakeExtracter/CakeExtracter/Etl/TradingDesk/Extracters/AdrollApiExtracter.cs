@@ -4,14 +4,24 @@ using CakeExtracter.Common;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
-    public class AdrollAdvertisablesExtracter : Extracter<Advertisable>
+    public abstract class AdrollApiExtracter<T> : Extracter<T>
     {
-        private AdRollUtility _arUtility;
+        protected AdRollUtility _arUtility;
+        protected DateRange? dateRange;
+        protected string advertisableEid;
 
-        public AdrollAdvertisablesExtracter()
+        public AdrollApiExtracter(AdRollUtility arUtility = null, DateRange? dateRange = null, string advertisableEid = null)
         {
-            _arUtility = new AdRollUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            this._arUtility = arUtility ?? new AdRollUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            this.dateRange = dateRange;
+            this.advertisableEid = advertisableEid;
         }
+    }
+
+    public class AdrollAdvertisablesExtracter : AdrollApiExtracter<Advertisable>
+    {
+        public AdrollAdvertisablesExtracter()
+            : base() { }
 
         protected override void Extract()
         {
@@ -22,26 +32,38 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         }
     }
 
-    public class AdrollAdDailySummariesExtracter : Extracter<AdSummary>
+    public class AdrollDailySummariesExtracter : AdrollApiExtracter<AdrollDailySummary>
     {
-        private readonly DateRange dateRange;
-        private readonly string advertisableEid;
+        public AdrollDailySummariesExtracter(DateRange dateRange, string advertisableEid, AdRollUtility arUtility = null)
+            : base(arUtility, dateRange, advertisableEid)
+        { }
+        //Note: this.dateRange is guaranteed to be non-null
 
-        private AdRollUtility _arUtility;
-
-        public AdrollAdDailySummariesExtracter(DateRange dateRange, string advertiseableEid)
+        protected override void Extract()
         {
-            this.dateRange = dateRange;
-            this.advertisableEid = advertiseableEid;
-            _arUtility = new AdRollUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            Logger.Info("Extracting DailySummaries from AdRoll API for ({0}) from {1:d} to {2:d}",
+                        this.advertisableEid, this.dateRange.Value.FromDate, this.dateRange.Value.ToDate);
+
+            var advSums = _arUtility.AdvertisableDailySummaries(dateRange.Value.FromDate, dateRange.Value.ToDate, advertisableEid);
+            Add(advSums);
+            End();
         }
+    }
+    //Note: Looks like we don't need to handle days with no stats? The AdRoll API always returns a record (possibly zero-filled)
+
+    public class AdrollAdDailySummariesExtracter : AdrollApiExtracter<AdSummary>
+    {
+        public AdrollAdDailySummariesExtracter(DateRange dateRange, string advertisableEid, AdRollUtility arUtility = null)
+            : base(arUtility, dateRange, advertisableEid)
+        { }
+        //Note: this.dateRange is guaranteed to be non-null
 
         protected override void Extract()
         {
             Logger.Info("Extracting AdDailySummaries from AdRoll API for {0} from {1:d} to {2:d}",
-                        this.advertisableEid, this.dateRange.FromDate, this.dateRange.ToDate);
+                        this.advertisableEid, this.dateRange.Value.FromDate, this.dateRange.Value.ToDate);
 
-            foreach (var date in dateRange.Dates)
+            foreach (var date in dateRange.Value.Dates)
             {
                 var adSums = _arUtility.AdDailySummaries(date, this.advertisableEid);
                 Add(adSums);
@@ -49,30 +71,4 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             End();
         }
     }
-
-    public class AdrollDailySummariesExtracter : Extracter<AdrollDailySummary>
-    {
-        private readonly DateRange dateRange;
-        private readonly string advertisableEid;
-
-        private AdRollUtility _arUtility;
-
-        public AdrollDailySummariesExtracter(DateRange dateRange, string advertiseableEid)
-        {
-            this.dateRange = dateRange;
-            this.advertisableEid = advertiseableEid;
-            _arUtility = new AdRollUtility(m => Logger.Info(m), m => Logger.Warn(m));
-        }
-
-        protected override void Extract()
-        {
-            Logger.Info("Extracting DailySummaries from AdRoll API for {0} from {1:d} to {2:d}",
-                        this.advertisableEid, this.dateRange.FromDate, this.dateRange.ToDate);
-
-            var advSums = _arUtility.AdvertisableDailySummaries(dateRange.FromDate, dateRange.ToDate, advertisableEid);
-            Add(advSums);
-            End();
-        }
-    }
-    //Note: Looks like we don't need to handle days with no stats? The AdRoll API always returns a record (possibly zero-filled)
 }

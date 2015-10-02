@@ -27,6 +27,15 @@ namespace AdRoll.Entities
     {
         public DateTime date { get; set; } // not always returned from the api
     }
+    //TODO: add date to StatSummary and rename to AdrollStatSummary?
+
+    // used for Advertisable report
+    public class AdvertisableSummary : StatSummary
+    {
+        public string eid { get; set; }
+        public string advertisable { get; set; }
+        // status, created_date
+    }
 
     // used for Ad daily report
     public class AdSummary : AdrollDailySummary

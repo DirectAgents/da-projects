@@ -18,6 +18,11 @@ namespace AdRoll.Clients
             var result = Execute<DailySummaryReportResponse>(request);
             return result;
         }
+        public EntityReportResponse Summaries(AdvertisableReportRequest request)
+        {
+            var result = Execute<EntityReportResponse>(request);
+            return result;
+        }
     }
 
     public class AdvertisableReportRequest : ApiRequest
@@ -44,6 +49,10 @@ namespace AdRoll.Clients
     public class DailySummaryReportResponse
     {
         public List<AdrollDailySummary> results { get; set; }
+    }
+    public class EntityReportResponse
+    {
+        public List<AdvertisableSummary> results { get; set; }
     }
 
     #endregion

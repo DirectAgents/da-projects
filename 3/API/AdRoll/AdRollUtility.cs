@@ -137,6 +137,25 @@ namespace AdRoll
             return response.results;
         }
 
+        // Stat Summaries by Advertisable
+        public List<AdvertisableSummary> AdvertisableSummaries(DateTime startDate, DateTime endDate, IEnumerable<string> advertisableEids)
+        {
+            var request = new AdvertisableReportRequest
+            {
+                start_date = startDate.ToString("MM-dd-yyyy"),
+                end_date = endDate.ToString("MM-dd-yyyy"),
+                advertisables = String.Join(",", advertisableEids),
+                data_format = "entity"
+            };
+            var response = this.AdvertisableReportClient.Summaries(request);
+            if (response == null)
+            {
+                LogInfo("No AdvertisableSummaries found");
+                return new List<AdvertisableSummary>();
+            }
+            return response.results;
+        }
+
         public List<Advertisable> GetAdvertisables()
         {
             var response = this.GetAdvertisablesClient.Get();

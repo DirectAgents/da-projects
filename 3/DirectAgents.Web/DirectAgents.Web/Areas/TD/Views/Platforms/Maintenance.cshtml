@@ -6,11 +6,12 @@
 <div id="divPlatformUpdate">
 @if (Model.Code == Platform.Code_AdRoll)
 {
-    @Html.ActionLink("Sync Accounts", "SyncAccounts", new { id = Model.Id }, new { onclick = "$('#divPlatformUpdate').html('Syncing...')" })
+    @Html.ActionLink("Update Accounts", "SyncAccounts", new { id = Model.Id }, new { onclick = "$('#divPlatformUpdate').html('Updating...')" })
+    <text>&nbsp;&nbsp;&nbsp;&nbsp;</text>
 }
-@if (Model.Code == Platform.Code_DBM)
+@if (Model.Code == Platform.Code_AdRoll || Model.Code == Platform.Code_DBM)
 {
-    @Html.ActionLink("Sync All Accounts", "SyncStats", new { id = Model.Id }, new { onclick = "$('#divPlatformUpdate').html('Syncing...')" })
+    @Html.ActionLink("Sync Stats For All Accounts", "SyncStats", new { id = Model.Id }, new { onclick = "$('#divPlatformUpdate').html('Syncing...')" })
 }
 </div>
 <br />

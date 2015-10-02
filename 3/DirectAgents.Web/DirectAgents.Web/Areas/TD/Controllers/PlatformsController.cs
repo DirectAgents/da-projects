@@ -46,10 +46,12 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var platform = tdRepo.Platform(id);
             if (platform == null)
                 return HttpNotFound();
+
+            if (platform.Code == Platform.Code_AdRoll)
+                DASynchAdrollStats.RunStatic();
             if (platform.Code == Platform.Code_DBM)
-            {
                 DASynchDBMStats.RunStatic();
-            }
+
             return RedirectToAction("Maintenance", new { id = id });
         }
 	}
