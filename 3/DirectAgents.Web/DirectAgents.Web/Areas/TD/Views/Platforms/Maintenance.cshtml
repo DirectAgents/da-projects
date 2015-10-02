@@ -1,17 +1,31 @@
 ﻿@using DirectAgents.Domain.Entities.TD;
 @model Platform
+@{
+    DateTime yesterday = DateTime.Today.AddDays(-1);
+    DateTime oneWeekAgo = yesterday.AddDays(-6);
+    DateTime firstOfMonth = (yesterday.Day == 1 ? yesterday.AddMonths(-1) : new DateTime(yesterday.Year, yesterday.Month, 1));
+    //If it's the 1st or 2nd, firstOfMonth is last month. Otherwise, it's this month.
+}
 
 <h2>@Model.Name - Maintenance</h2>
 
 <div id="divPlatformUpdate">
 @if (Model.Code == Platform.Code_AdRoll)
 {
-    @Html.ActionLink("Update Accounts", "SyncAccounts", new { id = Model.Id }, new { onclick = "$('#divPlatformUpdate').html('Updating...')" })
-    <text>&nbsp;&nbsp;&nbsp;&nbsp;</text>
+    @Html.ActionLink("Update Accounts", "SyncAccounts", new { id = Model.Id }, new { onclick = "$('#divPlatformUpdate').html('Updating... please wait')" })
+    <text>&nbsp;&nbsp;&nbsp;&nbsp;Sync Stats back to:</text>
+    string onclickJS = "$('#divPlatformUpdate').html('Syncing... please wait')";
+    @Html.ActionLink(firstOfMonth.ToShortDateString(), "SyncStats", new { id = Model.Id, start = firstOfMonth.ToShortDateString() }, new { onclick = onclickJS })
+    <text>&nbsp;</text>
+    if (oneWeekAgo != firstOfMonth) {
+        @Html.ActionLink(oneWeekAgo.ToShortDateString(), "SyncStats", new { id = Model.Id, start = oneWeekAgo.ToShortDateString() }, new { onclick = onclickJS })
+        <text>&nbsp;</text>
+    }
+    @Html.ActionLink(yesterday.ToShortDateString(), "SyncStats", new { id = Model.Id, start = yesterday.ToShortDateString() }, new { onclick = onclickJS })
 }
-@if (Model.Code == Platform.Code_AdRoll || Model.Code == Platform.Code_DBM)
+else if (Model.Code == Platform.Code_DBM)
 {
-    @Html.ActionLink("Sync Stats For All Accounts", "SyncStats", new { id = Model.Id }, new { onclick = "$('#divPlatformUpdate').html('Syncing...')" })
+    @Html.ActionLink("Sync Stats For All Accounts", "SyncStats", new { id = Model.Id }, new { onclick = "$('#divPlatformUpdate').html('Syncing... please wait')" })
 }
 </div>
 <br />

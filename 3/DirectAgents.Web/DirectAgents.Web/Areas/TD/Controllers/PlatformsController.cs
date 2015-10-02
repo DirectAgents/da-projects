@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using CakeExtracter.Commands;
 using DirectAgents.Domain.Abstract;
@@ -41,14 +42,14 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return RedirectToAction("Maintenance", new { id = id });
         }
 
-        public ActionResult SyncStats(int id)
+        public ActionResult SyncStats(int id, DateTime? start)
         {
             var platform = tdRepo.Platform(id);
             if (platform == null)
                 return HttpNotFound();
 
             if (platform.Code == Platform.Code_AdRoll)
-                DASynchAdrollStats.RunStatic();
+                DASynchAdrollStats.RunStatic(startDate: start);
             if (platform.Code == Platform.Code_DBM)
                 DASynchDBMStats.RunStatic();
 

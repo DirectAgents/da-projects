@@ -15,12 +15,12 @@ namespace CakeExtracter.Commands
     public class DASynchAdrollStats : ConsoleCommand
     {
         // if Eid not specified, will ask AdRoll for all Advertisables that have stats
-        public static int RunStatic(string advertisableEid = null, DateTime? startDate = null, DateTime? endDate = null)
+        public static int RunStatic(string advertisableEids = null, DateTime? startDate = null, DateTime? endDate = null)
         {
             var cmd = new DASynchAdrollStats
             {
-                AdvertisableEid = advertisableEid,
-                CheckActiveAdvertisables = string.IsNullOrWhiteSpace(advertisableEid),
+                AdvertisableEids = advertisableEids,
+                CheckActiveAdvertisables = string.IsNullOrWhiteSpace(advertisableEids),
                 StartDate = startDate,
                 EndDate = endDate
             };
@@ -30,7 +30,7 @@ namespace CakeExtracter.Commands
         }
 
         public int? AdvertisableId { get; set; }
-        public string AdvertisableEid { get; set; }
+        public string AdvertisableEids { get; set; } // if NullOrWhitespace, gets filled in during Run()
         public bool CheckActiveAdvertisables { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
@@ -39,7 +39,7 @@ namespace CakeExtracter.Commands
         public override void ResetProperties()
         {
             AdvertisableId = null;
-            AdvertisableEid = null;
+            AdvertisableEids = null;
             CheckActiveAdvertisables = false;
             StartDate = null;
             EndDate = null;
@@ -49,7 +49,7 @@ namespace CakeExtracter.Commands
         public DASynchAdrollStats()
         {
             IsCommand("daSynchAdrollStats", "synch AdRoll Stats");
-            HasOption("a|advertisableEid=", "Advertisable Eid (default = all)", c => AdvertisableEid = c);
+            HasOption("a|advertisableEids=", "Advertisable Eids (comma-separated) (default = all)", c => AdvertisableEids = c);
             HasOption<int>("i|advertisableId=", "Advertisable Id (default = all)", c => AdvertisableId = c);
             HasOption("c|checkActive=", "Check AdRoll for Advertisables with stats (if none specified)", c => bool.Parse(c));
             HasOption("s|startDate=", "Start Date (default is one month ago)", c => StartDate = DateTime.Parse(c));
@@ -66,10 +66,13 @@ namespace CakeExtracter.Commands
             var arUtility = new AdRollUtility(m => Logger.Info(m), m => Logger.Warn(m));
 
             IEnumerable<Advertisable> advertisables;
-            if (CheckActiveAdvertisables && string.IsNullOrWhiteSpace(AdvertisableEid) && !AdvertisableId.HasValue)
+            if (CheckActiveAdvertisables && string.IsNullOrWhiteSpace(AdvertisableEids) && !AdvertisableId.HasValue)
                 advertisables = GetAdvertisablesThatHaveStats(dateRange, arUtility);
             else
                 advertisables = GetAdvertisables();
+
+            if (string.IsNullOrWhiteSpace(AdvertisableEids))
+                AdvertisableEids = String.Join(",", advertisables.Select(a => a.Eid));
 
             if (OneStatPerAdvertisable)
                 DoETL_AdvertisableLevel(dateRange, advertisables);
@@ -81,6 +84,8 @@ namespace CakeExtracter.Commands
 
         private void DoETL_AdvertisableLevel(DateRange dateRange, IEnumerable<Advertisable> advertisables, AdRollUtility arUtility = null)
         {
+            //TODO: If there are fewer dates than advertisables, can we loop through the dates and make one API call for each date?
+
             foreach (var adv in advertisables)
             {
                 var extracter = new AdrollDailySummariesExtracter(dateRange, adv.Eid, arUtility);
@@ -99,6 +104,9 @@ namespace CakeExtracter.Commands
 
         private void DoETL_AdLevel(DateRange dateRange, IEnumerable<Advertisable> advertisables, AdRollUtility arUtility = null)
         {
+            //TODO: Loop thru dateRange. For each date, make one API call.
+            //      (Need to update Loader- pass in advertisables(?)... needed for creating new Ads in the DB... Items have Advertisable *name*, not Eid.)
+
             foreach (var adv in advertisables)
             {
                 var extracter = new AdrollAdDailySummariesExtracter(dateRange, adv.Eid, arUtility);
@@ -112,20 +120,23 @@ namespace CakeExtracter.Commands
 
         public IEnumerable<Advertisable> GetAdvertisables()
         {
+            string[] advEidsArray = new string[] { };
+            if (!string.IsNullOrWhiteSpace(this.AdvertisableEids))
+                advEidsArray = this.AdvertisableEids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             using (var db = new DATDContext())
             {
                 var advs = db.Advertisables.AsQueryable();
-                if (!string.IsNullOrWhiteSpace(this.AdvertisableEid) && this.AdvertisableId.HasValue)
-                {   // Handles if two different advs are specified
-                    advs = advs.Where(a => a.Eid == AdvertisableEid || a.Id == AdvertisableId.Value);
+                if (advEidsArray.Any() && this.AdvertisableId.HasValue)
+                {   // Handles if advs are specified by both Eid and Id
+                    advs = advs.Where(a => advEidsArray.Contains(a.Eid) || a.Id == this.AdvertisableId.Value);
                 }
-                else if (!String.IsNullOrWhiteSpace(this.AdvertisableEid))
+                else if (advEidsArray.Any())
                 {
-                    advs = advs.Where(a => a.Eid == AdvertisableEid);
+                    advs = advs.Where(a => advEidsArray.Contains(a.Eid));
                 }
                 else if (this.AdvertisableId.HasValue)
                 {
-                    advs = advs.Where(a => a.Id == AdvertisableId.Value);
+                    advs = advs.Where(a => a.Id == this.AdvertisableId.Value);
                 }
                 return advs.ToList();
             }
