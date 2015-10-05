@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
@@ -21,6 +22,60 @@ namespace DirectAgents.Web.Controllers
             if (tdRepo != null)
                 tdRepo.Dispose();
             base.Dispose(disposing);
+        }
+
+        // Pass in null to use "CurrentMonthTD"
+        // Returns the selected month
+        protected DateTime SetChooseMonthViewData(DateTime? month = null)
+        {
+            if (!month.HasValue)
+                month = CurrentMonthTD;
+            else if (month.Value.Day > 1) // make sure passed-in value is the 1st of a month
+                month = new DateTime(month.Value.Year, month.Value.Month, 1);
+
+            ViewBag.ChooseMonthSelectList = ChooseMonthSelectList(month.Value);
+            return month.Value;
+        }
+        protected DateTime SetChooseMonthViewData_NonCookie(DateTime? month = null)
+        {
+            if (!month.HasValue)
+                month = DateTime.Today.AddDays(-1); // if it's the 1st, use last month
+            return SetChooseMonthViewData(month);
+        }
+
+        protected SelectList ChooseMonthSelectList(DateTime selMonth)
+        {
+            var slItems = new List<SelectListItem>();
+            var iMonth = DateTime.Today.AddMonths(1);
+            iMonth = new DateTime(iMonth.Year, iMonth.Month, 1);
+            for (int i = 0; i < 13; i++)
+            {
+                slItems.Add(new SelectListItem { Text = iMonth.ToString("MMM yyyy"), Value = iMonth.ToShortDateString() });
+                iMonth = iMonth.AddMonths(-1);
+            }
+            return new SelectList(slItems, "Value", "Text", selMonth.ToShortDateString());
+        }
+
+        protected DateTime CurrentMonthTD
+        {
+            get
+            {
+                var currMonthCookie = Request.Cookies["CurrentMonthTD"];
+                DateTime currMonth;
+                if (currMonthCookie == null || !DateTime.TryParse(currMonthCookie.Value, out currMonth))
+                {
+                    currMonth = DateTime.Today.AddDays(-1); // default to last month if it's the 1st
+                    currMonth = new DateTime(currMonth.Year, currMonth.Month, 1);
+                    CurrentMonthTD = currMonth; // calls the setter
+                }
+                return currMonth;
+            }
+            set
+            {
+                HttpCookie cookie = new HttpCookie("CurrentMonthTD");
+                cookie.Value = value.ToString("d");
+                Response.Cookies.Add(cookie);
+            }
         }
     }
 

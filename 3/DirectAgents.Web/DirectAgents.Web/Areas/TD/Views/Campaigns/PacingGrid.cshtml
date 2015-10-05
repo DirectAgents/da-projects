@@ -6,8 +6,9 @@
 </style>
 
 <h2>Budget and Pacing</h2>
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
 
-<div id="grid"></div>
+<div id="pacingGrid"></div>
 
 @section scripts {
 <script>
@@ -16,6 +17,7 @@
     });
 
     function SetupDataSourceAndGrid() {
+        $('#pacingGrid').html('');
         var datasource = new kendo.data.DataSource({
             serverAggregates: true,
             serverFiltering: true,
@@ -26,7 +28,11 @@
             transport: {
                 read: {
                     url: '@Url.Action("PacingData")',
-                    type: 'post', dataType: 'json'
+                    //data: function () {
+                    //    return { month: $('#pacingGrid_selMonth').val() }
+                    //},
+                    type: 'post',
+                    dataType: 'json'
                 },
                 //parameterMap: function (data, type) {
                 //    return kendo.stringify(data);
@@ -69,7 +75,7 @@
         });
         datasource.bind('error', datasource_error);
 
-        $('#grid').kendoGrid({
+        $('#pacingGrid').kendoGrid({
             dataSource: datasource,
             //autoBind: false,
             height: $(document).height() - 110,

@@ -175,6 +175,7 @@
     <Compile Include="Areas\TD\Controllers\BudgetInfosController.cs" />
     <Compile Include="Areas\TD\Controllers\CampaignsController.cs" />
     <Compile Include="Areas\TD\Controllers\EmployeesController.cs" />
+    <Compile Include="Areas\TD\Controllers\MainController.cs" />
     <Compile Include="Areas\TD\Controllers\PlatformsController.cs" />
     <Compile Include="Areas\TD\Controllers\StatsController.cs" />
     <Compile Include="Areas\TD\Models\AccountMaintenanceVM.cs" />
@@ -805,6 +806,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\TD\Views\Main\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -944,6 +946,8 @@
     <Content Include="Areas\TD\Views\Employees\Edit.cshtml" />
     <Content Include="Areas\TD\Views\Platforms\Maintenance.cshtml" />
     <Content Include="Areas\TD\Views\Accounts\MaintenanceDetail.cshtml" />
+    <Content Include="Areas\TD\Views\Shared\ChooseMonth.cshtml" />
+    <Content Include="Areas\TD\Views\Shared\ChooseMonthNonSubmit.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

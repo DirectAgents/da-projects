@@ -17,6 +17,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
         public ActionResult MTD(int campId, DateTime? date)
         {
+            // Month/MTD view
             var campaign = tdRepo.Campaign(campId);
             if (campaign == null)
                 return Content("Campaign not found");
@@ -33,13 +34,10 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View(budgetWithStats);
         }
 
-        // Stats by "external account".  Either MTD or for the specified month (indicated by "date")
-        public ActionResult Account(string platform, int? campId, DateTime? date)
+        // Stats by "external account"
+        public ActionResult Account(string platform, int? campId, DateTime? month)
         {
-            if (!date.HasValue)
-                date = DateTime.Today;
-
-            var startOfMonth = new DateTime(date.Value.Year, date.Value.Month, 1);
+            var startOfMonth = SetChooseMonthViewData_NonCookie(month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
             var stats = new List<TDStat>();
 
@@ -51,13 +49,21 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 if (!stat.AllZeros())
                     stats.Add(stat);
             }
-            return View(stats);
+            var model = new TDStatsVM
+            {
+                //Name =
+                Month = startOfMonth,
+                PlatformCode = platform,
+                CampaignId = campId,
+                Stats = stats
+            };
+            return View(model);
         }
 
-        public ActionResult AdRoll(string advEid)
+        public ActionResult AdRoll(string advEid, DateTime? month)
         {
-            var today = DateTime.Today;
-            var startOfMonth = new DateTime(today.Year, today.Month, 1);
+            var startOfMonth = SetChooseMonthViewData_NonCookie(month);
+            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
             var stats = new List<TDStat>();
 
             var advertisable = tdRepo.Advertisable(advEid);
@@ -67,31 +73,35 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var ads = tdRepo.AdRoll_Ads(advEid: advEid);
             foreach (var ad in ads)
             {   //Note: Multiple Active Record Sets used here
-                var stat = tdRepo.GetAdRollStat(ad, startOfMonth, null); // MTD
+                var stat = tdRepo.GetAdRollStat(ad, startOfMonth, endOfMonth);
                 if (!stat.AllZeros())
                     stats.Add(stat);
             }
             var model = new TDStatsVM
             {
-                Name = "MTD Stats - " + advertisable.Name + "(AdRoll)",
+                Name = "ExtAccount: " + advertisable.Name + "(AdRoll)",
+                ExternalId = advEid,
+                Month = startOfMonth,
                 Stats = stats.OrderBy(a => a.Name).ToList()
             };
             return View(model);
         }
 
-        public ActionResult DBM(int ioID)
+        public ActionResult DBM(int ioID, DateTime? month)
         {
-            var today = DateTime.Today;
-            var startOfMonth = new DateTime(today.Year, today.Month, 1);
+            var startOfMonth = SetChooseMonthViewData_NonCookie(month);
+            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
 
             var insertionOrder = tdRepo.InsertionOrder(ioID);
             if (insertionOrder == null)
                 return Content("not found");
 
-            var stats = tdRepo.GetDBMStatsByCreative(ioID, startOfMonth, null);
+            var stats = tdRepo.GetDBMStatsByCreative(ioID, startOfMonth, endOfMonth);
             var model = new TDStatsVM
             {
-                Name = "MTD Stats - " + insertionOrder.Name + "(DBM)",
+                Name = "ExtAccount: " + insertionOrder.Name + "(DBM)",
+                ExternalId = ioID.ToString(),
+                Month = startOfMonth,
                 Stats = stats.OrderBy(a => a.Name).ToList()
             };
             return View("Generic", model);

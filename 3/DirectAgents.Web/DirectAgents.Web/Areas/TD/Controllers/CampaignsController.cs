@@ -101,13 +101,10 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         // --- Stats ---
 
         // Non-Kendo version
-        public ActionResult Pacing(DateTime? date, int? campId, bool showPerfStats = false)
+        public ActionResult Pacing(int? campId, bool showPerfStats = false)
         {
-            if (!date.HasValue)
-                date = DateTime.Today;
-            var startOfMonth = new DateTime(date.Value.Year, date.Value.Month, 1);
-
-            var budgetStats = GetCampaignStatsWithBudget(startOfMonth, campId);
+            DateTime currMonth = SetChooseMonthViewData();
+            var budgetStats = GetCampaignStatsWithBudget(currMonth, campId);
 
             var model = new CampaignPacingVM
             {
@@ -119,6 +116,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
         public ActionResult PacingGrid()
         {
+            SetChooseMonthViewData();
             return View();
         }
 
@@ -128,17 +126,17 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         }
 
         //[HttpPost]
-        public JsonResult PacingData(KendoGridMvcRequest request)
+        public JsonResult PacingData(KendoGridMvcRequest request) //, DateTime? month)
         {
             // The "agg" aggregates will get computed outside of KendoGridEx
             if (request.AggregateObjects != null)
                 request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
 
             int? campId = null;
-            DateTime? date = null;
-            if (!date.HasValue)
-                date = DateTime.Today;
-            var startOfMonth = new DateTime(date.Value.Year, date.Value.Month, 1);
+            //if (!month.HasValue)
+            //    month = DateTime.Today.AddDays(-1); // default; use last month if it's the 1st
+            //var startOfMonth = new DateTime(month.Value.Year, month.Value.Month, 1);
+            var startOfMonth = CurrentMonthTD;
 
             var budgetStats = GetCampaignStatsWithBudget(startOfMonth, campId);
             var dtos = budgetStats.Select(bs => new CampaignPacingDTO

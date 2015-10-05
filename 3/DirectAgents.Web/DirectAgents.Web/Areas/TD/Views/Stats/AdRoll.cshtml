@@ -1,6 +1,15 @@
 ﻿@model DirectAgents.Web.Areas.TD.Models.TDStatsVM
 
+@section scripts {
+<script>
+    function ChangeMonth(month) {
+        var url = '@Html.Raw(Url.Action("AdRoll", new { advEid = Model.ExternalId, month = "monthVal" }))';
+        location.href = url.replace('monthVal', month);
+    }
+</script>
+}
 <h2>Stats By Creative(AdRoll "Ad")</h2>
+@Html.Partial("ChooseMonthNonSubmit", (SelectList)ViewBag.ChooseMonthSelectList)
 
 @Model.Name
 
