@@ -60,6 +60,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View(model);
         }
 
+        // Stats by Ad
         public ActionResult AdRoll(string advEid, DateTime? month)
         {
             var startOfMonth = SetChooseMonthViewData_NonCookie(month);
@@ -87,6 +88,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View(model);
         }
 
+        // Stats by Creative
         public ActionResult DBM(int ioID, DateTime? month)
         {
             var startOfMonth = SetChooseMonthViewData_NonCookie(month);
@@ -106,7 +108,26 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             };
             return View("Generic", model);
         }
-	}
+
+        // Demo - DBM stats by creative
+        public ActionResult Spreadsheet(int ioID, DateTime? month)
+        {
+            return View(ioID);
+        }
+        public JsonResult SpreadsheetData(int ioID, DateTime? month)
+        {
+            var startOfMonth = SetChooseMonthViewData_NonCookie(month);
+            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+
+            var insertionOrder = tdRepo.InsertionOrder(ioID);
+            if (insertionOrder == null)
+                return null;
+
+            var stats = tdRepo.GetDBMStatsByCreative(ioID, startOfMonth, endOfMonth);
+            var json = Json(stats, JsonRequestBehavior.AllowGet);
+            return json;
+        }
+    }
 
     class KG<T>
     {
