@@ -26,7 +26,7 @@
     <td>@camp.Name</td>
     <td style="text-align:center">
         @if (camp.ExtAccounts.Any()) {
-            @Html.ActionLink("show(" + camp.ExtAccounts.Count + ")", "Index", "Accounts", new { campId = camp.Id }, null)
+            @Html.ActionLink("show(" + camp.ExtAccounts.Count + ")", "Index", "ExtAccounts", new { campId = camp.Id }, null)
         } else {
             <text>0</text>
         }

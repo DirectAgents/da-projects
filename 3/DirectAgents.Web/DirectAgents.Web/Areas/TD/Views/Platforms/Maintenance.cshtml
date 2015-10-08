@@ -44,7 +44,7 @@ External Accounts:
             pageSize: 100,
             transport: {
                 read: {
-                    url: '@Url.Action("IndexData", "Accounts", new { platform = Model.Code })',
+                    url: '@Url.Action("IndexData", "ExtAccounts", new { platform = Model.Code })',
                     type: 'POST', dataType: 'json'
                 }
             },
@@ -85,7 +85,7 @@ External Accounts:
     }
 
     function LoadMaintenanceDetail(acctId) {
-        $('#divAcctMaint' + acctId).load('@Url.Action("MaintenanceDetail", "Accounts", new { id = 0 })'.replace('0', acctId));
+        $('#divAcctMaint' + acctId).load('@Url.Action("MaintenanceDetail", "ExtAccounts", new { id = 0 })'.replace('0', acctId));
     }
 </script>
 }

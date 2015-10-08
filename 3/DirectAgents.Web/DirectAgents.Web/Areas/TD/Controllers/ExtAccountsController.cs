@@ -8,9 +8,9 @@ using DirectAgents.Web.Areas.TD.Models;
 
 namespace DirectAgents.Web.Areas.TD.Controllers
 {
-    public class AccountsController : DirectAgents.Web.Controllers.ControllerBase
+    public class ExtAccountsController : DirectAgents.Web.Controllers.ControllerBase
     {
-        public AccountsController(ITDRepository tdRepository)
+        public ExtAccountsController(ITDRepository tdRepository)
         {
             this.tdRepo = tdRepository;
         }

@@ -170,7 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\NinjectWebCommon.cs" />
-    <Compile Include="Areas\TD\Controllers\AccountsController.cs" />
+    <Compile Include="Areas\TD\Controllers\ExtAccountsController.cs" />
     <Compile Include="Areas\TD\Controllers\AdvertisersController.cs" />
     <Compile Include="Areas\TD\Controllers\BudgetInfosController.cs" />
     <Compile Include="Areas\TD\Controllers\CampaignsController.cs" />
@@ -927,9 +927,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\TD\Views\web.config" />
-    <Content Include="Areas\TD\Views\Accounts\Index.cshtml" />
+    <Content Include="Areas\TD\Views\ExtAccounts\Index.cshtml" />
     <Content Include="Areas\TD\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\TD\Views\Stats\Account.cshtml" />
+    <Content Include="Areas\TD\Views\Stats\ExtAccount.cshtml" />
     <Content Include="Areas\TD\Views\Stats\Generic.cshtml" />
     <Content Include="Areas\TD\Views\Stats\AdRoll.cshtml" />
     <Content Include="Areas\TD\Views\Advertisers\Index.cshtml" />
@@ -945,11 +945,11 @@
     <Content Include="Areas\TD\Views\Employees\Index.cshtml" />
     <Content Include="Areas\TD\Views\Employees\Edit.cshtml" />
     <Content Include="Areas\TD\Views\Platforms\Maintenance.cshtml" />
-    <Content Include="Areas\TD\Views\Accounts\MaintenanceDetail.cshtml" />
+    <Content Include="Areas\TD\Views\ExtAccounts\MaintenanceDetail.cshtml" />
     <Content Include="Areas\TD\Views\Shared\ChooseMonth.cshtml" />
     <Content Include="Areas\TD\Views\Shared\ChooseMonthNonSubmit.cshtml" />
     <Content Include="Areas\TD\Views\Stats\Spreadsheet.cshtml" />
-    <Content Include="Areas\TD\Views\Accounts\Edit.cshtml" />
+    <Content Include="Areas\TD\Views\ExtAccounts\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

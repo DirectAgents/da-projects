@@ -35,7 +35,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         }
 
         // Stats by "external account"
-        public ActionResult Account(string platform, int? campId, DateTime? month)
+        public ActionResult ExtAccount(string platform, int? campId, DateTime? month)
         {
             var startOfMonth = SetChooseMonthViewData_NonCookie(month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
