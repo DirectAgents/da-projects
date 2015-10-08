@@ -1,20 +1,29 @@
 ﻿@model IEnumerable<DirectAgents.Domain.Entities.TD.ExtAccount>
-
+@{
+    string platformCode = (string)Session["platformCode"];
+}
 <h2>External Accounts</h2>
 
 <table>
 <tr>
+    <th></th>
     <th>Platform</th>
     <th>AccountName</th>
     <th>ExternalId</th>
 </tr>
-@foreach (var acct in Model)
+@foreach (var extAcct in Model)
 {
 <tr>
-    <td>@acct.Platform.Name</td>
-    <td>@acct.Name</td>
-    <td>@acct.ExternalId</td>
+    <td>@Html.ActionLink("Edit", "Edit", new { id = extAcct.Id })</td>
+    <td>@extAcct.Platform.Name</td>
+    <td>@extAcct.Name</td>
+    <td>@extAcct.ExternalId</td>
 </tr>
 }
 </table>
 <br />
+@if (!string.IsNullOrWhiteSpace(platformCode))
+{
+    @Html.ActionLink("New ExtAccount", "CreateNew", new { platform = platformCode })
+    <br />
+}

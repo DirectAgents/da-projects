@@ -949,6 +949,7 @@
     <Content Include="Areas\TD\Views\Shared\ChooseMonth.cshtml" />
     <Content Include="Areas\TD\Views\Shared\ChooseMonthNonSubmit.cshtml" />
     <Content Include="Areas\TD\Views\Stats\Spreadsheet.cshtml" />
+    <Content Include="Areas\TD\Views\Accounts\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

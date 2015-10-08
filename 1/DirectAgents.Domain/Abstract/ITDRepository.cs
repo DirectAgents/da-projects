@@ -20,7 +20,10 @@ namespace DirectAgents.Domain.Abstract
 
         // TD
         Platform Platform(int id);
+        Platform Platform(string platformCode);
         IQueryable<Platform> Platforms();
+        bool AddPlatform(Platform platform);
+        bool SavePlatform(Platform platform);
         Advertiser Advertiser(int id);
         IQueryable<Advertiser> Advertisers();
         bool AddAdvertiser(Advertiser adv);
@@ -42,6 +45,9 @@ namespace DirectAgents.Domain.Abstract
         ExtAccount ExtAccount(int id);
         IQueryable<ExtAccount> ExtAccounts(string platformCode = null, int? campId = null);
         IQueryable<ExtAccount> ExtAccountsNotInCampaign(int campId);
+        bool AddExtAccount(ExtAccount extAcct);
+        bool SaveExtAccount(ExtAccount extAcct);
+        void FillExtended(ExtAccount extAcct);
         DateTime? LatestStatDate(int? acctId = null);
         IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? acctId = null);
         TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null);

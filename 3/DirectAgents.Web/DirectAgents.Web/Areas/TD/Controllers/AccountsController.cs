@@ -20,7 +20,45 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var extAccounts = tdRepo.ExtAccounts(platformCode: platform, campId: campId)
                 .OrderBy(a => a.Platform.Name).ThenBy(a => a.Name);
 
+            Session["platformCode"] = platform;
             return View(extAccounts);
+        }
+
+        public ActionResult CreateNew(string platform)
+        {
+            var plat = tdRepo.Platform(platform);
+            if (plat != null)
+            {
+                var extAcct = new ExtAccount
+                {
+                    PlatformId = plat.Id,
+                    Name = "zNew"
+                };
+                if (tdRepo.AddExtAccount(extAcct))
+                    return RedirectToAction("Index", new { platform = Session["platformCode"] });
+            }
+            return Content("Error creating ExtAccount");
+        }
+
+        [HttpGet]
+        public ActionResult Edit(int id)
+        {
+            var extAcct = tdRepo.ExtAccount(id);
+            if (extAcct == null)
+                return HttpNotFound();
+            return View(extAcct);
+        }
+        [HttpPost]
+        public ActionResult Edit(ExtAccount extAcct)
+        {
+            if (ModelState.IsValid)
+            {
+                if (tdRepo.SaveExtAccount(extAcct))
+                    return RedirectToAction("Index", new { platform = Session["platformCode"] });
+                ModelState.AddModelError("", "ExtAccount could not be saved.");
+            }
+            tdRepo.FillExtended(extAcct);
+            return View(extAcct);
         }
 
         // json data for Maintenance Grid

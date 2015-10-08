@@ -1,0 +1,36 @@
+﻿@model DirectAgents.Domain.Entities.TD.ExtAccount
+@{
+    string platform = (string)Session["platformCode"]; // for when returning back to Index
+}
+
+<fieldset>
+    <legend>Edit ExtAccount</legend>
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary()
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.PlatformId)
+        @Html.HiddenFor(m => m.CampaignId)
+        <div style="float:left">
+            Platform: @Model.Platform.Name
+            <br /><br />
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Id)</td>
+                    <td>@Html.DisplayFor(m => m.Id)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Name)</td>
+                    <td>@Html.EditorFor(m => m.Name)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.ExternalId)</td>
+                    <td>@Html.EditorFor(m => m.ExternalId)</td>
+                </tr>
+            </table>
+            <br />
+            <input type="submit" value="Save" />
+            &nbsp;@Html.ActionLink("cancel", "Index", new { platform = platform })
+        </div>
+    }
+</fieldset>

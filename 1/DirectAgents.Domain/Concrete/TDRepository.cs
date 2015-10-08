@@ -65,9 +65,33 @@ namespace DirectAgents.Domain.Concrete
         {
             return context.Platforms.Find(id);
         }
+        public Platform Platform(string platformCode)
+        {
+            return context.Platforms.Where(p => p.Code == platformCode).FirstOrDefault();
+        }
         public IQueryable<Platform> Platforms()
         {
             return context.Platforms;
+        }
+
+        public bool AddPlatform(Platform platform)
+        {
+            if (context.Platforms.Any(p => p.Id == platform.Id))
+                return false;
+            context.Platforms.Add(platform);
+            context.SaveChanges();
+            return true;
+        }
+        public bool SavePlatform(Platform platform)
+        {
+            if (context.Platforms.Any(p => p.Id == platform.Id))
+            {
+                var entry = context.Entry(platform);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            return false;
         }
 
         public Advertiser Advertiser(int id)
@@ -253,6 +277,31 @@ namespace DirectAgents.Domain.Concrete
                 extAccounts = extAccounts.Where(a => !campaignAcctIds.Contains(a.Id));
             }
             return extAccounts;
+        }
+
+        public bool AddExtAccount(ExtAccount extAcct)
+        {
+            if (context.ExtAccounts.Any(ea => ea.Id == extAcct.Id))
+                return false;
+            context.ExtAccounts.Add(extAcct);
+            context.SaveChanges();
+            return true;
+        }
+        public bool SaveExtAccount(ExtAccount extAcct)
+        {
+            if (context.ExtAccounts.Any(ea => ea.Id == extAcct.Id))
+            {
+                var entry = context.Entry(extAcct);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public void FillExtended(ExtAccount extAcct)
+        {
+            if (extAcct.Platform == null)
+                extAcct.Platform = Platform(extAcct.PlatformId);
         }
 
         public DateTime? LatestStatDate(int? acctId = null)
