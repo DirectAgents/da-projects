@@ -23,6 +23,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var campaigns = tdRepo.Campaigns(advId: advId)
                 .OrderBy(c => c.Advertiser.Name).ThenBy(c => c.Name);
 
+            Session["advId"] = advId.ToString();
             return View(campaigns);
         }
 
@@ -35,46 +36,32 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 DefaultBudget = new BudgetVals()
             };
             if (tdRepo.AddCampaign(campaign))
-                return RedirectToAction("Index", new { advId = advId });
+                return RedirectToAction("Index", new { advId = Session["advId"] });
             else
                 return Content("Error creating Campaign");
         }
-        public ActionResult Delete(int id, int? advId)
+        public ActionResult Delete(int id)
         {
             tdRepo.DeleteCampaign(id);
-            return RedirectToAction("Index", new { advId = advId });
+            return RedirectToAction("Index", new { advId = Session["advId"] });
         }
 
         [HttpGet]
-        public ActionResult Edit(int id, string advId)
+        public ActionResult Edit(int id)
         {
             var campaign = tdRepo.Campaign(id);
             if (campaign == null)
                 return HttpNotFound();
-            SetAdvId(advId);
             SetupForEdit(id);
             return View(campaign);
         }
-        private void SetAdvId(string advId)
-        {
-            if (!string.IsNullOrWhiteSpace(advId))
-            {
-                int advIdInt;
-                if (int.TryParse(advId, out advIdInt))
-                    Session["advId"] = advId;
-                else
-                    Session["advId"] = null; // (all advertisers)
-            }
-            // (otherwise, leave it as is)
-        }
-
         [HttpPost]
         public ActionResult Edit(Campaign camp)
         {
             if (ModelState.IsValid)
             {
                 if (tdRepo.SaveCampaign(camp))
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", new { advId = Session["advId"] });
                 ModelState.AddModelError("", "Campaign could not be saved.");
             }
             tdRepo.FillExtended(camp);
