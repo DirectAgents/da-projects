@@ -19,7 +19,7 @@ namespace DirectAgents.Domain.DTO
             {
                 this.Budget = new TDMoneyStat(budgetInfo.MgmtFeePct, budgetInfo.MarginPct, budgetInfo.MediaSpend);
                 this.Date = budgetInfo.Date;
-                this.Campaign = budgetInfo.Campaign;
+                this.Campaign = budgetInfo.Campaign; //TODO: need this? can we always "CopyFrom" tdStat?
             }
             else
             {
@@ -63,6 +63,7 @@ namespace DirectAgents.Domain.DTO
         public void CopyFrom(TDStat tdStat)
         {
             this.Name = tdStat.Name;
+            this.Campaign = tdStat.Campaign;
             this.ExtAccount = tdStat.ExtAccount;
 
             this.Impressions = tdStat.Impressions;

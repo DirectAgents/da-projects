@@ -1,0 +1,44 @@
+﻿@model DirectAgents.Domain.Entities.TD.DailySummary
+
+<fieldset>
+    <legend>Edit DailySummary</legend>
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary()
+        @Html.HiddenFor(m => m.Date)
+        @Html.HiddenFor(m => m.AccountId)
+        <div style="float:left">
+            ExtAccount: @Model.ExtAccount.Name (@Model.ExtAccount.Platform.Name)
+            <br /><br />
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Date)</td>
+                    <td>@Model.Date.ToShortDateString()</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Impressions)</td>
+                    <td>@Html.EditorFor(m => m.Impressions)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Clicks)</td>
+                    <td>@Html.EditorFor(m => m.Clicks)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.PostClickConv)</td>
+                    <td>@Html.EditorFor(m => m.PostClickConv)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.PostViewConv)</td>
+                    <td>@Html.EditorFor(m => m.PostViewConv)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Cost)</td>
+                    <td>@Html.EditorFor(m => m.Cost)</td>
+                </tr>
+            </table>
+            <br />
+            <input type="submit" value="Save" />
+            @* cancel *@
+        </div>
+    }
+</fieldset>

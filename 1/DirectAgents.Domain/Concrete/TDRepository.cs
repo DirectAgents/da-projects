@@ -312,6 +312,38 @@ namespace DirectAgents.Domain.Concrete
             return dSums.Max(ds => ds.Date);
         }
 
+        public DailySummary DailySummary(DateTime date, int acctId)
+        {
+            return context.DailySummaries.Find(date, acctId);
+        }
+
+        public bool AddDailySummary(DailySummary daySum)
+        {
+            if (context.DailySummaries.Any(ds => ds.Date == daySum.Date && ds.AccountId == daySum.AccountId))
+                return false;
+            if (!context.ExtAccounts.Any(ea => ea.Id == daySum.AccountId))
+                return false;
+            context.DailySummaries.Add(daySum);
+            context.SaveChanges();
+            return true;
+        }
+        public bool SaveDailySummary(DailySummary daySum)
+        {
+            if (context.DailySummaries.Any(ds => ds.Date == daySum.Date && ds.AccountId == daySum.AccountId))
+            {
+                var entry = context.Entry(daySum);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public void FillExtended(DailySummary daySum)
+        {
+            if (daySum.ExtAccount == null)
+                daySum.ExtAccount = ExtAccount(daySum.AccountId);
+        }
+
         public IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? acctId = null)
         {
             var dSums = context.DailySummaries.AsQueryable();

@@ -49,6 +49,10 @@ namespace DirectAgents.Domain.Abstract
         bool SaveExtAccount(ExtAccount extAcct);
         void FillExtended(ExtAccount extAcct);
         DateTime? LatestStatDate(int? acctId = null);
+        DailySummary DailySummary(DateTime date, int acctId);
+        bool AddDailySummary(DailySummary daySum);
+        bool SaveDailySummary(DailySummary daySum);
+        void FillExtended(DailySummary daySum);
         IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? acctId = null);
         TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null);
         TDStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null, MarginFeeVals marginFees = null);

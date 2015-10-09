@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.DTO;
+using DirectAgents.Domain.Entities.TD;
 using DirectAgents.Web.Areas.TD.Models;
 
 namespace DirectAgents.Web.Areas.TD.Controllers
@@ -29,9 +30,11 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
             var budgetInfo = campaign.BudgetInfoFor(startOfMonth);
             var tdStat = tdRepo.GetTDStat(startOfMonth, endOfMonth, campaign: campaign, marginFees: budgetInfo);
-            var budgetWithStats = new TDStatWithBudget(tdStat, budgetInfo);
+            var statWithBudget = new TDStatWithBudget(tdStat, budgetInfo);
+            if (budgetInfo == null)
+                statWithBudget.Date = startOfMonth;
 
-            return View(budgetWithStats);
+            return View(statWithBudget);
         }
 
         // Stats by "external account"
@@ -107,6 +110,43 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 Stats = stats.OrderBy(a => a.Name).ToList()
             };
             return View("Generic", model);
+        }
+
+        // Edit a DailySummary
+        [HttpGet]
+        public ActionResult Edit(DateTime date, int acctId, bool create = false)
+        {
+            var daySum = tdRepo.DailySummary(date, acctId);
+            if (daySum == null)
+            {
+                if (create)
+                {
+                    daySum = new DailySummary
+                    {
+                        Date = date,
+                        AccountId = acctId
+                    };
+                    if (tdRepo.AddDailySummary(daySum))
+                        tdRepo.FillExtended(daySum);
+                    else
+                        return Content("DailySummary could not be created");
+                }
+                else
+                    return HttpNotFound();
+            }
+            return View(daySum);
+        }
+        [HttpPost]
+        public ActionResult Edit(DailySummary daySum)
+        {
+            if (ModelState.IsValid)
+            {
+                if (tdRepo.SaveDailySummary(daySum))
+                    return Content("saved");
+                ModelState.AddModelError("", "DailySummary could not be saved");
+            }
+            tdRepo.FillExtended(daySum);
+            return View(daySum);
         }
 
         // Demo - DBM stats by creative
