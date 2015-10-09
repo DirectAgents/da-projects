@@ -114,6 +114,21 @@ namespace DirectAgents.Domain.DTO
         }
     }
 
+    // For future use...
+    public class TDBasicStat
+    {
+        public int Impressions { get; set; }
+        public int Clicks { get; set; }
+        public int PostClickConv { get; set; }
+        public int PostViewConv { get; set; }
+        // Compute: CTR, ConvRate, CPM, CPC, CPA
+
+        public decimal Cost { get; set; }
+        public decimal MediaSpend { get; set; }
+        public decimal TotalRevenue { get; set; }
+        //Compute: MgmtFee, Margin, MarginPct
+    }
+
     //Allows for the computation of MediaSpend, MgmtFee, TotalRevenue, Margin...
     public class TDMoneyStat
     {

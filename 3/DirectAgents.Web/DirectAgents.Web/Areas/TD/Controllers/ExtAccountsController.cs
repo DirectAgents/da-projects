@@ -21,6 +21,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 .OrderBy(a => a.Platform.Name).ThenBy(a => a.Name);
 
             Session["platformCode"] = platform;
+            Session["campId"] = campId.ToString();
             return View(extAccounts);
         }
 
@@ -35,7 +36,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                     Name = "zNew"
                 };
                 if (tdRepo.AddExtAccount(extAcct))
-                    return RedirectToAction("Index", new { platform = Session["platformCode"] });
+                    return RedirectToAction("Index", new { platform = Session["platformCode"], campId = Session["campId"] });
             }
             return Content("Error creating ExtAccount");
         }
@@ -54,7 +55,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             if (ModelState.IsValid)
             {
                 if (tdRepo.SaveExtAccount(extAcct))
-                    return RedirectToAction("Index", new { platform = Session["platformCode"] });
+                    return RedirectToAction("Index", new { platform = Session["platformCode"], campId = Session["campId"] });
                 ModelState.AddModelError("", "ExtAccount could not be saved.");
             }
             tdRepo.FillExtended(extAcct);

@@ -1,6 +1,7 @@
 ﻿@model DirectAgents.Domain.Entities.TD.ExtAccount
 @{
-    string platform = (string)Session["platformCode"]; // for when returning back to Index
+    string platform = (string)Session["platformCode"]; // for filtering when returning back to Index
+    string campId = (string)Session["campId"];
 }
 
 <fieldset>
@@ -30,7 +31,7 @@
             </table>
             <br />
             <input type="submit" value="Save" />
-            &nbsp;@Html.ActionLink("cancel", "Index", new { platform = platform })
+            &nbsp;@Html.ActionLink("cancel", "Index", new { platform = platform, campId = campId })
         </div>
     }
 </fieldset>

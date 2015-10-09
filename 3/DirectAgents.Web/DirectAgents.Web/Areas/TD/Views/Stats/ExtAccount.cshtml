@@ -4,7 +4,7 @@
 @section scripts {
 <script>
     function ChangeMonth(month) {
-        var url = '@Html.Raw(Url.Action("Account", new { platform = Model.PlatformCode, campId = Model.CampaignId, month = "monthVal" }))';
+        var url = '@Html.Raw(Url.Action("ExtAccount", new { platform = Model.PlatformCode, campId = Model.CampaignId, month = "monthVal" }))';
         location.href = url.replace('monthVal', month);
     }
 </script>

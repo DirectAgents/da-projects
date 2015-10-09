@@ -35,7 +35,7 @@
     <td>
         @Html.ActionLink("MTD", "MTD", "Stats", new { campId = camp.Id }, null) |
         @Html.ActionLink("Last Month", "MTD", "Stats", new { campId = camp.Id, date = lastMonth.ToShortDateString() }, null) |
-        @Html.ActionLink("By Ext.Account", "Account", "Stats", new { campId = camp.Id }, null)
+        @Html.ActionLink("By Ext.Account", "ExtAccount", "Stats", new { campId = camp.Id }, null)
     </td>
     <td>
         @if (!camp.ExtAccounts.Any() && !camp.Budgets.Any()) {

@@ -43,12 +43,15 @@ namespace DirectAgents.Web.Controllers
             return SetChooseMonthViewData(month);
         }
 
-        protected SelectList ChooseMonthSelectList(DateTime selMonth)
+        protected SelectList ChooseMonthSelectList(DateTime selMonth, bool includeNextMonth = false)
         {
             var slItems = new List<SelectListItem>();
-            var iMonth = DateTime.Today.AddMonths(1);
+            var iMonth = DateTime.Today.AddDays(-1); // If it's the 1st, the "current month" is still last month.
             iMonth = new DateTime(iMonth.Year, iMonth.Month, 1);
-            for (int i = 0; i < 13; i++)
+            if (includeNextMonth)
+                iMonth = iMonth.AddMonths(1);
+            int numMonths = (includeNextMonth ? 13 : 12);
+            for (int i = 0; i < numMonths; i++)
             {
                 slItems.Add(new SelectListItem { Text = iMonth.ToString("MMM yyyy"), Value = iMonth.ToShortDateString() });
                 iMonth = iMonth.AddMonths(-1);
