@@ -13,29 +13,29 @@ namespace DirectAgents.Domain.Entities.TD
         public string Name { get; set; }
 
         public virtual ICollection<ExtAccount> ExtAccounts { get; set; }
-        public virtual ICollection<BudgetInfo> Budgets { get; set; }
+        public virtual ICollection<BudgetInfo> BudgetInfos { get; set; }
         public BudgetVals DefaultBudget { get; set; }
 
         public BudgetInfo BudgetInfoFor(DateTime desiredMonth)
         {
-            if (Budgets == null)
+            if (BudgetInfos == null)
                 return null;
             var firstOfMonth = new DateTime(desiredMonth.Year, desiredMonth.Month, 1);
-            var budgets = Budgets.Where(b => b.Date == firstOfMonth);
+            var budgets = BudgetInfos.Where(b => b.Date == firstOfMonth);
             if (!budgets.Any())
                 return null;
             return budgets.First();
         }
 
         // returns months in reverse chronological order
-        public DateTime[] MonthsWithoutBudgets(int monthsToCheck = 12)
+        public DateTime[] MonthsWithoutBudgetInfos(int monthsToCheck = 12)
         {
             var months = new List<DateTime>();
             var iMonth = DateTime.Today.AddMonths(1);
             iMonth = new DateTime(iMonth.Year, iMonth.Month, 1); // start with next month (the 1st of)
             for (int i = 0; i < monthsToCheck; i++)
             {
-                if (Budgets == null || !Budgets.Any(b => b.Date == iMonth))
+                if (BudgetInfos == null || !BudgetInfos.Any(b => b.Date == iMonth))
                     months.Add(iMonth);
                 iMonth = iMonth.AddMonths(-1);
             }

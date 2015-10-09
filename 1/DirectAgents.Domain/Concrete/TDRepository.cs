@@ -169,8 +169,8 @@ namespace DirectAgents.Domain.Concrete
         {
             if (camp.Advertiser == null)
                 camp.Advertiser = context.Advertisers.Find(camp.AdvertiserId);
-            if (camp.Budgets == null)
-                camp.Budgets = BudgetInfos(campId: camp.Id).ToList();
+            if (camp.BudgetInfos == null)
+                camp.BudgetInfos = BudgetInfos(campId: camp.Id).ToList();
         }
 
         public bool AddExtAccountToCampaign(int campId, int acctId)
@@ -202,11 +202,11 @@ namespace DirectAgents.Domain.Concrete
         {
             // Note: If you create a new Campaign, you should set Budgets to a new Collection before calling this method
             var firstOfMonth = new DateTime(monthToCreate.Year, monthToCreate.Month, 1);
-            if (!campaign.Budgets.Where(b => b.Date == firstOfMonth).Any())
+            if (!campaign.BudgetInfos.Where(b => b.Date == firstOfMonth).Any())
             {
                 var budget = new BudgetInfo { Date = firstOfMonth };
                 budget.SetBudgetValsFrom(campaign.DefaultBudget);
-                campaign.Budgets.Add(budget);
+                campaign.BudgetInfos.Add(budget);
                 context.SaveChanges();
             }
         }

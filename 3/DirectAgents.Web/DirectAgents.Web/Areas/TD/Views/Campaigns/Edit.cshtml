@@ -24,10 +24,10 @@
                 </tr>
             </table>
             <br />
-            Default Budget
+            Defaults
             <table>
                 <tr>
-                    <td>@Html.LabelFor(m => m.DefaultBudget.MediaSpend)</td>
+                    <td>@Html.LabelFor(m => m.DefaultBudget.MediaSpend, "Budget (Media Spend)")</td>
                     <td>@Html.EditorFor(m => m.DefaultBudget.MediaSpend)</td>
                 </tr>
                 <tr>
@@ -56,7 +56,7 @@
                 <th>MgmtFeePct</th>
                 <th>MarginPct</th>
             </tr>
-        @foreach (var bi in Model.Budgets.OrderByDescending(b => b.Date).Take(6))
+        @foreach (var bi in Model.BudgetInfos.OrderByDescending(b => b.Date).Take(6))
         {
             <tr>
                 <td>@Html.ActionLink("Edit", "Edit", "BudgetInfos", new { campId = bi.CampaignId, date = bi.Date.ToShortDateString() }, null)</td>
@@ -68,7 +68,7 @@
         }
         </table>
         @{
-            var months = Model.MonthsWithoutBudgets(3);
+            var months = Model.MonthsWithoutBudgetInfos(3);
             if (months.Count() > 0)
             {
                 <br />

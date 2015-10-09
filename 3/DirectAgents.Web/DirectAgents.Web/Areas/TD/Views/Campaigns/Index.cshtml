@@ -38,7 +38,7 @@
         @Html.ActionLink("By Ext.Account", "ExtAccount", "Stats", new { campId = camp.Id }, null)
     </td>
     <td>
-        @if (!camp.ExtAccounts.Any() && !camp.Budgets.Any()) {
+        @if (!camp.ExtAccounts.Any() && !camp.BudgetInfos.Any()) {
             @Html.ActionLink("Delete", "Delete", new { id = camp.Id })
         }
     </td>
