@@ -71,9 +71,11 @@
     <Compile Include="Concrete\MainRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Concrete\TDRepository.cs" />
+    <Compile Include="Concrete\TDStatsRepository.cs" />
     <Compile Include="Contexts\HistoryContext.cs" />
     <Compile Include="Contexts\TDContext.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
+    <Compile Include="DTO\TDCampStats.cs" />
     <Compile Include="DTO\TDStat.cs" />
     <Compile Include="Entities\AdRoll\Ad.cs" />
     <Compile Include="Entities\AdRoll\AdDailySummary.cs" />
@@ -208,6 +210,10 @@
     <Compile Include="MigrationsTD\201510011510576_Mig_AdRollAdvProps.cs" />
     <Compile Include="MigrationsTD\201510011510576_Mig_AdRollAdvProps.Designer.cs">
       <DependentUpon>201510011510576_Mig_AdRollAdvProps.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201510151453368_Mig_PlatformBudgetInfo.cs" />
+    <Compile Include="MigrationsTD\201510151453368_Mig_PlatformBudgetInfo.Designer.cs">
+      <DependentUpon>201510151453368_Mig_PlatformBudgetInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
@@ -347,6 +353,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201510011510576_Mig_AdRollAdvProps.resx">
       <DependentUpon>201510011510576_Mig_AdRollAdvProps.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201510151453368_Mig_PlatformBudgetInfo.resx">
+      <DependentUpon>201510151453368_Mig_PlatformBudgetInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

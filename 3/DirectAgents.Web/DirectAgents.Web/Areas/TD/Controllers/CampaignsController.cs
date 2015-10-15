@@ -100,6 +100,13 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             };
             return View(model);
         }
+        public ActionResult Pacing2(int campId)
+        {
+            DateTime currMonth = SetChooseMonthViewData();
+            var campStats = tdRepo.GetCampStats(currMonth, campId);
+            var model = new List<TDCampStats>() { campStats };
+            return View(model);
+        }
 
         public ActionResult PacingGrid()
         {

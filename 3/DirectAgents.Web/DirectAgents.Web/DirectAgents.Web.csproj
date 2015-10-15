@@ -176,6 +176,7 @@
     <Compile Include="Areas\TD\Controllers\CampaignsController.cs" />
     <Compile Include="Areas\TD\Controllers\EmployeesController.cs" />
     <Compile Include="Areas\TD\Controllers\MainController.cs" />
+    <Compile Include="Areas\TD\Controllers\PlatformBudgetInfosController.cs" />
     <Compile Include="Areas\TD\Controllers\PlatformsController.cs" />
     <Compile Include="Areas\TD\Controllers\StatsController.cs" />
     <Compile Include="Areas\TD\Models\AccountMaintenanceVM.cs" />
@@ -951,6 +952,8 @@
     <Content Include="Areas\TD\Views\Stats\Spreadsheet.cshtml" />
     <Content Include="Areas\TD\Views\ExtAccounts\Edit.cshtml" />
     <Content Include="Areas\TD\Views\Stats\Edit.cshtml" />
+    <Content Include="Areas\TD\Views\Campaigns\Pacing2.cshtml" />
+    <Content Include="Areas\TD\Views\PlatformBudgetInfos\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

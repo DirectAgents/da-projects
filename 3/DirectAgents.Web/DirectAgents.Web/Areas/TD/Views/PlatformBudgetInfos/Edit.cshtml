@@ -1,0 +1,48 @@
+﻿@model DirectAgents.Domain.Entities.TD.PlatformBudgetInfo
+
+@section scripts {
+<script>
+    function SetForNoMarkup() {
+        var mgmtFeePct = parseFloat($('#MgmtFeePct').val());
+        var margin = (100 * mgmtFeePct / (100 + mgmtFeePct)).toFixed(5);
+        $('#MarginPct').val(margin);
+    }
+</script>
+}
+<fieldset>
+    <legend>Edit Platform Exception (Budget+Percents)</legend>
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary()
+        @Html.HiddenFor(m => m.CampaignId)
+        @Html.HiddenFor(m => m.PlatformId)
+        @Html.HiddenFor(m => m.Date)
+        <div style="float:left">
+            Campaign: @Model.Campaign.Name<br />
+            Month: @Model.Date.ToString("MMM yyyy")
+            <br /><br />
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Platform)</td>
+                    <td>@Html.DisplayFor(m => m.Platform.Name)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.MediaSpend)</td>
+                    <td>@Html.EditorFor(m => m.MediaSpend)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.MgmtFeePct)</td>
+                    <td>@Html.EditorFor(m => m.MgmtFeePct)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.MarginPct)</td>
+                    <td>@Html.TextBoxFor(m => m.MarginPct)</td>
+                    <td><input type="button" value="Set for no markup" onclick="SetForNoMarkup()" /></td>
+                </tr>
+            </table>
+            <br />
+            <input type="submit" value="Save" />
+            &nbsp;@Html.ActionLink("cancel", "Edit", "BudgetInfos", new { campId = Model.CampaignId, date = Model.Date.ToShortDateString() }, null)
+        </div>
+    }
+</fieldset>

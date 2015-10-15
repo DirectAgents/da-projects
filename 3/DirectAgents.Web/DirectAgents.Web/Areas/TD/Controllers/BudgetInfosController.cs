@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities.TD;
@@ -12,7 +13,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             this.tdRepo = tdRepository;
         }
 
-        public ActionResult Create(int campId, DateTime date)
+        public ActionResult CreateNew(int campId, DateTime date)
         {
             var campaign = tdRepo.Campaign(campId);
             if (campaign == null)
@@ -35,6 +36,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var budgetInfo = tdRepo.BudgetInfo(campId, date);
             if (budgetInfo == null)
                 return HttpNotFound();
+            SetupForEdit(budgetInfo);
             return View(budgetInfo);
         }
         [HttpPost]
@@ -47,7 +49,12 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 ModelState.AddModelError("", "BudgetInfo could not be saved.");
             }
             tdRepo.FillExtended(bi);
+            SetupForEdit(bi);
             return View(bi);
+        }
+        private void SetupForEdit(BudgetInfo bi)
+        {
+            ViewBag.Platforms = tdRepo.PlatformsWithoutBudgetInfo(bi.CampaignId, bi.Date).OrderBy(p => p.Name);
         }
     }
 }

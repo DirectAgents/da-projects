@@ -12,9 +12,26 @@ namespace DirectAgents.Domain.DTO
 
         public IEnumerable<TDStat> ExtAccountStats { get; set; }
 
+        public TDStatWithBudget(IEnumerable<DailySummary> dSums, BudgetVals budgetVals)
+            : base(dSums, budgetVals)
+        {
+            SetBudget(budgetVals);
+        }
+        public void SetBudget(BudgetVals budgetVals)
+        {
+            if (budgetVals != null)
+                this.Budget = new TDMoneyStat(budgetVals.MgmtFeePct, budgetVals.MarginPct, budgetVals.MediaSpend);
+            else
+                this.Budget = new TDMoneyStat();
+        }
+
         public TDStatWithBudget(TDStat tdStat, BudgetInfo budgetInfo)
         {
             CopyFrom(tdStat);
+            SetBudget(budgetInfo);
+        }
+        public void SetBudget(BudgetInfo budgetInfo)
+        {
             if (budgetInfo != null)
             {
                 this.Budget = new TDMoneyStat(budgetInfo.MgmtFeePct, budgetInfo.MarginPct, budgetInfo.MediaSpend);
@@ -42,6 +59,7 @@ namespace DirectAgents.Domain.DTO
         public string Name { get; set; }
         public Campaign Campaign { get; set; }
         public ExtAccount ExtAccount { get; set; }
+        public Platform Platform { get; set; }
 
         public int Impressions { get; set; }
         public int Clicks { get; set; }
@@ -58,6 +76,14 @@ namespace DirectAgents.Domain.DTO
         public bool AllZeros()
         {
             return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0);
+        }
+        // ---
+
+        public TDStat() { }
+        public TDStat(IEnumerable<DailySummary> dSums, MarginFeeVals marginFeeVals)
+        {
+            SetStatsFrom(dSums);
+            SetMarginFees(marginFeeVals);
         }
 
         public void CopyFrom(TDStat tdStat)
@@ -112,21 +138,6 @@ namespace DirectAgents.Domain.DTO
         {
             get { return (TotalConv == 0) ? 0 : Math.Round(MediaSpend() / TotalConv, 2); }
         }
-    }
-
-    // For future use...
-    public class TDBasicStat
-    {
-        public int Impressions { get; set; }
-        public int Clicks { get; set; }
-        public int PostClickConv { get; set; }
-        public int PostViewConv { get; set; }
-        // Compute: CTR, ConvRate, CPM, CPC, CPA
-
-        public decimal Cost { get; set; }
-        public decimal MediaSpend { get; set; }
-        public decimal TotalRevenue { get; set; }
-        //Compute: MgmtFee, Margin, MarginPct
     }
 
     //Allows for the computation of MediaSpend, MgmtFee, TotalRevenue, Margin...

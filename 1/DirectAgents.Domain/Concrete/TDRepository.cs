@@ -11,7 +11,7 @@ using DirectAgents.Domain.Entities.TD;
 
 namespace DirectAgents.Domain.Concrete
 {
-    public class TDRepository : ITDRepository, IDisposable
+    public partial class TDRepository : ITDRepository, IDisposable
     {
         private DATDContext context;
 
@@ -72,6 +72,12 @@ namespace DirectAgents.Domain.Concrete
         public IQueryable<Platform> Platforms()
         {
             return context.Platforms;
+        }
+
+        public IQueryable<Platform> PlatformsWithoutBudgetInfo(int campId, DateTime date)
+        {
+            var platformIds = PlatformBudgetInfos(campId: campId, date: date).Select(pbi => pbi.PlatformId).ToArray();
+            return context.Platforms.Where(p => !platformIds.Contains(p.Id));
         }
 
         public bool AddPlatform(Platform platform)
@@ -169,8 +175,12 @@ namespace DirectAgents.Domain.Concrete
         {
             if (camp.Advertiser == null)
                 camp.Advertiser = context.Advertisers.Find(camp.AdvertiserId);
+            if (camp.ExtAccounts == null)
+                camp.ExtAccounts = ExtAccounts(campId: camp.Id).ToList();
             if (camp.BudgetInfos == null)
                 camp.BudgetInfos = BudgetInfos(campId: camp.Id).ToList();
+            if (camp.PlatformBudgetInfos == null)
+                camp.PlatformBudgetInfos = PlatformBudgetInfos(campId: camp.Id).ToList();
         }
 
         public bool AddExtAccountToCampaign(int campId, int acctId)
@@ -224,12 +234,10 @@ namespace DirectAgents.Domain.Concrete
                 budgetInfos = budgetInfos.Where(b => b.Date == date.Value);
             return budgetInfos;
         }
-
         public bool AddBudgetInfo(BudgetInfo bi)
         {
             if (context.BudgetInfos.Any(b => b.CampaignId == bi.CampaignId && b.Date == bi.Date))
                 return false;
-
             context.BudgetInfos.Add(bi);
             context.SaveChanges();
             return true;
@@ -249,6 +257,57 @@ namespace DirectAgents.Domain.Concrete
         {
             if (bi.Campaign == null)
                 bi.Campaign = context.Campaigns.Find(bi.CampaignId);
+        }
+
+        public PlatformBudgetInfo PlatformBudgetInfo(int campId, int platformId, DateTime date)
+        {
+            return context.PlatformBudgetInfos.Find(campId, platformId, date);
+        }
+        public IQueryable<PlatformBudgetInfo> PlatformBudgetInfos(int? campId = null, int? platformId = null, DateTime? date = null)
+        {
+            var infos = context.PlatformBudgetInfos.AsQueryable();
+            if (campId.HasValue)
+                infos = infos.Where(i => i.CampaignId == campId.Value);
+            if (platformId.HasValue)
+                infos = infos.Where(i => i.PlatformId == platformId.Value);
+            if (date.HasValue)
+                infos = infos.Where(i => i.Date == date.Value);
+            return infos;
+        }
+        public bool AddPlatformBudgetInfo(PlatformBudgetInfo pbi)
+        {
+            if (context.PlatformBudgetInfos.Any(i => i.CampaignId == pbi.CampaignId && i.PlatformId == pbi.PlatformId && i.Date == pbi.Date))
+                return false;
+            context.PlatformBudgetInfos.Add(pbi);
+            context.SaveChanges();
+            return true;
+        }
+        public bool DeletePlatformBudgetInfo(int campId, int platformId, DateTime date)
+        {
+            var pbi = context.PlatformBudgetInfos.Find(campId, platformId, date);
+            if (pbi == null)
+                return false;
+            context.PlatformBudgetInfos.Remove(pbi);
+            context.SaveChanges();
+            return true;
+        }
+        public bool SavePlatformBudgetInfo(PlatformBudgetInfo pbi)
+        {
+            if (context.PlatformBudgetInfos.Any(i => i.CampaignId == pbi.CampaignId && i.PlatformId == pbi.PlatformId && i.Date == pbi.Date))
+            {
+                var entry = context.Entry(pbi);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public void FillExtended(PlatformBudgetInfo pbi)
+        {
+            if (pbi.Campaign == null)
+                pbi.Campaign = Campaign(pbi.CampaignId);
+            if (pbi.Platform == null)
+                pbi.Platform = Platform(pbi.PlatformId);
         }
 
         // ---
@@ -302,97 +361,6 @@ namespace DirectAgents.Domain.Concrete
         {
             if (extAcct.Platform == null)
                 extAcct.Platform = Platform(extAcct.PlatformId);
-        }
-
-        public DateTime? LatestStatDate(int? acctId = null)
-        {
-            var dSums = DailySummaries(null, null, acctId: acctId);
-            if (!dSums.Any())
-                return null;
-            return dSums.Max(ds => ds.Date);
-        }
-
-        public DailySummary DailySummary(DateTime date, int acctId)
-        {
-            return context.DailySummaries.Find(date, acctId);
-        }
-
-        public bool AddDailySummary(DailySummary daySum)
-        {
-            if (context.DailySummaries.Any(ds => ds.Date == daySum.Date && ds.AccountId == daySum.AccountId))
-                return false;
-            if (!context.ExtAccounts.Any(ea => ea.Id == daySum.AccountId))
-                return false;
-            context.DailySummaries.Add(daySum);
-            context.SaveChanges();
-            return true;
-        }
-        public bool SaveDailySummary(DailySummary daySum)
-        {
-            if (context.DailySummaries.Any(ds => ds.Date == daySum.Date && ds.AccountId == daySum.AccountId))
-            {
-                var entry = context.Entry(daySum);
-                entry.State = EntityState.Modified;
-                context.SaveChanges();
-                return true;
-            }
-            return false;
-        }
-        public void FillExtended(DailySummary daySum)
-        {
-            if (daySum.ExtAccount == null)
-                daySum.ExtAccount = ExtAccount(daySum.AccountId);
-        }
-
-        public IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? acctId = null)
-        {
-            var dSums = context.DailySummaries.AsQueryable();
-            if (startDate.HasValue)
-                dSums = dSums.Where(ds => ds.Date >= startDate.Value);
-            if (endDate.HasValue)
-                dSums = dSums.Where(ds => ds.Date <= endDate.Value);
-            if (acctId.HasValue)
-                dSums = dSums.Where(ds => ds.AccountId == acctId.Value);
-            return dSums;
-        }
-
-        //NOTE: This will sum stats for ALL campaigns if none specified.
-        public TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null)
-        {
-            var stat = new TDStat()
-            {
-                Campaign = campaign
-            };
-            var dSums = DailySummaries(startDate, endDate);
-            if (campaign != null)
-            {
-                var accountIds = campaign.ExtAccounts.Select(a => a.Id).ToArray();
-                dSums = dSums.Where(ds => accountIds.Contains(ds.AccountId));
-            }
-            if (dSums.Any())
-                stat.SetStatsFrom(dSums);
-            if (marginFees != null)
-                stat.SetMarginFees(marginFees);
-
-            return stat;
-        }
-
-        //NOTE: This will sum stats for ALL accounts if none specified.
-        public TDStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null, MarginFeeVals marginFees = null)
-        {
-            var stat = new TDStat
-            {
-                ExtAccount = extAccount
-            };
-            int? accountId = (extAccount != null) ? extAccount.Id : (int?)null;
-            var dSums = DailySummaries(startDate, endDate, acctId: accountId);
-
-            if (dSums.Any())
-                stat.SetStatsFrom(dSums);
-            if (marginFees != null)
-                stat.SetMarginFees(marginFees);
-
-            return stat;
         }
 
         #endregion

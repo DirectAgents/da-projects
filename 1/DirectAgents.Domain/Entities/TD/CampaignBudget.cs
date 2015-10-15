@@ -15,6 +15,12 @@ namespace DirectAgents.Domain.Entities.TD
         public virtual ICollection<ExtAccount> ExtAccounts { get; set; }
         public virtual ICollection<BudgetInfo> BudgetInfos { get; set; }
         public BudgetVals DefaultBudget { get; set; }
+        public virtual ICollection<PlatformBudgetInfo> PlatformBudgetInfos { get; set; }
+
+        public IEnumerable<PlatformBudgetInfo> PlatformBudgetInfosFor(DateTime month)
+        {
+            return PlatformBudgetInfos.Where(pbi => pbi.Date == month);
+        }
 
         public BudgetInfo BudgetInfoFor(DateTime desiredMonth)
         {
@@ -52,12 +58,22 @@ namespace DirectAgents.Domain.Entities.TD
         public virtual Campaign Campaign { get; set; }
     }
 
+    public class PlatformBudgetInfo : BudgetVals
+    {
+        public int CampaignId { get; set; }
+        public int PlatformId { get; set; }
+        public DateTime Date { get; set; }
+
+        public virtual Campaign Campaign { get; set; }
+        public virtual Platform Platform { get; set; }
+    }
+
     public class BudgetVals : MarginFeeVals
     {
         //The key values that define a budget...
         public decimal MediaSpend { get; set; }
 
-        //Computed vals
+        //Computed budget vals
         public decimal MgmtFee()
         {
             return MediaSpend * MgmtFeePct / 100;

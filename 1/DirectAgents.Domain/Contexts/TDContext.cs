@@ -24,16 +24,22 @@ namespace DirectAgents.Domain.Contexts
             // TD
             modelBuilder.Entity<Advertiser>().ToTable("Advertiser", tdSchema);
             modelBuilder.Entity<Campaign>().ToTable("Campaign", tdSchema);
+            modelBuilder.Entity<PlatformBudgetInfo>().ToTable("PlatformBudgetInfo", tdSchema);
             modelBuilder.Entity<BudgetInfo>().ToTable("BudgetInfo", tdSchema);
             modelBuilder.Entity<Platform>().ToTable("Platform", tdSchema);
             modelBuilder.Entity<ExtAccount>().ToTable("Account", tdSchema);
             modelBuilder.Entity<DailySummary>().ToTable("DailySummary", tdSchema);
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudget.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
-            modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudget.MgmtFeePct).HasPrecision(8, 3).HasColumnName("MgmtFeePct");
-            modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudget.MarginPct).HasPrecision(8, 3).HasColumnName("MarginPct");
+            modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudget.MgmtFeePct).HasPrecision(10, 5).HasColumnName("MgmtFeePct");
+            modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudget.MarginPct).HasPrecision(10, 5).HasColumnName("MarginPct");
+            modelBuilder.Entity<PlatformBudgetInfo>().Property(b => b.MediaSpend).HasPrecision(14, 2);
+            modelBuilder.Entity<PlatformBudgetInfo>().Property(b => b.MgmtFeePct).HasPrecision(10, 5);
+            modelBuilder.Entity<PlatformBudgetInfo>().Property(b => b.MarginPct).HasPrecision(10, 5);
+            modelBuilder.Entity<PlatformBudgetInfo>()
+                .HasKey(b => new { b.CampaignId, b.PlatformId, b.Date });
             modelBuilder.Entity<BudgetInfo>().Property(b => b.MediaSpend).HasPrecision(14, 2);
-            modelBuilder.Entity<BudgetInfo>().Property(b => b.MgmtFeePct).HasPrecision(8, 3);
-            modelBuilder.Entity<BudgetInfo>().Property(b => b.MarginPct).HasPrecision(8, 3);
+            modelBuilder.Entity<BudgetInfo>().Property(b => b.MgmtFeePct).HasPrecision(10, 5);
+            modelBuilder.Entity<BudgetInfo>().Property(b => b.MarginPct).HasPrecision(10, 5);
             modelBuilder.Entity<BudgetInfo>()
                 .HasKey(b => new { b.CampaignId, b.Date });
             modelBuilder.Entity<DailySummary>()
@@ -64,6 +70,7 @@ namespace DirectAgents.Domain.Contexts
         // TD
         public DbSet<Advertiser> Advertisers { get; set; }
         public DbSet<Campaign> Campaigns { get; set; }
+        public DbSet<PlatformBudgetInfo> PlatformBudgetInfos { get; set; }
         public DbSet<BudgetInfo> BudgetInfos { get; set; }
         public DbSet<Platform> Platforms { get; set; }
         public DbSet<ExtAccount> ExtAccounts { get; set; }

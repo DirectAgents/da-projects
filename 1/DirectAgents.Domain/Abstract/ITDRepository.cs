@@ -22,6 +22,7 @@ namespace DirectAgents.Domain.Abstract
         Platform Platform(int id);
         Platform Platform(string platformCode);
         IQueryable<Platform> Platforms();
+        IQueryable<Platform> PlatformsWithoutBudgetInfo(int campId, DateTime date); // (without a "PlatformBudgetInfo")
         bool AddPlatform(Platform platform);
         bool SavePlatform(Platform platform);
         Advertiser Advertiser(int id);
@@ -42,20 +43,28 @@ namespace DirectAgents.Domain.Abstract
         bool AddBudgetInfo(BudgetInfo bi);
         bool SaveBudgetInfo(BudgetInfo bi);
         void FillExtended(BudgetInfo bi);
+        PlatformBudgetInfo PlatformBudgetInfo(int campId, int platformId, DateTime date);
+        IQueryable<PlatformBudgetInfo> PlatformBudgetInfos(int? campId = null, int? platformId = null, DateTime? date = null);
+        bool AddPlatformBudgetInfo(PlatformBudgetInfo pbi);
+        bool DeletePlatformBudgetInfo(int campId, int platformId, DateTime date);
+        bool SavePlatformBudgetInfo(PlatformBudgetInfo pbi);
+        void FillExtended(PlatformBudgetInfo pbi);
         ExtAccount ExtAccount(int id);
         IQueryable<ExtAccount> ExtAccounts(string platformCode = null, int? campId = null);
         IQueryable<ExtAccount> ExtAccountsNotInCampaign(int campId);
         bool AddExtAccount(ExtAccount extAcct);
         bool SaveExtAccount(ExtAccount extAcct);
         void FillExtended(ExtAccount extAcct);
+
         DateTime? LatestStatDate(int? acctId = null);
         DailySummary DailySummary(DateTime date, int acctId);
         bool AddDailySummary(DailySummary daySum);
         bool SaveDailySummary(DailySummary daySum);
         void FillExtended(DailySummary daySum);
-        IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? acctId = null);
+        IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null);
         TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null);
         TDStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null, MarginFeeVals marginFees = null);
+        TDCampStats GetCampStats(DateTime monthStart, int campId);
 
         // AdRoll
         Advertisable Advertisable(string eid);

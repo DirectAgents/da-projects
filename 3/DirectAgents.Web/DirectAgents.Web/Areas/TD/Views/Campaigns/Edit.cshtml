@@ -47,7 +47,7 @@
     <br style="clear:both" />
     <div style="float:left">
         <br />
-        Recent Budgets
+        Recent Budget+Percents
         <table>
             <tr>
                 <th></th>
@@ -55,15 +55,18 @@
                 <th>MediaSpend</th>
                 <th>MgmtFeePct</th>
                 <th>MarginPct</th>
+                <th>Exceptions For</th>
             </tr>
         @foreach (var bi in Model.BudgetInfos.OrderByDescending(b => b.Date).Take(6))
         {
+            var pbis = Model.PlatformBudgetInfosFor(bi.Date).OrderBy(pbi => pbi.Platform.Name);
             <tr>
                 <td>@Html.ActionLink("Edit", "Edit", "BudgetInfos", new { campId = bi.CampaignId, date = bi.Date.ToShortDateString() }, null)</td>
                 <td>@bi.Date.ToString("MMM yyyy")</td>
                 <td style="text-align:right">@bi.MediaSpend.ToString("C")</td>
-                <td style="text-align:center">@bi.MgmtFeePct.ToString("#0.### \\%")</td>
-                <td style="text-align:center">@bi.MarginPct.ToString("#0.### \\%")</td>
+                <td style="text-align:center">@bi.MgmtFeePct.ToString("#0.##### \\%")</td>
+                <td style="text-align:center">@bi.MarginPct.ToString("#0.##### \\%")</td>
+                <td>@(String.Join(",", pbis.Select(i => i.Platform.Name)))</td>
             </tr>
         }
         </table>
@@ -72,11 +75,11 @@
             if (months.Count() > 0)
             {
                 <br />
-                <text>Create Budget For:</text>
+                <text>Create Budget+Percents For:</text>
                 <br />
                 foreach (var month in months)
                 {
-                    @Html.ActionLink(month.ToString("MMM yyyy"), "Create", "BudgetInfos", new { campId = Model.Id, date = month.ToShortDateString() }, null)
+                    @Html.ActionLink(month.ToString("MMM yyyy"), "CreateNew", "BudgetInfos", new { campId = Model.Id, date = month.ToShortDateString() }, null)
                     <text><br /></text>
                 }
             }
@@ -89,7 +92,7 @@
                 <th>Account</th>
                 <th></th>
             </tr>
-        @foreach (var acct in Model.ExtAccounts)
+        @foreach (var acct in Model.ExtAccounts.OrderBy(ea => ea.Platform.Name).ThenBy(ea => ea.Name))
         {
             <tr>
                 <td>@acct.Platform.Name</td>

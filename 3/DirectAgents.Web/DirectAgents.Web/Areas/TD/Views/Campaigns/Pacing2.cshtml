@@ -1,0 +1,96 @@
+﻿@model IEnumerable<DirectAgents.Domain.DTO.TDCampStats>
+@{
+    bool ShowPerfStats = false;
+    string date = Request["date"]; // null if current month
+}
+
+@if (!ShowPerfStats) {
+    <h2>Budget and Pacing</h2>
+} else {
+    <h2>Performance</h2>
+}
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+
+<table>
+<tr>
+    <th>Advertiser</th>
+    <th>Campaign</th>
+    <th>Platform</th>
+    <th>Budget</th>
+    <th>% Completed</th>
+    <th>DA Cost</th>
+    <th>Client Cost</th>
+    <th>Revenue</th>
+    <th>Margin</th>
+    <th>Margin %</th>
+    @if (!ShowPerfStats)
+    {
+        <th>Sales Rep</th>
+        <th>AM</th>
+    } else {
+        <th>Impressions</th>
+        <th>Clicks</th>
+        <th>Total Conv</th>
+        <th>Post-Click Conv</th>
+        <th>Post-View Conv</th>
+        <th>Click Rate (CTR)</th>
+        <th>eCPA</th>
+    }
+</tr>
+@foreach (var cStat in Model)
+{
+<tr>
+    <td>@cStat.Campaign.Advertiser.Name</td>
+    <td>@cStat.Campaign.Name</td>
+    <td></td>
+    <td>@cStat.Budget.MediaSpend.ToString("C")</td>
+    <td>@cStat.FractionReached().ToString("#0.##%")</td>
+    <td>@cStat.Cost.ToString("C")</td>
+    <td>@cStat.MediaSpend.ToString("C")</td>
+    <td>@cStat.TotalRevenue.ToString("C")</td>
+    <td>@cStat.Margin.ToString("C")</td>
+    <td>@cStat.MarginPct.ToString("#0.## \\%")</td>
+    @if (!ShowPerfStats)
+    {
+        <td>@cStat.Campaign.Advertiser.SalesRepName()</td>
+        <td>@cStat.Campaign.Advertiser.AMName()</td>
+    } else {
+        <td>@cStat.Impressions.ToString("N0")</td>
+        <td>@cStat.Clicks.ToString("N0")</td>
+        <td>@cStat.TotalConv.ToString("N0")</td>
+        <td>@cStat.PostClickConv.ToString("N0")</td>
+        <td>@cStat.PostViewConv.ToString("N0")</td>
+        <td>@cStat.CTR.ToString("#0.##%")</td>
+        <td>@cStat.CPA.ToString("C")</td>
+    }
+</tr>
+    if (cStat.PlatformStats.Any())
+    {
+        foreach (var platStat in cStat.PlatformStats)
+        {
+            decimal budget = platStat.Budget.MediaSpend();
+<tr>
+    <td colspan="2"></td>
+    <td>@platStat.Platform.Name</td>
+    <td>@(budget != 0 ? budget.ToString("C") : "")</td>
+    <td>@(budget != 0 ? platStat.FractionReached().ToString("#0.##%") : "")</td>
+    <td>@platStat.Cost.ToString("C")</td>
+    <td>@platStat.MediaSpend().ToString("C")</td>
+    <td>@platStat.TotalRevenue().ToString("C")</td>
+    <td>@platStat.Margin().ToString("C")</td>
+    <td>@platStat.MarginPct.ToString("#0.## \\%")</td>
+    @if (ShowPerfStats)
+    {
+        <td>@platStat.Impressions.ToString("N0")</td>
+        <td>@platStat.Clicks.ToString("N0")</td>
+        <td>@platStat.TotalConv.ToString("N0")</td>
+        <td>@platStat.PostClickConv.ToString("N0")</td>
+        <td>@platStat.PostViewConv.ToString("N0")</td>
+        <td>@platStat.CTR.ToString("#0.##%")</td>
+        <td>@platStat.CPA.ToString("C")</td>
+    }
+</tr>
+        }
+    }
+}
+</table>

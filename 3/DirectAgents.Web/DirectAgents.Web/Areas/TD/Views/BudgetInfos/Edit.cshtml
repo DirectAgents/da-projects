@@ -1,20 +1,21 @@
 ﻿@model DirectAgents.Domain.Entities.TD.BudgetInfo
+@{
+    var month = Model.Date;
+    var platformBudgetInfos = Model.Campaign.PlatformBudgetInfosFor(month).OrderBy(i => i.Platform.Name);
+}
 
-@using (Html.BeginForm())
-{
-    @Html.ValidationSummary()
-    <fieldset>
-        <legend>Edit Budget</legend>
+<fieldset>
+    <legend>Edit Budget+Percents</legend>
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary()
         @Html.HiddenFor(m => m.CampaignId)
         @Html.HiddenFor(m => m.Date)
         <div style="float:left">
-            Campaign: @Model.Campaign.Name
+            Campaign: @Model.Campaign.Name<br />
+            Month: @Model.Date.ToString("MMM yyyy")
             <br /><br />
             <table>
-                <tr>
-                    <td>@Html.LabelFor(m => m.Date, "Month")</td>
-                    <td>@Model.Date.ToString("MMM yyyy")</td>
-                </tr>
                 <tr>
                     <td>@Html.LabelFor(m => m.MediaSpend)</td>
                     <td>@Html.EditorFor(m => m.MediaSpend)</td>
@@ -30,7 +31,49 @@
             </table>
             <br />
             <input type="submit" value="Save" />
-            &nbsp;@Html.ActionLink("cancel", "Edit", "Campaigns", new { id = @Model.CampaignId }, null)
+            &nbsp;@Html.ActionLink("cancel", "Edit", "Campaigns", new { id = Model.CampaignId }, null)
         </div>
-    </fieldset>
+    }
+    <br style="clear:both" />
+    <div style="float:left">
+        <br />
+        Platform Exceptions
+        <table>
+            <tr>
+                <th></th>
+                <th>Platform</th>
+                <th>MediaSpend</th>
+                <th>MgmtFeePct</th>
+                <th>MarginPct</th>
+                <th></th>
+            </tr>
+        @foreach (var pbi in platformBudgetInfos)
+        {
+            <tr>
+                <td>@Html.ActionLink("Edit", "Edit", "PlatformBudgetInfos", new { campId = pbi.CampaignId, platId = pbi.PlatformId, date = pbi.Date.ToShortDateString() }, null)</td>
+                <td>@pbi.Platform.Name</td>
+                <td style="text-align:right">@pbi.MediaSpend.ToString("C")</td>
+                <td style="text-align:center">@pbi.MgmtFeePct.ToString("#0.##### \\%")</td>
+                <td style="text-align:center">@pbi.MarginPct.ToString("#0.##### \\%")</td>
+                <td>@Html.ActionLink("Delete", "Delete", "PlatformBudgetInfos", new { campId = pbi.CampaignId, platId = pbi.PlatformId, date = pbi.Date.ToShortDateString() }, null)</td>
+            </tr>
+        }
+        </table>
+@{
+    var platforms = (IEnumerable<DirectAgents.Domain.Entities.TD.Platform>)ViewBag.Platforms;
+    if (platforms.Any())
+    {
+        <br />
+        using (Html.BeginForm("CreateNew", "PlatformBudgetInfos", new { campId = Model.CampaignId, date = Model.Date.ToShortDateString() }))
+        {
+            var platformSelectList = new SelectList(platforms, "Id", "Name");
+            <text>Add Platform Exception:</text>
+            <table><tr><td>
+                @Html.DropDownList("platId", platformSelectList)
+            </td></tr></table>
+            <input type="submit" value="Add" />
+        }
+    }
 }
+    </div>
+</fieldset>
