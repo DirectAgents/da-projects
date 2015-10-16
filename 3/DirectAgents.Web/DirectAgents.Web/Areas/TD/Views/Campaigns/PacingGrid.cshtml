@@ -55,7 +55,7 @@
                         TotalRev: { type: 'number' },
                         Margin: { type: 'number' },
                         MarginPct: { type: 'number' },
-                        PlatformNames: { type: 'string' },
+                        Platform: { type: 'string' },
                         PctOfGoal: { type: 'number' },
                         SalesRep: { type: 'string' },
                         AM: { type: 'string' }
@@ -92,7 +92,7 @@
                 { field: 'TotalRev', format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.TotalRev.sum, 'n2') #", footerAttributes: { style: "text-align:right" } },
                 { field: 'Margin', format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.Margin.sum, 'n2') #", footerAttributes: { style: "text-align:right" } },
                 { field: 'MarginPct', format: "{0:p}", attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.MarginPct.agg, 'p') #", footerAttributes: { style: "text-align:right" } },
-                { field: 'PlatformNames', title: 'Platforms' },
+                { field: 'Platform', title: 'Platforms' },
                 { field: 'PctOfGoal', title: '%Goal', width: 80, format: "{0:p}", attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.PctOfGoal.agg, 'p') #", footerAttributes: { style: "text-align:right" } },
                 { field: 'SalesRep' },
                 { field: 'AM' }

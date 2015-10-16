@@ -126,30 +126,9 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             if (request.AggregateObjects != null)
                 request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
 
-            int? campId = null;
-            //if (!month.HasValue)
-            //    month = DateTime.Today.AddDays(-1); // default; use last month if it's the 1st
-            //var startOfMonth = new DateTime(month.Value.Year, month.Value.Month, 1);
             var startOfMonth = CurrentMonthTD;
-
-            var budgetStats = GetCampaignStatsWithBudget(startOfMonth, campId);
-            var dtos = budgetStats.Select(bs => new CampaignPacingDTO
-            {
-                NumExtAccts = bs.Campaign.ExtAccounts.Count,
-                Advertiser = bs.Campaign.Advertiser.Name,
-                CampaignId = bs.Campaign.Id,
-                Campaign = bs.Campaign.Name,
-                Budget = bs.Budget.MediaSpend(),
-                Cost = bs.Cost,
-                MediaSpend = bs.MediaSpend(),
-                TotalRev = bs.TotalRevenue(),
-                Margin = bs.Margin(),
-                MarginPct = bs.Budget.MarginPct / 100,
-                PlatformNames = string.Join(",", bs.Campaign.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name)),
-                PctOfGoal = bs.FractionReached(),
-                SalesRep = bs.Campaign.Advertiser.SalesRepName(),
-                AM = bs.Campaign.Advertiser.AMName()
-            }).ToList();
+            var budgetStats = GetCampaignStatsWithBudget(startOfMonth);
+            var dtos = budgetStats.Select(bs => new CampaignPacingDTO(bs)).ToList();
             var kgrid = new KendoGridEx<CampaignPacingDTO>(request, dtos);
             //return CreateJsonResult(kgrid);
             return CreateJsonResult(kgrid, allowGet: true);
@@ -162,33 +141,9 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             if (request.AggregateObjects != null)
                 request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
 
-            int? campId = null;
-            DateTime? date = null;
-            if (!date.HasValue)
-                date = DateTime.Today;
-            var startOfMonth = new DateTime(date.Value.Year, date.Value.Month, 1);
-
-            var budgetStats = GetCampaignStatsWithBudget(startOfMonth, campId);
-            var dtos = budgetStats.Select(bs => new PerformanceDTO
-            {
-                CampaignId = bs.Campaign.Id,
-                Campaign = bs.Campaign.Name,
-                Budget = bs.Budget.MediaSpend(),
-                Cost = bs.Cost,
-                MediaSpend = bs.MediaSpend(),
-                TotalRev = bs.TotalRevenue(),
-                Margin = bs.Margin(),
-                MarginPct = bs.Budget.MarginPct / 100,
-                PlatformNames = string.Join(",", bs.Campaign.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name)),
-                PctOfGoal = bs.FractionReached(),
-                Impressions = bs.Impressions,
-                Clicks = bs.Clicks,
-                TotalConv = bs.TotalConv,
-                PostClickConv = bs.PostClickConv,
-                PostViewConv = bs.PostViewConv,
-                CTR = bs.CTR,
-                CPA = bs.CPA
-            }).ToList();
+            var startOfMonth = CurrentMonthTD;
+            var budgetStats = GetCampaignStatsWithBudget(startOfMonth);
+            var dtos = budgetStats.Select(bs => new PerformanceDTO(bs)).ToList();
             var kgrid = new KendoGridEx<PerformanceDTO>(request, dtos);
             //return CreateJsonResult(kgrid);
             return CreateJsonResult(kgrid, allowGet: true);
@@ -197,7 +152,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         // ---
 
         // Fills in external account stats if campId is specified
-        private List<TDStatWithBudget> GetCampaignStatsWithBudget(DateTime startOfMonth, int? campId)
+        private List<TDStatWithBudget> GetCampaignStatsWithBudget(DateTime startOfMonth, int? campId = null)
         {
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
 

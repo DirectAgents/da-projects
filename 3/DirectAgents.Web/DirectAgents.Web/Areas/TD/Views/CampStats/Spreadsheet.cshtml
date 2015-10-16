@@ -1,6 +1,6 @@
 ﻿@model int
 
-<h2>Spreadsheet</h2>
+<h2>Budget & Pacing</h2>
 
 <div>
     <div id="spreadsheet" style="width:100%"></div>
@@ -10,13 +10,17 @@
 <script>
     $(document).ready(function () {
         SetupDataSourceAndSpreadsheet();
+
+        var spreadsheet = $('#spreadsheet').data('kendoSpreadsheet');
+        var sheet = spreadsheet.activeSheet();
+        sheet.range('E:I').format('$#,0.00');
     });
 
     function SetupDataSourceAndSpreadsheet() {
         var datasource = new kendo.data.DataSource({
             transport: {
                 read: {
-                    url: '@Url.Action("SpreadsheetData", new { ioID = Model })',
+                    url: '@Url.Action("SpreadsheetData", new { campId = Model })',
                     type: 'post',
                     dataType: 'json'
                 }
@@ -33,9 +37,24 @@
             //toolbar: false,
             //sheetsbar: false,
             sheets: [{
-                name: 'ExtAccounts',
+                name: 'BudgetPacing',
                 dataSource: datasource,
-                rows: [{
+                columns: [
+                    { width: 50 },
+                    { width: 100 },
+                    { width: 50 },
+                    { width: 100 },
+                    { width: 100 },
+                    { width: 100 },
+                    { width: 100 },
+                    { width: 100 },
+                    { width: 100 },
+                    { width: 100 },
+                    { width: 100 },
+                    { width: 100 },
+                    { width: 100 }
+                ],
+                rows: [{ // define header row
                     cells: [
                     {
                         bold: "true",
@@ -97,22 +116,13 @@
                         background: "#9c27b0",
                         textAlign: "center",
                         color: "white"
+                    }, {
+                        bold: "true",
+                        background: "#9c27b0",
+                        textAlign: "center",
+                        color: "white"
                     }]
                 }],
-                columns: [
-                    { width: 250 },
-                    { width: 1 },
-                    { width: 1 },
-                    { width: 100 },
-                    { width: 100 },
-                    { width: 100 },
-                    { width: 100 },
-                    { width: 100 },
-                    { width: 100 },
-                    { width: 100 },
-                    { width: 100 },
-                    { width: 1 }
-                ]
             }]
         });
     }

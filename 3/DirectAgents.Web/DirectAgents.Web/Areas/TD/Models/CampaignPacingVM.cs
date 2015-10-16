@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DirectAgents.Domain.DTO;
 
 namespace DirectAgents.Web.Areas.TD.Models
@@ -11,7 +12,7 @@ namespace DirectAgents.Web.Areas.TD.Models
 
     public class CampaignPacingDTO
     {
-        public int NumExtAccts { get; set; }
+        public int NumExtAccts { get; set; } // remove?
         public string Advertiser { get; set; }
         public int CampaignId { get; set; }
         public string Campaign { get; set; }
@@ -21,10 +22,53 @@ namespace DirectAgents.Web.Areas.TD.Models
         public decimal TotalRev { get; set; }
         public decimal Margin { get; set; }
         public decimal MarginPct { get; set; }
-        public string PlatformNames { get; set; }
+        public string Platform { get; set; }
         public decimal PctOfGoal { get; set; }
         public string SalesRep { get; set; }
         public string AM { get; set; }
+
+        public CampaignPacingDTO() { }
+        public CampaignPacingDTO(TDStatWithBudget bs)
+        {
+            if (bs.Campaign != null)
+            {
+                NumExtAccts = bs.Campaign.ExtAccounts.Count;
+                Advertiser = bs.Campaign.Advertiser.Name;
+                CampaignId = bs.Campaign.Id;
+                Campaign = bs.Campaign.Name;
+                Platform = string.Join(",", bs.Campaign.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name));
+                SalesRep = bs.Campaign.Advertiser.SalesRepName();
+                AM = bs.Campaign.Advertiser.AMName();
+            }
+            if (bs.Platform != null)
+            {
+                Platform = bs.Platform.Name;
+            }
+            Budget = bs.Budget.MediaSpend();
+            Cost = bs.Cost;
+            MediaSpend = bs.MediaSpend();
+            TotalRev = bs.TotalRevenue();
+            Margin = bs.Margin();
+            MarginPct = bs.Budget.MarginPct / 100;
+            PctOfGoal = bs.FractionReached();
+        }
+        public CampaignPacingDTO(TDCampStats cstat)
+        {
+            NumExtAccts = cstat.Campaign.ExtAccounts.Count;
+            Advertiser = cstat.Campaign.Advertiser.Name;
+            CampaignId = cstat.Campaign.Id;
+            Campaign = cstat.Campaign.Name;
+            Budget = cstat.Budget.MediaSpend;
+            Cost = cstat.Cost;
+            MediaSpend = cstat.MediaSpend;
+            TotalRev = cstat.TotalRevenue;
+            Margin = cstat.Margin;
+            MarginPct = cstat.MarginPct;
+            //Platform =
+            PctOfGoal = cstat.FractionReached();
+            SalesRep = cstat.Campaign.Advertiser.SalesRepName();
+            AM = cstat.Campaign.Advertiser.AMName();
+        }
     }
 
     public class PerformanceDTO
@@ -37,7 +81,7 @@ namespace DirectAgents.Web.Areas.TD.Models
         public decimal TotalRev { get; set; }
         public decimal Margin { get; set; }
         public decimal MarginPct { get; set; }
-        public string PlatformNames { get; set; }
+        public string Platform { get; set; }
         public decimal PctOfGoal { get; set; }
         public int Impressions { get; set; }
         public int Clicks { get; set; }
@@ -46,5 +90,30 @@ namespace DirectAgents.Web.Areas.TD.Models
         public int PostViewConv { get; set; }
         public double CTR { get; set; }
         public decimal CPA { get; set; }
+
+        public PerformanceDTO() { }
+        public PerformanceDTO(TDStatWithBudget bs)
+        {
+            if (bs.Campaign != null)
+            {
+                CampaignId = bs.Campaign.Id;
+                Campaign = bs.Campaign.Name;
+                Platform = string.Join(",", bs.Campaign.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name));
+            }
+            Budget = bs.Budget.MediaSpend();
+            Cost = bs.Cost;
+            MediaSpend = bs.MediaSpend();
+            TotalRev = bs.TotalRevenue();
+            Margin = bs.Margin();
+            MarginPct = bs.Budget.MarginPct / 100;
+            PctOfGoal = bs.FractionReached();
+            Impressions = bs.Impressions;
+            Clicks = bs.Clicks;
+            TotalConv = bs.TotalConv;
+            PostClickConv = bs.PostClickConv;
+            PostViewConv = bs.PostViewConv;
+            CTR = bs.CTR;
+            CPA = bs.CPA;
+        }
     }
 }
