@@ -27,7 +27,7 @@
             Defaults
             <table>
                 <tr>
-                    <td>@Html.LabelFor(m => m.DefaultBudget.MediaSpend, "Budget (Media Spend)")</td>
+                    <td>@Html.LabelFor(m => m.DefaultBudget.MediaSpend, "Budget (MediaSpend)")</td>
                     <td>@Html.EditorFor(m => m.DefaultBudget.MediaSpend)</td>
                 </tr>
                 <tr>
@@ -52,7 +52,7 @@
             <tr>
                 <th></th>
                 <th>Month</th>
-                <th>MediaSpend</th>
+                <th>Budget (MediaSpend)</th>
                 <th>MgmtFeePct</th>
                 <th>MarginPct</th>
                 <th>Exceptions For</th>
@@ -97,7 +97,9 @@
             <tr>
                 <td>@acct.Platform.Name</td>
                 <td>@acct.Name (@acct.ExternalId)</td>
-                <td>@Html.ActionLink("Remove from Campaign", "RemoveAccount", "Campaigns", new { id = Model.Id, acctId = acct.Id }, null)</td>
+                <td>@Html.ActionLink("Remove from Campaign", "RemoveAccount", "Campaigns",
+                                     new { id = Model.Id, acctId = acct.Id },
+                                     new { onclick="if (!confirm('Are you sure?')) return false" })</td>
             </tr>
         }
         </table>

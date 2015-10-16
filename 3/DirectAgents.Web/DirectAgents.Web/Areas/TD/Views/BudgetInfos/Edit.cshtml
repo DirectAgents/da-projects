@@ -17,7 +17,7 @@
             <br /><br />
             <table>
                 <tr>
-                    <td>@Html.LabelFor(m => m.MediaSpend)</td>
+                    <td>@Html.LabelFor(m => m.MediaSpend, "Budget (Media Spend)")</td>
                     <td>@Html.EditorFor(m => m.MediaSpend)</td>
                 </tr>
                 <tr>
@@ -42,7 +42,7 @@
             <tr>
                 <th></th>
                 <th>Platform</th>
-                <th>MediaSpend</th>
+                <th>Budget (MediaSpend)</th>
                 <th>MgmtFeePct</th>
                 <th>MarginPct</th>
                 <th></th>
@@ -55,7 +55,9 @@
                 <td style="text-align:right">@pbi.MediaSpend.ToString("C")</td>
                 <td style="text-align:center">@pbi.MgmtFeePct.ToString("#0.##### \\%")</td>
                 <td style="text-align:center">@pbi.MarginPct.ToString("#0.##### \\%")</td>
-                <td>@Html.ActionLink("Delete", "Delete", "PlatformBudgetInfos", new { campId = pbi.CampaignId, platId = pbi.PlatformId, date = pbi.Date.ToShortDateString() }, null)</td>
+                <td>@Html.ActionLink("Delete", "Delete", "PlatformBudgetInfos",
+                                     new { campId = pbi.CampaignId, platId = pbi.PlatformId, date = pbi.Date.ToShortDateString() },
+                                     new { onclick = "if (!confirm('Are you sure?')) return false" })</td>
             </tr>
         }
         </table>
