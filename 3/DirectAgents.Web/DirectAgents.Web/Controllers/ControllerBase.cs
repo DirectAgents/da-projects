@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using DirectAgents.Domain.Abstract;
+using KendoGridBinderEx;
 
 namespace DirectAgents.Web.Controllers
 {
@@ -80,6 +81,24 @@ namespace DirectAgents.Web.Controllers
                 Response.Cookies.Add(cookie);
             }
         }
+
+        protected JsonResult CreateJsonResult<T>(KendoGridEx<T> kgrid, object aggregates, bool allowGet = false)
+        {
+            var kg = new KG<T>();
+            kg.data = kgrid.Data;
+            kg.total = kgrid.Total;
+            kg.aggregates = aggregates;
+
+            var json = Json(kg, allowGet ? JsonRequestBehavior.AllowGet : JsonRequestBehavior.DenyGet);
+            return json;
+        }
+    }
+
+    class KG<T>
+    {
+        public IEnumerable<T> data { get; set; }
+        public int total { get; set; }
+        public object aggregates { get; set; }
     }
 
     public class JsonpResult : System.Web.Mvc.JsonResult

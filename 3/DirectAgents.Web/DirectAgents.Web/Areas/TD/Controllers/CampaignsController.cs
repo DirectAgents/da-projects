@@ -131,7 +131,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var dtos = budgetStats.Select(bs => new CampaignPacingDTO(bs)).ToList();
             var kgrid = new KendoGridEx<CampaignPacingDTO>(request, dtos);
             //return CreateJsonResult(kgrid);
-            return CreateJsonResult(kgrid, allowGet: true);
+            return CreateJsonResult(kgrid, Aggregates(kgrid), allowGet: true);
         }
 
         //[HttpPost]
@@ -146,7 +146,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var dtos = budgetStats.Select(bs => new PerformanceDTO(bs)).ToList();
             var kgrid = new KendoGridEx<PerformanceDTO>(request, dtos);
             //return CreateJsonResult(kgrid);
-            return CreateJsonResult(kgrid, allowGet: true);
+            return CreateJsonResult(kgrid, Aggregates(kgrid), allowGet: true);
         }
 
         // ---
@@ -188,20 +188,8 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return budgetStats;
         }
 
-        //       T could be CampaignPacingDTO, PerformanceDTO...
-        private JsonResult CreateJsonResult<T>(KendoGridEx<T> kgrid, bool allowGet = false)
-        {
-            var kg = new KG<T>();
-            kg.data = kgrid.Data;
-            kg.total = kgrid.Total;
-            kg.aggregates = Aggregates(kgrid);
-            //kg.aggregates = kgrid.Aggregates;
-
-            var json = Json(kg, allowGet ? JsonRequestBehavior.AllowGet : JsonRequestBehavior.DenyGet);
-            return json;
-        }
-
-        private object Aggregates<T>(KendoGridEx<T> kgrid)
+        // T could be CampaignPacingDTO, PerformanceDTO...
+        static object Aggregates<T>(KendoGridEx<T> kgrid)
         {
             if (kgrid.Total == 0 || kgrid.Aggregates == null) return null;
 
