@@ -12,7 +12,8 @@ namespace DirectAgents.Web.Areas.TD.Models
 
     public class CampaignPacingDTO
     {
-        public int NumExtAccts { get; set; } // remove?
+        public int NumPlatforms { get; set; }
+        public string Platform { get; set; } // one or multiple
         public string Advertiser { get; set; }
         public int CampaignId { get; set; }
         public string Campaign { get; set; }
@@ -22,7 +23,6 @@ namespace DirectAgents.Web.Areas.TD.Models
         public decimal TotalRev { get; set; }
         public decimal Margin { get; set; }
         public decimal MarginPct { get; set; }
-        public string Platform { get; set; }
         public decimal PctOfGoal { get; set; }
         public string SalesRep { get; set; }
         public string AM { get; set; }
@@ -32,7 +32,7 @@ namespace DirectAgents.Web.Areas.TD.Models
         {
             if (bs.Campaign != null)
             {
-                NumExtAccts = bs.Campaign.ExtAccounts.Count;
+                //NumPlatforms = (what only platforms that have stats?)
                 Advertiser = bs.Campaign.Advertiser.Name;
                 CampaignId = bs.Campaign.Id;
                 Campaign = bs.Campaign.Name;
@@ -54,7 +54,7 @@ namespace DirectAgents.Web.Areas.TD.Models
         }
         public CampaignPacingDTO(TDCampStats cstat)
         {
-            NumExtAccts = cstat.Campaign.ExtAccounts.Count;
+            NumPlatforms = cstat.PlatformStats.Count();
             Advertiser = cstat.Campaign.Advertiser.Name;
             CampaignId = cstat.Campaign.Id;
             Campaign = cstat.Campaign.Name;
@@ -63,7 +63,7 @@ namespace DirectAgents.Web.Areas.TD.Models
             MediaSpend = cstat.MediaSpend;
             TotalRev = cstat.TotalRevenue;
             Margin = cstat.Margin;
-            MarginPct = cstat.MarginPct;
+            MarginPct = cstat.MarginPct / 100;
             //Platform =
             PctOfGoal = cstat.FractionReached();
             SalesRep = cstat.Campaign.Advertiser.SalesRepName();

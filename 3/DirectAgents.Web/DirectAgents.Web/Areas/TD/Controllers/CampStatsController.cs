@@ -6,6 +6,8 @@ using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.TD;
 using DirectAgents.Web.Areas.TD.Models;
+using KendoGridBinderEx;
+using KendoGridBinderEx.ModelBinder.Mvc;
 
 namespace DirectAgents.Web.Areas.TD.Controllers
 {
@@ -14,6 +16,55 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         public CampStatsController(ITDRepository tdRepository)
         {
             this.tdRepo = tdRepository;
+        }
+
+        public ActionResult PacingGrid()
+        {
+            SetChooseMonthViewData();
+            return View();
+        }
+        //[HttpPost]
+        public JsonResult PacingData(KendoGridMvcRequest request) //, DateTime? month)
+        {
+            // The "agg" aggregates will get computed outside of KendoGridEx
+            if (request.AggregateObjects != null)
+                request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
+
+            var startOfMonth = CurrentMonthTD;
+            var campStats = GetCampStats(startOfMonth);
+            var dtos = campStats.Select(s => new CampaignPacingDTO(s));
+            var kgrid = new KendoGridEx<CampaignPacingDTO>(request, dtos);
+
+            return CreateJsonResult(kgrid, CampaignsController.Aggregates(kgrid), allowGet: true);
+        }
+        //[HttpPost]
+        public JsonResult PacingDetail(KendoGridMvcRequest request, int campId) //, DateTime? month)
+        {
+            DateTime currMonth = CurrentMonthTD;
+            var stat = tdRepo.GetCampStats(currMonth, campId);
+            var dtos = stat.PlatformStats.Select(s => new CampaignPacingDTO(s));
+            var kgrid = new KendoGridEx<CampaignPacingDTO>(request, dtos);
+
+            return CreateJsonResult(kgrid, CampaignsController.Aggregates(kgrid), allowGet: true);
+        }
+
+        private IEnumerable<TDCampStats> GetCampStats(DateTime startOfMonth, int? campId = null)
+        {
+            DateTime currMonth = CurrentMonthTD;
+
+            var campaigns = tdRepo.Campaigns();
+            if (campId.HasValue)
+                campaigns = campaigns.Where(c => c.Id == campId.Value);
+
+            var campStatsList = new List<TDCampStats>();
+            foreach (var camp in campaigns.OrderBy(c => c.Advertiser.Name).ThenBy(c => c.Name))
+            {
+                var stat = tdRepo.GetCampStats(currMonth, camp.Id);
+                if (!stat.AllZeros())
+                    campStatsList.Add(stat);
+                // TODO: include campStats for campaigns with BudgetInfos (or PlatformBudgetInfos?), even if no stats ?
+            }
+            return campStatsList;
         }
 
         public ActionResult Spreadsheet(int campId)

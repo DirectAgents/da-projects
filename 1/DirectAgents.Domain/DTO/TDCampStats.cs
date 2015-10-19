@@ -56,6 +56,11 @@ namespace DirectAgents.Domain.DTO
         public decimal MediaSpend { get; set; }
         public decimal TotalRevenue { get; set; }
 
+        public bool AllZeros()
+        {
+            return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0 && MediaSpend == 0 && TotalRevenue == 0);
+        }
+
         // Computed properties
         public int TotalConv
         {

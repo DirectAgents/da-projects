@@ -189,7 +189,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         }
 
         // T could be CampaignPacingDTO, PerformanceDTO...
-        static object Aggregates<T>(KendoGridEx<T> kgrid)
+        public static object Aggregates<T>(KendoGridEx<T> kgrid)
         {
             if (kgrid.Total == 0 || kgrid.Aggregates == null) return null;
 
@@ -209,11 +209,8 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
             if (typeof(T) == typeof(CampaignPacingDTO))
             {
-                int numExtAccts = ((dynamic)kgrid.Aggregates)["NumExtAccts"]["sum"];
-
                 var aggs = new
                 {
-                    NumExtAccts = new { sum = numExtAccts },
                     Budget = new { sum = budget },
                     Cost = new { sum = cost },
                     MediaSpend = new { sum = mediaSpend },

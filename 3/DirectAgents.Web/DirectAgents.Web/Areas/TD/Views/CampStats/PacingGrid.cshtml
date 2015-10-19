@@ -28,15 +28,9 @@
             transport: {
                 read: {
                     url: '@Url.Action("PacingData")',
-                    //data: function () {
-                    //    return { month: $('#pacingGrid_selMonth').val() }
-                    //},
                     type: 'post',
                     dataType: 'json'
-                },
-                //parameterMap: function (data, type) {
-                //    return kendo.stringify(data);
-                //}
+                }
             },
             schema: {
                 data: 'data',
@@ -46,31 +40,30 @@
                     id: 'CampaignId',
                     fields: {
                         CampaignId: { type: 'number' },
-                        //NumExtAccts: { type: 'number' },
+                        NumPlatforms: { type: 'number' },
+                        //Platform: { type: 'string' },
                         Advertiser: { type: 'string' },
                         Campaign: { type: 'string' },
                         Budget: { type: 'number' },
+                        PctOfGoal: { type: 'number' },
                         Cost: { type: 'number' },
                         MediaSpend: { type: 'number' },
                         TotalRev: { type: 'number' },
                         Margin: { type: 'number' },
                         MarginPct: { type: 'number' },
-                        Platform: { type: 'string' },
-                        PctOfGoal: { type: 'number' },
                         SalesRep: { type: 'string' },
                         AM: { type: 'string' }
                     }
                 }
             },
             aggregate: [
-                //{ field: 'NumExtAccts', aggregate: 'sum' },
                 { field: 'Budget', aggregate: 'sum' },
+                { field: 'PctOfGoal', aggregate: 'agg' },
                 { field: 'Cost', aggregate: 'sum' },
                 { field: 'MediaSpend', aggregate: 'sum' },
                 { field: 'TotalRev', aggregate: 'sum' },
                 { field: 'Margin', aggregate: 'sum' },
-                { field: 'MarginPct', aggregate: 'agg' },
-                { field: 'PctOfGoal', aggregate: 'agg' }
+                { field: 'MarginPct', aggregate: 'agg' }
             ]
         });
         datasource.bind('error', datasource_error);
@@ -82,24 +75,69 @@
             pageable: true,
             sortable: true,
             columns: [
-                //{ field: 'NumExtAccts', title: '#Accts', width: 80, attributes: { style: "text-align:center" }, footerTemplate: "#: data.NumExtAccts.sum #", footerAttributes: { style: "text-align:center" } },
+                { field: 'NumPlatforms', title: '#Platforms', width: 80, attributes: { style: "text-align:center" } },
                 { field: 'Advertiser' },
                 { field: 'Campaign' },
-                { field: 'CampaignId', title: 'ID', width: 50, attributes: { style: "text-align:center" } },
                 { field: 'Budget', format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.Budget.sum, 'n2') #", footerAttributes: { style: "text-align:right" } },
+                { field: 'PctOfGoal', title: '%Complete', width: 80, format: "{0:p}", attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.PctOfGoal.agg, 'p') #", footerAttributes: { style: "text-align:right" } },
                 { field: 'Cost', format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.Cost.sum, 'n2') #", footerAttributes: { style: "text-align:right" } },
                 { field: 'MediaSpend', format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.MediaSpend.sum, 'n2') #", footerAttributes: { style: "text-align:right" } },
                 { field: 'TotalRev', format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.TotalRev.sum, 'n2') #", footerAttributes: { style: "text-align:right" } },
                 { field: 'Margin', format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.Margin.sum, 'n2') #", footerAttributes: { style: "text-align:right" } },
                 { field: 'MarginPct', format: "{0:p}", attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.MarginPct.agg, 'p') #", footerAttributes: { style: "text-align:right" } },
-                { field: 'Platform', title: 'Platforms' },
-                { field: 'PctOfGoal', title: '%Goal', width: 80, format: "{0:p}", attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.PctOfGoal.agg, 'p') #", footerAttributes: { style: "text-align:right" } },
+                //{ field: 'Platform', title: 'Platforms' },
                 { field: 'SalesRep' },
                 { field: 'AM' }
             ],
             columnMenu: true,
             reorderable: true,
-            resizable: true
+            resizable: true,
+            detailInit: PacingGridDetailInit
+        });
+    }
+
+    function PacingGridDetailInit(e) {
+        var readData = function () {
+            return {
+                campid: e.data.CampaignId
+            };
+        };
+        var datasource = new kendo.data.DataSource({
+            serverPaging: true,
+            serverSorting: true,
+            serverFiltering: true,
+            serverAggregates: true,
+            pageSize: 50,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("PacingDetail")',
+                    data: readData
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                aggregates: 'aggregates'
+            }
+        });
+
+        $("<div style='margin-left:14%;margin-right:17%'></div>").appendTo(e.detailCell).kendoGrid({
+            dataSource: datasource,
+            columns: [
+                { field: 'Platform', width: 120 },
+                { field: 'Budget', format: '{0:n2}', attributes: { style: "text-align:right" } },
+                { field: 'PctOfGoal', title: '%Complete', width: 80, format: "{0:p}", attributes: { style: "text-align:right" } },
+                { field: 'Cost', format: '{0:n2}', attributes: { style: "text-align:right" } },
+                { field: 'MediaSpend', format: '{0:n2}', attributes: { style: "text-align:right" } },
+                { field: 'TotalRev', format: '{0:n2}', attributes: { style: "text-align:right" } },
+                { field: 'Margin', format: '{0:n2}', attributes: { style: "text-align:right" } },
+                { field: 'MarginPct', format: "{0:p}", attributes: { style: "text-align:right" } }
+            ],
+            sortable: { mode: 'single' },
+            pageable: false,
+            scrollable: false
         });
     }
 

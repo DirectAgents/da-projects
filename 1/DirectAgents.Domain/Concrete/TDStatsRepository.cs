@@ -102,6 +102,8 @@ namespace DirectAgents.Domain.Concrete
             var platStats = new List<TDStatWithBudget>(); // one for each platform
             var monthEnd = monthStart.AddMonths(1).AddDays(-1);
             var daySums = DailySummaries(monthStart, monthEnd, campId: campId);
+
+            //TODO: include platforms that have a PlatformBudgetInfo, even if stats are all zero ?
             var platforms = daySums.Select(ds => ds.ExtAccount.Platform).Distinct().OrderBy(p => p.Name).ToList();
             foreach (var plat in platforms)
             {
