@@ -115,5 +115,24 @@ namespace DirectAgents.Web.Areas.TD.Models
             CTR = bs.CTR;
             CPA = bs.CPA;
         }
+        public PerformanceDTO(TDCampStats cstat)
+        {
+            CampaignId = cstat.Campaign.Id;
+            Campaign = cstat.Campaign.Name;
+            Budget = cstat.Budget.MediaSpend;
+            Cost = cstat.Cost;
+            MediaSpend = cstat.MediaSpend;
+            TotalRev = cstat.TotalRevenue;
+            Margin = cstat.Margin;
+            MarginPct = cstat.MarginPct / 100;
+            PctOfGoal = cstat.FractionReached();
+            Impressions = cstat.Impressions;
+            Clicks = cstat.Clicks;
+            TotalConv = cstat.TotalConv;
+            PostClickConv = cstat.PostClickConv;
+            PostViewConv = cstat.PostViewConv;
+            CTR = cstat.CTR;
+            CPA = cstat.CPA;
+        }
     }
 }

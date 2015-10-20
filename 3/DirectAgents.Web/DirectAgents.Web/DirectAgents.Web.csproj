@@ -957,6 +957,7 @@
     <Content Include="Areas\TD\Views\PlatformBudgetInfos\Edit.cshtml" />
     <Content Include="Areas\TD\Views\CampStats\Spreadsheet.cshtml" />
     <Content Include="Areas\TD\Views\CampStats\PacingGrid.cshtml" />
+    <Content Include="Areas\TD\Views\CampStats\PerformanceGrid.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

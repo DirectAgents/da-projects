@@ -48,6 +48,26 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return CreateJsonResult(kgrid, CampaignsController.Aggregates(kgrid), allowGet: true);
         }
 
+        public ActionResult PerformanceGrid()
+        {
+            SetChooseMonthViewData();
+            return View();
+        }
+        //[HttpPost]
+        public JsonResult PerformanceData(KendoGridMvcRequest request) //, DateTime? month)
+        {
+            // The "agg" aggregates will get computed outside of KendoGridEx
+            if (request.AggregateObjects != null)
+                request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
+
+            var startOfMonth = CurrentMonthTD;
+            var campStats = GetCampStats(startOfMonth);
+            var dtos = campStats.Select(s => new PerformanceDTO(s));
+            var kgrid = new KendoGridEx<PerformanceDTO>(request, dtos);
+
+            return CreateJsonResult(kgrid, CampaignsController.Aggregates(kgrid), allowGet: true);
+        }
+
         private IEnumerable<TDCampStats> GetCampStats(DateTime startOfMonth, int? campId = null)
         {
             DateTime currMonth = CurrentMonthTD;
