@@ -9,14 +9,15 @@ namespace DirectAgents.Domain.DTO
     {
         public Campaign Campaign { get; set; }
         public IEnumerable<TDStatWithBudget> PlatformStats { get; set; }
+        public DateTime Month;
         public TDBudget Budget;
-        // Date?
 
-        public TDCampStats(Campaign campaign, IEnumerable<TDStatWithBudget> platformStats, decimal? budget = null)
+        public TDCampStats(Campaign campaign, IEnumerable<TDStatWithBudget> platformStats, DateTime monthStart, decimal? budget = null)
             : base(platformStats)
         {
             Campaign = campaign;
             PlatformStats = platformStats;
+            Month = monthStart;
             if (budget.HasValue)
                 Budget.MediaSpend = budget.Value;
         }
@@ -97,7 +98,11 @@ namespace DirectAgents.Domain.DTO
             get { return (TotalRevenue == 0) ? 0 : (100 * Margin / TotalRevenue); }
         }
 
-        // MgmtFee
+        public decimal MgmtFee
+        {
+            get { return TotalRevenue - MediaSpend; }
+        }
+        //public decimal MgmtFeePct
     }
 
 }

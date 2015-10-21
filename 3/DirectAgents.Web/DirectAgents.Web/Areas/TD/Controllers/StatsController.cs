@@ -16,25 +16,17 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             this.tdRepo = tdRepository;
         }
 
-        public ActionResult MTD(int campId, DateTime? date)
+        public ActionResult MTD(int campId, DateTime? date) // Month/MTD view
         {
-            // Month/MTD view
-            var campaign = tdRepo.Campaign(campId);
-            if (campaign == null)
-                return Content("Campaign not found");
-
             if (!date.HasValue)
                 date = DateTime.Today;
             var startOfMonth = new DateTime(date.Value.Year, date.Value.Month, 1);
-            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
 
-            var budgetInfo = campaign.BudgetInfoFor(startOfMonth);
-            var tdStat = tdRepo.GetTDStat(startOfMonth, endOfMonth, campaign: campaign, marginFees: budgetInfo);
-            var statWithBudget = new TDStatWithBudget(tdStat, budgetInfo);
-            if (budgetInfo == null)
-                statWithBudget.Date = startOfMonth;
+            var campStat = tdRepo.GetCampStats(startOfMonth, campId);
+            if (campStat == null)
+                return HttpNotFound();
 
-            return View(statWithBudget);
+            return View(campStat);
         }
 
         // Stats by "external account"

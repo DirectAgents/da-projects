@@ -808,7 +808,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\TD\Views\Main\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -953,11 +952,12 @@
     <Content Include="Areas\TD\Views\Stats\Spreadsheet.cshtml" />
     <Content Include="Areas\TD\Views\ExtAccounts\Edit.cshtml" />
     <Content Include="Areas\TD\Views\Stats\Edit.cshtml" />
-    <Content Include="Areas\TD\Views\Campaigns\Pacing2.cshtml" />
     <Content Include="Areas\TD\Views\PlatformBudgetInfos\Edit.cshtml" />
     <Content Include="Areas\TD\Views\CampStats\Spreadsheet.cshtml" />
     <Content Include="Areas\TD\Views\CampStats\PacingGrid.cshtml" />
     <Content Include="Areas\TD\Views\CampStats\PerformanceGrid.cshtml" />
+    <Content Include="Areas\TD\Views\Main\Links.cshtml" />
+    <Content Include="Areas\TD\Views\CampStats\Pacing.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.DTO;
-using DirectAgents.Domain.Entities.TD;
 using DirectAgents.Web.Areas.TD.Models;
 using KendoGridBinderEx;
 using KendoGridBinderEx.ModelBinder.Mvc;
@@ -16,6 +15,18 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         public CampStatsController(ITDRepository tdRepository)
         {
             this.tdRepo = tdRepository;
+        }
+
+        public ActionResult Pacing(int? campId, bool showPerfStats = false)
+        {
+            DateTime currMonth = SetChooseMonthViewData();
+            var campStats = GetCampStats(currMonth, campId);
+            var model = new CampaignPacingVM
+            {
+                CampStats = campStats,
+                ShowPerfStats = showPerfStats
+            };
+            return View(model);
         }
 
         public ActionResult PacingGrid()

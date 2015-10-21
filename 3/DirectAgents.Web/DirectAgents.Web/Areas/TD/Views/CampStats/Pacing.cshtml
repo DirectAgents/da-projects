@@ -1,10 +1,9 @@
-﻿@model IEnumerable<DirectAgents.Domain.DTO.TDCampStats>
+﻿@model DirectAgents.Web.Areas.TD.Models.CampaignPacingVM
 @{
-    bool ShowPerfStats = false;
     string date = Request["date"]; // null if current month
 }
 
-@if (!ShowPerfStats) {
+@if (!Model.ShowPerfStats) {
     <h2>Budget and Pacing</h2>
 } else {
     <h2>Performance</h2>
@@ -23,7 +22,7 @@
     <th>Revenue</th>
     <th>Margin</th>
     <th>Margin %</th>
-    @if (!ShowPerfStats)
+    @if (!Model.ShowPerfStats)
     {
         <th>Sales Rep</th>
         <th>AM</th>
@@ -37,7 +36,7 @@
         <th>eCPA</th>
     }
 </tr>
-@foreach (var cStat in Model)
+@foreach (var cStat in Model.CampStats)
 {
 <tr>
     <td>@cStat.Campaign.Advertiser.Name</td>
@@ -50,7 +49,7 @@
     <td>@cStat.TotalRevenue.ToString("C")</td>
     <td>@cStat.Margin.ToString("C")</td>
     <td>@cStat.MarginPct.ToString("#0.## \\%")</td>
-    @if (!ShowPerfStats)
+    @if (!Model.ShowPerfStats)
     {
         <td>@cStat.Campaign.Advertiser.SalesRepName()</td>
         <td>@cStat.Campaign.Advertiser.AMName()</td>
@@ -79,7 +78,7 @@
     <td>@platStat.TotalRevenue().ToString("C")</td>
     <td>@platStat.Margin().ToString("C")</td>
     <td>@platStat.MarginPct.ToString("#0.## \\%")</td>
-    @if (ShowPerfStats)
+    @if (Model.ShowPerfStats)
     {
         <td>@platStat.Impressions.ToString("N0")</td>
         <td>@platStat.Clicks.ToString("N0")</td>
@@ -94,3 +93,4 @@
     }
 }
 </table>
+

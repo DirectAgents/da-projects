@@ -1,12 +1,11 @@
-﻿@model DirectAgents.Domain.DTO.TDStatWithBudget
+﻿@model DirectAgents.Domain.DTO.TDCampStats
 @{
     var m = Model; // stats
-    var budg = Model.Budget;
 }
 
 <h2>Month/MTD View</h2>
 
-Month: @m.Date.ToString("MMM yyyy")
+Month: @m.Month.ToString("MMM yyyy")
 <br /><br />
 
 <table>
@@ -19,16 +18,12 @@ Month: @m.Date.ToString("MMM yyyy")
     <td>@m.Campaign.Name</td>
 </tr>
 <tr>
-    <th>Mgmt Fee</th>
-    <td>@budg.MgmtFeePct.ToString("#0.### \\%")</td>
+    <th>Platforms</th>
+    <td>@String.Join(",", m.PlatformStats.Select(ps => ps.Platform.Name))</td>
 </tr>
 <tr>
-    <th>Margin</th>
-    <td>@budg.MarginPct.ToString("#0.### \\%")</td>
-</tr>
-<tr>
-    <th>Budget</th>
-    <td>@budg.MediaSpend().ToString("C")</td>
+    <th>Computed Margin</th>
+    <td>@m.MarginPct.ToString("#0.## \\%")</td>
 </tr>
 </table>
 
@@ -37,37 +32,37 @@ Month: @m.Date.ToString("MMM yyyy")
 <tr>
     <th></th>
     <th>MTD</th>
-    <th>Budget/Goal</th>
+    <th>Budget</th>
     <th>% reached</th>
 </tr>
 <tr>
-    <td>Actual Cost</td>
+    <td>DA Cost</td>
     <td>@m.Cost.ToString("C")</td>
-    <td>@budg.Cost.ToString("C")</td>
-    <td>@m.FractionReached().ToString("#0.##%")</td>
-</tr>
-<tr>
-    <td>Media Spend</td>
-    <td>@m.MediaSpend().ToString("C")</td>
-    <td>@budg.MediaSpend().ToString("C")</td>
+    <td></td>
     <td></td>
 </tr>
 <tr>
+    <td>Media Spend</td>
+    <td>@m.MediaSpend.ToString("C")</td>
+    <td>@m.Budget.MediaSpend.ToString("C")</td>
+    <td>@m.FractionReached().ToString("#0.##%")</td>
+</tr>
+<tr>
     <td>Mgmt Fee</td>
-    <td>@m.MgmtFee().ToString("C")</td>
-    <td>@budg.MgmtFee().ToString("C")</td>
+    <td>@m.MgmtFee.ToString("C")</td>
+    <td></td>
     <td></td>
 </tr>
 <tr>
     <td>Total Revenue</td>
-    <td>@m.TotalRevenue().ToString("C")</td>
-    <td>@budg.TotalRevenue().ToString("C")</td>
+    <td>@m.TotalRevenue.ToString("C")</td>
+    <td></td>
     <td></td>
 </tr>
 <tr>
     <td>Margin</td>
-    <td>@m.Margin().ToString("C")</td>
-    <td>@budg.Margin().ToString("C")</td>
+    <td>@m.Margin.ToString("C")</td>
+    <td></td>
     <td></td>
 </tr>
 </table>
