@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.IO;
+using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.Loaders;
@@ -12,6 +13,7 @@ namespace CakeExtracter.Commands
     {
         public static int RunStatic(StreamReader streamReader, int adrollProfileId, out string status)
         {
+            AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new TDSynchAdDailySummariesAdrollCsv
             {
                 StreamReader = streamReader,

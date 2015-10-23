@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using AdRoll;
+using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
@@ -17,6 +18,7 @@ namespace CakeExtracter.Commands
         // if Eid not specified, will ask AdRoll for all Advertisables that have stats
         public static int RunStatic(string advertisableEids = null, DateTime? startDate = null, DateTime? endDate = null)
         {
+            AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new DASynchAdrollStats
             {
                 AdvertisableEids = advertisableEids,

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.Composition;
-using System.Threading;
+using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.CakeMarketing.Extracters;
 using CakeExtracter.Etl.CakeMarketing.DALoaders;
+using CakeExtracter.Etl.CakeMarketing.Extracters;
 
 namespace CakeExtracter.Commands
 {
@@ -11,6 +11,7 @@ namespace CakeExtracter.Commands
     {
         public static int RunStatic(int advertiserId, bool includeContacts, bool synchOffersAlso)
         {
+            AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new DASynchAdvertisersCommand
             {
                 AdvertiserId = advertiserId,

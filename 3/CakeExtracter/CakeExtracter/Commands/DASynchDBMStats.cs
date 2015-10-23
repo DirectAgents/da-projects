@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
+using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
@@ -17,6 +18,7 @@ namespace CakeExtracter.Commands
     {
         public static int RunStatic(int? insertionOrderID = null, DateTime? endDate = null)
         {
+            AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new DASynchDBMStats
             {
                 InsertionOrderID = insertionOrderID,

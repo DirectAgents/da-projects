@@ -1,17 +1,17 @@
-﻿using CakeExtracter.Common;
-using CakeExtracter.Reports;
-using ClientPortal.Data.Contexts;
-using ClientPortal.Data.DTOs;
-using ClientPortal.Data.Services;
-using DAGenerators.Spreadsheets;
-using OfficeOpenXml;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Configuration;
 using System.IO;
 using System.Net;
 using System.Net.Mail;
+using CakeExtracter.Common;
+using CakeExtracter.Reports;
+using ClientPortal.Data.Contexts;
+using ClientPortal.Data.DTOs;
+using ClientPortal.Data.Services;
+using DAGenerators.Spreadsheets;
+using OfficeOpenXml;
 
 namespace CakeExtracter.Commands
 {

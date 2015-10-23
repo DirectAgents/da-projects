@@ -1,9 +1,9 @@
-﻿using CakeExtracter.Common;
-using Criteo;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Xml;
+using CakeExtracter.Common;
+using Criteo;
 
 namespace CakeExtracter.Commands
 {

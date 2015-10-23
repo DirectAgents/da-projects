@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.CakeMarketing.DALoaders;
 using CakeExtracter.Etl.CakeMarketing.Extracters;
@@ -11,6 +12,7 @@ namespace CakeExtracter.Commands
     {
         public static int RunStatic(int advertiserId, int? offerId, DateTime? startDate = null, DateTime? endDate = null)
         {
+            AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new DASynchOfferDailySummariesCommand
             {
                 AdvertiserId = advertiserId,

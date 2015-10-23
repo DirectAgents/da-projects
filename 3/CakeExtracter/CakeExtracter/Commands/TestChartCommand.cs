@@ -1,11 +1,4 @@
-﻿using CakeExtracter.Common;
-using CakeExtracter.Reports;
-using ClientPortal.Data.Contexts;
-using ClientPortal.Data.DTOs;
-using ClientPortal.Data.Services;
-using DAGenerators.Charts;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Configuration;
 using System.Drawing;
@@ -13,6 +6,12 @@ using System.IO;
 using System.Net;
 using System.Net.Mail;
 using System.Windows.Forms.DataVisualization.Charting;
+using CakeExtracter.Common;
+using CakeExtracter.Reports;
+using ClientPortal.Data.Contexts;
+using ClientPortal.Data.DTOs;
+using ClientPortal.Data.Services;
+using DAGenerators.Charts;
 
 namespace CakeExtracter.Commands
 {

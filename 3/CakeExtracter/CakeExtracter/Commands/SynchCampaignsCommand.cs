@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
+using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.CakeMarketing.Extracters;
 using CakeExtracter.Etl.CakeMarketing.Loaders;
@@ -15,6 +16,7 @@ namespace CakeExtracter.Commands
     {
         public static int RunStatic(int advertiserId, int? offerId)
         {
+            AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new SynchCampaignsCommand
             {
                 AdvertiserId = advertiserId,

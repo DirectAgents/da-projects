@@ -1,7 +1,7 @@
-﻿using CakeExtracter.Common;
-using LocalConnex;
-using System;
+﻿using System;
 using System.ComponentModel.Composition;
+using CakeExtracter.Common;
+using LocalConnex;
 
 namespace CakeExtracter.Commands
 {

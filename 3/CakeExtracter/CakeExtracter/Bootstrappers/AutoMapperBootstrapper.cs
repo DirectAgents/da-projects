@@ -9,6 +9,11 @@ namespace CakeExtracter.Bootstrappers
     {
         public void Run()
         {
+            CreateMaps();
+        }
+
+        public static void CreateMaps()
+        {
             Mapper.CreateMap<SearchDailySummary, SearchDailySummary>();
             Mapper.CreateMap<SearchDailySummary2, SearchDailySummary2>();
             //Mapper.CreateMap<OfferDailySummary, OfferDailySummary>();
@@ -24,6 +29,16 @@ namespace CakeExtracter.Bootstrappers
             Mapper.CreateMap<DirectAgents.Domain.Entities.TD.DailySummary, DirectAgents.Domain.Entities.TD.DailySummary>();
             Mapper.CreateMap<DirectAgents.Domain.Entities.AdRoll.AdDailySummary, DirectAgents.Domain.Entities.AdRoll.AdDailySummary>();
             Mapper.CreateMap<DirectAgents.Domain.Entities.DBM.CreativeDailySummary, DirectAgents.Domain.Entities.DBM.CreativeDailySummary>();
+        }
+
+        // Called from the commands' RunStatic() methods
+        // TODO? A static method that checks all bootstrappers. e.g. ServicePointBootstrapper ... DefaultConnectionLimit
+        public static void CheckRunSetup()
+        {
+            if (Mapper.GetAllTypeMaps().Length == 0)
+            {
+                CreateMaps();
+            }
         }
     }
 }

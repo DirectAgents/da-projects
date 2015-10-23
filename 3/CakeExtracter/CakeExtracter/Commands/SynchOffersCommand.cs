@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.Composition;
-using System.Threading;
+using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.CakeMarketing.Extracters;
 using CakeExtracter.Etl.CakeMarketing.Loaders;
@@ -11,6 +11,7 @@ namespace CakeExtracter.Commands
     {
         public static int RunStatic(int advertiserId)
         {
+            AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new SynchOffersCommand
             {
                 AdvertiserId = advertiserId

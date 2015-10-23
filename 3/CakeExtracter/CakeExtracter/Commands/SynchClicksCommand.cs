@@ -31,6 +31,8 @@ namespace CakeExtracter.Commands
             HasOption("s|startDate=", "Start Date (default is two days ago)", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
             HasOption("c|conversions=", "synch Conversions also (default is false)", c => SynchConversionsAlso = bool.Parse(c));
+            //TODO: # of days to go back (ignored if StartDate.HasValue)
+            //TODO? Starting with yesterday, see if that day has any clicks/convs. keep going back if none are found (x days max).
         }
 
         public override int Execute(string[] remainingArguments)

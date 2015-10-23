@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using System.Linq;
 using AdRoll;
+using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.AdRoll;
@@ -13,6 +14,7 @@ namespace CakeExtracter.Commands
     {
         public static int RunStatic()
         {
+            AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new DASynchAdrollAccounts();
             return cmd.Run();
         }

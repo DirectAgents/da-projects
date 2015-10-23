@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using CakeExtracter.Bootstrappers;
 using CakeExtracter.CakeMarketingApi;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.CakeMarketing.DALoaders;
@@ -22,6 +23,7 @@ namespace CakeExtracter.Commands
     {
         public static int RunStatic(int? offerId)
         {
+            AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new DASynchOfferBudgetStatsCommand()
             {
                 OfferId = offerId
