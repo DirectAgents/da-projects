@@ -44,7 +44,7 @@
     <td></td>
     <td>@cStat.Budget.MediaSpend.ToString("C")</td>
     <td>@cStat.FractionReached().ToString("#0.##%")</td>
-    <td>@cStat.Cost.ToString("C")</td>
+    <td>@cStat.DACost.ToString("C")</td>
     <td>@cStat.MediaSpend.ToString("C")</td>
     <td>@cStat.TotalRevenue.ToString("C")</td>
     <td>@cStat.Margin.ToString("C")</td>
@@ -73,7 +73,7 @@
     <td>@platStat.Platform.Name</td>
     <td>@(budget != 0 ? budget.ToString("C") : "")</td>
     <td>@(budget != 0 ? platStat.FractionReached().ToString("#0.##%") : "")</td>
-    <td>@platStat.Cost.ToString("C")</td>
+    <td>@platStat.DACost().ToString("C")</td>
     <td>@platStat.MediaSpend().ToString("C")</td>
     <td>@platStat.TotalRevenue().ToString("C")</td>
     <td>@platStat.Margin().ToString("C")</td>

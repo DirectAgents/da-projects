@@ -82,7 +82,7 @@ namespace DirectAgents.Domain.Entities.TD
         {
             return MediaSpend * (1 + MgmtFeePct / 100);
         }
-        public decimal Cost()
+        public decimal DACost()
         {
             return TotalRevenue() * (100 - MarginPct) / 100;
         }

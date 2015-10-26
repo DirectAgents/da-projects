@@ -187,14 +187,14 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             if (kgrid.Total == 0 || kgrid.Aggregates == null) return null;
 
             decimal budget = ((dynamic)kgrid.Aggregates)["Budget"]["sum"];
-            decimal cost = ((dynamic)kgrid.Aggregates)["Cost"]["sum"];
+            decimal daCost = ((dynamic)kgrid.Aggregates)["DACost"]["sum"];
             decimal mediaSpend = ((dynamic)kgrid.Aggregates)["MediaSpend"]["sum"];
             decimal totalRev = ((dynamic)kgrid.Aggregates)["TotalRev"]["sum"];
             decimal margin = ((dynamic)kgrid.Aggregates)["Margin"]["sum"];
 
             decimal? marginPct = null;
             if (totalRev != 0)
-                marginPct = 1 - cost / totalRev;
+                marginPct = 1 - daCost / totalRev;
 
             decimal? pctOfGoal = null;
             if (budget != 0)
@@ -205,7 +205,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 var aggs = new
                 {
                     Budget = new { sum = budget },
-                    Cost = new { sum = cost },
+                    DACost = new { sum = daCost },
                     MediaSpend = new { sum = mediaSpend },
                     TotalRev = new { sum = totalRev },
                     Margin = new { sum = margin },
@@ -233,7 +233,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 var aggs = new
                 {
                     Budget = new { sum = budget },
-                    Cost = new { sum = cost },
+                    DACost = new { sum = daCost },
                     MediaSpend = new { sum = mediaSpend },
                     TotalRev = new { sum = totalRev },
                     Margin = new { sum = margin },

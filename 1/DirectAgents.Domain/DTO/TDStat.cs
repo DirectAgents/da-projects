@@ -143,7 +143,11 @@ namespace DirectAgents.Domain.DTO
     //Allows for the computation of MediaSpend, MgmtFee, TotalRevenue, Margin...
     public class TDMoneyStat
     {
-        public decimal Cost { get; set; }
+        //TODO: set other vals after these three vals are set
+        // e.g. recompute==true; _totalRev is int; getter checks recompute;
+        //      set recompute to true in setters of the three vals
+
+        public decimal Cost { get; set; } // this may or may not go through us
         public decimal MgmtFeePct { get; set; }
         public decimal MarginPct { get; set; }
 
@@ -167,36 +171,58 @@ namespace DirectAgents.Domain.DTO
         // Compute and set Cost based on the specified MediaSpend
         public void SetMediaSpend(decimal mediaSpend)
         {
-            this.Cost = mediaSpend * MediaSpendToRevMultiplier() * RevToCostMultiplier();
+            if (MarginPct == 100)
+                this.Cost = mediaSpend;
+            else
+                this.Cost = mediaSpend * MediaSpendToRevMultiplier() * RevToCostMultiplier();
         }
 
-        public decimal RevToCostMultiplier() // usually used in reverse (cost -> rev)
+        //note: is 0 if MarginPct==100
+        private decimal RevToCostMultiplier() // usually used in reverse (cost -> rev)
         {
             return (1 - MarginPct / 100);
         }
-        public decimal MediaSpendToRevMultiplier() // usually used in reverse (rev -> mediaspend)
+        private decimal MediaSpendToRevMultiplier() // usually used in reverse (rev -> mediaspend)
         {
             return (1 + MgmtFeePct / 100);
         }
 
         public decimal TotalRevenue()
         {
-            return this.Cost / RevToCostMultiplier();
+            if (MarginPct == 100)
+                return Cost * MgmtFeePct / 100;
+            else
+                return Cost / RevToCostMultiplier();
         }
 
         public decimal MediaSpend()
         {
-            return TotalRevenue() / MediaSpendToRevMultiplier();
+            if (MarginPct == 100)
+                return Cost;
+            else
+                return Cost / RevToCostMultiplier() / MediaSpendToRevMultiplier();
+                //return TotalRevenue() / MediaSpendToRevMultiplier();
         }
 
         public decimal MgmtFee()
         {
-            return TotalRevenue() - MediaSpend();
+            if (MarginPct == 100)
+                return TotalRevenue();
+            else
+                return TotalRevenue() - MediaSpend(); //TODO: make more efficient
+        }
+
+        public decimal DACost()
+        {
+            if (MarginPct == 100)
+                return 0;
+            else
+                return Cost;
         }
 
         public decimal Margin()
         {
-            return TotalRevenue() - this.Cost;
+            return TotalRevenue() - DACost();
         }
     }
 }

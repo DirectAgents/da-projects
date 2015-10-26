@@ -44,7 +44,7 @@ namespace DirectAgents.Domain.DTO
             Clicks = statsToSum.Sum(s => s.Clicks);
             PostClickConv = statsToSum.Sum(s => s.PostClickConv);
             PostViewConv = statsToSum.Sum(s => s.PostViewConv);
-            Cost = statsToSum.Sum(s => s.Cost);
+            DACost = statsToSum.Sum(s => s.DACost());
             MediaSpend = statsToSum.Sum(s => s.MediaSpend());
             TotalRevenue = statsToSum.Sum(s => s.TotalRevenue());
         }
@@ -53,13 +53,13 @@ namespace DirectAgents.Domain.DTO
         public int Clicks { get; set; }
         public int PostClickConv { get; set; }
         public int PostViewConv { get; set; }
-        public decimal Cost { get; set; }
+        public decimal DACost { get; set; }
         public decimal MediaSpend { get; set; }
         public decimal TotalRevenue { get; set; }
 
         public bool AllZeros()
         {
-            return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0 && MediaSpend == 0 && TotalRevenue == 0);
+            return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && DACost == 0 && MediaSpend == 0 && TotalRevenue == 0);
         }
 
         // Computed properties
@@ -91,7 +91,7 @@ namespace DirectAgents.Domain.DTO
 
         public decimal Margin
         {
-            get { return TotalRevenue - Cost; }
+            get { return TotalRevenue - DACost; }
         }
         public decimal MarginPct
         {

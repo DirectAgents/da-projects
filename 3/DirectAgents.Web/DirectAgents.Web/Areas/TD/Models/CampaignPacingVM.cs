@@ -19,7 +19,7 @@ namespace DirectAgents.Web.Areas.TD.Models
         public int CampaignId { get; set; }
         public string Campaign { get; set; }
         public decimal Budget { get; set; }
-        public decimal Cost { get; set; }
+        public decimal DACost { get; set; }
         public decimal MediaSpend { get; set; }
         public decimal TotalRev { get; set; }
         public decimal Margin { get; set; }
@@ -46,7 +46,7 @@ namespace DirectAgents.Web.Areas.TD.Models
                 Platform = bs.Platform.Name;
             }
             Budget = bs.Budget.MediaSpend();
-            Cost = bs.Cost;
+            DACost = bs.DACost();
             MediaSpend = bs.MediaSpend();
             TotalRev = bs.TotalRevenue();
             Margin = bs.Margin();
@@ -60,7 +60,7 @@ namespace DirectAgents.Web.Areas.TD.Models
             CampaignId = cstat.Campaign.Id;
             Campaign = cstat.Campaign.Name;
             Budget = cstat.Budget.MediaSpend;
-            Cost = cstat.Cost;
+            DACost = cstat.DACost;
             MediaSpend = cstat.MediaSpend;
             TotalRev = cstat.TotalRevenue;
             Margin = cstat.Margin;
@@ -77,7 +77,7 @@ namespace DirectAgents.Web.Areas.TD.Models
         public int CampaignId { get; set; }
         public string Campaign { get; set; }
         public decimal Budget { get; set; }
-        public decimal Cost { get; set; }
+        public decimal DACost { get; set; }
         public decimal MediaSpend { get; set; }
         public decimal TotalRev { get; set; }
         public decimal Margin { get; set; }
@@ -102,7 +102,7 @@ namespace DirectAgents.Web.Areas.TD.Models
                 Platform = string.Join(",", bs.Campaign.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name));
             }
             Budget = bs.Budget.MediaSpend();
-            Cost = bs.Cost;
+            DACost = bs.DACost();
             MediaSpend = bs.MediaSpend();
             TotalRev = bs.TotalRevenue();
             Margin = bs.Margin();
@@ -121,7 +121,7 @@ namespace DirectAgents.Web.Areas.TD.Models
             CampaignId = cstat.Campaign.Id;
             Campaign = cstat.Campaign.Name;
             Budget = cstat.Budget.MediaSpend;
-            Cost = cstat.Cost;
+            DACost = cstat.DACost;
             MediaSpend = cstat.MediaSpend;
             TotalRev = cstat.TotalRevenue;
             Margin = cstat.Margin;

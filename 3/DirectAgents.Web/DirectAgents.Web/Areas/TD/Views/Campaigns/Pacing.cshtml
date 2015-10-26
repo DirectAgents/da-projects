@@ -46,7 +46,7 @@
     <td>@cbStat.Campaign.Advertiser.Name</td>
     <td>@cbStat.Campaign.Name</td>
     <td>@cbStat.Budget.MediaSpend().ToString("C")</td>
-    <td>@cbStat.Cost.ToString("C")</td>
+    <td>@cbStat.DACost().ToString("C")</td>
     <td>@cbStat.MediaSpend().ToString("C")</td>
     <td>@cbStat.TotalRevenue().ToString("C")</td>
     <td>@cbStat.Margin().ToString("C")</td>
@@ -73,7 +73,7 @@ if (cbStat.ExtAccountStats != null)
     {
 <tr>
     <td colspan="4" style="text-align:right">@extAcctStat.ExtAccount.Name - @extAcctStat.ExtAccount.Platform.Name</td>
-    <td>@extAcctStat.Cost.ToString("C")</td>
+    <td>@extAcctStat.DACost().ToString("C")</td>
     <td>@extAcctStat.MediaSpend().ToString("C")</td>
     <td>@extAcctStat.TotalRevenue().ToString("C")</td>
     <td>@extAcctStat.Margin().ToString("C")</td>
