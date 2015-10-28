@@ -19,9 +19,9 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var platform = tdRepo.Platform(platId);
             if (campaign == null || platform == null)
                 return HttpNotFound();
-            BudgetVals defaultBudgetInfo = campaign.BudgetInfoFor(date);
+            BudgetInfoVals defaultBudgetInfo = campaign.BudgetInfoFor(date);
             if (defaultBudgetInfo == null)
-                defaultBudgetInfo = campaign.DefaultBudget;
+                defaultBudgetInfo = campaign.DefaultBudgetInfo;
             var prevMonthPBI = tdRepo.PlatformBudgetInfo(campId, platId, date.AddMonths(-1));
             var pbi = new PlatformBudgetInfo
             {

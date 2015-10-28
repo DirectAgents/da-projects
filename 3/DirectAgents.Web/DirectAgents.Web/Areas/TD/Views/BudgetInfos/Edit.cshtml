@@ -4,8 +4,18 @@
     var platformBudgetInfos = Model.Campaign.PlatformBudgetInfosFor(month).OrderBy(i => i.Platform.Name);
 }
 
+@* Note: duplicated in PlatformBudgetInfos.Edit *@
+@section scripts {
+<script>
+    function SetForNoMarkup() {
+        var mgmtFeePct = parseFloat($('#MgmtFeePct').val());
+        var margin = (100 * mgmtFeePct / (100 + mgmtFeePct)).toFixed(5);
+        $('#MarginPct').val(margin);
+    }
+</script>
+}
 <fieldset>
-    <legend>Edit Budget+Percents</legend>
+    <legend>Edit Campaign -> Budget+Percents</legend>
     @using (Html.BeginForm())
     {
         @Html.ValidationSummary()
@@ -22,11 +32,12 @@
                 </tr>
                 <tr>
                     <td>@Html.LabelFor(m => m.MgmtFeePct)</td>
-                    <td>@Html.EditorFor(m => m.MgmtFeePct)</td>
+                    <td>@Html.TextBoxFor(m => m.MgmtFeePct)</td>
                 </tr>
                 <tr>
                     <td>@Html.LabelFor(m => m.MarginPct)</td>
-                    <td>@Html.EditorFor(m => m.MarginPct)</td>
+                    <td>@Html.TextBoxFor(m => m.MarginPct)</td>
+                    <td><input type="button" value="Set for no markup" onclick="SetForNoMarkup()" /></td>
                 </tr>
             </table>
             <br />

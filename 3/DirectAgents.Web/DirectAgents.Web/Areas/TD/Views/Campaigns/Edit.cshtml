@@ -27,16 +27,16 @@
             Defaults
             <table>
                 <tr>
-                    <td>@Html.LabelFor(m => m.DefaultBudget.MediaSpend, "Budget (MediaSpend)")</td>
-                    <td>@Html.EditorFor(m => m.DefaultBudget.MediaSpend)</td>
+                    <td>@Html.LabelFor(m => m.DefaultBudgetInfo.MediaSpend, "Budget (MediaSpend)")</td>
+                    <td>@Html.EditorFor(m => m.DefaultBudgetInfo.MediaSpend)</td>
                 </tr>
                 <tr>
-                    <td>@Html.LabelFor(m => m.DefaultBudget.MgmtFeePct)</td>
-                    <td>@Html.EditorFor(m => m.DefaultBudget.MgmtFeePct)</td>
+                    <td>@Html.LabelFor(m => m.DefaultBudgetInfo.MgmtFeePct)</td>
+                    <td>@Html.TextBoxFor(m => m.DefaultBudgetInfo.MgmtFeePct)</td>
                 </tr>
                 <tr>
-                    <td>@Html.LabelFor(m => m.DefaultBudget.MarginPct)</td>
-                    <td>@Html.EditorFor(m => m.DefaultBudget.MarginPct)</td>
+                    <td>@Html.LabelFor(m => m.DefaultBudgetInfo.MarginPct)</td>
+                    <td>@Html.TextBoxFor(m => m.DefaultBudgetInfo.MarginPct)</td>
                 </tr>
             </table>
             <br />

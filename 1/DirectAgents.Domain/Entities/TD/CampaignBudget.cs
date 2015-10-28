@@ -14,7 +14,7 @@ namespace DirectAgents.Domain.Entities.TD
 
         public virtual ICollection<ExtAccount> ExtAccounts { get; set; }
         public virtual ICollection<BudgetInfo> BudgetInfos { get; set; }
-        public BudgetVals DefaultBudget { get; set; }
+        public BudgetInfoVals DefaultBudgetInfo { get; set; }
         public virtual ICollection<PlatformBudgetInfo> PlatformBudgetInfos { get; set; }
 
         public IEnumerable<PlatformBudgetInfo> PlatformBudgetInfosFor(DateTime month)
@@ -51,14 +51,14 @@ namespace DirectAgents.Domain.Entities.TD
         // flight dates, goal...
     }
 
-    public class BudgetInfo : BudgetVals
+    public class BudgetInfo : BudgetInfoVals
     {
         public int CampaignId { get; set; }
         public DateTime Date { get; set; }
         public virtual Campaign Campaign { get; set; }
     }
 
-    public class PlatformBudgetInfo : BudgetVals
+    public class PlatformBudgetInfo : BudgetInfoVals
     {
         public int CampaignId { get; set; }
         public int PlatformId { get; set; }
@@ -68,7 +68,7 @@ namespace DirectAgents.Domain.Entities.TD
         public virtual Platform Platform { get; set; }
     }
 
-    public class BudgetVals : MarginFeeVals
+    public class BudgetInfoVals : MarginFeeVals
     {
         //The key values that define a budget...
         public decimal MediaSpend { get; set; }
@@ -91,7 +91,7 @@ namespace DirectAgents.Domain.Entities.TD
             return TotalRevenue() * MarginPct / 100;
         }
 
-        public void SetBudgetValsFrom(BudgetVals source)
+        public void SetFrom(BudgetInfoVals source)
         {
             MediaSpend = source.MediaSpend;
             MgmtFeePct = source.MgmtFeePct;

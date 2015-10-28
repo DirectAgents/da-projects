@@ -108,14 +108,14 @@ namespace DirectAgents.Domain.Concrete
             foreach (var plat in platforms)
             {
                 // See if there is a PlatformBudgetInfo for this campaign/platform/month
-                BudgetVals pbInfo = PlatformBudgetInfo(campId, plat.Id, monthStart);
+                BudgetInfoVals pbInfo = PlatformBudgetInfo(campId, plat.Id, monthStart);
                 if (pbInfo == null)
                 {   // ...if not, use defaults - for the campaign/month or the campaign
-                    pbInfo = new BudgetVals
+                    pbInfo = new BudgetInfoVals
                     {
                         MediaSpend = 0,
-                        MgmtFeePct = (budgetInfo != null ? budgetInfo.MgmtFeePct : campaign.DefaultBudget.MgmtFeePct),
-                        MarginPct = (budgetInfo != null ? budgetInfo.MarginPct : campaign.DefaultBudget.MarginPct)
+                        MgmtFeePct = (budgetInfo != null ? budgetInfo.MgmtFeePct : campaign.DefaultBudgetInfo.MgmtFeePct),
+                        MarginPct = (budgetInfo != null ? budgetInfo.MarginPct : campaign.DefaultBudgetInfo.MarginPct)
                     };
                 }
                 var platDaySums = daySums.Where(ds => ds.ExtAccount.PlatformId == plat.Id);

@@ -12,12 +12,12 @@ namespace DirectAgents.Domain.DTO
 
         public IEnumerable<TDStat> ExtAccountStats { get; set; }
 
-        public TDStatWithBudget(IEnumerable<DailySummary> dSums, BudgetVals budgetVals)
+        public TDStatWithBudget(IEnumerable<DailySummary> dSums, BudgetInfoVals budgetVals)
             : base(dSums, budgetVals)
         {
             SetBudget(budgetVals);
         }
-        public void SetBudget(BudgetVals budgetVals)
+        public void SetBudget(BudgetInfoVals budgetVals)
         {
             if (budgetVals != null)
                 this.Budget = new TDMoneyStat(budgetVals.MgmtFeePct, budgetVals.MarginPct, budgetVals.MediaSpend);
@@ -30,7 +30,7 @@ namespace DirectAgents.Domain.DTO
             CopyFrom(tdStat);
             SetBudget(budgetInfo);
         }
-        public void SetBudget(BudgetInfo budgetInfo)
+        private void SetBudget(BudgetInfo budgetInfo)
         {
             if (budgetInfo != null)
             {

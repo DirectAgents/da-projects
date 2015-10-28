@@ -37,7 +37,7 @@ namespace DirectAgents.Domain.Abstract
         void FillExtended(Campaign camp);
         bool AddExtAccountToCampaign(int campId, int acctId);
         bool RemoveExtAccountFromCampaign(int campId, int acctId);
-        void CreateBudgetIfNotExists(Campaign campaign, DateTime monthToCreate);
+        //void CreateBudgetIfNotExists(Campaign campaign, DateTime monthToCreate);
         BudgetInfo BudgetInfo(int campId, DateTime date);
         IQueryable<BudgetInfo> BudgetInfos(int? campId = null, DateTime? date = null);
         bool AddBudgetInfo(BudgetInfo bi);

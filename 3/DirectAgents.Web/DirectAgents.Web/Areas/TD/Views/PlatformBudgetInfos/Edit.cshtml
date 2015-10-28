@@ -1,5 +1,6 @@
 ﻿@model DirectAgents.Domain.Entities.TD.PlatformBudgetInfo
 
+@* Note: duplicated in BudgetInfos.Edit *@
 @section scripts {
 <script>
     function SetForNoMarkup() {
@@ -10,7 +11,7 @@
 </script>
 }
 <fieldset>
-    <legend>Edit Platform Exception (Budget+Percents)</legend>
+    <legend>Edit Campaign -> Budget+Percents -> Platform Exception</legend>
     @using (Html.BeginForm())
     {
         @Html.ValidationSummary()
@@ -32,7 +33,7 @@
                 </tr>
                 <tr>
                     <td>@Html.LabelFor(m => m.MgmtFeePct)</td>
-                    <td>@Html.EditorFor(m => m.MgmtFeePct)</td>
+                    <td>@Html.TextBoxFor(m => m.MgmtFeePct)</td>
                 </tr>
                 <tr>
                     <td>@Html.LabelFor(m => m.MarginPct)</td>

@@ -22,9 +22,9 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             {
                 CampaignId = campId,
                 Date = date,
-                MediaSpend = campaign.DefaultBudget.MediaSpend,
-                MgmtFeePct = campaign.DefaultBudget.MgmtFeePct,
-                MarginPct = campaign.DefaultBudget.MarginPct
+                MediaSpend = campaign.DefaultBudgetInfo.MediaSpend,
+                MgmtFeePct = campaign.DefaultBudgetInfo.MgmtFeePct,
+                MarginPct = campaign.DefaultBudgetInfo.MarginPct
             };
             tdRepo.AddBudgetInfo(budgetInfo);
             return RedirectToAction("Edit", "Campaigns", new { id = campId });

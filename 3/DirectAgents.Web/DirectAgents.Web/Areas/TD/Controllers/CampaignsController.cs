@@ -33,7 +33,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             {
                 AdvertiserId = advId,
                 Name = "New",
-                DefaultBudget = new BudgetVals()
+                DefaultBudgetInfo = new BudgetInfoVals()
             };
             if (tdRepo.AddCampaign(campaign))
                 return RedirectToAction("Index", new { advId = Session["advId"] });

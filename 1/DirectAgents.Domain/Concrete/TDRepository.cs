@@ -208,18 +208,18 @@ namespace DirectAgents.Domain.Concrete
         }
 
         // monthToCreate is any day in the desired month
-        public void CreateBudgetIfNotExists(Campaign campaign, DateTime monthToCreate)
-        {
-            // Note: If you create a new Campaign, you should set Budgets to a new Collection before calling this method
-            var firstOfMonth = new DateTime(monthToCreate.Year, monthToCreate.Month, 1);
-            if (!campaign.BudgetInfos.Where(b => b.Date == firstOfMonth).Any())
-            {
-                var budget = new BudgetInfo { Date = firstOfMonth };
-                budget.SetBudgetValsFrom(campaign.DefaultBudget);
-                campaign.BudgetInfos.Add(budget);
-                context.SaveChanges();
-            }
-        }
+        //public void CreateBudgetIfNotExists(Campaign campaign, DateTime monthToCreate)
+        //{
+        //    // Note: If you create a new Campaign, you should set Budgets to a new Collection before calling this method
+        //    var firstOfMonth = new DateTime(monthToCreate.Year, monthToCreate.Month, 1);
+        //    if (!campaign.BudgetInfos.Where(b => b.Date == firstOfMonth).Any())
+        //    {
+        //        var budgetInfo = new BudgetInfo { Date = firstOfMonth };
+        //        budgetInfo.SetFrom(campaign.DefaultBudgetInfo);
+        //        campaign.BudgetInfos.Add(budgetInfo);
+        //        context.SaveChanges();
+        //    }
+        //}
 
         public BudgetInfo BudgetInfo(int campId, DateTime date)
         {

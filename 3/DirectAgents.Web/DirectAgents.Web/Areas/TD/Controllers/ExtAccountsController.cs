@@ -109,6 +109,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             if (extAcct == null)
                 return null;
 
+            // Go back to the 1st - if requesting this month or last month
             var firstOfMonth = Common.FirstOfMonth();
             var firstOfLastMonth = firstOfMonth.AddMonths(-1);
             if (!start.HasValue)
