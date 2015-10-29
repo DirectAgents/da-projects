@@ -46,6 +46,7 @@ namespace DirectAgents.Domain.DTO
             PostViewConv = statsToSum.Sum(s => s.PostViewConv);
             DACost = statsToSum.Sum(s => s.DACost());
             MediaSpend = statsToSum.Sum(s => s.MediaSpend());
+            MgmtFee = statsToSum.Sum(s => s.MgmtFee());
             TotalRevenue = statsToSum.Sum(s => s.TotalRevenue());
         }
 
@@ -55,6 +56,7 @@ namespace DirectAgents.Domain.DTO
         public int PostViewConv { get; set; }
         public decimal DACost { get; set; }
         public decimal MediaSpend { get; set; }
+        public decimal MgmtFee { get; set; }
         public decimal TotalRevenue { get; set; }
 
         public bool AllZeros()
@@ -93,15 +95,11 @@ namespace DirectAgents.Domain.DTO
         {
             get { return TotalRevenue - DACost; }
         }
-        public decimal MarginPct
+        public decimal MarginPct //TODO: make nullable
         {
             get { return (TotalRevenue == 0) ? 0 : (100 * Margin / TotalRevenue); }
         }
 
-        public decimal MgmtFee
-        {
-            get { return TotalRevenue - MediaSpend; }
-        }
         //public decimal MgmtFeePct
     }
 

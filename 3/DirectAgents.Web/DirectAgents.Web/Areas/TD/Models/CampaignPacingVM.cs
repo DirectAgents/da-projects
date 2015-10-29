@@ -45,12 +45,12 @@ namespace DirectAgents.Web.Areas.TD.Models
             {
                 Platform = bs.Platform.Name;
             }
-            Budget = bs.Budget.MediaSpend();
+            Budget = bs.Budget.MediaSpend;
             DACost = bs.DACost();
             MediaSpend = bs.MediaSpend();
             TotalRev = bs.TotalRevenue();
             Margin = bs.Margin();
-            MarginPct = bs.Budget.MarginPct / 100;
+            MarginPct = bs.MarginPct / 100;
             PctOfGoal = bs.FractionReached();
         }
         public CampaignPacingDTO(TDCampStats cstat)
@@ -101,12 +101,12 @@ namespace DirectAgents.Web.Areas.TD.Models
                 Campaign = bs.Campaign.Name;
                 Platform = string.Join(",", bs.Campaign.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name));
             }
-            Budget = bs.Budget.MediaSpend();
+            Budget = bs.Budget.MediaSpend;
             DACost = bs.DACost();
             MediaSpend = bs.MediaSpend();
             TotalRev = bs.TotalRevenue();
             Margin = bs.Margin();
-            MarginPct = bs.Budget.MarginPct / 100;
+            MarginPct = bs.MarginPct / 100;
             PctOfGoal = bs.FractionReached();
             Impressions = bs.Impressions;
             Clicks = bs.Clicks;

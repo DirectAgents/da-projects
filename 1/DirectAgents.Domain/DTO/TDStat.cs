@@ -7,48 +7,28 @@ namespace DirectAgents.Domain.DTO
 {
     public class TDStatWithBudget : TDStat
     {
-        public TDMoneyStat Budget { get; set; }
-        public DateTime Date { get; set; } // the month of the budget
+        //public DateTime Date { get; set; } // the month of the budget
+        public TDBudget Budget;
 
         public IEnumerable<TDStat> ExtAccountStats { get; set; }
 
         public TDStatWithBudget(IEnumerable<DailySummary> dSums, BudgetInfoVals budgetVals)
             : base(dSums, budgetVals)
         {
-            SetBudget(budgetVals);
-        }
-        public void SetBudget(BudgetInfoVals budgetVals)
-        {
-            if (budgetVals != null)
-                this.Budget = new TDMoneyStat(budgetVals.MgmtFeePct, budgetVals.MarginPct, budgetVals.MediaSpend);
-            else
-                this.Budget = new TDMoneyStat();
+            Budget.MediaSpend = budgetVals.MediaSpend;
         }
 
         public TDStatWithBudget(TDStat tdStat, BudgetInfo budgetInfo)
         {
             CopyFrom(tdStat);
-            SetBudget(budgetInfo);
-        }
-        private void SetBudget(BudgetInfo budgetInfo)
-        {
-            if (budgetInfo != null)
-            {
-                this.Budget = new TDMoneyStat(budgetInfo.MgmtFeePct, budgetInfo.MarginPct, budgetInfo.MediaSpend);
-                this.Date = budgetInfo.Date;
-                this.Campaign = budgetInfo.Campaign; //TODO: need this? can we always "CopyFrom" tdStat?
-            }
-            else
-            {
-                this.Budget = new TDMoneyStat();
-            }
+            Budget.MediaSpend = budgetInfo.MediaSpend;
         }
 
         public decimal FractionReached()
         {
-            if (Budget == null || Budget.Cost == 0)
+            if (Budget.MediaSpend == 0)
                 return 0;
-            return this.Cost / Budget.Cost;
+            return this.MediaSpend() / Budget.MediaSpend;
         }
 
     }
@@ -73,47 +53,59 @@ namespace DirectAgents.Domain.DTO
             get { return PostClickConv + PostViewConv; }
         }
 
-        public bool AllZeros()
+        public override bool AllZeros()
         {
-            return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0);
+            bool moneyAllZeros = base.AllZeros();
+            return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && moneyAllZeros);
         }
-        // ---
 
-        public TDStat() { }
+        // Constructors
+        public TDStat() { } // calls default base constructor too
         public TDStat(IEnumerable<DailySummary> dSums, MarginFeeVals marginFeeVals)
         {
-            SetStatsFrom(dSums);
-            SetMarginFees(marginFeeVals);
+            SetStatsAndMoneyValsFrom(dSums, marginFeeVals);
         }
 
-        public void CopyFrom(TDStat tdStat)
+        public override void CopyFrom(TDMoneyStat stat)
         {
-            this.Name = tdStat.Name;
-            this.Campaign = tdStat.Campaign;
-            this.ExtAccount = tdStat.ExtAccount;
+            base.CopyFrom(stat); // copy money vals
 
-            this.Impressions = tdStat.Impressions;
-            this.Clicks = tdStat.Clicks;
-            this.PostClickConv = tdStat.PostClickConv;
-            this.PostViewConv = tdStat.PostViewConv;
+            if (stat is TDStat)
+            {
+                TDStat tdStat = (TDStat)stat;
+                this.Name = tdStat.Name;
+                this.Campaign = tdStat.Campaign;
+                this.ExtAccount = tdStat.ExtAccount;
+                this.Platform = tdStat.Platform;
 
-            this.Cost = tdStat.Cost;
-            this.MgmtFeePct = tdStat.MgmtFeePct;
-            this.MarginPct = tdStat.MarginPct;
+                this.Impressions = tdStat.Impressions;
+                this.Clicks = tdStat.Clicks;
+                this.PostClickConv = tdStat.PostClickConv;
+                this.PostViewConv = tdStat.PostViewConv;
+            }
         }
 
-        public void SetStatsFrom(IEnumerable<DailySummary> dSums, bool roundCost = false)
+        private void SetStatsAndMoneyValsFrom(IEnumerable<DailySummary> dSums, MarginFeeVals marginFeeVals, bool roundCost = false)
         {
+            decimal cost = 0;
+            decimal mgmtFeePct = 0;
+            decimal marginPct = 0;
             if (dSums != null && dSums.Any())
             {
                 this.Impressions = dSums.Sum(ds => ds.Impressions);
                 this.Clicks = dSums.Sum(ds => ds.Clicks);
                 this.PostClickConv = dSums.Sum(ds => ds.PostClickConv);
                 this.PostViewConv = dSums.Sum(ds => ds.PostViewConv);
-                this.Cost = dSums.Sum(ds => ds.Cost);
+                cost = dSums.Sum(ds => ds.Cost);
+                if (roundCost)
+                    cost = Math.Round(cost, 2);
             }
-            if (roundCost)
-                this.Cost = Math.Round(this.Cost, 2);
+            if (marginFeeVals != null)
+            {
+                mgmtFeePct = marginFeeVals.MgmtFeePct;
+                marginPct = marginFeeVals.MarginPct;
+            }
+            SetMoneyVals(cost, mgmtFeePct, marginPct);
         }
 
         // Computed properties
@@ -143,15 +135,27 @@ namespace DirectAgents.Domain.DTO
     //Allows for the computation of MediaSpend, MgmtFee, TotalRevenue, Margin...
     public class TDMoneyStat
     {
-        //TODO: set other vals after these three vals are set
-        // e.g. recompute==true; _totalRev is int; getter checks recompute;
-        //      set recompute to true in setters of the three vals
+        public virtual void CopyFrom(TDMoneyStat stat)
+        {
+            this.Cost = stat.Cost;
+            this.MgmtFeePct = stat.MgmtFeePct;
+            this.MarginPct = stat.MarginPct;
+        }
+        public virtual bool AllZeros()
+        {
+            return (Cost == 0);
+        }
 
+        public decimal RawCost
+        {
+            set { Cost = value; }
+        }
         public decimal Cost { get; set; } // this may or may not go through us
         public decimal MgmtFeePct { get; set; }
         public decimal MarginPct { get; set; }
 
-        public TDMoneyStat(decimal mgmtFeePct = 0, decimal marginPct = 0, decimal mediaSpend = 0)
+        public TDMoneyStat() { }
+        public TDMoneyStat(decimal mgmtFeePct, decimal marginPct = 0, decimal mediaSpend = 0)
         {
             this.MgmtFeePct = mgmtFeePct;
             this.MarginPct = marginPct;
@@ -166,6 +170,13 @@ namespace DirectAgents.Domain.DTO
                 this.MarginPct = marginFees.MarginPct;
             }
             // else set to 0?
+        }
+
+        public void SetMoneyVals(decimal cost, decimal mgmtFeePct, decimal marginPct)
+        {
+            this.Cost = cost;
+            this.MgmtFeePct = mgmtFeePct;
+            this.MarginPct = marginPct;
         }
 
         // Compute and set Cost based on the specified MediaSpend

@@ -412,7 +412,7 @@ namespace DirectAgents.Domain.Concrete
                 stat.Clicks = ads.Sum(a => a.Clicks);
                 stat.PostClickConv = ads.Sum(a => a.CTC);
                 stat.PostViewConv = ads.Sum(a => a.VTC);
-                stat.Cost = Math.Round(ads.Sum(a => a.Cost), 2);
+                stat.RawCost = Math.Round(ads.Sum(a => a.Cost), 2);
                 //stat.Prospects = ads.Sum(a => a.Prospects);
             }
             return stat;
@@ -463,7 +463,7 @@ namespace DirectAgents.Domain.Concrete
                 Clicks = g.Sum(c => c.Clicks),
                 PostClickConv = g.Sum(c => c.PostClickConv),
                 PostViewConv = g.Sum(c => c.PostViewConv),
-                Cost = g.Sum(c => c.Revenue)
+                RawCost = g.Sum(c => c.Revenue)
             });
             return stats;
         }
@@ -481,7 +481,7 @@ namespace DirectAgents.Domain.Concrete
                 stat.Clicks = cds.Sum(c => c.Clicks);
                 stat.PostClickConv = cds.Sum(c => c.PostClickConv);
                 stat.PostViewConv = cds.Sum(c => c.PostViewConv);
-                stat.Cost = cds.Sum(c => c.Revenue);
+                stat.RawCost = cds.Sum(c => c.Revenue);
             }
             return stat;
         }

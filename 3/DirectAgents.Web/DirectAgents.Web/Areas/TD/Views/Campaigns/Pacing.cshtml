@@ -45,12 +45,12 @@
     <td>@Html.ActionLink(expandText, "Pacing", new { campId = cbStat.Campaign.Id, date = date, showPerfStats = Model.ShowPerfStats })</td>
     <td>@cbStat.Campaign.Advertiser.Name</td>
     <td>@cbStat.Campaign.Name</td>
-    <td>@cbStat.Budget.MediaSpend().ToString("C")</td>
+    <td>@cbStat.Budget.MediaSpend.ToString("C")</td>
     <td>@cbStat.DACost().ToString("C")</td>
     <td>@cbStat.MediaSpend().ToString("C")</td>
     <td>@cbStat.TotalRevenue().ToString("C")</td>
     <td>@cbStat.Margin().ToString("C")</td>
-    <td>@cbStat.Budget.MarginPct.ToString("#0.### \\%")</td>
+    <td>@cbStat.MarginPct.ToString("#0.### \\%")</td>
     <td>@string.Join(",", cbStat.Campaign.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name))</td>
     <td>@cbStat.FractionReached().ToString("#0.##%")</td>
 @if (!Model.ShowPerfStats)
