@@ -5,12 +5,12 @@ using DirectAgents.Domain.Entities.TD;
 
 namespace DirectAgents.Domain.DTO
 {
-    public class TDStatWithBudget : TDStat
+    public class TDStatWithBudget : TDMediaStat
     {
         //public DateTime Date { get; set; } // the month of the budget
         public TDBudget Budget;
 
-        public IEnumerable<TDStat> ExtAccountStats { get; set; }
+        //public IEnumerable<TDStat> ExtAccountStats { get; set; }
 
         public TDStatWithBudget(IEnumerable<DailySummary> dSums, BudgetInfoVals budgetVals)
             : base(dSums, budgetVals)
@@ -18,11 +18,11 @@ namespace DirectAgents.Domain.DTO
             Budget.MediaSpend = budgetVals.MediaSpend;
         }
 
-        public TDStatWithBudget(TDStat tdStat, BudgetInfo budgetInfo)
-        {
-            CopyFrom(tdStat);
-            Budget.MediaSpend = budgetInfo.MediaSpend;
-        }
+        //public TDStatWithBudget(TDStat tdStat, BudgetInfo budgetInfo)
+        //{
+        //    CopyFrom(tdStat);
+        //    Budget.MediaSpend = budgetInfo.MediaSpend;
+        //}
 
         public decimal FractionReached()
         {
@@ -33,7 +33,7 @@ namespace DirectAgents.Domain.DTO
 
     }
 
-    public class TDStat : TDMoneyStat
+    public class TDRawStat
     {
         // Possible ways to identify the stats...
         public string Name { get; set; }
@@ -45,7 +45,7 @@ namespace DirectAgents.Domain.DTO
         public int Clicks { get; set; }
         public int PostClickConv { get; set; }
         public int PostViewConv { get; set; }
-        //public decimal Cost { get; set; } // (inherited)
+        public decimal Cost { get; set; }
         //public int Prospects { get; set; }
 
         public int TotalConv
@@ -53,59 +53,43 @@ namespace DirectAgents.Domain.DTO
             get { return PostClickConv + PostViewConv; }
         }
 
-        public override bool AllZeros()
+        public virtual bool AllZeros()
         {
-            bool moneyAllZeros = base.AllZeros();
-            return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && moneyAllZeros);
+            return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0);
+        }
+
+        public virtual void CopyFrom(TDRawStat stat)
+        {
+            this.Name = stat.Name;
+            this.Campaign = stat.Campaign;
+            this.ExtAccount = stat.ExtAccount;
+            this.Platform = stat.Platform;
+
+            this.Impressions = stat.Impressions;
+            this.Clicks = stat.Clicks;
+            this.PostClickConv = stat.PostClickConv;
+            this.PostViewConv = stat.PostViewConv;
         }
 
         // Constructors
-        public TDStat() { } // calls default base constructor too
-        public TDStat(IEnumerable<DailySummary> dSums, MarginFeeVals marginFeeVals)
+        public TDRawStat() { }
+        public TDRawStat(IEnumerable<DailySummary> dSums)
         {
-            SetStatsAndMoneyValsFrom(dSums, marginFeeVals);
+            SetStatsFrom(dSums);
         }
 
-        public override void CopyFrom(TDMoneyStat stat)
+        private void SetStatsFrom(IEnumerable<DailySummary> dSums, bool roundCost = false)
         {
-            base.CopyFrom(stat); // copy money vals
-
-            if (stat is TDStat)
-            {
-                TDStat tdStat = (TDStat)stat;
-                this.Name = tdStat.Name;
-                this.Campaign = tdStat.Campaign;
-                this.ExtAccount = tdStat.ExtAccount;
-                this.Platform = tdStat.Platform;
-
-                this.Impressions = tdStat.Impressions;
-                this.Clicks = tdStat.Clicks;
-                this.PostClickConv = tdStat.PostClickConv;
-                this.PostViewConv = tdStat.PostViewConv;
-            }
-        }
-
-        private void SetStatsAndMoneyValsFrom(IEnumerable<DailySummary> dSums, MarginFeeVals marginFeeVals, bool roundCost = false)
-        {
-            decimal cost = 0;
-            decimal mgmtFeePct = 0;
-            decimal marginPct = 0;
             if (dSums != null && dSums.Any())
             {
                 this.Impressions = dSums.Sum(ds => ds.Impressions);
                 this.Clicks = dSums.Sum(ds => ds.Clicks);
                 this.PostClickConv = dSums.Sum(ds => ds.PostClickConv);
                 this.PostViewConv = dSums.Sum(ds => ds.PostViewConv);
-                cost = dSums.Sum(ds => ds.Cost);
+                this.Cost = dSums.Sum(ds => ds.Cost);
                 if (roundCost)
-                    cost = Math.Round(cost, 2);
+                    this.Cost = Math.Round(this.Cost, 2);
             }
-            if (marginFeeVals != null)
-            {
-                mgmtFeePct = marginFeeVals.MgmtFeePct;
-                marginPct = marginFeeVals.MarginPct;
-            }
-            SetMoneyVals(cost, mgmtFeePct, marginPct);
         }
 
         // Computed properties
@@ -118,48 +102,46 @@ namespace DirectAgents.Domain.DTO
             get { return (Clicks == 0) ? 0 : Math.Round((double)TotalConv / Clicks, 4); }
         }
 
-        public decimal CPM
+        public virtual decimal CPM
         {
-            get { return (Impressions == 0) ? 0 : Math.Round(1000 * MediaSpend() / Impressions, 2); }
+            get { return (Impressions == 0) ? 0 : Math.Round(1000 * Cost / Impressions, 2); }
         }
-        public decimal CPC
+        public virtual decimal CPC
         {
-            get { return (Clicks == 0) ? 0 : Math.Round(MediaSpend() / Clicks, 2); }
+            get { return (Clicks == 0) ? 0 : Math.Round(Cost / Clicks, 2); }
         }
-        public decimal CPA
+        public virtual decimal CPA
         {
-            get { return (TotalConv == 0) ? 0 : Math.Round(MediaSpend() / TotalConv, 2); }
+            get { return (TotalConv == 0) ? 0 : Math.Round(Cost / TotalConv, 2); }
         }
     }
 
     //Allows for the computation of MediaSpend, MgmtFee, TotalRevenue, Margin...
-    public class TDMoneyStat
+    public class TDMediaStat : TDRawStat
     {
-        public virtual void CopyFrom(TDMoneyStat stat)
+        public override void CopyFrom(TDRawStat stat)
         {
-            this.Cost = stat.Cost;
-            this.MgmtFeePct = stat.MgmtFeePct;
-            this.MarginPct = stat.MarginPct;
+            base.CopyFrom(stat);
+            if (stat is TDMediaStat)
+            {
+                this.MgmtFeePct = ((TDMediaStat)stat).MgmtFeePct;
+                this.MarginPct = ((TDMediaStat)stat).MarginPct;
+            }
         }
-        public virtual bool AllZeros()
-        {
-            return (Cost == 0);
-        }
-
-        public decimal RawCost
-        {
-            set { Cost = value; }
-        }
-        public decimal Cost { get; set; } // this may or may not go through us
         public decimal MgmtFeePct { get; set; }
         public decimal MarginPct { get; set; }
 
-        public TDMoneyStat() { }
-        public TDMoneyStat(decimal mgmtFeePct, decimal marginPct = 0, decimal mediaSpend = 0)
+        public TDMediaStat() { }
+        //public TDMediaStat(decimal mgmtFeePct, decimal marginPct = 0, decimal mediaSpend = 0)
+        //{
+        //    this.MgmtFeePct = mgmtFeePct;
+        //    this.MarginPct = marginPct;
+        //    SetMediaSpend(mediaSpend);
+        //}
+        public TDMediaStat(IEnumerable<DailySummary> dSums, MarginFeeVals marginFees)
+            : base(dSums)
         {
-            this.MgmtFeePct = mgmtFeePct;
-            this.MarginPct = marginPct;
-            SetMediaSpend(mediaSpend);
+            SetMarginFees(marginFees);
         }
 
         public void SetMarginFees(MarginFeeVals marginFees)
@@ -234,6 +216,19 @@ namespace DirectAgents.Domain.DTO
         public decimal Margin()
         {
             return TotalRevenue() - DACost();
+        }
+
+        public override decimal CPM
+        {
+            get { return (Impressions == 0) ? 0 : Math.Round(1000 * MediaSpend() / Impressions, 2); }
+        }
+        public override decimal CPC
+        {
+            get { return (Clicks == 0) ? 0 : Math.Round(MediaSpend() / Clicks, 2); }
+        }
+        public override decimal CPA
+        {
+            get { return (TotalConv == 0) ? 0 : Math.Round(MediaSpend() / TotalConv, 2); }
         }
     }
 }

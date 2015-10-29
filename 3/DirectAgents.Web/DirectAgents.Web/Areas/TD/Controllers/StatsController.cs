@@ -34,7 +34,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             var startOfMonth = SetChooseMonthViewData_NonCookie(month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
-            var stats = new List<TDStat>();
+            var stats = new List<TDRawStat>();
 
             var extAccounts = tdRepo.ExtAccounts(platformCode: platform, campId: campId)
                                 .OrderBy(a => a.Platform.Code).ThenBy(a => a.Name);
@@ -60,7 +60,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             var startOfMonth = SetChooseMonthViewData_NonCookie(month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
-            var stats = new List<TDStat>();
+            var stats = new List<TDRawStat>();
 
             var advertisable = tdRepo.Advertisable(advEid);
             if (advertisable == null)

@@ -399,9 +399,9 @@ namespace DirectAgents.Domain.Concrete
             return ads;
         }
 
-        public TDStat GetAdRollStat(Ad ad, DateTime? startDate, DateTime? endDate)
+        public TDRawStat GetAdRollStat(Ad ad, DateTime? startDate, DateTime? endDate)
         {
-            var stat = new TDStat
+            var stat = new TDRawStat
             {
                 Name = ad.Name
             };
@@ -412,7 +412,7 @@ namespace DirectAgents.Domain.Concrete
                 stat.Clicks = ads.Sum(a => a.Clicks);
                 stat.PostClickConv = ads.Sum(a => a.CTC);
                 stat.PostViewConv = ads.Sum(a => a.VTC);
-                stat.RawCost = Math.Round(ads.Sum(a => a.Cost), 2);
+                stat.Cost = Math.Round(ads.Sum(a => a.Cost), 2);
                 //stat.Prospects = ads.Sum(a => a.Prospects);
             }
             return stat;
@@ -452,25 +452,25 @@ namespace DirectAgents.Domain.Concrete
             return cds;
         }
 
-        public IQueryable<TDStat> GetDBMStatsByCreative(int ioID, DateTime? startDate, DateTime? endDate)
+        public IQueryable<TDRawStat> GetDBMStatsByCreative(int ioID, DateTime? startDate, DateTime? endDate)
         {
             var cds = DBM_CreativeDailySummaries(startDate, endDate, ioID: ioID);
             var groups = cds.GroupBy(c => c.Creative);
-            var stats = groups.Select(g => new TDStat
+            var stats = groups.Select(g => new TDRawStat
             {
                 Name = g.Key.Name,
                 Impressions = g.Sum(c => c.Impressions),
                 Clicks = g.Sum(c => c.Clicks),
                 PostClickConv = g.Sum(c => c.PostClickConv),
                 PostViewConv = g.Sum(c => c.PostViewConv),
-                RawCost = g.Sum(c => c.Revenue)
+                Cost = g.Sum(c => c.Revenue)
             });
             return stats;
         }
 
-        public TDStat GetDBMStat(Creative creative, DateTime? startDate, DateTime? endDate)
+        public TDRawStat GetDBMStat(Creative creative, DateTime? startDate, DateTime? endDate)
         {
-            var stat = new TDStat
+            var stat = new TDRawStat
             {
                 Name = creative.Name
             };
@@ -481,7 +481,7 @@ namespace DirectAgents.Domain.Concrete
                 stat.Clicks = cds.Sum(c => c.Clicks);
                 stat.PostClickConv = cds.Sum(c => c.PostClickConv);
                 stat.PostViewConv = cds.Sum(c => c.PostViewConv);
-                stat.RawCost = cds.Sum(c => c.Revenue);
+                stat.Cost = cds.Sum(c => c.Revenue);
             }
             return stat;
         }

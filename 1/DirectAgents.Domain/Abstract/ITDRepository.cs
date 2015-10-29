@@ -62,8 +62,8 @@ namespace DirectAgents.Domain.Abstract
         bool SaveDailySummary(DailySummary daySum);
         void FillExtended(DailySummary daySum);
         IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null);
-        TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null);
-        TDStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null, MarginFeeVals marginFees = null);
+        //TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null);
+        TDRawStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null);
         TDCampStats GetCampStats(DateTime monthStart, int campId);
 
         // AdRoll
@@ -71,14 +71,14 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<Advertisable> Advertisables();
         IQueryable<Ad> AdRoll_Ads(int? advId = null, string advEid = null);
         IQueryable<AdDailySummary> AdRoll_AdDailySummaries(int? advertisableId, int? adId, DateTime? startDate, DateTime? endDate);
-        TDStat GetAdRollStat(Ad ad, DateTime? startDate, DateTime? endDate);
+        TDRawStat GetAdRollStat(Ad ad, DateTime? startDate, DateTime? endDate);
 
         // DBM
         InsertionOrder InsertionOrder(int ioID);
         IQueryable<InsertionOrder> InsertionOrders();
         //IQueryable<Creative> DBM_Creatives(int? ioID);
         IQueryable<CreativeDailySummary> DBM_CreativeDailySummaries(DateTime? startDate, DateTime? endDate, int? ioID = null, int? creativeID = null);
-        IQueryable<TDStat> GetDBMStatsByCreative(int ioID, DateTime? startDate, DateTime? endDate);
-        TDStat GetDBMStat(Creative creative, DateTime? startDate, DateTime? endDate);
+        IQueryable<TDRawStat> GetDBMStatsByCreative(int ioID, DateTime? startDate, DateTime? endDate);
+        TDRawStat GetDBMStat(Creative creative, DateTime? startDate, DateTime? endDate);
     }
 }

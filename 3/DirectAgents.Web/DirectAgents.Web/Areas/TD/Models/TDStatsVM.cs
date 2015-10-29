@@ -15,12 +15,12 @@ namespace DirectAgents.Web.Areas.TD.Models
         public DateTime Month { set { MonthString = value.ToShortDateString(); } }
         public string MonthString { get; set; }
 
-        public IEnumerable<TDStat> Stats { get; set; }
-        public TDStat StatsTotal
+        public IEnumerable<TDRawStat> Stats { get; set; }
+        public TDRawStat StatsTotal
         {
             get
             {
-                return new TDStat
+                return new TDRawStat
                 {
                     Name = "TOTAL",
                     Impressions = Stats.Sum(s => s.Impressions),

@@ -64,28 +64,28 @@ namespace DirectAgents.Domain.Concrete
         }
 
         //NOTE: This will sum stats for ALL campaigns if none specified.
-        public TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null)
-        {
-            var dSums = DailySummaries(startDate, endDate);
-            if (campaign != null)
-            {
-                var accountIds = campaign.ExtAccounts.Select(a => a.Id).ToArray();
-                dSums = dSums.Where(ds => accountIds.Contains(ds.AccountId));
-            }
-            var stat = new TDStat(dSums, marginFees)
-            {
-                Campaign = campaign
-            };
-            return stat;
-        }
+        //public TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null)
+        //{
+        //    var dSums = DailySummaries(startDate, endDate);
+        //    if (campaign != null)
+        //    {
+        //        var accountIds = campaign.ExtAccounts.Select(a => a.Id).ToArray();
+        //        dSums = dSums.Where(ds => accountIds.Contains(ds.AccountId));
+        //    }
+        //    var stat = new TDStat(dSums, marginFees)
+        //    {
+        //        Campaign = campaign
+        //    };
+        //    return stat;
+        //}
 
         //NOTE: This will sum stats for ALL accounts if none specified.
-        public TDStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null, MarginFeeVals marginFees = null)
+        public TDRawStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null)
         {
             int? accountId = (extAccount != null) ? extAccount.Id : (int?)null;
             var dSums = DailySummaries(startDate, endDate, acctId: accountId);
 
-            var stat = new TDStat(dSums, marginFees)
+            var stat = new TDRawStat(dSums)
             {
                 ExtAccount = extAccount
             };

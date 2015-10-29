@@ -38,7 +38,7 @@ namespace DirectAgents.Domain.DTO
 
     public class TDBasicStat
     {
-        public TDBasicStat(IEnumerable<TDStat> statsToSum)
+        public TDBasicStat(IEnumerable<TDMediaStat> statsToSum)
         {
             Impressions = statsToSum.Sum(s => s.Impressions);
             Clicks = statsToSum.Sum(s => s.Clicks);
@@ -55,7 +55,7 @@ namespace DirectAgents.Domain.DTO
         public int PostClickConv { get; set; }
         public int PostViewConv { get; set; }
         public decimal DACost { get; set; }
-        public decimal MediaSpend { get; set; }
+        public decimal MediaSpend { get; set; } //TODO: chg to ClientCost
         public decimal MgmtFee { get; set; }
         public decimal TotalRevenue { get; set; }
 

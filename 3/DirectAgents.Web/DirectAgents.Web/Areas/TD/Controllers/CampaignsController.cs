@@ -87,99 +87,99 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
         // --- Stats ---
 
-        // Non-Kendo version
-        public ActionResult Pacing(int? campId, bool showPerfStats = false)
-        {
-            DateTime currMonth = SetChooseMonthViewData();
-            var budgetStats = GetCampaignStatsWithBudget(currMonth, campId);
+        //// Non-Kendo version
+        //public ActionResult Pacing(int? campId, bool showPerfStats = false)
+        //{
+        //    DateTime currMonth = SetChooseMonthViewData();
+        //    var budgetStats = GetCampaignStatsWithBudget(currMonth, campId);
 
-            var model = new CampaignPacingVM
-            {
-                CampaignBudgetStats = budgetStats,
-                ShowPerfStats = showPerfStats
-            };
-            return View(model);
-        }
+        //    var model = new CampaignPacingVM
+        //    {
+        //        CampaignBudgetStats = budgetStats,
+        //        ShowPerfStats = showPerfStats
+        //    };
+        //    return View(model);
+        //}
 
-        public ActionResult PacingGrid()
-        {
-            SetChooseMonthViewData();
-            return View();
-        }
+        //public ActionResult PacingGrid()
+        //{
+        //    SetChooseMonthViewData();
+        //    return View();
+        //}
 
-        public ActionResult PerformanceGrid()
-        {
-            return View();
-        }
+        //public ActionResult PerformanceGrid()
+        //{
+        //    return View();
+        //}
 
-        //[HttpPost]
-        public JsonResult PacingData(KendoGridMvcRequest request) //, DateTime? month)
-        {
-            // The "agg" aggregates will get computed outside of KendoGridEx
-            if (request.AggregateObjects != null)
-                request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
+        ////[HttpPost]
+        //public JsonResult PacingData(KendoGridMvcRequest request) //, DateTime? month)
+        //{
+        //    // The "agg" aggregates will get computed outside of KendoGridEx
+        //    if (request.AggregateObjects != null)
+        //        request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
 
-            var startOfMonth = CurrentMonthTD;
-            var budgetStats = GetCampaignStatsWithBudget(startOfMonth);
-            var dtos = budgetStats.Select(bs => new CampaignPacingDTO(bs)).ToList();
-            var kgrid = new KendoGridEx<CampaignPacingDTO>(request, dtos);
-            //return CreateJsonResult(kgrid);
-            return CreateJsonResult(kgrid, Aggregates(kgrid), allowGet: true);
-        }
+        //    var startOfMonth = CurrentMonthTD;
+        //    var budgetStats = GetCampaignStatsWithBudget(startOfMonth);
+        //    var dtos = budgetStats.Select(bs => new CampaignPacingDTO(bs)).ToList();
+        //    var kgrid = new KendoGridEx<CampaignPacingDTO>(request, dtos);
+        //    //return CreateJsonResult(kgrid);
+        //    return CreateJsonResult(kgrid, Aggregates(kgrid), allowGet: true);
+        //}
 
-        //[HttpPost]
-        public JsonResult PerformanceData(KendoGridMvcRequest request)
-        {
-            // The "agg" aggregates will get computed outside of KendoGridEx
-            if (request.AggregateObjects != null)
-                request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
+        ////[HttpPost]
+        //public JsonResult PerformanceData(KendoGridMvcRequest request)
+        //{
+        //    // The "agg" aggregates will get computed outside of KendoGridEx
+        //    if (request.AggregateObjects != null)
+        //        request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
 
-            var startOfMonth = CurrentMonthTD;
-            var budgetStats = GetCampaignStatsWithBudget(startOfMonth);
-            var dtos = budgetStats.Select(bs => new PerformanceDTO(bs)).ToList();
-            var kgrid = new KendoGridEx<PerformanceDTO>(request, dtos);
-            //return CreateJsonResult(kgrid);
-            return CreateJsonResult(kgrid, Aggregates(kgrid), allowGet: true);
-        }
+        //    var startOfMonth = CurrentMonthTD;
+        //    var budgetStats = GetCampaignStatsWithBudget(startOfMonth);
+        //    var dtos = budgetStats.Select(bs => new PerformanceDTO(bs)).ToList();
+        //    var kgrid = new KendoGridEx<PerformanceDTO>(request, dtos);
+        //    //return CreateJsonResult(kgrid);
+        //    return CreateJsonResult(kgrid, Aggregates(kgrid), allowGet: true);
+        //}
 
         // ---
 
         // Fills in external account stats if campId is specified
-        private List<TDStatWithBudget> GetCampaignStatsWithBudget(DateTime startOfMonth, int? campId = null)
-        {
-            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+        //private List<TDStatWithBudget> GetCampaignStatsWithBudget(DateTime startOfMonth, int? campId = null)
+        //{
+        //    var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
 
-            var campaigns = tdRepo.Campaigns();
-            if (campId.HasValue)
-                campaigns = campaigns.Where(c => c.Id == campId.Value);
+        //    var campaigns = tdRepo.Campaigns();
+        //    if (campId.HasValue)
+        //        campaigns = campaigns.Where(c => c.Id == campId.Value);
 
-            var budgetStats = new List<TDStatWithBudget>();
-            foreach (var camp in campaigns.OrderBy(c => c.Advertiser.Name).ThenBy(c => c.Name))
-            {
-                var budgetInfo = camp.BudgetInfoFor(startOfMonth);
-                var tdStat = tdRepo.GetTDStat(startOfMonth, endOfMonth, campaign: camp, marginFees: budgetInfo);
-                var statWithBudget = new TDStatWithBudget(tdStat, budgetInfo);
-                if (budgetInfo == null)
-                    statWithBudget.Campaign = camp;
+        //    var budgetStats = new List<TDStatWithBudget>();
+        //    foreach (var camp in campaigns.OrderBy(c => c.Advertiser.Name).ThenBy(c => c.Name))
+        //    {
+        //        var budgetInfo = camp.BudgetInfoFor(startOfMonth);
+        //        var tdStat = tdRepo.GetTDStat(startOfMonth, endOfMonth, campaign: camp, marginFees: budgetInfo);
+        //        var statWithBudget = new TDStatWithBudget(tdStat, budgetInfo);
+        //        if (budgetInfo == null)
+        //            statWithBudget.Campaign = camp;
 
-                // If we're viewing one particular campaign, get its external accounts stats
-                if (campId.HasValue)
-                {
-                    var extAccountStats = new List<TDStat>();
-                    var extAccounts = camp.ExtAccounts.OrderBy(a => a.Platform.Code).ThenBy(a => a.Name);
-                    foreach (var extAccount in extAccounts)
-                    {   //Note: Multiple Active Record Sets used here
-                        var extAcctStat = tdRepo.GetTDStatWithAccount(startOfMonth, endOfMonth, extAccount: extAccount, marginFees: budgetInfo);
-                        var extAcctBudgetStat = new TDStatWithBudget(extAcctStat, budgetInfo);
-                        extAccountStats.Add(extAcctBudgetStat);
-                    }
-                    statWithBudget.ExtAccountStats = extAccountStats;
-                }
+        //        // If we're viewing one particular campaign, get its external accounts stats
+        //        if (campId.HasValue)
+        //        {
+        //            var extAccountStats = new List<TDStat>();
+        //            var extAccounts = camp.ExtAccounts.OrderBy(a => a.Platform.Code).ThenBy(a => a.Name);
+        //            foreach (var extAccount in extAccounts)
+        //            {   //Note: Multiple Active Record Sets used here
+        //                var extAcctStat = tdRepo.GetTDStatWithAccount(startOfMonth, endOfMonth, extAccount: extAccount, marginFees: budgetInfo);
+        //                var extAcctBudgetStat = new TDStatWithBudget(extAcctStat, budgetInfo);
+        //                extAccountStats.Add(extAcctBudgetStat);
+        //            }
+        //            statWithBudget.ExtAccountStats = extAccountStats;
+        //        }
 
-                budgetStats.Add(statWithBudget);
-            }
-            return budgetStats;
-        }
+        //        budgetStats.Add(statWithBudget);
+        //    }
+        //    return budgetStats;
+        //}
 
         // T could be CampaignPacingDTO, PerformanceDTO...
         public static object Aggregates<T>(KendoGridEx<T> kgrid)

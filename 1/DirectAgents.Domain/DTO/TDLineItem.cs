@@ -1,26 +1,39 @@
 ﻿
 namespace DirectAgents.Domain.DTO
 {
-    public class TDLineItem
+    public interface ITDLineItem
+    {
+        // CopyFrom(), AllZeros()
+
+        decimal DACost { get; }
+        decimal ClientCost { get; } // may or may not go through us
+        //decimal MediaSpend { get; } // may or may not go through us
+        decimal TotalRevenue { get; }
+        decimal MgmtFee { get; }
+        decimal Margin { get; }
+        decimal? MarginPct { get; }
+    }
+
+    public class TDLineItem : ITDLineItem
     {
         public virtual void CopyFrom(TDLineItem stat)
         {
             this.DACost = stat.DACost;
-            this.MediaSpend = stat.MediaSpend;
+            this.ClientCost = stat.ClientCost;
             this.TotalRevenue = stat.TotalRevenue;
             this.CostGoesThruDA = stat.CostGoesThruDA;
         }
         public virtual bool AllZeros(bool includeCostThatDoesntGoThruDA = true)
         {
             if (includeCostThatDoesntGoThruDA)
-                return (DACost == 0 && MediaSpend == 0 && TotalRevenue == 0);
+                return (DACost == 0 && ClientCost == 0 && TotalRevenue == 0);
             else
-                return DACost == 0 && TotalRevenue == 0 && (MediaSpend == 0 || !CostGoesThruDA);
+                return DACost == 0 && TotalRevenue == 0 && (ClientCost == 0 || !CostGoesThruDA);
         }
 
         public decimal DACost { get; set; }
-        //public decimal ClientCost { get; set; } // may or may not go through us
-        public decimal MediaSpend { get; set; } // may or may not go through us
+        public decimal ClientCost { get; set; } // may or may not go through us
+        //public decimal MediaSpend { get; set; } // may or may not go through us
         public decimal TotalRevenue { get; set; }
         public bool CostGoesThruDA = true;
 
@@ -35,9 +48,9 @@ namespace DirectAgents.Domain.DTO
             SetMoneyVals(rawCost, mgmtFeePct, marginPct);
         }
 
-        public decimal MgmtFee()
+        public decimal MgmtFee
         {
-            return (CostGoesThruDA ? TotalRevenue - MediaSpend : TotalRevenue);
+            get { return (CostGoesThruDA ? TotalRevenue - ClientCost : TotalRevenue); }
         }
 
         public decimal Margin
@@ -55,7 +68,7 @@ namespace DirectAgents.Domain.DTO
             {
                 CostGoesThruDA = false;
                 DACost = 0;
-                MediaSpend = rawCost;
+                ClientCost = rawCost;
                 TotalRevenue = rawCost * mgmtFeePct / 100;
             }
             else
@@ -63,7 +76,7 @@ namespace DirectAgents.Domain.DTO
                 CostGoesThruDA = true;
                 DACost = rawCost;
                 TotalRevenue = rawCost / RevToCostMultiplier(marginPct);
-                MediaSpend = TotalRevenue / ClientCostToRevMultiplier(mgmtFeePct);
+                ClientCost = TotalRevenue / ClientCostToRevMultiplier(mgmtFeePct);
             }
         }
         private decimal RevToCostMultiplier(decimal marginPct)
