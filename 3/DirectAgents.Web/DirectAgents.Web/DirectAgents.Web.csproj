@@ -936,9 +936,6 @@
     <Content Include="Areas\TD\Views\Advertisers\Index.cshtml" />
     <Content Include="Areas\TD\Views\Campaigns\Index.cshtml" />
     <Content Include="Areas\TD\Views\Stats\MTD.cshtml" />
-    <Content Include="Areas\TD\Views\Campaigns\Pacing.cshtml" />
-    <Content Include="Areas\TD\Views\Campaigns\PacingGrid.cshtml" />
-    <Content Include="Areas\TD\Views\Campaigns\PerformanceGrid.cshtml" />
     <Content Include="Areas\TD\Views\Campaigns\Edit.cshtml" />
     <Content Include="Areas\TD\Views\BudgetInfos\Edit.cshtml" />
     <Content Include="Areas\TD\Views\Advertisers\Edit.cshtml" />

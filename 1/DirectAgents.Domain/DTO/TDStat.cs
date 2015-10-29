@@ -33,89 +33,6 @@ namespace DirectAgents.Domain.DTO
 
     }
 
-    public class TDRawStat
-    {
-        // Possible ways to identify the stats...
-        public string Name { get; set; }
-        public Campaign Campaign { get; set; }
-        public ExtAccount ExtAccount { get; set; }
-        public Platform Platform { get; set; }
-
-        public int Impressions { get; set; }
-        public int Clicks { get; set; }
-        public int PostClickConv { get; set; }
-        public int PostViewConv { get; set; }
-        public decimal Cost { get; set; }
-        //public int Prospects { get; set; }
-
-        public int TotalConv
-        {
-            get { return PostClickConv + PostViewConv; }
-        }
-
-        public virtual bool AllZeros()
-        {
-            return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0);
-        }
-
-        public virtual void CopyFrom(TDRawStat stat)
-        {
-            this.Name = stat.Name;
-            this.Campaign = stat.Campaign;
-            this.ExtAccount = stat.ExtAccount;
-            this.Platform = stat.Platform;
-
-            this.Impressions = stat.Impressions;
-            this.Clicks = stat.Clicks;
-            this.PostClickConv = stat.PostClickConv;
-            this.PostViewConv = stat.PostViewConv;
-        }
-
-        // Constructors
-        public TDRawStat() { }
-        public TDRawStat(IEnumerable<DailySummary> dSums)
-        {
-            SetStatsFrom(dSums);
-        }
-
-        private void SetStatsFrom(IEnumerable<DailySummary> dSums, bool roundCost = false)
-        {
-            if (dSums != null && dSums.Any())
-            {
-                this.Impressions = dSums.Sum(ds => ds.Impressions);
-                this.Clicks = dSums.Sum(ds => ds.Clicks);
-                this.PostClickConv = dSums.Sum(ds => ds.PostClickConv);
-                this.PostViewConv = dSums.Sum(ds => ds.PostViewConv);
-                this.Cost = dSums.Sum(ds => ds.Cost);
-                if (roundCost)
-                    this.Cost = Math.Round(this.Cost, 2);
-            }
-        }
-
-        // Computed properties
-        public double CTR
-        {
-            get { return (Impressions == 0) ? 0 : Math.Round((double)Clicks / Impressions, 4); }
-        }
-        public double ConvRate
-        {
-            get { return (Clicks == 0) ? 0 : Math.Round((double)TotalConv / Clicks, 4); }
-        }
-
-        public virtual decimal CPM
-        {
-            get { return (Impressions == 0) ? 0 : Math.Round(1000 * Cost / Impressions, 2); }
-        }
-        public virtual decimal CPC
-        {
-            get { return (Clicks == 0) ? 0 : Math.Round(Cost / Clicks, 2); }
-        }
-        public virtual decimal CPA
-        {
-            get { return (TotalConv == 0) ? 0 : Math.Round(Cost / TotalConv, 2); }
-        }
-    }
-
     //Allows for the computation of MediaSpend, MgmtFee, TotalRevenue, Margin...
     public class TDMediaStat : TDRawStat
     {
@@ -229,6 +146,89 @@ namespace DirectAgents.Domain.DTO
         public override decimal CPA
         {
             get { return (TotalConv == 0) ? 0 : Math.Round(MediaSpend() / TotalConv, 2); }
+        }
+    }
+
+    public class TDRawStat
+    {
+        // Possible ways to identify the stats...
+        public string Name { get; set; }
+        public Campaign Campaign { get; set; }
+        public ExtAccount ExtAccount { get; set; }
+        public Platform Platform { get; set; }
+
+        public int Impressions { get; set; }
+        public int Clicks { get; set; }
+        public int PostClickConv { get; set; }
+        public int PostViewConv { get; set; }
+        public decimal Cost { get; set; }
+        //public int Prospects { get; set; }
+
+        public int TotalConv
+        {
+            get { return PostClickConv + PostViewConv; }
+        }
+
+        public virtual bool AllZeros()
+        {
+            return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0);
+        }
+
+        public virtual void CopyFrom(TDRawStat stat)
+        {
+            this.Name = stat.Name;
+            this.Campaign = stat.Campaign;
+            this.ExtAccount = stat.ExtAccount;
+            this.Platform = stat.Platform;
+
+            this.Impressions = stat.Impressions;
+            this.Clicks = stat.Clicks;
+            this.PostClickConv = stat.PostClickConv;
+            this.PostViewConv = stat.PostViewConv;
+        }
+
+        // Constructors
+        public TDRawStat() { }
+        public TDRawStat(IEnumerable<DailySummary> dSums)
+        {
+            SetStatsFrom(dSums);
+        }
+
+        private void SetStatsFrom(IEnumerable<DailySummary> dSums, bool roundCost = false)
+        {
+            if (dSums != null && dSums.Any())
+            {
+                this.Impressions = dSums.Sum(ds => ds.Impressions);
+                this.Clicks = dSums.Sum(ds => ds.Clicks);
+                this.PostClickConv = dSums.Sum(ds => ds.PostClickConv);
+                this.PostViewConv = dSums.Sum(ds => ds.PostViewConv);
+                this.Cost = dSums.Sum(ds => ds.Cost);
+                if (roundCost)
+                    this.Cost = Math.Round(this.Cost, 2);
+            }
+        }
+
+        // Computed properties
+        public double CTR
+        {
+            get { return (Impressions == 0) ? 0 : Math.Round((double)Clicks / Impressions, 4); }
+        }
+        public double ConvRate
+        {
+            get { return (Clicks == 0) ? 0 : Math.Round((double)TotalConv / Clicks, 4); }
+        }
+
+        public virtual decimal CPM
+        {
+            get { return (Impressions == 0) ? 0 : Math.Round(1000 * Cost / Impressions, 2); }
+        }
+        public virtual decimal CPC
+        {
+            get { return (Clicks == 0) ? 0 : Math.Round(Cost / Clicks, 2); }
+        }
+        public virtual decimal CPA
+        {
+            get { return (TotalConv == 0) ? 0 : Math.Round(Cost / TotalConv, 2); }
         }
     }
 }

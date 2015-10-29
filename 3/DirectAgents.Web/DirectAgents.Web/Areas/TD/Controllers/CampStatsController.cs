@@ -46,7 +46,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var dtos = campStats.Select(s => new CampaignPacingDTO(s));
             var kgrid = new KendoGridEx<CampaignPacingDTO>(request, dtos);
 
-            return CreateJsonResult(kgrid, CampaignsController.Aggregates(kgrid), allowGet: true);
+            return CreateJsonResult(kgrid, Aggregates(kgrid), allowGet: true);
         }
         //[HttpPost]
         public JsonResult PacingDetail(KendoGridMvcRequest request, int campId) //, DateTime? month)
@@ -56,7 +56,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var dtos = stat.PlatformStats.Select(s => new CampaignPacingDTO(s));
             var kgrid = new KendoGridEx<CampaignPacingDTO>(request, dtos);
 
-            return CreateJsonResult(kgrid, CampaignsController.Aggregates(kgrid), allowGet: true);
+            return CreateJsonResult(kgrid, Aggregates(kgrid), allowGet: true);
         }
 
         public ActionResult PerformanceGrid()
@@ -76,7 +76,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var dtos = campStats.Select(s => new PerformanceDTO(s));
             var kgrid = new KendoGridEx<PerformanceDTO>(request, dtos);
 
-            return CreateJsonResult(kgrid, CampaignsController.Aggregates(kgrid), allowGet: true);
+            return CreateJsonResult(kgrid, Aggregates(kgrid), allowGet: true);
         }
 
         private IEnumerable<TDCampStats> GetCampStats(DateTime startOfMonth, int? campId = null)
@@ -116,5 +116,78 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             //var json = Json(dtos);
             return json;
         }
-	}
+
+
+        // T could be CampaignPacingDTO, PerformanceDTO...
+        public static object Aggregates<T>(KendoGridEx<T> kgrid)
+        {
+            if (kgrid.Total == 0 || kgrid.Aggregates == null) return null;
+
+            decimal budget = ((dynamic)kgrid.Aggregates)["Budget"]["sum"];
+            decimal daCost = ((dynamic)kgrid.Aggregates)["DACost"]["sum"];
+            decimal mediaSpend = ((dynamic)kgrid.Aggregates)["MediaSpend"]["sum"];
+            decimal totalRev = ((dynamic)kgrid.Aggregates)["TotalRev"]["sum"];
+            decimal margin = ((dynamic)kgrid.Aggregates)["Margin"]["sum"];
+
+            decimal? marginPct = null;
+            if (totalRev != 0)
+                marginPct = 1 - daCost / totalRev;
+
+            decimal? pctOfGoal = null;
+            if (budget != 0)
+                pctOfGoal = mediaSpend / budget;
+
+            if (typeof(T) == typeof(CampaignPacingDTO))
+            {
+                var aggs = new
+                {
+                    Budget = new { sum = budget },
+                    DACost = new { sum = daCost },
+                    MediaSpend = new { sum = mediaSpend },
+                    TotalRev = new { sum = totalRev },
+                    Margin = new { sum = margin },
+                    MarginPct = new { agg = marginPct },
+                    PctOfGoal = new { agg = pctOfGoal }
+                };
+                return aggs;
+            }
+            else if (typeof(T) == typeof(PerformanceDTO))
+            {
+                int impressions = ((dynamic)kgrid.Aggregates)["Impressions"]["sum"];
+                int clicks = ((dynamic)kgrid.Aggregates)["Clicks"]["sum"];
+                int totalConv = ((dynamic)kgrid.Aggregates)["TotalConv"]["sum"];
+                int postClickConv = ((dynamic)kgrid.Aggregates)["PostClickConv"]["sum"];
+                int postViewConv = ((dynamic)kgrid.Aggregates)["PostViewConv"]["sum"];
+
+                double? ctr = null;
+                if (impressions != 0)
+                    ctr = (double)clicks / impressions;
+
+                decimal? cpa = null;
+                if (totalConv != 0)
+                    cpa = mediaSpend / totalConv;
+
+                var aggs = new
+                {
+                    Budget = new { sum = budget },
+                    DACost = new { sum = daCost },
+                    MediaSpend = new { sum = mediaSpend },
+                    TotalRev = new { sum = totalRev },
+                    Margin = new { sum = margin },
+                    MarginPct = new { agg = marginPct },
+                    PctOfGoal = new { agg = pctOfGoal },
+                    Impressions = new { sum = impressions },
+                    Clicks = new { sum = clicks },
+                    TotalConv = new { sum = totalConv },
+                    PostClickConv = new { sum = postClickConv },
+                    PostViewConv = new { sum = postViewConv },
+                    CTR = new { agg = ctr },
+                    CPA = new { agg = cpa }
+                };
+                return aggs;
+            }
+            else
+                return null;
+        }
+    }
 }
