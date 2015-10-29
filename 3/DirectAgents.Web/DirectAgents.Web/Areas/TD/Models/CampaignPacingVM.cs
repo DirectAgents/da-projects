@@ -6,7 +6,6 @@ namespace DirectAgents.Web.Areas.TD.Models
 {
     public class CampaignPacingVM
     {
-        public IEnumerable<TDStatWithBudget> CampaignBudgetStats { get; set; }
         public IEnumerable<TDCampStats> CampStats { get; set; }
         public bool ShowPerfStats { get; set; }
     }
@@ -20,7 +19,7 @@ namespace DirectAgents.Web.Areas.TD.Models
         public string Campaign { get; set; }
         public decimal Budget { get; set; }
         public decimal DACost { get; set; }
-        public decimal MediaSpend { get; set; }
+        public decimal ClientCost { get; set; }
         public decimal TotalRev { get; set; }
         public decimal Margin { get; set; }
         public decimal MarginPct { get; set; }
@@ -29,7 +28,7 @@ namespace DirectAgents.Web.Areas.TD.Models
         public string AM { get; set; }
 
         public CampaignPacingDTO() { }
-        public CampaignPacingDTO(TDStatWithBudget bs)
+        public CampaignPacingDTO(TDMediaStatWithBudget bs)
         {
             if (bs.Campaign != null)
             {
@@ -47,7 +46,7 @@ namespace DirectAgents.Web.Areas.TD.Models
             }
             Budget = bs.Budget.MediaSpend;
             DACost = bs.DACost();
-            MediaSpend = bs.MediaSpend();
+            ClientCost = bs.MediaSpend();
             TotalRev = bs.TotalRevenue();
             Margin = bs.Margin();
             MarginPct = bs.MarginPct / 100;
@@ -61,7 +60,7 @@ namespace DirectAgents.Web.Areas.TD.Models
             Campaign = cstat.Campaign.Name;
             Budget = cstat.Budget.MediaSpend;
             DACost = cstat.DACost;
-            MediaSpend = cstat.MediaSpend;
+            ClientCost = cstat.ClientCost;
             TotalRev = cstat.TotalRevenue;
             Margin = cstat.Margin;
             MarginPct = cstat.MarginPct / 100;
@@ -78,7 +77,7 @@ namespace DirectAgents.Web.Areas.TD.Models
         public string Campaign { get; set; }
         public decimal Budget { get; set; }
         public decimal DACost { get; set; }
-        public decimal MediaSpend { get; set; }
+        public decimal ClientCost { get; set; }
         public decimal TotalRev { get; set; }
         public decimal Margin { get; set; }
         public decimal MarginPct { get; set; }
@@ -93,7 +92,7 @@ namespace DirectAgents.Web.Areas.TD.Models
         public decimal CPA { get; set; }
 
         public PerformanceDTO() { }
-        public PerformanceDTO(TDStatWithBudget bs)
+        public PerformanceDTO(TDMediaStatWithBudget bs)
         {
             if (bs.Campaign != null)
             {
@@ -103,7 +102,7 @@ namespace DirectAgents.Web.Areas.TD.Models
             }
             Budget = bs.Budget.MediaSpend;
             DACost = bs.DACost();
-            MediaSpend = bs.MediaSpend();
+            ClientCost = bs.MediaSpend();
             TotalRev = bs.TotalRevenue();
             Margin = bs.Margin();
             MarginPct = bs.MarginPct / 100;
@@ -122,7 +121,7 @@ namespace DirectAgents.Web.Areas.TD.Models
             Campaign = cstat.Campaign.Name;
             Budget = cstat.Budget.MediaSpend;
             DACost = cstat.DACost;
-            MediaSpend = cstat.MediaSpend;
+            ClientCost = cstat.ClientCost;
             TotalRev = cstat.TotalRevenue;
             Margin = cstat.Margin;
             MarginPct = cstat.MarginPct / 100;

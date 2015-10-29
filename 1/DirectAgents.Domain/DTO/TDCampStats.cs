@@ -8,11 +8,11 @@ namespace DirectAgents.Domain.DTO
     public class TDCampStats : TDBasicStat
     {
         public Campaign Campaign { get; set; }
-        public IEnumerable<TDStatWithBudget> PlatformStats { get; set; }
+        public IEnumerable<TDMediaStatWithBudget> PlatformStats { get; set; }
         public DateTime Month;
         public TDBudget Budget;
 
-        public TDCampStats(Campaign campaign, IEnumerable<TDStatWithBudget> platformStats, DateTime monthStart, decimal? budget = null)
+        public TDCampStats(Campaign campaign, IEnumerable<TDMediaStatWithBudget> platformStats, DateTime monthStart, decimal? budget = null)
             : base(platformStats)
         {
             Campaign = campaign;
@@ -27,7 +27,7 @@ namespace DirectAgents.Domain.DTO
             if (Budget.MediaSpend == 0)
                 return 0;
             else
-                return this.MediaSpend / Budget.MediaSpend;
+                return this.ClientCost / Budget.MediaSpend;
         }
     }
 
@@ -45,7 +45,7 @@ namespace DirectAgents.Domain.DTO
             PostClickConv = statsToSum.Sum(s => s.PostClickConv);
             PostViewConv = statsToSum.Sum(s => s.PostViewConv);
             DACost = statsToSum.Sum(s => s.DACost());
-            MediaSpend = statsToSum.Sum(s => s.MediaSpend());
+            ClientCost = statsToSum.Sum(s => s.MediaSpend());
             MgmtFee = statsToSum.Sum(s => s.MgmtFee());
             TotalRevenue = statsToSum.Sum(s => s.TotalRevenue());
         }
@@ -55,13 +55,13 @@ namespace DirectAgents.Domain.DTO
         public int PostClickConv { get; set; }
         public int PostViewConv { get; set; }
         public decimal DACost { get; set; }
-        public decimal MediaSpend { get; set; } //TODO: chg to ClientCost
+        public decimal ClientCost { get; set; }
         public decimal MgmtFee { get; set; }
         public decimal TotalRevenue { get; set; }
 
         public bool AllZeros()
         {
-            return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && DACost == 0 && MediaSpend == 0 && TotalRevenue == 0);
+            return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && DACost == 0 && ClientCost == 0 && TotalRevenue == 0);
         }
 
         // Computed properties
@@ -80,15 +80,15 @@ namespace DirectAgents.Domain.DTO
 
         public decimal CPM
         {
-            get { return (Impressions == 0) ? 0 : Math.Round(1000 * MediaSpend / Impressions, 2); }
+            get { return (Impressions == 0) ? 0 : Math.Round(1000 * ClientCost / Impressions, 2); }
         }
         public decimal CPC
         {
-            get { return (Clicks == 0) ? 0 : Math.Round(MediaSpend / Clicks, 2); }
+            get { return (Clicks == 0) ? 0 : Math.Round(ClientCost / Clicks, 2); }
         }
         public decimal CPA
         {
-            get { return (TotalConv == 0) ? 0 : Math.Round(MediaSpend / TotalConv, 2); }
+            get { return (TotalConv == 0) ? 0 : Math.Round(ClientCost / TotalConv, 2); }
         }
 
         public decimal Margin

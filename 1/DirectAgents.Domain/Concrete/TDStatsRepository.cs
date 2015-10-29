@@ -99,7 +99,7 @@ namespace DirectAgents.Domain.Concrete
                 return null; // ?new TDCampStats - blank?
             var budgetInfo = campaign.BudgetInfoFor(monthStart);
 
-            var platStats = new List<TDStatWithBudget>(); // one for each platform
+            var platStats = new List<TDMediaStatWithBudget>(); // one for each platform
             var monthEnd = monthStart.AddMonths(1).AddDays(-1);
             var daySums = DailySummaries(monthStart, monthEnd, campId: campId);
 
@@ -119,7 +119,7 @@ namespace DirectAgents.Domain.Concrete
                     };
                 }
                 var platDaySums = daySums.Where(ds => ds.ExtAccount.PlatformId == plat.Id);
-                var platStat = new TDStatWithBudget(platDaySums, pbInfo)
+                var platStat = new TDMediaStatWithBudget(platDaySums, pbInfo)
                 {
                     Platform = plat
                 };

@@ -1,22 +1,40 @@
 ﻿
 namespace DirectAgents.Domain.DTO
 {
-    public interface ITDLineItem
+    public interface ITDLineItem : ITDRawLineItem
     {
-        // CopyFrom(), AllZeros()
+        ITDClickStats Stats { get; }
+
+        decimal CPM { get; }
+        decimal CPC { get; }
+        decimal CPA { get; }
+    }
+    public interface ITDRawLineItem
+    {
+        // CopyFrom(), AllZeros() ?
 
         decimal DACost { get; }
         decimal ClientCost { get; } // may or may not go through us
-        //decimal MediaSpend { get; } // may or may not go through us
         decimal TotalRevenue { get; }
         decimal MgmtFee { get; }
         decimal Margin { get; }
         decimal? MarginPct { get; }
     }
-
-    public class TDLineItem : ITDLineItem
+    public interface ITDClickStats
     {
-        public virtual void CopyFrom(TDLineItem stat)
+        int Impressions { get; }
+        int Clicks { get; }
+        int PostClickConv { get; }
+        int PostViewConv { get; }
+        int TotalConv { get; }
+
+        double CTR { get; }
+        double ConvRate { get; }
+    }
+
+    public class TDRawLineItem : ITDRawLineItem
+    {
+        public virtual void CopyFrom(TDRawLineItem stat)
         {
             this.DACost = stat.DACost;
             this.ClientCost = stat.ClientCost;
@@ -43,7 +61,7 @@ namespace DirectAgents.Domain.DTO
         }
 
         // Constructor
-        public TDLineItem(decimal rawCost = 0, decimal mgmtFeePct = 0, decimal marginPct = 0)
+        public TDRawLineItem(decimal rawCost = 0, decimal mgmtFeePct = 0, decimal marginPct = 0)
         {
             SetMoneyVals(rawCost, mgmtFeePct, marginPct);
         }

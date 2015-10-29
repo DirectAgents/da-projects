@@ -17,6 +17,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             this.tdRepo = tdRepository;
         }
 
+        // HTML version
         public ActionResult Pacing(int? campId, bool showPerfStats = false)
         {
             DateTime currMonth = SetChooseMonthViewData();
@@ -125,7 +126,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
             decimal budget = ((dynamic)kgrid.Aggregates)["Budget"]["sum"];
             decimal daCost = ((dynamic)kgrid.Aggregates)["DACost"]["sum"];
-            decimal mediaSpend = ((dynamic)kgrid.Aggregates)["MediaSpend"]["sum"];
+            decimal clientCost = ((dynamic)kgrid.Aggregates)["ClientCost"]["sum"];
             decimal totalRev = ((dynamic)kgrid.Aggregates)["TotalRev"]["sum"];
             decimal margin = ((dynamic)kgrid.Aggregates)["Margin"]["sum"];
 
@@ -135,7 +136,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
             decimal? pctOfGoal = null;
             if (budget != 0)
-                pctOfGoal = mediaSpend / budget;
+                pctOfGoal = clientCost / budget;
 
             if (typeof(T) == typeof(CampaignPacingDTO))
             {
@@ -143,7 +144,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 {
                     Budget = new { sum = budget },
                     DACost = new { sum = daCost },
-                    MediaSpend = new { sum = mediaSpend },
+                    ClientCost = new { sum = clientCost },
                     TotalRev = new { sum = totalRev },
                     Margin = new { sum = margin },
                     MarginPct = new { agg = marginPct },
@@ -165,13 +166,13 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
                 decimal? cpa = null;
                 if (totalConv != 0)
-                    cpa = mediaSpend / totalConv;
+                    cpa = clientCost / totalConv;
 
                 var aggs = new
                 {
                     Budget = new { sum = budget },
                     DACost = new { sum = daCost },
-                    MediaSpend = new { sum = mediaSpend },
+                    ClientCost = new { sum = clientCost },
                     TotalRev = new { sum = totalRev },
                     Margin = new { sum = margin },
                     MarginPct = new { agg = marginPct },

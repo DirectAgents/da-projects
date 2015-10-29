@@ -5,14 +5,14 @@ using DirectAgents.Domain.Entities.TD;
 
 namespace DirectAgents.Domain.DTO
 {
-    public class TDStatWithBudget : TDMediaStat
+    public class TDMediaStatWithBudget : TDMediaStat
     {
         //public DateTime Date { get; set; } // the month of the budget
         public TDBudget Budget;
 
         //public IEnumerable<TDStat> ExtAccountStats { get; set; }
 
-        public TDStatWithBudget(IEnumerable<DailySummary> dSums, BudgetInfoVals budgetVals)
+        public TDMediaStatWithBudget(IEnumerable<DailySummary> dSums, BudgetInfoVals budgetVals)
             : base(dSums, budgetVals)
         {
             Budget.MediaSpend = budgetVals.MediaSpend;

@@ -16,12 +16,12 @@
     <th>Campaign</th>
     <th>Platform</th>
     <th>Budget</th>
-    <th>% Completed</th>
+    <th>%Completed</th>
     <th>DA Cost</th>
     <th>Client Cost</th>
     <th>Revenue</th>
     <th>Margin</th>
-    <th>Margin %</th>
+    <th>Margin%</th>
     @if (!Model.ShowPerfStats)
     {
         <th>Sales Rep</th>
@@ -45,7 +45,7 @@
     <td>@cStat.Budget.MediaSpend.ToString("C")</td>
     <td>@cStat.FractionReached().ToString("#0.##%")</td>
     <td>@cStat.DACost.ToString("C")</td>
-    <td>@cStat.MediaSpend.ToString("C")</td>
+    <td>@cStat.ClientCost.ToString("C")</td>
     <td>@cStat.TotalRevenue.ToString("C")</td>
     <td>@cStat.Margin.ToString("C")</td>
     <td>@cStat.MarginPct.ToString("#0.## \\%")</td>
