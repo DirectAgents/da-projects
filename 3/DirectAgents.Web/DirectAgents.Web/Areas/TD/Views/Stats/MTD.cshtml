@@ -23,7 +23,7 @@ Month: @m.Month.ToString("MMM yyyy")
 </tr>
 <tr>
     <th>Computed Margin</th>
-    <td>@m.MarginPct.ToString("#0.## \\%")</td>
+    <td>@(m.MarginPct.HasValue ? m.MarginPct.Value.ToString("#0.## \\%") : "N/A")</td>
 </tr>
 </table>
 
@@ -44,7 +44,7 @@ Month: @m.Month.ToString("MMM yyyy")
 <tr>
     <td>Client Cost</td>
     <td>@m.ClientCost.ToString("C")</td>
-    <td>@m.Budget.MediaSpend.ToString("C")</td>
+    <td>@m.Budget.ClientCost.ToString("C")</td>
     <td>@m.FractionReached().ToString("#0.##%")</td>
 </tr>
 <tr>

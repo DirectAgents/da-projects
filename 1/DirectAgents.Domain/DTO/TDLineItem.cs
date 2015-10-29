@@ -1,10 +1,8 @@
 ﻿
 namespace DirectAgents.Domain.DTO
 {
-    public interface ITDLineItem : ITDRawLineItem
+    public interface ITDLineItem : ITDRawLineItem, ITDClickStats
     {
-        ITDClickStats Stats { get; }
-
         decimal CPM { get; }
         decimal CPC { get; }
         decimal CPA { get; }
@@ -26,8 +24,8 @@ namespace DirectAgents.Domain.DTO
         int Clicks { get; }
         int PostClickConv { get; }
         int PostViewConv { get; }
-        int TotalConv { get; }
 
+        int TotalConv { get; }
         double CTR { get; }
         double ConvRate { get; }
     }

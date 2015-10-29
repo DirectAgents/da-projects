@@ -128,7 +128,7 @@ namespace DirectAgents.Domain.Concrete
 
             var campStats = new TDCampStats(campaign, platStats, monthStart);
             if (budgetInfo != null)
-                campStats.Budget.MediaSpend = budgetInfo.MediaSpend;
+                campStats.Budget.ClientCost = budgetInfo.MediaSpend;
 
             return campStats;
         }

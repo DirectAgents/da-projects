@@ -19,45 +19,45 @@ namespace DirectAgents.Domain.DTO
             PlatformStats = platformStats;
             Month = monthStart;
             if (budget.HasValue)
-                Budget.MediaSpend = budget.Value;
+                Budget.ClientCost = budget.Value;
         }
 
         public decimal FractionReached()
         {
-            if (Budget.MediaSpend == 0)
+            if (Budget.ClientCost == 0)
                 return 0;
             else
-                return this.ClientCost / Budget.MediaSpend;
+                return this.ClientCost / Budget.ClientCost;
         }
     }
 
     public struct TDBudget
     {
-        public decimal MediaSpend;
+        public decimal ClientCost;
     }
 
-    public class TDBasicStat
+    public class TDBasicStat : ITDLineItem
     {
         public TDBasicStat(IEnumerable<TDMediaStat> statsToSum)
         {
-            Impressions = statsToSum.Sum(s => s.Impressions);
-            Clicks = statsToSum.Sum(s => s.Clicks);
-            PostClickConv = statsToSum.Sum(s => s.PostClickConv);
-            PostViewConv = statsToSum.Sum(s => s.PostViewConv);
             DACost = statsToSum.Sum(s => s.DACost());
             ClientCost = statsToSum.Sum(s => s.MediaSpend());
             MgmtFee = statsToSum.Sum(s => s.MgmtFee());
             TotalRevenue = statsToSum.Sum(s => s.TotalRevenue());
+            Impressions = statsToSum.Sum(s => s.Impressions);
+            Clicks = statsToSum.Sum(s => s.Clicks);
+            PostClickConv = statsToSum.Sum(s => s.PostClickConv);
+            PostViewConv = statsToSum.Sum(s => s.PostViewConv);
         }
 
-        public int Impressions { get; set; }
-        public int Clicks { get; set; }
-        public int PostClickConv { get; set; }
-        public int PostViewConv { get; set; }
         public decimal DACost { get; set; }
         public decimal ClientCost { get; set; }
         public decimal MgmtFee { get; set; }
         public decimal TotalRevenue { get; set; }
+        public int Impressions { get; set; }
+        public int Clicks { get; set; }
+        public int PostClickConv { get; set; }
+        public int PostViewConv { get; set; }
 
         public bool AllZeros()
         {
@@ -95,9 +95,9 @@ namespace DirectAgents.Domain.DTO
         {
             get { return TotalRevenue - DACost; }
         }
-        public decimal MarginPct //TODO: make nullable
+        public decimal? MarginPct
         {
-            get { return (TotalRevenue == 0) ? 0 : (100 * Margin / TotalRevenue); }
+            get { return (TotalRevenue == 0) ? (decimal?)null : (100 * Margin / TotalRevenue); }
         }
 
         //public decimal MgmtFeePct

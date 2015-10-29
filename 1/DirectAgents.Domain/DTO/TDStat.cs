@@ -8,7 +8,7 @@ namespace DirectAgents.Domain.DTO
     public class TDMediaStatWithBudget : TDMediaStat
     {
         //public DateTime Date { get; set; } // the month of the budget
-        public TDBudget Budget;
+        public TDMediaBudget Budget;
 
         //public IEnumerable<TDStat> ExtAccountStats { get; set; }
 
@@ -31,6 +31,10 @@ namespace DirectAgents.Domain.DTO
             return this.MediaSpend() / Budget.MediaSpend;
         }
 
+    }
+    public struct TDMediaBudget
+    {
+        public decimal MediaSpend;
     }
 
     //Allows for the computation of MediaSpend, MgmtFee, TotalRevenue, Margin...

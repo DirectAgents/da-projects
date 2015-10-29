@@ -58,12 +58,12 @@ namespace DirectAgents.Web.Areas.TD.Models
             Advertiser = cstat.Campaign.Advertiser.Name;
             CampaignId = cstat.Campaign.Id;
             Campaign = cstat.Campaign.Name;
-            Budget = cstat.Budget.MediaSpend;
+            Budget = cstat.Budget.ClientCost;
             DACost = cstat.DACost;
             ClientCost = cstat.ClientCost;
             TotalRev = cstat.TotalRevenue;
             Margin = cstat.Margin;
-            MarginPct = cstat.MarginPct / 100;
+            MarginPct = cstat.MarginPct.HasValue ? (cstat.MarginPct.Value / 100) : 0;
             //Platform =
             PctOfGoal = cstat.FractionReached();
             SalesRep = cstat.Campaign.Advertiser.SalesRepName();
@@ -119,12 +119,12 @@ namespace DirectAgents.Web.Areas.TD.Models
         {
             CampaignId = cstat.Campaign.Id;
             Campaign = cstat.Campaign.Name;
-            Budget = cstat.Budget.MediaSpend;
+            Budget = cstat.Budget.ClientCost;
             DACost = cstat.DACost;
             ClientCost = cstat.ClientCost;
             TotalRev = cstat.TotalRevenue;
             Margin = cstat.Margin;
-            MarginPct = cstat.MarginPct / 100;
+            MarginPct = cstat.MarginPct.HasValue ? (cstat.MarginPct.Value / 100) : 0;
             PctOfGoal = cstat.FractionReached();
             Impressions = cstat.Impressions;
             Clicks = cstat.Clicks;

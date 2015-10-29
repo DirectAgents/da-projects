@@ -42,13 +42,13 @@
     <td>@cStat.Campaign.Advertiser.Name</td>
     <td>@cStat.Campaign.Name</td>
     <td></td>
-    <td>@cStat.Budget.MediaSpend.ToString("C")</td>
+    <td>@cStat.Budget.ClientCost.ToString("C")</td>
     <td>@cStat.FractionReached().ToString("#0.##%")</td>
     <td>@cStat.DACost.ToString("C")</td>
     <td>@cStat.ClientCost.ToString("C")</td>
     <td>@cStat.TotalRevenue.ToString("C")</td>
     <td>@cStat.Margin.ToString("C")</td>
-    <td>@cStat.MarginPct.ToString("#0.## \\%")</td>
+    <td>@(cStat.MarginPct.HasValue ? cStat.MarginPct.Value.ToString("#0.## \\%") : "N/A")</td>
     @if (!Model.ShowPerfStats)
     {
         <td>@cStat.Campaign.Advertiser.SalesRepName()</td>
