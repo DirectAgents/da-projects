@@ -5,17 +5,21 @@ using DirectAgents.Domain.Entities.TD;
 
 namespace DirectAgents.Domain.DTO
 {
-    public class TDMediaStatWithBudget : TDMediaStat
+    public class TDMediaStatWithBudget : TDMediaStat, ITDLineItem
     {
         //public DateTime Date { get; set; } // the month of the budget
-        public TDMediaBudget Budget;
+        private TDMediaBudget _budget;
+        public ITDBudget Budget
+        {
+            get { return _budget; }
+        }
 
         //public IEnumerable<TDStat> ExtAccountStats { get; set; }
 
         public TDMediaStatWithBudget(IEnumerable<DailySummary> dSums, BudgetInfoVals budgetVals)
             : base(dSums, budgetVals)
         {
-            Budget.MediaSpend = budgetVals.MediaSpend;
+            _budget = new TDMediaBudget { MediaSpend = budgetVals.MediaSpend };
         }
 
         //public TDStatWithBudget(TDStat tdStat, BudgetInfo budgetInfo)
@@ -24,17 +28,25 @@ namespace DirectAgents.Domain.DTO
         //    Budget.MediaSpend = budgetInfo.MediaSpend;
         //}
 
-        public decimal FractionReached()
+        public double FractionReached()
         {
-            if (Budget.MediaSpend == 0)
+            if (Budget.ClientCost == 0)
                 return 0;
-            return this.MediaSpend() / Budget.MediaSpend;
+            return (double)(this.MediaSpend() / _budget.MediaSpend);
         }
 
+        public decimal ClientCost
+        {
+            get { return MediaSpend(); }
+        }
     }
-    public struct TDMediaBudget
+    public class TDMediaBudget : ITDBudget
     {
-        public decimal MediaSpend;
+        public decimal MediaSpend { get; set; }
+        public decimal ClientCost
+        {
+            get { return MediaSpend; }
+        }
     }
 
     //Allows for the computation of MediaSpend, MgmtFee, TotalRevenue, Margin...
@@ -50,7 +62,16 @@ namespace DirectAgents.Domain.DTO
             }
         }
         public decimal MgmtFeePct { get; set; }
-        public decimal MarginPct { get; set; }
+        private decimal _marginPct;
+        public decimal? MarginPct
+        {
+            get { return _marginPct; }
+            set { _marginPct = (value.HasValue ? value.Value : 0); }
+        }
+        private bool CostGoesThruDA()
+        {
+            return (_marginPct != 100);
+        }
 
         public TDMediaStat() { }
         //public TDMediaStat(decimal mgmtFeePct, decimal marginPct = 0, decimal mediaSpend = 0)
@@ -85,7 +106,7 @@ namespace DirectAgents.Domain.DTO
         // Compute and set Cost based on the specified MediaSpend
         public void SetMediaSpend(decimal mediaSpend)
         {
-            if (MarginPct == 100)
+            if (!CostGoesThruDA())
                 this.Cost = mediaSpend;
             else
                 this.Cost = mediaSpend * MediaSpendToRevMultiplier() * RevToCostMultiplier();
@@ -94,49 +115,61 @@ namespace DirectAgents.Domain.DTO
         //note: is 0 if MarginPct==100
         private decimal RevToCostMultiplier() // usually used in reverse (cost -> rev)
         {
-            return (1 - MarginPct / 100);
+            return (1 - _marginPct / 100);
         }
         private decimal MediaSpendToRevMultiplier() // usually used in reverse (rev -> mediaspend)
         {
             return (1 + MgmtFeePct / 100);
         }
 
-        public decimal TotalRevenue()
+        public decimal TotalRevenue
         {
-            if (MarginPct == 100)
-                return Cost * MgmtFeePct / 100;
-            else
-                return Cost / RevToCostMultiplier();
+            get
+            {
+                if (!CostGoesThruDA())
+                    return Cost * MgmtFeePct / 100;
+                else
+                    return Cost / RevToCostMultiplier();
+            }
         }
 
         public decimal MediaSpend()
         {
-            if (MarginPct == 100)
+            if (!CostGoesThruDA())
                 return Cost;
             else
                 return Cost / RevToCostMultiplier() / MediaSpendToRevMultiplier();
                 //return TotalRevenue() / MediaSpendToRevMultiplier();
         }
 
-        public decimal MgmtFee()
+        public decimal MgmtFee
         {
-            if (MarginPct == 100)
-                return TotalRevenue();
-            else
-                return TotalRevenue() - MediaSpend(); //TODO: make more efficient
+            get
+            {
+                if (!CostGoesThruDA())
+                    return TotalRevenue;
+                else
+                    return TotalRevenue - MediaSpend(); //TODO: make more efficient
+            }
         }
 
-        public decimal DACost()
+        public decimal DACost
         {
-            if (MarginPct == 100)
-                return 0;
-            else
-                return Cost;
+            get
+            {
+                if (!CostGoesThruDA())
+                    return 0;
+                else
+                    return Cost;
+            }
         }
 
-        public decimal Margin()
+        public decimal Margin
         {
-            return TotalRevenue() - DACost();
+            get
+            {
+                return TotalRevenue - DACost;
+            }
         }
 
         public override decimal CPM

@@ -5,38 +5,43 @@ using DirectAgents.Domain.Entities.TD;
 
 namespace DirectAgents.Domain.DTO
 {
-    public class TDCampStats : TDLineItem
+    public class TDCampStats : TDLineItem, ITDLineItem
     {
         public Campaign Campaign { get; set; }
-        public IEnumerable<TDMediaStatWithBudget> PlatformStats { get; set; }
+        public Platform Platform { get; set; }
+        public IEnumerable<ITDLineItem> PlatformStats { get; set; }
         public DateTime Month;
-        public TDBudget Budget;
+        public ITDBudget Budget { get; private set; }
 
-        public TDCampStats(Campaign campaign, IEnumerable<TDMediaStatWithBudget> platformStats, DateTime monthStart, decimal? budget = null)
+        public TDCampStats(Campaign campaign, IEnumerable<ITDLineItem> platformStats, DateTime monthStart, decimal? budget = null)
             : base(platformStats)
         {
             Campaign = campaign;
             PlatformStats = platformStats;
             Month = monthStart;
-            if (budget.HasValue)
-                Budget.ClientCost = budget.Value;
+            Budget = new TDBudget(budget);
         }
 
-        public decimal FractionReached()
+        public double FractionReached()
         {
             if (Budget.ClientCost == 0)
                 return 0;
             else
-                return this.ClientCost / Budget.ClientCost;
+                return (double)(this.ClientCost / Budget.ClientCost);
         }
     }
 
-    public struct TDBudget
+    public class TDBudget : ITDBudget
     {
-        public decimal ClientCost;
+        public decimal ClientCost { get; set; } //TODO: make nullable
+
+        public TDBudget(decimal? clientCost)
+        {
+            ClientCost = clientCost.HasValue ? clientCost.Value : 0;
+        }
     }
 
-    public class TDLineItem : TDRawLineItem, ITDLineItem
+    public class TDLineItem : TDRawLineItem//, ITDLineItem
     {
         public override bool AllZeros(bool includeClientCost = true)
         {
@@ -45,7 +50,7 @@ namespace DirectAgents.Domain.DTO
         }
 
         // Constructor
-        public TDLineItem(IEnumerable<TDMediaStat> statsToSum)
+        public TDLineItem(IEnumerable<ITDLineItem> statsToSum)
             : base(statsToSum)
         {
             Impressions = statsToSum.Sum(s => s.Impressions);

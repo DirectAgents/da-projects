@@ -1,10 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DirectAgents.Domain.Entities.TD;
 
 namespace DirectAgents.Domain.DTO
 {
     public interface ITDLineItem : ITDRawLineItem, ITDClickStats
     {
+        Platform Platform { get; }
+
+        ITDBudget Budget { get; }
+        double FractionReached();
+
         decimal CPM { get; }
         decimal CPC { get; }
         decimal CPA { get; }
@@ -30,6 +36,10 @@ namespace DirectAgents.Domain.DTO
         int TotalConv { get; }
         double CTR { get; }
         double ConvRate { get; }
+    }
+    public interface ITDBudget
+    {
+        decimal ClientCost { get; }
     }
 
     public class TDRawLineItem : ITDRawLineItem
@@ -65,12 +75,12 @@ namespace DirectAgents.Domain.DTO
         }
 
         // Constructors
-        public TDRawLineItem(IEnumerable<TDMediaStat> statsToSum)
+        public TDRawLineItem(IEnumerable<ITDLineItem> statsToSum)
         {
-            DACost = statsToSum.Sum(s => s.DACost());
-            ClientCost = statsToSum.Sum(s => s.MediaSpend());
-            MgmtFee = statsToSum.Sum(s => s.MgmtFee());
-            TotalRevenue = statsToSum.Sum(s => s.TotalRevenue());
+            DACost = statsToSum.Sum(s => s.DACost);
+            ClientCost = statsToSum.Sum(s => s.ClientCost);
+            MgmtFee = statsToSum.Sum(s => s.MgmtFee);
+            TotalRevenue = statsToSum.Sum(s => s.TotalRevenue);
         }
 
         //public TDRawLineItem(decimal rawCost = 0, decimal mgmtFeePct = 0, decimal marginPct = 0)

@@ -22,35 +22,35 @@ namespace DirectAgents.Web.Areas.TD.Models
         public decimal ClientCost { get; set; }
         public decimal TotalRev { get; set; }
         public decimal Margin { get; set; }
-        public decimal MarginPct { get; set; }
-        public decimal PctOfGoal { get; set; }
+        public decimal? MarginPct { get; set; }
+        public double PctOfGoal { get; set; }
         public string SalesRep { get; set; }
         public string AM { get; set; }
 
         public CampaignPacingDTO() { }
-        public CampaignPacingDTO(TDMediaStatWithBudget bs)
+        public CampaignPacingDTO(ITDLineItem li)
         {
-            if (bs.Campaign != null)
+            //if (bs.Campaign != null)
+            //{
+            //    //NumPlatforms = (what only platforms that have stats?)
+            //    Advertiser = bs.Campaign.Advertiser.Name;
+            //    CampaignId = bs.Campaign.Id;
+            //    Campaign = bs.Campaign.Name;
+            //    Platform = string.Join(",", bs.Campaign.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name));
+            //    SalesRep = bs.Campaign.Advertiser.SalesRepName();
+            //    AM = bs.Campaign.Advertiser.AMName();
+            //}
+            if (li.Platform != null)
             {
-                //NumPlatforms = (what only platforms that have stats?)
-                Advertiser = bs.Campaign.Advertiser.Name;
-                CampaignId = bs.Campaign.Id;
-                Campaign = bs.Campaign.Name;
-                Platform = string.Join(",", bs.Campaign.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name));
-                SalesRep = bs.Campaign.Advertiser.SalesRepName();
-                AM = bs.Campaign.Advertiser.AMName();
+                Platform = li.Platform.Name;
             }
-            if (bs.Platform != null)
-            {
-                Platform = bs.Platform.Name;
-            }
-            Budget = bs.Budget.MediaSpend;
-            DACost = bs.DACost();
-            ClientCost = bs.MediaSpend();
-            TotalRev = bs.TotalRevenue();
-            Margin = bs.Margin();
-            MarginPct = bs.MarginPct / 100;
-            PctOfGoal = bs.FractionReached();
+            Budget = li.Budget.ClientCost;
+            DACost = li.DACost;
+            ClientCost = li.ClientCost;
+            TotalRev = li.TotalRevenue;
+            Margin = li.Margin;
+            MarginPct = li.MarginPct / 100;
+            PctOfGoal = li.FractionReached();
         }
         public CampaignPacingDTO(TDCampStats cstat)
         {
@@ -63,7 +63,7 @@ namespace DirectAgents.Web.Areas.TD.Models
             ClientCost = cstat.ClientCost;
             TotalRev = cstat.TotalRevenue;
             Margin = cstat.Margin;
-            MarginPct = cstat.MarginPct.HasValue ? (cstat.MarginPct.Value / 100) : 0;
+            MarginPct = cstat.MarginPct / 100;
             //Platform =
             PctOfGoal = cstat.FractionReached();
             SalesRep = cstat.Campaign.Advertiser.SalesRepName();
@@ -80,9 +80,9 @@ namespace DirectAgents.Web.Areas.TD.Models
         public decimal ClientCost { get; set; }
         public decimal TotalRev { get; set; }
         public decimal Margin { get; set; }
-        public decimal MarginPct { get; set; }
+        public decimal? MarginPct { get; set; }
         public string Platform { get; set; }
-        public decimal PctOfGoal { get; set; }
+        public double PctOfGoal { get; set; }
         public int Impressions { get; set; }
         public int Clicks { get; set; }
         public int TotalConv { get; set; }
@@ -92,28 +92,28 @@ namespace DirectAgents.Web.Areas.TD.Models
         public decimal CPA { get; set; }
 
         public PerformanceDTO() { }
-        public PerformanceDTO(TDMediaStatWithBudget bs)
+        public PerformanceDTO(ITDLineItem li)
         {
-            if (bs.Campaign != null)
-            {
-                CampaignId = bs.Campaign.Id;
-                Campaign = bs.Campaign.Name;
-                Platform = string.Join(",", bs.Campaign.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name));
-            }
-            Budget = bs.Budget.MediaSpend;
-            DACost = bs.DACost();
-            ClientCost = bs.MediaSpend();
-            TotalRev = bs.TotalRevenue();
-            Margin = bs.Margin();
-            MarginPct = bs.MarginPct / 100;
-            PctOfGoal = bs.FractionReached();
-            Impressions = bs.Impressions;
-            Clicks = bs.Clicks;
-            TotalConv = bs.TotalConv;
-            PostClickConv = bs.PostClickConv;
-            PostViewConv = bs.PostViewConv;
-            CTR = bs.CTR;
-            CPA = bs.CPA;
+            //if (bs.Campaign != null)
+            //{
+            //    CampaignId = bs.Campaign.Id;
+            //    Campaign = bs.Campaign.Name;
+            //    Platform = string.Join(",", bs.Campaign.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name));
+            //}
+            Budget = li.Budget.ClientCost;
+            DACost = li.DACost;
+            ClientCost = li.ClientCost;
+            TotalRev = li.TotalRevenue;
+            Margin = li.Margin;
+            MarginPct = li.MarginPct / 100;
+            PctOfGoal = li.FractionReached();
+            Impressions = li.Impressions;
+            Clicks = li.Clicks;
+            TotalConv = li.TotalConv;
+            PostClickConv = li.PostClickConv;
+            PostViewConv = li.PostViewConv;
+            CTR = li.CTR;
+            CPA = li.CPA;
         }
         public PerformanceDTO(TDCampStats cstat)
         {
@@ -124,7 +124,7 @@ namespace DirectAgents.Web.Areas.TD.Models
             ClientCost = cstat.ClientCost;
             TotalRev = cstat.TotalRevenue;
             Margin = cstat.Margin;
-            MarginPct = cstat.MarginPct.HasValue ? (cstat.MarginPct.Value / 100) : 0;
+            MarginPct = cstat.MarginPct / 100;
             PctOfGoal = cstat.FractionReached();
             Impressions = cstat.Impressions;
             Clicks = cstat.Clicks;

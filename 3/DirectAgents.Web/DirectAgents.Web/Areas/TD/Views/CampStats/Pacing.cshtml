@@ -67,17 +67,17 @@
     {
         foreach (var platStat in cStat.PlatformStats)
         {
-            decimal budget = platStat.Budget.MediaSpend;
+            decimal budget = platStat.Budget.ClientCost;
 <tr>
     <td colspan="2"></td>
     <td>@platStat.Platform.Name</td>
     <td>@(budget != 0 ? budget.ToString("C") : "")</td>
     <td>@(budget != 0 ? platStat.FractionReached().ToString("#0.##%") : "")</td>
-    <td>@platStat.DACost().ToString("C")</td>
-    <td>@platStat.MediaSpend().ToString("C")</td>
-    <td>@platStat.TotalRevenue().ToString("C")</td>
-    <td>@platStat.Margin().ToString("C")</td>
-    <td>@platStat.MarginPct.ToString("#0.## \\%")</td>
+    <td>@platStat.DACost.ToString("C")</td>
+    <td>@platStat.ClientCost.ToString("C")</td>
+    <td>@platStat.TotalRevenue.ToString("C")</td>
+    <td>@platStat.Margin.ToString("C")</td>
+    <td>@(platStat.MarginPct.HasValue ? platStat.MarginPct.Value.ToString("#0.## \\%") : "N/A")</td>
     @if (Model.ShowPerfStats)
     {
         <td>@platStat.Impressions.ToString("N0")</td>
