@@ -5,7 +5,7 @@ using DirectAgents.Domain.Entities.TD;
 
 namespace DirectAgents.Domain.DTO
 {
-    public class TDCampStats : TDBasicStat
+    public class TDCampStats : TDLineItem
     {
         public Campaign Campaign { get; set; }
         public IEnumerable<TDMediaStatWithBudget> PlatformStats { get; set; }
@@ -36,33 +36,28 @@ namespace DirectAgents.Domain.DTO
         public decimal ClientCost;
     }
 
-    public class TDBasicStat : ITDLineItem
+    public class TDLineItem : TDRawLineItem, ITDLineItem
     {
-        public TDBasicStat(IEnumerable<TDMediaStat> statsToSum)
+        public override bool AllZeros(bool includeClientCost = true)
         {
-            DACost = statsToSum.Sum(s => s.DACost());
-            ClientCost = statsToSum.Sum(s => s.MediaSpend());
-            MgmtFee = statsToSum.Sum(s => s.MgmtFee());
-            TotalRevenue = statsToSum.Sum(s => s.TotalRevenue());
+            bool allZeros = base.AllZeros(includeClientCost);
+            return (allZeros && Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0);
+        }
+
+        // Constructor
+        public TDLineItem(IEnumerable<TDMediaStat> statsToSum)
+            : base(statsToSum)
+        {
             Impressions = statsToSum.Sum(s => s.Impressions);
             Clicks = statsToSum.Sum(s => s.Clicks);
             PostClickConv = statsToSum.Sum(s => s.PostClickConv);
             PostViewConv = statsToSum.Sum(s => s.PostViewConv);
         }
 
-        public decimal DACost { get; set; }
-        public decimal ClientCost { get; set; }
-        public decimal MgmtFee { get; set; }
-        public decimal TotalRevenue { get; set; }
         public int Impressions { get; set; }
         public int Clicks { get; set; }
         public int PostClickConv { get; set; }
         public int PostViewConv { get; set; }
-
-        public bool AllZeros()
-        {
-            return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && DACost == 0 && ClientCost == 0 && TotalRevenue == 0);
-        }
 
         // Computed properties
         public int TotalConv
@@ -91,16 +86,6 @@ namespace DirectAgents.Domain.DTO
             get { return (TotalConv == 0) ? 0 : Math.Round(ClientCost / TotalConv, 2); }
         }
 
-        public decimal Margin
-        {
-            get { return TotalRevenue - DACost; }
-        }
-        public decimal? MarginPct
-        {
-            get { return (TotalRevenue == 0) ? (decimal?)null : (100 * Margin / TotalRevenue); }
-        }
-
-        //public decimal MgmtFeePct
     }
 
 }
