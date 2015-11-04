@@ -63,30 +63,30 @@
         <td>@cStat.CPA.ToString("C")</td>
     }
 </tr>
-    if (cStat.PlatformStats.Any())
+    if (cStat.LineItems.Any())
     {
-        foreach (var platStat in cStat.PlatformStats)
+        foreach (var li in cStat.LineItems)
         {
-            decimal budget = platStat.Budget.ClientCost;
+            decimal budget = li.Budget.ClientCost;
 <tr>
     <td colspan="2"></td>
-    <td>@platStat.Platform.Name</td>
+    <td>@li.Platform.Name</td>
     <td>@(budget != 0 ? budget.ToString("C") : "")</td>
-    <td>@(budget != 0 ? platStat.FractionReached().ToString("#0.##%") : "")</td>
-    <td>@platStat.DACost.ToString("C")</td>
-    <td>@platStat.ClientCost.ToString("C")</td>
-    <td>@platStat.TotalRevenue.ToString("C")</td>
-    <td>@platStat.Margin.ToString("C")</td>
-    <td>@(platStat.MarginPct.HasValue ? platStat.MarginPct.Value.ToString("#0.## \\%") : "N/A")</td>
+    <td>@(budget != 0 ? li.FractionReached().ToString("#0.##%") : "")</td>
+    <td>@li.DACost.ToString("C")</td>
+    <td>@li.ClientCost.ToString("C")</td>
+    <td>@li.TotalRevenue.ToString("C")</td>
+    <td>@li.Margin.ToString("C")</td>
+    <td>@(li.MarginPct.HasValue ? li.MarginPct.Value.ToString("#0.## \\%") : "N/A")</td>
     @if (Model.ShowPerfStats)
     {
-        <td>@platStat.Impressions.ToString("N0")</td>
-        <td>@platStat.Clicks.ToString("N0")</td>
-        <td>@platStat.TotalConv.ToString("N0")</td>
-        <td>@platStat.PostClickConv.ToString("N0")</td>
-        <td>@platStat.PostViewConv.ToString("N0")</td>
-        <td>@platStat.CTR.ToString("#0.##%")</td>
-        <td>@platStat.CPA.ToString("C")</td>
+        <td>@li.Impressions.ToString("N0")</td>
+        <td>@li.Clicks.ToString("N0")</td>
+        <td>@li.TotalConv.ToString("N0")</td>
+        <td>@li.PostClickConv.ToString("N0")</td>
+        <td>@li.PostViewConv.ToString("N0")</td>
+        <td>@li.CTR.ToString("#0.##%")</td>
+        <td>@li.CPA.ToString("C")</td>
     }
 </tr>
         }

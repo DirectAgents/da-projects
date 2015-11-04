@@ -54,7 +54,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             DateTime currMonth = CurrentMonthTD;
             var stat = tdRepo.GetCampStats(currMonth, campId);
-            var dtos = stat.PlatformStats.Select(s => new CampaignPacingDTO(s));
+            var dtos = stat.LineItems.Select(li => new CampaignPacingDTO(li));
             var kgrid = new KendoGridEx<CampaignPacingDTO>(request, dtos);
 
             return CreateJsonResult(kgrid, Aggregates(kgrid), allowGet: true);
@@ -109,9 +109,9 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var campStats = tdRepo.GetCampStats(currMonth, campId);
 
             var dtos = new List<CampaignPacingDTO> { new CampaignPacingDTO(campStats) };
-            foreach (var platStat in campStats.PlatformStats)
+            foreach (var li in campStats.LineItems)
             {
-                dtos.Add(new CampaignPacingDTO(platStat));
+                dtos.Add(new CampaignPacingDTO(li));
             }
             var json = Json(dtos, JsonRequestBehavior.AllowGet);
             //var json = Json(dtos);

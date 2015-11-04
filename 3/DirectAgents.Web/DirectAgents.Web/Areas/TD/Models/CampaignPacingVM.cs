@@ -12,7 +12,7 @@ namespace DirectAgents.Web.Areas.TD.Models
 
     public class CampaignPacingDTO
     {
-        public int NumPlatforms { get; set; }
+        public int NumPlatforms { get; set; } // remove?
         public string Platform { get; set; } // one or multiple
         public string Advertiser { get; set; }
         public int CampaignId { get; set; }
@@ -54,7 +54,7 @@ namespace DirectAgents.Web.Areas.TD.Models
         }
         public CampaignPacingDTO(TDCampStats cstat)
         {
-            NumPlatforms = cstat.PlatformStats.Count();
+            NumPlatforms = cstat.LineItems.Count(); // remove?
             Advertiser = cstat.Campaign.Advertiser.Name;
             CampaignId = cstat.Campaign.Id;
             Campaign = cstat.Campaign.Name;

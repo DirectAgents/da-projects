@@ -19,7 +19,7 @@ Month: @m.Month.ToString("MMM yyyy")
 </tr>
 <tr>
     <th>Platforms</th>
-    <td>@String.Join(",", m.PlatformStats.Select(ps => ps.Platform.Name))</td>
+    <td>@String.Join(",", m.LineItems.Select(li => li.Platform.Name))</td>@* compute differently? need distinct platform names *@
 </tr>
 <tr>
     <th>Computed Margin</th>

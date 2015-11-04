@@ -9,7 +9,7 @@ namespace DirectAgents.Domain.DTO
     {
         public Campaign Campaign { get; set; }
         public Platform Platform { get; set; }
-        public IEnumerable<ITDLineItem> PlatformStats { get; set; }
+        public IEnumerable<ITDLineItem> LineItems { get; set; }
         public DateTime Month;
         public ITDBudget Budget { get; private set; }
 
@@ -17,7 +17,7 @@ namespace DirectAgents.Domain.DTO
             : base(platformStats)
         {
             Campaign = campaign;
-            PlatformStats = platformStats;
+            LineItems = platformStats;
             Month = monthStart;
             Budget = new TDBudget(budget);
         }
