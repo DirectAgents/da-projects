@@ -18,7 +18,7 @@ Month: @m.Month.ToString("MMM yyyy")
     <td>@m.Campaign.Name</td>
 </tr>
 <tr>
-    <th>Platforms</th>
+    <th>Partners</th>
     <td>@String.Join(",", m.LineItems.Select(li => li.Platform.Name))</td>@* compute differently? need distinct platform names *@
 </tr>
 <tr>

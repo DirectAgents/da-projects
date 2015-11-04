@@ -11,7 +11,7 @@
 </script>
 }
 <fieldset>
-    <legend>Edit Campaign -> Budget+Percents -> Platform Exception</legend>
+    <legend>Edit Campaign -> Budget+Percents -> Partner Exception</legend>
     @using (Html.BeginForm())
     {
         @Html.ValidationSummary()
@@ -24,7 +24,7 @@
             <br /><br />
             <table>
                 <tr>
-                    <td>@Html.LabelFor(m => m.Platform)</td>
+                    <td>@Html.LabelFor(m => m.Platform, "Partner")</td>
                     <td>@Html.DisplayFor(m => m.Platform.Name)</td>
                 </tr>
                 <tr>

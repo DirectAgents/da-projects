@@ -79,7 +79,7 @@
             pageable: true,
             sortable: true,
             columns: [
-                { field: 'NumPlatforms', title: '#Plats', width: 80, attributes: { style: "text-align:center" } },
+                { field: 'NumPlatforms', title: 'Partners', width: 80, attributes: { style: "text-align:center" } },
                 { field: 'Advertiser' },
                 { field: 'Campaign' },
                 { field: 'Budget', format: '{0:n2}', attributes: { style: "text-align:right" }, footerTemplate: "#: kendo.toString(data.Budget.sum, 'n2') #", footerAttributes: { style: "text-align:right" } },
@@ -130,7 +130,7 @@
         $("<div style='margin-left:14%;margin-right:17%'></div>").appendTo(e.detailCell).kendoGrid({
             dataSource: datasource,
             columns: [
-                { field: 'Platform', width: 120 },
+                { field: 'Platform', title: 'Partner', width: 120 },
                 { field: 'Budget', format: '{0:n2}', attributes: { style: "text-align:right" } },
                 { field: 'PctOfGoal', title: '%Used', width: 85, format: "{0:p}", attributes: { style: "text-align:right" } },
                 { field: 'DACost', format: '{0:n2}', attributes: { style: "text-align:right" } },

@@ -48,11 +48,11 @@
     <br style="clear:both" />
     <div style="float:left">
         <br />
-        Platform Exceptions
+        Partner Exceptions
         <table>
             <tr>
                 <th></th>
-                <th>Platform</th>
+                <th>Partner</th>
                 <th>Budget (ClientCost)</th>
                 <th>MgmtFeePct</th>
                 <th>MarginPct</th>
@@ -80,7 +80,7 @@
         using (Html.BeginForm("CreateNew", "PlatformBudgetInfos", new { campId = Model.CampaignId, date = Model.Date.ToShortDateString() }))
         {
             var platformSelectList = new SelectList(platforms, "Id", "Name");
-            <text>Add Platform Exception:</text>
+            <text>Add Partner Exception:</text>
             <table><tr><td>
                 @Html.DropDownList("platId", platformSelectList)
             </td></tr></table>
