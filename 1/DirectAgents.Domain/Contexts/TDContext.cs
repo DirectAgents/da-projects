@@ -29,6 +29,8 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<Platform>().ToTable("Platform", tdSchema);
             modelBuilder.Entity<ExtAccount>().ToTable("Account", tdSchema);
             modelBuilder.Entity<DailySummary>().ToTable("DailySummary", tdSchema);
+            modelBuilder.Entity<ExtraItem>().ToTable("ExtraItem", tdSchema);
+
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MgmtFeePct).HasPrecision(10, 5).HasColumnName("MgmtFeePct");
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MarginPct).HasPrecision(10, 5).HasColumnName("MarginPct");
@@ -45,6 +47,8 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<DailySummary>()
                 .HasKey(ds => new { ds.Date, ds.AccountId })
                 .Property(t => t.Cost).HasPrecision(18, 6);
+            modelBuilder.Entity<ExtraItem>().Property(i => i.Cost).HasPrecision(14, 2);
+            modelBuilder.Entity<ExtraItem>().Property(i => i.Revenue).HasPrecision(14, 2);
 
             // AdRoll
             modelBuilder.Entity<Advertisable>().ToTable("Advertisable", adrollSchema);
@@ -75,6 +79,7 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<Platform> Platforms { get; set; }
         public DbSet<ExtAccount> ExtAccounts { get; set; }
         public DbSet<DailySummary> DailySummaries { get; set; }
+        public DbSet<ExtraItem> ExtraItems { get; set; }
 
         // AdRoll
         public DbSet<Advertisable> Advertisables { get; set; }
