@@ -1,0 +1,40 @@
+﻿@model DirectAgents.Web.Areas.TD.Models.ExtraItemsVM
+@{
+    string campId = (string)Session["campId"];
+}
+<h2>Extra Items</h2>
+
+Month: @(Model.Month.HasValue ? Model.Month.Value.ToString("MMM yyyy") : "(all)")
+<br /><br />
+
+<table>
+<tr>
+    <th></th>
+    <th>Date</th>
+    <th>Campaign</th>
+    <th>Platform</th>
+    <th>Description</th>
+    <th>Cost</th>
+    <th>Revenue</th>
+    <th></th>
+</tr>
+@foreach (var item in Model.Items)
+{
+<tr>
+    <td>@Html.ActionLink("Edit", "Edit", new { id = item.Id })</td>
+    <td>@item.Date.ToShortDateString()</td>
+    <td>@item.Campaign.Name</td>
+    <td>@item.Platform.Name</td>
+    <td>@item.Description</td>
+    <td>@item.Cost.ToString("C")</td>
+    <td>@item.Revenue.ToString("C")</td>
+    <td>@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { onclick = "if (!confirm('Are you sure?')) return false" })</td>
+</tr>
+}
+</table>
+<br />
+@if (!string.IsNullOrWhiteSpace(campId))
+{
+    @Html.ActionLink("New Extra Item", "CreateNew", new { campId = campId, date = (Model.Month.HasValue ? Model.Month.Value.ToShortDateString() : "") })
+    <br />
+}

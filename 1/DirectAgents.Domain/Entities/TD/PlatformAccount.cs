@@ -14,6 +14,7 @@ namespace DirectAgents.Domain.Entities.TD
         public virtual ICollection<ExtAccount> ExtAccounts { get; set; }
         //public virtual ICollection<PlatformBudgetInfo> PlatformBudgetInfos { get; set; }
 
+        public const string Code_DATradingDesk = "datd";
         public const string Code_AdRoll = "adr";
         public const string Code_DBM = "dbm";
     }

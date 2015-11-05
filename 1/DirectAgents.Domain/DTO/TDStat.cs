@@ -39,6 +39,7 @@ namespace DirectAgents.Domain.DTO
         {
             get { return MediaSpend(); }
         }
+        public bool MoneyValsOnly { get; set; } // probably always false
     }
     public class TDMediaBudget : ITDBudget
     {

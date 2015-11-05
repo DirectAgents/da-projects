@@ -11,6 +11,8 @@ namespace DirectAgents.Domain.DTO
         ITDBudget Budget { get; }
         double FractionReached();
 
+        bool MoneyValsOnly { get; } // i.e. no click stats
+
         decimal CPM { get; }
         decimal CPC { get; }
         decimal CPA { get; }
@@ -81,6 +83,13 @@ namespace DirectAgents.Domain.DTO
             ClientCost = statsToSum.Sum(s => s.ClientCost);
             MgmtFee = statsToSum.Sum(s => s.MgmtFee);
             TotalRevenue = statsToSum.Sum(s => s.TotalRevenue);
+        }
+        public TDRawLineItem(IEnumerable<ExtraItem> itemsToSum)
+        {
+            DACost = itemsToSum.Sum(i => i.Cost);
+            ClientCost = itemsToSum.Sum(i => i.Revenue);
+            // (no fee)
+            TotalRevenue = ClientCost;
         }
 
         //public TDRawLineItem(decimal rawCost = 0, decimal mgmtFeePct = 0, decimal marginPct = 0)

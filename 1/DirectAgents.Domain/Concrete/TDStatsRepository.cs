@@ -99,7 +99,7 @@ namespace DirectAgents.Domain.Concrete
                 return null; // ?new TDCampStats - blank?
             var budgetInfo = campaign.BudgetInfoFor(monthStart);
 
-            var platStats = new List<TDMediaStatWithBudget>(); // one for each platform
+            var platStats = new List<ITDLineItem>();
             var monthEnd = monthStart.AddMonths(1).AddDays(-1);
             var daySums = DailySummaries(monthStart, monthEnd, campId: campId);
 
@@ -126,8 +126,73 @@ namespace DirectAgents.Domain.Concrete
                 platStats.Add(platStat);
             }
 
+            var extraItems = ExtraItems(monthStart, monthEnd, campId);
+            platforms = extraItems.Select(i => i.Platform).Distinct().OrderBy(p => p.Name).ToList();
+            foreach (var plat in platforms)
+            {
+                BudgetInfoVals pbInfo = PlatformBudgetInfo(campId, plat.Id, monthStart);
+
+                var platItems = extraItems.Where(i => i.PlatformId == plat.Id);
+                var lineItem = new TDLineItem(platItems, (pbInfo != null ? pbInfo.MediaSpend : (decimal?)null))
+                {
+                    Platform = plat,
+                    MoneyValsOnly = true // no click stats
+                };
+                platStats.Add(lineItem);
+            }
+
             var campStats = new TDCampStats(campaign, platStats, monthStart, (budgetInfo != null ? budgetInfo.MediaSpend : (decimal?)null) );
             return campStats;
+        }
+
+        public ExtraItem ExtraItem(int id)
+        {
+            return context.ExtraItems.Find(id);
+        }
+        public IQueryable<ExtraItem> ExtraItems(DateTime? startDate, DateTime? endDate, int? campId = null)
+        {
+            var items = context.ExtraItems.AsQueryable();
+            if (startDate.HasValue)
+                items = items.Where(i => i.Date >= startDate.Value);
+            if (endDate.HasValue)
+                items = items.Where(i => i.Date <= endDate.Value);
+            if (campId.HasValue)
+                items = items.Where(i => i.CampaignId == campId.Value);
+            return items;
+        }
+
+        public bool AddExtraItem(ExtraItem item)
+        {
+            if (context.ExtraItems.Any(i => i.Id == item.Id))
+                return false;
+            context.ExtraItems.Add(item);
+            context.SaveChanges();
+            return true;
+        }
+        public bool DeleteExtraItem(int id)
+        {
+            var item = context.ExtraItems.Find(id);
+            if (item == null)
+                return false;
+            context.ExtraItems.Remove(item);
+            context.SaveChanges();
+            return true;
+        }
+        public bool SaveExtraItem(ExtraItem item)
+        {
+            if (context.ExtraItems.Any(i => i.Id == item.Id))
+            {
+                var entry = context.Entry(item);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public void FillExtended(ExtraItem item)
+        {
+            if (item.Campaign == null)
+                item.Campaign = context.Campaigns.Find(item.CampaignId);
         }
 
     }

@@ -16,6 +16,7 @@
     <th>External Accounts</th>
     <th>Partners</th>
     <th>Stats</th>
+    <th>Extra Items</th>
     <th></th>
 </tr>
 @foreach (var camp in Model)
@@ -35,11 +36,17 @@
     <td>
         @Html.ActionLink("MTD", "MTD", "Stats", new { campId = camp.Id }, null) |
         @Html.ActionLink("Last Month", "MTD", "Stats", new { campId = camp.Id, date = lastMonth.ToShortDateString() }, null) |
+        @Html.ActionLink("Quick", "Pacing", "CampStats", new { campId = camp.Id }, null) |
         @Html.ActionLink("By Ext.Account", "ExtAccount", "Stats", new { campId = camp.Id }, null)
     </td>
     <td>
+        @Html.ActionLink("This Month", "Index", "ExtraItems", new { campId = camp.Id, month = startOfMonth.ToShortDateString() }, null) |
+        @Html.ActionLink("Last Month", "Index", "ExtraItems", new { campId = camp.Id, month = lastMonth.ToShortDateString() }, null) |
+        @Html.ActionLink("All", "Index", "ExtraItems", new { campId = camp.Id }, null)&nbsp;
+    </td>
+    <td>
         @if (!camp.ExtAccounts.Any() && !camp.BudgetInfos.Any()) {
-            @Html.ActionLink("Delete", "Delete", new { id = camp.Id })
+            @Html.ActionLink("Delete", "Delete", new { id = camp.Id }, new { onclick = "if (!confirm('Are you sure?')) return false" })
         }
     </td>
 </tr>

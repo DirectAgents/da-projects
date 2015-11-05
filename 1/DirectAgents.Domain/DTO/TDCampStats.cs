@@ -5,29 +5,18 @@ using DirectAgents.Domain.Entities.TD;
 
 namespace DirectAgents.Domain.DTO
 {
-    public class TDCampStats : TDLineItem, ITDLineItem
+    public class TDCampStats : TDLineItem
     {
         public Campaign Campaign { get; set; }
-        public Platform Platform { get; set; }
         public IEnumerable<ITDLineItem> LineItems { get; set; }
         public DateTime Month;
-        public ITDBudget Budget { get; private set; }
 
-        public TDCampStats(Campaign campaign, IEnumerable<ITDLineItem> platformStats, DateTime monthStart, decimal? budget = null)
-            : base(platformStats)
+        public TDCampStats(Campaign campaign, IEnumerable<ITDLineItem> lineItems, DateTime monthStart, decimal? budget = null)
+            : base(lineItems, budget)
         {
             Campaign = campaign;
-            LineItems = platformStats;
+            LineItems = lineItems;
             Month = monthStart;
-            Budget = new TDBudget(budget);
-        }
-
-        public double FractionReached()
-        {
-            if (Budget.ClientCost == 0)
-                return 0;
-            else
-                return (double)(this.ClientCost / Budget.ClientCost);
         }
     }
 
@@ -41,7 +30,7 @@ namespace DirectAgents.Domain.DTO
         }
     }
 
-    public class TDLineItem : TDRawLineItem//, ITDLineItem
+    public class TDLineItem : TDRawLineItem, ITDLineItem
     {
         public override bool AllZeros(bool includeClientCost = true)
         {
@@ -49,14 +38,33 @@ namespace DirectAgents.Domain.DTO
             return (allZeros && Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0);
         }
 
-        // Constructor
-        public TDLineItem(IEnumerable<ITDLineItem> statsToSum)
+        // Constructors
+        public TDLineItem(IEnumerable<ITDLineItem> statsToSum, decimal? budget = null)
             : base(statsToSum)
         {
             Impressions = statsToSum.Sum(s => s.Impressions);
             Clicks = statsToSum.Sum(s => s.Clicks);
             PostClickConv = statsToSum.Sum(s => s.PostClickConv);
             PostViewConv = statsToSum.Sum(s => s.PostViewConv);
+            Budget = new TDBudget(budget);
+        }
+        public TDLineItem(IEnumerable<ExtraItem> itemsToSum, decimal? budget = null)
+            : base(itemsToSum)
+        {
+            MoneyValsOnly = true;
+            Budget = new TDBudget(budget);
+        }
+
+        public bool MoneyValsOnly { get; set; }
+        // Description?
+        public Platform Platform { get; set; }
+        public ITDBudget Budget { get; protected set; }
+        public double FractionReached()
+        {
+            if (Budget.ClientCost == 0)
+                return 0;
+            else
+                return (double)(this.ClientCost / Budget.ClientCost);
         }
 
         public int Impressions { get; set; }

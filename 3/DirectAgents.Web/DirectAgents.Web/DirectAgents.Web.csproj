@@ -176,12 +176,14 @@
     <Compile Include="Areas\TD\Controllers\BudgetInfosController.cs" />
     <Compile Include="Areas\TD\Controllers\CampaignsController.cs" />
     <Compile Include="Areas\TD\Controllers\EmployeesController.cs" />
+    <Compile Include="Areas\TD\Controllers\ExtraItemsController.cs" />
     <Compile Include="Areas\TD\Controllers\MainController.cs" />
     <Compile Include="Areas\TD\Controllers\PlatformBudgetInfosController.cs" />
     <Compile Include="Areas\TD\Controllers\PlatformsController.cs" />
     <Compile Include="Areas\TD\Controllers\StatsController.cs" />
     <Compile Include="Areas\TD\Models\AccountMaintenanceVM.cs" />
     <Compile Include="Areas\TD\Models\CampaignPacingVM.cs" />
+    <Compile Include="Areas\TD\Models\ExtraItemsVM.cs" />
     <Compile Include="Areas\TD\Models\TDStatsVM.cs" />
     <Compile Include="Areas\TD\TDAreaRegistration.cs" />
     <Compile Include="Common.cs" />
@@ -955,6 +957,8 @@
     <Content Include="Areas\TD\Views\CampStats\PerformanceGrid.cshtml" />
     <Content Include="Areas\TD\Views\Main\Links.cshtml" />
     <Content Include="Areas\TD\Views\CampStats\Pacing.cshtml" />
+    <Content Include="Areas\TD\Views\ExtraItems\Index.cshtml" />
+    <Content Include="Areas\TD\Views\ExtraItems\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

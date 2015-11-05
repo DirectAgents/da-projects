@@ -65,6 +65,12 @@ namespace DirectAgents.Domain.Abstract
         //TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null);
         TDRawStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null);
         TDCampStats GetCampStats(DateTime monthStart, int campId);
+        ExtraItem ExtraItem(int id);
+        IQueryable<ExtraItem> ExtraItems(DateTime? startDate, DateTime? endDate, int? campId = null);
+        bool AddExtraItem(ExtraItem item);
+        bool DeleteExtraItem(int id);
+        bool SaveExtraItem(ExtraItem item);
+        void FillExtended(ExtraItem item);
 
         // AdRoll
         Advertisable Advertisable(string eid);
