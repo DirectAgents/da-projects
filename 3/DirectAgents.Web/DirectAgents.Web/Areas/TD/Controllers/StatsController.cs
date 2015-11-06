@@ -104,43 +104,6 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View("Generic", model);
         }
 
-        // Edit a DailySummary
-        [HttpGet]
-        public ActionResult Edit(DateTime date, int acctId, bool create = false)
-        {
-            var daySum = tdRepo.DailySummary(date, acctId);
-            if (daySum == null)
-            {
-                if (create)
-                {
-                    daySum = new DailySummary
-                    {
-                        Date = date,
-                        AccountId = acctId
-                    };
-                    if (tdRepo.AddDailySummary(daySum))
-                        tdRepo.FillExtended(daySum);
-                    else
-                        return Content("DailySummary could not be created");
-                }
-                else
-                    return HttpNotFound();
-            }
-            return View(daySum);
-        }
-        [HttpPost]
-        public ActionResult Edit(DailySummary daySum)
-        {
-            if (ModelState.IsValid)
-            {
-                if (tdRepo.SaveDailySummary(daySum))
-                    return Content("saved");
-                ModelState.AddModelError("", "DailySummary could not be saved");
-            }
-            tdRepo.FillExtended(daySum);
-            return View(daySum);
-        }
-
         // Demo - DBM stats by creative
         public ActionResult Spreadsheet(int ioID, DateTime? month)
         {

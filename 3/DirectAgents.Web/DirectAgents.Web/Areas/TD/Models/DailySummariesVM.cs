@@ -1,0 +1,13 @@
+﻿using System;
+using System.Collections.Generic;
+using DirectAgents.Domain.Entities.TD;
+
+namespace DirectAgents.Web.Areas.TD.Models
+{
+    public class DailySummariesVM
+    {
+        public ExtAccount ExtAccount { get; set; }
+        public DateTime? Month { get; set; }
+        public IEnumerable<DailySummary> DailySummaries { get; set; }
+    }
+}

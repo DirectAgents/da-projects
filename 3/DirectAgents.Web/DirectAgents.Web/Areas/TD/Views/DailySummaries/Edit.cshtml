@@ -1,4 +1,7 @@
 ﻿@model DirectAgents.Domain.Entities.TD.DailySummary
+@{
+    string month = (string)Session["month"]; // for filtering when returning back to Index
+}
 
 <fieldset>
     <legend>Edit DailySummary</legend>
@@ -16,6 +19,10 @@
                     <td>@Model.Date.ToShortDateString()</td>
                 </tr>
                 <tr>
+                    <td>@Html.LabelFor(m => m.Cost)</td>
+                    <td>@Html.EditorFor(m => m.Cost)</td>
+                </tr>
+                <tr>
                     <td>@Html.LabelFor(m => m.Impressions)</td>
                     <td>@Html.EditorFor(m => m.Impressions)</td>
                 </tr>
@@ -31,14 +38,10 @@
                     <td>@Html.LabelFor(m => m.PostViewConv)</td>
                     <td>@Html.EditorFor(m => m.PostViewConv)</td>
                 </tr>
-                <tr>
-                    <td>@Html.LabelFor(m => m.Cost)</td>
-                    <td>@Html.EditorFor(m => m.Cost)</td>
-                </tr>
             </table>
             <br />
             <input type="submit" value="Save" />
-            @* cancel *@
+            &nbsp;@Html.ActionLink("cancel", "Index", new { acctId = Model.AccountId, month = month })
         </div>
     }
 </fieldset>

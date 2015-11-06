@@ -16,21 +16,29 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
         public ActionResult Index(int? campId, DateTime? month)
         {
+            Campaign campaign = null;
+            if (campId.HasValue)
+            {
+                campaign = tdRepo.Campaign(campId.Value);
+                if (campaign == null)
+                    return HttpNotFound();
+            }
             DateTime? startDate = null, endDate = null;
             if (month.HasValue)
             {
-                startDate = new DateTime(month.Value.Year, month.Value.Month, 1);
+                startDate = SetChooseMonthViewData_NonCookie(month);
                 endDate = startDate.Value.AddMonths(1).AddDays(-1);
             }
             var items = tdRepo.ExtraItems(startDate, endDate, campId: campId);
 
             var model = new ExtraItemsVM
             {
-                Month = month,
+                Campaign = campaign,
+                Month = month.HasValue ? startDate : null,
                 Items = items.OrderBy(i => i.Date).ThenBy(i => i.Id)
             };
             Session["campId"] = campId.ToString();
-            Session["month"] = (month.HasValue ? month.Value.ToShortDateString() : "");
+            Session["month"] = (month.HasValue ? month.Value.ToShortDateString() : ""); //TODO: set to startDate?
             return View(model);
         }
 

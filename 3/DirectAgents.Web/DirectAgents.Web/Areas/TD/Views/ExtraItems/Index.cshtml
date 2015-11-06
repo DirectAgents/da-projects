@@ -2,11 +2,32 @@
 @{
     string campId = (string)Session["campId"];
 }
+
+@section scripts {
+<script>
+    function ChangeMonth(month) {
+        var url = '@Html.Raw(Url.Action("Index", new { campId = Model.CampaignId, month = "monthVal" }))';
+        location.href = url.replace('monthVal', month);
+    }
+</script>
+}
 <h2>Extra Items</h2>
 
-Month: @(Model.Month.HasValue ? Model.Month.Value.ToString("MMM yyyy") : "(all)")
-<br /><br />
+@if (Model.Month.HasValue) {
+    <div style="margin-bottom:10px">
+    <form>
+        @Html.DropDownList("month", (SelectList)ViewBag.ChooseMonthSelectList, new { onchange = "ChangeMonth(this.value)" })
+    </form>
+    </div>
+} else {
+    <text>Month: (all)</text>
+    <br />
+}
 
+@if (Model.Campaign != null)
+{
+    <text>Campaign: @Model.Campaign.Name</text>
+}
 <table>
 <tr>
     <th></th>

@@ -171,6 +171,7 @@
   <ItemGroup>
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="Areas\TD\Controllers\CampStatsController.cs" />
+    <Compile Include="Areas\TD\Controllers\DailySummariesController.cs" />
     <Compile Include="Areas\TD\Controllers\ExtAccountsController.cs" />
     <Compile Include="Areas\TD\Controllers\AdvertisersController.cs" />
     <Compile Include="Areas\TD\Controllers\BudgetInfosController.cs" />
@@ -183,6 +184,7 @@
     <Compile Include="Areas\TD\Controllers\StatsController.cs" />
     <Compile Include="Areas\TD\Models\AccountMaintenanceVM.cs" />
     <Compile Include="Areas\TD\Models\CampaignPacingVM.cs" />
+    <Compile Include="Areas\TD\Models\DailySummariesVM.cs" />
     <Compile Include="Areas\TD\Models\ExtraItemsVM.cs" />
     <Compile Include="Areas\TD\Models\TDStatsVM.cs" />
     <Compile Include="Areas\TD\TDAreaRegistration.cs" />
@@ -950,7 +952,7 @@
     <Content Include="Areas\TD\Views\Shared\ChooseMonthNonSubmit.cshtml" />
     <Content Include="Areas\TD\Views\Stats\Spreadsheet.cshtml" />
     <Content Include="Areas\TD\Views\ExtAccounts\Edit.cshtml" />
-    <Content Include="Areas\TD\Views\Stats\Edit.cshtml" />
+    <Content Include="Areas\TD\Views\DailySummaries\Edit.cshtml" />
     <Content Include="Areas\TD\Views\PlatformBudgetInfos\Edit.cshtml" />
     <Content Include="Areas\TD\Views\CampStats\Spreadsheet.cshtml" />
     <Content Include="Areas\TD\Views\CampStats\PacingGrid.cshtml" />
@@ -959,6 +961,7 @@
     <Content Include="Areas\TD\Views\CampStats\Pacing.cshtml" />
     <Content Include="Areas\TD\Views\ExtraItems\Index.cshtml" />
     <Content Include="Areas\TD\Views\ExtraItems\Edit.cshtml" />
+    <Content Include="Areas\TD\Views\DailySummaries\Index.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

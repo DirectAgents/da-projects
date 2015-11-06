@@ -1,0 +1,62 @@
+﻿@model DirectAgents.Web.Areas.TD.Models.DailySummariesVM
+
+@section scripts {
+<script>
+    function ChangeMonth(month) {
+        var url = '@Html.Raw(Url.Action("Index", new { acctId = Model.ExtAccount.Id, month = "monthVal" }))';
+        location.href = url.replace('monthVal', month);
+    }
+</script>
+}
+<h2>Daily Summaries</h2>
+
+@if (Model.Month.HasValue) {
+    <div style="margin-bottom:10px">
+    <form>
+        @Html.DropDownList("month", (SelectList)ViewBag.ChooseMonthSelectList, new { onchange = "ChangeMonth(this.value)" })
+    </form>
+    </div>
+} else {
+    <text>Month: (all)</text>
+    <br />
+}
+
+@if (Model.ExtAccount != null)
+{
+    <text>ExtAccount: @Model.ExtAccount.Name (@Model.ExtAccount.Platform.Name)</text>
+}
+<table>
+<tr>
+    <th></th>
+    <th>Partner</th>
+    <th>Ext Account</th>
+    <th>Date</th>
+    <th>Cost</th>
+    <th>Impressions</th>
+    <th>Clicks</th>
+    <th>PostClick Conv</th>
+    <th>PostView Conv</th>
+</tr>
+@foreach (var ds in Model.DailySummaries)
+{
+<tr>
+    <td>@Html.ActionLink("Edit", "Edit", new { acctid = ds.AccountId, date = ds.Date.ToShortDateString() })</td>
+    <td>@ds.ExtAccount.Platform.Name</td>
+    <td>@ds.ExtAccount.Name</td>
+    <td>@ds.Date.ToShortDateString()</td>
+    <td>@ds.Cost</td>
+    <td>@ds.Impressions</td>
+    <td>@ds.Clicks</td>
+    <td>@ds.PostClickConv</td>
+    <td>@ds.PostViewConv</td>
+</tr>
+}
+</table>
+<br />
+@if (!Model.DailySummaries.Any())
+{
+    DateTime yesterday = DateTime.Today.AddDays(-1);
+    DateTime date = Model.Month.HasValue ? Model.Month.Value : new DateTime(yesterday.Year, yesterday.Month, 1);
+    @Html.ActionLink("New", "Edit", new { date = date.ToShortDateString(), acctId = Model.ExtAccount.Id, create = true })
+    <br />
+}
