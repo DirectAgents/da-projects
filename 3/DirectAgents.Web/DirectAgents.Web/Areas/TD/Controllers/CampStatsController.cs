@@ -99,6 +99,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return campStatsList;
         }
 
+        // Budget & Pacing
         public ActionResult Spreadsheet(int campId)
         {
             return View(campId);
@@ -114,6 +115,43 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 dtos.Add(new CampaignPacingDTO(li));
             }
             var json = Json(dtos, JsonRequestBehavior.AllowGet);
+            //var json = Json(dtos);
+            return json;
+        }
+
+        // Daily Stats Spreadsheet
+        public ActionResult Daily(int campId)
+        {
+            var campaign = tdRepo.Campaign(campId);
+            if (campaign == null)
+                return HttpNotFound();
+            return View(campaign);
+        }
+        public JsonResult DailyData(int campId)
+        {
+            DateTime currMonth = CurrentMonthTD.AddMonths(-1);
+            var dsGroups = tdRepo.DailySummaries(currMonth, null, campId: campId).GroupBy(ds => ds.Date);
+            var dtoList = new List<DailyDTO>();
+            foreach (var g in dsGroups.OrderBy(g => g.Key))
+            {
+                int clicks = g.Sum(d => d.Clicks);
+                int impressions = g.Sum(d => d.Impressions);
+                int totalConv = g.Sum(d => d.PostClickConv) + g.Sum(d => d.PostViewConv);
+                decimal spend = g.Sum(d => d.Cost) / (decimal).7 / (decimal)1.15; //TODO: unhardcode markup! get from budgetinfo/platformbudgetinfo
+
+                var dto = new DailyDTO
+                {
+                    Date = g.Key.ToString("MM/dd/yyyy"),
+                    Impressions = impressions,
+                    Clicks = clicks,
+                    TotalConv = totalConv,
+                    Spend = spend,
+                    CTR = (impressions == 0) ? 0 : (double)clicks / impressions,
+                    CPA = (totalConv == 0) ? 0 : spend / totalConv
+                };
+                dtoList.Add(dto);
+            }
+            var json = Json(dtoList, JsonRequestBehavior.AllowGet);
             //var json = Json(dtos);
             return json;
         }

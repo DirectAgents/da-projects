@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DirectAgents.Domain.DTO;
 
@@ -8,6 +9,18 @@ namespace DirectAgents.Web.Areas.TD.Models
     {
         public IEnumerable<TDCampStats> CampStats { get; set; }
         public bool ShowPerfStats { get; set; }
+    }
+
+    public class DailyDTO
+    {
+        //public DateTime Date { get; set; }
+        public string Date { get; set; }
+        public int Impressions { get; set; }
+        public int Clicks { get; set; }
+        public int TotalConv { get; set; }
+        public decimal Spend { get; set; }
+        public double CTR { get; set; }
+        public decimal CPA { get; set; }
     }
 
     public class CampaignPacingDTO

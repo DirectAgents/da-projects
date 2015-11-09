@@ -1,12 +1,14 @@
-﻿@model int
+﻿@model DirectAgents.Domain.Entities.TD.Campaign
 @{
-    int numCols = 12;
+    int numCols = 7;
 }
 
-<h2>Budget & Pacing</h2>
+<h2>Daily Stats</h2>
+
+Campaign: @Model.Name
 
 <div>
-    <div id="spreadsheet" style="width:100%"></div>
+    <div id="spreadsheet"></div>
 </div>
 
 @section scripts {
@@ -16,15 +18,17 @@
 
         var spreadsheet = $('#spreadsheet').data('kendoSpreadsheet');
         var sheet = spreadsheet.activeSheet();
-        sheet.range('E:I').format('$#,0.00');
-        sheet.range('J:J').format('#,0.00%');
+        //sheet.range('A:A').format('dd/mm/yyyy');
+        sheet.range('B:D').format('#,0');
+        sheet.range('E:G').format('$#,0.00');
+        sheet.range('F:F').format('#,0.00%');
     });
 
     function SetupDataSourceAndSpreadsheet() {
         var datasource = new kendo.data.DataSource({
             transport: {
                 read: {
-                    url: '@Url.Action("SpreadsheetData", new { campId = Model })',
+                    url: '@Url.Action("DailyData", new { campId = Model.Id })',
                     type: 'post',
                     dataType: 'json'
                 }
@@ -41,14 +45,9 @@
             //toolbar: false,
             //sheetsbar: false,
             sheets: [{
-                name: 'BudgetPacing',
+                name: 'Daily',
                 dataSource: datasource,
                 columns: [
-                    { width: 50 },
-                    { width: 100 },
-                    { width: 50 },
-                    { width: 100 },
-                    { width: 100 },
                     { width: 100 },
                     { width: 100 },
                     { width: 100 },
@@ -76,3 +75,4 @@
     }
 </script>
 }
+
