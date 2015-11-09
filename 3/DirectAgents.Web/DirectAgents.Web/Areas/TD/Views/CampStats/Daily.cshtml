@@ -1,6 +1,6 @@
 ﻿@model DirectAgents.Domain.Entities.TD.Campaign
 @{
-    int numCols = 7;
+    int numCols = 8;
 }
 
 <h2>Daily Stats</h2>
@@ -55,7 +55,8 @@ Campaign: @Model.Name
                     { width: 100 },
                     { width: 100 },
                     { width: 100 },
-                    { width: 100 }
+                    { width: 1 },
+                    { width: 100 } // extra col
                 ],
                 rows: [{ // define header row
                     cells: [

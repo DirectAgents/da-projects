@@ -1,0 +1,90 @@
+﻿@model DirectAgents.Domain.Entities.TD.Campaign
+
+<div class="k-content">
+    <div id="dailyChart"></div>
+</div>
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+        var datasource = CreateDailyDataSource();
+        CreateDailyChart(datasource);
+        datasource.read();
+    });
+
+    function CreateDailyDataSource() {
+        return new kendo.data.DataSource({
+            serverPaging: true,
+            serverSorting: true,
+            serverFiltering: true,
+            serverAggregates: true,
+            pageSize: 100,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("DailyChartData")',
+                    data: function () {
+                        return {
+                            campid: @Model.Id,
+                            //startdate: $('#summary_startdate').val(),
+                            //enddate: $('#summary_enddate').val(),
+                        };
+                    }
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                aggregates: 'aggregates',
+                model: {
+                    id: 'Id',
+                    fields: {
+                        Date: { type: 'date' },
+                        Impressions: { type: 'number' },
+                        Clicks: { type: 'number' },
+                        TotalConv: { type: 'number' },
+                        Spend: { type: 'number' },
+                        CTR: { type: 'number' },
+                        CPA: { type: 'number' }
+                    }
+                }
+            },
+            sort: { field: "Date", dir: "asc" },
+        });
+    }
+
+    function CreateDailyChart(datasource) {
+        $('#dailyChart').kendoChart({
+            dataSource: datasource,
+            autoBind: false,
+            chartArea: {
+                height: 300
+            },
+            theme: $(document).data("kendoSkin") || "default",
+            series: [
+                { type: "line", aggregate: "sum", field: "Clicks", name: "Clicks", axis: "clicks", markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}', category) #: #= kendo.format('{0:N0}',value) #" } },
+                { type: "line", aggregate: "sum", field: "Spend", name: "Spend", axis: "spend", markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}', category) #: #= kendo.format('{0:C}',value) #" } }
+            ],
+            categoryAxis: {
+                baseUnit: "days",
+                field: "Date",
+                labels: { rotation: -90 },
+                axisCrossingValue: [0, 1000]
+            },
+            valueAxis: [
+                { name: "clicks", labels: { format: "N0", step: 2 }, title: { text: "Clicks" } },
+                { name: "spend", labels: { format: "C", step: 2 }, title: { text: "Spend" } }
+            ],
+            tooltip: {
+                visible: true
+            },
+            legend: {
+                position: "custom",
+                offsetX: 90,
+                offsetY: 0
+            }
+        });
+    }
+</script>
+}

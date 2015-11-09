@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DirectAgents.Domain.Entities.TD;
 
@@ -62,6 +63,8 @@ namespace DirectAgents.Domain.DTO
                 return allZeros;
         }
 
+        public DateTime? Date { get; set; }
+
         public decimal DACost { get; set; }
         public decimal ClientCost { get; set; } // may or may not go through us
         public decimal MgmtFee { get; set; }
@@ -77,6 +80,7 @@ namespace DirectAgents.Domain.DTO
         }
 
         // Constructors
+        public TDRawLineItem() { }
         public TDRawLineItem(IEnumerable<ITDLineItem> statsToSum)
         {
             DACost = statsToSum.Sum(s => s.DACost);

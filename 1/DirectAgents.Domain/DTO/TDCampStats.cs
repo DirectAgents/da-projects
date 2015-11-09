@@ -39,6 +39,7 @@ namespace DirectAgents.Domain.DTO
         }
 
         // Constructors
+        public TDLineItem() { }
         public TDLineItem(IEnumerable<ITDLineItem> statsToSum, decimal? budget = null)
             : base(statsToSum)
         {

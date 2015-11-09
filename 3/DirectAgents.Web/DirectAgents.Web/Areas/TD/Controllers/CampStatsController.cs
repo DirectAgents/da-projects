@@ -127,33 +127,67 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 return HttpNotFound();
             return View(campaign);
         }
+        //[HttpPost]
         public JsonResult DailyData(int campId)
         {
-            DateTime currMonth = CurrentMonthTD.AddMonths(-1);
-            var dsGroups = tdRepo.DailySummaries(currMonth, null, campId: campId).GroupBy(ds => ds.Date);
-            var dtoList = new List<DailyDTO>();
+            DateTime start = CurrentMonthTD.AddMonths(-1);
+            var dailyDTOs = GetDailyStatsDTO(campId, start, null);
+
+            var json = Json(dailyDTOs, JsonRequestBehavior.AllowGet);
+            //var json = Json(dailyDTOs);
+            return json;
+        }
+
+        // Daily Stats line chart
+        public ActionResult DailyChart(int campId)
+        {
+            var campaign = tdRepo.Campaign(campId);
+            if (campaign == null)
+                return HttpNotFound();
+            return View(campaign);
+        }
+        //[HttpPost]
+        public JsonResult DailyChartData(KendoGridMvcRequest request, int campId)
+        {
+            DateTime start = CurrentMonthTD.AddMonths(-1);
+            var dailyDTOs = GetDailyStatsDTO(campId, start, null);
+            var kgrid = new KendoGridEx<DailyDTO>(request, dailyDTOs);
+            return CreateJsonResult(kgrid, null, allowGet: true);
+        }
+
+        private IEnumerable<DailyDTO> GetDailyStatsDTO(int campId, DateTime? startDate, DateTime? endDate)
+        {
+            var dailyLIs = GetDailyStatsLI(campId, startDate, endDate);
+            var dailyDTOs = dailyLIs.Select(li => new DailyDTO
+            {
+                Date = li.Date.Value,
+                Impressions = li.Impressions,
+                Clicks = li.Clicks,
+                TotalConv = li.PostClickConv + li.PostViewConv,
+                Spend = li.ClientCost,
+                CTR = li.CTR,
+                CPA = li.CPA
+            });
+            return dailyDTOs;
+        }
+        private IEnumerable<TDLineItem> GetDailyStatsLI(int campId, DateTime? startDate, DateTime? endDate)
+        {
+            var dsGroups = tdRepo.DailySummaries(startDate, endDate, campId: campId).GroupBy(ds => ds.Date);
+            var statList = new List<TDLineItem>();
             foreach (var g in dsGroups.OrderBy(g => g.Key))
             {
-                int clicks = g.Sum(d => d.Clicks);
-                int impressions = g.Sum(d => d.Impressions);
-                int totalConv = g.Sum(d => d.PostClickConv) + g.Sum(d => d.PostViewConv);
-                decimal spend = g.Sum(d => d.Cost) / (decimal).7 / (decimal)1.15; //TODO: unhardcode markup! get from budgetinfo/platformbudgetinfo
-
-                var dto = new DailyDTO
+                var li = new TDLineItem
                 {
-                    Date = g.Key.ToString("MM/dd/yyyy"),
-                    Impressions = impressions,
-                    Clicks = clicks,
-                    TotalConv = totalConv,
-                    Spend = spend,
-                    CTR = (impressions == 0) ? 0 : (double)clicks / impressions,
-                    CPA = (totalConv == 0) ? 0 : spend / totalConv
+                    Date = g.Key,
+                    Impressions = g.Sum(d => d.Impressions),
+                    Clicks = g.Sum(d => d.Clicks),
+                    PostClickConv = g.Sum(d => d.PostClickConv),
+                    PostViewConv = g.Sum(d => d.PostViewConv),
+                    ClientCost = g.Sum(d => d.Cost) / (decimal).7 / (decimal)1.15 //TODO: unhardcode markup! get from budgetinfo/platformbudgetinfo
                 };
-                dtoList.Add(dto);
+                statList.Add(li);
             }
-            var json = Json(dtoList, JsonRequestBehavior.AllowGet);
-            //var json = Json(dtos);
-            return json;
+            return statList;
         }
 
 
