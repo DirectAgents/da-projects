@@ -57,14 +57,29 @@ namespace BingAds
         }
         private AuthorizationData GetAuthorizationData()
         {
-            var authentication = new PasswordAuthentication(UserName, Password);
             var authorizationData = new AuthorizationData
             {
-                Authentication = authentication,
                 CustomerId = CustomerID,
                 //AccountId: not needed?
                 DeveloperToken = DeveloperToken
             };
+            if (UserName.Contains('@')) // is an email address (Microsoft account); can't use PasswordAuthentication
+            {
+                string clientId = ConfigurationManager.AppSettings["BingClientId"];
+                string clientSecret = ConfigurationManager.AppSettings["BingClientSecret"];
+                string redirString = ConfigurationManager.AppSettings["BingRedirectionUri"];
+                string refreshToken = ConfigurationManager.AppSettings["BingRefreshToken"];
+                var authorization = new OAuthWebAuthCodeGrant(clientId, clientSecret, new Uri(redirString));
+                var task = authorization.RequestAccessAndRefreshTokensAsync(refreshToken);
+                task.Wait();
+                // TODO: see if refreshtoken changed; if so, save the new one
+
+                authorizationData.Authentication = authorization;
+            }
+            else
+            {   // old style: BingAds username
+                authorizationData.Authentication = new PasswordAuthentication(UserName, Password);
+            }
             return authorizationData;
         }
 
