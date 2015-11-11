@@ -13,14 +13,13 @@ namespace DirectAgents.Web.Areas.TD.Models
 
     public class DailyDTO
     {
-        public string DateString { get { return Date.ToString("MM/dd/yyyy"); } }
+        public DateTime Date { get; set; }
         public int Impressions { get; set; }
         public int Clicks { get; set; }
         public int TotalConv { get; set; }
         public decimal Spend { get; set; }
         public double CTR { get; set; }
         public decimal CPA { get; set; }
-        public DateTime Date { get; set; }
     }
 
     public class CampaignPacingDTO

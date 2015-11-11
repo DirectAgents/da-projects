@@ -22,7 +22,10 @@
 @foreach (var camp in Model)
 {
 <tr>
-    <td>@Html.ActionLink("Edit", "Edit", new { id = camp.Id })</td>
+    <td>
+        @Html.ActionLink("Edit", "Edit", new { id = camp.Id }) |
+        @Html.ActionLink("Reporting", "Home", "Reports", new { campId = camp.Id }, null)
+    </td>
     <td>@camp.Advertiser.Name</td>
     <td>@camp.Name</td>
     <td style="text-align:center">
@@ -32,7 +35,7 @@
             <text>0</text>
         }
     </td>
-    <td>@string.Join(",", camp.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name))</td>
+    <td>@string.Join(", ", camp.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name))</td>
     <td>
         @Html.ActionLink("MTD", "MTD", "Stats", new { campId = camp.Id }, null) |
         @Html.ActionLink("Last Month", "MTD", "Stats", new { campId = camp.Id, date = lastMonth.ToShortDateString() }, null) |
@@ -45,7 +48,7 @@
         @Html.ActionLink("All", "Index", "ExtraItems", new { campId = camp.Id }, null)&nbsp;
     </td>
     <td>
-        @if (!camp.ExtAccounts.Any() && !camp.BudgetInfos.Any()) {
+        @if (!camp.ExtAccounts.Any() && !camp.BudgetInfos.Any() && !camp.PlatformBudgetInfos.Any()) {
             @Html.ActionLink("Delete", "Delete", new { id = camp.Id }, new { onclick = "if (!confirm('Are you sure?')) return false" })
         }
     </td>

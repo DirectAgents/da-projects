@@ -1,6 +1,6 @@
 ﻿@model DirectAgents.Domain.Entities.TD.Campaign
 @{
-    int numCols = 8;
+    int numCols = 7;
 }
 
 <h2>Daily Stats</h2>
@@ -10,6 +10,8 @@ Campaign: @Model.Name
 <div>
     <div id="spreadsheet"></div>
 </div>
+<br />
+@Html.ActionLink("Reporting Home", "Home", "Reports", new { campId = Model.Id }, null)
 
 @section scripts {
 <script>
@@ -35,7 +37,16 @@ Campaign: @Model.Name
             },
             schema: {
                 model: {
-                    id: 'Id'
+                    id: 'Id',
+                    fields: {
+                        Date: { type: 'date' },
+                        Impressions: { type: 'number' },
+                        Clicks: { type: 'number' },
+                        TotalConv: { type: 'number' },
+                        Spend: { type: 'number' },
+                        CTR: { type: 'number' },
+                        CPA: { type: 'number' }
+                    }
                 }
             }
         });
@@ -55,7 +66,6 @@ Campaign: @Model.Name
                     { width: 100 },
                     { width: 100 },
                     { width: 100 },
-                    { width: 1 },
                     { width: 100 } // extra col
                 ],
                 rows: [{ // define header row

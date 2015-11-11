@@ -1,0 +1,10 @@
+﻿@model DirectAgents.Domain.Entities.TD.Campaign
+
+<h2>Reporting</h2>
+
+Advertiser: @Model.Advertiser.Name<br />
+Campaign: @Model.Name
+<br /><br />
+
+@Html.ActionLink("Daily Stats", "Daily", "CampStats", new { campId = Model.Id }, null) |
+@Html.ActionLink("Chart", "DailyChart", "CampStats", new { campId = Model.Id }, null)

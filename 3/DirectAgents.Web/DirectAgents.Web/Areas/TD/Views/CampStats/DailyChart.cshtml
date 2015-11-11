@@ -1,8 +1,19 @@
 ﻿@model DirectAgents.Domain.Entities.TD.Campaign
 
+<h2>Daily Chart</h2>
+
+Advertiser: @Model.Advertiser.Name<br />
+Campaign: @Model.Name
+
 <div class="k-content">
     <div id="dailyChart"></div>
 </div>
+<div>
+    <button id="btnExportImg">Save as Image</button>&nbsp;
+    <button id="btnExportPDF">Save as PDF</button>
+</div>
+<br />
+@Html.ActionLink("Reporting Home", "Home", "Reports", new { campId = Model.Id }, null)
 
 @section scripts {
 <script>
@@ -10,7 +21,24 @@
         var datasource = CreateDailyDataSource();
         CreateDailyChart(datasource);
         datasource.read();
+        SetupExports();
     });
+
+    function SetupExports() {
+        $('#btnExportImg').click(function() {
+            var chart = $('#dailyChart').getKendoChart();
+            chart.exportImage().done(function(data) {
+                kendo.saveAs({
+                    dataURI: data,
+                    fileName: 'DailyChart_@(Model.Name).png'
+                });
+            });
+        });
+        $('#btnExportPDF').click(function() {
+            var chart = $('#dailyChart').getKendoChart();
+            chart.saveAsPDF();
+        });
+    }
 
     function CreateDailyDataSource() {
         return new kendo.data.DataSource({
@@ -56,6 +84,9 @@
 
     function CreateDailyChart(datasource) {
         $('#dailyChart').kendoChart({
+            pdf: {
+                fileName: "DailyChart_@(Model.Name).pdf"
+            },
             dataSource: datasource,
             autoBind: false,
             chartArea: {
@@ -63,8 +94,10 @@
             },
             theme: $(document).data("kendoSkin") || "default",
             series: [
-                { type: "line", aggregate: "sum", field: "Clicks", name: "Clicks", axis: "clicks", markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}', category) #: #= kendo.format('{0:N0}',value) #" } },
-                { type: "line", aggregate: "sum", field: "Spend", name: "Spend", axis: "spend", markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}', category) #: #= kendo.format('{0:C}',value) #" } }
+                //{ type: "column", field: "Clicks", name: "Clicks", axis: "clicks", markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}', category) #: #= kendo.format('{0:N0}',value) #" } },
+                { type: "column", field: "Impressions", name: "Impressions", axis: "imp", markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}', category) #: #= kendo.format('{0:N0}',value) #" } },
+                { type: "line", width: 3, field: "TotalConv", name: "Conversions", axis: "conv", markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}', category) #: #= kendo.format('{0:N0}',value) #" } }
+                //{ type: "line", width: 3, field: "Spend", name: "Spend", axis: "spend", markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}', category) #: #= kendo.format('{0:C}',value) #" } }
             ],
             categoryAxis: {
                 baseUnit: "days",
@@ -73,8 +106,10 @@
                 axisCrossingValue: [0, 1000]
             },
             valueAxis: [
-                { name: "clicks", labels: { format: "N0", step: 2 }, title: { text: "Clicks" } },
-                { name: "spend", labels: { format: "C", step: 2 }, title: { text: "Spend" } }
+                //{ name: "clicks", labels: { format: "N0", step: 2 }, title: { text: "Clicks" } },
+                { name: "imp", labels: { format: "N0", step: 2 }, title: { text: "Impressions" } },
+                { name: "conv", labels: { format: "N0", step: 2 }, title: { text: "Conversions" } }
+                //{ name: "spend", labels: { format: "C", step: 2 }, title: { text: "Spend" } }
             ],
             tooltip: {
                 visible: true
