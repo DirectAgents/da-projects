@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.SearchMarketing.Extracters;
 using CakeExtracter.Etl.SearchMarketing.Loaders;
@@ -12,6 +13,20 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchSearchDailySummariesAdWordsCommand : ConsoleCommand
     {
+        public static int RunStatic(int? searchProfileId, DateTime? start = null, DateTime? end = null, int? daysAgoToStart = null, string getClickAssistConvStats = null)
+        {
+            AutoMapperBootstrapper.CheckRunSetup();
+            var cmd = new SynchSearchDailySummariesAdWordsCommand
+            {
+                SearchProfileId = searchProfileId,
+                StartDate = start,
+                EndDate = end,
+                DaysAgoToStart = daysAgoToStart,
+                GetClickAssistConvStats = getClickAssistConvStats
+            };
+            return cmd.Run();
+        }
+
         public int? SearchProfileId { get; set; }
         public string ClientId { get; set; }
         public DateTime? StartDate { get; set; }

@@ -116,7 +116,8 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                     loaded++;
                 }
 
-                Logger.Info("Loading {0} FactClicks ({1} updates, {2} additions)", loaded, updated, added);
+                //Logger.Info("Loading {0} FactClicks ({1} updates, {2} additions)", loaded, updated, added);
+                Logger.Info("Loading {0} FactClicks ({1} already-loaded, {2} additions)", loaded, updated, added);
 
                 try
                 {

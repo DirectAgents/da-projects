@@ -12,6 +12,19 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchSearchDailySummariesBingCommand : ConsoleCommand
     {
+        public static int RunStatic(int? searchProfileId, DateTime? start = null, DateTime? end = null, int? daysAgoToStart = null)
+        {
+            CakeExtracter.Bootstrappers.AutoMapperBootstrapper.CheckRunSetup();
+            var cmd = new SynchSearchDailySummariesBingCommand
+            {
+                SearchProfileId = searchProfileId,
+                StartDate = start,
+                EndDate = end,
+                DaysAgoToStart = daysAgoToStart
+            };
+            return cmd.Run();
+        }
+
         public int? SearchProfileId { get; set; }
         public int AccountId { get; set; }
         public DateTime? StartDate { get; set; }
