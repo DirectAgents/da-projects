@@ -157,7 +157,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
         private IEnumerable<DailyDTO> GetDailyStatsDTO(int campId, DateTime? startDate, DateTime? endDate)
         {
-            var dailyLIs = GetDailyStatsLI(campId, startDate, endDate);
+            var dailyLIs = tdRepo.GetDailyStatsLI(campId, startDate, endDate);
             var dailyDTOs = dailyLIs.Select(li => new DailyDTO
             {
                 Date = li.Date.Value,
@@ -170,26 +170,6 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             });
             return dailyDTOs;
         }
-        private IEnumerable<TDLineItem> GetDailyStatsLI(int campId, DateTime? startDate, DateTime? endDate)
-        {
-            var dsGroups = tdRepo.DailySummaries(startDate, endDate, campId: campId).GroupBy(ds => ds.Date);
-            var statList = new List<TDLineItem>();
-            foreach (var g in dsGroups.OrderBy(g => g.Key))
-            {
-                var li = new TDLineItem
-                {
-                    Date = g.Key,
-                    Impressions = g.Sum(d => d.Impressions),
-                    Clicks = g.Sum(d => d.Clicks),
-                    PostClickConv = g.Sum(d => d.PostClickConv),
-                    PostViewConv = g.Sum(d => d.PostViewConv),
-                    ClientCost = g.Sum(d => d.Cost) / (decimal).7 / (decimal)1.15 //TODO: unhardcode markup! get from budgetinfo/platformbudgetinfo
-                };
-                statList.Add(li);
-            }
-            return statList;
-        }
-
 
         // T could be CampaignPacingDTO, PerformanceDTO...
         public static object Aggregates<T>(KendoGridEx<T> kgrid)

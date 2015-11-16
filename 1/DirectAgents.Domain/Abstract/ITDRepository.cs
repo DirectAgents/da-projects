@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities;
@@ -65,6 +66,8 @@ namespace DirectAgents.Domain.Abstract
         //TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null);
         TDRawStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null);
         TDCampStats GetCampStats(DateTime monthStart, int campId);
+        IEnumerable<TDLineItem> GetDailyStatsLI(int campId, DateTime? startDate, DateTime? endDate);
+
         ExtraItem ExtraItem(int id);
         IQueryable<ExtraItem> ExtraItems(DateTime? startDate, DateTime? endDate, int? campId = null);
         bool AddExtraItem(ExtraItem item);

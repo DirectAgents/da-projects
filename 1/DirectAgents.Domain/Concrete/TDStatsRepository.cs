@@ -97,43 +97,32 @@ namespace DirectAgents.Domain.Concrete
             var campaign = Campaign(campId);
             if (campaign == null)
                 return null; // ?new TDCampStats - blank?
-            var budgetInfo = campaign.BudgetInfoFor(monthStart);
 
             var platStats = new List<ITDLineItem>();
             var monthEnd = monthStart.AddMonths(1).AddDays(-1);
-            var daySums = DailySummaries(monthStart, monthEnd, campId: campId);
 
-            //TODO: include platforms that have a PlatformBudgetInfo, even if stats are all zero ?
+            // Get MediaStats
+            var daySums = DailySummaries(monthStart, monthEnd, campId: campId);
             var platforms = daySums.Select(ds => ds.ExtAccount.Platform).Distinct().OrderBy(p => p.Name).ToList();
             foreach (var plat in platforms)
             {
-                // See if there is a PlatformBudgetInfo for this campaign/platform/month
-                BudgetInfoVals pbInfo = PlatformBudgetInfo(campId, plat.Id, monthStart);
-                if (pbInfo == null)
-                {   // ...if not, use defaults - for the campaign/month or the campaign
-                    pbInfo = new BudgetInfoVals
-                    {
-                        MediaSpend = 0,
-                        MgmtFeePct = (budgetInfo != null ? budgetInfo.MgmtFeePct : campaign.DefaultBudgetInfo.MgmtFeePct),
-                        MarginPct = (budgetInfo != null ? budgetInfo.MarginPct : campaign.DefaultBudgetInfo.MarginPct)
-                    };
-                }
                 var platDaySums = daySums.Where(ds => ds.ExtAccount.PlatformId == plat.Id);
-                var platStat = new TDMediaStatWithBudget(platDaySums, pbInfo)
+                var budgetInfoVals = campaign.PlatformBudgetInfoFor(monthStart, plat.Id, useParentValsIfNone: true);
+                var platStat = new TDMediaStatWithBudget(platDaySums, budgetInfoVals)
                 {
                     Platform = plat
                 };
                 platStats.Add(platStat);
             }
 
+            // Get ExtraItems
             var extraItems = ExtraItems(monthStart, monthEnd, campId);
             platforms = extraItems.Select(i => i.Platform).Distinct().OrderBy(p => p.Name).ToList();
             foreach (var plat in platforms)
             {
-                BudgetInfoVals pbInfo = PlatformBudgetInfo(campId, plat.Id, monthStart);
-
                 var platItems = extraItems.Where(i => i.PlatformId == plat.Id);
-                var lineItem = new TDLineItem(platItems, (pbInfo != null ? pbInfo.MediaSpend : (decimal?)null))
+                var budgetInfoVals = campaign.PlatformBudgetInfoFor(monthStart, plat.Id, useParentValsIfNone: false);
+                var lineItem = new TDLineItem(platItems, (budgetInfoVals != null ? budgetInfoVals.MediaSpend : (decimal?)null))
                 {
                     Platform = plat,
                     MoneyValsOnly = true // no click stats
@@ -141,9 +130,43 @@ namespace DirectAgents.Domain.Concrete
                 platStats.Add(lineItem);
             }
 
-            var campStats = new TDCampStats(campaign, platStats, monthStart, (budgetInfo != null ? budgetInfo.MediaSpend : (decimal?)null) );
+            //NOTE: if there is both a MediaStat and an ExtraItem for a particular platform, the budget(mediaspend) is listed for both.
+
+            var budgetInfo = campaign.BudgetInfoFor(monthStart, useDefaultIfNone: true);
+            var campStats = new TDCampStats(campaign, platStats, monthStart, (budgetInfo != null ? budgetInfo.MediaSpend : (decimal?)null));
             return campStats;
         }
+
+        public IEnumerable<TDLineItem> GetDailyStatsLI(int campId, DateTime? startDate, DateTime? endDate)
+        {
+            var statList = new List<TDLineItem>();
+            var campaign = Campaign(campId);
+            if (campaign == null)
+                return statList;
+
+            var dsGroups = DailySummaries(startDate, endDate, campId: campId).GroupBy(ds => ds.Date);
+            foreach (var dayGroup in dsGroups.OrderBy(g => g.Key)) // group by day
+            {
+                var li = new TDLineItem
+                {
+                    Date = dayGroup.Key,
+                    Impressions = dayGroup.Sum(d => d.Impressions),
+                    Clicks = dayGroup.Sum(d => d.Clicks),
+                    PostClickConv = dayGroup.Sum(d => d.PostClickConv),
+                    PostViewConv = dayGroup.Sum(d => d.PostViewConv),
+                };
+                // Compute marked-up ClientCost - could be a different markup for each platform
+                foreach (var platGroup in dayGroup.GroupBy(g => g.ExtAccount.PlatformId))
+                {
+                    MarginFeeVals mfVals = campaign.PlatformBudgetInfoFor(dayGroup.Key, platGroup.Key, useParentValsIfNone: true);
+                    li.ClientCost += mfVals.CostToClientCost(platGroup.Sum(g => g.Cost));
+                }
+                statList.Add(li);
+            }
+            return statList;
+        }
+
+        // --- ExtraItems ---
 
         public ExtraItem ExtraItem(int id)
         {

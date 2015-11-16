@@ -22,15 +22,45 @@ namespace DirectAgents.Domain.Entities.TD
             return PlatformBudgetInfos.Where(pbi => pbi.Date == month);
         }
 
-        public BudgetInfo BudgetInfoFor(DateTime desiredMonth)
+        // if no PBI for specific month/platform, bubbles up to the parent(month) or default(for the campaign)
+        public BudgetInfoVals PlatformBudgetInfoFor(DateTime date, int platformId, bool useParentValsIfNone)
+        {
+            BudgetInfoVals biVals = PlatformBudgetInfoForInner(date, platformId);
+            if (biVals == null && useParentValsIfNone)
+            {
+                biVals = new BudgetInfoVals();
+                var parentBI = BudgetInfoFor(date, useDefaultIfNone: true);
+                if (parentBI != null)
+                {
+                    biVals.MgmtFeePct = parentBI.MgmtFeePct;
+                    biVals.MarginPct = parentBI.MarginPct;
+                } // Ignore the MediaSpend(Budget) in this case; it applies to the campaign overall
+            }
+            return biVals;
+        }
+        private PlatformBudgetInfo PlatformBudgetInfoForInner(DateTime date, int platformId)
+        {
+            if (PlatformBudgetInfos == null)
+                return null;
+            var firstOfMonth = new DateTime(date.Year, date.Month, 1);
+            var pbis = PlatformBudgetInfos.Where(pbi => pbi.Date == firstOfMonth && pbi.PlatformId == platformId);
+            return pbis.Any() ? pbis.First() : null;
+        }
+
+        public BudgetInfoVals BudgetInfoFor(DateTime date, bool useDefaultIfNone)
+        {
+            BudgetInfoVals budgetInfo = BudgetInfoFor(date);
+            if (budgetInfo == null && useDefaultIfNone)
+                budgetInfo = this.DefaultBudgetInfo;
+            return budgetInfo;
+        }
+        public BudgetInfo BudgetInfoFor(DateTime date)
         {
             if (BudgetInfos == null)
                 return null;
-            var firstOfMonth = new DateTime(desiredMonth.Year, desiredMonth.Month, 1);
+            var firstOfMonth = new DateTime(date.Year, date.Month, 1);
             var budgets = BudgetInfos.Where(b => b.Date == firstOfMonth);
-            if (!budgets.Any())
-                return null;
-            return budgets.First();
+            return budgets.Any() ? budgets.First() : null;
         }
 
         // returns months in reverse chronological order
@@ -80,11 +110,11 @@ namespace DirectAgents.Domain.Entities.TD
         }
         public decimal TotalRevenue()
         {
-            return MediaSpend * (1 + MgmtFeePct / 100);
+            return MediaSpend * MediaSpendToRevMultiplier;
         }
         public decimal DACost()
         {
-            return TotalRevenue() * (100 - MarginPct) / 100;
+            return TotalRevenue() * RevToCostMultiplier;
         }
         public decimal Margin()
         {
@@ -102,6 +132,57 @@ namespace DirectAgents.Domain.Entities.TD
     {
         public decimal MgmtFeePct { get; set; }
         public decimal MarginPct { get; set; }
+
+        // Constructor
+        public MarginFeeVals(MarginFeeVals mfVals = null)
+        {
+            if (mfVals != null)
+            {
+                this.MgmtFeePct = mfVals.MgmtFeePct;
+                this.MarginPct = mfVals.MarginPct;
+            }
+        }
+
+        public bool CostGoesThruDA()
+        {
+            return (MarginPct != 100);
+        }
+
+        //note: is 0 if MarginPct==100
+        public decimal RevToCostMultiplier
+        {
+            get { return (1 - MarginPct / 100); }
+        }
+        public decimal MediaSpendToRevMultiplier
+        {
+            get { return (1 + MgmtFeePct / 100); }
+        }
+
+        // i.e. marked up media-spend
+        public decimal CostToClientCost(decimal cost)
+        {
+            if (CostGoesThruDA())
+                return cost / RevToCostMultiplier / MediaSpendToRevMultiplier;
+            else
+                return cost;
+        }
+        public decimal CostToTotalRevenue(decimal cost)
+        {
+            if (CostGoesThruDA())
+                return cost / RevToCostMultiplier;
+            else
+                return cost * MgmtFeePct / 100;
+        }
+        public decimal CostToMgmtFee(decimal cost)
+        {
+            var revenue = CostToTotalRevenue(cost);
+            if (CostGoesThruDA())
+                //return revenue - CostToClientCost(cost); //TODO: make more efficient
+                //return revenue - revenue / MediaSpendToRevMultiplier;
+                return revenue * MgmtFeePct / (100 + MgmtFeePct);
+            else
+                return revenue;
+        }
     }
 
 }

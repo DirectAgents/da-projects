@@ -62,19 +62,23 @@ namespace DirectAgents.Domain.DTO
                 this.MarginPct = ((TDMediaStat)stat).MarginPct;
             }
         }
-        public decimal MgmtFeePct { get; set; }
-        private decimal _marginPct;
+        private MarginFeeVals MFVals { get; set; }
+
+        public decimal MgmtFeePct
+        {
+            get { return MFVals.MgmtFeePct; }
+            set { MFVals.MgmtFeePct = value; }
+        }
         public decimal? MarginPct
         {
-            get { return _marginPct; }
-            set { _marginPct = (value.HasValue ? value.Value : 0); }
-        }
-        private bool CostGoesThruDA()
-        {
-            return (_marginPct != 100);
+            get { return MFVals.MarginPct; }
+            set { MFVals.MarginPct = (value.HasValue ? value.Value : 0); }
         }
 
-        public TDMediaStat() { }
+        public TDMediaStat()
+        {
+            SetMarginFees(null); // initializes this.MFVals
+        }
         //public TDMediaStat(decimal mgmtFeePct, decimal marginPct = 0, decimal mediaSpend = 0)
         //{
         //    this.MgmtFeePct = mgmtFeePct;
@@ -87,14 +91,10 @@ namespace DirectAgents.Domain.DTO
             SetMarginFees(marginFees);
         }
 
+        // this.MFVals will always be instantiated after this method is called
         public void SetMarginFees(MarginFeeVals marginFees)
         {
-            if (marginFees != null)
-            {
-                this.MgmtFeePct = marginFees.MgmtFeePct;
-                this.MarginPct = marginFees.MarginPct;
-            }
-            // else set to 0?
+            this.MFVals = new MarginFeeVals(marginFees);
         }
 
         public void SetMoneyVals(decimal cost, decimal mgmtFeePct, decimal marginPct)
@@ -107,58 +107,32 @@ namespace DirectAgents.Domain.DTO
         // Compute and set Cost based on the specified MediaSpend
         public void SetMediaSpend(decimal mediaSpend)
         {
-            if (!CostGoesThruDA())
+            if (MFVals.CostGoesThruDA())
                 this.Cost = mediaSpend;
             else
-                this.Cost = mediaSpend * MediaSpendToRevMultiplier() * RevToCostMultiplier();
-        }
-
-        //note: is 0 if MarginPct==100
-        private decimal RevToCostMultiplier() // usually used in reverse (cost -> rev)
-        {
-            return (1 - _marginPct / 100);
-        }
-        private decimal MediaSpendToRevMultiplier() // usually used in reverse (rev -> mediaspend)
-        {
-            return (1 + MgmtFeePct / 100);
+                this.Cost = mediaSpend * MFVals.MediaSpendToRevMultiplier * MFVals.RevToCostMultiplier;
         }
 
         public decimal TotalRevenue
         {
-            get
-            {
-                if (!CostGoesThruDA())
-                    return Cost * MgmtFeePct / 100;
-                else
-                    return Cost / RevToCostMultiplier();
-            }
+            get { return MFVals.CostToTotalRevenue(this.Cost); }
         }
 
         public decimal MediaSpend()
         {
-            if (!CostGoesThruDA())
-                return Cost;
-            else
-                return Cost / RevToCostMultiplier() / MediaSpendToRevMultiplier();
-                //return TotalRevenue() / MediaSpendToRevMultiplier();
+            return MFVals.CostToClientCost(this.Cost);
         }
 
         public decimal MgmtFee
         {
-            get
-            {
-                if (!CostGoesThruDA())
-                    return TotalRevenue;
-                else
-                    return TotalRevenue - MediaSpend(); //TODO: make more efficient
-            }
+            get { return MFVals.CostToMgmtFee(this.Cost); }
         }
 
         public decimal DACost
         {
             get
             {
-                if (!CostGoesThruDA())
+                if (!MFVals.CostGoesThruDA())
                     return 0;
                 else
                     return Cost;
@@ -167,10 +141,7 @@ namespace DirectAgents.Domain.DTO
 
         public decimal Margin
         {
-            get
-            {
-                return TotalRevenue - DACost;
-            }
+            get { return TotalRevenue - DACost; }
         }
 
         public override decimal CPM
