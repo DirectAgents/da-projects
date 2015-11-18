@@ -187,6 +187,7 @@
     <Compile Include="Areas\TD\Models\CampaignPacingVM.cs" />
     <Compile Include="Areas\TD\Models\DailySummariesVM.cs" />
     <Compile Include="Areas\TD\Models\ExtraItemsVM.cs" />
+    <Compile Include="Areas\TD\Models\ReportingVM.cs" />
     <Compile Include="Areas\TD\Models\TDStatsVM.cs" />
     <Compile Include="Areas\TD\TDAreaRegistration.cs" />
     <Compile Include="Common.cs" />

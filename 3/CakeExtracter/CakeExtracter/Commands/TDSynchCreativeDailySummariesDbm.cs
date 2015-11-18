@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
+using System.Configuration;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.Loaders;
 using ClientPortal.Data.Entities.TD;
-using ClientPortal.Data.Entities.TD.DBM;
 
 namespace CakeExtracter.Commands
 {
@@ -46,10 +45,9 @@ namespace CakeExtracter.Commands
             var reportDate = endDate.AddDays(1);
             var dateRange = new DateRange(reportDate, reportDate);
 
-            var insertionOrders = GetInsertionOrders();
-            var bucketNames = insertionOrders.Select(i => i.Bucket);
+            var buckets = GetBuckets();
 
-            var extracter = new DbmCloudStorageExtracter(dateRange, bucketNames);
+            var extracter = new DbmCloudStorageExtracter(dateRange, buckets);
             var loader = new DbmCreativeDailySummaryLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -59,18 +57,31 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
-        public IEnumerable<InsertionOrder> GetInsertionOrders()
+        public IEnumerable<string> GetBuckets()
         {
-            using (var db = new TDContext())
+            var buckets = new List<string>();
+            if (TradingDeskAccountId.HasValue)
             {
-                var tdas = db.TradingDeskAccounts.AsQueryable();
-                if (this.TradingDeskAccountId.HasValue)
+                using (var db = new TDContext())
                 {
-                    tdas = tdas.Where(t => t.TradingDeskAccountId == TradingDeskAccountId.Value);
+                    var tda = db.TradingDeskAccounts.Find(TradingDeskAccountId.Value);
+                    if (tda != null)
+                    {
+                        foreach (var io in tda.InsertionOrders)
+                        {
+                            if (!string.IsNullOrWhiteSpace(io.Bucket))
+                                buckets.Add(io.Bucket);
+                        }
+                    }
+                    //Note: this excludes IOs that don't have a TradingDeskAccountId or a Bucket
                 }
-                return tdas.SelectMany(t => t.InsertionOrders).Where(io => io.Bucket != null).ToList();
-                //Note: this excludes IOs that don't have a TradingDeskAccountId or a Bucket
             }
+            else
+            {
+                buckets.Add(ConfigurationManager.AppSettings["DBM_AllCreativeBucket"]);
+            }
+            return buckets;
         }
+
     }
 }

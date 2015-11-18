@@ -1,17 +1,18 @@
-﻿@model DirectAgents.Domain.Entities.TD.Campaign
+﻿@model DirectAgents.Web.Areas.TD.Models.ReportingVM
 @{
+    var camp = Model.Campaign;
     int numCols = 7;
 }
 
 <h2>Daily Stats</h2>
 
-Campaign: @Model.Name
+Campaign: @camp.Name
 
 <div>
     <div id="spreadsheet"></div>
 </div>
 <br />
-@Html.ActionLink("Reporting Home", "Home", "Reports", new { campId = Model.Id }, null)
+@Html.ActionLink("Reporting Home", "Home", "Reports", new { campId = camp.Id }, null)
 
 @section scripts {
 <script>
@@ -30,7 +31,12 @@ Campaign: @Model.Name
         var datasource = new kendo.data.DataSource({
             transport: {
                 read: {
-                    url: '@Url.Action("DailyData", new { campId = Model.Id })',
+                    url: '@Url.Action("DailyData")',
+                    data: {
+                        campId: @camp.Id,
+                        start: '@Model.Start.ToRouteString()',
+                        end: '@Model.End.ToRouteString()'
+                    },
                     type: 'post',
                     dataType: 'json'
                 }

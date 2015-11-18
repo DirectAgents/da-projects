@@ -120,18 +120,25 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         }
 
         // Daily Stats Spreadsheet
-        public ActionResult Daily(int campId)
+        public ActionResult Daily(int campId, DateTime? start, DateTime? end)
         {
             var campaign = tdRepo.Campaign(campId);
             if (campaign == null)
                 return HttpNotFound();
-            return View(campaign);
+            var model = new ReportingVM
+            {
+                Campaign = campaign,
+                Start = start,
+                End = end
+            };
+            return View(model);
         }
         //[HttpPost]
-        public JsonResult DailyData(int campId)
+        public JsonResult DailyData(int campId, DateTime? start, DateTime? end)
         {
-            DateTime start = CurrentMonthTD.AddMonths(-1);
-            var dailyDTOs = GetDailyStatsDTO(campId, start, null);
+            if (!start.HasValue)
+                start = CurrentMonthTD;
+            var dailyDTOs = GetDailyStatsDTO(campId, start, end);
 
             var json = Json(dailyDTOs, JsonRequestBehavior.AllowGet);
             //var json = Json(dailyDTOs);

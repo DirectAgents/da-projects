@@ -14,7 +14,7 @@ namespace DirectAgents.Web.Controllers
             int? daysAgoToStart = null;
             string getClickAssistConvStats = "both";
             //SynchSearchDailySummariesAdWordsCommand.RunStatic(searchProfileId, start, end, daysAgoToStart, getClickAssistConvStats);
-            SynchSearchDailySummariesBingCommand.RunStatic(searchProfileId, start, end, daysAgoToStart);
+            //SynchSearchDailySummariesBingCommand.RunStatic(searchProfileId, start, end, daysAgoToStart);
 
             return Content("okay");
         }
