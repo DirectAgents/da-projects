@@ -295,6 +295,7 @@
     <Compile Include="Commands\DASynchAdrollStats.cs" />
     <Compile Include="Commands\DASynchAdvertisersCommand.cs" />
     <Compile Include="Commands\DASynchDBMStats.cs" />
+    <Compile Include="Commands\DASynchFacebookStats.cs" />
     <Compile Include="Commands\DASynchOfferBudgetStats2.cs" />
     <Compile Include="Commands\DASynchOfferBudgetStatsCommand.cs" />
     <Compile Include="Commands\DASynchOfferDailySummariesCommand.cs" />
@@ -513,6 +514,10 @@
     <ProjectReference Include="..\..\API\AdRoll\AdRoll.csproj">
       <Project>{feb04d4a-cf17-43bf-bf2c-635e87a38279}</Project>
       <Name>AdRoll</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\API\FacebookAPI\FacebookAPI.csproj">
+      <Project>{3358a07a-a5a0-4933-9680-03d4308b278c}</Project>
+      <Name>FacebookAPI</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\BingAds\BingAds.csproj">
       <Project>{e2ea8ab5-abaf-4007-a446-09624cb159e6}</Project>
