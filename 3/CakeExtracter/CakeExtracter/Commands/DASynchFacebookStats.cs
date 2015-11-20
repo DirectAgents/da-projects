@@ -19,7 +19,9 @@ namespace CakeExtracter.Commands
         public override int Execute(string[] remainingArguments)
         {
             var fbUtility = new FacebookUtility(m => Logger.Info(m), m => Logger.Warn(m));
-            fbUtility.Test();
+            //var acctId = "act_10153287675738628"; // Crackle
+            var acctId = "act_101672655"; // Zeel consumer
+            fbUtility.GetDailyStats(acctId);
 
             return 0;
         }
