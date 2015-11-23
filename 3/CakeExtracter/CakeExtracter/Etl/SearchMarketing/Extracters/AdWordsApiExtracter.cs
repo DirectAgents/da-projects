@@ -4,14 +4,14 @@ using System.Configuration;
 using System.Xml;
 using Google.Api.Ads.AdWords.Lib;
 using Google.Api.Ads.AdWords.Util.Reports;
-using Google.Api.Ads.AdWords.v201502;
+using Google.Api.Ads.AdWords.v201509;
 using Google.Api.Ads.Common.Util.Reports;
 
 namespace CakeExtracter.Etl.SearchMarketing.Extracters
 {
     public class AdWordsApiExtracter : Extracter<Dictionary<string, string>>
     {
-        const string VERSION = "v201502";
+        const string VERSION = "v201509";
         private readonly string reportFilePath = ConfigurationManager.AppSettings["AdWordsReportFilePath"];
 
         private readonly string clientCustomerId;
@@ -68,7 +68,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 "Impressions", // impressions
                 "Clicks",      // clicks
                 "ConvertedClicks", // convertedClicks
-                "ConversionsManyPerClick", // conversions
+                "Conversions", // conversions
                 "Cost", // cost
                 "ConversionValue", // totalConvValue
                 "AdNetworkType1", // network

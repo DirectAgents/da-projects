@@ -66,6 +66,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         CurrencyId = (!item.Keys.Contains("currency") || item["currency"] == "USD") ? 1 : -1, // NOTE: non USD (if exists) -1 for now
                         Network = item["network"].Substring(0, 1)
                     };
+                    if (item["network"] == "YouTube Videos")
+                        sds.Network = "V";
+                    // Y will be for "YouTube Search"
 
                     if (clickAssistConvStats)
                     {
@@ -77,7 +80,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     {
                         sds.Revenue = decimal.Parse(item["totalConvValue"]);
                         sds.Cost = decimal.Parse(item["cost"]) / 1000000; // convert from mincrons to dollars
-                        sds.Orders = int.Parse(item[conversionKey]);
+                        var conversions = double.Parse(item[conversionKey]);
+                        sds.Orders = Convert.ToInt32(conversions); // default rounding - nearest even # if .5
                         sds.Clicks = int.Parse(item["clicks"]);
                         sds.Impressions = int.Parse(item["impressions"]);
                         sds.Device = item["device"].Substring(0, 1);

@@ -90,13 +90,13 @@
       <HintPath>..\..\ClientPortal.Web\packages\EPPlus.4.0.4\lib\net20\EPPlus.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Google.Ads.Common, Version=3.5.0.0, Culture=neutral, PublicKeyToken=52807268f2b614dc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ClientPortal.Web\packages\Google.Ads.Common.3.5.0\lib\net40\Google.Ads.Common.dll</HintPath>
+    <Reference Include="Google.Ads.Common, Version=3.10.0.0, Culture=neutral, PublicKeyToken=52807268f2b614dc, processorArchitecture=MSIL">
+      <HintPath>..\..\ClientPortal.Web\packages\Google.Ads.Common.3.10.0\lib\net40\Google.Ads.Common.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Google.AdWords, Version=18.10.0.0, Culture=neutral, PublicKeyToken=52807268f2b614dc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ClientPortal.Web\packages\Google.AdWords.18.10.0\lib\net40\Google.AdWords.dll</HintPath>
+    <Reference Include="Google.AdWords, Version=18.19.0.0, Culture=neutral, PublicKeyToken=52807268f2b614dc, processorArchitecture=MSIL">
+      <HintPath>..\..\ClientPortal.Web\packages\Google.AdWords.18.19.0\lib\net40\Google.AdWords.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Google.Apis, Version=1.8.2.23762, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
