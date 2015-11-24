@@ -178,6 +178,10 @@ namespace ClientPortal.Data.DTOs
                         return "Search";
                     case "D":
                         return "Display";
+                    case "V":
+                        return "YT Videos";
+                    case "Y":
+                        return "YT Search";
                     default:
                         return _network;
                 }
