@@ -17,6 +17,7 @@ namespace DirectAgents.Domain.Entities.TD
         public const string Code_DATradingDesk = "datd";
         public const string Code_AdRoll = "adr";
         public const string Code_DBM = "dbm";
+        public const string Code_FB = "fb";
     }
 
     public class ExtAccount

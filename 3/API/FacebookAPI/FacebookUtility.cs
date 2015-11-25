@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.Configuration;
 using Facebook;
+using FacebookAPI.Entities;
 
 namespace FacebookAPI
 {
     public class FacebookUtility
     {
+        public const int DaysPerCall = 25;
+
         public string AppId { get; set; }
         public string AppSecret { get; set; }
         public string AccessToken { get; set; }
         public string ApiVersion { get; set; }
-        private FacebookClient FBClient { get; set; }
 
         // --- Logging ---
         private Action<string> _LogInfo;
@@ -49,13 +51,18 @@ namespace FacebookAPI
         {
             AccessToken = ConfigurationManager.AppSettings["FacebookToken"];
             ApiVersion = ConfigurationManager.AppSettings["FacebookApiVersion"];
-            FBClient = new FacebookClient(AccessToken);
-            FBClient.Version = "v" + ApiVersion;
             //AccessToken = AppId + "|" + AppSecret;
             //var client = new WebClient();
             //var oauthUrl = string.Format("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={0}&client_secret={1}", AppId, AppSecret);
             //AccessToken = client.DownloadString(oauthUrl).Split('=')[1];
         }
+        private FacebookClient CreateFBClient()
+        {
+            var fbClient = new FacebookClient(AccessToken);
+            fbClient.Version = "v" + ApiVersion;
+            return fbClient;
+        }
+
         //private void GetAccessToken2() // No can do; returns "unsupported browser"
         //{
         //    var client = new WebClient();
@@ -64,29 +71,48 @@ namespace FacebookAPI
         //    var x = client.DownloadString(url1);
         //}
 
-        public List<object> GetDailyStats(string accountId)
+        // TODO: make asynchronous / do calls in parallel ?
+        public IEnumerable<FBSummary> GetDailyStats(string accountId, DateTime start, DateTime end)
         {
-            var path = accountId + "/insights";
-            dynamic retObj = FBClient.Get(path, new
+            while (start <= end)
             {
-                metadata = 1,
+                var tempEnd = start.AddDays(DaysPerCall - 1);
+                if (tempEnd > end)
+                    tempEnd = end;
+                var fbSummaries = GetDailyStatsInner(accountId, start, tempEnd);
+                foreach (var fbSum in fbSummaries)
+                {
+                    yield return fbSum;
+                }
+                start = start.AddDays(DaysPerCall);
+            }
+        }
+        public IEnumerable<FBSummary> GetDailyStatsInner(string accountId, DateTime start, DateTime end)
+        {
+            var fbClient = CreateFBClient();
+            var path = accountId + "/insights";
+            dynamic retObj = fbClient.Get(path, new
+            {
+                //metadata = 1,
                 fields = "impressions,unique_clicks,total_actions,spend",
-                time_range = new { since = "2015-10-1", until = "2015-10-3" },
+                time_range = new { since = DateString(start), until = DateString(end) },
                 time_increment = 1
             });
-            var statList = new List<dynamic>();
-            try
+            int impressions;
+            foreach (var row in retObj.data)
             {
-                foreach (var row in retObj.data)
+                var fbSum = new FBSummary
                 {
-                    statList.Add(row);
-                }
+                    Date = DateTime.Parse(row.date_start),
+                    Spend = (decimal)row.spend,
+                    //Impressions = row.impressions,
+                    UniqueClicks = (int)row.unique_clicks,
+                    TotalActions = (int)row.total_actions
+                };
+                if (Int32.TryParse(row.impressions, out impressions))
+                    fbSum.Impressions = impressions;
+                yield return fbSum;
             }
-            catch (Exception)
-            {
-            }
-            return statList;
-            //TODO: create a class with DateTime and return those...
         }
 
         public void TestToken()
@@ -112,12 +138,18 @@ namespace FacebookAPI
             var acctId = "act_101672655"; // Zeel consumer
             var path = acctId + "/insights";
             //var fullpath = "v" + ApiVersion + "/" + path;
-            dynamic obj = FBClient.Get(path, new {
+            var fbClient = CreateFBClient();
+            dynamic obj = fbClient.Get(path, new {
                 metadata = 1,
                 fields = "impressions,unique_clicks,total_actions,spend",
                 time_range = new { since = "2015-10-1", until = "2015-10-3" },
                 time_increment = 1
             });
+        }
+
+        public static string DateString(DateTime dateTime)
+        {
+            return dateTime.ToString("yyyy-M-d");
         }
     }
 }

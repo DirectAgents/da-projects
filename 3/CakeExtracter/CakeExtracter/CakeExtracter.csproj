@@ -412,6 +412,8 @@
     <Compile Include="Etl\SearchMarketing\Loaders\CallDailySummaryLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\CriteoDailySummaryLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\CriteoDailySummaryLoader2.cs" />
+    <Compile Include="Etl\SocialMarketing\Extracters\FacebookApiExtracter.cs" />
+    <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollApiExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollCsvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmCloudStorageExtracter.cs" />
@@ -546,6 +548,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\ClientPortal.Web\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\ClientPortal.Web\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
