@@ -28,7 +28,7 @@
         </tr>
         <tr>
             <td>AdMgr</td>
-            <td class="bold">@offer.Advertiser.AdManager.FullName</td>
+            <td class="bold">@(offer.Advertiser.AdManager == null ? "" : offer.Advertiser.AdManager.FullName)</td>
         </tr>
         <tr>
             <td>AcctMgr</td>

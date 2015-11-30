@@ -146,6 +146,7 @@ namespace DirectAgents.Domain.Concrete
             if (advertiserId.HasValue)
                 offers = offers.Where(o => o.AdvertiserId == advertiserId);
 
+            // TODO: count OfferBudgets where Budget==0 as "doesn't have budget" ??
             if (withBudget.HasValue && withBudget.Value)
                 offers = offers.Where(o => o.OfferBudgets.Count > 0);
             if (withBudget.HasValue && !withBudget.Value)

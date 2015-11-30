@@ -4,6 +4,12 @@
 }
 <h3>@Html.ActionLink("Budgets", "Start") - Offers</h3>
 
+@if (Model.WithBudget == true) {
+    <input type="button" value="Edit all" onclick="EditAll()" /><text>&nbsp;</text>
+    <input type="button" value="Update last month to this month" onclick="UpdateCurrMonth()" /><text> (click "Save All" when done)</text>
+    <br /><br />
+}
+
 <div class="validation-summary-errors" style="display:none">
     <ul>
         <li>Row(s) could not be saved.</li>
@@ -52,6 +58,40 @@
             });
         }
 *@
+        $(document).ready(function () {
+            SetupMonths();
+        });
+        function SetupMonths() {
+            var nowDate = new Date();
+            var yearOfCurrMonth = nowDate.getFullYear()
+            var yearOfLastMonth = yearOfCurrMonth;
+            var lastMonth = nowDate.getMonth();
+            var currMonth = lastMonth + 1;
+            if (lastMonth == 0) {
+                lastMonth = 12;
+                yearOfLastMonth--;
+            }
+            lastMonthStr = lastMonth + "/1/" + yearOfLastMonth;
+            currMonthStr = currMonth + "/1/" + yearOfCurrMonth;
+            var lastMonthLastDay = new Date(yearOfCurrMonth, currMonth - 1, 0).getDate();
+            var currMonthLastDay = new Date(yearOfCurrMonth, currMonth, 0).getDate();
+            lastMonthEndStr = lastMonth + "/" + lastMonthLastDay + "/" + yearOfLastMonth;
+            currMonthEndStr = currMonth + "/" + currMonthLastDay + "/" + yearOfCurrMonth;
+        }
+
+        function EditAll() {
+            $('tr input[value="Edit"]').each(function () {
+                var offerId = $(this).data('offerId');
+                LoadBudgetRow(offerId, false, true);
+            });
+        }
+        function UpdateCurrMonth() {
+            var txtStarts = $('input[name="BudgetStart"][value="' + lastMonthStr + '"]');
+            txtStarts.val(currMonthStr);
+            var txtEnds = $('input[name="BudgetEnd"][value="' + lastMonthEndStr + '"]');
+            txtEnds.val(currMonthEndStr);
+        }
+
         function SaveBudgetRow(offerId, suppressAlerts) {
             var url = '@Url.Action("SaveOfferRow")?offerId=' + offerId;
             var data = {
