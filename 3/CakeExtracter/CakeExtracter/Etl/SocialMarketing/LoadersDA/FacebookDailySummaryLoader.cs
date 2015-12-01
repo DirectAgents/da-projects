@@ -50,7 +50,8 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                         AccountId = accountId,
                         Date = item.Date,
                         Impressions = item.Impressions,
-                        Clicks = item.UniqueClicks,
+                        //Clicks = item.UniqueClicks,
+                        Clicks = item.LinkClicks,
                         PostClickConv = item.TotalActions,
                         //NOTE: TotalActions- includes postclick AND postview (within 1 day)... can be configured?
                         //PostViewConv = 0,

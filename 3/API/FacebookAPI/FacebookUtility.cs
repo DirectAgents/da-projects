@@ -94,7 +94,7 @@ namespace FacebookAPI
             dynamic retObj = fbClient.Get(path, new
             {
                 //metadata = 1,
-                fields = "impressions,unique_clicks,total_actions,spend",
+                fields = "impressions,unique_clicks,inline_link_clicks,total_actions,spend",
                 time_range = new { since = DateString(start), until = DateString(end) },
                 time_increment = 1
             });
@@ -107,6 +107,7 @@ namespace FacebookAPI
                     Spend = (decimal)row.spend,
                     //Impressions = row.impressions,
                     UniqueClicks = (int)row.unique_clicks,
+                    LinkClicks = (int)row.inline_link_clicks,
                     TotalActions = (int)row.total_actions
                 };
                 if (Int32.TryParse(row.impressions, out impressions))
