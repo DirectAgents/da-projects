@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
-using CakeExtracter.CakeMarketingApi.Entities;
 using CakeExtracter.Common;
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.Cake;
 using MoreLinq;
 
 namespace CakeExtracter.Etl.CakeMarketing.DALoaders
 {
-    public class DAAdvertisersLoader : Loader<Advertiser>
+    public class DAAdvertisersLoader : Loader<CakeExtracter.CakeMarketingApi.Entities.Advertiser>
     {
         private readonly bool includeContacts;
 
@@ -16,26 +18,33 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             this.includeContacts = includeContacts;
         }
 
-        protected override int Load(List<Advertiser> items)
+        protected override int Load(List<CakeExtracter.CakeMarketingApi.Entities.Advertiser> items)
         {
             Logger.Info("Synching {0} advertisers...", items.Count);
-            using (var db = new DirectAgents.Domain.Contexts.DAContext())
+            using (var db = new DAContext())
             {
-                var newRoles = new List<DirectAgents.Domain.Entities.Cake.Role>();
+                var newRoles = new List<Role>();
 
                 foreach (var item in items)
                 {
-                    var advertiser = db.Advertisers
-                        .Where(a => a.AdvertiserId == item.AdvertiserId)
-                        .SingleOrFallback(() =>
+                    var advertiser = db.Set<Advertiser>().Find(item.AdvertiserId);
+                    if (advertiser == null)
+                    {
+                        advertiser = new Advertiser
                         {
-                            var newAdvertiser = new DirectAgents.Domain.Entities.Cake.Advertiser
-                            {
-                                AdvertiserId = item.AdvertiserId
-                            };
-                            db.Advertisers.Add(newAdvertiser);
-                            return newAdvertiser;
-                        });
+                            AdvertiserId = item.AdvertiserId
+                        };
+                        db.Advertisers.Add(advertiser);
+                    }
+                    else // Advertiser found (in cache or db)
+                    {
+                        var entry = db.Entry(advertiser);
+                        if (entry.State != EntityState.Unchanged)
+                        {
+                            Logger.Warn("Encountered duplicate Advertiser {0} - skipping", item.AdvertiserId);
+                            continue;
+                        }
+                    }
 
                     advertiser.AdvertiserName = item.AdvertiserName;
 
@@ -51,7 +60,7 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                                     if (newRole == null)
                                     {
                                         Logger.Info("Adding new Role: {0} ({1})", ci.Role.RoleName, ci.Role.RoleId);
-                                        newRole = new DirectAgents.Domain.Entities.Cake.Role
+                                        newRole = new Role
                                         {
                                             RoleId = ci.Role.RoleId,
                                             RoleName = ci.Role.RoleName
@@ -65,7 +74,7 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                                 .Where(c => c.ContactId == ci.ContactId)
                                 .SingleOrFallback(() =>
                                 {
-                                    var newContact = new DirectAgents.Domain.Entities.Cake.Contact
+                                    var newContact = new Contact
                                     {
                                         ContactId = ci.ContactId,
                                         Role = role

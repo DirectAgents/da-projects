@@ -44,10 +44,17 @@ namespace DirectAgents.Common
                 var existing = targetObjectSet.ToDictionary(c => c.MemberValue<object>(targetKey));
                 var mapper = new Mapper<TItem, TTarget>();
 
+                var processedIds = new List<object>();
+
                 foreach (var item in sourceItemsCollection().Where(c => filter(c)))
                 {
-                    var id = item.MemberValue<object>(sourceKey);
                     TTarget entity;
+
+                    var id = item.MemberValue<object>(sourceKey);
+                    if (processedIds.Contains(id))
+                        continue; // skipping
+
+                    processedIds.Add(id);
 
                     if (existing.ContainsKey(id))
                     {
