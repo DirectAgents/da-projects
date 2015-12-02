@@ -173,7 +173,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             if (!endDate.HasValue)
                 endDate = DateTime.Today.AddDays(-1);
 
-            var spreadsheet = DAGenerators.Spreadsheets.Generator.GenerateSearchReport(cpRepo, templateFolder, searchProfileId, numWeeks, numMonths, endDate.Value, groupBySearchAccount);
+            var spreadsheet = DAGenerators.Spreadsheets.GeneratorCP.GenerateSearchReport(cpRepo, templateFolder, searchProfileId, numWeeks, numMonths, endDate.Value, groupBySearchAccount);
             if (spreadsheet == null)
                 return HttpNotFound();
 

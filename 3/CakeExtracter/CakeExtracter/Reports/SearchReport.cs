@@ -153,7 +153,7 @@ namespace CakeExtracter.Reports
         {
             string templateFolder = ConfigurationManager.AppSettings["PATH_Search"];
             bool groupBySearchAccount = simpleReport.SearchProfile.HasChannelWithMultipleSearchAccounts();
-            this.Spreadsheet = DAGenerators.Spreadsheets.Generator.GenerateSearchReport(
+            this.Spreadsheet = DAGenerators.Spreadsheets.GeneratorCP.GenerateSearchReport(
                 cpRepo,
                 templateFolder,
                 simpleReport.SearchProfile.SearchProfileId,

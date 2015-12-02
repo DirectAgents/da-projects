@@ -7,7 +7,7 @@ using ClientPortal.Data.DTOs;
 
 namespace DAGenerators.Spreadsheets
 {
-    public class Generator
+    public class GeneratorCP
     {
         public static SearchReportPPC GenerateSearchReport(IClientPortalRepository cpRepo, string templateFolder, int searchProfileId, int numWeeks, int numMonths, DateTime endDate, bool groupBySearchAccount)
         {
@@ -165,17 +165,20 @@ namespace DAGenerators.Spreadsheets
                 foreach (string channel in channels)
                 {
                     campaignStatsDict[channel] = SortCampaignStats(searchProfile, campaignStats.Where(s => s.Channel == channel));
+                    //int maxRows = 582; // 584 was too much (with 5 weeks, 0 month... btw, 6 weeks, 0 months worked)
+                    //if (campaignStatsDict[channel].Count() > maxRows)
+                    //    campaignStatsDict[channel] = campaignStatsDict[channel].Take(maxRows);
                 }
             }
             return campaignStatsDict;
         }
 
-        private static IQueryable<SearchStat> SortCampaignStats(SearchProfile searchProfile, IQueryable<SearchStat> campaignStats)
+        private static IEnumerable<SearchStat> SortCampaignStats(SearchProfile searchProfile, IQueryable<SearchStat> campaignStats)
         {
             if (searchProfile.ShowRevenue)
-                return campaignStats.OrderByDescending(s => s.Revenue).ThenByDescending(s => s.Cost).ThenByDescending(s => s.Impressions);
+                return campaignStats.OrderByDescending(s => s.Revenue).ThenByDescending(s => s.Cost).ThenByDescending(s => s.Impressions).ToList();
             else
-                return campaignStats; // already ordered by title (campaign name)
+                return campaignStats.ToList(); // already ordered by title (campaign name)
         }
 
         // DisposeResources when done with SearchReport?
