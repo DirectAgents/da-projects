@@ -50,8 +50,10 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
             if (platform.Code == Platform.Code_AdRoll)
                 DASynchAdrollStats.RunStatic(startDate: start);
-            if (platform.Code == Platform.Code_DBM)
+            else if (platform.Code == Platform.Code_DBM)
                 DASynchDBMStats.RunStatic();
+            else if (platform.Code == Platform.Code_FB)
+                DASynchFacebookStats.RunStatic(startDate: start);
 
             return RedirectToAction("Maintenance", new { id = id });
         }

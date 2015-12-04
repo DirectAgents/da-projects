@@ -53,7 +53,7 @@ namespace CakeExtracter.Commands
             IsCommand("daSynchAdrollStats", "synch AdRoll Stats");
             HasOption("a|advertisableEids=", "Advertisable Eids (comma-separated) (default = all)", c => AdvertisableEids = c);
             HasOption<int>("i|advertisableId=", "Advertisable Id (default = all)", c => AdvertisableId = c);
-            HasOption("c|checkActive=", "Check AdRoll for Advertisables with stats (if none specified)", c => bool.Parse(c));
+            HasOption("c|checkActive=", "Check AdRoll for Advertisables with stats (if none specified)", c => CheckActiveAdvertisables = bool.Parse(c));
             HasOption("s|startDate=", "Start Date (default is one month ago)", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
             HasOption<bool>("o|oneStatPerAdv=", "One Stat per advertisable per day (default = false / one per ad)", c => OneStatPerAdvertisable = c);

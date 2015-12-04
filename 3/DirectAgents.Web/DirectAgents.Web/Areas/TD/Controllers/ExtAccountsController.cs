@@ -83,7 +83,8 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             if (extAcct == null)
                 return HttpNotFound();
 
-            bool syncable = extAcct.Platform.Code == Platform.Code_AdRoll;
+            bool syncable = extAcct.Platform.Code == Platform.Code_AdRoll ||
+                            extAcct.Platform.Code == Platform.Code_FB;
             if (extAcct.Platform.Code == Platform.Code_DBM)
             {
                 int ioID;
@@ -119,17 +120,20 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             else if (start > firstOfLastMonth)
                 start = firstOfLastMonth;
 
-            if (extAcct.Platform.Code == Platform.Code_AdRoll)
+            switch (extAcct.Platform.Code)
             {
-                DASynchAdrollStats.RunStatic(extAcct.ExternalId, startDate: start);
+                case Platform.Code_AdRoll:
+                    DASynchAdrollStats.RunStatic(extAcct.ExternalId, startDate: start);
+                    break;
+                case Platform.Code_DBM:
+                    int ioID;
+                    if (int.TryParse(extAcct.ExternalId, out ioID))
+                        DASynchDBMStats.RunStatic(insertionOrderID: ioID); // gets report with stats up to yesterday (and back ?30? days)
+                    break;
+                case Platform.Code_FB:
+                    DASynchFacebookStats.RunStatic(extAcctId: extAcct.Id, startDate: start);
+                    break;
             }
-            else if (extAcct.Platform.Code == Platform.Code_DBM)
-            {
-                int ioID;
-                if (int.TryParse(extAcct.ExternalId, out ioID))
-                    DASynchDBMStats.RunStatic(insertionOrderID: ioID); // gets report with stats up to yesterday (and back ?30? days)
-            }
-            //else
             return null;
         }
 	}

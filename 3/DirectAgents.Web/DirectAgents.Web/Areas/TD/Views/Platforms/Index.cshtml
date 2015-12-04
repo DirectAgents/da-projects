@@ -9,19 +9,19 @@
 <tr>
     <th>Code</th>
     <th>Name</th>
-    <th>Show...</th>
+    <th>Show/Create...</th>
     <th></th>
+    <td></td>
 </tr>
 @foreach (var plat in Model)
 {
 <tr>
     <td>@plat.Code</td>
     <td>@plat.Name</td>
-    <td>
-        @Html.ActionLink("ExtAccounts(" + plat.ExtAccounts.Count + ")", "Index", "ExtAccounts", new { platform = plat.Code }, null) |
-        @Html.ActionLink("Stats", "ExtAccount", "Stats", new { platform = plat.Code }, null)
+    <td>@Html.ActionLink("ExtAccounts(" + plat.ExtAccounts.Count + ")", "Index", "ExtAccounts", new { platform = plat.Code }, null)</td>
+    <td>@Html.ActionLink("Raw Stats", "ExtAccount", "Stats", new { platform = plat.Code }, null)</td>
+    <td>@Html.ActionLink("Maintenance", "Maintenance", new { id = plat.Id })
     </td>
-    <td>@Html.ActionLink("Maintenance", "Maintenance", new { id = plat.Id })</td>
 </tr>
 }
 </table>
