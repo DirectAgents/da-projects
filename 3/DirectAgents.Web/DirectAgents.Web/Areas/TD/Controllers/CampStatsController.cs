@@ -171,6 +171,8 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 Impressions = li.Impressions,
                 Clicks = li.Clicks,
                 TotalConv = li.PostClickConv + li.PostViewConv,
+                PostClickConv = li.PostClickConv,
+                PostViewConv = li.PostViewConv,
                 Spend = li.ClientCost,
                 CTR = li.CTR,
                 CPA = li.CPA

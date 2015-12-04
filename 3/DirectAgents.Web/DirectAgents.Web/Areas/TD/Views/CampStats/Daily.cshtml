@@ -1,7 +1,7 @@
 ﻿@model DirectAgents.Web.Areas.TD.Models.ReportingVM
 @{
     var camp = Model.Campaign;
-    int numCols = 7;
+    int numCols = 9;
 }
 
 <h2>Daily Stats</h2>
@@ -9,7 +9,7 @@
 Campaign: @camp.Name
 
 <div>
-    <div id="spreadsheet"></div>
+    <div id="spreadsheet" style="width:950px"></div>
 </div>
 <br />
 @Html.ActionLink("Reporting Home", "Home", "Reports", new { campId = camp.Id }, null)
@@ -22,9 +22,9 @@ Campaign: @camp.Name
         var spreadsheet = $('#spreadsheet').data('kendoSpreadsheet');
         var sheet = spreadsheet.activeSheet();
         //sheet.range('A:A').format('dd/mm/yyyy');
-        sheet.range('B:D').format('#,0');
-        sheet.range('E:G').format('$#,0.00');
-        sheet.range('F:F').format('#,0.00%');
+        sheet.range('B:F').format('#,0');
+        sheet.range('G:I').format('$#,0.00');
+        sheet.range('H:H').format('#,0.00%');
     });
 
     function SetupDataSourceAndSpreadsheet() {
@@ -49,6 +49,8 @@ Campaign: @camp.Name
                         Impressions: { type: 'number' },
                         Clicks: { type: 'number' },
                         TotalConv: { type: 'number' },
+                        PostClickConv: { type: 'number' },
+                        PostViewConv: { type: 'number' },
                         Spend: { type: 'number' },
                         CTR: { type: 'number' },
                         CPA: { type: 'number' }
@@ -73,7 +75,9 @@ Campaign: @camp.Name
                     { width: 100 },
                     { width: 100 },
                     { width: 100 },
-                    { width: 100 } // extra col
+                    { width: 100 },
+                    { width: 100 },
+                    //{ width: 100 } // extra col
                 ],
                 rows: [{ // define header row
                     cells: [
