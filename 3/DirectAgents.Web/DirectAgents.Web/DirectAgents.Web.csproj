@@ -969,6 +969,7 @@
     <Content Include="Areas\TD\Views\CampStats\Daily.cshtml" />
     <Content Include="Areas\TD\Views\CampStats\DailyChart.cshtml" />
     <Content Include="Areas\TD\Views\Reports\Home.cshtml" />
+    <Content Include="Areas\TD\Views\Platforms\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

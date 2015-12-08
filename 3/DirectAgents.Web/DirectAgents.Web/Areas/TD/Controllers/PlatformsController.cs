@@ -21,6 +21,27 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View(platforms);
         }
 
+        [HttpGet]
+        public ActionResult Edit(int id)
+        {
+            var platform = tdRepo.Platform(id);
+            if (platform == null)
+                return HttpNotFound();
+            return View(platform);
+        }
+        [HttpPost]
+        public ActionResult Edit(Platform plat)
+        {
+            if (ModelState.IsValid)
+            {
+                if (tdRepo.SavePlatform(plat))
+                    return RedirectToAction("Index");
+                ModelState.AddModelError("", "Platform could not be saved.");
+            }
+            // ?fillextended / setupforedit?
+            return View(plat);
+        }
+
         public ActionResult Maintenance(int id)
         {
             var platform = tdRepo.Platform(id);
