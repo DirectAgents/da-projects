@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using CakeExtracter.Commands;
 using DirectAgents.Domain.Abstract;
@@ -133,6 +135,23 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 case Platform.Code_FB:
                     DASynchFacebookStats.RunStatic(extAcctId: extAcct.Id, startDate: start);
                     break;
+            }
+            return null;
+        }
+
+        public ActionResult UploadStats(int id)
+        {
+            var extAcct = tdRepo.ExtAccount(id);
+            if (extAcct == null)
+                return HttpNotFound();
+
+            return View(extAcct);
+        }
+        public ActionResult UploadFile(int id, HttpPostedFileBase file)
+        {
+            using (var reader = new StreamReader(file.InputStream))
+            {
+                DASynchTDDailySummaries.RunStatic(id, reader);
             }
             return null;
         }

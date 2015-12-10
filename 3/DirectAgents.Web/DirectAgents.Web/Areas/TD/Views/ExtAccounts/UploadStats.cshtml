@@ -1,0 +1,38 @@
+﻿@model DirectAgents.Domain.Entities.TD.ExtAccount
+@{
+    var url = Url.Action("UploadFile", new { id = Model.Id });
+}
+<h2>Upload Stats for External Account</h2>
+
+Account Name: @Model.Name<br />
+Partner: @Model.Platform.Name
+<br /><br />
+
+<div id="filesMessage" style="margin: 0px 0px 18px 5px"></div>
+
+<form method="post" action="@url" enctype="multipart/form-data">
+    <div>
+        <input id="fileUpload" name="file" type="file" />
+    </div>
+</form>
+
+<script>
+    $(function () {
+        $("#fileUpload").kendoUpload({
+            async: {
+                saveUrl: "@url",
+                autoUpload: false
+            },
+            localization: {
+                select: "Upload&nbsp;file...",
+                uploadSelectedFiles: "Upload"
+            },
+            multiple: false,
+            complete: UploadComplete
+        });
+    });
+
+    function UploadComplete() {
+        $('#filesMessage').html('Stats uploaded.');
+    }
+</script>

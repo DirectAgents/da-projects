@@ -310,6 +310,33 @@ namespace DirectAgents.Domain.Concrete
                 pbi.Platform = Platform(pbi.PlatformId);
         }
 
+        public PlatColMapping PlatColMapping(int id)
+        {
+            return context.PlatColMappings.Find(id);
+        }
+        public bool AddSavePlatColMapping(PlatColMapping platColMapping)
+        {
+            if (context.PlatColMappings.Any(p => p.Id == platColMapping.Id))
+            {
+                var entry = context.Entry(platColMapping);
+                entry.State = EntityState.Modified;
+            }
+            else
+            {
+                if (!context.Platforms.Any(p => p.Id == platColMapping.Id))
+                    return false; // no platform with that id - don't save mapping
+
+                context.PlatColMappings.Add(platColMapping);
+            }
+            context.SaveChanges();
+            return true;
+        }
+        public void FillExtended(PlatColMapping platColMapping)
+        {
+            if (platColMapping.Platform == null)
+                platColMapping.Platform = Platform(platColMapping.Id);
+        }
+
         // ---
 
         public ExtAccount ExtAccount(int id)

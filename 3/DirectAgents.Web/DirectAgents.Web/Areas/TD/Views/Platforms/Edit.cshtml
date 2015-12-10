@@ -25,6 +25,8 @@
             <br />
             <input type="submit" value="Save" />
             &nbsp;@Html.ActionLink("cancel", "Index")
+            <br /><br />
+            @Html.ActionLink("Edit Column Mappings", "Edit", "PlatColMappings", new { id = Model.Id }, null)
         </div>
     }
 </fieldset>

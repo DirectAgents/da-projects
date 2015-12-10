@@ -50,6 +50,9 @@ namespace DirectAgents.Domain.Abstract
         bool DeletePlatformBudgetInfo(int campId, int platformId, DateTime date);
         bool SavePlatformBudgetInfo(PlatformBudgetInfo pbi);
         void FillExtended(PlatformBudgetInfo pbi);
+        PlatColMapping PlatColMapping(int id);
+        bool AddSavePlatColMapping(PlatColMapping platColMapping);
+        void FillExtended(PlatColMapping platColMapping);
         ExtAccount ExtAccount(int id);
         IQueryable<ExtAccount> ExtAccounts(string platformCode = null, int? campId = null);
         IQueryable<ExtAccount> ExtAccountsNotInCampaign(int campId);

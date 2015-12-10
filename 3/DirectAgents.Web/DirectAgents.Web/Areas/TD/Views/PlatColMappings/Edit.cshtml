@@ -1,0 +1,47 @@
+﻿@model DirectAgents.Domain.Entities.TD.PlatColMapping
+
+<fieldset>
+    <legend>Edit Column Mappings</legend>
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary()
+        @Html.HiddenFor(m => m.Id)
+        <div style="float:left">
+            Partner: @Model.Platform.Name
+            <br /><br />
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Date, "*Date")</td>
+                    <td>@Html.EditorFor(m => m.Date)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Cost)</td>
+                    <td>@Html.EditorFor(m => m.Cost)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Impressions)</td>
+                    <td>@Html.EditorFor(m => m.Impressions)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Clicks)</td>
+                    <td>@Html.EditorFor(m => m.Clicks)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.PostClickConv)</td>
+                    <td>@Html.EditorFor(m => m.PostClickConv)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.PostViewConv)</td>
+                    <td>@Html.EditorFor(m => m.PostViewConv)</td>
+                </tr>
+            </table>
+            *Required
+            <br /><br />
+            <input type="submit" value="Save" />
+            &nbsp;@Html.ActionLink("cancel", "Edit", "Platforms", new { id = Model.Id }, null)
+            <br /><br />
+            Fill in the corresponding names of the columns that a CSV file will have.
+            Leave blank to skip that field.
+        </div>
+    }
+</fieldset>
