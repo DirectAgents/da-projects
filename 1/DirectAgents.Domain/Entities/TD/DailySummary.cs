@@ -17,5 +17,10 @@ namespace DirectAgents.Domain.Entities.TD
         public decimal Cost { get; set; }
 
         //TotalConv
+
+        public bool AllZeros()
+        {
+            return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0);
+        }
     }
 }

@@ -13,11 +13,46 @@ namespace DirectAgents.Domain.Entities.TD
 
         public virtual ICollection<ExtAccount> ExtAccounts { get; set; }
         //public virtual ICollection<PlatformBudgetInfo> PlatformBudgetInfos { get; set; }
+        public virtual PlatColMapping PlatColMapping { get; set; }
 
         public const string Code_DATradingDesk = "datd";
         public const string Code_AdRoll = "adr";
         public const string Code_DBM = "dbm";
         public const string Code_FB = "fb";
+    }
+
+    public class PlatColMapping : ColumnMapping
+    {
+        public int Id { get; set; }
+        public virtual Platform Platform { get; set; }
+    }
+    public class ColumnMapping
+    {
+        // the values are the names of the columns these properties are mapped to (in DailySummary)
+        [Required]
+        public string Date { get; set; }
+        public string Cost { get; set; }
+        public string Impressions { get; set; }
+        public string Clicks { get; set; }
+        public string PostClickConv { get; set; }
+        public string PostViewConv { get; set; }
+
+        public static ColumnMapping CreateDefault()
+        {
+            var mapping = new ColumnMapping();
+            mapping.SetDefaults();
+            return mapping;
+        }
+
+        public void SetDefaults()
+        {
+            Date = "Date";
+            Cost = "Cost";
+            Impressions = "Impressions";
+            Clicks = "Clicks";
+            PostClickConv = "PostClickConv";
+            PostViewConv = "PostViewConv";
+        }
     }
 
     public class ExtAccount
