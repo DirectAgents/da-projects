@@ -1,4 +1,7 @@
 ﻿@model DirectAgents.Web.Areas.TD.Models.DailySummariesVM
+@{
+    bool super = Request.QueryString["super"] == "1";
+}
 
 @section scripts {
 <script>
@@ -23,37 +26,41 @@
 
 @if (Model.ExtAccount != null)
 {
-    <text>ExtAccount: @Model.ExtAccount.Name (@Model.ExtAccount.Platform.Name)</text>
+    <text>ExtAccount: </text>@Model.ExtAccount.Name<br />
+    if (Model.ExtAccount.Platform != null)
+    {
+        <text>Partner: </text>@Model.ExtAccount.Platform.Name<br />
+    }
 }
 <table>
 <tr>
     <th></th>
-    <th>Partner</th>
-    <th>Ext Account</th>
     <th>Date</th>
-    <th>Cost</th>
     <th>Impressions</th>
     <th>Clicks</th>
     <th>PostClick Conv</th>
     <th>PostView Conv</th>
+    <th>Cost</th>
 </tr>
 @foreach (var ds in Model.DailySummaries)
 {
 <tr>
-    <td>@Html.ActionLink("Edit", "Edit", new { acctid = ds.AccountId, date = ds.Date.ToShortDateString() })</td>
-    <td>@ds.ExtAccount.Platform.Name</td>
-    <td>@ds.ExtAccount.Name</td>
+    <td>
+    @if (super) {
+        @Html.ActionLink("Edit", "Edit", new { acctid = ds.AccountId, date = ds.Date.ToShortDateString() })
+    }
+    </td>
     <td>@ds.Date.ToShortDateString()</td>
-    <td>@ds.Cost</td>
-    <td>@ds.Impressions</td>
-    <td>@ds.Clicks</td>
-    <td>@ds.PostClickConv</td>
-    <td>@ds.PostViewConv</td>
+    <td style="text-align:right">@ds.Impressions</td>
+    <td style="text-align:right">@ds.Clicks</td>
+    <td style="text-align:right">@ds.PostClickConv</td>
+    <td style="text-align:right">@ds.PostViewConv</td>
+    <td style="text-align:right">@ds.Cost</td>
 </tr>
 }
 </table>
 <br />
-@if (!Model.DailySummaries.Any())
+@if (!Model.DailySummaries.Any() && super)
 {
     DateTime yesterday = DateTime.Today.AddDays(-1);
     DateTime date = Model.Month.HasValue ? Model.Month.Value : new DateTime(yesterday.Year, yesterday.Month, 1);

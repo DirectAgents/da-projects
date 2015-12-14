@@ -1,6 +1,8 @@
 ﻿@model IEnumerable<DirectAgents.Domain.Entities.TD.ExtAccount>
 @{
     string platformCode = (string)Session["platformCode"];
+    var yesterday = DateTime.Today.AddDays(-1);
+    var month = new DateTime(yesterday.Year, yesterday.Month, 1);
 }
 <h2>External Accounts</h2>
 
@@ -10,7 +12,7 @@
     <th>Partner</th>
     <th>AccountName</th>
     <th>ExternalId</th>
-    <th></th>
+    <th>Daily Stats</th>
 </tr>
 @foreach (var extAcct in Model)
 {
@@ -19,7 +21,10 @@
     <td>@extAcct.Platform.Name</td>
     <td>@extAcct.Name</td>
     <td>@extAcct.ExternalId</td>
-    <td>@Html.ActionLink("Upload Stats", "UploadStats", new { id = extAcct.Id })</td>
+    <td>
+        @Html.ActionLink("View", "Index", "DailySummaries", new { acctId = extAcct.Id, month = month.ToShortDateString() }, null) |
+        @Html.ActionLink("Upload", "UploadStats", new { id = extAcct.Id })
+    </td>
 </tr>
 }
 </table>
