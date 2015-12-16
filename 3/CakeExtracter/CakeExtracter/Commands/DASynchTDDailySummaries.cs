@@ -51,16 +51,6 @@ namespace CakeExtracter.Commands
             var extAccount = GetExtAccount(AccountId);
             if (extAccount != null)
             {
-                //var mapping = new PlatColMapping
-                //{
-                //    //PlatformId = 
-                //    Date = "Day",
-                //    Cost = "Inventory Cost",
-                //    Impressions = "Impressions",
-                //    Clicks = "Clicks",
-                //    PostClickConv = "Conversions",
-                //    PostViewConv = null
-                //};
                 ColumnMapping mapping = extAccount.Platform.PlatColMapping;
                 if (mapping == null)
                     mapping = ColumnMapping.CreateDefault();

@@ -4,8 +4,8 @@
 }
 <h2>Upload Stats for External Account</h2>
 
-Account Name: @Model.Name<br />
-Partner: @Model.Platform.Name
+Partner: @Model.Platform.Name<br />
+ExtAccount: @Model.Name
 <br /><br />
 
 <div id="filesMessage" style="margin: 0px 0px 18px 5px"></div>
@@ -16,6 +16,9 @@ Partner: @Model.Platform.Name
     </div>
 </form>
 
+<br />
+@Html.ActionLink("Back", "Index", new { platform = Model.Platform.Code })
+
 <script>
     $(function () {
         $("#fileUpload").kendoUpload({
@@ -25,7 +28,7 @@ Partner: @Model.Platform.Name
             },
             localization: {
                 select: "Upload&nbsp;file...",
-                uploadSelectedFiles: "Upload"
+                uploadSelectedFiles: "Upload and Process"
             },
             multiple: false,
             complete: UploadComplete
@@ -33,6 +36,6 @@ Partner: @Model.Platform.Name
     });
 
     function UploadComplete() {
-        $('#filesMessage').html('Stats uploaded.');
+        $('#filesMessage').html('Done processing.');
     }
 </script>

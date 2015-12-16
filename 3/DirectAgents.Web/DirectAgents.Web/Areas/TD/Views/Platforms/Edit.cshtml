@@ -1,4 +1,7 @@
 ﻿@model DirectAgents.Domain.Entities.TD.Platform
+@{
+    bool super = Request.QueryString["super"] == "1";
+}
 
 <fieldset>
     <legend>Edit Partner</legend>
@@ -6,7 +9,9 @@
     {
         @Html.ValidationSummary()
         @Html.HiddenFor(m => m.Id)
-        @Html.HiddenFor(m => m.Code)
+        if (!super) {
+            @Html.HiddenFor(m => m.Code)
+        }
         <div style="float:left">
             <table>
                 <tr>
@@ -15,7 +20,13 @@
                 </tr>
                 <tr>
                     <td>@Html.LabelFor(m => m.Code)</td>
-                    <td>@Html.DisplayFor(m => m.Code)</td>
+                    <td>
+                    @if (super) {
+                        @Html.EditorFor(m => m.Code)
+                    } else {
+                        @Html.DisplayFor(m => m.Code)
+                    }
+                    </td>
                 </tr>
                 <tr>
                     <td>@Html.LabelFor(m => m.Name)</td>

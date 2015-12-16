@@ -26,7 +26,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var campaign = new Campaign
             {
                 AdvertiserId = advId,
-                Name = "New",
+                Name = "zNew",
                 DefaultBudgetInfo = new BudgetInfoVals
                 {
                     MgmtFeePct = 15,
@@ -59,7 +59,8 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             if (ModelState.IsValid)
             {
                 if (tdRepo.SaveCampaign(camp))
-                    return RedirectToAction("Index", new { advId = Session["advId"] });
+                    return RedirectToAction("Edit", new { id = camp.Id });
+                    //return RedirectToAction("Index", new { advId = Session["advId"] });
                 ModelState.AddModelError("", "Campaign could not be saved.");
             }
             tdRepo.FillExtended(camp);

@@ -21,6 +21,19 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View(platforms);
         }
 
+        public ActionResult CreateNew()
+        {
+            var platform = new Platform
+            {
+                Code = "z",
+                Name = "zNew"
+            };
+            if (tdRepo.AddPlatform(platform))
+                return RedirectToAction("Index");
+            else
+                return Content("Error creating Partner");
+        }
+
         [HttpGet]
         public ActionResult Edit(int id)
         {

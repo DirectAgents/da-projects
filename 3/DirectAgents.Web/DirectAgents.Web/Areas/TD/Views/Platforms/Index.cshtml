@@ -2,6 +2,7 @@
 @{
     var lastMonth = DateTime.Today.AddMonths(-1);
     lastMonth = new DateTime(lastMonth.Year, lastMonth.Month, 1);
+    bool super = Request.QueryString["super"] == "1";
 }
 <h2>Partners</h2>
 
@@ -27,3 +28,8 @@
 </tr>
 }
 </table>
+@if (super)
+{
+    <br />
+    @Html.ActionLink("New Partner", "CreateNew")
+}

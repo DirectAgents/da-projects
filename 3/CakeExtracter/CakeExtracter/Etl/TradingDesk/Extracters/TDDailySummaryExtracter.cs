@@ -53,6 +53,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             using (CsvReader csv = new CsvReader(reader))
             {
                 csv.Configuration.SkipEmptyRecords = true;
+                csv.Configuration.WillThrowOnMissingField = false;
+                csv.Configuration.IgnoreReadingExceptions = true; // This is at the row level
+                csv.Configuration.ReadingExceptionCallback = (ex, row) =>
+                    {
+                        Logger.Error(ex);
+                    };
 
                 var classMap = CreateCsvClassMap(this.columnMapping);
                 csv.Configuration.RegisterClassMap(classMap);
@@ -68,11 +74,27 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 }
                 if (csvRows != null)
                 {
-                    for (int i = 0; i < csvRows.Count; i++)
-                    {
-                        yield return csvRows[i];
-                    }
+                    foreach (var ds in GroupByDateAndEnumerate(csvRows))
+                        yield return ds;
                 }
+            }
+        }
+
+        private IEnumerable<DailySummary> GroupByDateAndEnumerate(List<DailySummary> csvRows)
+        {
+            var groupedRows = csvRows.GroupBy(r => r.Date);
+            foreach (var dayGroup in groupedRows)
+            {
+                var ds = new DailySummary
+                {
+                    Date = dayGroup.Key,
+                    Impressions = dayGroup.Sum(g => g.Impressions),
+                    Clicks = dayGroup.Sum(g => g.Clicks),
+                    PostClickConv = dayGroup.Sum(g => g.PostClickConv),
+                    PostViewConv = dayGroup.Sum(g => g.PostViewConv),
+                    Cost = dayGroup.Sum(g => g.Cost)
+                };
+                yield return ds;
             }
         }
 
@@ -101,6 +123,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 propertyInfo.PropertyType == typeof(decimal))
             {
                 propMap.TypeConverterOption(NumberStyles.Currency);
+                propMap.Default(0);
             }
             return propMap;
         }
