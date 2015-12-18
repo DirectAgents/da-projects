@@ -16,7 +16,7 @@
 }
 <fieldset>
     <legend>Edit Campaign -> Budget+Percents</legend>
-    @using (Html.BeginForm())
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "formBudgetInfo" }))
     {
         @Html.ValidationSummary()
         @Html.HiddenFor(m => m.CampaignId)
@@ -41,8 +41,11 @@
                 </tr>
             </table>
             <br />
-            <input type="submit" value="Save" />
-            &nbsp;@Html.ActionLink("cancel", "Edit", "Campaigns", new { id = Model.CampaignId }, null)
+            <div id="divSave">
+                <input type="submit" value="Save" onclick="SaveBudgetInfo()" />
+                &nbsp;@Html.ActionLink("cancel(back to campaign)", "Edit", "Campaigns", new { id = Model.CampaignId }, null)
+            </div>
+            <div id="divSaveMessage"></div>
         </div>
     }
     <br style="clear:both" />
@@ -90,3 +93,12 @@
 }
     </div>
 </fieldset>
+<br />
+
+<script>
+    function SaveBudgetInfo() {
+        $('#formBudgetInfo').submit();
+        $('#divSave').hide();
+        $('#divSaveMessage').html("<i>Saving...</i>");
+    }
+</script>

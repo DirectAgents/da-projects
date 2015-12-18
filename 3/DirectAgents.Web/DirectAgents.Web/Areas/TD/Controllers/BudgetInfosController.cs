@@ -45,7 +45,8 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             if (ModelState.IsValid)
             {
                 if (tdRepo.SaveBudgetInfo(bi))
-                    return RedirectToAction("Edit", "Campaigns", new { id = bi.CampaignId });
+                    return RedirectToAction("Edit", new { campId = bi.CampaignId, date = bi.Date.ToShortDateString() });
+                    //return RedirectToAction("Edit", "Campaigns", new { id = bi.CampaignId });
                 ModelState.AddModelError("", "BudgetInfo could not be saved.");
             }
             tdRepo.FillExtended(bi);

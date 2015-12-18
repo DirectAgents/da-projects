@@ -5,7 +5,7 @@
 
 <fieldset>
     <legend>Edit Campaign</legend>
-    @using (Html.BeginForm())
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "formCampaign" }))
     {
         @Html.ValidationSummary()
         @Html.HiddenFor(m => m.Id)
@@ -40,8 +40,11 @@
                 </tr>
             </table>
             <br />
-            <input type="submit" value="Save" />
-            &nbsp;@Html.ActionLink("cancel", "Index", new { advId = advId })
+            <div id="divSave">
+                <input id="btnSubmit" type="submit" value="Save" onclick="SaveCampaign()" />
+                &nbsp;@Html.ActionLink("cancel(back to campaigns)", "Index", new { advId = advId })
+            </div>
+            <div id="divSaveMessage"></div>
         </div>
     }
     <br style="clear:both" />
@@ -120,6 +123,19 @@
     }
 }
         <br />
-        @Html.ActionLink("Back to Campaign List", "Index", new { advId = advId })
+        @Html.ActionLink("Back to Campaigns", "Index", new { advId = advId })
     </div>
 </fieldset>
+<br />
+
+<script>
+    //$(function () {
+    //    $('#btnSubmit').prop('disabled', false);
+    //});
+
+    function SaveCampaign() {
+        $('#formCampaign').submit();
+        $('#divSave').hide();
+        $('#divSaveMessage').html("<i>Saving...</i>");
+    }
+</script>
