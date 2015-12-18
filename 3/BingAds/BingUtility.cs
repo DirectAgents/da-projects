@@ -28,6 +28,10 @@ namespace BingAds
         private string UserName { get; set; }
         private string Password { get; set; }
 
+        private string ClientId { get; set; }
+        private string ClientSecret { get; set; }
+        private string RefreshToken { get; set; }
+
         private void ResetCredentials()
         {
             CustomerID = Convert.ToInt64(_customerID);
@@ -42,18 +46,25 @@ namespace BingAds
             string customerID = ConfigurationManager.AppSettings["BingCustomerID" + accountId];
             if (!String.IsNullOrWhiteSpace(customerID))
                 CustomerID = Convert.ToInt64(customerID);
-
             string token = ConfigurationManager.AppSettings["BingApiToken" + accountId];
             if (!String.IsNullOrWhiteSpace(token))
                 DeveloperToken = token;
-
             string username = ConfigurationManager.AppSettings["BingApiUsername" + accountId];
             if (!String.IsNullOrWhiteSpace(username))
                 UserName = username;
-
             string password = ConfigurationManager.AppSettings["BingApiPassword" + accountId];
             if (!String.IsNullOrWhiteSpace(password))
                 Password = password;
+
+            string _clientId = ConfigurationManager.AppSettings["BingClientId" + accountId];
+            if (!String.IsNullOrWhiteSpace(_clientId))
+                ClientId = _clientId;
+            string _clientSecret = ConfigurationManager.AppSettings["BingClientSecret" + accountId];
+            if (!String.IsNullOrWhiteSpace(_clientSecret))
+                ClientSecret = _clientSecret;
+            string _refreshToken = ConfigurationManager.AppSettings["BingRefreshToken" + accountId];
+            if (!String.IsNullOrWhiteSpace(_refreshToken))
+                RefreshToken = _refreshToken;
         }
         private AuthorizationData GetAuthorizationData()
         {
@@ -65,12 +76,9 @@ namespace BingAds
             };
             if (UserName.Contains('@')) // is an email address (Microsoft account); can't use PasswordAuthentication
             {
-                string clientId = ConfigurationManager.AppSettings["BingClientId"];
-                string clientSecret = ConfigurationManager.AppSettings["BingClientSecret"];
                 string redirString = ConfigurationManager.AppSettings["BingRedirectionUri"];
-                string refreshToken = ConfigurationManager.AppSettings["BingRefreshToken"];
-                var authorization = new OAuthWebAuthCodeGrant(clientId, clientSecret, new Uri(redirString));
-                var task = authorization.RequestAccessAndRefreshTokensAsync(refreshToken);
+                var authorization = new OAuthWebAuthCodeGrant(ClientId, ClientSecret, new Uri(redirString));
+                var task = authorization.RequestAccessAndRefreshTokensAsync(RefreshToken);
                 task.Wait();
                 // TODO: see if refreshtoken changed; if so, save the new one
 

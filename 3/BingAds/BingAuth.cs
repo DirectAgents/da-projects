@@ -8,9 +8,9 @@ using System.Text;
 using WatiN.Core;
 using WatiN.Core.Native;
 
-namespace BingTestConsole
+namespace BingAds
 {
-    class BingAuth
+    public class BingAuth
     {
         private const string AuthorizeUri = "https://login.live.com/oauth20_authorize.srf";
         private const string TokenUri = "https://login.live.com/oauth20_token.srf";
@@ -195,7 +195,7 @@ namespace BingTestConsole
 
 
     [DataContract]
-    class AccessTokens
+    public class AccessTokens
     {
         [DataMember]
         // Indicates the duration in seconds until the access token will expire.

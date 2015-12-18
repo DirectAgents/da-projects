@@ -334,6 +334,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Commands\TestAdRollCommand.cs" />
+    <Compile Include="Commands\TestBingCommand.cs" />
     <Compile Include="Commands\TestChartCommand.cs" />
     <Compile Include="Commands\TestCriteoCommand.cs" />
     <Compile Include="Commands\TestDbmCommand.cs" />

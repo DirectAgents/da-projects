@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+//using System.Net;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.SearchMarketing.Extracters;
 using CakeExtracter.Etl.SearchMarketing.Loaders;
@@ -52,6 +53,7 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
+            //GlobalProxySelection.Select = new WebProxy("127.0.0.1", 8888);
             if (!DaysAgoToStart.HasValue)
                 DaysAgoToStart = 62; // used if StartDate==null
             var today = DateTime.Today;
