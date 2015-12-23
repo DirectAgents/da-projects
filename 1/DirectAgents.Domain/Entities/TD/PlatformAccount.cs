@@ -73,4 +73,15 @@ namespace DirectAgents.Domain.Entities.TD
             get { return "(" + Platform.Name + ") " + Name + " [" + ExternalId + "]"; }
         }
     }
+
+    public class Strategy
+    {
+        public int Id { get; set; }
+        public int AccountId { get; set; }
+        [ForeignKey("AccountId")]
+        public virtual ExtAccount ExtAccount { get; set; }
+
+        public string ExternalId { get; set; }
+        public string Name { get; set; }
+    }
 }

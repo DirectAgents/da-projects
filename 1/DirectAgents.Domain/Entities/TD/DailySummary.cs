@@ -3,13 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DirectAgents.Domain.Entities.TD
 {
-    public class DailySummary
+    public class DaySumStats
     {
-        public DateTime Date { get; set; }
-        public int AccountId { get; set; }
-        [ForeignKey("AccountId")]
-        public virtual ExtAccount ExtAccount { get; set; }
-
         public int Impressions { get; set; }
         public int Clicks { get; set; }
         public int PostClickConv { get; set; }
@@ -22,5 +17,20 @@ namespace DirectAgents.Domain.Entities.TD
         {
             return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0);
         }
+    }
+
+    public class DailySummary : DaySumStats
+    {
+        public DateTime Date { get; set; }
+        public int AccountId { get; set; }
+        [ForeignKey("AccountId")]
+        public virtual ExtAccount ExtAccount { get; set; }
+    }
+
+    public class StrategySummary : DaySumStats
+    {
+        public DateTime Date { get; set; }
+        public int StrategyId { get; set; }
+        public virtual Strategy Strategy { get; set; }
     }
 }
