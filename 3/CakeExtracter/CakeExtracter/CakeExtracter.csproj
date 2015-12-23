@@ -425,9 +425,10 @@
     <Compile Include="Etl\TradingDesk\Extracters\DbmUserListStatExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\TDDailySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollAdDailySummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\AdrollCampaignDailySummaryLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\AdrollCampaignSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\DBMCreativeDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDDailySummaryLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\TDStrategySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\Loaders\AdrollAdDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\Loaders\AdrollAdDailySummaryLoader2.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollDailySummaryLoader.cs" />

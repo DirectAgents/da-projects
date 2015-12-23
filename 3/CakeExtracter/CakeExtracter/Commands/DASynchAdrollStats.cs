@@ -111,15 +111,20 @@ namespace CakeExtracter.Commands
 
         private void DoETL_CampaignLevel(DateRange dateRange, IEnumerable<Advertisable> advertisables, AdRollUtility arUtility = null)
         {
-            //TODO: same as AdLevel
+            //TODO: same as AdLevel todo
             foreach (var adv in advertisables)
             {
                 var extracter = new AdrollCampaignDailySummariesExtracter(dateRange, adv.Eid, arUtility);
-                var loader = new AdrollCampaignDailySummaryLoader(adv.Id);
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
+                var loader = new AdrollCampaignSummaryLoader(adv.Eid);
+                if (loader.FoundAccount())
+                {
+                    var extracterThread = extracter.Start();
+                    var loaderThread = loader.Start(extracter);
+                    extracterThread.Join();
+                    loaderThread.Join();
+                }
+                else
+                    Logger.Warn("AdRoll Account did not exist for Advertisable with Eid {0}. Cannot do ETL.", adv.Eid);
             }
         }
 
