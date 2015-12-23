@@ -37,6 +37,21 @@ namespace AdRoll.Entities
         // status, created_date
     }
 
+    // used for Campaign daily report
+    public class CampaignSummary : AdrollDailySummary
+    {
+        public string eid { get; set; }
+        public string campaign { get; set; } // campaign name
+        public string advertiser { get; set; } // advertisable name
+        public string type { get; set; } // e.g. "Retargeting"
+        public string status { get; set; } // e.g. "approved"
+        public DateTime created_date { get; set; }
+        public DateTime start_date { get; set; }
+        public DateTime? end_date { get; set; }
+        public double budget_USD { get; set; }
+
+    }
+
     // used for Ad daily report
     public class AdSummary : AdrollDailySummary
     {

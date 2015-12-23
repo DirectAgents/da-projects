@@ -46,6 +46,10 @@ namespace AdRoll
         {
             get { return (AdReportClient)GetClient(typeof(AdReportClient)); }
         }
+        private CampaignReportClient CampaignReportClient
+        {
+            get { return (CampaignReportClient)GetClient(typeof(CampaignReportClient)); }
+        }
         private AdvertisableReportClient AdvertisableReportClient
         {
             get { return (AdvertisableReportClient)GetClient(typeof(AdvertisableReportClient)); }
@@ -116,6 +120,29 @@ namespace AdRoll
                 adSum.date = date;
             }
             return adSummaries;
+        }
+
+        // Daily Summaries by Campaign (also one day per call)
+        public List<CampaignSummary> CampaignDailySummaries(DateTime date, string advertisableEid)
+        {
+            var request = new CampaignReportRequest
+            {
+                start_date = date.ToString("MM-dd-yyyy"),
+                end_date = date.ToString("MM-dd-yyyy"),
+                advertisables = advertisableEid
+            };
+            var response = this.CampaignReportClient.CampaignSummaries(request);
+            if (response == null)
+            {
+                LogInfo("No CampaignSummaries found");
+                return new List<CampaignSummary>();
+            }
+            var campaignSummaries = response.results;
+            foreach (var campSum in campaignSummaries)
+            {
+                campSum.date = date;
+            }
+            return campaignSummaries;
         }
 
         // DailySummaries for an Advertisable

@@ -4,14 +4,32 @@ using AdRoll.Entities;
 
 namespace AdRoll.Clients
 {
-    #region advertisable
+    public abstract class ReportRequest : ApiRequest
+    {
+        public string campaigns { get; set; }
+        public string adgroups { get; set; }
+        public string ads { get; set; }
+        public string advertisables { get; set; }
+
+        public string data_format { get; set; }
+
+        //public int? past_days { get; set; }
+        public string start_date { get; set; }
+        public string end_date { get; set; }
+
+        public ReportRequest()
+        {
+            start_date = DateTime.Today.AddDays(-1).ToString("MM-dd-yyyy");
+            end_date = start_date;
+        }
+    }
+
+    #region Advertisable
 
     public class AdvertisableReportClient : ApiClient
     {
         public AdvertisableReportClient()
-            : base(1, "report", "advertisable")
-        {
-        }
+            : base(1, "report", "advertisable") { }
 
         public DailySummaryReportResponse DailySummaries(AdvertisableReportRequest request)
         {
@@ -25,27 +43,14 @@ namespace AdRoll.Clients
         }
     }
 
-    public class AdvertisableReportRequest : ApiRequest
+    public class AdvertisableReportRequest : ReportRequest
     {
         public AdvertisableReportRequest()
+            : base()
         {
-            start_date = DateTime.Today.AddDays(-1).ToString("MM-dd-yyyy");
-            end_date = start_date;
             data_format = "date";
         }
-
-        public string campaigns { get; set; }
-        public string adgroups { get; set; }
-        public string ads { get; set; }
-        public string advertisables { get; set; }
-
-        public string data_format { get; set; }
-
-        //public int? past_days { get; set; }
-        public string start_date { get; set; }
-        public string end_date { get; set; }
     }
-
     public class DailySummaryReportResponse
     {
         public List<AdrollDailySummary> results { get; set; }
@@ -56,14 +61,40 @@ namespace AdRoll.Clients
     }
 
     #endregion
-    #region ad
+    #region Campaign
+
+    public class CampaignReportClient : ApiClient
+    {
+        public CampaignReportClient()
+            : base(1, "report", "campaign") { }
+
+        public CampaignSummaryReportResponse CampaignSummaries(CampaignReportRequest request)
+        {
+            var result = Execute<CampaignSummaryReportResponse>(request);
+            return result;
+        }
+    }
+
+    public class CampaignReportRequest : ReportRequest
+    {
+        public CampaignReportRequest()
+            : base()
+        {
+            data_format = "entity";
+        }
+    }
+    public class CampaignSummaryReportResponse
+    {
+        public List<CampaignSummary> results { get; set; }
+    }
+
+    #endregion
+    #region Ad
 
     public class AdReportClient : ApiClient
     {
         public AdReportClient()
-            : base(1, "report", "ad")
-        {
-        }
+            : base(1, "report", "ad") { }
 
         public AdSummaryReportResponse AdSummaries(AdReportRequest request)
         {
@@ -72,25 +103,14 @@ namespace AdRoll.Clients
         }
     }
 
-    public class AdReportRequest : ApiRequest
+    public class AdReportRequest : ReportRequest
     {
         public AdReportRequest()
+            : base()
         {
-            start_date = DateTime.Today.AddDays(-1).ToString("MM-dd-yyyy");
-            end_date = start_date;
             data_format = "entity";
         }
-
-        public string campaigns { get; set; }
-        public string adgroups { get; set; }
-        public string ads { get; set; }
-        public string advertisables { get; set; }
-
-        public string start_date { get; set; }
-        public string end_date { get; set; }
-        public string data_format { get; set; }
     }
-
     public class AdSummaryReportResponse
     {
         public List<AdSummary> results { get; set; }
