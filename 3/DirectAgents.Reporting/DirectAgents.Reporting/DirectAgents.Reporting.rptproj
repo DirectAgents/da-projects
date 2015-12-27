@@ -19,14 +19,6 @@
       <MimeType>image/jpeg</MimeType>
     </ResourceProjectItem>
     <ProjectItem>
-      <Name>Report1 messed up.rdl</Name>
-      <FullPath>Report1 messed up.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Report1 orig.rdl</Name>
-      <FullPath>Report1 orig.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>Report1.rdl</Name>
       <FullPath>Report1.rdl</FullPath>
     </ProjectItem>
