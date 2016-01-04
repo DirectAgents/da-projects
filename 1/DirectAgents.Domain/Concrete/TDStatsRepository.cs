@@ -16,6 +16,13 @@ namespace DirectAgents.Domain.Concrete
                 return null;
             return dSums.Max(ds => ds.Date);
         }
+        public DateTime? LatestStrategyStatDate(int? acctId = null)
+        {
+            var sSums = StrategySummaries(null, null, acctId: acctId);
+            if (!sSums.Any())
+                return null;
+            return sSums.Max(s => s.Date);
+        }
 
         public DailySummary DailySummary(DateTime date, int acctId)
         {
@@ -61,6 +68,22 @@ namespace DirectAgents.Domain.Concrete
             if (campId.HasValue)
                 dSums = dSums.Where(ds => ds.ExtAccount.CampaignId == campId);
             return dSums;
+        }
+
+        public IQueryable<StrategySummary> StrategySummaries(DateTime? startDate, DateTime? endDate, int? stratId = null, int? acctId = null, int? campId = null)
+        {
+            var sSums = context.StrategySummaries.AsQueryable();
+            if (startDate.HasValue)
+                sSums = sSums.Where(s => s.Date >= startDate.Value);
+            if (endDate.HasValue)
+                sSums = sSums.Where(s => s.Date <= endDate.Value);
+            if (stratId.HasValue)
+                sSums = sSums.Where(s => s.StrategyId == stratId.Value);
+            if (acctId.HasValue)
+                sSums = sSums.Where(s => s.Strategy.AccountId == acctId.Value);
+            if (campId.HasValue)
+                sSums = sSums.Where(s => s.Strategy.ExtAccount.CampaignId == campId);
+            return sSums;
         }
 
         //NOTE: This will sum stats for ALL campaigns if none specified.

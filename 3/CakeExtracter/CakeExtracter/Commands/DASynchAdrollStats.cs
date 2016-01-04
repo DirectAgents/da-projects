@@ -16,7 +16,7 @@ namespace CakeExtracter.Commands
     public class DASynchAdrollStats : ConsoleCommand
     {
         // if Eid not specified, will ask AdRoll for all Advertisables that have stats
-        public static int RunStatic(string advertisableEids = null, DateTime? startDate = null, DateTime? endDate = null)
+        public static int RunStatic(string advertisableEids = null, DateTime? startDate = null, DateTime? endDate = null, string oneStatPer = null)
         {
             AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new DASynchAdrollStats
@@ -24,12 +24,9 @@ namespace CakeExtracter.Commands
                 AdvertisableEids = advertisableEids,
                 CheckActiveAdvertisables = string.IsNullOrWhiteSpace(advertisableEids),
                 StartDate = startDate,
-                EndDate = endDate
+                EndDate = endDate,
+                OneStatPer = oneStatPer
             };
-            cmd.Run();
-            cmd.OneStatPer = "camp";
-            cmd.Run();
-            cmd.OneStatPer = "ad";
             return cmd.Run();
         }
 
@@ -58,7 +55,7 @@ namespace CakeExtracter.Commands
             HasOption("c|checkActive=", "Check AdRoll for Advertisables with stats (if none specified)", c => CheckActiveAdvertisables = bool.Parse(c));
             HasOption("s|startDate=", "Start Date (default is one month ago)", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
-            HasOption("o|oneStatPer=", "One Stat per [what] per day (camp/ad default = advertisable)", c => OneStatPer = c);
+            HasOption("o|oneStatPer=", "One Stat per [what] per day (advertisable/campaign/ad, default = all)", c => OneStatPer = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -79,12 +76,12 @@ namespace CakeExtracter.Commands
                 AdvertisableEids = String.Join(",", advertisables.Select(a => a.Eid));
 
             string _oneStatPer = (OneStatPer == null) ? "" : OneStatPer.ToLower();
-            if (_oneStatPer.StartsWith("camp"))
+            if (_oneStatPer.StartsWith("adv") || _oneStatPer == "")
+                DoETL_AdvertisableLevel(dateRange, advertisables);
+            if (_oneStatPer.StartsWith("camp") || _oneStatPer == "")
                 DoETL_CampaignLevel(dateRange, advertisables);
-            else if (_oneStatPer.StartsWith("ad"))
+            if ((_oneStatPer.StartsWith("ad") && !_oneStatPer.StartsWith("adv")) || _oneStatPer == "")
                 DoETL_AdLevel(dateRange, advertisables);
-            else
-                DoETL_AdvertisableLevel(dateRange, advertisables); //default
 
             return 0;
         }
@@ -109,6 +106,7 @@ namespace CakeExtracter.Commands
             }
         }
 
+        // Extracts campaign stats, converts campaign to strategy during load
         private void DoETL_CampaignLevel(DateRange dateRange, IEnumerable<Advertisable> advertisables, AdRollUtility arUtility = null)
         {
             //TODO: same as AdLevel todo

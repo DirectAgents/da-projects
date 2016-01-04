@@ -1,11 +1,22 @@
-﻿@model DirectAgents.Web.Areas.TD.Models.AccountMaintenanceVM
+﻿@using DirectAgents.Domain.Entities.TD
+@model DirectAgents.Web.Areas.TD.Models.AccountMaintenanceVM
 @{
-    string latestStatString = Model.LatestStatDate.HasValue ? Model.LatestStatDate.Value.ToShortDateString() : null;
-    string syncUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, start = latestStatString });
+    string latestDailyStat = Model.LatestDailyStat.HasValue ? Model.LatestDailyStat.Value.ToShortDateString() : null;
+    string latestStrategyStat = Model.LatestStrategyStat.HasValue ? Model.LatestStrategyStat.Value.ToShortDateString() : null;
+    string syncAllUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, start = latestDailyStat });
+    string syncDailyUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, start = latestDailyStat, level = "account" });
+    string syncStratUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, start = latestStrategyStat, level = "strategy" });
 }
 
-Latest Stats: @(latestStatString ?? "(none)")
+Latest Daily Stats: @(latestDailyStat ?? "(none)")
 @if (Model.Syncable) {
+    string syncUrl = (Model.ExtAccount.Platform.Code == Platform.Code_AdRoll) ? syncDailyUrl : syncAllUrl;
     <text>&nbsp;&nbsp;</text>
     <a href="#" onclick="SyncAccount(@Model.ExtAccount.Id, '@syncUrl'); return false">Sync</a>
+}
+<br />
+Latest Strategy Stats: @(latestStrategyStat ?? "(none)")
+@if (Model.Syncable && Model.ExtAccount.Platform.Code == Platform.Code_AdRoll) {
+    <text>&nbsp;&nbsp;</text>
+    <a href="#" onclick="SyncAccount(@Model.ExtAccount.Id, '@syncStratUrl'); return false">Sync</a>
 }

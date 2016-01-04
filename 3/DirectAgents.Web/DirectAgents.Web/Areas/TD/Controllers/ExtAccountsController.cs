@@ -100,13 +100,14 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var model = new AccountMaintenanceVM
             {
                 ExtAccount = extAcct,
-                LatestStatDate = tdRepo.LatestStatDate(extAcct.Id),
+                LatestDailyStat = tdRepo.LatestStatDate(extAcct.Id),
+                LatestStrategyStat = tdRepo.LatestStrategyStatDate(extAcct.Id),
                 Syncable = syncable
             };
             return PartialView(model);
         }
 
-        public JsonResult Sync(int id, DateTime? start)
+        public JsonResult Sync(int id, DateTime? start, string level)
         {
             var extAcct = tdRepo.ExtAccount(id);
             if (extAcct == null)
@@ -125,7 +126,14 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             switch (extAcct.Platform.Code)
             {
                 case Platform.Code_AdRoll:
-                    DASynchAdrollStats.RunStatic(extAcct.ExternalId, startDate: start);
+                    string oneStatPer;
+                    if (level == "account")
+                        oneStatPer = "advertisable";
+                    else if (level == "strategy")
+                        oneStatPer = "campaign";
+                    else
+                        oneStatPer = level;
+                    DASynchAdrollStats.RunStatic(extAcct.ExternalId, startDate: start, oneStatPer: oneStatPer);
                     break;
                 case Platform.Code_DBM:
                     int ioID;
