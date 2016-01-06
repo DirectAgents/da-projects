@@ -32,6 +32,8 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<DailySummary>().ToTable("DailySummary", tdSchema);
             modelBuilder.Entity<Strategy>().ToTable("Strategy", tdSchema);
             modelBuilder.Entity<StrategySummary>().ToTable("StrategySummary", tdSchema);
+            modelBuilder.Entity<TDad>().ToTable("Ad", tdSchema);
+            modelBuilder.Entity<TDadSummary>().ToTable("AdSummary", tdSchema);
             modelBuilder.Entity<ExtraItem>().ToTable("ExtraItem", tdSchema);
 
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
@@ -53,6 +55,9 @@ namespace DirectAgents.Domain.Contexts
                 .Property(t => t.Cost).HasPrecision(18, 6);
             modelBuilder.Entity<StrategySummary>()
                 .HasKey(ss => new { ss.Date, ss.StrategyId })
+                .Property(t => t.Cost).HasPrecision(18, 6);
+            modelBuilder.Entity<TDadSummary>()
+                .HasKey(s => new { s.Date, s.TDadId })
                 .Property(t => t.Cost).HasPrecision(18, 6);
             modelBuilder.Entity<ExtraItem>().Property(i => i.Cost).HasPrecision(14, 2);
             modelBuilder.Entity<ExtraItem>().Property(i => i.Revenue).HasPrecision(14, 2);
@@ -89,6 +94,8 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<DailySummary> DailySummaries { get; set; }
         public DbSet<Strategy> Strategies { get; set; }
         public DbSet<StrategySummary> StrategySummaries { get; set; }
+        public DbSet<TDad> TDads { get; set; }
+        public DbSet<TDadSummary> TDadSummaries { get; set; }
         public DbSet<ExtraItem> ExtraItems { get; set; }
 
         // AdRoll

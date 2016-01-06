@@ -33,4 +33,11 @@ namespace DirectAgents.Domain.Entities.TD
         public int StrategyId { get; set; }
         public virtual Strategy Strategy { get; set; }
     }
+
+    public class TDadSummary : DaySumStats
+    {
+        public DateTime Date { get; set; }
+        public int TDadId { get; set; }
+        public virtual TDad TDad { get; set; }
+    }
 }

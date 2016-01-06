@@ -84,4 +84,19 @@ namespace DirectAgents.Domain.Entities.TD
         public string ExternalId { get; set; }
         public string Name { get; set; }
     }
+
+    public class TDad // TD Ad
+    {
+        public int Id { get; set; }
+        public int AccountId { get; set; }
+        [ForeignKey("AccountId")]
+        public virtual ExtAccount ExtAccount { get; set; }
+
+        public string ExternalId { get; set; }
+        public string Name { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+
+        // ? nullable StrategyId ?
+    }
 }

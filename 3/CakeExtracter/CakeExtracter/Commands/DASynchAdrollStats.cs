@@ -9,6 +9,7 @@ using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.AdRoll;
+using DirectAgents.Domain.Entities.TD;
 
 namespace CakeExtracter.Commands
 {
@@ -131,6 +132,28 @@ namespace CakeExtracter.Commands
             //TODO: Loop thru dateRange. For each date, make one API call.
             //      (Need to update Loader- pass in advertisables(?)... needed for creating new Ads in the DB... Items have Advertisable *name*, not Eid.)
 
+            foreach (var adv in advertisables)
+            {
+                ExtAccount extAccount = null;
+                using (var db = new DATDContext())
+                {
+                    extAccount = db.ExtAccounts.Where(a => a.ExternalId == adv.Eid && a.Platform.Code == Platform.Code_AdRoll).FirstOrDefault();
+                }
+                if (extAccount != null)
+                {
+                    var extracter = new AdrollAdDailySummariesExtracter(dateRange, adv.Eid, arUtility);
+                    var loader = new TDadSummaryLoader(extAccount.Id);
+                    var extracterThread = extracter.Start();
+                    var loaderThread = loader.Start(extracter);
+                    extracterThread.Join();
+                    loaderThread.Join();
+                }
+                else
+                    Logger.Warn("AdRoll Account did not exist for Advertisable with Eid {0}. Cannot do ETL.", adv.Eid);
+            }
+        }
+        private void DoETL_AdLevelOLD(DateRange dateRange, IEnumerable<Advertisable> advertisables, AdRollUtility arUtility = null)
+        {
             foreach (var adv in advertisables)
             {
                 var extracter = new AdrollAdDailySummariesExtracter(dateRange, adv.Eid, arUtility);
