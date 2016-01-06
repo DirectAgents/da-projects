@@ -1135,6 +1135,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 </TablixRowHierarchy>
                 <DataSetName>MTDBasicStats</DataSetName>
                 <Top>0.25in</Top>
+                <Left>0.03472in</Left>
                 <Height>0.5in</Height>
                 <Width>7.96875in</Width>
                 <Style>
@@ -1160,6 +1161,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox15</rd:DefaultName>
+                <Left>0.03472in</Left>
                 <Height>0.25in</Height>
                 <Width>7.96875in</Width>
                 <ZIndex>1</ZIndex>
@@ -1191,6 +1193,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 </Paragraphs>
                 <rd:DefaultName>Textbox15</rd:DefaultName>
                 <Top>1.04167in</Top>
+                <Left>0.03472in</Left>
                 <Height>0.25in</Height>
                 <Width>7.96875in</Width>
                 <ZIndex>2</ZIndex>
@@ -1456,7 +1459,8 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   </Style>
                 </ChartNoDataMessage>
                 <DataSetName>CTDBasicStats</DataSetName>
-                <Top>2.34611in</Top>
+                <Top>2.35166in</Top>
+                <Left>0.03472in</Left>
                 <Height>1in</Height>
                 <Width>2.675in</Width>
                 <ZIndex>3</ZIndex>
@@ -1475,7 +1479,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     <ChartMember>
                       <Group Name="Chart1_CategoryGroup">
                         <GroupExpressions>
-                          <GroupExpression>=(DateDiff(DateInterval.Day, Parameters!MTDStartDate.Value, Fields!Date.Value) Mod 7) + 1</GroupExpression>
+                          <GroupExpression>=Fields!Date.Value '(DateDiff(DateInterval.Day, Parameters!MTDStartDate.Value, Fields!Date.Value) Mod 7) + 1</GroupExpression>
                         </GroupExpressions>
                       </Group>
                       <SortExpressions>
@@ -1483,24 +1487,14 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                           <Value>=Fields!Date.Value</Value>
                         </SortExpression>
                       </SortExpressions>
-                      <Label>=CStr((DateDiff(DateInterval.Day, Parameters!MTDStartDate.Value, Fields!Date.Value) Mod 7) + 1) + " (" + Format(Fields!Date.Value, "ddd") + ")"</Label>
+                      <Label>=Format(Fields!Date.Value, "M/d") 'CStr((DateDiff(DateInterval.Day, Parameters!MTDStartDate.Value, Fields!Date.Value) Mod 7) + 1) + " (" + Format(Fields!Date.Value, "ddd") + ")"</Label>
                     </ChartMember>
                   </ChartMembers>
                 </ChartCategoryHierarchy>
                 <ChartSeriesHierarchy>
                   <ChartMembers>
                     <ChartMember>
-                      <Group Name="Chart1_SeriesGroup">
-                        <GroupExpressions>
-                          <GroupExpression>=Int(DateDiff(DateInterval.Day, Parameters!MTDStartDate.Value, Fields!Date.Value) / 7) + 1</GroupExpression>
-                        </GroupExpressions>
-                      </Group>
-                      <SortExpressions>
-                        <SortExpression>
-                          <Value>=Fields!Date.Value</Value>
-                        </SortExpression>
-                      </SortExpressions>
-                      <Label>="Week " + CStr(Int(DateDiff(DateInterval.Day, Parameters!MTDStartDate.Value, Fields!Date.Value) / 7) + 1) 'Weeknum</Label>
+                      <Label />
                     </ChartMember>
                   </ChartMembers>
                 </ChartSeriesHierarchy>
@@ -1515,7 +1509,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                           <ChartDataLabel>
                             <Style />
                           </ChartDataLabel>
-                          <ToolTip>=Format(Fields(Parameters!KPI.Value).Value, "#,#")</ToolTip>
+                          <ToolTip>=Format(Fields(Parameters!KPI.Value).Value, Code.KPIDataFormat(Parameters!KPI.Value))</ToolTip>
                           <Style>
                             <Border>
                               <Width>3pt</Width>
@@ -1557,7 +1551,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                           <FontSize>8pt</FontSize>
                         </Style>
                         <ChartAxisTitle>
-                          <Caption>Day of Week</Caption>
+                          <Caption />
                           <Style>
                             <FontSize>8pt</FontSize>
                           </Style>
@@ -1632,12 +1626,13 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                       <ChartAxis Name="Primary">
                         <Style>
                           <FontSize>8pt</FontSize>
-                          <Format>=IIf((Parameters!KPI.Value = "CTR") Or (Parameters!KPI.Value = "CR"), "0.00%", "#,#")</Format>
+                          <Format>=Code.KPIAxisFormat(Parameters!KPI.Value)</Format>
                         </Style>
                         <ChartAxisTitle>
                           <Caption>=Parameters!KPI.Label</Caption>
                           <Style>
                             <FontSize>8pt</FontSize>
+                            <FontWeight>Bold</FontWeight>
                           </Style>
                         </ChartAxisTitle>
                         <ChartMajorGridLines>
@@ -1708,28 +1703,9 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     </Style>
                   </ChartArea>
                 </ChartAreas>
-                <ChartLegends>
-                  <ChartLegend Name="Default">
-                    <Style>
-                      <BackgroundGradientType>None</BackgroundGradientType>
-                      <FontSize>8pt</FontSize>
-                    </Style>
-                    <DockOutsideChartArea>true</DockOutsideChartArea>
-                    <ChartLegendTitle>
-                      <Caption />
-                      <Style>
-                        <FontSize>8pt</FontSize>
-                        <FontWeight>Bold</FontWeight>
-                        <TextAlign>Center</TextAlign>
-                      </Style>
-                    </ChartLegendTitle>
-                    <HeaderSeparatorColor>Black</HeaderSeparatorColor>
-                    <ColumnSeparatorColor>Black</ColumnSeparatorColor>
-                  </ChartLegend>
-                </ChartLegends>
                 <ChartTitles>
                   <ChartTitle Name="Default">
-                    <Caption>MTD Week over Week KPI Trend</Caption>
+                    <Caption>Campaign to Date KPI Trend</Caption>
                     <Style>
                       <BackgroundGradientType>None</BackgroundGradientType>
                       <FontWeight>Bold</FontWeight>
@@ -1754,8 +1730,9 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     <VerticalAlign>Top</VerticalAlign>
                   </Style>
                 </ChartNoDataMessage>
-                <DataSetName>MTDBasicStats</DataSetName>
+                <DataSetName>CTDBasicStats</DataSetName>
                 <Top>4.71416in</Top>
+                <Left>0.03472in</Left>
                 <Height>2.21875in</Height>
                 <Width>7.96875in</Width>
                 <ZIndex>4</ZIndex>
@@ -2477,6 +2454,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 </TablixRowHierarchy>
                 <DataSetName>PreviousMonthBasicStats</DataSetName>
                 <Top>1.29167in</Top>
+                <Left>0.03472in</Left>
                 <Height>0.5in</Height>
                 <Width>7.96875in</Width>
                 <ZIndex>5</ZIndex>
@@ -2738,7 +2716,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 </ChartNoDataMessage>
                 <DataSetName>CTDBasicStats</DataSetName>
                 <Top>2.35166in</Top>
-                <Left>2.7375in</Left>
+                <Left>2.77917in</Left>
                 <Height>1in</Height>
                 <Width>2.675in</Width>
                 <ZIndex>6</ZIndex>
@@ -3033,7 +3011,8 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   </Style>
                 </ChartNoDataMessage>
                 <DataSetName>CTDBasicStats</DataSetName>
-                <Top>3.41555in</Top>
+                <Top>3.42805in</Top>
+                <Left>0.03472in</Left>
                 <Height>1in</Height>
                 <Width>2.675in</Width>
                 <ZIndex>8</ZIndex>
@@ -3297,8 +3276,8 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   </Style>
                 </ChartNoDataMessage>
                 <DataSetName>CTDBasicStats</DataSetName>
-                <Top>3.42111in</Top>
-                <Left>2.74444in</Left>
+                <Top>3.43361in</Top>
+                <Left>2.77917in</Left>
                 <Height>1in</Height>
                 <Width>2.675in</Width>
                 <ZIndex>9</ZIndex>
@@ -3318,7 +3297,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             <PageName>Executive Summary</PageName>
             <KeepTogether>true</KeepTogether>
             <Height>7.16166in</Height>
-            <Width>7.96875in</Width>
+            <Width>8.00347in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -3582,25 +3561,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                       </Style>
                                     </ChartArea>
                                   </ChartAreas>
-                                  <ChartLegends>
-                                    <ChartLegend Name="Default">
-                                      <Style>
-                                        <BackgroundGradientType>None</BackgroundGradientType>
-                                        <FontSize>8pt</FontSize>
-                                      </Style>
-                                      <DockOutsideChartArea>true</DockOutsideChartArea>
-                                      <ChartLegendTitle>
-                                        <Caption />
-                                        <Style>
-                                          <FontSize>8pt</FontSize>
-                                          <FontWeight>Bold</FontWeight>
-                                          <TextAlign>Center</TextAlign>
-                                        </Style>
-                                      </ChartLegendTitle>
-                                      <HeaderSeparatorColor>Black</HeaderSeparatorColor>
-                                      <ColumnSeparatorColor>Black</ColumnSeparatorColor>
-                                    </ChartLegend>
-                                  </ChartLegends>
                                   <ChartTitles>
                                     <ChartTitle Name="Default">
                                       <Caption>="MTD Week over Week KPI Trend for Strategy " + Fields!StrategyName.Value</Caption>
@@ -4280,6 +4240,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             <PageName>Strategy Summary</PageName>
             <KeepTogether>true</KeepTogether>
             <Top>7.18291in</Top>
+            <Left>0.03472in</Left>
             <Height>2.625in</Height>
             <Width>7.96875in</Width>
             <ZIndex>1</ZIndex>
@@ -4293,7 +4254,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
         <Height>9.80791in</Height>
         <Style />
       </Body>
-      <Width>7.96875in</Width>
+      <Width>8.00347in</Width>
       <Page>
         <PageHeader>
           <Height>1.34028in</Height>
@@ -4320,7 +4281,8 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox13</rd:DefaultName>
-              <Top>0.89236in</Top>
+              <Top>0.90625in</Top>
+              <Left>0.03472in</Left>
               <Height>0.43403in</Height>
               <Width>7.96875in</Width>
               <Style>
@@ -4337,6 +4299,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             <Image Name="Image1">
               <Source>External</Source>
               <Value>DirectAgentsDigitalMarketingHeader.jpg</Value>
+              <Left>0.03472in</Left>
               <Height>0.90625in</Height>
               <Width>7.96875in</Width>
               <ZIndex>1</ZIndex>
@@ -4376,7 +4339,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
               </Paragraphs>
               <rd:DefaultName>Textbox13</rd:DefaultName>
               <Top>0.01389in</Top>
-              <Left>2.32292in</Left>
+              <Left>2.35764in</Left>
               <Height>0.26736in</Height>
               <Width>3.89167in</Width>
               <Style>
@@ -4407,7 +4370,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
               </Paragraphs>
               <rd:DefaultName>Textbox13</rd:DefaultName>
               <Top>0.01389in</Top>
-              <Left>6.21458in</Left>
+              <Left>6.2493in</Left>
               <Height>0.26736in</Height>
               <Width>1.75417in</Width>
               <ZIndex>1</ZIndex>
@@ -4439,6 +4402,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
               </Paragraphs>
               <rd:DefaultName>Textbox13</rd:DefaultName>
               <Top>0.01389in</Top>
+              <Left>0.03472in</Left>
               <Height>0.26736in</Height>
               <Width>2.32292in</Width>
               <ZIndex>2</ZIndex>
@@ -4606,6 +4570,26 @@ Public Function PreviousMonthEnd(ByVal PreviousMonthStartDate As Date, ByVal MTD
 		Return CDate(previousMonthEndDateStr)
 	End If
 	Return DateAdd(DateInterval.Day, -1, DateAdd(DateInterval.Day, -1 * (Day(MTDEndDate) - 1), MTDEndDate))
+End Function
+
+Public Function KPIDataFormat(ByVal KPI As String) As String
+	Select KPI
+		Case "CTR", "CR", "Pacing"
+			Return "0.00%"
+		Case "Budget", "Spend", "eCPC", "eCPA"
+			Return "c"
+	End Select
+	Return "#,#"
+End Function
+
+Public Function KPIAxisFormat(ByVal KPI As String) As String
+	Select KPI
+		Case "CTR", "CR", "Pacing"
+			Return "0.00%"
+		Case "Budget", "Spend", "eCPC", "eCPA"
+			Return "c0"
+	End Select
+	Return "#,#"
 End Function</Code>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportID>ea256a65-4592-4acf-b45d-5d6834eb03ce</rd:ReportID>
