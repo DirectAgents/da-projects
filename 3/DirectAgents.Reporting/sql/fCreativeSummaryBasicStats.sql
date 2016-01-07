@@ -16,7 +16,7 @@ select DatePart(weekday, Date) AS Weekday, * from td.fDailySummaryBasicStats(4, 
 
 
 
-select * from td.fCreativeSummaryBasicStats(3, '11/1/2015', getdate())
+select distinct AdName from td.fCreativeSummaryBasicStats(3, '1/1/2015', getdate())
 select AdvertiserId
 FROM td.Campaign
 INNER JOIN td.Account ON td.Account.CampaignId = td.Campaign.Id
@@ -38,13 +38,7 @@ WITH budgetInfo AS
 	  AND (td.PlatformBudgetInfo.Date BETWEEN @StartDate AND @EndDate)
 	WHERE (td.Campaign.AdvertiserId = @AdvertiserId)
 )
-, adTop10 AS
-(
-	SELECT DISTINCT TOP 10 Ad.*
-	FROM td.Ad
-	INNER JOIN td.AdSummary ON td.AdSummary.TDadId = Ad.Id
-	WHERE (td.AdSummary.Date BETWEEN @StartDate AND @EndDate)
-)
+
 , revenue AS
 (
 	SELECT AdSummary.Date
@@ -53,6 +47,7 @@ WITH budgetInfo AS
 	, AdSummary.Impressions
 	, AdSummary.Clicks
 	, AdSummary.PostClickConv + AdSummary.PostViewConv AS Conversions
+	, CASE WHEN AdSummary.Impressions = 0 THEN 0 ELSE AdSummary.Clicks / CAST(AdSummary.Impressions AS float) END AS CTR
 	, AdSummary.Cost
 	, CASE	WHEN budgetInfo.MarginPct = 100 THEN AdSummary.Cost * (1 + (budgetInfo.MgmtFeePct / 100))
 			ELSE AdSummary.Cost / (1 - (budgetInfo.MarginPct / 100))
@@ -61,24 +56,41 @@ WITH budgetInfo AS
 	, budgetInfo.MgmtFeePct AS BIMgmtFeePct
 	, budgetInfo.MarginPct AS BIMarginPct
 	FROM budgetInfo
-	INNER JOIN adTop10 Ad ON Ad.AccountId = budgetInfo.AccountId
+	INNER JOIN td.Ad ON td.Ad.AccountId = budgetInfo.AccountId
 	INNER JOIN td.AdSummary ON td.AdSummary.TDadId = Ad.Id
 	WHERE (td.AdSummary.Date BETWEEN @StartDate AND @EndDate)
 )
+, revenueTopTen AS
+(
+	SELECT TOP 10 AdId
+	, SumCTR
+	FROM
+		(
+		SELECT AdId
+		, SUM(Impressions) AS SumImpressions
+		, CASE WHEN SUM(Impressions) = 0 THEN 0 ELSE SUM(Clicks) / CAST(SUM(Impressions) AS float) END AS SumCTR
+		FROM revenue
+		GROUP BY AdId
+		) x
+	ORDER BY CASE WHEN SumImpressions > 5000 THEN 1 ELSE 0 END DESC, SumCTR DESC
+)
 , mediaSpend AS
 (
-	SELECT *
+	SELECT revenue.*
 	, CASE	WHEN revenue.BIMediaSpend = 100 THEN revenue.Cost
 			ELSE revenue.Revenue / (1 + (revenue.BIMgmtFeePct / 100))
 	  END AS MediaSpend
+	, revenueTopTen.SumCTR
 	FROM revenue
+	INNER JOIN revenueTopTen ON revenueTopTen.adId = revenue.AdId
 )
 SELECT Date
 , AdName
 , AdId
 , Impressions
 , Clicks
-, CASE WHEN Impressions = 0 THEN 0 ELSE Clicks / CAST(Impressions AS float) END AS CTR
+, CTR
+, SumCTR
 , Conversions AS Conversions
 , CASE WHEN Clicks = 0 THEN 0 ELSE Conversions / CAST(Clicks as float) END AS CR
 , MediaSpend
