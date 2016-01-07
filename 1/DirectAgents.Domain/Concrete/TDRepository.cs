@@ -390,6 +390,22 @@ namespace DirectAgents.Domain.Concrete
                 extAcct.Platform = Platform(extAcct.PlatformId);
         }
 
+        public IQueryable<Strategy> Strategies(int? acctId)
+        {
+            var strategies = context.Strategies.AsQueryable();
+            if (acctId.HasValue)
+                strategies = strategies.Where(s => s.AccountId == acctId.Value);
+            return strategies;
+        }
+
+        public IQueryable<TDad> TDads(int? acctId)
+        {
+            var ads = context.TDads.AsQueryable();
+            if (acctId.HasValue)
+                ads = ads.Where(a => a.AccountId == acctId.Value);
+            return ads;
+        }
+
         #endregion
         #region AdRoll
 

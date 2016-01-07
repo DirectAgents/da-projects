@@ -13,6 +13,7 @@
     <th>AccountName</th>
     <th>ExternalId</th>
     <th>Daily Stats</th>
+    <th></th>
 </tr>
 @foreach (var extAcct in Model)
 {
@@ -24,6 +25,10 @@
     <td>
         @Html.ActionLink("View", "Index", "DailySummaries", new { acctId = extAcct.Id, month = month.ToShortDateString() }, null) |
         @Html.ActionLink("Upload", "UploadStats", new { id = extAcct.Id })
+    </td>
+    <td>
+        @Html.ActionLink("Strategies", "Strategies", new { id = extAcct.Id }, null) |
+        @Html.ActionLink("Creatives", "TDads", new { id = extAcct.Id }, null)
     </td>
 </tr>
 }

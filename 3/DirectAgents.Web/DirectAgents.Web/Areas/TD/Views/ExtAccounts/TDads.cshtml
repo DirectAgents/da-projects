@@ -1,0 +1,23 @@
+﻿@model  IEnumerable<DirectAgents.Domain.Entities.TD.TDad>
+
+<h2>Creatives</h2>
+
+<table>
+<tr>
+    <th>Id</th>
+    <th>Name</th>
+    <th>Width</th>
+    <th>Height</th>
+    <th>ExternalId</th>
+</tr>
+@foreach (var ad in Model)
+{
+<tr>
+    <td>@ad.Id</td>
+    <td>@ad.Name</td>
+    <td>@ad.Width</td>
+    <td>@ad.Height</td>
+    <td>@ad.ExternalId</td>
+</tr>
+}
+</table>

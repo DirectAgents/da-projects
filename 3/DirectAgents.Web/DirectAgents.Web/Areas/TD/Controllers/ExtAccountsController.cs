@@ -147,6 +147,19 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return null;
         }
 
+        public ActionResult Strategies(int? id)
+        {
+            var strategies = tdRepo.Strategies(acctId: id).OrderBy(s => s.Name);
+            return View(strategies);
+        }
+        public ActionResult TDads(int? id)
+        {
+            var ads = tdRepo.TDads(acctId: id).OrderBy(a => a.Name).ThenBy(a => a.Id);
+            return View(ads);
+        }
+
+        // --- Stats Uploading ---
+
         public ActionResult UploadStats(int id)
         {
             var extAcct = tdRepo.ExtAccount(id);

@@ -59,6 +59,8 @@ namespace DirectAgents.Domain.Abstract
         bool AddExtAccount(ExtAccount extAcct);
         bool SaveExtAccount(ExtAccount extAcct);
         void FillExtended(ExtAccount extAcct);
+        IQueryable<Strategy> Strategies(int? acctId);
+        IQueryable<TDad> TDads(int? acctId);
 
         DateTime? LatestStatDate(int? acctId = null);
         DateTime? LatestStrategyStatDate(int? acctId = null);
