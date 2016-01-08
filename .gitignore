@@ -16,3 +16,7 @@ ThirdParty
 # other
 *.dbmdl
 *.suo
+
+# SSRS
+*.rdl.data
+*.rptproj.user
