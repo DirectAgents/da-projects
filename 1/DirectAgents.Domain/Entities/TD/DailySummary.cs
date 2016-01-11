@@ -40,4 +40,22 @@ namespace DirectAgents.Domain.Entities.TD
         public int TDadId { get; set; }
         public virtual TDad TDad { get; set; }
     }
+
+    // DailySummary for a Site / ExtAccount
+    public class SiteSummary : DaySumStats
+    {
+        public DateTime Date { get; set; }
+
+        public int SiteId { get; set; }
+        public virtual Site Site { get; set; }
+
+        public int AccountId { get; set; }
+        [ForeignKey("AccountId")]
+        public virtual ExtAccount ExtAccount { get; set; }
+    }
+    public class Site
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
 }
