@@ -58,7 +58,7 @@ namespace CakeExtracter.Commands
 
             var buckets = GetBuckets();
 
-            var extracter = new DbmCloudStorageExtracter(dateRange, buckets);
+            var extracter = new DbmCloudStorageExtracter(dateRange, buckets, byCreative: true);
             var loader = new DBMCreativeDailySummaryLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -124,6 +124,7 @@ namespace CakeExtracter.Commands
                             Name = io.Name
                         };
                         db.ExtAccounts.Add(newAccount);
+                        Logger.Info("Adding new ExtAccount from InsertionOrder: {0} ({1})", io.Name, io.ID);
                     }
                     // Note: skipping update
                 }

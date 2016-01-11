@@ -15,17 +15,24 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     {
         private readonly DateRange dateRange;
         private readonly IEnumerable<string> bucketNames;
+        private readonly bool byCreative;
+        private readonly bool bySite;
 
-        public DbmCloudStorageExtracter(DateRange dateRange, IEnumerable<string> bucketNames)
+        public DbmCloudStorageExtracter(DateRange dateRange, IEnumerable<string> bucketNames, bool byCreative = false, bool bySite = false)
         {
             this.dateRange = dateRange;
             this.bucketNames = bucketNames;
+            this.byCreative = byCreative;
+            this.bySite = bySite;
         }
 
         protected override void Extract()
         {
+            string by = "";
+            if (bySite) by = " by site";
+            if (byCreative) by = " by creative"; // take precedence
             string toPart = (dateRange.FromDate == dateRange.ToDate) ? "" : string.Format(" to {0:d}", dateRange.ToDate);
-            Logger.Info("Extracting DailySummaries reports from {0} buckets - report date(s) {1:d}{2}", bucketNames.Count(), dateRange.FromDate, toPart);
+            Logger.Info("Extracting DailySummary reports{0} from {1} buckets - report date(s) {2:d}{3}", by, bucketNames.Count(), dateRange.FromDate, toPart);
             var items = EnumerateRows();
             Add(items);
             End();
@@ -48,10 +55,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                     if (reportObject != null)
                     {
                         var stream = GetStreamForCloudStorageObject(reportObject, credential);
-                        bool byCreative = true;
                         using (var reader = new StreamReader(stream))
                         {
-                            foreach (var row in DbmCsvExtracter.EnumerateRowsStatic(reader, byCreative))
+                            foreach (var row in DbmCsvExtracter.EnumerateRowsStatic(reader, byCreative: byCreative, bySite: bySite))
                                 yield return row;
                         }
                     }

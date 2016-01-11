@@ -37,7 +37,7 @@ namespace CakeExtracter.Commands
             string bucketName = "gdbm-479-320231"; // location of our data transfer files
             int timezoneOffset = -5;
             //int timezoneOffset = -4; // daylight savings
-            DateRange daylightSavingsRange = new DateRange(new DateTime(2015, 3, 8), new DateTime(2015, 11, 1));
+            DateRange daylightSavingsRange = new DateRange(new DateTime(2016, 3, 13), new DateTime(2016, 11, 6));
 
             var today = DateTime.Today;
             var yesterday = today.AddDays(-1);

@@ -47,7 +47,7 @@ namespace CakeExtracter.Commands
 
             var buckets = GetBuckets();
 
-            var extracter = new DbmCloudStorageExtracter(dateRange, buckets);
+            var extracter = new DbmCloudStorageExtracter(dateRange, buckets, byCreative: true);
             var loader = new DbmCreativeDailySummaryLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);

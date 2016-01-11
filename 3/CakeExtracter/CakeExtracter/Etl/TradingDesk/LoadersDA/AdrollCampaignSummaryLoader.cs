@@ -76,7 +76,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     // Assume all strategies in the group have the same properties (just different dates/stats)
                     var groupAd = group.First();
 
-                    if (stratsInDb.Count() == 0)
+                    if (!stratsInDb.Any())
                     {   // Strategy doesn't exist in the db; so create it and put an entry in the lookup
                         var strategy = new Strategy
                         {
