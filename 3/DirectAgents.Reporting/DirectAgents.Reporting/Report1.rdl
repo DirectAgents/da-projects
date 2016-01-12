@@ -166,7 +166,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="MTDBasicStats">
+    <DataSet Name="BasicStatsMTD">
       <Query>
         <DataSourceName>DirectAgents</DataSourceName>
         <QueryParameters>
@@ -253,7 +253,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="CTDStrategy">
+    <DataSet Name="StrategyCTD">
       <Query>
         <DataSourceName>DirectAgents</DataSourceName>
         <QueryParameters>
@@ -348,7 +348,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="CTDBasicStats">
+    <DataSet Name="BasicStatsCTD">
       <Query>
         <DataSourceName>DirectAgents</DataSourceName>
         <QueryParameters>
@@ -435,7 +435,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="CTDCreative">
+    <DataSet Name="CreativeCTD">
       <Query>
         <DataSourceName>DirectAgents</DataSourceName>
         <QueryParameters>
@@ -534,21 +534,21 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="CTDSiteSummary">
+    <DataSet Name="SiteSummaryMTD">
       <Query>
         <DataSourceName>DirectAgents</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@AdvertiserId">
             <Value>=Parameters!AdvertiserId.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@CampaignStartDate">
-            <Value>=Parameters!CampaignStartDate.Value</Value>
+          <QueryParameter Name="@MTDStartDate">
+            <Value>=Parameters!MTDStartDate.Value</Value>
           </QueryParameter>
           <QueryParameter Name="@MTDEndDate">
             <Value>=Parameters!MTDEndDate.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>select * from td.fSiteSummaryBasicStats(@AdvertiserId, @CampaignStartDate, @MTDEndDate)</CommandText>
+        <CommandText>select * from td.fSiteSummaryBasicStats(@AdvertiserId, @MTDStartDate, @MTDEndDate)</CommandText>
       </Query>
       <Fields>
         <Field Name="Date">
@@ -567,8 +567,16 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
           <DataField>SiteId</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
+        <Field Name="PlatformName">
+          <DataField>PlatformName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="Clicks">
           <DataField>Clicks</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="PlatformId">
+          <DataField>PlatformId</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="CTR">
@@ -578,6 +586,10 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
         <Field Name="Conversions">
           <DataField>Conversions</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="SumCTR">
+          <DataField>SumCTR</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
         </Field>
         <Field Name="CR">
           <DataField>CR</DataField>
@@ -1413,7 +1425,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     <TablixMember />
                   </TablixMembers>
                 </TablixRowHierarchy>
-                <DataSetName>MTDBasicStats</DataSetName>
+                <DataSetName>BasicStatsMTD</DataSetName>
                 <Top>0.25in</Top>
                 <Height>0.5in</Height>
                 <Width>7.96875in</Width>
@@ -1738,7 +1750,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     <VerticalAlign>Top</VerticalAlign>
                   </Style>
                 </ChartNoDataMessage>
-                <DataSetName>CTDBasicStats</DataSetName>
+                <DataSetName>BasicStatsCTD</DataSetName>
                 <Top>2.35722in</Top>
                 <Left>3.675in</Left>
                 <Height>1.21875in</Height>
@@ -2016,7 +2028,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     <VerticalAlign>Top</VerticalAlign>
                   </Style>
                 </ChartNoDataMessage>
-                <DataSetName>CTDBasicStats</DataSetName>
+                <DataSetName>BasicStatsCTD</DataSetName>
                 <Top>5.22458in</Top>
                 <Height>2.21875in</Height>
                 <Width>7.96875in</Width>
@@ -3069,7 +3081,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     <VerticalAlign>Top</VerticalAlign>
                   </Style>
                 </ChartNoDataMessage>
-                <DataSetName>CTDBasicStats</DataSetName>
+                <DataSetName>BasicStatsCTD</DataSetName>
                 <Top>2.35722in</Top>
                 <Left>5.88542in</Left>
                 <Height>1.21875in</Height>
@@ -3370,7 +3382,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     <VerticalAlign>Top</VerticalAlign>
                   </Style>
                 </ChartNoDataMessage>
-                <DataSetName>CTDBasicStats</DataSetName>
+                <DataSetName>BasicStatsCTD</DataSetName>
                 <Top>3.70791in</Top>
                 <Left>3.675in</Left>
                 <Height>1.27222in</Height>
@@ -3637,7 +3649,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     <VerticalAlign>Top</VerticalAlign>
                   </Style>
                 </ChartNoDataMessage>
-                <DataSetName>CTDBasicStats</DataSetName>
+                <DataSetName>BasicStatsCTD</DataSetName>
                 <Top>3.70791in</Top>
                 <Left>5.88542in</Left>
                 <Height>1.27222in</Height>
@@ -3969,7 +3981,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     <VerticalAlign>Top</VerticalAlign>
                   </Style>
                 </ChartNoDataMessage>
-                <DataSetName>MTDBasicStats</DataSetName>
+                <DataSetName>BasicStatsMTD</DataSetName>
                 <Top>2.10166in</Top>
                 <Height>2.87847in</Height>
                 <Width>3.34375in</Width>
@@ -4271,7 +4283,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   </Style>
                 </ChartNoDataMessage>
                 <rd:DesignerMode>DataBar</rd:DesignerMode>
-                <DataSetName>MTDBasicStats</DataSetName>
+                <DataSetName>BasicStatsMTD</DataSetName>
                 <Top>1.8507in</Top>
                 <Height>0.18846in</Height>
                 <Width>3.34375in</Width>
@@ -4876,7 +4888,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                       </TablixMember>
                                     </TablixMembers>
                                   </TablixRowHierarchy>
-                                  <DataSetName>CTDStrategy</DataSetName>
+                                  <DataSetName>StrategyCTD</DataSetName>
                                   <Filters>
                                     <Filter>
                                       <FilterExpression>=Fields!Date.Value</FilterExpression>
@@ -5194,7 +5206,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                       <VerticalAlign>Top</VerticalAlign>
                                     </Style>
                                   </ChartNoDataMessage>
-                                  <DataSetName>CTDStrategy</DataSetName>
+                                  <DataSetName>StrategyCTD</DataSetName>
                                   <Top>0.5in</Top>
                                   <Height>2in</Height>
                                   <Width>7.96875in</Width>
@@ -5283,7 +5295,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   </TablixMembers>
                 </TablixRowHierarchy>
                 <NoRowsMessage>="No strategies this month: " + Format(Parameters!MTDStartDate.Value, "d") + " thru " + Format(Parameters!MTDEndDate.Value, "d")</NoRowsMessage>
-                <DataSetName>CTDStrategy</DataSetName>
+                <DataSetName>StrategyCTD</DataSetName>
                 <Height>2.75in</Height>
                 <Width>7.96875in</Width>
                 <Style>
@@ -6154,7 +6166,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                       <TablixMember />
                                     </TablixMembers>
                                   </TablixRowHierarchy>
-                                  <DataSetName>CTDCreative</DataSetName>
+                                  <DataSetName>CreativeCTD</DataSetName>
                                   <Height>0.75in</Height>
                                   <Width>7.96875in</Width>
                                   <Style>
@@ -6254,7 +6266,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   </TablixMembers>
                 </TablixRowHierarchy>
                 <NoRowsMessage>="No creative in campaign: " + Format(Parameters!CampaignStartDate.Value, "d") + " thru " + Format(Parameters!MTDEndDate.Value, "d")</NoRowsMessage>
-                <DataSetName>CTDCreative</DataSetName>
+                <DataSetName>CreativeCTD</DataSetName>
                 <Top>0.38542in</Top>
                 <Height>1.96875in</Height>
                 <Width>7.96875in</Width>
@@ -6317,17 +6329,11 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
           </Rectangle>
           <Rectangle Name="Rectangle6">
             <ReportItems>
-              <Tablix Name="Tablix7">
+              <Tablix Name="Tablix8">
                 <TablixBody>
                   <TablixColumns>
                     <TablixColumn>
-                      <Width>1in</Width>
-                    </TablixColumn>
-                    <TablixColumn>
-                      <Width>1in</Width>
-                    </TablixColumn>
-                    <TablixColumn>
-                      <Width>0.675in</Width>
+                      <Width>2.675in</Width>
                     </TablixColumn>
                     <TablixColumn>
                       <Width>1in</Width>
@@ -6357,14 +6363,14 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                       <TablixCells>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="SiteName">
+                            <Textbox Name="PlatformName1">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Fields!SiteName.Value</Value>
+                                      <Value>="Top 50 sites for " + Fields!PlatformName.Value</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -6377,7 +6383,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                   </Style>
                                 </Paragraph>
                               </Paragraphs>
-                              <rd:DefaultName>SiteName</rd:DefaultName>
+                              <rd:DefaultName>PlatformName1</rd:DefaultName>
                               <Style>
                                 <Border>
                                   <Color>LightGrey</Color>
@@ -6389,11 +6395,9 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
-                            <ColSpan>10</ColSpan>
+                            <ColSpan>8</ColSpan>
                           </CellContents>
                         </TablixCell>
-                        <TablixCell />
-                        <TablixCell />
                         <TablixCell />
                         <TablixCell />
                         <TablixCell />
@@ -6408,14 +6412,14 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                       <TablixCells>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="Budget8">
+                            <Textbox Name="Budget10">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>Budget</Value>
+                                      <Value>Site</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -6443,77 +6447,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         </TablixCell>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="Textbox54">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>Spend</Value>
-                                      <Style>
-                                        <FontFamily>Calibri</FontFamily>
-                                        <FontSize>11pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Center</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox5</rd:DefaultName>
-                              <Style>
-                                <Border>
-                                  <Color>LightGrey</Color>
-                                  <Style>Solid</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                          </CellContents>
-                        </TablixCell>
-                        <TablixCell>
-                          <CellContents>
-                            <Textbox Name="Textbox55">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>Pacing</Value>
-                                      <Style>
-                                        <FontFamily>Calibri</FontFamily>
-                                        <FontSize>11pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Center</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox37</rd:DefaultName>
-                              <Style>
-                                <Border>
-                                  <Color>LightGrey</Color>
-                                  <Style>Solid</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                          </CellContents>
-                        </TablixCell>
-                        <TablixCell>
-                          <CellContents>
-                            <Textbox Name="Textbox56">
+                            <Textbox Name="Textbox72">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -6548,7 +6482,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         </TablixCell>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="Textbox57">
+                            <Textbox Name="Textbox73">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -6583,7 +6517,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         </TablixCell>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="Textbox58">
+                            <Textbox Name="Textbox74">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -6618,7 +6552,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         </TablixCell>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="Textbox59">
+                            <Textbox Name="Textbox75">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -6653,7 +6587,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         </TablixCell>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="Textbox60">
+                            <Textbox Name="Textbox76">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -6688,7 +6622,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         </TablixCell>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="Textbox61">
+                            <Textbox Name="Textbox77">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -6723,7 +6657,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         </TablixCell>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="Textbox62">
+                            <Textbox Name="Textbox78">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -6763,14 +6697,14 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                       <TablixCells>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="Budget11">
+                            <Textbox Name="Budget12">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Sum(Fields!Budget.Value)</Value>
+                                      <Value>=Fields!SiteName.Value</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -6799,79 +6733,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         </TablixCell>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="MediaSpend9">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>=Sum(Fields!MediaSpend.Value)</Value>
-                                      <Style>
-                                        <FontFamily>Calibri</FontFamily>
-                                        <FontSize>11pt</FontSize>
-                                        <Format>c2</Format>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Center</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>MediaSpend</rd:DefaultName>
-                              <Style>
-                                <Border>
-                                  <Color>LightGrey</Color>
-                                  <Style>Solid</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                          </CellContents>
-                        </TablixCell>
-                        <TablixCell>
-                          <CellContents>
-                            <Textbox Name="Pacing5">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>=Sum(Fields!Pacing.Value)</Value>
-                                      <Style>
-                                        <FontFamily>Calibri</FontFamily>
-                                        <FontSize>11pt</FontSize>
-                                        <Format>p2</Format>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Center</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Pacing</rd:DefaultName>
-                              <Style>
-                                <Border>
-                                  <Color>LightGrey</Color>
-                                  <Style>Solid</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                          </CellContents>
-                        </TablixCell>
-                        <TablixCell>
-                          <CellContents>
-                            <Textbox Name="Impressions14">
+                            <Textbox Name="Impressions15">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -6907,7 +6769,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         </TablixCell>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="Clicks10">
+                            <Textbox Name="Clicks11">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -6943,7 +6805,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         </TablixCell>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="CTR8">
+                            <Textbox Name="CTR9">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -6979,7 +6841,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         </TablixCell>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="eCPC5">
+                            <Textbox Name="eCPC6">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -7015,7 +6877,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         </TablixCell>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="Conversions10">
+                            <Textbox Name="Conversions11">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -7051,7 +6913,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         </TablixCell>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="CR8">
+                            <Textbox Name="CR9">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -7087,7 +6949,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         </TablixCell>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="MgmtFee8">
+                            <Textbox Name="MgmtFee9">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -7123,12 +6985,59 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         </TablixCell>
                       </TablixCells>
                     </TablixRow>
+                    <TablixRow>
+                      <Height>0.25in</Height>
+                      <TablixCells>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox48">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value />
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox48</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>AliceBlue</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                            <ColSpan>8</ColSpan>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell />
+                        <TablixCell />
+                        <TablixCell />
+                        <TablixCell />
+                        <TablixCell />
+                        <TablixCell />
+                        <TablixCell />
+                      </TablixCells>
+                    </TablixRow>
                   </TablixRows>
                 </TablixBody>
                 <TablixColumnHierarchy>
                   <TablixMembers>
-                    <TablixMember />
-                    <TablixMember />
                     <TablixMember />
                     <TablixMember />
                     <TablixMember />
@@ -7142,27 +7051,49 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 <TablixRowHierarchy>
                   <TablixMembers>
                     <TablixMember>
-                      <Group Name="SiteId">
+                      <Group Name="PlatformId">
                         <GroupExpressions>
-                          <GroupExpression>=Fields!SiteId.Value</GroupExpression>
+                          <GroupExpression>=Fields!PlatformId.Value</GroupExpression>
                         </GroupExpressions>
                       </Group>
                       <SortExpressions>
                         <SortExpression>
-                          <Value>=Fields!SiteId.Value</Value>
+                          <Value>=Fields!PlatformId.Value</Value>
                         </SortExpression>
                       </SortExpressions>
                       <TablixMembers>
-                        <TablixMember />
-                        <TablixMember />
-                        <TablixMember />
+                        <TablixMember>
+                          <KeepWithGroup>After</KeepWithGroup>
+                        </TablixMember>
+                        <TablixMember>
+                          <KeepWithGroup>After</KeepWithGroup>
+                        </TablixMember>
+                        <TablixMember>
+                          <Group Name="SiteId">
+                            <GroupExpressions>
+                              <GroupExpression>=Fields!SiteId.Value</GroupExpression>
+                            </GroupExpressions>
+                          </Group>
+                          <SortExpressions>
+                            <SortExpression>
+                              <Value>=Fields!SumCTR.Value</Value>
+                              <Direction>Descending</Direction>
+                            </SortExpression>
+                          </SortExpressions>
+                          <TablixMembers>
+                            <TablixMember />
+                          </TablixMembers>
+                        </TablixMember>
+                        <TablixMember>
+                          <KeepWithGroup>Before</KeepWithGroup>
+                        </TablixMember>
                       </TablixMembers>
                     </TablixMember>
                   </TablixMembers>
                 </TablixRowHierarchy>
-                <NoRowsMessage>="No sites this month: " + Format(Parameters!MTDStartDate.Value, "d") + " thru " + Format(Parameters!MTDEndDate.Value, "d")</NoRowsMessage>
-                <DataSetName>CTDSiteSummary</DataSetName>
-                <Height>0.75in</Height>
+                <NoRowsMessage>="No sites this month: " + Microsoft.VisualBasic.Strings.Format(Parameters!MTDStartDate.Value, "d") + " thru " + Microsoft.VisualBasic.Strings.Format(Parameters!MTDEndDate.Value, "d")</NoRowsMessage>
+                <DataSetName>SiteSummaryMTD</DataSetName>
+                <Height>1in</Height>
                 <Width>7.96875in</Width>
                 <Style>
                   <Border>
@@ -7177,7 +7108,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             <PageName>Site List MTD</PageName>
             <KeepTogether>true</KeepTogether>
             <Top>12.70375in</Top>
-            <Height>0.75in</Height>
+            <Height>1in</Height>
             <Width>7.96875in</Width>
             <ZIndex>3</ZIndex>
             <Style>
@@ -7187,7 +7118,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             </Style>
           </Rectangle>
         </ReportItems>
-        <Height>13.45375in</Height>
+        <Height>13.70375in</Height>
         <Style />
       </Body>
       <Width>7.96875in</Width>
