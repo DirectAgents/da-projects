@@ -123,6 +123,7 @@
     </Compile>
     <Compile Include="Entities\TD\Advertiser.cs" />
     <Compile Include="Entities\TD\CampaignBudget.cs" />
+    <Compile Include="Entities\TD\Conv.cs" />
     <Compile Include="Entities\TD\DailySummary.cs" />
     <Compile Include="Entities\TD\ExtraItem.cs" />
     <Compile Include="Entities\TD\PlatformAccount.cs" />
@@ -236,6 +237,10 @@
     <Compile Include="MigrationsTD\201601082136085_Mig_Site.cs" />
     <Compile Include="MigrationsTD\201601082136085_Mig_Site.Designer.cs">
       <DependentUpon>201601082136085_Mig_Site.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201601111845000_Mig_Conv.cs" />
+    <Compile Include="MigrationsTD\201601111845000_Mig_Conv.Designer.cs">
+      <DependentUpon>201601111845000_Mig_Conv.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
@@ -393,6 +398,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201601082136085_Mig_Site.resx">
       <DependentUpon>201601082136085_Mig_Site.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201601111845000_Mig_Conv.resx">
+      <DependentUpon>201601111845000_Mig_Conv.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

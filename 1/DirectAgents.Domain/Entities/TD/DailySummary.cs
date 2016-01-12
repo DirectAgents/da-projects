@@ -27,6 +27,7 @@ namespace DirectAgents.Domain.Entities.TD
         public virtual ExtAccount ExtAccount { get; set; }
     }
 
+    // DailySummary for a Strategy
     public class StrategySummary : DaySumStats
     {
         public DateTime Date { get; set; }
@@ -34,6 +35,7 @@ namespace DirectAgents.Domain.Entities.TD
         public virtual Strategy Strategy { get; set; }
     }
 
+    // DailySummary for a "TD ad"
     public class TDadSummary : DaySumStats
     {
         public DateTime Date { get; set; }
@@ -58,4 +60,5 @@ namespace DirectAgents.Domain.Entities.TD
         public int Id { get; set; }
         public string Name { get; set; }
     }
+
 }
