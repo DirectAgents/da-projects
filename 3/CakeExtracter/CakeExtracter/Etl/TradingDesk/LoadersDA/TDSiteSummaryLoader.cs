@@ -1,35 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.TD;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
-    public class TDDailySummaryLoader : Loader<DailySummary>
+    public class TDSiteSummaryLoader : Loader<SiteSummary>
     {
-        private readonly int accountId;
+        //public TDSiteSummaryLoader() { }
 
-        //public bool ReadyToLoad { get; set; }
-
-        public TDDailySummaryLoader(int extAccountId)
+        protected override int Load(List<SiteSummary> items)
         {
-            this.accountId = extAccountId;
-            //using (var db = new DATDContext())
-            //{
-            //    if (db.ExtAccounts.Any(a => a.Id == extAccountId))
-            //        ReadyToLoad = true;
-            //}
-        }
-
-        protected override int Load(List<DailySummary> items)
-        {
-            Logger.Info("Loading {0} DA-TD DailySummaries..", items.Count);
+            Logger.Info("Loading {0} DA-TD SiteSummaries..", items.Count);
             var count = UpsertDailySummaries(items);
             return count;
         }
 
-        private int UpsertDailySummaries(List<DailySummary> items)
+        public int UpsertDailySummaries(List<SiteSummary> items)
         {
             var addedCount = 0;
             var updatedCount = 0;
@@ -41,21 +28,18 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 foreach (var item in items)
                 {
-                    item.AccountId = accountId; // ?Use what's in the item?
-
-                    var target = db.Set<DailySummary>().Find(item.Date, accountId);
+                    var target = db.Set<SiteSummary>().Find(item.Date, item.SiteId, item.AccountId);
                     if (target == null)
                     {
                         if (!item.AllZeros())
                         {
-                            //db.DailySummaries.Add(source);
-                            db.DailySummaries.Add(item);
+                            db.SiteSummaries.Add(item);
                             addedCount++;
                         }
                         else
                             alreadyDeletedCount++;
                     }
-                    else // DailySummary already exists
+                    else // Summary already exists
                     {
                         var entry = db.Entry(target);
                         if (entry.State == EntityState.Unchanged)
@@ -63,7 +47,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                             if (!item.AllZeros())
                             {
                                 entry.State = EntityState.Detached;
-                                //AutoMapper.Mapper.Map(source, target);
                                 AutoMapper.Mapper.Map(item, target);
                                 entry.State = EntityState.Modified;
                                 updatedCount++;
@@ -73,16 +56,16 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         }
                         else
                         {
-                            Logger.Warn("Encountered duplicate for {0:d} - Acct {1}", item.Date, accountId);
+                            Logger.Warn("Encountered duplicate for {0:d} - Site {1}, Account {2}", item.Date, item.Site, item.AccountId);
                             duplicateCount++;
                         }
                     }
                     itemCount++;
                 }
-                Logger.Info("Saving {0} DailySummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted)",
+                Logger.Info("Saving {0} SiteSummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted)",
                             itemCount, updatedCount, addedCount, duplicateCount, deletedCount, alreadyDeletedCount);
                 if (duplicateCount > 0)
-                    Logger.Warn("Encountered {0} duplicates which were skipped", duplicateCount);
+                    Logger.Warn("Encountered {0} duplicates which were skipped");
                 int numChanges = db.SaveChanges();
             }
             return itemCount;

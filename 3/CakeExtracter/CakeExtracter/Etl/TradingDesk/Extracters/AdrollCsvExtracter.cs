@@ -58,8 +58,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 }
             }
         }
-
     }
+
+    // Todo: use this and rm spaces in Name values
+    // csv.Configuration.IgnoreHeaderWhiteSpace = true;
+
     public sealed class AdrollRowMap : CsvClassMap<AdrollRow>
     {
         public AdrollRowMap()

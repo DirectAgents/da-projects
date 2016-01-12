@@ -40,20 +40,20 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         {
             if (streamReader != null)
             {
-                foreach (var row in EnumerateRowsStatic(streamReader, wantCreativeDailySummaries))
+                foreach (var row in EnumerateRowsStatic(streamReader, byCreative: wantCreativeDailySummaries))
                     yield return row;
             }
             else
             {
                 using (StreamReader reader = File.OpenText(csvFilePath))
                 {
-                    foreach (var row in EnumerateRowsStatic(reader, wantCreativeDailySummaries))
+                    foreach (var row in EnumerateRowsStatic(reader, byCreative: wantCreativeDailySummaries))
                         yield return row;
                 }
             }
         }
 
-        public static IEnumerable<DbmRowBase> EnumerateRowsStatic(StreamReader reader, bool byCreative)
+        public static IEnumerable<DbmRowBase> EnumerateRowsStatic(StreamReader reader, bool byCreative = false, bool bySite = false)
         {
             using (CsvReader csv = new CsvReader(reader))
             {
@@ -61,11 +61,22 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 csv.Configuration.SkipEmptyRecords = true;
                 csv.Configuration.IgnoreReadingExceptions = true;
 
+                // if byCreative is true, ignores bySite
                 if (byCreative)
                 {
                     csv.Configuration.RegisterClassMap<DbmRowWithCreativeMap>();
 
                     var csvRows = csv.GetRecords<DbmRowWithCreative>().ToList();
+                    for (int i = 0; i < csvRows.Count; i++)
+                    {
+                        yield return csvRows[i];
+                    }
+                }
+                else if (bySite)
+                {
+                    csv.Configuration.RegisterClassMap<DbmRowWithSiteMap>();
+
+                    var csvRows = csv.GetRecords<DbmRowWithSite>().ToList();
                     for (int i = 0; i < csvRows.Count; i++)
                     {
                         yield return csvRows[i];
@@ -116,6 +127,23 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             Map(m => m.CreativeID);
         }
     }
+    public sealed class DbmRowWithSiteMap : CsvClassMap<DbmRowWithSite>
+    {
+        public DbmRowWithSiteMap()
+        {
+            Map(m => m.Date);
+            Map(m => m.InsertionOrder);
+            Map(m => m.InsertionOrderID);
+            Map(m => m.Impressions);
+            Map(m => m.Clicks);
+            Map(m => m.TotalConversions);
+            Map(m => m.PostClickConversions).Name("Post-ClickConversions");
+            Map(m => m.PostViewConversions).Name("Post-ViewConversions");
+            Map(m => m.Revenue).Name("Revenue(USD)");
+            Map(m => m.Site);
+            Map(m => m.SiteID);
+        }
+    }
 
     public class DbmRowBase
     {
@@ -136,10 +164,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     public class DbmRow : DbmRowBase
     {
     }
-
     public class DbmRowWithCreative : DbmRowBase
     {
         public string Creative { get; set; }
         public string CreativeID { get; set; } // int
+    }
+    public class DbmRowWithSite : DbmRowBase
+    {
+        public string Site { get; set; }
+        public string SiteID { get; set; } // int
     }
 }

@@ -292,9 +292,11 @@
     <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
     <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
     <Compile Include="Commands\DASynchAdrollAccounts.cs" />
+    <Compile Include="Commands\DASynchAdrollConvCsv.cs" />
     <Compile Include="Commands\DASynchAdrollStats.cs" />
     <Compile Include="Commands\DASynchAdvertisersCommand.cs" />
     <Compile Include="Commands\DASynchDBMStats.cs" />
+    <Compile Include="Commands\DASynchDBMStats2.cs" />
     <Compile Include="Commands\DASynchFacebookStats.cs" />
     <Compile Include="Commands\DASynchOfferBudgetStats2.cs" />
     <Compile Include="Commands\DASynchOfferBudgetStatsCommand.cs" />
@@ -417,6 +419,7 @@
     <Compile Include="Etl\SocialMarketing\Extracters\FacebookApiExtracter.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollApiExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\AdrollConvCsvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollCsvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmCloudStorageExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmConversionExtracter.cs" />
@@ -426,9 +429,13 @@
     <Compile Include="Etl\TradingDesk\Extracters\TDDailySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollAdDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollCampaignSummaryLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\AdrollConvLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\DBMCreativeDailySummaryLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\DbmSiteSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDadSummaryLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\TDConvLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDDailySummaryLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\TDSiteSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDStrategySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\Loaders\AdrollAdDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\Loaders\AdrollAdDailySummaryLoader2.cs" />

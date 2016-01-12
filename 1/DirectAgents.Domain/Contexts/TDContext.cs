@@ -34,7 +34,12 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<StrategySummary>().ToTable("StrategySummary", tdSchema);
             modelBuilder.Entity<TDad>().ToTable("Ad", tdSchema);
             modelBuilder.Entity<TDadSummary>().ToTable("AdSummary", tdSchema);
+            modelBuilder.Entity<Site>().ToTable("Site", tdSchema);
+            modelBuilder.Entity<SiteSummary>().ToTable("SiteSummary", tdSchema);
             modelBuilder.Entity<ExtraItem>().ToTable("ExtraItem", tdSchema);
+            modelBuilder.Entity<Conv>().ToTable("Conv", tdSchema);
+            modelBuilder.Entity<ConvCity>().ToTable("ConvCity", tdSchema);
+            modelBuilder.Entity<ConvCountry>().ToTable("ConvCountry", tdSchema);
 
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MgmtFeePct).HasPrecision(10, 5).HasColumnName("MgmtFeePct");
@@ -59,8 +64,12 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<TDadSummary>()
                 .HasKey(s => new { s.Date, s.TDadId })
                 .Property(t => t.Cost).HasPrecision(18, 6);
+            modelBuilder.Entity<SiteSummary>()
+                .HasKey(s => new { s.Date, s.SiteId, s.AccountId })
+                .Property(t => t.Cost).HasPrecision(18, 6);
             modelBuilder.Entity<ExtraItem>().Property(i => i.Cost).HasPrecision(14, 2);
             modelBuilder.Entity<ExtraItem>().Property(i => i.Revenue).HasPrecision(14, 2);
+            modelBuilder.Entity<Conv>().Property(c => c.ConvVal).HasPrecision(18, 6);
 
             // AdRoll
             modelBuilder.Entity<Advertisable>().ToTable("Advertisable", adrollSchema);
@@ -96,7 +105,12 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<StrategySummary> StrategySummaries { get; set; }
         public DbSet<TDad> TDads { get; set; }
         public DbSet<TDadSummary> TDadSummaries { get; set; }
+        public DbSet<Site> Sites { get; set; }
+        public DbSet<SiteSummary> SiteSummaries { get; set; }
         public DbSet<ExtraItem> ExtraItems { get; set; }
+        public DbSet<Conv> Convs { get; set; }
+        public DbSet<ConvCity> ConvCities { get; set; }
+        public DbSet<ConvCountry> ConvCountries { get; set; }
 
         // AdRoll
         public DbSet<Advertisable> Advertisables { get; set; }
