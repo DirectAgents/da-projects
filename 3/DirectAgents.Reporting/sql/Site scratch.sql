@@ -33,4 +33,5 @@ group by PlatformName
 
 select *
 from td.fSiteSummaryBasicStats(3, '1/1/2016', '1/11/2016')
+order by PlatformName, CTR DESC
 
