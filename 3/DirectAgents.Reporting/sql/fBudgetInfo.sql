@@ -13,16 +13,14 @@ SELECT ISNULL(td.PlatformBudgetInfo.MediaSpend, ISNULL(td.BudgetInfo.MediaSpend,
 	, td.Account.PlatformId
 FROM td.Campaign
 LEFT OUTER JOIN td.BudgetInfo
-	ON (td.BudgetInfo.CampaignId = td.Campaign.Id)
-	AND ((@StartDate IS NULL) OR (td.BudgetInfo.Date >= @StartDate))
-	AND ((@EndDate IS NULL) OR (td.BudgetInfo.Date <= @EndDate))
+	ON (BudgetInfo.CampaignId = Campaign.Id)
+	AND ((@StartDate IS NULL) OR (BudgetInfo.Date >= @StartDate))
+	AND ((@EndDate IS NULL) OR (BudgetInfo.Date <= @EndDate))
 LEFT OUTER JOIN td.PlatformBudgetInfo
-	ON (td.PlatformBudgetInfo.CampaignId = td.Campaign.Id)
-	AND ((@StartDate IS NULL) OR (td.PlatformBudgetInfo.Date >= @StartDate))
-	AND ((@EndDate IS NULL) OR (td.PlatformBudgetInfo.Date <= @EndDate))
-LEFT OUTER JOIN td.Platform ON Platform.Id = td.PlatformBudgetInfo.PlatformId
+	ON (PlatformBudgetInfo.CampaignId = Campaign.Id)
+	AND ((@StartDate IS NULL) OR (PlatformBudgetInfo.Date >= @StartDate))
+	AND ((@EndDate IS NULL) OR (PlatformBudgetInfo.Date <= @EndDate))
+LEFT OUTER JOIN td.Platform ON Platform.Id = PlatformBudgetInfo.PlatformId
 LEFT OUTER JOIN td.Account
-  ON ((td.Account.CampaignId = Campaign.Id)  OR (td.Account.PlatformId = Platform.Id))
-  --ON ((td.Account.CampaignId = Campaign.Id) AND (td.Account.PlatformId IS NULL))
-  --OR ((td.Account.PlatformId = Platform.Id) AND (td.Account.CampaignId IS NULL))
+  ON ((Account.CampaignId = Campaign.Id)  OR (Account.PlatformId = Platform.Id))
 WHERE (td.Campaign.AdvertiserId = @AdvertiserId)

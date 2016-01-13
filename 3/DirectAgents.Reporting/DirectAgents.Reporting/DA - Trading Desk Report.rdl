@@ -1655,13 +1655,14 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     </ChartCategoryAxes>
                     <ChartValueAxes>
                       <ChartAxis Name="Primary">
+                        <Visible>False</Visible>
                         <Style>
                           <FontSize>8pt</FontSize>
                           <Format>'$'#,0;('$'#,0)</Format>
                           <rd:FormatSymbolCulture>en-US</rd:FormatSymbolCulture>
                         </Style>
                         <ChartAxisTitle>
-                          <Caption>Spend</Caption>
+                          <Caption />
                           <Style>
                             <FontFamily>Calibri</FontFamily>
                           </Style>
@@ -1738,6 +1739,31 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     </Style>
                   </ChartArea>
                 </ChartAreas>
+                <ChartTitles>
+                  <ChartTitle Name="Title1">
+                    <Caption>Spend</Caption>
+                    <Style>
+                      <BackgroundGradientType>None</BackgroundGradientType>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextAlign>General</TextAlign>
+                      <VerticalAlign>Top</VerticalAlign>
+                    </Style>
+                  </ChartTitle>
+                  <ChartTitle Name="Title2">
+                    <Caption>="$" + Code.KiloFormat(Sum(Fields!MediaSpend.Value))</Caption>
+                    <Style>
+                      <BackgroundGradientType>None</BackgroundGradientType>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>16pt</FontSize>
+                      <TextAlign>General</TextAlign>
+                      <VerticalAlign>Top</VerticalAlign>
+                    </Style>
+                    <Position>LeftCenter</Position>
+                    <ToolTip>=Format(Sum(Fields!MediaSpend.Value), "c2")</ToolTip>
+                    <TextOrientation>Horizontal</TextOrientation>
+                  </ChartTitle>
+                </ChartTitles>
                 <Palette>BrightPastel</Palette>
                 <ChartBorderSkin>
                   <Style>
@@ -2794,7 +2820,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                           <ChartDataLabel>
                             <Style />
                           </ChartDataLabel>
-                          <ToolTip>=Format(Fields!Date.Value, "d") + ": " + Format(Sum(Fields!Impressions.Value), "n")</ToolTip>
+                          <ToolTip>=Format(Fields!Date.Value, "d") + ": " + Format(Sum(Fields!Impressions.Value), "n0")</ToolTip>
                           <Style>
                             <BackgroundGradientType>None</BackgroundGradientType>
                             <BackgroundHatchType>None</BackgroundHatchType>
@@ -3005,6 +3031,20 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                       <VerticalAlign>Top</VerticalAlign>
                     </Style>
                   </ChartTitle>
+                  <ChartTitle Name="Title2">
+                    <Caption>=Code.KiloFormat(Sum(Fields!Impressions.Value))</Caption>
+                    <Style>
+                      <BackgroundGradientType>None</BackgroundGradientType>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>16pt</FontSize>
+                      <TextAlign>General</TextAlign>
+                      <VerticalAlign>Top</VerticalAlign>
+                    </Style>
+                    <Position>LeftTop</Position>
+                    <DockOutsideChartArea>true</DockOutsideChartArea>
+                    <ToolTip>=Format(Sum(Fields!Impressions.Value), "n0")</ToolTip>
+                    <TextOrientation>Horizontal</TextOrientation>
+                  </ChartTitle>
                 </ChartTitles>
                 <Palette>BrightPastel</Palette>
                 <ChartBorderSkin>
@@ -3109,7 +3149,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                           <ChartDataLabel>
                             <Style />
                           </ChartDataLabel>
-                          <ToolTip>=Microsoft.VisualBasic.Strings.Format(Fields!Date.Value, "d") + ": " + Microsoft.VisualBasic.Strings.Format(Sum(Fields!Clicks.Value), "n")</ToolTip>
+                          <ToolTip>=Microsoft.VisualBasic.Strings.Format(Fields!Date.Value, "d") + ": " + Microsoft.VisualBasic.Strings.Format(Sum(Fields!Clicks.Value), "n0")</ToolTip>
                           <Style>
                             <BackgroundGradientType>None</BackgroundGradientType>
                             <BackgroundHatchType>None</BackgroundHatchType>
@@ -3225,6 +3265,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     </ChartCategoryAxes>
                     <ChartValueAxes>
                       <ChartAxis Name="Primary">
+                        <Visible>False</Visible>
                         <Style>
                           <Border>
                             <Style>None</Style>
@@ -3324,6 +3365,19 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                       <VerticalAlign>Top</VerticalAlign>
                     </Style>
                   </ChartTitle>
+                  <ChartTitle Name="Title2">
+                    <Caption>=Code.KiloFormat(Sum(Fields!Clicks.Value))</Caption>
+                    <Style>
+                      <BackgroundGradientType>None</BackgroundGradientType>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>16pt</FontSize>
+                      <TextAlign>General</TextAlign>
+                      <VerticalAlign>Top</VerticalAlign>
+                    </Style>
+                    <Position>LeftCenter</Position>
+                    <ToolTip>=Format(Sum(Fields!Clicks.Value), "n0")</ToolTip>
+                    <TextOrientation>Horizontal</TextOrientation>
+                  </ChartTitle>
                 </ChartTitles>
                 <Palette>BrightPastel</Palette>
                 <ChartBorderSkin>
@@ -3391,7 +3445,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                           <ChartDataLabel>
                             <Style />
                           </ChartDataLabel>
-                          <ToolTip>=Microsoft.VisualBasic.Strings.Format(Fields!Date.Value, "d") + ": " + Microsoft.VisualBasic.Strings.Format(Sum(Fields!Conversions.Value), "n")</ToolTip>
+                          <ToolTip>=Microsoft.VisualBasic.Strings.Format(Fields!Date.Value, "d") + ": " + Microsoft.VisualBasic.Strings.Format(Sum(Fields!Conversions.Value), "n0")</ToolTip>
                           <Style>
                             <BackgroundGradientType>None</BackgroundGradientType>
                             <BackgroundHatchType>None</BackgroundHatchType>
@@ -3509,6 +3563,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     </ChartCategoryAxes>
                     <ChartValueAxes>
                       <ChartAxis Name="Primary">
+                        <Visible>False</Visible>
                         <Style>
                           <FontSize>8pt</FontSize>
                           <Format>#,0;(#,0)</Format>
@@ -3591,6 +3646,31 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     </Style>
                   </ChartArea>
                 </ChartAreas>
+                <ChartTitles>
+                  <ChartTitle Name="Title1">
+                    <Caption>Conversions</Caption>
+                    <Style>
+                      <BackgroundGradientType>None</BackgroundGradientType>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextAlign>General</TextAlign>
+                      <VerticalAlign>Top</VerticalAlign>
+                    </Style>
+                  </ChartTitle>
+                  <ChartTitle Name="Title2">
+                    <Caption>=Code.KiloFormat(Sum(Fields!Conversions.Value))</Caption>
+                    <Style>
+                      <BackgroundGradientType>None</BackgroundGradientType>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>16pt</FontSize>
+                      <TextAlign>General</TextAlign>
+                      <VerticalAlign>Top</VerticalAlign>
+                    </Style>
+                    <Position>LeftCenter</Position>
+                    <ToolTip>=Format(Sum(Fields!Conversions.Value), "n0")</ToolTip>
+                    <TextOrientation>Horizontal</TextOrientation>
+                  </ChartTitle>
+                </ChartTitles>
                 <Palette>BrightPastel</Palette>
                 <ChartBorderSkin>
                   <Style>
@@ -3912,7 +3992,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 </ChartAreas>
                 <ChartTitles>
                   <ChartTitle Name="Default">
-                    <Caption>Budet Month to Date</Caption>
+                    <Caption>Budget Month to Date</Caption>
                     <Style>
                       <BackgroundGradientType>None</BackgroundGradientType>
                       <FontFamily>Calibri</FontFamily>
@@ -4378,9 +4458,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   </Paragraph>
                                                 </Paragraphs>
                                                 <rd:DefaultName>Textbox60</rd:DefaultName>
-                                                <Visibility>
-                                                  <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
-                                                </Visibility>
                                                 <Style>
                                                   <Border>
                                                     <Color>LightGrey</Color>
@@ -4419,9 +4496,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   </Paragraph>
                                                 </Paragraphs>
                                                 <rd:DefaultName>Textbox95</rd:DefaultName>
-                                                <Visibility>
-                                                  <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
-                                                </Visibility>
                                                 <Style>
                                                   <Border>
                                                     <Color>LightGrey</Color>
@@ -4718,9 +4792,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   </Paragraph>
                                                 </Paragraphs>
                                                 <rd:DefaultName>PostClickConv</rd:DefaultName>
-                                                <Visibility>
-                                                  <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
-                                                </Visibility>
                                                 <Style>
                                                   <Border>
                                                     <Color>LightGrey</Color>
@@ -4756,9 +4827,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   </Paragraph>
                                                 </Paragraphs>
                                                 <rd:DefaultName>PostViewConv</rd:DefaultName>
-                                                <Visibility>
-                                                  <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
-                                                </Visibility>
                                                 <Style>
                                                   <Border>
                                                     <Color>LightGrey</Color>
@@ -4857,12 +4925,12 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                       <TablixMember />
                                       <TablixMember>
                                         <Visibility>
-                                          <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
+                                          <Hidden>=Fields!ShowClickAndViewConv.Value = 0</Hidden>
                                         </Visibility>
                                       </TablixMember>
                                       <TablixMember>
                                         <Visibility>
-                                          <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
+                                          <Hidden>=Fields!ShowClickAndViewConv.Value = 0</Hidden>
                                         </Visibility>
                                       </TablixMember>
                                       <TablixMember />
@@ -4882,20 +4950,20 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                           <GroupExpressions>
                                             <GroupExpression>=Fields!StrategyId.Value</GroupExpression>
                                           </GroupExpressions>
+                                          <Filters>
+                                            <Filter>
+                                              <FilterExpression>=Fields!Date.Value</FilterExpression>
+                                              <Operator>GreaterThanOrEqual</Operator>
+                                              <FilterValues>
+                                                <FilterValue>=Parameters!MTDStartDate.Value</FilterValue>
+                                              </FilterValues>
+                                            </Filter>
+                                          </Filters>
                                         </Group>
                                       </TablixMember>
                                     </TablixMembers>
                                   </TablixRowHierarchy>
                                   <DataSetName>StrategyCTD</DataSetName>
-                                  <Filters>
-                                    <Filter>
-                                      <FilterExpression>=Fields!Date.Value</FilterExpression>
-                                      <Operator>GreaterThanOrEqual</Operator>
-                                      <FilterValues>
-                                        <FilterValue>=Parameters!MTDStartDate.Value</FilterValue>
-                                      </FilterValues>
-                                    </Filter>
-                                  </Filters>
                                   <Left>0.0125in</Left>
                                   <Height>0.75in</Height>
                                   <Width>7.95625in</Width>
@@ -5692,9 +5760,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   </Paragraph>
                                                 </Paragraphs>
                                                 <rd:DefaultName>Textbox60</rd:DefaultName>
-                                                <Visibility>
-                                                  <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
-                                                </Visibility>
                                                 <Style>
                                                   <Border>
                                                     <Color>LightGrey</Color>
@@ -5733,9 +5798,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   </Paragraph>
                                                 </Paragraphs>
                                                 <rd:DefaultName>Textbox95</rd:DefaultName>
-                                                <Visibility>
-                                                  <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
-                                                </Visibility>
                                                 <Style>
                                                   <Border>
                                                     <Color>LightGrey</Color>
@@ -6032,9 +6094,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   </Paragraph>
                                                 </Paragraphs>
                                                 <rd:DefaultName>PostClickConv</rd:DefaultName>
-                                                <Visibility>
-                                                  <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
-                                                </Visibility>
                                                 <Style>
                                                   <Border>
                                                     <Color>LightGrey</Color>
@@ -6070,9 +6129,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   </Paragraph>
                                                 </Paragraphs>
                                                 <rd:DefaultName>PostViewConv</rd:DefaultName>
-                                                <Visibility>
-                                                  <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
-                                                </Visibility>
                                                 <Style>
                                                   <Border>
                                                     <Color>LightGrey</Color>
@@ -6171,12 +6227,12 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                       <TablixMember />
                                       <TablixMember>
                                         <Visibility>
-                                          <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
+                                          <Hidden>=Fields!ShowClickAndViewConv.Value = 0</Hidden>
                                         </Visibility>
                                       </TablixMember>
                                       <TablixMember>
                                         <Visibility>
-                                          <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
+                                          <Hidden>=Fields!ShowClickAndViewConv.Value = 0</Hidden>
                                         </Visibility>
                                       </TablixMember>
                                       <TablixMember />
@@ -8065,6 +8121,20 @@ Public Function IsNull(ByVal field As Object, ByVal valueIfNull As Object) As Ob
 		Return valueIfNull
 	End If
 	Return field
+End Function
+
+Public Function KiloFormat(ByVal num As Long) As String
+	If (num &gt;= 100000000)
+		Return (num / 1000000).ToString("#,0M")
+	Else If (num &gt;= 10000000)
+		Return (num / 1000000).ToString("0.#") + "M"
+	Else If (num &gt;= 100000)
+		Return (num / 1000).ToString("#,0K")
+	Else If (num &gt;= 10000)
+		Return (num / 1000).ToString("0.#") + "K"
+	End If
+
+	Return num.ToString("#,0")
 End Function</Code>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportID>ea256a65-4592-4acf-b45d-5d6834eb03ce</rd:ReportID>
