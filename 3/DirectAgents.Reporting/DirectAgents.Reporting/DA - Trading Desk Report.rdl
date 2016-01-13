@@ -123,6 +123,9 @@ FROM td.fDailySummaryBasicStats(@AdvertiserId, @PreviousMonthStartDate
           <QueryParameter Name="@AdvertiserId">
             <Value>=Parameters!AdvertiserId.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@MTDEndDate">
+            <Value>=Parameters!MTDEndDate.Value</Value>
+          </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT Advertiser.Name
 --, Campaign.StartDate AS CampaignStartDate
@@ -137,6 +140,7 @@ FROM td.fDailySummaryBasicStats(@AdvertiserId, @PreviousMonthStartDate
 , 'eCPA' AS KPI
 --, Campaign.KPIGoal
 , cast(RAND(Campaign.Id) as float) * 100 AS KPIGoal
+, 'DA - ' + Advertiser.Name + ' - Trading Desk Report - ' + CONVERT(varchar(10), @MTDEndDate, 120) AS ExportFilename
 FROM td.Advertiser
 INNER JOIN td.Campaign ON td.Campaign.Id =
 	(
@@ -163,6 +167,10 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
         <Field Name="KPIGoal">
           <DataField>KPIGoal</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="ExportFilename">
+          <DataField>ExportFilename</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -4006,7 +4014,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     <TextOrientation>Horizontal</TextOrientation>
                   </ChartTitle>
                   <ChartTitle Name="Title1">
-                    <Caption>=Format(Sum(Fields!MediaSpend.Value), "c")</Caption>
+                    <Caption>="$" + Code.KiloFormat(Sum(Fields!MediaSpend.Value))</Caption>
                     <Style>
                       <BackgroundGradientType>None</BackgroundGradientType>
                       <FontFamily>Calibri</FontFamily>
@@ -4020,7 +4028,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     <TextOrientation>Horizontal</TextOrientation>
                   </ChartTitle>
                   <ChartTitle Name="Title2">
-                    <Caption>=Format(Sum(Fields!Budget.Value), "c")</Caption>
+                    <Caption>="$" + Code.KiloFormat(Sum(Fields!Budget.Value))</Caption>
                     <Style>
                       <BackgroundGradientType>None</BackgroundGradientType>
                       <FontFamily>Calibri</FontFamily>
@@ -7961,7 +7969,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
       <DataType>DateTime</DataType>
       <DefaultValue>
         <Values>
-          <Value>=Today()</Value>
+          <Value>=DateAdd(DateInterval.Day, -1, Today())</Value>
         </Values>
       </DefaultValue>
       <Prompt>End Date</Prompt>
@@ -8070,6 +8078,16 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
         </DataSetReference>
       </DefaultValue>
       <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="ExportFilename">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>Advertiser</DataSetName>
+          <ValueField>ExportFilename</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Export Filename</Prompt>
     </ReportParameter>
   </ReportParameters>
   <Code>' DirectAgents.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
