@@ -1,7 +1,7 @@
 alter FUNCTION [td].[fLeadIDs](
 @AdvertiserId int
-, @StartDate datetime = NULL
-, @EndDate datetime = NULL
+, @StartDate datetime
+, @EndDate datetime
 ) RETURNS TABLE AS RETURN
 SELECT Strategy.Name AS StrategyName
 , Strategy.Id AS StrategyId
@@ -13,6 +13,7 @@ SELECT Strategy.Name AS StrategyName
 , Conv.ExtData AS LeadID
 , ConvCity.Name AS City
 , ConvCountry.Name AS Country
+, Conv.IP
 FROM td.Conv
 LEFT OUTER JOIN td.ConvCity ON ConvCity.Id = Conv.CityId
 LEFT OUTER JOIN td.ConvCountry ON ConvCountry.Id = ConvCity.CountryId
@@ -24,4 +25,4 @@ LEFT OUTER JOIN td.Account ON Account.Id IN (Strategy.AccountId, Ad.AccountId)
 LEFT OUTER JOIN td.Campaign ON Campaign.Id = Account.CampaignId
 LEFT OUTER JOIN td.Advertiser ON Advertiser.Id = Campaign.AdvertiserId
 WHERE (Advertiser.Id = @AdvertiserId)
-
+  AND (Conv.Time BETWEEN @StartDate AND @EndDate)
