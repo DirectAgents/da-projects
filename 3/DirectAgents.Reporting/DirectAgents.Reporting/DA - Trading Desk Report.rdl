@@ -298,9 +298,21 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
           <DataField>Conversions</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
+        <Field Name="PostClickConv">
+          <DataField>PostClickConv</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
         <Field Name="CR">
           <DataField>CR</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="ShowClickAndViewConv">
+          <DataField>ShowClickAndViewConv</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="PostViewConv">
+          <DataField>PostViewConv</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="MediaSpend">
           <DataField>MediaSpend</DataField>
@@ -448,8 +460,11 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
           <QueryParameter Name="@MTDEndDate">
             <Value>=Parameters!MTDEndDate.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@KPI">
+            <Value>=Parameters!KPI.Value</Value>
+          </QueryParameter>
         </QueryParameters>
-        <CommandText>select * from td.fCreativeSummaryBasicStats(@AdvertiserId, @CampaignStartDate, @MTDEndDate)</CommandText>
+        <CommandText>select * from td.fCreativeSummaryBasicStats(@AdvertiserId, @CampaignStartDate, @MTDEndDate, @KPI)</CommandText>
       </Query>
       <Fields>
         <Field Name="Date">
@@ -480,17 +495,29 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
           <DataField>Conversions</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="SumCTR">
-          <DataField>SumCTR</DataField>
+        <Field Name="PostClickConv">
+          <DataField>PostClickConv</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="SumKPI">
+          <DataField>SumKPI</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
         </Field>
         <Field Name="CR">
           <DataField>CR</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
         </Field>
+        <Field Name="PostViewConv">
+          <DataField>PostViewConv</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
         <Field Name="MediaSpend">
           <DataField>MediaSpend</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="ShowClickAndViewConv">
+          <DataField>ShowClickAndViewConv</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
         </Field>
         <Field Name="MgmtFee">
           <DataField>MgmtFee</DataField>
@@ -717,7 +744,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                       <Width>1in</Width>
                     </TablixColumn>
                     <TablixColumn>
-                      <Width>0.525in</Width>
+                      <Width>1.19375in</Width>
                     </TablixColumn>
                     <TablixColumn>
                       <Width>0.675in</Width>
@@ -727,9 +754,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     </TablixColumn>
                     <TablixColumn>
                       <Width>0.91875in</Width>
-                    </TablixColumn>
-                    <TablixColumn>
-                      <Width>0.675in</Width>
                     </TablixColumn>
                     <TablixColumn>
                       <Width>0.75in</Width>
@@ -1021,41 +1045,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         </TablixCell>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="Textbox18">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>CR</Value>
-                                      <Style>
-                                        <FontFamily>Calibri</FontFamily>
-                                        <FontSize>11pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Center</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox18</rd:DefaultName>
-                              <Style>
-                                <Border>
-                                  <Color>LightGrey</Color>
-                                  <Style>Solid</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                          </CellContents>
-                        </TablixCell>
-                        <TablixCell>
-                          <CellContents>
                             <Textbox Name="Textbox3">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
@@ -1175,7 +1164,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Sum(Fields!Pacing.Value)</Value>
+                                      <Value>=Code.SafeFraction(Sum(Fields!MediaSpend.Value), Sum(Fields!Budget.Value))</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -1384,42 +1373,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         </TablixCell>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="CR4">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>=Code.SafeFraction(Sum(Fields!Conversions.Value), Sum(Fields!Clicks.Value))</Value>
-                                      <Style>
-                                        <FontFamily>Calibri</FontFamily>
-                                        <FontSize>11pt</FontSize>
-                                        <Format>p2</Format>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Center</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>CR</rd:DefaultName>
-                              <Style>
-                                <Border>
-                                  <Color>LightGrey</Color>
-                                  <Style>Solid</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                          </CellContents>
-                        </TablixCell>
-                        <TablixCell>
-                          <CellContents>
                             <Textbox Name="MgmtFee4">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
@@ -1469,7 +1422,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     <TablixMember />
                     <TablixMember />
                     <TablixMember />
-                    <TablixMember />
                   </TablixMembers>
                 </TablixColumnHierarchy>
                 <TablixRowHierarchy>
@@ -1481,7 +1433,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 <DataSetName>BasicStatsMTD</DataSetName>
                 <Top>0.25in</Top>
                 <Height>0.5in</Height>
-                <Width>7.96875in</Width>
+                <Width>7.9625in</Width>
                 <Style>
                   <Border>
                     <Style>None</Style>
@@ -1738,6 +1690,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         <CrossAt>NaN</CrossAt>
                         <Minimum>NaN</Minimum>
                         <Maximum>NaN</Maximum>
+                        <HideLabels>true</HideLabels>
                         <IncludeZero>false</IncludeZero>
                         <ChartAxisScaleBreak>
                           <Style />
@@ -1804,10 +1757,9 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   </Style>
                 </ChartNoDataMessage>
                 <DataSetName>BasicStatsCTD</DataSetName>
-                <Top>2.35722in</Top>
-                <Left>3.675in</Left>
-                <Height>1.21875in</Height>
-                <Width>2.21042in</Width>
+                <Top>3.36763in</Top>
+                <Height>0.92708in</Height>
+                <Width>3.9in</Width>
                 <ZIndex>3</ZIndex>
                 <Style>
                   <Border>
@@ -2082,7 +2034,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   </Style>
                 </ChartNoDataMessage>
                 <DataSetName>BasicStatsCTD</DataSetName>
-                <Top>5.22458in</Top>
+                <Top>5.62042in</Top>
                 <Height>2.21875in</Height>
                 <Width>7.96875in</Width>
                 <ZIndex>4</ZIndex>
@@ -2111,7 +2063,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                       <Width>1in</Width>
                     </TablixColumn>
                     <TablixColumn>
-                      <Width>0.525in</Width>
+                      <Width>1.2in</Width>
                     </TablixColumn>
                     <TablixColumn>
                       <Width>0.675in</Width>
@@ -2121,9 +2073,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     </TablixColumn>
                     <TablixColumn>
                       <Width>0.91875in</Width>
-                    </TablixColumn>
-                    <TablixColumn>
-                      <Width>0.675in</Width>
                     </TablixColumn>
                     <TablixColumn>
                       <Width>0.75in</Width>
@@ -2415,41 +2364,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         </TablixCell>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="Textbox20">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>CR</Value>
-                                      <Style>
-                                        <FontFamily>Calibri</FontFamily>
-                                        <FontSize>11pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Center</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox18</rd:DefaultName>
-                              <Style>
-                                <Border>
-                                  <Color>LightGrey</Color>
-                                  <Style>Solid</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                          </CellContents>
-                        </TablixCell>
-                        <TablixCell>
-                          <CellContents>
                             <Textbox Name="Textbox5">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
@@ -2569,7 +2483,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Sum(Fields!Pacing.Value)</Value>
+                                      <Value>=Code.SafeFraction(Sum(Fields!MediaSpend.Value), Sum(Fields!Budget.Value))</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -2778,42 +2692,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         </TablixCell>
                         <TablixCell>
                           <CellContents>
-                            <Textbox Name="CR5">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>=Code.SafeFraction(Sum(Fields!Conversions.Value), Sum(Fields!Clicks.Value))</Value>
-                                      <Style>
-                                        <FontFamily>Calibri</FontFamily>
-                                        <FontSize>11pt</FontSize>
-                                        <Format>p2</Format>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Center</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>CR</rd:DefaultName>
-                              <Style>
-                                <Border>
-                                  <Color>LightGrey</Color>
-                                  <Style>Solid</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                          </CellContents>
-                        </TablixCell>
-                        <TablixCell>
-                          <CellContents>
                             <Textbox Name="MgmtFee5">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
@@ -2854,7 +2732,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 </TablixBody>
                 <TablixColumnHierarchy>
                   <TablixMembers>
-                    <TablixMember />
                     <TablixMember />
                     <TablixMember />
                     <TablixMember />
@@ -3037,6 +2914,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     </ChartCategoryAxes>
                     <ChartValueAxes>
                       <ChartAxis Name="Primary">
+                        <Visible>False</Visible>
                         <Style>
                           <FontSize>8pt</FontSize>
                           <Format>#,0;(#,0)</Format>
@@ -3118,6 +2996,18 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     </Style>
                   </ChartArea>
                 </ChartAreas>
+                <ChartTitles>
+                  <ChartTitle Name="Title1">
+                    <Caption>Impressions</Caption>
+                    <Style>
+                      <BackgroundGradientType>None</BackgroundGradientType>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextAlign>General</TextAlign>
+                      <VerticalAlign>Top</VerticalAlign>
+                    </Style>
+                  </ChartTitle>
+                </ChartTitles>
                 <Palette>BrightPastel</Palette>
                 <ChartBorderSkin>
                   <Style>
@@ -3135,10 +3025,10 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   </Style>
                 </ChartNoDataMessage>
                 <DataSetName>BasicStatsCTD</DataSetName>
-                <Top>2.35722in</Top>
-                <Left>5.88542in</Left>
-                <Height>1.21875in</Height>
-                <Width>2.08333in</Width>
+                <Top>3.38152in</Top>
+                <Left>4.0625in</Left>
+                <Height>0.91319in</Height>
+                <Width>3.9in</Width>
                 <ZIndex>6</ZIndex>
                 <Style>
                   <Border>
@@ -3170,10 +3060,9 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox15</rd:DefaultName>
-                <Top>2.10722in</Top>
-                <Left>3.675in</Left>
+                <Top>3.11763in</Top>
                 <Height>0.25in</Height>
-                <Width>4.29375in</Width>
+                <Width>7.96875in</Width>
                 <ZIndex>7</ZIndex>
                 <Style>
                   <Border>
@@ -3339,11 +3228,14 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     <ChartValueAxes>
                       <ChartAxis Name="Primary">
                         <Style>
+                          <Border>
+                            <Style>None</Style>
+                          </Border>
                           <FontSize>8pt</FontSize>
                           <Format>#,0;(#,0)</Format>
                         </Style>
                         <ChartAxisTitle>
-                          <Caption>Clicks</Caption>
+                          <Caption />
                           <Style>
                             <FontFamily>Calibri</FontFamily>
                           </Style>
@@ -3364,12 +3256,16 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                             </Border>
                           </Style>
                         </ChartMinorGridLines>
+                        <ChartMajorTickMarks>
+                          <Enabled>False</Enabled>
+                        </ChartMajorTickMarks>
                         <ChartMinorTickMarks>
                           <Length>0.5</Length>
                         </ChartMinorTickMarks>
                         <CrossAt>NaN</CrossAt>
                         <Minimum>NaN</Minimum>
                         <Maximum>NaN</Maximum>
+                        <HideLabels>true</HideLabels>
                         <IncludeZero>false</IncludeZero>
                         <ChartAxisScaleBreak>
                           <Style />
@@ -3419,6 +3315,18 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     </Style>
                   </ChartArea>
                 </ChartAreas>
+                <ChartTitles>
+                  <ChartTitle Name="Title1">
+                    <Caption>Clicks</Caption>
+                    <Style>
+                      <BackgroundGradientType>None</BackgroundGradientType>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextAlign>General</TextAlign>
+                      <VerticalAlign>Top</VerticalAlign>
+                    </Style>
+                  </ChartTitle>
+                </ChartTitles>
                 <Palette>BrightPastel</Palette>
                 <ChartBorderSkin>
                   <Style>
@@ -3436,10 +3344,9 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   </Style>
                 </ChartNoDataMessage>
                 <DataSetName>BasicStatsCTD</DataSetName>
-                <Top>3.70791in</Top>
-                <Left>3.675in</Left>
-                <Height>1.27222in</Height>
-                <Width>2.21042in</Width>
+                <Top>4.47874in</Top>
+                <Height>0.92708in</Height>
+                <Width>3.9in</Width>
                 <ZIndex>8</ZIndex>
                 <Style>
                   <Border>
@@ -3703,10 +3610,10 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   </Style>
                 </ChartNoDataMessage>
                 <DataSetName>BasicStatsCTD</DataSetName>
-                <Top>3.70791in</Top>
-                <Left>5.88542in</Left>
-                <Height>1.27222in</Height>
-                <Width>2.08333in</Width>
+                <Top>4.47874in</Top>
+                <Left>4.0625in</Left>
+                <Height>0.92708in</Height>
+                <Width>3.90625in</Width>
                 <ZIndex>9</ZIndex>
                 <Style>
                   <Border>
@@ -3717,7 +3624,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   <BackgroundGradientType>None</BackgroundGradientType>
                 </Style>
               </Chart>
-              <Chart Name="Chart3">
+              <Chart Name="BudgetMTDDataBar">
                 <ChartCategoryHierarchy>
                   <ChartMembers>
                     <ChartMember>
@@ -3731,338 +3638,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                       <Label>Budget</Label>
                     </ChartMember>
                     <ChartMember>
-                      <Label>Media Spend</Label>
-                    </ChartMember>
-                  </ChartMembers>
-                </ChartSeriesHierarchy>
-                <ChartData>
-                  <ChartSeriesCollection>
-                    <ChartSeries Name="Budget">
-                      <ChartDataPoints>
-                        <ChartDataPoint>
-                          <ChartDataPointValues>
-                            <X>Budget</X>
-                            <Y>=Sum(Fields!Budget.Value)</Y>
-                          </ChartDataPointValues>
-                          <ChartDataLabel>
-                            <Style>
-                              <FontFamily>Calibri</FontFamily>
-                            </Style>
-                            <Label>#LEGENDTEXT</Label>
-                          </ChartDataLabel>
-                          <ToolTip>=Format(Sum(Fields!Budget.Value), "c")</ToolTip>
-                          <Style>
-                            <Border>
-                              <Color>Black</Color>
-                            </Border>
-                            <Color>White</Color>
-                          </Style>
-                          <ChartMarker>
-                            <Style />
-                          </ChartMarker>
-                          <DataElementOutput>Output</DataElementOutput>
-                        </ChartDataPoint>
-                      </ChartDataPoints>
-                      <Type>Shape</Type>
-                      <Style />
-                      <ChartEmptyPoints>
-                        <Style />
-                        <ChartMarker>
-                          <Style />
-                        </ChartMarker>
-                        <ChartDataLabel>
-                          <Style />
-                        </ChartDataLabel>
-                      </ChartEmptyPoints>
-                      <ValueAxisName>Primary</ValueAxisName>
-                      <CategoryAxisName>Primary</CategoryAxisName>
-                      <ChartSmartLabel>
-                        <CalloutLineColor>Black</CalloutLineColor>
-                        <MinMovingDistance>0pt</MinMovingDistance>
-                      </ChartSmartLabel>
-                    </ChartSeries>
-                    <ChartSeries Name="MediaSpend">
-                      <ChartDataPoints>
-                        <ChartDataPoint>
-                          <ChartDataPointValues>
-                            <X>Spend</X>
-                            <Y>=Sum(Fields!MediaSpend.Value)</Y>
-                          </ChartDataPointValues>
-                          <ChartDataLabel>
-                            <Style>
-                              <FontFamily>Calibri</FontFamily>
-                            </Style>
-                            <Label>=Format(Sum(Fields!MediaSpend.Value) / Sum(Fields!Budget.Value), "p2")</Label>
-                            <Visible>true</Visible>
-                          </ChartDataLabel>
-                          <ToolTip>=Format(Sum(Fields!MediaSpend.Value), "c")</ToolTip>
-                          <Style>
-                            <Border>
-                              <Color>Black</Color>
-                            </Border>
-                            <Color>#578ece</Color>
-                          </Style>
-                          <ChartMarker>
-                            <Style />
-                          </ChartMarker>
-                          <DataElementOutput>Output</DataElementOutput>
-                        </ChartDataPoint>
-                      </ChartDataPoints>
-                      <Type>Shape</Type>
-                      <Style />
-                      <ChartEmptyPoints>
-                        <Style />
-                        <ChartMarker>
-                          <Style />
-                        </ChartMarker>
-                        <ChartDataLabel>
-                          <Style />
-                        </ChartDataLabel>
-                      </ChartEmptyPoints>
-                      <ValueAxisName>Primary</ValueAxisName>
-                      <CategoryAxisName>Primary</CategoryAxisName>
-                      <ChartSmartLabel>
-                        <CalloutLineColor>Black</CalloutLineColor>
-                        <MinMovingDistance>0pt</MinMovingDistance>
-                      </ChartSmartLabel>
-                    </ChartSeries>
-                  </ChartSeriesCollection>
-                </ChartData>
-                <ChartAreas>
-                  <ChartArea Name="Default">
-                    <ChartCategoryAxes>
-                      <ChartAxis Name="Primary">
-                        <Style>
-                          <FontSize>8pt</FontSize>
-                        </Style>
-                        <ChartAxisTitle>
-                          <Caption>Axis Title</Caption>
-                          <Style>
-                            <FontSize>8pt</FontSize>
-                          </Style>
-                        </ChartAxisTitle>
-                        <ChartMajorGridLines>
-                          <Enabled>False</Enabled>
-                          <Style>
-                            <Border>
-                              <Color>Gainsboro</Color>
-                            </Border>
-                          </Style>
-                        </ChartMajorGridLines>
-                        <ChartMinorGridLines>
-                          <Style>
-                            <Border>
-                              <Color>Gainsboro</Color>
-                              <Style>Dotted</Style>
-                            </Border>
-                          </Style>
-                        </ChartMinorGridLines>
-                        <ChartMinorTickMarks>
-                          <Length>0.5</Length>
-                        </ChartMinorTickMarks>
-                        <CrossAt>NaN</CrossAt>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <ChartAxisScaleBreak>
-                          <Style />
-                        </ChartAxisScaleBreak>
-                      </ChartAxis>
-                      <ChartAxis Name="Secondary">
-                        <Style>
-                          <FontSize>8pt</FontSize>
-                        </Style>
-                        <ChartAxisTitle>
-                          <Caption>Axis Title</Caption>
-                          <Style>
-                            <FontSize>8pt</FontSize>
-                          </Style>
-                        </ChartAxisTitle>
-                        <ChartMajorGridLines>
-                          <Enabled>False</Enabled>
-                          <Style>
-                            <Border>
-                              <Color>Gainsboro</Color>
-                            </Border>
-                          </Style>
-                        </ChartMajorGridLines>
-                        <ChartMinorGridLines>
-                          <Style>
-                            <Border>
-                              <Color>Gainsboro</Color>
-                              <Style>Dotted</Style>
-                            </Border>
-                          </Style>
-                        </ChartMinorGridLines>
-                        <ChartMinorTickMarks>
-                          <Length>0.5</Length>
-                        </ChartMinorTickMarks>
-                        <CrossAt>NaN</CrossAt>
-                        <Location>Opposite</Location>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <ChartAxisScaleBreak>
-                          <Style />
-                        </ChartAxisScaleBreak>
-                      </ChartAxis>
-                    </ChartCategoryAxes>
-                    <ChartValueAxes>
-                      <ChartAxis Name="Primary">
-                        <Style>
-                          <FontSize>8pt</FontSize>
-                        </Style>
-                        <ChartAxisTitle>
-                          <Caption>Axis Title</Caption>
-                          <Style>
-                            <FontSize>8pt</FontSize>
-                          </Style>
-                        </ChartAxisTitle>
-                        <ChartMajorGridLines>
-                          <Style>
-                            <Border>
-                              <Color>Gainsboro</Color>
-                            </Border>
-                          </Style>
-                        </ChartMajorGridLines>
-                        <ChartMinorGridLines>
-                          <Style>
-                            <Border>
-                              <Color>Gainsboro</Color>
-                              <Style>Dotted</Style>
-                            </Border>
-                          </Style>
-                        </ChartMinorGridLines>
-                        <ChartMinorTickMarks>
-                          <Length>0.5</Length>
-                        </ChartMinorTickMarks>
-                        <CrossAt>NaN</CrossAt>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <ChartAxisScaleBreak>
-                          <Style />
-                        </ChartAxisScaleBreak>
-                      </ChartAxis>
-                      <ChartAxis Name="Secondary">
-                        <Style>
-                          <FontSize>8pt</FontSize>
-                        </Style>
-                        <ChartAxisTitle>
-                          <Caption>Axis Title</Caption>
-                          <Style>
-                            <FontSize>8pt</FontSize>
-                          </Style>
-                        </ChartAxisTitle>
-                        <ChartMajorGridLines>
-                          <Style>
-                            <Border>
-                              <Color>Gainsboro</Color>
-                            </Border>
-                          </Style>
-                        </ChartMajorGridLines>
-                        <ChartMinorGridLines>
-                          <Style>
-                            <Border>
-                              <Color>Gainsboro</Color>
-                              <Style>Dotted</Style>
-                            </Border>
-                          </Style>
-                        </ChartMinorGridLines>
-                        <ChartMinorTickMarks>
-                          <Length>0.5</Length>
-                        </ChartMinorTickMarks>
-                        <CrossAt>NaN</CrossAt>
-                        <Location>Opposite</Location>
-                        <Minimum>NaN</Minimum>
-                        <Maximum>NaN</Maximum>
-                        <ChartAxisScaleBreak>
-                          <Style />
-                        </ChartAxisScaleBreak>
-                      </ChartAxis>
-                    </ChartValueAxes>
-                    <Style>
-                      <BackgroundGradientType>None</BackgroundGradientType>
-                    </Style>
-                  </ChartArea>
-                </ChartAreas>
-                <ChartLegends>
-                  <ChartLegend Name="Default">
-                    <Hidden>true</Hidden>
-                    <Style>
-                      <BackgroundGradientType>None</BackgroundGradientType>
-                      <FontFamily>Calibri</FontFamily>
-                      <FontSize>8pt</FontSize>
-                    </Style>
-                    <Position>BottomCenter</Position>
-                    <ChartLegendTitle>
-                      <Caption />
-                      <Style>
-                        <FontSize>8pt</FontSize>
-                        <FontWeight>Bold</FontWeight>
-                        <TextAlign>Center</TextAlign>
-                      </Style>
-                    </ChartLegendTitle>
-                    <HeaderSeparatorColor>Black</HeaderSeparatorColor>
-                    <ColumnSeparatorColor>Black</ColumnSeparatorColor>
-                  </ChartLegend>
-                </ChartLegends>
-                <ChartTitles>
-                  <ChartTitle Name="Title1">
-                    <Caption>Budget Month to Date</Caption>
-                    <Style>
-                      <BackgroundGradientType>None</BackgroundGradientType>
-                      <FontFamily>Calibri</FontFamily>
-                      <FontSize>11pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <TextAlign>General</TextAlign>
-                      <VerticalAlign>Top</VerticalAlign>
-                    </Style>
-                    <DockOutsideChartArea>true</DockOutsideChartArea>
-                  </ChartTitle>
-                </ChartTitles>
-                <Palette>BrightPastel</Palette>
-                <ChartBorderSkin>
-                  <Style>
-                    <BackgroundColor>Gray</BackgroundColor>
-                    <BackgroundGradientType>None</BackgroundGradientType>
-                    <Color>White</Color>
-                  </Style>
-                </ChartBorderSkin>
-                <ChartNoDataMessage Name="NoDataMessage">
-                  <Caption>No Data Available</Caption>
-                  <Style>
-                    <BackgroundGradientType>None</BackgroundGradientType>
-                    <TextAlign>General</TextAlign>
-                    <VerticalAlign>Top</VerticalAlign>
-                  </Style>
-                </ChartNoDataMessage>
-                <DataSetName>BasicStatsMTD</DataSetName>
-                <Top>2.10166in</Top>
-                <Height>2.87847in</Height>
-                <Width>3.34375in</Width>
-                <ZIndex>10</ZIndex>
-                <Style>
-                  <Border>
-                    <Color>LightGrey</Color>
-                    <Style>Solid</Style>
-                  </Border>
-                  <BackgroundColor>White</BackgroundColor>
-                  <BackgroundGradientType>None</BackgroundGradientType>
-                </Style>
-              </Chart>
-              <Chart Name="DataBar1">
-                <ChartCategoryHierarchy>
-                  <ChartMembers>
-                    <ChartMember>
-                      <Label />
-                    </ChartMember>
-                  </ChartMembers>
-                </ChartCategoryHierarchy>
-                <ChartSeriesHierarchy>
-                  <ChartMembers>
-                    <ChartMember>
-                      <Label>Media Spend</Label>
-                    </ChartMember>
-                    <ChartMember>
-                      <Label>Media Spend</Label>
+                      <Label>Budget</Label>
                     </ChartMember>
                   </ChartMembers>
                 </ChartSeriesHierarchy>
@@ -4072,14 +3648,14 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                       <ChartDataPoints>
                         <ChartDataPoint>
                           <ChartDataPointValues>
-                            <Y>=Sum(Fields!MediaSpend.Value)</Y>
+                            <Y>=Code.SafeFraction(Sum(Fields!MediaSpend.Value), Sum(Fields!Budget.Value))</Y>
                           </ChartDataPointValues>
                           <ChartDataLabel>
                             <Style>
                               <FontFamily>Calibri</FontFamily>
                               <FontSize>9pt</FontSize>
                             </Style>
-                            <Label>=Format(Sum(Fields!MediaSpend.Value) / Sum(Fields!Budget.Value), "p2")</Label>
+                            <Label>=Microsoft.VisualBasic.Strings.Format(Sum(Fields!MediaSpend.Value) / Sum(Fields!Budget.Value), "p2")</Label>
                             <Position>Left</Position>
                           </ChartDataLabel>
                           <ToolTip>=Format(Sum(Fields!MediaSpend.Value), "c")</ToolTip>
@@ -4115,10 +3691,16 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                       <ChartDataPoints>
                         <ChartDataPoint>
                           <ChartDataPointValues>
-                            <Y>=Sum(Fields!Budget.Value) - Sum(Fields!MediaSpend.Value)</Y>
+                            <Y>=1 - Code.SafeFraction(Sum(Fields!MediaSpend.Value), Sum(Fields!Budget.Value))</Y>
                           </ChartDataPointValues>
                           <ChartDataLabel>
-                            <Style />
+                            <Style>
+                              <FontFamily>Calibri</FontFamily>
+                              <FontSize>14pt</FontSize>
+                            </Style>
+                            <Label>=Format(Code.SafeFraction(Sum(Fields!MediaSpend.Value), Sum(Fields!Budget.Value)), "p2")</Label>
+                            <Visible>true</Visible>
+                            <Position>Left</Position>
                           </ChartDataLabel>
                           <ToolTip>=Format(Sum(Fields!Budget.Value), "c")</ToolTip>
                           <Style>
@@ -4160,7 +3742,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                           <FontSize>8pt</FontSize>
                         </Style>
                         <ChartAxisTitle>
-                          <Caption>Axis Title</Caption>
+                          <Caption />
                           <Style>
                             <FontSize>8pt</FontSize>
                           </Style>
@@ -4234,12 +3816,15 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     </ChartCategoryAxes>
                     <ChartValueAxes>
                       <ChartAxis Name="Primary">
-                        <Visible>False</Visible>
                         <Style>
+                          <Border>
+                            <Style>Solid</Style>
+                          </Border>
+                          <FontFamily>Calibri</FontFamily>
                           <FontSize>8pt</FontSize>
                         </Style>
                         <ChartAxisTitle>
-                          <Caption>Axis Title</Caption>
+                          <Caption />
                           <Style>
                             <FontSize>8pt</FontSize>
                           </Style>
@@ -4259,10 +3844,21 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                             </Border>
                           </Style>
                         </ChartMinorGridLines>
+                        <ChartMajorTickMarks>
+                          <Type>Cross</Type>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                            </Border>
+                          </Style>
+                          <Length>5</Length>
+                        </ChartMajorTickMarks>
                         <ChartMinorTickMarks>
+                          <Enabled>True</Enabled>
                           <Length>0.5</Length>
                         </ChartMinorTickMarks>
                         <CrossAt>NaN</CrossAt>
+                        <InterlacedColor>LimeGreen</InterlacedColor>
                         <Minimum>0</Minimum>
                         <Maximum>NaN</Maximum>
                         <ChartAxisScaleBreak>
@@ -4308,17 +3904,58 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                       </ChartAxis>
                     </ChartValueAxes>
                     <Style>
+                      <Border>
+                        <Style>Solid</Style>
+                      </Border>
                       <BackgroundColor>#00ffffff</BackgroundColor>
                       <BackgroundGradientType>None</BackgroundGradientType>
                     </Style>
-                    <ChartElementPosition>
-                      <Top>10</Top>
-                      <Left>3</Left>
-                      <Height>80</Height>
-                      <Width>96</Width>
-                    </ChartElementPosition>
                   </ChartArea>
                 </ChartAreas>
+                <ChartTitles>
+                  <ChartTitle Name="Default">
+                    <Caption>Budet Month to Date</Caption>
+                    <Style>
+                      <BackgroundGradientType>None</BackgroundGradientType>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextAlign>General</TextAlign>
+                      <VerticalAlign>Top</VerticalAlign>
+                    </Style>
+                    <DockToChartArea>Default</DockToChartArea>
+                    <DockOutsideChartArea>true</DockOutsideChartArea>
+                    <TextOrientation>Horizontal</TextOrientation>
+                  </ChartTitle>
+                  <ChartTitle Name="Title1">
+                    <Caption>=Format(Sum(Fields!MediaSpend.Value), "c")</Caption>
+                    <Style>
+                      <BackgroundGradientType>None</BackgroundGradientType>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextAlign>General</TextAlign>
+                      <VerticalAlign>Top</VerticalAlign>
+                    </Style>
+                    <Position>LeftTop</Position>
+                    <DockOutsideChartArea>true</DockOutsideChartArea>
+                    <TextOrientation>Horizontal</TextOrientation>
+                  </ChartTitle>
+                  <ChartTitle Name="Title2">
+                    <Caption>=Format(Sum(Fields!Budget.Value), "c")</Caption>
+                    <Style>
+                      <BackgroundGradientType>None</BackgroundGradientType>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextAlign>General</TextAlign>
+                      <VerticalAlign>Top</VerticalAlign>
+                    </Style>
+                    <Position>RightTop</Position>
+                    <DockOutsideChartArea>true</DockOutsideChartArea>
+                    <TextOrientation>Horizontal</TextOrientation>
+                  </ChartTitle>
+                </ChartTitles>
                 <Palette>BrightPastel</Palette>
                 <ChartBorderSkin>
                   <Style>
@@ -4335,12 +3972,11 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     <VerticalAlign>Top</VerticalAlign>
                   </Style>
                 </ChartNoDataMessage>
-                <rd:DesignerMode>DataBar</rd:DesignerMode>
                 <DataSetName>BasicStatsMTD</DataSetName>
-                <Top>1.8507in</Top>
-                <Height>0.18846in</Height>
-                <Width>3.34375in</Width>
-                <ZIndex>11</ZIndex>
+                <Top>2.13194in</Top>
+                <Height>0.80513in</Height>
+                <Width>7.96875in</Width>
+                <ZIndex>10</ZIndex>
                 <Style>
                   <Border>
                     <Color>LightGrey</Color>
@@ -4356,7 +3992,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             </PageBreak>
             <PageName>Executive Summary</PageName>
             <KeepTogether>true</KeepTogether>
-            <Height>7.59958in</Height>
+            <Height>7.83917in</Height>
             <Width>7.96875in</Width>
             <Style>
               <Border>
@@ -4370,12 +4006,12 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 <TablixBody>
                   <TablixColumns>
                     <TablixColumn>
-                      <Width>7.96875in</Width>
+                      <Width>7.98125in</Width>
                     </TablixColumn>
                   </TablixColumns>
                   <TablixRows>
                     <TablixRow>
-                      <Height>2.5in</Height>
+                      <Height>2.75in</Height>
                       <TablixCells>
                         <TablixCell>
                           <CellContents>
@@ -4385,16 +4021,10 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                   <TablixBody>
                                     <TablixColumns>
                                       <TablixColumn>
-                                        <Width>2.61875in</Width>
+                                        <Width>1.06526in</Width>
                                       </TablixColumn>
                                       <TablixColumn>
-                                        <Width>1in</Width>
-                                      </TablixColumn>
-                                      <TablixColumn>
-                                        <Width>1in</Width>
-                                      </TablixColumn>
-                                      <TablixColumn>
-                                        <Width>0.675in</Width>
+                                        <Width>1.06599in</Width>
                                       </TablixColumn>
                                       <TablixColumn>
                                         <Width>1in</Width>
@@ -4403,10 +4033,153 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                         <Width>0.675in</Width>
                                       </TablixColumn>
                                       <TablixColumn>
+                                        <Width>0.675in</Width>
+                                      </TablixColumn>
+                                      <TablixColumn>
+                                        <Width>0.9in</Width>
+                                      </TablixColumn>
+                                      <TablixColumn>
+                                        <Width>0.9in</Width>
+                                      </TablixColumn>
+                                      <TablixColumn>
                                         <Width>1in</Width>
+                                      </TablixColumn>
+                                      <TablixColumn>
+                                        <Width>0.675in</Width>
                                       </TablixColumn>
                                     </TablixColumns>
                                     <TablixRows>
+                                      <TablixRow>
+                                        <Height>0.25in</Height>
+                                        <TablixCells>
+                                          <TablixCell>
+                                            <CellContents>
+                                              <Textbox Name="Textbox18">
+                                                <CanGrow>true</CanGrow>
+                                                <KeepTogether>true</KeepTogether>
+                                                <Paragraphs>
+                                                  <Paragraph>
+                                                    <TextRuns>
+                                                      <TextRun>
+                                                        <Value>Strategy MTD Stats for </Value>
+                                                        <Style>
+                                                          <FontFamily>Calibri</FontFamily>
+                                                          <FontSize>11pt</FontSize>
+                                                          <FontWeight>Bold</FontWeight>
+                                                        </Style>
+                                                      </TextRun>
+                                                      <TextRun>
+                                                        <Value>=Fields!StrategyName.Value</Value>
+                                                        <Style>
+                                                          <FontFamily>Calibri</FontFamily>
+                                                          <FontSize>11pt</FontSize>
+                                                          <FontWeight>Bold</FontWeight>
+                                                        </Style>
+                                                      </TextRun>
+                                                    </TextRuns>
+                                                    <Style>
+                                                      <TextAlign>Center</TextAlign>
+                                                    </Style>
+                                                  </Paragraph>
+                                                </Paragraphs>
+                                                <rd:DefaultName>Textbox18</rd:DefaultName>
+                                                <Style>
+                                                  <Border>
+                                                    <Color>LightGrey</Color>
+                                                    <Style>Solid</Style>
+                                                  </Border>
+                                                  <PaddingLeft>2pt</PaddingLeft>
+                                                  <PaddingRight>2pt</PaddingRight>
+                                                  <PaddingTop>2pt</PaddingTop>
+                                                  <PaddingBottom>2pt</PaddingBottom>
+                                                </Style>
+                                              </Textbox>
+                                              <ColSpan>5</ColSpan>
+                                            </CellContents>
+                                          </TablixCell>
+                                          <TablixCell />
+                                          <TablixCell />
+                                          <TablixCell />
+                                          <TablixCell />
+                                          <TablixCell>
+                                            <CellContents>
+                                              <Textbox Name="Textbox90">
+                                                <CanGrow>true</CanGrow>
+                                                <KeepTogether>true</KeepTogether>
+                                                <Paragraphs>
+                                                  <Paragraph>
+                                                    <TextRuns>
+                                                      <TextRun>
+                                                        <Value>Conversions</Value>
+                                                        <Style>
+                                                          <FontFamily>Calibri</FontFamily>
+                                                          <FontSize>11pt</FontSize>
+                                                        </Style>
+                                                      </TextRun>
+                                                    </TextRuns>
+                                                    <Style>
+                                                      <TextAlign>Center</TextAlign>
+                                                    </Style>
+                                                  </Paragraph>
+                                                </Paragraphs>
+                                                <rd:DefaultName>Textbox90</rd:DefaultName>
+                                                <Style>
+                                                  <Border>
+                                                    <Color>LightGrey</Color>
+                                                    <Style>Solid</Style>
+                                                  </Border>
+                                                  <BottomBorder>
+                                                    <Style>None</Style>
+                                                  </BottomBorder>
+                                                  <PaddingLeft>2pt</PaddingLeft>
+                                                  <PaddingRight>2pt</PaddingRight>
+                                                  <PaddingTop>2pt</PaddingTop>
+                                                  <PaddingBottom>2pt</PaddingBottom>
+                                                </Style>
+                                              </Textbox>
+                                              <ColSpan>3</ColSpan>
+                                            </CellContents>
+                                          </TablixCell>
+                                          <TablixCell />
+                                          <TablixCell />
+                                          <TablixCell>
+                                            <CellContents>
+                                              <Textbox Name="Textbox92">
+                                                <CanGrow>true</CanGrow>
+                                                <KeepTogether>true</KeepTogether>
+                                                <Paragraphs>
+                                                  <Paragraph>
+                                                    <TextRuns>
+                                                      <TextRun>
+                                                        <Value />
+                                                        <Style>
+                                                          <FontFamily>Calibri</FontFamily>
+                                                          <FontSize>11pt</FontSize>
+                                                          <FontWeight>Bold</FontWeight>
+                                                        </Style>
+                                                      </TextRun>
+                                                    </TextRuns>
+                                                    <Style>
+                                                      <TextAlign>Center</TextAlign>
+                                                    </Style>
+                                                  </Paragraph>
+                                                </Paragraphs>
+                                                <rd:DefaultName>Textbox92</rd:DefaultName>
+                                                <Style>
+                                                  <Border>
+                                                    <Color>LightGrey</Color>
+                                                    <Style>Solid</Style>
+                                                  </Border>
+                                                  <PaddingLeft>2pt</PaddingLeft>
+                                                  <PaddingRight>2pt</PaddingRight>
+                                                  <PaddingTop>2pt</PaddingTop>
+                                                  <PaddingBottom>2pt</PaddingBottom>
+                                                </Style>
+                                              </Textbox>
+                                            </CellContents>
+                                          </TablixCell>
+                                        </TablixCells>
+                                      </TablixRow>
                                       <TablixRow>
                                         <Height>0.25in</Height>
                                         <TablixCells>
@@ -4419,11 +4192,10 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   <Paragraph>
                                                     <TextRuns>
                                                       <TextRun>
-                                                        <Value>Strategy MTD Stats</Value>
+                                                        <Value>Spend</Value>
                                                         <Style>
                                                           <FontFamily>Calibri</FontFamily>
                                                           <FontSize>11pt</FontSize>
-                                                          <FontWeight>Bold</FontWeight>
                                                         </Style>
                                                       </TextRun>
                                                     </TextRuns>
@@ -4553,6 +4325,123 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                           </TablixCell>
                                           <TablixCell>
                                             <CellContents>
+                                              <Textbox Name="Textbox56">
+                                                <CanGrow>true</CanGrow>
+                                                <KeepTogether>true</KeepTogether>
+                                                <Paragraphs>
+                                                  <Paragraph>
+                                                    <TextRuns>
+                                                      <TextRun>
+                                                        <Value>eCPC</Value>
+                                                        <Style>
+                                                          <FontFamily>Calibri</FontFamily>
+                                                          <FontSize>11pt</FontSize>
+                                                        </Style>
+                                                      </TextRun>
+                                                    </TextRuns>
+                                                    <Style>
+                                                      <TextAlign>Center</TextAlign>
+                                                    </Style>
+                                                  </Paragraph>
+                                                </Paragraphs>
+                                                <rd:DefaultName>Textbox56</rd:DefaultName>
+                                                <Style>
+                                                  <Border>
+                                                    <Color>LightGrey</Color>
+                                                    <Style>Solid</Style>
+                                                  </Border>
+                                                  <PaddingLeft>2pt</PaddingLeft>
+                                                  <PaddingRight>2pt</PaddingRight>
+                                                  <PaddingTop>2pt</PaddingTop>
+                                                  <PaddingBottom>2pt</PaddingBottom>
+                                                </Style>
+                                              </Textbox>
+                                            </CellContents>
+                                          </TablixCell>
+                                          <TablixCell>
+                                            <CellContents>
+                                              <Textbox Name="Textbox60">
+                                                <CanGrow>true</CanGrow>
+                                                <KeepTogether>true</KeepTogether>
+                                                <Paragraphs>
+                                                  <Paragraph>
+                                                    <TextRuns>
+                                                      <TextRun>
+                                                        <Value>Click Conv</Value>
+                                                        <Style>
+                                                          <FontFamily>Calibri</FontFamily>
+                                                          <FontSize>11pt</FontSize>
+                                                        </Style>
+                                                      </TextRun>
+                                                    </TextRuns>
+                                                    <Style>
+                                                      <TextAlign>Center</TextAlign>
+                                                    </Style>
+                                                  </Paragraph>
+                                                </Paragraphs>
+                                                <rd:DefaultName>Textbox60</rd:DefaultName>
+                                                <Visibility>
+                                                  <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
+                                                </Visibility>
+                                                <Style>
+                                                  <Border>
+                                                    <Color>LightGrey</Color>
+                                                    <Style>Solid</Style>
+                                                  </Border>
+                                                  <TopBorder>
+                                                    <Style>None</Style>
+                                                  </TopBorder>
+                                                  <PaddingLeft>2pt</PaddingLeft>
+                                                  <PaddingRight>2pt</PaddingRight>
+                                                  <PaddingTop>2pt</PaddingTop>
+                                                  <PaddingBottom>2pt</PaddingBottom>
+                                                </Style>
+                                              </Textbox>
+                                            </CellContents>
+                                          </TablixCell>
+                                          <TablixCell>
+                                            <CellContents>
+                                              <Textbox Name="Textbox95">
+                                                <CanGrow>true</CanGrow>
+                                                <KeepTogether>true</KeepTogether>
+                                                <Paragraphs>
+                                                  <Paragraph>
+                                                    <TextRuns>
+                                                      <TextRun>
+                                                        <Value>View Conv</Value>
+                                                        <Style>
+                                                          <FontFamily>Calibri</FontFamily>
+                                                          <FontSize>11pt</FontSize>
+                                                        </Style>
+                                                      </TextRun>
+                                                    </TextRuns>
+                                                    <Style>
+                                                      <TextAlign>Center</TextAlign>
+                                                    </Style>
+                                                  </Paragraph>
+                                                </Paragraphs>
+                                                <rd:DefaultName>Textbox95</rd:DefaultName>
+                                                <Visibility>
+                                                  <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
+                                                </Visibility>
+                                                <Style>
+                                                  <Border>
+                                                    <Color>LightGrey</Color>
+                                                    <Style>Solid</Style>
+                                                  </Border>
+                                                  <TopBorder>
+                                                    <Style>None</Style>
+                                                  </TopBorder>
+                                                  <PaddingLeft>2pt</PaddingLeft>
+                                                  <PaddingRight>2pt</PaddingRight>
+                                                  <PaddingTop>2pt</PaddingTop>
+                                                  <PaddingBottom>2pt</PaddingBottom>
+                                                </Style>
+                                              </Textbox>
+                                            </CellContents>
+                                          </TablixCell>
+                                          <TablixCell>
+                                            <CellContents>
                                               <Textbox Name="Textbox26">
                                                 <CanGrow>true</CanGrow>
                                                 <KeepTogether>true</KeepTogether>
@@ -4560,7 +4449,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   <Paragraph>
                                                     <TextRuns>
                                                       <TextRun>
-                                                        <Value>Conversions</Value>
+                                                        <Value>Total</Value>
                                                         <Style>
                                                           <FontFamily>Calibri</FontFamily>
                                                           <FontSize>11pt</FontSize>
@@ -4578,6 +4467,9 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                     <Color>LightGrey</Color>
                                                     <Style>Solid</Style>
                                                   </Border>
+                                                  <TopBorder>
+                                                    <Style>None</Style>
+                                                  </TopBorder>
                                                   <PaddingLeft>2pt</PaddingLeft>
                                                   <PaddingRight>2pt</PaddingRight>
                                                   <PaddingTop>2pt</PaddingTop>
@@ -4595,7 +4487,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   <Paragraph>
                                                     <TextRuns>
                                                       <TextRun>
-                                                        <Value>CR</Value>
+                                                        <Value>eCPA</Value>
                                                         <Style>
                                                           <FontFamily>Calibri</FontFamily>
                                                           <FontSize>11pt</FontSize>
@@ -4621,41 +4513,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                               </Textbox>
                                             </CellContents>
                                           </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="Textbox6">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>Spend</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Textbox5</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
                                         </TablixCells>
                                       </TablixRow>
                                       <TablixRow>
@@ -4663,17 +4520,18 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                         <TablixCells>
                                           <TablixCell>
                                             <CellContents>
-                                              <Textbox Name="StrategyName">
+                                              <Textbox Name="MediaSpend">
                                                 <CanGrow>true</CanGrow>
                                                 <KeepTogether>true</KeepTogether>
                                                 <Paragraphs>
                                                   <Paragraph>
                                                     <TextRuns>
                                                       <TextRun>
-                                                        <Value>=Fields!StrategyName.Value</Value>
+                                                        <Value>=Sum(Fields!MediaSpend.Value)</Value>
                                                         <Style>
                                                           <FontFamily>Calibri</FontFamily>
                                                           <FontSize>11pt</FontSize>
+                                                          <Format>c</Format>
                                                         </Style>
                                                       </TextRun>
                                                     </TextRuns>
@@ -4682,7 +4540,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                     </Style>
                                                   </Paragraph>
                                                 </Paragraphs>
-                                                <rd:DefaultName>StrategyName</rd:DefaultName>
+                                                <rd:DefaultName>MediaSpend</rd:DefaultName>
                                                 <Style>
                                                   <Border>
                                                     <Color>LightGrey</Color>
@@ -4806,6 +4664,118 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                           </TablixCell>
                                           <TablixCell>
                                             <CellContents>
+                                              <Textbox Name="eCPC1">
+                                                <CanGrow>true</CanGrow>
+                                                <KeepTogether>true</KeepTogether>
+                                                <Paragraphs>
+                                                  <Paragraph>
+                                                    <TextRuns>
+                                                      <TextRun>
+                                                        <Value>=Sum(Fields!eCPC.Value)</Value>
+                                                        <Style>
+                                                          <FontFamily>Calibri</FontFamily>
+                                                          <FontSize>11pt</FontSize>
+                                                          <Format>c</Format>
+                                                        </Style>
+                                                      </TextRun>
+                                                    </TextRuns>
+                                                    <Style>
+                                                      <TextAlign>Center</TextAlign>
+                                                    </Style>
+                                                  </Paragraph>
+                                                </Paragraphs>
+                                                <rd:DefaultName>eCPC1</rd:DefaultName>
+                                                <Style>
+                                                  <Border>
+                                                    <Color>LightGrey</Color>
+                                                    <Style>Solid</Style>
+                                                  </Border>
+                                                  <PaddingLeft>2pt</PaddingLeft>
+                                                  <PaddingRight>2pt</PaddingRight>
+                                                  <PaddingTop>2pt</PaddingTop>
+                                                  <PaddingBottom>2pt</PaddingBottom>
+                                                </Style>
+                                              </Textbox>
+                                            </CellContents>
+                                          </TablixCell>
+                                          <TablixCell>
+                                            <CellContents>
+                                              <Textbox Name="PostClickConv">
+                                                <CanGrow>true</CanGrow>
+                                                <KeepTogether>true</KeepTogether>
+                                                <Paragraphs>
+                                                  <Paragraph>
+                                                    <TextRuns>
+                                                      <TextRun>
+                                                        <Value>=Sum(Fields!PostClickConv.Value)</Value>
+                                                        <Style>
+                                                          <FontFamily>Calibri</FontFamily>
+                                                          <FontSize>11pt</FontSize>
+                                                        </Style>
+                                                      </TextRun>
+                                                    </TextRuns>
+                                                    <Style>
+                                                      <TextAlign>Center</TextAlign>
+                                                    </Style>
+                                                  </Paragraph>
+                                                </Paragraphs>
+                                                <rd:DefaultName>PostClickConv</rd:DefaultName>
+                                                <Visibility>
+                                                  <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
+                                                </Visibility>
+                                                <Style>
+                                                  <Border>
+                                                    <Color>LightGrey</Color>
+                                                    <Style>Solid</Style>
+                                                  </Border>
+                                                  <PaddingLeft>2pt</PaddingLeft>
+                                                  <PaddingRight>2pt</PaddingRight>
+                                                  <PaddingTop>2pt</PaddingTop>
+                                                  <PaddingBottom>2pt</PaddingBottom>
+                                                </Style>
+                                              </Textbox>
+                                            </CellContents>
+                                          </TablixCell>
+                                          <TablixCell>
+                                            <CellContents>
+                                              <Textbox Name="PostViewConv">
+                                                <CanGrow>true</CanGrow>
+                                                <KeepTogether>true</KeepTogether>
+                                                <Paragraphs>
+                                                  <Paragraph>
+                                                    <TextRuns>
+                                                      <TextRun>
+                                                        <Value>=Sum(Fields!PostViewConv.Value)</Value>
+                                                        <Style>
+                                                          <FontFamily>Calibri</FontFamily>
+                                                          <FontSize>11pt</FontSize>
+                                                        </Style>
+                                                      </TextRun>
+                                                    </TextRuns>
+                                                    <Style>
+                                                      <TextAlign>Center</TextAlign>
+                                                    </Style>
+                                                  </Paragraph>
+                                                </Paragraphs>
+                                                <rd:DefaultName>PostViewConv</rd:DefaultName>
+                                                <Visibility>
+                                                  <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
+                                                </Visibility>
+                                                <Style>
+                                                  <Border>
+                                                    <Color>LightGrey</Color>
+                                                    <Style>Solid</Style>
+                                                  </Border>
+                                                  <PaddingLeft>2pt</PaddingLeft>
+                                                  <PaddingRight>2pt</PaddingRight>
+                                                  <PaddingTop>2pt</PaddingTop>
+                                                  <PaddingBottom>2pt</PaddingBottom>
+                                                </Style>
+                                              </Textbox>
+                                            </CellContents>
+                                          </TablixCell>
+                                          <TablixCell>
+                                            <CellContents>
                                               <Textbox Name="Conversions3">
                                                 <CanGrow>true</CanGrow>
                                                 <KeepTogether>true</KeepTogether>
@@ -4849,11 +4819,11 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   <Paragraph>
                                                     <TextRuns>
                                                       <TextRun>
-                                                        <Value>=Code.SafeFraction(Sum(Fields!Conversions.Value), Sum(Fields!Clicks.Value))</Value>
+                                                        <Value>=Sum(Fields!eCPC.Value)</Value>
                                                         <Style>
                                                           <FontFamily>Calibri</FontFamily>
                                                           <FontSize>11pt</FontSize>
-                                                          <Format>p2</Format>
+                                                          <Format>c</Format>
                                                         </Style>
                                                       </TextRun>
                                                     </TextRuns>
@@ -4863,42 +4833,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   </Paragraph>
                                                 </Paragraphs>
                                                 <rd:DefaultName>CR</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="MediaSpend2">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>=Sum(Fields!MediaSpend.Value)</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                          <Format>c2</Format>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>MediaSpend</rd:DefaultName>
                                                 <Style>
                                                   <Border>
                                                     <Color>LightGrey</Color>
@@ -4923,12 +4857,25 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                       <TablixMember />
                                       <TablixMember />
                                       <TablixMember />
+                                      <TablixMember>
+                                        <Visibility>
+                                          <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
+                                        </Visibility>
+                                      </TablixMember>
+                                      <TablixMember>
+                                        <Visibility>
+                                          <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
+                                        </Visibility>
+                                      </TablixMember>
                                       <TablixMember />
                                       <TablixMember />
                                     </TablixMembers>
                                   </TablixColumnHierarchy>
                                   <TablixRowHierarchy>
                                     <TablixMembers>
+                                      <TablixMember>
+                                        <KeepWithGroup>After</KeepWithGroup>
+                                      </TablixMember>
                                       <TablixMember>
                                         <KeepWithGroup>After</KeepWithGroup>
                                       </TablixMember>
@@ -4951,8 +4898,9 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                       </FilterValues>
                                     </Filter>
                                   </Filters>
-                                  <Height>0.5in</Height>
-                                  <Width>7.96875in</Width>
+                                  <Left>0.0125in</Left>
+                                  <Height>0.75in</Height>
+                                  <Width>7.95625in</Width>
                                   <Style>
                                     <Border>
                                       <Style>None</Style>
@@ -5260,7 +5208,8 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                     </Style>
                                   </ChartNoDataMessage>
                                   <DataSetName>StrategyCTD</DataSetName>
-                                  <Top>0.5in</Top>
+                                  <Top>0.75in</Top>
+                                  <Left>0.0125in</Left>
                                   <Height>2in</Height>
                                   <Width>7.96875in</Width>
                                   <ZIndex>1</ZIndex>
@@ -5349,8 +5298,8 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 </TablixRowHierarchy>
                 <NoRowsMessage>="No strategies this month: " + Format(Parameters!MTDStartDate.Value, "d") + " thru " + Format(Parameters!MTDEndDate.Value, "d")</NoRowsMessage>
                 <DataSetName>StrategyCTD</DataSetName>
-                <Height>2.75in</Height>
-                <Width>7.96875in</Width>
+                <Height>3in</Height>
+                <Width>7.98125in</Width>
                 <Style>
                   <Border>
                     <Style>None</Style>
@@ -5363,9 +5312,9 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             </PageBreak>
             <PageName>Strategy Summary</PageName>
             <KeepTogether>true</KeepTogether>
-            <Top>7.59958in</Top>
-            <Height>2.75in</Height>
-            <Width>7.96875in</Width>
+            <Top>7.83917in</Top>
+            <Height>3in</Height>
+            <Width>7.98125in</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>
@@ -5379,7 +5328,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 <TablixBody>
                   <TablixColumns>
                     <TablixColumn>
-                      <Width>7.96875in</Width>
+                      <Width>7.98125in</Width>
                     </TablixColumn>
                   </TablixColumns>
                   <TablixRows>
@@ -5394,7 +5343,10 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                   <TablixBody>
                                     <TablixColumns>
                                       <TablixColumn>
-                                        <Width>1in</Width>
+                                        <Width>1.06526in</Width>
+                                      </TablixColumn>
+                                      <TablixColumn>
+                                        <Width>1.06599in</Width>
                                       </TablixColumn>
                                       <TablixColumn>
                                         <Width>1in</Width>
@@ -5403,25 +5355,19 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                         <Width>0.675in</Width>
                                       </TablixColumn>
                                       <TablixColumn>
+                                        <Width>0.675in</Width>
+                                      </TablixColumn>
+                                      <TablixColumn>
+                                        <Width>0.9in</Width>
+                                      </TablixColumn>
+                                      <TablixColumn>
+                                        <Width>0.9in</Width>
+                                      </TablixColumn>
+                                      <TablixColumn>
                                         <Width>1in</Width>
                                       </TablixColumn>
                                       <TablixColumn>
-                                        <Width>0.525in</Width>
-                                      </TablixColumn>
-                                      <TablixColumn>
-                                        <Width>0.675in</Width>
-                                      </TablixColumn>
-                                      <TablixColumn>
-                                        <Width>0.75in</Width>
-                                      </TablixColumn>
-                                      <TablixColumn>
-                                        <Width>0.91875in</Width>
-                                      </TablixColumn>
-                                      <TablixColumn>
-                                        <Width>0.675in</Width>
-                                      </TablixColumn>
-                                      <TablixColumn>
-                                        <Width>0.75in</Width>
+                                        <Width>0.7in</Width>
                                       </TablixColumn>
                                     </TablixColumns>
                                     <TablixRows>
@@ -5462,33 +5408,23 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   <PaddingBottom>2pt</PaddingBottom>
                                                 </Style>
                                               </Textbox>
-                                              <ColSpan>10</ColSpan>
+                                              <ColSpan>5</ColSpan>
                                             </CellContents>
                                           </TablixCell>
                                           <TablixCell />
                                           <TablixCell />
                                           <TablixCell />
                                           <TablixCell />
-                                          <TablixCell />
-                                          <TablixCell />
-                                          <TablixCell />
-                                          <TablixCell />
-                                          <TablixCell />
-                                        </TablixCells>
-                                      </TablixRow>
-                                      <TablixRow>
-                                        <Height>0.25in</Height>
-                                        <TablixCells>
                                           <TablixCell>
                                             <CellContents>
-                                              <Textbox Name="Budget4">
+                                              <Textbox Name="Textbox91">
                                                 <CanGrow>true</CanGrow>
                                                 <KeepTogether>true</KeepTogether>
                                                 <Paragraphs>
                                                   <Paragraph>
                                                     <TextRuns>
                                                       <TextRun>
-                                                        <Value>Budget</Value>
+                                                        <Value>Conversions</Value>
                                                         <Style>
                                                           <FontFamily>Calibri</FontFamily>
                                                           <FontSize>11pt</FontSize>
@@ -5500,7 +5436,50 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                     </Style>
                                                   </Paragraph>
                                                 </Paragraphs>
-                                                <rd:DefaultName>Budget</rd:DefaultName>
+                                                <rd:DefaultName>Textbox90</rd:DefaultName>
+                                                <Style>
+                                                  <Border>
+                                                    <Color>LightGrey</Color>
+                                                    <Style>Solid</Style>
+                                                  </Border>
+                                                  <BottomBorder>
+                                                    <Style>None</Style>
+                                                  </BottomBorder>
+                                                  <PaddingLeft>2pt</PaddingLeft>
+                                                  <PaddingRight>2pt</PaddingRight>
+                                                  <PaddingTop>2pt</PaddingTop>
+                                                  <PaddingBottom>2pt</PaddingBottom>
+                                                </Style>
+                                              </Textbox>
+                                              <ColSpan>3</ColSpan>
+                                              <rd:Selected>true</rd:Selected>
+                                            </CellContents>
+                                          </TablixCell>
+                                          <TablixCell />
+                                          <TablixCell />
+                                          <TablixCell>
+                                            <CellContents>
+                                              <Textbox Name="Textbox171">
+                                                <CanGrow>true</CanGrow>
+                                                <KeepTogether>true</KeepTogether>
+                                                <Paragraphs>
+                                                  <Paragraph>
+                                                    <TextRuns>
+                                                      <TextRun>
+                                                        <Value />
+                                                        <Style>
+                                                          <FontFamily>Calibri</FontFamily>
+                                                          <FontSize>11pt</FontSize>
+                                                          <FontWeight>Bold</FontWeight>
+                                                        </Style>
+                                                      </TextRun>
+                                                    </TextRuns>
+                                                    <Style>
+                                                      <TextAlign>Center</TextAlign>
+                                                    </Style>
+                                                  </Paragraph>
+                                                </Paragraphs>
+                                                <rd:DefaultName>Textbox171</rd:DefaultName>
                                                 <Style>
                                                   <Border>
                                                     <Color>LightGrey</Color>
@@ -5514,9 +5493,14 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                               </Textbox>
                                             </CellContents>
                                           </TablixCell>
+                                        </TablixCells>
+                                      </TablixRow>
+                                      <TablixRow>
+                                        <Height>0.25in</Height>
+                                        <TablixCells>
                                           <TablixCell>
                                             <CellContents>
-                                              <Textbox Name="Textbox31">
+                                              <Textbox Name="Textbox44">
                                                 <CanGrow>true</CanGrow>
                                                 <KeepTogether>true</KeepTogether>
                                                 <Paragraphs>
@@ -5551,42 +5535,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                           </TablixCell>
                                           <TablixCell>
                                             <CellContents>
-                                              <Textbox Name="Textbox41">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>Pacing</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Textbox37</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="Textbox32">
+                                              <Textbox Name="Textbox54">
                                                 <CanGrow>true</CanGrow>
                                                 <KeepTogether>true</KeepTogether>
                                                 <Paragraphs>
@@ -5621,7 +5570,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                           </TablixCell>
                                           <TablixCell>
                                             <CellContents>
-                                              <Textbox Name="Textbox33">
+                                              <Textbox Name="Textbox62">
                                                 <CanGrow>true</CanGrow>
                                                 <KeepTogether>true</KeepTogether>
                                                 <Paragraphs>
@@ -5656,7 +5605,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                           </TablixCell>
                                           <TablixCell>
                                             <CellContents>
-                                              <Textbox Name="Textbox34">
+                                              <Textbox Name="Textbox52">
                                                 <CanGrow>true</CanGrow>
                                                 <KeepTogether>true</KeepTogether>
                                                 <Paragraphs>
@@ -5691,7 +5640,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                           </TablixCell>
                                           <TablixCell>
                                             <CellContents>
-                                              <Textbox Name="Textbox42">
+                                              <Textbox Name="Textbox87">
                                                 <CanGrow>true</CanGrow>
                                                 <KeepTogether>true</KeepTogether>
                                                 <Paragraphs>
@@ -5726,14 +5675,14 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                           </TablixCell>
                                           <TablixCell>
                                             <CellContents>
-                                              <Textbox Name="Textbox35">
+                                              <Textbox Name="Textbox86">
                                                 <CanGrow>true</CanGrow>
                                                 <KeepTogether>true</KeepTogether>
                                                 <Paragraphs>
                                                   <Paragraph>
                                                     <TextRuns>
                                                       <TextRun>
-                                                        <Value>Conversions</Value>
+                                                        <Value>Click Conv</Value>
                                                         <Style>
                                                           <FontFamily>Calibri</FontFamily>
                                                           <FontSize>11pt</FontSize>
@@ -5745,12 +5694,59 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                     </Style>
                                                   </Paragraph>
                                                 </Paragraphs>
-                                                <rd:DefaultName>Textbox16</rd:DefaultName>
+                                                <rd:DefaultName>Textbox60</rd:DefaultName>
+                                                <Visibility>
+                                                  <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
+                                                </Visibility>
                                                 <Style>
                                                   <Border>
                                                     <Color>LightGrey</Color>
                                                     <Style>Solid</Style>
                                                   </Border>
+                                                  <TopBorder>
+                                                    <Style>None</Style>
+                                                  </TopBorder>
+                                                  <PaddingLeft>2pt</PaddingLeft>
+                                                  <PaddingRight>2pt</PaddingRight>
+                                                  <PaddingTop>2pt</PaddingTop>
+                                                  <PaddingBottom>2pt</PaddingBottom>
+                                                </Style>
+                                              </Textbox>
+                                            </CellContents>
+                                          </TablixCell>
+                                          <TablixCell>
+                                            <CellContents>
+                                              <Textbox Name="Textbox96">
+                                                <CanGrow>true</CanGrow>
+                                                <KeepTogether>true</KeepTogether>
+                                                <Paragraphs>
+                                                  <Paragraph>
+                                                    <TextRuns>
+                                                      <TextRun>
+                                                        <Value>View Conv</Value>
+                                                        <Style>
+                                                          <FontFamily>Calibri</FontFamily>
+                                                          <FontSize>11pt</FontSize>
+                                                        </Style>
+                                                      </TextRun>
+                                                    </TextRuns>
+                                                    <Style>
+                                                      <TextAlign>Center</TextAlign>
+                                                    </Style>
+                                                  </Paragraph>
+                                                </Paragraphs>
+                                                <rd:DefaultName>Textbox95</rd:DefaultName>
+                                                <Visibility>
+                                                  <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
+                                                </Visibility>
+                                                <Style>
+                                                  <Border>
+                                                    <Color>LightGrey</Color>
+                                                    <Style>Solid</Style>
+                                                  </Border>
+                                                  <TopBorder>
+                                                    <Style>None</Style>
+                                                  </TopBorder>
                                                   <PaddingLeft>2pt</PaddingLeft>
                                                   <PaddingRight>2pt</PaddingRight>
                                                   <PaddingTop>2pt</PaddingTop>
@@ -5768,7 +5764,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   <Paragraph>
                                                     <TextRuns>
                                                       <TextRun>
-                                                        <Value>CR</Value>
+                                                        <Value>Total</Value>
                                                         <Style>
                                                           <FontFamily>Calibri</FontFamily>
                                                           <FontSize>11pt</FontSize>
@@ -5780,12 +5776,15 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                     </Style>
                                                   </Paragraph>
                                                 </Paragraphs>
-                                                <rd:DefaultName>Textbox18</rd:DefaultName>
+                                                <rd:DefaultName>Textbox16</rd:DefaultName>
                                                 <Style>
                                                   <Border>
                                                     <Color>LightGrey</Color>
                                                     <Style>Solid</Style>
                                                   </Border>
+                                                  <TopBorder>
+                                                    <Style>None</Style>
+                                                  </TopBorder>
                                                   <PaddingLeft>2pt</PaddingLeft>
                                                   <PaddingRight>2pt</PaddingRight>
                                                   <PaddingTop>2pt</PaddingTop>
@@ -5836,43 +5835,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                         <TablixCells>
                                           <TablixCell>
                                             <CellContents>
-                                              <Textbox Name="Budget5">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>=Sum(Fields!Budget.Value)</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                          <Format>c2</Format>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Budget1</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="MediaSpend7">
+                                              <Textbox Name="MediaSpend8">
                                                 <CanGrow>true</CanGrow>
                                                 <KeepTogether>true</KeepTogether>
                                                 <Paragraphs>
@@ -5908,43 +5871,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                           </TablixCell>
                                           <TablixCell>
                                             <CellContents>
-                                              <Textbox Name="Pacing3">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>=Sum(Fields!Pacing.Value)</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                          <Format>p2</Format>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Pacing</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="Impressions12">
+                                              <Textbox Name="Impressions13">
                                                 <CanGrow>true</CanGrow>
                                                 <KeepTogether>true</KeepTogether>
                                                 <Paragraphs>
@@ -5980,7 +5907,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                           </TablixCell>
                                           <TablixCell>
                                             <CellContents>
-                                              <Textbox Name="Clicks8">
+                                              <Textbox Name="Clicks9">
                                                 <CanGrow>true</CanGrow>
                                                 <KeepTogether>true</KeepTogether>
                                                 <Paragraphs>
@@ -6016,7 +5943,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                           </TablixCell>
                                           <TablixCell>
                                             <CellContents>
-                                              <Textbox Name="CTR6">
+                                              <Textbox Name="CTR7">
                                                 <CanGrow>true</CanGrow>
                                                 <KeepTogether>true</KeepTogether>
                                                 <Paragraphs>
@@ -6052,7 +5979,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                           </TablixCell>
                                           <TablixCell>
                                             <CellContents>
-                                              <Textbox Name="eCPC3">
+                                              <Textbox Name="eCPC4">
                                                 <CanGrow>true</CanGrow>
                                                 <KeepTogether>true</KeepTogether>
                                                 <Paragraphs>
@@ -6088,7 +6015,83 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                           </TablixCell>
                                           <TablixCell>
                                             <CellContents>
-                                              <Textbox Name="Conversions8">
+                                              <Textbox Name="PostClickConv2">
+                                                <CanGrow>true</CanGrow>
+                                                <KeepTogether>true</KeepTogether>
+                                                <Paragraphs>
+                                                  <Paragraph>
+                                                    <TextRuns>
+                                                      <TextRun>
+                                                        <Value>=Sum(Fields!PostClickConv.Value)</Value>
+                                                        <Style>
+                                                          <FontFamily>Calibri</FontFamily>
+                                                          <FontSize>11pt</FontSize>
+                                                        </Style>
+                                                      </TextRun>
+                                                    </TextRuns>
+                                                    <Style>
+                                                      <TextAlign>Center</TextAlign>
+                                                    </Style>
+                                                  </Paragraph>
+                                                </Paragraphs>
+                                                <rd:DefaultName>PostClickConv</rd:DefaultName>
+                                                <Visibility>
+                                                  <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
+                                                </Visibility>
+                                                <Style>
+                                                  <Border>
+                                                    <Color>LightGrey</Color>
+                                                    <Style>Solid</Style>
+                                                  </Border>
+                                                  <PaddingLeft>2pt</PaddingLeft>
+                                                  <PaddingRight>2pt</PaddingRight>
+                                                  <PaddingTop>2pt</PaddingTop>
+                                                  <PaddingBottom>2pt</PaddingBottom>
+                                                </Style>
+                                              </Textbox>
+                                            </CellContents>
+                                          </TablixCell>
+                                          <TablixCell>
+                                            <CellContents>
+                                              <Textbox Name="PostViewConv2">
+                                                <CanGrow>true</CanGrow>
+                                                <KeepTogether>true</KeepTogether>
+                                                <Paragraphs>
+                                                  <Paragraph>
+                                                    <TextRuns>
+                                                      <TextRun>
+                                                        <Value>=Sum(Fields!PostViewConv.Value)</Value>
+                                                        <Style>
+                                                          <FontFamily>Calibri</FontFamily>
+                                                          <FontSize>11pt</FontSize>
+                                                        </Style>
+                                                      </TextRun>
+                                                    </TextRuns>
+                                                    <Style>
+                                                      <TextAlign>Center</TextAlign>
+                                                    </Style>
+                                                  </Paragraph>
+                                                </Paragraphs>
+                                                <rd:DefaultName>PostViewConv</rd:DefaultName>
+                                                <Visibility>
+                                                  <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
+                                                </Visibility>
+                                                <Style>
+                                                  <Border>
+                                                    <Color>LightGrey</Color>
+                                                    <Style>Solid</Style>
+                                                  </Border>
+                                                  <PaddingLeft>2pt</PaddingLeft>
+                                                  <PaddingRight>2pt</PaddingRight>
+                                                  <PaddingTop>2pt</PaddingTop>
+                                                  <PaddingBottom>2pt</PaddingBottom>
+                                                </Style>
+                                              </Textbox>
+                                            </CellContents>
+                                          </TablixCell>
+                                          <TablixCell>
+                                            <CellContents>
+                                              <Textbox Name="Conversions4">
                                                 <CanGrow>true</CanGrow>
                                                 <KeepTogether>true</KeepTogether>
                                                 <Paragraphs>
@@ -6109,42 +6112,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   </Paragraph>
                                                 </Paragraphs>
                                                 <rd:DefaultName>Conversions</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="CR6">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>=Code.SafeFraction(Sum(Fields!Conversions.Value), Sum(Fields!Clicks.Value))</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                          <Format>p2</Format>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>CR</rd:DefaultName>
                                                 <Style>
                                                   <Border>
                                                     <Color>LightGrey</Color>
@@ -6205,9 +6172,16 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                       <TablixMember />
                                       <TablixMember />
                                       <TablixMember />
-                                      <TablixMember />
-                                      <TablixMember />
-                                      <TablixMember />
+                                      <TablixMember>
+                                        <Visibility>
+                                          <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
+                                        </Visibility>
+                                      </TablixMember>
+                                      <TablixMember>
+                                        <Visibility>
+                                          <Hidden>=Fields!ShowClickAndViewConv.Value &lt;&gt; 1</Hidden>
+                                        </Visibility>
+                                      </TablixMember>
                                       <TablixMember />
                                       <TablixMember />
                                     </TablixMembers>
@@ -6221,7 +6195,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                   </TablixRowHierarchy>
                                   <DataSetName>CreativeCTD</DataSetName>
                                   <Height>0.75in</Height>
-                                  <Width>7.96875in</Width>
+                                  <Width>7.98125in</Width>
                                   <Style>
                                     <Border>
                                       <Style>None</Style>
@@ -6307,7 +6281,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                       </Group>
                       <SortExpressions>
                         <SortExpression>
-                          <Value>=Fields!SumCTR.Value</Value>
+                          <Value>=Fields!SumKPI.Value</Value>
                           <Direction>Descending</Direction>
                         </SortExpression>
                       </SortExpressions>
@@ -6322,7 +6296,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 <DataSetName>CreativeCTD</DataSetName>
                 <Top>0.38542in</Top>
                 <Height>1.96875in</Height>
-                <Width>7.96875in</Width>
+                <Width>7.98125in</Width>
                 <Style>
                   <Border>
                     <Style>None</Style>
@@ -6370,9 +6344,9 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             </PageBreak>
             <PageName>Creative Performance</PageName>
             <KeepTogether>true</KeepTogether>
-            <Top>10.34958in</Top>
+            <Top>10.83917in</Top>
             <Height>2.35417in</Height>
-            <Width>7.96875in</Width>
+            <Width>7.98125in</Width>
             <ZIndex>2</ZIndex>
             <Style>
               <Border>
@@ -7495,7 +7469,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             </PageBreak>
             <PageName>Site List MTD</PageName>
             <KeepTogether>true</KeepTogether>
-            <Top>12.70375in</Top>
+            <Top>13.19334in</Top>
             <Height>1.125in</Height>
             <Width>7.96875in</Width>
             <ZIndex>3</ZIndex>
@@ -8405,7 +8379,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             </PageBreak>
             <PageName>Lead IDs</PageName>
             <KeepTogether>true</KeepTogether>
-            <Top>13.82875in</Top>
+            <Top>14.31834in</Top>
             <Height>0.625in</Height>
             <Width>7.96875in</Width>
             <ZIndex>4</ZIndex>
@@ -8416,10 +8390,10 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             </Style>
           </Rectangle>
         </ReportItems>
-        <Height>14.45375in</Height>
+        <Height>14.94334in</Height>
         <Style />
       </Body>
-      <Width>7.96875in</Width>
+      <Width>7.98125in</Width>
       <Page>
         <PageHeader>
           <Height>1.45834in</Height>

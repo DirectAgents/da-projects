@@ -15,8 +15,8 @@
       <MimeType>image/jpeg</MimeType>
     </ResourceProjectItem>
     <ProjectItem>
-      <Name>Report1.rdl</Name>
-      <FullPath>Report1.rdl</FullPath>
+      <Name>DA - Trading Desk Report.rdl</Name>
+      <FullPath>DA - Trading Desk Report.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

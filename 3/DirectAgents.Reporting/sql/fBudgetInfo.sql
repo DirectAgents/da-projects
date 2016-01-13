@@ -6,6 +6,7 @@
 SELECT ISNULL(td.PlatformBudgetInfo.MediaSpend, ISNULL(td.BudgetInfo.MediaSpend, td.Campaign.MediaSpend)) AS MediaSpend
 	, ISNULL(td.PlatformBudgetInfo.MgmtFeePct, ISNULL(td.BudgetInfo.MgmtFeePct, td.Campaign.MgmtFeePct)) AS MgmtFeePct
 	, ISNULL(td.PlatformBudgetInfo.MarginPct, ISNULL(td.BudgetInfo.MarginPct, td.Campaign.MarginPct)) AS MarginPct
+	, CAST(CASE WHEN Platform.Name = 'Facebook' THEN 0 ELSE 1 END AS bit) AS ShowClickAndViewConv
 	, td.Campaign.Id AS CampaignId
 	, td.Campaign.AdvertiserId
 	, td.Account.Id AS AccountId

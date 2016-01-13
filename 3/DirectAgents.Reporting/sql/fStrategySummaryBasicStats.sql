@@ -10,6 +10,9 @@ WITH revenue AS
 	, Strategy.Id AS StrategyId
 	, StrategySummary.Impressions
 	, StrategySummary.Clicks
+	, StrategySummary.PostClickConv
+	, StrategySummary.PostViewConv
+	, budgetInfo.ShowClickAndViewConv
 	, StrategySummary.PostClickConv + StrategySummary.PostViewConv AS Conversions
 	, StrategySummary.Cost
 	, CASE	WHEN budgetInfo.MarginPct = 100 THEN StrategySummary.Cost * (1 + (budgetInfo.MgmtFeePct / 100))
@@ -21,6 +24,7 @@ WITH revenue AS
 	FROM fBudgetInfo(@AdvertiserId, @StartDate, @EndDate) budgetInfo
 	INNER JOIN td.Strategy ON td.Strategy.AccountId = budgetInfo.AccountId
 	INNER JOIN td.StrategySummary ON td.StrategySummary.StrategyId = td.Strategy.Id
+	LEFT OUTER JOIN td.Platform ON Platform.Id = budgetInfo.PlatformId
 	WHERE (td.StrategySummary.Date BETWEEN @StartDate AND @EndDate)
 )
 , mediaSpend AS
@@ -37,6 +41,9 @@ SELECT Date
 , Impressions
 , Clicks
 , CASE WHEN Impressions = 0 THEN 0 ELSE Clicks / CAST(Impressions AS float) END AS CTR
+, PostClickConv
+, PostViewConv
+, ShowClickAndViewConv
 , Conversions AS Conversions
 , CASE WHEN Clicks = 0 THEN 0 ELSE Conversions / CAST(Clicks as float) END AS CR
 , MediaSpend

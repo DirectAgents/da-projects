@@ -2,6 +2,7 @@ ALTER FUNCTION [td].[fCreativeSummaryBasicStats](
 @AdvertiserId int
 , @StartDate datetime
 , @EndDate datetime
+, @KPI varchar(max)
 ) RETURNS TABLE AS RETURN
 WITH revenue AS
 (
@@ -10,6 +11,9 @@ WITH revenue AS
 	, Ad.Id AS AdId
 	, AdSummary.Impressions
 	, AdSummary.Clicks
+	, AdSummary.PostClickConv
+	, AdSummary.PostViewConv
+	, budgetInfo.ShowClickAndViewConv
 	, AdSummary.PostClickConv + AdSummary.PostViewConv AS Conversions
 	, CASE WHEN AdSummary.Impressions = 0 THEN 0 ELSE AdSummary.Clicks / CAST(AdSummary.Impressions AS float) END AS CTR
 	, AdSummary.Cost
@@ -24,37 +28,46 @@ WITH revenue AS
 	INNER JOIN td.AdSummary ON td.AdSummary.TDadId = Ad.Id
 	WHERE (td.AdSummary.Date BETWEEN @StartDate AND @EndDate)
 )
-, revenueTopTen AS
-(
-	SELECT TOP 10 AdId
-	, SumCTR
-	FROM
-		(
-		SELECT AdId
-		, SUM(Impressions) AS SumImpressions
-		, CASE WHEN SUM(Impressions) = 0 THEN 0 ELSE SUM(Clicks) / CAST(SUM(Impressions) AS float) END AS SumCTR
-		FROM revenue
-		GROUP BY AdId
-		) x
-	ORDER BY CASE WHEN SumImpressions > 5000 THEN 1 ELSE 0 END DESC, SumCTR DESC
-)
 , mediaSpend AS
 (
 	SELECT revenue.*
 	, CASE	WHEN revenue.BIMediaSpend = 100 THEN revenue.Cost
 			ELSE revenue.Revenue / (1 + (revenue.BIMgmtFeePct / 100))
 	  END AS MediaSpend
-	, revenueTopTen.SumCTR
 	FROM revenue
-	INNER JOIN revenueTopTen ON revenueTopTen.AdId = revenue.AdId
+)
+, topTen AS
+(
+	SELECT TOP 10 AdId
+	, SumKPI
+	FROM
+		(
+		SELECT AdId
+		, SUM(Impressions) AS SumImpressions
+		, CASE @KPI
+				WHEN 'Impressions' THEN SUM(Impressions)
+				WHEN 'Clicks' THEN SUM(Clicks)
+				WHEN 'CTR' THEN CASE WHEN SUM(Impressions) = 0 THEN 0 ELSE SUM(Clicks) / CAST(SUM(Impressions) AS float) END
+				WHEN 'Conversions' THEN SUM(Conversions)
+				WHEN 'CR' THEN CASE WHEN SUM(Clicks) = 0 THEN 0 ELSE SUM(Conversions) / CAST(SUM(Clicks) as float) END
+				WHEN 'eCPC' THEN CASE WHEN SUM(Clicks) = 0 THEN 0 ELSE SUM(MediaSpend) / CAST(SUM(Clicks) as float) END
+				WHEN 'eCPA' THEN CASE WHEN SUM(Conversions) = 0 THEN 0 ELSE SUM(MediaSpend) / CAST(SUM(Conversions) as float) END
+		  END AS SumKPI
+		FROM mediaSpend
+		GROUP BY AdId
+		) x
+	ORDER BY CASE WHEN SumImpressions > 5000 THEN 1 ELSE 0 END DESC, SumKPI DESC
 )
 SELECT Date
 , AdName
-, AdId
+, mediaSpend.AdId
 , Impressions
 , Clicks
 , CTR
-, SumCTR
+, SumKPI
+, PostClickConv
+, PostViewConv
+, ShowClickAndViewConv
 , Conversions AS Conversions
 , CASE WHEN Clicks = 0 THEN 0 ELSE Conversions / CAST(Clicks as float) END AS CR
 , MediaSpend
@@ -70,3 +83,4 @@ SELECT Date
 , Revenue
 , BIMediaSpend, BIMgmtFeePct, BIMarginPct
 FROM mediaSpend
+INNER JOIN topTen ON topTen.AdId = mediaSpend.AdId
