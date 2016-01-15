@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using DirectAgents.Domain.Contexts;
@@ -28,21 +29,21 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
             Logger.Info("Loading {0} SiteDailySummaries..", items.Count);
             AddUpdateDependentSites(items);
-            var ssItems = items.Select(i => CreateSiteSummary((AdrollSiteStatsRow)i, siteIdLookupByName[((AdrollSiteStatsRow)i).website], AccountId, date)).ToList();
+            var ssItems = items.Select(i => CreateSiteSummary((AdrollSiteStatsRow)i, siteIdLookupByName[((AdrollSiteStatsRow)i).website])).ToList();
             var count = siteSummaryLoader.UpsertDailySummaries(ssItems);
             return count;
         }
 
-        public static SiteSummary CreateSiteSummary(AdrollSiteStatsRow item, int siteId, int accountId, DateTime date)
+        public SiteSummary CreateSiteSummary(AdrollSiteStatsRow item, int siteId)
         {
             var sSum = new SiteSummary //fill with new columns
             {
                 SiteId = siteId,
-                AccountId = accountId,
-                Date = date,
-                Impressions = int.Parse(item.impression),
-                Clicks = int.Parse(item.click),
-                Cost = decimal.Parse(item.cost),
+                AccountId = this.AccountId,
+                Date = this.date,
+                Impressions = item.impression,
+                Clicks = item.click,
+                Cost = item.cost
             };
             return sSum;
         }

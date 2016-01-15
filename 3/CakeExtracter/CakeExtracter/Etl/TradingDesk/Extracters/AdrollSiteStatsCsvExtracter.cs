@@ -1,11 +1,9 @@
-﻿using CakeExtracter.Etl;
-using CsvHelper;
-using CsvHelper.Configuration;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
+using CsvHelper;
+using CsvHelper.Configuration;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
@@ -55,9 +53,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 csv.Configuration.RegisterClassMap<AdrollSiteStatsRowMap>();
 
                 var csvRows = csv.GetRecords<AdrollSiteStatsRow>().ToList();
-                for (int i = 0; i < csvRows.Count; i++)
+                var siteGroups = csvRows.GroupBy(row => row.website);
+                foreach (var siteGroup in siteGroups)
                 {
-                    yield return csvRows[i];
+                    var siteStats = new AdrollSiteStatsRow
+                    {
+                        website = siteGroup.Key,
+                        click = siteGroup.Sum(row => row.click),
+                        impression = siteGroup.Sum(row => row.impression),
+                        cost = siteGroup.Sum(row => row.cost)
+                    };
+                    yield return siteStats;
                 }
             }
         }
@@ -70,9 +76,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         {
             Map(m => m.website).Name("Website");
             Map(m => m.size).Name("Size");
-            Map(m => m.cost).Name("Spend over Period");
-            Map(m => m.impression).Name("Impressions");
-            Map(m => m.click).Name("Clicks");
+            Map(m => m.cost).Name("SpendoverPeriod").TypeConverterOption(NumberStyles.Currency);
+            Map(m => m.impression).Name("Impressions").TypeConverterOption(NumberStyles.Number);
+            Map(m => m.click).Name("Clicks").TypeConverterOption(NumberStyles.Number);
         }
     }
 
@@ -80,9 +86,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     {
         public string website { get; set; }
         public string size { get; set; }
-        public string cost { get; set; }
-        public string impression { get; set; }
-        public string click { get; set; }
+        public decimal cost { get; set; }
+        public int impression { get; set; }
+        public int click { get; set; }
 
     }
 }

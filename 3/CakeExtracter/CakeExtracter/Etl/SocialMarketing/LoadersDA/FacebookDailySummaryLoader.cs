@@ -94,7 +94,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                 Logger.Info("Saving {0} DailySummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted)",
                             itemCount, updatedCount, addedCount, duplicateCount, deletedCount, alreadyDeletedCount);
                 if (duplicateCount > 0)
-                    Logger.Warn("Encountered {0} duplicates which were skipped");
+                    Logger.Warn("Encountered {0} duplicates which were skipped", duplicateCount);
                 int numChanges = db.SaveChanges();
             }
             return itemCount;
