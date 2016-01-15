@@ -291,6 +291,9 @@
     <Compile Include="CakeMarketingApi\Entities\Role.cs" />
     <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
     <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\AdrollSiteStatsCsvExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\AdrollSiteStatsLoader.cs" />
+    <Compile Include="Commands\DASynchAdrollSiteStatsCsv.cs" />
     <Compile Include="Commands\DASynchAdrollAccounts.cs" />
     <Compile Include="Commands\DASynchAdrollConvCsv.cs" />
     <Compile Include="Commands\DASynchAdrollStats.cs" />
