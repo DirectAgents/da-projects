@@ -6,7 +6,7 @@
 WITH revenue AS
 (
 	SELECT StrategySummary.Date
-	, Strategy.Name AS StrategyName
+	, ISNULL('DA' + CAST(Platform.Id AS varchar) + ' ', '') + Strategy.Name AS StrategyName
 	, Strategy.Id AS StrategyId
 	, StrategySummary.Impressions
 	, StrategySummary.Clicks

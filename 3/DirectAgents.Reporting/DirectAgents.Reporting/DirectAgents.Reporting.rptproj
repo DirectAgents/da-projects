@@ -9,14 +9,18 @@
   </DataSources>
   <DataSets />
   <Reports>
+    <ProjectItem>
+      <Name>DA - Trading Desk Report.rdl</Name>
+      <FullPath>DA - Trading Desk Report.rdl</FullPath>
+    </ProjectItem>
     <ResourceProjectItem>
       <Name>DirectAgentsDigitalMarketingHeader.jpg</Name>
       <FullPath>DirectAgentsDigitalMarketingHeader.jpg</FullPath>
       <MimeType>image/jpeg</MimeType>
     </ResourceProjectItem>
     <ProjectItem>
-      <Name>DA - Trading Desk Report.rdl</Name>
-      <FullPath>DA - Trading Desk Report.rdl</FullPath>
+      <Name>DA - Trading Desk Report (Weekly Summary).rdl</Name>
+      <FullPath>DA - Trading Desk Report (Weekly Summary).rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

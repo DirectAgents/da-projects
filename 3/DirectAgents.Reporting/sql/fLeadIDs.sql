@@ -10,7 +10,7 @@ SELECT Strategy.Name AS StrategyName
 , Conv.Time
 , CASE Conv.ConvType WHEN 'c' THEN 'ClickThru' WHEN 'v' THEN 'ViewThru' END AS ConvType
 , Conv.ConvVal
-, Conv.ExtData AS LeadID
+, CASE Conv.ExtData WHEN '' THEN NULL ELSE Conv.ExtData END AS LeadID
 , ConvCity.Name AS City
 , ConvCountry.Name AS Country
 , Conv.IP
