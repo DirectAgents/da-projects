@@ -27,7 +27,7 @@ ORDER BY Name</CommandText>
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="PreviousMonthBasicStats">
+    <DataSet Name="BasicStatsPreviousMonth">
       <Query>
         <DataSourceName>DirectAgents</DataSourceName>
         <QueryParameters>
@@ -472,13 +472,9 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             <Value>=Parameters!KPI.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>select * from td.fCreativeSummaryBasicStats(@AdvertiserId, @CampaignStartDate, @MTDEndDate, @KPI)</CommandText>
+        <CommandText>select * from td.fCreativeProgressBasicStats(@AdvertiserId, @CampaignStartDate, @MTDEndDate, @KPI)</CommandText>
       </Query>
       <Fields>
-        <Field Name="Date">
-          <DataField>Date</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
         <Field Name="AdName">
           <DataField>AdName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -491,6 +487,10 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
           <DataField>Impressions</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
+        <Field Name="ShowClickAndViewConv">
+          <DataField>ShowClickAndViewConv</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
         <Field Name="Clicks">
           <DataField>Clicks</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
@@ -499,20 +499,12 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
           <DataField>CTR</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
         </Field>
-        <Field Name="Conversions">
-          <DataField>Conversions</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
         <Field Name="PostClickConv">
           <DataField>PostClickConv</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="SumKPI">
           <DataField>SumKPI</DataField>
-          <rd:TypeName>System.Double</rd:TypeName>
-        </Field>
-        <Field Name="CR">
-          <DataField>CR</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
         </Field>
         <Field Name="PostViewConv">
@@ -523,53 +515,21 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
           <DataField>MediaSpend</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
-        <Field Name="ShowClickAndViewConv">
-          <DataField>ShowClickAndViewConv</DataField>
-          <rd:TypeName>System.Boolean</rd:TypeName>
-        </Field>
-        <Field Name="MgmtFee">
-          <DataField>MgmtFee</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="Budget">
-          <DataField>Budget</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="Pacing">
-          <DataField>Pacing</DataField>
-          <rd:TypeName>System.Double</rd:TypeName>
-        </Field>
         <Field Name="eCPC">
           <DataField>eCPC</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Conversions">
+          <DataField>Conversions</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="eCPA">
           <DataField>eCPA</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
         </Field>
-        <Field Name="Cost">
-          <DataField>Cost</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="Revenue">
-          <DataField>Revenue</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="BIMediaSpend">
-          <DataField>BIMediaSpend</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="BIMgmtFeePct">
-          <DataField>BIMgmtFeePct</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="BIMarginPct">
-          <DataField>BIMarginPct</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="SiteSummaryMTD">
+    <DataSet Name="SiteListMTD">
       <Query>
         <DataSourceName>DirectAgents</DataSourceName>
         <QueryParameters>
@@ -586,10 +546,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
         <CommandText>select * from td.fSiteSummaryBasicStats(@AdvertiserId, @MTDStartDate, @MTDEndDate)</CommandText>
       </Query>
       <Fields>
-        <Field Name="Date">
-          <DataField>Date</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
         <Field Name="SiteName">
           <DataField>SiteName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -613,54 +569,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
         <Field Name="Conversions">
           <DataField>Conversions</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="CR">
-          <DataField>CR</DataField>
-          <rd:TypeName>System.Double</rd:TypeName>
-        </Field>
-        <Field Name="MediaSpend">
-          <DataField>MediaSpend</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="MgmtFee">
-          <DataField>MgmtFee</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="Budget">
-          <DataField>Budget</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="Pacing">
-          <DataField>Pacing</DataField>
-          <rd:TypeName>System.Double</rd:TypeName>
-        </Field>
-        <Field Name="eCPC">
-          <DataField>eCPC</DataField>
-          <rd:TypeName>System.Double</rd:TypeName>
-        </Field>
-        <Field Name="eCPA">
-          <DataField>eCPA</DataField>
-          <rd:TypeName>System.Double</rd:TypeName>
-        </Field>
-        <Field Name="Cost">
-          <DataField>Cost</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="Revenue">
-          <DataField>Revenue</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="BIMediaSpend">
-          <DataField>BIMediaSpend</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="BIMgmtFeePct">
-          <DataField>BIMgmtFeePct</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="BIMarginPct">
-          <DataField>BIMarginPct</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -1210,7 +1118,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
-                                        <Format>#,#</Format>
+                                        <Format>#,0</Format>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -1246,7 +1154,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
-                                        <Format>#,#</Format>
+                                        <Format>#,0</Format>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -1354,7 +1262,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
-                                        <Format>#,#</Format>
+                                        <Format>#,0</Format>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -2555,7 +2463,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
-                                        <Format>#,#</Format>
+                                        <Format>#,0</Format>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -2591,7 +2499,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
-                                        <Format>#,#</Format>
+                                        <Format>#,0</Format>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -2699,7 +2607,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
-                                        <Format>#,#</Format>
+                                        <Format>#,0</Format>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -2781,7 +2689,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     <TablixMember />
                   </TablixMembers>
                 </TablixRowHierarchy>
-                <DataSetName>PreviousMonthBasicStats</DataSetName>
+                <DataSetName>BasicStatsPreviousMonth</DataSetName>
                 <Top>1.29167in</Top>
                 <Height>0.5in</Height>
                 <Width>7.96875in</Width>
@@ -4073,11 +3981,11 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
           </Rectangle>
           <Rectangle Name="Rectangle2">
             <ReportItems>
-              <Tablix Name="Tablix1">
+              <Tablix Name="tbxStrategyCTD">
                 <TablixBody>
                   <TablixColumns>
                     <TablixColumn>
-                      <Width>7.98125in</Width>
+                      <Width>7.96875in</Width>
                     </TablixColumn>
                   </TablixColumns>
                   <TablixRows>
@@ -4125,145 +4033,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                         <TablixCells>
                                           <TablixCell>
                                             <CellContents>
-                                              <Textbox Name="Textbox18">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>MTD Stats for "</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                          <FontWeight>Bold</FontWeight>
-                                                        </Style>
-                                                      </TextRun>
-                                                      <TextRun>
-                                                        <Value>=Fields!StrategyName.Value</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                          <FontWeight>Bold</FontWeight>
-                                                        </Style>
-                                                      </TextRun>
-                                                      <TextRun>
-                                                        <Value>"</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                          <FontWeight>Bold</FontWeight>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Textbox18</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                              <ColSpan>5</ColSpan>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell />
-                                          <TablixCell />
-                                          <TablixCell />
-                                          <TablixCell />
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="Textbox90">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>Conversions</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Textbox90</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <BottomBorder>
-                                                    <Style>None</Style>
-                                                  </BottomBorder>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                              <ColSpan>3</ColSpan>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell />
-                                          <TablixCell />
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="Textbox92">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value />
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                          <FontWeight>Bold</FontWeight>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Textbox92</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                        </TablixCells>
-                                      </TablixRow>
-                                      <TablixRow>
-                                        <Height>0.25in</Height>
-                                        <TablixCells>
-                                          <TablixCell>
-                                            <CellContents>
                                               <Textbox Name="Textbox1">
                                                 <CanGrow>true</CanGrow>
                                                 <KeepTogether>true</KeepTogether>
@@ -4271,7 +4040,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   <Paragraph>
                                                     <TextRuns>
                                                       <TextRun>
-                                                        <Value>Spend</Value>
+                                                        <Value EvaluationMode="Constant">Spend</Value>
                                                         <Style>
                                                           <FontFamily>Calibri</FontFamily>
                                                           <FontSize>11pt</FontSize>
@@ -4640,7 +4409,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                         <Style>
                                                           <FontFamily>Calibri</FontFamily>
                                                           <FontSize>11pt</FontSize>
-                                                          <Format>#,#</Format>
+                                                          <Format>#,0</Format>
                                                         </Style>
                                                       </TextRun>
                                                     </TextRuns>
@@ -4676,7 +4445,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                         <Style>
                                                           <FontFamily>Calibri</FontFamily>
                                                           <FontSize>11pt</FontSize>
-                                                          <Format>#,#</Format>
+                                                          <Format>#,0</Format>
                                                         </Style>
                                                       </TextRun>
                                                     </TextRuns>
@@ -4780,10 +4549,11 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   <Paragraph>
                                                     <TextRuns>
                                                       <TextRun>
-                                                        <Value>=IIf(Fields!ShowClickAndViewConv.Value = 0, "n/a", Sum(Fields!PostClickConv.Value))</Value>
+                                                        <Value>=IIf(CountRows() = 0, Nothing, IIf(Fields!ShowClickAndViewConv.Value = 0, "n/a", Sum(Fields!PostClickConv.Value)))</Value>
                                                         <Style>
                                                           <FontFamily>Calibri</FontFamily>
                                                           <FontSize>11pt</FontSize>
+                                                          <Format>#,0</Format>
                                                         </Style>
                                                       </TextRun>
                                                     </TextRuns>
@@ -4815,10 +4585,11 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   <Paragraph>
                                                     <TextRuns>
                                                       <TextRun>
-                                                        <Value>=IIf(Fields!ShowClickAndViewConv.Value = 0, "n/a", Sum(Fields!PostViewConv.Value))</Value>
+                                                        <Value>=IIf(CountRows() = 0, Nothing, IIf(Fields!ShowClickAndViewConv.Value = 0, "n/a", Sum(Fields!PostViewConv.Value)))</Value>
                                                         <Style>
                                                           <FontFamily>Calibri</FontFamily>
                                                           <FontSize>11pt</FontSize>
+                                                          <Format>#,0</Format>
                                                         </Style>
                                                       </TextRun>
                                                     </TextRuns>
@@ -4854,7 +4625,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                         <Style>
                                                           <FontFamily>Calibri</FontFamily>
                                                           <FontSize>11pt</FontSize>
-                                                          <Format>#,#</Format>
+                                                          <Format>#,0</Format>
                                                         </Style>
                                                       </TextRun>
                                                     </TextRuns>
@@ -4934,7 +4705,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                     <TablixMembers>
                                       <TablixMember />
                                       <TablixMember />
-                                      <TablixMember />
                                     </TablixMembers>
                                   </TablixRowHierarchy>
                                   <DataSetName>StrategyCTD</DataSetName>
@@ -4947,8 +4717,8 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                       </FilterValues>
                                     </Filter>
                                   </Filters>
-                                  <Left>0.0125in</Left>
-                                  <Height>0.75in</Height>
+                                  <Top>0.25in</Top>
+                                  <Height>0.5in</Height>
                                   <Width>7.95625in</Width>
                                   <Style>
                                     <Border>
@@ -5270,6 +5040,160 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                     <BackgroundGradientType>None</BackgroundGradientType>
                                   </Style>
                                 </Chart>
+                                <Tablix Name="Tablix1">
+                                  <TablixBody>
+                                    <TablixColumns>
+                                      <TablixColumn>
+                                        <Width>4.46875in</Width>
+                                      </TablixColumn>
+                                      <TablixColumn>
+                                        <Width>2.8125in</Width>
+                                      </TablixColumn>
+                                      <TablixColumn>
+                                        <Width>0.675in</Width>
+                                      </TablixColumn>
+                                    </TablixColumns>
+                                    <TablixRows>
+                                      <TablixRow>
+                                        <Height>0.25in</Height>
+                                        <TablixCells>
+                                          <TablixCell>
+                                            <CellContents>
+                                              <Textbox Name="Textbox106">
+                                                <CanGrow>true</CanGrow>
+                                                <KeepTogether>true</KeepTogether>
+                                                <Paragraphs>
+                                                  <Paragraph>
+                                                    <TextRuns>
+                                                      <TextRun>
+                                                        <Value>="MTD Stats for """ + Fields!StrategyName.Value + """"</Value>
+                                                        <Style>
+                                                          <FontFamily>Calibri</FontFamily>
+                                                          <FontSize>11pt</FontSize>
+                                                          <FontWeight>Bold</FontWeight>
+                                                        </Style>
+                                                      </TextRun>
+                                                    </TextRuns>
+                                                    <Style>
+                                                      <TextAlign>Center</TextAlign>
+                                                    </Style>
+                                                  </Paragraph>
+                                                </Paragraphs>
+                                                <rd:DefaultName>Textbox106</rd:DefaultName>
+                                                <Style>
+                                                  <Border>
+                                                    <Color>LightGrey</Color>
+                                                    <Style>Solid</Style>
+                                                  </Border>
+                                                  <BottomBorder>
+                                                    <Style>None</Style>
+                                                  </BottomBorder>
+                                                  <PaddingLeft>2pt</PaddingLeft>
+                                                  <PaddingRight>2pt</PaddingRight>
+                                                  <PaddingTop>2pt</PaddingTop>
+                                                  <PaddingBottom>2pt</PaddingBottom>
+                                                </Style>
+                                              </Textbox>
+                                            </CellContents>
+                                          </TablixCell>
+                                          <TablixCell>
+                                            <CellContents>
+                                              <Textbox Name="Textbox108">
+                                                <CanGrow>true</CanGrow>
+                                                <KeepTogether>true</KeepTogether>
+                                                <Paragraphs>
+                                                  <Paragraph>
+                                                    <TextRuns>
+                                                      <TextRun>
+                                                        <Value>Conversions</Value>
+                                                        <Style>
+                                                          <FontFamily>Calibri</FontFamily>
+                                                          <FontSize>11pt</FontSize>
+                                                        </Style>
+                                                      </TextRun>
+                                                    </TextRuns>
+                                                    <Style>
+                                                      <TextAlign>Center</TextAlign>
+                                                    </Style>
+                                                  </Paragraph>
+                                                </Paragraphs>
+                                                <rd:DefaultName>Textbox108</rd:DefaultName>
+                                                <Style>
+                                                  <Border>
+                                                    <Color>LightGrey</Color>
+                                                    <Style>Solid</Style>
+                                                  </Border>
+                                                  <BottomBorder>
+                                                    <Style>None</Style>
+                                                  </BottomBorder>
+                                                  <PaddingLeft>2pt</PaddingLeft>
+                                                  <PaddingRight>2pt</PaddingRight>
+                                                  <PaddingTop>2pt</PaddingTop>
+                                                  <PaddingBottom>2pt</PaddingBottom>
+                                                </Style>
+                                              </Textbox>
+                                            </CellContents>
+                                          </TablixCell>
+                                          <TablixCell>
+                                            <CellContents>
+                                              <Textbox Name="Textbox109">
+                                                <CanGrow>true</CanGrow>
+                                                <KeepTogether>true</KeepTogether>
+                                                <Paragraphs>
+                                                  <Paragraph>
+                                                    <TextRuns>
+                                                      <TextRun>
+                                                        <Value />
+                                                        <Style>
+                                                          <FontFamily>Calibri</FontFamily>
+                                                          <FontSize>11pt</FontSize>
+                                                        </Style>
+                                                      </TextRun>
+                                                    </TextRuns>
+                                                    <Style />
+                                                  </Paragraph>
+                                                </Paragraphs>
+                                                <Style>
+                                                  <Border>
+                                                    <Color>LightGrey</Color>
+                                                    <Style>Solid</Style>
+                                                  </Border>
+                                                  <BottomBorder>
+                                                    <Style>None</Style>
+                                                  </BottomBorder>
+                                                  <PaddingLeft>2pt</PaddingLeft>
+                                                  <PaddingRight>2pt</PaddingRight>
+                                                  <PaddingTop>2pt</PaddingTop>
+                                                  <PaddingBottom>2pt</PaddingBottom>
+                                                </Style>
+                                              </Textbox>
+                                            </CellContents>
+                                          </TablixCell>
+                                        </TablixCells>
+                                      </TablixRow>
+                                    </TablixRows>
+                                  </TablixBody>
+                                  <TablixColumnHierarchy>
+                                    <TablixMembers>
+                                      <TablixMember />
+                                      <TablixMember />
+                                      <TablixMember />
+                                    </TablixMembers>
+                                  </TablixColumnHierarchy>
+                                  <TablixRowHierarchy>
+                                    <TablixMembers>
+                                      <TablixMember />
+                                    </TablixMembers>
+                                  </TablixRowHierarchy>
+                                  <Height>0.25in</Height>
+                                  <Width>7.95625in</Width>
+                                  <ZIndex>2</ZIndex>
+                                  <Style>
+                                    <Border>
+                                      <Style>None</Style>
+                                    </Border>
+                                  </Style>
+                                </Tablix>
                               </ReportItems>
                               <KeepTogether>true</KeepTogether>
                               <Style>
@@ -5308,7 +5232,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                               </Paragraphs>
                               <rd:DefaultName>Textbox2</rd:DefaultName>
                               <Visibility>
-                                <Hidden>=(Not Globals!RenderFormat.IsInteractive) And (Globals!RenderFormat.Name = "PDF") And ((RunningValue(CountDistinct("Tablix1"), Count, "Tablix1") Mod 3) = 0)</Hidden>
+                                <Hidden>=(Not Globals!RenderFormat.IsInteractive) And (Globals!RenderFormat.Name = "PDF") And ((RunningValue(CountDistinct("Tablix1"), Count, "tbxStrategyCTD") Mod 3) = 0)</Hidden>
                               </Visibility>
                               <Style>
                                 <Border>
@@ -5335,10 +5259,15 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 <TablixRowHierarchy>
                   <TablixMembers>
                     <TablixMember>
-                      <Group Name="Details1">
+                      <Group Name="detailsStrategyCTD">
                         <GroupExpressions>
                           <GroupExpression>=Fields!StrategyId.Value</GroupExpression>
                         </GroupExpressions>
+                        <Variables>
+                          <Variable Name="ShowClickAndViewConv">
+                            <Value>=Fields!ShowClickAndViewConv.Value</Value>
+                          </Variable>
+                        </Variables>
                       </Group>
                       <SortExpressions>
                         <SortExpression>
@@ -5352,10 +5281,9 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     </TablixMember>
                   </TablixMembers>
                 </TablixRowHierarchy>
-                <NoRowsMessage>="No strategies this month: " + Format(Parameters!MTDStartDate.Value, "d") + " thru " + Format(Parameters!MTDEndDate.Value, "d")</NoRowsMessage>
                 <DataSetName>StrategyCTD</DataSetName>
                 <Height>2.64583in</Height>
-                <Width>7.98125in</Width>
+                <Width>7.96875in</Width>
                 <Style>
                   <Border>
                     <Style>None</Style>
@@ -5369,8 +5297,8 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             <PageName>Strategy Summary</PageName>
             <KeepTogether>true</KeepTogether>
             <Top>7.83917in</Top>
-            <Height>3in</Height>
-            <Width>7.98125in</Width>
+            <Height>2.64583in</Height>
+            <Width>7.96875in</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>
@@ -5380,972 +5308,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
           </Rectangle>
           <Rectangle Name="Rectangle4">
             <ReportItems>
-              <Tablix Name="Tablix6">
-                <TablixBody>
-                  <TablixColumns>
-                    <TablixColumn>
-                      <Width>7.98125in</Width>
-                    </TablixColumn>
-                  </TablixColumns>
-                  <TablixRows>
-                    <TablixRow>
-                      <Height>1.71875in</Height>
-                      <TablixCells>
-                        <TablixCell>
-                          <CellContents>
-                            <Rectangle Name="Rectangle5">
-                              <ReportItems>
-                                <Tablix Name="Tablix5">
-                                  <TablixBody>
-                                    <TablixColumns>
-                                      <TablixColumn>
-                                        <Width>1.06526in</Width>
-                                      </TablixColumn>
-                                      <TablixColumn>
-                                        <Width>1.06599in</Width>
-                                      </TablixColumn>
-                                      <TablixColumn>
-                                        <Width>1in</Width>
-                                      </TablixColumn>
-                                      <TablixColumn>
-                                        <Width>0.675in</Width>
-                                      </TablixColumn>
-                                      <TablixColumn>
-                                        <Width>0.675in</Width>
-                                      </TablixColumn>
-                                      <TablixColumn>
-                                        <Width>0.9in</Width>
-                                      </TablixColumn>
-                                      <TablixColumn>
-                                        <Width>0.9in</Width>
-                                      </TablixColumn>
-                                      <TablixColumn>
-                                        <Width>1in</Width>
-                                      </TablixColumn>
-                                      <TablixColumn>
-                                        <Width>0.7in</Width>
-                                      </TablixColumn>
-                                    </TablixColumns>
-                                    <TablixRows>
-                                      <TablixRow>
-                                        <Height>0.25in</Height>
-                                        <TablixCells>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="AdName">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>="Campaign to Date for Creative """ + Fields!AdName.Value + """"</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                          <FontWeight>Bold</FontWeight>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>AdName</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                              <ColSpan>5</ColSpan>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell />
-                                          <TablixCell />
-                                          <TablixCell />
-                                          <TablixCell />
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="Textbox91">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>Conversions</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Textbox90</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <BottomBorder>
-                                                    <Style>None</Style>
-                                                  </BottomBorder>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                              <ColSpan>3</ColSpan>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell />
-                                          <TablixCell />
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="Textbox171">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value />
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                          <FontWeight>Bold</FontWeight>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Textbox171</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                        </TablixCells>
-                                      </TablixRow>
-                                      <TablixRow>
-                                        <Height>0.25in</Height>
-                                        <TablixCells>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="Textbox44">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>Spend</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Textbox5</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="Textbox54">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>Impressions</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Textbox14</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="Textbox62">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>Clicks</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Textbox9</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="Textbox52">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>CTR</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Textbox11</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="Textbox87">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>eCPC</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Textbox39</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="Textbox86">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>Click Conv</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Textbox60</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <TopBorder>
-                                                    <Style>None</Style>
-                                                  </TopBorder>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="Textbox96">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>View Conv</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Textbox95</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <TopBorder>
-                                                    <Style>None</Style>
-                                                  </TopBorder>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="Textbox36">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>Total</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Textbox16</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <TopBorder>
-                                                    <Style>None</Style>
-                                                  </TopBorder>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="Textbox4">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>eCPA</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Textbox3</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                        </TablixCells>
-                                      </TablixRow>
-                                      <TablixRow>
-                                        <Height>0.25in</Height>
-                                        <TablixCells>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="MediaSpend8">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>=Sum(Fields!MediaSpend.Value)</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                          <Format>c2</Format>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>MediaSpend</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="Impressions13">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>=Sum(Fields!Impressions.Value)</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                          <Format>#,#</Format>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Impressions</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="Clicks9">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>=Sum(Fields!Clicks.Value)</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                          <Format>#,#</Format>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Clicks</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="CTR7">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>=Code.SafeFraction(Sum(Fields!Clicks.Value), Sum(Fields!Impressions.Value))</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                          <Format>p2</Format>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>CTR</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="eCPC4">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>=Sum(Fields!eCPC.Value)</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                          <Format>c2</Format>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>eCPC</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="PostClickConv2">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>=IIf(Fields!ShowClickAndViewConv.Value = 0, "n/a", Sum(Fields!PostClickConv.Value))</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>PostClickConv</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="PostViewConv2">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>=IIf(Fields!ShowClickAndViewConv.Value = 0, "n/a", Sum(Fields!PostViewConv.Value))</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>PostViewConv</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="Conversions4">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>=Sum(Fields!Conversions.Value)</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                          <Format>#,#</Format>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Conversions</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                          <TablixCell>
-                                            <CellContents>
-                                              <Textbox Name="MgmtFee6">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>=Sum(Fields!eCPA.Value)</Value>
-                                                        <Style>
-                                                          <FontFamily>Calibri</FontFamily>
-                                                          <FontSize>11pt</FontSize>
-                                                          <Format>c2</Format>
-                                                        </Style>
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style>
-                                                      <TextAlign>Center</TextAlign>
-                                                    </Style>
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>MgmtFee</rd:DefaultName>
-                                                <Style>
-                                                  <Border>
-                                                    <Color>LightGrey</Color>
-                                                    <Style>Solid</Style>
-                                                  </Border>
-                                                  <PaddingLeft>2pt</PaddingLeft>
-                                                  <PaddingRight>2pt</PaddingRight>
-                                                  <PaddingTop>2pt</PaddingTop>
-                                                  <PaddingBottom>2pt</PaddingBottom>
-                                                </Style>
-                                              </Textbox>
-                                            </CellContents>
-                                          </TablixCell>
-                                        </TablixCells>
-                                      </TablixRow>
-                                    </TablixRows>
-                                  </TablixBody>
-                                  <TablixColumnHierarchy>
-                                    <TablixMembers>
-                                      <TablixMember />
-                                      <TablixMember />
-                                      <TablixMember />
-                                      <TablixMember />
-                                      <TablixMember />
-                                      <TablixMember>
-                                        <Visibility>
-                                          <Hidden>=Fields!ShowClickAndViewConv.Value = 0</Hidden>
-                                        </Visibility>
-                                      </TablixMember>
-                                      <TablixMember>
-                                        <Visibility>
-                                          <Hidden>=Fields!ShowClickAndViewConv.Value = 0</Hidden>
-                                        </Visibility>
-                                      </TablixMember>
-                                      <TablixMember />
-                                      <TablixMember />
-                                    </TablixMembers>
-                                  </TablixColumnHierarchy>
-                                  <TablixRowHierarchy>
-                                    <TablixMembers>
-                                      <TablixMember />
-                                      <TablixMember />
-                                      <TablixMember />
-                                    </TablixMembers>
-                                  </TablixRowHierarchy>
-                                  <DataSetName>CreativeCTD</DataSetName>
-                                  <Height>0.75in</Height>
-                                  <Width>7.98125in</Width>
-                                  <Style>
-                                    <Border>
-                                      <Style>None</Style>
-                                    </Border>
-                                  </Style>
-                                </Tablix>
-                                <Image Name="Image2">
-                                  <Source>External</Source>
-                                  <Value>https://upload.wikimedia.org/wikipedia/commons/b/bb/Balance_bike.jpg</Value>
-                                  <Sizing>FitProportional</Sizing>
-                                  <Top>0.75in</Top>
-                                  <Height>0.96875in</Height>
-                                  <Width>7.96875in</Width>
-                                  <ZIndex>1</ZIndex>
-                                  <Style>
-                                    <Border>
-                                      <Color>LightGrey</Color>
-                                      <Style>Solid</Style>
-                                    </Border>
-                                  </Style>
-                                </Image>
-                              </ReportItems>
-                              <KeepTogether>true</KeepTogether>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                              </Style>
-                            </Rectangle>
-                          </CellContents>
-                        </TablixCell>
-                      </TablixCells>
-                    </TablixRow>
-                    <TablixRow>
-                      <Height>0.25in</Height>
-                      <TablixCells>
-                        <TablixCell>
-                          <CellContents>
-                            <Textbox Name="Textbox50">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value />
-                                      <Style />
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style />
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox2</rd:DefaultName>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <BackgroundColor>AliceBlue</BackgroundColor>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                          </CellContents>
-                        </TablixCell>
-                      </TablixCells>
-                    </TablixRow>
-                  </TablixRows>
-                </TablixBody>
-                <TablixColumnHierarchy>
-                  <TablixMembers>
-                    <TablixMember />
-                  </TablixMembers>
-                </TablixColumnHierarchy>
-                <TablixRowHierarchy>
-                  <TablixMembers>
-                    <TablixMember>
-                      <Group Name="Details2">
-                        <GroupExpressions>
-                          <GroupExpression>=Fields!AdId.Value</GroupExpression>
-                        </GroupExpressions>
-                      </Group>
-                      <SortExpressions>
-                        <SortExpression>
-                          <Value>=Fields!SumKPI.Value</Value>
-                          <Direction>Descending</Direction>
-                        </SortExpression>
-                      </SortExpressions>
-                      <TablixMembers>
-                        <TablixMember />
-                        <TablixMember />
-                      </TablixMembers>
-                    </TablixMember>
-                  </TablixMembers>
-                </TablixRowHierarchy>
-                <NoRowsMessage>="No creative in campaign: " + Format(Parameters!CampaignStartDate.Value, "d") + " thru " + Format(Parameters!MTDEndDate.Value, "d")</NoRowsMessage>
-                <DataSetName>CreativeCTD</DataSetName>
-                <Top>0.38542in</Top>
-                <Height>1.96875in</Height>
-                <Width>7.98125in</Width>
-                <Style>
-                  <Border>
-                    <Style>None</Style>
-                  </Border>
-                </Style>
-              </Tablix>
               <Textbox Name="Textbox43">
                 <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
@@ -6369,7 +5331,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 <rd:DefaultName>Textbox13</rd:DefaultName>
                 <Height>0.38542in</Height>
                 <Width>7.96875in</Width>
-                <ZIndex>1</ZIndex>
                 <Style>
                   <Border>
                     <Style>None</Style>
@@ -6381,15 +5342,1146 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   <PaddingBottom>2pt</PaddingBottom>
                 </Style>
               </Textbox>
+              <Tablix Name="Tablix6">
+                <TablixBody>
+                  <TablixColumns>
+                    <TablixColumn>
+                      <Width>1.07776in</Width>
+                    </TablixColumn>
+                    <TablixColumn>
+                      <Width>1.05349in</Width>
+                    </TablixColumn>
+                    <TablixColumn>
+                      <Width>1in</Width>
+                    </TablixColumn>
+                    <TablixColumn>
+                      <Width>0.675in</Width>
+                    </TablixColumn>
+                    <TablixColumn>
+                      <Width>0.675in</Width>
+                    </TablixColumn>
+                    <TablixColumn>
+                      <Width>0.9in</Width>
+                    </TablixColumn>
+                    <TablixColumn>
+                      <Width>0.9in</Width>
+                    </TablixColumn>
+                    <TablixColumn>
+                      <Width>1in</Width>
+                    </TablixColumn>
+                    <TablixColumn>
+                      <Width>0.68125in</Width>
+                    </TablixColumn>
+                  </TablixColumns>
+                  <TablixRows>
+                    <TablixRow>
+                      <Height>0.25in</Height>
+                      <TablixCells>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox63">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>Media Spend</Value>
+                                      <Style />
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox63</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>White</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox57">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>Impressions</Value>
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox14</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>White</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox65">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>Clicks</Value>
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox9</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>White</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox70">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>CTR</Value>
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox11</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>White</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox88">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>eCPC</Value>
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox39</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>White</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox97">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>Click Conv</Value>
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox60</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>White</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox98">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>View Conv</Value>
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox95</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>White</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox41">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>Total Conv</Value>
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox16</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>White</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox6">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>eCPA</Value>
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox3</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>White</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                      </TablixCells>
+                    </TablixRow>
+                    <TablixRow>
+                      <Height>0.125in</Height>
+                      <TablixCells>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox44">
+                              <CanGrow>true</CanGrow>
+                              <UserSort>
+                                <SortExpression>=Fields!MediaSpend.Value</SortExpression>
+                              </UserSort>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value />
+                                      <Style />
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox44</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>White</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox45">
+                              <CanGrow>true</CanGrow>
+                              <UserSort>
+                                <SortExpression>=Fields!Impressions.Value</SortExpression>
+                              </UserSort>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value />
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox45</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>White</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox48">
+                              <CanGrow>true</CanGrow>
+                              <UserSort>
+                                <SortExpression>=Fields!Clicks.Value</SortExpression>
+                              </UserSort>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value />
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox48</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>White</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox49">
+                              <CanGrow>true</CanGrow>
+                              <UserSort>
+                                <SortExpression>=Fields!CTR.Value</SortExpression>
+                              </UserSort>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value />
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox49</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>White</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox50">
+                              <CanGrow>true</CanGrow>
+                              <UserSort>
+                                <SortExpression>=Fields!eCPC.Value</SortExpression>
+                              </UserSort>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value />
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox50</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>White</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox51">
+                              <CanGrow>true</CanGrow>
+                              <UserSort>
+                                <SortExpression>=Microsoft.VisualBasic.Interaction.IIf(Fields!ShowClickAndViewConv.Value = 0, "n/a", Fields!PostClickConv.Value)</SortExpression>
+                              </UserSort>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value />
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox51</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>White</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox52">
+                              <CanGrow>true</CanGrow>
+                              <UserSort>
+                                <SortExpression>=Microsoft.VisualBasic.Interaction.IIf(Fields!ShowClickAndViewConv.Value = 0, "n/a", Fields!PostViewConv.Value)</SortExpression>
+                              </UserSort>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value />
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox52</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>White</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox54">
+                              <CanGrow>true</CanGrow>
+                              <UserSort>
+                                <SortExpression>=Fields!Conversions.Value</SortExpression>
+                              </UserSort>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value />
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox54</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>White</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox61">
+                              <CanGrow>true</CanGrow>
+                              <UserSort>
+                                <SortExpression>=Fields!eCPA.Value</SortExpression>
+                              </UserSort>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value />
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox61</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>White</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                      </TablixCells>
+                    </TablixRow>
+                    <TablixRow>
+                      <Height>0.25in</Height>
+                      <TablixCells>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="AdName">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=Fields!AdName.Value</Value>
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Left</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>AdName</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                            <ColSpan>9</ColSpan>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell />
+                        <TablixCell />
+                        <TablixCell />
+                        <TablixCell />
+                        <TablixCell />
+                        <TablixCell />
+                        <TablixCell />
+                        <TablixCell />
+                      </TablixCells>
+                    </TablixRow>
+                    <TablixRow>
+                      <Height>0.25in</Height>
+                      <TablixCells>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="MediaSpend9">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=Fields!MediaSpend.Value</Value>
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                        <Format>c2</Format>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>MediaSpend</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Impressions14">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=Fields!Impressions.Value</Value>
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                        <Format>#,0</Format>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Impressions</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Clicks10">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=Fields!Clicks.Value</Value>
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                        <Format>#,0</Format>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Clicks</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="CTR8">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=Fields!CTR.Value</Value>
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                        <Format>p2</Format>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>CTR</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="eCPC6">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=Fields!eCPC.Value</Value>
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                        <Format>c2</Format>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>eCPC</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="PostClickConv4">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=Microsoft.VisualBasic.Interaction.IIf(Fields!ShowClickAndViewConv.Value = 0, "n/a", Fields!PostClickConv.Value)</Value>
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>PostClickConv</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="PostViewConv4">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=Microsoft.VisualBasic.Interaction.IIf(Fields!ShowClickAndViewConv.Value = 0, "n/a", Fields!PostViewConv.Value)</Value>
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>PostViewConv</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Conversions5">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=Fields!Conversions.Value</Value>
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                        <Format>#,0</Format>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Conversions</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="MgmtFee7">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=Fields!eCPA.Value</Value>
+                                      <Style>
+                                        <FontFamily>Calibri</FontFamily>
+                                        <FontSize>11pt</FontSize>
+                                        <Format>c2</Format>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>MgmtFee</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                      </TablixCells>
+                    </TablixRow>
+                  </TablixRows>
+                </TablixBody>
+                <TablixColumnHierarchy>
+                  <TablixMembers>
+                    <TablixMember />
+                    <TablixMember />
+                    <TablixMember />
+                    <TablixMember />
+                    <TablixMember />
+                    <TablixMember />
+                    <TablixMember />
+                    <TablixMember />
+                    <TablixMember />
+                  </TablixMembers>
+                </TablixColumnHierarchy>
+                <TablixRowHierarchy>
+                  <TablixMembers>
+                    <TablixMember>
+                      <FixedData>true</FixedData>
+                      <KeepWithGroup>After</KeepWithGroup>
+                      <RepeatOnNewPage>true</RepeatOnNewPage>
+                    </TablixMember>
+                    <TablixMember>
+                      <FixedData>true</FixedData>
+                      <Visibility>
+                        <Hidden>=Not Globals!RenderFormat.IsInteractive</Hidden>
+                      </Visibility>
+                      <KeepWithGroup>After</KeepWithGroup>
+                      <RepeatOnNewPage>true</RepeatOnNewPage>
+                    </TablixMember>
+                    <TablixMember>
+                      <Group Name="AdId" />
+                      <SortExpressions>
+                        <SortExpression>
+                          <Value>=IIf(Fields!Impressions.Value &gt;= 5000, 0, 1)</Value>
+                        </SortExpression>
+                        <SortExpression>
+                          <Value>=Fields!SumKPI.Value</Value>
+                          <Direction>Descending</Direction>
+                        </SortExpression>
+                      </SortExpressions>
+                      <TablixMembers>
+                        <TablixMember />
+                        <TablixMember />
+                      </TablixMembers>
+                    </TablixMember>
+                  </TablixMembers>
+                </TablixRowHierarchy>
+                <RepeatRowHeaders>true</RepeatRowHeaders>
+                <FixedRowHeaders>true</FixedRowHeaders>
+                <DataSetName>CreativeCTD</DataSetName>
+                <Top>0.38542in</Top>
+                <Height>0.875in</Height>
+                <Width>7.9625in</Width>
+                <ZIndex>1</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                </Style>
+              </Tablix>
             </ReportItems>
             <PageBreak>
               <BreakLocation>Start</BreakLocation>
             </PageBreak>
             <PageName>Creative Performance</PageName>
             <KeepTogether>true</KeepTogether>
-            <Top>10.83917in</Top>
-            <Height>2.35417in</Height>
-            <Width>7.98125in</Width>
+            <Top>10.485in</Top>
+            <Height>1.26042in</Height>
+            <Width>7.96875in</Width>
             <ZIndex>2</ZIndex>
             <Style>
               <Border>
@@ -6612,7 +6704,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                             <Textbox Name="Textbox99">
                               <UserSort>
                                 <SortExpression>=Fields!SiteName.Value</SortExpression>
-                                <SortExpressionScope>SiteId</SortExpressionScope>
                               </UserSort>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -6650,8 +6741,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                           <CellContents>
                             <Textbox Name="Textbox100">
                               <UserSort>
-                                <SortExpression>=Sum(Fields!Impressions.Value)</SortExpression>
-                                <SortExpressionScope>SiteId</SortExpressionScope>
+                                <SortExpression>=Fields!Impressions.Value</SortExpression>
                               </UserSort>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -6689,8 +6779,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                           <CellContents>
                             <Textbox Name="Textbox111">
                               <UserSort>
-                                <SortExpression>=Sum(Fields!Clicks.Value)</SortExpression>
-                                <SortExpressionScope>SiteId</SortExpressionScope>
+                                <SortExpression>=Fields!Clicks.Value</SortExpression>
                               </UserSort>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -6728,8 +6817,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                           <CellContents>
                             <Textbox Name="Textbox112">
                               <UserSort>
-                                <SortExpression>=Code.SafeFraction(Sum(Fields!Clicks.Value), Sum(Fields!Impressions.Value))</SortExpression>
-                                <SortExpressionScope>SiteId</SortExpressionScope>
+                                <SortExpression>=Fields!CTR.Value</SortExpression>
                               </UserSort>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -6767,8 +6855,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                           <CellContents>
                             <Textbox Name="Textbox113">
                               <UserSort>
-                                <SortExpression>=Sum(Fields!Conversions.Value)</SortExpression>
-                                <SortExpressionScope>SiteId</SortExpressionScope>
+                                <SortExpression>=Fields!Conversions.Value</SortExpression>
                               </UserSort>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -6852,11 +6939,11 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Sum(Fields!Impressions.Value)</Value>
+                                      <Value>=Fields!Impressions.Value</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
-                                        <Format>#,#</Format>
+                                        <Format>#,0</Format>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -6888,11 +6975,11 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Sum(Fields!Clicks.Value)</Value>
+                                      <Value>=Fields!Clicks.Value</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
-                                        <Format>#,#</Format>
+                                        <Format>#,0</Format>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -6924,7 +7011,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Code.SafeFraction(Sum(Fields!Clicks.Value), Sum(Fields!Impressions.Value))</Value>
+                                      <Value>=Fields!CTR.Value</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -6960,11 +7047,11 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Sum(Fields!Conversions.Value)</Value>
+                                      <Value>=Fields!Conversions.Value</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
-                                        <Format>#,#</Format>
+                                        <Format>#,0</Format>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -7003,26 +7090,20 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 <TablixRowHierarchy>
                   <TablixMembers>
                     <TablixMember>
+                      <FixedData>true</FixedData>
                       <KeepWithGroup>After</KeepWithGroup>
+                      <RepeatOnNewPage>true</RepeatOnNewPage>
                     </TablixMember>
                     <TablixMember>
+                      <FixedData>true</FixedData>
+                      <Visibility>
+                        <Hidden>=Not Globals!RenderFormat.IsInteractive</Hidden>
+                      </Visibility>
                       <KeepWithGroup>After</KeepWithGroup>
+                      <RepeatOnNewPage>true</RepeatOnNewPage>
                     </TablixMember>
                     <TablixMember>
-                      <Group Name="SiteId">
-                        <GroupExpressions>
-                          <GroupExpression>=Fields!SiteId.Value</GroupExpression>
-                        </GroupExpressions>
-                      </Group>
-                      <SortExpressions>
-                        <SortExpression>
-                          <Value>=Fields!Impressions.Value</Value>
-                          <Direction>Descending</Direction>
-                        </SortExpression>
-                        <SortExpression>
-                          <Value>=Fields!SiteName.Value</Value>
-                        </SortExpression>
-                      </SortExpressions>
+                      <Group Name="SiteId" />
                       <TablixMembers>
                         <TablixMember />
                       </TablixMembers>
@@ -7030,7 +7111,16 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   </TablixMembers>
                 </TablixRowHierarchy>
                 <NoRowsMessage>="No sites this month: " + Microsoft.VisualBasic.Strings.Format(Parameters!MTDStartDate.Value, "d") + " thru " + Microsoft.VisualBasic.Strings.Format(Parameters!MTDEndDate.Value, "d")</NoRowsMessage>
-                <DataSetName>SiteSummaryMTD</DataSetName>
+                <DataSetName>SiteListMTD</DataSetName>
+                <SortExpressions>
+                  <SortExpression>
+                    <Value>=Fields!Impressions.Value</Value>
+                    <Direction>Descending</Direction>
+                  </SortExpression>
+                  <SortExpression>
+                    <Value>=Fields!SiteName.Value</Value>
+                  </SortExpression>
+                </SortExpressions>
                 <Height>0.625in</Height>
                 <Width>7.96875in</Width>
                 <Style>
@@ -7045,7 +7135,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             </PageBreak>
             <PageName>Top 50 Site List MTD</PageName>
             <KeepTogether>true</KeepTogether>
-            <Top>13.19334in</Top>
+            <Top>11.74542in</Top>
             <Height>0.625in</Height>
             <Width>7.96875in</Width>
             <ZIndex>3</ZIndex>
@@ -7061,7 +7151,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 <TablixBody>
                   <TablixColumns>
                     <TablixColumn>
-                      <Width>1.41459in</Width>
+                      <Width>1.51459in</Width>
                     </TablixColumn>
                     <TablixColumn>
                       <Width>0.73958in</Width>
@@ -7076,7 +7166,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                       <Width>1.20833in</Width>
                     </TablixColumn>
                     <TablixColumn>
-                      <Width>1.68125in</Width>
+                      <Width>1.5875in</Width>
                     </TablixColumn>
                   </TablixColumns>
                   <TablixRows>
@@ -7107,6 +7197,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                   <Color>LightGrey</Color>
                                   <Style>Solid</Style>
                                 </Border>
+                                <BackgroundColor>White</BackgroundColor>
                                 <PaddingLeft>2pt</PaddingLeft>
                                 <PaddingRight>2pt</PaddingRight>
                                 <PaddingTop>2pt</PaddingTop>
@@ -7139,6 +7230,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                   <Color>LightGrey</Color>
                                   <Style>Solid</Style>
                                 </Border>
+                                <BackgroundColor>White</BackgroundColor>
                                 <PaddingLeft>2pt</PaddingLeft>
                                 <PaddingRight>2pt</PaddingRight>
                                 <PaddingTop>2pt</PaddingTop>
@@ -7171,6 +7263,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                   <Color>LightGrey</Color>
                                   <Style>Solid</Style>
                                 </Border>
+                                <BackgroundColor>White</BackgroundColor>
                                 <PaddingLeft>2pt</PaddingLeft>
                                 <PaddingRight>2pt</PaddingRight>
                                 <PaddingTop>2pt</PaddingTop>
@@ -7203,6 +7296,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                   <Color>LightGrey</Color>
                                   <Style>Solid</Style>
                                 </Border>
+                                <BackgroundColor>White</BackgroundColor>
                                 <PaddingLeft>2pt</PaddingLeft>
                                 <PaddingRight>2pt</PaddingRight>
                                 <PaddingTop>2pt</PaddingTop>
@@ -7235,6 +7329,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                   <Color>LightGrey</Color>
                                   <Style>Solid</Style>
                                 </Border>
+                                <BackgroundColor>White</BackgroundColor>
                                 <PaddingLeft>2pt</PaddingLeft>
                                 <PaddingRight>2pt</PaddingRight>
                                 <PaddingTop>2pt</PaddingTop>
@@ -7267,6 +7362,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                   <Color>LightGrey</Color>
                                   <Style>Solid</Style>
                                 </Border>
+                                <BackgroundColor>White</BackgroundColor>
                                 <PaddingLeft>2pt</PaddingLeft>
                                 <PaddingRight>2pt</PaddingRight>
                                 <PaddingTop>2pt</PaddingTop>
@@ -7307,6 +7403,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                   <Color>LightGrey</Color>
                                   <Style>Solid</Style>
                                 </Border>
+                                <BackgroundColor>White</BackgroundColor>
                                 <PaddingLeft>2pt</PaddingLeft>
                                 <PaddingRight>2pt</PaddingRight>
                                 <PaddingTop>2pt</PaddingTop>
@@ -7342,6 +7439,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                   <Color>LightGrey</Color>
                                   <Style>Solid</Style>
                                 </Border>
+                                <BackgroundColor>White</BackgroundColor>
                                 <PaddingLeft>2pt</PaddingLeft>
                                 <PaddingRight>2pt</PaddingRight>
                                 <PaddingTop>2pt</PaddingTop>
@@ -7377,6 +7475,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                   <Color>LightGrey</Color>
                                   <Style>Solid</Style>
                                 </Border>
+                                <BackgroundColor>White</BackgroundColor>
                                 <PaddingLeft>2pt</PaddingLeft>
                                 <PaddingRight>2pt</PaddingRight>
                                 <PaddingTop>2pt</PaddingTop>
@@ -7412,6 +7511,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                   <Color>LightGrey</Color>
                                   <Style>Solid</Style>
                                 </Border>
+                                <BackgroundColor>White</BackgroundColor>
                                 <PaddingLeft>2pt</PaddingLeft>
                                 <PaddingRight>2pt</PaddingRight>
                                 <PaddingTop>2pt</PaddingTop>
@@ -7447,6 +7547,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                   <Color>LightGrey</Color>
                                   <Style>Solid</Style>
                                 </Border>
+                                <BackgroundColor>White</BackgroundColor>
                                 <PaddingLeft>2pt</PaddingLeft>
                                 <PaddingRight>2pt</PaddingRight>
                                 <PaddingTop>2pt</PaddingTop>
@@ -7482,6 +7583,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                   <Color>LightGrey</Color>
                                   <Style>Solid</Style>
                                 </Border>
+                                <BackgroundColor>White</BackgroundColor>
                                 <PaddingLeft>2pt</PaddingLeft>
                                 <PaddingRight>2pt</PaddingRight>
                                 <PaddingTop>2pt</PaddingTop>
@@ -7706,10 +7808,12 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 <TablixRowHierarchy>
                   <TablixMembers>
                     <TablixMember>
+                      <FixedData>true</FixedData>
                       <KeepWithGroup>After</KeepWithGroup>
                       <RepeatOnNewPage>true</RepeatOnNewPage>
                     </TablixMember>
                     <TablixMember>
+                      <FixedData>true</FixedData>
                       <Visibility>
                         <Hidden>=Not Globals!RenderFormat.IsInteractive</Hidden>
                       </Visibility>
@@ -7735,7 +7839,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   </SortExpression>
                 </SortExpressions>
                 <Height>0.625in</Height>
-                <Width>7.9625in</Width>
+                <Width>7.96875in</Width>
                 <Style>
                   <Border>
                     <Style>None</Style>
@@ -7748,7 +7852,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             </PageBreak>
             <PageName>Lead IDs</PageName>
             <KeepTogether>true</KeepTogether>
-            <Top>13.81834in</Top>
+            <Top>12.37042in</Top>
             <Height>0.625in</Height>
             <Width>7.96875in</Width>
             <ZIndex>4</ZIndex>
@@ -7759,10 +7863,10 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             </Style>
           </Rectangle>
         </ReportItems>
-        <Height>14.44334in</Height>
+        <Height>12.99542in</Height>
         <Style />
       </Body>
-      <Width>7.98125in</Width>
+      <Width>7.96875in</Width>
       <Page>
         <PageHeader>
           <Height>1.45834in</Height>
@@ -7835,7 +7939,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=Globals!ReportName + " for " + First(Fields!Name.Value, "Advertiser")</Value>
+                      <Value>=Parameters!ExportFilename.Value</Value>
                       <Style>
                         <FontFamily>Calibri</FontFamily>
                         <FontSize>11pt</FontSize>
@@ -8121,7 +8225,7 @@ Public Function KPIDataFormat(ByVal KPI As String) As String
 		Case "Budget", "Spend", "eCPC", "eCPA"
 			Return "c"
 	End Select
-	Return "#,#"
+	Return "#,0"
 End Function
 
 Public Function KPIAxisFormat(ByVal KPI As String) As String
@@ -8131,7 +8235,7 @@ Public Function KPIAxisFormat(ByVal KPI As String) As String
 		Case "Budget", "Spend", "eCPC", "eCPA"
 			Return "c0"
 	End Select
-	Return "#,#"
+	Return "#,0"
 End Function
 
 Public Function IsNull(ByVal field As Object, ByVal valueIfNull As Object) As Object
@@ -8154,6 +8258,10 @@ Public Function KiloFormat(ByVal num As Long) As String
 	End If
 
 	Return num.ToString("#,0")
+End Function
+
+Public Function DateInMTD(ByVal dt As Date) As Boolean
+	Return (dt &gt;= Report.Parameters!MTDStartDate.Value) And (dt &lt;= Report.Parameters!MTDEndDate.Value)
 End Function</Code>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportID>ea256a65-4592-4acf-b45d-5d6834eb03ce</rd:ReportID>

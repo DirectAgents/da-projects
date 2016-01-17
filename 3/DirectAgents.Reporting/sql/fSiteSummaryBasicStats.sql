@@ -44,24 +44,27 @@ WITH revenue AS
 	FROM revenue
 	INNER JOIN revenueTop50 ON revenueTop50.SiteId = revenue.SiteId
 )
-SELECT Date
-, SiteName
-, SiteId
-, Impressions
-, Clicks
-, CASE WHEN Impressions = 0 THEN 0 ELSE Clicks / CAST(Impressions AS float) END AS CTR
-, Conversions AS Conversions
-, CASE WHEN Clicks = 0 THEN 0 ELSE Conversions / CAST(Clicks as float) END AS CR
-, MediaSpend
-, CASE	WHEN BIMgmtFeePct = 100 THEN MediaSpend * BIMgmtFeePct
-			ELSE Revenue - MediaSpend
-  END AS MgmtFee
-, BIMediaSpend AS Budget
-, CASE WHEN BIMediaSpend = 0 THEN 0 ELSE MediaSpend / CAST(BIMediaSpend as float) END AS Pacing
-, CASE WHEN Clicks = 0 THEN 0 ELSE MediaSpend / CAST(Clicks as float) END AS eCPC
-, CASE WHEN Conversions = 0 THEN 0 ELSE MediaSpend / CAST(Conversions as float) END AS eCPA
--- debugging
-, Cost
-, Revenue
-, BIMediaSpend, BIMgmtFeePct, BIMarginPct
-FROM mediaSpend
+, mgmtFee AS
+(
+	SELECT *
+	, CASE	WHEN BIMgmtFeePct = 100 THEN MediaSpend * BIMgmtFeePct
+				ELSE Revenue - MediaSpend
+	  END AS MgmtFee
+	FROM mediaSpend
+)
+SELECT SiteName, SiteId
+, SUM(Impressions) AS Impressions
+, SUM(Clicks) AS Clicks
+, CASE WHEN SUM(Impressions) = 0 THEN 0 ELSE SUM(Clicks) / CAST(SUM(Impressions) AS float) END AS CTR
+, SUM(Conversions) AS Conversions
+/*
+, CASE WHEN SUM(Clicks) = 0 THEN 0 ELSE SUM(Conversions) / CAST(SUM(Clicks) as float) END AS CR
+, SUM(MediaSpend) AS MediaSpend
+, SUM(MgmtFee) AS MgmtFee
+, SUM(BIMediaSpend) AS Budget
+, CASE WHEN SUM(BIMediaSpend) = 0 THEN 0 ELSE SUM(MediaSpend) / CAST(SUM(BIMediaSpend) as float) END AS Pacing
+, CASE WHEN SUM(Clicks) = 0 THEN 0 ELSE SUM(MediaSpend) / CAST(SUM(Clicks) as float) END AS eCPC
+, CASE WHEN SUM(Conversions) = 0 THEN 0 ELSE SUM(MediaSpend) / CAST(SUM(Conversions) as float) END AS eCPA
+*/
+FROM mgmtFee
+GROUP BY SiteName, SiteId
