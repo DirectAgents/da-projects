@@ -18,10 +18,6 @@
       <FullPath>DirectAgentsDigitalMarketingHeader.jpg</FullPath>
       <MimeType>image/jpeg</MimeType>
     </ResourceProjectItem>
-    <ProjectItem>
-      <Name>DA - Trading Desk Report (Weekly Summary).rdl</Name>
-      <FullPath>DA - Trading Desk Report (Weekly Summary).rdl</FullPath>
-    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
