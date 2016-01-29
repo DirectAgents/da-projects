@@ -8,6 +8,7 @@ namespace DirectAgents.Web.Areas.TD.Models
         public ExtAccount ExtAccount { get; set; }
         public DateTime? LatestDailyStat { get; set; }
         public DateTime? LatestStrategyStat { get; set; }
+        public DateTime? LatestTDadStat { get; set; }
         public bool Syncable { get; set; }
     }
 }

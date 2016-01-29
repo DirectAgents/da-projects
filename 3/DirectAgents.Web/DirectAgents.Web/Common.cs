@@ -9,6 +9,12 @@ namespace DirectAgents.Web
             var today = DateTime.Today;
             return new DateTime(today.Year, today.Month, 1);
         }
+
+        public static DateTime FirstOfYear()
+        {
+            var today = DateTime.Today;
+            return new DateTime(today.Year, 1, 1);
+        }
     }
 
     public static class Extensions

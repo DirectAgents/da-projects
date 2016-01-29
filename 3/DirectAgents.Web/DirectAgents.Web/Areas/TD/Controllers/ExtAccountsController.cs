@@ -64,6 +64,8 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View(extAcct);
         }
 
+        // --- Maintenance ---
+
         // json data for Maintenance Grid
         public JsonResult IndexData(string platform)
         {
@@ -102,6 +104,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 ExtAccount = extAcct,
                 LatestDailyStat = tdRepo.LatestStatDate(extAcct.Id),
                 LatestStrategyStat = tdRepo.LatestStrategyStatDate(extAcct.Id),
+                LatestTDadStat = tdRepo.LatestTDadStatDate(extAcct.Id),
                 Syncable = syncable
             };
             return PartialView(model);
@@ -113,15 +116,13 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             if (extAcct == null)
                 return null;
 
-            // Go back to the 1st - if requesting this month or last month
-            var firstOfMonth = Common.FirstOfMonth();
-            var firstOfLastMonth = firstOfMonth.AddMonths(-1);
+            // TODO: Go back to campaign's start date
             if (!start.HasValue)
-                start = firstOfLastMonth;
-            else if (start >= firstOfMonth)
-                start = firstOfMonth;
-            else if (start > firstOfLastMonth)
-                start = firstOfLastMonth;
+                start = Common.FirstOfMonth().AddMonths(-6);
+                //start = Common.FirstOfYear().AddYears(-1);
+            else if (start.Value.Day > 1)
+                start = new DateTime(start.Value.Year, start.Value.Month, 1);
+            // Go back to 1st of month - so as to refresh the stats
 
             switch (extAcct.Platform.Code)
             {
@@ -131,6 +132,8 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                         oneStatPer = "advertisable";
                     else if (level == "strategy")
                         oneStatPer = "campaign";
+                    else if (level == "creative")
+                        oneStatPer = "ad";
                     else
                         oneStatPer = level;
                     DASynchAdrollStats.RunStatic(extAcct.ExternalId, startDate: start, oneStatPer: oneStatPer);
@@ -146,6 +149,8 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             }
             return null;
         }
+
+        // --- Strats, TDads, etc
 
         public ActionResult Strategies(int? id)
         {

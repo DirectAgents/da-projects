@@ -3,9 +3,11 @@
 @{
     string latestDailyStat = Model.LatestDailyStat.HasValue ? Model.LatestDailyStat.Value.ToShortDateString() : null;
     string latestStrategyStat = Model.LatestStrategyStat.HasValue ? Model.LatestStrategyStat.Value.ToShortDateString() : null;
+    string latestCreativeStat = Model.LatestTDadStat.HasValue ? Model.LatestTDadStat.Value.ToShortDateString() : null;
     string syncAllUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, start = latestDailyStat });
     string syncDailyUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, start = latestDailyStat, level = "account" });
     string syncStratUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, start = latestStrategyStat, level = "strategy" });
+    string syncCreatUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, start = latestCreativeStat, level = "creative" });
 }
 
 Latest Daily Stats: @(latestDailyStat ?? "(none)")
@@ -19,4 +21,10 @@ Latest Strategy Stats: @(latestStrategyStat ?? "(none)")
 @if (Model.Syncable && Model.ExtAccount.Platform.Code == Platform.Code_AdRoll) {
     <text>&nbsp;&nbsp;</text>
     <a href="#" onclick="SyncAccount(@Model.ExtAccount.Id, '@syncStratUrl'); return false">Sync</a>
+}
+<br />
+Latest Creative Stats: @(latestCreativeStat ?? "(none)")
+@if (Model.Syncable && Model.ExtAccount.Platform.Code == Platform.Code_AdRoll) {
+    <text>&nbsp;&nbsp;</text>
+    <a href="#" onclick="SyncAccount(@Model.ExtAccount.Id, '@syncCreatUrl'); return false">Sync</a>
 }
