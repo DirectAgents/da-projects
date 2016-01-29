@@ -1006,7 +1006,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Sum(Fields!Budget.Value)</Value>
+                                      <Value>=First(Fields!Budget.Value)</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -1078,7 +1078,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Code.SafeFraction(Sum(Fields!MediaSpend.Value), Sum(Fields!Budget.Value))</Value>
+                                      <Value>=Code.SafeFraction(Sum(Fields!MediaSpend.Value), First(Fields!Budget.Value))</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -2351,7 +2351,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Sum(Fields!Budget.Value)</Value>
+                                      <Value>=First(Fields!Budget.Value)</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -2423,7 +2423,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Code.SafeFraction(Sum(Fields!MediaSpend.Value), Sum(Fields!Budget.Value))</Value>
+                                      <Value>=Code.SafeFraction(Sum(Fields!MediaSpend.Value), First(Fields!Budget.Value))</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -3649,10 +3649,10 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                               <FontFamily>Calibri</FontFamily>
                               <FontSize>9pt</FontSize>
                             </Style>
-                            <Label>=Microsoft.VisualBasic.Strings.Format(Sum(Fields!MediaSpend.Value) / Sum(Fields!Budget.Value), "p2")</Label>
+                            <Label>=Microsoft.VisualBasic.Strings.Format(Sum(Fields!MediaSpend.Value) / First(Fields!Budget.Value), "p2")</Label>
                             <Position>Left</Position>
                           </ChartDataLabel>
-                          <ToolTip>=Format(Sum(Fields!MediaSpend.Value), "c")</ToolTip>
+                          <ToolTip>="Spend: " + Format(Sum(Fields!MediaSpend.Value), "c")</ToolTip>
                           <Style>
                             <Color>#578ece</Color>
                           </Style>
@@ -3685,17 +3685,17 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                       <ChartDataPoints>
                         <ChartDataPoint>
                           <ChartDataPointValues>
-                            <Y>=Sum(Fields!Budget.Value) - Sum(Fields!MediaSpend.Value)</Y>
+                            <Y>=First(Fields!Budget.Value) - Sum(Fields!MediaSpend.Value)</Y>
                           </ChartDataPointValues>
                           <ChartDataLabel>
                             <Style>
                               <FontFamily>Calibri</FontFamily>
                               <FontSize>14pt</FontSize>
                             </Style>
-                            <Label>=Format(Code.SafeFraction(Sum(Fields!MediaSpend.Value), Sum(Fields!Budget.Value)), "p2")</Label>
+                            <Label>=Format(Code.SafeFraction(Sum(Fields!MediaSpend.Value), First(Fields!Budget.Value)), "p2")</Label>
                             <Position>Left</Position>
                           </ChartDataLabel>
-                          <ToolTip>=Format(Sum(Fields!Budget.Value), "c")</ToolTip>
+                          <ToolTip>="Budget: " + Format(First(Fields!Budget.Value), "c")</ToolTip>
                           <Style>
                             <Color>White</Color>
                           </Style>
@@ -3852,7 +3852,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         <CrossAt>NaN</CrossAt>
                         <InterlacedColor>LimeGreen</InterlacedColor>
                         <Minimum>0</Minimum>
-                        <Maximum>=Sum(Fields!Budget.Value)</Maximum>
+                        <Maximum>=First(Fields!Budget.Value)</Maximum>
                         <ChartAxisScaleBreak>
                           <Style />
                         </ChartAxisScaleBreak>
@@ -3920,7 +3920,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     <TextOrientation>Horizontal</TextOrientation>
                   </ChartTitle>
                   <ChartTitle Name="Title2">
-                    <Caption>=Format(Code.SafeFraction(Sum(Fields!MediaSpend.Value), Sum(Fields!Budget.Value)), "p2")</Caption>
+                    <Caption>=Format(Code.SafeFraction(Sum(Fields!MediaSpend.Value), First(Fields!Budget.Value)), "p2")</Caption>
                     <Style>
                       <BackgroundGradientType>None</BackgroundGradientType>
                       <FontFamily>Calibri</FontFamily>
@@ -3931,7 +3931,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     <Position>RightTop</Position>
                     <DockOutsideChartArea>true</DockOutsideChartArea>
                     <DockOffset>-3</DockOffset>
-                    <ToolTip>=Format(Sum(Fields!Budget.Value), "c")</ToolTip>
+                    <ToolTip>="Budget: " + Format(First(Fields!Budget.Value), "c")</ToolTip>
                     <TextOrientation>Horizontal</TextOrientation>
                   </ChartTitle>
                 </ChartTitles>
@@ -9359,7 +9359,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
       <DataType>Integer</DataType>
       <DefaultValue>
         <Values>
-          <Value>3</Value>
+          <Value>2010</Value>
         </Values>
       </DefaultValue>
       <Prompt>Advertiser</Prompt>

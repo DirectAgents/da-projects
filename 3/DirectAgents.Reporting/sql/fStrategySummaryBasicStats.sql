@@ -21,7 +21,7 @@ WITH revenue AS
 	, budgetInfo.MediaSpend AS BIMediaSpend
 	, budgetInfo.MgmtFeePct AS BIMgmtFeePct
 	, budgetInfo.MarginPct AS BIMarginPct
-	FROM fBudgetInfo(@AdvertiserId, @StartDate, @EndDate) budgetInfo
+	FROM td.fBudgetInfo(@AdvertiserId, @StartDate, @EndDate) budgetInfo
 	INNER JOIN td.Strategy ON td.Strategy.AccountId = budgetInfo.AccountId
 	INNER JOIN td.StrategySummary ON td.StrategySummary.StrategyId = td.Strategy.Id
 	LEFT OUTER JOIN td.Platform ON Platform.Id = budgetInfo.PlatformId

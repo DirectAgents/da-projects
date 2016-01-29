@@ -1,4 +1,4 @@
-﻿alter FUNCTION fBudgetInfo(
+﻿alter FUNCTION td.fBudgetInfo(
 @AdvertiserId int
 , @StartDate datetime = NULL
 , @EndDate datetime = NULL
@@ -13,14 +13,14 @@ SELECT ISNULL(PlatformBudgetInfo.MediaSpend, ISNULL(BudgetInfo.MediaSpend, Campa
 	, Account.PlatformId
 FROM td.Campaign
 LEFT OUTER JOIN td.BudgetInfo
-	ON (BudgetInfo.CampaignId = Campaign.Id)
-	AND ((@StartDate IS NULL) OR (BudgetInfo.Date >= @StartDate))
-	AND ((@EndDate IS NULL) OR (BudgetInfo.Date <= @EndDate))
+   ON (BudgetInfo.CampaignId = Campaign.Id)
+  AND ((@StartDate IS NULL) OR (BudgetInfo.Date >= @StartDate))
+  AND ((@EndDate IS NULL) OR (BudgetInfo.Date <= @EndDate))
 LEFT OUTER JOIN td.PlatformBudgetInfo
-	ON (PlatformBudgetInfo.CampaignId = Campaign.Id)
-	AND ((@StartDate IS NULL) OR (PlatformBudgetInfo.Date >= @StartDate))
-	AND ((@EndDate IS NULL) OR (PlatformBudgetInfo.Date <= @EndDate))
+   ON (PlatformBudgetInfo.CampaignId = Campaign.Id)
+  AND ((@StartDate IS NULL) OR (PlatformBudgetInfo.Date >= @StartDate))
+  AND ((@EndDate IS NULL) OR (PlatformBudgetInfo.Date <= @EndDate))
 LEFT OUTER JOIN td.Platform ON Platform.Id = PlatformBudgetInfo.PlatformId
 LEFT OUTER JOIN td.Account
-  ON ((Account.CampaignId = Campaign.Id)  OR (Account.PlatformId = Platform.Id))
+   ON ((Account.CampaignId = Campaign.Id)  OR (Account.PlatformId = Platform.Id))
 WHERE (td.Campaign.AdvertiserId = @AdvertiserId)

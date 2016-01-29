@@ -22,7 +22,7 @@ WITH revenue AS
 	, budgetInfo.MediaSpend AS BIMediaSpend
 	, budgetInfo.MgmtFeePct AS BIMgmtFeePct
 	, budgetInfo.MarginPct AS BIMarginPct
-	FROM fBudgetInfo(@AdvertiserId, default, default) budgetInfo
+	FROM td.fBudgetInfo(@AdvertiserId, default, default) budgetInfo
 	INNER JOIN td.SiteSummary ON td.SiteSummary.AccountId = budgetInfo.AccountId
 	INNER JOIN td.Site ON td.Site.Id = td.SiteSummary.SiteId
 	WHERE (td.SiteSummary.Date BETWEEN @StartDate AND @EndDate)

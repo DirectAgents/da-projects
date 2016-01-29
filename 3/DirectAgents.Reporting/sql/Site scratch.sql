@@ -1,4 +1,8 @@
-﻿select distinct Site.Name, SiteSummary.Date, Account.Name AS Account
+﻿declare @AdvertiserId int; select @AdvertiserId = Id from td.Advertiser where Name = 'Monterey Bay'
+select * from td.fBudgetInfo(@AdvertiserId, default, default)
+select * from td.fDailySummaryBasicStats(@AdvertiserId, '1/1/1970', getdate())
+
+select distinct Site.Name, SiteSummary.Date, Account.Name AS Account
 , Advertiser.Id AS AdvertiserId, Advertiser.Name AS Advertiser
 , Platform.Name AS Platform, Platform.Id As PlatformId
 , pbiAdvertiser.Name AS PBIAdvertiser, pbiAdvertiser.Id AS PBIAdvertiserId
@@ -22,7 +26,7 @@ left outer join td.Advertiser ON Advertiser.Id = Campaign.AdvertiserId
 
 
 select distinct Platform.Name
-from fBudgetInfo(3, default, default) budgetInfo
+from td.fBudgetInfo(3, default, default) budgetInfo
 	INNER JOIN td.SiteSummary ON td.SiteSummary.AccountId = budgetInfo.AccountId
 	INNER JOIN td.Site ON td.Site.Id = td.SiteSummary.SiteId
 	LEFT OUTER JOIN td.Platform ON Platform.Id = budgetInfo.PlatformId
