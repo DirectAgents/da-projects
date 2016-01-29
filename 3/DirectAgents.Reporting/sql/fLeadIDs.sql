@@ -21,7 +21,7 @@ LEFT OUTER JOIN td.ConvCountry ON ConvCountry.Id = ConvCity.CountryId
 LEFT OUTER JOIN td.Strategy ON Strategy.Id = Conv.StrategyId
 -- If Conv.TDadId is not null
 LEFT OUTER JOIN td.Ad ON Ad.Id = Conv.TDadId
-LEFT OUTER JOIN td.Account ON Account.Id IN (Strategy.AccountId, Ad.AccountId)
+LEFT OUTER JOIN td.Account ON Account.Id IN (Strategy.AccountId, Ad.AccountId, Conv.AccountId)
 LEFT OUTER JOIN td.Campaign ON Campaign.Id = Account.CampaignId
 LEFT OUTER JOIN td.Advertiser ON Advertiser.Id = Campaign.AdvertiserId
 WHERE (Advertiser.Id = @AdvertiserId)
