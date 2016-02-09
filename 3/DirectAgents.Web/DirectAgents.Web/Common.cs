@@ -36,5 +36,13 @@ namespace DirectAgents.Web
             else
                 return null;
         }
+
+        public static string ToShortDateString(this DateTime? dateTime, string nullString = null)
+        {
+            if (dateTime.HasValue)
+                return dateTime.Value.ToShortDateString();
+            else
+                return nullString;
+        }
     }
 }

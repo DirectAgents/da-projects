@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -25,6 +26,31 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             Session["platformCode"] = platform;
             Session["campId"] = campId.ToString();
             return View(extAccounts);
+        }
+
+        // For each account, shows a "gauge" of what stats are loaded
+        public ActionResult IndexGauge(string platform, int? campId)
+        {
+            var extAccounts = tdRepo.ExtAccounts(platformCode: platform, campId: campId)
+                .OrderBy(a => a.Platform.Name).ThenBy(a => a.Name);
+
+            List<StatsGaugeVM> statsGauges = new List<StatsGaugeVM>();
+            foreach (var extAcct in extAccounts)
+            {
+                var statsGauge = new StatsGaugeVM
+                {
+                    Platform = extAcct.Platform,
+                    ExtAccount = extAcct,
+                    EarliestDaily = tdRepo.EarliestDailyStatDate(extAcct.Id),
+                    EarliestStrat = tdRepo.EarliestStrategyStatDate(extAcct.Id),
+                    EarliestCreat = tdRepo.EarliestTDadStatDate(extAcct.Id),
+                    LatestDaily = tdRepo.LatestDailyStatDate(extAcct.Id),
+                    LatestStrat = tdRepo.LatestStrategyStatDate(extAcct.Id),
+                    LatestCreat = tdRepo.LatestTDadStatDate(extAcct.Id)
+                };
+                statsGauges.Add(statsGauge);
+            }
+            return View(statsGauges);
         }
 
         public ActionResult CreateNew(string platform)
@@ -102,7 +128,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var model = new AccountMaintenanceVM
             {
                 ExtAccount = extAcct,
-                LatestDailyStat = tdRepo.LatestStatDate(extAcct.Id),
+                LatestDailyStat = tdRepo.LatestDailyStatDate(extAcct.Id),
                 LatestStrategyStat = tdRepo.LatestStrategyStatDate(extAcct.Id),
                 LatestTDadStat = tdRepo.LatestTDadStatDate(extAcct.Id),
                 Syncable = syncable

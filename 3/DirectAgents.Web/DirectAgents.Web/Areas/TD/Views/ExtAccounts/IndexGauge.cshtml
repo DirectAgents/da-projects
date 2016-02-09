@@ -1,0 +1,40 @@
+﻿@model IEnumerable<DirectAgents.Web.Areas.TD.Models.StatsGaugeVM>
+
+<h2>Stats Gauge - By ExtAccount</h2>
+
+<table>
+<tr>
+    <th colspan="2"></th>
+    <th colspan="2">Daily</th>
+    <th colspan="2">Strategy</th>
+    <th colspan="2">Creative</th>
+</tr>
+<tr>
+    <th>Partner</th>
+    <th>AccountName</th>
+    <th>Earliest</th>
+    <th>Latest</th>
+    <th>Earliest</th>
+    <th>Latest</th>
+    <th>Earliest</th>
+    <th>Latest</th>
+</tr>
+@foreach (var gauge in Model)
+{
+<tr>
+    <td>@gauge.Platform.Name</td>
+    <td>@gauge.ExtAccount.Name</td>
+    <td style="text-align:right">@gauge.EarliestDaily.ToShortDateString()</td>
+    <td style="text-align:right">@gauge.LatestDaily.ToShortDateString()</td>
+    <td style="text-align:right">@gauge.EarliestStrat.ToShortDateString()</td>
+    <td style="text-align:right">@gauge.LatestStrat.ToShortDateString()</td>
+    <td style="text-align:right">@gauge.EarliestCreat.ToShortDateString()</td>
+    <td style="text-align:right">@gauge.LatestCreat.ToShortDateString()</td>
+</tr>
+}
+</table>
+<br />
+Filter:
+@Html.ActionLink("AdRoll", null, new { platform = "adr" }) |
+@Html.ActionLink("DBM", null, new { platform = "dbm" })
+<br /><br />
