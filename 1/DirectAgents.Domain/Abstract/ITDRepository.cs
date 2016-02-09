@@ -62,12 +62,13 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<Strategy> Strategies(int? acctId);
         IQueryable<TDad> TDads(int? acctId);
 
-        DateTime? EarliestDailyStatDate(int? acctId = null);
-        DateTime? EarliestStrategyStatDate(int? acctId = null);
-        DateTime? EarliestTDadStatDate(int? acctId = null);
-        DateTime? LatestDailyStatDate(int? acctId = null);
-        DateTime? LatestStrategyStatDate(int? acctId = null);
-        DateTime? LatestTDadStatDate(int? acctId = null);
+        TDStatsGauge GetStatsGauge(int? acctId = null);
+        //DateTime? EarliestDailyStatDate(int? acctId = null);
+        //DateTime? EarliestStrategyStatDate(int? acctId = null);
+        //DateTime? EarliestTDadStatDate(int? acctId = null);
+        //DateTime? LatestDailyStatDate(int? acctId = null);
+        //DateTime? LatestStrategyStatDate(int? acctId = null);
+        //DateTime? LatestTDadStatDate(int? acctId = null);
         DailySummary DailySummary(DateTime date, int acctId);
         bool AddDailySummary(DailySummary daySum);
         bool SaveDailySummary(DailySummary daySum);
@@ -75,6 +76,8 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null);
         IQueryable<StrategySummary> StrategySummaries(DateTime? startDate, DateTime? endDate, int? stratId = null, int? acctId = null, int? campId = null);
         IQueryable<TDadSummary> TDadSummaries(DateTime? startDate, DateTime? endDate, int? tdadId = null, int? acctId = null, int? campId = null);
+        IQueryable<SiteSummary> SiteSummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null);
+        IQueryable<Conv> Convs(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null);
         //TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null);
         TDRawStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null);
         TDCampStats GetCampStats(DateTime monthStart, int campId);

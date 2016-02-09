@@ -1,29 +1,47 @@
 ﻿@using DirectAgents.Domain.Entities.TD
 @model DirectAgents.Web.Areas.TD.Models.AccountMaintenanceVM
 @{
-    string latestDailyStat = Model.LatestDailyStat.HasValue ? Model.LatestDailyStat.Value.ToShortDateString() : null;
-    string latestStrategyStat = Model.LatestStrategyStat.HasValue ? Model.LatestStrategyStat.Value.ToShortDateString() : null;
-    string latestCreativeStat = Model.LatestTDadStat.HasValue ? Model.LatestTDadStat.Value.ToShortDateString() : null;
+    string earliestDailyStat = Model.StatsGauge.Daily.EarliestDisp;
+    string latestDailyStat = Model.StatsGauge.Daily.LatestDisp;
+    string earliestStrategyStat = Model.StatsGauge.Strategy.EarliestDisp;
+    string latestStrategyStat = Model.StatsGauge.Strategy.LatestDisp;
+    string earliestCreativeStat = Model.StatsGauge.Creative.EarliestDisp;
+    string latestCreativeStat = Model.StatsGauge.Creative.LatestDisp;
     string syncAllUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, start = latestDailyStat });
     string syncDailyUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, start = latestDailyStat, level = "account" });
     string syncStratUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, start = latestStrategyStat, level = "strategy" });
     string syncCreatUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, start = latestCreativeStat, level = "creative" });
 }
 
-Latest Daily Stats: @(latestDailyStat ?? "(none)")
+Daily Stats...
+@if (earliestDailyStat != null) {
+    <text>Earliest: @earliestDailyStat - Latest: @latestDailyStat</text>
+} else {
+    <text>(none)</text>
+}
 @if (Model.Syncable) {
     string syncUrl = (Model.ExtAccount.Platform.Code == Platform.Code_AdRoll) ? syncDailyUrl : syncAllUrl;
     <text>&nbsp;&nbsp;</text>
     <a href="#" onclick="SyncAccount(@Model.ExtAccount.Id, '@syncUrl'); return false">Sync</a>
 }
 <br />
-Latest Strategy Stats: @(latestStrategyStat ?? "(none)")
+Strategy Stats...
+@if (earliestStrategyStat != null) {
+    <text>Earliest: @earliestStrategyStat - Latest: @latestStrategyStat</text>
+} else {
+    <text>(none)</text>
+}
 @if (Model.Syncable && Model.ExtAccount.Platform.Code == Platform.Code_AdRoll) {
     <text>&nbsp;&nbsp;</text>
     <a href="#" onclick="SyncAccount(@Model.ExtAccount.Id, '@syncStratUrl'); return false">Sync</a>
 }
 <br />
-Latest Creative Stats: @(latestCreativeStat ?? "(none)")
+Creative Stats...
+@if (earliestCreativeStat != null) {
+    <text>Earliest: @earliestCreativeStat - Latest: @latestCreativeStat</text>
+} else {
+    <text>(none)</text>
+}
 @if (Model.Syncable && Model.ExtAccount.Platform.Code == Platform.Code_AdRoll) {
     <text>&nbsp;&nbsp;</text>
     <a href="#" onclick="SyncAccount(@Model.ExtAccount.Id, '@syncCreatUrl'); return false">Sync</a>

@@ -8,6 +8,8 @@
     <th colspan="2">Daily</th>
     <th colspan="2">Strategy</th>
     <th colspan="2">Creative</th>
+    <th colspan="2">Site</th>
+    <th colspan="2">Conv</th>
 </tr>
 <tr>
     <th>Partner</th>
@@ -18,18 +20,26 @@
     <th>Latest</th>
     <th>Earliest</th>
     <th>Latest</th>
+    <th>Earliest</th>
+    <th>Latest</th>
+    <th>Earliest</th>
+    <th>Latest</th>
 </tr>
-@foreach (var gauge in Model)
+@foreach (var vm in Model)
 {
 <tr>
-    <td>@gauge.Platform.Name</td>
-    <td>@gauge.ExtAccount.Name</td>
-    <td style="text-align:right">@gauge.EarliestDaily.ToShortDateString()</td>
-    <td style="text-align:right">@gauge.LatestDaily.ToShortDateString()</td>
-    <td style="text-align:right">@gauge.EarliestStrat.ToShortDateString()</td>
-    <td style="text-align:right">@gauge.LatestStrat.ToShortDateString()</td>
-    <td style="text-align:right">@gauge.EarliestCreat.ToShortDateString()</td>
-    <td style="text-align:right">@gauge.LatestCreat.ToShortDateString()</td>
+    <td>@vm.Platform.Name</td>
+    <td>@vm.ExtAccount.Name</td>
+    <td style="text-align:right">@vm.Gauge.Daily.EarliestDisp</td>
+    <td style="text-align:right">@vm.Gauge.Daily.LatestDisp</td>
+    <td style="text-align:right">@vm.Gauge.Strategy.EarliestDisp</td>
+    <td style="text-align:right">@vm.Gauge.Strategy.LatestDisp</td>
+    <td style="text-align:right">@vm.Gauge.Creative.EarliestDisp</td>
+    <td style="text-align:right">@vm.Gauge.Creative.LatestDisp</td>
+    <td style="text-align:right">@vm.Gauge.Site.EarliestDisp</td>
+    <td style="text-align:right">@vm.Gauge.Site.LatestDisp</td>
+    <td style="text-align:right">@vm.Gauge.Conv.EarliestDisp</td>
+    <td style="text-align:right">@vm.Gauge.Conv.LatestDisp</td>
 </tr>
 }
 </table>

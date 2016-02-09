@@ -1,4 +1,5 @@
 ﻿using System;
+using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.TD;
 
 namespace DirectAgents.Web.Areas.TD.Models
@@ -6,9 +7,8 @@ namespace DirectAgents.Web.Areas.TD.Models
     public class AccountMaintenanceVM
     {
         public ExtAccount ExtAccount { get; set; }
-        public DateTime? LatestDailyStat { get; set; }
-        public DateTime? LatestStrategyStat { get; set; }
-        public DateTime? LatestTDadStat { get; set; }
         public bool Syncable { get; set; }
+
+        public TDStatsGauge StatsGauge { get; set; }
     }
 }

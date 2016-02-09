@@ -34,23 +34,18 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var extAccounts = tdRepo.ExtAccounts(platformCode: platform, campId: campId)
                 .OrderBy(a => a.Platform.Name).ThenBy(a => a.Name);
 
-            List<StatsGaugeVM> statsGauges = new List<StatsGaugeVM>();
+            List<StatsGaugeVM> statsGaugeVMs = new List<StatsGaugeVM>();
             foreach (var extAcct in extAccounts)
             {
-                var statsGauge = new StatsGaugeVM
+                var statsGaugeVM = new StatsGaugeVM
                 {
                     Platform = extAcct.Platform,
                     ExtAccount = extAcct,
-                    EarliestDaily = tdRepo.EarliestDailyStatDate(extAcct.Id),
-                    EarliestStrat = tdRepo.EarliestStrategyStatDate(extAcct.Id),
-                    EarliestCreat = tdRepo.EarliestTDadStatDate(extAcct.Id),
-                    LatestDaily = tdRepo.LatestDailyStatDate(extAcct.Id),
-                    LatestStrat = tdRepo.LatestStrategyStatDate(extAcct.Id),
-                    LatestCreat = tdRepo.LatestTDadStatDate(extAcct.Id)
+                    Gauge = tdRepo.GetStatsGauge(extAcct.Id)
                 };
-                statsGauges.Add(statsGauge);
+                statsGaugeVMs.Add(statsGaugeVM);
             }
-            return View(statsGauges);
+            return View(statsGaugeVMs);
         }
 
         public ActionResult CreateNew(string platform)
@@ -128,10 +123,8 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var model = new AccountMaintenanceVM
             {
                 ExtAccount = extAcct,
-                LatestDailyStat = tdRepo.LatestDailyStatDate(extAcct.Id),
-                LatestStrategyStat = tdRepo.LatestStrategyStatDate(extAcct.Id),
-                LatestTDadStat = tdRepo.LatestTDadStatDate(extAcct.Id),
-                Syncable = syncable
+                Syncable = syncable,
+                StatsGauge = tdRepo.GetStatsGauge(extAcct.Id)
             };
             return PartialView(model);
         }

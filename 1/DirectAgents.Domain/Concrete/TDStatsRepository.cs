@@ -9,43 +9,79 @@ namespace DirectAgents.Domain.Concrete
 {
     public partial class TDRepository
     {
-        public DateTime? EarliestDailyStatDate(int? acctId = null)
+        public TDStatsGauge GetStatsGauge(int? acctId = null)
         {
+            var gauge = new TDStatsGauge();
             var dSums = DailySummaries(null, null, acctId: acctId);
-            if (!dSums.Any()) return null;
-            return dSums.Min(ds => ds.Date);
-        }
-        public DateTime? EarliestStrategyStatDate(int? acctId = null)
-        {
+            if (dSums.Any())
+            {
+                gauge.Daily.Earliest = dSums.Min(s => s.Date);
+                gauge.Daily.Latest = dSums.Max(s => s.Date);
+            }
             var sSums = StrategySummaries(null, null, acctId: acctId);
-            if (!sSums.Any()) return null;
-            return sSums.Min(s => s.Date);
-        }
-        public DateTime? EarliestTDadStatDate(int? acctId = null)
-        {
+            if (sSums.Any())
+            {
+                gauge.Strategy.Earliest = sSums.Min(s => s.Date);
+                gauge.Strategy.Latest = sSums.Max(s => s.Date);
+            }
             var tSums = TDadSummaries(null, null, acctId: acctId);
-            if (!tSums.Any()) return null;
-            return tSums.Min(s => s.Date);
+            if (tSums.Any())
+            {
+                gauge.Creative.Earliest = tSums.Min(s => s.Date);
+                gauge.Creative.Latest = tSums.Max(s => s.Date);
+            }
+            var siteSums = SiteSummaries(null, null, acctId: acctId);
+            if (siteSums.Any())
+            {
+                gauge.Site.Earliest = siteSums.Min(s => s.Date);
+                gauge.Site.Latest = siteSums.Max(s => s.Date);
+            }
+            var convs = Convs(null, null, acctId: acctId);
+            if (convs.Any())
+            {
+                gauge.Conv.Earliest = convs.Min(c => c.Time);
+                gauge.Conv.Latest = convs.Max(c => c.Time);
+            }
+            return gauge;
         }
 
-        public DateTime? LatestDailyStatDate(int? acctId = null)
-        {
-            var dSums = DailySummaries(null, null, acctId: acctId);
-            if (!dSums.Any()) return null;
-            return dSums.Max(ds => ds.Date);
-        }
-        public DateTime? LatestStrategyStatDate(int? acctId = null)
-        {
-            var sSums = StrategySummaries(null, null, acctId: acctId);
-            if (!sSums.Any()) return null;
-            return sSums.Max(s => s.Date);
-        }
-        public DateTime? LatestTDadStatDate(int? acctId = null)
-        {
-            var tSums = TDadSummaries(null, null, acctId: acctId);
-            if (!tSums.Any()) return null;
-            return tSums.Max(s => s.Date);
-        }
+        //public DateTime? EarliestDailyStatDate(int? acctId = null)
+        //{
+        //    var dSums = DailySummaries(null, null, acctId: acctId);
+        //    if (!dSums.Any()) return null;
+        //    return dSums.Min(ds => ds.Date);
+        //}
+        //public DateTime? EarliestStrategyStatDate(int? acctId = null)
+        //{
+        //    var sSums = StrategySummaries(null, null, acctId: acctId);
+        //    if (!sSums.Any()) return null;
+        //    return sSums.Min(s => s.Date);
+        //}
+        //public DateTime? EarliestTDadStatDate(int? acctId = null)
+        //{
+        //    var tSums = TDadSummaries(null, null, acctId: acctId);
+        //    if (!tSums.Any()) return null;
+        //    return tSums.Min(s => s.Date);
+        //}
+
+        //public DateTime? LatestDailyStatDate(int? acctId = null)
+        //{
+        //    var dSums = DailySummaries(null, null, acctId: acctId);
+        //    if (!dSums.Any()) return null;
+        //    return dSums.Max(ds => ds.Date);
+        //}
+        //public DateTime? LatestStrategyStatDate(int? acctId = null)
+        //{
+        //    var sSums = StrategySummaries(null, null, acctId: acctId);
+        //    if (!sSums.Any()) return null;
+        //    return sSums.Max(s => s.Date);
+        //}
+        //public DateTime? LatestTDadStatDate(int? acctId = null)
+        //{
+        //    var tSums = TDadSummaries(null, null, acctId: acctId);
+        //    if (!tSums.Any()) return null;
+        //    return tSums.Max(s => s.Date);
+        //}
 
         public DailySummary DailySummary(DateTime date, int acctId)
         {
@@ -123,6 +159,35 @@ namespace DirectAgents.Domain.Concrete
             if (campId.HasValue)
                 tSums = tSums.Where(s => s.TDad.ExtAccount.CampaignId == campId);
             return tSums;
+        }
+
+        public IQueryable<SiteSummary> SiteSummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null)
+        {
+            var sSums = context.SiteSummaries.AsQueryable();
+            if (startDate.HasValue)
+                sSums = sSums.Where(s => s.Date >= startDate.Value);
+            if (endDate.HasValue)
+                sSums = sSums.Where(s => s.Date <= endDate.Value);
+            if (acctId.HasValue)
+                sSums = sSums.Where(s => s.AccountId == acctId.Value);
+            if (campId.HasValue)
+                sSums = sSums.Where(s => s.ExtAccount.CampaignId == campId);
+            return sSums;
+        }
+
+        public IQueryable<Conv> Convs(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null)
+        {
+            var convs = context.Convs.AsQueryable();
+            if (startDate.HasValue)
+                convs = convs.Where(s => s.Time >= startDate.Value);
+            if (endDate.HasValue)
+                convs = convs.Where(s => s.Time < endDate.Value.AddDays(1));
+                // Include up to 11:59:59.999... on the endDate specified
+            if (acctId.HasValue)
+                convs = convs.Where(s => s.AccountId == acctId.Value);
+            if (campId.HasValue)
+                convs = convs.Where(s => s.ExtAccount.CampaignId == campId);
+            return convs;
         }
 
         //NOTE: This will sum stats for ALL campaigns if none specified.

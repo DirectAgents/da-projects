@@ -78,6 +78,7 @@
     <Compile Include="DTO\TDCampStats.cs" />
     <Compile Include="DTO\TDLineItem.cs" />
     <Compile Include="DTO\TDStat.cs" />
+    <Compile Include="DTO\TDStatsGauge.cs" />
     <Compile Include="Entities\AdRoll\Ad.cs" />
     <Compile Include="Entities\AdRoll\AdDailySummary.cs" />
     <Compile Include="Entities\AdRoll\Advertisable.cs" />
