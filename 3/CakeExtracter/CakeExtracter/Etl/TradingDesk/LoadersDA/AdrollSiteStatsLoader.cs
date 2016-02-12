@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using DirectAgents.Domain.Contexts;
@@ -8,7 +7,7 @@ using DirectAgents.Domain.Entities.TD;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
-    public class AdrollSiteStatsLoader : Loader<AdrollSiteStatsRow> /*question*/
+    public class AdrollSiteStatsLoader : Loader<AdrollSiteStatsRow>
     {
         private TDSiteSummaryLoader siteSummaryLoader;
         private Dictionary<string, int> siteIdLookupByName = new Dictionary<string, int>();
@@ -68,12 +67,12 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         db.Sites.Add(site);
                         db.SaveChanges();
                         Logger.Info("Saved new Site: {0} ({1})", site.Name, site.Id);
-                        siteIdLookupByName[site.Name] = site.Id;
+                        siteIdLookupByName[siteName] = site.Id;
                     }
                     else
                     {
                         var site = sites.First(); // there shouldn't be more than one with the same name, but...
-                        siteIdLookupByName[site.Name] = site.Id;
+                        siteIdLookupByName[siteName] = site.Id;
                     }
                 }
             }

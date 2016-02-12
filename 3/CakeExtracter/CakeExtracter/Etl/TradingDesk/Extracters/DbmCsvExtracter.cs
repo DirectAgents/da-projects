@@ -131,7 +131,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     {
         public DbmRowWithSiteMap()
         {
-            Map(m => m.Date);
+            Map(m => m.Date).Name("Month");
             Map(m => m.InsertionOrder);
             Map(m => m.InsertionOrderID);
             Map(m => m.Impressions);
@@ -171,7 +171,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     }
     public class DbmRowWithSite : DbmRowBase
     {
-        public string Site { get; set; }
+        private string _site;
+        public string Site
+        {
+            get { return _site; }
+            set { _site = value.ToLower(); }
+        }
         public string SiteID { get; set; } // int
     }
 }

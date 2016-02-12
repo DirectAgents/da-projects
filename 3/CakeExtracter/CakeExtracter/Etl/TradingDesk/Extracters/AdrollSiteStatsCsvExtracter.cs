@@ -84,7 +84,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
     public class AdrollSiteStatsRow
     {
-        public string website { get; set; }
+        private string _website;
+        public string website
+        {
+            get { return _website; }
+            set { _website = value.ToLower(); }
+        }
         public string size { get; set; }
         public decimal cost { get; set; }
         public int impression { get; set; }
