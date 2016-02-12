@@ -14,7 +14,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public AdrollCampaignSummaryLoader(string advertisableEid)
         {
-            this.strategySummaryLoader = new TDStrategySummaryLoader();
             using (var db = new DATDContext())
             {
                 var account = db.ExtAccounts.Where(a => a.ExternalId == advertisableEid && a.Platform.Code == Platform.Code_AdRoll)
@@ -23,6 +22,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     accountId = account.Id;
                 else
                     accountId = -1;
+
+                this.strategySummaryLoader = new TDStrategySummaryLoader(accountId);
             }
         }
         public bool FoundAccount()
@@ -74,7 +75,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     //    stratsInDb = db.Strategies.Where(s => s.AccountId == accountId && s => s.Name == group.Key.campaign);
 
                     // Assume all strategies in the group have the same properties (just different dates/stats)
-                    var groupAd = group.First();
+                    //var groupStrat = group.First();
 
                     if (!stratsInDb.Any())
                     {   // Strategy doesn't exist in the db; so create it and put an entry in the lookup

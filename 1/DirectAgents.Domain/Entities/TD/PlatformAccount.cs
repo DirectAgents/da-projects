@@ -26,7 +26,37 @@ namespace DirectAgents.Domain.Entities.TD
         public int Id { get; set; }
         public virtual Platform Platform { get; set; }
     }
-    public class ColumnMapping
+    public class ColumnMapping : ColumnMappingStats
+    {
+        [NotMapped] //TODO: remove these annotations!
+        public string StrategyName { get; set; }
+        [NotMapped]
+        public string StrategyEid { get; set; }
+        [NotMapped]
+        public string TDadName { get; set; }
+        [NotMapped]
+        public string TDadEid { get; set; }
+        [NotMapped]
+        public string SiteName { get; set; }
+
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            StrategyName = "Campaign";
+            StrategyEid = "CampaignEid";
+            TDadName = "Creative";
+            TDadEid = "CreativeEid";
+            SiteName = "Website";
+        }
+
+        public static ColumnMapping CreateDefault()
+        {
+            var mapping = new ColumnMapping();
+            mapping.SetDefaults();
+            return mapping;
+        }
+    }
+    public class ColumnMappingStats
     {
         // the values are the names of the columns these properties are mapped to (in DailySummary)
         [Required]
@@ -37,14 +67,7 @@ namespace DirectAgents.Domain.Entities.TD
         public string PostClickConv { get; set; }
         public string PostViewConv { get; set; }
 
-        public static ColumnMapping CreateDefault()
-        {
-            var mapping = new ColumnMapping();
-            mapping.SetDefaults();
-            return mapping;
-        }
-
-        public void SetDefaults()
+        public virtual void SetDefaults()
         {
             Date = "Date";
             Cost = "Cost";

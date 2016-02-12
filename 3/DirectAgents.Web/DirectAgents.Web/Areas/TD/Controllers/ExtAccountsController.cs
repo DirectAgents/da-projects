@@ -192,11 +192,11 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
             return View(extAcct);
         }
-        public ActionResult UploadFile(int id, HttpPostedFileBase file)
+        public ActionResult UploadFile(int id, HttpPostedFileBase file, string statsType)
         {
             using (var reader = new StreamReader(file.InputStream))
             {
-                DASynchTDDailySummaries.RunStatic(id, reader);
+                DASynchTDDailySummaries.RunStatic(id, reader, statsType);
             }
             return null;
         }

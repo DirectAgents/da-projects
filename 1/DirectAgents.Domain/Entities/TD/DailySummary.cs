@@ -33,6 +33,11 @@ namespace DirectAgents.Domain.Entities.TD
         public DateTime Date { get; set; }
         public int StrategyId { get; set; }
         public virtual Strategy Strategy { get; set; }
+
+        [NotMapped]
+        public string StrategyName { get; set; }
+        [NotMapped]
+        public string StrategyEid { get; set; } // external id
     }
 
     // DailySummary for a "TD ad"
