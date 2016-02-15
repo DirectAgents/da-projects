@@ -61,6 +61,8 @@ namespace CakeExtracter.Commands
 
                 if (StatsType.StartsWith("strat"))
                     DoETL_Strategy(mapping);
+                else if (StatsType.StartsWith("creat"))
+                    DoETL_Creative(mapping);
                 else
                     DoETL_Daily(mapping);
             }
@@ -84,6 +86,15 @@ namespace CakeExtracter.Commands
         {
             var extracter = new TDStrategySummaryExtracter(mapping, streamReader: StreamReader, csvFilePath: FilePath);
             var loader = new TDStrategySummaryLoader(AccountId);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+        public void DoETL_Creative(ColumnMapping mapping)
+        {
+            var extracter = new TDadSummaryExtracter(mapping, streamReader: StreamReader, csvFilePath: FilePath);
+            var loader = new TDadSummaryLoader(AccountId);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();

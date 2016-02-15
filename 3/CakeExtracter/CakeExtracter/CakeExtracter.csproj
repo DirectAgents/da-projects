@@ -292,6 +292,7 @@
     <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
     <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollSiteStatsCsvExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\TDadSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\TDStrategySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollSiteStatsLoader.cs" />
     <Compile Include="Commands\DASynchAdrollSiteStatsCsv.cs" />
@@ -437,6 +438,7 @@
     <Compile Include="Etl\TradingDesk\LoadersDA\DBMCreativeDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\DbmSiteSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollAdSummaryLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\TDadSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDConvLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDSiteSummaryLoader.cs" />

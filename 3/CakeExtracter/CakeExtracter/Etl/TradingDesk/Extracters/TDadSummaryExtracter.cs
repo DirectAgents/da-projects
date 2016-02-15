@@ -8,7 +8,7 @@ using DirectAgents.Domain.Entities.TD;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
-    public class TDStrategySummaryExtracter : Extracter<StrategySummary>
+    public class TDadSummaryExtracter : Extracter<TDadSummary>
     {
         // if streamReader is not null, use it. otherwise use csvFilePath.
         private readonly StreamReader streamReader;
@@ -16,7 +16,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         private readonly ColumnMapping columnMapping;
 
-        public TDStrategySummaryExtracter(ColumnMapping columnMapping, StreamReader streamReader = null, string csvFilePath = null)
+        public TDadSummaryExtracter(ColumnMapping columnMapping, StreamReader streamReader = null, string csvFilePath = null)
         {
             this.columnMapping = columnMapping;
             this.streamReader = streamReader;
@@ -25,13 +25,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            Logger.Info("Extracting StrategySummaries from {0}", csvFilePath ?? "StreamReader");
+            Logger.Info("Extracting TDadSummaries from {0}", csvFilePath ?? "StreamReader");
             var items = EnumerateRows();
             Add(items);
             End();
         }
 
-        private IEnumerable<StrategySummary> EnumerateRows()
+        private IEnumerable<TDadSummary> EnumerateRows()
         {
             if (this.streamReader != null)
             {
@@ -48,7 +48,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             }
         }
 
-        private IEnumerable<StrategySummary> EnumerateRowsInner(StreamReader reader)
+        private IEnumerable<TDadSummary> EnumerateRowsInner(StreamReader reader)
         {
             using (CsvReader csv = new CsvReader(reader))
             {
@@ -63,10 +63,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 var classMap = CreateCsvClassMap(this.columnMapping);
                 csv.Configuration.RegisterClassMap(classMap);
 
-                List<StrategySummary> csvRows = null;
+                List<TDadSummary> csvRows = null;
                 try
                 {
-                    csvRows = csv.GetRecords<StrategySummary>().ToList();
+                    csvRows = csv.GetRecords<TDadSummary>().ToList();
                 }
                 catch (CsvHelperException ex)
                 {
@@ -80,19 +80,19 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             }
         }
 
-        private IEnumerable<StrategySummary> GroupAndEnumerate(List<StrategySummary> csvRows)
+        private IEnumerable<TDadSummary> GroupAndEnumerate(List<TDadSummary> csvRows)
         {
-            // if StrategyEid's aren't all filled in...
-            if (csvRows.Any(r => string.IsNullOrWhiteSpace(r.StrategyEid)))
+            // if TDadEid's aren't all filled in...
+            if (csvRows.Any(r => string.IsNullOrWhiteSpace(r.TDadEid)))
             {
-                var groupedRows = csvRows.GroupBy(r => new { r.Date, r.StrategyEid, r.StrategyName });
+                var groupedRows = csvRows.GroupBy(r => new { r.Date, r.TDadEid, r.TDadName });
                 foreach (var group in groupedRows)
                 {
-                    var sum = new StrategySummary
+                    var sum = new TDadSummary
                     {
                         Date = group.Key.Date,
-                        StrategyEid = group.Key.StrategyEid,
-                        StrategyName = group.Key.StrategyName,
+                        TDadEid = group.Key.TDadEid,
+                        TDadName = group.Key.TDadName,
                         Impressions = group.Sum(g => g.Impressions),
                         Clicks = group.Sum(g => g.Clicks),
                         PostClickConv = group.Sum(g => g.PostClickConv),
@@ -102,19 +102,19 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                     yield return sum;
                 }
             }
-            else // if all StrategyEid's are filled in...
+            else // if all TDadEid's are filled in...
             {
-                var groupedRows = csvRows.GroupBy(r => new { r.Date, r.StrategyEid });
+                var groupedRows = csvRows.GroupBy(r => new { r.Date, r.TDadEid });
                 foreach (var group in groupedRows)
                 {
-                    string stratName = null;
+                    string tdAdName = null;
                     if (group.Count() == 1)
-                        stratName = group.First().StrategyName;
-                    var sum = new StrategySummary
+                        tdAdName = group.First().TDadName;
+                    var sum = new TDadSummary
                     {
                         Date = group.Key.Date,
-                        StrategyEid = group.Key.StrategyEid,
-                        StrategyName = stratName,
+                        TDadEid = group.Key.TDadEid,
+                        TDadName = tdAdName,
                         Impressions = group.Sum(g => g.Impressions),
                         Clicks = group.Sum(g => g.Clicks),
                         PostClickConv = group.Sum(g => g.PostClickConv),
@@ -128,11 +128,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         private CsvClassMap CreateCsvClassMap(ColumnMapping colMap)
         {
-            var classMap = new DefaultCsvClassMap<StrategySummary>();
-            Type classType = typeof(StrategySummary);
+            var classMap = new DefaultCsvClassMap<TDadSummary>();
+            Type classType = typeof(TDadSummary);
             TDDailySummaryExtracter.AddBasicPropertyMaps(classMap, classType, colMap);
-            TDDailySummaryExtracter.CheckAddPropertyMap(classMap, classType, "StrategyName", colMap.StrategyName);
-            TDDailySummaryExtracter.CheckAddPropertyMap(classMap, classType, "StrategyEid", colMap.StrategyEid);
+            TDDailySummaryExtracter.CheckAddPropertyMap(classMap, classType, "TDadName", colMap.TDadName);
+            TDDailySummaryExtracter.CheckAddPropertyMap(classMap, classType, "TDadEid", colMap.TDadEid);
             return classMap;
         }
     }

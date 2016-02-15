@@ -71,7 +71,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                             }
                             else
                             {
-                                Logger.Warn("Skipping load of item. Strategy {0} does not exist.", item.StrategyId);
+                                Logger.Warn("Skipping load of item. Strategy with id {0} does not exist.", item.StrategyId);
                                 skippedCount++;
                             }
                         }

@@ -46,6 +46,11 @@ namespace DirectAgents.Domain.Entities.TD
         public DateTime Date { get; set; }
         public int TDadId { get; set; }
         public virtual TDad TDad { get; set; }
+
+        [NotMapped]
+        public string TDadName { get; set; }
+        [NotMapped]
+        public string TDadEid { get; set; } // external id
     }
 
     // DailySummary for a Site / ExtAccount
