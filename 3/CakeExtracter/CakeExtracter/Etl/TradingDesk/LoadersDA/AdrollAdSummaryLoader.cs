@@ -8,12 +8,12 @@ using DirectAgents.Domain.Entities.TD;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
-    public class TDadSummaryLoader : Loader<AdSummary>
+    public class AdrollAdSummaryLoader : Loader<AdSummary>
     {
         private readonly int accountId;
         private Dictionary<string, int> TDadIdLookupByEid = new Dictionary<string, int>();
 
-        public TDadSummaryLoader(int acctId)
+        public AdrollAdSummaryLoader(int acctId)
         {
             this.accountId = acctId;
         }

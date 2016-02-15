@@ -142,7 +142,7 @@ namespace CakeExtracter.Commands
                 if (extAccount != null)
                 {
                     var extracter = new AdrollAdDailySummariesExtracter(dateRange, adv.Eid, arUtility);
-                    var loader = new TDadSummaryLoader(extAccount.Id);
+                    var loader = new AdrollAdSummaryLoader(extAccount.Id);
                     var extracterThread = extracter.Start();
                     var loaderThread = loader.Start(extracter);
                     extracterThread.Join();
