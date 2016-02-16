@@ -63,6 +63,8 @@ namespace CakeExtracter.Commands
                     DoETL_Strategy(mapping);
                 else if (StatsType.StartsWith("creat"))
                     DoETL_Creative(mapping);
+                else if (StatsType.StartsWith("site"))
+                    DoETL_Site(mapping);
                 else
                     DoETL_Daily(mapping);
             }
@@ -95,6 +97,15 @@ namespace CakeExtracter.Commands
         {
             var extracter = new TDadSummaryExtracter(mapping, streamReader: StreamReader, csvFilePath: FilePath);
             var loader = new TDadSummaryLoader(AccountId);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+        public void DoETL_Site(ColumnMapping mapping)
+        {
+            var extracter = new TDSiteSummaryExtracter(mapping, streamReader: StreamReader, csvFilePath: FilePath);
+            var loader = new TDSiteSummaryLoader(AccountId);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();

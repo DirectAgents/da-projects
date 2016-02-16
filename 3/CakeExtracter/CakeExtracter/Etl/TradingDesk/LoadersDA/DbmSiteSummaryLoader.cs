@@ -10,7 +10,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
     public class DbmSiteSummaryLoader : Loader<DbmRowBase>
     {
         private TDSiteSummaryLoader siteSummaryLoader;
-        private Dictionary<string, int> siteIdLookupByName = new Dictionary<string, int>();
+        private Dictionary<string, int> siteIdLookupByName = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         private Dictionary<int, int> accountIdLookupByIOid = new Dictionary<int, int>();
 
         public DbmSiteSummaryLoader()

@@ -10,15 +10,14 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
     public class AdrollSiteStatsLoader : Loader<AdrollSiteStatsRow>
     {
         private TDSiteSummaryLoader siteSummaryLoader;
-        private Dictionary<string, int> siteIdLookupByName = new Dictionary<string, int>();
-        private Dictionary<int, int> accountIdLookupByIOid = new Dictionary<int, int>();
+        private Dictionary<string, int> siteIdLookupByName = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         private int AccountId;
         private DateTime date;
 
-        public AdrollSiteStatsLoader(int AccountId, DateTime date)
+        public AdrollSiteStatsLoader(int accountId, DateTime date)
         {
             this.siteSummaryLoader = new TDSiteSummaryLoader();
-            this.AccountId = AccountId;
+            this.AccountId = accountId;
             this.date = date;
         }
 
@@ -50,32 +49,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         private void AddUpdateDependentSites(List<AdrollSiteStatsRow> items)
         {
             var siteNames = items.Select(i => i.website).Distinct();
-            using (var db = new DATDContext())
-            {
-                foreach (var siteName in siteNames)
-                {
-                    if (siteIdLookupByName.ContainsKey(siteName))
-                        continue; // already encountered this site
-
-                    var sites = db.Sites.Where(s => s.Name == siteName);
-                    if (!sites.Any())
-                    {
-                        var site = new Site
-                        {
-                            Name = siteName
-                        };
-                        db.Sites.Add(site);
-                        db.SaveChanges();
-                        Logger.Info("Saved new Site: {0} ({1})", site.Name, site.Id);
-                        siteIdLookupByName[siteName] = site.Id;
-                    }
-                    else
-                    {
-                        var site = sites.First(); // there shouldn't be more than one with the same name, but...
-                        siteIdLookupByName[siteName] = site.Id;
-                    }
-                }
-            }
+            TDSiteSummaryLoader.AddUpdateDependentSites(siteNames, siteIdLookupByName);
         }
     }
 }
