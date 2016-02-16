@@ -28,16 +28,12 @@ namespace DirectAgents.Domain.Entities.TD
     }
     public class ColumnMapping : ColumnMappingStats
     {
-        [NotMapped] //TODO: remove these annotations!
         public string StrategyName { get; set; }
-        [NotMapped]
         public string StrategyEid { get; set; }
-        [NotMapped]
         public string TDadName { get; set; }
-        [NotMapped]
         public string TDadEid { get; set; }
-        [NotMapped]
         public string SiteName { get; set; }
+        public string Month { get; set; }
 
         public override void SetDefaults()
         {
@@ -47,6 +43,7 @@ namespace DirectAgents.Domain.Entities.TD
             TDadName = "Creative";
             TDadEid = "CreativeEid";
             SiteName = "Website";
+            Month = "Month";
         }
 
         public static ColumnMapping CreateDefault()

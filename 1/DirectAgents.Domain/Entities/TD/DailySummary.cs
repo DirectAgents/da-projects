@@ -64,6 +64,14 @@ namespace DirectAgents.Domain.Entities.TD
         public int AccountId { get; set; }
         [ForeignKey("AccountId")]
         public virtual ExtAccount ExtAccount { get; set; }
+
+        [NotMapped]
+        public string SiteName
+        {
+            get { return _sitename; }
+            set { _sitename = value.ToLower(); }
+        }
+        private string _sitename;
     }
     public class Site
     {
