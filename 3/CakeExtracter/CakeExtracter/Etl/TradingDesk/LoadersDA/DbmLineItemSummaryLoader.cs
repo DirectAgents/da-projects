@@ -23,12 +23,12 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             Logger.Info("Loading {0} LineItem DailySummaries..", items.Count);
             AddUpdateDependentAccounts(items);
             AddUpdateDependentStrategies(items);
-            var ssItems = items.Select(i => CreateStrategySummary((DbmRowWithLineItem)i, strategyIdLookupByLineItemId[((DbmRowWithLineItem)i).LineItemID])).ToList();
+            var ssItems = items.Select(i => CreateStrategySummary(i, strategyIdLookupByLineItemId[((DbmRowWithLineItem)i).LineItemID])).ToList();
             var count = strategySummaryLoader.UpsertDailySummaries(ssItems);
             return count;
         }
 
-        public static StrategySummary CreateStrategySummary(DbmRowWithLineItem item, int strategyId)
+        public static StrategySummary CreateStrategySummary(DbmRowBase item, int strategyId)
         {
             var sSum = new StrategySummary
             {
@@ -46,7 +46,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public void AddUpdateDependentAccounts(List<DbmRowBase> items)
         {
             var ioTuples = items.Select(i => Tuple.Create(i.InsertionOrderID, i.InsertionOrder)).Distinct();
-            DbmSiteSummaryLoader.AddUpdateAccounts(ioTuples, accountIdLookupByIOid);
+            DbmDailySummaryLoader.AddUpdateAccounts(ioTuples, accountIdLookupByIOid);
         }
 
         private void AddUpdateDependentStrategies(List<DbmRowBase> items)

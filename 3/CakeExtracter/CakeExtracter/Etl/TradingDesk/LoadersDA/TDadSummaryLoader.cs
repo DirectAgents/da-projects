@@ -11,9 +11,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         private readonly int accountId;
         private Dictionary<string, int> tdAdIdLookupByEidAndName = new Dictionary<string, int>();
 
-        public TDadSummaryLoader(int extAccountId)
+        public TDadSummaryLoader(int accountId = -1)
         {
-            this.accountId = extAccountId;
+            this.accountId = accountId;
         }
 
         protected override int Load(List<TDadSummary> items)

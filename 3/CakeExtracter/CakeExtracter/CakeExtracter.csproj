@@ -438,6 +438,8 @@
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollCampaignSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollConvLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\DBMCreativeDailySummaryLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\DbmCreativeSummaryLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\DbmDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\DbmLineItemSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\DbmSiteSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollAdSummaryLoader.cs" />
