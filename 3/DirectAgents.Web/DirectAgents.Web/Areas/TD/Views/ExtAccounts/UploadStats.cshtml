@@ -1,6 +1,6 @@
 ﻿@model DirectAgents.Domain.Entities.TD.ExtAccount
 @{
-    var statsTypeList = new[] { "Daily", "Strategy", "Creative", "Site", "Conv" };
+    var statsTypeList = new[] { "Daily", "Strategy", "Creative", "Site" };
     var url = Url.Action("UploadFile", new { id = Model.Id });
 }
 <h2>Upload Stats for External Account</h2>

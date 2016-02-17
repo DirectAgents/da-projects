@@ -4,7 +4,7 @@
 
 <table>
 <tr>
-    <th colspan="2"></th>
+    <th colspan="3"></th>
     <th colspan="2">Daily</th>
     <th colspan="2">Strategy</th>
     <th colspan="2">Creative</th>
@@ -13,6 +13,7 @@
 </tr>
 <tr>
     <th>Partner</th>
+    <th>Id</th>
     <th>AccountName</th>
     <th>Earliest</th>
     <th>Latest</th>
@@ -29,6 +30,7 @@
 {
 <tr>
     <td>@vm.Platform.Name</td>
+    <td style="text-align:right">@vm.ExtAccount.Id</td>
     <td>@vm.ExtAccount.Name</td>
     <td style="text-align:right">@vm.Gauge.Daily.EarliestDisp</td>
     <td style="text-align:right">@vm.Gauge.Daily.LatestDisp</td>
@@ -46,5 +48,6 @@
 <br />
 Filter:
 @Html.ActionLink("AdRoll", null, new { platform = "adr" }) |
-@Html.ActionLink("DBM", null, new { platform = "dbm" })
+@Html.ActionLink("DBM", null, new { platform = "dbm" }) |
+@Html.ActionLink("(show all)", null)
 <br /><br />
