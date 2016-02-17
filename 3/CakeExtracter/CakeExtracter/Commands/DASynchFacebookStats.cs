@@ -15,19 +15,19 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchFacebookStats : ConsoleCommand
     {
-        public static int RunStatic(int? extAcctId = null, DateTime? startDate = null, DateTime? endDate = null)
+        public static int RunStatic(int? accountId = null, DateTime? startDate = null, DateTime? endDate = null)
         {
             AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new DASynchFacebookStats
             {
-                ExtAcctId = extAcctId,
+                AccountId = accountId,
                 StartDate = startDate,
                 EndDate = endDate
             };
             return cmd.Run();
         }
 
-        public int? ExtAcctId { get; set; }
+        public int? AccountId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
@@ -40,7 +40,7 @@ namespace CakeExtracter.Commands
         public DASynchFacebookStats()
         {
             IsCommand("daSynchFacebookStats", "synch Facebook stats");
-            HasOption<int>("x|extAccountId=", "External Account Id (default = all)", c => ExtAcctId = c);
+            HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
             HasOption("s|startDate=", "Start Date (default is ... ago)", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
         }
@@ -53,11 +53,11 @@ namespace CakeExtracter.Commands
 
             var fbUtility = new FacebookUtility(m => Logger.Info(m), m => Logger.Warn(m));
 
-            var extAccounts = GetExtAccounts();
-            foreach (var extAcct in extAccounts)
+            var accounts = GetAccounts();
+            foreach (var acct in accounts)
             {
-                var extracter = new FacebookDailySummariesExtracter(dateRange, extAcct.ExternalId, fbUtility);
-                var loader = new FacebookDailySummaryLoader(extAcct.Id);
+                var extracter = new FacebookDailySummariesExtracter(dateRange, acct.ExternalId, fbUtility);
+                var loader = new FacebookDailySummaryLoader(acct.Id);
                 if (loader.ReadyToLoad)
                 {
                     var extracterThread = extracter.Start();
@@ -67,7 +67,7 @@ namespace CakeExtracter.Commands
                 }
                 else
                 {
-                    Logger.Warn("FacebookDailySummaryLoader (ExtAcctId: {0}) not ready. Skipping ETL.", extAcct.Id);
+                    Logger.Warn("FacebookDailySummaryLoader (AccountId: {0}) not ready. Skipping ETL.", acct.Id);
                 }
             }
 
@@ -80,16 +80,16 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
-        public IEnumerable<ExtAccount> GetExtAccounts()
+        public IEnumerable<ExtAccount> GetAccounts()
         {
             string[] acctIdsArray = new string[] { };
             using (var db = new DATDContext())
             {
-                var extAccounts = db.ExtAccounts.Where(a => a.Platform.Code == Platform.Code_FB);
-                if (ExtAcctId.HasValue)
-                    extAccounts = extAccounts.Where(a => a.Id == ExtAcctId.Value);
+                var accounts = db.ExtAccounts.Where(a => a.Platform.Code == Platform.Code_FB);
+                if (AccountId.HasValue)
+                    accounts = accounts.Where(a => a.Id == AccountId.Value);
 
-                return extAccounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
+                return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
             }
         }
     }

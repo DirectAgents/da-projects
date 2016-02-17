@@ -50,10 +50,10 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            var extAccount = GetExtAccount(AccountId);
-            if (extAccount != null)
+            var account = GetAccount(AccountId);
+            if (account != null)
             {
-                ColumnMapping mapping = extAccount.Platform.PlatColMapping;
+                ColumnMapping mapping = account.Platform.PlatColMapping;
                 if (mapping == null)
                     mapping = ColumnMapping.CreateDefault();
 
@@ -112,7 +112,7 @@ namespace CakeExtracter.Commands
             loaderThread.Join();
         }
 
-        public static ExtAccount GetExtAccount(int acctId)
+        public static ExtAccount GetAccount(int acctId)
         {
             using (var db = new DATDContext())
             {

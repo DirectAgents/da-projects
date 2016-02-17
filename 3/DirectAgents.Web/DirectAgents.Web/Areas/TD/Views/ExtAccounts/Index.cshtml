@@ -10,8 +10,9 @@
 <tr>
     <th></th>
     <th>Partner</th>
-    <th>AccountName</th>
-    <th>ExternalId</th>
+    <th style="text-align:right">ID</th>
+    <th>Ext Account</th>
+    <th>External Id</th>
     <th>Daily Stats</th>
     <th></th>
 </tr>
@@ -20,6 +21,7 @@
 <tr>
     <td>@Html.ActionLink("Edit", "Edit", new { id = extAcct.Id })</td>
     <td>@extAcct.Platform.Name</td>
+    <td style="text-align:right">@extAcct.Id</td>
     <td>@extAcct.Name</td>
     <td>@extAcct.ExternalId</td>
     <td>

@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<DirectAgents.Web.Areas.TD.Models.StatsGaugeVM>
+@using DirectAgents.Domain.Entities.TD
 
 <h2>Stats Gauge - By ExtAccount</h2>
 
@@ -13,8 +14,8 @@
 </tr>
 <tr>
     <th>Partner</th>
-    <th>Id</th>
-    <th>AccountName</th>
+    <th style="text-align:right">ID</th>
+    <th>Ext Account</th>
     <th>Earliest</th>
     <th>Latest</th>
     <th>Earliest</th>
@@ -47,7 +48,8 @@
 </table>
 <br />
 Filter:
-@Html.ActionLink("AdRoll", null, new { platform = "adr" }) |
-@Html.ActionLink("DBM", null, new { platform = "dbm" }) |
+@Html.ActionLink("AdRoll", null, new { platform = Platform.Code_AdRoll }) |
+@Html.ActionLink("DBM", null, new { platform = Platform.Code_DBM }) |
+@Html.ActionLink("Facebook", null, new { platform = Platform.Code_FB }) |
 @Html.ActionLink("(show all)", null)
 <br /><br />

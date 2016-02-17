@@ -14,14 +14,14 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         public bool ReadyToLoad { get; set; }
 
-        public FacebookDailySummaryLoader(int extAccountId)
+        public FacebookDailySummaryLoader(int accountId)
         {
             this.BatchSize = FacebookUtility.DaysPerCall; //FB API only returns 25 days in one call
 
-            this.accountId = extAccountId;
+            this.accountId = accountId;
             using (var db = new DATDContext())
             {
-                if (db.ExtAccounts.Any(a => a.Id == extAccountId))
+                if (db.ExtAccounts.Any(a => a.Id == accountId))
                     ReadyToLoad = true;
             }
         }

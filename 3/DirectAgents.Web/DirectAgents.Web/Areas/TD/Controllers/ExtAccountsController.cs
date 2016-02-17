@@ -163,7 +163,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                         DASynchDBMStatsOld.RunStatic(insertionOrderID: ioID); // gets report with stats up to yesterday (and back ?30? days)
                     break;
                 case Platform.Code_FB:
-                    DASynchFacebookStats.RunStatic(extAcctId: extAcct.Id, startDate: start);
+                    DASynchFacebookStats.RunStatic(accountId: extAcct.Id, startDate: start);
                     break;
             }
             return null;
