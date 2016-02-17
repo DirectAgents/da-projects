@@ -12,7 +12,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         private readonly int accountId;
         private Dictionary<string, int> strategyIdLookupByEidAndName = new Dictionary<string, int>();
 
-        public TDStrategySummaryLoader(int extAccountId)
+        public TDStrategySummaryLoader(int extAccountId = -1)
         {
             this.accountId = extAccountId;
         }

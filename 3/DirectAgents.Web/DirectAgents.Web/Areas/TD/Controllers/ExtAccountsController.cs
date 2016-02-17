@@ -160,7 +160,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 case Platform.Code_DBM:
                     int ioID;
                     if (int.TryParse(extAcct.ExternalId, out ioID))
-                        DASynchDBMStats.RunStatic(insertionOrderID: ioID); // gets report with stats up to yesterday (and back ?30? days)
+                        DASynchDBMStatsOld.RunStatic(insertionOrderID: ioID); // gets report with stats up to yesterday (and back ?30? days)
                     break;
                 case Platform.Code_FB:
                     DASynchFacebookStats.RunStatic(extAcctId: extAcct.Id, startDate: start);

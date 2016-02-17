@@ -53,7 +53,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             }
         }
 
-        public static IEnumerable<DbmRowBase> EnumerateRowsStatic(StreamReader reader, bool byCreative = false, bool bySite = false)
+        public static IEnumerable<DbmRowBase> EnumerateRowsStatic(StreamReader reader, bool byLineItem = false, bool byCreative = false, bool bySite = false)
         {
             using (CsvReader csv = new CsvReader(reader))
             {
@@ -61,8 +61,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 csv.Configuration.SkipEmptyRecords = true;
                 csv.Configuration.IgnoreReadingExceptions = true;
 
-                // if byCreative is true, ignores bySite
-                if (byCreative)
+                if (byLineItem)
+                {
+                    csv.Configuration.RegisterClassMap<DbmRowWithLineItemMap>();
+
+                    var csvRows = csv.GetRecords<DbmRowWithLineItem>().ToList();
+                    for (int i = 0; i < csvRows.Count; i++)
+                    {
+                        yield return csvRows[i];
+                    }
+                }
+                else if (byCreative)
                 {
                     csv.Configuration.RegisterClassMap<DbmRowWithCreativeMap>();
 
@@ -108,6 +117,23 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             Map(m => m.Clicks);
             Map(m => m.TotalConversions);
             Map(m => m.Revenue).Name("Revenue(USD)");
+        }
+    }
+    public sealed class DbmRowWithLineItemMap : CsvClassMap<DbmRowWithLineItem>
+    {
+        public DbmRowWithLineItemMap()
+        {
+            Map(m => m.Date);
+            Map(m => m.InsertionOrder);
+            Map(m => m.InsertionOrderID);
+            Map(m => m.Impressions);
+            Map(m => m.Clicks);
+            Map(m => m.TotalConversions);
+            Map(m => m.PostClickConversions).Name("Post-ClickConversions");
+            Map(m => m.PostViewConversions).Name("Post-ViewConversions");
+            Map(m => m.Revenue).Name("Revenue(USD)");
+            Map(m => m.LineItem);
+            Map(m => m.LineItemID);
         }
     }
     public sealed class DbmRowWithCreativeMap : CsvClassMap<DbmRowWithCreative>
@@ -163,6 +189,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
     public class DbmRow : DbmRowBase
     {
+    }
+    public class DbmRowWithLineItem : DbmRowBase
+    {
+        public string LineItem { get; set; }
+        public string LineItemID { get; set; } //int
     }
     public class DbmRowWithCreative : DbmRowBase
     {

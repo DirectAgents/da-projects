@@ -80,9 +80,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public void AddUpdateDependentAccounts(List<DbmRowBase> items)
         {
             var ioTuples = items.Select(i => Tuple.Create(i.InsertionOrderID, i.InsertionOrder)).Distinct();
-            AddUpdateAccounts(ioTuples);
+            AddUpdateAccounts(ioTuples, accountIdLookupByIOid);
         }
-        public void AddUpdateAccounts(IEnumerable<Tuple<int, string>> ioTuples)
+        public static void AddUpdateAccounts(IEnumerable<Tuple<int, string>> ioTuples, Dictionary<int, int> accountIdLookupByIOid)
         {
             using (var db = new DATDContext())
             {

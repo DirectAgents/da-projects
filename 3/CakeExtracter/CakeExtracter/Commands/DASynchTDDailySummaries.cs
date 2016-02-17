@@ -45,7 +45,7 @@ namespace CakeExtracter.Commands
             IsCommand("daSynchTDDailySummaries", "synch daily summaries via file upload");
             HasRequiredOption<int>("a|accountId=", "Account ID", c => AccountId = c);
             HasOption<string>("f|filePath=", "CSV filepath", c => FilePath = c);
-            HasOption<string>("s|statsType=", "Stats Type (default: daily)", c => StatsType = c);
+            HasOption<string>("t|statsType=", "Stats Type (default: daily)", c => StatsType = c);
         }
 
         public override int Execute(string[] remainingArguments)

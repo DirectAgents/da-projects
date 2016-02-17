@@ -15,13 +15,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     {
         private readonly DateRange dateRange;
         private readonly IEnumerable<string> bucketNames;
+
+        private readonly bool byLineItem;
         private readonly bool byCreative;
         private readonly bool bySite;
+        // Note: only set at most *one* of these to true
 
-        public DbmCloudStorageExtracter(DateRange dateRange, IEnumerable<string> bucketNames, bool byCreative = false, bool bySite = false)
+        public DbmCloudStorageExtracter(DateRange dateRange, IEnumerable<string> bucketNames, bool byLineItem = false, bool byCreative = false, bool bySite = false)
         {
             this.dateRange = dateRange;
             this.bucketNames = bucketNames;
+            this.byLineItem = byLineItem;
             this.byCreative = byCreative;
             this.bySite = bySite;
         }
@@ -30,7 +34,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         {
             string by = "";
             if (bySite) by = " by site";
-            if (byCreative) by = " by creative"; // take precedence
+            if (byCreative) by = " by creative";
+            if (byLineItem) by = " by lineitem"; // takes precedence
             string toPart = (dateRange.FromDate == dateRange.ToDate) ? "" : string.Format(" to {0:d}", dateRange.ToDate);
             Logger.Info("Extracting DailySummary reports{0} from {1} buckets - report date(s) {2:d}{3}", by, bucketNames.Count(), dateRange.FromDate, toPart);
             var items = EnumerateRows();
@@ -57,7 +62,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         var stream = GetStreamForCloudStorageObject(reportObject, credential);
                         using (var reader = new StreamReader(stream))
                         {
-                            foreach (var row in DbmCsvExtracter.EnumerateRowsStatic(reader, byCreative: byCreative, bySite: bySite))
+                            foreach (var row in DbmCsvExtracter.EnumerateRowsStatic(reader, byLineItem: byLineItem, byCreative: byCreative, bySite: bySite))
                                 yield return row;
                         }
                     }
