@@ -10,8 +10,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
     public class DbmCreativeSummaryLoader : Loader<DbmRowBase>
     {
         private TDadSummaryLoader tdAdSummaryLoader;
-        private Dictionary<string, int> tdAdIdLookupByCreativeId = new Dictionary<string, int>();
         private Dictionary<int, int> accountIdLookupByIOid = new Dictionary<int, int>();
+        private Dictionary<string, int> tdAdIdLookupByCreativeId = new Dictionary<string, int>();
 
         public DbmCreativeSummaryLoader()
         {

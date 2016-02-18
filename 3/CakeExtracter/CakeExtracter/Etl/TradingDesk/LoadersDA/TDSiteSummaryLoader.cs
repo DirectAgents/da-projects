@@ -9,12 +9,12 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class TDSiteSummaryLoader : Loader<SiteSummary>
     {
+        private readonly int accountId;
         private Dictionary<string, int> siteIdLookupByName = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-        private int AccountId;
 
         public TDSiteSummaryLoader(int accountId = -1)
         {
-            this.AccountId = accountId;
+            this.accountId = accountId;
         }
 
         protected override int Load(List<SiteSummary> items)
@@ -32,7 +32,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             foreach (var item in items)
             {
-                item.AccountId = AccountId;
+                item.AccountId = accountId;
                 if (siteIdLookupByName.ContainsKey(item.SiteName))
                     item.SiteId = siteIdLookupByName[item.SiteName];
             }

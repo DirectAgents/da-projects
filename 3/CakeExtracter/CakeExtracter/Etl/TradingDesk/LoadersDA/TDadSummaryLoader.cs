@@ -8,7 +8,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class TDadSummaryLoader : Loader<TDadSummary>
     {
-        private readonly int accountId;
+        private readonly int accountId; // only used in AddUpdateDependentTDads()
         private Dictionary<string, int> tdAdIdLookupByEidAndName = new Dictionary<string, int>();
 
         public TDadSummaryLoader(int accountId = -1)

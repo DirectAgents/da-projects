@@ -18,8 +18,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public AdrollConvLoader(int acctId)
         {
-            this.convLoader = new TDConvLoader();
             this.accountId = acctId;
+            this.convLoader = new TDConvLoader();
         }
 
         protected override int Load(List<AdrollConvRow> items)
