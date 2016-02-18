@@ -30,54 +30,75 @@ namespace CakeExtracter.Commands
         public int? AccountId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public string StatsType { get; set; }
 
         public override void ResetProperties()
         {
             StartDate = null;
             EndDate = null;
+            StatsType = null;
         }
 
         public DASynchFacebookStats()
         {
             IsCommand("daSynchFacebookStats", "synch Facebook stats");
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
-            HasOption("s|startDate=", "Start Date (default is ... ago)", c => StartDate = DateTime.Parse(c));
+            HasOption("s|startDate=", "Start Date (default is one month ago)", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
+            HasOption<string>("t|statsType=", "Stats Type (default: daily)", c => StatsType = c);
         }
 
         public override int Execute(string[] remainingArguments)
         {
             var today = DateTime.Today;
-            var oneMonthAgo = today.AddMonths(-1); //TODO: chg to two months?
+            var oneMonthAgo = today.AddMonths(-1);
             var dateRange = new DateRange(StartDate ?? oneMonthAgo, EndDate ?? today.AddDays(-1));
 
+            StatsType = (StatsType == null) ? "" : StatsType.ToLower(); // make it lowered and not null
             var fbUtility = new FacebookUtility(m => Logger.Info(m), m => Logger.Warn(m));
 
             var accounts = GetAccounts();
             foreach (var acct in accounts)
             {
-                var extracter = new FacebookDailySummariesExtracter(dateRange, acct.ExternalId, fbUtility);
-                var loader = new FacebookDailySummaryLoader(acct.Id);
-                if (loader.ReadyToLoad)
-                {
-                    var extracterThread = extracter.Start();
-                    var loaderThread = loader.Start(extracter);
-                    extracterThread.Join();
-                    loaderThread.Join();
-                }
+                if (StatsType.StartsWith("strat"))
+                    DoETL_Strategy(dateRange, acct, fbUtility);
+                else if (StatsType.StartsWith("creat"))
+                    DoETL_Creative(dateRange, acct, fbUtility);
+                //else if (StatsType.StartsWith("site"))
+                //    DoETL_Site(dateRange, acct, fbUtility);
                 else
-                {
-                    Logger.Warn("FacebookDailySummaryLoader (AccountId: {0}) not ready. Skipping ETL.", acct.Id);
-                }
+                    DoETL_Daily(dateRange, acct, fbUtility);
             }
 
-            //var acctId = "act_10153287675738628"; // Crackle
-            //var acctId = "act_101672655"; // Zeel consumer
-            //var start = new DateTime(2015, 11, 1);
-            //var end = new DateTime(2015, 11, 3);
-            //var stats = fbUtility.GetDailyStats(acctId, start, end);
-
             return 0;
+        }
+
+        public void DoETL_Daily(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility = null)
+        {
+            var extracter = new FacebookDailySummaryExtracter(dateRange, account.ExternalId, fbUtility);
+            var loader = new FacebookDailySummaryLoader(account.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+        public void DoETL_Strategy(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility = null)
+        {
+            var extracter = new FacebookCampaignSummaryExtracter(dateRange, account.ExternalId, fbUtility);
+            var loader = new FacebookCampaignSummaryLoader(account.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+        public void DoETL_Creative(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility = null)
+        {
+            var extracter = new FacebookAdSummaryExtracter(dateRange, account.ExternalId, fbUtility);
+            var loader = new FacebookAdSummaryLoader(account.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
         }
 
         public IEnumerable<ExtAccount> GetAccounts()

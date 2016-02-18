@@ -12,18 +12,10 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
     {
         private readonly int accountId;
 
-        public bool ReadyToLoad { get; set; }
-
         public FacebookDailySummaryLoader(int accountId)
         {
-            this.BatchSize = FacebookUtility.DaysPerCall; //FB API only returns 25 days in one call
-
+            this.BatchSize = FacebookUtility.RowsPerCall; //FB API only returns 25 rows in one call
             this.accountId = accountId;
-            using (var db = new DATDContext())
-            {
-                if (db.ExtAccounts.Any(a => a.Id == accountId))
-                    ReadyToLoad = true;
-            }
         }
 
         protected override int Load(List<FBSummary> items)

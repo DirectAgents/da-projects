@@ -8,10 +8,10 @@ namespace FacebookAPI
 {
     public class FacebookUtility
     {
-        public const int DaysPerCall = 25;
+        public const int RowsPerCall = 25;
 
-        public string AppId { get; set; }
-        public string AppSecret { get; set; }
+        //public string AppId { get; set; }
+        //public string AppSecret { get; set; }
         public string AccessToken { get; set; }
         public string ApiVersion { get; set; }
 
@@ -74,46 +74,86 @@ namespace FacebookAPI
         // TODO: make asynchronous / do calls in parallel ?
         public IEnumerable<FBSummary> GetDailyStats(string accountId, DateTime start, DateTime end)
         {
-            while (start <= end)
-            {
-                var tempEnd = start.AddDays(DaysPerCall - 1);
-                if (tempEnd > end)
-                    tempEnd = end;
-                var fbSummaries = GetDailyStatsInner(accountId, start, tempEnd);
-                foreach (var fbSum in fbSummaries)
-                {
-                    yield return fbSum;
-                }
-                start = start.AddDays(DaysPerCall);
-            }
+            //while (start <= end)
+            //{
+            //    var tempEnd = start.AddDays(DaysPerCall - 1);
+            //    if (tempEnd > end)
+            //        tempEnd = end;
+            //    var fbSummaries = GetFBSummaries(accountId, start, tempEnd);
+            //    foreach (var fbSum in fbSummaries)
+            //    {
+            //        yield return fbSum;
+            //    }
+            //    start = start.AddDays(DaysPerCall);
+            //}
+            return GetFBSummaries(accountId, start, end);
         }
-        public IEnumerable<FBSummary> GetDailyStatsInner(string accountId, DateTime start, DateTime end)
+        public IEnumerable<FBSummary> GetDailyCampaignStats(string accountId, DateTime start, DateTime end)
+        {
+            return GetFBSummaries(accountId, start, end, byCampaign: true);
+        }
+        public IEnumerable<FBSummary> GetDailyAdStats(string accountId, DateTime start, DateTime end)
+        {
+            return GetFBSummaries(accountId, start, end, byAd: true);
+        }
+
+        public IEnumerable<FBSummary> GetFBSummaries(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAd = false)
         {
             var fbClient = CreateFBClient();
             var path = accountId + "/insights";
-            dynamic retObj = fbClient.Get(path, new
+
+            var levelVal = "";
+            var fieldsVal = "impressions,unique_clicks,inline_link_clicks,total_actions,spend";
+            if (byCampaign)
             {
-                //metadata = 1,
-                fields = "impressions,unique_clicks,inline_link_clicks,total_actions,spend",
-                time_range = new { since = DateString(start), until = DateString(end) },
-                time_increment = 1
-            });
-            int impressions;
-            foreach (var row in retObj.data)
-            {
-                var fbSum = new FBSummary
-                {
-                    Date = DateTime.Parse(row.date_start),
-                    Spend = (decimal)row.spend,
-                    //Impressions = row.impressions,
-                    UniqueClicks = (int)row.unique_clicks,
-                    LinkClicks = (int)row.inline_link_clicks,
-                    TotalActions = (int)row.total_actions
-                };
-                if (Int32.TryParse(row.impressions, out impressions))
-                    fbSum.Impressions = impressions;
-                yield return fbSum;
+                levelVal = "campaign";
+                fieldsVal += ",campaign_id,campaign_name";
             }
+            else if (byAd)
+            {
+                levelVal = "ad";
+                fieldsVal += ",ad_id,ad_name";
+            }
+            var afterVal = "";
+
+            bool moreData = false;
+            do
+            {
+                var parms = new
+                {
+                    //metadata = 1,
+                    level = levelVal,
+                    fields = fieldsVal,
+                    time_range = new { since = DateString(start), until = DateString(end) },
+                    time_increment = 1,
+                    after = afterVal
+                };
+                dynamic retObj = fbClient.Get(path, parms);
+
+                int impressions;
+                foreach (var row in retObj.data)
+                {
+                    var fbSum = new FBSummary
+                    {
+                        Date = DateTime.Parse(row.date_start),
+                        Spend = (decimal)row.spend,
+                        //Impressions = row.impressions,
+                        UniqueClicks = (int)row.unique_clicks,
+                        LinkClicks = (int)row.inline_link_clicks,
+                        TotalActions = (int)row.total_actions,
+                        CampaignId = row.campaign_id,
+                        CampaignName = row.campaign_name,
+                        AdId = row.ad_id,
+                        AdName = row.ad_name
+                    };
+                    if (Int32.TryParse(row.impressions, out impressions))
+                        fbSum.Impressions = impressions;
+                    yield return fbSum;
+                }
+                moreData = (retObj.paging.next != null);
+                if (moreData)
+                    afterVal = retObj.paging.cursors.after;
+            } while (moreData);
         }
 
         public void TestToken()
