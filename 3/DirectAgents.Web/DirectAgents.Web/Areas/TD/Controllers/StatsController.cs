@@ -64,17 +64,36 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             var startOfMonth = SetChooseMonthViewData_NonCookie(month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+            var stats = tdRepo.GetStrategyStats(startOfMonth, endOfMonth, acctId: acctId)
+                .OrderBy(s => s.Strategy.Name).ThenBy(s => s.Strategy.Id);
 
             var model = new TDStatsVM
             {
                 Month = startOfMonth,
                 AccountId = acctId,
-                Stats = tdRepo.GetStrategyStats(startOfMonth, endOfMonth, acctId)
+                Stats = stats
             };
             return View(model);
         }
 
-        // Stats by Ad
+        // Stats by "TDad"
+        public ActionResult Creative(int? acctId, DateTime? month)
+        {
+            var startOfMonth = SetChooseMonthViewData_NonCookie(month);
+            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+            var stats = tdRepo.GetTDadStats(startOfMonth, endOfMonth, acctId: acctId)
+                .OrderBy(s => s.TDad.Name).ThenBy(s => s.TDad.Id);
+
+            var model = new TDStatsVM
+            {
+                Month = startOfMonth,
+                AccountId = acctId,
+                Stats = stats
+            };
+            return View(model);
+        }
+
+        // AdRoll Stats by Ad
         public ActionResult AdRoll(string advEid, DateTime? month)
         {
             var startOfMonth = SetChooseMonthViewData_NonCookie(month);
@@ -102,7 +121,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View(model);
         }
 
-        // Stats by Creative
+        // DBM Stats by Creative
         public ActionResult DBM(int ioID, DateTime? month)
         {
             var startOfMonth = SetChooseMonthViewData_NonCookie(month);

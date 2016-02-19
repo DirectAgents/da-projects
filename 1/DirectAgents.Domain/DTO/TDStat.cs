@@ -166,6 +166,7 @@ namespace DirectAgents.Domain.DTO
         public Campaign Campaign { get; set; }
         public ExtAccount ExtAccount { get; set; }
         public Strategy Strategy { get; set; }
+        public TDad TDad { get; set; }
 
         public int Impressions { get; set; }
         public int Clicks { get; set; }
