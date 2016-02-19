@@ -3,7 +3,11 @@
 , @StartDate datetime
 , @EndDate datetime
 ) RETURNS TABLE AS RETURN
-WITH revenue AS
+WITH fBI AS
+(
+	SELECT * FROM td.fBudgetInfo(@AdvertiserId, default, default)
+)
+, revenue AS
 (
 	SELECT StrategySummary.Date
 	, ISNULL('DA' + CAST(Platform.Id AS varchar) + ' ', '') + Strategy.Name AS StrategyName
@@ -12,20 +16,29 @@ WITH revenue AS
 	, StrategySummary.Clicks
 	, StrategySummary.PostClickConv
 	, StrategySummary.PostViewConv
-	, budgetInfo.ShowClickAndViewConv
+	, fBI.ShowClickAndViewConv
 	, StrategySummary.PostClickConv + StrategySummary.PostViewConv AS Conversions
 	, StrategySummary.Cost
-	, CASE	WHEN budgetInfo.MarginPct = 100 THEN StrategySummary.Cost * (1 + (budgetInfo.MgmtFeePct / 100))
-			ELSE StrategySummary.Cost / (1 - (budgetInfo.MarginPct / 100))
+	, CASE	WHEN fBI.MarginPct = 100 THEN StrategySummary.Cost * (1 + (fBI.MgmtFeePct / 100))
+			ELSE StrategySummary.Cost / (1 - (fBI.MarginPct / 100))
 	  END AS Revenue
-	, budgetInfo.MediaSpend AS BIMediaSpend
-	, budgetInfo.MgmtFeePct AS BIMgmtFeePct
-	, budgetInfo.MarginPct AS BIMarginPct
-	FROM td.fBudgetInfo(@AdvertiserId, @StartDate, @EndDate) budgetInfo
-	INNER JOIN td.Strategy ON td.Strategy.AccountId = budgetInfo.AccountId
-	INNER JOIN td.StrategySummary ON td.StrategySummary.StrategyId = td.Strategy.Id
-	LEFT OUTER JOIN td.Platform ON Platform.Id = budgetInfo.PlatformId
-	WHERE (td.StrategySummary.Date BETWEEN @StartDate AND @EndDate)
+	, fBI.MediaSpend AS BIMediaSpend
+	, fBI.MgmtFeePct AS BIMgmtFeePct
+	, fBI.MarginPct AS BIMarginPct
+	FROM fBI
+	INNER JOIN td.Strategy ON Strategy.AccountId = fBI.AccountId
+	INNER JOIN td.StrategySummary ON StrategySummary.StrategyId = Strategy.Id
+	LEFT OUTER JOIN td.Account ON Account.Id = Strategy.AccountId
+	LEFT OUTER JOIN td.Platform ON Platform.Id = fBI.PlatformId
+	WHERE (StrategySummary.Date BETWEEN @StartDate AND @EndDate)
+	  AND (fBI.AsOfDate =
+			(
+			SELECT TOP 1 x.AsOfDate
+			FROM fBI x
+			WHERE (x.AccountId = Strategy.AccountId)
+			  AND ((Account.PlatformId IS NULL) OR (x.PlatformId = Account.PlatformId))
+			  AND (x.AsOfDate <= StrategySummary.Date)
+			))
 )
 , mediaSpend AS
 (

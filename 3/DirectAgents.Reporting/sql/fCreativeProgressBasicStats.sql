@@ -4,7 +4,11 @@ alter FUNCTION [td].[fCreativeProgressBasicStats](
 , @EndDate datetime
 , @KPI varchar(max)
 ) RETURNS TABLE AS RETURN
-WITH revenue AS
+WITH fBI AS
+(
+	SELECT * FROM td.fBudgetInfo(@AdvertiserId, @StartDate, @EndDate)
+)
+, revenue AS
 (
 	SELECT AdSummary.Date
 	, Ad.Name AS AdName
@@ -13,20 +17,30 @@ WITH revenue AS
 	, AdSummary.Clicks
 	, AdSummary.PostClickConv
 	, AdSummary.PostViewConv
-	, budgetInfo.ShowClickAndViewConv
+	, fBI.ShowClickAndViewConv
 	, AdSummary.PostClickConv + AdSummary.PostViewConv AS Conversions
 	, AdSummary.Cost
-	, CASE	WHEN budgetInfo.MarginPct = 100 THEN AdSummary.Cost * (1 + (budgetInfo.MgmtFeePct / 100))
-			ELSE AdSummary.Cost / (1 - (budgetInfo.MarginPct / 100))
+	, CASE	WHEN fBI.MarginPct = 100 THEN AdSummary.Cost * (1 + (fBI.MgmtFeePct / 100))
+			ELSE AdSummary.Cost / (1 - (fBI.MarginPct / 100))
 	  END AS Revenue
-	, budgetInfo.MediaSpend AS BIMediaSpend
-	, budgetInfo.MgmtFeePct AS BIMgmtFeePct
-	, budgetInfo.MarginPct AS BIMarginPct
-	FROM td.fBudgetInfo(@AdvertiserId, @StartDate, @EndDate) budgetInfo
-	INNER JOIN td.Ad ON td.Ad.AccountId = budgetInfo.AccountId
-	INNER JOIN td.AdSummary ON td.AdSummary.TDadId = Ad.Id
+	, fBI.MediaSpend AS BIMediaSpend
+	, fBI.MgmtFeePct AS BIMgmtFeePct
+	, fBI.MarginPct AS BIMarginPct
+	FROM fBI
+	INNER JOIN td.Ad ON Ad.AccountId = fBI.AccountId
+	INNER JOIN td.AdSummary ON AdSummary.TDadId = Ad.Id
+	LEFT OUTER JOIN td.Account
+	   ON (Account.Id = fBI.AccountId)
+	  AND (Account.PlatformId = fBI.PlatformId)
 	WHERE (td.AdSummary.Date BETWEEN @StartDate AND @EndDate)
-)
+	  AND (fBI.AsOfDate =
+			(
+			SELECT TOP 1 x.AsOfDate
+			FROM fBI x
+			WHERE (x.AccountId = Ad.AccountId)
+			  AND ((Account.PlatformId IS NULL) OR (x.PlatformId = Account.PlatformId))
+			  AND (x.AsOfDate <= AdSummary.Date)
+			)))
 , mediaSpend AS
 (
 	SELECT revenue.*
