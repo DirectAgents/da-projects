@@ -32,10 +32,14 @@ namespace CakeExtracter.Commands
         {
             var arUtility = new AdRollUtility(m => Logger.Info(m), m => Logger.Warn(m));
             var freshAdvertisables = arUtility.GetAdvertisables();
+            var freshEids = freshAdvertisables.Select(a => a.eid).ToArray(); // test
             using (var db = new DATDContext())
             {
                 var dbAdvertisables = db.Advertisables.ToList();
                 var dbAdvEids = dbAdvertisables.Select(a => a.Eid).ToArray();
+
+                var outdatedAdvertisables = dbAdvertisables.Where(a => !freshEids.Contains(a.Eid)); // test
+                //TODO: remove these or make Eid null in adr.Advertisable table
 
                 var platformId_AdRoll = db.Platforms.Where(p => p.Code == Platform.Code_AdRoll).First().Id;
                 var dbAccounts = db.ExtAccounts.Where(a => a.PlatformId == platformId_AdRoll).ToList();

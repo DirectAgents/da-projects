@@ -1,5 +1,6 @@
 ﻿@model DirectAgents.Domain.Entities.TD.ExtAccount
 @{
+    var statsTypeList = new[] { "Daily", "Strategy", "Creative", "Site" };
     var url = Url.Action("UploadFile", new { id = Model.Id });
 }
 <h2>Upload Stats for External Account</h2>
@@ -12,6 +13,9 @@ ExtAccount: @Model.Name
 
 <form method="post" action="@url" enctype="multipart/form-data">
     <div>
+        Stats Type:
+        @Html.DropDownList("statsType", new SelectList(statsTypeList))
+        <br /><br />
         <input id="fileUpload" name="file" type="file" />
     </div>
 </form>
@@ -31,10 +35,14 @@ ExtAccount: @Model.Name
                 uploadSelectedFiles: "Upload and Process"
             },
             multiple: false,
+            upload: OnUpload,
             complete: UploadComplete
         });
     });
 
+    function OnUpload(e) {
+        e.data = { statsType: $('#statsType').val() };
+    }
     function UploadComplete() {
         $('#filesMessage').html('Done processing.');
     }

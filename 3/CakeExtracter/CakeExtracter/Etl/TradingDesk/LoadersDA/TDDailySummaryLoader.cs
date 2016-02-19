@@ -10,26 +10,28 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
     {
         private readonly int accountId;
 
-        //public bool ReadyToLoad { get; set; }
-
-        public TDDailySummaryLoader(int extAccountId)
+        public TDDailySummaryLoader(int accountId = -1)
         {
-            this.accountId = extAccountId;
-            //using (var db = new DATDContext())
-            //{
-            //    if (db.ExtAccounts.Any(a => a.Id == extAccountId))
-            //        ReadyToLoad = true;
-            //}
+            this.accountId = accountId;
         }
 
         protected override int Load(List<DailySummary> items)
         {
             Logger.Info("Loading {0} DA-TD DailySummaries..", items.Count);
+            AssignIdsToItems(items);
             var count = UpsertDailySummaries(items);
             return count;
         }
 
-        private int UpsertDailySummaries(List<DailySummary> items)
+        public void AssignIdsToItems(List<DailySummary> items)
+        {
+            foreach (var item in items)
+            {
+                item.AccountId = accountId;
+            }
+        }
+
+        public int UpsertDailySummaries(List<DailySummary> items)
         {
             var addedCount = 0;
             var updatedCount = 0;
@@ -41,9 +43,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 foreach (var item in items)
                 {
-                    item.AccountId = accountId; // ?Use what's in the item?
-
-                    var target = db.Set<DailySummary>().Find(item.Date, accountId);
+                    var target = db.Set<DailySummary>().Find(item.Date, item.AccountId);
                     if (target == null)
                     {
                         if (!item.AllZeros())
@@ -73,7 +73,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         }
                         else
                         {
-                            Logger.Warn("Encountered duplicate for {0:d} - Acct {1}", item.Date, accountId);
+                            Logger.Warn("Encountered duplicate for {0:d} - Acct {1}", item.Date, item.AccountId);
                             duplicateCount++;
                         }
                     }

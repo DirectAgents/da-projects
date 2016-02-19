@@ -142,7 +142,7 @@ namespace CakeExtracter.Commands
                 if (extAccount != null)
                 {
                     var extracter = new AdrollAdDailySummariesExtracter(dateRange, adv.Eid, arUtility);
-                    var loader = new TDadSummaryLoader(extAccount.Id);
+                    var loader = new AdrollAdSummaryLoader(extAccount.Id);
                     var extracterThread = extracter.Start();
                     var loaderThread = loader.Start(extracter);
                     extracterThread.Join();
@@ -191,10 +191,13 @@ namespace CakeExtracter.Commands
 
         public IEnumerable<Advertisable> GetAdvertisablesThatHaveStats(DateRange dateRange, AdRollUtility arUtility)
         {
+            //TODO? call arUtility.GetAdvertisables() and take the intersection of those Eids and those in the db
+
             IEnumerable<Advertisable> advertisables;
             using (var db = new DATDContext())
             {
                 advertisables = db.Advertisables.ToList();
+                advertisables = advertisables.Where(a => !string.IsNullOrWhiteSpace(a.Eid));
             }
             var dbAdvEids = advertisables.Select(a => a.Eid).ToArray();
             var advSums = arUtility.AdvertisableSummaries(dateRange.FromDate, dateRange.ToDate, dbAdvEids);

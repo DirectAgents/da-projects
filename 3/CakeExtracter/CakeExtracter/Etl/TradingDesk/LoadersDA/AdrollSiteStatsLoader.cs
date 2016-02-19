@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using DirectAgents.Domain.Contexts;
@@ -8,19 +7,18 @@ using DirectAgents.Domain.Entities.TD;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
-    public class AdrollSiteStatsLoader : Loader<AdrollSiteStatsRow> /*question*/
+    public class AdrollSiteStatsLoader : Loader<AdrollSiteStatsRow>
     {
+        private readonly int accountId;
+        private readonly DateTime date;
         private TDSiteSummaryLoader siteSummaryLoader;
-        private Dictionary<string, int> siteIdLookupByName = new Dictionary<string, int>();
-        private Dictionary<int, int> accountIdLookupByIOid = new Dictionary<int, int>();
-        private int AccountId;
-        private DateTime date;
+        private Dictionary<string, int> siteIdLookupByName = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
-        public AdrollSiteStatsLoader(int AccountId, DateTime date)
+        public AdrollSiteStatsLoader(int accountId, DateTime date)
         {
-            this.siteSummaryLoader = new TDSiteSummaryLoader();
-            this.AccountId = AccountId;
+            this.accountId = accountId;
             this.date = date;
+            this.siteSummaryLoader = new TDSiteSummaryLoader();
         }
 
         protected override int Load(List<AdrollSiteStatsRow> items)
@@ -39,7 +37,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             var sSum = new SiteSummary //fill with new columns
             {
                 SiteId = siteId,
-                AccountId = this.AccountId,
+                AccountId = this.accountId,
                 Date = this.date,
                 Impressions = item.impression,
                 Clicks = item.click,
@@ -51,32 +49,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         private void AddUpdateDependentSites(List<AdrollSiteStatsRow> items)
         {
             var siteNames = items.Select(i => i.website).Distinct();
-            using (var db = new DATDContext())
-            {
-                foreach (var siteName in siteNames)
-                {
-                    if (siteIdLookupByName.ContainsKey(siteName))
-                        continue; // already encountered this site
-
-                    var sites = db.Sites.Where(s => s.Name == siteName);
-                    if (!sites.Any())
-                    {
-                        var site = new Site
-                        {
-                            Name = siteName
-                        };
-                        db.Sites.Add(site);
-                        db.SaveChanges();
-                        Logger.Info("Saved new Site: {0} ({1})", site.Name, site.Id);
-                        siteIdLookupByName[site.Name] = site.Id;
-                    }
-                    else
-                    {
-                        var site = sites.First(); // there shouldn't be more than one with the same name, but...
-                        siteIdLookupByName[site.Name] = site.Id;
-                    }
-                }
-            }
+            TDSiteSummaryLoader.AddUpdateDependentSites(siteNames, siteIdLookupByName);
         }
     }
 }

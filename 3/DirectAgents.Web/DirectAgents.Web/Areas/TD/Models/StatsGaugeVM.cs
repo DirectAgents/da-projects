@@ -4,11 +4,11 @@ using DirectAgents.Domain.Entities.TD;
 
 namespace DirectAgents.Web.Areas.TD.Models
 {
-    public class AccountMaintenanceVM
+    public class StatsGaugeVM
     {
+        public Platform Platform { get; set; }
         public ExtAccount ExtAccount { get; set; }
-        public bool Syncable { get; set; }
 
-        public TDStatsGauge StatsGauge { get; set; }
+        public TDStatsGauge Gauge { get; set; }
     }
 }

@@ -33,6 +33,11 @@ namespace DirectAgents.Domain.Entities.TD
         public DateTime Date { get; set; }
         public int StrategyId { get; set; }
         public virtual Strategy Strategy { get; set; }
+
+        [NotMapped]
+        public string StrategyName { get; set; }
+        [NotMapped]
+        public string StrategyEid { get; set; } // external id
     }
 
     // DailySummary for a "TD ad"
@@ -41,6 +46,11 @@ namespace DirectAgents.Domain.Entities.TD
         public DateTime Date { get; set; }
         public int TDadId { get; set; }
         public virtual TDad TDad { get; set; }
+
+        [NotMapped]
+        public string TDadName { get; set; }
+        [NotMapped]
+        public string TDadEid { get; set; } // external id
     }
 
     // DailySummary for a Site / ExtAccount
@@ -54,6 +64,14 @@ namespace DirectAgents.Domain.Entities.TD
         public int AccountId { get; set; }
         [ForeignKey("AccountId")]
         public virtual ExtAccount ExtAccount { get; set; }
+
+        [NotMapped]
+        public string SiteName
+        {
+            get { return _sitename; }
+            set { _sitename = value.ToLower(); }
+        }
+        private string _sitename;
     }
     public class Site
     {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -101,22 +102,27 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         private CsvClassMap CreateCsvClassMap(ColumnMapping colMap)
         {
             var classMap = new DefaultCsvClassMap<DailySummary>();
-            CheckAddPropertyMap(classMap, "Date", colMap.Date);
-            CheckAddPropertyMap(classMap, "Cost", colMap.Cost);
-            CheckAddPropertyMap(classMap, "Impressions", colMap.Impressions);
-            CheckAddPropertyMap(classMap, "Clicks", colMap.Clicks);
-            CheckAddPropertyMap(classMap, "PostClickConv", colMap.PostClickConv);
-            CheckAddPropertyMap(classMap, "PostViewConv", colMap.PostViewConv);
+            AddBasicPropertyMaps(classMap, typeof(DailySummary), colMap);
             return classMap;
         }
-        private void CheckAddPropertyMap(CsvClassMap classMap, string propName, string colName)
+
+        public static void AddBasicPropertyMaps(CsvClassMap classMap, Type classType, ColumnMapping colMap)
+        {
+            CheckAddPropertyMap(classMap, classType, "Date", colMap.Date);
+            CheckAddPropertyMap(classMap, classType, "Cost", colMap.Cost);
+            CheckAddPropertyMap(classMap, classType, "Impressions", colMap.Impressions);
+            CheckAddPropertyMap(classMap, classType, "Clicks", colMap.Clicks);
+            CheckAddPropertyMap(classMap, classType, "PostClickConv", colMap.PostClickConv);
+            CheckAddPropertyMap(classMap, classType, "PostViewConv", colMap.PostViewConv);
+        }
+        public static void CheckAddPropertyMap(CsvClassMap classMap, Type classType, string propName, string colName)
         {
             if (!string.IsNullOrWhiteSpace(colName))
-                classMap.PropertyMaps.Add(CreatePropertyMap(propName, colName));
+                classMap.PropertyMaps.Add(CreatePropertyMap(classType, propName, colName));
         }
-        private CsvPropertyMap CreatePropertyMap(string propName, string colName)
+        private static CsvPropertyMap CreatePropertyMap(Type classType, string propName, string colName)
         {
-            var propertyInfo = typeof(DailySummary).GetProperty(propName);
+            var propertyInfo = classType.GetProperty(propName);
             var propMap = new CsvPropertyMap(propertyInfo);
             propMap.Name(colName);
             if (propertyInfo.PropertyType == typeof(int) ||

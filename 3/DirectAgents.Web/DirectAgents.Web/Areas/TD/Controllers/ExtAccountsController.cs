@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -25,6 +26,26 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             Session["platformCode"] = platform;
             Session["campId"] = campId.ToString();
             return View(extAccounts);
+        }
+
+        // For each account, shows a "gauge" of what stats are loaded
+        public ActionResult IndexGauge(string platform, int? campId)
+        {
+            var extAccounts = tdRepo.ExtAccounts(platformCode: platform, campId: campId)
+                .OrderBy(a => a.Platform.Name).ThenBy(a => a.Name);
+
+            List<StatsGaugeVM> statsGaugeVMs = new List<StatsGaugeVM>();
+            foreach (var extAcct in extAccounts)
+            {
+                var statsGaugeVM = new StatsGaugeVM
+                {
+                    Platform = extAcct.Platform,
+                    ExtAccount = extAcct,
+                    Gauge = tdRepo.GetStatsGauge(extAcct.Id)
+                };
+                statsGaugeVMs.Add(statsGaugeVM);
+            }
+            return View(statsGaugeVMs);
         }
 
         public ActionResult CreateNew(string platform)
@@ -64,6 +85,8 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View(extAcct);
         }
 
+        // --- Maintenance ---
+
         // json data for Maintenance Grid
         public JsonResult IndexData(string platform)
         {
@@ -100,9 +123,8 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var model = new AccountMaintenanceVM
             {
                 ExtAccount = extAcct,
-                LatestDailyStat = tdRepo.LatestStatDate(extAcct.Id),
-                LatestStrategyStat = tdRepo.LatestStrategyStatDate(extAcct.Id),
-                Syncable = syncable
+                Syncable = syncable,
+                StatsGauge = tdRepo.GetStatsGauge(extAcct.Id)
             };
             return PartialView(model);
         }
@@ -113,15 +135,13 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             if (extAcct == null)
                 return null;
 
-            // Go back to the 1st - if requesting this month or last month
-            var firstOfMonth = Common.FirstOfMonth();
-            var firstOfLastMonth = firstOfMonth.AddMonths(-1);
+            // TODO: Go back to campaign's start date
             if (!start.HasValue)
-                start = firstOfLastMonth;
-            else if (start >= firstOfMonth)
-                start = firstOfMonth;
-            else if (start > firstOfLastMonth)
-                start = firstOfLastMonth;
+                start = Common.FirstOfMonth().AddMonths(-6);
+                //start = Common.FirstOfYear().AddYears(-1);
+            else if (start.Value.Day > 1)
+                start = new DateTime(start.Value.Year, start.Value.Month, 1);
+            // Go back to 1st of month - so as to refresh the stats
 
             switch (extAcct.Platform.Code)
             {
@@ -131,6 +151,8 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                         oneStatPer = "advertisable";
                     else if (level == "strategy")
                         oneStatPer = "campaign";
+                    else if (level == "creative")
+                        oneStatPer = "ad";
                     else
                         oneStatPer = level;
                     DASynchAdrollStats.RunStatic(extAcct.ExternalId, startDate: start, oneStatPer: oneStatPer);
@@ -138,14 +160,16 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 case Platform.Code_DBM:
                     int ioID;
                     if (int.TryParse(extAcct.ExternalId, out ioID))
-                        DASynchDBMStats.RunStatic(insertionOrderID: ioID); // gets report with stats up to yesterday (and back ?30? days)
+                        DASynchDBMStatsOld.RunStatic(insertionOrderID: ioID); // gets report with stats up to yesterday (and back ?30? days)
                     break;
                 case Platform.Code_FB:
-                    DASynchFacebookStats.RunStatic(extAcctId: extAcct.Id, startDate: start);
+                    DASynchFacebookStats.RunStatic(accountId: extAcct.Id, startDate: start);
                     break;
             }
             return null;
         }
+
+        // --- Strats, TDads, etc
 
         public ActionResult Strategies(int? id)
         {
@@ -168,11 +192,11 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
             return View(extAcct);
         }
-        public ActionResult UploadFile(int id, HttpPostedFileBase file)
+        public ActionResult UploadFile(int id, HttpPostedFileBase file, string statsType)
         {
             using (var reader = new StreamReader(file.InputStream))
             {
-                DASynchTDDailySummaries.RunStatic(id, reader);
+                DASynchTDDailySummaries.RunStatic(id, reader, statsType);
             }
             return null;
         }

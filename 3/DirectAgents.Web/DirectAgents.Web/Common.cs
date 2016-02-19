@@ -9,6 +9,12 @@ namespace DirectAgents.Web
             var today = DateTime.Today;
             return new DateTime(today.Year, today.Month, 1);
         }
+
+        public static DateTime FirstOfYear()
+        {
+            var today = DateTime.Today;
+            return new DateTime(today.Year, 1, 1);
+        }
     }
 
     public static class Extensions
@@ -29,6 +35,14 @@ namespace DirectAgents.Web
                 return dateTime.Value.ToString("M-d-yy");
             else
                 return null;
+        }
+
+        public static string ToShortDateString(this DateTime? dateTime, string nullString = null)
+        {
+            if (dateTime.HasValue)
+                return dateTime.Value.ToShortDateString();
+            else
+                return nullString;
         }
     }
 }

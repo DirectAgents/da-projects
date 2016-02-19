@@ -78,6 +78,7 @@
     <Compile Include="DTO\TDCampStats.cs" />
     <Compile Include="DTO\TDLineItem.cs" />
     <Compile Include="DTO\TDStat.cs" />
+    <Compile Include="DTO\TDStatsGauge.cs" />
     <Compile Include="Entities\AdRoll\Ad.cs" />
     <Compile Include="Entities\AdRoll\AdDailySummary.cs" />
     <Compile Include="Entities\AdRoll\Advertisable.cs" />
@@ -242,6 +243,14 @@
     <Compile Include="MigrationsTD\201601111845000_Mig_Conv.Designer.cs">
       <DependentUpon>201601111845000_Mig_Conv.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsTD\201601291719443_Mig_Conv2.cs" />
+    <Compile Include="MigrationsTD\201601291719443_Mig_Conv2.Designer.cs">
+      <DependentUpon>201601291719443_Mig_Conv2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201602122137175_Mig_MoreColMapping.cs" />
+    <Compile Include="MigrationsTD\201602122137175_Mig_MoreColMapping.Designer.cs">
+      <DependentUpon>201602122137175_Mig_MoreColMapping.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.Designer.cs">
@@ -401,6 +410,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201601111845000_Mig_Conv.resx">
       <DependentUpon>201601111845000_Mig_Conv.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201601291719443_Mig_Conv2.resx">
+      <DependentUpon>201601291719443_Mig_Conv2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201602122137175_Mig_MoreColMapping.resx">
+      <DependentUpon>201602122137175_Mig_MoreColMapping.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

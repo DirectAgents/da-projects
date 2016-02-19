@@ -18,8 +18,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public AdrollConvLoader(int acctId)
         {
-            this.convLoader = new TDConvLoader();
             this.accountId = acctId;
+            this.convLoader = new TDConvLoader();
         }
 
         protected override int Load(List<AdrollConvRow> items)
@@ -41,13 +41,15 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             int? cityId = cityIdLookupByCountryCity.ContainsKey(countryCity) ? cityIdLookupByCountryCity[countryCity] : (int?)null;
             var conv = new Conv
             {
+                AccountId = accountId,
                 Time = convRow.ConvTime,
                 ConvType = ConvTypeAbbrev(convRow.ConvType),
                 StrategyId = stratId,
                 TDadId = tdAdId,
                 ConvVal = decimal.Parse(convRow.ConvVal, NumberStyles.Currency),
                 CityId = cityId,
-                ExtData = convRow.ext_data_user_id
+                //ExtData = convRow.ext_data_user_id
+                ExtData = convRow.ext_data_order_id
             };
             return conv;
         }

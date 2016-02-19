@@ -85,7 +85,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             if (platform.Code == Platform.Code_AdRoll)
                 DASynchAdrollStats.RunStatic(startDate: start, oneStatPer: "all");
             else if (platform.Code == Platform.Code_DBM)
-                DASynchDBMStats.RunStatic();
+                DASynchDBMStatsOld.RunStatic();
             else if (platform.Code == Platform.Code_FB)
                 DASynchFacebookStats.RunStatic(startDate: start);
 

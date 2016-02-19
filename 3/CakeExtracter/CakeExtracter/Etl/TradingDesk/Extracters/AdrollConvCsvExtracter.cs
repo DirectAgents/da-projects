@@ -80,7 +80,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             //Map(m => m.FinalEventTimestamp).Name("FinalEventTimestamp");
 
             Map(m => m.ExternalData);
-            Map(m => m.ext_data_user_id);
+            //Map(m => m.ext_data_user_id);
+            Map(m => m.ext_data_order_id);
         }
     }
 
@@ -101,6 +102,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         //public string FinalEventTimestamp { get; set; }
 
         public string ExternalData { get; set; }
-        public string ext_data_user_id { get; set; }
+        //public string ext_data_user_id { get; set; }
+        public string ext_data_order_id { get; set; }
     }
 }

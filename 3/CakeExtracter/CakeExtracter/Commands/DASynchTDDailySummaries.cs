@@ -14,13 +14,14 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchTDDailySummaries : ConsoleCommand
     {
-        public static int RunStatic(int accountId, StreamReader streamReader)
+        public static int RunStatic(int accountId, StreamReader streamReader, string statsType = null)
         {
             AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new DASynchTDDailySummaries
             {
                 AccountId = accountId,
-                StreamReader = streamReader
+                StreamReader = streamReader,
+                StatsType = statsType
             };
             int result = cmd.Run();
             return result;
@@ -29,12 +30,14 @@ namespace CakeExtracter.Commands
         public int AccountId { get; set; }
         public StreamReader StreamReader { get; set; }
         public string FilePath { get; set; }
+        public string StatsType { get; set; }
 
         public override void ResetProperties()
         {
             AccountId = 0;
             StreamReader = null;
             FilePath = null;
+            StatsType = null;
         }
 
         public DASynchTDDailySummaries()
@@ -42,25 +45,28 @@ namespace CakeExtracter.Commands
             IsCommand("daSynchTDDailySummaries", "synch daily summaries via file upload");
             HasRequiredOption<int>("a|accountId=", "Account ID", c => AccountId = c);
             HasOption<string>("f|filePath=", "CSV filepath", c => FilePath = c);
+            HasOption<string>("t|statsType=", "Stats Type (default: daily)", c => StatsType = c);
         }
 
         public override int Execute(string[] remainingArguments)
         {
-            //FilePath = @"G:\work\tradingdesk\yam\12-09-2015_bevel.csv";
-            //int acctId = 1110;
-            var extAccount = GetExtAccount(AccountId);
-            if (extAccount != null)
+            var account = GetAccount(AccountId);
+            if (account != null)
             {
-                ColumnMapping mapping = extAccount.Platform.PlatColMapping;
+                ColumnMapping mapping = account.Platform.PlatColMapping;
                 if (mapping == null)
                     mapping = ColumnMapping.CreateDefault();
 
-                var extracter = new TDDailySummaryExtracter(mapping, streamReader: StreamReader, csvFilePath: FilePath);
-                var loader = new TDDailySummaryLoader(AccountId);
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
+                StatsType = (StatsType == null) ? "" : StatsType.ToLower(); // make it lowered and not null
+
+                if (StatsType.StartsWith("strat"))
+                    DoETL_Strategy(mapping);
+                else if (StatsType.StartsWith("creat"))
+                    DoETL_Creative(mapping);
+                else if (StatsType.StartsWith("site"))
+                    DoETL_Site(mapping);
+                else
+                    DoETL_Daily(mapping);
             }
             else
             {
@@ -69,7 +75,44 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
-        public static ExtAccount GetExtAccount(int acctId)
+        public void DoETL_Daily(ColumnMapping mapping)
+        {
+            var extracter = new TDDailySummaryExtracter(mapping, streamReader: StreamReader, csvFilePath: FilePath);
+            var loader = new TDDailySummaryLoader(AccountId);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+        public void DoETL_Strategy(ColumnMapping mapping)
+        {
+            var extracter = new TDStrategySummaryExtracter(mapping, streamReader: StreamReader, csvFilePath: FilePath);
+            var loader = new TDStrategySummaryLoader(AccountId);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+        public void DoETL_Creative(ColumnMapping mapping)
+        {
+            var extracter = new TDadSummaryExtracter(mapping, streamReader: StreamReader, csvFilePath: FilePath);
+            var loader = new TDadSummaryLoader(AccountId);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+        public void DoETL_Site(ColumnMapping mapping)
+        {
+            var extracter = new TDSiteSummaryExtracter(mapping, streamReader: StreamReader, csvFilePath: FilePath);
+            var loader = new TDSiteSummaryLoader(AccountId);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+
+        public static ExtAccount GetAccount(int acctId)
         {
             using (var db = new DATDContext())
             {

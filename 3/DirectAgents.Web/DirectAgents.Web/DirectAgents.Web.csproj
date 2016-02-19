@@ -189,6 +189,7 @@
     <Compile Include="Areas\TD\Models\DailySummariesVM.cs" />
     <Compile Include="Areas\TD\Models\ExtraItemsVM.cs" />
     <Compile Include="Areas\TD\Models\ReportingVM.cs" />
+    <Compile Include="Areas\TD\Models\StatsGaugeVM.cs" />
     <Compile Include="Areas\TD\Models\TDStatsVM.cs" />
     <Compile Include="Areas\TD\TDAreaRegistration.cs" />
     <Compile Include="Common.cs" />
@@ -975,6 +976,7 @@
     <Content Include="Areas\TD\Views\ExtAccounts\UploadStats.cshtml" />
     <Content Include="Areas\TD\Views\ExtAccounts\Strategies.cshtml" />
     <Content Include="Areas\TD\Views\ExtAccounts\TDads.cshtml" />
+    <Content Include="Areas\TD\Views\ExtAccounts\IndexGauge.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

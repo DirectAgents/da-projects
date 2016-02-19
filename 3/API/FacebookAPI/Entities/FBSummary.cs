@@ -11,6 +11,12 @@ namespace FacebookAPI.Entities
         public int LinkClicks { get; set; }
         public int TotalActions { get; set; }
 
+        public string CampaignId { get; set; }
+        public string CampaignName { get; set; }
+
+        public string AdId { get; set; }
+        public string AdName { get; set; }
+
         public bool AllZeros()
         {
             return (Spend == 0 && Impressions == 0 && UniqueClicks == 0 && LinkClicks == 0 && TotalActions == 0);

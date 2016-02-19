@@ -8,6 +8,10 @@ namespace DirectAgents.Domain.Entities.TD
     public class Conv
     {
         public int Id { get; set; }
+        public int AccountId { get; set; }
+        [ForeignKey("AccountId")]
+        public virtual ExtAccount ExtAccount { get; set; }
+
         public int? StrategyId { get; set; } // optional
         public virtual Strategy Strategy { get; set; }
         public int? TDadId { get; set; } // optional
