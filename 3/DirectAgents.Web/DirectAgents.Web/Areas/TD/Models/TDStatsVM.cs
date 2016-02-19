@@ -11,6 +11,7 @@ namespace DirectAgents.Web.Areas.TD.Models
         public string PlatformCode { get; set; }
         public int? CampaignId { get; set; }
         public string ExternalId { get; set; }
+        public int? AccountId { get; set; }
 
         public DateTime Month { set { MonthString = value.ToShortDateString(); } }
         public string MonthString { get; set; }
@@ -20,15 +21,16 @@ namespace DirectAgents.Web.Areas.TD.Models
         {
             get
             {
-                return new TDRawStat
+                var stat = new TDRawStat { Name = "TOTAL" };
+                if (Stats != null)
                 {
-                    Name = "TOTAL",
-                    Impressions = Stats.Sum(s => s.Impressions),
-                    Clicks = Stats.Sum(s => s.Clicks),
-                    PostClickConv = Stats.Sum(s => s.PostClickConv),
-                    PostViewConv = Stats.Sum(s => s.PostViewConv),
-                    Cost = Stats.Sum(s => s.Cost)
-                };
+                    stat.Impressions = Stats.Sum(s => s.Impressions);
+                    stat.Clicks = Stats.Sum(s => s.Clicks);
+                    stat.PostClickConv = Stats.Sum(s => s.PostClickConv);
+                    stat.PostViewConv = Stats.Sum(s => s.PostViewConv);
+                    stat.Cost = Stats.Sum(s => s.Cost);
+                }
+                return stat;
             }
         }
     }

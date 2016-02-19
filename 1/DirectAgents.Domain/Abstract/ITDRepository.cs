@@ -80,6 +80,7 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<Conv> Convs(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null);
         //TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null);
         TDRawStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null);
+        IEnumerable<TDRawStat> GetStrategyStats(DateTime? startDate, DateTime? endDate, int? acctId = null);
         TDCampStats GetCampStats(DateTime monthStart, int campId);
         IEnumerable<TDLineItem> GetDailyStatsLI(int campId, DateTime? startDate, DateTime? endDate);
 
