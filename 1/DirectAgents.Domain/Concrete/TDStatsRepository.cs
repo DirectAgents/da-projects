@@ -219,6 +219,40 @@ namespace DirectAgents.Domain.Concrete
             return stat;
         }
 
+        //TODO: by campaignId, etc
+        public IEnumerable<TDRawStat> GetStrategyStats(DateTime? startDate, DateTime? endDate, int? acctId = null)
+        {
+            var sSums = StrategySummaries(startDate, endDate, acctId: acctId);
+            var sGroups = sSums.GroupBy(s => s.Strategy);
+            var stats = new List<TDRawStat>();
+            foreach (var sGroup in sGroups)
+            {
+                var stat = new TDRawStat(sGroup)
+                {
+                    Strategy = sGroup.Key
+                };
+                stats.Add(stat);
+            }
+            return stats;
+        }
+
+        //TODO: by campaignId, etc
+        public IEnumerable<TDRawStat> GetTDadStats(DateTime? startDate, DateTime? endDate, int? acctId = null)
+        {
+            var sums = TDadSummaries(startDate, endDate, acctId: acctId);
+            var groups = sums.GroupBy(s => s.TDad);
+            var stats = new List<TDRawStat>();
+            foreach (var group in groups)
+            {
+                var stat = new TDRawStat(group)
+                {
+                    TDad = group.Key
+                };
+                stats.Add(stat);
+            }
+            return stats;
+        }
+
         public TDCampStats GetCampStats(DateTime monthStart, int campId)
         {
             var campaign = Campaign(campId);

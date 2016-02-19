@@ -30,7 +30,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         }
 
         // Stats by "external account"
-        public ActionResult ExtAccount(string platform, int? campId, DateTime? month)
+        public ActionResult ExtAccount(string platform, int? campId, int? acctId, DateTime? month)
         {
             var startOfMonth = SetChooseMonthViewData_NonCookie(month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
@@ -38,6 +38,9 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
             var extAccounts = tdRepo.ExtAccounts(platformCode: platform, campId: campId)
                                 .OrderBy(a => a.Platform.Code).ThenBy(a => a.Name);
+            if (acctId.HasValue)
+                extAccounts = extAccounts.Where(a => a.Id == acctId.Value).OrderBy(a => a.Name); // will be only one
+
             foreach (var extAccount in extAccounts)
             {   //Note: Multiple Active Record Sets used here
                 var stat = tdRepo.GetTDStatWithAccount(startOfMonth, endOfMonth, extAccount: extAccount);
@@ -50,12 +53,47 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 Month = startOfMonth,
                 PlatformCode = platform,
                 CampaignId = campId,
+                AccountId = acctId,
                 Stats = stats
             };
             return View(model);
         }
 
-        // Stats by Ad
+        // Stats by "strategy"
+        public ActionResult Strategy(int? acctId, DateTime? month)
+        {
+            var startOfMonth = SetChooseMonthViewData_NonCookie(month);
+            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+            var stats = tdRepo.GetStrategyStats(startOfMonth, endOfMonth, acctId: acctId)
+                .OrderBy(s => s.Strategy.Name).ThenBy(s => s.Strategy.Id);
+
+            var model = new TDStatsVM
+            {
+                Month = startOfMonth,
+                AccountId = acctId,
+                Stats = stats
+            };
+            return View(model);
+        }
+
+        // Stats by "TDad"
+        public ActionResult Creative(int? acctId, DateTime? month)
+        {
+            var startOfMonth = SetChooseMonthViewData_NonCookie(month);
+            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+            var stats = tdRepo.GetTDadStats(startOfMonth, endOfMonth, acctId: acctId)
+                .OrderBy(s => s.TDad.Name).ThenBy(s => s.TDad.Id);
+
+            var model = new TDStatsVM
+            {
+                Month = startOfMonth,
+                AccountId = acctId,
+                Stats = stats
+            };
+            return View(model);
+        }
+
+        // AdRoll Stats by Ad
         public ActionResult AdRoll(string advEid, DateTime? month)
         {
             var startOfMonth = SetChooseMonthViewData_NonCookie(month);
@@ -83,7 +121,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View(model);
         }
 
-        // Stats by Creative
+        // DBM Stats by Creative
         public ActionResult DBM(int ioID, DateTime? month)
         {
             var startOfMonth = SetChooseMonthViewData_NonCookie(month);

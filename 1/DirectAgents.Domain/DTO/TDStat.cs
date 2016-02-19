@@ -162,9 +162,11 @@ namespace DirectAgents.Domain.DTO
     {
         // Possible ways to identify the stats...
         public string Name { get; set; }
+        public Platform Platform { get; set; }
         public Campaign Campaign { get; set; }
         public ExtAccount ExtAccount { get; set; }
-        public Platform Platform { get; set; }
+        public Strategy Strategy { get; set; }
+        public TDad TDad { get; set; }
 
         public int Impressions { get; set; }
         public int Clicks { get; set; }
@@ -185,10 +187,10 @@ namespace DirectAgents.Domain.DTO
 
         public virtual void CopyFrom(TDRawStat stat)
         {
+            this.Platform = stat.Platform;
             this.Name = stat.Name;
             this.Campaign = stat.Campaign;
             this.ExtAccount = stat.ExtAccount;
-            this.Platform = stat.Platform;
 
             this.Impressions = stat.Impressions;
             this.Clicks = stat.Clicks;
@@ -198,20 +200,20 @@ namespace DirectAgents.Domain.DTO
 
         // Constructors
         public TDRawStat() { }
-        public TDRawStat(IEnumerable<DailySummary> dSums)
+        public TDRawStat(IEnumerable<StatsSummary> sSums)
         {
-            SetStatsFrom(dSums);
+            SetStatsFrom(sSums);
         }
 
-        private void SetStatsFrom(IEnumerable<DailySummary> dSums, bool roundCost = false)
+        private void SetStatsFrom(IEnumerable<StatsSummary> sSums, bool roundCost = false)
         {
-            if (dSums != null && dSums.Any())
+            if (sSums != null && sSums.Any())
             {
-                this.Impressions = dSums.Sum(ds => ds.Impressions);
-                this.Clicks = dSums.Sum(ds => ds.Clicks);
-                this.PostClickConv = dSums.Sum(ds => ds.PostClickConv);
-                this.PostViewConv = dSums.Sum(ds => ds.PostViewConv);
-                this.Cost = dSums.Sum(ds => ds.Cost);
+                this.Impressions = sSums.Sum(ds => ds.Impressions);
+                this.Clicks = sSums.Sum(ds => ds.Clicks);
+                this.PostClickConv = sSums.Sum(ds => ds.PostClickConv);
+                this.PostViewConv = sSums.Sum(ds => ds.PostViewConv);
+                this.Cost = sSums.Sum(ds => ds.Cost);
                 if (roundCost)
                     this.Cost = Math.Round(this.Cost, 2);
             }

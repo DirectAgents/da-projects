@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DirectAgents.Domain.Entities.TD
 {
-    public class DaySumStats
+    public class StatsSummary
     {
         public int Impressions { get; set; }
         public int Clicks { get; set; }
@@ -19,7 +19,7 @@ namespace DirectAgents.Domain.Entities.TD
         }
     }
 
-    public class DailySummary : DaySumStats
+    public class DailySummary : StatsSummary
     {
         public DateTime Date { get; set; }
         public int AccountId { get; set; }
@@ -28,7 +28,7 @@ namespace DirectAgents.Domain.Entities.TD
     }
 
     // DailySummary for a Strategy
-    public class StrategySummary : DaySumStats
+    public class StrategySummary : StatsSummary
     {
         public DateTime Date { get; set; }
         public int StrategyId { get; set; }
@@ -41,7 +41,7 @@ namespace DirectAgents.Domain.Entities.TD
     }
 
     // DailySummary for a "TD ad"
-    public class TDadSummary : DaySumStats
+    public class TDadSummary : StatsSummary
     {
         public DateTime Date { get; set; }
         public int TDadId { get; set; }
@@ -54,7 +54,7 @@ namespace DirectAgents.Domain.Entities.TD
     }
 
     // DailySummary for a Site / ExtAccount
-    public class SiteSummary : DaySumStats
+    public class SiteSummary : StatsSummary
     {
         public DateTime Date { get; set; }
 
@@ -73,6 +73,7 @@ namespace DirectAgents.Domain.Entities.TD
         }
         private string _sitename;
     }
+
     public class Site
     {
         public int Id { get; set; }
