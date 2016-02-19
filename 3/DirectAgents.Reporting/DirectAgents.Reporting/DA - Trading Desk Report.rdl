@@ -1294,7 +1294,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Sum(Fields!eCPA.Value)</Value>
+                                      <Value>=Code.SafeFraction(Sum(Fields!MediaSpend.Value), Sum(Fields!Conversions.Value))</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -2639,7 +2639,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Sum(Fields!eCPA.Value)</Value>
+                                      <Value>=Code.SafeFraction(Sum(Fields!MediaSpend.Value), Sum(Fields!Conversions.Value))</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -4658,7 +4658,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   <Paragraph>
                                                     <TextRuns>
                                                       <TextRun>
-                                                        <Value>=IIf(CountRows() = 0, 0, Sum(Fields!eCPC.Value))</Value>
+                                                        <Value>=IIf(CountRows() = 0, 0, Code.SafeFraction(Sum(Fields!MediaSpend.Value), Sum(Fields!Conversions.Value)))</Value>
                                                         <Style>
                                                           <FontFamily>Calibri</FontFamily>
                                                           <FontSize>11pt</FontSize>
@@ -6410,6 +6410,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
+                            <rd:Selected>true</rd:Selected>
                           </CellContents>
                         </TablixCell>
                       </TablixCells>
@@ -8456,7 +8457,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Sum(Fields!eCPC.Value)</Value>
+                                      <Value>=Code.SafeFraction(Sum(Fields!MediaSpend.Value), Sum(Fields!Conversions.Value))</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -8777,7 +8778,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Sum(Fields!eCPC.Value)</Value>
+                                      <Value>=Code.SafeFraction(Sum(Fields!MediaSpend.Value), Sum(Fields!Conversions.Value))</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
