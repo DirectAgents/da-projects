@@ -26,7 +26,7 @@ namespace CakeExtracter.Commands
         {
             IsCommand("daSynchDBMStats", "synch DBM Daily Stats - by lineitem/creative/site...");
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
-            HasOption<string>("t|statsType=", "Stats Type (default: daily)", c => StatsType = c);
+            HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -36,17 +36,18 @@ namespace CakeExtracter.Commands
             var reportDate = endDate.AddDays(1);
             var dateRange = new DateRange(reportDate, reportDate);
 
-            StatsType = (StatsType == null) ? "" : StatsType.ToLower(); // make it lowered and not null
+            var statsType = new StatsTypeAgg(this.StatsType);
 
-            if (StatsType.StartsWith("strat"))
+            //if (statsType.Daily)
+            // TODO: implement
+            if (statsType.Strategy)
                 DoETL_Strategy(dateRange);
-            else if (StatsType.StartsWith("creat"))
+            if (statsType.Creative)
                 DoETL_Creative(dateRange);
-            else if (StatsType.StartsWith("site"))
+            if (statsType.Site)
                 DoETL_Site(dateRange);
-            //else
-            //    DoETL_Daily(dateRange);
-
+            //if (statsType.Conv)
+            // TODO: implement
 
             return 0;
         }
