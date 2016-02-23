@@ -34,51 +34,53 @@ namespace CakeExtracter.Commands
             // Note: The reportDate will be one day after the endDate of the desired stats
             DateTime endDate = EndDate ?? DateTime.Today.AddDays(-1);
             var reportDate = endDate.AddDays(1);
-            var dateRange = new DateRange(reportDate, reportDate);
 
             var statsType = new StatsTypeAgg(this.StatsType);
 
             //if (statsType.Daily)
             // TODO: implement
             if (statsType.Strategy)
-                DoETL_Strategy(dateRange);
+                DoETL_Strategy(reportDate);
             if (statsType.Creative)
-                DoETL_Creative(dateRange);
+                DoETL_Creative(reportDate);
             if (statsType.Site)
-                DoETL_Site(dateRange);
+                DoETL_Site(reportDate);
             //if (statsType.Conv)
             // TODO: implement
 
             return 0;
         }
 
-        public void DoETL_Strategy(DateRange dateRange)
+        public void DoETL_Strategy(DateTime reportDate, List<string> buckets = null)
         {
-            var buckets = new List<string> { ConfigurationManager.AppSettings["DBM_AllLineItemBucket"] };
+            if (buckets == null)
+                buckets = new List<string> { ConfigurationManager.AppSettings["DBM_AllLineItemBucket"] };
 
-            var extracter = new DbmCloudStorageExtracter(dateRange, buckets, byLineItem: true);
+            var extracter = new DbmCloudStorageExtracter(reportDate, buckets, byLineItem: true);
             var loader = new DbmLineItemSummaryLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
             loaderThread.Join();
         }
-        public void DoETL_Creative(DateRange dateRange)
+        public void DoETL_Creative(DateTime reportDate, List<string> buckets = null)
         {
-            var buckets = new List<string> { ConfigurationManager.AppSettings["DBM_AllCreativeBucket"] };
+            if (buckets == null)
+                buckets = new List<string> { ConfigurationManager.AppSettings["DBM_AllCreativeBucket"] };
 
-            var extracter = new DbmCloudStorageExtracter(dateRange, buckets, byCreative: true);
+            var extracter = new DbmCloudStorageExtracter(reportDate, buckets, byCreative: true);
             var loader = new DbmCreativeSummaryLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
             loaderThread.Join();
         }
-        public void DoETL_Site(DateRange dateRange)
+        public void DoETL_Site(DateTime reportDate, List<string> buckets = null)
         {
-            var buckets = new List<string> { ConfigurationManager.AppSettings["DBM_AllSiteBucket"] };
+            if (buckets == null)
+                buckets = new List<string> { ConfigurationManager.AppSettings["DBM_AllSiteBucket"] };
 
-            var extracter = new DbmCloudStorageExtracter(dateRange, buckets, bySite: true);
+            var extracter = new DbmCloudStorageExtracter(reportDate, buckets, bySite: true);
             var loader = new DbmSiteSummaryLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
