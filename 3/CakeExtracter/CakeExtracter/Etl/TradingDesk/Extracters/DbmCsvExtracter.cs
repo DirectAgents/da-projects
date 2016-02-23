@@ -93,7 +93,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 }
                 else
                 {
-                    //NOTE: NOT TESTED. (Only tested W/DbmCloudStorageExtracter, which sets byCreative to true.)
                     csv.Configuration.RegisterClassMap<DbmRowMap>();
 
                     var csvRows = csv.GetRecords<DbmRow>().ToList();
@@ -104,9 +103,28 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 }
             }
         }
+
+        private IEnumerable<DbmRowBase> GroupByDateAndEnumerate(List<DbmRow> csvRows)
+        {
+            var groupedRows = csvRows.GroupBy(r => new { r.Date, r.InsertionOrderID, r.InsertionOrder });
+            foreach (var dayGroup in groupedRows)
+            {
+                var row = new DbmRow
+                {
+                    Date = dayGroup.Key.Date,
+                    //Impressions = dayGroup.Sum(g => g.Impressions),
+                    //Clicks = dayGroup.Sum(g => g.Clicks),
+                    //TotalConversions =
+                    //PostClickConversions = dayGroup.Sum(g => g.PostClickConversions),
+                    //PostViewConversions = dayGroup.Sum(g => g.PostViewConversions),
+                    //Revenue = dayGroup.Sum(g => g.Revenue)
+                };
+                yield return row;
+            }
+        }
     }
 
-    public sealed class DbmRowMap : CsvClassMap<DbmRow> // NOT TESTED
+    public sealed class DbmRowMap : CsvClassMap<DbmRow>
     {
         public DbmRowMap()
         {
@@ -116,6 +134,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             Map(m => m.Impressions);
             Map(m => m.Clicks);
             Map(m => m.TotalConversions);
+            Map(m => m.PostClickConversions).Name("Post-ClickConversions");
+            Map(m => m.PostViewConversions).Name("Post-ViewConversions");
             Map(m => m.Revenue).Name("Revenue(USD)");
         }
     }

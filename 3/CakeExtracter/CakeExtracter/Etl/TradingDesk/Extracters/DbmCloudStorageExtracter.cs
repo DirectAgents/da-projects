@@ -14,7 +14,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     public class DbmCloudStorageExtracter : Extracter<DbmRowBase>
     {
         // if specified, dateFilter is used to select objects (by name) within the specified buckets
-        private readonly DateTime dateFilter;
+        private readonly DateTime? dateFilter;
         private readonly IEnumerable<string> bucketNames;
 
         private readonly bool byLineItem;
@@ -22,7 +22,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         private readonly bool bySite;
         // Note: only set at most *one* of these to true
 
-        public DbmCloudStorageExtracter(DateTime dateFilter, IEnumerable<string> bucketNames, bool byLineItem = false, bool byCreative = false, bool bySite = false)
+        public DbmCloudStorageExtracter(DateTime? dateFilter, IEnumerable<string> bucketNames, bool byLineItem = false, bool byCreative = false, bool bySite = false)
         {
             this.dateFilter = dateFilter;
             this.bucketNames = bucketNames;
@@ -39,7 +39,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             if (byLineItem) by = " by lineitem"; // takes precedence
             string datePart = "";
             if (dateFilter != null)
-                datePart = string.Format(" - report date {0:d}", dateFilter);
+                datePart = string.Format(" - report date {0:d}", dateFilter.Value);
             Logger.Info("Extracting DailySummary reports{0} from {1} buckets{2}", by, bucketNames.Count(), datePart);
 
             var items = EnumerateRows();
@@ -60,7 +60,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 IEnumerable<Google.Apis.Storage.v1.Data.Object> reportObjects = bucketObjects.Items;
                 if (dateFilter != null)
                 {
-                    string dateString = dateFilter.ToString("yyyy-MM-dd");
+                    string dateString = dateFilter.Value.ToString("yyyy-MM-dd");
                     reportObjects = reportObjects.Where(o => o.Name.Contains(dateString));
                 }
 
