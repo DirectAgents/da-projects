@@ -11,7 +11,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
     {
         private TDadSummaryLoader tdAdSummaryLoader;
         private Dictionary<int, int> accountIdLookupByIOid = new Dictionary<int, int>();
-        private Dictionary<string, int> tdAdIdLookupByCreativeId = new Dictionary<string, int>();
+        private Dictionary<string, int> tdAdIdLookupByCreativeId_IOid = new Dictionary<string, int>();
 
         public DbmCreativeSummaryLoader()
         {
@@ -23,7 +23,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             Logger.Info("Loading {0} Creative DailySummaries..", items.Count);
             AddUpdateDependentAccounts(items);
             AddUpdateDependentTDads(items);
-            var sItems = items.Select(i => CreateTDadSummary(i, tdAdIdLookupByCreativeId[((DbmRowWithCreative)i).CreativeID])).ToList();
+            var sItems = items.Select(i => CreateTDadSummary(i, tdAdIdLookupByCreativeId_IOid[((DbmRowWithCreative)i).CreativeID + "_" + i.InsertionOrderID])).ToList();
             var count = tdAdSummaryLoader.UpsertDailySummaries(sItems);
             return count;
         }
@@ -61,7 +61,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     string creativeName = tuple.Item2;
                     int ioID = tuple.Item3;
 
-                    if (tdAdIdLookupByCreativeId.ContainsKey(creativeID))
+                    if (tdAdIdLookupByCreativeId_IOid.ContainsKey(creativeID + "_" + ioID))
                         continue; // already encountered this creative
                     if (!accountIdLookupByIOid.ContainsKey(ioID))
                         continue; // should have been added in AddUpdateDependentAccounts()
@@ -80,7 +80,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         db.TDads.Add(tdAd);
                         db.SaveChanges();
                         Logger.Info("Saved new TDad: {0} ({1}), ExternalId={2}", tdAd.Name, tdAd.Id, tdAd.ExternalId);
-                        tdAdIdLookupByCreativeId[creativeID] = tdAd.Id;
+                        tdAdIdLookupByCreativeId_IOid[creativeID + "_" + ioID] = tdAd.Id;
                     }
                     else
                     {   // Update & put existing TDad in the lookup
@@ -98,7 +98,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                             if (numUpdates > 1)
                                 Logger.Warn("Multiple entities in db ({0})", numUpdates);
                         }
-                        tdAdIdLookupByCreativeId[creativeID] = tdAdsInDb.First().Id;
+                        tdAdIdLookupByCreativeId_IOid[creativeID + "_" + ioID] = tdAdsInDb.First().Id;
                     }
                 }
             }
