@@ -3,11 +3,11 @@
 , @StartDate datetime
 , @EndDate datetime
 ) RETURNS TABLE AS RETURN
-/*
-declare @AdvertiserId int, @StartDate datetime, @EndDate datetime
-select @AdvertiserId = 3, @StartDate = '1/1/2016', @EndDate = getdate();
---*/
-WITH revenue AS
+WITH fBI AS
+(
+	SELECT * FROM td.fBudgetInfo(@AdvertiserId, default, default)
+)
+, revenue AS
 (
 	SELECT SiteSummary.Date
 	, Site.Name AS SiteName
@@ -16,16 +16,25 @@ WITH revenue AS
 	, SiteSummary.Clicks
 	, SiteSummary.PostClickConv + SiteSummary.PostViewConv AS Conversions
 	, SiteSummary.Cost
-	, CASE	WHEN budgetInfo.MarginPct = 100 THEN SiteSummary.Cost * (1 + (budgetInfo.MgmtFeePct / 100))
-			ELSE SiteSummary.Cost / (1 - (budgetInfo.MarginPct / 100))
+	, CASE	WHEN fBI.MarginPct = 100 THEN SiteSummary.Cost * (1 + (fBI.MgmtFeePct / 100))
+			ELSE SiteSummary.Cost / (1 - (fBI.MarginPct / 100))
 	  END AS Revenue
-	, budgetInfo.MediaSpend AS BIMediaSpend
-	, budgetInfo.MgmtFeePct AS BIMgmtFeePct
-	, budgetInfo.MarginPct AS BIMarginPct
-	FROM td.fBudgetInfo(@AdvertiserId, default, default) budgetInfo
-	INNER JOIN td.SiteSummary ON td.SiteSummary.AccountId = budgetInfo.AccountId
-	INNER JOIN td.Site ON td.Site.Id = td.SiteSummary.SiteId
+	, fBI.MediaSpend AS BIMediaSpend
+	, fBI.MgmtFeePct AS BIMgmtFeePct
+	, fBI.MarginPct AS BIMarginPct
+	FROM fBI
+	INNER JOIN td.SiteSummary ON SiteSummary.AccountId = fBI.AccountId
+	INNER JOIN td.Site ON Site.Id = SiteSummary.SiteId
+	LEFT OUTER JOIN td.Account ON Account.Id = SiteSummary.AccountId
 	WHERE (td.SiteSummary.Date BETWEEN @StartDate AND @EndDate)
+	  AND (fBI.AsOfDate =
+			(
+			SELECT TOP 1 x.AsOfDate
+			FROM fBI x
+			WHERE (x.AccountId = SiteSummary.AccountId)
+			  AND ((Account.PlatformId IS NULL) OR (x.PlatformId = Account.PlatformId))
+			  AND (x.AsOfDate <= SiteSummary.Date)
+			))
 )
 , revenueTop50 AS
 (

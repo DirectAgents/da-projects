@@ -3,22 +3,37 @@ ALTER FUNCTION [td].[fDailySummaryBasicStats](
 , @StartDate datetime
 , @EndDate datetime
 ) RETURNS TABLE AS RETURN
-WITH revenue AS
+WITH fBI AS
+(
+	SELECT * FROM td.fBudgetInfo(@AdvertiserId, @StartDate, @EndDate)
+)
+, revenue AS
 (
 	SELECT DailySummary.Date
 	, DailySummary.Impressions
 	, DailySummary.Clicks
 	, DailySummary.PostClickConv + DailySummary.PostViewConv AS Conversions
 	, DailySummary.Cost
-	, CASE	WHEN budgetInfo.MarginPct = 100 THEN DailySummary.Cost * (1 + (budgetInfo.MgmtFeePct / 100))
-			ELSE DailySummary.Cost / (1 - (budgetInfo.MarginPct / 100))
+	, CASE	WHEN fBI.MarginPct = 100 THEN DailySummary.Cost * (1 + (fBI.MgmtFeePct / 100))
+			ELSE DailySummary.Cost / (1 - (fBI.MarginPct / 100))
 	  END AS Revenue
-	, budgetInfo.MediaSpend AS BIMediaSpend
-	, budgetInfo.MgmtFeePct AS BIMgmtFeePct
-	, budgetInfo.MarginPct AS BIMarginPct
-	FROM td.fBudgetInfo(@AdvertiserId, @StartDate, @EndDate) budgetInfo
-	INNER JOIN td.DailySummary ON td.DailySummary.AccountId = budgetInfo.AccountId
+	, fBI.MediaSpend AS BIMediaSpend
+	, fBI.MgmtFeePct AS BIMgmtFeePct
+	, fBI.MarginPct AS BIMarginPct
+	FROM fBI
+	INNER JOIN td.Account
+	   ON (Account.Id = fBI.AccountId)
+	  AND (Account.PlatformId = fBI.PlatformId)
+	INNER JOIN td.DailySummary ON DailySummary.AccountId = Account.Id
 	WHERE (td.DailySummary.Date BETWEEN @StartDate AND @EndDate)
+	  AND (fBI.AsOfDate =
+			(
+			SELECT TOP 1 x.AsOfDate
+			FROM fBI x
+			WHERE (x.AccountId = Account.Id)
+			  AND (x.PlatformId = Account.PlatformId)
+			  AND (x.AsOfDate <= DailySummary.Date)
+			))
 )
 , mediaSpend AS
 (
