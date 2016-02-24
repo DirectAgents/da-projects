@@ -27,9 +27,14 @@ namespace CakeExtracter.Bootstrappers
             Mapper.CreateMap<ClientPortal.Data.Entities.TD.AdRoll.AdDailySummary, ClientPortal.Data.Entities.TD.AdRoll.AdDailySummary>();
 
             Mapper.CreateMap<DirectAgents.Domain.Entities.TD.DailySummary, DirectAgents.Domain.Entities.TD.DailySummary>();
-            Mapper.CreateMap<DirectAgents.Domain.Entities.TD.StrategySummary, DirectAgents.Domain.Entities.TD.StrategySummary>();
-            Mapper.CreateMap<DirectAgents.Domain.Entities.TD.TDadSummary, DirectAgents.Domain.Entities.TD.TDadSummary>();
-            Mapper.CreateMap<DirectAgents.Domain.Entities.TD.SiteSummary, DirectAgents.Domain.Entities.TD.SiteSummary>();
+            Mapper.CreateMap<DirectAgents.Domain.Entities.TD.StrategySummary, DirectAgents.Domain.Entities.TD.StrategySummary>()
+                .ForMember(s => s.StrategyName, opt => opt.Ignore())
+                .ForMember(s => s.StrategyEid, opt => opt.Ignore());
+            Mapper.CreateMap<DirectAgents.Domain.Entities.TD.TDadSummary, DirectAgents.Domain.Entities.TD.TDadSummary>()
+                .ForMember(s => s.TDadName, opt => opt.Ignore())
+                .ForMember(s => s.TDadEid, opt => opt.Ignore());
+            Mapper.CreateMap<DirectAgents.Domain.Entities.TD.SiteSummary, DirectAgents.Domain.Entities.TD.SiteSummary>()
+                .ForMember(s => s.SiteName, opt => opt.Ignore());
             Mapper.CreateMap<DirectAgents.Domain.Entities.TD.Conv, DirectAgents.Domain.Entities.TD.Conv>();
             Mapper.CreateMap<DirectAgents.Domain.Entities.AdRoll.AdDailySummary, DirectAgents.Domain.Entities.AdRoll.AdDailySummary>();
             Mapper.CreateMap<DirectAgents.Domain.Entities.DBM.CreativeDailySummary, DirectAgents.Domain.Entities.DBM.CreativeDailySummary>();

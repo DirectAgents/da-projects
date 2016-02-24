@@ -69,7 +69,7 @@ namespace DirectAgents.Domain.Entities.TD
         public string SiteName
         {
             get { return _sitename; }
-            set { _sitename = value.ToLower(); }
+            set { _sitename = (value == null) ? null : value.ToLower(); }
         }
         private string _sitename;
     }

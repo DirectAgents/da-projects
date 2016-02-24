@@ -93,7 +93,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         }
                         else
                         {
-                            Logger.Warn("Encountered duplicate for {0:d} - Site {1}, Account {2}", item.Date, item.Site, item.AccountId);
+                            Logger.Warn("Encountered duplicate for {0:d} - Site {1} ({2}), Account {3}", item.Date, item.SiteId, item.SiteName, item.AccountId);
                             duplicateCount++;
                         }
                     }

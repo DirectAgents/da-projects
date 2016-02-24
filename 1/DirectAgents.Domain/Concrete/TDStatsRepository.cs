@@ -253,6 +253,25 @@ namespace DirectAgents.Domain.Concrete
             return stats;
         }
 
+        //TODO: by campaignId, etc
+        public IEnumerable<TDRawStat> GetSiteStats(DateTime? startDate, DateTime? endDate, int? acctId = null, int? minImpressions = null)
+        {
+            var sums = SiteSummaries(startDate, endDate, acctId: acctId);
+            if (minImpressions.HasValue)
+                sums = sums.Where(s => s.Impressions >= minImpressions.Value);
+            var groups = sums.GroupBy(s => s.Site);
+            var stats = new List<TDRawStat>();
+            foreach (var group in groups)
+            {
+                var stat = new TDRawStat(group)
+                {
+                    Site = group.Key
+                };
+                stats.Add(stat);
+            }
+            return stats;
+        }
+
         public TDCampStats GetCampStats(DateTime monthStart, int campId)
         {
             var campaign = Campaign(campId);

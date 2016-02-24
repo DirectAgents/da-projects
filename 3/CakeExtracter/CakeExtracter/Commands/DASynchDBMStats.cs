@@ -125,6 +125,11 @@ namespace CakeExtracter.Commands
                 buckets = new List<string> { ConfigurationManager.AppSettings["DBM_AllSiteBucket"] };
 
             var extracter = new DbmCloudStorageExtracter(reportDate, buckets, bySite: true);
+            var impThresholdString = ConfigurationManager.AppSettings["TD_SiteStats_ImpressionThreshold"];
+            int impThreshold;
+            if (int.TryParse(impThresholdString, out impThreshold))
+                extracter.ImpressionThreshold = impThreshold;
+
             var loader = new DbmSiteSummaryLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);

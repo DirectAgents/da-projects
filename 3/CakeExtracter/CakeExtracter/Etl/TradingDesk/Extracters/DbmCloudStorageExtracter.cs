@@ -22,6 +22,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         private readonly bool bySite;
         // Note: only set at most *one* of these to true
 
+        public int ImpressionThreshold { get; set; } // used only for site stats
+
         public DbmCloudStorageExtracter(DateTime? dateFilter, IEnumerable<string> bucketNames, bool byLineItem = false, bool byCreative = false, bool bySite = false)
         {
             this.dateFilter = dateFilter;
@@ -69,8 +71,21 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                     var stream = GetStreamForCloudStorageObject(reportObject, credential);
                     using (var reader = new StreamReader(stream))
                     {
-                        foreach (var row in DbmCsvExtracter.EnumerateRowsStatic(reader, byLineItem: byLineItem, byCreative: byCreative, bySite: bySite))
-                            yield return row;
+                        if (!bySite)
+                        {
+                            foreach (var row in DbmCsvExtracter.EnumerateRowsStatic(reader, byLineItem: byLineItem, byCreative: byCreative, bySite: bySite))
+                                yield return row;
+                        }
+                        else
+                        {   // for site stats: do filtering
+                            foreach (var row in DbmCsvExtracter.EnumerateRowsStatic(reader, byLineItem: byLineItem, byCreative: byCreative, bySite: bySite))
+                            {
+                                int impressions = int.Parse(row.Impressions);
+                                int conversions = (int)decimal.Parse(row.TotalConversions);
+                                if (impressions >= ImpressionThreshold || conversions > 0)
+                                    yield return row;
+                            }
+                        }
                     }
                 }
             }
