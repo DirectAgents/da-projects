@@ -36,23 +36,10 @@
 @foreach (var stat in Model.Stats)
 {
 <tr>
-    <td>by:@Html.ActionLink("strat", "Strategy", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("creat", "Creative", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })</td>
+    <td>by:@Html.ActionLink("strat", "Strategy", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("creat", "Creative", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("site", "Site", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("daily", "Index", "DailySummaries", new { acctId = stat.ExtAccount.Id, month = Model.MonthString }, null)</td>
     <td>@stat.ExtAccount.Platform.Name</td>
     <td style="text-align:right">@stat.ExtAccount.Id</td>
-    <td>
-        @if (stat.ExtAccount.Platform.Code == Platform.Code_AdRoll)
-        {
-            @Html.ActionLink(stat.ExtAccount.Name, "AdRoll", new { advEid = stat.ExtAccount.ExternalId, month = Model.MonthString })
-        }
-        else if (stat.ExtAccount.Platform.Code == Platform.Code_DBM)
-        {
-            @Html.ActionLink(stat.ExtAccount.Name, "DBM", new { ioID = stat.ExtAccount.ExternalId, month = Model.MonthString })
-        }
-        else
-        {
-            @stat.ExtAccount.Name
-        }
-    </td>
+    <td>@stat.ExtAccount.Name</td>
     <td style="text-align:right">@stat.Impressions</td>
     <td style="text-align:right">@stat.Clicks</td>
     <td style="text-align:center">@stat.CTR</td>
