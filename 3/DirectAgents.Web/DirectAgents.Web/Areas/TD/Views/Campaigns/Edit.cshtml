@@ -124,6 +124,8 @@
 }
         <br />
         @Html.ActionLink("Back to Campaigns", "Index", new { advId = advId })
+        <br /><br />
+        Budget & Pacing: @Html.ActionLink("HTML", "Pacing", "CampStats", new { campId = Model.Id }, null)
     </div>
 </fieldset>
 <br />

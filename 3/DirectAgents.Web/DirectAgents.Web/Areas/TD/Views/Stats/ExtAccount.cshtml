@@ -74,3 +74,13 @@
 }
 </table>
 <br />
+@if (!Model.CampaignId.HasValue && !Model.AccountId.HasValue)
+{
+    <text>Filter:
+    @Html.ActionLink("AdRoll", null, new { platform = Platform.Code_AdRoll }) |
+    @Html.ActionLink("DBM", null, new { platform = Platform.Code_DBM }) |
+    @Html.ActionLink("Facebook", null, new { platform = Platform.Code_FB }) |
+    @Html.ActionLink("(show all)", null)
+    </text>
+    <br />
+}

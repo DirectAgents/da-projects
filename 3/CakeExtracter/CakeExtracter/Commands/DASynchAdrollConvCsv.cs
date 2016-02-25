@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using System.IO;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
@@ -11,6 +10,18 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchAdrollConvCsv : ConsoleCommand
     {
+        public static int RunStatic(int accountId, StreamReader streamReader)
+        {
+            AutoMapperBootstrapper.CheckRunSetup();
+            var cmd = new DASynchAdrollConvCsv
+            {
+                AccountId = accountId,
+                StreamReader = streamReader
+            };
+            int result = cmd.Run();
+            return result;
+        }
+
         public StreamReader StreamReader { get; set; }
 
         public string CsvFilePath { get; set; }
