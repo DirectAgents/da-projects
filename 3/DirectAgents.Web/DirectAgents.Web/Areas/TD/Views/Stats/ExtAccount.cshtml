@@ -36,7 +36,7 @@
 @foreach (var stat in Model.Stats)
 {
 <tr>
-    <td>by:@Html.ActionLink("strat", "Strategy", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("creat", "Creative", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("site", "Site", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("daily", "Index", "DailySummaries", new { acctId = stat.ExtAccount.Id, month = Model.MonthString }, null)</td>
+    <td>by:@Html.ActionLink("strat", "Strategy", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("creat", "Creative", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("site", "Site", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("daily", "Index", "DailySummaries", new { acctId = stat.ExtAccount.Id, month = Model.MonthString }, null) | @Html.ActionLink("convs", "Conv", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })</td>
     <td>@stat.ExtAccount.Platform.Name</td>
     <td style="text-align:right">@stat.ExtAccount.Id</td>
     <td>@stat.ExtAccount.Name</td>

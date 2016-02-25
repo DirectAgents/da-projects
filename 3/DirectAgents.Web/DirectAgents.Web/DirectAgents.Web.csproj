@@ -192,6 +192,7 @@
     <Compile Include="Areas\TD\Models\StatsGaugeVM.cs" />
     <Compile Include="Areas\TD\Models\TDStatsVM.cs" />
     <Compile Include="Areas\TD\TDAreaRegistration.cs" />
+    <None Include="Areas\TD\Views\Stats\Conv.cshtml" />
     <Compile Include="Common.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />

@@ -181,8 +181,11 @@ namespace DirectAgents.Domain.Concrete
             if (startDate.HasValue)
                 convs = convs.Where(s => s.Time >= startDate.Value);
             if (endDate.HasValue)
-                convs = convs.Where(s => s.Time < endDate.Value.AddDays(1));
+            {
+                var date = endDate.Value.AddDays(1);
+                convs = convs.Where(s => s.Time < date);
                 // Include up to 11:59:59.999... on the endDate specified
+            }
             if (acctId.HasValue)
                 convs = convs.Where(s => s.AccountId == acctId.Value);
             if (campId.HasValue)
