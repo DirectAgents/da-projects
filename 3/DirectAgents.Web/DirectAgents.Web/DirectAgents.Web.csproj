@@ -187,11 +187,13 @@
     <Compile Include="Areas\TD\Models\AccountMaintenanceVM.cs" />
     <Compile Include="Areas\TD\Models\CampaignPacingVM.cs" />
     <Compile Include="Areas\TD\Models\DailySummariesVM.cs" />
+    <Compile Include="Areas\TD\Models\DashboardVM.cs" />
     <Compile Include="Areas\TD\Models\ExtraItemsVM.cs" />
     <Compile Include="Areas\TD\Models\ReportingVM.cs" />
     <Compile Include="Areas\TD\Models\StatsGaugeVM.cs" />
     <Compile Include="Areas\TD\Models\TDStatsVM.cs" />
     <Compile Include="Areas\TD\TDAreaRegistration.cs" />
+    <Content Include="Areas\TD\Views\Campaigns\Dashboard.cshtml" />
     <None Include="Areas\TD\Views\Stats\Conv.cshtml" />
     <Compile Include="Common.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />

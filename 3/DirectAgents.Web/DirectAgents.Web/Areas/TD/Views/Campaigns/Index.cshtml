@@ -39,7 +39,7 @@
     <td>
         @Html.ActionLink("MTD", "MTD", "Stats", new { campId = camp.Id }, null) |
         @Html.ActionLink("Last Month", "MTD", "Stats", new { campId = camp.Id, date = lastMonth.ToShortDateString() }, null) |
-        @Html.ActionLink("Quick", "Pacing", "CampStats", new { campId = camp.Id }, null) |
+        @Html.ActionLink("B&P", "Pacing", "CampStats", new { campId = camp.Id }, null) |
         @Html.ActionLink("By Ext.Account", "ExtAccount", "Stats", new { campId = camp.Id }, null)
     </td>
     <td>

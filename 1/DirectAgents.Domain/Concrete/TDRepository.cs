@@ -142,6 +142,17 @@ namespace DirectAgents.Domain.Concrete
                 campaigns = campaigns.Where(c => c.AdvertiserId == advId.Value);
             return campaigns;
         }
+        public IQueryable<Campaign> CampaignsActive(DateTime? monthStart = null)
+        {
+            // A campaign is considered "active" if at least one of its accounts has DailySummaries for the specified month
+            // TODO?: check Strat/Creat/Site Sums and Convs?
+            DateTime? monthEnd = monthStart.HasValue ? monthStart.Value.AddMonths(1).AddDays(-1) : (DateTime?)null;
+            var daySums = DailySummaries(monthStart, monthEnd);
+            var activeAcctIds = daySums.Select(s => s.AccountId).Distinct().ToArray();
+            var activeCampIds = context.ExtAccounts.Where(a => activeAcctIds.Contains(a.Id) && a.CampaignId.HasValue).Select(a => a.CampaignId.Value).Distinct().ToArray();
+            var campaigns = context.Campaigns.Where(c => activeCampIds.Contains(c.Id));
+            return campaigns;
+        }
 
         public bool AddCampaign(Campaign camp)
         {

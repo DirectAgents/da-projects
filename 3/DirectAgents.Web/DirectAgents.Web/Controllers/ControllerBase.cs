@@ -25,7 +25,7 @@ namespace DirectAgents.Web.Controllers
             base.Dispose(disposing);
         }
 
-        // Pass in null to use "CurrentMonthTD"
+        // Pass in null to use "CurrentMonthTD" cookie
         // Returns the selected month
         protected DateTime SetChooseMonthViewData(DateTime? month = null)
         {
@@ -37,6 +37,8 @@ namespace DirectAgents.Web.Controllers
             ViewBag.ChooseMonthSelectList = ChooseMonthSelectList(month.Value);
             return month.Value;
         }
+
+        // Passing in null will not use the cookie
         protected DateTime SetChooseMonthViewData_NonCookie(DateTime? month = null)
         {
             if (!month.HasValue)

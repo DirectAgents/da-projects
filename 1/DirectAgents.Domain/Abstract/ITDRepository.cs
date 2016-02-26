@@ -32,6 +32,7 @@ namespace DirectAgents.Domain.Abstract
         bool SaveAdvertiser(Advertiser adv);
         Campaign Campaign(int id);
         IQueryable<Campaign> Campaigns(int? advId = null);
+        IQueryable<Campaign> CampaignsActive(DateTime? monthStart = null);
         bool AddCampaign(Campaign camp);
         bool DeleteCampaign(int id);
         bool SaveCampaign(Campaign camp);

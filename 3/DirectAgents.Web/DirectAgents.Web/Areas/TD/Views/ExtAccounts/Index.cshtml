@@ -13,8 +13,8 @@
     <th style="text-align:right">ID</th>
     <th>Ext Account</th>
     <th>External Id</th>
-    <th>Daily Stats</th>
-    <th></th>
+    <th>Stats</th>
+    <th>List...</th>
 </tr>
 @foreach (var extAcct in Model)
 {
@@ -24,10 +24,7 @@
     <td style="text-align:right">@extAcct.Id</td>
     <td>@extAcct.Name</td>
     <td>@extAcct.ExternalId</td>
-    <td>
-        @Html.ActionLink("View", "Index", "DailySummaries", new { acctId = extAcct.Id, month = month.ToShortDateString() }, null) |
-        @Html.ActionLink("Upload", "UploadStats", new { id = extAcct.Id })
-    </td>
+    <td>@Html.ActionLink("Upload", "UploadStats", new { id = extAcct.Id })</td>
     <td>
         @Html.ActionLink("Strategies", "Strategies", new { id = extAcct.Id }, null) |
         @Html.ActionLink("Creatives", "TDads", new { id = extAcct.Id }, null)

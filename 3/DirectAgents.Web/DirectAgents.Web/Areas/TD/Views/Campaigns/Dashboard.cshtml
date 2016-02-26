@@ -1,0 +1,27 @@
+﻿@model DirectAgents.Web.Areas.TD.Models.DashboardVM
+
+<h2>Campaign Dashboard</h2>
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+
+<table>
+<tr>
+    <th>Advertiser</th>
+    <th>Campaign</th>
+    <th>Stats</th>
+    <th>ExtAccounts</th>
+</tr>
+@foreach (var camp in Model.Campaigns)
+{
+<tr>
+    <td>@camp.Advertiser.Name</td>
+    <td>@Html.ActionLink(camp.Name, "Pacing", "CampStats", new { campId = camp.Id }, null)</td>
+    <td>@Html.ActionLink("Raw", "ExtAccount", "Stats", new { campId = camp.Id, month = Model.MonthString }, null)</td>
+    <td>
+        @Html.ActionLink("List(" + camp.ExtAccounts.Count + ")", "Index", "ExtAccounts", new { campId = camp.Id }, null) |
+        @Html.ActionLink("StatsGauge", "IndexGauge", "ExtAccounts", new { campId = camp.Id }, null)
+    </td>
+</tr>
+}
+</table>
+<br />
+Click on the Campaign name for "Budget & Pacing".

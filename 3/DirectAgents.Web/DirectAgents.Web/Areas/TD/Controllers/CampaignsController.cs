@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Web.Areas.TD.Models;
 
 namespace DirectAgents.Web.Areas.TD.Controllers
 {
@@ -19,6 +21,20 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
             Session["advId"] = advId.ToString();
             return View(campaigns);
+        }
+
+        public ActionResult Dashboard()
+        {
+            DateTime currMonth = SetChooseMonthViewData();
+            var campaigns = tdRepo.CampaignsActive(currMonth)
+                .OrderBy(c => c.Advertiser.Name).ThenBy(c => c.Name);
+
+            var model = new DashboardVM
+            {
+                Month = currMonth,
+                Campaigns = campaigns
+            };
+            return View(model);
         }
 
         public ActionResult CreateNew(int advId)
