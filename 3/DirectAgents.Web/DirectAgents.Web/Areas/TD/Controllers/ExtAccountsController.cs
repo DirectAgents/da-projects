@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using CakeExtracter.Commands;
 using DirectAgents.Domain.Abstract;
+using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.TD;
 using DirectAgents.Web.Areas.TD.Models;
 
@@ -34,18 +35,19 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var extAccounts = tdRepo.ExtAccounts(platformCode: platform, campId: campId)
                 .OrderBy(a => a.Platform.Name).ThenBy(a => a.Name);
 
-            List<StatsGaugeVM> statsGaugeVMs = new List<StatsGaugeVM>();
+            List<TDStatsGauge> statsGauges = new List<TDStatsGauge>();
             foreach (var extAcct in extAccounts)
             {
-                var statsGaugeVM = new StatsGaugeVM
-                {
-                    Platform = extAcct.Platform,
-                    ExtAccount = extAcct,
-                    Gauge = tdRepo.GetStatsGauge(extAcct.Id)
-                };
-                statsGaugeVMs.Add(statsGaugeVM);
+                var statsGauge = tdRepo.GetStatsGauge(extAcct);
+                statsGauges.Add(statsGauge);
             }
-            return View(statsGaugeVMs);
+            var model = new StatsGaugeVM
+            {
+                PlatformCode = platform,
+                CampaignId = campId,
+                StatsGauges = statsGauges
+            };
+            return View(model);
         }
 
         public ActionResult CreateNew(string platform)

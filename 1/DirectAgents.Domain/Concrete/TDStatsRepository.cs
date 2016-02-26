@@ -9,7 +9,18 @@ namespace DirectAgents.Domain.Concrete
 {
     public partial class TDRepository
     {
-        public TDStatsGauge GetStatsGauge(int? acctId = null)
+        public TDStatsGauge GetStatsGauge(ExtAccount extAccount)
+        {
+            if (extAccount != null)
+            {
+                var gauge = GetStatsGauge(extAccount.Id);
+                gauge.ExtAccount = extAccount;
+                return gauge;
+            }
+            else
+                return GetStatsGauge();
+        }
+        public TDStatsGauge GetStatsGauge(int? acctId = null) //Note: doesn't fill in ExtAccount
         {
             var gauge = new TDStatsGauge();
             var dSums = DailySummaries(null, null, acctId: acctId);
@@ -44,44 +55,6 @@ namespace DirectAgents.Domain.Concrete
             }
             return gauge;
         }
-
-        //public DateTime? EarliestDailyStatDate(int? acctId = null)
-        //{
-        //    var dSums = DailySummaries(null, null, acctId: acctId);
-        //    if (!dSums.Any()) return null;
-        //    return dSums.Min(ds => ds.Date);
-        //}
-        //public DateTime? EarliestStrategyStatDate(int? acctId = null)
-        //{
-        //    var sSums = StrategySummaries(null, null, acctId: acctId);
-        //    if (!sSums.Any()) return null;
-        //    return sSums.Min(s => s.Date);
-        //}
-        //public DateTime? EarliestTDadStatDate(int? acctId = null)
-        //{
-        //    var tSums = TDadSummaries(null, null, acctId: acctId);
-        //    if (!tSums.Any()) return null;
-        //    return tSums.Min(s => s.Date);
-        //}
-
-        //public DateTime? LatestDailyStatDate(int? acctId = null)
-        //{
-        //    var dSums = DailySummaries(null, null, acctId: acctId);
-        //    if (!dSums.Any()) return null;
-        //    return dSums.Max(ds => ds.Date);
-        //}
-        //public DateTime? LatestStrategyStatDate(int? acctId = null)
-        //{
-        //    var sSums = StrategySummaries(null, null, acctId: acctId);
-        //    if (!sSums.Any()) return null;
-        //    return sSums.Max(s => s.Date);
-        //}
-        //public DateTime? LatestTDadStatDate(int? acctId = null)
-        //{
-        //    var tSums = TDadSummaries(null, null, acctId: acctId);
-        //    if (!tSums.Any()) return null;
-        //    return tSums.Max(s => s.Date);
-        //}
 
         public DailySummary DailySummary(DateTime date, int acctId)
         {
