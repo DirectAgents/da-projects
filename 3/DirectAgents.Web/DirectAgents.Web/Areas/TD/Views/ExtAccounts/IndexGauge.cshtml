@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DirectAgents.Web.Areas.TD.Models.StatsGaugeVM>
+﻿@model DirectAgents.Web.Areas.TD.Models.StatsGaugeVM
 @using DirectAgents.Domain.Entities.TD
 
 <h2>Stats Gauge - By ExtAccount</h2>
@@ -27,29 +27,34 @@
     <th>Earliest</th>
     <th>Latest</th>
 </tr>
-@foreach (var vm in Model)
+@foreach (var gauge in Model.StatsGauges)
 {
 <tr>
-    <td>@vm.Platform.Name</td>
-    <td style="text-align:right">@vm.ExtAccount.Id</td>
-    <td>@vm.ExtAccount.Name</td>
-    <td style="text-align:right">@vm.Gauge.Daily.EarliestDisp</td>
-    <td style="text-align:right">@vm.Gauge.Daily.LatestDisp</td>
-    <td style="text-align:right">@vm.Gauge.Strategy.EarliestDisp</td>
-    <td style="text-align:right">@vm.Gauge.Strategy.LatestDisp</td>
-    <td style="text-align:right">@vm.Gauge.Creative.EarliestDisp</td>
-    <td style="text-align:right">@vm.Gauge.Creative.LatestDisp</td>
-    <td style="text-align:right">@vm.Gauge.Site.EarliestDisp</td>
-    <td style="text-align:right">@vm.Gauge.Site.LatestDisp</td>
-    <td style="text-align:right">@vm.Gauge.Conv.EarliestDisp</td>
-    <td style="text-align:right">@vm.Gauge.Conv.LatestDisp</td>
+    <td>@gauge.ExtAccount.Platform.Name</td>
+    <td style="text-align:right">@gauge.ExtAccount.Id</td>
+    <td>@gauge.ExtAccount.Name</td>
+    <td style="text-align:right">@gauge.Daily.EarliestDisp</td>
+    <td style="text-align:right">@gauge.Daily.LatestDisp</td>
+    <td style="text-align:right">@gauge.Strategy.EarliestDisp</td>
+    <td style="text-align:right">@gauge.Strategy.LatestDisp</td>
+    <td style="text-align:right">@gauge.Creative.EarliestDisp</td>
+    <td style="text-align:right">@gauge.Creative.LatestDisp</td>
+    <td style="text-align:right">@gauge.Site.EarliestDisp</td>
+    <td style="text-align:right">@gauge.Site.LatestDisp</td>
+    <td style="text-align:right">@gauge.Conv.EarliestDisp</td>
+    <td style="text-align:right">@gauge.Conv.LatestDisp</td>
 </tr>
 }
 </table>
 <br />
-Filter:
-@Html.ActionLink("AdRoll", null, new { platform = Platform.Code_AdRoll }) |
-@Html.ActionLink("DBM", null, new { platform = Platform.Code_DBM }) |
-@Html.ActionLink("Facebook", null, new { platform = Platform.Code_FB }) |
-@Html.ActionLink("(show all)", null)
-<br /><br />
+@if (!Model.CampaignId.HasValue)
+{
+    <text>
+    Filter:
+    @Html.ActionLink("AdRoll", null, new { platform = Platform.Code_AdRoll }) |
+    @Html.ActionLink("DBM", null, new { platform = Platform.Code_DBM }) |
+    @Html.ActionLink("Facebook", null, new { platform = Platform.Code_FB }) |
+    @Html.ActionLink("(show all)", null)
+    </text>
+    <br /><br />
+}

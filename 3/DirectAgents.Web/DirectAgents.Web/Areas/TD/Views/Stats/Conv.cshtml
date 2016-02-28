@@ -19,7 +19,9 @@
 <table>
 <tr>
     <th>Time</th>
-    <th>Conversion Type</th>
+    <th>Type</th>
+    <th>City</th>
+    <th>Country</th>
     <th>Lead ID</th>
     <th>Strategy</th>
     <th>Creative</th>
@@ -28,7 +30,9 @@
 {
 <tr>
     <td>@conv.Time</td>
-    <td>@conv.ConvType</td>
+    <td>@(conv.ConvType == "c" ? "clickthru" : (conv.ConvType == "v" ? "viewthru" : conv.ConvType))</td>
+    <td>@(conv.City == null ? "" : conv.City.Name)</td>
+    <td>@(conv.City == null || conv.City.Country == null ? "" : conv.City.Country.Name)</td>
     <td>@conv.ExtData</td>
     <td>@((conv.Strategy != null) ? conv.Strategy.Name : "")</td>
     <td>@((conv.TDad != null) ? conv.TDad.Name : "")</td>

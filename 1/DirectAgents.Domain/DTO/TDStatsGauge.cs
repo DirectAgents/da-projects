@@ -1,9 +1,12 @@
 ﻿using System;
+using DirectAgents.Domain.Entities.TD;
 
 namespace DirectAgents.Domain.DTO
 {
     public class TDStatsGauge
     {
+        public ExtAccount ExtAccount { get; set; }
+
         public TDStatRange Daily;
         public TDStatRange Strategy;
         public TDStatRange Creative;
