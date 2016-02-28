@@ -45,7 +45,7 @@ namespace CakeExtracter.Commands
             IsCommand("daSynchTDDailySummaries", "synch daily summaries via file upload");
             HasRequiredOption<int>("a|accountId=", "Account ID", c => AccountId = c);
             HasOption<string>("f|filePath=", "CSV filepath", c => FilePath = c);
-            HasOption<string>("t|statsType=", "Stats Type (default: daily)", c => StatsType = c);
+            HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -57,16 +57,18 @@ namespace CakeExtracter.Commands
                 if (mapping == null)
                     mapping = ColumnMapping.CreateDefault();
 
-                StatsType = (StatsType == null) ? "" : StatsType.ToLower(); // make it lowered and not null
+                var statsType = new StatsTypeAgg(this.StatsType);
 
-                if (StatsType.StartsWith("strat"))
-                    DoETL_Strategy(mapping);
-                else if (StatsType.StartsWith("creat"))
-                    DoETL_Creative(mapping);
-                else if (StatsType.StartsWith("site"))
-                    DoETL_Site(mapping);
-                else
+                if (statsType.Daily)
                     DoETL_Daily(mapping);
+                if (statsType.Strategy)
+                    DoETL_Strategy(mapping);
+                if (statsType.Creative)
+                    DoETL_Creative(mapping);
+                if (statsType.Site)
+                    DoETL_Site(mapping);
+                //if (statsType.Conv)
+                // TODO: implement
             }
             else
             {
@@ -120,6 +122,41 @@ namespace CakeExtracter.Commands
                     .Include(a => a.Platform.PlatColMapping)
                     .SingleOrDefault(a => a.Id == acctId);
             }
+        }
+    }
+
+    public class StatsTypeAgg
+    {
+        public bool Daily { get; set; }
+        public bool Strategy { get; set; }
+        public bool Creative { get; set; }
+        public bool Site { get; set; }
+        public bool Conv { get; set; }
+
+        public void SetAllTrue()
+        {
+            Daily = true;
+            Strategy = true;
+            Creative = true;
+            Site = true;
+            Conv = true;
+        }
+
+        public StatsTypeAgg(string statsTypeString)
+        {
+            string statsTypeUpper = (statsTypeString == null) ? "" : statsTypeString.ToUpper();
+            if (string.IsNullOrWhiteSpace(statsTypeUpper) || statsTypeUpper == "ALL")
+                SetAllTrue();
+            else if (statsTypeUpper.StartsWith("DAILY"))
+                Daily = true;
+            else if (statsTypeUpper.StartsWith("STRAT"))
+                Strategy = true;
+            else if (statsTypeUpper.StartsWith("CREAT"))
+                Creative = true;
+            else if (statsTypeUpper.StartsWith("SITE"))
+                Site = true;
+            else if (statsTypeUpper.StartsWith("CONV"))
+                Conv = true;
         }
     }
 }

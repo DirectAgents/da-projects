@@ -12,8 +12,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
     {
         private readonly int accountId;
         private TDConvLoader convLoader;
-        private Dictionary<string, int> strategyIdLookupByCampName = new Dictionary<string, int>();
-        private Dictionary<string, int> adIdLookupByName = new Dictionary<string, int>();
+        private Dictionary<string, int?> strategyIdLookupByCampName = new Dictionary<string, int?>();
+        private Dictionary<string, int?> adIdLookupByName = new Dictionary<string, int?>();
+        private Dictionary<string, int> countryIdLookupByName = new Dictionary<string, int>();
         private Dictionary<string, int> cityIdLookupByCountryCity = new Dictionary<string, int>();
 
         public AdrollConvLoader(int acctId)
@@ -35,17 +36,15 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public Conv CreateConv(AdrollConvRow convRow)
         {
-            int? stratId = strategyIdLookupByCampName.ContainsKey(convRow.Campaign) ? strategyIdLookupByCampName[convRow.Campaign] : (int?)null;
-            int? tdAdId = adIdLookupByName.ContainsKey(convRow.Ad) ? adIdLookupByName[convRow.Ad] : (int?)null;
-            var countryCity = convRow.Country + " " + convRow.City;
+            var countryCity = convRow.Country + "_" + convRow.City;
             int? cityId = cityIdLookupByCountryCity.ContainsKey(countryCity) ? cityIdLookupByCountryCity[countryCity] : (int?)null;
             var conv = new Conv
             {
                 AccountId = accountId,
                 Time = convRow.ConvTime,
                 ConvType = ConvTypeAbbrev(convRow.ConvType),
-                StrategyId = stratId,
-                TDadId = tdAdId,
+                StrategyId = strategyIdLookupByCampName[convRow.Campaign], // could be null
+                TDadId = adIdLookupByName[convRow.Ad], // could be null
                 ConvVal = decimal.Parse(convRow.ConvVal, NumberStyles.Currency),
                 CityId = cityId,
                 //ExtData = convRow.ext_data_user_id
@@ -68,37 +67,46 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 var tuples = items.Select(c => new Tuple<string, string>(c.Country, c.City)).Distinct();
                 var countryGroups = tuples.GroupBy(t => t.Item1);
-                foreach (var countryGroup in countryGroups)
+                foreach (var countryGroup in countryGroups) // first, loop through each country
                 {
-                    var country = db.ConvCountries.FirstOrDefault(c => c.Name == countryGroup.Key);
-                    // (assuming just one ConvCountries with the specified Name)
-                    if (country == null)
-                    {
-                        country = new ConvCountry
+                    var countryName = countryGroup.Key;
+                    if (!countryIdLookupByName.ContainsKey(countryName))
+                    { // look for this country in the db...
+                        var country = db.ConvCountries.FirstOrDefault(c => c.Name == countryName);
+                        // (assuming just one ConvCountries with the specified Name)
+                        if (country == null)
                         {
-                            Name = countryGroup.Key
-                        };
-                        db.ConvCountries.Add(country);
-                        db.SaveChanges();
-                        Logger.Info("Saved new country: {0} ({1})", country.Name, country.Id);
+                            country = new ConvCountry
+                            {
+                                Name = countryName
+                            };
+                            db.ConvCountries.Add(country);
+                            db.SaveChanges();
+                            Logger.Info("Saved new country: {0} ({1})", country.Name, country.Id);
+                        }
+                        countryIdLookupByName[countryName] = country.Id;
                     }
-                    foreach (var tuple in countryGroup)
+                    int countryId = countryIdLookupByName[countryName];
+                    foreach (var tuple in countryGroup) // within each country, loop through each city
                     {
                         var cityName = tuple.Item2;
-                        var city = db.ConvCities.Where(c => c.CountryId == country.Id && c.Name == cityName).FirstOrDefault();
+                        var countryCity = countryName + "_" + cityName;
+                        if (cityIdLookupByCountryCity.ContainsKey(countryCity))
+                            continue; // already encountered
+
+                        var city = db.ConvCities.Where(c => c.CountryId == countryId && c.Name == cityName).FirstOrDefault();
                         // (assuming just one)
                         if (city == null)
                         {
                             city = new ConvCity
                             {
-                                CountryId = country.Id,
+                                CountryId = countryId,
                                 Name = cityName
                             };
                             db.ConvCities.Add(city);
                             db.SaveChanges();
-                            Logger.Info("Saved new city: {0} ({1}), {2}", city.Name, city.Id, country.Name);
+                            Logger.Info("Saved new city: {0} ({1}), {2}", city.Name, city.Id, countryName);
                         }
-                        var countryCity = country.Name + " " + city.Name;
                         cityIdLookupByCountryCity[countryCity] = city.Id;
                     }
                 }
@@ -113,12 +121,17 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 foreach (var campName in campNames)
                 {
+                    if (strategyIdLookupByCampName.ContainsKey(campName))
+                        continue; // already encountered
+
                     var strats = db.Strategies.Where(s => s.AccountId == accountId && s.Name == campName);
                     if (strats.Count() == 1)
                     {
                         var strat = strats.First();
                         strategyIdLookupByCampName[campName] = strat.Id;
                     }
+                    else
+                        strategyIdLookupByCampName[campName] = null; // leave StrategyId blank in Conv
                 }
             }
         }
@@ -131,12 +144,17 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 foreach (var adName in adNames)
                 {
+                    if (adIdLookupByName.ContainsKey(adName))
+                        continue; // already encountered
+
                     var tdAds = db.TDads.Where(a => a.AccountId == accountId && a.Name == adName);
                     if (tdAds.Count() == 1)
                     {
                         var tdAd = tdAds.First();
                         adIdLookupByName[adName] = tdAd.Id;
                     }
+                    else
+                        adIdLookupByName[adName] = null; // leave TDadId blank in Conv
                 }
             }
         }

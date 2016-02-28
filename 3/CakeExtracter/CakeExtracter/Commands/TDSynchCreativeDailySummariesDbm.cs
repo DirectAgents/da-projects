@@ -43,11 +43,10 @@ namespace CakeExtracter.Commands
             // Note: The reportDate will be one day after the endDate of the desired stats
             DateTime endDate = EndDate ?? DateTime.Today.AddDays(-1);
             var reportDate = endDate.AddDays(1);
-            var dateRange = new DateRange(reportDate, reportDate);
 
             var buckets = GetBuckets();
 
-            var extracter = new DbmCloudStorageExtracter(dateRange, buckets, byCreative: true);
+            var extracter = new DbmCloudStorageExtracter(reportDate, buckets, byCreative: true);
             var loader = new DbmCreativeDailySummaryLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);

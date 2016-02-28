@@ -10,8 +10,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
     public class DbmLineItemSummaryLoader : Loader<DbmRowBase>
     {
         private TDStrategySummaryLoader strategySummaryLoader;
-        private Dictionary<string, int> strategyIdLookupByLineItemId = new Dictionary<string, int>();
         private Dictionary<int, int> accountIdLookupByIOid = new Dictionary<int, int>();
+        private Dictionary<string, int> strategyIdLookupByLineItemId = new Dictionary<string, int>();
 
         public DbmLineItemSummaryLoader()
         {

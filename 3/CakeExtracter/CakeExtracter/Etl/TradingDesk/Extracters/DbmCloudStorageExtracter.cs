@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
-using CakeExtracter.Common;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Google.Apis.Storage.v1;
@@ -13,7 +13,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
     public class DbmCloudStorageExtracter : Extracter<DbmRowBase>
     {
-        private readonly DateRange dateRange;
+        // if specified, dateFilter is used to select objects (by name) within the specified buckets
+        private readonly DateTime? dateFilter;
         private readonly IEnumerable<string> bucketNames;
 
         private readonly bool byLineItem;
@@ -21,9 +22,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         private readonly bool bySite;
         // Note: only set at most *one* of these to true
 
-        public DbmCloudStorageExtracter(DateRange dateRange, IEnumerable<string> bucketNames, bool byLineItem = false, bool byCreative = false, bool bySite = false)
+        public int ImpressionThreshold { get; set; } // used only for site stats
+
+        public DbmCloudStorageExtracter(DateTime? dateFilter, IEnumerable<string> bucketNames, bool byLineItem = false, bool byCreative = false, bool bySite = false)
         {
-            this.dateRange = dateRange;
+            this.dateFilter = dateFilter;
             this.bucketNames = bucketNames;
             this.byLineItem = byLineItem;
             this.byCreative = byCreative;
@@ -36,8 +39,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             if (bySite) by = " by site";
             if (byCreative) by = " by creative";
             if (byLineItem) by = " by lineitem"; // takes precedence
-            string toPart = (dateRange.FromDate == dateRange.ToDate) ? "" : string.Format(" to {0:d}", dateRange.ToDate);
-            Logger.Info("Extracting DailySummary reports{0} from {1} buckets - report date(s) {2:d}{3}", by, bucketNames.Count(), dateRange.FromDate, toPart);
+            string datePart = "";
+            if (dateFilter != null)
+                datePart = string.Format(" - report date {0:d}", dateFilter.Value);
+            Logger.Info("Extracting DailySummary reports{0} from {1} buckets{2}", by, bucketNames.Count(), datePart);
+
             var items = EnumerateRows();
             Add(items);
             End();
@@ -53,17 +59,32 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 var request = service.Objects.List(bucketName);
                 var bucketObjects = request.Execute();
 
-                foreach (var date in dateRange.Dates)
+                IEnumerable<Google.Apis.Storage.v1.Data.Object> reportObjects = bucketObjects.Items;
+                if (dateFilter != null)
                 {
-                    string dateString = date.ToString("yyyy-MM-dd");
-                    var reportObject = bucketObjects.Items.Where(i => i.Name.Contains(dateString)).FirstOrDefault();
-                    if (reportObject != null)
+                    string dateString = dateFilter.Value.ToString("yyyy-MM-dd");
+                    reportObjects = reportObjects.Where(o => o.Name.Contains(dateString));
+                }
+
+                foreach (var reportObject in reportObjects) // usually should be just one
+                {
+                    var stream = GetStreamForCloudStorageObject(reportObject, credential);
+                    using (var reader = new StreamReader(stream))
                     {
-                        var stream = GetStreamForCloudStorageObject(reportObject, credential);
-                        using (var reader = new StreamReader(stream))
+                        if (!bySite)
                         {
                             foreach (var row in DbmCsvExtracter.EnumerateRowsStatic(reader, byLineItem: byLineItem, byCreative: byCreative, bySite: bySite))
                                 yield return row;
+                        }
+                        else
+                        {   // for site stats: do filtering
+                            foreach (var row in DbmCsvExtracter.EnumerateRowsStatic(reader, byLineItem: byLineItem, byCreative: byCreative, bySite: bySite))
+                            {
+                                int impressions = int.Parse(row.Impressions);
+                                int conversions = (int)decimal.Parse(row.TotalConversions);
+                                if (impressions >= ImpressionThreshold || conversions > 0)
+                                    yield return row;
+                            }
                         }
                     }
                 }

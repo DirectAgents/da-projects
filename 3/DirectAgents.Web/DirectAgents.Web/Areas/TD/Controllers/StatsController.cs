@@ -93,6 +93,39 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View(model);
         }
 
+        // Stats by site
+        public ActionResult Site(int? acctId, DateTime? month, int? minImp)
+        {
+            var startOfMonth = SetChooseMonthViewData_NonCookie(month);
+            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+            var stats = tdRepo.GetSiteStats(startOfMonth, endOfMonth, acctId: acctId, minImpressions: minImp)
+                .OrderByDescending(s => s.Impressions).ThenBy(s => s.Site.Name);
+
+            var model = new TDStatsVM
+            {
+                Month = startOfMonth,
+                AccountId = acctId,
+                Stats = stats
+            };
+            return View(model);
+        }
+
+        public ActionResult Conv(int? acctId, DateTime? month)
+        {
+            var startOfMonth = SetChooseMonthViewData_NonCookie(month);
+            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+            var convs = tdRepo.Convs(startOfMonth, endOfMonth, acctId: acctId)
+                .OrderBy(s => s.Time);
+
+            var model = new TDStatsVM
+            {
+                Month = startOfMonth,
+                AccountId = acctId,
+                Convs = convs
+            };
+            return View(model);
+        }
+
         // AdRoll Stats by Ad
         public ActionResult AdRoll(string advEid, DateTime? month)
         {

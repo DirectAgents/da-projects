@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DirectAgents.Domain.DTO;
+using DirectAgents.Domain.Entities.TD;
 
 namespace DirectAgents.Web.Areas.TD.Models
 {
@@ -33,5 +34,6 @@ namespace DirectAgents.Web.Areas.TD.Models
                 return stat;
             }
         }
+        public IEnumerable<Conv> Convs { get; set; }
     }
 }

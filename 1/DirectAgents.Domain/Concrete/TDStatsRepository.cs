@@ -181,8 +181,11 @@ namespace DirectAgents.Domain.Concrete
             if (startDate.HasValue)
                 convs = convs.Where(s => s.Time >= startDate.Value);
             if (endDate.HasValue)
-                convs = convs.Where(s => s.Time < endDate.Value.AddDays(1));
+            {
+                var date = endDate.Value.AddDays(1);
+                convs = convs.Where(s => s.Time < date);
                 // Include up to 11:59:59.999... on the endDate specified
+            }
             if (acctId.HasValue)
                 convs = convs.Where(s => s.AccountId == acctId.Value);
             if (campId.HasValue)
@@ -247,6 +250,25 @@ namespace DirectAgents.Domain.Concrete
                 var stat = new TDRawStat(group)
                 {
                     TDad = group.Key
+                };
+                stats.Add(stat);
+            }
+            return stats;
+        }
+
+        //TODO: by campaignId, etc
+        public IEnumerable<TDRawStat> GetSiteStats(DateTime? startDate, DateTime? endDate, int? acctId = null, int? minImpressions = null)
+        {
+            var sums = SiteSummaries(startDate, endDate, acctId: acctId);
+            if (minImpressions.HasValue)
+                sums = sums.Where(s => s.Impressions >= minImpressions.Value);
+            var groups = sums.GroupBy(s => s.Site);
+            var stats = new List<TDRawStat>();
+            foreach (var group in groups)
+            {
+                var stat = new TDRawStat(group)
+                {
+                    Site = group.Key
                 };
                 stats.Add(stat);
             }

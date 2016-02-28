@@ -196,7 +196,10 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             using (var reader = new StreamReader(file.InputStream))
             {
-                DASynchTDDailySummaries.RunStatic(id, reader, statsType);
+                if (statsType != null && statsType.ToUpper().StartsWith("CONV"))
+                    DASynchAdrollConvCsv.RunStatic(id, reader); // TODO: generic Conv syncher?
+                else
+                    DASynchTDDailySummaries.RunStatic(id, reader, statsType);
             }
             return null;
         }

@@ -9,7 +9,7 @@
     }
 </script>
 }
-<h2>External Accounts - Raw Stats</h2>
+<h2>External Accounts - Raw Stats, by site</h2>
 <div style="margin-bottom:10px">
 <form>
     @Html.DropDownList("month", (SelectList)ViewBag.ChooseMonthSelectList, new { onchange = "ChangeMonth(this.value)" })
@@ -18,10 +18,8 @@
 
 <table>
 <tr>
-    <th>more...</th>
-    <th>Partner</th>
     <th style="text-align:right">ID</th>
-    <th>Ext Account</th>
+    <th>Site</th>
     <th>Impressions</th>
     <th>Clicks</th>
     <th>CTR</th>
@@ -36,10 +34,8 @@
 @foreach (var stat in Model.Stats)
 {
 <tr>
-    <td>by:@Html.ActionLink("strat", "Strategy", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("creat", "Creative", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("site", "Site", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("daily", "Index", "DailySummaries", new { acctId = stat.ExtAccount.Id, month = Model.MonthString }, null) | @Html.ActionLink("convs", "Conv", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })</td>
-    <td>@stat.ExtAccount.Platform.Name</td>
-    <td style="text-align:right">@stat.ExtAccount.Id</td>
-    <td>@stat.ExtAccount.Name</td>
+    <td style="text-align:right">@stat.Site.Id</td>
+    <td>@stat.Site.Name</td>
     <td style="text-align:right">@stat.Impressions</td>
     <td style="text-align:right">@stat.Clicks</td>
     <td style="text-align:center">@stat.CTR</td>
@@ -57,8 +53,6 @@
     var tot = Model.StatsTotal;
 <tr>
     <th></th>
-    <th></th>
-    <th></th>
     <th>@tot.Name</th>
     <th style="text-align:right">@tot.Impressions</th>
     <th style="text-align:right">@tot.Clicks</th>
@@ -74,13 +68,3 @@
 }
 </table>
 <br />
-@if (!Model.CampaignId.HasValue && !Model.AccountId.HasValue)
-{
-    <text>Filter:
-    @Html.ActionLink("AdRoll", null, new { platform = Platform.Code_AdRoll }) |
-    @Html.ActionLink("DBM", null, new { platform = Platform.Code_DBM }) |
-    @Html.ActionLink("Facebook", null, new { platform = Platform.Code_FB }) |
-    @Html.ActionLink("(show all)", null)
-    </text>
-    <br />
-}
