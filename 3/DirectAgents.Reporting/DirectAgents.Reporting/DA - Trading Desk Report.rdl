@@ -3649,7 +3649,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                               <FontFamily>Calibri</FontFamily>
                               <FontSize>9pt</FontSize>
                             </Style>
-                            <Label>=Microsoft.VisualBasic.Strings.Format(Sum(Fields!MediaSpend.Value) / First(Fields!Budget.Value), "p2")</Label>
+                            <Label>=Format(Code.SafeFraction(Sum(Fields!MediaSpend.Value), First(Fields!Budget.Value)), "p2")</Label>
                             <Position>Left</Position>
                           </ChartDataLabel>
                           <ToolTip>="Spend: " + Format(Sum(Fields!MediaSpend.Value), "c")</ToolTip>
@@ -7769,7 +7769,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=IIf(IsNothing(Fields!LeadID.Value) Or (Fields!LeadID.Value = ""), Nothing, IIf(IsNumeric(Fields!LeadID.Value), CInt(Fields!LeadID.Value), Fields!LeadID.Value))</Value>
+                                      <Value>=IIf(IsNothing(Fields!LeadID.Value) Or (Fields!LeadID.Value = ""), Nothing, Code.ExcelNum(Fields!LeadID.Value))</Value>
                                       <Style />
                                     </TextRun>
                                   </TextRuns>
@@ -7790,6 +7790,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
+                            <rd:Selected>true</rd:Selected>
                           </CellContents>
                         </TablixCell>
                       </TablixCells>
@@ -9582,6 +9583,13 @@ Public Function StartOfWeek(ByVal dt As DateTime, ByVal firstDayOfWeek AS DayOfW
 		diff += 7
 	End If
 	Return dt.AddDays(-1 * diff).Date
+End Function
+
+Public Function ExcelNum(ByVal numOrString As String) As Object
+	If (Len(numOrString) &lt;= 11) And IsNumeric(numOrString)
+		Return CLng(numOrString)
+	End If
+	Return numOrString
 End Function</Code>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportID>ea256a65-4592-4acf-b45d-5d6834eb03ce</rd:ReportID>

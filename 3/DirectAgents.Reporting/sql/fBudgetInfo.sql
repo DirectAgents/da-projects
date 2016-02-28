@@ -7,7 +7,7 @@ SELECT ISNULL(PlatformBudgetInfo.MediaSpend, ISNULL(BudgetInfo.MediaSpend, Campa
 	, ISNULL(PlatformBudgetInfo.MgmtFeePct, ISNULL(BudgetInfo.MgmtFeePct, Campaign.MgmtFeePct)) AS MgmtFeePct
 	, ISNULL(PlatformBudgetInfo.MarginPct, ISNULL(BudgetInfo.MarginPct, Campaign.MarginPct)) AS MarginPct
 	, CAST(CASE WHEN Platform.Name = 'Facebook' THEN 0 ELSE 1 END AS bit) AS ShowClickAndViewConv
-	, ISNULL(PlatformBudgetInfo.Date, ISNULL(BudgetInfo.Date, @StartDate)) AS AsOfDate
+	, ISNULL(PlatformBudgetInfo.Date, ISNULL(BudgetInfo.Date, ISNULL(@StartDate, '1/1/1970'))) AS AsOfDate
 	, Platform.Name AS PlatformName
 	, BudgetInfo.Date AS BudgetInfoDate
 	, PlatformBudgetInfo.Date AS PlatformBudgetInfoDate
