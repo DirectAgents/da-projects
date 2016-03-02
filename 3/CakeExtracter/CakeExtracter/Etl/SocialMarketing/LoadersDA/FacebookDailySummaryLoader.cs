@@ -14,7 +14,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         public FacebookDailySummaryLoader(int accountId)
         {
-            this.BatchSize = FacebookUtility.RowsPerCall; //FB API only returns 25 rows in one call
+            this.BatchSize = FacebookUtility.RowsReturnedAtATime; //FB API only returns 25 rows at a time
             this.accountId = accountId;
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Threading;
 using Facebook;
 using FacebookAPI.Entities;
 
@@ -8,7 +9,10 @@ namespace FacebookAPI
 {
     public class FacebookUtility
     {
-        public const int RowsPerCall = 25;
+        public const int RowsReturnedAtATime = 25;
+
+        public int DaysPerCall_Campaign = 20;
+        public int DaysPerCall_Ad = 8;
 
         //public string AppId { get; set; }
         //public string AppSecret { get; set; }
@@ -74,31 +78,44 @@ namespace FacebookAPI
         // TODO: make asynchronous / do calls in parallel ?
         public IEnumerable<FBSummary> GetDailyStats(string accountId, DateTime start, DateTime end)
         {
-            //while (start <= end)
-            //{
-            //    var tempEnd = start.AddDays(DaysPerCall - 1);
-            //    if (tempEnd > end)
-            //        tempEnd = end;
-            //    var fbSummaries = GetFBSummaries(accountId, start, tempEnd);
-            //    foreach (var fbSum in fbSummaries)
-            //    {
-            //        yield return fbSum;
-            //    }
-            //    start = start.AddDays(DaysPerCall);
-            //}
-            return GetFBSummaries(accountId, start, end);
+            return GetFBSummariesLoop(accountId, start, end);
         }
         public IEnumerable<FBSummary> GetDailyCampaignStats(string accountId, DateTime start, DateTime end)
         {
-            return GetFBSummaries(accountId, start, end, byCampaign: true);
+            return GetFBSummariesLoop(accountId, start, end, byCampaign: true);
         }
         public IEnumerable<FBSummary> GetDailyAdStats(string accountId, DateTime start, DateTime end)
         {
-            return GetFBSummaries(accountId, start, end, byAd: true);
+            return GetFBSummariesLoop(accountId, start, end, byAd: true);
         }
 
+        public IEnumerable<FBSummary> GetFBSummariesLoop(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAd = false)
+        {
+            int daysPerCall = 365; // default
+            if (byCampaign)
+                daysPerCall = DaysPerCall_Campaign;
+            else if (byAd)
+                daysPerCall = DaysPerCall_Ad;
+
+            while (start <= end)
+            {
+                var tempEnd = start.AddDays(daysPerCall - 1);
+                if (tempEnd > end)
+                    tempEnd = end;
+                var fbSummaries = GetFBSummaries(accountId, start, tempEnd, byCampaign, byAd);
+                foreach (var fbSum in fbSummaries)
+                {
+                    yield return fbSum;
+                }
+                start = start.AddDays(daysPerCall);
+            }
+        }
         public IEnumerable<FBSummary> GetFBSummaries(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAd = false)
         {
+            string by = byCampaign ? " by Campaign" : "";
+            by += byAd ? " by Ad" : "";
+            LogInfo(string.Format("GetFBSummaries {0:d} - {1:d} ({2}{3})", start, end, accountId, by));
+
             var fbClient = CreateFBClient();
             var path = accountId + "/insights";
 
@@ -116,9 +133,10 @@ namespace FacebookAPI
             }
             var afterVal = "";
 
-            bool moreData = false;
+            bool moreData;
             do
             {
+                moreData = false;
                 var parms = new
                 {
                     //metadata = 1,
@@ -128,29 +146,47 @@ namespace FacebookAPI
                     time_increment = 1,
                     after = afterVal
                 };
-                dynamic retObj = fbClient.Get(path, parms);
+                dynamic retObj = null;
+                try
+                {
+                    retObj = fbClient.Get(path, parms);
+                }
+                //catch (FacebookOAuthException ex)
+                catch (Exception ex)
+                {
+                    //if (ex.Message.ToLower().Contains("request limit")) // (#17) User request limit reached
+                    LogError(ex.Message);
+                    LogInfo("Waiting 180 seconds before trying again.");
+                    Thread.Sleep(180000);
+                    retObj = fbClient.Get(path, parms);
+                }
+                if (retObj == null)
+                    continue;
 
                 int impressions;
-                foreach (var row in retObj.data)
+                if (retObj.data != null)
                 {
-                    var fbSum = new FBSummary
+                    foreach (var row in retObj.data)
                     {
-                        Date = DateTime.Parse(row.date_start),
-                        Spend = (decimal)row.spend,
-                        //Impressions = row.impressions,
-                        UniqueClicks = (int)row.unique_clicks,
-                        LinkClicks = (int)row.inline_link_clicks,
-                        TotalActions = (int)row.total_actions,
-                        CampaignId = row.campaign_id,
-                        CampaignName = row.campaign_name,
-                        AdId = row.ad_id,
-                        AdName = row.ad_name
-                    };
-                    if (Int32.TryParse(row.impressions, out impressions))
-                        fbSum.Impressions = impressions;
-                    yield return fbSum;
+                        var fbSum = new FBSummary
+                        {
+                            Date = DateTime.Parse(row.date_start),
+                            Spend = (decimal)row.spend,
+                            //Impressions = row.impressions,
+                            UniqueClicks = (int)row.unique_clicks,
+                            LinkClicks = (int)row.inline_link_clicks,
+                            TotalActions = (int)row.total_actions,
+                            CampaignId = row.campaign_id,
+                            CampaignName = row.campaign_name,
+                            AdId = row.ad_id,
+                            AdName = row.ad_name
+                        };
+                        if (Int32.TryParse(row.impressions, out impressions))
+                            fbSum.Impressions = impressions;
+                        yield return fbSum;
+                    }
                 }
-                moreData = (retObj.paging.next != null);
+                moreData = (retObj.paging != null && retObj.paging.next != null);
                 if (moreData)
                     afterVal = retObj.paging.cursors.after;
             } while (moreData);
