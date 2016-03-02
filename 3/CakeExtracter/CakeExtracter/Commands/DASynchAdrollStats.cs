@@ -54,7 +54,7 @@ namespace CakeExtracter.Commands
             HasOption("a|advertisableEids=", "Advertisable Eids (comma-separated) (default = all)", c => AdvertisableEids = c);
             HasOption<int>("i|advertisableId=", "Advertisable Id (default = all)", c => AdvertisableId = c);
             HasOption("c|checkActive=", "Check AdRoll for Advertisables with stats (if none specified)", c => CheckActiveAdvertisables = bool.Parse(c));
-            HasOption("s|startDate=", "Start Date (default is one month ago)", c => StartDate = DateTime.Parse(c));
+            HasOption("s|startDate=", "Start Date (default is 7 days ago)", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
             HasOption("o|oneStatPer=", "One Stat per [what] per day (advertisable/campaign/ad, default = all)", c => OneStatPer = c);
         }
@@ -62,8 +62,8 @@ namespace CakeExtracter.Commands
         public override int Execute(string[] remainingArguments)
         {
             var today = DateTime.Today;
-            var oneMonthAgo = today.AddMonths(-1);
-            var dateRange = new DateRange(StartDate ?? oneMonthAgo, EndDate ?? today.AddDays(-1));
+            var oneWeekAgo = today.AddDays(-7);
+            var dateRange = new DateRange(StartDate ?? oneWeekAgo, EndDate ?? today.AddDays(-1));
 
             var arUtility = new AdRollUtility(m => Logger.Info(m), m => Logger.Warn(m));
 

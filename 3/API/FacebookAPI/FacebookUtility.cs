@@ -147,19 +147,28 @@ namespace FacebookAPI
                     after = afterVal
                 };
                 dynamic retObj = null;
-                try
+                int tryNumber = 0;
+                do
                 {
-                    retObj = fbClient.Get(path, parms);
-                }
-                //catch (FacebookOAuthException ex)
-                catch (Exception ex)
-                {
-                    //if (ex.Message.ToLower().Contains("request limit")) // (#17) User request limit reached
-                    LogError(ex.Message);
-                    LogInfo("Waiting 180 seconds before trying again.");
-                    Thread.Sleep(180000);
-                    retObj = fbClient.Get(path, parms);
-                }
+                    try
+                    {
+                        retObj = fbClient.Get(path, parms);
+                        tryNumber = 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        LogError(ex.Message);
+                        tryNumber++;
+                        if (tryNumber < 10)
+                        {
+                            LogInfo("Waiting 60 seconds before trying again.");
+                            Thread.Sleep(60000);
+                        }
+                    }
+                } while (tryNumber > 0 && tryNumber < 10);
+                if (tryNumber >= 10)
+                    throw new Exception("Tried 10 times. Throwing exception.");
+
                 if (retObj == null)
                     continue;
 

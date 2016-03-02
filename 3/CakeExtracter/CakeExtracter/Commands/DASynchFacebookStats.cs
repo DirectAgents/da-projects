@@ -43,31 +43,31 @@ namespace CakeExtracter.Commands
         {
             IsCommand("daSynchFacebookStats", "synch Facebook stats");
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
-            HasOption("s|startDate=", "Start Date (default is one month ago)", c => StartDate = DateTime.Parse(c));
+            HasOption("s|startDate=", "Start Date (default is seven days ago)", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
-            HasOption<string>("t|statsType=", "Stats Type (default: daily)", c => StatsType = c);
+            HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
         }
 
         public override int Execute(string[] remainingArguments)
         {
             var today = DateTime.Today;
-            var oneMonthAgo = today.AddMonths(-1);
-            var dateRange = new DateRange(StartDate ?? oneMonthAgo, EndDate ?? today.AddDays(-1));
+            var oneWeekAgo = today.AddDays(-7);
+            var dateRange = new DateRange(StartDate ?? oneWeekAgo, EndDate ?? today.AddDays(-1));
 
-            StatsType = (StatsType == null) ? "" : StatsType.ToLower(); // make it lowered and not null
             var fbUtility = new FacebookUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            var statsType = new StatsTypeAgg(this.StatsType);
 
             var accounts = GetAccounts();
             foreach (var acct in accounts)
             {
-                if (StatsType.StartsWith("strat"))
-                    DoETL_Strategy(dateRange, acct, fbUtility);
-                else if (StatsType.StartsWith("creat"))
-                    DoETL_Creative(dateRange, acct, fbUtility);
-                //else if (StatsType.StartsWith("site"))
-                //    DoETL_Site(dateRange, acct, fbUtility);
-                else
+                if (statsType.Daily)
                     DoETL_Daily(dateRange, acct, fbUtility);
+                if (statsType.Strategy)
+                    DoETL_Strategy(dateRange, acct, fbUtility);
+                if (statsType.Creative)
+                    DoETL_Creative(dateRange, acct, fbUtility);
+                //if (statsType.Site)
+                //    DoETL_Site(dateRange, acct, fbUtility);
             }
 
             return 0;
