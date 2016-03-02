@@ -107,7 +107,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             return itemCount;
         }
 
-        private void AddUpdateDependentTDads(List<TDadSummary> items)
+        public void AddUpdateDependentTDads(List<TDadSummary> items)
         {
             using (var db = new DATDContext())
             {

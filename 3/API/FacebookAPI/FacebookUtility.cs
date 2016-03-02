@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Threading;
 using Facebook;
 using FacebookAPI.Entities;
@@ -86,7 +87,30 @@ namespace FacebookAPI
         }
         public IEnumerable<FBSummary> GetDailyAdStats(string accountId, DateTime start, DateTime end)
         {
-            return GetFBSummariesLoop(accountId, start, end, byAd: true);
+            int daysPerCall = DaysPerCall_Ad;
+            while (start <= end)
+            {
+                var tempEnd = start.AddDays(daysPerCall - 1);
+                if (tempEnd > end)
+                    tempEnd = end;
+                var fbSummaries = GetFBSummaries(accountId, start, tempEnd, byAd: true);
+                var groups = fbSummaries.GroupBy(s => new { s.Date, s.AdName });
+                foreach (var group in groups)
+                {
+                    var fbSum = new FBSummary
+                    {
+                        Date = group.Key.Date,
+                        AdName = group.Key.AdName,
+                        Spend = group.Sum(g => g.Spend),
+                        Impressions = group.Sum(g => g.Impressions),
+                        UniqueClicks = group.Sum(g => g.UniqueClicks),
+                        LinkClicks = group.Sum(g => g.LinkClicks),
+                        TotalActions = group.Sum(g => g.TotalActions)
+                    };
+                    yield return fbSum;
+                }
+                start = start.AddDays(daysPerCall);
+            }
         }
 
         public IEnumerable<FBSummary> GetFBSummariesLoop(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAd = false)
