@@ -74,7 +74,7 @@
         }
         </table>
         @{
-            var months = Model.MonthsWithoutBudgetInfos(3);
+            var months = Model.MonthsWithoutBudgetInfos(4);
             if (months.Count() > 0)
             {
                 <br />
@@ -136,6 +136,7 @@
     //});
 
     function SaveCampaign() {
+        $('#DefaultBudgetInfo_MediaSpend').val($('#DefaultBudgetInfo_MediaSpend').val().toString().replace("$", '').replace(",",''));
         $('#formCampaign').submit();
         $('#divSave').hide();
         $('#divSaveMessage').html("<i>Saving...</i>");

@@ -29,6 +29,7 @@ namespace DirectAgents.Domain.Seed
             AddPlatformIfNotExist("bc", "Bluecore");
             AddPlatformIfNotExist("li", "LiveIntent");
             AddPlatformIfNotExist("mg", "Magnetic");
+            AddPlatformIfNotExist("max", "Maxpoint");
             AddPlatformIfNotExist("tab", "Taboola");
             AddPlatformIfNotExist("tc", "TapCommerce");
             AddPlatformIfNotExist("yam", "YAM");
