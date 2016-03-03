@@ -175,7 +175,7 @@ namespace AdRoll
                 data_format = "entity"
             };
             var response = this.AdvertisableReportClient.Summaries(request);
-            if (response == null)
+            if (response == null || response.results == null)
             {
                 LogInfo("No AdvertisableSummaries found");
                 return new List<AdvertisableSummary>();

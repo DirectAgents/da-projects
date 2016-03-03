@@ -45,7 +45,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         this.advertisableEid, this.dateRange.Value.FromDate, this.dateRange.Value.ToDate);
 
             var advSums = _arUtility.AdvertisableDailySummaries(dateRange.Value.FromDate, dateRange.Value.ToDate, advertisableEid);
-            Add(advSums);
+            if (advSums != null)
+                Add(advSums);
             End();
         }
     }
@@ -66,7 +67,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             foreach (var date in dateRange.Value.Dates)
             {
                 var campSums = _arUtility.CampaignDailySummaries(date, this.advertisableEid);
-                Add(campSums);
+                if (campSums != null)
+                    Add(campSums);
             }
             End();
         }
@@ -87,7 +89,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             foreach (var date in dateRange.Value.Dates)
             {
                 var adSums = _arUtility.AdDailySummaries(date, this.advertisableEid);
-                Add(adSums);
+                if (adSums != null)
+                    Add(adSums);
             }
             End();
         }
