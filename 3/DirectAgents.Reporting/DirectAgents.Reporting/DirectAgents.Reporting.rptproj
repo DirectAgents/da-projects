@@ -6,6 +6,10 @@
       <Name>DirectAgents.rds</Name>
       <FullPath>DirectAgents.rds</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>DirectAgentsProd.rds</Name>
+      <FullPath>DirectAgentsProd.rds</FullPath>
+    </ProjectItem>
   </DataSources>
   <DataSets />
   <Reports>

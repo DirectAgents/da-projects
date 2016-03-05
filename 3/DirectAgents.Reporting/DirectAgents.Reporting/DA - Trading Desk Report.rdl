@@ -139,7 +139,7 @@ FROM td.fDailySummaryBasicStats(@AdvertiserId, @PreviousMonthStartDate
 --, Campaign.KPI
 , 'eCPA' AS KPI
 --, Campaign.KPIGoal
-, cast(RAND(Campaign.Id) as float) * 100 AS KPIGoal
+, cast(5 AS float) AS KPIGoal
 , 'DA - ' + Advertiser.Name + ' - Trading Desk Report - ' + CONVERT(varchar(10), @MTDEndDate, 120) AS ExportFilename
 FROM td.Advertiser
 INNER JOIN td.Campaign ON td.Campaign.Id =
@@ -7790,7 +7790,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
-                            <rd:Selected>true</rd:Selected>
                           </CellContents>
                         </TablixCell>
                       </TablixCells>
@@ -9344,7 +9343,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
       <DataType>DateTime</DataType>
       <DefaultValue>
         <Values>
-          <Value>=DateAdd(DateInterval.Day, -1, Today())</Value>
+          <Value>=DateAdd(DateInterval.Second, -1, Today())</Value>
         </Values>
       </DefaultValue>
       <Prompt>End Date</Prompt>
@@ -9353,7 +9352,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
       <DataType>Integer</DataType>
       <DefaultValue>
         <Values>
-          <Value>2010</Value>
+          <Value>0</Value>
         </Values>
       </DefaultValue>
       <Prompt>Advertiser</Prompt>
@@ -9472,7 +9471,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
       <DataType>DateTime</DataType>
       <DefaultValue>
         <Values>
-          <Value>=DateAdd(DateInterval.Day, -1 * Day(Parameters!MTDEndDate.Value) + 1, Parameters!MTDEndDate.Value)</Value>
+          <Value>=CDate(CStr(Year(Parameters!MTDEndDate.Value)) + "-" + CStr(Month(Parameters!MTDEndDate.Value)) + "-1")</Value>
         </Values>
       </DefaultValue>
       <Hidden>true</Hidden>
