@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Facebook;
 using FacebookAPI.Entities;
@@ -11,6 +12,7 @@ namespace FacebookAPI
     public class FacebookUtility
     {
         public const int RowsReturnedAtATime = 25;
+        public const string Pattern_ParenNums = @"^\((\d+)\)\s*";
 
         public int DaysPerCall_Campaign = 20;
         public int DaysPerCall_Ad = 8;
@@ -94,6 +96,9 @@ namespace FacebookAPI
                 if (tempEnd > end)
                     tempEnd = end;
                 var fbSummaries = GetFBSummaries(accountId, start, tempEnd, byAd: true);
+
+                fbSummaries = RemoveIds(fbSummaries);
+
                 var groups = fbSummaries.GroupBy(s => new { s.Date, s.AdName });
                 foreach (var group in groups)
                 {
@@ -110,6 +115,14 @@ namespace FacebookAPI
                     yield return fbSum;
                 }
                 start = start.AddDays(daysPerCall);
+            }
+        }
+        public static IEnumerable<FBSummary> RemoveIds(IEnumerable<FBSummary> fbSummaries)
+        {
+            foreach (var fbSum in fbSummaries)
+            {
+                fbSum.AdName = Regex.Replace(fbSum.AdName, Pattern_ParenNums, "");
+                yield return fbSum;
             }
         }
 
@@ -185,8 +198,8 @@ namespace FacebookAPI
                         tryNumber++;
                         if (tryNumber < 10)
                         {
-                            LogInfo("Waiting 60 seconds before trying again.");
-                            Thread.Sleep(60000);
+                            LogInfo("Waiting 90 seconds before trying again.");
+                            Thread.Sleep(90000);
                         }
                     }
                 } while (tryNumber > 0 && tryNumber < 10);
