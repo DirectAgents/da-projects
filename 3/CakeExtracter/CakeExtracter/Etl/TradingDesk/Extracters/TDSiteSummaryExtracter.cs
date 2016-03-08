@@ -15,10 +15,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         private readonly string csvFilePath;
 
         private readonly ColumnMapping columnMapping;
+        private readonly DateTime? dateOverride;
 
-        public TDSiteSummaryExtracter(ColumnMapping columnMapping, StreamReader streamReader = null, string csvFilePath = null)
+        public TDSiteSummaryExtracter(ColumnMapping columnMapping, DateTime? dateOverride = null, StreamReader streamReader = null, string csvFilePath = null)
         {
             this.columnMapping = columnMapping;
+            this.dateOverride = dateOverride;
             this.streamReader = streamReader;
             this.csvFilePath = csvFilePath;
         }
@@ -74,17 +76,21 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 }
                 if (csvRows != null)
                 {
-                    foreach (var sum in GroupAndEnumerate(csvRows))
+                    foreach (var sum in ProcessAndEnumerate(csvRows))
                         yield return sum;
                 }
             }
         }
 
-        private IEnumerable<SiteSummary> GroupAndEnumerate(List<SiteSummary> csvRows)
+        private IEnumerable<SiteSummary> ProcessAndEnumerate(List<SiteSummary> csvRows)
         {
-            // NOTE: assume that the Date field is assigned to the 1st of each month
-            // TODO? group by month and assign Date to be the 1st?
+            // NOTE: assume that if the Date field is assigned, it's set to the 1st of each month
 
+            if (this.dateOverride.HasValue)
+            {
+                foreach (var row in csvRows)
+                    row.Date = dateOverride.Value;
+            }
             var groupedRows = csvRows.GroupBy(r => new { r.Date, r.SiteName });
             foreach (var group in groupedRows)
             {

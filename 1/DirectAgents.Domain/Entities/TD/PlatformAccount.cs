@@ -39,9 +39,9 @@ namespace DirectAgents.Domain.Entities.TD
         {
             base.SetDefaults();
             StrategyName = "Campaign";
-            StrategyEid = "CampaignEid";
+            StrategyEid = "";
             TDadName = "Creative";
-            TDadEid = "CreativeEid";
+            TDadEid = "";
             SiteName = "Website";
             Month = "Month";
         }

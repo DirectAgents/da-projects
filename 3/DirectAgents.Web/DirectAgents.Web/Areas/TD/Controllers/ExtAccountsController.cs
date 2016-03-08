@@ -192,16 +192,25 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             if (extAcct == null)
                 return HttpNotFound();
 
+            //TODO: remember where came from - for Back button
+
             return View(extAcct);
         }
-        public ActionResult UploadFile(int id, HttpPostedFileBase file, string statsType)
+        public ActionResult UploadFile(int id, HttpPostedFileBase file, string statsType, string statsDate)
         {
+            DateTime? statsDateNullable = null;
+            DateTime parseDate;
+            if (DateTime.TryParse(statsDate, out parseDate))
+                statsDateNullable = parseDate;
+            else
+                statsDateNullable = null;
+
             using (var reader = new StreamReader(file.InputStream))
             {
                 if (statsType != null && statsType.ToUpper().StartsWith("CONV"))
                     DASynchAdrollConvCsv.RunStatic(id, reader); // TODO: generic Conv syncher?
                 else
-                    DASynchTDDailySummaries.RunStatic(id, reader, statsType);
+                    DASynchTDDailySummaries.RunStatic(id, reader, statsType, statsDate: statsDateNullable);
             }
             return null;
         }

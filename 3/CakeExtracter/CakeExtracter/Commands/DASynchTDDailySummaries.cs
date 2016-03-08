@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.ComponentModel.Composition;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
@@ -14,14 +15,15 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchTDDailySummaries : ConsoleCommand
     {
-        public static int RunStatic(int accountId, StreamReader streamReader, string statsType = null)
+        public static int RunStatic(int accountId, StreamReader streamReader, string statsType = null, DateTime? statsDate = null)
         {
             AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new DASynchTDDailySummaries
             {
                 AccountId = accountId,
                 StreamReader = streamReader,
-                StatsType = statsType
+                StatsType = statsType,
+                StatsDate = statsDate
             };
             int result = cmd.Run();
             return result;
@@ -31,6 +33,7 @@ namespace CakeExtracter.Commands
         public StreamReader StreamReader { get; set; }
         public string FilePath { get; set; }
         public string StatsType { get; set; }
+        public DateTime? StatsDate { get; set; } // optional
 
         public override void ResetProperties()
         {
@@ -38,6 +41,7 @@ namespace CakeExtracter.Commands
             StreamReader = null;
             FilePath = null;
             StatsType = null;
+            StatsDate = null;
         }
 
         public DASynchTDDailySummaries()
@@ -106,7 +110,7 @@ namespace CakeExtracter.Commands
         }
         public void DoETL_Site(ColumnMapping mapping)
         {
-            var extracter = new TDSiteSummaryExtracter(mapping, streamReader: StreamReader, csvFilePath: FilePath);
+            var extracter = new TDSiteSummaryExtracter(mapping, dateOverride: StatsDate, streamReader: StreamReader, csvFilePath: FilePath);
             var loader = new TDSiteSummaryLoader(AccountId);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
