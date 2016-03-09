@@ -15,6 +15,7 @@ namespace FacebookAPI
         public const string Pattern_ParenNums = @"^\((\d+)\)\s*";
 
         public int DaysPerCall_Campaign = 20;
+        public int DaysPerCall_AdSet = 10;
         public int DaysPerCall_Ad = 8;
 
         //public string AppId { get; set; }
@@ -87,6 +88,11 @@ namespace FacebookAPI
         {
             return GetFBSummariesLoop(accountId, start, end, byCampaign: true);
         }
+        public IEnumerable<FBSummary> GetDailyAdSetStats(string accountId, DateTime start, DateTime end)
+        {
+            return GetFBSummariesLoop(accountId, start, end, byCampaign: true, byAdSet: true);
+            //TODO: test!
+        }
         public IEnumerable<FBSummary> GetDailyAdStats(string accountId, DateTime start, DateTime end)
         {
             int daysPerCall = DaysPerCall_Ad;
@@ -126,12 +132,14 @@ namespace FacebookAPI
             }
         }
 
-        public IEnumerable<FBSummary> GetFBSummariesLoop(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAd = false)
+        public IEnumerable<FBSummary> GetFBSummariesLoop(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAdSet = false, bool byAd = false)
         {
             int daysPerCall = 365; // default
             if (byCampaign)
                 daysPerCall = DaysPerCall_Campaign;
-            else if (byAd)
+            if (byAdSet)
+                daysPerCall = DaysPerCall_AdSet;
+            if (byAd)
                 daysPerCall = DaysPerCall_Ad;
 
             while (start <= end)
@@ -139,7 +147,7 @@ namespace FacebookAPI
                 var tempEnd = start.AddDays(daysPerCall - 1);
                 if (tempEnd > end)
                     tempEnd = end;
-                var fbSummaries = GetFBSummaries(accountId, start, tempEnd, byCampaign, byAd);
+                var fbSummaries = GetFBSummaries(accountId, start, tempEnd, byCampaign: byCampaign, byAdSet: byAdSet, byAd: byAd);
                 foreach (var fbSum in fbSummaries)
                 {
                     yield return fbSum;
@@ -147,9 +155,10 @@ namespace FacebookAPI
                 start = start.AddDays(daysPerCall);
             }
         }
-        public IEnumerable<FBSummary> GetFBSummaries(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAd = false)
+        public IEnumerable<FBSummary> GetFBSummaries(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAdSet = false, bool byAd = false)
         {
             string by = byCampaign ? " by Campaign" : "";
+            by += byAdSet ? " by AdSet" : "";
             by += byAd ? " by Ad" : "";
             LogInfo(string.Format("GetFBSummaries {0:d} - {1:d} ({2}{3})", start, end, accountId, by));
 
@@ -163,7 +172,12 @@ namespace FacebookAPI
                 levelVal = "campaign";
                 fieldsVal += ",campaign_id,campaign_name";
             }
-            else if (byAd)
+            if (byAdSet)
+            {
+                levelVal = "adset";
+                fieldsVal += ",adset_id,adset_name";
+            }
+            if (byAd)
             {
                 levelVal = "ad";
                 fieldsVal += ",ad_id,ad_name";
@@ -224,6 +238,8 @@ namespace FacebookAPI
                             TotalActions = (int)row.total_actions,
                             CampaignId = row.campaign_id,
                             CampaignName = row.campaign_name,
+                            AdSetId = row.adset_id,
+                            AdSetName = row.adset_name,
                             AdId = row.ad_id,
                             AdName = row.ad_name
                         };
