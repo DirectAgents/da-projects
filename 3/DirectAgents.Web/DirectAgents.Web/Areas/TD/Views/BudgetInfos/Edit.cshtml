@@ -97,8 +97,10 @@
 
 <script>
     function SaveBudgetInfo() {
+        $('#MediaSpend').val($('#MediaSpend').val().toString().replace(/\$/g, '').replace(/\,/g, ''));
         $('#formBudgetInfo').submit();
         $('#divSave').hide();
         $('#divSaveMessage').html("<i>Saving...</i>");
     }
 </script>
+

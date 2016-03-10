@@ -12,7 +12,7 @@
 }
 <fieldset>
     <legend>Edit Campaign -> Budget+Percents -> Partner Exception</legend>
-    @using (Html.BeginForm())
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "formBudgetInfo" }))
     {
         @Html.ValidationSummary()
         @Html.HiddenFor(m => m.CampaignId)
@@ -42,8 +42,15 @@
                 </tr>
             </table>
             <br />
-            <input type="submit" value="Save" />
+            <input type="submit" value="Save" onclick="SaveBudgetInfo()" />
             &nbsp;@Html.ActionLink("cancel", "Edit", "BudgetInfos", new { campId = Model.CampaignId, date = Model.Date.ToShortDateString() }, null)
         </div>
     }
 </fieldset>
+
+<script>
+    function SaveBudgetInfo() {
+        $('#MediaSpend').val($('#MediaSpend').val().toString().replace(/\$/g, '').replace(/\,/g, ''));
+        $('#formBudgetInfo').submit();
+    }
+</script>

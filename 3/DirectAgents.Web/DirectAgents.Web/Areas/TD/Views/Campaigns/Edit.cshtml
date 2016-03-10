@@ -136,7 +136,7 @@
     //});
 
     function SaveCampaign() {
-        $('#DefaultBudgetInfo_MediaSpend').val($('#DefaultBudgetInfo_MediaSpend').val().toString().replace("$", '').replace(",",''));
+        $('#DefaultBudgetInfo_MediaSpend').val($('#DefaultBudgetInfo_MediaSpend').val().toString().replace(/\$/g, '').replace(/\,/g, ''));
         $('#formCampaign').submit();
         $('#divSave').hide();
         $('#divSaveMessage').html("<i>Saving...</i>");
