@@ -64,6 +64,10 @@
       <HintPath>..\..\ClientPortal.Web\packages\ManyConsole.0.4.2.16\lib\ManyConsole.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\MicosoftReportViewerWebForms_v11.1.0.1\lib\Microsoft.ReportViewer.WebForms.DLL</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.16\lib\net45\Microsoft.Threading.Tasks.dll</HintPath>
       <Private>True</Private>
@@ -86,6 +90,10 @@
     </Reference>
     <Reference Include="Ninject.Web.Mvc, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.MVC5.3.2.1.0\lib\net45-full\Ninject.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ReportViewerForMvc, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ReportViewerForMvc.1.0.1\lib\net45\ReportViewerForMvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -194,6 +202,7 @@
     <Compile Include="Areas\TD\Models\TDStatsVM.cs" />
     <Compile Include="Areas\TD\TDAreaRegistration.cs" />
     <Content Include="Areas\TD\Views\Campaigns\Dashboard.cshtml" />
+    <Content Include="Areas\TD\Views\Reports\Test.cshtml" />
     <Content Include="Areas\TD\Views\Stats\Conv.cshtml" />
     <Compile Include="Common.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />
@@ -385,6 +394,7 @@
     <Content Include="Content\kendo\2014.1.416\Uniform\sprite_2x.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="ReportViewerWebForm.aspx" />
     <Content Include="Scripts\kendo\2014.1.416\cultures\kendo.culture.af-ZA.min.js" />
     <Content Include="Scripts\kendo\2014.1.416\cultures\kendo.culture.af.min.js" />
     <Content Include="Scripts\kendo\2014.1.416\cultures\kendo.culture.am-ET.min.js" />
