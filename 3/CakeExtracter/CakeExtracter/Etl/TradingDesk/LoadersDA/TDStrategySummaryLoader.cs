@@ -108,7 +108,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             return itemCount;
         }
 
-        private void AddUpdateDependentStrategies(List<StrategySummary> items)
+        public void AddUpdateDependentStrategies(List<StrategySummary> items)
         {
             using (var db = new DATDContext())
             {

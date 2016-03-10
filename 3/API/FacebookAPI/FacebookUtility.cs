@@ -86,7 +86,31 @@ namespace FacebookAPI
         }
         public IEnumerable<FBSummary> GetDailyCampaignStats(string accountId, DateTime start, DateTime end)
         {
-            return GetFBSummariesLoop(accountId, start, end, byCampaign: true);
+            int daysPerCall = DaysPerCall_Campaign;
+            while (start <= end)
+            {
+                var tempEnd = start.AddDays(daysPerCall - 1);
+                if (tempEnd > end)
+                    tempEnd = end;
+                var fbSummaries = GetFBSummaries(accountId, start, tempEnd, byCampaign: true);
+
+                var groups = fbSummaries.GroupBy(s => new { s.Date, s.CampaignName });
+                foreach (var group in groups)
+                {
+                    var fbSum = new FBSummary
+                    {
+                        Date = group.Key.Date,
+                        CampaignName = group.Key.CampaignName,
+                        Spend = group.Sum(g => g.Spend),
+                        Impressions = group.Sum(g => g.Impressions),
+                        UniqueClicks = group.Sum(g => g.UniqueClicks),
+                        LinkClicks = group.Sum(g => g.LinkClicks),
+                        TotalActions = group.Sum(g => g.TotalActions)
+                    };
+                    yield return fbSum;
+                }
+                start = start.AddDays(daysPerCall);
+            }
         }
         public IEnumerable<FBSummary> GetDailyAdSetStats(string accountId, DateTime start, DateTime end)
         {
