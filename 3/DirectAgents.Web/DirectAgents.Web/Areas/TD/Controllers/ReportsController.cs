@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
-using DirectAgents.Domain.Abstract;
-using DirectAgents.Domain.DTO;
-using DirectAgents.Web.Areas.TD.Models;
-using Microsoft.Reporting.WebForms;
-using System.Security.Principal;
+using System.Configuration;
 using System.Net;
+using System.Security.Principal;
+using System.Web.Mvc;
 using System.Web.UI.WebControls;
+using DirectAgents.Domain.Abstract;
+using Microsoft.Reporting.WebForms;
 
 namespace DirectAgents.Web.Areas.TD.Controllers
 {
@@ -27,29 +24,29 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View(campaign);
         }
 
-        public ActionResult Test()
+        public ActionResult ReportViewer()
         {
             ReportViewer rv = new ReportViewer()
             {
                 ProcessingMode = ProcessingMode.Remote,
-                Width = 1000,
-                Height = 600
+                SizeToReportContent = true,
+                Width = Unit.Percentage(100),
+                Height = Unit.Percentage(100)
             };
 
             rv.ServerReport.ReportPath = "/DA - Trading Desk Report";
-            //rv.ServerReport.ReportServerUrl = new Uri("http://biz/ReportServer_SQLEXPRESS");
-            rv.ServerReport.ReportServerUrl = new Uri("http://173.204.123.91/ReportServer_SQL3");
-            //rv.ServerReport.ReportServerCredentials = new ReportServerCredentials("administrator", "xxx", "");
-            rv.ServerReport.ReportServerCredentials = new ReportServerCredentials("reportviewertest", "xxx", "");
+            rv.ServerReport.ReportServerUrl = new Uri(ConfigurationManager.AppSettings["SSRS_ReportServerUrl"]);
 
-            rv.SizeToReportContent = true;
-            rv.Width = Unit.Percentage(100);
-            rv.Height = Unit.Percentage(100);
+            string username = ConfigurationManager.AppSettings["SSRS_ReportServerUsername"];
+            string password = ConfigurationManager.AppSettings["SSRS_ReportServerPassword"];
+            if (!String.IsNullOrWhiteSpace(username) && !String.IsNullOrWhiteSpace(password))
+                rv.ServerReport.ReportServerCredentials = new ReportServerCredentials(username, password, "");
 
             ViewBag.ReportViewer = rv;
             return View();
         }
 	}
+
     public class ReportServerCredentials : IReportServerCredentials
     {
         private string _userName;

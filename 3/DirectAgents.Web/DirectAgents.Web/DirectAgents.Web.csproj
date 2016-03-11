@@ -202,7 +202,7 @@
     <Compile Include="Areas\TD\Models\TDStatsVM.cs" />
     <Compile Include="Areas\TD\TDAreaRegistration.cs" />
     <Content Include="Areas\TD\Views\Campaigns\Dashboard.cshtml" />
-    <Content Include="Areas\TD\Views\Reports\Test.cshtml" />
+    <Content Include="Areas\TD\Views\Reports\ReportViewer.cshtml" />
     <Content Include="Areas\TD\Views\Stats\Conv.cshtml" />
     <Compile Include="Common.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />
