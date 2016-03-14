@@ -42,7 +42,7 @@
             <br />
             <div id="divSave">
                 <input id="btnSubmit" type="submit" value="Save" onclick="SaveCampaign()" />
-                &nbsp;@Html.ActionLink("cancel(back to campaigns)", "Index", new { advId = advId })
+                &nbsp;@Html.ActionLink("Cancel", "Show", new { id = Model.Id })
             </div>
             <div id="divSaveMessage"></div>
         </div>
@@ -123,9 +123,7 @@
     }
 }
         <br />
-        @Html.ActionLink("Back to Campaigns", "Index", new { advId = advId })
-        <br /><br />
-        Budget & Pacing: @Html.ActionLink("HTML", "Pacing", "CampStats", new { campId = Model.Id }, null)
+        @Html.ActionLink("Back to Campaign Details", "Show", new { id = Model.Id })
     </div>
 </fieldset>
 <br />

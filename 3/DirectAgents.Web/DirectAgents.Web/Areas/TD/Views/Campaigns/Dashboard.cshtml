@@ -7,21 +7,32 @@
 <tr>
     <th>Advertiser</th>
     <th>Campaign</th>
-    <th>Stats</th>
-    <th>ExtAccounts</th>
+    <th>Month Stats</th>
+    <th></th>
 </tr>
 @foreach (var camp in Model.Campaigns)
 {
 <tr>
     <td>@camp.Advertiser.Name</td>
-    <td>@Html.ActionLink(camp.Name, "Pacing", "CampStats", new { campId = camp.Id }, null)</td>
-    <td>@Html.ActionLink("Raw", "ExtAccount", "Stats", new { campId = camp.Id, month = Model.MonthString }, null)</td>
+    <td>@Html.ActionLink(camp.Name, "Show", new { id = camp.Id })</td>
     <td>
-        @Html.ActionLink("List(" + camp.ExtAccounts.Count + ")", "Index", "ExtAccounts", new { campId = camp.Id }, null) |
+        @Html.ActionLink("Budget+Pacing", "Pacing", "CampStats", new { campId = camp.Id }, null) |
+        @Html.ActionLink("Raw", "ExtAccount", "Stats", new { campId = camp.Id, month = Model.MonthString }, null)
+    </td>
+    <td>
         @Html.ActionLink("StatsGauge", "IndexGauge", "ExtAccounts", new { campId = camp.Id }, null)
     </td>
 </tr>
 }
 </table>
 <br />
-Click on the Campaign name for "Budget & Pacing".
+Show:
+@if (Model.ShowAll) {
+    <b>all campaigns</b><text> | </text>
+    @Html.ActionLink("active campaigns", "Dashboard")
+} else {
+    @Html.ActionLink("all campaigns", "Dashboard", new { all = true })
+    <text> | </text><b>active campaigns</b>
+}
+<br /><br />
+<i>Click on the campaign name for details/maintenance.</i>

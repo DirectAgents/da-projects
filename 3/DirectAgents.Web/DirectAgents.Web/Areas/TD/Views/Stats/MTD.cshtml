@@ -1,6 +1,7 @@
 ﻿@model DirectAgents.Domain.DTO.TDCampStats
 @{
     var m = Model; // stats
+    var lastMonth = m.Month.AddMonths(-1);
 }
 
 <h2>Month/MTD View</h2>
@@ -89,8 +90,7 @@ Month: @m.Month.ToString("MMM yyyy")
     <td>Total Conv</td>
     <td>@m.TotalConv.ToString("N0")</td>
 </tr>
-<tr>
-    <td></td>
-    <td></td>
-</tr>
 </table>
+
+<br />
+@Html.ActionLink("Previous Month", "MTD", "Stats", new { campId = Model.Campaign.Id, date = lastMonth.ToShortDateString() }, null)

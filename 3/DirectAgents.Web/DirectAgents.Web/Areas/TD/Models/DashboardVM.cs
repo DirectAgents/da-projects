@@ -10,5 +10,6 @@ namespace DirectAgents.Web.Areas.TD.Models
         public string MonthString { get; set; }
 
         public IEnumerable<Campaign> Campaigns { get; set; }
+        public bool ShowAll { get; set; }
     }
 }

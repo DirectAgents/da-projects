@@ -23,7 +23,7 @@
 {
 <tr>
     <td>
-        @Html.ActionLink("Edit", "Edit", new { id = camp.Id }) |
+        @Html.ActionLink("Details", "Show", new { id = camp.Id }) |
         @Html.ActionLink("Reporting", "Home", "Reports", new { campId = camp.Id }, null)
     </td>
     <td>@camp.Advertiser.Name</td>
@@ -38,7 +38,6 @@
     <td>@string.Join(", ", camp.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name))</td>
     <td>
         @Html.ActionLink("MTD", "MTD", "Stats", new { campId = camp.Id }, null) |
-        @Html.ActionLink("Last Month", "MTD", "Stats", new { campId = camp.Id, date = lastMonth.ToShortDateString() }, null) |
         @Html.ActionLink("B&P", "Pacing", "CampStats", new { campId = camp.Id }, null) |
         @Html.ActionLink("By Ext.Account", "ExtAccount", "Stats", new { campId = camp.Id }, null)
     </td>
@@ -59,9 +58,11 @@
 @if (!string.IsNullOrWhiteSpace(advId))
 {
     @Html.ActionLink("New Campaign", "CreateNew", new { advId = advId })
-    <br />
 } else {
-    <text>To create a campaign, go to</text>
+    <i>To create a campaign, go to
     @Html.ActionLink("Advertisers", "Index", "Advertisers")
-    <text>and click "show" under "Campaigns" for the desired Advertiser.</text>
+    and click "show" under "Campaigns" for the desired Advertiser.</i>
 }
+<br /><br />
+<i>To edit a campaign, click "Details".</i>
+<br />

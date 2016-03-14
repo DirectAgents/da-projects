@@ -1,0 +1,59 @@
+﻿@model DirectAgents.Domain.Entities.TD.Campaign
+@{
+    var today = DateTime.Today;
+    var startOfMonth = new DateTime(today.Year, today.Month, 1);
+    var lastMonth = startOfMonth.AddMonths(-1);
+}
+
+<h2>Campaign Details</h2>
+
+<table>
+<tr>
+    <td>
+        Advertiser: @Model.Advertiser.Name<br />
+        Campaign: @Model.Name
+    </td>
+    <td style="text-align:center">
+        SalesRep: @Model.Advertiser.SalesRepName()<br />
+        AM: @Model.Advertiser.AMName()
+    </td>
+</tr>
+</table>
+[@Html.ActionLink("Edit Campaign", "Edit", new { id = Model.Id })]
+<br /><br />
+
+External Accounts:
+<table>
+<tr>
+    <th>Partner</th>
+    <th style="text-align:right">ID</th>
+    <th>Ext Account</th>
+    <th>Stats</th>
+    <th>List...</th>
+</tr>
+@foreach (var extAcct in Model.ExtAccounts)
+{
+<tr>
+    <td>@extAcct.Platform.Name</td>
+    <td style="text-align:right">@extAcct.Id</td>
+    <td>@extAcct.Name</td>
+    <td>@Html.ActionLink("Upload", "UploadStats", "ExtAccounts", new { id = extAcct.Id }, null)</td>
+    <td>
+        @Html.ActionLink("Strategies", "Strategies", "ExtAccounts", new { id = extAcct.Id }, null) |
+        @Html.ActionLink("Creatives", "TDads", "ExtAccounts", new { id = extAcct.Id }, null)
+    </td>
+</tr>
+}
+</table>
+
+<br />
+Extra Items:
+@Html.ActionLink("This Month", "Index", "ExtraItems", new { campId = Model.Id, month = startOfMonth.ToShortDateString() }, null) |
+@Html.ActionLink("Last Month", "Index", "ExtraItems", new { campId = Model.Id, month = lastMonth.ToShortDateString() }, null) |
+@Html.ActionLink("All", "Index", "ExtraItems", new { campId = Model.Id }, null)
+<br /><br />
+Stats:
+@Html.ActionLink("Budget&Pacing", "Pacing", "CampStats", new { campId = Model.Id }, null) |
+@Html.ActionLink("Raw Stats", "ExtAccount", "Stats", new { campId = Model.Id }, null) |
+@Html.ActionLink("MTD", "MTD", "Stats", new { campId = Model.Id }, null)
+<br /><br />

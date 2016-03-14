@@ -54,7 +54,7 @@ table th,td {
         <ul class="nav navbar-nav">
 @*            <li><a href="@Url.Action("Pacing", "Campaigns", new { showPerfStats = true })">Performance</a></li>*@
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Views <span class="caret"></span></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Budget Views <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a href="@Url.Action("PacingGrid", "CampStats")">Budget & Pacing</a></li>
                     <li><a href="@Url.Action("PerformanceGrid", "CampStats")">Performance</a></li>
@@ -63,10 +63,11 @@ table th,td {
                 </ul>
             </li>
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Stats <span class="caret"></span></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reports/Stats <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a href="@Url.Action("ExtAccount", "Stats")">By ExternalAccount</a></li>
-                    <li><a href="@Url.Action("IndexGauge", "ExtAccounts")">Stats Gauge</a></li>
+                    <li><a href="@Url.Action("ReportViewer", "Reports")">Report Viewer</a></li>
+                    <li><a href="@Url.Action("ExtAccount", "Stats")">Raw Stats - all</a></li>
+                    <li><a href="@Url.Action("IndexGauge", "ExtAccounts")">Stats Gauge - all</a></li>
                 </ul>
             </li>
             <li class="dropdown">
@@ -77,12 +78,6 @@ table th,td {
                     <li><a href="@Url.Action("Index", "Advertisers")">Advertisers</a></li>
                     <li><a href="@Url.Action("Index", "Campaigns")">Campaigns</a></li>
                     <li><a href="@Url.Action("Index", "Employees")">Employees</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reports <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                    <li><a href="@Url.Action("ReportViewer", "Reports")">Viewer</a></li>
                 </ul>
             </li>
         </ul>

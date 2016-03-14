@@ -57,5 +57,7 @@
 @if (!string.IsNullOrWhiteSpace(campId))
 {
     @Html.ActionLink("New Extra Item", "CreateNew", new { campId = campId, date = (Model.Month.HasValue ? Model.Month.Value.ToShortDateString() : "") })
+    <text>&nbsp;|&nbsp;</text>
+    @Html.ActionLink("Back to Campaign", "Show", "Campaigns", new { id = campId }, null)
     <br />
 }

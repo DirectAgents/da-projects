@@ -25,7 +25,13 @@ ExtAccount: @Model.Name
 </form>
 
 <br />
-@Html.ActionLink("Back", "Index", new { platform = Model.Platform.Code })
+Back to:
+@if (Model.CampaignId.HasValue)
+{
+    @Html.ActionLink("Campaign Details", "Show", "Campaigns", new { id = Model.CampaignId.Value }, null)
+    <text> | </text>
+}
+@Html.ActionLink("ExtAccounts", "Index")
 
 <script>
     $(function () {

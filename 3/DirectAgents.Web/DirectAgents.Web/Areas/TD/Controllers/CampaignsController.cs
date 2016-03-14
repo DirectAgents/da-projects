@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
@@ -23,18 +24,31 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             return View(campaigns);
         }
 
-        public ActionResult Dashboard()
+        public ActionResult Dashboard(bool all = false)
         {
             DateTime currMonth = SetChooseMonthViewData();
-            var campaigns = tdRepo.CampaignsActive(currMonth)
-                .OrderBy(c => c.Advertiser.Name).ThenBy(c => c.Name);
+            IEnumerable<Campaign> campaigns;
+            if (all)
+                campaigns = tdRepo.Campaigns();
+            else
+                campaigns = tdRepo.CampaignsActive(currMonth);
 
             var model = new DashboardVM
             {
                 Month = currMonth,
-                Campaigns = campaigns
+                Campaigns = campaigns.OrderBy(c => c.Advertiser.Name).ThenBy(c => c.Name),
+                ShowAll = all
             };
             return View(model);
+        }
+
+        public ActionResult Show(int id)
+        {
+            var campaign = tdRepo.Campaign(id);
+            if (campaign == null)
+                return HttpNotFound();
+
+            return View(campaign);
         }
 
         public ActionResult CreateNew(int advId)
