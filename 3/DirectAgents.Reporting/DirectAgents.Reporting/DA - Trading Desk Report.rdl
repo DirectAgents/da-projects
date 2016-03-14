@@ -6495,19 +6495,16 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 <TablixBody>
                   <TablixColumns>
                     <TablixColumn>
-                      <Width>4.85in</Width>
+                      <Width>5.07812in</Width>
                     </TablixColumn>
                     <TablixColumn>
-                      <Width>1in</Width>
+                      <Width>1.22812in</Width>
                     </TablixColumn>
                     <TablixColumn>
-                      <Width>0.525in</Width>
+                      <Width>0.75312in</Width>
                     </TablixColumn>
                     <TablixColumn>
-                      <Width>0.675in</Width>
-                    </TablixColumn>
-                    <TablixColumn>
-                      <Width>0.91875in</Width>
+                      <Width>0.90312in</Width>
                     </TablixColumn>
                   </TablixColumns>
                   <TablixRows>
@@ -6644,42 +6641,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox11</rd:DefaultName>
-                              <Style>
-                                <Border>
-                                  <Color>LightGrey</Color>
-                                  <Style>Solid</Style>
-                                </Border>
-                                <BackgroundColor>White</BackgroundColor>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                          </CellContents>
-                        </TablixCell>
-                        <TablixCell>
-                          <CellContents>
-                            <Textbox Name="Textbox82">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>Conversions</Value>
-                                      <Style>
-                                        <FontFamily>Calibri</FontFamily>
-                                        <FontSize>11pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Center</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox16</rd:DefaultName>
                               <Style>
                                 <Border>
                                   <Color>LightGrey</Color>
@@ -6851,44 +6812,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                             </Textbox>
                           </CellContents>
                         </TablixCell>
-                        <TablixCell>
-                          <CellContents>
-                            <Textbox Name="Textbox113">
-                              <UserSort>
-                                <SortExpression>=Fields!Conversions.Value</SortExpression>
-                              </UserSort>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value />
-                                      <Style>
-                                        <FontFamily>Calibri</FontFamily>
-                                        <FontSize>11pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Center</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox83</rd:DefaultName>
-                              <Style>
-                                <Border>
-                                  <Color>LightGrey</Color>
-                                  <Style>Solid</Style>
-                                </Border>
-                                <BackgroundColor>White</BackgroundColor>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                          </CellContents>
-                        </TablixCell>
                       </TablixCells>
                     </TablixRow>
                     <TablixRow>
@@ -7038,49 +6961,12 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                             </Textbox>
                           </CellContents>
                         </TablixCell>
-                        <TablixCell>
-                          <CellContents>
-                            <Textbox Name="Conversions11">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>=Fields!Conversions.Value</Value>
-                                      <Style>
-                                        <FontFamily>Calibri</FontFamily>
-                                        <FontSize>11pt</FontSize>
-                                        <Format>#,0</Format>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Center</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Conversions</rd:DefaultName>
-                              <Style>
-                                <Border>
-                                  <Color>LightGrey</Color>
-                                  <Style>Solid</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                          </CellContents>
-                        </TablixCell>
                       </TablixCells>
                     </TablixRow>
                   </TablixRows>
                 </TablixBody>
                 <TablixColumnHierarchy>
                   <TablixMembers>
-                    <TablixMember />
                     <TablixMember />
                     <TablixMember />
                     <TablixMember />
@@ -7122,7 +7008,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   </SortExpression>
                 </SortExpressions>
                 <Height>0.625in</Height>
-                <Width>7.96875in</Width>
+                <Width>7.9625in</Width>
                 <Style>
                   <Border>
                     <Style>None</Style>
@@ -7734,7 +7620,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   </SortExpression>
                 </SortExpressions>
                 <Height>0.625in</Height>
-                <Width>7.96876in</Width>
+                <Width>7.96877in</Width>
                 <Style>
                   <Border>
                     <Style>None</Style>
@@ -7749,7 +7635,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             <KeepTogether>true</KeepTogether>
             <Top>15.2975in</Top>
             <Height>0.625in</Height>
-            <Width>7.96876in</Width>
+            <Width>7.96877in</Width>
             <ZIndex>4</ZIndex>
             <Style>
               <Border>
@@ -9048,7 +8934,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
         <Height>15.9225in</Height>
         <Style />
       </Body>
-      <Width>7.96876in</Width>
+      <Width>7.96877in</Width>
       <Page>
         <PageHeader>
           <Height>1.45834in</Height>
