@@ -10,12 +10,12 @@
 <table>
 <tr>
     <td>
-        Advertiser: @Model.Advertiser.Name<br />
-        Campaign: @Model.Name
+        Advertiser: <b>@Model.Advertiser.Name</b><br />
+        Campaign: <b>@Model.Name</b>
     </td>
     <td style="text-align:center">
-        SalesRep: @Model.Advertiser.SalesRepName()<br />
-        AM: @Model.Advertiser.AMName()
+        SalesRep: <b>@Model.Advertiser.SalesRepName()</b><br />
+        AM: <b>@Model.Advertiser.AMName()</b>
     </td>
 </tr>
 </table>
@@ -56,4 +56,6 @@ Stats:
 @Html.ActionLink("Budget&Pacing", "Pacing", "CampStats", new { campId = Model.Id }, null) |
 @Html.ActionLink("Raw Stats", "ExtAccount", "Stats", new { campId = Model.Id }, null) |
 @Html.ActionLink("MTD", "MTD", "Stats", new { campId = Model.Id }, null)
+<br /><br />
+@Html.ActionLink("Report Components", "Home", "Reports", new { campId = Model.Id }, null)
 <br /><br />
