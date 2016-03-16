@@ -15,6 +15,7 @@ SELECT ISNULL(PlatformBudgetInfo.MediaSpend, ISNULL(BudgetInfo.MediaSpend, Campa
 	, Campaign.AdvertiserId
 	, Account.Id AS AccountId
 	, Account.PlatformId
+	, CAST(Campaign.Id AS varchar) + ISNULL('-' + CONVERT(varchar, BudgetInfo.Date, 112), '') + ISNULL('-' + CAST(Account.Id AS varchar), '') + ISNULL('-' + CAST(Platform.Id AS varchar), '') + ISNULL('-' + CONVERT(varchar, PlatformBudgetInfo.Date, 112), '') AS UniqueId
 FROM td.Campaign
 LEFT OUTER JOIN td.BudgetInfo
    ON (BudgetInfo.CampaignId = Campaign.Id)

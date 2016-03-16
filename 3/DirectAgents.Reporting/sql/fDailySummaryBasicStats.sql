@@ -26,13 +26,14 @@ WITH fBI AS
 	  AND (Account.PlatformId = fBI.PlatformId)
 	INNER JOIN td.DailySummary ON DailySummary.AccountId = Account.Id
 	WHERE (td.DailySummary.Date BETWEEN @StartDate AND @EndDate)
-	  AND (fBI.AsOfDate =
+	  AND (fBI.UniqueId =
 			(
-			SELECT TOP 1 x.AsOfDate
+			SELECT TOP 1 x.UniqueId
 			FROM fBI x
 			WHERE (x.AccountId = Account.Id)
 			  AND (x.PlatformId = Account.PlatformId)
 			  AND (x.AsOfDate <= DailySummary.Date)
+			ORDER BY x.AsOfDate DESC
 			))
 )
 , mediaSpend AS
