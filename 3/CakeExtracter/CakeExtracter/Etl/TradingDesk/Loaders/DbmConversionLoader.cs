@@ -53,7 +53,8 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                         OSID = item.os_id,
                         BrowserID = item.browser_id,
                         BrowserTimezoneOffsetMinutes = item.browser_timezone_offset_minutes,
-                        NetSpeed = item.net_speed
+                        NetSpeed = item.net_speed,
+                        IP = item.ip
                     };
                     if (source.EventTime >= daylightSavingsRange.FromDate && source.EventTime < daylightSavingsRange.ToDate)
                         source.EventTime = source.EventTime.AddHours(1);

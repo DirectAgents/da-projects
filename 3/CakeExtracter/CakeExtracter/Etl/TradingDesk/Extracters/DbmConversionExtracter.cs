@@ -89,7 +89,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                     if (!includeViewThrus && csvRows[i].event_sub_type == "postview")
                         continue;
                     if (!includeViewThrus)
-                        Logger.Info("Extracting a conversion");
+                        Logger.Info("Extracting a conversion"); //only log this if we're just extracting clickthrus
                     yield return csvRows[i];
                 }
             }
