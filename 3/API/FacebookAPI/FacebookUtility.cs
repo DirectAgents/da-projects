@@ -18,6 +18,8 @@ namespace FacebookAPI
         public int DaysPerCall_AdSet = 10;
         public int DaysPerCall_Ad = 8;
 
+        public string Conversion_ActionType = "offsite_conversion";
+
         //public string AppId { get; set; }
         //public string AppSecret { get; set; }
         public string AccessToken { get; set; }
@@ -105,6 +107,8 @@ namespace FacebookAPI
                         Impressions = group.Sum(g => g.Impressions),
                         UniqueClicks = group.Sum(g => g.UniqueClicks),
                         LinkClicks = group.Sum(g => g.LinkClicks),
+                        Conversions_28d_click = group.Sum(g => g.Conversions_28d_click),
+                        Conversions_1d_view = group.Sum(g => g.Conversions_1d_view),
                         TotalActions = group.Sum(g => g.TotalActions)
                     };
                     yield return fbSum;
@@ -140,6 +144,8 @@ namespace FacebookAPI
                         Impressions = group.Sum(g => g.Impressions),
                         UniqueClicks = group.Sum(g => g.UniqueClicks),
                         LinkClicks = group.Sum(g => g.LinkClicks),
+                        Conversions_28d_click = group.Sum(g => g.Conversions_28d_click),
+                        Conversions_1d_view = group.Sum(g => g.Conversions_1d_view),
                         TotalActions = group.Sum(g => g.TotalActions)
                     };
                     yield return fbSum;
@@ -190,7 +196,7 @@ namespace FacebookAPI
             var path = accountId + "/insights";
 
             var levelVal = "";
-            var fieldsVal = "impressions,unique_clicks,inline_link_clicks,total_actions,spend";
+            var fieldsVal = "impressions,unique_clicks,inline_link_clicks,actions,total_actions,spend";
             if (byCampaign)
             {
                 levelVal = "campaign";
@@ -217,6 +223,8 @@ namespace FacebookAPI
                     //metadata = 1,
                     level = levelVal,
                     fields = fieldsVal,
+                    action_breakdowns = "action_type",
+                    action_attribution_windows = "28d_click,1d_view",
                     time_range = new { since = DateString(start), until = DateString(end) },
                     time_increment = 1,
                     after = afterVal
@@ -269,6 +277,29 @@ namespace FacebookAPI
                         };
                         if (Int32.TryParse(row.impressions, out impressions))
                             fbSum.Impressions = impressions;
+                        var actionStats = row.actions;
+                        if (actionStats != null)
+                        {
+                            foreach (var stat in actionStats)
+                            {
+                                if (stat.action_type == Conversion_ActionType)
+                                {
+                                    if (((IDictionary<String, object>)stat).ContainsKey("28d_click"))
+                                        fbSum.Conversions_28d_click = (int)stat["28d_click"];
+                                    if (((IDictionary<String, object>)stat).ContainsKey("1d_view"))
+                                        fbSum.Conversions_1d_view = (int)stat["1d_view"];
+                                    break;
+                                }
+                            }
+                            //for (int i = actionStats.Count - 1; i >= 0; i--)
+                            //{ // We go in reverse order b/c if it's included, it's the last one
+                            //    if (actionStats[i].action_type == "offsite_conversion")
+                            //    {
+                            //        fbSum.Conversions = (int)actionStats[i].value;
+                            //        break;
+                            //    }
+                            //}
+                        }
                         yield return fbSum;
                     }
                 }

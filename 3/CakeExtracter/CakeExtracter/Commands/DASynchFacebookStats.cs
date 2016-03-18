@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Configuration;
 using System.Linq;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
@@ -57,9 +58,19 @@ namespace CakeExtracter.Commands
             var fbUtility = new FacebookUtility(m => Logger.Info(m), m => Logger.Warn(m));
             var statsType = new StatsTypeAgg(this.StatsType);
 
+            var string_ConvAsPurch = ConfigurationManager.AppSettings["FB_ConversionsAsPurchases"] ?? "";
+            var Accts_ConvAsPurch = string_ConvAsPurch.Split(new char[] { ',' });
+            var string_ConvAsReg = ConfigurationManager.AppSettings["FB_ConversionsAsRegistrations"] ?? "";
+            var Accts_ConvAsReg = string_ConvAsReg.Split(new char[] { ',' });
+
             var accounts = GetAccounts();
             foreach (var acct in accounts)
             {
+                if (Accts_ConvAsPurch.Contains(acct.ExternalId))
+                    fbUtility.Conversion_ActionType = "offsite_conversion.fb_pixel_purchase";
+                else if (Accts_ConvAsReg.Contains(acct.ExternalId))
+                    fbUtility.Conversion_ActionType = "offsite_conversion.fb_pixel_complete_registration";
+
                 if (statsType.Daily)
                     DoETL_Daily(dateRange, acct, fbUtility);
                 if (statsType.Strategy)
