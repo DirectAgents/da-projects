@@ -80,7 +80,7 @@ FROM td.fDailySummaryBasicStats(@AdvertiserId, @PreviousMonthStartDate
         </Field>
         <Field Name="Budget">
           <DataField>Budget</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
+          <rd:TypeName>System.Double</rd:TypeName>
         </Field>
         <Field Name="Pacing">
           <DataField>Pacing</DataField>
@@ -100,18 +100,6 @@ FROM td.fDailySummaryBasicStats(@AdvertiserId, @PreviousMonthStartDate
         </Field>
         <Field Name="Revenue">
           <DataField>Revenue</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="BIMediaSpend">
-          <DataField>BIMediaSpend</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="BIMgmtFeePct">
-          <DataField>BIMgmtFeePct</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="BIMarginPct">
-          <DataField>BIMarginPct</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
       </Fields>
@@ -229,7 +217,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
         </Field>
         <Field Name="Budget">
           <DataField>Budget</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
+          <rd:TypeName>System.Double</rd:TypeName>
         </Field>
         <Field Name="Pacing">
           <DataField>Pacing</DataField>
@@ -243,21 +231,9 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
           <DataField>eCPC</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
         </Field>
-        <Field Name="BIMediaSpend">
-          <DataField>BIMediaSpend</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="BIMgmtFeePct">
-          <DataField>BIMgmtFeePct</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
         <Field Name="eCPA">
           <DataField>eCPA</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
-        </Field>
-        <Field Name="BIMarginPct">
-          <DataField>BIMarginPct</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -330,41 +306,21 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
           <DataField>MgmtFee</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
-        <Field Name="Cost">
-          <DataField>Cost</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
         <Field Name="Budget">
           <DataField>Budget</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
+          <rd:TypeName>System.Double</rd:TypeName>
         </Field>
         <Field Name="Pacing">
           <DataField>Pacing</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
         </Field>
-        <Field Name="Revenue">
-          <DataField>Revenue</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
         <Field Name="eCPC">
           <DataField>eCPC</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
         </Field>
-        <Field Name="BIMediaSpend">
-          <DataField>BIMediaSpend</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="BIMgmtFeePct">
-          <DataField>BIMgmtFeePct</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
         <Field Name="eCPA">
           <DataField>eCPA</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
-        </Field>
-        <Field Name="BIMarginPct">
-          <DataField>BIMarginPct</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -419,7 +375,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
         </Field>
         <Field Name="Budget">
           <DataField>Budget</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
+          <rd:TypeName>System.Double</rd:TypeName>
         </Field>
         <Field Name="Pacing">
           <DataField>Pacing</DataField>
@@ -439,18 +395,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
         </Field>
         <Field Name="Revenue">
           <DataField>Revenue</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="BIMediaSpend">
-          <DataField>BIMediaSpend</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="BIMgmtFeePct">
-          <DataField>BIMgmtFeePct</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="BIMarginPct">
-          <DataField>BIMarginPct</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
       </Fields>
@@ -3971,6 +3915,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             </PageBreak>
             <PageName>Executive Summary</PageName>
             <KeepTogether>true</KeepTogether>
+            <Top>0in</Top>
             <Height>7.83917in</Height>
             <Width>7.96875in</Width>
             <Style>
@@ -4574,6 +4519,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   <PaddingBottom>2pt</PaddingBottom>
                                                 </Style>
                                               </Textbox>
+                                              <rd:Selected>true</rd:Selected>
                                             </CellContents>
                                           </TablixCell>
                                           <TablixCell>
@@ -7008,7 +6954,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   </SortExpression>
                 </SortExpressions>
                 <Height>0.625in</Height>
-                <Width>7.9625in</Width>
+                <Width>7.96248in</Width>
                 <Style>
                   <Border>
                     <Style>None</Style>
