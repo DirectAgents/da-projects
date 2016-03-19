@@ -42,9 +42,8 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                 Impressions = item.Impressions,
                 //Clicks = item.UniqueClicks,
                 Clicks = item.LinkClicks,
-                PostClickConv = item.TotalActions,
-                //NOTE: TotalActions- includes postclick AND postview (within 1 day)... can be configured?
-                //PostViewConv = 0,
+                PostClickConv = item.Conversions_28d_click,
+                PostViewConv = item.Conversions_1d_view,
                 Cost = item.Spend
             };
             return sum;

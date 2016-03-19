@@ -249,6 +249,7 @@ namespace EomToolWeb.Controllers
             var unitTypeSort = request.SortObjects.SingleOrDefault(so => so.Field == "UnitTypeId");
             if (unitTypeSort != null) unitTypeSort.Field = "UnitTypeName";
 
+            //TODO: replace CampAffItems() with a new method that returns a new class (collection) with only the necessary fields (e.g. id, not name)
             var data = mainRepo.CampAffItems(true);
             var kgrid = new KendoGridEx<CampAffItem>(request, data);
 

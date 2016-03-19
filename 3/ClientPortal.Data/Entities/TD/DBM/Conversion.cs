@@ -16,7 +16,6 @@ namespace ClientPortal.Data.Entities.TD.DBM
         public string EventSubType { get; set; }
         public string UserID { get; set; }
         public int? AdPosition { get; set; }
-        // string ip
         public string Country { get; set; }
         public int? DMACode { get; set; }
         public string PostalCode { get; set; }
@@ -26,5 +25,7 @@ namespace ClientPortal.Data.Entities.TD.DBM
         public int? BrowserID { get; set; }
         public int? BrowserTimezoneOffsetMinutes { get; set; }
         public int? NetSpeed { get; set; }
+
+        public string IP { get; set; }
     }
 }

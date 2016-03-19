@@ -378,6 +378,10 @@
     <Compile Include="Migrations\201506041516483_Mig_DailyLocationStat.Designer.cs">
       <DependentUpon>201506041516483_Mig_DailyLocationStat.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603171654404_Mig_Conv_IP.cs" />
+    <Compile Include="Migrations\201603171654404_Mig_Conv_IP.Designer.cs">
+      <DependentUpon>201603171654404_Mig_Conv_IP.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\ChangeIdentityOperation.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -485,6 +489,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506041516483_Mig_DailyLocationStat.resx">
       <DependentUpon>201506041516483_Mig_DailyLocationStat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603171654404_Mig_Conv_IP.resx">
+      <DependentUpon>201603171654404_Mig_Conv_IP.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
