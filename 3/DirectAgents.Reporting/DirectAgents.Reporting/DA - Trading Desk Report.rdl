@@ -4519,7 +4519,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                                   <PaddingBottom>2pt</PaddingBottom>
                                                 </Style>
                                               </Textbox>
-                                              <rd:Selected>true</rd:Selected>
                                             </CellContents>
                                           </TablixCell>
                                           <TablixCell>
@@ -7945,6 +7944,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
+                            <rd:Selected>true</rd:Selected>
                           </CellContents>
                         </TablixCell>
                         <TablixCell>
@@ -9156,38 +9156,38 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
       <DataType>Integer</DataType>
       <DefaultValue>
         <Values>
-          <Value>=FirstDayOfWeek.Monday</Value>
+          <Value>=DayOfWeek.Monday</Value>
         </Values>
       </DefaultValue>
       <Prompt>First Day Of Week</Prompt>
       <ValidValues>
         <ParameterValues>
           <ParameterValue>
-            <Value>=FirstDayOfWeek.Monday</Value>
+            <Value>=DayOfWeek.Monday</Value>
             <Label>Monday</Label>
           </ParameterValue>
           <ParameterValue>
-            <Value>=FirstDayOfWeek.Tuesday</Value>
+            <Value>=DayOfWeek.Tuesday</Value>
             <Label>Tuesday</Label>
           </ParameterValue>
           <ParameterValue>
-            <Value>=FirstDayOfWeek.Wednesday</Value>
+            <Value>=DayOfWeek.Wednesday</Value>
             <Label>Wednesday</Label>
           </ParameterValue>
           <ParameterValue>
-            <Value>=FirstDayOfWeek.Thursday</Value>
+            <Value>=DayOfWeek.Thursday</Value>
             <Label>Thursday</Label>
           </ParameterValue>
           <ParameterValue>
-            <Value>=FirstDayOfWeek.Friday</Value>
+            <Value>=DayOfWeek.Friday</Value>
             <Label>Friday</Label>
           </ParameterValue>
           <ParameterValue>
-            <Value>=FirstDayOfWeek.Saturday</Value>
+            <Value>=DayOfWeek.Saturday</Value>
             <Label>Saturday</Label>
           </ParameterValue>
           <ParameterValue>
-            <Value>=FirstDayOfWeek.Sunday</Value>
+            <Value>=DayOfWeek.Sunday</Value>
             <Label>Sunday</Label>
           </ParameterValue>
         </ParameterValues>
