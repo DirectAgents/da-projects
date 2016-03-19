@@ -2,7 +2,6 @@
 @AdvertiserId int
 , @StartDate datetime
 , @EndDate datetime
--- select * from td.fSiteSummaryBasicStats(9, '1/1/2016', getdate())
 ) RETURNS @ret TABLE
 	(
 	SiteName	nvarchar(max)
