@@ -18,7 +18,10 @@ namespace FacebookAPI
         public int DaysPerCall_AdSet = 10;
         public int DaysPerCall_Ad = 8;
 
-        public string Conversion_ActionType = "offsite_conversion";
+        public const string Conversion_ActionType_Default = "offsite_conversion";
+        public const string Conversion_ActionType_Purchase = "offsite_conversion.fb_pixel_purchase";
+        public const string Conversion_ActionType_Registration = "offsite_conversion.fb_pixel_complete_registration";
+        public string Conversion_ActionType = Conversion_ActionType_Default;
 
         //public string AppId { get; set; }
         //public string AppSecret { get; set; }
@@ -236,7 +239,7 @@ namespace FacebookAPI
                     try
                     {
                         retObj = fbClient.Get(path, parms);
-                        tryNumber = 0;
+                        tryNumber = 0; // Mark as call succeeded (no exception)
                     }
                     catch (Exception ex)
                     {

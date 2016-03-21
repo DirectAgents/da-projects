@@ -67,9 +67,11 @@ namespace CakeExtracter.Commands
             foreach (var acct in accounts)
             {
                 if (Accts_ConvAsPurch.Contains(acct.ExternalId))
-                    fbUtility.Conversion_ActionType = "offsite_conversion.fb_pixel_purchase";
+                    fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_Purchase;
                 else if (Accts_ConvAsReg.Contains(acct.ExternalId))
-                    fbUtility.Conversion_ActionType = "offsite_conversion.fb_pixel_complete_registration";
+                    fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_Registration;
+                else
+                    fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_Default;
 
                 if (statsType.Daily)
                     DoETL_Daily(dateRange, acct, fbUtility);
