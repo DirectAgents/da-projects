@@ -2320,6 +2320,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
+                            <rd:Selected>true</rd:Selected>
                           </CellContents>
                         </TablixCell>
                         <TablixCell>
@@ -3915,7 +3916,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             </PageBreak>
             <PageName>Executive Summary</PageName>
             <KeepTogether>true</KeepTogether>
-            <Top>0in</Top>
             <Height>7.83917in</Height>
             <Width>7.96875in</Width>
             <Style>
@@ -7944,7 +7944,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
-                            <rd:Selected>true</rd:Selected>
                           </CellContents>
                         </TablixCell>
                         <TablixCell>
@@ -9206,7 +9205,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
       <DataType>DateTime</DataType>
       <DefaultValue>
         <Values>
-          <Value>=DateAdd(DateInterval.Day, -1 * (Day(DateAdd(DateInterval.Month, -1, Parameters!MTDEndDate.Value)) - 1), DateAdd(DateInterval.Month, -1, Parameters!MTDEndDate.Value))</Value>
+          <Value>=DateAdd(DateInterval.Day, -1 * (Day(DateAdd(DateInterval.Month, -1, Parameters!MTDEndDate.Value)) - 1), DateAdd(DateInterval.Month, -1, Parameters!MTDEndDate.Value.Date))</Value>
         </Values>
       </DefaultValue>
       <Hidden>true</Hidden>
