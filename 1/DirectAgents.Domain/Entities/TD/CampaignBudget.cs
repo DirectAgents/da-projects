@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace DirectAgents.Domain.Entities.TD
@@ -86,6 +87,9 @@ namespace DirectAgents.Domain.Entities.TD
         public int CampaignId { get; set; }
         public DateTime Date { get; set; }
         public virtual Campaign Campaign { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; } // used for SSRS report
     }
 
     public class PlatformBudgetInfo : BudgetInfoVals
@@ -96,6 +100,9 @@ namespace DirectAgents.Domain.Entities.TD
 
         public virtual Campaign Campaign { get; set; }
         public virtual Platform Platform { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; } // used for SSRS report
     }
 
     public class BudgetInfoVals : MarginFeeVals

@@ -251,6 +251,10 @@
     <Compile Include="MigrationsTD\201602122137175_Mig_MoreColMapping.Designer.cs">
       <DependentUpon>201602122137175_Mig_MoreColMapping.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsTD\201603212004059_Mig_BudgInfo_Id.cs" />
+    <Compile Include="MigrationsTD\201603212004059_Mig_BudgInfo_Id.Designer.cs">
+      <DependentUpon>201603212004059_Mig_BudgInfo_Id.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.Designer.cs">
@@ -417,6 +421,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201602122137175_Mig_MoreColMapping.resx">
       <DependentUpon>201602122137175_Mig_MoreColMapping.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201603212004059_Mig_BudgInfo_Id.resx">
+      <DependentUpon>201603212004059_Mig_BudgInfo_Id.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>
