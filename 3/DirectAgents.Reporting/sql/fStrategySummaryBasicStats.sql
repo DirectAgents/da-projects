@@ -33,6 +33,7 @@ BEGIN
 		, ISNULL(PlatformBudgetInfo.MgmtFeePct, ISNULL(BudgetInfo.MgmtFeePct, Campaign.MgmtFeePct)) AS MgmtFeePct
 		, ISNULL(PlatformBudgetInfo.MarginPct, ISNULL(BudgetInfo.MarginPct, Campaign.MarginPct)) AS MarginPct
 		, Account.Id AS AccountId
+		, Strategy.Id As StrategyId
 		, Account.PlatformId
 		FROM td.Campaign
 		INNER JOIN td.Account ON Account.CampaignId = Campaign.Id
@@ -79,6 +80,7 @@ BEGIN
 		INNER JOIN td.StrategySummary ON StrategySummary.StrategyId = Strategy.Id
 		INNER JOIN dtData
 		   ON (dtData.AccountId = Strategy.AccountId)
+		  AND (dtData.StrategyId = Strategy.Id)
 		  AND (dtData.Date = StrategySummary.Date)
 		LEFT OUTER JOIN td.Platform ON Platform.Id = dtData.PlatformId
 		WHERE (StrategySummary.Date BETWEEN @StartDate AND @EndDate)
