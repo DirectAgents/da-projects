@@ -194,5 +194,17 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             //var json = Json(stats);
             return json;
         }
+
+        public JsonResult Test()
+        {
+            var advId = 18;
+            var startDate = new DateTime(2016, 3, 1);
+            var endDate = new DateTime(2016, 3, 21);
+            var stats = tdRepo.DayOfWeekBasicStats(advId, startDate, endDate);
+            //var stats = tdRepo.DailySummaryBasicStats(advId, startDate, endDate);
+            var json = Json(stats, JsonRequestBehavior.AllowGet);
+            //var json = Json(stats);
+            return json;
+        }
     }
 }
