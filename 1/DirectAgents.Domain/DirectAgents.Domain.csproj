@@ -127,6 +127,7 @@
     <Compile Include="Entities\TD\Conv.cs" />
     <Compile Include="Entities\TD\DailySummary.cs" />
     <Compile Include="Entities\TD\ExtraItem.cs" />
+    <Compile Include="Entities\TD\FunctionEntities.cs" />
     <Compile Include="Entities\TD\PlatformAccount.cs" />
     <Compile Include="Entities\Variable.cs" />
     <Compile Include="Entities\WikiPartials\Campaign.cs" />

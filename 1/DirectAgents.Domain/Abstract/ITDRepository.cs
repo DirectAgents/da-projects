@@ -63,6 +63,10 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<Strategy> Strategies(int? acctId);
         IQueryable<TDad> TDads(int? acctId);
 
+        //TD Stats
+        IEnumerable<BasicStat> DayOfWeekBasicStats(int advId, DateTime startDate, DateTime endDate);
+        IEnumerable<BasicStat> DailySummaryBasicStats(int advId, DateTime startDate, DateTime endDate);
+
         TDStatsGauge GetStatsGauge(ExtAccount extAccount);
         TDStatsGauge GetStatsGauge(int? acctId = null);
         DailySummary DailySummary(DateTime date, int acctId);

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.SqlServer;
+using System.Data.SqlClient;
 using System.Linq;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.TD;
@@ -9,6 +11,44 @@ namespace DirectAgents.Domain.Concrete
 {
     public partial class TDRepository
     {
+        public IEnumerable<BasicStat> DayOfWeekBasicStats(int advId, DateTime startDate, DateTime endDate)
+        {
+            //var dailyStats = DailySummaryBasicStats(advId, startDate, endDate);
+            //var statGroups = dailyStats.GroupBy(s => SqlFunctions.DatePart("weekday", s.Date));
+            //var weeklyStats = statGroups.Select(g => new BasicStat
+            //{
+            //    Date = g.Select(s => s.Date).OrderBy(s => s).First(),
+            //    Impressions = g.Sum(s => s.Impressions),
+            //    Clicks = g.Sum(s => s.Clicks),
+            //    Conversions = g.Sum(s => s.Conversions),
+            //    MediaSpend = g.Sum(s => s.MediaSpend),
+            //    MgmtFee = g.Sum(s => s.MgmtFee)
+            //});
+            var sql = @"select DatePart(weekday, Date) as Day, sum(Impressions) as Impressions, sum(Clicks) as Clicks, sum(Conversions) as Conversions, sum(MediaSpend) as MediaSpend, sum(MgmtFee) as MgmtFee
+from td.fDailySummaryBasicStats(@p1, @p2, @p3)
+group by DatePart(weekday, Date)";
+            var weeklyStats = context.Database.SqlQuery<BasicStat>(
+                sql,
+                new SqlParameter("@p1", advId),
+                new SqlParameter("@p2", startDate),
+                new SqlParameter("@p3", endDate)
+                );
+            foreach (var stat in weeklyStats)
+            {
+                stat.ComputeCalculatedStats();
+                yield return stat;
+            }
+        }
+        public IEnumerable<BasicStat> DailySummaryBasicStats(int advId, DateTime startDate, DateTime endDate)
+        {
+            return context.Database.SqlQuery<BasicStat>(
+                "select * from td.fDailySummaryBasicStats(@p1, @p2, @p3)",
+                new SqlParameter("@p1", advId),
+                new SqlParameter("@p2", startDate),
+                new SqlParameter("@p3", endDate)
+                );
+        }
+
         public TDStatsGauge GetStatsGauge(ExtAccount extAccount)
         {
             if (extAccount != null)
