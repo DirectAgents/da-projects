@@ -2956,6 +2956,10 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\1\DirectAgents.Domain\DirectAgents.Domain.csproj">
+      <Project>{278911ab-cb92-4316-843e-4571cd0c3410}</Project>
+      <Name>DirectAgents.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\CakeExtracter\CakeExtracter\CakeExtracter.csproj">
       <Project>{3b6c5433-5392-4165-a7e4-4aa431a75bb3}</Project>
       <Name>CakeExtracter</Name>

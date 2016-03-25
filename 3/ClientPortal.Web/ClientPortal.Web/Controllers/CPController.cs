@@ -1,14 +1,12 @@
-﻿using ClientPortal.Data.Contexts;
+﻿using System;
+using System.IO;
+using System.Web.Mvc;
+using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.Entities.TD;
-using ClientPortal.Data.Entities.TD.DBM;
 using ClientPortal.Web.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using DirectAgents.Domain.Abstract;
+using DirectAgents.Domain.Concrete;
 using WebMatrix.WebData;
 
 namespace ClientPortal.Web.Controllers
@@ -16,7 +14,8 @@ namespace ClientPortal.Web.Controllers
     public class CPController : Controller
     {
         protected IClientPortalRepository cpRepo;
-        protected ITDRepository cptdRepo;
+        protected ClientPortal.Data.Contracts.ITDRepository cptdRepo;
+        protected DirectAgents.Domain.Abstract.ITDRepository datdRepo;
 
         // return a redirect if needed to logout; otherwise return null
         protected ActionResult CheckLogout(UserInfo userInfo)
@@ -143,6 +142,7 @@ namespace ClientPortal.Web.Controllers
         {
             if (cpRepo != null) cpRepo.Dispose();
             if (cptdRepo != null) cptdRepo.Dispose();
+            if (datdRepo != null) datdRepo.Dispose();
             base.Dispose(disposing);
         }
     }
