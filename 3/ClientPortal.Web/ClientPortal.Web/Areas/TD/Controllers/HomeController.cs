@@ -10,7 +10,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
     {
         public HomeController(ITDRepository tdRepository, IClientPortalRepository cpRepository)
         {
-            tdRepo = tdRepository;
+            cptdRepo = tdRepository;
             cpRepo = cpRepository;
         }
 

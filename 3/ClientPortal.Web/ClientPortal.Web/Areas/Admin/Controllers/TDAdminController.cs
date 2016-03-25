@@ -18,19 +18,19 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
     {
         public TDAdminController(ITDRepository tdRepository, IClientPortalRepository cpRepository)
         {
-            tdRepo = tdRepository;
+            cptdRepo = tdRepository;
             cpRepo = cpRepository;
         }
 
         public ActionResult CreateAccount(int ioID)
         {
-            tdRepo.CreateAccountForInsertionOrder(ioID);
+            cptdRepo.CreateAccountForInsertionOrder(ioID);
             return RedirectToAction("InsertionOrders");
         }
 
         public ActionResult TradingDeskAccounts()
         {
-            var tdAccounts = tdRepo.TradingDeskAccounts().ToList();
+            var tdAccounts = cptdRepo.TradingDeskAccounts().ToList();
             var userProfiles = cpRepo.UserProfiles().Where(up => up.TradingDeskAccountId.HasValue).ToList();
             foreach (var tdAccount in tdAccounts)
             {
@@ -44,12 +44,12 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult NewAccount()
         {
-            int maxId = tdRepo.MaxTradingDeskAccountId();
+            int maxId = cptdRepo.MaxTradingDeskAccountId();
             var tda = new TradingDeskAccount
             {
                 TradingDeskAccountId = maxId + 1
             };
-            tdRepo.CreateTradingDeskAccount(tda);
+            cptdRepo.CreateTradingDeskAccount(tda);
 
             return RedirectToAction("TradingDeskAccounts");
         }
@@ -57,7 +57,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult EditAccount(int tdaId)
         {
-            var tdAccount = tdRepo.GetTradingDeskAccount(tdaId);
+            var tdAccount = cptdRepo.GetTradingDeskAccount(tdaId);
             if (tdAccount == null)
                 return HttpNotFound();
             return Do_EditAccount(tdAccount);
@@ -91,7 +91,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             {
                 if (string.IsNullOrWhiteSpace(tdAccount.FixedMetricName))
                     tdAccount.FixedMetricValue = null;
-                tdRepo.SaveTradingDeskAccount(tdAccount);
+                cptdRepo.SaveTradingDeskAccount(tdAccount);
                 return RedirectToAction("TradingDeskAccounts");
             }
             return Do_EditAccount(tdAccount);
@@ -99,7 +99,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public ActionResult CreateUserProfile(int tdaId)
         {
-            var tdAccount = tdRepo.GetTradingDeskAccount(tdaId);
+            var tdAccount = cptdRepo.GetTradingDeskAccount(tdaId);
             if (tdAccount == null)
                 return HttpNotFound();
             return View(tdAccount);
@@ -109,7 +109,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult CreateUserProfile(int tdaId, string username, string password) //, bool sendemail, string email)
         {
-            var tdAccount = tdRepo.GetTradingDeskAccount(tdaId);
+            var tdAccount = cptdRepo.GetTradingDeskAccount(tdaId);
             if (tdAccount != null)
             {
                 if (WebSecurity.UserExists(username))
@@ -131,7 +131,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public ActionResult InsertionOrders()
         {
-            var insertionOrders = tdRepo.InsertionOrders();
+            var insertionOrders = cptdRepo.InsertionOrders();
             //var insertionOrders = tdRepo.InsertionOrders().ToList();
             //var userProfiles = cpRepo.UserProfiles().Where(up => up.InsertionOrderId.HasValue).ToList();
             //foreach (var io in insertionOrders)
@@ -153,14 +153,14 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult CreateInsertionOrder(InsertionOrder io)
         {
-            var existingIO = tdRepo.GetInsertionOrder(io.InsertionOrderID);
+            var existingIO = cptdRepo.GetInsertionOrder(io.InsertionOrderID);
             if (existingIO != null)
             {
                 ModelState.AddModelError("", "Insertion Order (with that Id) already added to TradingDeskAccount " + existingIO.TradingDeskAccountId);
             }
             if (ModelState.IsValid)
             {
-                tdRepo.SaveInsertionOrder(io);
+                cptdRepo.SaveInsertionOrder(io);
                 return RedirectToAction("EditAccount", new { tdaId = io.TradingDeskAccountId });
             }
             return View(io);
@@ -169,7 +169,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult EditInsertionOrder(int id)
         {
-            var io = tdRepo.GetInsertionOrder(id);
+            var io = cptdRepo.GetInsertionOrder(id);
             if (io == null)
                 return HttpNotFound();
             return View(io);
@@ -179,7 +179,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                tdRepo.SaveInsertionOrder(io);
+                cptdRepo.SaveInsertionOrder(io);
                 return RedirectToAction("EditAccount", new { tdaId = io.TradingDeskAccountId });
             }
             return View(io);
@@ -187,27 +187,27 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public ActionResult AdRollProfiles()
         {
-            var arps = tdRepo.AdRollProfiles();
+            var arps = cptdRepo.AdRollProfiles();
             return View(arps);
         }
 
         public ActionResult CreateNextAdRollProfile(int tdaId)
         {
-            int maxId = tdRepo.MaxAdRollProfileId();
+            int maxId = cptdRepo.MaxAdRollProfileId();
             var arProfile = new AdRollProfile
             {
                 Id = maxId + 1,
                 TradingDeskAccountId = tdaId,
                 Name = "New Profile"
             };
-            tdRepo.SaveAdRollProfile(arProfile);
+            cptdRepo.SaveAdRollProfile(arProfile);
             return RedirectToAction("EditAccount", new { tdaId = tdaId });
         }
 
         [HttpGet]
         public ActionResult EditAdRollProfile(int id)
         {
-            var arp = tdRepo.GetAdRollProfile(id);
+            var arp = cptdRepo.GetAdRollProfile(id);
             if (arp == null)
                 return HttpNotFound();
             return View(arp);
@@ -217,7 +217,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                tdRepo.SaveAdRollProfile(arProfile);
+                cptdRepo.SaveAdRollProfile(arProfile);
                 return RedirectToAction("EditAccount", new { tdaId = arProfile.TradingDeskAccountId });
             }
             return View(arProfile);
@@ -228,7 +228,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Upload()
         {
-            var adrollProfiles = tdRepo.AdRollProfiles();
+            var adrollProfiles = cptdRepo.AdRollProfiles();
             return View(adrollProfiles);
         }
         [HttpPost]
@@ -244,7 +244,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public ActionResult StatsRollup(int profileId)
         {
-            var statsRollup = tdRepo.AdRollStatsRollup(profileId);
+            var statsRollup = cptdRepo.AdRollStatsRollup(profileId);
             return View(statsRollup);
         }
     }

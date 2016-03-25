@@ -16,7 +16,7 @@ namespace ClientPortal.Web.Controllers
     public class CPController : Controller
     {
         protected IClientPortalRepository cpRepo;
-        protected ITDRepository tdRepo;
+        protected ITDRepository cptdRepo;
 
         // return a redirect if needed to logout; otherwise return null
         protected ActionResult CheckLogout(UserInfo userInfo)
@@ -65,8 +65,8 @@ namespace ClientPortal.Web.Controllers
             if (userProfile != null)
             {
                 advertiser = GetAdvertiser(userProfile.CakeAdvertiserId);
-                if (userProfile.TradingDeskAccountId.HasValue && tdRepo != null)
-                    tradingDeskAccount = tdRepo.GetTradingDeskAccount(userProfile.TradingDeskAccountId.Value);
+                if (userProfile.TradingDeskAccountId.HasValue && cptdRepo != null)
+                    tradingDeskAccount = cptdRepo.GetTradingDeskAccount(userProfile.TradingDeskAccountId.Value);
             }
             var userInfo = new UserInfo(userProfile, advertiser, tradingDeskAccount);
             return userInfo;
@@ -142,7 +142,7 @@ namespace ClientPortal.Web.Controllers
         protected override void Dispose(bool disposing)
         {
             if (cpRepo != null) cpRepo.Dispose();
-            if (tdRepo != null) tdRepo.Dispose();
+            if (cptdRepo != null) cptdRepo.Dispose();
             base.Dispose(disposing);
         }
     }
