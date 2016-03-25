@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -16,9 +17,9 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
     [Authorize(Users = "admin")]
     public class TDAdminController : CPController
     {
-        public TDAdminController(ITDRepository tdRepository, IClientPortalRepository cpRepository)
+        public TDAdminController(ITDRepository cptdRepository, IClientPortalRepository cpRepository)
         {
-            cptdRepo = tdRepository;
+            cptdRepo = cptdRepository;
             cpRepo = cpRepository;
         }
 
@@ -112,11 +113,16 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             var tdAccount = cptdRepo.GetTradingDeskAccount(tdaId);
             if (tdAccount != null)
             {
-                if (WebSecurity.UserExists(username))
-                {
+                if (String.IsNullOrWhiteSpace(username))
+                    ModelState.AddModelError("", "Username must be supplied.");
+                else if (WebSecurity.UserExists(username))
                     ModelState.AddModelError("", string.Format("The username '{0}' already exists.", username));
+                if (String.IsNullOrWhiteSpace(password))
+                    ModelState.AddModelError("", "Password must be supplied.");
+
+                if (!ModelState.IsValid)
                     return View(tdAccount);
-                }
+
                 WebSecurity.CreateUserAndAccount(
                     username, password,
                     new { TradingDeskAccountId = tdAccount.TradingDeskAccountId });

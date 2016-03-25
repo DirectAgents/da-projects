@@ -18,9 +18,9 @@ namespace ClientPortal.Web.Areas.TD.Controllers
     [Authorize]
     public class StatsController : CPController
     {
-        public StatsController(ITDRepository tdRepository, IClientPortalRepository cpRepository)
+        public StatsController(ITDRepository cptdRepository, IClientPortalRepository cpRepository)
         {
-            cptdRepo = tdRepository;
+            cptdRepo = cptdRepository;
             cpRepo = cpRepository;
         }
 

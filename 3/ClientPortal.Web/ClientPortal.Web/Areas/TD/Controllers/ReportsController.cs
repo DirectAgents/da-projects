@@ -12,9 +12,9 @@ namespace ClientPortal.Web.Areas.TD.Controllers
     [Authorize]
     public class ReportsController : CPController
     {
-        public ReportsController(ITDRepository tdRepository, IClientPortalRepository cpRepository)
+        public ReportsController(ITDRepository cptdRepository, IClientPortalRepository cpRepository)
         {
-            cptdRepo = tdRepository;
+            cptdRepo = cptdRepository;
             cpRepo = cpRepository;
         }
 

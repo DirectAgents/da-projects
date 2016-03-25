@@ -1,2 +1,34 @@
-﻿
-testing 1 2 3
+﻿@model IEnumerable<ClientPortal.Web.Areas.Admin.Models.AdvertiserVM>
+
+@{
+    //ViewBag.Title = "";
+    var ajaxOptions = new AjaxOptions()
+    {
+        UpdateTargetId = "progAdvertisersTab"
+    };
+}
+
+@Ajax.ActionLink("Refresh", "Advertisers", ajaxOptions)
+
+<table border="1">
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Login</th>
+    </tr>
+@foreach (var advVM in Model)
+{
+    <tr>
+        <td style="text-align:right">@advVM.TDAdvertiser.Id</td>
+        <td>@advVM.TDAdvertiser.Name</td>
+        <td>
+            @if (advVM.UserProfiles.Count() > 0) {
+                @advVM.Login
+            } else {
+                @Ajax.ActionLink("create", "CreateUserProfile", new { advId = advVM.TDAdvertiser.Id }, ajaxOptions)
+            }
+        </td>
+    </tr>
+}
+</table>
+<br />

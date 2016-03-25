@@ -7,6 +7,7 @@ using ClientPortal.Data.Entities.TD;
 using ClientPortal.Web.Models;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Concrete;
+using DirectAgents.Domain.Entities.TD;
 using WebMatrix.WebData;
 
 namespace ClientPortal.Web.Controllers
@@ -59,15 +60,18 @@ namespace ClientPortal.Web.Controllers
         {
             var userProfile = GetUserProfile();
 
-            Advertiser advertiser = null;
+            ClientPortal.Data.Contexts.Advertiser cpAdvertiser = null;
             TradingDeskAccount tradingDeskAccount = null;
+            DirectAgents.Domain.Entities.TD.Advertiser datdAdvertiser = null;
             if (userProfile != null)
             {
-                advertiser = GetAdvertiser(userProfile.CakeAdvertiserId);
+                cpAdvertiser = GetAdvertiser(userProfile.CakeAdvertiserId);
                 if (userProfile.TradingDeskAccountId.HasValue && cptdRepo != null)
                     tradingDeskAccount = cptdRepo.GetTradingDeskAccount(userProfile.TradingDeskAccountId.Value);
+                if (userProfile.TDAdvertiserId.HasValue && datdRepo != null)
+                    datdAdvertiser = datdRepo.Advertiser(userProfile.TDAdvertiserId.Value);
             }
-            var userInfo = new UserInfo(userProfile, advertiser, tradingDeskAccount);
+            var userInfo = new UserInfo(userProfile, cpAdvertiser, tradingDeskAccount: tradingDeskAccount, datdAdvertiser: datdAdvertiser);
             return userInfo;
         }
 
@@ -94,12 +98,12 @@ namespace ClientPortal.Web.Controllers
             return advertiserId;
         }
 
-        public Advertiser GetAdvertiser()
+        public ClientPortal.Data.Contexts.Advertiser GetAdvertiser()
         {
             int? advId = GetAdvertiserId();
             return GetAdvertiser(advId);
         }
-        private Advertiser GetAdvertiser(int? advId)
+        private ClientPortal.Data.Contexts.Advertiser GetAdvertiser(int? advId)
         {
             if (advId.HasValue)
                 return cpRepo.GetAdvertiser(advId.Value);

@@ -240,6 +240,7 @@
     </Compile>
     <Compile Include="Areas\Admin\Helpers.cs" />
     <Compile Include="Areas\Admin\Models\AdminModel.cs" />
+    <Compile Include="Areas\Admin\Models\AdvertiserVM.cs" />
     <Compile Include="Areas\Admin\Models\CampaignDropVM.cs" />
     <Compile Include="Areas\Admin\Models\CampaignDropWizardVM.cs" />
     <Compile Include="Areas\Admin\Models\ContactVM.cs" />
@@ -1128,6 +1129,7 @@
     <Content Include="Content\kendo\2015.1.408\images\kendoui.woff" />
     <Content Include="Areas\TD\Views\Reports\Analysis.cshtml" />
     <Content Include="Areas\Admin\Views\ProgAdmin\Advertisers.cshtml" />
+    <Content Include="Areas\Admin\Views\ProgAdmin\CreateUserProfile.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />
