@@ -54,9 +54,13 @@
             {
                 <dd class="active"><a href="#searchTab" id="vertNav_Search">Search</a></dd>
             }
+            @if (Model.Programmatic)
+            {
+                <dd class="@(Model.Search ? "" : "active")"><a href="#progTab" id="vertNav_Prog">Programmatic</a></dd>
+            }
             @if (Model.TradingDesk)
             {
-                <dd class="@(Model.Search ? "" : "active")"><a href="#tdTab" id="vertNav_TD">Trading Desk</a></dd>
+                <dd class="@(Model.Search || Model.Programmatic ? "" : "active")"><a href="#tdTab" id="vertNav_TD">Trading Desk (old)</a></dd>
             }
         </dl>
         <!-- /VTabs -->
@@ -72,7 +76,7 @@
         @*<!--+-----------+
               | Home VTab |
               +-----------+-->*@
-        <li id="vertical1Tab" class="content @(Model.Search || Model.TradingDesk ? "" : "active")">
+        <li id="vertical1Tab" class="content @(Model.Search || Model.Programmatic || Model.TradingDesk ? "" : "active")">
             <div class="portaltabs-h">
 
                 @*<!--+----------------+
@@ -144,9 +148,28 @@
         </li>
     }
 
+    @if (Model.Programmatic)
+    {
+        <li id="progTab" class="content @(Model.Search ? "" : "active")">
+            <div class="portaltabs-h">
+                @*<!--+-------------+
+                      | Prog HTabs  |
+                      +-------------+-->*@
+                <dl class="tabs" data-tab>
+                    <dd class="active"><a href="#progAdvertisersTab" id="navProgAdvertisers">Advertisers</a></dd>
+                </dl>
+                @*<!--+---------------------+
+                      | Prog HTabs Content  |
+                      +---------------------+-->*@
+                <div class="tabs-content">
+                    <div id="progAdvertisersTab" class="content active"></div>
+                </div>
+            </div>
+        </li>
+    }
     @if (Model.TradingDesk)
     {
-        <li id="tdTab" class="content @(Model.Search ? "" : "active")">
+        <li id="tdTab" class="content @(Model.Search || Model.Programmatic ? "" : "active")">
             <div class="portaltabs-h">
                 @*<!--+-------------+
                       | TD HTabs    |
@@ -214,6 +237,10 @@
                 <text>LoadSearchProfiles();</text>
                 <text>LoadSearchReports();</text>
             }
+            else if (Model.Programmatic)
+            {
+                <text>LoadProgAdvertisers();</text>
+            }
             else if (Model.TradingDesk)
             {
                 <text>LoadTDAccounts();</text>
@@ -255,6 +282,15 @@
             });
         }
 
+        function LoadProgAdvertisers() {
+            $("#progAdvertisersTab").html("Loading...");
+            $.ajax({
+                url: '@Url.Action("Advertisers", "ProgAdmin")',
+                cache: false
+            }).done(function (html) {
+                $("#progAdvertisersTab").html(html);
+            });
+        }
         function LoadTDAccounts() {
             $("#tdAccountsTab").html("Loading...");
             $.ajax({
@@ -266,17 +302,25 @@
         }
 
         function SetupTabs() {
-        @if (Model.Search || Model.TradingDesk)
+        @if (Model.Search || Model.Programmatic || Model.TradingDesk)
         {<text>
-            // Home
+            // Click Home ("Admin")
             $("#vertNav_Home").one("click", function () {
                 LoadAdvertisers();
             });
         </text>}
 
-        @if (Model.Search && Model.TradingDesk)
+        @if (Model.Search && Model.Programmatic)
         {<text>
-            // Trading Desk
+            // Click Programmatic
+            $("#vertNav_Prog").one("click", function () {
+                LoadProgAdvertisers();
+            });
+        </text>}
+
+        @if ((Model.Search || Model.Programmatic) && Model.TradingDesk)
+        {<text>
+            // Click Trading Desk
             $("#vertNav_TD").one("click", function () {
                 LoadTDAccounts();
             });
@@ -284,7 +328,7 @@
 
         @if (Model.TradingDesk)
         {<text>
-            // TD Upload
+            // Click TD Upload
             $("#navTDUpload").one("click", function () {
                 $.ajax({
                     url: '@Url.Action("Upload", "TDAdmin")',

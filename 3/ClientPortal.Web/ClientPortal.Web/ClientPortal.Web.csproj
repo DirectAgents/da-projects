@@ -230,6 +230,7 @@
     <Compile Include="Areas\Admin\Controllers\OffersController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Areas\Admin\Controllers\ProgAdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\SearchAdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\SimpleReportsController.cs">
       <SubType>Code</SubType>
@@ -1126,6 +1127,7 @@
     <Content Include="Content\kendo\2015.1.408\images\kendoui.ttf" />
     <Content Include="Content\kendo\2015.1.408\images\kendoui.woff" />
     <Content Include="Areas\TD\Views\Reports\Analysis.cshtml" />
+    <Content Include="Areas\Admin\Views\ProgAdmin\Advertisers.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />
