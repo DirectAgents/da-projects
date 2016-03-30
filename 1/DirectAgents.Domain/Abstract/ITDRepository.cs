@@ -66,6 +66,8 @@ namespace DirectAgents.Domain.Abstract
         //TD Stats
         IEnumerable<BasicStat> DayOfWeekBasicStats(int advId, DateTime startDate, DateTime endDate);
         IEnumerable<BasicStat> DailySummaryBasicStats(int advId, DateTime startDate, DateTime endDate);
+        BasicStat MTDBasicStat(int advId, DateTime endDate);
+        BasicStat DateRangeBasicStat(int advId, DateTime startDate, DateTime endDate);
 
         TDStatsGauge GetStatsGauge(ExtAccount extAccount);
         TDStatsGauge GetStatsGauge(int? acctId = null);

@@ -65,5 +65,19 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             }
             return RedirectToAction("Advertisers");
         }
+
+        public ActionResult Test()
+        {
+            var advId = 2;
+            var startDate = new DateTime(2015, 11, 1);
+            var endDate = new DateTime(2016, 2, 29);
+
+            var stats = datdRepo.DailySummaryBasicStats(advId, startDate, endDate);
+            //var stats = datdRepo.DayOfWeekBasicStats(advId, startDate, endDate);
+            //var stat = datdRepo.MTDBasicStat(advId, endDate);
+
+            var json = Json(stats, JsonRequestBehavior.AllowGet);
+            //var json = Json(stats);
+            return json;        }
     }
 }

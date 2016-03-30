@@ -13,41 +13,91 @@ namespace DirectAgents.Domain.Concrete
     {
         public IEnumerable<BasicStat> DayOfWeekBasicStats(int advId, DateTime startDate, DateTime endDate)
         {
-            //var dailyStats = DailySummaryBasicStats(advId, startDate, endDate);
-            //var statGroups = dailyStats.GroupBy(s => SqlFunctions.DatePart("weekday", s.Date));
-            //var weeklyStats = statGroups.Select(g => new BasicStat
-            //{
-            //    Date = g.Select(s => s.Date).OrderBy(s => s).First(),
-            //    Impressions = g.Sum(s => s.Impressions),
-            //    Clicks = g.Sum(s => s.Clicks),
-            //    Conversions = g.Sum(s => s.Conversions),
-            //    MediaSpend = g.Sum(s => s.MediaSpend),
-            //    MgmtFee = g.Sum(s => s.MgmtFee)
-            //});
             var sql = @"select DatePart(weekday, Date) as Day, sum(Impressions) as Impressions, sum(Clicks) as Clicks, sum(Conversions) as Conversions, sum(MediaSpend) as MediaSpend, sum(MgmtFee) as MgmtFee
 from td.fDailySummaryBasicStats(@p1, @p2, @p3)
-group by DatePart(weekday, Date)";
-            var weeklyStats = context.Database.SqlQuery<BasicStat>(
-                sql,
-                new SqlParameter("@p1", advId),
-                new SqlParameter("@p2", startDate),
-                new SqlParameter("@p3", endDate)
-                );
-            foreach (var stat in weeklyStats)
+group by DatePart(weekday, Date) order by Day";
+            return DailySummaryBasicStatsWithCompute(advId, startDate, endDate, sql);
+        }
+
+        public IEnumerable<BasicStat> DailySummaryBasicStats(int advId, DateTime startDate, DateTime endDate)
+        {
+            return DailySummaryBasicStatsWithCompute(advId, startDate, endDate, null);
+        }
+
+        private IEnumerable<BasicStat> DailySummaryBasicStatsWithCompute(int advId, DateTime startDate, DateTime endDate, string sql)
+        {
+            if (sql == null) // Default query - one row per day
+                sql = @"select Date, sum(Impressions) as Impressions, sum(Clicks) as Clicks, sum(Conversions) as Conversions, sum(MediaSpend) as MediaSpend, sum(MgmtFee) as MgmtFee
+from td.fDailySummaryBasicStats(@p1, @p2, @p3)
+group by Date order by Date";
+            var stats = DailySummaryBasicStatsRaw(advId, startDate, endDate, sql);
+            foreach (var stat in stats)
             {
                 stat.ComputeCalculatedStats();
                 yield return stat;
             }
         }
-        public IEnumerable<BasicStat> DailySummaryBasicStats(int advId, DateTime startDate, DateTime endDate)
+
+        // Return value is unexecuted query (?)
+        private IEnumerable<BasicStat> DailySummaryBasicStatsRaw(int advId, DateTime startDate, DateTime endDate, string sql = null)
         {
+            if (sql == null)
+                sql = "select * from td.fDailySummaryBasicStats(@p1, @p2, @p3)";
             return context.Database.SqlQuery<BasicStat>(
-                "select * from td.fDailySummaryBasicStats(@p1, @p2, @p3)",
+                sql,
                 new SqlParameter("@p1", advId),
                 new SqlParameter("@p2", startDate),
                 new SqlParameter("@p3", endDate)
                 );
+            //Note: With default sql, calculated stats are computed by SQL Server
+            //      Can return multiple rows per day... (one per campaign/account)
         }
+
+        public BasicStat MTDBasicStat(int advId, DateTime endDate)
+        {
+            var startDate = new DateTime(endDate.Year, endDate.Month, 1);
+            return DateRangeBasicStat(advId, startDate, endDate);
+        }
+
+        //NOTE: as of now, basicstat.Budget will only be valid if startDate is the 1st and endDate is within the same month
+        public BasicStat DateRangeBasicStat(int advId, DateTime startDate, DateTime endDate)
+        {
+            var stats = DailySummaryBasicStatsRaw(advId, startDate, endDate).ToList();
+            if (stats.Count() == 0)
+                return new BasicStat();
+
+            var stat = new BasicStat
+            {
+                Impressions = stats.Sum(s => s.Impressions),
+                Clicks = stats.Sum(s => s.Clicks),
+                Conversions = stats.Sum(s => s.Conversions),
+                MediaSpend = stats.Sum(s => s.MediaSpend),
+                MgmtFee = stats.Sum(s => s.MgmtFee)
+            };
+            if (startDate.Day == 1 && startDate.Month == endDate.Month && startDate.Year == endDate.Year)
+                stat.Budget = stats.First().Budget;
+            stat.ComputeCalculatedStats();
+            return stat;
+        }
+
+////Doing the summing in SQL Server... only issue is with Budget which shouldn't be summed (would have to group by Budget or something)
+//        public BasicStat DateRangeBasicStatX(int advId, DateTime startDate, DateTime endDate)
+//        {
+//            var sql = @"select sum(Impressions) as Impressions, sum(Clicks) as Clicks, sum(Conversions) as Conversions, sum(MediaSpend) as MediaSpend, sum(MgmtFee) as MgmtFee
+//from td.fDailySummaryBasicStats(@p1, @p2, @p3)";
+//            var stats = context.Database.SqlQuery<BasicStat>(
+//                sql,
+//                new SqlParameter("@p1", advId),
+//                new SqlParameter("@p2", startDate),
+//                new SqlParameter("@p3", endDate)
+//                ).ToList();
+//            if (stats.Count() == 0)
+//                return new BasicStat();
+//
+//            var stat = stats.First();
+//            stat.ComputeCalculatedStats();
+//            return stat;
+//        }
 
         public TDStatsGauge GetStatsGauge(ExtAccount extAccount)
         {
