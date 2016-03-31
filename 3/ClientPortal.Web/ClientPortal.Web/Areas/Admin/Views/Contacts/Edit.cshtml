@@ -1,12 +1,12 @@
 ﻿@model ClientPortal.Data.Contexts.Contact
-
 @{
-    ViewBag.Title = "Edit";
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("contactsTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("contactsTab", httpMethod: "Post");
 }
 
 <h4>Edit Contact</h4>
 
-@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "contactsTab" }))
+@using (Ajax.BeginForm(ajaxOpts_Post))
 {
     @Html.ValidationSummary(true)
 
@@ -58,9 +58,7 @@
 }
 
 <div>
-    @Ajax.ActionLink("Back to List", "Index", new AjaxOptions() {
-        UpdateTargetId = "contactsTab", HttpMethod = "Get"
-    })
+    @Ajax.ActionLink("Back to List", "Index", ajaxOptions)
 </div>
 
 @section Scripts {

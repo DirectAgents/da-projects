@@ -3,10 +3,9 @@
     var ajaxOptions = RazorHelpers.GetAjaxOptions("advertisersTab");
 }
 
-<p>
-    @Ajax.ActionLink("Create New Advertiser", "Create", ajaxOptions) |
-    @Ajax.ActionLink("Refresh", "Index", ajaxOptions)
-</p>
+@Ajax.ActionLink("Create New Advertiser", "Create", ajaxOptions) |
+@Ajax.ActionLink("Refresh", "Index", ajaxOptions)
+
 <table>
     <tr>
         <th></th>

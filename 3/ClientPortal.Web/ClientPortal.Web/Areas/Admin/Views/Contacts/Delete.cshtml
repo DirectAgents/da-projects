@@ -1,7 +1,7 @@
 ﻿@model ClientPortal.Data.Contexts.Contact
-
 @{
-    ViewBag.Title = "Delete";
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("contactsTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("contactsTab", httpMethod: "Post");
 }
 
 <h4>Delete</h4>
@@ -45,12 +45,10 @@
         @Html.DisplayFor(model => model.Email)
     </div>
 </fieldset>
-@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "contactsTab" }))
+@using (Ajax.BeginForm(ajaxOpts_Post))
 {
     <p>
         <input type="submit" value="Delete" /> |
-        @Ajax.ActionLink("Back to List", "Index", new AjaxOptions() {
-            UpdateTargetId = "contactsTab", HttpMethod = "Get"
-        })
+        @Ajax.ActionLink("Back to List", "Index", ajaxOptions)
     </p>
 }
