@@ -238,6 +238,7 @@
     <Compile Include="Areas\Admin\Controllers\TDAdminController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Areas\Admin\Controllers\UsersController.cs" />
     <Compile Include="Areas\Admin\Helpers.cs" />
     <Compile Include="Areas\Admin\Models\AdminModel.cs" />
     <Compile Include="Areas\Admin\Models\AdvertiserVM.cs" />
@@ -247,6 +248,7 @@
     <Compile Include="Areas\Admin\Models\CPMReportVM.cs" />
     <Compile Include="Areas\Admin\Models\CPMReportWizardVM.cs" />
     <Compile Include="Areas\Admin\Models\CreativeStatVM.cs" />
+    <Compile Include="Areas\Admin\Models\UserVM.cs" />
     <Compile Include="Areas\TD\Controllers\StatsController.cs" />
     <Compile Include="Areas\TD\Controllers\HomeController.cs" />
     <Compile Include="Areas\TD\Controllers\ReportsController.cs" />
@@ -1130,6 +1132,7 @@
     <Content Include="Areas\TD\Views\Reports\Analysis.cshtml" />
     <Content Include="Areas\Admin\Views\ProgAdmin\Advertisers.cshtml" />
     <Content Include="Areas\Admin\Views\ProgAdmin\CreateUserProfile.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\Index.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

@@ -48,7 +48,7 @@
               | Vertical Tabs |
               +---------------+-->*@
         <dl class="vertical tabs" data-tab>
-            <dd class="@(Model.Search || Model.TradingDesk ? "" : "active")"><a href="#vertical1Tab" id="vertNav_Home">Admin</a></dd>
+            <dd class="@(Model.Search || Model.Programmatic || Model.TradingDesk ? "" : "active")"><a href="#vertical1Tab" id="vertNav_Home">Admin</a></dd>
             <dd><a href="#cpmTab" id="vertNav_CPM">CPM Reports</a></dd>
             @if (Model.Search)
             {
@@ -83,7 +83,8 @@
                       | Home HTabs     |
                       +----------------+-->*@
                 <dl class="tabs" data-tab>
-                    <dd class="active"><a href="#advertisersTab" id="navAdvertisers">Advertisers</a></dd>
+                    <dd class="active"><a href="#usersTab" id="navUsers">Users</a></dd>
+                    <dd><a href="#advertisersTab" id="navAdvertisers">CakeAdvertisers</a></dd>
                     <dd><a href="#contactsTab" id="navContacts">Contacts</a></dd>
                 </dl>
                 <!-- /Home HTabs  -->
@@ -92,7 +93,8 @@
                       | Home HTabs Content     |
                       +------------------------+-->*@
                 <div class="tabs-content">
-                    <div id="advertisersTab" class="content active"></div>
+                    <div id="usersTab" class="content active"></div>
+                    <div id="advertisersTab" class="content"></div>
                     <div id="contactsTab" class="content"></div>
                 </div>
                 <!-- /Home Content  -->
@@ -202,7 +204,7 @@
     <div class="large-12 columns">
         <div class="row">
             <div class="large-6 columns">
-                <p>&copy; 2015 Direct Agents</p>
+                <p>&copy; 2016 Direct Agents</p>
             </div>
             <div class="large-6 columns">
             </div>
@@ -247,18 +249,18 @@
             }
             else
             {
-                <text>LoadAdvertisers();</text>
+                <text>LoadUsers();</text>
             }
             SetupTabs();
         });
 
-        function LoadAdvertisers() {
-            $("#advertisersTab").html("Loading...");
+        function LoadUsers() {
+            $("#usersTab").html("Loading...");
             $.ajax({
-                url: '@Url.Action("Index", "Advertisers")',
+                url: '@Url.Action("Index", "Users")',
                 cache: false
             }).done(function (html) {
-                $("#advertisersTab").html(html);
+                $("#usersTab").html(html);
             });
         }
 
@@ -306,7 +308,7 @@
         {<text>
             // Click Home ("Admin")
             $("#vertNav_Home").one("click", function () {
-                LoadAdvertisers();
+                LoadUsers();
             });
         </text>}
 
@@ -339,8 +341,20 @@
             });
         </text>}
 
+            // Advertisers
+            $("#navAdvertisers").one("click", function () {
+                $("#advertisersTab").html("Loading...");
+                $.ajax({
+                    url: '@Url.Action("Index", "Advertisers")',
+                    cache: false
+                }).done(function (html) {
+                    $("#advertisersTab").html(html);
+                });
+            });
+
             // Contacts
             $("#navContacts").one("click", function () {
+                $("#contactsTab").html("Loading...");
                 $.ajax({
                     url: '@Url.Action("Index", "Contacts")',
                     cache: false

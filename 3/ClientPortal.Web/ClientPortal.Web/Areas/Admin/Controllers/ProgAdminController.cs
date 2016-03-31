@@ -70,13 +70,14 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         {
             var advId = 2;
             var startDate = new DateTime(2015, 11, 1);
-            var endDate = new DateTime(2016, 2, 29);
+            var endDate = new DateTime(2016, 3, 31);
 
-            var stats = datdRepo.DailySummaryBasicStats(advId, startDate, endDate);
+            //var stats = datdRepo.DailySummaryBasicStats(advId, startDate, endDate);
             //var stats = datdRepo.DayOfWeekBasicStats(advId, startDate, endDate);
-            //var stat = datdRepo.MTDBasicStat(advId, endDate);
+            var stat = datdRepo.MTDBasicStat(advId, endDate);
+            //var stat = datdRepo.DateRangeBasicStat(advId, startDate, endDate);
 
-            var json = Json(stats, JsonRequestBehavior.AllowGet);
+            var json = Json(stat, JsonRequestBehavior.AllowGet);
             //var json = Json(stats);
             return json;        }
     }
