@@ -1,7 +1,7 @@
 ﻿@model ClientPortal.Data.Contexts.Advertiser
-
 @{
-    ViewBag.Title = "Edit Logo";
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("advertisersTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("advertisersTab", httpMethod: "Post");
 }
 
 <h4>Edit Logo</h4>
@@ -12,15 +12,13 @@
     <img src="@Url.Action("Logo", new { id = Model.AdvertiserId })" />
 }
 
-@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "advertisersTab" }))
+@using (Ajax.BeginForm(ajaxOpts_Post))
 {
     <input id="logoUpload" name="logo" type="file" />
 }
 
 <div>
-    @Ajax.ActionLink("Back to List", "Index", new AjaxOptions() {
-        UpdateTargetId = "advertisersTab", HttpMethod = "Get"
-    })
+    @Ajax.ActionLink("Back to List", "Index", ajaxOptions)
 </div>
 
 <script>
@@ -34,6 +32,7 @@
                 e.data = { id: @Model.AdvertiserId };
             },
             localization: {
+                select: "Select file...",
                 uploadSelectedFiles: "Upload"
             },
             multiple: false,

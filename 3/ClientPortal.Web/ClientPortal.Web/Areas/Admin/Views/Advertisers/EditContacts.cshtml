@@ -1,12 +1,12 @@
 ﻿@model ClientPortal.Data.Contexts.Advertiser
-
 @{
-    ViewBag.Title = "Edit Contacts";
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("advertisersTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("advertisersTab", httpMethod: "Post");
 }
 
 <h4>Edit Advertiser Contacts</h4>
 
-@using (Ajax.BeginForm("EditContacts", null, new AjaxOptions { UpdateTargetId = "advertisersTab" }, new { onsubmit = "SetContactsHidden()" }))
+@using (Ajax.BeginForm("EditContacts", null, ajaxOpts_Post, new { onsubmit = "SetContactsHidden()" }))
 {
     <input type="hidden" id="contactids" name="contactids" />
     <fieldset>
@@ -34,9 +34,7 @@
 }
 
 <div>
-    @Ajax.ActionLink("Back to List", "Index", new AjaxOptions() {
-        UpdateTargetId = "advertisersTab", HttpMethod = "Get"
-    })
+    @Ajax.ActionLink("Back to List", "Index", ajaxOptions)
 </div>
 
 <script>

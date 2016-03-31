@@ -1,12 +1,12 @@
 ﻿@model ClientPortal.Data.Contexts.Advertiser
-
 @{
-    ViewBag.Title = "Edit";
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("advertisersTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("advertisersTab", httpMethod: "Post");
 }
 
 <h4>Edit Advertiser</h4>
 
-@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "advertisersTab" }))
+@using (Ajax.BeginForm(ajaxOpts_Post))
 {
     @Html.ValidationSummary(true)
 
@@ -116,9 +116,7 @@
 }
 
 <div>
-    @Ajax.ActionLink("Back to List", "Index", new AjaxOptions() {
-        UpdateTargetId = "advertisersTab", HttpMethod = "Get"
-    })
+    @Ajax.ActionLink("Back to List", "Index", ajaxOptions)
 </div>
 <br />
 

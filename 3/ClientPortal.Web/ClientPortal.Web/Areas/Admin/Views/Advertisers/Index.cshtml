@@ -1,12 +1,6 @@
 ﻿@model IEnumerable<ClientPortal.Data.Contexts.Advertiser>
-
 @{
-    ViewBag.Title = "Index";
-    var ajaxOptions = new AjaxOptions()
-    {
-        UpdateTargetId = "advertisersTab",
-        HttpMethod = "Get"
-    };
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("advertisersTab");
 }
 
 <p>
