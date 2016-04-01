@@ -17,62 +17,12 @@
     <div class="demo-section k-content wide">
         <div id="chart" style="background: center no-repeat url('../content/shared/styles/world-map.png');"></div>
     </div>
-
-    <script>
-        function createChart() {
-            $("#chart").kendoChart({
-                dataSource:{
-                    transport: {
-                        read: {
-                            type: 'post',
-                            dataType: 'json',
-                            url: '@Url.Action("Data", "Test")',
-                        }
-                    }
-                },
-                legend: {
-                    visible: false
-                },
-                seriesDefaults: {
-                    type: "column"
-                },
-                series: [{
-                    field: "eCPA",
-                    name: "Average eCPA",
-                    color: "#3ba4ce"
-                }],
-                valueAxis: {
-                    line: {
-                        visible: false
-                    },
-                    minorGridLines: {
-                        visible: true
-                    },
-                    labels: {
-                        rotation: "auto"
-                    }
-                },
-                categoryAxis: {
-                    field: "DayName",
-                    majorGridLines: {
-                        visible: false
-                    }
-                },
-                tooltip: {
-                    visible: true,
-                    template: "#= series.name #: #= value #"
-                }
-            });
-        }
-
-        $(document).ready(createChart);
-        $(document).bind("kendo:skinChange", createChart);
-    </script>
 </div>
-        <section>
-        	<div class="heading"><p>Weekly Stats</p></div>
-            <div class="grid">
-            <table class="grid" cellspacing="0" width="100%">
+
+<section>
+    <div class="heading"><p>Weekly Stats</p></div>
+    <div class="grid">
+        <table class="grid" cellspacing="0" width="100%">
         <thead>
             <tr>
                 <th class="col_first">Week</th>
@@ -197,10 +147,63 @@
         		<td>$73.40</td>
         	</tr>
 		</tbody>
-    </table>
-            </div>
-        </section>
+        </table>
+    </div>
+</section>
 
-</div>
+        </div>
     </div>
 </div>
+
+@section scripts {
+<script>
+    function createChart() {
+        $("#chart").kendoChart({
+            dataSource: {
+                transport: {
+                    read: {
+                        type: 'post',
+                        dataType: 'json',
+                        url: '@Url.Action("Data", "Test")',
+                    }
+                }
+            },
+            legend: {
+                visible: false
+            },
+            seriesDefaults: {
+                type: "column"
+            },
+            series: [{
+                field: "eCPA",
+                name: "Average eCPA",
+                color: "#3ba4ce"
+            }],
+            valueAxis: {
+                line: {
+                    visible: false
+                },
+                minorGridLines: {
+                    visible: true
+                },
+                labels: {
+                    rotation: "auto"
+                }
+            },
+            categoryAxis: {
+                field: "DayName",
+                majorGridLines: {
+                    visible: false
+                }
+            },
+            tooltip: {
+                visible: true,
+                template: "#= series.name #: #= value #"
+            }
+        });
+    }
+
+    $(document).ready(createChart);
+    $(document).bind("kendo:skinChange", createChart);
+</script>
+}

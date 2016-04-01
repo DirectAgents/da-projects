@@ -12,12 +12,12 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             datdRepo = datdRepository;
         }
 
-        public ActionResult Weekly()
+        public ActionResult Executive()
         {
             return View();
         }
 
-        public ActionResult Executive()
+        public ActionResult Weekly()
         {
             return View();
         }
