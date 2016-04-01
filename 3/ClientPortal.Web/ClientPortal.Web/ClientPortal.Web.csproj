@@ -249,6 +249,8 @@
     <Compile Include="Areas\Admin\Models\CPMReportWizardVM.cs" />
     <Compile Include="Areas\Admin\Models\CreativeStatVM.cs" />
     <Compile Include="Areas\Admin\Models\UserVM.cs" />
+    <Compile Include="Areas\Prog\Controllers\TestController.cs" />
+    <Compile Include="Areas\Prog\ProgAreaRegistration.cs" />
     <Compile Include="Areas\TD\Controllers\StatsController.cs" />
     <Compile Include="Areas\TD\Controllers\HomeController.cs" />
     <Compile Include="Areas\TD\Controllers\ReportsController.cs" />
@@ -965,6 +967,7 @@
     <Content Include="Content\kendo\2015.1.408\Uniform\sprite_kpi.png" />
     <Content Include="Content\kendo\2015.1.408\Uniform\sprite_kpi_2x.png" />
     <Content Include="Content\portal.css" />
+    <Content Include="Content\progstyle.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -1133,6 +1136,11 @@
     <Content Include="Areas\Admin\Views\ProgAdmin\Advertisers.cshtml" />
     <Content Include="Areas\Admin\Views\ProgAdmin\CreateUserProfile.cshtml" />
     <Content Include="Areas\Admin\Views\Users\Index.cshtml" />
+    <Content Include="Areas\Prog\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Prog\Views\Test\Executive.cshtml" />
+    <Content Include="Areas\Prog\Views\Test\Weekly.cshtml" />
+    <Content Include="Areas\Prog\Views\web.config" />
+    <Content Include="Areas\Prog\Views\_ViewStart.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />
@@ -2985,6 +2993,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Areas\Prog\Models\" />
     <Folder Include="Filters\" />
   </ItemGroup>
   <PropertyGroup>
