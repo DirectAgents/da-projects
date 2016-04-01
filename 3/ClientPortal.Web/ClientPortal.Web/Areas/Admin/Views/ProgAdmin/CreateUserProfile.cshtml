@@ -1,7 +1,7 @@
 ﻿@model DirectAgents.Domain.Entities.TD.Advertiser
 @{
     var ajaxOptions = RazorHelpers.GetAjaxOptions("progAdvertisersTab");
-    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("progAdvertisersTab", null, "Post");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("progAdvertisersTab", httpMethod: "Post");
 }
 
 @using (Ajax.BeginForm(ajaxOpts_Post))
@@ -19,11 +19,11 @@
                 <td>@Html.DisplayFor(m => m.Name)</td>
             </tr>
             <tr>
-                <td>Username</td>
+                <td>@Html.Label("Username")</td>
                 <td>@Html.TextBox("username")</td>
             </tr>
             <tr>
-                <td>Password</td>
+                <td>@Html.Label("Password")</td>
                 <td>@Html.TextBox("password", null, new { id = "progPassword" })<input type="button" value="Generate Password" onclick="GenerateProgPassword()" /></td>
             </tr>
         </table>

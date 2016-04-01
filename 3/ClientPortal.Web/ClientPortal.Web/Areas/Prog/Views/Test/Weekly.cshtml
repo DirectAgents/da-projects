@@ -1,0 +1,206 @@
+﻿@{
+    ViewBag.Title = "Bevel Test";
+}
+<div id="client_bar">
+	<div id="container">
+		<div class="client_logo"></div>
+        <div class="client_name">Bevel</div>
+        <div class="page_title">Weekly Summary</div>
+    </div>
+</div>
+<div id="page_content">
+	<div id="container">
+    	<div id="page_content">
+
+<div class="heading"><p>Avg eCPA for Day of Week</p></div>
+<div id="example">
+    <div class="demo-section k-content wide">
+        <div id="chart" style="background: center no-repeat url('../content/shared/styles/world-map.png');"></div>
+    </div>
+
+    <script>
+        function createChart() {
+            $("#chart").kendoChart({
+                dataSource:{
+                    transport: {
+                        read: {
+                            type: 'post',
+                            dataType: 'json',
+                            url: '@Url.Action("Data", "Test")',
+                        }
+                    }
+                },
+                legend: {
+                    visible: false
+                },
+                seriesDefaults: {
+                    type: "column"
+                },
+                series: [{
+                    field: "eCPA",
+                    name: "Average eCPA",
+                    color: "#3ba4ce"
+                }],
+                valueAxis: {
+                    line: {
+                        visible: false
+                    },
+                    minorGridLines: {
+                        visible: true
+                    },
+                    labels: {
+                        rotation: "auto"
+                    }
+                },
+                categoryAxis: {
+                    field: "DayName",
+                    majorGridLines: {
+                        visible: false
+                    }
+                },
+                tooltip: {
+                    visible: true,
+                    template: "#= series.name #: #= value #"
+                }
+            });
+        }
+
+        $(document).ready(createChart);
+        $(document).bind("kendo:skinChange", createChart);
+    </script>
+</div>
+        <section>
+        	<div class="heading"><p>Weekly Stats</p></div>
+            <div class="grid">
+            <table class="grid" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th class="col_first">Week</th>
+                <th>Spend</th>
+                <th>Impressions</th>
+                <th>Clicks</th>
+                <th>CTR</th>
+                <th>eCPC</th>
+                <th>Total Conv</th>
+                <th>eCPA</th>
+            </tr>
+        </thead>
+        <tbody>
+        	<tr class="grey_row">
+        		<td class="col_first">11/3/2015</td>
+        		<td>$1,1071.70</td>
+       	 		<td>144,847</td>
+       			<td>419</td>
+        		<td>0.29%</td>
+        		<td>$2.56</td>
+        		<td>9</td>
+        		<td>$119.11</td>
+        	</tr>
+            <tr>
+        		<td class="col_first">11/10/2015</td>
+        		<td>$2.08</td>
+       	 		<td>850,292</td>
+       			<td>1,626</td>
+        		<td>0.19%</td>
+        		<td>$2.77</td>
+        		<td>50</td>
+        		<td>$119.11</td>
+        	</tr>
+            <tr class="grey_row">
+        		<td class="col_first">11/17/2015</td>
+        		<td>$4,501.98</td>
+       	 		<td>859,012</td>
+       			<td>1,259</td>
+        		<td>0.15%</td>
+        		<td>$3.43</td>
+        		<td>47</td>
+        		<td>$90.04</td>
+        	</tr>
+            <tr>
+        		<td class="col_first">11/24/2015</td>
+        		<td>$4,322.59</td>
+       	 		<td>957,754</td>
+       			<td>1,605</td>
+        		<td>0.17%</td>
+        		<td>$4.45</td>
+        		<td>123</td>
+        		<td>$91.98</td>
+        	</tr>
+            <tr class="grey_row">
+        		<td class="col_first">12/1/2015</td>
+        		<td>$7,143.63</td>
+       	 		<td>1,474,075</td>
+       			<td>2,131</td>
+        		<td>0.14%</td>
+        		<td>$6.53</td>
+        		<td>1,515</td>
+        		<td>$58.08</td>
+        	</tr>
+            <tr>
+        		<td class="col_first">12/8/2015</td>
+        		<td>$13,904.70</td>
+       	 		<td>1,659,962</td>
+       			<td>2,668</td>
+        		<td>0.16%</td>
+        		<td>$5.17</td>
+        		<td>188</td>
+        		<td>$119.11</td>
+        	</tr>
+            <tr class="grey_row">
+        		<td class="col_first">12/15/2015</td>
+        		<td>$13,799.98</td>
+       	 		<td>3,578,308</td>
+       			<td>3,905</td>
+        		<td>0.11%</td>
+        		<td>$4.45</td>
+        		<td>4,376</td>
+        		<td>$73.40</td>
+        	</tr>
+            <tr>
+        		<td class="col_first">12/22/2015</td>
+        		<td>$4,322.59</td>
+       	 		<td>957,754</td>
+       			<td>1,605</td>
+        		<td>0.12%</td>
+        		<td>$4.45</td>
+        		<td>123</td>
+        		<td>$91.98</td>
+        	</tr>
+            <tr class="grey_row">
+        		<td class="col_first">12/29/2015</td>
+        		<td>$7,143.63</td>
+       	 		<td>1,474,075</td>
+       			<td>2,131</td>
+        		<td>0.15%</td>
+        		<td>$6.53</td>
+        		<td>1,515</td>
+        		<td>$58.08</td>
+        	</tr>
+            <tr>
+        		<td class="col_first">1/5/2016</td>
+        		<td>$13,904.70</td>
+       	 		<td>1,659,962</td>
+       			<td>2,668</td>
+        		<td>0.15%</td>
+        		<td>$5.17</td>
+        		<td>188</td>
+        		<td>$119.11</td>
+        	</tr>
+            <tr class="grey_row">
+        		<td class="col_first">1/12/2016</td>
+        		<td>$13,799.98</td>
+       	 		<td>3,578,308</td>
+       			<td>3,905</td>
+        		<td>0.18%</td>
+        		<td>$4.45</td>
+        		<td>4,376</td>
+        		<td>$73.40</td>
+        	</tr>
+		</tbody>
+    </table>
+            </div>
+        </section>
+
+</div>
+    </div>
+</div>

@@ -1,7 +1,7 @@
 ﻿@model ClientPortal.Data.Contexts.SearchProfile
 @{
     var ajaxOptions = RazorHelpers.GetAjaxOptions("searchProfilesTab");
-    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("searchProfilesTab", null, "Post");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("searchProfilesTab", httpMethod: "Post");
 }
 
 @using (Ajax.BeginForm(ajaxOpts_Post))
@@ -15,12 +15,12 @@
                 <td>@Html.DisplayFor(m => m.SearchProfileName)</td>
             </tr>
             <tr>
-                <td>UserName</td>
+                <td>@Html.Label("Username")</td>
                 <td>@Html.TextBox("username")</td>
             </tr>
             <tr>
-                <td>Password</td>
-                <td>@Html.TextBox("password")<input type="button" value="Generate Password" onclick="GeneratePassword()" /></td>
+                <td>@Html.Label("Password")</td>
+                <td>@Html.TextBox("password", null, new { id = "searchPassword" })<input type="button" value="Generate Password" onclick="GenerateSearchPassword()" /></td>
             </tr>
         </table>
         <br />
@@ -30,7 +30,7 @@
 }
 
 <script>
-    function GeneratePassword() {
+    function GenerateSearchPassword() {
         var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
         var string_length = 8;
         var randomstring = '';
@@ -38,6 +38,6 @@
             var rnum = Math.floor(Math.random() * chars.length);
             randomstring += chars.substring(rnum, rnum + 1);
         }
-        $('#password').val(randomstring);
+        $('#searchPassword').val(randomstring);
     }
 </script>

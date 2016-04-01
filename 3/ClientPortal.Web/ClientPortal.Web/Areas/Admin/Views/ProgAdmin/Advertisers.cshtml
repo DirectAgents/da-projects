@@ -1,11 +1,6 @@
 ﻿@model IEnumerable<ClientPortal.Web.Areas.Admin.Models.AdvertiserVM>
-
 @{
-    //ViewBag.Title = "";
-    var ajaxOptions = new AjaxOptions()
-    {
-        UpdateTargetId = "progAdvertisersTab"
-    };
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("progAdvertisersTab");
 }
 
 @Ajax.ActionLink("Refresh", "Advertisers", ajaxOptions)
@@ -26,6 +21,8 @@
                 @advVM.Login
             } else {
                 @Ajax.ActionLink("create", "CreateUserProfile", new { advId = advVM.TDAdvertiser.Id }, ajaxOptions)
+                <text> | </text>
+                @Ajax.ActionLink("assign", "AssignUserProfile", new { advId = advVM.TDAdvertiser.Id }, ajaxOptions)
             }
         </td>
     </tr>

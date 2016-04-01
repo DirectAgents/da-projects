@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "Executive Summary";
+}
+
+<div id="gridMTD"></div>
+<div id="gridPrev"></div>
+<script>
+$("#gridMTD").kendoGrid({
+
+    columns: [
+    {
+        title: "Month to Date: 2/1/2016 thru 2/8/2016",
+        columns: [
+        { field: "Budget" },
+        { field: "Spend" },
+        { field: "Pacing" },
+        { field: "Impressions" },
+        { field: "Clicks" },
+        { field: "CTR" },
+        { field: "eCPC" },
+        { field: "Conversions" },
+        { field: "eCPA" }
+        ]
+    }
+    ],
+    dataSource: [
+        { Budget: "$2000.00", Spend: "$103.86", Pacing: "5.15%", Impressions: "25,126", Clicks: "16", CTR: "0.06%", eCPC: "$6.46", Conversions: "0", eCPA: "$0.00" }
+    ]
+});
+</script>
+<script>
+    $("#gridPrev").kendoGrid({
+
+        columns: [
+        {
+            title: "Previous Month: 1/1/2016 thru 1/8/2016",
+            columns: [
+            { field: "Budget" },
+            { field: "Spend" },
+            { field: "Pacing" },
+            { field: "Impressions" },
+            { field: "Clicks" },
+            { field: "CTR" },
+            { field: "eCPC" },
+            { field: "Conversions" },
+            { field: "eCPA" }
+            ]
+        }
+        ],
+        dataSource: [
+            { Budget: "$2000.00", Spend: "$2068.42", Pacing: "103.40%", Impressions: "400,115", Clicks: "293", CTR: "0.07%", eCPC: "$43.08", Conversions: "0", eCPA: "$0.00" }
+        ]
+    });
+</script>

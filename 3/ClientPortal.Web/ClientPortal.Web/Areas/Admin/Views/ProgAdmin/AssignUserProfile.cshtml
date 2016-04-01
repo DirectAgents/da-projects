@@ -1,0 +1,24 @@
+﻿@model DirectAgents.Domain.Entities.TD.Advertiser
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("progAdvertisersTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("progAdvertisersTab", httpMethod: "Post");
+
+    var userProfiles = (IEnumerable<ClientPortal.Data.Contexts.UserProfile>)ViewBag.UserProfiles;
+    var upSelectList = new SelectList(userProfiles, "UserId", "UserName");
+}
+
+<h3>Assign Login</h3>
+
+(Programmatic)<br />
+Advertiser: @Model.Name
+<br /><br />
+
+@using (Ajax.BeginForm(ajaxOpts_Post))
+{
+    <table><tr><td>
+    @Html.DropDownList("userid", upSelectList)
+    </td></tr></table>
+    <input type="submit" value="Assign" />
+}
+
+@Ajax.ActionLink("Cancel", "Advertisers", ajaxOptions)
