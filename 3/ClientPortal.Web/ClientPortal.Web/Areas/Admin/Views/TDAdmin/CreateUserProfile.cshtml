@@ -15,11 +15,11 @@
                 <td>@Html.DisplayFor(m => m.TradingDeskAccountId)</td>
             </tr>
             <tr>
-                <td>Username</td>
+                <td>@Html.Label("Username")</td>
                 <td>@Html.TextBox("username")</td>
             </tr>
             <tr>
-                <td>Password</td>
+                <td>@Html.Label("Password")</td>
                 <td>@Html.TextBox("password", null, new { id = "tdPassword" })<input type="button" value="Generate Password" onclick="GenerateTDPassword()" /></td>
             </tr>
         </table>

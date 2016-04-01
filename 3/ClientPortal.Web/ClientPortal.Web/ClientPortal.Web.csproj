@@ -1141,6 +1141,7 @@
     <Content Include="Areas\Prog\Views\Test\Weekly.cshtml" />
     <Content Include="Areas\Prog\Views\web.config" />
     <Content Include="Areas\Prog\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Admin\Views\ProgAdmin\AssignUserProfile.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

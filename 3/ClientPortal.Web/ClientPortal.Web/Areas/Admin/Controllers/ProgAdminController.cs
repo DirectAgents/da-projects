@@ -66,6 +66,28 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return RedirectToAction("Advertisers");
         }
 
+        public ActionResult AssignUserProfile(int advId)
+        {
+            var tdAdvertiser = datdRepo.Advertiser(advId);
+            if (tdAdvertiser == null)
+                return HttpNotFound();
+
+            ViewBag.UserProfiles = cpRepo.UserProfiles().OrderBy(up => up.UserName);
+            return View(tdAdvertiser);
+        }
+        [HttpPost]
+        public ActionResult AssignUserProfile(int advId, int userId)
+        {
+            var tdAdvertiser = datdRepo.Advertiser(advId);
+            var userProfile = cpRepo.GetUserProfile(userId);
+            if (tdAdvertiser != null && userProfile != null)
+            {
+                userProfile.TDAdvertiserId = tdAdvertiser.Id;
+                cpRepo.SaveChanges();
+            }
+            return RedirectToAction("Advertisers");
+        }
+
         public ActionResult Test()
         {
             var advId = 2;
