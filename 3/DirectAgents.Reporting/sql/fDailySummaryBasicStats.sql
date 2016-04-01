@@ -38,8 +38,7 @@ BEGIN
 			SELECT TOP 1 x.Id
 			FROM td.BudgetInfo x
 			WHERE (x.CampaignId = Account.CampaignId)
-			  AND (x.Date BETWEEN @StartDate AND @EndDate)
-			  AND (x.Date <= dt.Date)
+			  AND (x.Date = CAST(CAST(YEAR(dt.Date) as varchar) + '-' + CAST(MONTH(dt.Date) AS varchar) + '-01' AS datetime))
 			ORDER BY x.Date DESC
 			)
 		LEFT OUTER JOIN td.PlatformBudgetInfo ON PlatformBudgetInfo.Id =
@@ -48,8 +47,7 @@ BEGIN
 			FROM td.PlatformBudgetInfo x
 			WHERE (x.CampaignId = Campaign.Id)
 			  AND (x.PlatformId = Account.PlatformId)
-			  AND (x.Date BETWEEN @StartDate AND @EndDate)
-			  AND (x.Date <= dt.Date)
+			  AND (x.Date = CAST(CAST(YEAR(dt.Date) as varchar) + '-' + CAST(MONTH(dt.Date) AS varchar) + '-01' AS datetime))
 			ORDER BY x.Date DESC
 			)
 		WHERE (td.Campaign.AdvertiserId = @AdvertiserId)
