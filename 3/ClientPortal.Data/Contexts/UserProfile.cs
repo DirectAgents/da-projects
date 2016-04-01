@@ -27,6 +27,7 @@ namespace ClientPortal.Data.Contexts
         public Nullable<int> QuickBooksAdvertiserId { get; set; }
         public Nullable<int> TradingDeskAccountId { get; set; }
         public Nullable<int> SearchProfileId { get; set; }
+        public Nullable<int> TDAdvertiserId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserEvent> UserEvents { get; set; }

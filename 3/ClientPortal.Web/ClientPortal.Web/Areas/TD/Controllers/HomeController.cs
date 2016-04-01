@@ -8,9 +8,9 @@ namespace ClientPortal.Web.Areas.TD.Controllers
     [Authorize]
     public class HomeController : CPController
     {
-        public HomeController(ITDRepository tdRepository, IClientPortalRepository cpRepository)
+        public HomeController(ITDRepository cptdRepository, IClientPortalRepository cpRepository)
         {
-            tdRepo = tdRepository;
+            cptdRepo = cptdRepository;
             cpRepo = cpRepository;
         }
 

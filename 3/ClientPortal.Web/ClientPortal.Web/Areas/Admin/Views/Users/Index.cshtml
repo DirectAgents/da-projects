@@ -1,0 +1,28 @@
+﻿@model IEnumerable<ClientPortal.Web.Areas.Admin.Models.UserVM>
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("usersTab");
+}
+
+@Ajax.ActionLink("Refresh", "Index", ajaxOptions)
+
+<table border="1">
+    <tr>
+        <th>Id</th>
+        <th>Username</th>
+        <th>CakeAdvertiser</th>
+        <th>SearchProfile</th>
+        <th>Programmatic</th>
+    </tr>
+@foreach (var u in Model)
+{
+    <tr>
+        <td>@u.UserProfile.UserId</td>
+        <td>@u.UserProfile.UserName</td>
+        <td>@(u.CakeAdvertiser == null ? "" : u.CakeAdvertiser.AdvertiserName)</td>
+        <td>@(u.UserProfile.SearchProfile == null ? "" : u.UserProfile.SearchProfile.SearchProfileName)</td>
+        <td>@(u.ProgAdvertiser == null ? "" : u.ProgAdvertiser.Name)</td>
+    </tr>
+}
+</table>
+<br />
+@* new user? *@

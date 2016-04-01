@@ -58,15 +58,27 @@ namespace CakeExtracter.Commands
             var fbUtility = new FacebookUtility(m => Logger.Info(m), m => Logger.Warn(m));
             var statsType = new StatsTypeAgg(this.StatsType);
 
+            var string_ConvAsMobAppInst = ConfigurationManager.AppSettings["FB_ConversionsAsMobileAppInstalls"] ?? "";
+            var Accts_ConvAsMobAppInst = string_ConvAsMobAppInst.Split(new char[] { ',' });
             var string_ConvAsPurch = ConfigurationManager.AppSettings["FB_ConversionsAsPurchases"] ?? "";
             var Accts_ConvAsPurch = string_ConvAsPurch.Split(new char[] { ',' });
             var string_ConvAsReg = ConfigurationManager.AppSettings["FB_ConversionsAsRegistrations"] ?? "";
             var Accts_ConvAsReg = string_ConvAsReg.Split(new char[] { ',' });
 
+            var Accts_DailyOnly = new string[] { };
+            if (!AccountId.HasValue || statsType.All)
+            {
+                var string_DailyOnly = ConfigurationManager.AppSettings["FB_DailyStatsOnly"] ?? "";
+                Accts_DailyOnly = string_DailyOnly.Split(new char[] { ',' });
+            }   // Used when synching all accounts AND/OR all stats types...
+            // So if an account is marked as "daily only", you can only load other stats by specifying the accountId and statsType
+
             var accounts = GetAccounts();
             foreach (var acct in accounts)
             {
-                if (Accts_ConvAsPurch.Contains(acct.ExternalId))
+                if (Accts_ConvAsMobAppInst.Contains(acct.ExternalId))
+                    fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_MobileAppInstall;
+                else if (Accts_ConvAsPurch.Contains(acct.ExternalId))
                     fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_Purchase;
                 else if (Accts_ConvAsReg.Contains(acct.ExternalId))
                     fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_Registration;
@@ -75,6 +87,10 @@ namespace CakeExtracter.Commands
 
                 if (statsType.Daily)
                     DoETL_Daily(dateRange, acct, fbUtility);
+
+                if (Accts_DailyOnly.Contains(acct.ExternalId))
+                    continue;
+
                 if (statsType.Strategy)
                     DoETL_Strategy(dateRange, acct, fbUtility);
                 if (statsType.Creative)

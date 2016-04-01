@@ -1,12 +1,6 @@
 ﻿@model ClientPortal.Data.Contexts.Contact
-
 @{
-    ViewBag.Title = "Details";
-    var ajaxOptions = new AjaxOptions()
-    {
-        UpdateTargetId = "contactsTab",
-        HttpMethod = "Get"
-    };
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("contactsTab");
 }
 
 <h4>Contact Details</h4>

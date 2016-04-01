@@ -1,11 +1,10 @@
-﻿using ClientPortal.Data.Contexts;
-using System;
-using System.Data;
+﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Web.Helpers;
 using System.Web.Mvc;
+using ClientPortal.Data.Contexts;
 using WebMatrix.WebData;
-using System.Data.Entity;
 
 namespace ClientPortal.Web.Areas.Admin.Controllers
 {

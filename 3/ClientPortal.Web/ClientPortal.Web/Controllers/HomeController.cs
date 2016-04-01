@@ -1,14 +1,14 @@
-﻿using ClientPortal.Data.Contexts;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Helpers;
+using System.Web.Mvc;
+using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
 using ClientPortal.Web.Models;
 using MoreLinq;
 using StackExchange.Profiling;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Helpers;
-using System.Web.Mvc;
 
 namespace ClientPortal.Web.Controllers
 {
@@ -19,7 +19,7 @@ namespace ClientPortal.Web.Controllers
         //public HomeController(IClientPortalRepository cpRepository)
         {
             this.cpRepo = cpRepository;
-            this.tdRepo = tdRepository;
+            this.cptdRepo = tdRepository; // used in GetUserInfo()
         }
         //TODO: handle the case when a non-cake user arrives... currently there's a null reference exception loading Dashboard.
 

@@ -1,7 +1,7 @@
 ﻿@model ClientPortal.Data.Contexts.Advertiser
-
 @{
-    ViewBag.Title = "Delete";
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("advertisersTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("advertisersTab", httpMethod: "Post");
 }
 
 <h4>Delete</h4>
@@ -31,12 +31,10 @@
         <img src="@Url.Action("Logo", new { id = Model.AdvertiserId })" />
     </div>
 </fieldset>
-@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "advertisersTab" }))
+@using (Ajax.BeginForm(ajaxOpts_Post))
 {
     <p>
         <input type="submit" value="Delete" /> |
-        @Ajax.ActionLink("Back to List", "Index", new AjaxOptions() {
-            UpdateTargetId = "advertisersTab", HttpMethod = "Get"
-        })
+        @Ajax.ActionLink("Back to List", "Index", ajaxOptions)
     </p>
 }

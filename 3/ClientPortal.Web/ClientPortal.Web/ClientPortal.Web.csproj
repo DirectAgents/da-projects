@@ -230,6 +230,7 @@
     <Compile Include="Areas\Admin\Controllers\OffersController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Areas\Admin\Controllers\ProgAdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\SearchAdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\SimpleReportsController.cs">
       <SubType>Code</SubType>
@@ -237,14 +238,17 @@
     <Compile Include="Areas\Admin\Controllers\TDAdminController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Areas\Admin\Controllers\UsersController.cs" />
     <Compile Include="Areas\Admin\Helpers.cs" />
     <Compile Include="Areas\Admin\Models\AdminModel.cs" />
+    <Compile Include="Areas\Admin\Models\AdvertiserVM.cs" />
     <Compile Include="Areas\Admin\Models\CampaignDropVM.cs" />
     <Compile Include="Areas\Admin\Models\CampaignDropWizardVM.cs" />
     <Compile Include="Areas\Admin\Models\ContactVM.cs" />
     <Compile Include="Areas\Admin\Models\CPMReportVM.cs" />
     <Compile Include="Areas\Admin\Models\CPMReportWizardVM.cs" />
     <Compile Include="Areas\Admin\Models\CreativeStatVM.cs" />
+    <Compile Include="Areas\Admin\Models\UserVM.cs" />
     <Compile Include="Areas\TD\Controllers\StatsController.cs" />
     <Compile Include="Areas\TD\Controllers\HomeController.cs" />
     <Compile Include="Areas\TD\Controllers\ReportsController.cs" />
@@ -1126,6 +1130,9 @@
     <Content Include="Content\kendo\2015.1.408\images\kendoui.ttf" />
     <Content Include="Content\kendo\2015.1.408\images\kendoui.woff" />
     <Content Include="Areas\TD\Views\Reports\Analysis.cshtml" />
+    <Content Include="Areas\Admin\Views\ProgAdmin\Advertisers.cshtml" />
+    <Content Include="Areas\Admin\Views\ProgAdmin\CreateUserProfile.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\Index.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />
@@ -2956,6 +2963,10 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\1\DirectAgents.Domain\DirectAgents.Domain.csproj">
+      <Project>{278911ab-cb92-4316-843e-4571cd0c3410}</Project>
+      <Name>DirectAgents.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\CakeExtracter\CakeExtracter\CakeExtracter.csproj">
       <Project>{3b6c5433-5392-4165-a7e4-4aa431a75bb3}</Project>
       <Name>CakeExtracter</Name>

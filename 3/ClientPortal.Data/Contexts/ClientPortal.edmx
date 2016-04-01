@@ -481,6 +481,7 @@
           <Property Name="QuickBooksAdvertiserId" Type="int" />
           <Property Name="TradingDeskAccountId" Type="int" />
           <Property Name="SearchProfileId" Type="int" />
+          <Property Name="TDAdvertiserId" Type="int" />
         </EntityType>
         <Association Name="FK_Advertiser_CakeContact">
           <End Role="CakeContact" Type="Self.CakeContact" Multiplicity="0..1" />
@@ -1538,6 +1539,7 @@
           <Property Type="Int32" Name="TradingDeskAccountId" />
           <Property Type="Int32" Name="SearchProfileId" />
           <NavigationProperty Name="SearchProfile" Relationship="ClientPortalModel.FK_UserProfile_SearchProfile" FromRole="UserProfile" ToRole="SearchProfile" />
+          <Property Name="TDAdvertiserId" Type="Int32" />
         </EntityType>
         <EntityType Name="SearchDailySummary2">
           <Key>
@@ -2438,6 +2440,7 @@
           <EntitySetMapping Name="UserProfiles">
             <EntityTypeMapping TypeName="ClientPortalModel.UserProfile">
               <MappingFragment StoreEntitySet="UserProfile">
+                <ScalarProperty Name="TDAdvertiserId" ColumnName="TDAdvertiserId" />
                 <ScalarProperty Name="SearchProfileId" ColumnName="SearchProfileId" />
                 <ScalarProperty Name="TradingDeskAccountId" ColumnName="TradingDeskAccountId" />
                 <ScalarProperty Name="QuickBooksAdvertiserId" ColumnName="QuickBooksAdvertiserId" />

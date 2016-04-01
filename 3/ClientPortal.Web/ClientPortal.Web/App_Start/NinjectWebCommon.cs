@@ -7,6 +7,8 @@ namespace ClientPortal.Web.App_Start
     using System.Web;
     using ClientPortal.Data.Contracts;
     using ClientPortal.Data.Services;
+    using DirectAgents.Domain.Abstract;
+    using DirectAgents.Domain.Concrete;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
     using Ninject;
     using Ninject.Web.Common;
@@ -54,7 +56,8 @@ namespace ClientPortal.Web.App_Start
         private static void RegisterServices(IKernel kernel)
         {
             kernel.Bind<IClientPortalRepository>().To<ClientPortalRepository>();
-            kernel.Bind<ITDRepository>().To<TDRepository>();
+            kernel.Bind<ClientPortal.Data.Contracts.ITDRepository>().To<ClientPortal.Data.Services.TDRepository>();
+            kernel.Bind<DirectAgents.Domain.Abstract.ITDRepository>().To<DirectAgents.Domain.Concrete.TDRepository>();
         }
     }
 }

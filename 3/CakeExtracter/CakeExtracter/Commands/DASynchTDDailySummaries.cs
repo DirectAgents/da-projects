@@ -137,6 +137,11 @@ namespace CakeExtracter.Commands
         public bool Site { get; set; }
         public bool Conv { get; set; }
 
+        public bool All
+        {
+            get { return Daily && Strategy && Creative && Site && Conv; }
+        }
+
         public void SetAllTrue()
         {
             Daily = true;

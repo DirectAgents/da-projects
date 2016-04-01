@@ -1,24 +1,27 @@
-﻿using ClientPortal.Data.Contexts;
-using ClientPortal.Data.Entities.TD;
-using ClientPortal.Web.Controllers;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Web.Configuration;
+using ClientPortal.Data.Contexts;
+using ClientPortal.Data.Entities.TD;
+using ClientPortal.Web.Controllers;
+using DirectAgents.Domain.Entities.TD;
 
 namespace ClientPortal.Web.Models
 {
     public class UserInfo
     {
-        public UserInfo(UserProfile userProfile, Advertiser advertiser, TradingDeskAccount tradingDeskAccount)
+        public UserInfo(UserProfile userProfile, ClientPortal.Data.Contexts.Advertiser cpAdvertiser, TradingDeskAccount tradingDeskAccount = null, DirectAgents.Domain.Entities.TD.Advertiser datdAdvertiser = null)
         {
             this.UserProfile = userProfile;
-            this.Advertiser = advertiser;
+            this.Advertiser = cpAdvertiser;
             this.TDAccount = tradingDeskAccount;
+            this.DATDAdvertiser = datdAdvertiser;
         }
 
         private UserProfile UserProfile { get; set; }
-        private Advertiser Advertiser { get; set; }
+        private ClientPortal.Data.Contexts.Advertiser Advertiser { get; set; }
         public TradingDeskAccount TDAccount { get; set; }
+        public DirectAgents.Domain.Entities.TD.Advertiser DATDAdvertiser { get; set; }
 
         public bool HasUserProfile
         {

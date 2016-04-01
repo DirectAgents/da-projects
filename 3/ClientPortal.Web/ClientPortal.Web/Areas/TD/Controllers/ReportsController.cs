@@ -12,9 +12,9 @@ namespace ClientPortal.Web.Areas.TD.Controllers
     [Authorize]
     public class ReportsController : CPController
     {
-        public ReportsController(ITDRepository tdRepository, IClientPortalRepository cpRepository)
+        public ReportsController(ITDRepository cptdRepository, IClientPortalRepository cpRepository)
         {
-            tdRepo = tdRepository;
+            cptdRepo = cptdRepository;
             cpRepo = cpRepository;
         }
 
@@ -59,7 +59,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             var insertionOrderID = userInfo.InsertionOrderID;
             if (insertionOrderID.HasValue)
             {
-                var userListRuns = tdRepo.UserListRuns(insertionOrderID.Value);
+                var userListRuns = cptdRepo.UserListRuns(insertionOrderID.Value);
                 if (userListRuns.Any())
                 {
                     var ulr = userListRuns.OrderByDescending(u => u.Date).First();

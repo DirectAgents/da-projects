@@ -1,14 +1,13 @@
-﻿using ClientPortal.Data.Contexts;
+﻿using System;
+using System.IO;
+using System.Web.Mvc;
+using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.Entities.TD;
-using ClientPortal.Data.Entities.TD.DBM;
 using ClientPortal.Web.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using DirectAgents.Domain.Abstract;
+using DirectAgents.Domain.Concrete;
+using DirectAgents.Domain.Entities.TD;
 using WebMatrix.WebData;
 
 namespace ClientPortal.Web.Controllers
@@ -16,7 +15,8 @@ namespace ClientPortal.Web.Controllers
     public class CPController : Controller
     {
         protected IClientPortalRepository cpRepo;
-        protected ITDRepository tdRepo;
+        protected ClientPortal.Data.Contracts.ITDRepository cptdRepo;
+        protected DirectAgents.Domain.Abstract.ITDRepository datdRepo;
 
         // return a redirect if needed to logout; otherwise return null
         protected ActionResult CheckLogout(UserInfo userInfo)
@@ -60,15 +60,18 @@ namespace ClientPortal.Web.Controllers
         {
             var userProfile = GetUserProfile();
 
-            Advertiser advertiser = null;
+            ClientPortal.Data.Contexts.Advertiser cpAdvertiser = null;
             TradingDeskAccount tradingDeskAccount = null;
+            DirectAgents.Domain.Entities.TD.Advertiser datdAdvertiser = null;
             if (userProfile != null)
             {
-                advertiser = GetAdvertiser(userProfile.CakeAdvertiserId);
-                if (userProfile.TradingDeskAccountId.HasValue && tdRepo != null)
-                    tradingDeskAccount = tdRepo.GetTradingDeskAccount(userProfile.TradingDeskAccountId.Value);
+                cpAdvertiser = GetAdvertiser(userProfile.CakeAdvertiserId);
+                if (userProfile.TradingDeskAccountId.HasValue && cptdRepo != null)
+                    tradingDeskAccount = cptdRepo.GetTradingDeskAccount(userProfile.TradingDeskAccountId.Value);
+                if (userProfile.TDAdvertiserId.HasValue && datdRepo != null)
+                    datdAdvertiser = datdRepo.Advertiser(userProfile.TDAdvertiserId.Value);
             }
-            var userInfo = new UserInfo(userProfile, advertiser, tradingDeskAccount);
+            var userInfo = new UserInfo(userProfile, cpAdvertiser, tradingDeskAccount: tradingDeskAccount, datdAdvertiser: datdAdvertiser);
             return userInfo;
         }
 
@@ -95,12 +98,12 @@ namespace ClientPortal.Web.Controllers
             return advertiserId;
         }
 
-        public Advertiser GetAdvertiser()
+        public ClientPortal.Data.Contexts.Advertiser GetAdvertiser()
         {
             int? advId = GetAdvertiserId();
             return GetAdvertiser(advId);
         }
-        private Advertiser GetAdvertiser(int? advId)
+        private ClientPortal.Data.Contexts.Advertiser GetAdvertiser(int? advId)
         {
             if (advId.HasValue)
                 return cpRepo.GetAdvertiser(advId.Value);
@@ -142,7 +145,8 @@ namespace ClientPortal.Web.Controllers
         protected override void Dispose(bool disposing)
         {
             if (cpRepo != null) cpRepo.Dispose();
-            if (tdRepo != null) tdRepo.Dispose();
+            if (cptdRepo != null) cptdRepo.Dispose();
+            if (datdRepo != null) datdRepo.Dispose();
             base.Dispose(disposing);
         }
     }

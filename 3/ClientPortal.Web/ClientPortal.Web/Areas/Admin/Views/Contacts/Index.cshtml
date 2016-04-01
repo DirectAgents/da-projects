@@ -1,17 +1,11 @@
 ﻿@model IEnumerable<ClientPortal.Data.Contexts.Contact>
-
 @{
-    ViewBag.Title = "Index";
-    var ajaxOptions = new AjaxOptions()
-    {
-        UpdateTargetId = "contactsTab",
-        HttpMethod = "Get"
-    };
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("contactsTab");
 }
 
-<p>
-    @Ajax.ActionLink("Create New Contact", "Create", ajaxOptions)
-</p>
+@Ajax.ActionLink("Create New Contact", "Create", ajaxOptions) |
+@Ajax.ActionLink("Refresh", "Index", ajaxOptions)
+
 <table>
     <tr>
         <th>

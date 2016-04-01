@@ -5,14 +5,16 @@ namespace DirectAgents.Domain.Entities.TD
     public class BasicStat
     {
         public int Day { get; set; }
-
         public DateTime Date { get; set; }
+
         public int Impressions { get; set; }
         public int Clicks { get; set; }
         public int Conversions { get; set; }
         public decimal MediaSpend { get; set; }
         public decimal MgmtFee { get; set; }
-        // Budget, Pacing
+
+        public double Budget { get; set; }
+        public double Pacing { get; set; }
 
         public double CTR { get; set; }
         public double CR { get; set; }
@@ -25,6 +27,7 @@ namespace DirectAgents.Domain.Entities.TD
             CR = (Conversions == 0) ? 0 : (double)Conversions / Clicks;
             eCPC = (Clicks == 0) ? 0 : (double)(MediaSpend / Clicks);
             eCPA = (Conversions == 0) ? 0 : (double)(MediaSpend / Conversions);
+            Pacing = (Budget == 0) ? 0 : (double)MediaSpend / Budget;
         }
     }
 }

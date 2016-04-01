@@ -5,9 +5,6 @@ using System.Web.Mvc;
 using AutoMapper;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs.TD;
-using ClientPortal.Data.Entities.TD;
-using ClientPortal.Data.Entities.TD.AdRoll;
-using ClientPortal.Data.Entities.TD.DBM;
 using ClientPortal.Web.Areas.TD.Models;
 using ClientPortal.Web.Controllers;
 using ClientPortal.Web.Models;
@@ -21,9 +18,9 @@ namespace ClientPortal.Web.Areas.TD.Controllers
     [Authorize]
     public class StatsController : CPController
     {
-        public StatsController(ITDRepository tdRepository, IClientPortalRepository cpRepository)
+        public StatsController(ITDRepository cptdRepository, IClientPortalRepository cpRepository)
         {
-            tdRepo = tdRepository;
+            cptdRepo = cptdRepository;
             cpRepo = cpRepository;
         }
 
@@ -34,7 +31,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end) || userInfo.TDAccount == null)
                 return Json(new { });
 
-            var summaries = tdRepo.GetDailyStatsSummaries(start, end, userInfo.TDAccount);
+            var summaries = cptdRepo.GetDailyStatsSummaries(start, end, userInfo.TDAccount);
 
             var kgrid = new KendoGrid<StatsSummary>(request, summaries);
             var aggregates = GetAggregates(summaries, userInfo);
@@ -82,7 +79,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             }
             request.SortObjects = sortObjects;
 
-            var summaries = tdRepo.GetCreativeStatsSummaries(start, end, userInfo.TDAccount);
+            var summaries = cptdRepo.GetCreativeStatsSummaries(start, end, userInfo.TDAccount);
 
             var kgrid = new KendoGrid<CreativeStatsSummary>(request, summaries);
             kgrid.aggregates = GetAggregates(summaries, userInfo);
@@ -97,7 +94,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             var userInfo = GetUserInfo();
 
             var endDate = userInfo.TD_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
-            var weekStats = tdRepo.GetWeekStats(userInfo.TDAccount, numweeks, endDate);
+            var weekStats = cptdRepo.GetWeekStats(userInfo.TDAccount, numweeks, endDate);
             var kgrid = new KendoGrid<RangeStat>(request, weekStats);
             if (weekStats.Any())
                 kgrid.aggregates = GetAggregates(weekStats, userInfo);
@@ -110,7 +107,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             var userInfo = GetUserInfo();
 
             var endDate = userInfo.TD_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
-            var weekStats = tdRepo.GetWeekStats(userInfo.TDAccount, numweeks, endDate);
+            var weekStats = cptdRepo.GetWeekStats(userInfo.TDAccount, numweeks, endDate);
             var rows = Mapper.Map<IEnumerable<RangeStat>, IEnumerable<RangeStatExportRow>>(weekStats);
 
             string filename = "Weekly" + ControllerHelpers.DateStamp() + ".csv";
@@ -123,7 +120,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             var userInfo = GetUserInfo();
 
             var endDate = userInfo.TD_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
-            var monthStats = tdRepo.GetMonthStats(userInfo.TDAccount, nummonths, endDate);
+            var monthStats = cptdRepo.GetMonthStats(userInfo.TDAccount, nummonths, endDate);
             var kgrid = new KendoGrid<RangeStat>(request, monthStats);
             if (monthStats.Any())
                 kgrid.aggregates = GetAggregates(monthStats, userInfo);
@@ -136,7 +133,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             var userInfo = GetUserInfo();
 
             var endDate = userInfo.TD_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
-            var monthStats = tdRepo.GetMonthStats(userInfo.TDAccount, nummonths, endDate);
+            var monthStats = cptdRepo.GetMonthStats(userInfo.TDAccount, nummonths, endDate);
             var rows = Mapper.Map<IEnumerable<RangeStat>, IEnumerable<RangeStatExportRow>>(monthStats);
 
             string filename = "Monthly" + ControllerHelpers.DateStamp() + ".csv";
