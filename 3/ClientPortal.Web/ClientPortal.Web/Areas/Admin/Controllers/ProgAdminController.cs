@@ -12,23 +12,23 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
     [Authorize(Users = "admin")]
     public class ProgAdminController : CPController
     {
-        public ProgAdminController(DirectAgents.Domain.Abstract.ITDRepository datdRepository, IClientPortalRepository cpRepository)
+        public ProgAdminController(DirectAgents.Domain.Abstract.ITDRepository progRepository, IClientPortalRepository cpRepository)
         {
-            datdRepo = datdRepository;
+            progRepo = progRepository;
             cpRepo = cpRepository;
         }
 
         public ActionResult Advertisers()
         {
-            var tdAdvertisers = datdRepo.Advertisers().OrderBy(a => a.Name).ToList();
+            var progAdvertisers = progRepo.Advertisers().OrderBy(a => a.Name).ToList();
             var userProfiles = cpRepo.UserProfiles().Where(up => up.TDAdvertiserId.HasValue).ToList();
             var advertiserVMs = new List<AdvertiserVM>();
-            foreach (var tdAdv in tdAdvertisers)
+            foreach (var progAdv in progAdvertisers)
             {
                 var advVM = new AdvertiserVM
                 {
-                    TDAdvertiser = tdAdv,
-                    UserProfiles = userProfiles.Where(up => up.TDAdvertiserId.Value == tdAdv.Id)
+                    ProgAdvertiser = progAdv,
+                    UserProfiles = userProfiles.Where(up => up.TDAdvertiserId.Value == progAdv.Id)
                 };
                 advertiserVMs.Add(advVM);
             }
@@ -37,17 +37,17 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public ActionResult CreateUserProfile(int advId) // (for a TDAdvertiser)
         {
-            var tdAdvertiser = datdRepo.Advertiser(advId);
-            if (tdAdvertiser == null)
+            var progAdvertiser = progRepo.Advertiser(advId);
+            if (progAdvertiser == null)
                 return HttpNotFound();
-            return View(tdAdvertiser);
+            return View(progAdvertiser);
         }
 
         [HttpPost]
         public ActionResult CreateUserProfile(int advId, string username, string password)
         {
-            var tdAdvertiser = datdRepo.Advertiser(advId);
-            if (tdAdvertiser != null)
+            var progAdvertiser = progRepo.Advertiser(advId);
+            if (progAdvertiser != null)
             {
                 if (String.IsNullOrWhiteSpace(username))
                     ModelState.AddModelError("", "Username must be supplied.");
@@ -57,50 +57,35 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                     ModelState.AddModelError("", "Password must be supplied.");
 
                 if (!ModelState.IsValid)
-                    return View(tdAdvertiser);
+                    return View(progAdvertiser);
 
                 WebSecurity.CreateUserAndAccount(
                     username, password,
-                    new { TDAdvertiserId = tdAdvertiser.Id });
+                    new { TDAdvertiserId = progAdvertiser.Id });
             }
             return RedirectToAction("Advertisers");
         }
 
         public ActionResult AssignUserProfile(int advId)
         {
-            var tdAdvertiser = datdRepo.Advertiser(advId);
-            if (tdAdvertiser == null)
+            var progAdvertiser = progRepo.Advertiser(advId);
+            if (progAdvertiser == null)
                 return HttpNotFound();
 
             ViewBag.UserProfiles = cpRepo.UserProfiles().OrderBy(up => up.UserName);
-            return View(tdAdvertiser);
+            return View(progAdvertiser);
         }
         [HttpPost]
         public ActionResult AssignUserProfile(int advId, int userId)
         {
-            var tdAdvertiser = datdRepo.Advertiser(advId);
+            var progAdvertiser = progRepo.Advertiser(advId);
             var userProfile = cpRepo.GetUserProfile(userId);
-            if (tdAdvertiser != null && userProfile != null)
+            if (progAdvertiser != null && userProfile != null)
             {
-                userProfile.TDAdvertiserId = tdAdvertiser.Id;
+                userProfile.TDAdvertiserId = progAdvertiser.Id;
                 cpRepo.SaveChanges();
             }
             return RedirectToAction("Advertisers");
         }
-
-        public ActionResult Test()
-        {
-            var advId = 2;
-            var startDate = new DateTime(2015, 11, 1);
-            var endDate = new DateTime(2016, 3, 31);
-
-            //var stats = datdRepo.DailySummaryBasicStats(advId, startDate, endDate);
-            //var stats = datdRepo.DayOfWeekBasicStats(advId, startDate, endDate);
-            var stat = datdRepo.MTDBasicStat(advId, endDate);
-            //var stat = datdRepo.DateRangeBasicStat(advId, startDate, endDate);
-
-            var json = Json(stat, JsonRequestBehavior.AllowGet);
-            //var json = Json(stats);
-            return json;        }
     }
 }

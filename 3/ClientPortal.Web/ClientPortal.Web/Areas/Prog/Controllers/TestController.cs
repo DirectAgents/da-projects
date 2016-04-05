@@ -7,9 +7,9 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
 {
     public class TestController : CPController
     {
-        public TestController(ITDRepository datdRepository)
+        public TestController(ITDRepository progRepository)
         {
-            datdRepo = datdRepository;
+            progRepo = progRepository;
         }
 
         public ActionResult Executive()
@@ -28,11 +28,28 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             var advId = 18;
             var startDate = new DateTime(2016, 3, 1);
             var endDate = new DateTime(2016, 3, 23);
-            var stats = datdRepo.DayOfWeekBasicStats(advId, startDate, endDate);
+            var stats = progRepo.DayOfWeekBasicStats(advId, startDate, endDate);
             //var stats = tdRepo.DailySummaryBasicStats(advId, startDate, endDate);
             var json = Json(stats, JsonRequestBehavior.AllowGet);
             //var json = Json(stats);
             return json;
         }
+
+        public JsonResult TestCalls()
+        {
+            var advId = 2;
+            var startDate = new DateTime(2015, 2, 25);
+            var endDate = new DateTime(2016, 3, 31);
+
+            var stats = progRepo.DailySummaryBasicStats(advId, startDate, endDate); // for graphs (daily #s)
+            //var stats = progRepo.DayOfWeekBasicStats(advId, startDate, endDate);
+            //var stat = progRepo.MTDBasicStat(advId, endDate);
+            //var stat = progRepo.DateRangeBasicStat(advId, startDate, endDate); // for campaign-to-date summary (won't include budget)
+
+            var json = Json(stats, JsonRequestBehavior.AllowGet);
+            //var json = Json(stats);
+            return json;
+        }
+
     }
 }

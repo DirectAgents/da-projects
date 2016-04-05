@@ -8,9 +8,9 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
 {
     public class StatsController : CPController
     {
-        public StatsController(ITDRepository datdRepository, ClientPortal.Data.Contracts.IClientPortalRepository cpRepository)
+        public StatsController(ITDRepository progRepository, ClientPortal.Data.Contracts.IClientPortalRepository cpRepository)
         {
-            this.datdRepo = datdRepository;
+            this.progRepo = progRepository;
             this.cpRepo = cpRepository;
         }
 
@@ -36,7 +36,7 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             if (userInfo.ProgAdvertiser == null)
                 return null;
 
-            var basicStat = datdRepo.MTDBasicStat(userInfo.ProgAdvertiser.Id, endDate);
+            var basicStat = progRepo.MTDBasicStat(userInfo.ProgAdvertiser.Id, endDate);
             var array = new BasicStat[] { basicStat };
 
             var json = Json(array, JsonRequestBehavior.AllowGet);

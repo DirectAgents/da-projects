@@ -9,16 +9,16 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
     [Authorize(Users = "admin")]
     public class UsersController : CPController
     {
-        public UsersController(IClientPortalRepository cpRepository, DirectAgents.Domain.Abstract.ITDRepository datdRepository)
+        public UsersController(IClientPortalRepository cpRepository, DirectAgents.Domain.Abstract.ITDRepository progRepository)
         {
             cpRepo = cpRepository;
-            datdRepo = datdRepository;
+            progRepo = progRepository;
         }
 
         public ActionResult Index()
         {
             var cakeAdvertisers = cpRepo.Advertisers.ToList();
-            var progAdvertisers = datdRepo.Advertisers().ToList();
+            var progAdvertisers = progRepo.Advertisers().ToList();
             var userProfiles = cpRepo.UserProfiles().OrderBy(up => up.UserName).ToList();
             var userVMs = userProfiles.Select(up => new UserVM
             {

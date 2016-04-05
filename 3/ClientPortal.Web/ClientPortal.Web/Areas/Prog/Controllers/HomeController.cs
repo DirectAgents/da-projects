@@ -6,9 +6,9 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
 {
     public class HomeController : CPController
     {
-        public HomeController(ITDRepository datdRepository, ClientPortal.Data.Contracts.IClientPortalRepository cpRepository)
+        public HomeController(ITDRepository progRepository, ClientPortal.Data.Contracts.IClientPortalRepository cpRepository)
         {
-            this.datdRepo = datdRepository;
+            this.progRepo = progRepository;
             this.cpRepo = cpRepository;
         }
 

@@ -16,7 +16,7 @@ namespace ClientPortal.Web.Controllers
     {
         protected IClientPortalRepository cpRepo;
         protected ClientPortal.Data.Contracts.ITDRepository cptdRepo;
-        protected DirectAgents.Domain.Abstract.ITDRepository datdRepo;
+        protected DirectAgents.Domain.Abstract.ITDRepository progRepo;
 
         // return a redirect if needed to logout; otherwise return null
         protected ActionResult CheckLogout(UserInfo userInfo)
@@ -68,8 +68,8 @@ namespace ClientPortal.Web.Controllers
                 cpAdvertiser = GetAdvertiser(userProfile.CakeAdvertiserId);
                 if (userProfile.TradingDeskAccountId.HasValue && cptdRepo != null)
                     tradingDeskAccount = cptdRepo.GetTradingDeskAccount(userProfile.TradingDeskAccountId.Value);
-                if (userProfile.TDAdvertiserId.HasValue && datdRepo != null)
-                    progAdvertiser = datdRepo.Advertiser(userProfile.TDAdvertiserId.Value);
+                if (userProfile.TDAdvertiserId.HasValue && progRepo != null)
+                    progAdvertiser = progRepo.Advertiser(userProfile.TDAdvertiserId.Value);
             }
             var userInfo = new UserInfo(userProfile, cpAdvertiser, tradingDeskAccount: tradingDeskAccount, progAdvertiser: progAdvertiser);
             return userInfo;
@@ -146,7 +146,7 @@ namespace ClientPortal.Web.Controllers
         {
             if (cpRepo != null) cpRepo.Dispose();
             if (cptdRepo != null) cptdRepo.Dispose();
-            if (datdRepo != null) datdRepo.Dispose();
+            if (progRepo != null) progRepo.Dispose();
             base.Dispose(disposing);
         }
     }
