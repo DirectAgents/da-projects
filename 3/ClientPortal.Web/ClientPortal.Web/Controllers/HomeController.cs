@@ -32,10 +32,12 @@ namespace ClientPortal.Web.Controllers
 
             if (userInfo.IsAdmin)
                 return Redirect("/Admin");
-            else if (userInfo.HasTradingDesk(true))
-                return RedirectToAction("Index", "Home", new { area = "td" });
             else if (userInfo.HasSearch)
                 return RedirectToAction("Index", "SearchHome");
+            else if (userInfo.HasProgrammatic)
+                return RedirectToAction("Index", "Home", new { area = "prog" });
+            else if (userInfo.HasTradingDesk(true))
+                return RedirectToAction("Index", "Home", new { area = "td" });
             else
                 return RedirectToAction("Index");
         }

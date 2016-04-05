@@ -1,0 +1,75 @@
+﻿@model ClientPortal.Web.Models.UserInfo
+@{
+    ViewBag.Title = "Executive Summary";
+}
+
+<h2>@Model.ProgAdvertiser.Name</h2>
+
+<div id="gridMTD"></div>
+<div id="gridPrevMonth"></div>
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+        SetupGrids();
+    });
+
+    function SetupGrids() {
+        $("#gridMTD").kendoGrid({
+            columns: [
+            {
+                title: "Month to Date: x/1/2016 thru x/x/2016",
+                columns: [
+                { field: "Budget" },
+                { field: "MediaSpend", title: "Spend" },
+                { field: "Pacing" },
+                { field: "Impressions" },
+                { field: "Clicks" },
+                { field: "CTR" },
+                { field: "eCPC" },
+                { field: "Conversions" },
+                { field: "eCPA" }
+                ]
+            }
+            ],
+            dataSource: {
+                transport: {
+                    read: {
+                        type: 'post',
+                        dataType: 'json',
+                        url: '@Url.Action("ExecMTD", "Stats")',
+                    }
+                }
+            }
+        });
+
+        $("#gridPrevMonth").kendoGrid({
+            columns: [
+            {
+                title: "Previous Month: x/1/2016 thru x/x/2016",
+                columns: [
+                { field: "Budget" },
+                { field: "MediaSpend", title: "Spend" },
+                { field: "Pacing" },
+                { field: "Impressions" },
+                { field: "Clicks" },
+                { field: "CTR" },
+                { field: "eCPC" },
+                { field: "Conversions" },
+                { field: "eCPA" }
+                ]
+            }
+            ],
+            dataSource: {
+                transport: {
+                    read: {
+                        type: 'post',
+                        dataType: 'json',
+                        url: '@Url.Action("ExecLastMonth", "Stats")',
+                    }
+                }
+            }
+        });
+    }
+</script>
+}

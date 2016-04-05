@@ -249,6 +249,8 @@
     <Compile Include="Areas\Admin\Models\CPMReportWizardVM.cs" />
     <Compile Include="Areas\Admin\Models\CreativeStatVM.cs" />
     <Compile Include="Areas\Admin\Models\UserVM.cs" />
+    <Compile Include="Areas\Prog\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Prog\Controllers\StatsController.cs" />
     <Compile Include="Areas\Prog\Controllers\TestController.cs" />
     <Compile Include="Areas\Prog\ProgAreaRegistration.cs" />
     <Compile Include="Areas\TD\Controllers\StatsController.cs" />
@@ -1142,6 +1144,7 @@
     <Content Include="Areas\Prog\Views\web.config" />
     <Content Include="Areas\Prog\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Admin\Views\ProgAdmin\AssignUserProfile.cshtml" />
+    <Content Include="Areas\Prog\Views\Home\Index.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />
@@ -2995,6 +2998,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Prog\Models\" />
+    <Folder Include="Areas\Prog\Views\Stats\" />
     <Folder Include="Filters\" />
   </ItemGroup>
   <PropertyGroup>

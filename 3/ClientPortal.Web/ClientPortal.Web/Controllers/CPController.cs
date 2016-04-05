@@ -62,16 +62,16 @@ namespace ClientPortal.Web.Controllers
 
             ClientPortal.Data.Contexts.Advertiser cpAdvertiser = null;
             TradingDeskAccount tradingDeskAccount = null;
-            DirectAgents.Domain.Entities.TD.Advertiser datdAdvertiser = null;
+            DirectAgents.Domain.Entities.TD.Advertiser progAdvertiser = null;
             if (userProfile != null)
             {
                 cpAdvertiser = GetAdvertiser(userProfile.CakeAdvertiserId);
                 if (userProfile.TradingDeskAccountId.HasValue && cptdRepo != null)
                     tradingDeskAccount = cptdRepo.GetTradingDeskAccount(userProfile.TradingDeskAccountId.Value);
                 if (userProfile.TDAdvertiserId.HasValue && datdRepo != null)
-                    datdAdvertiser = datdRepo.Advertiser(userProfile.TDAdvertiserId.Value);
+                    progAdvertiser = datdRepo.Advertiser(userProfile.TDAdvertiserId.Value);
             }
-            var userInfo = new UserInfo(userProfile, cpAdvertiser, tradingDeskAccount: tradingDeskAccount, datdAdvertiser: datdAdvertiser);
+            var userInfo = new UserInfo(userProfile, cpAdvertiser, tradingDeskAccount: tradingDeskAccount, progAdvertiser: progAdvertiser);
             return userInfo;
         }
 
