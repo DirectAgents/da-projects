@@ -32,14 +32,15 @@ namespace CakeExtracter.Commands
         {
             var arUtility = new AdRollUtility(m => Logger.Info(m), m => Logger.Warn(m));
             var freshAdvertisables = arUtility.GetAdvertisables();
-            var freshEids = freshAdvertisables.Select(a => a.eid).ToArray(); // test
+            var freshEids = freshAdvertisables.Select(a => a.eid).ToArray();
             using (var db = new DATDContext())
             {
                 var dbAdvertisables = db.Advertisables.ToList();
                 var dbAdvEids = dbAdvertisables.Select(a => a.Eid).ToArray();
 
-                var outdatedAdvertisables = dbAdvertisables.Where(a => !freshEids.Contains(a.Eid)); // test
-                //TODO: remove these or make Eid null in adr.Advertisable table
+                var outdatedAdvertisables = dbAdvertisables.Where(a => !freshEids.Contains(a.Eid));
+                foreach (var adv in outdatedAdvertisables)
+                    adv.Eid = null; // so DASynchAdrollStats doesn't pick it up
 
                 var platformId_AdRoll = db.Platforms.Where(p => p.Code == Platform.Code_AdRoll).First().Id;
                 var dbAccounts = db.ExtAccounts.Where(a => a.PlatformId == platformId_AdRoll).ToList();
@@ -77,7 +78,7 @@ namespace CakeExtracter.Commands
 
                     if (!dbAcctEids.Contains(adv.eid))
                     { // add
-                        Logger.Info("Adding new Account '{0}' ({1})", adv.name, adv.eid);
+                        Logger.Info("Adding new ExtAccount '{0}' ({1})", adv.name, adv.eid);
                         var newAcct = new ExtAccount
                         {
                             PlatformId = platformId_AdRoll,

@@ -49,6 +49,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             using (CsvReader csv = new CsvReader(reader))
             {
                 csv.Configuration.IgnoreHeaderWhiteSpace = true;
+                csv.Configuration.WillThrowOnMissingField = false;
                 csv.Configuration.SkipEmptyRecords = true;
                 csv.Configuration.RegisterClassMap<AdrollConvRowMap>();
 
