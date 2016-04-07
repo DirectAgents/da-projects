@@ -7,6 +7,11 @@ namespace DirectAgents.Domain.Entities.TD
         public int Day { get; set; }
         public DateTime Date { get; set; }
 
+        public string DayName
+        {
+            get { return Enum.GetName(typeof(DayOfWeek), Day - 1); }
+        }
+
         public int Impressions { get; set; }
         public int Clicks { get; set; }
         public int Conversions { get; set; }

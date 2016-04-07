@@ -14,7 +14,7 @@
 {
 <tr>
     <td>@camp.Advertiser.Name</td>
-    <td>@Html.ActionLink(camp.Name, "Show", new { id = camp.Id })</td>
+    <td>@Html.ActionLink(camp.Name + "(" + camp.ExtAccounts.Count + ")", "Show", new { id = camp.Id })</td>
     <td>
         @Html.ActionLink("Budget+Pacing", "Pacing", "CampStats", new { campId = camp.Id }, null) |
         @Html.ActionLink("Raw", "ExtAccount", "Stats", new { campId = camp.Id, month = Model.MonthString }, null)
