@@ -38,10 +38,10 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
         public JsonResult TestCalls()
         {
             var advId = 2;
-            var startDate = new DateTime(2015, 2, 25);
-            var endDate = new DateTime(2016, 3, 31);
+            var startDate = new DateTime(2016, 2, 20);
+            var endDate = new DateTime(2016, 3, 15);
 
-            var stats = progRepo.DailySummaryBasicStats(advId, startDate, endDate); // for graphs (daily #s)
+            var stats = progRepo.DailySummaryBasicStats(advId); // for graphs (daily #s)
             //var stats = progRepo.DayOfWeekBasicStats(advId, startDate, endDate);
             //var stat = progRepo.MTDBasicStat(advId, endDate);
             //var stat = progRepo.DateRangeBasicStat(advId, startDate, endDate); // for campaign-to-date summary (won't include budget)
