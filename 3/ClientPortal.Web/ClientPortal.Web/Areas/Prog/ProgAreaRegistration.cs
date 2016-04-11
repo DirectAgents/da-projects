@@ -17,7 +17,7 @@ namespace ClientPortal.Web.Areas.Prog
             context.MapRoute(
                 "Prog_default",
                 "Prog/{controller}/{action}/{id}",
-                new { action = "Index", id = UrlParameter.Optional }
+                new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

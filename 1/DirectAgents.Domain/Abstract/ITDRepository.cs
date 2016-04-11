@@ -65,7 +65,7 @@ namespace DirectAgents.Domain.Abstract
 
         //TD Stats
         IEnumerable<BasicStat> DayOfWeekBasicStats(int advId, DateTime startDate, DateTime endDate);
-        IEnumerable<BasicStat> DailySummaryBasicStats(int advId, DateTime startDate, DateTime endDate);
+        IEnumerable<BasicStat> DailySummaryBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null);
         BasicStat MTDBasicStat(int advId, DateTime endDate);
         BasicStat DateRangeBasicStat(int advId, DateTime startDate, DateTime endDate);
 
@@ -75,7 +75,7 @@ namespace DirectAgents.Domain.Abstract
         bool AddDailySummary(DailySummary daySum);
         bool SaveDailySummary(DailySummary daySum);
         void FillExtended(DailySummary daySum);
-        IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null);
+        IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null, int? advId = null);
         IQueryable<StrategySummary> StrategySummaries(DateTime? startDate, DateTime? endDate, int? stratId = null, int? acctId = null, int? campId = null);
         IQueryable<TDadSummary> TDadSummaries(DateTime? startDate, DateTime? endDate, int? tdadId = null, int? acctId = null, int? campId = null);
         IQueryable<SiteSummary> SiteSummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null);

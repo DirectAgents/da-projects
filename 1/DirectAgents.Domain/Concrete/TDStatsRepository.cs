@@ -19,18 +19,25 @@ group by DatePart(weekday, Date) order by Day";
             return DailySummaryBasicStatsWithCompute(advId, startDate, endDate, sql);
         }
 
-        public IEnumerable<BasicStat> DailySummaryBasicStats(int advId, DateTime startDate, DateTime endDate)
+        public IEnumerable<BasicStat> DailySummaryBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null)
         {
             return DailySummaryBasicStatsWithCompute(advId, startDate, endDate, null);
         }
 
-        private IEnumerable<BasicStat> DailySummaryBasicStatsWithCompute(int advId, DateTime startDate, DateTime endDate, string sql)
+        private IEnumerable<BasicStat> DailySummaryBasicStatsWithCompute(int advId, DateTime? startDate, DateTime? endDate, string sql)
         {
+            if (!startDate.HasValue)
+            {
+                startDate = EarliestStatDate(advId);
+            }
+            if (!endDate.HasValue)
+                endDate = DateTime.Today.AddDays(-1);
+
             if (sql == null) // Default query - one row per day
                 sql = @"select Date, sum(Impressions) as Impressions, sum(Clicks) as Clicks, sum(Conversions) as Conversions, sum(MediaSpend) as MediaSpend, sum(MgmtFee) as MgmtFee
 from td.fDailySummaryBasicStats(@p1, @p2, @p3)
 group by Date order by Date";
-            var stats = DailySummaryBasicStatsRaw(advId, startDate, endDate, sql);
+            var stats = DailySummaryBasicStatsRaw(advId, startDate.Value, endDate.Value, sql);
             foreach (var stat in stats)
             {
                 stat.ComputeCalculatedStats();
@@ -98,6 +105,14 @@ group by Date order by Date";
 //            stat.ComputeCalculatedStats();
 //            return stat;
 //        }
+        public DateTime? EarliestStatDate(int? advId)
+        {
+            DateTime? earliest = null;
+            var dSums = DailySummaries(null, null, advId: advId);
+            if (dSums.Any())
+                earliest = dSums.Min(s => s.Date);
+            return earliest;
+        }
 
         public TDStatsGauge GetStatsGauge(ExtAccount extAccount)
         {
@@ -178,7 +193,7 @@ group by Date order by Date";
                 daySum.ExtAccount = ExtAccount(daySum.AccountId);
         }
 
-        public IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null)
+        public IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null, int? advId = null)
         {
             var dSums = context.DailySummaries.AsQueryable();
             if (startDate.HasValue)
@@ -188,7 +203,9 @@ group by Date order by Date";
             if (acctId.HasValue)
                 dSums = dSums.Where(ds => ds.AccountId == acctId.Value);
             if (campId.HasValue)
-                dSums = dSums.Where(ds => ds.ExtAccount.CampaignId == campId);
+                dSums = dSums.Where(ds => ds.ExtAccount.CampaignId == campId.Value);
+            if (advId.HasValue)
+                dSums = dSums.Where(ds => ds.ExtAccount.Campaign.AdvertiserId == advId.Value);
             return dSums;
         }
 
@@ -204,7 +221,7 @@ group by Date order by Date";
             if (acctId.HasValue)
                 sSums = sSums.Where(s => s.Strategy.AccountId == acctId.Value);
             if (campId.HasValue)
-                sSums = sSums.Where(s => s.Strategy.ExtAccount.CampaignId == campId);
+                sSums = sSums.Where(s => s.Strategy.ExtAccount.CampaignId == campId.Value);
             return sSums;
         }
 
@@ -220,7 +237,7 @@ group by Date order by Date";
             if (acctId.HasValue)
                 tSums = tSums.Where(s => s.TDad.AccountId == acctId.Value);
             if (campId.HasValue)
-                tSums = tSums.Where(s => s.TDad.ExtAccount.CampaignId == campId);
+                tSums = tSums.Where(s => s.TDad.ExtAccount.CampaignId == campId.Value);
             return tSums;
         }
 
@@ -234,7 +251,7 @@ group by Date order by Date";
             if (acctId.HasValue)
                 sSums = sSums.Where(s => s.AccountId == acctId.Value);
             if (campId.HasValue)
-                sSums = sSums.Where(s => s.ExtAccount.CampaignId == campId);
+                sSums = sSums.Where(s => s.ExtAccount.CampaignId == campId.Value);
             return sSums;
         }
 
@@ -252,7 +269,7 @@ group by Date order by Date";
             if (acctId.HasValue)
                 convs = convs.Where(s => s.AccountId == acctId.Value);
             if (campId.HasValue)
-                convs = convs.Where(s => s.ExtAccount.CampaignId == campId);
+                convs = convs.Where(s => s.ExtAccount.CampaignId == campId.Value);
             return convs;
         }
 

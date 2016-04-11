@@ -7,7 +7,7 @@ namespace ClientPortal.Web.Areas.Admin.Models
 {
     public class AdvertiserVM
     {
-        public DirectAgents.Domain.Entities.TD.Advertiser TDAdvertiser { get; set; }
+        public DirectAgents.Domain.Entities.TD.Advertiser ProgAdvertiser { get; set; }
         public IEnumerable<UserProfile> UserProfiles { get; set; }
 
         public string Login

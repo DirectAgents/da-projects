@@ -10,18 +10,18 @@ namespace ClientPortal.Web.Models
 {
     public class UserInfo
     {
-        public UserInfo(UserProfile userProfile, ClientPortal.Data.Contexts.Advertiser cpAdvertiser, TradingDeskAccount tradingDeskAccount = null, DirectAgents.Domain.Entities.TD.Advertiser datdAdvertiser = null)
+        public UserInfo(UserProfile userProfile, ClientPortal.Data.Contexts.Advertiser cpAdvertiser, TradingDeskAccount tradingDeskAccount = null, DirectAgents.Domain.Entities.TD.Advertiser progAdvertiser = null)
         {
             this.UserProfile = userProfile;
             this.Advertiser = cpAdvertiser;
             this.TDAccount = tradingDeskAccount;
-            this.DATDAdvertiser = datdAdvertiser;
+            this.ProgAdvertiser = progAdvertiser;
         }
 
         private UserProfile UserProfile { get; set; }
         private ClientPortal.Data.Contexts.Advertiser Advertiser { get; set; }
         public TradingDeskAccount TDAccount { get; set; }
-        public DirectAgents.Domain.Entities.TD.Advertiser DATDAdvertiser { get; set; }
+        public DirectAgents.Domain.Entities.TD.Advertiser ProgAdvertiser { get; set; }
 
         public bool HasUserProfile
         {
@@ -180,6 +180,13 @@ namespace ClientPortal.Web.Models
                 return _tdDates;
             }
         }
+
+        public bool HasProgrammatic
+        {
+            get { return (ProgAdvertiser != null); }
+        }
+
+        // --- to be eliminated ---
 
         public bool HasTradingDesk(bool only = false)
         {

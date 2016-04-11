@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using RestSharp;
 
 namespace AdRoll.Clients
@@ -18,6 +19,25 @@ namespace AdRoll.Clients
 
             foreach (var tuple in propertiesWithValue)
                 restRequest.AddParameter(tuple.Item1, tuple.Item2);
+        }
+
+        public virtual string ParametersAsString(bool includeQuestionMark = false)
+        {
+            var propertiesWithValue = from property in GetType().GetProperties()
+                                      let value = property.GetValue(this)
+                                      where value != null
+                                      select Tuple.Create(property.Name, value.ToString());
+            bool first = true;
+            var parms = new StringBuilder(includeQuestionMark ? "?" : String.Empty);
+            foreach (var tuple in propertiesWithValue)
+            {
+                if (first)
+                    first = false;
+                else
+                    parms.Append("&");
+                parms.Append(tuple.Item1 + "=" + tuple.Item2);
+            }
+            return parms.ToString();
         }
     }
 }

@@ -1,0 +1,209 @@
+﻿@model ClientPortal.Web.Models.UserInfo
+@{
+    ViewBag.Title = "Executive Summary";
+}
+
+
+<div id="client_bar">
+	<div id="container">
+		<div class="client_logo"></div>
+        <div class="client_name">@Model.ProgAdvertiser.Name</div>
+    </div>
+</div>
+<div id="page_content">
+    <div id="container">
+    	<div id="page_content">
+		    <section>
+<div id="gridMTD"></div>
+<div id="gridPrevMonth"></div>
+<div class="heading"><p>Campaign to Date</p></div>
+<span>Spend</span><div id="spendTD"></div>
+<span>Impressions</span><div id="ImpressionTD"></div>
+<span>Clicks</span><div id="ClickTD"></div>
+<span>Conversions</span><div id="ConversionTD"></div>
+<div class="heading"><p>Campaign to Date eCPA Trend</p></div>
+<div id="trendECPA"</div>
+            </section>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+        SetupGrids();
+        SetupSparklineCharts();
+        SetupMainChart();
+    });
+
+    function SetupGrids()
+    {
+        $("#gridMTD").kendoGrid({
+            columns: [
+            {
+                
+                title: "Month to Date: x/1/2016 thru x/x/2016",
+                columns: [
+                { field: "Budget" },
+                { field: "MediaSpend", title: "Spend", format: "{0:$###,###,###,###,###,###,###,###.##}" },
+                { field: "Pacing", format: "{0:$###,###,###,###,###,###,###,###.##}" },
+                { field: "Impressions" },
+                { field: "Clicks" },
+                { field: "CTR", format: "{0:$###,###,###,###,###,###,###,###.##}" },
+                { field: "eCPC", format: "{0:$###,###,###,###,###,###,###,###.##}" },
+                { field: "Conversions" },
+                { field: "eCPA", format: "{0:$###,###,###,###,###,###,###,###.##}" },
+                ]
+            }
+            ],
+            dataSource: {
+                transport: {
+                    read: {
+                        type: 'post',
+                        dataType: 'json',
+                        url: '@Url.Action("ExecMTD", "Stats")',
+                    }
+                }
+            }
+        });
+
+        $("#gridPrevMonth").kendoGrid({
+            columns: [
+            {
+                title: "Previous Month: x/1/2016 thru x/x/2016",
+                columns: [
+                { field: "Budget" },
+                { field: "MediaSpend", title: "Spend", format: "{0:$###,###,###,###,###,###,###,###.##}" },
+                { field: "Pacing", format: "{0:$###,###,###,###,###,###,###,###.##}" },
+                { field: "Impressions" },
+                { field: "Clicks" },
+                { field: "CTR", format: "{0:$###,###,###,###,###,###,###,###.##}" },
+                { field: "eCPC", format: "{0:$###,###,###,###,###,###,###,###.##}" },
+                { field: "Conversions" },
+                { field: "eCPA", format: "{0:$###,###,###,###,###,###,###,###.##}" }
+                ]
+            }
+            ],
+            dataSource: {
+                transport: {
+                    read: {
+                        type: 'post',
+                        dataType: 'json',
+                        url: '@Url.Action("ExecLastMonth", "Stats")',
+                    }
+                }
+            }
+        });
+    }
+
+    function SetupMainChart()
+    {
+        var datasource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("TestCalls", "Test")',
+                }
+            },
+            schema: {
+                model: {
+                    id: 'Id',
+                    fields: {
+                        Date: { type: 'date' }
+                        // rest of fields: numbers
+                    }
+                }
+            }
+        });
+        $("#trendECPA").kendoChart({
+            dataSource: datasource,
+            series: [
+                { field: "eCPA", type: "area", color: "rgb(13, 141, 214)", tooltip: { format: "{0:C}" } }
+            ],
+            categoryAxis: {
+                field: "Date",
+                labels: { rotation: -90, step: 5 },
+                axisCrossingValue: [0, 2000],
+                majorGridLines: { visible: false }
+            },
+            valueAxis: [
+                { labels: { format: "C" } }
+            ],
+            tooltip: { visible: true }
+        });
+    }
+
+    function SetupSparklineCharts()
+    {
+        $("#spendTD").kendoSparkline({
+            type: "area",
+            lineColor: '#2424e2',
+            fillColor: '#abbad8',
+            series: [{
+                field: "MediaSpend", title: "Spend", format: "{0:$###,###,###,###,###,###,###,###.##}"
+            }],
+            dataSource: {
+                transport: {
+                    read: {
+                        type: 'post',
+                        dataType: 'json',
+                        url: '@Url.Action("TestCalls", "Test")',
+                    }
+                }
+            }
+        });
+        $("#ImpressionTD").kendoSparkline({
+            type: "area",
+            lineColor: '#2424e2',
+            fillColor: '#abbad8',
+            series: [{
+                field: "Impressions", title: "Impression", format: "{0:$###,###,###,###,###,###,###,###.##}"
+            }],
+            dataSource: {
+                transport: {
+                    read: {
+                        type: 'post',
+                        dataType: 'json',
+                        url: '@Url.Action("TestCalls", "Test")',
+                    }
+                }
+            }
+        });
+        $("#ClickTD").kendoSparkline({
+            type: "area",
+            lineColor: '#2424e2',
+            fillColor: '#abbad8',
+            series: [{
+                field: "Clicks", title: "Click"
+            }],
+            dataSource: {
+                transport: {
+                    read: {
+                        type: 'post',
+                        dataType: 'json',
+                        url: '@Url.Action("TestCalls", "Test")',
+                    }
+                }
+            }
+        });
+        $("#ConversionTD").kendoSparkline({
+            type: "area",
+            lineColor: '#2424e2',
+            fillColor: '#abbad8',
+            series: [{
+                field: "Conversions", title: "Conversion"
+            }],
+            dataSource: {
+                transport: {
+                    read: {
+                        type: 'post',
+                        dataType: 'json',
+                        url: '@Url.Action("TestCalls", "Test")',
+                    }
+                }
+            }
+        });
+    }
+</script>
+}

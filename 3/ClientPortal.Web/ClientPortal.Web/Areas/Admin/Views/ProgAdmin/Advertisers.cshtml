@@ -14,15 +14,15 @@
 @foreach (var advVM in Model)
 {
     <tr>
-        <td style="text-align:right">@advVM.TDAdvertiser.Id</td>
-        <td>@advVM.TDAdvertiser.Name</td>
+        <td style="text-align:right">@advVM.ProgAdvertiser.Id</td>
+        <td>@advVM.ProgAdvertiser.Name</td>
         <td>
             @if (advVM.UserProfiles.Count() > 0) {
                 @advVM.Login
             } else {
-                @Ajax.ActionLink("create", "CreateUserProfile", new { advId = advVM.TDAdvertiser.Id }, ajaxOptions)
+                @Ajax.ActionLink("create", "CreateUserProfile", new { advId = advVM.ProgAdvertiser.Id }, ajaxOptions)
                 <text> | </text>
-                @Ajax.ActionLink("assign", "AssignUserProfile", new { advId = advVM.TDAdvertiser.Id }, ajaxOptions)
+                @Ajax.ActionLink("assign", "AssignUserProfile", new { advId = advVM.ProgAdvertiser.Id }, ajaxOptions)
             }
         </td>
     </tr>
