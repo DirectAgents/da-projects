@@ -22,6 +22,7 @@ BEGIN
 		, ISNULL(PlatformBudgetInfo.MgmtFeePct, ISNULL(BudgetInfo.MgmtFeePct, Campaign.MgmtFeePct)) AS MgmtFeePct
 		, ISNULL(PlatformBudgetInfo.MarginPct, ISNULL(BudgetInfo.MarginPct, Campaign.MarginPct)) AS MarginPct
 		, Account.Id AS AccountId
+		, dt.SiteId
 		, Account.PlatformId
 		FROM td.Campaign
 		INNER JOIN td.Account ON Account.CampaignId = Campaign.Id
@@ -62,9 +63,10 @@ BEGIN
 		  END AS Revenue
 		, dtData.MgmtFeePct
 		FROM td.Site
-		INNER JOIN td.SiteSummary ON Site.Id = SiteSummary.SiteId
+		INNER JOIN td.SiteSummary ON SiteSummary.SiteId = Site.Id
 		INNER JOIN dtData
 		  ON (dtData.AccountId = SiteSummary.AccountId)
+		 AND (dtData.SiteId = SiteSummary.SiteId)
 		 AND (dtData.Date = SiteSummary.Date)
 		LEFT OUTER JOIN td.Account ON Account.Id = SiteSummary.AccountId
 		WHERE (td.SiteSummary.Date BETWEEN @StartDate AND @EndDate)
