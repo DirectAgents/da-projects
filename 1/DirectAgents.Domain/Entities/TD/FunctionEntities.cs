@@ -5,7 +5,8 @@ namespace DirectAgents.Domain.Entities.TD
     public class BasicStat
     {
         public int Day { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } // also used for End Date
+        public DateTime StartDate { get; set; }
 
         public string DayName
         {

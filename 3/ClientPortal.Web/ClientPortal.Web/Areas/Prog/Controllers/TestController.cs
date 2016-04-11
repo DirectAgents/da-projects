@@ -12,6 +12,11 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             progRepo = progRepository;
         }
 
+        public ActionResult Blank()
+        {
+            return View();
+        }
+
         public ActionResult Executive()
         {
             return View();

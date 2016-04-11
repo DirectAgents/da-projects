@@ -23,9 +23,9 @@ body {
 .logo {
 	height: 100px;
 	width: 34%;
-	background: url("http://www.directagents.com/preview/portal/img/da_logo.jpg") #52AAE3;
+	background: url(../Images/da_logo.jpg) #52AAE3;
 	border-top: 4px solid #2d599d;
-	border-left: solid 1px #77c0ee;
+	border-left: groove 2px #77C0E7;
 	margin-top: -4px;
 	z-index: 100;
 	float: left;
@@ -91,6 +91,21 @@ body {
 	z-index: -1;
 	position: relative;
 }
+#client_bar_exec {
+	background-color: #EAEAEA;
+	height: 395px;
+	float: left;
+	width: 100%;
+	z-index: -1;
+	position: relative;
+}
+.exec th {
+	background-color:#FFF;
+	font-weight:400 !important;
+	font-size:13px !important;
+	padding:15px 2px !important;
+	}
+.exec_charts{width:65.7%; float:right;}
 .client_logo {
 	height: 80px;
 	width: 80px;
@@ -106,6 +121,33 @@ body {
 	background-position: center center;
 	background-size: contain;
 }
+.client_logo_exec {
+	height: 200px;
+	width: 200px;
+	box-shadow: inset 0px 1px 1px #888;
+	-webkit-box-shadow: inset 0px 1px 1px #888;
+	-moz-box-shadow: inset 0px 1px 1px #888;
+	box-shadow: inset 0px 1px 1px #888;
+	background-color: #FFF;
+	border-radius: 50%;
+	margin-top: 40px;
+	background-image: url("http://www.directagents.com/preview/portal/img/logo_monterey.jpg");
+	background-position: center center;
+	background-size: contain;
+	margin-left:7%;
+}
+.client_name_exec {
+	font-size: 24px;
+	line-height:28px;
+	color: #444444;
+	margin-left: 4%;
+	text-shadow: 0px 1px 1px #fff;
+	margin-top: 20px;
+	width:26%;
+	text-align:center;
+	border-top:groove #ffffff 2px;
+	padding-top:20px;
+}
 .client_name {
 	font-size: 24px;
 	color: #444444;
@@ -113,7 +155,14 @@ body {
 	float: left;
 	text-shadow: 0px 1px 1px #fff;
 	margin-top: 40px;
+	border-bottom: groove 2px#fff;
+    width: 24%;
 }
+#exec_leftbar{
+	width:34%;
+	background-color:#00F;
+	float:left;
+	}
 .page_title {
 	font-size: 36px;
 	font-weight: 300;
@@ -127,6 +176,13 @@ body {
 	margin-top: 160px;
 	background: #FFF;
 	position: relative;
+}
+#page_content_exec {
+	width: 100%;
+	margin-top: 40px;
+	background: #FFF;
+	position: relative;
+	float:left;
 }
 .heading {
 	background: #2d599d; /* Old browsers */
@@ -153,12 +209,17 @@ body {
  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f4f4f4', GradientType=0 ); /* IE6-9 */
 	height: auto;
 	padding: 25px 20px;
+	margin-bottom:10px;
 }
-.chart {
-	clear: both;
-	padding: 0;
-	width: 90%;
-	margin-left: 10%;
+.content_box2 {
+	background: #ffffff; /* Old browsers */
+	background: -moz-linear-gradient(top, #ffffff 0%, #f4f4f4 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top, #ffffff 0%, #f4f4f4 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom, #ffffff 0%, #f4f4f4 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f4f4f4', GradientType=0 ); /* IE6-9 */
+	height: auto;
+	padding: 10px 20px;
+	margin-bottom:0px;
 }
 .grid {
 	color: #666666;
@@ -174,14 +235,40 @@ body {
 	border-left: 1px solid #d1d1d1;
 	text-align: center;
 	font-weight: 300;
+	padding: 15px 10px; /* edited by KS, to handle larger #s */
+}
+.grid2 {
+	color: #666666;
+	font-size: 14px;
+	margin-top:-54px;
+}
+.grid2 th {
+	font-weight: 800;
+	border-bottom: 1px solid #666666;
+	padding: 15px;
+	border-left: 1px solid #d1d1d1;
+	background-color:#fff;
+}
+.grid2 td {
+	border-left: 1px solid #d1d1d1;
+	text-align: center;
+	font-weight: 300;
 	padding: 15px;
 }
 .col_first {
 	border-left: 0px !important;
 	text-align: left !important;
 }
+.col_first2 {
+	border-left: 0px !important;
+	text-align: center !important;
+}
 .grey_row {
 	background-color: #f4f4f4;
+}
+#exec_right{
+	width:65%;
+	float:right;
 }
 #footer{
 	background-color:#2A579F;
@@ -189,19 +276,38 @@ body {
 	min-height:100px;
 	position:relative;
 	margin:50px 0px 0px 0px;
+	width:100%;
+	float:left;
 }
+.conversions{
+	background-color:#b9d342;
+	-moz-border-radius: 4px 4px 0 0;
+	-webkit-border-radius: 4px;
+	border-radius: 4px 4px 0 0;
+	-moz-box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.4);
+	-webkit-box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.4);
+	box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.4);
+	font-weight:300;
+	color:#ffffff;
+	font-size:18px;
+	border:0px;
+	text-align:center !important;
+}
+
+/*---BAR CHART STYLES ---*/
+
 @media (min-width: 700px) {
-.chart {
+.barchart {
 	background: url("../img/bg-chart.png") right top repeat-x;
 	height: 175px;
 	background-size: contain;
-	margin: 0 auto emCalc(-32px);
+	margin-left:10%;
 	border-left: 1px solid #666666;
 	padding-left: 20px;
 	width: 88%;
 }
 }
-.chart li {
+.barchart li {
 	display: block;
 	height: 35px;
 	padding: emCalc(25px) 0;
@@ -216,14 +322,14 @@ body {
 	box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
 }
 @media (min-width: 700px) {
-.chart li {
+.barchart li {
 	display: inline-block;
 	height: 165px;
 	margin: 0 1.8% 0 0;
 	width: 11.7%;
 }
 }
-.chart .axis {
+.barchart .axis {
 	display: none;
 	top: emCalc(-34px);
 	width: 86.3%;
@@ -233,11 +339,11 @@ body {
 	margin-left: -20px;
 }
 @media (min-width: 700px) {
-.chart .axis {
+.barchart .axis {
 	display: inline-block;
 }
 }
-.chart .label {
+.barchart .label {
 	color: #666666;
 	font-size: 14px;
 	font-weight: 300;
@@ -247,7 +353,7 @@ body {
 	width: 79px;
 	height: 49px;
 }
-.chart .percent {
+.barchart .percent {
 	letter-spacing: -3px;
 	opacity: .4;
 	width: 100%;
@@ -255,17 +361,17 @@ body {
 	font-size: 1.875rem;
 }
 @media (min-width: 700px) {
-.chart .percent {
+.barchart .percent {
 	position: absolute;
 	font-size: 62px;
 	font-size: 3.875rem;
 }
 }
-.chart .percent span {
+.barchart .percent span {
 	font-size: 30px;
 	font-size: 1.875rem;
 }
-.chart .skill {
+.barchart .date {
 	font-weight: 300;
 	overflow: hidden;
 	width: 100%;
@@ -273,26 +379,243 @@ body {
 	color: #666666;
 }
 @media (min-width: 700px) {
-.chart .skill {
+.barchart .date {
 	bottom: -30px;
 	position: absolute;
 	font-size: 16px;
 	font-size: 1rem;
 }
 }
-.chart .blue {
+.barchart .blue {
 	background-color: rgba(13,131,214, 0.7);
 	margin-top: 13px;
 }
 
-/*Kendo Grid*/
-.k-grid th.k-header
-{
-    background:#3d6fbd;
+/*---AREA CHART STYLES ---*/
+
+@media (min-width: 700px) {
+.areachart {
+	background: url("http://www.directagents.com/preview/portal/img/bg-areachart.png") right top repeat-x;
+	height: 175px;
+	background-size: contain;
+	margin-left:10%;
+	border-left: 1px solid #666666;
+	padding-left: 2px;
+	width: 89.65%;
+}
+.areachart li {
+	display: block;
+	height: 35px;
+	padding: emCalc(25px) 0;
+	position: relative;
+	text-align: center;
+	vertical-align: bottom;
+}
+.areachart ul {
+	margin-left:-20px;
+}
+.areachart li {
+	display: inline-block;
+	height: 165px;
+	margin: 0px -2px;
+	width: 9.1%;
+}
+.areachart .axis {
+	display: inline-block;
+	top: emCalc(-34px);
+	width: 86.3%;
+	position: absolute;
+	border-bottom: 1px solid #666666;
+	padding-bottom: 9px;
+	margin-left: -2px;
+}
+.areachart .label {
+	color: #666666;
+	font-size: 14px;
+	font-weight: 300;
+	margin: -6px 0px 0px -95px;
+	line-height: 14px;
+	text-align: right;
+	width: 79px;
+	height: 40px;
+}
+.areachart .percent {
+	letter-spacing: -3px;
+	opacity: .4;
+	width: 100%;
+	font-size: 30px;
+	font-size: 1.875rem;
+}
+.areachart .percent span {
+	font-size: 30px;
+	font-size: 1.875rem;
+}
+.areachart .date {
+	font-weight: 300;
+	overflow: hidden;
+	width: 100%;
+	font-size: 14px !important;
+	color: #666666;
+	text-align: left;
+    margin-left: 25px;
+	bottom: -30px;
+	position: absolute;
+}
+.areachart .blue {
+	background-color: rgba(13,131,214, 0.7);
+	margin-top: 13px;
+}
+.exec_leftchart .date {
+	font-weight: 300;
+	overflow: hidden;
+	width: 100%;
+	font-size: 14px !important;
+	color: #666666;
+	text-align: left;
+    margin-left: 25px;
+	bottom: -30px;
+	position: absolute;
+}
+.exec_leftchart .blue {
+	background-color: rgba(13,131,214, 0.7);
+	margin-top: 13px;
+}
+.exec_leftchart {
+	height: 90px;
+	margin-left: 14%;
+    width: 90%;
+}
+.exec_leftchart li {
+	display: block;
+	height: 35px;
+	padding: emCalc(25px) 0;
+	position: relative;
+	text-align: center;
+	vertical-align: bottom;
+}
+.exec_leftchart ul {
+	margin-left:-20px;
+}
+.exec_leftchart li {
+	display: inline-block;
+	height: 90px;
+	margin: 0px -2px;
+	width: 7%;
+}
+.exec_leftchart .axis {
+	display: inline-block;
+	top: emCalc(-34px);
+	width: auto;
+	position: relative;
+    padding-bottom: 0;
+    margin-right: 16px;
+}
+.exec_leftchart .label {
+	color: #666666;
+	font-size: 13px;
+	margin: -6px 0px 0px -76px;
+	line-height: 14px;
+	text-align: left;
+	width: 70px;
+	height: 40px;
+	font-weight:800;
+}
+.exec_leftchart .biglabel {
+	color: #666666;
+	font-size: 24px;
+	font-weight: 300;
+	margin: 6px 0px 0px -76px;
+	line-height: 14px;
+	text-align: left;
+	width: 70px;
+	height: 40px;
+}
+.exec_leftchart .percent {
+	letter-spacing: -3px;
+	opacity: .4;
+	width: 100%;
+	font-size: 30px;
+	font-size: 1.875rem;
+}
+.exec_leftchart .percent span {
+	font-size: 30px;
+	font-size: 1.875rem;
 }
 
-.k-grid th.k-header,
-.k-grid th.k-header .k-link
-{
-    color:White
+.exec_spark {
+    width: 200px;
+    height: 90px
+}
+
+.exec_rightchart {
+	background: url("http://www.directagents.com/preview/img/bg-areachart.png") right top repeat-x;
+	height: 175px;
+	background-size: contain;
+	margin-left:10%;
+	border-left: 1px solid #666666;
+	padding-left: 2px;
+	width: 89.65%;
+}
+.exec_rightchart li {
+	display: block;
+	height: 35px;
+	padding: emCalc(25px) 0;
+	position: relative;
+	text-align: center;
+	vertical-align: bottom;
+}
+.exec_rightchart ul {
+	margin-left:-20px;
+}
+.exec_rightchart li {
+	display: inline-block;
+	height: 165px;
+	margin: 0px -2px;
+	width: 16.7%;
+}
+.exec_rightchart .axis {
+	display: inline-block;
+	top: emCalc(-34px);
+	width: 54.8%;
+	position: absolute;
+	border-bottom: 1px solid #666666;
+	padding-bottom: 9px;
+	margin-left: -2px;
+}
+.exec_rightchart .label {
+	color: #666666;
+	font-size: 14px;
+	font-weight: 300;
+	margin: -6px 0px 0px -95px;
+	line-height: 14px;
+	text-align: right;
+	width: 79px;
+	height: 40px;
+}
+.exec_rightchart .percent {
+	letter-spacing: -3px;
+	opacity: .4;
+	width: 100%;
+	font-size: 30px;
+	font-size: 1.875rem;
+}
+.exec_rightchart .percent span {
+	font-size: 30px;
+	font-size: 1.875rem;
+}
+.exec_rightchart .date {
+	font-weight: 300;
+	overflow: hidden;
+	width: 100%;
+	font-size: 14px !important;
+	color: #666666;
+	text-align: left;
+    margin-left: 25px;
+	bottom: -30px;
+	position: absolute;
+}
+.exec_rightchart .blue {
+	background-color: rgba(13,131,214, 0.7);
+	margin-top: 13px;
+}
 }
