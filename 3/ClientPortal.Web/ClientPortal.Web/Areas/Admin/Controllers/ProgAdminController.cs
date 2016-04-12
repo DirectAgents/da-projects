@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
+using CakeExtracter.Commands;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Areas.Admin.Models;
 using ClientPortal.Web.Controllers;
@@ -86,6 +89,37 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 cpRepo.SaveChanges();
             }
             return RedirectToAction("Advertisers");
+        }
+
+        public ActionResult UploadStats()
+        {
+            var extAccounts = progRepo.ExtAccounts()
+                .OrderBy(a => a.Platform.Name).ThenBy(a => a.Name).ToList();
+            return View(extAccounts);
+        }
+        public ActionResult UploadFile(HttpPostedFileBase file, string acctId, string statsType, string statsDate)
+        {
+            int accountId;
+            if (!Int32.TryParse(acctId, out accountId))
+                return null;
+            if (progRepo.ExtAccount(accountId) == null)
+                return null;
+
+            DateTime? statsDateNullable = null;
+            DateTime parseDate;
+            if (DateTime.TryParse(statsDate, out parseDate))
+                statsDateNullable = parseDate;
+            else
+                statsDateNullable = null;
+
+            using (var reader = new StreamReader(file.InputStream))
+            {
+                if (statsType != null && statsType.ToUpper().StartsWith("CONV"))
+                    DASynchAdrollConvCsv.RunStatic(accountId, reader); // TODO: generic Conv syncher?
+                else
+                    DASynchTDDailySummaries.RunStatic(accountId, reader, statsType, statsDate: statsDateNullable);
+            }
+            return null;
         }
     }
 }

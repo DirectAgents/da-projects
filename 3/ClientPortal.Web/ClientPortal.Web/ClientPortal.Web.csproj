@@ -1148,6 +1148,7 @@
     <Content Include="Areas\Admin\Views\ProgAdmin\AssignUserProfile.cshtml" />
     <Content Include="Areas\Prog\Views\Home\Index.cshtml" />
     <Content Include="Areas\Prog\Views\Test\Blank.cshtml" />
+    <Content Include="Areas\Admin\Views\ProgAdmin\UploadStats.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />
