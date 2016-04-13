@@ -30,16 +30,18 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         }
 
         // For each account, shows a "gauge" of what stats are loaded
-        public ActionResult IndexGauge(string platform, int? campId)
+        public ActionResult IndexGauge(string platform, int? campId, bool recent = false)
         {
             var extAccounts = tdRepo.ExtAccounts(platformCode: platform, campId: campId)
                 .OrderBy(a => a.Platform.Name).ThenBy(a => a.Name);
 
+            var recentDate = DateTime.Today.FirstDayOfMonth(-1); // for comparison, if recent==true
             List<TDStatsGauge> statsGauges = new List<TDStatsGauge>();
             foreach (var extAcct in extAccounts)
             {
                 var statsGauge = tdRepo.GetStatsGauge(extAcct);
-                statsGauges.Add(statsGauge);
+                if (recent == false || (statsGauge.Daily.Latest.HasValue && statsGauge.Daily.Latest.Value >= recentDate))
+                    statsGauges.Add(statsGauge);
             }
             var model = new StatsGaugeVM
             {
