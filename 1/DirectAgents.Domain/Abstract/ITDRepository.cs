@@ -69,6 +69,7 @@ namespace DirectAgents.Domain.Abstract
         BasicStat MTDBasicStat(int advId, DateTime endDate);
         BasicStat DateRangeBasicStat(int advId, DateTime startDate, DateTime endDate);
 
+        DateTime? EarliestStatDate(int? advId);
         TDStatsGauge GetStatsGauge(ExtAccount extAccount);
         TDStatsGauge GetStatsGauge(int? acctId = null);
         DailySummary DailySummary(DateTime date, int acctId);

@@ -273,6 +273,7 @@
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\SearchHomeController.cs" />
     <Compile Include="Controllers\SearchReportsController.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

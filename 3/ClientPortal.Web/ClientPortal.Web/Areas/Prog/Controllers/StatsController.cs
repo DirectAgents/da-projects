@@ -42,5 +42,13 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             var json = Json(array, JsonRequestBehavior.AllowGet);
             return json;
         }
+
+        public JsonResult DailyCTD(int advId) // campaign-to-date dailies
+        {
+            var stats = progRepo.DailySummaryBasicStats(advId: advId);
+
+            var json = Json(stats, JsonRequestBehavior.AllowGet);
+            return json;
+        }
 	}
 }

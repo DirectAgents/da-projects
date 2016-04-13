@@ -26,11 +26,15 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             else
                 lastMonthEndDate = today.AddDays(-1).AddMonths(-1);
 
+            int advId = userInfo.ProgAdvertiser.Id;
+            DateTime earliestStatDate = progRepo.EarliestStatDate(advId: advId) ?? yesterday;
+
             var model = new ExecSumVM
             {
                 UserInfo = userInfo,
-                MTDStat = progRepo.MTDBasicStat(userInfo.ProgAdvertiser.Id, yesterday),
-                LastMonthStat = progRepo.MTDBasicStat(userInfo.ProgAdvertiser.Id, lastMonthEndDate)
+                MTDStat = progRepo.MTDBasicStat(advId, yesterday),
+                LastMonthStat = progRepo.MTDBasicStat(advId, lastMonthEndDate),
+                CTDStat = progRepo.DateRangeBasicStat(advId, earliestStatDate, yesterday)
             };
             return View(model);
         }

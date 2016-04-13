@@ -90,7 +90,7 @@
                     <ul class="exec_leftchart">
                         <li class="axis">
                             <div class="label">Spend</div>
-                            <div class="biglabel">$??.?K</div>
+                            <div class="biglabel">$@Model.CTDStat.MediaSpend.ToStringKMB()</div>
                         </li>
                         <li>
                             <div class="exec_spark" id="sparkSpend"></div>
@@ -101,7 +101,7 @@
                     <ul class="exec_leftchart">
                         <li class="axis">
                             <div class="label">Impressions</div>
-                            <div class="biglabel">?.?M</div>
+                            <div class="biglabel">@Model.CTDStat.Impressions.ToStringKMB()</div>
                         </li>
                         <li>
                             <div class="exec_spark" id="sparkImpressions"></div>
@@ -112,7 +112,7 @@
                     <ul class="exec_leftchart">
                         <li class="axis">
                             <div class="label">Clicks</div>
-                            <div class="biglabel">?.?K</div>
+                            <div class="biglabel">@Model.CTDStat.Clicks.ToStringKMB()</div>
                         </li>
                         <li>
                             <div class="exec_spark" id="sparkClicks"></div>
@@ -123,7 +123,7 @@
                     <ul class="exec_leftchart">
                         <li class="axis">
                             <div class="label">Conversions</div>
-                            <div class="biglabel">?</div>
+                            <div class="biglabel">@Model.CTDStat.Conversions.ToStringKMB()</div>
                         </li>
                         <li>
                             <div class="exec_spark" id="sparkConversions"></div>
@@ -132,35 +132,39 @@
                 </div>
             </div>
             <div id="exec_right">
-                @* <section... *@
+                <section>
+                    <div class="heading"><p>Pacing Month to Date</p></div>
+                    <div class="content_box" style="height:205px">
+                        gauge...<br />gauge...<br />gauge...<br />gauge...<br />gauge...<br />gauge...
+                    </div>
+                </section>
+                <section>
+                    <div class="heading"><p>Campaign to Date eCPA Trend</p></div>
+                    <div class="content_box">
+                        <div id="trendECPA" style="height:205px"></div>
+                    </div>
+                </section>
             </div>
         </div>
     </div>
 </div>
 
-<div id="gridMTD"></div>
-<div id="gridPrevMonth"></div>
-
-@*<div id="ClickTD"></div>
-<div id="ConversionTD"></div>*@
-
-<div id="trendECPA"></div>
-
 @section scripts {
 <script>
     $(document).ready(function () {
-        SetupSparklineCharts();
-        //SetupMainChart();
+        var datasource = GetDataSourceCTD();
+        SetupSparklineCharts(datasource);
+        SetupMainChart(datasource);
+        datasource.read();
     });
 
-    function SetupMainChart()
-    {
-        var datasource = new kendo.data.DataSource({
+    function GetDataSourceCTD() {
+        return new kendo.data.DataSource({
             transport: {
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("TestCalls", "Test")',
+                    url: '@Url.Action("DailyCTD", "Stats", new { advId = @Model.UserInfo.ProgAdvertiser.Id })',
                 }
             },
             schema: {
@@ -173,14 +177,18 @@
                 }
             }
         });
+    }
+    function SetupMainChart(datasource)
+    {
         $("#trendECPA").kendoChart({
             dataSource: datasource,
+            autoBind: false,
             series: [
                 { field: "eCPA", type: "area", color: "rgb(13, 141, 214)", tooltip: { format: "{0:C}" } }
             ],
             categoryAxis: {
                 field: "Date",
-                labels: { rotation: -90, step: 5 },
+                labels: { rotation: -90, step: 15 },
                 axisCrossingValue: [0, 2000],
                 majorGridLines: { visible: false }
             },
@@ -191,67 +199,39 @@
         });
     }
 
-    function SetupSparklineCharts()
+    function SetupSparklineCharts(datasource)
     {
         $("#sparkSpend").kendoSparkline({
+            dataSource: datasource,
+            autoBind: false,
             type: "area",
             series: [
                 { field: "MediaSpend", color: "rgb(13, 141, 214)", tooltip: { format: "{0:C}" } }
-            ],
-            dataSource: {
-                transport: {
-                    read: {
-                        type: 'post',
-                        dataType: 'json',
-                        url: '@Url.Action("TestCalls", "Test")',
-                    }
-                }
-            }
+            ]
         });
         $("#sparkImpressions").kendoSparkline({
+            dataSource: datasource,
+            autoBind: false,
             type: "area",
             series: [
                 { field: "Impressions", color: "rgb(13, 141, 214)", tooltip: { format: "{0:N0}" } }
-            ],
-            dataSource: {
-                transport: {
-                    read: {
-                        type: 'post',
-                        dataType: 'json',
-                        url: '@Url.Action("TestCalls", "Test")',
-                    }
-                }
-            }
+            ]
         });
         $("#sparkClicks").kendoSparkline({
+            dataSource: datasource,
+            autoBind: false,
             type: "area",
             series: [
                 { field: "Clicks", color: "rgb(13, 141, 214)", tooltip: { format: "{0:N0}" } }
-            ],
-            dataSource: {
-                transport: {
-                    read: {
-                        type: 'post',
-                        dataType: 'json',
-                        url: '@Url.Action("TestCalls", "Test")',
-                    }
-                }
-            }
+            ]
         });
         $("#sparkConversions").kendoSparkline({
+            dataSource: datasource,
+            autoBind: false,
             type: "area",
             series: [
                 { field: "Conversions", color: "rgb(13, 141, 214)", tooltip: { format: "{0:N0}" } }
-            ],
-            dataSource: {
-                transport: {
-                    read: {
-                        type: 'post',
-                        dataType: 'json',
-                        url: '@Url.Action("TestCalls", "Test")',
-                    }
-                }
-            }
+            ]
         });
     }
 </script>
