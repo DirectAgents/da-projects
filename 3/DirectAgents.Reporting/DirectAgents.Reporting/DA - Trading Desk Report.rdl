@@ -94,14 +94,6 @@ FROM td.fDailySummaryBasicStats(@AdvertiserId, @PreviousMonthStartDate
           <DataField>eCPA</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
         </Field>
-        <Field Name="Cost">
-          <DataField>Cost</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="Revenue">
-          <DataField>Revenue</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
       </Fields>
     </DataSet>
     <DataSet Name="Advertiser">
@@ -211,10 +203,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
           <DataField>MgmtFee</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
-        <Field Name="Cost">
-          <DataField>Cost</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
         <Field Name="Budget">
           <DataField>Budget</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
@@ -222,10 +210,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
         <Field Name="Pacing">
           <DataField>Pacing</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
-        </Field>
-        <Field Name="Revenue">
-          <DataField>Revenue</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
         <Field Name="eCPC">
           <DataField>eCPC</DataField>
@@ -274,21 +258,17 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
           <DataField>Clicks</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="CTR">
-          <DataField>CTR</DataField>
-          <rd:TypeName>System.Double</rd:TypeName>
-        </Field>
         <Field Name="Conversions">
           <DataField>Conversions</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
+        <Field Name="CTR">
+          <DataField>CTR</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
         <Field Name="PostClickConv">
           <DataField>PostClickConv</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="CR">
-          <DataField>CR</DataField>
-          <rd:TypeName>System.Double</rd:TypeName>
         </Field>
         <Field Name="ShowClickAndViewConv">
           <DataField>ShowClickAndViewConv</DataField>
@@ -305,6 +285,10 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
         <Field Name="MgmtFee">
           <DataField>MgmtFee</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="CR">
+          <DataField>CR</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
         </Field>
         <Field Name="Budget">
           <DataField>Budget</DataField>
@@ -388,14 +372,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
         <Field Name="eCPA">
           <DataField>eCPA</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
-        </Field>
-        <Field Name="Cost">
-          <DataField>Cost</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="Revenue">
-          <DataField>Revenue</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -2320,7 +2296,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
-                            <rd:Selected>true</rd:Selected>
                           </CellContents>
                         </TablixCell>
                         <TablixCell>
@@ -3916,6 +3891,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             </PageBreak>
             <PageName>Executive Summary</PageName>
             <KeepTogether>true</KeepTogether>
+            <Top>0in</Top>
             <Height>7.83917in</Height>
             <Width>7.96875in</Width>
             <Style>
@@ -8617,7 +8593,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 <ChartSeriesHierarchy>
                   <ChartMembers>
                     <ChartMember>
-                      <Label />
+                      <Label>Impressions</Label>
                     </ChartMember>
                   </ChartMembers>
                 </ChartSeriesHierarchy>
@@ -8627,12 +8603,20 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                       <ChartDataPoints>
                         <ChartDataPoint>
                           <ChartDataPointValues>
-                            <Y>=Avg(Fields(Parameters!KPI.Value).Value)</Y>
+                            <Y>=IIf(Parameters!KPI.Value = "CTR", Code.SafeFraction(Sum(Fields!Clicks.Value), Sum(Fields!Impressions.Value)),
+ IIf(Parameters!KPI.Value = "CR", Code.SafeFraction(Sum(Fields!Conversions.Value), Sum(Fields!Clicks.Value)),
+ IIf(Parameters!KPI.Value = "eCPC", Code.SafeFraction(Sum(Fields!MediaSpend.Value), Sum(Fields!Clicks.Value)),
+ IIf(Parameters!KPI.Value = "eCPA", Code.SafeFraction(Sum(Fields!MediaSpend.Value), Sum(Fields!Conversions.Value))
+ , Avg(Fields(Parameters!KPI.Value).Value)))))</Y>
                           </ChartDataPointValues>
                           <ChartDataLabel>
                             <Style />
                           </ChartDataLabel>
-                          <ToolTip>=Format(Avg(Fields(Parameters!KPI.Value).Value), Code.KPIDataFormat(Parameters!KPI.Value))</ToolTip>
+                          <ToolTip>=Format(IIf(Parameters!KPI.Value = "CTR", Code.SafeFraction(Sum(Fields!Clicks.Value), Sum(Fields!Impressions.Value)),
+ IIf(Parameters!KPI.Value = "CR", Code.SafeFraction(Sum(Fields!Conversions.Value), Sum(Fields!Clicks.Value)),
+ IIf(Parameters!KPI.Value = "eCPC", Code.SafeFraction(Sum(Fields!MediaSpend.Value), Sum(Fields!Clicks.Value)),
+ IIf(Parameters!KPI.Value = "eCPA", Code.SafeFraction(Sum(Fields!MediaSpend.Value), Sum(Fields!Conversions.Value))
+ , Avg(Fields(Parameters!KPI.Value).Value))))), Code.KPIDataFormat(Parameters!KPI.Value))</ToolTip>
                           <Style />
                           <ChartMarker>
                             <Style />
@@ -9238,7 +9222,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
 ' 	daDomain = new DirectAgents.Domain.BudgetInfoVals()
 ' End Sub
 
-Public Function SafeFraction(ByVal numerator As Integer, ByVal denominator As Integer) As Double
+Public Function SafeFraction(ByVal numerator As Double, ByVal denominator As Double) As Double
 	If (denominator = 0)
 		Return 0
 	End If
