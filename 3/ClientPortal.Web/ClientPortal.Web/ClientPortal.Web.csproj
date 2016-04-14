@@ -252,6 +252,7 @@
     <Compile Include="Areas\Prog\Controllers\HomeController.cs" />
     <Compile Include="Areas\Prog\Controllers\StatsController.cs" />
     <Compile Include="Areas\Prog\Controllers\TestController.cs" />
+    <Compile Include="Areas\Prog\Models\ExecSumVM.cs" />
     <Compile Include="Areas\Prog\ProgAreaRegistration.cs" />
     <Compile Include="Areas\TD\Controllers\StatsController.cs" />
     <Compile Include="Areas\TD\Controllers\HomeController.cs" />
@@ -272,6 +273,7 @@
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\SearchHomeController.cs" />
     <Compile Include="Controllers\SearchReportsController.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1008,6 +1010,7 @@
     <Content Include="Images\arrow_up.jpg" />
     <Content Include="Images\avatar.png" />
     <Content Include="Images\bullet_triangle.gif" />
+    <Content Include="Images\da_logo.jpg" />
     <Content Include="Images\icon_metrics.gif" />
     <Content Include="Images\icon_mobile.gif" />
     <Content Include="Images\icon_reports.gif" />
@@ -1145,6 +1148,8 @@
     <Content Include="Areas\Prog\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Admin\Views\ProgAdmin\AssignUserProfile.cshtml" />
     <Content Include="Areas\Prog\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Prog\Views\Test\Blank.cshtml" />
+    <Content Include="Areas\Admin\Views\ProgAdmin\UploadStats.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />
@@ -2996,7 +3001,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Areas\Prog\Models\" />
     <Folder Include="Areas\Prog\Views\Stats\" />
     <Folder Include="Filters\" />
   </ItemGroup>

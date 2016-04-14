@@ -75,6 +75,8 @@ group by Date order by Date";
 
             var stat = new BasicStat
             {
+                StartDate = startDate,
+                Date = endDate,
                 Impressions = stats.Sum(s => s.Impressions),
                 Clicks = stats.Sum(s => s.Clicks),
                 Conversions = stats.Sum(s => s.Conversions),

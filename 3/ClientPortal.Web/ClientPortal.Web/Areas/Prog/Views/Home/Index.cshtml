@@ -1,29 +1,150 @@
-﻿@model ClientPortal.Web.Models.UserInfo
+﻿@model ClientPortal.Web.Areas.Prog.Models.ExecSumVM
 @{
     ViewBag.Title = "Executive Summary";
+    var mtd = Model.MTDStat;
+    var prev = Model.LastMonthStat;
 }
 
-
-<div id="client_bar">
-	<div id="container">
-		<div class="client_logo"></div>
-        <div class="client_name">@Model.ProgAdvertiser.Name</div>
+<div id="client_bar_exec">
+<div id="container">
+    <div class="exec_charts">
+        @* TODO: Put in separate partial view... *@
+        <section>
+            <div class="heading"><p>Month to Date: @mtd.StartDate.ToShortDateString() thru @mtd.Date.ToShortDateString()</p></div>
+            <div class="grid">
+                <table class="grid" cellspacing="0" width="100%">
+                    <thead>
+                        <tr class="exec">
+                            <th>Budget</th>
+                            <th>Spend</th>
+                            <th>Pacing</th>
+                            <th>Impressions</th>
+                            <th>Clicks</th>
+                            <th>CTR</th>
+                            <th>eCPC</th>
+                            <th>Conversions</th>
+                            <th>eCPA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="grey_row">
+                            <td>@mtd.Budget.ToString("C")</td>
+                            <td>@mtd.MediaSpend.ToString("C")</td>
+                            <td>@mtd.Pacing.ToString("0.00%")</td>
+                            <td>@mtd.Impressions.ToString("N0")</td>
+                            <td>@mtd.Clicks.ToString("N0")</td>
+                            <td>@mtd.CTR.ToString("0.00%")</td>
+                            <td>@mtd.eCPC.ToString("C")</td>
+                            <td>@mtd.Conversions.ToString("N0")</td>
+                            <td>@mtd.eCPA.ToString("C")</td>
+                        </tr>
+		            </tbody>
+                </table>
+            </div>
+        </section>
+        <section>
+            <div class="heading"><p>Previous Month: @prev.StartDate.ToShortDateString() thru @prev.Date.ToShortDateString()</p></div>
+            <div class="grid">
+                <table class="grid" cellspacing="0" width="100%">
+                    <thead>
+                        <tr class="exec">
+                            <th>Budget</th>
+                            <th>Spend</th>
+                            <th>Pacing</th>
+                            <th>Impressions</th>
+                            <th>Clicks</th>
+                            <th>CTR</th>
+                            <th>eCPC</th>
+                            <th>Conversions</th>
+                            <th>eCPA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="grey_row">
+                            <td>@prev.Budget.ToString("C")</td>
+                            <td>@prev.MediaSpend.ToString("C")</td>
+                            <td>@prev.Pacing.ToString("0.00%")</td>
+                            <td>@prev.Impressions.ToString("N0")</td>
+                            <td>@prev.Clicks.ToString("N0")</td>
+                            <td>@prev.CTR.ToString("0.00%")</td>
+                            <td>@prev.eCPC.ToString("C")</td>
+                            <td>@prev.Conversions.ToString("N0")</td>
+                            <td>@prev.eCPA.ToString("C")</td>
+                        </tr>
+		            </tbody>
+                </table>
+            </div>
+        </section>
+        </div>
+        <div class="client_logo_exec"></div>
+        <div class="client_name_exec">@Model.UserInfo.ProgAdvertiser.Name</div>
     </div>
 </div>
+
 <div id="page_content">
     <div id="container">
-    	<div id="page_content">
-		    <section>
-<div id="gridMTD"></div>
-<div id="gridPrevMonth"></div>
-<div class="heading"><p>Campaign to Date</p></div>
-<span>Spend</span><div id="spendTD"></div>
-<span>Impressions</span><div id="ImpressionTD"></div>
-<span>Clicks</span><div id="ClickTD"></div>
-<span>Conversions</span><div id="ConversionTD"></div>
-<div class="heading"><p>Campaign to Date eCPA Trend</p></div>
-<div id="trendECPA"</div>
-            </section>
+        <div id="page_content_exec">
+            <div id="exec_leftbar">
+                <div class="heading"><p>Campaign to Date</p></div>
+                <div class="content_box2">
+                    <ul class="exec_leftchart">
+                        <li class="axis">
+                            <div class="label">Spend</div>
+                            <div class="biglabel">$@Model.CTDStat.MediaSpend.ToStringKMB()</div>
+                        </li>
+                        <li>
+                            <div class="exec_spark" id="sparkSpend"></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="content_box2">
+                    <ul class="exec_leftchart">
+                        <li class="axis">
+                            <div class="label">Impressions</div>
+                            <div class="biglabel">@Model.CTDStat.Impressions.ToStringKMB()</div>
+                        </li>
+                        <li>
+                            <div class="exec_spark" id="sparkImpressions"></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="content_box2">
+                    <ul class="exec_leftchart">
+                        <li class="axis">
+                            <div class="label">Clicks</div>
+                            <div class="biglabel">@Model.CTDStat.Clicks.ToStringKMB()</div>
+                        </li>
+                        <li>
+                            <div class="exec_spark" id="sparkClicks"></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="content_box2">
+                    <ul class="exec_leftchart">
+                        <li class="axis">
+                            <div class="label">Conversions</div>
+                            <div class="biglabel">@Model.CTDStat.Conversions.ToStringKMB()</div>
+                        </li>
+                        <li>
+                            <div class="exec_spark" id="sparkConversions"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="exec_right">
+                <section>
+                    <div class="heading"><p>Pacing Month to Date</p></div>
+                    <div class="content_box" style="height:205px">
+                        gauge...<br />gauge...<br />gauge...<br />gauge...<br />gauge...<br />gauge...
+                    </div>
+                </section>
+                <section>
+                    <div class="heading"><p>Campaign to Date eCPA Trend</p></div>
+                    <div class="content_box">
+                        <div id="trendECPA" style="height:205px"></div>
+                    </div>
+                </section>
+            </div>
         </div>
     </div>
 </div>
@@ -31,79 +152,19 @@
 @section scripts {
 <script>
     $(document).ready(function () {
-        SetupGrids();
-        SetupSparklineCharts();
-        SetupMainChart();
+        var datasource = GetDataSourceCTD();
+        SetupSparklineCharts(datasource);
+        SetupMainChart(datasource);
+        datasource.read();
     });
 
-    function SetupGrids()
-    {
-        $("#gridMTD").kendoGrid({
-            columns: [
-            {
-                
-                title: "Month to Date: x/1/2016 thru x/x/2016",
-                columns: [
-                { field: "Budget" },
-                { field: "MediaSpend", title: "Spend", format: "{0:$###,###,###,###,###,###,###,###.##}" },
-                { field: "Pacing", format: "{0:$###,###,###,###,###,###,###,###.##}" },
-                { field: "Impressions" },
-                { field: "Clicks" },
-                { field: "CTR", format: "{0:$###,###,###,###,###,###,###,###.##}" },
-                { field: "eCPC", format: "{0:$###,###,###,###,###,###,###,###.##}" },
-                { field: "Conversions" },
-                { field: "eCPA", format: "{0:$###,###,###,###,###,###,###,###.##}" },
-                ]
-            }
-            ],
-            dataSource: {
-                transport: {
-                    read: {
-                        type: 'post',
-                        dataType: 'json',
-                        url: '@Url.Action("ExecMTD", "Stats")',
-                    }
-                }
-            }
-        });
-
-        $("#gridPrevMonth").kendoGrid({
-            columns: [
-            {
-                title: "Previous Month: x/1/2016 thru x/x/2016",
-                columns: [
-                { field: "Budget" },
-                { field: "MediaSpend", title: "Spend", format: "{0:$###,###,###,###,###,###,###,###.##}" },
-                { field: "Pacing", format: "{0:$###,###,###,###,###,###,###,###.##}" },
-                { field: "Impressions" },
-                { field: "Clicks" },
-                { field: "CTR", format: "{0:$###,###,###,###,###,###,###,###.##}" },
-                { field: "eCPC", format: "{0:$###,###,###,###,###,###,###,###.##}" },
-                { field: "Conversions" },
-                { field: "eCPA", format: "{0:$###,###,###,###,###,###,###,###.##}" }
-                ]
-            }
-            ],
-            dataSource: {
-                transport: {
-                    read: {
-                        type: 'post',
-                        dataType: 'json',
-                        url: '@Url.Action("ExecLastMonth", "Stats")',
-                    }
-                }
-            }
-        });
-    }
-
-    function SetupMainChart()
-    {
-        var datasource = new kendo.data.DataSource({
+    function GetDataSourceCTD() {
+        return new kendo.data.DataSource({
             transport: {
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("TestCalls", "Test")',
+                    url: '@Url.Action("DailyCTD", "Stats", new { advId = @Model.UserInfo.ProgAdvertiser.Id })',
                 }
             },
             schema: {
@@ -116,14 +177,18 @@
                 }
             }
         });
+    }
+    function SetupMainChart(datasource)
+    {
         $("#trendECPA").kendoChart({
             dataSource: datasource,
+            autoBind: false,
             series: [
                 { field: "eCPA", type: "area", color: "rgb(13, 141, 214)", tooltip: { format: "{0:C}" } }
             ],
             categoryAxis: {
                 field: "Date",
-                labels: { rotation: -90, step: 5 },
+                labels: { rotation: -90, step: 15 },
                 axisCrossingValue: [0, 2000],
                 majorGridLines: { visible: false }
             },
@@ -134,75 +199,39 @@
         });
     }
 
-    function SetupSparklineCharts()
+    function SetupSparklineCharts(datasource)
     {
-        $("#spendTD").kendoSparkline({
+        $("#sparkSpend").kendoSparkline({
+            dataSource: datasource,
+            autoBind: false,
             type: "area",
-            lineColor: '#2424e2',
-            fillColor: '#abbad8',
-            series: [{
-                field: "MediaSpend", title: "Spend", format: "{0:$###,###,###,###,###,###,###,###.##}"
-            }],
-            dataSource: {
-                transport: {
-                    read: {
-                        type: 'post',
-                        dataType: 'json',
-                        url: '@Url.Action("TestCalls", "Test")',
-                    }
-                }
-            }
+            series: [
+                { field: "MediaSpend", color: "rgb(13, 141, 214)", tooltip: { format: "{0:C}" } }
+            ]
         });
-        $("#ImpressionTD").kendoSparkline({
+        $("#sparkImpressions").kendoSparkline({
+            dataSource: datasource,
+            autoBind: false,
             type: "area",
-            lineColor: '#2424e2',
-            fillColor: '#abbad8',
-            series: [{
-                field: "Impressions", title: "Impression", format: "{0:$###,###,###,###,###,###,###,###.##}"
-            }],
-            dataSource: {
-                transport: {
-                    read: {
-                        type: 'post',
-                        dataType: 'json',
-                        url: '@Url.Action("TestCalls", "Test")',
-                    }
-                }
-            }
+            series: [
+                { field: "Impressions", color: "rgb(13, 141, 214)", tooltip: { format: "{0:N0}" } }
+            ]
         });
-        $("#ClickTD").kendoSparkline({
+        $("#sparkClicks").kendoSparkline({
+            dataSource: datasource,
+            autoBind: false,
             type: "area",
-            lineColor: '#2424e2',
-            fillColor: '#abbad8',
-            series: [{
-                field: "Clicks", title: "Click"
-            }],
-            dataSource: {
-                transport: {
-                    read: {
-                        type: 'post',
-                        dataType: 'json',
-                        url: '@Url.Action("TestCalls", "Test")',
-                    }
-                }
-            }
+            series: [
+                { field: "Clicks", color: "rgb(13, 141, 214)", tooltip: { format: "{0:N0}" } }
+            ]
         });
-        $("#ConversionTD").kendoSparkline({
+        $("#sparkConversions").kendoSparkline({
+            dataSource: datasource,
+            autoBind: false,
             type: "area",
-            lineColor: '#2424e2',
-            fillColor: '#abbad8',
-            series: [{
-                field: "Conversions", title: "Conversion"
-            }],
-            dataSource: {
-                transport: {
-                    read: {
-                        type: 'post',
-                        dataType: 'json',
-                        url: '@Url.Action("TestCalls", "Test")',
-                    }
-                }
-            }
+            series: [
+                { field: "Conversions", color: "rgb(13, 141, 214)", tooltip: { format: "{0:N0}" } }
+            ]
         });
     }
 </script>

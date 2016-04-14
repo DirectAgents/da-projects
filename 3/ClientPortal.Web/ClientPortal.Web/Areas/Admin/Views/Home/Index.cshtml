@@ -159,12 +159,14 @@
                       +-------------+-->*@
                 <dl class="tabs" data-tab>
                     <dd class="active"><a href="#progAdvertisersTab" id="navProgAdvertisers">Advertisers</a></dd>
+                    <dd><a href="#progUploadTab" id="navProgUpload">Upload</a></dd>
                 </dl>
                 @*<!--+---------------------+
                       | Prog HTabs Content  |
                       +---------------------+-->*@
                 <div class="tabs-content">
                     <div id="progAdvertisersTab" class="content active"></div>
+                    <div id="progUploadTab" class="content"></div>
                 </div>
             </div>
         </li>
@@ -317,6 +319,18 @@
             // Click Programmatic
             $("#vertNav_Prog").one("click", function () {
                 LoadProgAdvertisers();
+            });
+        </text>}
+        @if (Model.Programmatic)
+        {<text>
+            // Click Prog Upload
+            $("#navProgUpload").one("click", function () {
+                $.ajax({
+                    url: '@Url.Action("UploadStats", "ProgAdmin")',
+                    cache: false
+                }).done(function (html) {
+                    $("#progUploadTab").html(html);
+                });
             });
         </text>}
 

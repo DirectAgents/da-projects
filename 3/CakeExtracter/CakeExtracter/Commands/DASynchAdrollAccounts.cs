@@ -32,6 +32,11 @@ namespace CakeExtracter.Commands
         {
             var arUtility = new AdRollUtility(m => Logger.Info(m), m => Logger.Warn(m));
             var freshAdvertisables = arUtility.GetAdvertisables();
+            if (!freshAdvertisables.Any())
+            {
+                Logger.Warn("No Advertisables returned. Aborting synch.");
+                return 0;
+            }
             var freshEids = freshAdvertisables.Select(a => a.eid).ToArray();
             using (var db = new DATDContext())
             {

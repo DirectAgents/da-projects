@@ -5,7 +5,8 @@ namespace DirectAgents.Domain.Entities.TD
     public class BasicStat
     {
         public int Day { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } // also used for End Date
+        public DateTime StartDate { get; set; }
 
         public string DayName
         {
@@ -29,7 +30,7 @@ namespace DirectAgents.Domain.Entities.TD
         public void ComputeCalculatedStats()
         {
             CTR = (Impressions == 0) ? 0 : (double)Clicks / Impressions;
-            CR = (Conversions == 0) ? 0 : (double)Conversions / Clicks;
+            CR = (Clicks == 0) ? 0 : (double)Conversions / Clicks;
             eCPC = (Clicks == 0) ? 0 : (double)(MediaSpend / Clicks);
             eCPA = (Conversions == 0) ? 0 : (double)(MediaSpend / Conversions);
             Pacing = (Budget == 0) ? 0 : (double)MediaSpend / Budget;
