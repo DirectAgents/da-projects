@@ -31,7 +31,10 @@
 
 @RenderBody()
 
-<div id="footer">&nbsp;</div>
+<div id="footer">
+    &nbsp;
+    @Html.Partial("_LoginPartial", model: false)
+</div>
 @RenderSection("scripts", required: false)
 </body>
 </html>

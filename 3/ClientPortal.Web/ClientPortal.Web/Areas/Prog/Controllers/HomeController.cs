@@ -6,6 +6,7 @@ using DirectAgents.Domain.Abstract;
 
 namespace ClientPortal.Web.Areas.Prog.Controllers
 {
+    [Authorize]
     public class HomeController : CPController
     {
         public HomeController(ITDRepository progRepository, ClientPortal.Data.Contracts.IClientPortalRepository cpRepository)

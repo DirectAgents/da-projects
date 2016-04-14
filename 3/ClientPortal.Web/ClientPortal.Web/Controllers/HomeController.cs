@@ -15,11 +15,12 @@ namespace ClientPortal.Web.Controllers
     [Authorize]
     public class HomeController : CPController
     {
-        public HomeController(IClientPortalRepository cpRepository, ITDRepository tdRepository)
+        public HomeController(IClientPortalRepository cpRepository, ITDRepository tdRepository, DirectAgents.Domain.Abstract.ITDRepository progRepository)
         //public HomeController(IClientPortalRepository cpRepository)
         {
             this.cpRepo = cpRepository;
             this.cptdRepo = tdRepository; // used in GetUserInfo()
+            this.progRepo = progRepository; // used in GetUserInfo()
         }
         //TODO: handle the case when a non-cake user arrives... currently there's a null reference exception loading Dashboard.
 
@@ -34,10 +35,10 @@ namespace ClientPortal.Web.Controllers
                 return Redirect("/Admin");
             else if (userInfo.HasSearch)
                 return RedirectToAction("Index", "SearchHome");
-            else if (userInfo.HasProgrammatic)
+            else if (userInfo.HasProgrammatic(true))
                 return RedirectToAction("Index", "Home", new { area = "prog" });
             else if (userInfo.HasTradingDesk(true))
-                return RedirectToAction("Index", "Home", new { area = "td" });
+                return RedirectToAction("Index", "Home", new { area = "td" }); //TODO: remove
             else
                 return RedirectToAction("Index");
         }
@@ -48,11 +49,16 @@ namespace ClientPortal.Web.Controllers
             var result = CheckLogout(userInfo);
             if (result != null) return result;
 
-            if (userInfo.HasTradingDesk(true))
-                return RedirectToAction("Index", "Home", new { area = "td" });
-            else if (userInfo.HasSearch)
-                return RedirectToAction("Index", "SearchHome");
-
+            if (!userInfo.HasCake)
+            {
+                if (userInfo.HasSearch)
+                    return RedirectToAction("Index", "SearchHome");
+                else if (userInfo.HasProgrammatic())
+                    return RedirectToAction("Index", "Home", new { area = "prog" });
+                else if (userInfo.HasTradingDesk())
+                    return RedirectToAction("Index", "Home", new { area = "td" }); //TODO: remove
+                //TODO: force logout?
+            }
             var profiler = MiniProfiler.Current;
             using (profiler.Step("Index"))
             {
