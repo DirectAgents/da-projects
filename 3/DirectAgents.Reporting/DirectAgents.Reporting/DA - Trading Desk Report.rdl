@@ -8831,7 +8831,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     <VerticalAlign>Top</VerticalAlign>
                   </Style>
                 </ChartNoDataMessage>
-                <DataSetName>StrategyCTD</DataSetName>
+                <DataSetName>BasicStatsCTD</DataSetName>
                 <Height>1.92708in</Height>
                 <Width>7.96875in</Width>
                 <ZIndex>1</ZIndex>
