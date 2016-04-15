@@ -44,9 +44,13 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             return json;
         }
 
-        public JsonResult DailyCTD(int advId) // campaign-to-date dailies
+        public JsonResult DailyCTD() // campaign-to-date dailies
         {
-            var stats = progRepo.DailySummaryBasicStats(advId: advId);
+            var userInfo = GetUserInfo();
+            if (userInfo.ProgAdvertiser == null)
+                return null;
+
+            var stats = progRepo.DailySummaryBasicStats(advId: userInfo.ProgAdvertiser.Id);
 
             var json = Json(stats, JsonRequestBehavior.AllowGet); //TODO: don't allow get
             return json;
