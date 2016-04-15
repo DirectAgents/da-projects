@@ -6,6 +6,7 @@ using DirectAgents.Domain.Entities.TD;
 
 namespace ClientPortal.Web.Areas.Prog.Controllers
 {
+    [Authorize]
     public class StatsController : CPController
     {
         public StatsController(ITDRepository progRepository, ClientPortal.Data.Contracts.IClientPortalRepository cpRepository)
@@ -39,7 +40,7 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             var basicStat = progRepo.MTDBasicStat(userInfo.ProgAdvertiser.Id, endDate);
             var array = new BasicStat[] { basicStat };
 
-            var json = Json(array, JsonRequestBehavior.AllowGet);
+            var json = Json(array, JsonRequestBehavior.AllowGet); //TODO: don't allow get
             return json;
         }
 
@@ -47,7 +48,7 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
         {
             var stats = progRepo.DailySummaryBasicStats(advId: advId);
 
-            var json = Json(stats, JsonRequestBehavior.AllowGet);
+            var json = Json(stats, JsonRequestBehavior.AllowGet); //TODO: don't allow get
             return json;
         }
 	}

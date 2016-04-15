@@ -67,6 +67,11 @@ namespace ClientPortal.Web.Models
             get { return (Advertiser == null) ? false : Advertiser.ConversionValueIsNumber; }
         }
 
+        public bool HasCake
+        {
+            get { return (Advertiser != null); }
+        }
+
         public bool HasSearch
         {
             get {
@@ -181,9 +186,13 @@ namespace ClientPortal.Web.Models
             }
         }
 
-        public bool HasProgrammatic
+        public bool HasProgrammatic(bool only = false)
         {
-            get { return (ProgAdvertiser != null); }
+            bool hasProgrammatic = (ProgAdvertiser != null);
+            if (only)
+                return hasProgrammatic && !HasCake && !HasSearch;
+            else
+                return hasProgrammatic;
         }
 
         // --- to be eliminated ---
@@ -192,7 +201,7 @@ namespace ClientPortal.Web.Models
         {
             bool hasTradingDesk = (this.TDAccount != null);
             if (only)
-                return hasTradingDesk && (Advertiser == null);
+                return hasTradingDesk && !HasCake && !HasSearch;
             else
                 return hasTradingDesk;
         }

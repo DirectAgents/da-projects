@@ -71,8 +71,13 @@ group by Date order by Date";
         {
             var stats = DailySummaryBasicStatsRaw(advId, startDate, endDate).ToList();
             if (stats.Count() == 0)
-                return new BasicStat();
-
+            {
+                return new BasicStat
+                {
+                    StartDate = startDate,
+                    Date = endDate
+                };
+            }
             var stat = new BasicStat
             {
                 StartDate = startDate,
