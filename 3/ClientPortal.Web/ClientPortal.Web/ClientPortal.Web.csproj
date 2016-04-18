@@ -73,6 +73,10 @@
       <HintPath>..\packages\ManyConsole.0.4.2.16\lib\ManyConsole.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\MicosoftReportViewerWebForms_v11.1.0.1\lib\Microsoft.ReportViewer.WebForms.DLL</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MiniProfiler, Version=3.1.1.140, Culture=neutral, PublicKeyToken=b44f9351044011a3, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MiniProfiler.3.1.1.140\lib\net40\MiniProfiler.dll</HintPath>
@@ -96,6 +100,10 @@
     </Reference>
     <Reference Include="Ninject.Web.Mvc">
       <HintPath>..\packages\Ninject.MVC3.3.0.0.6\lib\net45-full\Ninject.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="ReportViewerForMvc, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ReportViewerForMvc.1.0.1\lib\net45\ReportViewerForMvc.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -250,6 +258,7 @@
     <Compile Include="Areas\Admin\Models\CreativeStatVM.cs" />
     <Compile Include="Areas\Admin\Models\UserVM.cs" />
     <Compile Include="Areas\Prog\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Prog\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Prog\Controllers\StatsController.cs" />
     <Compile Include="Areas\Prog\Controllers\TestController.cs" />
     <Compile Include="Areas\Prog\Models\ExecSumVM.cs" />
@@ -1023,6 +1032,7 @@
     <Content Include="Images\logoSelectQuote.png" />
     <Content Include="Images\programmatic.png" />
     <Content Include="Images\spacer.gif" />
+    <Content Include="ReportViewerWebForm.aspx" />
     <Content Include="Scripts\blackbird.js" />
     <Content Include="Areas\Admin\Views\Web.config" />
     <Content Include="Areas\Admin\Views\Advertisers\Index.cshtml" />
@@ -1150,6 +1160,7 @@
     <Content Include="Areas\Prog\Views\Home\Index.cshtml" />
     <Content Include="Areas\Prog\Views\Test\Blank.cshtml" />
     <Content Include="Areas\Admin\Views\ProgAdmin\UploadStats.cshtml" />
+    <Content Include="Areas\Prog\Views\Reports\ReportViewer.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />
