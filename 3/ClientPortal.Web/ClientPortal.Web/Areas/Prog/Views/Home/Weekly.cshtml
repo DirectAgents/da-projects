@@ -20,6 +20,10 @@
         <div id="chartDayOfWeek" style="height:175px"></div>
     </div>
 </section>
+<section>
+    <div class="heading"><p>Weekly Stats</p></div>
+    <div id="gridWeekly"></div>
+</section>
 
         </div>
     </div>
@@ -27,7 +31,14 @@
 
 @section scripts {
 <script>
-    function createDayOfWeekChart() {
+    $(document).ready(function () {
+        CreateDayOfWeekChart();
+        var dsWeekly = CreateWeeklyDataSource();
+        CreateWeeklyGrid(dsWeekly);
+        dsWeekly.read();
+    });
+
+    function CreateDayOfWeekChart() {
         $("#chartDayOfWeek").kendoChart({
             dataSource: {
                 transport: {
@@ -78,6 +89,41 @@
         });
     }
 
-    $(document).ready(createDayOfWeekChart);
+    function CreateWeeklyDataSource() {
+        return new kendo.data.DataSource({
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("Weekly", "Stats")'
+                }
+            },
+            schema: {
+                model: {
+                    id: 'Id',
+                    fields: {
+                        Date: { type: 'date' }
+                        // rest of fields: numbers
+                    }
+                }
+            }
+        });
+    }
+    function CreateWeeklyGrid(datasource) {
+        $("#gridWeekly").kendoGrid({
+            dataSource: datasource,
+            autoBind: false,
+            columns: [
+                { field: "Date", title: "Week", format: "{0:d}" },
+                { field: "MediaSpend", title: "Spend", format: "{0:c}", attributes: { style: "text-align: center" } },
+                { field: "Impressions", format: "{0:n0}", attributes: { style: "text-align: center" } },
+                { field: "Clicks", format: "{0:n0}", attributes: { style: "text-align: center" } },
+                { field: "CTR", format: "{0:0.00%}", attributes: { style: "text-align: center" } },
+                { field: "eCPC", format: "{0:c}", attributes: { style: "text-align: center" } },
+                { field: "Conversions", title: "Total Conv", format: "{0:n0}", attributes: { style: "text-align: center" } },
+                { field: "eCPA", format: "{0:c}", attributes: { style: "text-align: center" } }
+            ]
+        });
+    }
 </script>
 }

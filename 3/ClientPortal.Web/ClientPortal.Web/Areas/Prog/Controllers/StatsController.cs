@@ -63,5 +63,14 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             var json = Json(stats, JsonRequestBehavior.AllowGet); //TODO: don't allow get
             return json;
         }
+
+        public JsonResult Weekly()
+        {
+            var userInfo = GetUserInfo();
+            var stats = progRepo.WeeklyBasicStats(userInfo.ProgAdvertiser.Id);
+
+            var json = Json(stats, JsonRequestBehavior.AllowGet); //TODO: don't allow get
+            return json;
+        }
 	}
 }

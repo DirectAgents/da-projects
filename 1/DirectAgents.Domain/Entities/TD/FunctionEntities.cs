@@ -6,7 +6,7 @@ namespace DirectAgents.Domain.Entities.TD
     {
         public int Day { get; set; }
         public DateTime Date { get; set; } // also used for End Date
-        public DateTime StartDate { get; set; }
+        public DateTime StartDate { get; set; } // also used for Start Day of Week
 
         public string DayName
         {
@@ -34,6 +34,13 @@ namespace DirectAgents.Domain.Entities.TD
             eCPC = (Clicks == 0) ? 0 : (double)(MediaSpend / Clicks);
             eCPA = (Conversions == 0) ? 0 : (double)(MediaSpend / Conversions);
             Pacing = (Budget == 0) ? 0 : (double)MediaSpend / Budget;
+        }
+
+        public void ComputeWeekStartDate(DayOfWeek startDayOfWeek = DayOfWeek.Monday)
+        {
+            StartDate = Date;
+            while (StartDate.DayOfWeek != startDayOfWeek)
+                StartDate = StartDate.AddDays(-1);
         }
     }
 }
