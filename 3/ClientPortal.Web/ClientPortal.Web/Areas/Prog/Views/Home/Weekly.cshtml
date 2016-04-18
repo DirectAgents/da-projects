@@ -1,0 +1,83 @@
+﻿@model ClientPortal.Web.Areas.Prog.Models.WeekSumVM
+@{
+    ViewBag.Title = "Weekly Summary";
+}
+
+<div id="client_bar">
+	<div id="container">
+		<div class="client_logo"></div>
+        <div class="client_name">@Model.UserInfo.ProgAdvertiser.Name</div>
+        <div class="page_title">Weekly Summary</div>
+    </div>
+</div>
+<div id="page_content">
+	<div id="container">
+    	<div id="page_content">
+
+<section>
+    <div class="heading"><p>Avg eCPA for Day of Week</p></div>
+    <div class="content_box">
+        <div id="chartDayOfWeek" style="height:175px"></div>
+    </div>
+</section>
+
+        </div>
+    </div>
+</div>
+
+@section scripts {
+<script>
+    function createDayOfWeekChart() {
+        $("#chartDayOfWeek").kendoChart({
+            dataSource: {
+                transport: {
+                    read: {
+                        type: 'post',
+                        dataType: 'json',
+                        url: '@Url.Action("DayOfWeek", "Stats")',
+                    }
+                }
+            },
+            chartArea: {
+                background: "transparent"
+            },
+            legend: {
+                visible: false
+            },
+            seriesDefaults: {
+                type: "column"
+            },
+            series: [{
+                field: "eCPA",
+                name: "Average eCPA",
+                color: "rgba(13,141,214, 0.7)",
+                border: { width: 0 },
+                gap: .2
+            }],
+            valueAxis: {
+                line: {
+                    visible: false
+                },
+                labels: {
+                    format: "C0"
+                }
+            },
+            categoryAxis: {
+                field: "DayName",
+                majorGridLines: {
+                    visible: false
+                },
+                majorTicks: {
+                    visible: false
+                }
+            },
+            tooltip: {
+                visible: true,
+                format: "{0:C}"
+            }
+        });
+    }
+
+    $(document).ready(createDayOfWeekChart);
+</script>
+}

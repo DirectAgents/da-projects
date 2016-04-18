@@ -11,12 +11,18 @@ namespace DirectAgents.Domain.Concrete
 {
     public partial class TDRepository
     {
-        public IEnumerable<BasicStat> DayOfWeekBasicStats(int advId, DateTime startDate, DateTime endDate)
+        public IEnumerable<BasicStat> DayOfWeekBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool mondayFirst = false)
         {
             var sql = @"select DatePart(weekday, Date) as Day, sum(Impressions) as Impressions, sum(Clicks) as Clicks, sum(Conversions) as Conversions, sum(MediaSpend) as MediaSpend, sum(MgmtFee) as MgmtFee
 from td.fDailySummaryBasicStats(@p1, @p2, @p3)
 group by DatePart(weekday, Date) order by Day";
-            return DailySummaryBasicStatsWithCompute(advId, startDate, endDate, sql);
+            var stats = DailySummaryBasicStatsWithCompute(advId, startDate, endDate, sql);
+            if (mondayFirst)
+            {
+                return stats.OrderBy(s => s.Day < 2).ThenBy(s => s.Day);
+            }
+            else
+                return stats;
         }
 
         public IEnumerable<BasicStat> DailySummaryBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null)

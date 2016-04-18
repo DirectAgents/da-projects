@@ -1,6 +1,7 @@
 ﻿@{
     ViewBag.Title = "Bevel Test";
 }
+
 <div id="client_bar">
 	<div id="container">
 		<div class="client_logo"></div>
@@ -12,12 +13,12 @@
 	<div id="container">
     	<div id="page_content">
 
-<div class="heading"><p>Avg eCPA for Day of Week</p></div>
-<div id="example">
-    <div class="demo-section k-content wide">
-        <div id="chart" style="background: center no-repeat url('../content/shared/styles/world-map.png');"></div>
+<section>
+    <div class="heading"><p>Avg eCPA for Day of Week</p></div>
+    <div class="content_box">
+        <div id="chartDayOfWeek" style="height:175px"></div>
     </div>
-</div>
+</section>
 
 <section>
     <div class="heading"><p>Weekly Stats</p></div>
@@ -157,8 +158,8 @@
 
 @section scripts {
 <script>
-    function createChart() {
-        $("#chart").kendoChart({
+    function createDayOfWeekChart() {
+        $("#chartDayOfWeek").kendoChart({
             dataSource: {
                 transport: {
                     read: {
@@ -167,6 +168,9 @@
                         url: '@Url.Action("Data", "Test")',
                     }
                 }
+            },
+            chartArea: {
+                background: "transparent"
             },
             legend: {
                 visible: false
@@ -177,33 +181,35 @@
             series: [{
                 field: "eCPA",
                 name: "Average eCPA",
-                color: "#3ba4ce"
+                color: "rgba(13,141,214, 0.7)",
+                border: { width: 0 },
+                gap: .2
             }],
             valueAxis: {
                 line: {
                     visible: false
                 },
-                minorGridLines: {
-                    visible: true
-                },
                 labels: {
-                    rotation: "auto"
+                    format: "C0"
                 }
             },
             categoryAxis: {
                 field: "DayName",
                 majorGridLines: {
                     visible: false
+                },
+                majorTicks: {
+                    visible: false
                 }
             },
             tooltip: {
                 visible: true,
-                template: "#= series.name #: #= value #"
+                format: "{0:C}"
             }
         });
     }
 
-    $(document).ready(createChart);
-    $(document).bind("kendo:skinChange", createChart);
+    $(document).ready(createDayOfWeekChart);
+    $(document).bind("kendo:skinChange", createDayOfWeekChart);
 </script>
 }

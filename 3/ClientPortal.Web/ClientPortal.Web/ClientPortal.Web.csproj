@@ -262,6 +262,9 @@
     <Compile Include="Areas\Prog\Controllers\StatsController.cs" />
     <Compile Include="Areas\Prog\Controllers\TestController.cs" />
     <Compile Include="Areas\Prog\Models\ExecSumVM.cs" />
+    <Compile Include="Areas\Prog\Models\WeekSumVM.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Areas\Prog\ProgAreaRegistration.cs" />
     <Compile Include="Areas\TD\Controllers\StatsController.cs" />
     <Compile Include="Areas\TD\Controllers\HomeController.cs" />
@@ -312,6 +315,9 @@
     <Content Include="App_Data\manual-migration-03142013-fileUploads.sql" />
     <Content Include="App_Readme\blackbird_example.html" />
     <Content Include="Areas\Admin\Views\SimpleReports\Test.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Areas\Prog\Views\Home\Weekly.cshtml">
       <SubType>Code</SubType>
     </Content>
     <Content Include="Areas\TD\Views\Reports\Weekly.cshtml">

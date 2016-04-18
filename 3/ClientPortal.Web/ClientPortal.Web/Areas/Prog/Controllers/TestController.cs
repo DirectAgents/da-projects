@@ -33,7 +33,7 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             var advId = 18;
             var startDate = new DateTime(2016, 3, 1);
             var endDate = new DateTime(2016, 3, 23);
-            var stats = progRepo.DayOfWeekBasicStats(advId, startDate, endDate);
+            var stats = progRepo.DayOfWeekBasicStats(advId, startDate, endDate, mondayFirst: false);
             //var stats = tdRepo.DailySummaryBasicStats(advId, startDate, endDate);
             var json = Json(stats, JsonRequestBehavior.AllowGet);
             //var json = Json(stats);

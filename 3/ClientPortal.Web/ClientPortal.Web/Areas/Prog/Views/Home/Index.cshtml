@@ -163,13 +163,18 @@
         $('#pacingGauge').kendoChart({
 @*            title: "@string.Format("Spend: {0:C} ({1:0.00%}) of {2:C0} Budgeted", Model.MTDStat.MediaSpend, Model.MTDStat.Pacing, Model.MTDStat.Budget)",*@
             title: "@string.Format("Used {0:0.00%} of {1:C0} Budget", Model.MTDStat.Pacing, Model.MTDStat.Budget)",
+            chartArea: {
+                background: "transparent"
+            },
             tooltip: {
                 visible: true,
                 format: "C"
             },
-            seriesDefaults: { type: "bar", color: "rgb(13, 141, 214)" },
+            seriesDefaults: { type: "bar" },
             series: [{
-                data: [@Model.MTDStat.MediaSpend]
+                data: [@Model.MTDStat.MediaSpend],
+                color: "rgba(13,141,214, 0.7)",
+                border: { width: 0 }
             }],
             valueAxis: {
                 max: @Model.MTDStat.Budget,
@@ -207,6 +212,9 @@
         $("#trendECPA").kendoChart({
             dataSource: datasource,
             autoBind: false,
+            chartArea: {
+                background: "transparent"
+            },
             series: [
                 { field: "eCPA", type: "area", color: "rgb(13, 141, 214)" }
             ],
@@ -231,6 +239,7 @@
         $("#sparkSpend").kendoSparkline({
             dataSource: datasource,
             autoBind: false,
+            chartArea: { background: "transparent" },
             type: "area",
             series: [{ field: "MediaSpend", color: "rgb(13, 141, 214)", tooltip: { format: "{0:C}" } }],
             categoryAxis: { field: "Date" }
@@ -238,6 +247,7 @@
         $("#sparkImpressions").kendoSparkline({
             dataSource: datasource,
             autoBind: false,
+            chartArea: { background: "transparent" },
             type: "area",
             series: [{ field: "Impressions", color: "rgb(13, 141, 214)", tooltip: { format: "{0:N0}" } }],
             categoryAxis: { field: "Date" }
@@ -245,6 +255,7 @@
         $("#sparkClicks").kendoSparkline({
             dataSource: datasource,
             autoBind: false,
+            chartArea: { background: "transparent" },
             type: "area",
             series: [{ field: "Clicks", color: "rgb(13, 141, 214)", tooltip: { format: "{0:N0}" } }],
             categoryAxis: { field: "Date" }
@@ -252,6 +263,7 @@
         $("#sparkConversions").kendoSparkline({
             dataSource: datasource,
             autoBind: false,
+            chartArea: { background: "transparent" },
             type: "area",
             series: [{ field: "Conversions", color: "rgb(13, 141, 214)", tooltip: { format: "{0:N0}" } }],
             categoryAxis: { field: "Date" }

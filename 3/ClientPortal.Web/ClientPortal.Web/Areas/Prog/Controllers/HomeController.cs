@@ -15,6 +15,7 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             this.cpRepo = cpRepository;
         }
 
+        // "Executive Summary"
         public ActionResult Index()
         {
             var userInfo = GetUserInfo();
@@ -36,6 +37,17 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
                 MTDStat = progRepo.MTDBasicStat(advId, yesterday),
                 LastMonthStat = progRepo.MTDBasicStat(advId, lastMonthEndDate),
                 CTDStat = progRepo.DateRangeBasicStat(advId, earliestStatDate, yesterday)
+            };
+            return View(model);
+        }
+
+        public ActionResult Weekly()
+        {
+            var userInfo = GetUserInfo();
+
+            var model = new WeekSumVM
+            {
+                UserInfo = userInfo
             };
             return View(model);
         }

@@ -15,6 +15,8 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             this.cpRepo = cpRepository;
         }
 
+        // --- Executive Summary ---
+
         public JsonResult ExecMTD()
         {
             var yesterday = DateTime.Today.AddDays(-1);
@@ -34,8 +36,6 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
         private JsonResult GetMonthStatsJson(DateTime endDate)
         {
             var userInfo = GetUserInfo();
-            if (userInfo.ProgAdvertiser == null)
-                return null;
 
             var basicStat = progRepo.MTDBasicStat(userInfo.ProgAdvertiser.Id, endDate);
             var array = new BasicStat[] { basicStat };
@@ -47,10 +47,18 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
         public JsonResult DailyCTD() // campaign-to-date dailies
         {
             var userInfo = GetUserInfo();
-            if (userInfo.ProgAdvertiser == null)
-                return null;
-
             var stats = progRepo.DailySummaryBasicStats(advId: userInfo.ProgAdvertiser.Id);
+
+            var json = Json(stats, JsonRequestBehavior.AllowGet); //TODO: don't allow get
+            return json;
+        }
+
+        // --- Weekly Summary ---
+
+        public JsonResult DayOfWeek()
+        {
+            var userInfo = GetUserInfo();
+            var stats = progRepo.DayOfWeekBasicStats(userInfo.ProgAdvertiser.Id, mondayFirst: false);
 
             var json = Json(stats, JsonRequestBehavior.AllowGet); //TODO: don't allow get
             return json;
