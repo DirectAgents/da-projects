@@ -1,5 +1,4 @@
 ﻿using ClientPortal.Web.Models;
-using DirectAgents.Domain.Entities.TD;
 
 namespace ClientPortal.Web.Areas.Prog.Models
 {

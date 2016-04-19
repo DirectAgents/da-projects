@@ -1,0 +1,57 @@
+﻿@model ClientPortal.Web.Areas.Prog.Models.StratSumVM
+@{
+    ViewBag.Title = "Strategy Summary";
+}
+
+@Html.Partial("_ClientBar", Model.UserInfo)
+<div id="page_content">
+	<div id="container">
+    	<div id="page_content">
+
+@foreach (var stat in Model.MTDStrategyStats)
+{
+<section>
+<div class="heading"><p>MTD Stats for "@stat.StrategyName"</p></div>
+<div class="grid">
+    <table class="grid2" cellspacing="0" width="100%">
+        <tbody>
+            <tr>
+                <td class="col_first">&nbsp;</td>
+                <td class="col_first">&nbsp;</td>
+                <td class="col_first">&nbsp;</td>
+                <td class="col_first">&nbsp;</td>
+                <td class="col_first">&nbsp;</td>
+                <td colspan="3" class="conversions col_first">Conversions</td>
+                <td class="col_first">&nbsp;</td>
+            </tr>
+            <tr>
+                <th class="col_first2">Spend</th>
+                <th>Impressions</th>
+                <th>Clicks</th>
+                <th>CTR</th>
+                <th>eCPC</th>
+                <th>Click Conv</th>
+                <th>View Conv</th>
+                <th>Total</th>
+                <th>eCPA</th>
+            </tr>
+            <tr class="grey_row">
+                <td class="col_first2">@stat.MediaSpend.ToString("C")</td>
+                <td>@stat.Impressions.ToString("N0")</td>
+                <td>@stat.Clicks.ToString("N0")</td>
+                <td>@stat.CTR.ToString("0.00%")</td>
+                <td>@stat.eCPC.ToString("C")</td>
+                <td>@(stat.ShowClickAndViewConv ? stat.PostClickConv.ToString("N0") : "n/a")</td>
+                <td>@(stat.ShowClickAndViewConv ? stat.PostViewConv.ToString("N0") : "n/a")</td>
+                <td>@stat.Conversions.ToString("N0")</td>
+                <td>@stat.eCPA.ToString("C")</td>
+            </tr>
+        </tbody>
+    </table>				
+</div>
+</section>
+}
+
+        </div>
+    </div>
+</div>

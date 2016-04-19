@@ -262,6 +262,7 @@
     <Compile Include="Areas\Prog\Controllers\StatsController.cs" />
     <Compile Include="Areas\Prog\Controllers\TestController.cs" />
     <Compile Include="Areas\Prog\Models\ExecSumVM.cs" />
+    <Compile Include="Areas\Prog\Models\StratSumVM.cs" />
     <Compile Include="Areas\Prog\Models\WeekSumVM.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1167,6 +1168,8 @@
     <Content Include="Areas\Prog\Views\Test\Blank.cshtml" />
     <Content Include="Areas\Admin\Views\ProgAdmin\UploadStats.cshtml" />
     <Content Include="Areas\Prog\Views\Reports\ReportViewer.cshtml" />
+    <Content Include="Areas\Prog\Views\Home\Strategy.cshtml" />
+    <Content Include="Areas\Prog\Views\Shared\_ClientBar.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

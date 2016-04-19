@@ -41,6 +41,20 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             return View(model);
         }
 
+        public ActionResult Strategy()
+        {
+            var userInfo = GetUserInfo();
+            int advId = userInfo.ProgAdvertiser.Id;
+
+            var yesterday = DateTime.Today.AddDays(-1);
+            var model = new StratSumVM
+            {
+                UserInfo = userInfo,
+                MTDStrategyStats = progRepo.MTDStrategyBasicStats(advId, endDate: yesterday)
+            };
+            return View(model);
+        }
+
         public ActionResult Weekly()
         {
             var userInfo = GetUserInfo();

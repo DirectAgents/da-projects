@@ -47,7 +47,19 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
         public JsonResult DailyCTD() // campaign-to-date dailies
         {
             var userInfo = GetUserInfo();
-            var stats = progRepo.DailySummaryBasicStats(advId: userInfo.ProgAdvertiser.Id);
+            var stats = progRepo.DailySummaryBasicStats(userInfo.ProgAdvertiser.Id);
+
+            var json = Json(stats, JsonRequestBehavior.AllowGet); //TODO: don't allow get
+            return json;
+        }
+
+        // --- Strategy Summary ---
+
+        public JsonResult StrategyMTD()
+        {
+            var userInfo = GetUserInfo();
+            var yesterday = DateTime.Today.AddDays(-1);
+            var stats = progRepo.MTDStrategyBasicStats(userInfo.ProgAdvertiser.Id, endDate: yesterday);
 
             var json = Json(stats, JsonRequestBehavior.AllowGet); //TODO: don't allow get
             return json;

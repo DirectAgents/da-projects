@@ -16,9 +16,9 @@ namespace DirectAgents.Domain.Entities.TD
         public int Impressions { get; set; }
         public int Clicks { get; set; }
         public int Conversions { get; set; }
+
         public decimal MediaSpend { get; set; }
         public decimal MgmtFee { get; set; }
-
         public double Budget { get; set; }
         public double Pacing { get; set; }
 
@@ -26,6 +26,13 @@ namespace DirectAgents.Domain.Entities.TD
         public double CR { get; set; }
         public double eCPC { get; set; }
         public double eCPA { get; set; }
+
+        // For Strategy Stats...
+        public int StrategyId { get; set; }
+        public string StrategyName { get; set; }
+        public int PostClickConv { get; set; }
+        public int PostViewConv { get; set; }
+        public bool ShowClickAndViewConv { get; set; }
 
         public void ComputeCalculatedStats()
         {

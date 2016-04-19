@@ -73,6 +73,29 @@ group by Date order by Date";
             }
         }
 
+        public IEnumerable<BasicStat> MTDStrategyBasicStats(int advId, DateTime endDate)
+        {
+            var startDate = new DateTime(endDate.Year, endDate.Month, 1);
+            return StrategyBasicStats(advId, startDate, endDate);
+        }
+        public IEnumerable<BasicStat> StrategyBasicStats(int advId, DateTime startDate, DateTime endDate)
+        {
+            string sql = @"select StrategyName,StrategyId,ShowClickAndViewConv, sum(Impressions) as Impressions, sum(Clicks) as Clicks, sum(PostClickConv) as PostClickConv,sum(PostViewConv) as PostViewConv, sum(Conversions) as Conversions, sum(MediaSpend) as MediaSpend, sum(MgmtFee) as MgmtFee
+from td.fStrategySummaryBasicStats(@p1, @p2, @p3)
+group by StrategyName,StrategyId,ShowClickAndViewConv order by StrategyName";
+            var stats = DailySummaryBasicStatsRaw(advId, startDate, endDate, sql);
+            foreach (var stat in stats)
+            {
+                stat.ComputeCalculatedStats();
+                yield return stat;
+            }
+        }
+        //public IEnumerable<BasicStat> StrategyDailySummaryBasicStats(int advId, DateTime startDate, DateTime endDate)
+        //{
+        //    string sql = "select * from td.fStrategySummaryBasicStats(@p1, @p2, @p3)";
+        //    return DailySummaryBasicStatsRaw(advId, startDate, endDate, sql);
+        //}
+
         // Return value is unexecuted query (?)
         private IEnumerable<BasicStat> DailySummaryBasicStatsRaw(int advId, DateTime startDate, DateTime endDate, string sql = null)
         {
