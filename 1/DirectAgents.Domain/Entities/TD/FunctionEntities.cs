@@ -57,4 +57,20 @@ namespace DirectAgents.Domain.Entities.TD
                 StartDate = StartDate.AddDays(-1);
         }
     }
+
+    public class LeadInfo
+    {
+        public DateTime Time { get; set; }
+        public string ConvType { get; set; }
+        public decimal ConvVal { get; set; }
+        public string LeadID { get; set; }
+        public string City { get; set; }
+        public string Country { get; set; }
+        public string IP { get; set; }
+
+        public string StrategyName { get; set; }
+        public int StrategyId { get; set; }
+        public string AdName { get; set; }
+        public int AdId { get; set; }
+    }
 }

@@ -111,8 +111,22 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
         public ActionResult Lead()
         {
             var userInfo = GetUserInfo();
+            int advId = userInfo.ProgAdvertiser.Id;
 
-            return View(userInfo);
+            var yesterday = DateTime.Today.AddDays(-1);
+            var monthStart = new DateTime(yesterday.Year, yesterday.Month, 1);
+
+            var leadInfos = progRepo.MTDLeadInfos(advId, endDate: yesterday)
+                .OrderByDescending(i => i.Time).ThenBy(i => i.Country).ThenBy(i => i.City);
+
+            var model = new ReportVM
+            {
+                UserInfo = userInfo,
+                StartDate = monthStart,
+                EndDate = yesterday,
+                LeadInfos = leadInfos
+            };
+            return View(model);
         }
     }
 }

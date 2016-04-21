@@ -54,7 +54,7 @@ group by DatePart(weekday, Date) order by Day";
         {
             DateTime yesterday = DateTime.Today.AddDays(-1);
             if (!startDate.HasValue)
-                startDate = EarliestStatDate(advId) ?? yesterday;
+                startDate = EarliestStatDate(advId) ?? yesterday; // if no stats, just set to yesterday
             if (!endDate.HasValue)
                 endDate = yesterday;
 
@@ -99,7 +99,7 @@ group by StrategyName,StrategyId,ShowClickAndViewConv order by StrategyName";
         {
             DateTime yesterday = DateTime.Today.AddDays(-1);
             if (!startDate.HasValue)
-                startDate = EarliestStatDate_TDad(advId) ?? yesterday;
+                startDate = EarliestStatDate_TDad(advId) ?? yesterday; // if no stats, just set to yesterday
             if (!endDate.HasValue)
                 endDate = yesterday;
 
@@ -186,6 +186,35 @@ group by StrategyName,StrategyId,ShowClickAndViewConv order by StrategyName";
 //            stat.ComputeCalculatedStats();
 //            return stat;
 //        }
+
+        public IEnumerable<LeadInfo> MTDLeadInfos(int advId, DateTime endDate)
+        {
+            var startDate = new DateTime(endDate.Year, endDate.Month, 1);
+            return LeadInfosRaw(advId, startDate, endDate);
+        }
+        public IEnumerable<LeadInfo> LeadInfos(int advId, DateTime? startDate, DateTime? endDate)
+        {
+            DateTime yesterday = DateTime.Today.AddDays(-1);
+            if (!startDate.HasValue)
+                startDate = EarliestStatDate_Conv(advId) ?? yesterday; // if no convs, just set to yesterday
+            if (!endDate.HasValue)
+                endDate = yesterday;
+            //if (!startDate.HasValue)
+            //    startDate = EarliestStatDate_Conv(advId) ?? (endDate.Value < yesterday ? endDate.Value : yesterday);
+            return LeadInfosRaw(advId, startDate.Value, endDate.Value);
+        }
+        private IEnumerable<LeadInfo> LeadInfosRaw(int advId, DateTime startDate, DateTime endDate, string sql = null)
+        {
+            if (sql == null)
+                sql = "select * from td.fLeadIDs(@p1, @p2, @p3)";
+            return context.Database.SqlQuery<LeadInfo>(
+                sql,
+                new SqlParameter("@p1", advId),
+                new SqlParameter("@p2", startDate),
+                new SqlParameter("@p3", endDate)
+                );
+        }
+
         public DateTime? EarliestStatDate(int? advId, bool checkAll = false)
         {
             var earliest = EarliestStatDate_Daily(advId);
@@ -197,6 +226,7 @@ group by StrategyName,StrategyId,ShowClickAndViewConv order by StrategyName";
                 var earliestTDad = EarliestStatDate_TDad(advId);
                 if (!earliest.HasValue || (earliestTDad.HasValue && earliestTDad.Value < earliest.Value))
                     earliest = earliestTDad;
+                //NOTE: not including Site stats or Convs
             }
             return earliest;
         }
@@ -222,6 +252,14 @@ group by StrategyName,StrategyId,ShowClickAndViewConv order by StrategyName";
             var sums = TDadSummaries(null, null, advId: advId);
             if (sums.Any())
                 earliest = sums.Min(s => s.Date);
+            return earliest;
+        }
+        public DateTime? EarliestStatDate_Conv(int? advId)
+        {
+            DateTime? earliest = null;
+            var convs = Convs(null, null, advId: advId);
+            if (convs.Any())
+                earliest = convs.Min(s => s.Time);
             return earliest;
         }
 
@@ -370,7 +408,7 @@ group by StrategyName,StrategyId,ShowClickAndViewConv order by StrategyName";
             return sSums;
         }
 
-        public IQueryable<Conv> Convs(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null)
+        public IQueryable<Conv> Convs(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null, int? advId = null)
         {
             var convs = context.Convs.AsQueryable();
             if (startDate.HasValue)
@@ -385,6 +423,8 @@ group by StrategyName,StrategyId,ShowClickAndViewConv order by StrategyName";
                 convs = convs.Where(s => s.AccountId == acctId.Value);
             if (campId.HasValue)
                 convs = convs.Where(s => s.ExtAccount.CampaignId == campId.Value);
+            if (advId.HasValue)
+                convs = convs.Where(s => s.ExtAccount.Campaign.AdvertiserId == advId.Value);
             return convs;
         }
 
