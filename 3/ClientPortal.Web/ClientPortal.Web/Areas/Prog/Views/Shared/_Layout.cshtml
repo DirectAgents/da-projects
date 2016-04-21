@@ -10,12 +10,16 @@
 
 <script src="https://kendo.cdn.telerik.com/2016.1.406/js/jquery.min.js"></script>
 <script src="https://kendo.cdn.telerik.com/2016.1.406/js/kendo.all.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="http://www.directagents.com/preview/portal/css/bootstrap.css">
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/js/bootstrap.js"></script>
+<link href="https://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
 <div id="header">
     <div id="container">
-        <div class="logo">&nbsp;</div>
+@*        <div class="logo">&nbsp;</div>
         <div class="nav">
             <ul class="navbar">
                 <li class="nav1"><a href="@Url.Action("Index", "Home")">Executive<br />Summary</a></li>
@@ -25,7 +29,37 @@
                 <li class="nav4"><a href="@Url.Action("Site", "Home")">Top 50<br />Site List</a></li>
                 <li class="nav4"><a href="@Url.Action("Lead", "Home")">Lead<br />IDs</a></li>
             </ul>
+        </div>*@
+        <div class="nav">
+            <!-- Static navbar -->
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#"><div class="logo">&nbsp;</div></a>
+                    </div>
+                    <div id="navbar" class="navbar-collapse collapse">
+                        <ul class="nav navbar navbar-nav">
+                            <li class="nav1"><a href="@Url.Action("Index", "Home")">Executive Summary</a></li>
+                            <li class="nav2"><a href="@Url.Action("Strategy", "Home")">Strategy Summary</a></li>
+                            <li class="nav3"><a href="@Url.Action("Weekly", "Home")">Weekly Summary</a></li>
+                            <li class="nav4"><a href="@Url.Action("Creative", "Home")">Creative Performance</a></li>
+                            <li class="nav5"><a href="@Url.Action("Site", "Home")">Top 50 Site List</a></li>
+                            <li class="nav6"><a href="@Url.Action("Lead", "Home")">Lead IDs</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="logout"><a href="#"><i class="glyphicon glyphicon-off"></i>Logout</a></li>
+                        </ul>
+                    </div><!--/.nav-collapse -->
+                </div><!--/.container-fluid -->
+            </nav>
         </div>
+
     </div>
 </div>
 
