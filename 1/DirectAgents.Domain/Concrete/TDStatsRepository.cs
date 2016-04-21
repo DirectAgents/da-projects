@@ -107,6 +107,18 @@ group by StrategyName,StrategyId,ShowClickAndViewConv order by StrategyName";
             return DailySummaryBasicStatsRaw(advId, startDate.Value, endDate.Value, sql);
         }
 
+        public IEnumerable<BasicStat> MTDSiteBasicStats(int advId, DateTime endDate)
+        {
+            var startDate = new DateTime(endDate.Year, endDate.Month, 1);
+            return SiteSummaryBasicStatsRaw(advId, startDate, endDate); // since the site stats are only on the 1st, this works to get one stat per site
+        }
+        // TODO: a middle method that groups by SiteId/SiteName and sums the stats (and computes...)
+        private IEnumerable<BasicStat> SiteSummaryBasicStatsRaw(int advId, DateTime startDate, DateTime endDate)
+        {
+            var sql = "select * from td.fSiteSummaryBasicStats(@p1, @p2, @p3)";
+            return DailySummaryBasicStatsRaw(advId, startDate, endDate, sql);
+        }
+
         // Return value is unexecuted query (?)
         private IEnumerable<BasicStat> DailySummaryBasicStatsRaw(int advId, DateTime startDate, DateTime endDate, string sql = null)
         {

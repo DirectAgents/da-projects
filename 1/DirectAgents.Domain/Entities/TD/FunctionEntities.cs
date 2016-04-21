@@ -37,6 +37,10 @@ namespace DirectAgents.Domain.Entities.TD
         public string AdName { get; set; }
         //public double SumKPI { get; set; }
 
+        // For Site Stats...
+        public int SiteId { get; set; }
+        public string SiteName { get; set; }
+
         public void ComputeCalculatedStats()
         {
             CTR = (Impressions == 0) ? 0 : (double)Clicks / Impressions;

@@ -74,7 +74,8 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             DateTime yesterday = DateTime.Today.AddDays(-1);
             DateTime campaignStart = progRepo.EarliestStatDate(advId, checkAll: true) ?? yesterday;
 
-            var stats = progRepo.CreativePerfBasicStats(advId).ToList().OrderByDescending(s => s.Impressions >= 5000).ThenByDescending(s => s.eCPA);
+            var stats = progRepo.CreativePerfBasicStats(advId)
+                .OrderByDescending(s => s.Impressions >= 5000).ThenByDescending(s => s.eCPA);
 
             var model = new CreatPerfVM
             {
@@ -89,9 +90,24 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
         public ActionResult Site()
         {
             var userInfo = GetUserInfo();
+            int advId = userInfo.ProgAdvertiser.Id;
 
-            return View(userInfo);
+            var yesterday = DateTime.Today.AddDays(-1);
+            var monthStart = new DateTime(yesterday.Year, yesterday.Month, 1);
+
+            var stats = progRepo.MTDSiteBasicStats(advId, endDate: yesterday)
+                .OrderByDescending(s => s.Impressions).ThenBy(s => s.SiteName);
+
+            var model = new ReportVM
+            {
+                UserInfo = userInfo,
+                StartDate = monthStart,
+                EndDate = yesterday,
+                Stats = stats
+            };
+            return View(model);
         }
+
         public ActionResult Lead()
         {
             var userInfo = GetUserInfo();

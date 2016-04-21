@@ -70,6 +70,7 @@ namespace DirectAgents.Domain.Abstract
         IEnumerable<BasicStat> MTDStrategyBasicStats(int advId, DateTime endDate);
         IEnumerable<BasicStat> StrategyBasicStats(int advId, DateTime startDate, DateTime endDate);
         IEnumerable<BasicStat> CreativePerfBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null);
+        IEnumerable<BasicStat> MTDSiteBasicStats(int advId, DateTime endDate);
         BasicStat MTDBasicStat(int advId, DateTime endDate);
         BasicStat DateRangeBasicStat(int advId, DateTime startDate, DateTime endDate);
 
