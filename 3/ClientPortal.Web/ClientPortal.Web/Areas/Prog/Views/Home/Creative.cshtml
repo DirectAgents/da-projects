@@ -85,18 +85,24 @@
 @section scripts {
 <script>
     $(document).ready(function () {
-        $("#panelbar").kendoPanelBar();
+        $("#panelbar").kendoPanelBar({
+            select: onSelect
+        });
     });
+
+    function onSelect(e) {
+        $("#panelbar").data("kendoPanelBar").clearSelection();
+    }
 
     function ExpandAll(expand) {
         if (expand) {
             $("#aExpandAll").hide();
             $("#aCollapseAll").show();
-            $("#panelbar").data("kendoPanelBar").expand($("#panelbar .k-item"));
+            $("#panelbar").data("kendoPanelBar").expand($("#panelbar .k-item"), false);
         } else {
             $("#aExpandAll").show();
             $("#aCollapseAll").hide();
-            $("#panelbar").data("kendoPanelBar").collapse($("#panelbar .k-item"));
+            $("#panelbar").data("kendoPanelBar").collapse($("#panelbar .k-item"), false);
         }
     }
 </script>
