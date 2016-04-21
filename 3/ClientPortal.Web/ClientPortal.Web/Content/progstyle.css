@@ -117,7 +117,8 @@ body {
 	border-radius: 50%;
 	float: left;
 	margin-top: 20px;
-	background-image: url("http://www.directagents.com/preview/portal/img/logo_bevel.jpg");
+	/*background-image: url("http://www.directagents.com/preview/portal/img/logo_bevel.jpg");*/
+	background-image: url("/images/logo_seeso_200px.jpg");
 	background-position: center center;
 	background-size: contain;
 }
@@ -131,7 +132,8 @@ body {
 	background-color: #FFF;
 	border-radius: 50%;
 	margin-top: 40px;
-	background-image: url("http://www.directagents.com/preview/portal/img/logo_monterey.jpg");
+	/*background-image: url("http://www.directagents.com/preview/portal/img/logo_bevel_200x200.jpg");*/
+	background-image: url("/images/logo_seeso_200px.jpg");
 	background-position: center center;
 	background-size: contain;
 	margin-left:7%;
@@ -255,11 +257,29 @@ body {
 	font-weight: 300;
 	padding: 15px;
 }
+.grid3 {
+	color: #666666;
+	font-size: 14px;
+}
+.grid3 th {
+	border-left: 1px solid #666666;
+	border-top: 1px solid #666666;
+	border-bottom: 1px solid #666666;
+	font-weight: 800;
+	padding: 15px;
+	text-align: center;
+}
+.grid3 td {
+	border-left: 1px solid #666666;
+	text-align: center;
+	font-weight: 300;
+	padding: 15px;
+}
 .col_first {
 	border-left: 0px !important;
 	text-align: left !important;
 }
-.col_first2 {
+.col_first2, .col_first3 {
 	border-left: 0px !important;
 	text-align: center !important;
 }
@@ -292,6 +312,18 @@ body {
 	font-size:18px;
 	border:0px;
 	text-align:center !important;
+}
+
+ul.k-panelbar .k-panelbar-expand,
+ul.k-panelbar .k-panelbar-collapse
+{
+	right: auto;
+	left: 2px;
+}
+ul.k-panelbar>.k-item>.k-link
+{
+	padding-left: 20px;
+    border-top: 1px solid #666666;
 }
 
 /*---BAR CHART STYLES ---*/

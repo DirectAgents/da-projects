@@ -261,6 +261,7 @@
     <Compile Include="Areas\Prog\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Prog\Controllers\StatsController.cs" />
     <Compile Include="Areas\Prog\Controllers\TestController.cs" />
+    <Compile Include="Areas\Prog\Models\CreatPerfVM.cs" />
     <Compile Include="Areas\Prog\Models\ExecSumVM.cs" />
     <Compile Include="Areas\Prog\Models\StratSumVM.cs" />
     <Compile Include="Areas\Prog\Models\WeekSumVM.cs">
@@ -1037,6 +1038,7 @@
     <Content Include="Images\logo1.png" />
     <Content Include="Images\logo1w.png" />
     <Content Include="Images\logoSelectQuote.png" />
+    <Content Include="Images\logo_seeso_200px.jpg" />
     <Content Include="Images\programmatic.png" />
     <Content Include="Images\spacer.gif" />
     <Content Include="ReportViewerWebForm.aspx" />
@@ -1170,6 +1172,7 @@
     <Content Include="Areas\Prog\Views\Reports\ReportViewer.cshtml" />
     <Content Include="Areas\Prog\Views\Home\Strategy.cshtml" />
     <Content Include="Areas\Prog\Views\Shared\_ClientBar.cshtml" />
+    <Content Include="Areas\Prog\Views\Home\Creative.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

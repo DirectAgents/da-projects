@@ -65,5 +65,21 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             };
             return View(model);
         }
+
+        public ActionResult Creative()
+        {
+            var userInfo = GetUserInfo();
+            int advId = userInfo.ProgAdvertiser.Id;
+            DateTime yesterday = DateTime.Today.AddDays(-1);
+            DateTime campaignStart = progRepo.EarliestStatDate(advId) ?? yesterday;
+
+            var model = new CreatPerfVM
+            {
+                UserInfo = userInfo,
+                StartDate = campaignStart,
+                EndDate = yesterday
+            };
+            return View(model);
+        }
     }
 }

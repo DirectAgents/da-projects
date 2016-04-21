@@ -1,0 +1,114 @@
+﻿@model ClientPortal.Web.Areas.Prog.Models.CreatPerfVM
+@{
+    ViewBag.Title = "Creative Performance";
+}
+
+@Html.Partial("_ClientBar", Model.UserInfo)
+
+<div id="page_content">
+	<div id="container">
+    	<div id="page_content">
+            <section>
+
+<div class="heading"><p>Campaign to Date: @Model.StartDate.ToShortDateString() thru @Model.EndDate.ToShortDateString()</p></div>
+<ul id="panelbar">
+    <li class="k-state-active">
+        <i class="glyphicon glyphicon-minus"></i>WalkerCo_Bevel_300x250_HolidayRed
+        <div>
+            <table class="grid3" cellspacing="0" width="100%">
+                <thead>
+                    <tr class="grey_row">
+                        <th class="col_first3">Media Spend</th>
+                        <th>Impressions</th>
+                        <th>Clicks</th>
+                        <th>CTR</th>
+                        <th>eCPC</th>
+                        <th>Click Conv</th>
+                        <th>View Conv</th>
+                        <th>Total Conv</th>
+                        <th>eCPA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="grey_row">
+                        <td class="col_first3">$1,1071.70</td>
+                        <td>144,847</td>
+                        <td>419</td>
+                        <td>0.29%</td>
+                        <td>$2.56</td>
+                        <td>45</td>
+                        <td>130</td>
+                        <td>175</td>
+                        <td>$119.11</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </li>
+    <li>
+        <i class="glyphicon glyphicon-minus"></i>WalkerCo_Bevel_300x250_HolidayRed2
+        <div>
+            <table class="grid3" cellspacing="0" width="100%">
+                <thead>
+                    <tr class="grey_row">
+                        <th class="col_first3">Media Spend</th>
+                        <th>Impressions</th>
+                        <th>Clicks</th>
+                        <th>CTR</th>
+                        <th>eCPC</th>
+                        <th>Click Conv</th>
+                        <th>View Conv</th>
+                        <th>Total Conv</th>
+                        <th>eCPA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="grey_row">
+                        <td class="col_first3">$1,1071.70</td>
+                        <td>144,847</td>
+                        <td>419</td>
+                        <td>0.29%</td>
+                        <td>$2.56</td>
+                        <td>45</td>
+                        <td>130</td>
+                        <td>175</td>
+                        <td>$119.11</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </li>
+</ul>
+
+@*<div class="grid">
+    <div class="panel-group" id="accordion">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#panel1"><i class="glyphicon glyphicon-minus"></i>WalkerCo_Bevel_300x250_HolidayRed</a>
+                </h4>
+<!-- thumb -->
+            </div>
+            <div id="panel1" class="panel-collapse collapse in">
+                <div class="panel-body">
+<!-- table -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>*@
+
+            </section>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+        $("#panelbar").kendoPanelBar();
+    });
+</script>
+}
