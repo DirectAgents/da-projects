@@ -1173,6 +1173,8 @@
     <Content Include="Areas\Prog\Views\Home\Strategy.cshtml" />
     <Content Include="Areas\Prog\Views\Shared\_ClientBar.cshtml" />
     <Content Include="Areas\Prog\Views\Home\Creative.cshtml" />
+    <Content Include="Areas\Prog\Views\Home\Site.cshtml" />
+    <Content Include="Areas\Prog\Views\Home\Lead.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

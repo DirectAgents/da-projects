@@ -85,5 +85,18 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             };
             return View(model);
         }
+
+        public ActionResult Site()
+        {
+            var userInfo = GetUserInfo();
+
+            return View(userInfo);
+        }
+        public ActionResult Lead()
+        {
+            var userInfo = GetUserInfo();
+
+            return View(userInfo);
+        }
     }
 }
