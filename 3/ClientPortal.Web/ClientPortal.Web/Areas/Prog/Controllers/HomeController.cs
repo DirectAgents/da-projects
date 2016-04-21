@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using ClientPortal.Web.Areas.Prog.Models;
 using ClientPortal.Web.Controllers;
@@ -71,13 +72,16 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             var userInfo = GetUserInfo();
             int advId = userInfo.ProgAdvertiser.Id;
             DateTime yesterday = DateTime.Today.AddDays(-1);
-            DateTime campaignStart = progRepo.EarliestStatDate(advId) ?? yesterday;
+            DateTime campaignStart = progRepo.EarliestStatDate(advId, checkAll: true) ?? yesterday;
+
+            var stats = progRepo.CreativePerfBasicStats(advId).ToList().OrderByDescending(s => s.Impressions >= 5000).ThenByDescending(s => s.eCPA);
 
             var model = new CreatPerfVM
             {
                 UserInfo = userInfo,
                 StartDate = campaignStart,
-                EndDate = yesterday
+                EndDate = yesterday,
+                CreativeStats = stats
             };
             return View(model);
         }

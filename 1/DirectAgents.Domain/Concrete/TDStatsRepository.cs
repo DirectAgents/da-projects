@@ -52,12 +52,11 @@ group by DatePart(weekday, Date) order by Day";
 
         private IEnumerable<BasicStat> DailySummaryBasicStatsWithCompute(int advId, DateTime? startDate, DateTime? endDate, string sql = null, bool computeWeekStartDate = false)
         {
+            DateTime yesterday = DateTime.Today.AddDays(-1);
             if (!startDate.HasValue)
-            {
-                startDate = EarliestStatDate(advId);
-            }
+                startDate = EarliestStatDate(advId) ?? yesterday;
             if (!endDate.HasValue)
-                endDate = DateTime.Today.AddDays(-1);
+                endDate = yesterday;
 
             if (sql == null) // Default query - one row per day
                 sql = @"select Date, sum(Impressions) as Impressions, sum(Clicks) as Clicks, sum(Conversions) as Conversions, sum(MediaSpend) as MediaSpend, sum(MgmtFee) as MgmtFee
@@ -95,6 +94,18 @@ group by StrategyName,StrategyId,ShowClickAndViewConv order by StrategyName";
         //    string sql = "select * from td.fStrategySummaryBasicStats(@p1, @p2, @p3)";
         //    return DailySummaryBasicStatsRaw(advId, startDate, endDate, sql);
         //}
+
+        public IEnumerable<BasicStat> CreativePerfBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null)
+        {
+            DateTime yesterday = DateTime.Today.AddDays(-1);
+            if (!startDate.HasValue)
+                startDate = EarliestStatDate_TDad(advId) ?? yesterday;
+            if (!endDate.HasValue)
+                endDate = yesterday;
+
+            var sql = "select * from td.fCreativeProgressBasicStats(@p1, @p2, @p3, NULL)";
+            return DailySummaryBasicStatsRaw(advId, startDate.Value, endDate.Value, sql);
+        }
 
         // Return value is unexecuted query (?)
         private IEnumerable<BasicStat> DailySummaryBasicStatsRaw(int advId, DateTime startDate, DateTime endDate, string sql = null)
@@ -163,12 +174,42 @@ group by StrategyName,StrategyId,ShowClickAndViewConv order by StrategyName";
 //            stat.ComputeCalculatedStats();
 //            return stat;
 //        }
-        public DateTime? EarliestStatDate(int? advId)
+        public DateTime? EarliestStatDate(int? advId, bool checkAll = false)
+        {
+            var earliest = EarliestStatDate_Daily(advId);
+            if (checkAll)
+            {
+                var earliestStrat = EarliestStatDate_Strategy(advId);
+                if (!earliest.HasValue || (earliestStrat.HasValue && earliestStrat.Value < earliest.Value))
+                    earliest = earliestStrat;
+                var earliestTDad = EarliestStatDate_TDad(advId);
+                if (!earliest.HasValue || (earliestTDad.HasValue && earliestTDad.Value < earliest.Value))
+                    earliest = earliestTDad;
+            }
+            return earliest;
+        }
+        private DateTime? EarliestStatDate_Daily(int? advId)
         {
             DateTime? earliest = null;
             var dSums = DailySummaries(null, null, advId: advId);
             if (dSums.Any())
                 earliest = dSums.Min(s => s.Date);
+            return earliest;
+        }
+        public DateTime? EarliestStatDate_Strategy(int? advId)
+        {
+            DateTime? earliest = null;
+            var sums = StrategySummaries(null, null, advId: advId);
+            if (sums.Any())
+                earliest = sums.Min(s => s.Date);
+            return earliest;
+        }
+        public DateTime? EarliestStatDate_TDad(int? advId)
+        {
+            DateTime? earliest = null;
+            var sums = TDadSummaries(null, null, advId: advId);
+            if (sums.Any())
+                earliest = sums.Min(s => s.Date);
             return earliest;
         }
 
@@ -267,7 +308,7 @@ group by StrategyName,StrategyId,ShowClickAndViewConv order by StrategyName";
             return dSums;
         }
 
-        public IQueryable<StrategySummary> StrategySummaries(DateTime? startDate, DateTime? endDate, int? stratId = null, int? acctId = null, int? campId = null)
+        public IQueryable<StrategySummary> StrategySummaries(DateTime? startDate, DateTime? endDate, int? stratId = null, int? acctId = null, int? campId = null, int? advId = null)
         {
             var sSums = context.StrategySummaries.AsQueryable();
             if (startDate.HasValue)
@@ -280,10 +321,12 @@ group by StrategyName,StrategyId,ShowClickAndViewConv order by StrategyName";
                 sSums = sSums.Where(s => s.Strategy.AccountId == acctId.Value);
             if (campId.HasValue)
                 sSums = sSums.Where(s => s.Strategy.ExtAccount.CampaignId == campId.Value);
+            if (advId.HasValue)
+                sSums = sSums.Where(s => s.Strategy.ExtAccount.Campaign.AdvertiserId == advId.Value);
             return sSums;
         }
 
-        public IQueryable<TDadSummary> TDadSummaries(DateTime? startDate, DateTime? endDate, int? tdadId = null, int? acctId = null, int? campId = null)
+        public IQueryable<TDadSummary> TDadSummaries(DateTime? startDate, DateTime? endDate, int? tdadId = null, int? acctId = null, int? campId = null, int? advId = null)
         {
             var tSums = context.TDadSummaries.AsQueryable();
             if (startDate.HasValue)
@@ -296,6 +339,8 @@ group by StrategyName,StrategyId,ShowClickAndViewConv order by StrategyName";
                 tSums = tSums.Where(s => s.TDad.AccountId == acctId.Value);
             if (campId.HasValue)
                 tSums = tSums.Where(s => s.TDad.ExtAccount.CampaignId == campId.Value);
+            if (advId.HasValue)
+                tSums = tSums.Where(s => s.TDad.ExtAccount.Campaign.AdvertiserId == advId.Value);
             return tSums;
         }
 

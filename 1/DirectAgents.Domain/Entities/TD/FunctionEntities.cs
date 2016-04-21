@@ -27,12 +27,15 @@ namespace DirectAgents.Domain.Entities.TD
         public double eCPC { get; set; }
         public double eCPA { get; set; }
 
-        // For Strategy Stats...
+        // For Strategy/Creative Stats...
         public int StrategyId { get; set; }
         public string StrategyName { get; set; }
         public int PostClickConv { get; set; }
         public int PostViewConv { get; set; }
         public bool ShowClickAndViewConv { get; set; }
+        public int AdId { get; set; }
+        public string AdName { get; set; }
+        //public double SumKPI { get; set; }
 
         public void ComputeCalculatedStats()
         {

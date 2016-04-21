@@ -10,10 +10,18 @@
     	<div id="page_content">
             <section>
 
+<a id="aExpandAll" href="#" onclick="ExpandAll(true); return false">Expand All</a>
+<a id="aCollapseAll" style="display:none" href="#" onclick="ExpandAll(false); return false">Collapse All</a>
+
 <div class="heading"><p>Campaign to Date: @Model.StartDate.ToShortDateString() thru @Model.EndDate.ToShortDateString()</p></div>
 <ul id="panelbar">
-    <li class="k-state-active">
-        <i class="glyphicon glyphicon-minus"></i>WalkerCo_Bevel_300x250_HolidayRed
+@{
+    bool first = true;
+}
+@foreach (var stat in Model.CreativeStats)
+{
+    <li class="@(first ? "k-state-active" : "")">
+        <i class="glyphicon glyphicon-minus"></i>@stat.AdName
         <div>
             <table class="grid3" cellspacing="0" width="100%">
                 <thead>
@@ -31,53 +39,22 @@
                 </thead>
                 <tbody>
                     <tr class="grey_row">
-                        <td class="col_first3">$1,1071.70</td>
-                        <td>144,847</td>
-                        <td>419</td>
-                        <td>0.29%</td>
-                        <td>$2.56</td>
-                        <td>45</td>
-                        <td>130</td>
-                        <td>175</td>
-                        <td>$119.11</td>
+                        <td class="col_first3">@stat.MediaSpend.ToString("C")</td>
+                        <td>@stat.Impressions.ToString("N0")</td>
+                        <td>@stat.Clicks.ToString("N0")</td>
+                        <td>@stat.CTR.ToString("0.00%")</td>
+                        <td>@stat.eCPC.ToString("C")</td>
+                        <td>@(stat.ShowClickAndViewConv ? stat.PostClickConv.ToString("N0") : "n/a")</td>
+                        <td>@(stat.ShowClickAndViewConv ? stat.PostViewConv.ToString("N0") : "n/a")</td>
+                        <td>@stat.Conversions.ToString("N0")</td>
+                        <td>@stat.eCPA.ToString("C")</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </li>
-    <li>
-        <i class="glyphicon glyphicon-minus"></i>WalkerCo_Bevel_300x250_HolidayRed2
-        <div>
-            <table class="grid3" cellspacing="0" width="100%">
-                <thead>
-                    <tr class="grey_row">
-                        <th class="col_first3">Media Spend</th>
-                        <th>Impressions</th>
-                        <th>Clicks</th>
-                        <th>CTR</th>
-                        <th>eCPC</th>
-                        <th>Click Conv</th>
-                        <th>View Conv</th>
-                        <th>Total Conv</th>
-                        <th>eCPA</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="grey_row">
-                        <td class="col_first3">$1,1071.70</td>
-                        <td>144,847</td>
-                        <td>419</td>
-                        <td>0.29%</td>
-                        <td>$2.56</td>
-                        <td>45</td>
-                        <td>130</td>
-                        <td>175</td>
-                        <td>$119.11</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </li>
+    first = false;
+}
 </ul>
 
 @*<div class="grid">
@@ -110,5 +87,17 @@
     $(document).ready(function () {
         $("#panelbar").kendoPanelBar();
     });
+
+    function ExpandAll(expand) {
+        if (expand) {
+            $("#aExpandAll").hide();
+            $("#aCollapseAll").show();
+            $("#panelbar").data("kendoPanelBar").expand($("#panelbar .k-item"));
+        } else {
+            $("#aExpandAll").show();
+            $("#aCollapseAll").hide();
+            $("#panelbar").data("kendoPanelBar").collapse($("#panelbar .k-item"));
+        }
+    }
 </script>
 }
