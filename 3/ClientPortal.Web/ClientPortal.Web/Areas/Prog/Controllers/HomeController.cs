@@ -48,10 +48,10 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             int advId = userInfo.ProgAdvertiser.Id;
 
             var yesterday = DateTime.Today.AddDays(-1);
-            var model = new StratSumVM
+            var model = new ReportVM
             {
                 UserInfo = userInfo,
-                MTDStrategyStats = progRepo.MTDStrategyBasicStats(advId, endDate: yesterday)
+                Stats = progRepo.MTDStrategyBasicStats(advId, endDate: yesterday)
             };
             return View(model);
         }
@@ -60,7 +60,7 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var model = new WeekSumVM
+            var model = new ReportVM
             {
                 UserInfo = userInfo
             };
@@ -77,12 +77,12 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             var stats = progRepo.CreativePerfBasicStats(advId)
                 .OrderByDescending(s => s.Impressions >= 5000).ThenByDescending(s => s.eCPA);
 
-            var model = new CreatPerfVM
+            var model = new ReportVM
             {
                 UserInfo = userInfo,
                 StartDate = campaignStart,
                 EndDate = yesterday,
-                CreativeStats = stats
+                Stats = stats
             };
             return View(model);
         }

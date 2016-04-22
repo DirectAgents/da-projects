@@ -261,13 +261,8 @@
     <Compile Include="Areas\Prog\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Prog\Controllers\StatsController.cs" />
     <Compile Include="Areas\Prog\Controllers\TestController.cs" />
-    <Compile Include="Areas\Prog\Models\CreatPerfVM.cs" />
     <Compile Include="Areas\Prog\Models\ExecSumVM.cs" />
     <Compile Include="Areas\Prog\Models\ReportVM.cs" />
-    <Compile Include="Areas\Prog\Models\StratSumVM.cs" />
-    <Compile Include="Areas\Prog\Models\WeekSumVM.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Areas\Prog\ProgAreaRegistration.cs" />
     <Compile Include="Areas\TD\Controllers\StatsController.cs" />
     <Compile Include="Areas\TD\Controllers\HomeController.cs" />

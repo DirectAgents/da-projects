@@ -1,4 +1,4 @@
-﻿@model ClientPortal.Web.Areas.Prog.Models.CreatPerfVM
+﻿@model ClientPortal.Web.Areas.Prog.Models.ReportVM
 @{
     ViewBag.Title = "Creative Performance";
 }
@@ -18,7 +18,7 @@
 @{
     bool first = true;
 }
-@foreach (var stat in Model.CreativeStats)
+@foreach (var stat in Model.Stats)
 {
     <li class="@(first ? "k-state-active" : "")">
         <i class="glyphicon glyphicon-minus"></i>@stat.AdName
@@ -56,26 +56,6 @@
     first = false;
 }
 </ul>
-
-@*<div class="grid">
-    <div class="panel-group" id="accordion">
-
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#panel1"><i class="glyphicon glyphicon-minus"></i>WalkerCo_Bevel_300x250_HolidayRed</a>
-                </h4>
-<!-- thumb -->
-            </div>
-            <div id="panel1" class="panel-collapse collapse in">
-                <div class="panel-body">
-<!-- table -->
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>*@
 
             </section>
         </div>

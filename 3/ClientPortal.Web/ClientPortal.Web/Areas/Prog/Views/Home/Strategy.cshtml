@@ -1,4 +1,4 @@
-﻿@model ClientPortal.Web.Areas.Prog.Models.StratSumVM
+﻿@model ClientPortal.Web.Areas.Prog.Models.ReportVM
 @{
     ViewBag.Title = "Strategy Summary";
 }
@@ -8,7 +8,7 @@
 	<div id="container">
     	<div id="page_content">
 
-@foreach (var stat in Model.MTDStrategyStats)
+@foreach (var stat in Model.Stats)
 {
 <section>
 <div class="heading"><p>MTD Stats for "@stat.StrategyName"</p></div>
