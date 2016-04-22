@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using ClientPortal.Web.Areas.Prog.Models;
 using ClientPortal.Web.Controllers;
@@ -14,6 +15,15 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
         {
             this.progRepo = progRepository;
             this.cpRepo = cpRepository;
+        }
+
+        public FileResult Logo()
+        {
+            var userInfo = GetUserInfo();
+            if (userInfo.ProgAdvertiser == null || userInfo.ProgAdvertiser.Logo == null)
+                return null;
+            WebImage logo = new WebImage(userInfo.ProgAdvertiser.Logo);
+            return File(logo.GetBytes(), "image/" + logo.ImageFormat, logo.FileName);
         }
 
         // "Executive Summary"
