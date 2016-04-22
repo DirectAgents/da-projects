@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DirectAgents.Domain.Entities.TD
@@ -7,6 +8,8 @@ namespace DirectAgents.Domain.Entities.TD
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public byte[] Logo { get; set; }
+        public DateTime? StartDate { get; set; }
 
         public int? SalesRepId { get; set; }
         [ForeignKey("SalesRepId")]
