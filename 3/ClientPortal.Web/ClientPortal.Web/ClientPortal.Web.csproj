@@ -1023,6 +1023,7 @@
     <Content Include="Images\arrow_up.jpg" />
     <Content Include="Images\avatar.png" />
     <Content Include="Images\bullet_triangle.gif" />
+    <Content Include="Images\creativethumb.gif" />
     <Content Include="Images\da_logo.jpg" />
     <Content Include="Images\icon_metrics.gif" />
     <Content Include="Images\icon_mobile.gif" />
@@ -1036,6 +1037,9 @@
     <Content Include="Images\logoSelectQuote.png" />
     <Content Include="Images\logo_seeso_200px.jpg" />
     <Content Include="Images\programmatic.png" />
+    <Content Include="Images\Seeso_300x600.jpg" />
+    <Content Include="Images\Seeso_728x90.jpg" />
+    <Content Include="Images\Seeso_Video.jpg" />
     <Content Include="Images\spacer.gif" />
     <Content Include="ReportViewerWebForm.aspx" />
     <Content Include="Scripts\blackbird.js" />

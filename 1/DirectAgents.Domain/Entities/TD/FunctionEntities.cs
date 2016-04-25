@@ -69,8 +69,8 @@ namespace DirectAgents.Domain.Entities.TD
         public string IP { get; set; }
 
         public string StrategyName { get; set; }
-        public int StrategyId { get; set; }
+        public int? StrategyId { get; set; }
         public string AdName { get; set; }
-        public int AdId { get; set; }
+        public int? AdId { get; set; }
     }
 }

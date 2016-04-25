@@ -95,6 +95,31 @@ group by StrategyName,StrategyId,ShowClickAndViewConv order by StrategyName";
         //    return DailySummaryBasicStatsRaw(advId, startDate, endDate, sql);
         //}
 
+        public IEnumerable<BasicStat> CreativePerfBasicStats2(int advId) // *** does not compute spend markup ***
+        {
+            DateTime yesterday = DateTime.Today.AddDays(-1);
+            DateTime startDate = EarliestStatDate_TDad(advId) ?? yesterday;
+
+            var sums = TDadSummaries(startDate, yesterday, advId: advId);
+            var adGroups = sums.GroupBy(s => s.TDad);
+            var stats = adGroups.Select(g => new BasicStat
+            {
+                AdId = g.Key.Id,
+                AdName = g.Key.Name,
+                Impressions = g.Sum(s => s.Impressions),
+                Clicks = g.Sum(s => s.Clicks),
+                PostClickConv = g.Sum(s => s.PostClickConv),
+                PostViewConv = g.Sum(s => s.PostViewConv),
+                MediaSpend = g.Sum(s => s.Cost)
+            });
+            foreach (var stat in stats)
+            {
+                stat.Conversions = stat.PostClickConv + stat.PostViewConv;
+                stat.ComputeCalculatedStats();
+                yield return stat;
+            }
+        }
+
         public IEnumerable<BasicStat> CreativePerfBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null)
         {
             DateTime yesterday = DateTime.Today.AddDays(-1);
@@ -203,10 +228,12 @@ group by StrategyName,StrategyId,ShowClickAndViewConv order by StrategyName";
             //    startDate = EarliestStatDate_Conv(advId) ?? (endDate.Value < yesterday ? endDate.Value : yesterday);
             return LeadInfosRaw(advId, startDate.Value, endDate.Value);
         }
-        private IEnumerable<LeadInfo> LeadInfosRaw(int advId, DateTime startDate, DateTime endDate, string sql = null)
+        private IEnumerable<LeadInfo> LeadInfosRaw(int advId, DateTime startDate, DateTime endDate, bool includeFullEndDate = true, string sql = null)
         {
             if (sql == null)
                 sql = "select * from td.fLeadIDs(@p1, @p2, @p3)";
+            if (includeFullEndDate)
+                endDate = endDate.Date.AddDays(1).AddSeconds(-1); // to include through 23:59:59 on the specified day
             return context.Database.SqlQuery<LeadInfo>(
                 sql,
                 new SqlParameter("@p1", advId),

@@ -95,5 +95,13 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             var json = Json(stats, JsonRequestBehavior.AllowGet); //TODO: don't allow get
             return json;
         }
-	}
+        public JsonResult Creative2()
+        {
+            var userInfo = GetUserInfo();
+            var stats = progRepo.CreativePerfBasicStats2(userInfo.ProgAdvertiser.Id);
+
+            var json = Json(stats, JsonRequestBehavior.AllowGet); //TODO: don't allow get
+            return json;
+        }
+    }
 }
