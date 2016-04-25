@@ -31,6 +31,7 @@ BEGIN
 		, ISNULL(PlatformBudgetInfo.MarginPct, ISNULL(BudgetInfo.MarginPct, Campaign.MarginPct)) AS MarginPct
 		, Account.Id AS AccountId
 		, Account.PlatformId
+		, Ad.Id AS AdId
 		FROM td.Campaign
 		INNER JOIN td.Account ON Account.CampaignId = Campaign.Id
 		INNER JOIN td.Ad ON Ad.AccountId = Account.Id
@@ -54,7 +55,7 @@ BEGIN
 			  AND (x.Date = CAST(CAST(YEAR(dt.Date) as varchar) + '-' + CAST(MONTH(dt.Date) AS varchar) + '-01' AS datetime))
 			ORDER BY x.Date DESC
 			)
-		WHERE (td.Campaign.AdvertiserId = @AdvertiserId)
+		WHERE (Campaign.AdvertiserId = @AdvertiserId)
 	)
 	, revenue AS
 	(
@@ -76,6 +77,7 @@ BEGIN
 		INNER JOIN td.AdSummary ON AdSummary.TDadId = Ad.Id
 		INNER JOIN dtData
 		   ON (dtData.AccountId = Ad.AccountId)
+		  AND (dtData.AdId = Ad.Id)
 		  AND (dtData.Date = AdSummary.Date)
 		LEFT OUTER JOIN td.Platform ON Platform.Id = dtData.PlatformId
 		WHERE (td.AdSummary.Date BETWEEN @StartDate AND @EndDate)
