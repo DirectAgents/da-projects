@@ -8,16 +8,17 @@
 <h2>Budget and Pacing</h2>
 @Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
 
-<div id="pacingGrid"></div>
+<div id="budgetGrid"></div>
 
 @section scripts {
 <script>
     $(document).ready(function () {
-        SetupDataSourceAndGrid();
+        var gridDS = CreateGridDataSource();
+        SetupGrid(gridDS);
+        gridDS.read();
     });
 
-    function SetupDataSourceAndGrid() {
-        $('#pacingGrid').html('');
+    function CreateGridDataSource() {
         var datasource = new kendo.data.DataSource({
             serverAggregates: true,
             serverFiltering: true,
@@ -71,10 +72,20 @@
             ]
         });
         datasource.bind('error', datasource_error);
+        return datasource;
+    }
+    function datasource_error(e) {
+        alert('Grid error:\n' + e.errorThrown);
+        //var grid = $("#budgetGrid").data("kendoGrid");
+        //grid.cancelChanges();
+    }
 
-        $('#pacingGrid').kendoGrid({
+    function SetupGrid(datasource) {
+        $('#budgetGrid').html('');
+
+        $('#budgetGrid').kendoGrid({
             dataSource: datasource,
-            //autoBind: false,
+            autoBind: false,
             filterable: true,
             pageable: true,
             sortable: true,
@@ -143,13 +154,6 @@
             pageable: false,
             scrollable: false
         });
-    }
-
-    function datasource_error(e) {
-        alert('Grid error:\n' + e.errorThrown);
-
-        //var grid = $("#grid").data("kendoGrid");
-        //grid.cancelChanges();
     }
 </script>
 }

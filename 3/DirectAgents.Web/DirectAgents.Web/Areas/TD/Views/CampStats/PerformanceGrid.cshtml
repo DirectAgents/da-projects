@@ -7,15 +7,17 @@
 
 <h2>Performance</h2>
 
-<div id="grid"></div>
+<div id="budgetGrid"></div>
 
 @section scripts {
 <script>
     $(document).ready(function () {
-        SetupDataSourceAndGrid();
+        var gridDS = CreateGridDataSource();
+        SetupGrid(gridDS);
+        gridDS.read();
     });
 
-    function SetupDataSourceAndGrid() {
+    function CreateGridDataSource() {
         var datasource = new kendo.data.DataSource({
             serverAggregates: true,
             serverFiltering: true,
@@ -81,10 +83,20 @@
             ]
         });
         datasource.bind('error', datasource_error);
+        return datasource;
+    }
+    function datasource_error(e) {
+        alert('Grid error:\n' + e.errorThrown);
+        //var grid = $("#budgetGrid").data("kendoGrid");
+        //grid.cancelChanges();
+    }
 
-        $('#grid').kendoGrid({
+    function SetupGrid(datasource) {
+        //$('#budgetGrid').html(''); // ???
+
+        $('#budgetGrid').kendoGrid({
             dataSource: datasource,
-            //autoBind: false,
+            autoBind: false,
             filterable: true,
             pageable: true,
             sortable: true,
@@ -113,13 +125,6 @@
             reorderable: true,
             resizable: true
         });
-    }
-
-    function datasource_error(e) {
-        alert('Grid error:\n' + e.errorThrown);
-
-        //var grid = $("#grid").data("kendoGrid");
-        //grid.cancelChanges();
     }
 </script>
 }

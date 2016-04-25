@@ -1,0 +1,14 @@
+﻿@model ClientPortal.Web.Models.UserInfo
+
+<style type="text/css">
+    .client_logo {
+        background-image: url("@Url.Action("Logo", "Home")");
+    }
+</style>
+<div id="client_bar">
+	<div id="container">
+		<div class="client_logo"></div>
+        <div class="client_name">@Model.ProgAdvertiser.Name</div>
+        <div class="page_title">@ViewBag.Title</div>
+    </div>
+</div>

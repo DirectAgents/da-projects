@@ -1,0 +1,89 @@
+﻿@model ClientPortal.Web.Areas.Prog.Models.ReportVM
+@{
+    ViewBag.Title = "Creative Performance";
+}
+
+@Html.Partial("_ClientBar", Model.UserInfo)
+
+<div id="page_content">
+	<div id="container">
+    	<div id="page_content">
+            <section>
+
+<a id="aExpandAll" href="#" onclick="ExpandAll(true); return false">Expand All</a>
+<a id="aCollapseAll" style="display:none" href="#" onclick="ExpandAll(false); return false">Collapse All</a>
+
+<div class="heading"><p>Campaign to Date: @Model.StartDate.ToShortDateString() thru @Model.EndDate.ToShortDateString()</p></div>
+<ul id="panelbar">
+@{
+    bool first = true;
+}
+@foreach (var stat in Model.Stats)
+{
+    <li class="@(first ? "k-state-active" : "")">
+        <i class="glyphicon glyphicon-minus"></i>@stat.AdName
+        <div>
+            <table class="grid3" cellspacing="0" width="100%">
+                <thead>
+                    <tr class="grey_row">
+                        <th class="col_first3">Media Spend</th>
+                        <th>Impressions</th>
+                        <th>Clicks</th>
+                        <th>CTR</th>
+                        <th>eCPC</th>
+                        <th>Click Conv</th>
+                        <th>View Conv</th>
+                        <th>Total Conv</th>
+                        <th>eCPA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="grey_row">
+                        <td class="col_first3">@stat.MediaSpend.ToString("C")</td>
+                        <td>@stat.Impressions.ToString("N0")</td>
+                        <td>@stat.Clicks.ToString("N0")</td>
+                        <td>@stat.CTR.ToString("0.00%")</td>
+                        <td>@stat.eCPC.ToString("C")</td>
+                        <td>@(stat.ShowClickAndViewConv ? stat.PostClickConv.ToString("N0") : "n/a")</td>
+                        <td>@(stat.ShowClickAndViewConv ? stat.PostViewConv.ToString("N0") : "n/a")</td>
+                        <td>@stat.Conversions.ToString("N0")</td>
+                        <td>@stat.eCPA.ToString("C")</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </li>
+    first = false;
+}
+</ul>
+
+            </section>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+        $("#panelbar").kendoPanelBar({
+            select: onSelect
+        });
+    });
+
+    function onSelect(e) {
+        $("#panelbar").data("kendoPanelBar").clearSelection();
+    }
+
+    function ExpandAll(expand) {
+        if (expand) {
+            $("#aExpandAll").hide();
+            $("#aCollapseAll").show();
+            $("#panelbar").data("kendoPanelBar").expand($("#panelbar .k-item"), false);
+        } else {
+            $("#aExpandAll").show();
+            $("#aCollapseAll").hide();
+            $("#panelbar").data("kendoPanelBar").collapse($("#panelbar .k-item"), false);
+        }
+    }
+</script>
+}

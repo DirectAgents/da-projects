@@ -1,0 +1,123 @@
+﻿@model ClientPortal.Web.Areas.Prog.Models.ReportVM
+@{
+    ViewBag.Title = "Weekly Summary";
+}
+
+@Html.Partial("_ClientBar", Model.UserInfo)
+<div id="page_content">
+	<div id="container">
+    	<div id="page_content">
+
+<section>
+    <div class="heading"><p>Avg eCPA for Day of Week</p></div>
+    <div class="content_box">
+        <div id="chartDayOfWeek" style="height:175px"></div>
+    </div>
+</section>
+<section>
+    <div class="heading"><p>Weekly Stats</p></div>
+    <div id="gridWeekly"></div>
+</section>
+
+        </div>
+    </div>
+</div>
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+        CreateDayOfWeekChart();
+        var dsWeekly = CreateWeeklyDataSource();
+        CreateWeeklyGrid(dsWeekly);
+        dsWeekly.read();
+    });
+
+    function CreateDayOfWeekChart() {
+        $("#chartDayOfWeek").kendoChart({
+            dataSource: {
+                transport: {
+                    read: {
+                        type: 'post',
+                        dataType: 'json',
+                        url: '@Url.Action("DayOfWeek", "Stats")',
+                    }
+                }
+            },
+            chartArea: {
+                background: "transparent"
+            },
+            legend: {
+                visible: false
+            },
+            seriesDefaults: {
+                type: "column"
+            },
+            series: [{
+                field: "eCPA",
+                name: "Average eCPA",
+                color: "rgba(13,141,214, 0.7)",
+                border: { width: 0 },
+                gap: .2
+            }],
+            valueAxis: {
+                line: {
+                    visible: false
+                },
+                labels: {
+                    format: "C0"
+                }
+            },
+            categoryAxis: {
+                field: "DayName",
+                majorGridLines: {
+                    visible: false
+                },
+                majorTicks: {
+                    visible: false
+                }
+            },
+            tooltip: {
+                visible: true,
+                format: "{0:C}"
+            }
+        });
+    }
+
+    function CreateWeeklyDataSource() {
+        return new kendo.data.DataSource({
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("Weekly", "Stats")'
+                }
+            },
+            schema: {
+                model: {
+                    id: 'Id',
+                    fields: {
+                        Date: { type: 'date' }
+                        // rest of fields: numbers
+                    }
+                }
+            }
+        });
+    }
+    function CreateWeeklyGrid(datasource) {
+        $("#gridWeekly").kendoGrid({
+            dataSource: datasource,
+            autoBind: false,
+            columns: [
+                { field: "Date", title: "Week", format: "{0:d}" },
+                { field: "MediaSpend", title: "Spend", format: "{0:c}", attributes: { style: "text-align: center" } },
+                { field: "Impressions", format: "{0:n0}", attributes: { style: "text-align: center" } },
+                { field: "Clicks", format: "{0:n0}", attributes: { style: "text-align: center" } },
+                { field: "CTR", format: "{0:0.00%}", attributes: { style: "text-align: center" } },
+                { field: "eCPC", format: "{0:c}", attributes: { style: "text-align: center" } },
+                { field: "Conversions", title: "Total Conv", format: "{0:n0}", attributes: { style: "text-align: center" } },
+                { field: "eCPA", format: "{0:c}", attributes: { style: "text-align: center" } }
+            ]
+        });
+    }
+</script>
+}

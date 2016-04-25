@@ -33,6 +33,14 @@
             <br />
             <input type="submit" value="Save" />
             &nbsp;@Html.ActionLink("cancel", "Index")
+            <br /><br />
+            @Html.ActionLink("Edit Logo", "EditLogo", new { id = Model.Id })
+@if (Model.Logo != null)
+{
+    <table><tr><td>
+        <img src="@Url.Action("Logo", new { id = Model.Id })" />
+    </td></tr></table>
+}
         </div>
     }
 </fieldset>

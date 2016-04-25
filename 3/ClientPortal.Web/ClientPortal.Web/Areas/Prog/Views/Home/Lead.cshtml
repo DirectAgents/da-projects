@@ -1,0 +1,50 @@
+﻿@model ClientPortal.Web.Areas.Prog.Models.ReportVM
+
+@{
+    ViewBag.Title = "Lead IDs";
+}
+
+@Html.Partial("_ClientBar", Model.UserInfo)
+
+<div id="page_content">
+    <div id="container">
+        <div id="page_content">
+        
+        <section>
+            <div class="heading"><p>Month to Date: @Model.StartDate.ToShortDateString() thru @Model.EndDate.ToShortDateString()</p></div>
+            <div class="grid">
+
+<table class="grid" cellspacing="0" width="100%">
+<thead>
+    <tr>
+        <th class="col_first">Timestamp</th>
+        <th>Conv Type</th>
+        <th>City</th>
+        <th>Country</th>
+        <th>Lead ID</th>
+    </tr>
+</thead>
+<tbody>
+@{
+    int i = 0;
+}
+@foreach (var lead in Model.LeadInfos)
+{
+    <tr class="@(i % 2 == 0 ? "grey_row" : "")">
+        <td class="col_first">@lead.Time</td>
+        <td>@lead.ConvType</td>
+        <td>@lead.City</td>
+        <td>@lead.Country</td>
+        <td>@lead.LeadID</td>
+    </tr>
+    i++;
+}
+</tbody>
+</table>
+
+            </div>
+        </section>
+
+        </div>
+    </div>
+</div>

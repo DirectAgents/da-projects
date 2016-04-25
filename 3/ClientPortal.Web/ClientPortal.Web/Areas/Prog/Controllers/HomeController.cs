@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using ClientPortal.Web.Areas.Prog.Models;
 using ClientPortal.Web.Controllers;
@@ -15,6 +17,16 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             this.cpRepo = cpRepository;
         }
 
+        public FileResult Logo()
+        {
+            var userInfo = GetUserInfo();
+            if (userInfo.ProgAdvertiser == null || userInfo.ProgAdvertiser.Logo == null)
+                return null;
+            WebImage logo = new WebImage(userInfo.ProgAdvertiser.Logo);
+            return File(logo.GetBytes(), "image/" + logo.ImageFormat, logo.FileName);
+        }
+
+        // "Executive Summary"
         public ActionResult Index()
         {
             var userInfo = GetUserInfo();
@@ -36,6 +48,93 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
                 MTDStat = progRepo.MTDBasicStat(advId, yesterday),
                 LastMonthStat = progRepo.MTDBasicStat(advId, lastMonthEndDate),
                 CTDStat = progRepo.DateRangeBasicStat(advId, earliestStatDate, yesterday)
+            };
+            return View(model);
+        }
+
+        public ActionResult Strategy()
+        {
+            var userInfo = GetUserInfo();
+            int advId = userInfo.ProgAdvertiser.Id;
+
+            var yesterday = DateTime.Today.AddDays(-1);
+            var model = new ReportVM
+            {
+                UserInfo = userInfo,
+                Stats = progRepo.MTDStrategyBasicStats(advId, endDate: yesterday)
+            };
+            return View(model);
+        }
+
+        public ActionResult Weekly()
+        {
+            var userInfo = GetUserInfo();
+
+            var model = new ReportVM
+            {
+                UserInfo = userInfo
+            };
+            return View(model);
+        }
+
+        public ActionResult Creative()
+        {
+            var userInfo = GetUserInfo();
+            int advId = userInfo.ProgAdvertiser.Id;
+            DateTime yesterday = DateTime.Today.AddDays(-1);
+            DateTime campaignStart = progRepo.EarliestStatDate(advId, checkAll: true) ?? yesterday;
+
+            var stats = progRepo.CreativePerfBasicStats(advId)
+                .OrderByDescending(s => s.Impressions >= 5000).ThenByDescending(s => s.eCPA);
+
+            var model = new ReportVM
+            {
+                UserInfo = userInfo,
+                StartDate = campaignStart,
+                EndDate = yesterday,
+                Stats = stats
+            };
+            return View(model);
+        }
+
+        public ActionResult Site()
+        {
+            var userInfo = GetUserInfo();
+            int advId = userInfo.ProgAdvertiser.Id;
+
+            var yesterday = DateTime.Today.AddDays(-1);
+            var monthStart = new DateTime(yesterday.Year, yesterday.Month, 1);
+
+            var stats = progRepo.MTDSiteBasicStats(advId, endDate: yesterday)
+                .OrderByDescending(s => s.Impressions).ThenBy(s => s.SiteName);
+
+            var model = new ReportVM
+            {
+                UserInfo = userInfo,
+                StartDate = monthStart,
+                EndDate = yesterday,
+                Stats = stats
+            };
+            return View(model);
+        }
+
+        public ActionResult Lead()
+        {
+            var userInfo = GetUserInfo();
+            int advId = userInfo.ProgAdvertiser.Id;
+
+            var yesterday = DateTime.Today.AddDays(-1);
+            var monthStart = new DateTime(yesterday.Year, yesterday.Month, 1);
+
+            var leadInfos = progRepo.MTDLeadInfos(advId, endDate: yesterday)
+                .OrderByDescending(i => i.Time).ThenBy(i => i.Country).ThenBy(i => i.City);
+
+            var model = new ReportVM
+            {
+                UserInfo = userInfo,
+                StartDate = monthStart,
+                EndDate = yesterday,
+                LeadInfos = leadInfos
             };
             return View(model);
         }

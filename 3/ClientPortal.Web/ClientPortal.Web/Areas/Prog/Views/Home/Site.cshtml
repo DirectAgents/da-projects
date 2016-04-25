@@ -1,0 +1,48 @@
+﻿@model ClientPortal.Web.Areas.Prog.Models.ReportVM
+
+@{
+    ViewBag.Title = "Top 50 Site List";
+}
+
+@Html.Partial("_ClientBar", Model.UserInfo)
+
+<div id="page_content">
+    <div id="container">
+        <div id="page_content">
+        
+        <section>
+            <div class="heading"><p>Month to Date: @Model.StartDate.ToShortDateString() thru @Model.EndDate.ToShortDateString()</p></div>
+            <div class="grid">
+
+<table class="grid" cellspacing="0" width="100%">
+<thead>
+    <tr>
+        <th class="col_first">Site</th>
+        <th>Impressions</th>
+        <th>Clicks</th>
+        <th>CTR</th>
+    </tr>
+</thead>
+<tbody>
+@{
+    int i = 0;
+}
+@foreach (var stat in Model.Stats)
+{
+    <tr class="@(i % 2 == 0 ? "grey_row" : "")">
+        <td class="col_first">@stat.SiteName</td>
+        <td>@stat.Impressions.ToString("N0")</td>
+        <td>@stat.Clicks.ToString("N0")</td>
+        <td>@stat.CTR.ToString("0.00%")</td>
+    </tr>
+    i++;
+}
+</tbody>
+</table>
+
+            </div>
+        </section>
+
+        </div>
+    </div>
+</div>

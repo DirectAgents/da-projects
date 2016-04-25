@@ -6,7 +6,7 @@ namespace DirectAgents.Domain.Entities.TD
     {
         public int Day { get; set; }
         public DateTime Date { get; set; } // also used for End Date
-        public DateTime StartDate { get; set; }
+        public DateTime StartDate { get; set; } // also used for Start Day of Week
 
         public string DayName
         {
@@ -16,9 +16,9 @@ namespace DirectAgents.Domain.Entities.TD
         public int Impressions { get; set; }
         public int Clicks { get; set; }
         public int Conversions { get; set; }
+
         public decimal MediaSpend { get; set; }
         public decimal MgmtFee { get; set; }
-
         public double Budget { get; set; }
         public double Pacing { get; set; }
 
@@ -26,6 +26,20 @@ namespace DirectAgents.Domain.Entities.TD
         public double CR { get; set; }
         public double eCPC { get; set; }
         public double eCPA { get; set; }
+
+        // For Strategy/Creative Stats...
+        public int StrategyId { get; set; }
+        public string StrategyName { get; set; }
+        public int PostClickConv { get; set; }
+        public int PostViewConv { get; set; }
+        public bool ShowClickAndViewConv { get; set; }
+        public int AdId { get; set; }
+        public string AdName { get; set; }
+        //public double SumKPI { get; set; }
+
+        // For Site Stats...
+        public int SiteId { get; set; }
+        public string SiteName { get; set; }
 
         public void ComputeCalculatedStats()
         {
@@ -35,5 +49,28 @@ namespace DirectAgents.Domain.Entities.TD
             eCPA = (Conversions == 0) ? 0 : (double)(MediaSpend / Conversions);
             Pacing = (Budget == 0) ? 0 : (double)MediaSpend / Budget;
         }
+
+        public void ComputeWeekStartDate(DayOfWeek startDayOfWeek = DayOfWeek.Monday)
+        {
+            StartDate = Date;
+            while (StartDate.DayOfWeek != startDayOfWeek)
+                StartDate = StartDate.AddDays(-1);
+        }
+    }
+
+    public class LeadInfo
+    {
+        public DateTime Time { get; set; }
+        public string ConvType { get; set; }
+        public decimal ConvVal { get; set; }
+        public string LeadID { get; set; }
+        public string City { get; set; }
+        public string Country { get; set; }
+        public string IP { get; set; }
+
+        public string StrategyName { get; set; }
+        public int StrategyId { get; set; }
+        public string AdName { get; set; }
+        public int AdId { get; set; }
     }
 }

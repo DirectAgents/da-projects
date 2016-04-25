@@ -64,12 +64,22 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<TDad> TDads(int? acctId);
 
         //TD Stats
-        IEnumerable<BasicStat> DayOfWeekBasicStats(int advId, DateTime startDate, DateTime endDate);
+        IEnumerable<BasicStat> DayOfWeekBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool mondayFirst = false);
+        IEnumerable<BasicStat> WeeklyBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null);
         IEnumerable<BasicStat> DailySummaryBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null);
+        IEnumerable<BasicStat> MTDStrategyBasicStats(int advId, DateTime endDate);
+        IEnumerable<BasicStat> StrategyBasicStats(int advId, DateTime startDate, DateTime endDate);
+        IEnumerable<BasicStat> CreativePerfBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null);
+        IEnumerable<BasicStat> MTDSiteBasicStats(int advId, DateTime endDate);
         BasicStat MTDBasicStat(int advId, DateTime endDate);
         BasicStat DateRangeBasicStat(int advId, DateTime startDate, DateTime endDate);
+        IEnumerable<LeadInfo> MTDLeadInfos(int advId, DateTime endDate);
+        IEnumerable<LeadInfo> LeadInfos(int advId, DateTime? startDate, DateTime? endDate);
 
-        DateTime? EarliestStatDate(int? advId);
+        DateTime? EarliestStatDate(int? advId, bool checkAll = false);
+        DateTime? EarliestStatDate_Strategy(int? advId);
+        DateTime? EarliestStatDate_TDad(int? advId);
+        DateTime? EarliestStatDate_Conv(int? advId);
         TDStatsGauge GetStatsGauge(ExtAccount extAccount);
         TDStatsGauge GetStatsGauge(int? acctId = null);
         DailySummary DailySummary(DateTime date, int acctId);
@@ -77,10 +87,10 @@ namespace DirectAgents.Domain.Abstract
         bool SaveDailySummary(DailySummary daySum);
         void FillExtended(DailySummary daySum);
         IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null, int? advId = null);
-        IQueryable<StrategySummary> StrategySummaries(DateTime? startDate, DateTime? endDate, int? stratId = null, int? acctId = null, int? campId = null);
-        IQueryable<TDadSummary> TDadSummaries(DateTime? startDate, DateTime? endDate, int? tdadId = null, int? acctId = null, int? campId = null);
+        IQueryable<StrategySummary> StrategySummaries(DateTime? startDate, DateTime? endDate, int? stratId = null, int? acctId = null, int? campId = null, int? advId = null);
+        IQueryable<TDadSummary> TDadSummaries(DateTime? startDate, DateTime? endDate, int? tdadId = null, int? acctId = null, int? campId = null, int? advId = null);
         IQueryable<SiteSummary> SiteSummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null);
-        IQueryable<Conv> Convs(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null);
+        IQueryable<Conv> Convs(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null, int? advId = null);
         //TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null);
         TDRawStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null);
         IEnumerable<TDRawStat> GetStrategyStats(DateTime? startDate, DateTime? endDate, int? acctId = null);

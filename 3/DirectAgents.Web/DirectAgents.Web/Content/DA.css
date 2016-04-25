@@ -18,3 +18,7 @@ table.editable input[type="text"] {
     color: #e80c20;
     font-weight: bold;
 }
+
+#budgetGrid .k-grid-content {
+    min-height: 75px; /* in order to see progress bar */
+}

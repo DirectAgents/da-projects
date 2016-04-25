@@ -4,6 +4,11 @@
     var mtd = Model.MTDStat;
     var prev = Model.LastMonthStat;
 }
+<style type="text/css">
+    .client_logo_exec {
+        background-image: url("@Url.Action("Logo", "Home")");
+    }
+</style>
 
 <div id="client_bar_exec">
 <div id="container">
@@ -134,8 +139,8 @@
             <div id="exec_right">
                 <section>
                     <div class="heading"><p>Pacing Month to Date</p></div>
-                    <div class="content_box" style="height:205px">
-                        gauge...<br />gauge...<br />gauge...<br />gauge...<br />gauge...<br />gauge...
+                    <div class="content_box">
+                        <div id="pacingGauge" style="height:205px"></div>
                     </div>
                 </section>
                 <section>
@@ -152,11 +157,39 @@
 @section scripts {
 <script>
     $(document).ready(function () {
+        SetupPacingGauge();
         var datasource = GetDataSourceCTD();
         SetupSparklineCharts(datasource);
         SetupMainChart(datasource);
         datasource.read();
     });
+
+    function SetupPacingGauge() {
+        $('#pacingGauge').kendoChart({
+@*            title: "@string.Format("Spend: {0:C} ({1:0.00%}) of {2:C0} Budgeted", Model.MTDStat.MediaSpend, Model.MTDStat.Pacing, Model.MTDStat.Budget)",*@
+            title: "@string.Format("Used {0:0.00%} of {1:C0} Budget", Model.MTDStat.Pacing, Model.MTDStat.Budget)",
+            chartArea: {
+                background: "transparent"
+            },
+            tooltip: {
+                visible: true,
+                format: "C"
+            },
+            seriesDefaults: { type: "bar" },
+            series: [{
+                data: [@Model.MTDStat.MediaSpend],
+                color: "rgba(13,141,214, 0.7)",
+                border: { width: 0 }
+            }],
+            valueAxis: {
+                max: @Model.MTDStat.Budget,
+                labels: { format: "C0" }
+            },
+            //categoryAxis: {
+            //    categories: ["PacingX"]
+            //}
+        });
+    }
 
     function GetDataSourceCTD() {
         return new kendo.data.DataSource({
@@ -164,7 +197,7 @@
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("DailyCTD", "Stats", new { advId = @Model.UserInfo.ProgAdvertiser.Id })',
+                    url: '@Url.Action("DailyCTD", "Stats")',
                 }
             },
             schema: {
@@ -178,13 +211,17 @@
             }
         });
     }
+
     function SetupMainChart(datasource)
     {
         $("#trendECPA").kendoChart({
             dataSource: datasource,
             autoBind: false,
+            chartArea: {
+                background: "transparent"
+            },
             series: [
-                { field: "eCPA", type: "area", color: "rgb(13, 141, 214)", tooltip: { format: "{0:C}" } }
+                { field: "eCPA", type: "area", color: "rgb(13, 141, 214)" }
             ],
             categoryAxis: {
                 field: "Date",
@@ -195,7 +232,10 @@
             valueAxis: [
                 { labels: { format: "C" } }
             ],
-            tooltip: { visible: true }
+            tooltip: {
+                visible: true,
+                template: "#= kendo.format('{0:d}',category) #: #= kendo.format('{0:C}',value) #"
+            }
         });
     }
 
@@ -204,34 +244,34 @@
         $("#sparkSpend").kendoSparkline({
             dataSource: datasource,
             autoBind: false,
+            chartArea: { background: "transparent" },
             type: "area",
-            series: [
-                { field: "MediaSpend", color: "rgb(13, 141, 214)", tooltip: { format: "{0:C}" } }
-            ]
+            series: [{ field: "MediaSpend", color: "rgb(13, 141, 214)", tooltip: { format: "{0:C}" } }],
+            categoryAxis: { field: "Date" }
         });
         $("#sparkImpressions").kendoSparkline({
             dataSource: datasource,
             autoBind: false,
+            chartArea: { background: "transparent" },
             type: "area",
-            series: [
-                { field: "Impressions", color: "rgb(13, 141, 214)", tooltip: { format: "{0:N0}" } }
-            ]
+            series: [{ field: "Impressions", color: "rgb(13, 141, 214)", tooltip: { format: "{0:N0}" } }],
+            categoryAxis: { field: "Date" }
         });
         $("#sparkClicks").kendoSparkline({
             dataSource: datasource,
             autoBind: false,
+            chartArea: { background: "transparent" },
             type: "area",
-            series: [
-                { field: "Clicks", color: "rgb(13, 141, 214)", tooltip: { format: "{0:N0}" } }
-            ]
+            series: [{ field: "Clicks", color: "rgb(13, 141, 214)", tooltip: { format: "{0:N0}" } }],
+            categoryAxis: { field: "Date" }
         });
         $("#sparkConversions").kendoSparkline({
             dataSource: datasource,
             autoBind: false,
+            chartArea: { background: "transparent" },
             type: "area",
-            series: [
-                { field: "Conversions", color: "rgb(13, 141, 214)", tooltip: { format: "{0:N0}" } }
-            ]
+            series: [{ field: "Conversions", color: "rgb(13, 141, 214)", tooltip: { format: "{0:N0}" } }],
+            categoryAxis: { field: "Date" }
         });
     }
 </script>

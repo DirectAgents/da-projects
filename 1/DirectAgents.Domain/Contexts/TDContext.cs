@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.AdRoll;
@@ -12,6 +13,13 @@ namespace DirectAgents.Domain.Contexts
         const string adrollSchema = "adr";
         const string dbmSchema = "dbm";
         const string tdSchema = "td";
+
+        public DATDContext()
+        {
+            var adapter = (IObjectContextAdapter)this;
+            var objectContext = adapter.ObjectContext;
+            objectContext.CommandTimeout = 3 * 60; // value in seconds
+        }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

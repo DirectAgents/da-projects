@@ -5,25 +5,25 @@
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css' />
 <link href='~/Content/progstyle.css' rel="stylesheet" type="text/css" />
 
-<link href="http://kendo.cdn.telerik.com/2016.1.406/styles/kendo.common-bootstrap.min.css" rel="stylesheet" />
-<link href="http://kendo.cdn.telerik.com/2016.1.406/styles/kendo.bootstrap.min.css" rel="stylesheet" />
+<link href="https://kendo.cdn.telerik.com/2016.1.406/styles/kendo.common-bootstrap.min.css" rel="stylesheet" />
+<link href="https://kendo.cdn.telerik.com/2016.1.406/styles/kendo.bootstrap.min.css" rel="stylesheet" />
 
-<script src="http://kendo.cdn.telerik.com/2016.1.406/js/jquery.min.js"></script>
-<script src="http://kendo.cdn.telerik.com/2016.1.406/js/kendo.all.min.js"></script>
+<script src="https://kendo.cdn.telerik.com/2016.1.406/js/jquery.min.js"></script>
+<script src="https://kendo.cdn.telerik.com/2016.1.406/js/kendo.all.min.js"></script>
 </head>
 
 <body>
 <div id="header">
-	<div id="container">
-    	<div class="logo">&nbsp;</div>
+    <div id="container">
+        <div class="logo">&nbsp;</div>
         <div class="nav">
-        	<ul class="navbar">
-            	<li class="nav1"><a href="#">Executive<br />Summary</a></li>
-                <li class="nav2"><a href="#">Strategy<br />Summary</a></li>
-                <li class="nav2"><a href="#">Weekly<br />Summary</a></li>
-                <li class="nav3"><a href="#">Creative<br />Performance</a></li>
-                <li class="nav4"><a href="#">Top 50<br />Site List</a></li>
-                <li class="nav4"><a href="#">Lead<br />IDs</a></li>
+            <ul class="navbar">
+                <li class="nav1"><a href="@Url.Action("Index", "Home")">Executive<br />Summary</a></li>
+                <li class="nav2"><a href="@Url.Action("Strategy", "Home")">Strategy<br />Summary</a></li>
+                <li class="nav2"><a href="@Url.Action("Weekly", "Home")">Weekly<br />Summary</a></li>
+                <li class="nav3"><a href="@Url.Action("Creative", "Home")">Creative<br />Performance</a></li>
+                <li class="nav4"><a href="@Url.Action("Site", "Home")">Top 50<br />Site List</a></li>
+                <li class="nav4"><a href="@Url.Action("Lead", "Home")">Lead<br />IDs</a></li>
             </ul>
         </div>
     </div>
