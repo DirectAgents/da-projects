@@ -1,6 +1,7 @@
 ﻿@model ClientPortal.Web.Areas.Prog.Models.ReportVM
 @{
     ViewBag.Title = "Creative Performance";
+    bool showHoverCol = (Model.UserInfo.ProgAdvertiser.Name == "Seeso");
 }
 
 @Html.Partial("_ClientBar", Model.UserInfo)
@@ -12,7 +13,7 @@
                 <div class="heading"><p>Campaign to Date: @Model.StartDate.ToShortDateString() thru @Model.EndDate.ToShortDateString()</p></div>
                 <div class="grid">
 
-<table class="grid" cellspacing="0" width="100%">
+<table id="tblCreative" class="grid" cellspacing="0" width="100%">
 <thead>
     <tr>
         <th class="col_first">Creative</th>
@@ -21,11 +22,14 @@
         <th>Clicks</th>
         <th>CTR</th>
         <th>eCPC</th>
-        <th>Click Conv</th>
-        <th>View Conv</th>
-        <th>Total Conv</th>
+        <th class="convheader">Click Conv</th>
+        <th class="convheader">View Conv</th>
+        <th class="convheader">Total Conv</th>
         <th>eCPA</th>
+    @if (showHoverCol)
+    {
         <th>Preview (Hover)</th>
+    }
     </tr>
 </thead>
 <tbody>
@@ -34,11 +38,6 @@
 }
 @foreach (var stat in Model.Stats)
 {
-    var creativeImage = "Seeso_300x600.jpg";
-    if (i % 3 > 0)
-    {
-        creativeImage = (i % 3 == 1) ? "Seeso_728x90.jpg" : "Seeso_Video.jpg";
-    }
     <tr class="@(i % 2 == 0 ? "grey_row" : "")">
         <td class="col_first">@stat.AdName</td>
         <td>@stat.MediaSpend.ToString("C")</td>
@@ -50,38 +49,22 @@
         <td>@stat.PostViewConv.ToString("N0")</td>
         <td>@stat.Conversions.ToString("N0")</td>
         <td>@stat.eCPA.ToString("C")</td>
+    @if (showHoverCol)
+    {
+        var creativeImage = "Seeso_300x600.jpg";
+        if (i % 3 > 0)
+        {
+            creativeImage = (i % 3 == 1) ? "Seeso_728x90.jpg" : "Seeso_Video.jpg";
+        }
         <td>
-            <a class="thumbnail" href="#">
-                <img src="~/Images/creativethumb.gif" alt="Bevel" border="0">
-                <span><img src="~/Images/@creativeImage"></span>
-            </a>
+            <img class="thumbnail" src="~/Images/creativethumb.gif" border="0" data-img="@creativeImage">
         </td>
+    }
     </tr>
     i++;
 }
 </tbody>
 </table>
-<style type="text/css">
-    .grid td {
-        padding: 10px 5px;
-    }
-    .thumbnail span {
-        position: absolute;
-        padding: 0px;
-        /*left: -400px;*/
-        /*top: 100px;
-        right:100px;*/
-        border: 0px solid #666;
-        visibility: hidden;
-        color: black;
-        text-decoration: none;
-    }
-    .thumbnail:hover span {
-        visibility: visible;
-        top: 100px;
-        right: 100px;
-        }
-</style>
 
                 </div>
             </section>
@@ -92,25 +75,38 @@
 @section scripts {
 <script>
     $(document).ready(function () {
-        //$("#panelbar").kendoPanelBar({
-        //    select: onSelect
-        //});
+        SetupTooltips();
     });
 
-    function onSelect(e) {
-        $("#panelbar").data("kendoPanelBar").clearSelection();
-    }
-
-    function ExpandAll(expand) {
-        if (expand) {
-            $("#aExpandAll").hide();
-            $("#aCollapseAll").show();
-            $("#panelbar").data("kendoPanelBar").expand($("#panelbar .k-item"), false);
-        } else {
-            $("#aExpandAll").show();
-            $("#aCollapseAll").hide();
-            $("#panelbar").data("kendoPanelBar").collapse($("#panelbar .k-item"), false);
-        }
+    function SetupTooltips() {
+        tooltip = $("#tblCreative").kendoTooltip({
+            position: "left",
+            filter: ".thumbnail",
+            content: kendo.template($("#tmplCreative").html()),
+        }).data("kendoTooltip");
     }
 </script>
+<script id="tmplCreative" type="text/x-kendo-template">
+    <div id="divHover">
+        <img id="imgHover" src="@(Url.Content("~/Images/"))#= target.data('img') #" />
+    </div>
+</script>
 }
+<style type="text/css">
+    .grid td {
+        padding: 10px 5px;
+    }
+    #divHover {
+        position:relative;
+        width:600px;
+        height:300px;
+    }
+    #imgHover {
+        max-width:600px;
+        max-height:300px;
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+    }
+</style>
