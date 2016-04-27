@@ -35,6 +35,7 @@ namespace DirectAgents.Domain.Entities.TD
         public bool ShowClickAndViewConv { get; set; }
         public int AdId { get; set; }
         public string AdName { get; set; }
+        public string Url { get; set; }
         //public double SumKPI { get; set; }
 
         // For Site Stats...

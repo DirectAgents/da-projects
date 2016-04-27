@@ -1,7 +1,20 @@
 ﻿@model ClientPortal.Web.Areas.Prog.Models.ReportVM
 @{
     ViewBag.Title = "Creative Performance";
-    bool showHoverCol = (Model.UserInfo.ProgAdvertiser.Name == "Seeso");
+    if (Model.UserInfo.ProgAdvertiser.Name == "Seeso") { // for Demo
+        var baseUrl = Url.Content("~/Images/");
+        int j = 0;
+        foreach (var stat in Model.Stats)
+        {
+            var creativeImage = "Seeso_300x600.jpg";
+            if (j % 3 > 0) {
+                creativeImage = (j % 3 == 1) ? "Seeso_728x90.jpg" : "Seeso_Video.jpg";
+            }
+            stat.Url = baseUrl + creativeImage;
+            j++;
+        }
+    }
+    bool showHoverCol = Model.AnyUrls();
 }
 
 @Html.Partial("_ClientBar", Model.UserInfo)
@@ -51,13 +64,11 @@
         <td>@stat.eCPA.ToString("C")</td>
     @if (showHoverCol)
     {
-        var creativeImage = "Seeso_300x600.jpg";
-        if (i % 3 > 0)
-        {
-            creativeImage = (i % 3 == 1) ? "Seeso_728x90.jpg" : "Seeso_Video.jpg";
-        }
         <td>
-            <img class="thumbnail" src="~/Images/creativethumb.gif" border="0" data-img="@creativeImage">
+            @if (!String.IsNullOrWhiteSpace(stat.Url))
+            {
+                <img class="thumbnail" src="~/Images/creativethumb.gif" border="0" data-img="@stat.Url">
+            }
         </td>
     }
     </tr>
@@ -88,7 +99,7 @@
 </script>
 <script id="tmplCreative" type="text/x-kendo-template">
     <div id="divHover">
-        <img id="imgHover" src="@(Url.Content("~/Images/"))#= target.data('img') #" />
+        <img id="imgHover" src="#= target.data('img') #" />
     </div>
 </script>
 }

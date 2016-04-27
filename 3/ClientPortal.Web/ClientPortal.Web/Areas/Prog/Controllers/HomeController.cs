@@ -84,8 +84,10 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             DateTime yesterday = DateTime.Today.AddDays(-1);
             DateTime campaignStart = progRepo.EarliestStatDate(advId, checkAll: true) ?? yesterday;
 
-            var stats = progRepo.CreativePerfBasicStats(advId)
-                .OrderByDescending(s => s.Impressions >= 5000).ThenByDescending(s => s.eCPA).ThenByDescending(s => s.Impressions);
+            var stats = progRepo.CreativePerfBasicStats(advId, includeInfo: true)
+                .OrderBy(s => s.eCPA == 0).ThenBy(s => s.eCPA).ThenBy(s => s.AdName)
+                //.OrderByDescending(s => s.Impressions >= 5000).ThenByDescending(s => s.eCPA).ThenByDescending(s => s.Impressions)
+                .ToList();
 
             var model = new ReportVM
             {

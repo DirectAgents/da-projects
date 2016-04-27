@@ -120,7 +120,7 @@ group by StrategyName,StrategyId,ShowClickAndViewConv order by StrategyName";
             }
         }
 
-        public IEnumerable<BasicStat> CreativePerfBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null)
+        public IEnumerable<BasicStat> CreativePerfBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool includeInfo = false)
         {
             DateTime yesterday = DateTime.Today.AddDays(-1);
             if (!startDate.HasValue)
@@ -129,7 +129,27 @@ group by StrategyName,StrategyId,ShowClickAndViewConv order by StrategyName";
                 endDate = yesterday;
 
             var sql = "select * from td.fCreativeProgressBasicStats(@p1, @p2, @p3, NULL)";
-            return DailySummaryBasicStatsRaw(advId, startDate.Value, endDate.Value, sql);
+            var stats = DailySummaryBasicStatsRaw(advId, startDate.Value, endDate.Value, sql);
+            if (includeInfo)
+                return CreativeStatsWithInfo(stats);
+            else
+                return stats;
+        }
+        private IEnumerable<BasicStat> CreativeStatsWithInfo(IEnumerable<BasicStat> stats)
+        {
+            var statsList = stats.ToList();
+            var adIds = statsList.Select(s => s.AdId).ToArray();
+            var adDict = context.TDads.Where(a => adIds.Contains(a.Id))
+                .Select(a => new { a.Id, a.Url })
+                .ToDictionary(a => a.Id, a => a.Url);
+
+            foreach (var stat in statsList)
+            {
+                if (adDict.ContainsKey(stat.AdId))
+                    stat.Url = adDict[stat.AdId];
+                //yield return stat;
+            }
+            return statsList;
         }
 
         public IEnumerable<BasicStat> MTDSiteBasicStats(int advId, DateTime endDate)

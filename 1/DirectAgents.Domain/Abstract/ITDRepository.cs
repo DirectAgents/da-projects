@@ -69,7 +69,7 @@ namespace DirectAgents.Domain.Abstract
         IEnumerable<BasicStat> DailySummaryBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null);
         IEnumerable<BasicStat> MTDStrategyBasicStats(int advId, DateTime endDate);
         IEnumerable<BasicStat> StrategyBasicStats(int advId, DateTime startDate, DateTime endDate);
-        IEnumerable<BasicStat> CreativePerfBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null);
+        IEnumerable<BasicStat> CreativePerfBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool includeInfo = false);
         IEnumerable<BasicStat> CreativePerfBasicStats2(int advId); // *** does not compute spend markup ***
         IEnumerable<BasicStat> MTDSiteBasicStats(int advId, DateTime endDate);
         BasicStat MTDBasicStat(int advId, DateTime endDate);
