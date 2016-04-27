@@ -37,6 +37,7 @@ namespace CakeExtracter.Commands
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public string OneStatPer { get; set; } // (per day)
+        public bool UpdateAds { get; set; }
 
         public override void ResetProperties()
         {
@@ -46,6 +47,7 @@ namespace CakeExtracter.Commands
             StartDate = null;
             EndDate = null;
             OneStatPer = null;
+            UpdateAds = false;
         }
 
         public DASynchAdrollStats()
@@ -57,6 +59,7 @@ namespace CakeExtracter.Commands
             HasOption("s|startDate=", "Start Date (default is 7 days ago)", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
             HasOption("o|oneStatPer=", "One Stat per [what] per day (advertisable/campaign/ad, default = all)", c => OneStatPer = c);
+            HasOption("u|updateAds=", "After synching stats, update Ads? (default = false)", c => UpdateAds = bool.Parse(c));
         }
 
         public override int Execute(string[] remainingArguments)
@@ -147,6 +150,17 @@ namespace CakeExtracter.Commands
                     var loaderThread = loader.Start(extracter);
                     extracterThread.Join();
                     loaderThread.Join();
+
+                    // TODO: test!
+                    if (UpdateAds)
+                    {
+                        var adExtracter = new AdRollAdExtracter(loader.AdEids, arUtility: arUtility);
+                        var adLoader = new AdRollAdLoader(extAccount.Id);
+                        var adExtracterThread = adExtracter.Start();
+                        var adLoaderThread = adLoader.Start(adExtracter);
+                        adExtracterThread.Join();
+                        adLoaderThread.Join();
+                    }
                 }
                 else
                     Logger.Warn("AdRoll Account did not exist for Advertisable with Eid {0}. Cannot do ETL.", adv.Eid);

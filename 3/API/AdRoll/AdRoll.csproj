@@ -48,6 +48,7 @@
     <Compile Include="Clients\ApiRequest.cs" />
     <Compile Include="Clients\OrganizationClients.cs" />
     <Compile Include="Clients\ReportClients.cs" />
+    <Compile Include="Entities\Ad.cs" />
     <Compile Include="Entities\AdSummary.cs" />
     <Compile Include="Entities\Advertisable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
