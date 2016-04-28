@@ -1025,6 +1025,10 @@
     <Content Include="Images\bullet_triangle.gif" />
     <Content Include="Images\creativethumb.gif" />
     <Content Include="Images\da_logo.jpg" />
+    <Content Include="Images\Demo\seph1.jpg" />
+    <Content Include="Images\Demo\seph2.jpg" />
+    <Content Include="Images\Demo\seph3.jpg" />
+    <Content Include="Images\Demo\seph4.jpg" />
     <Content Include="Images\icon_metrics.gif" />
     <Content Include="Images\icon_mobile.gif" />
     <Content Include="Images\icon_reports.gif" />

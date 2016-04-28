@@ -277,6 +277,9 @@ body {
 	border-left: 0px !important;
 	text-align: left !important;
 }
+#tblCreative .col_first {
+    word-break: break-all;
+}
 .col_first2, .col_first3 {
 	border-left: 0px !important;
 	text-align: center !important;
