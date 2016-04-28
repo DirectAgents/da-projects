@@ -21,6 +21,7 @@
 	, Pacing	float(53)
 	, eCPC	float(53)
 	, eCPA	float(53)
+	, PlatformAlias nvarchar(max)
 	)
 AS
 BEGIN
@@ -63,7 +64,10 @@ BEGIN
 	, revenue AS
 	(
 		SELECT StrategySummary.Date
-		, ISNULL('DA' + CAST(Platform.Id AS varchar) + ' ', '') + Strategy.Name AS StrategyName
+		, CASE	WHEN Platform.Code = 'fb' THEN 'Facebook'
+				ELSE 'DA' + CAST(Platform.Id AS varchar)
+		END AS PlatformAlias
+		, Strategy.Name AS StrategyName
 		, Strategy.Id AS StrategyId
 		, StrategySummary.Impressions
 		, StrategySummary.Clicks
@@ -95,7 +99,7 @@ BEGIN
 	)
 	INSERT INTO @ret
 	SELECT Date
-	, StrategyName
+	, ISNULL(PlatformAlias + ' ' + StrategyName, StrategyName)
 	, StrategyId
 	, Impressions
 	, Clicks
@@ -113,6 +117,7 @@ BEGIN
 	, CASE WHEN @Budget = 0 THEN 0 ELSE MediaSpend / CAST(@Budget as float) END AS Pacing
 	, CASE WHEN Clicks = 0 THEN 0 ELSE MediaSpend / CAST(Clicks as float) END AS eCPC
 	, CASE WHEN Conversions = 0 THEN 0 ELSE MediaSpend / CAST(Conversions as float) END AS eCPA
+	, PlatformAlias
 	FROM mediaSpend
 
 	RETURN

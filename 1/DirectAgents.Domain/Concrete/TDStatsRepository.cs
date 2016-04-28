@@ -79,9 +79,9 @@ group by Date order by Date";
         }
         public IEnumerable<BasicStat> StrategyBasicStats(int advId, DateTime startDate, DateTime endDate)
         {
-            string sql = @"select StrategyName,StrategyId,ShowClickAndViewConv, sum(Impressions) as Impressions, sum(Clicks) as Clicks, sum(PostClickConv) as PostClickConv,sum(PostViewConv) as PostViewConv, sum(Conversions) as Conversions, sum(MediaSpend) as MediaSpend, sum(MgmtFee) as MgmtFee
+            string sql = @"select PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv, sum(Impressions) as Impressions, sum(Clicks) as Clicks, sum(PostClickConv) as PostClickConv,sum(PostViewConv) as PostViewConv, sum(Conversions) as Conversions, sum(MediaSpend) as MediaSpend, sum(MgmtFee) as MgmtFee
 from td.fStrategySummaryBasicStats(@p1, @p2, @p3)
-group by StrategyName,StrategyId,ShowClickAndViewConv order by StrategyName";
+group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by PlatformAlias,MediaSpend desc,StrategyName";
             var stats = DailySummaryBasicStatsRaw(advId, startDate, endDate, sql);
             foreach (var stat in stats)
             {

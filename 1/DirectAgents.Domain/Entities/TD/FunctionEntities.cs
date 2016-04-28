@@ -28,6 +28,7 @@ namespace DirectAgents.Domain.Entities.TD
         public double eCPA { get; set; }
 
         // For Strategy/Creative Stats...
+        public string PlatformAlias { get; set; }
         public int StrategyId { get; set; }
         public string StrategyName { get; set; }
         public int PostClickConv { get; set; }
