@@ -1,5 +1,5 @@
 -- *TODO: SET APPROPRIATE DATABASES!*
--- USE...
+USE DADatabaseB...2016
 
 --Disable triggers
 DISABLE TRIGGER tr_Affiliate_IU ON Affiliate
@@ -21,7 +21,7 @@ ENABLE TRIGGER tr_Affiliate_IU ON Affiliate
 --TODO: Set from menu... Query -> SQLCMD Mode
 --also, make sure correct database is still set, particularly if executing one script at a time
 
---Initialize audit
+--Initialize audit (changes current db)
 :r "C:\GitHub\da-projects-kevin\1\SchemaChanges\AuditScripts\autoaudit 2.00h.sql"
 
 USE DADatabaseB...2016
