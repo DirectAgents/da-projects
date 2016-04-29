@@ -85,6 +85,16 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             return json;
         }
 
+        public JsonResult StrategyByWeek(DateTime weekStart)
+        {
+            var userInfo = GetUserInfo();
+            DateTime weekEnd = weekStart.AddDays(6);
+            var stats = progRepo.StrategyBasicStats(userInfo.ProgAdvertiser.Id, weekStart, weekEnd);
+
+            var json = Json(stats, JsonRequestBehavior.AllowGet); //TODO: don't allow get
+            return json;
+        }
+
         // --- Creative Performance ---
 
         public JsonResult Creative()
