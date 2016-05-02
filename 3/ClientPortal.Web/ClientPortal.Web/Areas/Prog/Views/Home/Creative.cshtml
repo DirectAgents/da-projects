@@ -27,7 +27,8 @@
             j++;
         }
     }
-    bool showHoverCol = Model.AnyUrls();
+    //bool showHoverCol = Model.AnyUrls();
+    bool showHoverCol = true;
 }
 
 @Html.Partial("_ClientBar", Model.UserInfo)
@@ -37,60 +38,7 @@
     	<div id="page_content">
             <section>
                 <div class="heading"><p>Campaign to Date: @Model.StartDate.ToShortDateString() thru @Model.EndDate.ToShortDateString()</p></div>
-                <div class="grid">
-
-<table id="tblCreative" class="grid" cellspacing="0" width="100%">
-<thead>
-    <tr>
-        <th class="col_first">Creative</th>
-        <th>Media Spend</th>
-        <th>Impressions</th>
-        <th>Clicks</th>
-        <th>CTR</th>
-        <th>eCPC</th>
-        <th class="convheader">Click Conv</th>
-        <th class="convheader">View Conv</th>
-        <th class="convheader">Total Conv</th>
-        <th>eCPA</th>
-    @if (showHoverCol)
-    {
-        <th>Preview (Hover)</th>
-    }
-    </tr>
-</thead>
-<tbody>
-@{
-    int i = 0;
-}
-@foreach (var stat in Model.Stats)
-{
-    <tr class="@(i % 2 == 0 ? "grey_row" : "")">
-        <td class="col_first">@stat.AdName</td>
-        <td>@stat.MediaSpend.ToString("C")</td>
-        <td>@stat.Impressions.ToString("N0")</td>
-        <td>@stat.Clicks.ToString("N0")</td>
-        <td>@stat.CTR.ToString("0.00%")</td>
-        <td>@stat.eCPC.ToString("C")</td>
-        <td>@stat.PostClickConv.ToString("N0")</td>
-        <td>@stat.PostViewConv.ToString("N0")</td>
-        <td>@stat.Conversions.ToString("N0")</td>
-        <td>@stat.eCPA.ToString("C")</td>
-    @if (showHoverCol)
-    {
-        <td>
-            @if (!String.IsNullOrWhiteSpace(stat.Url))
-            {
-                <img class="thumbnail" src="~/Images/creativethumb.gif" border="0" data-img="@stat.Url">
-            }
-        </td>
-    }
-    </tr>
-    i++;
-}
-</tbody>
-</table>
-
-                </div>
+                <div id="gridCreative"></div>
             </section>
         </div>
     </div>
@@ -99,27 +47,105 @@
 @section scripts {
 <script>
     $(document).ready(function () {
+        var dsCreative = CreateCreativeDataSource();
+        SetupCreativeGrid(dsCreative);
+        dsCreative.read();
         SetupTooltips();
     });
 
+    function CreateCreativeDataSource() {
+        return new kendo.data.DataSource({
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("Creative", "Stats")'
+                }
+            },
+            schema: {
+                model: {
+                    id: 'Id',
+                    fields: {
+                        AdName: { type: 'string' },
+                        Url: { type: 'string' }
+                        // rest of fields: numbers
+                    }
+                }
+            },
+            //sort: { field: "eCPA", dir: "asc" }
+        });
+    }
+    function SetupCreativeGrid(datasource) {
+        $("#gridCreative").kendoGrid({
+            dataSource: datasource,
+            autoBind: false,
+            scrollable: false,
+            sortable: { allowUnsort: false },
+            width: 1000,
+            columns: [
+                {
+                    columns: [
+                        { field: "AdName", title: "Creative", attributes: { class: "gridcol_string" } },
+                        { field: "MediaSpend", title: "Spend", format: "{0:c}", attributes: { style: "text-align: center" } },
+                        { field: "Impressions", format: "{0:n0}", attributes: { style: "text-align: center" } },
+                        { field: "Clicks", format: "{0:n0}", attributes: { style: "text-align: center" } },
+                        { field: "CTR", format: "{0:0.00%}", attributes: { style: "text-align: center" } },
+                        { field: "eCPC", format: "{0:c}", attributes: { style: "text-align: center" } }
+                    ]
+                }, {
+                    title: "Conversions",
+                    headerAttributes: { style: "text-align: center" },
+                    columns: [
+                        { field: "PostClickConv", title: "Click", format: "{0:n0}", attributes: { style: "text-align: center" } },
+                        { field: "PostViewConv", title: "View", format: "{0:n0}", attributes: { style: "text-align: center" } },
+                        { field: "Conversions", title: "Total", format: "{0:n0}", attributes: { style: "text-align: center" } }
+                    ]
+                }, {
+                    columns: [
+                        { field: "eCPA", format: "{0:c}", attributes: { style: "text-align: center" }, sortable: { compare: Sort_eCPA } },
+                    @if (showHoverCol) {
+                        <text>{
+                            field: "Url",
+                            title: "Preview",
+                            template: kendo.template($("#tmplCreativeIcon").html())
+                        }</text>
+                    }
+                    ]
+                }
+            ]
+        });
+    }
+    function Sort_eCPA(a, b, descending) {
+        if (a.eCPA === b.eCPA) {
+            return a.MediaSpend - b.MediaSpend;
+        } else {
+            if (a.eCPA == 0 || b.eCPA == 0)@* one or the other is 0, not both *@
+                return b.eCPA - a.eCPA;
+            else
+                return a.eCPA - b.eCPA;
+        }
+    }
+
     function SetupTooltips() {
-        tooltip = $("#tblCreative").kendoTooltip({
+        $("#gridCreative").kendoTooltip({
             position: "left",
-            filter: ".thumbnail",
-            content: kendo.template($("#tmplCreative").html()),
-        }).data("kendoTooltip");
+            filter: "td:last-child img.thumbnail",
+            content: kendo.template($("#tmplCreativeHover").html())
+        });
     }
 </script>
-<script id="tmplCreative" type="text/x-kendo-template">
+<script id="tmplCreativeIcon" type="text/x-kendo-template">
+    #if (Url != null) {#
+        <img class="thumbnail" src="@Url.Content("~/Images/")creativethumb.gif" border="0" data-img="#: Url #">
+    #}#
+</script>
+<script id="tmplCreativeHover" type="text/x-kendo-template">
     <div id="divHover">
         <img id="imgHover" src="#= target.data('img') #" />
     </div>
 </script>
 }
 <style type="text/css">
-    .grid td {
-        padding: 10px 5px;
-    }
     #divHover {
         position:relative;
         width:600px;

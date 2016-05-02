@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using ClientPortal.Web.Controllers;
 using DirectAgents.Domain.Abstract;
@@ -100,7 +101,8 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
         public JsonResult Creative()
         {
             var userInfo = GetUserInfo();
-            var stats = progRepo.CreativePerfBasicStats(userInfo.ProgAdvertiser.Id);
+            var stats = progRepo.CreativePerfBasicStats(userInfo.ProgAdvertiser.Id, includeInfo: true)
+                .OrderBy(s => s.eCPA == 0).ThenBy(s => s.eCPA).ThenBy(s => s.MediaSpend);
 
             var json = Json(stats, JsonRequestBehavior.AllowGet); //TODO: don't allow get
             return json;
