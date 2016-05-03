@@ -1029,6 +1029,7 @@
     <Content Include="Images\Demo\seph2.jpg" />
     <Content Include="Images\Demo\seph3.jpg" />
     <Content Include="Images\Demo\seph4.jpg" />
+    <Content Include="Images\glyphicon-off.png" />
     <Content Include="Images\icon_metrics.gif" />
     <Content Include="Images\icon_mobile.gif" />
     <Content Include="Images\icon_reports.gif" />

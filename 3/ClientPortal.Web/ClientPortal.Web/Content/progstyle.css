@@ -23,7 +23,7 @@ body {
 .logo {
 	height: 100px;
 	width: 34%;
-	background: url(../Images/da_logo.jpg) #52AAE3;
+	background: url("../Images/da_logo.jpg") #52AAE3;
 	border-top: 4px solid #2d599d;
 	border-left: groove 2px #77C0E7;
 	margin-top: -4px;
@@ -82,6 +82,14 @@ body {
 }
 .nav4 {
 	border-top: 4px solid #FF8A00
+}
+.logout {
+    float: left;
+    background: #2d599d url("../Images/glyphicon-off.png") 0% 30% no-repeat;
+	border-top: 4px solid #0d67ef;
+}
+.logout a {
+  padding: 25px 17px 0 17px;
 }
 #client_bar {
 	background-color: #EAEAEA;
