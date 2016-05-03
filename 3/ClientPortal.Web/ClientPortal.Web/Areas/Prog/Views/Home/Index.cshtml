@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Executive Summary";
     var mtd = Model.MTDStat;
-    var prev = Model.LastMonthStat;
+    var ctd = Model.CTDStat;
 }
 <style type="text/css">
     .client_logo_exec {
@@ -48,15 +48,13 @@
             </div>
         </section>
         <section>
-            <div class="heading"><p>Previous Month: @prev.StartDate.ToShortDateString() thru @prev.Date.ToShortDateString()</p></div>
+            <div class="heading"><p>Campaign to Date: @ctd.StartDate.ToShortDateString() thru @ctd.Date.ToShortDateString()</p></div>
             <div class="grid">
                 <table class="grid" cellspacing="0" width="100%">
                     <thead>
                         <tr class="exec">
-                            <th>Budget</th>
                             <th>Spend</th>
-                            <th>Pacing</th>
-                            <th>Impressions</th>
+                           <th>Impressions</th>
                             <th>Clicks</th>
                             <th>CTR</th>
                             <th>eCPC</th>
@@ -66,15 +64,13 @@
                     </thead>
                     <tbody>
                         <tr class="grey_row">
-                            <td>@prev.Budget.ToString("C")</td>
-                            <td>@prev.MediaSpend.ToString("C")</td>
-                            <td>@prev.Pacing.ToString("0.00%")</td>
-                            <td>@prev.Impressions.ToString("N0")</td>
-                            <td>@prev.Clicks.ToString("N0")</td>
-                            <td>@prev.CTR.ToString("0.00%")</td>
-                            <td>@prev.eCPC.ToString("C")</td>
-                            <td>@prev.Conversions.ToString("N0")</td>
-                            <td>@prev.eCPA.ToString("C")</td>
+                            <td>@ctd.MediaSpend.ToString("C")</td>
+                            <td>@ctd.Impressions.ToString("N0")</td>
+                            <td>@ctd.Clicks.ToString("N0")</td>
+                            <td>@ctd.CTR.ToString("0.00%")</td>
+                            <td>@ctd.eCPC.ToString("C")</td>
+                            <td>@ctd.Conversions.ToString("N0")</td>
+                            <td>@ctd.eCPA.ToString("C")</td>
                         </tr>
 		            </tbody>
                 </table>

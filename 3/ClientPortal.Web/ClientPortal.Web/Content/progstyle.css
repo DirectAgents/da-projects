@@ -55,7 +55,13 @@ body {
 	font-size:13px !important;
 	padding:15px 2px !important;
 	}
-.exec_charts{width:65.7%; float:right;}
+.exec_charts {
+	width:65.7%;
+	float:right;
+}
+.exec_charts section {
+	margin-bottom: 10px;
+}
 .client_logo {
 	height: 80px;
 	width: 80px;
