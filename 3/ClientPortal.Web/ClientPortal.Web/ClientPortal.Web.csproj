@@ -985,6 +985,7 @@
     <Content Include="Content\kendo\2015.1.408\Uniform\sprite_kpi_2x.png" />
     <Content Include="Content\portal.css" />
     <Content Include="Content\progstyle.css" />
+    <Content Include="Content\progstyle2.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -2701,6 +2702,7 @@
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\progscript.js" />
     <Content Include="Scripts\search_grids_charts.js" />
     <Content Include="testfoundation.html" />
     <Content Include="Web.config">
