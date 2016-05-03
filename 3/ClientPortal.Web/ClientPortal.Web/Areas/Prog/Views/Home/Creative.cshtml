@@ -1,32 +1,6 @@
 ﻿@model ClientPortal.Web.Areas.Prog.Models.ReportVM
 @{
     ViewBag.Title = "Creative Performance";
-    if (Model.UserInfo.ProgAdvertiser.Name == "Seeso") { // for Demo
-        var baseUrl = Url.Content("~/Images/");
-        int j = 0;
-        foreach (var stat in Model.Stats)
-        {
-            var creativeImage = "Seeso_300x600.jpg";
-            if (j % 3 > 0) {
-                creativeImage = (j % 3 == 1) ? "Seeso_728x90.jpg" : "Seeso_Video.jpg";
-            }
-            stat.Url = baseUrl + creativeImage;
-            j++;
-        }
-    } else if (Model.UserInfo.ProgAdvertiser.Name == "Sephora") {
-        var baseUrl = Url.Content("~/Images/Demo/");
-        int j = 0;
-        foreach (var stat in Model.Stats)
-        {
-            var creativeImage = "seph1.jpg";
-            if (j % 4 > 0)
-            {
-                creativeImage = (j % 4 == 1) ? "seph2.jpg" : ((j % 4 == 2) ? "seph3.jpg" : "seph4.jpg");
-            }
-            stat.Url = baseUrl + creativeImage;
-            j++;
-        }
-    }
     //bool showHoverCol = Model.AnyUrls();
     bool showHoverCol = true;
 }

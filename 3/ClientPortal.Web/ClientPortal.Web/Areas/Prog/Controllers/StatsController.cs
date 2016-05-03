@@ -104,6 +104,24 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             var stats = progRepo.CreativePerfBasicStats(userInfo.ProgAdvertiser.Id, includeInfo: true)
                 .OrderBy(s => s.eCPA == 0).ThenBy(s => s.eCPA).ThenBy(s => s.MediaSpend);
 
+            var demoAdvs = new string[] { "sees", "seph", "sony" }; //TODO: put in config
+            var advPrefix = userInfo.ProgAdvertiser.Name.Substring(0, 4).ToLower();
+            if (demoAdvs.Contains(advPrefix))
+            {
+                var baseUrl = Url.Content("~/Images/Demo/");
+                int j = 0;
+                foreach (var stat in stats)
+                {
+                    var creativeImage = advPrefix + "1.jpg";
+                    if (j % 4 > 0)
+                    {
+                        creativeImage = (j % 4 == 1) ? advPrefix + "2.jpg" : ((j % 4 == 2) ? advPrefix + "3.jpg" : advPrefix + "4.jpg");
+                    }
+                    stat.Url = baseUrl + creativeImage;
+                    j++;
+                }
+            }
+
             var json = Json(stats, JsonRequestBehavior.AllowGet); //TODO: don't allow get
             return json;
         }
