@@ -29,7 +29,7 @@ namespace DirectAgents.Domain.Abstract
         Advertiser Advertiser(int id);
         IQueryable<Advertiser> Advertisers();
         bool AddAdvertiser(Advertiser adv);
-        bool SaveAdvertiser(Advertiser adv);
+        bool SaveAdvertiser(Advertiser adv, bool includeLogo = false);
         Campaign Campaign(int id);
         IQueryable<Campaign> Campaigns(int? advId = null);
         IQueryable<Campaign> CampaignsActive(DateTime? monthStart = null);

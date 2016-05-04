@@ -23,7 +23,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public ActionResult Advertisers()
         {
-            var progAdvertisers = progRepo.Advertisers().OrderBy(a => a.Name).ToList();
+            var progAdvertisers = progRepo.Advertisers().OrderBy(a => a.Name).ToList(); //TODO? Don't load images? (also check DAWeb)
             var userProfiles = cpRepo.UserProfiles().Where(up => up.TDAdvertiserId.HasValue).ToList();
             var advertiserVMs = new List<AdvertiserVM>();
             foreach (var progAdv in progAdvertisers)

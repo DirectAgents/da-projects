@@ -117,10 +117,14 @@ namespace DirectAgents.Domain.Concrete
             context.SaveChanges();
             return true;
         }
-        public bool SaveAdvertiser(Advertiser adv)
+        public bool SaveAdvertiser(Advertiser adv, bool includeLogo = false)
         {
             if (context.Advertisers.Any(a => a.Id == adv.Id))
             {
+                if (!includeLogo)
+                { // Keep the logo the same as it is in the db
+                    adv.Logo = context.Advertisers.AsNoTracking().FirstOrDefault(a => a.Id == adv.Id).Logo;
+                }
                 var entry = context.Entry(adv);
                 entry.State = EntityState.Modified;
                 context.SaveChanges();
