@@ -17,13 +17,13 @@ namespace CakeExtracter.Commands
     public class DASynchAdrollStats : ConsoleCommand
     {
         // if Eid not specified, will ask AdRoll for all Advertisables that have stats
-        public static int RunStatic(string advertisableEids = null, DateTime? startDate = null, DateTime? endDate = null, string oneStatPer = null)
+        public static int RunStatic(int? accountId = null, DateTime? startDate = null, DateTime? endDate = null, string oneStatPer = null)
         {
             AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new DASynchAdrollStats
             {
-                AdvertisableEids = advertisableEids,
-                CheckActiveAdvertisables = string.IsNullOrWhiteSpace(advertisableEids),
+                AccountId = accountId,
+                CheckActiveAdvertisables = !accountId.HasValue,
                 StartDate = startDate,
                 EndDate = endDate,
                 OneStatPer = oneStatPer
@@ -31,6 +31,9 @@ namespace CakeExtracter.Commands
             return cmd.Run();
         }
 
+        //TODO: Change "OneStatPer" to "StatsType" (note: RunStatic is called from DAWeb)
+
+        public int? AccountId { get; set; }
         public int? AdvertisableId { get; set; }
         public string AdvertisableEids { get; set; } // if NullOrWhitespace, gets filled in during Run()
         public bool CheckActiveAdvertisables { get; set; }
@@ -53,13 +56,14 @@ namespace CakeExtracter.Commands
         public DASynchAdrollStats()
         {
             IsCommand("daSynchAdrollStats", "synch AdRoll Stats");
-            HasOption("a|advertisableEids=", "Advertisable Eids (comma-separated) (default = all)", c => AdvertisableEids = c);
+            HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c); // takes precedence over advertisableEids
+            HasOption("x|advertisableEids=", "Advertisable Eids (comma-separated) (default = all)", c => AdvertisableEids = c);
             HasOption<int>("i|advertisableId=", "Advertisable Id (default = all)", c => AdvertisableId = c);
             HasOption("c|checkActive=", "Check AdRoll for Advertisables with stats (if none specified)", c => CheckActiveAdvertisables = bool.Parse(c));
             HasOption("s|startDate=", "Start Date (default is 7 days ago)", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
             HasOption("o|oneStatPer=", "One Stat per [what] per day (advertisable/campaign/ad, default = all)", c => OneStatPer = c);
-            HasOption("u|updateAds=", "After synching stats, update Ads? (default = false)", c => UpdateAds = bool.Parse(c));
+            HasOption("u|updateAds=", "After synching ad stats, update Ads? (default = false)", c => UpdateAds = bool.Parse(c));
         }
 
         public override int Execute(string[] remainingArguments)
@@ -69,6 +73,16 @@ namespace CakeExtracter.Commands
             var dateRange = new DateRange(StartDate ?? oneWeekAgo, EndDate ?? today.AddDays(-1));
 
             var arUtility = new AdRollUtility(m => Logger.Info(m), m => Logger.Warn(m));
+
+            if (AccountId.HasValue) // For now, try getting advertisable Eid from accountId, if specified
+            {
+                using (var db = new DATDContext())
+                {
+                    var extAcct = db.ExtAccounts.Find(AccountId.Value);
+                    if (extAcct != null)
+                        AdvertisableEids = extAcct.ExternalId; //Note: overwrites any AdvertisableEids set by the caller
+                }
+            }
 
             IEnumerable<Advertisable> advertisables;
             if (CheckActiveAdvertisables && string.IsNullOrWhiteSpace(AdvertisableEids) && !AdvertisableId.HasValue)
@@ -151,7 +165,6 @@ namespace CakeExtracter.Commands
                     extracterThread.Join();
                     loaderThread.Join();
 
-                    // TODO: test!
                     if (UpdateAds)
                     {
                         var adExtracter = new AdRollAdExtracter(loader.AdEids, arUtility: arUtility);

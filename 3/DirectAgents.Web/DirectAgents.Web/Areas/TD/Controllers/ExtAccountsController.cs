@@ -159,14 +159,14 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                         oneStatPer = "ad";
                     else
                         oneStatPer = level;
-                    DASynchAdrollStats.RunStatic(extAcct.ExternalId, startDate: start, oneStatPer: oneStatPer);
+                    DASynchAdrollStats.RunStatic(accountId: extAcct.Id, startDate: start, oneStatPer: oneStatPer);
                     break;
-                case Platform.Code_DBM:
+                case Platform.Code_DBM: //TODO: remove/replace this
                     int ioID;
                     if (int.TryParse(extAcct.ExternalId, out ioID))
                         DASynchDBMStatsOld.RunStatic(insertionOrderID: ioID); // gets report with stats up to yesterday (and back ?30? days)
                     break;
-                case Platform.Code_FB:
+                case Platform.Code_FB: //TODO: pass in statsType
                     DASynchFacebookStats.RunStatic(accountId: extAcct.Id, startDate: start);
                     break;
             }
