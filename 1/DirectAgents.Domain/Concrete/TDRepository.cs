@@ -413,12 +413,32 @@ namespace DirectAgents.Domain.Concrete
             return strategies;
         }
 
+        public TDad TDad(int id)
+        {
+            return context.TDads.Find(id);
+        }
         public IQueryable<TDad> TDads(int? acctId)
         {
             var ads = context.TDads.AsQueryable();
             if (acctId.HasValue)
                 ads = ads.Where(a => a.AccountId == acctId.Value);
             return ads;
+        }
+        public bool SaveTDad(TDad tDad)
+        {
+            if (context.TDads.Any(ad => ad.Id == tDad.Id))
+            {
+                var entry = context.Entry(tDad);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public void FillExtended(TDad tDad)
+        {
+            if (tDad.ExtAccount == null)
+                tDad.ExtAccount = ExtAccount(tDad.AccountId);
         }
 
         #endregion

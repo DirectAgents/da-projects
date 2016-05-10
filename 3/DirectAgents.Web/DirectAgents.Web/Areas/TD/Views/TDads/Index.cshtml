@@ -4,20 +4,24 @@
 
 <table>
 <tr>
+    <th></th>
     <th>Id</th>
     <th>Name</th>
     <th>Width</th>
     <th>Height</th>
     <th>ExternalId</th>
+    <th>URL</th>
 </tr>
 @foreach (var ad in Model)
 {
 <tr>
+    <td>@Html.ActionLink("Edit", "Edit", new { id = ad.Id })</td>
     <td>@ad.Id</td>
     <td>@ad.Name</td>
     <td>@ad.Width</td>
     <td>@ad.Height</td>
     <td>@ad.ExternalId</td>
+    <td>@ad.Url</td>
 </tr>
 }
 </table>

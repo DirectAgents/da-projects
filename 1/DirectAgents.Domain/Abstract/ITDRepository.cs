@@ -61,7 +61,10 @@ namespace DirectAgents.Domain.Abstract
         bool SaveExtAccount(ExtAccount extAcct);
         void FillExtended(ExtAccount extAcct);
         IQueryable<Strategy> Strategies(int? acctId);
+        TDad TDad(int id);
         IQueryable<TDad> TDads(int? acctId);
+        bool SaveTDad(TDad tDad);
+        void FillExtended(TDad tDad);
 
         //TD Stats
         IEnumerable<BasicStat> DayOfWeekBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool mondayFirst = false);
