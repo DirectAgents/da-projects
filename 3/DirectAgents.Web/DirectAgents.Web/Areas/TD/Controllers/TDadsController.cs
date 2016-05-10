@@ -17,9 +17,10 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
         //
         // GET: /TD/TDAd/
-        public ActionResult Index()
+        public ActionResult Index(int? id)
         {
-            var ads = tdRepo.TDads(acctId: null).OrderBy(a => a.Name).ThenBy(a => a.Id);
+            var ads = tdRepo.TDads(acctId: id).OrderBy(a => a.Name).ThenBy(a => a.Id);
+            Session["accountId"] = id.ToString();
             return View(ads);
         }
 
@@ -38,7 +39,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             if (ModelState.IsValid)
             {
                 if (tdRepo.SaveTDad(ad))
-                    return RedirectToAction("Index", new { platform = Session["platformCode"], campId = Session["campId"] });
+                    return RedirectToAction("Index", new { id = Session["accountId"] });
                 ModelState.AddModelError("", "TDad could not be saved.");
             }
             tdRepo.FillExtended(ad);

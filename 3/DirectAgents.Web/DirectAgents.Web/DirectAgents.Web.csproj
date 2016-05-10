@@ -989,7 +989,6 @@
     <Content Include="Areas\TD\Views\PlatColMappings\Edit.cshtml" />
     <Content Include="Areas\TD\Views\ExtAccounts\UploadStats.cshtml" />
     <Content Include="Areas\TD\Views\ExtAccounts\Strategies.cshtml" />
-    <Content Include="Areas\TD\Views\ExtAccounts\TDads.cshtml" />
     <Content Include="Areas\TD\Views\ExtAccounts\IndexGauge.cshtml" />
     <Content Include="Areas\TD\Views\Stats\Strategy.cshtml" />
     <Content Include="Areas\TD\Views\Stats\Creative.cshtml" />

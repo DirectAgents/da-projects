@@ -1,7 +1,6 @@
 ﻿@model DirectAgents.Domain.Entities.TD.TDad
 @{
-    string platform = (string)Session["platformCode"]; // for filtering when returning back to Index
-    string campId = (string)Session["campId"];
+    string accountId = (string)Session["accountId"]; // for filtering when returning back to Index
 }
 
 <fieldset>
@@ -46,7 +45,7 @@
             </table>
             <br />
             <input type="submit" value="Save" />
-            &nbsp;@Html.ActionLink("cancel", "Index", new { platform = platform, campId = campId })
+            &nbsp;@Html.ActionLink("cancel", "Index", new { id = accountId })
         </div>
     }
 </fieldset>
