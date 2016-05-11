@@ -250,6 +250,10 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
           <DataField>StrategyName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="PlatformAlias">
+          <DataField>PlatformAlias</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
         <Field Name="StrategyId">
           <DataField>StrategyId</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
@@ -1313,7 +1317,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>="Previous Month: " + Format(Parameters!PreviousMonthStartDate.Value, "d") + " thru " + Format(Parameters!PreviousMonthEndDate.Value, "d")</Value>
+                        <Value>="Campaign to Date: " + Format(Parameters!CampaignStartDate.Value, "d") + " thru " + Format(Parameters!MTDEndDate.Value, "d")</Value>
                         <Style>
                           <FontFamily>Calibri</FontFamily>
                           <FontSize>11pt</FontSize>
@@ -2609,7 +2613,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                     <TablixMember />
                   </TablixMembers>
                 </TablixRowHierarchy>
-                <DataSetName>BasicStatsPreviousMonth</DataSetName>
+                <DataSetName>BasicStatsCTD</DataSetName>
                 <Top>1.29167in</Top>
                 <Height>0.5in</Height>
                 <Width>7.96875in</Width>
@@ -5192,6 +5196,13 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                       </Group>
                       <SortExpressions>
                         <SortExpression>
+                          <Value>=Fields!PlatformAlias.Value</Value>
+                        </SortExpression>
+                        <SortExpression>
+                          <Value>=Fields!MediaSpend.Value</Value>
+                          <Direction>Descending</Direction>
+                        </SortExpression>
+                        <SortExpression>
                           <Value>=Fields!StrategyName.Value</Value>
                         </SortExpression>
                       </SortExpressions>
@@ -5994,6 +6005,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                               </Style>
                             </Textbox>
                             <ColSpan>9</ColSpan>
+                            <rd:Selected>true</rd:Selected>
                           </CellContents>
                         </TablixCell>
                         <TablixCell />
@@ -6043,6 +6055,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
+                            <rd:Selected>true</rd:Selected>
                           </CellContents>
                         </TablixCell>
                         <TablixCell>
@@ -6367,11 +6380,13 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                       <Group Name="AdId" />
                       <SortExpressions>
                         <SortExpression>
-                          <Value>=IIf(Fields!Impressions.Value &gt;= 5000, 0, 1)</Value>
+                          <Value>=IIf(Fields!eCPA.Value = 0, 0, 1)</Value>
                         </SortExpression>
                         <SortExpression>
-                          <Value>=Fields!SumKPI.Value</Value>
-                          <Direction>Descending</Direction>
+                          <Value>=Fields!eCPA.Value</Value>
+                        </SortExpression>
+                        <SortExpression>
+                          <Value>=Fields!MediaSpend.Value</Value>
                         </SortExpression>
                       </SortExpressions>
                       <TablixMembers>
@@ -8546,6 +8561,13 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                             </GroupExpressions>
                           </Group>
                           <SortExpressions>
+                            <SortExpression>
+                              <Value>=Fields!PlatformAlias.Value</Value>
+                            </SortExpression>
+                            <SortExpression>
+                              <Value>=Fields!MediaSpend.Value</Value>
+                              <Direction>Descending</Direction>
+                            </SortExpression>
                             <SortExpression>
                               <Value>=Fields!StrategyName.Value</Value>
                             </SortExpression>
