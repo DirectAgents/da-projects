@@ -6388,6 +6388,9 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                         <SortExpression>
                           <Value>=Fields!MediaSpend.Value</Value>
                         </SortExpression>
+                        <SortExpression>
+                          <Value>=Fields!AdName.Value</Value>
+                        </SortExpression>
                       </SortExpressions>
                       <TablixMembers>
                         <TablixMember />
