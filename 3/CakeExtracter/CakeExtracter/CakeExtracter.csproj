@@ -292,16 +292,13 @@
     <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
     <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
     <Compile Include="Commands\DASeed.cs" />
-    <Compile Include="Commands\DASynchAdrollAds.cs" />
     <Compile Include="Commands\DASynchDBMStatsOld.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookCampaignSummaryLoader.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\AdRollAdExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollSiteStatsCsvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\TDadSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\TDSiteSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\TDStrategySummaryExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\LoadersDA\AdRollAdLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollSiteStatsLoader.cs" />
     <Compile Include="Commands\DASynchAdrollSiteStatsCsv.cs" />
     <Compile Include="Commands\DASynchAdrollAccounts.cs" />

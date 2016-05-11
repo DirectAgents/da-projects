@@ -260,10 +260,6 @@
     <Compile Include="MigrationsTD\201604221549032_AdvUpdates.Designer.cs">
       <DependentUpon>201604221549032_AdvUpdates.cs</DependentUpon>
     </Compile>
-    <Compile Include="MigrationsTD\201604271705417_Mig_TDad_Url.cs" />
-    <Compile Include="MigrationsTD\201604271705417_Mig_TDad_Url.Designer.cs">
-      <DependentUpon>201604271705417_Mig_TDad_Url.cs</DependentUpon>
-    </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.Designer.cs">
@@ -436,9 +432,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201604221549032_AdvUpdates.resx">
       <DependentUpon>201604221549032_AdvUpdates.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsTD\201604271705417_Mig_TDad_Url.resx">
-      <DependentUpon>201604271705417_Mig_TDad_Url.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

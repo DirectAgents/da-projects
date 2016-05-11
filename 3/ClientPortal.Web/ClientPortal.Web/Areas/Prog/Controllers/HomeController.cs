@@ -33,6 +33,11 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
 
             var today = DateTime.Today;
             var yesterday = today.AddDays(-1);
+            DateTime lastMonthEndDate; //Note: if it's the 1st, last month is still considered the current month
+            if (today.Day == 1) // ...always go to last day of previous month, even if it has more days than the "current" month
+                lastMonthEndDate = today.AddMonths(-1).AddDays(-1);
+            else
+                lastMonthEndDate = today.AddDays(-1).AddMonths(-1);
 
             int advId = userInfo.ProgAdvertiser.Id;
             DateTime earliestStatDate = progRepo.EarliestStatDate(advId: advId) ?? yesterday;
@@ -40,8 +45,8 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             var model = new ExecSumVM
             {
                 UserInfo = userInfo,
-                StartDate = earliestStatDate,
                 MTDStat = progRepo.MTDBasicStat(advId, yesterday),
+                LastMonthStat = progRepo.MTDBasicStat(advId, lastMonthEndDate),
                 CTDStat = progRepo.DateRangeBasicStat(advId, earliestStatDate, yesterday)
             };
             return View(model);
@@ -79,11 +84,15 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             DateTime yesterday = DateTime.Today.AddDays(-1);
             DateTime campaignStart = progRepo.EarliestStatDate(advId, checkAll: true) ?? yesterday;
 
+            var stats = progRepo.CreativePerfBasicStats(advId)
+                .OrderByDescending(s => s.Impressions >= 5000).ThenByDescending(s => s.eCPA);
+
             var model = new ReportVM
             {
                 UserInfo = userInfo,
                 StartDate = campaignStart,
-                EndDate = yesterday
+                EndDate = yesterday,
+                Stats = stats
             };
             return View(model);
         }

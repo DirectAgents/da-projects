@@ -103,12 +103,10 @@
             }
         });
     }
-
     function CreateWeeklyGrid(datasource) {
         $("#gridWeekly").kendoGrid({
             dataSource: datasource,
             autoBind: false,
-            scrollable: false,
             columns: [
                 { field: "Date", title: "Week", format: "{0:d}" },
                 { field: "MediaSpend", title: "Spend", format: "{0:c}", attributes: { style: "text-align: center" } },
@@ -118,51 +116,7 @@
                 { field: "eCPC", format: "{0:c}", attributes: { style: "text-align: center" } },
                 { field: "Conversions", title: "Total Conv", format: "{0:n0}", attributes: { style: "text-align: center" } },
                 { field: "eCPA", format: "{0:c}", attributes: { style: "text-align: center" } }
-            ],
-            detailInit: WeekDetailInit
-        });
-    }
-
-    function WeekDetailInit(e) {
-        var readData = function () { return { weekstart: e.data.Date.toDateString() } };
-        //var readData = { weekstart: e.data.Date.toDateString() };
-        var datasource = CreateStrategyBreakdownDataSource(readData);
-
-        $("<div/>").appendTo(e.detailCell).kendoGrid({
-            dataSource: datasource,
-            scrollable: false,
-            columns: [
-                { field: "StrategyName", title: "Strategy" },
-                { field: "MediaSpend", title: "Spend", format: "{0:c}", attributes: { style: "text-align: center" } },
-                { field: "Impressions", format: "{0:n0}", attributes: { style: "text-align: center" } },
-                { field: "Clicks", format: "{0:n0}", attributes: { style: "text-align: center" } },
-                { field: "CTR", format: "{0:0.00%}", attributes: { style: "text-align: center" } },
-                { field: "eCPC", format: "{0:c}", attributes: { style: "text-align: center" } },
-                { field: "Conversions", title: "Total Conv", format: "{0:n0}", attributes: { style: "text-align: center" } },
-                { field: "eCPA", format: "{0:c}", attributes: { style: "text-align: center" } }
             ]
-        });
-    }
-    function CreateStrategyBreakdownDataSource(readData) {
-        return new kendo.data.DataSource({
-            transport: {
-                read: {
-                    type: 'post',
-                    dataType: 'json',
-                    url: '@Url.Action("StrategyByWeek", "Stats")',
-                    data: readData
-                }
-            },
-            schema: {
-                model: {
-                    id: 'Id',
-                    fields: {
-                        StrategyName: { type: 'string' }
-                        // rest of fields: numbers
-                    }
-                }
-            },
-            //sort: [ { field: "", dir: "asc" } ]
         });
     }
 </script>

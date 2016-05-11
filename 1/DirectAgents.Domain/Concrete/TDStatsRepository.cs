@@ -79,9 +79,9 @@ group by Date order by Date";
         }
         public IEnumerable<BasicStat> StrategyBasicStats(int advId, DateTime startDate, DateTime endDate)
         {
-            string sql = @"select PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv, sum(Impressions) as Impressions, sum(Clicks) as Clicks, sum(PostClickConv) as PostClickConv,sum(PostViewConv) as PostViewConv, sum(Conversions) as Conversions, sum(MediaSpend) as MediaSpend, sum(MgmtFee) as MgmtFee
+            string sql = @"select StrategyName,StrategyId,ShowClickAndViewConv, sum(Impressions) as Impressions, sum(Clicks) as Clicks, sum(PostClickConv) as PostClickConv,sum(PostViewConv) as PostViewConv, sum(Conversions) as Conversions, sum(MediaSpend) as MediaSpend, sum(MgmtFee) as MgmtFee
 from td.fStrategySummaryBasicStats(@p1, @p2, @p3)
-group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by PlatformAlias,MediaSpend desc,StrategyName";
+group by StrategyName,StrategyId,ShowClickAndViewConv order by StrategyName";
             var stats = DailySummaryBasicStatsRaw(advId, startDate, endDate, sql);
             foreach (var stat in stats)
             {
@@ -95,32 +95,7 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
         //    return DailySummaryBasicStatsRaw(advId, startDate, endDate, sql);
         //}
 
-        public IEnumerable<BasicStat> CreativePerfBasicStats2(int advId) // *** does not compute spend markup ***
-        {
-            DateTime yesterday = DateTime.Today.AddDays(-1);
-            DateTime startDate = EarliestStatDate_TDad(advId) ?? yesterday;
-
-            var sums = TDadSummaries(startDate, yesterday, advId: advId);
-            var adGroups = sums.GroupBy(s => s.TDad);
-            var stats = adGroups.Select(g => new BasicStat
-            {
-                AdId = g.Key.Id,
-                AdName = g.Key.Name,
-                Impressions = g.Sum(s => s.Impressions),
-                Clicks = g.Sum(s => s.Clicks),
-                PostClickConv = g.Sum(s => s.PostClickConv),
-                PostViewConv = g.Sum(s => s.PostViewConv),
-                MediaSpend = g.Sum(s => s.Cost)
-            });
-            foreach (var stat in stats)
-            {
-                stat.Conversions = stat.PostClickConv + stat.PostViewConv;
-                stat.ComputeCalculatedStats();
-                yield return stat;
-            }
-        }
-
-        public IEnumerable<BasicStat> CreativePerfBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool includeInfo = false)
+        public IEnumerable<BasicStat> CreativePerfBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null)
         {
             DateTime yesterday = DateTime.Today.AddDays(-1);
             if (!startDate.HasValue)
@@ -129,27 +104,7 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
                 endDate = yesterday;
 
             var sql = "select * from td.fCreativeProgressBasicStats(@p1, @p2, @p3, NULL)";
-            var stats = DailySummaryBasicStatsRaw(advId, startDate.Value, endDate.Value, sql);
-            if (includeInfo)
-                return CreativeStatsWithInfo(stats);
-            else
-                return stats;
-        }
-        private IEnumerable<BasicStat> CreativeStatsWithInfo(IEnumerable<BasicStat> stats)
-        {
-            var statsList = stats.ToList();
-            var adIds = statsList.Select(s => s.AdId).ToArray();
-            var adDict = context.TDads.Where(a => adIds.Contains(a.Id))
-                .Select(a => new { a.Id, a.Url })
-                .ToDictionary(a => a.Id, a => a.Url);
-
-            foreach (var stat in statsList)
-            {
-                if (adDict.ContainsKey(stat.AdId))
-                    stat.Url = adDict[stat.AdId];
-                //yield return stat;
-            }
-            return statsList;
+            return DailySummaryBasicStatsRaw(advId, startDate.Value, endDate.Value, sql);
         }
 
         public IEnumerable<BasicStat> MTDSiteBasicStats(int advId, DateTime endDate)
@@ -248,12 +203,10 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             //    startDate = EarliestStatDate_Conv(advId) ?? (endDate.Value < yesterday ? endDate.Value : yesterday);
             return LeadInfosRaw(advId, startDate.Value, endDate.Value);
         }
-        private IEnumerable<LeadInfo> LeadInfosRaw(int advId, DateTime startDate, DateTime endDate, bool includeFullEndDate = true, string sql = null)
+        private IEnumerable<LeadInfo> LeadInfosRaw(int advId, DateTime startDate, DateTime endDate, string sql = null)
         {
             if (sql == null)
                 sql = "select * from td.fLeadIDs(@p1, @p2, @p3)";
-            if (includeFullEndDate)
-                endDate = endDate.Date.AddDays(1).AddSeconds(-1); // to include through 23:59:59 on the specified day
             return context.Database.SqlQuery<LeadInfo>(
                 sql,
                 new SqlParameter("@p1", advId),

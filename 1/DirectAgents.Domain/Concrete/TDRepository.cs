@@ -117,14 +117,10 @@ namespace DirectAgents.Domain.Concrete
             context.SaveChanges();
             return true;
         }
-        public bool SaveAdvertiser(Advertiser adv, bool includeLogo = false)
+        public bool SaveAdvertiser(Advertiser adv)
         {
             if (context.Advertisers.Any(a => a.Id == adv.Id))
             {
-                if (!includeLogo)
-                { // Keep the logo the same as it is in the db
-                    adv.Logo = context.Advertisers.AsNoTracking().FirstOrDefault(a => a.Id == adv.Id).Logo;
-                }
                 var entry = context.Entry(adv);
                 entry.State = EntityState.Modified;
                 context.SaveChanges();
@@ -413,32 +409,12 @@ namespace DirectAgents.Domain.Concrete
             return strategies;
         }
 
-        public TDad TDad(int id)
-        {
-            return context.TDads.Find(id);
-        }
         public IQueryable<TDad> TDads(int? acctId)
         {
             var ads = context.TDads.AsQueryable();
             if (acctId.HasValue)
                 ads = ads.Where(a => a.AccountId == acctId.Value);
             return ads;
-        }
-        public bool SaveTDad(TDad tDad)
-        {
-            if (context.TDads.Any(ad => ad.Id == tDad.Id))
-            {
-                var entry = context.Entry(tDad);
-                entry.State = EntityState.Modified;
-                context.SaveChanges();
-                return true;
-            }
-            return false;
-        }
-        public void FillExtended(TDad tDad)
-        {
-            if (tDad.ExtAccount == null)
-                tDad.ExtAccount = ExtAccount(tDad.AccountId);
         }
 
         #endregion

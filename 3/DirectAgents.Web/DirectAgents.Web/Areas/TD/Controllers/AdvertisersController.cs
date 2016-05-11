@@ -15,7 +15,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
         public ActionResult Index()
         {
-            var advertisers = tdRepo.Advertisers() //TODO? don't load images? (also check ClientPortal.Web)
+            var advertisers = tdRepo.Advertisers()
                 .OrderBy(a => a.Name);
 
             return View(advertisers);
@@ -47,7 +47,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (tdRepo.SaveAdvertiser(adv, includeLogo: false))
+                if (tdRepo.SaveAdvertiser(adv))
                     return RedirectToAction("Index");
                 ModelState.AddModelError("", "Campaign could not be saved.");
             }

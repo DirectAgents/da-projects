@@ -61,6 +61,5 @@ namespace AdRoll.Entities
         public int width { get; set; }
         public DateTime created_date { get; set; }
         public string type { get; set; }
-        public string src { get; set; }
     }
 }

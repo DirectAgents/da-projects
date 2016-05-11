@@ -58,10 +58,6 @@ namespace AdRoll
         {
             get { return (GetAdvertisablesClient)GetClient(typeof(GetAdvertisablesClient)); }
         }
-        private GetAdClient GetAdClient
-        {
-            get { return (GetAdClient)GetClient(typeof(GetAdClient)); }
-        }
 
         private Dictionary<string, ApiClient> ClientsDict = new Dictionary<string, ApiClient>();
         private ApiClient GetClient(Type clientType)
@@ -194,21 +190,6 @@ namespace AdRoll
             {
                 LogInfo("No Advertisables found");
                 return new List<Advertisable>();
-            }
-            return response.results;
-        }
-
-        public Ad GetAd(string eid)
-        {
-            var request = new GetAdRequest
-            {
-                ad = eid
-            };
-            var response = this.GetAdClient.Get(request);
-            if (response == null)
-            {
-                LogInfo("Ad not found: " + eid);
-                return null;
             }
             return response.results;
         }

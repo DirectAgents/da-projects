@@ -13,11 +13,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         private readonly int accountId;
         private Dictionary<string, int> TDadIdLookupByEid = new Dictionary<string, int>();
 
-        public string[] AdEids
-        {
-            get { return TDadIdLookupByEid.Keys.ToArray(); }
-        }
-
         public AdrollAdSummaryLoader(int acctId)
         {
             this.accountId = acctId;

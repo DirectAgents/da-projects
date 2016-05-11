@@ -18,7 +18,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         public ActionResult Index()
         {
             var cakeAdvertisers = cpRepo.Advertisers.ToList();
-            var progAdvertisers = progRepo.Advertisers().ToList(); //TODO? don't load images? (also check DAWeb)
+            var progAdvertisers = progRepo.Advertisers().ToList();
             var userProfiles = cpRepo.UserProfiles().OrderBy(up => up.UserName).ToList();
             var userVMs = userProfiles.Select(up => new UserVM
             {

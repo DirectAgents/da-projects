@@ -159,14 +159,14 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                         oneStatPer = "ad";
                     else
                         oneStatPer = level;
-                    DASynchAdrollStats.RunStatic(accountId: extAcct.Id, startDate: start, oneStatPer: oneStatPer);
+                    DASynchAdrollStats.RunStatic(extAcct.ExternalId, startDate: start, oneStatPer: oneStatPer);
                     break;
-                case Platform.Code_DBM: //TODO: remove/replace this
+                case Platform.Code_DBM:
                     int ioID;
                     if (int.TryParse(extAcct.ExternalId, out ioID))
                         DASynchDBMStatsOld.RunStatic(insertionOrderID: ioID); // gets report with stats up to yesterday (and back ?30? days)
                     break;
-                case Platform.Code_FB: //TODO: pass in statsType
+                case Platform.Code_FB:
                     DASynchFacebookStats.RunStatic(accountId: extAcct.Id, startDate: start);
                     break;
             }
@@ -179,6 +179,11 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             var strategies = tdRepo.Strategies(acctId: id).OrderBy(s => s.Name);
             return View(strategies);
+        }
+        public ActionResult TDads(int? id)
+        {
+            var ads = tdRepo.TDads(acctId: id).OrderBy(a => a.Name).ThenBy(a => a.Id);
+            return View(ads);
         }
 
         // --- Stats Uploading ---
