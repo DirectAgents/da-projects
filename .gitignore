@@ -16,7 +16,12 @@ ThirdParty
 # other
 *.dbmdl
 *.suo
+*.vssettings
 
 # SSRS
 *.rdl.data
 *.rptproj.user
+
+# NuGet
+packages
+
