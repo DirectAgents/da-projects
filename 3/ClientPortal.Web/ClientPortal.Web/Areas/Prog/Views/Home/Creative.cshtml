@@ -1,6 +1,8 @@
 ﻿@model ClientPortal.Web.Areas.Prog.Models.ReportVM
 @{
     ViewBag.Title = "Creative Performance";
+    //bool showHoverCol = Model.AnyUrls();
+    bool showHoverCol = true;
 }
 
 @Html.Partial("_ClientBar", Model.UserInfo)
@@ -9,54 +11,8 @@
 	<div id="container">
     	<div id="page_content">
             <section>
-
-<a id="aExpandAll" href="#" onclick="ExpandAll(true); return false">Expand All</a>
-<a id="aCollapseAll" style="display:none" href="#" onclick="ExpandAll(false); return false">Collapse All</a>
-
-<div class="heading"><p>Campaign to Date: @Model.StartDate.ToShortDateString() thru @Model.EndDate.ToShortDateString()</p></div>
-<ul id="panelbar">
-@{
-    bool first = true;
-}
-@foreach (var stat in Model.Stats)
-{
-    <li class="@(first ? "k-state-active" : "")">
-        <i class="glyphicon glyphicon-minus"></i>@stat.AdName
-        <div>
-            <table class="grid3" cellspacing="0" width="100%">
-                <thead>
-                    <tr class="grey_row">
-                        <th class="col_first3">Media Spend</th>
-                        <th>Impressions</th>
-                        <th>Clicks</th>
-                        <th>CTR</th>
-                        <th>eCPC</th>
-                        <th>Click Conv</th>
-                        <th>View Conv</th>
-                        <th>Total Conv</th>
-                        <th>eCPA</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="grey_row">
-                        <td class="col_first3">@stat.MediaSpend.ToString("C")</td>
-                        <td>@stat.Impressions.ToString("N0")</td>
-                        <td>@stat.Clicks.ToString("N0")</td>
-                        <td>@stat.CTR.ToString("0.00%")</td>
-                        <td>@stat.eCPC.ToString("C")</td>
-                        <td>@(stat.ShowClickAndViewConv ? stat.PostClickConv.ToString("N0") : "n/a")</td>
-                        <td>@(stat.ShowClickAndViewConv ? stat.PostViewConv.ToString("N0") : "n/a")</td>
-                        <td>@stat.Conversions.ToString("N0")</td>
-                        <td>@stat.eCPA.ToString("C")</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </li>
-    first = false;
-}
-</ul>
-
+                <div class="heading"><p>Campaign to Date: @Model.StartDate.ToShortDateString() thru @Model.EndDate.ToShortDateString()</p></div>
+                <div id="gridCreative"></div>
             </section>
         </div>
     </div>
@@ -65,25 +21,116 @@
 @section scripts {
 <script>
     $(document).ready(function () {
-        $("#panelbar").kendoPanelBar({
-            select: onSelect
-        });
+        var dsCreative = CreateCreativeDataSource();
+        SetupCreativeGrid(dsCreative);
+        dsCreative.read();
+        SetupTooltips();
     });
 
-    function onSelect(e) {
-        $("#panelbar").data("kendoPanelBar").clearSelection();
+    function CreateCreativeDataSource() {
+        return new kendo.data.DataSource({
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("Creative", "Stats")'
+                }
+            },
+            schema: {
+                model: {
+                    id: 'Id',
+                    fields: {
+                        AdName: { type: 'string' },
+                        Url: { type: 'string' }
+                        // rest of fields: numbers
+                    }
+                }
+            },
+            //sort: { field: "eCPA", dir: "asc" }
+        });
     }
-
-    function ExpandAll(expand) {
-        if (expand) {
-            $("#aExpandAll").hide();
-            $("#aCollapseAll").show();
-            $("#panelbar").data("kendoPanelBar").expand($("#panelbar .k-item"), false);
+    function SetupCreativeGrid(datasource) {
+        $("#gridCreative").kendoGrid({
+            dataSource: datasource,
+            autoBind: false,
+            scrollable: false,
+            sortable: { allowUnsort: false },
+            width: 1000,
+            columns: [
+                {
+                    columns: [
+                        { field: "AdName", title: "Creative", attributes: { class: "gridcol_string" } },
+                        { field: "MediaSpend", title: "Spend", format: "{0:c}", attributes: { style: "text-align: center" } },
+                        { field: "Impressions", format: "{0:n0}", attributes: { style: "text-align: center" } },
+                        { field: "Clicks", format: "{0:n0}", attributes: { style: "text-align: center" } },
+                        { field: "CTR", format: "{0:0.00%}", attributes: { style: "text-align: center" } },
+                        { field: "eCPC", format: "{0:c}", attributes: { style: "text-align: center" } }
+                    ]
+                }, {
+                    title: "Conversions",
+                    headerAttributes: { style: "text-align: center" },
+                    columns: [
+                        { field: "PostClickConv", title: "Click", format: "{0:n0}", attributes: { style: "text-align: center" } },
+                        { field: "PostViewConv", title: "View", format: "{0:n0}", attributes: { style: "text-align: center" } },
+                        { field: "Conversions", title: "Total", format: "{0:n0}", attributes: { style: "text-align: center" } }
+                    ]
+                }, {
+                    columns: [
+                        { field: "eCPA", format: "{0:c}", attributes: { style: "text-align: center" }, sortable: { compare: Sort_eCPA } },
+                    @if (showHoverCol) {
+                        <text>{
+                            field: "Url",
+                            title: "Preview",
+                            template: kendo.template($("#tmplCreativeIcon").html())
+                        }</text>
+                    }
+                    ]
+                }
+            ]
+        });
+    }
+    function Sort_eCPA(a, b, descending) {
+        if (a.eCPA === b.eCPA) {
+            return a.MediaSpend - b.MediaSpend;
         } else {
-            $("#aExpandAll").show();
-            $("#aCollapseAll").hide();
-            $("#panelbar").data("kendoPanelBar").collapse($("#panelbar .k-item"), false);
+            if (a.eCPA == 0 || b.eCPA == 0)@* one or the other is 0, not both *@
+                return b.eCPA - a.eCPA;
+            else
+                return a.eCPA - b.eCPA;
         }
     }
+
+    function SetupTooltips() {
+        $("#gridCreative").kendoTooltip({
+            position: "left",
+            filter: "td:last-child img.thumbnail",
+            content: kendo.template($("#tmplCreativeHover").html())
+        });
+    }
+</script>
+<script id="tmplCreativeIcon" type="text/x-kendo-template">
+    #if (Url != null) {#
+        <img class="thumbnail" src="@Url.Content("~/Images/")creativethumb.gif" border="0" data-img="#: Url #">
+    #}#
+</script>
+<script id="tmplCreativeHover" type="text/x-kendo-template">
+    <div id="divHover">
+        <img id="imgHover" src="#= target.data('img') #" />
+    </div>
 </script>
 }
+<style type="text/css">
+    #divHover {
+        position:relative;
+        width:600px;
+        height:300px;
+    }
+    #imgHover {
+        max-width:600px;
+        max-height:300px;
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+    }
+</style>

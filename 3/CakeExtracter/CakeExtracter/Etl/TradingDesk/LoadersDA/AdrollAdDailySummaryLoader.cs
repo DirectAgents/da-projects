@@ -123,7 +123,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
                     if (adsInDb.Count() == 0)
                     {   // Ad doesn't exist in the db; so create it and put an entry in the lookup
-                        var ad = new Ad
+                        var ad = new DirectAgents.Domain.Entities.AdRoll.Ad
                         {
                             AdvertisableId = this.advertisableId,
                             Eid = group.Key.eid,

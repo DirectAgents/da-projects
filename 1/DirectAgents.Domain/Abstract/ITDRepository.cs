@@ -29,7 +29,7 @@ namespace DirectAgents.Domain.Abstract
         Advertiser Advertiser(int id);
         IQueryable<Advertiser> Advertisers();
         bool AddAdvertiser(Advertiser adv);
-        bool SaveAdvertiser(Advertiser adv);
+        bool SaveAdvertiser(Advertiser adv, bool includeLogo = false);
         Campaign Campaign(int id);
         IQueryable<Campaign> Campaigns(int? advId = null);
         IQueryable<Campaign> CampaignsActive(DateTime? monthStart = null);
@@ -61,7 +61,10 @@ namespace DirectAgents.Domain.Abstract
         bool SaveExtAccount(ExtAccount extAcct);
         void FillExtended(ExtAccount extAcct);
         IQueryable<Strategy> Strategies(int? acctId);
+        TDad TDad(int id);
         IQueryable<TDad> TDads(int? acctId);
+        bool SaveTDad(TDad tDad);
+        void FillExtended(TDad tDad);
 
         //TD Stats
         IEnumerable<BasicStat> DayOfWeekBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool mondayFirst = false);
@@ -69,7 +72,8 @@ namespace DirectAgents.Domain.Abstract
         IEnumerable<BasicStat> DailySummaryBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null);
         IEnumerable<BasicStat> MTDStrategyBasicStats(int advId, DateTime endDate);
         IEnumerable<BasicStat> StrategyBasicStats(int advId, DateTime startDate, DateTime endDate);
-        IEnumerable<BasicStat> CreativePerfBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null);
+        IEnumerable<BasicStat> CreativePerfBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool includeInfo = false);
+        IEnumerable<BasicStat> CreativePerfBasicStats2(int advId); // *** does not compute spend markup ***
         IEnumerable<BasicStat> MTDSiteBasicStats(int advId, DateTime endDate);
         BasicStat MTDBasicStat(int advId, DateTime endDate);
         BasicStat DateRangeBasicStat(int advId, DateTime startDate, DateTime endDate);

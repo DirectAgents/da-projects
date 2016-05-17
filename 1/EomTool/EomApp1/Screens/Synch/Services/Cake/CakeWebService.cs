@@ -220,10 +220,21 @@ namespace EomApp1.Screens.Synch.Services.Cake
             var result = new List<EomApp1.Cake.WebServices._4.Reports.conversion>();
             int startRow = 1;
 
+            // testing
+            List<string> idList = new List<string>();
             do
             {
                 response = getResponse(startRow);
-                result.AddRange(response.conversions.ToList());
+                //result.AddRange(response.conversions.ToList());
+                var convList = response.conversions.ToList();
+                foreach (var conv in convList)
+                {
+                    if (!idList.Contains(conv.conversion_id))
+                    {
+                        result.Add(conv);
+                        idList.Add(conv.conversion_id);
+                    }
+                }
                 startRow += batchSize;
             }
             while (response.conversions.Length == batchSize);

@@ -10,20 +10,20 @@ body {
 #header {
 	background: linear-gradient(90deg, #52AAE3 50%, #2d599d 50%);
 	height: 100px;
-	border-top: 4px solid #0d67ef;
+	border-top:none !important;
 	border-bottom: 1px solid #FFF;
 	z-index: 10;
 	box-shadow: 0px 3px 10px rgba(0,0,0,0.2);
 }
 #container {
 	width: 100%;
-	max-width: 1000px;
+	max-width:1050px !important;
 	margin: 0px auto;
 }
 .logo {
 	height: 100px;
-	width: 34%;
-	background: url(../Images/da_logo.jpg) #52AAE3;
+	width: 26%;
+	background: url("../Images/da_logo.jpg") #52AAE3;
 	border-top: 4px solid #2d599d;
 	border-left: groove 2px #77C0E7;
 	margin-top: -4px;
@@ -32,57 +32,7 @@ body {
 	background-position: center center;
 	background-repeat: no-repeat;
 }
-.nav {
-	float: left;
-	width: 65.5%;
-	background-color: #2A579F;
-	height: 100px;
-}
-.navbar {
-	list-style-type: none;
-	margin: 0px !important;
-	padding: 0px !important;
-	text-align: left;
-}
-.navbar li {
-	border-left: 1px solid #3d6fbd;
-	border-right: 1px solid #1f447d;
-	width: 14.8%;
-	height: 75px !important;
-	display: inline-block;
-	margin-top: -4px;
-	float: left;
-	padding-top: 25px;
-	padding-left: 10px;
-}
-.navbar a {
-	color: #ffffff;
-	font-size: 14px;
-	line-height: 20px;
-	font-family: 'Open Sans', sans-serif;
-	font-weight: 300;
-	text-decoration: none;
-}
-.navbar a:active {
-	color: #ffffff;
-	font-size: 14px;
-	line-height: 20px;
-	font-family: 'Open Sans', sans-serif;
-	font-weight: 700;
-	text-decoration: none;
-}
-.nav1 {
-	border-top: 4px solid #B9D532
-}
-.nav2 {
-	border-top: 4px solid #9FC8FF
-}
-.nav3 {
-	border-top: 4px solid #F9EA12
-}
-.nav4 {
-	border-top: 4px solid #FF8A00
-}
+
 #client_bar {
 	background-color: #EAEAEA;
 	height: 120px;
@@ -105,7 +55,13 @@ body {
 	font-size:13px !important;
 	padding:15px 2px !important;
 	}
-.exec_charts{width:65.7%; float:right;}
+.exec_charts {
+	width:65.7%;
+	float:right;
+}
+.exec_charts section {
+	margin-bottom: 10px;
+}
 .client_logo {
 	height: 80px;
 	width: 80px;
@@ -277,6 +233,9 @@ body {
 	border-left: 0px !important;
 	text-align: left !important;
 }
+.gridcol_string {
+    word-break: break-all;
+}
 .col_first2, .col_first3 {
 	border-left: 0px !important;
 	text-align: center !important;
@@ -284,11 +243,11 @@ body {
 .grey_row {
 	background-color: #f4f4f4;
 }
-#exec_right{
+#exec_right {
 	width:65%;
 	float:right;
 }
-#footer{
+#footer {
 	background-color:#2A579F;
 	height:100%;
 	min-height:100px;
@@ -297,7 +256,7 @@ body {
 	width:100%;
 	float:left;
 }
-.conversions{
+.conversions {
 	background-color:#b9d342;
 	-moz-border-radius: 4px 4px 0 0;
 	-webkit-border-radius: 4px;

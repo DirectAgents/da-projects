@@ -192,6 +192,7 @@
     <Compile Include="Areas\TD\Controllers\PlatformsController.cs" />
     <Compile Include="Areas\TD\Controllers\ReportsController.cs" />
     <Compile Include="Areas\TD\Controllers\StatsController.cs" />
+    <Compile Include="Areas\TD\Controllers\TDadsController.cs" />
     <Compile Include="Areas\TD\Models\AccountMaintenanceVM.cs" />
     <Compile Include="Areas\TD\Models\CampaignPacingVM.cs" />
     <Compile Include="Areas\TD\Models\DailySummariesVM.cs" />
@@ -988,13 +989,14 @@
     <Content Include="Areas\TD\Views\PlatColMappings\Edit.cshtml" />
     <Content Include="Areas\TD\Views\ExtAccounts\UploadStats.cshtml" />
     <Content Include="Areas\TD\Views\ExtAccounts\Strategies.cshtml" />
-    <Content Include="Areas\TD\Views\ExtAccounts\TDads.cshtml" />
     <Content Include="Areas\TD\Views\ExtAccounts\IndexGauge.cshtml" />
     <Content Include="Areas\TD\Views\Stats\Strategy.cshtml" />
     <Content Include="Areas\TD\Views\Stats\Creative.cshtml" />
     <Content Include="Areas\TD\Views\Stats\Site.cshtml" />
     <Content Include="Areas\TD\Views\Campaigns\Show.cshtml" />
     <Content Include="Areas\TD\Views\Advertisers\EditLogo.cshtml" />
+    <Content Include="Areas\TD\Views\TDads\Index.cshtml" />
+    <Content Include="Areas\TD\Views\TDads\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

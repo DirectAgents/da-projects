@@ -1,0 +1,51 @@
+﻿@model DirectAgents.Domain.Entities.TD.TDad
+@{
+    string accountId = (string)Session["accountId"]; // for filtering when returning back to Index
+}
+
+<fieldset>
+    <legend>Edit TDad</legend>
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary()
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.AccountId)
+        @Html.HiddenFor(m => m.Name)
+        @Html.HiddenFor(m => m.Width)
+        @Html.HiddenFor(m => m.Height)
+        @Html.HiddenFor(m => m.ExternalId)
+        <div style="float:left">
+            External Account: @Model.ExtAccount.Name
+            <br /><br />
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Id)</td>
+                    <td>@Html.DisplayFor(m => m.Id)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Name)</td>
+                    <td>@Html.DisplayFor(m => m.Name)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Width)</td>
+                    <td>@Html.DisplayFor(m => m.Width)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Height)</td>
+                    <td>@Html.DisplayFor(m => m.Height)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.ExternalId)</td>
+                    <td>@Html.DisplayFor(m => m.ExternalId)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Url)</td>
+                    <td>@Html.EditorFor(m => m.Url)</td>
+                </tr>
+            </table>
+            <br />
+            <input type="submit" value="Save" />
+            &nbsp;@Html.ActionLink("cancel", "Index", new { id = accountId })
+        </div>
+    }
+</fieldset>
