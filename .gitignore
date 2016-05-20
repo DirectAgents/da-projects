@@ -2,6 +2,7 @@
 bin
 obj
 debug
+Debug - EOM
 
 # mstest test results
 TestResults
