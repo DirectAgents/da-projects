@@ -41,7 +41,9 @@
                     id: 'Id',
                     fields: {
                         AdName: { type: 'string' },
-                        Url: { type: 'string' }
+                        Url: { type: 'string' },
+                        AdWidth: { type: 'int' },
+                        AdHeight: { type: 'int' }
                         // rest of fields: numbers
                     }
                 }
@@ -110,24 +112,20 @@
 </script>
 <script id="tmplCreativeIcon" type="text/x-kendo-template">
     #if (Url != null) {#
-        <img class="thumbnail" src="@Url.Content("~/Images/")creativethumb.gif" border="0" data-img="#: Url #">
+        <img class="thumbnail" src="@Url.Content("~/Images/")creativethumb.gif" border="0" data-url="#: Url #" data-adWidth="#: AdWidth #" data-adHeight="#: AdHeight #">
     #}#
 </script>
 <script id="tmplCreativeHover" type="text/x-kendo-template">
-    <div id="divHover">
-        <img id="imgHover" src="#= target.data('img') #" />
+    <div id="divHover" style="width:#= target.data('adwidth') #px; height:#= target.data('adheight') #px">
+        <iframe id="iframeHover" src="#= target.data('url') #" width="#= target.data('adwidth') #" height="#= target.data('adheight') #" scrolling="yes" style="border: none;"></iframe>
     </div>
 </script>
 }
 <style type="text/css">
     #divHover {
         position:relative;
-        width:600px;
-        height:300px;
     }
-    #imgHover {
-        max-width:600px;
-        max-height:300px;
+    #iframeHover {
         position:absolute;
         top:50%;
         left:50%;

@@ -37,6 +37,8 @@ namespace DirectAgents.Domain.Entities.TD
         public int AdId { get; set; }
         public string AdName { get; set; }
         public string Url { get; set; }
+        public int AdWidth { get; set; }
+        public int AdHeight { get; set; }
         //public double SumKPI { get; set; }
 
         // For Site Stats...
