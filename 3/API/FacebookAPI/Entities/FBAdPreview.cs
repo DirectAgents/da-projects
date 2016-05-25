@@ -28,7 +28,7 @@ namespace FacebookAPI.Entities
         {
             get
             {
-                if (BodyHTML != null) return Int32.Parse(Regex.Match(BodyHTML, @"height=""([^""]+)""").Groups[1].Value);
+                if (BodyHTML != null) return Int32.Parse(Regex.Match(BodyHTML, @"height=""([^""]+)""").Groups[1].Value) + 100; // Add to height to eliminate need for scrollbar in preview
                 else return 0;
             }
         }
