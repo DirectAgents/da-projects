@@ -291,10 +291,12 @@
     <Compile Include="CakeMarketingApi\Entities\Role.cs" />
     <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
     <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
+    <Compile Include="Commands\DASynchFacebookAdPreviews.cs" />
     <Compile Include="Commands\DASynchDBMCreatives.cs" />
     <Compile Include="Commands\DASeed.cs" />
     <Compile Include="Commands\DASynchAdrollAds.cs" />
     <Compile Include="Commands\DASynchDBMStatsOld.cs" />
+    <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdPreviewLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookCampaignSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdRollAdExtracter.cs" />
@@ -445,6 +447,7 @@
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollAdDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollCampaignSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollConvLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\TDadPreviewLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\DBMCreativeDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\DbmCreativeSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\DbmDailySummaryLoader.cs" />
