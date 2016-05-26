@@ -128,7 +128,7 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             if (!endDate.HasValue)
                 endDate = yesterday;
 
-            var sql = "select * from td.fCreativeProgressBasicStats(@p1, @p2, @p3, NULL)";
+            var sql = "select * from td.fCreativeProgressBasicStatsGroupByName(@p1, @p2, @p3, NULL)";
             var stats = DailySummaryBasicStatsRaw(advId, startDate.Value, endDate.Value, sql);
             if (includeInfo)
                 return CreativeStatsWithInfo(stats);
