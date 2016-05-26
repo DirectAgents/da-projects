@@ -13,6 +13,15 @@
     </tr>
     @foreach (var ad in Model)
     {
+        var url = "";
+        if (ad.IsUrlShortened)
+        {
+            url = "<abbr title=\"" + ad.Url + "\">" + ad.UrlShortened + "</abbr>";
+        }
+        else
+        {
+            url = ad.Url;
+        }
         <tr>
             <td>@Html.ActionLink("Edit", "Edit", new { id = ad.Id })</td>
             <td>@ad.Id</td>
@@ -20,7 +29,7 @@
             <td>@ad.Width</td>
             <td>@ad.Height</td>
             <td>@ad.ExternalId</td>
-            <td>@ad.Url</td>
+            <td>@Html.Raw(url)</td>
         </tr>
     }
 </table>

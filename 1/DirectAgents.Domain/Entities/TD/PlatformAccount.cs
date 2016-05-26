@@ -118,6 +118,29 @@ namespace DirectAgents.Domain.Entities.TD
         public int Height { get; set; }
         public string Url { get; set; }
 
+        // AdRoll Facebook
+        [NotMapped]
+        public string Body { get; set; }
+        [NotMapped]
+        public string Headline { get; set; }
+        [NotMapped]
+        public string Message { get; set; }
+
+        [NotMapped]
+        const int URLMAX = 100;
+        [NotMapped]
+        public bool IsUrlShortened { get { return Url == null ? false : Url.Length > URLMAX; } }
+        [NotMapped]
+        public string UrlShortened
+        {
+            get
+            {
+                if (IsUrlShortened) return Url.Substring(0, URLMAX - 3) + "...";
+                return Url;
+            }
+        }
+
+
         // ? nullable StrategyId ?
     }
 }
