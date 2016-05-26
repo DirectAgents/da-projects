@@ -139,14 +139,15 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
         {
             var statsList = stats.ToList();
             var adIds = statsList.Select(s => s.AdId).ToArray();
-            var adDict = context.TDads.Where(a => adIds.Contains(a.Id))
-                .Select(a => new { a.Id, a.Url })
-                .ToDictionary(a => a.Id, a => a.Url);
+            var ads = context.TDads.Where(a => adIds.Contains(a.Id))
+                .Select(a => new { a.Id, a.Url, a.Width, a.Height });
 
             foreach (var stat in statsList)
             {
-                if (adDict.ContainsKey(stat.AdId))
-                    stat.Url = adDict[stat.AdId];
+                var ad = ads.Where(a => a.Id == stat.AdId).First();
+                stat.Url = ad.Url;
+                stat.AdWidth = ad.Width;
+                stat.AdHeight = ad.Height;
                 //yield return stat;
             }
             return statsList;

@@ -291,13 +291,18 @@
     <Compile Include="CakeMarketingApi\Entities\Role.cs" />
     <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
     <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
+    <Compile Include="Commands\DASynchFacebookAdPreviews.cs" />
+    <Compile Include="Commands\DASynchDBMCreatives.cs" />
     <Compile Include="Commands\DASeed.cs" />
     <Compile Include="Commands\DASynchAdrollAds.cs" />
     <Compile Include="Commands\DASynchDBMStatsOld.cs" />
+    <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdPreviewLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookCampaignSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdRollAdExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollSiteStatsCsvExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\DbmCreativeCloudStorageExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\DBMCreativeExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\TDadSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\TDSiteSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\TDStrategySummaryExtracter.cs" />
@@ -442,6 +447,7 @@
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollAdDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollCampaignSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollConvLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\TDadPreviewLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\DBMCreativeDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\DbmCreativeSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\DbmDailySummaryLoader.cs" />
@@ -546,6 +552,10 @@
     <ProjectReference Include="..\..\API\AdRoll\AdRoll.csproj">
       <Project>{feb04d4a-cf17-43bf-bf2c-635e87a38279}</Project>
       <Name>AdRoll</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\API\DBM\DBM.csproj">
+      <Project>{7b3c53ed-633b-4dde-b925-6161f39fd9ca}</Project>
+      <Name>DBM</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\API\FacebookAPI\FacebookAPI.csproj">
       <Project>{3358a07a-a5a0-4933-9680-03d4308b278c}</Project>

@@ -1,6 +1,7 @@
 ﻿using CakeExtracter.Common;
 using FacebookAPI;
 using FacebookAPI.Entities;
+using System.Collections.Generic;
 
 namespace CakeExtracter.Etl.SocialMarketing.Extracters
 {
@@ -70,6 +71,28 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
             foreach (var fbSum in fbSums)
             {
                 Add(fbSum);
+            }
+            End();
+        }
+    }
+
+    public class FacebookAdPreviewExtracter : FacebookApiExtracter<FBAdPreview>
+    {
+        protected IEnumerable<string> fbAdIds;
+
+        public FacebookAdPreviewExtracter(string fbAccountId, IEnumerable<string> fbAdIds, FacebookUtility fbUtility = null)
+            : base(fbUtility, null, fbAccountId)
+        {
+            this.fbAdIds = fbAdIds;
+        }
+
+        protected override void Extract()
+        {
+            Logger.Info("Extracting Ad Previews from Facebook API for ({0})", this.fbAccountId);
+            var fbAds = _fbUtility.GetAdPreviews("act_" + fbAccountId, fbAdIds);
+            foreach (var fbAd in fbAds)
+            {
+                Add(fbAd);
             }
             End();
         }

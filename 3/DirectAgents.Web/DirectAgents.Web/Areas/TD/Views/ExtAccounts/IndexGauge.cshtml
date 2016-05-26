@@ -27,8 +27,23 @@
     <th>Earliest</th>
     <th>Latest</th>
 </tr>
-@foreach (var gauge in Model.StatsGauges)
+@foreach (var partner in Model.StatsGauges.OrderBy(p => p.ExtAccount.Platform.Name).GroupBy(p => p.ExtAccount.Platform))
 {
+<tr style="font-weight:bold;background-color:aquamarine">
+    <td colspan="3">@partner.First().ExtAccount.Platform.Name summary for all Ext Accounts:</td>
+    <td style="text-align: right">@String.Format("{0:d}", partner.Min(p => p.Daily.Earliest))</td>
+    <td style="text-align: right">@String.Format("{0:d}", partner.Max(p => p.Daily.Latest))</td>
+    <td style="text-align: right">@String.Format("{0:d}", partner.Min(p => p.Strategy.Earliest))</td>
+    <td style="text-align: right">@String.Format("{0:d}", partner.Max(p => p.Strategy.Latest))</td>
+    <td style="text-align: right">@String.Format("{0:d}", partner.Min(p => p.Creative.Earliest))</td>
+    <td style="text-align: right">@String.Format("{0:d}", partner.Max(p => p.Creative.Latest))</td>
+    <td style="text-align: right">@String.Format("{0:d}", partner.Min(p => p.Site.Earliest))</td>
+    <td style="text-align: right">@String.Format("{0:d}", partner.Max(p => p.Site.Latest))</td>
+    <td style="text-align: right">@String.Format("{0:d}", partner.Min(p => p.Conv.Earliest))</td>
+    <td style="text-align: right">@String.Format("{0:d}", partner.Max(p => p.Conv.Latest))</td>
+</tr>
+    foreach (var gauge in partner.OrderBy(g => g.ExtAccount.Name))
+    {
 <tr>
     <td>@gauge.ExtAccount.Platform.Name</td>
     <td style="text-align:right">@gauge.ExtAccount.Id</td>
@@ -44,6 +59,7 @@
     <td style="text-align:right">@gauge.Conv.EarliestDisp</td>
     <td style="text-align:right">@gauge.Conv.LatestDisp</td>
 </tr>
+    }
 }
 </table>
 <br />

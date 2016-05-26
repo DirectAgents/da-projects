@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\FBAdPreview.cs" />
     <Compile Include="Entities\FBSummary.cs" />
     <Compile Include="FacebookUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

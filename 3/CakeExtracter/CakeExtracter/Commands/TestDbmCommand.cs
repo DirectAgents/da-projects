@@ -10,6 +10,7 @@ using Google.Apis.Auth.OAuth2;
 using Google.Apis.DoubleClickBidManager.v1;
 using Google.Apis.Services;
 using Google.Apis.Storage.v1;
+using RestSharp.Deserializers;
 
 namespace CakeExtracter.Commands
 {
@@ -89,7 +90,8 @@ namespace CakeExtracter.Commands
                 //string bucketName = "151075984680687222131409861541653_report"; // ui_created
                 string bucketName = "151075984680687222131410283081521_report"; // Betterment_creative
 
-                ListBucket(service, credential);
+                //ListBucket(service, credential);
+                GetBucket(service, credential);
 
                 //var request = service.Objects.List(bucketName);
                 //var results = request.Execute();
@@ -105,21 +107,33 @@ namespace CakeExtracter.Commands
         }
         private void ListBucket(StorageService service, ServiceAccountCredential credential)
         {
-            string bucketName = "151075984680687222131410283081521_report"; // Betterment_creative
+            string bucketName = "gdbm-479-320231"; // Betterment_creative
+            //string bucketName = "gdbm-479-320231/entity/";
 
-            //var request = service.Buckets.Get(bucketName);
+            // List
             var request = service.Objects.List(bucketName);
             var results = request.Execute();
             Logger.Info("Found {0} objects in the bucket.", results.Items.Count);
-
-            if (this.Download)
-                TestDownload(credential, results);
-        }
-        private void TestDownload(ServiceAccountCredential credential, Google.Apis.Storage.v1.Data.Objects results)
-        {
-            string dateString = DateTime.Today.ToString("yyyy-MM-dd");
+            string dateString = DateTime.Today.ToString("yyyyMMdd");
             var reportObject = results.Items.Where(i => i.Name.Contains(dateString)).FirstOrDefault();
 
+            if (this.Download) TestDownload(credential, reportObject);
+        }
+        private void GetBucket(StorageService service, ServiceAccountCredential credential)
+        {
+            string bucketName = "gdbm-479-320231"; // Betterment_creative
+            //string bucketName = "gdbm-479-320231/entity/";
+
+            // Get
+            var bucketRequest = service.Buckets.Get(bucketName);
+            var bucketResult = bucketRequest.Execute();
+            var request = service.Objects.Get(bucketName, "entity/20160520.0.Language.json");
+            var reportObject = request.Execute();
+
+            if (this.Download) TestDownload(credential, reportObject);
+        }
+        private void TestDownload(ServiceAccountCredential credential, Google.Apis.Storage.v1.Data.Object reportObject)
+        {
             //var x = service.Objects.Get(bucketName, reportObject.Name).Execute();
             HttpWebRequest req = createRequest(reportObject.MediaLink, credential);
             HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
