@@ -396,7 +396,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             <Value>=Parameters!KPI.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>select * from td.fCreativeProgressBasicStats(@AdvertiserId, @CampaignStartDate, @MTDEndDate, @KPI)</CommandText>
+        <CommandText>select * from td.fCreativeProgressBasicStatsGroupByName(@AdvertiserId, @CampaignStartDate, @MTDEndDate, @KPI)</CommandText>
       </Query>
       <Fields>
         <Field Name="AdName">
@@ -414,6 +414,10 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
         <Field Name="ShowClickAndViewConv">
           <DataField>ShowClickAndViewConv</DataField>
           <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="DupNameCount">
+          <DataField>DupNameCount</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="Clicks">
           <DataField>Clicks</DataField>
@@ -6005,6 +6009,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                               </Style>
                             </Textbox>
                             <ColSpan>9</ColSpan>
+                            <rd:Selected>true</rd:Selected>
                           </CellContents>
                         </TablixCell>
                         <TablixCell />
@@ -6054,6 +6059,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
+                            <rd:Selected>true</rd:Selected>
                           </CellContents>
                         </TablixCell>
                         <TablixCell>
@@ -6340,7 +6346,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
-                            <rd:Selected>true</rd:Selected>
                           </CellContents>
                         </TablixCell>
                       </TablixCells>
