@@ -6005,7 +6005,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                               </Style>
                             </Textbox>
                             <ColSpan>9</ColSpan>
-                            <rd:Selected>true</rd:Selected>
                           </CellContents>
                         </TablixCell>
                         <TablixCell />
@@ -6055,7 +6054,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
-                            <rd:Selected>true</rd:Selected>
                           </CellContents>
                         </TablixCell>
                         <TablixCell>
@@ -6067,7 +6065,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Fields!Impressions.Value</Value>
+                                      <Value>=Sum(Fields!Impressions.Value)</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -6103,7 +6101,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Fields!Clicks.Value</Value>
+                                      <Value>=Sum(Fields!Clicks.Value)</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -6139,7 +6137,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Fields!CTR.Value</Value>
+                                      <Value>=Code.SafeFraction(Sum(Fields!Clicks.Value), Sum(Fields!Impressions.Value))</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -6175,7 +6173,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Fields!eCPC.Value</Value>
+                                      <Value>=Code.SafeFraction(Sum(Fields!MediaSpend.Value), Sum(Fields!Clicks.Value))</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -6211,7 +6209,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Microsoft.VisualBasic.Interaction.IIf(Fields!ShowClickAndViewConv.Value = 0, "n/a", Fields!PostClickConv.Value)</Value>
+                                      <Value>=IIf(Fields!ShowClickAndViewConv.Value = 0, "n/a", Sum(Fields!PostClickConv.Value))</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -6246,7 +6244,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Microsoft.VisualBasic.Interaction.IIf(Fields!ShowClickAndViewConv.Value = 0, "n/a", Fields!PostViewConv.Value)</Value>
+                                      <Value>=IIf(Fields!ShowClickAndViewConv.Value = 0, "n/a", Sum(Fields!PostViewConv.Value))</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -6281,7 +6279,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Fields!Conversions.Value</Value>
+                                      <Value>=Sum(Fields!Conversions.Value)</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -6317,7 +6315,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Fields!eCPA.Value</Value>
+                                      <Value>=Sum(Fields!eCPA.Value)</Value>
                                       <Style>
                                         <FontFamily>Calibri</FontFamily>
                                         <FontSize>11pt</FontSize>
@@ -6342,6 +6340,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
+                            <rd:Selected>true</rd:Selected>
                           </CellContents>
                         </TablixCell>
                       </TablixCells>
@@ -6377,7 +6376,11 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                       <RepeatOnNewPage>true</RepeatOnNewPage>
                     </TablixMember>
                     <TablixMember>
-                      <Group Name="AdId" />
+                      <Group Name="AdName">
+                        <GroupExpressions>
+                          <GroupExpression>=Fields!AdName.Value</GroupExpression>
+                        </GroupExpressions>
+                      </Group>
                       <SortExpressions>
                         <SortExpression>
                           <Value>=IIf(Fields!eCPA.Value = 0, 0, 1)</Value>
