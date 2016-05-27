@@ -140,7 +140,7 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             var statsList = stats.ToList();
             var adIds = statsList.Select(s => s.AdId).ToArray();
             var ads = context.TDads.Where(a => adIds.Contains(a.Id))
-                .Select(a => new { a.Id, a.Url, a.Width, a.Height });
+                .Select(a => new { a.Id, a.Url, a.Width, a.Height, a.Body, a.Headline, a.Message });
 
             foreach (var stat in statsList)
             {
@@ -148,6 +148,9 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
                 stat.Url = ad.Url;
                 stat.AdWidth = ad.Width;
                 stat.AdHeight = ad.Height;
+                stat.AdBody = "Ad Body test!"; //ad.Body;
+                stat.AdHeadline = ad.Headline;
+                stat.AdMessage = ad.Message;
                 //yield return stat;
             }
             return statsList;

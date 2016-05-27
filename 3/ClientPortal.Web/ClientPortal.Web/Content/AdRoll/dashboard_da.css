@@ -1,0 +1,283 @@
+﻿.popover {
+    text-align: left;
+}
+
+.popover-content {
+    padding: 9px 14px;
+    overflow: hidden;
+}
+
+.fb-instagram-preview, .fb-newsfeed-preview {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+/* LIne 102 */
+section {
+    display: block;
+}
+
+/* Line 13331-13796*/
+.fb-nf-ad-preview {
+    position: relative;
+    overflow: hidden;
+    font-weight: 400;
+}
+
+    .fb-nf-ad-preview .nf-thumbnail {
+        position: relative;
+        z-index: 1;
+    }
+
+        .fb-nf-ad-preview .nf-thumbnail, .fb-nf-ad-preview .nf-thumbnail canvas.preview, .fb-nf-ad-preview .nf-thumbnail img {
+            border: none;
+            margin: 0;
+            vertical-align: middle;
+        }
+
+    .fb-nf-ad-preview .fb-nf-border-bottom, .fb-nf-ad-preview .fb-nf-border-left, .fb-nf-ad-preview .fb-nf-border-right, .fb-nf-ad-preview .fb-nf-border-top {
+        position: absolute;
+        background-color: #ccc;
+        background-color: rgba(0,0,0,.08);
+        z-index: 3;
+    }
+
+    .fb-nf-ad-preview .fb-nf-border-top {
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+    }
+
+    .fb-nf-ad-preview .fb-nf-border-bottom {
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+    }
+
+    .fb-nf-ad-preview .fb-nf-border-left {
+        left: 0;
+        top: 1px;
+        bottom: 1px;
+        width: 1px;
+    }
+
+    .fb-nf-ad-preview .fb-nf-border-right {
+        right: 0;
+        top: 1px;
+        bottom: 1px;
+        width: 1px;
+    }
+    
+ .fb-newsfeed-preview {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: 400;
+    text-align: left;
+    background-color: #fff;
+    padding: 14px;
+    border: 1px solid #c1c4c9;
+}
+
+    .fb-newsfeed-preview.has-dnf-placement:not(.fb-mobile-newsfeed-preview):not(.fb-rhc-preview) {
+        width: 498px;
+    }
+
+    .fb-newsfeed-preview .fb-mobile-secondary {
+        color: #979797;
+    }
+
+    .fb-newsfeed-preview .fb-mobile-small {
+        font-size: 12px;
+    }
+
+    .fb-newsfeed-preview .fb-mobile-nowrap {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: block;
+    }
+
+    .fb-newsfeed-preview .fb-mobile-page-header {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        cursor: default;
+        margin-left: -12px;
+        margin-right: -12px;
+        position: relative;
+        min-height: 34px;
+        padding-left: 54px;
+        margin-bottom: 12px;
+    }
+
+        .fb-newsfeed-preview .fb-mobile-page-header .fb-mobile-page-icon {
+            display: table;
+            table-layout: fixed;
+            position: absolute;
+            left: 12px;
+            top: 0;
+            background: #eee;
+            width: 34px;
+            height: 34px;
+            overflow: hidden;
+        }
+
+            .fb-newsfeed-preview .fb-mobile-page-header .fb-mobile-page-icon .placeholder {
+                display: table-cell;
+                vertical-align: middle;
+                text-align: center;
+                color: #bdbdbd;
+                font-size: 9px;
+                text-transform: uppercase;
+            }
+
+        .fb-newsfeed-preview .fb-mobile-page-header .fb-mobile-page-name {
+            font-weight: 600;
+            color: #3b5998;
+        }
+
+    .fb-newsfeed-preview .fb-message {
+        line-height: 1.4;
+        color: #141823;
+        margin-bottom: 12px;
+    }
+
+    .fb-newsfeed-preview .fb-nf-ad-preview {
+        overflow: visible;
+    }
+
+        .fb-newsfeed-preview .fb-nf-ad-preview .fb-mobile-fields {
+            background-color: #f7f7f7;
+            padding: 10px 11px;
+        }
+
+            .fb-newsfeed-preview .fb-nf-ad-preview .fb-mobile-fields .fb-mobile-ad-preview-details {
+                display: table-cell;
+                padding: 0 5px 0 0;
+                width: 100%;
+            }
+
+                .fb-newsfeed-preview .fb-nf-ad-preview .fb-mobile-fields .fb-mobile-ad-preview-details .fb-mobile-secondary {
+                    display: block;
+                }
+
+            .fb-newsfeed-preview .fb-nf-ad-preview .fb-mobile-fields .fb-mobile-secondary {
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                cursor: default;
+            }
+
+        .fb-newsfeed-preview .fb-nf-ad-preview .fb-preview-fields {
+            background-color: #fff;
+            padding: 10px 11px 0;
+        }
+
+            .fb-newsfeed-preview .fb-nf-ad-preview .fb-preview-fields .fb-mobile-ad-preview-details {
+                display: table-cell;
+                padding: 0 5px 0 0;
+                width: 100%;
+            }
+
+                .fb-newsfeed-preview .fb-nf-ad-preview .fb-preview-fields .fb-mobile-ad-preview-details .fb-mobile-secondary {
+                    display: block;
+                }
+
+            .fb-newsfeed-preview .fb-nf-ad-preview .fb-preview-fields .fb-mobile-secondary {
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                cursor: default;
+            }
+
+            .fb-newsfeed-preview .fb-nf-ad-preview .fb-preview-fields.has-cta {
+                width: 67%;
+            }
+
+        .fb-newsfeed-preview .fb-nf-ad-preview .fb-cta-button {
+            border-radius: 4px;
+            background: #f7f7f7;
+            background: linear-gradient(#fefefe,#f0f0f0);
+            background: -o-linear-gradient(#fefefe,#f0f0f0);
+            box-shadow: 0 1px 1px rgba(0,0,0,.05);
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            cursor: default;
+            text-shadow: 0 1px 0 #fff;
+            font-weight: 600;
+            color: #333;
+            border-width: 1px;
+            border-style: solid;
+            border-color: #d3d3d3 #cdcdcd #c8c8c8;
+            padding: 7px;
+            font-size: 11px;
+            float: right;
+            margin: -26px 11px 0 0;
+        }
+
+        .fb-newsfeed-preview .fb-nf-ad-preview .fb-mobile-body, .fb-newsfeed-preview .fb-nf-ad-preview .fb-mobile-headline {
+            color: #141823;
+        }
+
+        .fb-newsfeed-preview .fb-nf-ad-preview .fb-mobile-headline {
+            font-family: Georgia,"Times New Roman",serif;
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        .fb-newsfeed-preview .fb-nf-ad-preview .fb-mobile-body {
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-size: 12px;
+            margin-bottom: 14px;
+        }
+
+.fb-rhc-preview {
+    width: 302px;
+}
+
+    .fb-rhc-preview.thumb_1200x1200 .img, .fb-rhc-preview.thumb_600x315 .img, .fb-rhc-preview.thumb_600x600 .img {
+        height: 143px;
+        width: 272px;
+    }
+
+    .fb-rhc-preview .fb-mobile-page-header {
+        padding-left: 14px;
+        min-height: 0;
+    }
+
+        .fb-rhc-preview .fb-mobile-page-header .fb-nf-sponsored {
+            text-transform: uppercase;
+            font-weight: 600;
+            font-size: 11px;
+        }
+
+    .fb-rhc-preview .fb-preview-fields .fb-rhc-headline, .fb-rhc-preview .fb-preview-fields .fb-rhc-url {
+        font-family: "Lucida Grande",Arial,Verdana,sans-serif;
+        font-size: 12px;
+        color: #3b5998;
+    }
+
+    .fb-rhc-preview .fb-preview-fields .fb-rhc-headline {
+        font-weight: 600;
+    }
+
+    .fb-rhc-preview .fb-preview-fields .fb-rhc-message {
+        color: #999;
+        font-size: 12px;
+    }
+
+/* Line 17490 */
+    .popover embed, .popover img, .popover object, .popover video {
+        max-height: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        display: block;
+    }

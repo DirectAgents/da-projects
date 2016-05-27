@@ -1,0 +1,38 @@
+﻿.popover .popover-content {
+    font-family: "Open Sans","Helvetica Neue",Arial,Verdana,sans-serif;
+}
+
+.ad-row td .popover, .ad-thumbnail-container div .popover {
+    border: 1px solid #ccc!important;
+    background: #FFF!important;
+}
+
+.popover-content {
+    padding: 12px;
+}
+
+.popover .popover-content .ad.fb-newsfeed-preview {
+    margin-left: auto;
+    margin-right: auto;
+    background: #FFF;
+    border: 1px solid #e2e6e6;
+}
+
+.fb-newsfeed-preview {
+    border: 2px solid #999;
+    border: 1px solid #c1c4c9;
+}
+
+/* line 3883 */
+.popover-content .fb-rhc-preview.specific-placements {
+    margin-bottom: 30px;
+}
+
+.popover .popover-content .ad .ad_network, .popover .popover-content .ad embed, .popover .popover-content .ad img, .popover .popover-content .ad object {
+    max-height: 100%;
+    margin: 0 auto;
+    display: block;
+    overflow: hidden;
+    font-size: 11px;
+    color: #999;
+}

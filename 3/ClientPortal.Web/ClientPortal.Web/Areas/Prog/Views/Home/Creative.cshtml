@@ -4,6 +4,8 @@
     //bool showHoverCol = Model.AnyUrls();
     bool showHoverCol = true;
 }
+<link href='~/Content/AdRoll/multi_product_da.css' rel="stylesheet" type="text/css" />
+<link href='~/Content/AdRoll/dashboard_da.css' rel="stylesheet" type="text/css" />
 
 @Html.Partial("_ClientBar", Model.UserInfo)
 
@@ -43,7 +45,10 @@
                         AdName: { type: 'string' },
                         Url: { type: 'string' },
                         AdWidth: { type: 'int' },
-                        AdHeight: { type: 'int' }
+                        AdHeight: { type: 'int' },
+                        AdBody: { type: 'string' },
+                        AdHeadline: { type: 'string' },
+                        AdMessage: { type: 'string' }
                         // rest of fields: numbers
                     }
                 }
@@ -112,13 +117,39 @@
 </script>
 <script id="tmplCreativeIcon" type="text/x-kendo-template">
     #if (Url != null) {#
-        <img class="thumbnail" src="@Url.Content("~/Images/")creativethumb.gif" border="0" data-url="#: Url #" data-adWidth="#: AdWidth #" data-adHeight="#: AdHeight #">
+        <img class="thumbnail" src="@Url.Content("~/Images/")creativethumb.gif" border="0" data-url="#: Url #" data-adwidth="#: AdWidth #" data-adheight="#: AdHeight #" data-adbody="#: AdBody #" data-adheadline="#: AdHeadline #" data-admessage="#: AdMessage #">
     #}#
 </script>
 <script id="tmplCreativeHover" type="text/x-kendo-template">
+    # if (target.data('adbody') != null) { #
+    <div id="divHover" class="popover">
+	    <div class="popover-content">
+
+		    <figure class="ad thumb_600x315 fb-newsfeed-preview fb-rhc-preview">
+			    <header class="fb-mobile-page-header">
+				    <span class="fb-nf-sponsored fb-mobile-secondary fb-mobile-small">Sponsored</span>
+			    </header>
+			    <section class="fb-nf-ad-preview">
+				    <section class="nf-thumbnail">
+					    <img src="https://s.adroll.com/a/XC7/NN2/XC7NN2SJLZHDVFYTRI2LUP.jpg?v=2016-02-05 20:58:28.713055" alt="0205 WalkerCo Bevel Vday2016 FB 600x315 3">
+					    <div class="fb-nf-border-bottom"></div>
+				    </section>
+				    <section class="fb-preview-fields">
+					    <h5 class="fb-rhc-headline fb-mobile-nowrap">Great V-Day Gift For Men</h5>
+					    <span class="fb-mobile-secondary fb-rhc-url fb-mobile-nowrap">a2.adform.net</span>
+					    <span class="fb-rhc-message">Bevel Shave System Helps Prevent Razor Bumps</span>
+				    </section>
+				    <div class="clear"></div>
+			    </section>
+		    </figure>
+	     </div>
+	    <div style="left: -30px; padding-left: 30px; position: absolute; height: 100%; top: 0px;"></div>
+    </div>
+    # } else { #
     <div id="divHover" style="width:#= target.data('adwidth') #px; height:#= target.data('adheight') #px">
         <iframe id="iframeHover" src="#= target.data('url') #" width="#= target.data('adwidth') #" height="#= target.data('adheight') #" scrolling="yes" style="border: none;"></iframe>
     </div>
+    # } #
 </script>
 }
 <style type="text/css">
