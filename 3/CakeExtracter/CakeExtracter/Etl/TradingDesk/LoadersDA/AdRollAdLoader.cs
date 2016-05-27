@@ -33,6 +33,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                             dbAd.Width = itemAd.width;
                             dbAd.Height = itemAd.height;
                             dbAd.Url = itemAd.src;
+                            dbAd.Headline = itemAd.headline;
+                            dbAd.Body = itemAd.body;
+                            dbAd.Message = itemAd.message;
                             // status, created_date, updated_date...
                         }
                     }

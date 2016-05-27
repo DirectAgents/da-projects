@@ -119,11 +119,8 @@ namespace DirectAgents.Domain.Entities.TD
         public string Url { get; set; }
 
         // AdRoll Facebook
-        [NotMapped]
         public string Body { get; set; }
-        [NotMapped]
         public string Headline { get; set; }
-        [NotMapped]
         public string Message { get; set; }
 
         [NotMapped]
