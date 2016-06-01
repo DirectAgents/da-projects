@@ -314,9 +314,11 @@ namespace FacebookAPI
             } while (moreData);
         }
 
-        public IEnumerable<FBAdPreview> GetAdPreviews(string accountId, IEnumerable<string> fbAdIds)
+        //public IEnumerable<FBAdPreview> GetAdPreviews(string accountId, IEnumerable<string> fbAdIds)
+        public IEnumerable<FBAdPreview> GetAdPreviews(IEnumerable<string> fbAdIds)
         {
-            //var adIds = GetAdIds(accountId);
+            //TODO: create FacebookClient once, here. Then pass in to GetAdPreviewsAPI().
+
             foreach (var adId in fbAdIds)
             {
                 var fbAdPreviews = GetAdPreviewsAPI(adId);
