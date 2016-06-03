@@ -268,6 +268,10 @@
     <Compile Include="MigrationsTD\201605262050589_Mig_BodyHeadlineMessage.Designer.cs">
       <DependentUpon>201605262050589_Mig_BodyHeadlineMessage.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsTD\201606022031596_Mig_CreativeURLFormat.cs" />
+    <Compile Include="MigrationsTD\201606022031596_Mig_CreativeURLFormat.Designer.cs">
+      <DependentUpon>201606022031596_Mig_CreativeURLFormat.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.Designer.cs">
@@ -446,6 +450,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201605262050589_Mig_BodyHeadlineMessage.resx">
       <DependentUpon>201605262050589_Mig_BodyHeadlineMessage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201606022031596_Mig_CreativeURLFormat.resx">
+      <DependentUpon>201606022031596_Mig_CreativeURLFormat.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>
