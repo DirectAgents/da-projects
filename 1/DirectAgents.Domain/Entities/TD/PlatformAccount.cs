@@ -87,6 +87,8 @@ namespace DirectAgents.Domain.Entities.TD
         public string ExternalId { get; set; }
         public string Name { get; set; }
 
+        public string CreativeURLFormat { get; set; }
+
         [NotMapped]
         public string DisplayName1
         {
