@@ -11,8 +11,8 @@ namespace DAGenerators.Spreadsheets
     {
         private const int Row_SummaryDate = 8;
         //private const int Row_StatsHeader = 11;
-        private const int Row_ClientNameBottom = 24;
-        private const int Row_Charts = 27;
+        private const int Row_ClientNameBottom = 30;
+        private const int Row_Charts = 33;
 
         private const int Col_LeftChart = 2;
         private const int Col_RightChart = 9;
@@ -30,8 +30,10 @@ namespace DAGenerators.Spreadsheets
         }
         protected int StartRow_YoYSummary = 20;
 
-        private const int StartRow_WeeklyCampaignPerfTemplate = 45;
-        private const int StartRow_MonthlyCampaignPerfTemplate = 51;
+        protected int StartRow_WoWSummary = 26;
+
+        private const int StartRow_WeeklyCampaignPerfTemplate = 51;
+        private const int StartRow_MonthlyCampaignPerfTemplate = 57;
         private const int NumRows_CampaignPerfTemplate = 3;
         private const int NumRows_CampaignPerfSubTemplate = 2;
 
@@ -188,11 +190,23 @@ namespace DAGenerators.Spreadsheets
         // IEnumerable<T> stats should have two elements: last year's and this year's stats
         public virtual void LoadYearOverYear_Summary<T>(IEnumerable<T> stats)
         {
-            int startRow = StartRow_YoYSummary + NumWeekRowsAdded + NumMonthRowsAdded;
+            LoadXOverX_Summary(stats, StartRow_YoYSummary);
+        }
+
+        // IEnumerable<T> stats should have two elements: last week's and this week's stats
+        public virtual void LoadWeekOverWeek_Summary<T>(IEnumerable<T> stats)
+        {
+            LoadXOverX_Summary(stats, StartRow_WoWSummary);
+        }
+
+        // IEnumerable<T> stats should have two elements: last week's and this week's stats
+        public virtual void LoadXOverX_Summary<T>(IEnumerable<T> stats, int sectionStartRow)
+        {
+            int startRow = sectionStartRow + NumWeekRowsAdded + NumMonthRowsAdded;
             int blankRows = 2;
             LoadStats(Metrics1, WS1, startRow, stats, blankRows);
 
-            //YoY diff row...
+            //XoX diff row...
             string diffFormula = "IFERROR((R[-1]C-R[-2]C)/R[-2]C,\"-\")";
             var metrics = Metrics1.GetAll(false);
             foreach (var metric in metrics)
