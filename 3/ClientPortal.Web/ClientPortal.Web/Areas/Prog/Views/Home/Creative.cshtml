@@ -48,7 +48,8 @@
                         AdHeight: { type: 'int' },
                         AdBody: { type: 'string' },
                         AdHeadline: { type: 'string' },
-                        AdMessage: { type: 'string' }
+                        AdMessage: { type: 'string' },
+                        AdDestinationUrl: { type: 'string' }
                         // rest of fields: numbers
                     }
                 }
@@ -117,11 +118,11 @@
 </script>
 <script id="tmplCreativeIcon" type="text/x-kendo-template">
     #if (Url != null) {#
-        <img class="thumbnail" src="@Url.Content("~/Images/")creativethumb.gif" border="0" data-url="#: Url #" data-adwidth="#: AdWidth #" data-adheight="#: AdHeight #" data-adbody="#: AdBody #" data-adheadline="#: AdHeadline #" data-admessage="#: AdMessage #">
+        <img class="thumbnail" src="@Url.Content("~/Images/")creativethumb.gif" border="0" data-url="#: Url #" data-adwidth="#: AdWidth #" data-adheight="#: AdHeight #" data-adbody="#: AdBody #" data-adheadline="#: AdHeadline #" data-admessage="#: AdMessage #" data-addestinationurl="#: AdDestinationUrl #">
     #}#
 </script>
 <script id="tmplCreativeHover" type="text/x-kendo-template">
-    # if ((target.data('adheadline') != null) || (target.data('admessage') != null)) { #
+    # if ((target.data('adbody') != null) || (target.data('adheadline') != null) || (target.data('admessage') != null)) { #
     <div id="divHover" class="popover">
 	    <div class="popover-content">
 		    <figure class="ad thumb_#= target.data('adwidth') #x#= target.data('adheight') # fb-newsfeed-preview fb-rhc-preview">
@@ -134,13 +135,18 @@
 					    <div class="fb-nf-border-bottom"></div>
 				    </section>
 				    <section class="fb-preview-fields">
-					#if (target.data('adheadline') != null) { #
+				    #if (target.data('adheadline') != null) { #
                         <h5 class="fb-rhc-headline fb-mobile-nowrap">#= target.data('adheadline') #</h5>
+				    # } #
+				    #if (target.data('adheadline') != null) { #
+					    <span class="fb-mobile-secondary fb-rhc-url fb-mobile-nowrap">#= target.data('addestinationurl') #</span>
                     # } #
-					    <span class="fb-mobile-secondary fb-rhc-url fb-mobile-nowrap">a2.adform.net</span>
-					#if (target.data('admessage') != null) { #
+				    #if (target.data('admessage') != null) { #
 					    <span class="fb-rhc-message">#= target.data('admessage') #</span>
-                    # } #
+				    # } #
+				    #if (target.data('admessage') != null) { #
+					    <p class="fb-body">#= target.data('adbody') #</p>
+				    # } #
 				    </section>
 				    <div class="clear"></div>
 			    </section>

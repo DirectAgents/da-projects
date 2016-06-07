@@ -124,6 +124,7 @@ namespace DirectAgents.Domain.Entities.TD
         public string Body { get; set; }
         public string Headline { get; set; }
         public string Message { get; set; }
+        public string DestinationUrl { get; set; }
 
         [NotMapped]
         const int URLMAX = 100;

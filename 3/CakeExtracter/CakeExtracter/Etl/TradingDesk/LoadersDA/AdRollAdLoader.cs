@@ -36,6 +36,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                             dbAd.Headline = itemAd.headline;
                             dbAd.Body = itemAd.body;
                             dbAd.Message = itemAd.message;
+                            dbAd.DestinationUrl = itemAd.destination_url;
                             // status, created_date, updated_date...
                         }
                     }

@@ -42,6 +42,7 @@ namespace DirectAgents.Domain.Entities.TD
         public string AdBody { get; set; }
         public string AdHeadline { get; set; }
         public string AdMessage { get; set; }
+        public string AdDestinationUrl { get; set; }
 
         //public double SumKPI { get; set; }
 

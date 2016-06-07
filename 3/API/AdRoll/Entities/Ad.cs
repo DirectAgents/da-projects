@@ -14,7 +14,7 @@ namespace AdRoll.Entities
         public string body { get; set; }
         public string headline { get; set; }
         public string message { get; set; }
-        //public string destination_url { get; set; }
+        public string destination_url { get; set; }
 
         //public string type { get; set; }
         public DateTime created_date { get; set; }
