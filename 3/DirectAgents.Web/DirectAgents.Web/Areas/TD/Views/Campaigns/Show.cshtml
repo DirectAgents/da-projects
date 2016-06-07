@@ -23,6 +23,7 @@
 <br /><br />
 
 External Accounts:
+[@Html.ActionLink("List/Edit", "Index", "ExtAccounts", new { campid = Model.Id }, null)]
 <table>
 <tr>
     <th>Partner</th>
@@ -40,7 +41,7 @@ External Accounts:
     <td>@Html.ActionLink("Upload", "UploadStats", "ExtAccounts", new { id = extAcct.Id }, null)</td>
     <td>
         @Html.ActionLink("Strategies", "Strategies", "ExtAccounts", new { id = extAcct.Id }, null) |
-        @Html.ActionLink("Creatives", "Index", "TDads", new { id = extAcct.Id }, null)
+        @Html.ActionLink("Creatives", "Index", "TDads", new { acctid = extAcct.Id }, null)
     </td>
 </tr>
 }
@@ -57,5 +58,6 @@ Stats:
 @Html.ActionLink("Raw Stats", "ExtAccount", "Stats", new { campId = Model.Id }, null) |
 @Html.ActionLink("MTD", "MTD", "Stats", new { campId = Model.Id }, null)
 <br /><br />
+Generate:
 @Html.ActionLink("Report Components", "Home", "Reports", new { campId = Model.Id }, null)
 <br /><br />

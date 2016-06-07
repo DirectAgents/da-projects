@@ -15,6 +15,7 @@
     <th>External Id</th>
     <th>Stats</th>
     <th>List...</th>
+    <th>Creative URL Format</th>
 </tr>
 @foreach (var extAcct in Model)
 {
@@ -27,8 +28,9 @@
     <td>@Html.ActionLink("Upload", "UploadStats", new { id = extAcct.Id })</td>
     <td>
         @Html.ActionLink("Strategies", "Strategies", new { id = extAcct.Id }, null) |
-        @Html.ActionLink("Creatives", "Index", "TDads", new { id = extAcct.Id }, null)
+        @Html.ActionLink("Creatives", "Index", "TDads", new { acctid = extAcct.Id }, null)
     </td>
+    <td>@extAcct.CreativeURLFormat</td>
 </tr>
 }
 </table>

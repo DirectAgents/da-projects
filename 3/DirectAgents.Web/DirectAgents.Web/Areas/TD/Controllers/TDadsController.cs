@@ -15,12 +15,10 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             this.tdRepo = tdRepository;
         }
 
-        //
-        // GET: /TD/TDAd/
-        public ActionResult Index(int? id)
+        public ActionResult Index(int? acctId)
         {
-            var ads = tdRepo.TDads(acctId: id).OrderBy(a => a.Name).ThenBy(a => a.Id);
-            Session["accountId"] = id.ToString();
+            var ads = tdRepo.TDads(acctId: acctId).OrderBy(a => a.Name).ThenBy(a => a.Id);
+            Session["accountId"] = acctId.ToString();
             return View(ads);
         }
 
