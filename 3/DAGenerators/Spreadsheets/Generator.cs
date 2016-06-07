@@ -96,13 +96,13 @@ namespace DAGenerators.Spreadsheets
             DateTime weekEnd = endDate;
             while (weekEnd.AddDays(1).DayOfWeek != (DayOfWeek)searchProfile.StartDayOfWeek) // go to the beginning of the week
                 weekEnd = weekEnd.AddDays(-1);
-            DateTime weekStart = weekEnd.AddDays(-7);
+            DateTime weekStart = weekEnd.AddDays(-6);
 
             var weekStats = cpRepo.GetSearchStats(searchProfile, weekStart, weekEnd, false);
             weekStats.Title = weekStart.ToString("MM/dd") + " - " + weekEnd.ToString("MM/dd");
 
             weekStart = weekStart.AddDays(-7);
-            weekEnd = weekStart.AddDays(7).AddDays(-1);
+            weekEnd = weekStart.AddDays(6);
             var weekStatsLastWeek = cpRepo.GetSearchStats(searchProfile, weekStart, weekEnd, false);
             weekStatsLastWeek.Title = weekStart.ToString("MM/dd") + " - " + weekEnd.ToString("MM/dd");
 
