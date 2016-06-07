@@ -38,7 +38,7 @@ namespace CakeExtracter.Commands
 
         public DASynchFacebookAdPreviews()
         {
-            IsCommand("DASynchFacebookAdPreviews", "synch Facebook ads");
+            IsCommand("daSynchFacebookAdPreviews", "synch Facebook ads");
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
         }
 

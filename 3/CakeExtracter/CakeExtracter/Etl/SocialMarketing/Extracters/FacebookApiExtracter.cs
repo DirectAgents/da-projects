@@ -89,7 +89,8 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
         protected override void Extract()
         {
             Logger.Info("Extracting Ad Previews from Facebook API for ({0})", this.fbAccountId);
-            var fbAds = _fbUtility.GetAdPreviews("act_" + fbAccountId, fbAdIds);
+            //var fbAds = _fbUtility.GetAdPreviews("act_" + fbAccountId, fbAdIds);
+            var fbAds = _fbUtility.GetAdPreviews(fbAdIds);
             foreach (var fbAd in fbAds)
             {
                 Add(fbAd);

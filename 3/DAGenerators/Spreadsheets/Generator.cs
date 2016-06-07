@@ -91,6 +91,24 @@ namespace DAGenerators.Spreadsheets
             var yoyStats_Summary = new[] { monthStatsLastYear, monthStats };
             spreadsheet.LoadYearOverYear_Summary(yoyStats_Summary);
 
+
+            // Week-Over-Week - for the most recent full week given the StartDayOfWeek setting
+            DateTime weekEnd = endDate;
+            while (weekEnd.AddDays(1).DayOfWeek != (DayOfWeek)searchProfile.StartDayOfWeek) // go to the beginning of the week
+                weekEnd = weekEnd.AddDays(-1);
+            DateTime weekStart = weekEnd.AddDays(-6);
+
+            var weekStats = cpRepo.GetSearchStats(searchProfile, weekStart, weekEnd, false);
+            weekStats.Title = weekStart.ToString("MM/dd") + " - " + weekEnd.ToString("MM/dd");
+
+            weekStart = weekStart.AddDays(-7);
+            weekEnd = weekStart.AddDays(6);
+            var weekStatsLastWeek = cpRepo.GetSearchStats(searchProfile, weekStart, weekEnd, false);
+            weekStatsLastWeek.Title = weekStart.ToString("MM/dd") + " - " + weekEnd.ToString("MM/dd");
+
+            var wowStats_Summary = new[] { weekStatsLastWeek, weekStats };
+            spreadsheet.LoadWeekOverWeek_Summary(wowStats_Summary);
+
             // Monthly campaign performance stats...
             // start with the most recent and go back the number of months specified
             var periodStart = new DateTime(endDate.Year, endDate.Month, 1); // (the first could be a partial month)
