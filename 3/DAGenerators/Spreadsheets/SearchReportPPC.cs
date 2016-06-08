@@ -11,8 +11,8 @@ namespace DAGenerators.Spreadsheets
     {
         private const int Row_SummaryDate = 8;
         //private const int Row_StatsHeader = 11;
-        private const int Row_ClientNameBottom = 30;
-        private const int Row_Charts = 33;
+        private const int Row_ClientNameBottom = 31;
+        private const int Row_Charts = 34;
 
         private const int Col_LeftChart = 2;
         private const int Col_RightChart = 9;
@@ -30,10 +30,10 @@ namespace DAGenerators.Spreadsheets
         }
         protected int StartRow_YoYSummary = 20;
 
-        protected int StartRow_WoWSummary = 26;
+        protected int StartRow_WoWSummary = 27;
 
-        private const int StartRow_WeeklyCampaignPerfTemplate = 51;
-        private const int StartRow_MonthlyCampaignPerfTemplate = 57;
+        private const int StartRow_WeeklyCampaignPerfTemplate = 52;
+        private const int StartRow_MonthlyCampaignPerfTemplate = 58;
         private const int NumRows_CampaignPerfTemplate = 3;
         private const int NumRows_CampaignPerfSubTemplate = 2;
 
