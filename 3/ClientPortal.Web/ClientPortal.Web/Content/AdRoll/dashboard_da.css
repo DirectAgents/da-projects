@@ -11,9 +11,22 @@
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
-/* LIne 102 */
+/* Line 102 */
 section {
     display: block;
+}
+
+/* Line 4806 */
+        .fb-nf-ad-preview .fb-body, .fb-nf-ad-preview a, .fb-nf-ad-preview h4 {
+            font-size: 9px;
+            line-height: 11px;
+            margin: 0 0 3px;
+            text-align: left;
+        }
+
+/* Line 13172 */
+.fb-thumb .fb-body, .fb-thumb a, .fb-thumb h4, .fbx-newsfeed-ad, .fbx-newsfeed-ad .nf-message, .fbx-newsfeed-ad .nf-url {
+    font-family: "Lucida Grande",Arial,Verdana,sans-serif;
 }
 
 /* Line 13331-13796*/

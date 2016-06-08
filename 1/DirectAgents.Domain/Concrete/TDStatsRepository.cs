@@ -151,7 +151,7 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
                 stat.AdBody = ad.Body;
                 stat.AdHeadline = ad.Headline;
                 stat.AdMessage = ad.Message;
-                stat.AdDestinationUrl = ad.DestinationUrl;
+                if (ad.DestinationUrl != null) stat.AdDestinationUrl = new Uri(ad.DestinationUrl).Host;
                 //yield return stat;
             }
             return statsList;
