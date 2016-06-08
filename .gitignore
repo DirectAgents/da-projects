@@ -3,6 +3,7 @@ bin
 obj
 debug
 Debug - EOM
+*.csproj.user
 
 # mstest test results
 TestResults
