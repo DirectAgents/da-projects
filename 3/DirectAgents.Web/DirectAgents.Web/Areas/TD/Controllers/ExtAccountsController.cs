@@ -39,17 +39,57 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             List<TDStatsGauge> statsGauges = new List<TDStatsGauge>();
             foreach (var extAcct in extAccounts)
             {
-                var statsGauge = tdRepo.GetStatsGauge(extAcct);
+                var statsGauge = tdRepo.GetStatsGauge(extAccount: extAcct);
                 if (recent == false || (statsGauge.Daily.Latest.HasValue && statsGauge.Daily.Latest.Value >= recentDate))
                     statsGauges.Add(statsGauge);
             }
+
+            //Group by platform
+            var platformGroups = statsGauges.GroupBy(s => s.ExtAccount.Platform).OrderBy(g => g.Key.Name);
+            List<TDStatsGauge> platformGauges = new List<TDStatsGauge>();
+            foreach (var platGroup in platformGroups)
+            {
+                var pGauge = new TDStatsGauge
+                {
+                    Platform = platGroup.Key,
+                    Children = platGroup.ToList()
+                };
+                pGauge.Daily.Earliest = platGroup.Min(p => p.Daily.Earliest);
+                pGauge.Daily.Latest = platGroup.Max(p => p.Daily.Latest);
+                pGauge.Strategy.Earliest = platGroup.Min(p => p.Strategy.Earliest);
+                pGauge.Strategy.Latest = platGroup.Max(p => p.Strategy.Latest);
+                pGauge.Creative.Earliest = platGroup.Min(p => p.Creative.Earliest);
+                pGauge.Creative.Latest = platGroup.Max(p => p.Creative.Latest);
+                pGauge.Site.Earliest = platGroup.Min(p => p.Site.Earliest);
+                pGauge.Site.Latest = platGroup.Max(p => p.Site.Latest);
+                pGauge.Conv.Earliest = platGroup.Min(p => p.Conv.Earliest);
+                pGauge.Conv.Latest = platGroup.Max(p => p.Conv.Latest);
+
+                platformGauges.Add(pGauge);
+            }
+
             var model = new StatsGaugeVM
             {
                 PlatformCode = platform,
                 CampaignId = campId,
-                StatsGauges = statsGauges
+                StatsGauges = platformGauges
             };
             return View(model);
+        }
+        public ActionResult IndexGaugeSummary()
+        {
+            var platforms = tdRepo.Platforms().OrderBy(p => p.Name);
+            List<TDStatsGauge> statsGauges = new List<TDStatsGauge>();
+            foreach (var platform in platforms)
+            {
+                var statsGauge = tdRepo.GetStatsGauge(platform: platform);
+                statsGauges.Add(statsGauge);
+            }
+            var model = new StatsGaugeVM
+            {
+                StatsGauges = statsGauges
+            };
+            return View("IndexGauge", model);
         }
 
         public ActionResult CreateNew(string platform)
@@ -128,7 +168,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             {
                 ExtAccount = extAcct,
                 Syncable = syncable,
-                StatsGauge = tdRepo.GetStatsGauge(extAcct.Id)
+                StatsGauge = tdRepo.GetStatsGaugeViaIds(acctId: extAcct.Id)
             };
             return PartialView(model);
         }

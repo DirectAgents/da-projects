@@ -315,45 +315,49 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             return earliest;
         }
 
-        public TDStatsGauge GetStatsGauge(ExtAccount extAccount)
+        public TDStatsGauge GetStatsGauge(ExtAccount extAccount = null, Platform platform = null)
         {
-            if (extAccount != null)
+            if (extAccount != null || platform != null)
             {
-                var gauge = GetStatsGauge(extAccount.Id);
+                var gauge = GetStatsGaugeViaIds(
+                    acctId: (extAccount != null) ? (int?)extAccount.Id : null,
+                    platformId: (platform != null) ? (int?)platform.Id : null
+                );
                 gauge.ExtAccount = extAccount;
+                gauge.Platform = platform;
                 return gauge;
             }
             else
-                return GetStatsGauge();
+                return GetStatsGaugeViaIds();
         }
-        public TDStatsGauge GetStatsGauge(int? acctId = null) //Note: doesn't fill in ExtAccount
+        public TDStatsGauge GetStatsGaugeViaIds(int? acctId = null, int? platformId = null) //Note: doesn't fill in ExtAccount or Platform
         {
             var gauge = new TDStatsGauge();
-            var dSums = DailySummaries(null, null, acctId: acctId);
+            var dSums = DailySummaries(null, null, acctId: acctId, platformId: platformId);
             if (dSums.Any())
             {
                 gauge.Daily.Earliest = dSums.Min(s => s.Date);
                 gauge.Daily.Latest = dSums.Max(s => s.Date);
             }
-            var sSums = StrategySummaries(null, null, acctId: acctId);
+            var sSums = StrategySummaries(null, null, acctId: acctId, platformId: platformId);
             if (sSums.Any())
             {
                 gauge.Strategy.Earliest = sSums.Min(s => s.Date);
                 gauge.Strategy.Latest = sSums.Max(s => s.Date);
             }
-            var tSums = TDadSummaries(null, null, acctId: acctId);
+            var tSums = TDadSummaries(null, null, acctId: acctId, platformId: platformId);
             if (tSums.Any())
             {
                 gauge.Creative.Earliest = tSums.Min(s => s.Date);
                 gauge.Creative.Latest = tSums.Max(s => s.Date);
             }
-            var siteSums = SiteSummaries(null, null, acctId: acctId);
+            var siteSums = SiteSummaries(null, null, acctId: acctId, platformId: platformId);
             if (siteSums.Any())
             {
                 gauge.Site.Earliest = siteSums.Min(s => s.Date);
                 gauge.Site.Latest = siteSums.Max(s => s.Date);
             }
-            var convs = Convs(null, null, acctId: acctId);
+            var convs = Convs(null, null, acctId: acctId, platformId: platformId);
             if (convs.Any())
             {
                 gauge.Conv.Earliest = convs.Min(c => c.Time);
@@ -394,7 +398,7 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
                 daySum.ExtAccount = ExtAccount(daySum.AccountId);
         }
 
-        public IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null, int? advId = null)
+        public IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null)
         {
             var dSums = context.DailySummaries.AsQueryable();
             if (startDate.HasValue)
@@ -403,6 +407,8 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
                 dSums = dSums.Where(ds => ds.Date <= endDate.Value);
             if (acctId.HasValue)
                 dSums = dSums.Where(ds => ds.AccountId == acctId.Value);
+            if (platformId.HasValue)
+                dSums = dSums.Where(ds => ds.ExtAccount.PlatformId == platformId.Value);
             if (campId.HasValue)
                 dSums = dSums.Where(ds => ds.ExtAccount.CampaignId == campId.Value);
             if (advId.HasValue)
@@ -410,7 +416,7 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             return dSums;
         }
 
-        public IQueryable<StrategySummary> StrategySummaries(DateTime? startDate, DateTime? endDate, int? stratId = null, int? acctId = null, int? campId = null, int? advId = null)
+        public IQueryable<StrategySummary> StrategySummaries(DateTime? startDate, DateTime? endDate, int? stratId = null, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null)
         {
             var sSums = context.StrategySummaries.AsQueryable();
             if (startDate.HasValue)
@@ -421,6 +427,8 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
                 sSums = sSums.Where(s => s.StrategyId == stratId.Value);
             if (acctId.HasValue)
                 sSums = sSums.Where(s => s.Strategy.AccountId == acctId.Value);
+            if (platformId.HasValue)
+                sSums = sSums.Where(s => s.Strategy.ExtAccount.PlatformId == platformId.Value);
             if (campId.HasValue)
                 sSums = sSums.Where(s => s.Strategy.ExtAccount.CampaignId == campId.Value);
             if (advId.HasValue)
@@ -428,7 +436,7 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             return sSums;
         }
 
-        public IQueryable<TDadSummary> TDadSummaries(DateTime? startDate, DateTime? endDate, int? tdadId = null, int? acctId = null, int? campId = null, int? advId = null)
+        public IQueryable<TDadSummary> TDadSummaries(DateTime? startDate, DateTime? endDate, int? tdadId = null, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null)
         {
             var tSums = context.TDadSummaries.AsQueryable();
             if (startDate.HasValue)
@@ -439,6 +447,8 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
                 tSums = tSums.Where(s => s.TDadId == tdadId.Value);
             if (acctId.HasValue)
                 tSums = tSums.Where(s => s.TDad.AccountId == acctId.Value);
+            if (platformId.HasValue)
+                tSums = tSums.Where(s => s.TDad.ExtAccount.PlatformId == platformId.Value);
             if (campId.HasValue)
                 tSums = tSums.Where(s => s.TDad.ExtAccount.CampaignId == campId.Value);
             if (advId.HasValue)
@@ -446,7 +456,7 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             return tSums;
         }
 
-        public IQueryable<SiteSummary> SiteSummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null)
+        public IQueryable<SiteSummary> SiteSummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? platformId = null, int? campId = null)
         {
             var sSums = context.SiteSummaries.AsQueryable();
             if (startDate.HasValue)
@@ -455,12 +465,14 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
                 sSums = sSums.Where(s => s.Date <= endDate.Value);
             if (acctId.HasValue)
                 sSums = sSums.Where(s => s.AccountId == acctId.Value);
+            if (platformId.HasValue)
+                sSums = sSums.Where(s => s.ExtAccount.PlatformId == platformId.Value);
             if (campId.HasValue)
                 sSums = sSums.Where(s => s.ExtAccount.CampaignId == campId.Value);
             return sSums;
         }
 
-        public IQueryable<Conv> Convs(DateTime? startDate, DateTime? endDate, int? acctId = null, int? campId = null, int? advId = null)
+        public IQueryable<Conv> Convs(DateTime? startDate, DateTime? endDate, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null)
         {
             var convs = context.Convs.AsQueryable();
             if (startDate.HasValue)
@@ -473,6 +485,8 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             }
             if (acctId.HasValue)
                 convs = convs.Where(s => s.AccountId == acctId.Value);
+            if (platformId.HasValue)
+                convs = convs.Where(s => s.ExtAccount.PlatformId == platformId.Value);
             if (campId.HasValue)
                 convs = convs.Where(s => s.ExtAccount.CampaignId == campId.Value);
             if (advId.HasValue)

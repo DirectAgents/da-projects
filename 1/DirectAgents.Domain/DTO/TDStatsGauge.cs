@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using DirectAgents.Domain.Entities.TD;
 
 namespace DirectAgents.Domain.DTO
 {
     public class TDStatsGauge
     {
+        public Platform Platform { get; set; }
         public ExtAccount ExtAccount { get; set; }
+
+        public IEnumerable<TDStatsGauge> Children { get; set; }
 
         public TDStatRange Daily;
         public TDStatRange Strategy;

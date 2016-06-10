@@ -1,7 +1,12 @@
 ﻿@model DirectAgents.Web.Areas.TD.Models.StatsGaugeVM
 @using DirectAgents.Domain.Entities.TD
-
-<h2>Stats Gauge - By ExtAccount</h2>
+@{
+    string by = "Partner";
+    if (Model.StatsGauges.Any(s => s.Children != null && s.Children.Any())) {
+        by = "ExtAccount";
+    }
+}
+<h2>Stats Gauge - By @by</h2>
 
 <table>
 <tr>
@@ -27,39 +32,42 @@
     <th>Earliest</th>
     <th>Latest</th>
 </tr>
-@foreach (var partner in Model.StatsGauges.OrderBy(p => p.ExtAccount.Platform.Name).GroupBy(p => p.ExtAccount.Platform))
+@foreach (var pGauge in Model.StatsGauges)
 {
 <tr style="font-weight:bold;background-color:aquamarine">
-    <td colspan="3">@partner.First().ExtAccount.Platform.Name summary for all Ext Accounts:</td>
-    <td style="text-align: right">@String.Format("{0:d}", partner.Min(p => p.Daily.Earliest))</td>
-    <td style="text-align: right">@String.Format("{0:d}", partner.Max(p => p.Daily.Latest))</td>
-    <td style="text-align: right">@String.Format("{0:d}", partner.Min(p => p.Strategy.Earliest))</td>
-    <td style="text-align: right">@String.Format("{0:d}", partner.Max(p => p.Strategy.Latest))</td>
-    <td style="text-align: right">@String.Format("{0:d}", partner.Min(p => p.Creative.Earliest))</td>
-    <td style="text-align: right">@String.Format("{0:d}", partner.Max(p => p.Creative.Latest))</td>
-    <td style="text-align: right">@String.Format("{0:d}", partner.Min(p => p.Site.Earliest))</td>
-    <td style="text-align: right">@String.Format("{0:d}", partner.Max(p => p.Site.Latest))</td>
-    <td style="text-align: right">@String.Format("{0:d}", partner.Min(p => p.Conv.Earliest))</td>
-    <td style="text-align: right">@String.Format("{0:d}", partner.Max(p => p.Conv.Latest))</td>
+    <td colspan="3">@pGauge.Platform.Name - Summary for all Ext Accounts:</td>
+    <td style="text-align:right">@pGauge.Daily.EarliestDisp</td>
+    <td style="text-align:right">@pGauge.Daily.LatestDisp</td>
+    <td style="text-align:right">@pGauge.Strategy.EarliestDisp</td>
+    <td style="text-align:right">@pGauge.Strategy.LatestDisp</td>
+    <td style="text-align:right">@pGauge.Creative.EarliestDisp</td>
+    <td style="text-align:right">@pGauge.Creative.LatestDisp</td>
+    <td style="text-align:right">@pGauge.Site.EarliestDisp</td>
+    <td style="text-align:right">@pGauge.Site.LatestDisp</td>
+    <td style="text-align:right">@pGauge.Conv.EarliestDisp</td>
+    <td style="text-align:right">@pGauge.Conv.LatestDisp</td>
 </tr>
-    foreach (var gauge in partner.OrderBy(g => g.ExtAccount.Name))
+if (pGauge.Children != null)
+{
+    foreach (var gauge in pGauge.Children.OrderBy(s => s.ExtAccount.Name))
     {
-<tr>
-    <td>@gauge.ExtAccount.Platform.Name</td>
-    <td style="text-align:right">@gauge.ExtAccount.Id</td>
-    <td>@gauge.ExtAccount.Name</td>
-    <td style="text-align:right">@gauge.Daily.EarliestDisp</td>
-    <td style="text-align:right">@gauge.Daily.LatestDisp</td>
-    <td style="text-align:right">@gauge.Strategy.EarliestDisp</td>
-    <td style="text-align:right">@gauge.Strategy.LatestDisp</td>
-    <td style="text-align:right">@gauge.Creative.EarliestDisp</td>
-    <td style="text-align:right">@gauge.Creative.LatestDisp</td>
-    <td style="text-align:right">@gauge.Site.EarliestDisp</td>
-    <td style="text-align:right">@gauge.Site.LatestDisp</td>
-    <td style="text-align:right">@gauge.Conv.EarliestDisp</td>
-    <td style="text-align:right">@gauge.Conv.LatestDisp</td>
-</tr>
+    <tr>
+        <td>@gauge.ExtAccount.Platform.Name</td>
+        <td style="text-align:right">@gauge.ExtAccount.Id</td>
+        <td>@gauge.ExtAccount.Name</td>
+        <td style="text-align:right">@gauge.Daily.EarliestDisp</td>
+        <td style="text-align:right">@gauge.Daily.LatestDisp</td>
+        <td style="text-align:right">@gauge.Strategy.EarliestDisp</td>
+        <td style="text-align:right">@gauge.Strategy.LatestDisp</td>
+        <td style="text-align:right">@gauge.Creative.EarliestDisp</td>
+        <td style="text-align:right">@gauge.Creative.LatestDisp</td>
+        <td style="text-align:right">@gauge.Site.EarliestDisp</td>
+        <td style="text-align:right">@gauge.Site.LatestDisp</td>
+        <td style="text-align:right">@gauge.Conv.EarliestDisp</td>
+        <td style="text-align:right">@gauge.Conv.LatestDisp</td>
+    </tr>
     }
+}
 }
 </table>
 <br />
@@ -67,10 +75,10 @@
 {
     <text>
     Filter:
-    @Html.ActionLink("AdRoll", null, new { platform = Platform.Code_AdRoll }) |
-    @Html.ActionLink("DBM", null, new { platform = Platform.Code_DBM }) |
-    @Html.ActionLink("Facebook", null, new { platform = Platform.Code_FB }) |
-    @Html.ActionLink("(show all)", null)
+    @Html.ActionLink("AdRoll", "IndexGauge", new { platform = Platform.Code_AdRoll }) |
+    @Html.ActionLink("DBM", "IndexGauge", new { platform = Platform.Code_DBM }) |
+    @Html.ActionLink("Facebook", "IndexGauge", new { platform = Platform.Code_FB }) |
+    @Html.ActionLink("(show all)", "IndexGauge")
     </text>
     <br /><br />
 }
