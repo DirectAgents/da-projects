@@ -27,13 +27,13 @@ namespace CakeExtracter.Commands
         }
 
         public int? AccountId { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        //public DateTime? StartDate { get; set; }
+        //public DateTime? EndDate { get; set; }
 
         public override void ResetProperties()
         {
-            StartDate = null;
-            EndDate = null;
+            //StartDate = null;
+            //EndDate = null;
         }
 
         public DASynchFacebookAdPreviews()
