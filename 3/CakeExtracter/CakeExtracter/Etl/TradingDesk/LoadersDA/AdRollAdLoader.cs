@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using AdRoll.Entities;
 using DirectAgents.Domain.Contexts;
 
@@ -8,6 +10,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
     public class AdRollAdLoader : Loader<Ad>
     {
         private readonly int accountId;
+
+        private const string patternAdUrl = @"img src=&#34;(.*?)&#34;";
+        private Regex regexAdUrl = new Regex(patternAdUrl);
 
         public AdRollAdLoader(int acctId)
         {
@@ -23,6 +28,14 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
                 foreach (var itemAd in items)
                 {
+                    string adUrl = itemAd.src;
+                    if (String.IsNullOrWhiteSpace(adUrl) && !String.IsNullOrWhiteSpace(itemAd.html))
+                    { //Try extracting ad url...
+                        var match = regexAdUrl.Match(itemAd.html);
+                        if (match.Success)
+                            adUrl = match.Groups[1].Value;
+                    }
+
                     // should be just one, but...
                     var adMatch = dbAds.Where(a => a.ExternalId == itemAd.eid);
                     if (adMatch.Any())
@@ -32,7 +45,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                             dbAd.Name = itemAd.name;
                             dbAd.Width = itemAd.width;
                             dbAd.Height = itemAd.height;
-                            dbAd.Url = itemAd.src;
+                            dbAd.Url = adUrl;
                             dbAd.Headline = itemAd.headline;
                             dbAd.Body = itemAd.body;
                             dbAd.Message = itemAd.message;

@@ -60,7 +60,7 @@
                 <th>MarginPct</th>
                 <th>Exceptions For</th>
             </tr>
-        @foreach (var bi in Model.BudgetInfos.OrderByDescending(b => b.Date).Take(6))
+        @foreach (var bi in Model.BudgetInfos.OrderByDescending(b => b.Date))
         {
             var pbis = Model.PlatformBudgetInfosFor(bi.Date).OrderBy(pbi => pbi.Platform.Name);
             <tr>

@@ -11,6 +11,7 @@ namespace AdRoll.Entities
         public int height { get; set; }
         public int width { get; set; }
         public string src { get; set; }
+        public string html { get; set; } //for adform creatives, etc
         public string body { get; set; }
         public string headline { get; set; }
         public string message { get; set; }

@@ -44,6 +44,7 @@ namespace CakeExtracter.Commands
 
         public override void ResetProperties()
         {
+            AccountId = null;
             AdvertisableId = null;
             AdvertisableEids = null;
             CheckActiveAdvertisables = false;

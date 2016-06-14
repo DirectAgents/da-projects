@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using CakeExtracter.Common;
@@ -12,21 +12,25 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchAdrollAds : ConsoleCommand
     {
+        public int? AccountId { get; set; }
+
         public override void ResetProperties()
         {
+            AccountId = null;
         }
 
         public DASynchAdrollAds()
         {
             IsCommand("daSynchAdrollAds", "synch AdRoll Ads");
+            HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
         }
 
         public override int Execute(string[] remainingArguments)
         {
             using (var db = new DATDContext())
             {
-                var platformId_AdRoll = db.Platforms.Where(p => p.Code == Platform.Code_AdRoll).First().Id;
-                var extAccounts = db.ExtAccounts.Where(a => a.PlatformId == platformId_AdRoll && !String.IsNullOrEmpty(a.ExternalId));
+                var extAccounts = GetAccounts();
+
                 foreach (var extAcct in extAccounts)
                 {
                     Logger.Info("Synch Ads for Account: {0} ({1})", extAcct.Name, extAcct.ExternalId);
@@ -42,6 +46,18 @@ namespace CakeExtracter.Commands
                 }
             }
             return 0;
+        }
+
+        public IEnumerable<ExtAccount> GetAccounts()
+        {
+            using (var db = new DATDContext())
+            {
+                var accounts = db.ExtAccounts.Where(a => a.Platform.Code == Platform.Code_AdRoll);
+                if (AccountId.HasValue)
+                    return accounts.Where(a => a.Id == AccountId.Value).ToList();
+                else
+                    return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
+            }
         }
     }
 }

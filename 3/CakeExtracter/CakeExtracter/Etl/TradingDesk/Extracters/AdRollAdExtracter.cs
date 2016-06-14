@@ -18,12 +18,15 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            Logger.Info("Attempting to extract {0} AdRoll Ads", AdEids.Count());
+            Logger.Info("Attempting to extract {0} AdRoll Ads - will check for null/empty, etc", AdEids.Count());
             foreach (string adEid in AdEids)
             {
-                var ad = _arUtility.GetAd(adEid);
-                if (ad != null)
-                    Add(ad);
+                if (!string.IsNullOrWhiteSpace(adEid))
+                {
+                    var ad = _arUtility.GetAd(adEid);
+                    if (ad != null)
+                        Add(ad);
+                }
             }
             End();
         }
