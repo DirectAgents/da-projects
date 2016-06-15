@@ -34,19 +34,22 @@
 </tr>
 @foreach (var pGauge in Model.StatsGauges)
 {
-<tr style="font-weight:bold;background-color:aquamarine">
-    <td colspan="3">@pGauge.Platform.Name - Summary for all Ext Accounts:</td>
-    <td style="text-align:right">@pGauge.Daily.EarliestDisp</td>
-    <td style="text-align:right">@pGauge.Daily.LatestDisp</td>
-    <td style="text-align:right">@pGauge.Strategy.EarliestDisp</td>
-    <td style="text-align:right">@pGauge.Strategy.LatestDisp</td>
-    <td style="text-align:right">@pGauge.Creative.EarliestDisp</td>
-    <td style="text-align:right">@pGauge.Creative.LatestDisp</td>
-    <td style="text-align:right">@pGauge.Site.EarliestDisp</td>
-    <td style="text-align:right">@pGauge.Site.LatestDisp</td>
-    <td style="text-align:right">@pGauge.Conv.EarliestDisp</td>
-    <td style="text-align:right">@pGauge.Conv.LatestDisp</td>
-</tr>
+if (!Model.CampaignId.HasValue) // don't show Partner summaries if filtering by campaign
+{
+    <tr style="font-weight:bold;background-color:aquamarine">
+        <td colspan="3">@pGauge.Platform.Name - Summary for all Ext Accounts:</td>
+        <td style="text-align:right">@pGauge.Daily.EarliestDisp</td>
+        <td style="text-align:right">@pGauge.Daily.LatestDisp</td>
+        <td style="text-align:right">@pGauge.Strategy.EarliestDisp</td>
+        <td style="text-align:right">@pGauge.Strategy.LatestDisp</td>
+        <td style="text-align:right">@pGauge.Creative.EarliestDisp</td>
+        <td style="text-align:right">@pGauge.Creative.LatestDisp</td>
+        <td style="text-align:right">@pGauge.Site.EarliestDisp</td>
+        <td style="text-align:right">@pGauge.Site.LatestDisp</td>
+        <td style="text-align:right">@pGauge.Conv.EarliestDisp</td>
+        <td style="text-align:right">@pGauge.Conv.LatestDisp</td>
+    </tr>
+}
 if (pGauge.Children != null)
 {
     foreach (var gauge in pGauge.Children.OrderBy(s => s.ExtAccount.Name))

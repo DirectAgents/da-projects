@@ -48,14 +48,14 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             if (platformTD == null)
                 return HttpNotFound();
             if (!date.HasValue)
-                date = DateTime.Today;
+                date = DateTime.Today.FirstDayOfMonth();
 
             var extraItem = new ExtraItem
             {
                 Date = date.Value,
                 CampaignId = campId,
                 PlatformId = platformTD.Id,
-                Description = "New"
+                //Description =
             };
             if (tdRepo.AddExtraItem(extraItem))
                 return RedirectToAction("Index", new { campId = Session["campId"], month = Session["month"] });

@@ -18,7 +18,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         public ActionResult Index(int? acctId)
         {
             var ads = tdRepo.TDads(acctId: acctId).OrderBy(a => a.Name).ThenBy(a => a.Id);
-            Session["accountId"] = acctId.ToString();
+            Session["acctId"] = acctId.ToString();
             return View(ads);
         }
 
@@ -37,7 +37,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             if (ModelState.IsValid)
             {
                 if (tdRepo.SaveTDad(ad))
-                    return RedirectToAction("Index", new { id = Session["accountId"] });
+                    return RedirectToAction("Index", new { acctId = Session["acctId"] });
                 ModelState.AddModelError("", "TDad could not be saved.");
             }
             tdRepo.FillExtended(ad);
