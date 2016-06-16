@@ -154,9 +154,13 @@
 	     </div>
 	    <div style="left: -30px; padding-left: 30px; position: absolute; height: 100%; top: 0px;"></div>
     </div>
-    # } else { #
+    # } else if ((target.data('adwidth') != '0') && (target.data('adheight') != '0')) { #
     <div id="divHover" style="width:#= target.data('adwidth') #px; height:#= target.data('adheight') #px">
         <iframe id="iframeHover" src="#= target.data('url') #" width="#= target.data('adwidth') #" height="#= target.data('adheight') #" scrolling="yes" style="border: none;"></iframe>
+    </div>
+    # } else { #
+    <div id="divHover" style="width:600px; height:300px">
+        <img id="imgHover" src="#= target.data('url') #" style="max-width:600px; max-height:300px" />
     </div>
     # } #
 </script>

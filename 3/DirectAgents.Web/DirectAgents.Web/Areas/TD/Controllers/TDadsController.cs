@@ -19,6 +19,9 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             var ads = tdRepo.TDads(acctId: acctId).OrderBy(a => a.Name).ThenBy(a => a.Id);
             Session["acctId"] = acctId.ToString();
+
+            // Don't show images if not filtered (i.e. showing all creatives), unless requested explicitly
+            ViewBag.ShowImages = (acctId.HasValue || (Request["images"] != null && Request["images"].ToUpper() == "TRUE"));
             return View(ads);
         }
 
@@ -38,7 +41,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             {
                 if (tdRepo.SaveTDad(ad))
                     return RedirectToAction("Index", new { acctId = Session["acctId"] });
-                ModelState.AddModelError("", "TDad could not be saved.");
+                ModelState.AddModelError("", "Creative could not be saved.");
             }
             tdRepo.FillExtended(ad);
             return View(ad);

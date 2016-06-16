@@ -118,6 +118,11 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
                         creativeImage = (j % 4 == 1) ? advPrefix + "2.jpg" : ((j % 4 == 2) ? advPrefix + "3.jpg" : advPrefix + "4.jpg");
                     }
                     stat.Url = baseUrl + creativeImage;
+                    stat.AdWidth = 0;
+                    stat.AdHeight = 0;
+                    stat.AdBody = null;
+                    stat.AdHeadline = null;
+                    stat.AdMessage = null;
                     j++;
                 }
             }

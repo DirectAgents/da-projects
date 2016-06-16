@@ -67,13 +67,18 @@ namespace DirectAgents.Domain.Entities.TD
         // returns months in reverse chronological order
         public DateTime[] MonthsWithoutBudgetInfos(int monthsToCheck = 12)
         {
+            bool anyNonFutureMonths = false; // include at least one non-future month
             var months = new List<DateTime>();
             var iMonth = DateTime.Today.AddMonths(1);
             iMonth = new DateTime(iMonth.Year, iMonth.Month, 1); // start with next month (the 1st of)
-            for (int i = 0; i < monthsToCheck; i++)
+            for (int i = 0; i < monthsToCheck || !anyNonFutureMonths; i++)
             {
                 if (BudgetInfos == null || !BudgetInfos.Any(b => b.Date == iMonth))
+                {
                     months.Add(iMonth);
+                    if (i > 0)
+                        anyNonFutureMonths = true;
+                }
                 iMonth = iMonth.AddMonths(-1);
             }
             return months.ToArray();

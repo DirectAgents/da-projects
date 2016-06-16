@@ -4,7 +4,7 @@
 }
 
 <fieldset>
-    <legend>Edit TDad</legend>
+    <legend>Edit Creative</legend>
     @using (Html.BeginForm())
     {
         @Html.ValidationSummary()
@@ -15,11 +15,12 @@
         @Html.HiddenFor(m => m.Height)
         @Html.HiddenFor(m => m.ExternalId)
         <div style="float:left">
-            External Account: @Model.ExtAccount.Name
+            Platform: @Model.ExtAccount.Platform.Name<br />
+            External Account: @Model.ExtAccount.Name (ID: @Model.ExtAccount.Id)
             <br /><br />
             <table>
                 <tr>
-                    <td>@Html.LabelFor(m => m.Id)</td>
+                    <td>@Html.LabelFor(m => m.Id, "Creative ID")</td>
                     <td>@Html.DisplayFor(m => m.Id)</td>
                 </tr>
                 <tr>
