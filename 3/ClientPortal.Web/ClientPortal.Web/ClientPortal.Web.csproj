@@ -1040,6 +1040,10 @@
     <Content Include="Images\Demo\sony2.jpg" />
     <Content Include="Images\Demo\sony3.jpg" />
     <Content Include="Images\Demo\sony4.jpg" />
+    <Content Include="Images\Demo\winv1.jpg" />
+    <Content Include="Images\Demo\winv2.jpg" />
+    <Content Include="Images\Demo\winv3.jpg" />
+    <Content Include="Images\Demo\winv4.jpg" />
     <Content Include="Images\glyphicon-off.png" />
     <Content Include="Images\icon_metrics.gif" />
     <Content Include="Images\icon_mobile.gif" />

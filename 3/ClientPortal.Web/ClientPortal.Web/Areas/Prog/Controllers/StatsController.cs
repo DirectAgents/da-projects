@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using System.Web.Mvc;
 using ClientPortal.Web.Controllers;
@@ -104,7 +105,8 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             var stats = progRepo.CreativePerfBasicStats(userInfo.ProgAdvertiser.Id, includeInfo: true)
                 .OrderBy(s => s.eCPA == 0).ThenBy(s => s.eCPA).ThenBy(s => s.MediaSpend);
 
-            var demoAdvs = new string[] { "sees", "seph", "sony" }; //TODO: put in config
+            string progDemoAdvs = ConfigurationManager.AppSettings["ProgDemoAdvs"] ?? "";
+            var demoAdvs = progDemoAdvs.Split(new char[] { ',' }); // e.g.  "sees", "seph", "sony", "winv"
             var advPrefix = userInfo.ProgAdvertiser.Name.Substring(0, 4).ToLower();
             if (demoAdvs.Contains(advPrefix))
             {
