@@ -1,129 +1,245 @@
 ﻿@model ClientPortal.Web.Models.LoginModel
-
-@section head {
-    <style>
-        h4 {
-            font-size: 20px;
-        }
-
-        form {
-            margin: 0;
-        }
-
-        .icondiv {
-            padding: 30px;
-        }
-
-        .icon {
-            float: left;
-            margin-right: 5px;
-        }
-
-        .icontext {
-            padding-top: 15px;
-            line-height: 1.3;
-        }
-
-        .dalogo2 {
-            width: 10%;
-        }
-
-        .logindiv {
-            border: 1px solid rgb(107,172,236);
-            margin-top: 30px;
-        }
-
-        .loginfieldset {
-            margin: 0;
-            padding: 15px;
-            background-color: #f3f3f3;
-        }
-
-        .labeldiv {
-            text-align: center;
-        }
-    </style>
+@{
+    Layout = null;
 }
 
-<div style="background-color: white; width: 100%">
-    <img style="margin-top: 15px; margin-left: 15px" src="~/Images/logo1.png" />
-</div>
-
-<div class="row fullWidth">
-    <div class="large-8 columns" style="padding: 40px">
-        <h4>Direct Agents Client Portal</h4>
-        <div class="row" style="border: 4px solid #f7f7f7">
-            <div class="large-6 columns icondiv">
-                <img src="~/Images/icon_reports.gif" class="icon" />
-                <div class="icontext">Access real-time reports showing campaign effectiveness and spend</div>
-                <br style="clear: both" /><br /><br />
-                <img src="~/Images/icon_mobile.gif" class="icon" />
-                <div class="icontext">See details on devices and demographics instantly</div>
-            </div>
-            <div class="large-6 columns icondiv">
-                <img src="~/Images/icon_track.gif" class="icon" />
-                <div class="icontext">Track your top performing affiliates and creatives</div>
-                <br style="clear: both" /><br /><br />
-                <img src="~/Images/icon_metrics.gif" class="icon" />
-                <div class="icontext">Gain insight with our unique dashboard with visualizations of key metrics, custom goals and more</div>
-            </div>
-        </div>
-    </div>
-    <div class="large-4 columns" style="padding: 40px">
-        <div class="logindiv">
-
-        @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
-        {
-            @Html.AntiForgeryToken()
-            @Html.ValidationSummary(true)
-            <fieldset class="loginfieldset">
-                <legend style="display:none"></legend>
-                <div class="row">
-                    <div style="text-align: center">
-                        <h5>SIGN IN</h5>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="large-4 columns labeldiv">
-                        @Html.LabelFor(m => m.UserName, new { @class = "inline" } )
-                    </div>
-                    <div class="large-8 columns" style="padding-right: 25px">
-                        @Html.TextBoxFor(m => m.UserName)
-                        @Html.ValidationMessageFor(m => m.UserName)
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="large-4 columns labeldiv">
-                        @Html.LabelFor(m => m.Password)
-                    </div>
-                    <div class="large-8 columns" style="padding-right: 25px">
-                        @Html.PasswordFor(m => m.Password)
-                        @Html.ValidationMessageFor(m => m.Password)
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="large-4 columns">
-                    </div>
-                    <div class="large-8 columns">
-                        @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
-                        @Html.CheckBoxFor(m => m.RememberMe)
-                    </div>
-                </div>
-            </fieldset>
-            <div class="row">
-                <div style="text-align: center; margin: 20px 0px">
-                    <input type="submit" class="button" value="LOG IN" style="width: 200px" />
-                </div>
-            </div>
-        }
-        </div>
-    </div>
-</div>
-
-@section scripts {
-    <script>
-        $(function () {
-            $('#UserName').focus();
-        });
-    </script>
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | Direct Agents Portal</title>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+<style type="text/css">
+body {
+	margin: 0px;
+	padding: 0px;
+	font-family: 'Open Sans', sans-serif;
 }
+.panel_login {
+	width: 38%;
+	height: 100%;
+	float: left;
+	position: absolute;
+	background-color: #eaeaea;
+}
+.panel_filler {
+	width: 62%;
+	height: 100%;
+	float: right;
+	position: absolute;
+	margin-left: 38%;
+	background: url(@Url.Content("~/Images/bg_login.jpg")) center left no-repeat;
+	background-size: cover;
+}
+.col_login {
+	width: 70%;
+	max-width: 320px;
+	margin: 0px auto;
+	height: 100%;
+	text-align: center;
+}
+.logo_login {
+	margin-top: calc(25vh);
+	margin-bottom: 20%;
+	width: 100%;
+	max-width: 130px;
+}
+.logo_w_login {
+	display:none;
+}
+p {
+	font-size: 20px;
+	color: #444444;
+}
+table {
+	width: 100%;
+}
+input {
+	width: 100%;
+	text-align: center;
+	color: #5391c9;
+	font-size: 20px;
+	font-family: 'Open Sans', sans-serif;
+	border-top: 0px;
+	border-right: 0px;
+	border-bottom: 1px solid #444444;
+	border-left: 0px;
+	background: none;
+	margin-bottom: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-right:0px;
+	padding-left:0px;
+	max-width: 320px !important;
+}
+::-webkit-input-placeholder {
+ color:#5391c9;
+ opacity: 1 !important;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+ color:#5391c9;
+ opacity: 1 !important;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+ color:#5391c9;
+ opacity: 1 !important;
+}
+
+:-ms-input-placeholder {
+ color:#5391c9;
+ opacity: 1 !important;
+}
+#Submit {
+	background: #7cddad;
+	background: -moz-linear-gradient(left, #7cddad 0%, #31b8ea 100%);
+	background: -webkit-linear-gradient(left, #7cddad 0%, #31b8ea 100%);
+	background: -webkit-gradient(linear, 0 0, 100% 0, from(#7cddad), to(#31b8ea));
+	background: -o-linear-gradient(left, #7cddad 0%, #31b8ea 100%);
+	background: linear-gradient(left, #7cddad 0%, #31b8ea 100%);
+ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7cddad', endColorstr='#31b8ea', GradientType=1 );
+	font-family: 'Open Sans', sans-serif;
+	color: #fff;
+	font-size: 20px;
+	margin-top: 35px;
+}
+button {
+	border: 0px;
+	width: 100%;
+	height: 66px;
+}
+#RememberMe[type="checkbox"]{
+	float:left;
+	width:30px;
+	margin-left:80px;
+}
+.style1{
+	font-size:13px;
+	float:left;
+	color:#444444;
+}
+#keeplogin{
+	margin-top:30px;
+}
+@@media only screen and (min-width : 861px) and (max-width : 1200px){
+.panel_login {
+	width:50% !important;
+}
+.panel_filler {
+	width:50% !important;
+	margin-left:50% !important;
+}
+#RememberMe[type="checkbox"] {
+    margin-left: calc(15% + 30px) !important;
+}
+}
+@@media only screen and (max-width : 860px){
+.panel_login {
+	width:100% !important;
+	background: url(@Url.Content("~/Images/bg_login.jpg")) center left no-repeat !important;
+	background-size: cover !important;
+}
+.panel_filler {
+	display:none !important;
+}
+p {
+	color: #ffffff !important;
+}
+.style1{
+	color:#fff !important;
+	margin-top:3px;
+}
+input {
+	border-bottom:1px solid #ffffff !important;
+	color:#4ed793 !important;
+	border-radius:0px !important;
+	padding-right:0px !important;
+	padding-left:0px !important;
+}
+#RememberMe[type="checkbox"] {
+    margin-left: 20% !important;
+}
+::-webkit-input-placeholder {
+	color:#4ed793 !important;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+	color:#4ed793 !important;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+	color:#4ed793 !important;
+}
+
+:-ms-input-placeholder {
+	color:#4ed793 !important;
+}
+.logo_login{
+	display:none !important;
+}
+.logo_w_login{
+	margin-top: calc(6vh) !important;
+	margin-bottom: 9% !important;
+	width: 100% !important;
+	max-width: 130px !important;
+	display:inline-block !important;
+}
+}
+</style>
+</head>
+
+<body>
+<div class="panel_login">
+  <div class="col_login"> <img src="~/Images/logo_login.gif" border="0" class="logo_login">
+  <img src="~/Images/logo_w_login.png" border="0" class="logo_w_login">
+    <p>Sign In</p>
+    <table border="0" cellpadding="0" cellspacing="0" id="form">
+      <tr>
+        <td>
+@using (Html.BeginForm(null, null, new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { id = "formLogin" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+          <div class="row">
+            <span class="label">
+              <label for="UserName" style="display:none;">Username</label>
+            </span>
+            <span class="formw">
+              <input autocomplete="off" type="text" class="username req" name="UserName" id="UserName" placeholder="Username" size="25" maxlength="100" tabindex="1" />
+            </span>
+            @Html.ValidationMessageFor(m => m.UserName)
+          </div>
+          <div class="row">
+            <span class="label">
+              <label for="Password" style="display:none;">Password</label>
+            </span>
+            <span class="formw">
+              <input type="password" class="password req" name="Password" id="Password" placeholder="Password" size="25" maxlength="100" tabindex="2" />
+            </span>
+            @Html.ValidationMessageFor(m => m.Password)
+          </div>
+          <div class="row">
+            <a href="javascript:void(0);" onclick="document.getElementById('formLogin').submit();">
+              <button id="Submit" type="submit" class="submitbutton" name="form_submitted" tabindex="3">Log in</button>
+            </a>
+          </div>
+          <div class="row">
+            <div id="keeplogin">
+              @Html.CheckBoxFor(m => m.RememberMe)
+              <div class="style1">Keep me logged in</div>
+            </div>
+          </div>
+}
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="panel_filler"></div>
+<script>
+    document.getElementById('UserName').focus();
+</script>
+</body>
+</html>

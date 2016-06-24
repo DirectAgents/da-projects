@@ -24,10 +24,13 @@ namespace ClientPortal.Web.Controllers
         //
         // GET: /Account/Login
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public ActionResult Login(string returnUrl, bool old = false)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            if (old)
+                return View("LoginOld");
+            else
+                return View();
         }
 
         //

@@ -1025,9 +1025,11 @@
     <Content Include="Images\arrow_down.jpg" />
     <Content Include="Images\arrow_up.jpg" />
     <Content Include="Images\avatar.png" />
+    <Content Include="Images\bg_login.jpg" />
     <Content Include="Images\bullet_triangle.gif" />
     <Content Include="Images\creativethumb.gif" />
     <Content Include="Images\da_logo.jpg" />
+    <Content Include="Images\da_logo2016.jpg" />
     <Content Include="Images\Demo\sees1.jpg" />
     <Content Include="Images\Demo\sees2.jpg" />
     <Content Include="Images\Demo\sees3.jpg" />
@@ -1055,7 +1057,9 @@
     <Content Include="Images\logo1.png" />
     <Content Include="Images\logo1w.png" />
     <Content Include="Images\logoSelectQuote.png" />
+    <Content Include="Images\logo_login.gif" />
     <Content Include="Images\logo_seeso_200px.jpg" />
+    <Content Include="Images\logo_w_login.png" />
     <Content Include="Images\programmatic.png" />
     <Content Include="Images\spacer.gif" />
     <Content Include="ReportViewerWebForm.aspx" />
@@ -2711,6 +2715,9 @@
     <Content Include="Scripts\progscript.js" />
     <Content Include="Scripts\search_grids_charts.js" />
     <Content Include="testfoundation.html" />
+    <Content Include="Views\Account\LoginOld.cshtml">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
