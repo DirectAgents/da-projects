@@ -42,10 +42,11 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     {
                         foreach (var dbAd in adMatch)
                         {
+                            if (adUrl != null)
+                                dbAd.Url = adUrl;
                             dbAd.Name = itemAd.name;
                             dbAd.Width = itemAd.width;
                             dbAd.Height = itemAd.height;
-                            dbAd.Url = adUrl;
                             dbAd.Headline = itemAd.headline;
                             dbAd.Body = itemAd.body;
                             dbAd.Message = itemAd.message;

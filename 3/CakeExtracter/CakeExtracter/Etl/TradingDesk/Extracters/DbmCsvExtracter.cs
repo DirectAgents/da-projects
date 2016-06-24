@@ -75,9 +75,20 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 {
                     csv.Configuration.RegisterClassMap<DbmRowWithCreativeMap>();
 
+                    //TESTING
+                    //int testIO = 1946273; // bevel
+                    //int testIO = 1844659; // coursehero
+                    //int testIO = 1632789; // crackle
+                    //int testIO = 2131348; // ellura
+                    //int testIO = 2301762; // gaiam
+
                     var csvRows = csv.GetRecords<DbmRowWithCreative>().ToList();
                     for (int i = 0; i < csvRows.Count; i++)
                     {
+                        //TESTING!!!
+                        //if (csvRows[i].InsertionOrderID == testIO)
+                        //    yield return csvRows[i];
+
                         yield return csvRows[i];
                     }
                 }
@@ -171,6 +182,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             Map(m => m.Revenue).Name("Revenue(USD)");
             Map(m => m.Creative);
             Map(m => m.CreativeID);
+            Map(m => m.CreativeSource);
+            Map(m => m.CreativeWidth);
+            Map(m => m.CreativeHeight);
+            // CreativeStatus, etc...
         }
     }
     public sealed class DbmRowWithSiteMap : CsvClassMap<DbmRowWithSite>
@@ -186,8 +201,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             Map(m => m.PostClickConversions).Name("Post-ClickConversions");
             Map(m => m.PostViewConversions).Name("Post-ViewConversions");
             Map(m => m.Revenue).Name("Revenue(USD)");
-            Map(m => m.Site);
-            Map(m => m.SiteID);
+            Map(m => m.Site).Name("App/URL");
+            Map(m => m.SiteID).Name("App/URLID");
         }
     }
 
@@ -219,6 +234,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     {
         public string Creative { get; set; }
         public string CreativeID { get; set; } // int
+        //public string DCMPlacementID { get; set; } // int
+        //public string CreativeStatus { get; set; }
+        public string CreativeSource { get; set; } // e.g. DCM, User
+        //public string CreativeIntegrationCode { get; set; }
+        public int CreativeWidth { get; set; }
+        public int CreativeHeight { get; set; }
+        //public string CreativeType { get; set; }
+        //public string CreativeAttributes { get; set; } // e.g. 'Active View', 'None'
     }
     public class DbmRowWithSite : DbmRowBase
     {

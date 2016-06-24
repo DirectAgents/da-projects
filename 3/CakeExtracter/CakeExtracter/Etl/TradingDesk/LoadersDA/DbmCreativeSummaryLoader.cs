@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using DirectAgents.Domain.Contexts;
@@ -51,15 +52,38 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         private void AddUpdateDependentTDads(List<DbmRowBase> items)
         {
-            var tuples = items.Select(i => Tuple.Create(((DbmRowWithCreative)i).CreativeID, ((DbmRowWithCreative)i).Creative, i.InsertionOrderID)).Distinct();
+            var tuples = items.Select(i => Tuple.Create(
+                i.InsertionOrderID,
+                ((DbmRowWithCreative)i).CreativeID,
+                ((DbmRowWithCreative)i).Creative,
+                ((DbmRowWithCreative)i).CreativeWidth,
+                ((DbmRowWithCreative)i).CreativeHeight
+            )).Distinct();
 
             using (var db = new DATDContext())
             {
+                var acctIds = accountIdLookupByIOid.Values.ToArray();
+                var extAccounts = db.ExtAccounts.Where(a => acctIds.Contains(a.Id));
+                Dictionary<int, string> urlFormatByAccountId = new Dictionary<int, string>();
+                foreach (var extAcct in extAccounts)
+                    urlFormatByAccountId[extAcct.Id] = extAcct.CreativeURLFormat;
+
                 foreach (var tuple in tuples)
                 {
-                    string creativeID = tuple.Item1;
-                    string creativeName = tuple.Item2;
-                    int ioID = tuple.Item3;
+                    int ioID = tuple.Item1;
+                    string creativeID = tuple.Item2;
+                    string creativeName = tuple.Item3;
+                    int creativeWidth = tuple.Item4;
+                    int creativeHeight = tuple.Item5;
+
+                    // How to determine if jpg or gif (latter for animations?)
+                    string creativeUrl = null;
+                    if (accountIdLookupByIOid.ContainsKey(ioID) && urlFormatByAccountId.ContainsKey(accountIdLookupByIOid[ioID]))
+                    {
+                        var urlFormat = urlFormatByAccountId[accountIdLookupByIOid[ioID]];
+                        if (urlFormat != null)
+                            creativeUrl = String.Format(urlFormat, creativeName.Replace(" ", "") + ".jpg");
+                    }
 
                     if (tdAdIdLookupByCreativeId_IOid.ContainsKey(creativeID + "_" + ioID))
                         continue; // already encountered this creative
@@ -74,7 +98,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         {
                             AccountId = accountId,
                             ExternalId = creativeID,
-                            Name = creativeName
+                            Name = creativeName,
+                            Width = creativeWidth,
+                            Height = creativeHeight,
+                            Url = creativeUrl
                             // other properties...
                         };
                         db.TDads.Add(tdAd);
@@ -89,6 +116,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         {
                             if (!string.IsNullOrWhiteSpace(creativeName))
                                 tdAd.Name = creativeName;
+                            if (creativeUrl != null)
+                                tdAd.Url = creativeUrl;
+                            tdAd.Width = creativeWidth;
+                            tdAd.Height = creativeHeight;
                             // other properties...
                         }
                         int numUpdates = db.SaveChanges();

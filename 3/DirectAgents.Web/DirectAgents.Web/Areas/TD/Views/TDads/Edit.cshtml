@@ -11,8 +11,6 @@
         @Html.HiddenFor(m => m.Id)
         @Html.HiddenFor(m => m.AccountId)
         @Html.HiddenFor(m => m.Name)
-        @Html.HiddenFor(m => m.Width)
-        @Html.HiddenFor(m => m.Height)
         @Html.HiddenFor(m => m.ExternalId)
         <div style="float:left">
             Platform: @Model.ExtAccount.Platform.Name<br />
@@ -24,20 +22,20 @@
                     <td>@Html.DisplayFor(m => m.Id)</td>
                 </tr>
                 <tr>
+                    <td>@Html.LabelFor(m => m.ExternalId)</td>
+                    <td>@Html.DisplayFor(m => m.ExternalId)</td>
+                </tr>
+                <tr>
                     <td>@Html.LabelFor(m => m.Name)</td>
                     <td>@Html.DisplayFor(m => m.Name)</td>
                 </tr>
                 <tr>
                     <td>@Html.LabelFor(m => m.Width)</td>
-                    <td>@Html.DisplayFor(m => m.Width)</td>
+                    <td>@Html.EditorFor(m => m.Width)</td>
                 </tr>
                 <tr>
                     <td>@Html.LabelFor(m => m.Height)</td>
-                    <td>@Html.DisplayFor(m => m.Height)</td>
-                </tr>
-                <tr>
-                    <td>@Html.LabelFor(m => m.ExternalId)</td>
-                    <td>@Html.DisplayFor(m => m.ExternalId)</td>
+                    <td>@Html.EditorFor(m => m.Height)</td>
                 </tr>
                 <tr>
                     <td>@Html.LabelFor(m => m.Url)</td>
