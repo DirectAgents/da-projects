@@ -81,8 +81,10 @@ namespace DirectAgents.Domain.Abstract
         IEnumerable<LeadInfo> LeadInfos(int advId, DateTime? startDate, DateTime? endDate);
 
         DateTime? EarliestStatDate(int? advId, bool checkAll = false);
+        IStatsRange StatsRange_All(int? advId, bool includeConvs = false, bool includeSiteSummaries = false);
         IStatsRange StatsRange_Strategy(int? advId);
         IStatsRange StatsRange_TDad(int? advId);
+        IStatsRange StatsRange_Site(int? advId);
         IStatsRange StatsRange_Conv(int? advId);
         TDStatsGauge GetStatsGauge(ExtAccount extAccount = null, Platform platform = null);
         TDStatsGauge GetStatsGaugeViaIds(int? acctId = null, int? platformId = null);
@@ -93,7 +95,7 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null);
         IQueryable<StrategySummary> StrategySummaries(DateTime? startDate, DateTime? endDate, int? stratId = null, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null);
         IQueryable<TDadSummary> TDadSummaries(DateTime? startDate, DateTime? endDate, int? tdadId = null, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null);
-        IQueryable<SiteSummary> SiteSummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? platformId = null, int? campId = null);
+        IQueryable<SiteSummary> SiteSummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null);
         IQueryable<Conv> Convs(DateTime? startDate, DateTime? endDate, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null);
         //TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null);
         TDRawStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null);

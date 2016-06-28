@@ -284,6 +284,21 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             return earliest;
         }
 
+        public IStatsRange StatsRange_All(int? advId, bool includeConvs = false, bool includeSiteSummaries = false)
+        {
+            var ssRange = new SimpleStatsRange();
+            ssRange.UpdateWith(StatsRange_Daily(advId));
+            ssRange.UpdateWith(StatsRange_Strategy(advId));
+            ssRange.UpdateWith(StatsRange_TDad(advId));
+
+            if (includeConvs)
+                ssRange.UpdateWith(StatsRange_Conv(advId));
+            if (includeSiteSummaries) // usually don't include b/c they're dated on the 1st of the month by convention
+                ssRange.UpdateWith(StatsRange_Site(advId));
+
+            return ssRange;
+        }
+
         public IStatsRange StatsRange_Daily(int? advId)
         {
             var sums = DailySummaries(null, null, advId: advId);
@@ -297,6 +312,11 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
         public IStatsRange StatsRange_TDad(int? advId)
         {
             var sums = TDadSummaries(null, null, advId: advId);
+            return new StatsSummaryRange(sums);
+        }
+        public IStatsRange StatsRange_Site(int? advId)
+        {
+            var sums = SiteSummaries(null, null, advId: advId);
             return new StatsSummaryRange(sums);
         }
         public IStatsRange StatsRange_Conv(int? advId)
@@ -442,7 +462,7 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             return tSums;
         }
 
-        public IQueryable<SiteSummary> SiteSummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? platformId = null, int? campId = null)
+        public IQueryable<SiteSummary> SiteSummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null)
         {
             var sSums = context.SiteSummaries.AsQueryable();
             if (startDate.HasValue)
@@ -455,6 +475,8 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
                 sSums = sSums.Where(s => s.ExtAccount.PlatformId == platformId.Value);
             if (campId.HasValue)
                 sSums = sSums.Where(s => s.ExtAccount.CampaignId == campId.Value);
+            if (advId.HasValue)
+                sSums = sSums.Where(s => s.ExtAccount.Campaign.AdvertiserId == advId.Value);
             return sSums;
         }
 

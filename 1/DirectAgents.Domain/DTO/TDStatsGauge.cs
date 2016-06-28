@@ -54,6 +54,31 @@ namespace DirectAgents.Domain.DTO
         DateTime? Latest { get; }
     }
 
+    public class SimpleStatsRange : IStatsRange
+    {
+        public DateTime? Earliest { get; set; }
+        public DateTime? Latest { get; set; }
+
+        public void UpdateWith(IStatsRange statsRange)
+        {
+            SetIfEarlier(statsRange.Earliest);
+            SetIfLater(statsRange.Latest);
+        }
+        public void SetIfEarlier(DateTime? dateTime)
+        {
+            if (!dateTime.HasValue)
+                return;
+            if (!this.Earliest.HasValue || dateTime.Value < this.Earliest.Value)
+                this.Earliest = dateTime;
+        }
+        public void SetIfLater(DateTime? dateTime)
+        {
+            if (!dateTime.HasValue)
+                return;
+            if (!this.Latest.HasValue || dateTime.Value > this.Latest.Value)
+                this.Latest = dateTime;
+        }
+    }
     public class StatsSummaryRange : IStatsRange
     {
         public IQueryable<DatedStatsSummary> Summaries { get; set; }
@@ -63,16 +88,45 @@ namespace DirectAgents.Domain.DTO
             this.Summaries = summaries;
         }
 
+        private bool? _anySums;
+        private bool AnySums
+        {
+            get
+            {
+                if (!_anySums.HasValue)
+                {
+                    _anySums = (Summaries != null && Summaries.Any());
+                }
+                return _anySums.Value;
+            }
+        }
+
+        private DateTime? _earliest;
         public DateTime? Earliest
         {
-            get { return (Summaries == null || !Summaries.Any()) ? null : (DateTime?)Summaries.Min(s => s.Date); }
+            get
+            {
+                if (!_earliest.HasValue && this.AnySums)
+                {
+                    _earliest = Summaries.Min(s => s.Date);
+                }
+                return _earliest;
+            }
         }
+        private DateTime? _latest;
         public DateTime? Latest
         {
-            get { return (Summaries == null || !Summaries.Any()) ? null : (DateTime?)Summaries.Max(s => s.Date); }
+            get
+            {
+                if (!_latest.HasValue && this.AnySums)
+                {
+                    _latest = Summaries.Max(s => s.Date);
+                }
+                return _latest;
+            }
         }
-        //TODO? cache the results
     }
+
     public class ConvRange : IStatsRange
     {
         public IQueryable<Conv> Convs { get; set; }
@@ -82,14 +136,34 @@ namespace DirectAgents.Domain.DTO
             this.Convs = convs;
         }
 
+        private bool earliestSet;
+        private DateTime? _earliest;
         public DateTime? Earliest
         {
-            get { return (Convs == null || !Convs.Any()) ? null : (DateTime?)Convs.Min(s => s.Time); }
+            get
+            {
+                if (!earliestSet)
+                {
+                    _earliest = (Convs == null || !Convs.Any()) ? null : (DateTime?)Convs.Min(s => s.Time);
+                    earliestSet = true;
+                }
+                return _earliest;
+            }
         }
+
+        private bool latestSet;
+        private DateTime? _latest;
         public DateTime? Latest
         {
-            get { return (Convs == null || !Convs.Any()) ? null : (DateTime?)Convs.Max(s => s.Time); }
+            get
+            {
+                if (!latestSet)
+                {
+                    _latest = (Convs == null || !Convs.Any()) ? null : (DateTime?)Convs.Max(s => s.Time);
+                    latestSet = true;
+                }
+                return _latest;
+            }
         }
-        //TODO? cache the results
     }
 }
