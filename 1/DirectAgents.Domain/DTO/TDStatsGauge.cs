@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DirectAgents.Domain.Entities.TD;
 
 namespace DirectAgents.Domain.DTO
@@ -45,5 +46,50 @@ namespace DirectAgents.Domain.DTO
         {
             get { return Latest.HasValue ? Latest.Value.ToShortDateString() : null; }
         }
+    }
+
+    public interface IStatsRange
+    {
+        DateTime? Earliest { get; }
+        DateTime? Latest { get; }
+    }
+
+    public class StatsSummaryRange : IStatsRange
+    {
+        public IQueryable<DatedStatsSummary> Summaries { get; set; }
+
+        public StatsSummaryRange(IQueryable<DatedStatsSummary> summaries)
+        {
+            this.Summaries = summaries;
+        }
+
+        public DateTime? Earliest
+        {
+            get { return (Summaries == null || !Summaries.Any()) ? null : (DateTime?)Summaries.Min(s => s.Date); }
+        }
+        public DateTime? Latest
+        {
+            get { return (Summaries == null || !Summaries.Any()) ? null : (DateTime?)Summaries.Max(s => s.Date); }
+        }
+        //TODO? cache the results
+    }
+    public class ConvRange : IStatsRange
+    {
+        public IQueryable<Conv> Convs { get; set; }
+
+        public ConvRange(IQueryable<Conv> convs)
+        {
+            this.Convs = convs;
+        }
+
+        public DateTime? Earliest
+        {
+            get { return (Convs == null || !Convs.Any()) ? null : (DateTime?)Convs.Min(s => s.Time); }
+        }
+        public DateTime? Latest
+        {
+            get { return (Convs == null || !Convs.Any()) ? null : (DateTime?)Convs.Max(s => s.Time); }
+        }
+        //TODO? cache the results
     }
 }

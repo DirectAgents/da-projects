@@ -81,9 +81,9 @@ namespace DirectAgents.Domain.Abstract
         IEnumerable<LeadInfo> LeadInfos(int advId, DateTime? startDate, DateTime? endDate);
 
         DateTime? EarliestStatDate(int? advId, bool checkAll = false);
-        DateTime? EarliestStatDate_Strategy(int? advId);
-        DateTime? EarliestStatDate_TDad(int? advId);
-        DateTime? EarliestStatDate_Conv(int? advId);
+        IStatsRange StatsRange_Strategy(int? advId);
+        IStatsRange StatsRange_TDad(int? advId);
+        IStatsRange StatsRange_Conv(int? advId);
         TDStatsGauge GetStatsGauge(ExtAccount extAccount = null, Platform platform = null);
         TDStatsGauge GetStatsGaugeViaIds(int? acctId = null, int? platformId = null);
         DailySummary DailySummary(DateTime date, int acctId);

@@ -19,18 +19,21 @@ namespace DirectAgents.Domain.Entities.TD
         }
     }
 
-    public class DailySummary : StatsSummary
+    public class DatedStatsSummary : StatsSummary
     {
         public DateTime Date { get; set; }
+    }
+
+    public class DailySummary : DatedStatsSummary
+    {
         public int AccountId { get; set; }
         [ForeignKey("AccountId")]
         public virtual ExtAccount ExtAccount { get; set; }
     }
 
     // DailySummary for a Strategy
-    public class StrategySummary : StatsSummary
+    public class StrategySummary : DatedStatsSummary
     {
-        public DateTime Date { get; set; }
         public int StrategyId { get; set; }
         public virtual Strategy Strategy { get; set; }
 
@@ -41,9 +44,8 @@ namespace DirectAgents.Domain.Entities.TD
     }
 
     // DailySummary for a "TD ad"
-    public class TDadSummary : StatsSummary
+    public class TDadSummary : DatedStatsSummary
     {
-        public DateTime Date { get; set; }
         public int TDadId { get; set; }
         public virtual TDad TDad { get; set; }
 
@@ -51,13 +53,14 @@ namespace DirectAgents.Domain.Entities.TD
         public string TDadName { get; set; }
         [NotMapped]
         public string TDadEid { get; set; } // external id
+        [NotMapped]
+        public int Width { get; set; }
+        //[NotMapped]
     }
 
     // DailySummary for a Site / ExtAccount
-    public class SiteSummary : StatsSummary
+    public class SiteSummary : DatedStatsSummary
     {
-        public DateTime Date { get; set; }
-
         public int SiteId { get; set; }
         public virtual Site Site { get; set; }
 

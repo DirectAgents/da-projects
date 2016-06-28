@@ -98,7 +98,7 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
         public IEnumerable<BasicStat> CreativePerfBasicStats2(int advId) // *** does not compute spend markup ***
         {
             DateTime yesterday = DateTime.Today.AddDays(-1);
-            DateTime startDate = EarliestStatDate_TDad(advId) ?? yesterday;
+            DateTime startDate = StatsRange_TDad(advId).Earliest ?? yesterday;
 
             var sums = TDadSummaries(startDate, yesterday, advId: advId);
             var adGroups = sums.GroupBy(s => s.TDad);
@@ -124,7 +124,7 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
         {
             DateTime yesterday = DateTime.Today.AddDays(-1);
             if (!startDate.HasValue)
-                startDate = EarliestStatDate_TDad(advId) ?? yesterday; // if no stats, just set to yesterday
+                startDate = StatsRange_TDad(advId).Earliest ?? yesterday; // if no stats, just set to yesterday
             if (!endDate.HasValue)
                 endDate = yesterday;
 
@@ -246,7 +246,7 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
         {
             DateTime yesterday = DateTime.Today.AddDays(-1);
             if (!startDate.HasValue)
-                startDate = EarliestStatDate_Conv(advId) ?? yesterday; // if no convs, just set to yesterday
+                startDate = StatsRange_Conv(advId).Earliest ?? yesterday; // (if no convs, just set to yesterday)
             if (!endDate.HasValue)
                 endDate = yesterday;
             //if (!startDate.HasValue)
@@ -269,50 +269,40 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
 
         public DateTime? EarliestStatDate(int? advId, bool checkAll = false)
         {
-            var earliest = EarliestStatDate_Daily(advId);
+            var earliest = StatsRange_Daily(advId).Earliest;
             if (checkAll)
             {
-                var earliestStrat = EarliestStatDate_Strategy(advId);
+                // Check earliest Strat/TDad stats and use that if it's earlier or if "earliest" is still null...
+                var earliestStrat = StatsRange_Strategy(advId).Earliest;
                 if (!earliest.HasValue || (earliestStrat.HasValue && earliestStrat.Value < earliest.Value))
                     earliest = earliestStrat;
-                var earliestTDad = EarliestStatDate_TDad(advId);
+                var earliestTDad = StatsRange_TDad(advId).Earliest;
                 if (!earliest.HasValue || (earliestTDad.HasValue && earliestTDad.Value < earliest.Value))
                     earliest = earliestTDad;
                 //NOTE: not including Site stats or Convs
             }
             return earliest;
         }
-        private DateTime? EarliestStatDate_Daily(int? advId)
+
+        public IStatsRange StatsRange_Daily(int? advId)
         {
-            DateTime? earliest = null;
-            var dSums = DailySummaries(null, null, advId: advId);
-            if (dSums.Any())
-                earliest = dSums.Min(s => s.Date);
-            return earliest;
+            var sums = DailySummaries(null, null, advId: advId);
+            return new StatsSummaryRange(sums);
         }
-        public DateTime? EarliestStatDate_Strategy(int? advId)
+        public IStatsRange StatsRange_Strategy(int? advId)
         {
-            DateTime? earliest = null;
             var sums = StrategySummaries(null, null, advId: advId);
-            if (sums.Any())
-                earliest = sums.Min(s => s.Date);
-            return earliest;
+            return new StatsSummaryRange(sums);
         }
-        public DateTime? EarliestStatDate_TDad(int? advId)
+        public IStatsRange StatsRange_TDad(int? advId)
         {
-            DateTime? earliest = null;
             var sums = TDadSummaries(null, null, advId: advId);
-            if (sums.Any())
-                earliest = sums.Min(s => s.Date);
-            return earliest;
+            return new StatsSummaryRange(sums);
         }
-        public DateTime? EarliestStatDate_Conv(int? advId)
+        public IStatsRange StatsRange_Conv(int? advId)
         {
-            DateTime? earliest = null;
             var convs = Convs(null, null, advId: advId);
-            if (convs.Any())
-                earliest = convs.Min(s => s.Time);
-            return earliest;
+            return new ConvRange(convs);
         }
 
         public TDStatsGauge GetStatsGauge(ExtAccount extAccount = null, Platform platform = null)
@@ -333,36 +323,32 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
         public TDStatsGauge GetStatsGaugeViaIds(int? acctId = null, int? platformId = null) //Note: doesn't fill in ExtAccount or Platform
         {
             var gauge = new TDStatsGauge();
+
             var dSums = DailySummaries(null, null, acctId: acctId, platformId: platformId);
-            if (dSums.Any())
-            {
-                gauge.Daily.Earliest = dSums.Min(s => s.Date);
-                gauge.Daily.Latest = dSums.Max(s => s.Date);
-            }
+            var ssRange = new StatsSummaryRange(dSums);
+            gauge.Daily.Earliest = ssRange.Earliest;
+            gauge.Daily.Latest = ssRange.Latest;
+
             var sSums = StrategySummaries(null, null, acctId: acctId, platformId: platformId);
-            if (sSums.Any())
-            {
-                gauge.Strategy.Earliest = sSums.Min(s => s.Date);
-                gauge.Strategy.Latest = sSums.Max(s => s.Date);
-            }
+            ssRange = new StatsSummaryRange(sSums);
+            gauge.Strategy.Earliest = ssRange.Earliest;
+            gauge.Strategy.Latest = ssRange.Latest;
+
             var tSums = TDadSummaries(null, null, acctId: acctId, platformId: platformId);
-            if (tSums.Any())
-            {
-                gauge.Creative.Earliest = tSums.Min(s => s.Date);
-                gauge.Creative.Latest = tSums.Max(s => s.Date);
-            }
+            ssRange = new StatsSummaryRange(tSums);
+            gauge.Creative.Earliest = ssRange.Earliest;
+            gauge.Creative.Latest = ssRange.Latest;
+
             var siteSums = SiteSummaries(null, null, acctId: acctId, platformId: platformId);
-            if (siteSums.Any())
-            {
-                gauge.Site.Earliest = siteSums.Min(s => s.Date);
-                gauge.Site.Latest = siteSums.Max(s => s.Date);
-            }
+            ssRange = new StatsSummaryRange(siteSums);
+            gauge.Site.Earliest = ssRange.Earliest;
+            gauge.Site.Latest = ssRange.Latest;
+
             var convs = Convs(null, null, acctId: acctId, platformId: platformId);
-            if (convs.Any())
-            {
-                gauge.Conv.Earliest = convs.Min(c => c.Time);
-                gauge.Conv.Latest = convs.Max(c => c.Time);
-            }
+            var cRange = new ConvRange(convs);
+            gauge.Conv.Earliest = cRange.Earliest;
+            gauge.Conv.Latest = cRange.Latest;
+
             return gauge;
         }
 
