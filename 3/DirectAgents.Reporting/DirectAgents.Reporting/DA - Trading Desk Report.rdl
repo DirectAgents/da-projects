@@ -6009,7 +6009,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                               </Style>
                             </Textbox>
                             <ColSpan>9</ColSpan>
-                            <rd:Selected>true</rd:Selected>
                           </CellContents>
                         </TablixCell>
                         <TablixCell />
@@ -6059,7 +6058,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                                 <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
-                            <rd:Selected>true</rd:Selected>
                           </CellContents>
                         </TablixCell>
                         <TablixCell>
@@ -8940,7 +8938,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             </Textbox>
             <Image Name="Image1">
               <Source>External</Source>
-              <Value>DirectAgentsDigitalMarketingHeader.jpg</Value>
+              <Value>direct-agents-logo.png</Value>
               <Height>0.90625in</Height>
               <Width>7.96875in</Width>
               <ZIndex>1</ZIndex>
@@ -8948,6 +8946,8 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 <Border>
                   <Style>None</Style>
                 </Border>
+                <PaddingLeft>5pt</PaddingLeft>
+                <PaddingTop>5pt</PaddingTop>
               </Style>
             </Image>
           </ReportItems>
