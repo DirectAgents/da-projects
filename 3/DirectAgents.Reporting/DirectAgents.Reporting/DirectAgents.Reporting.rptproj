@@ -25,7 +25,7 @@
     <ResourceProjectItem>
       <Name>direct-agents-logo.png</Name>
       <FullPath>direct-agents-logo.png</FullPath>
-      <MimeType>image/x-png</MimeType>
+      <MimeType>image/png</MimeType>
     </ResourceProjectItem>
   </Reports>
   <Configurations>

@@ -8938,7 +8938,7 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
             </Textbox>
             <Image Name="Image1">
               <Source>External</Source>
-              <Value>direct-agents-logo.png</Value>
+              <Value>DirectAgentsDigitalMarketingHeader.jpg</Value>
               <Height>0.90625in</Height>
               <Width>7.96875in</Width>
               <ZIndex>1</ZIndex>
@@ -8946,8 +8946,6 @@ WHERE (td.Advertiser.Id = @AdvertiserId)</CommandText>
                 <Border>
                   <Style>None</Style>
                 </Border>
-                <PaddingLeft>5pt</PaddingLeft>
-                <PaddingTop>5pt</PaddingTop>
               </Style>
             </Image>
           </ReportItems>
