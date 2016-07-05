@@ -28,6 +28,7 @@ namespace DirectAgents.Domain.Seed
             AddPlatformIfNotExist("adt", "Adroit");
             AddPlatformIfNotExist("bc", "Bluecore");
             AddPlatformIfNotExist("crit", "Criteo");
+            AddPlatformIfNotExist("kin", "Kinetic");
             AddPlatformIfNotExist("li", "LiveIntent");
             AddPlatformIfNotExist("mg", "Magnetic");
             AddPlatformIfNotExist("max", "Maxpoint");

@@ -269,7 +269,7 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
 
         public DateTime? EarliestStatDate(int? advId, bool checkAll = false)
         {
-            var earliest = StatsRange_Daily(advId).Earliest;
+            var earliest = StatsRange_Daily(advId: advId).Earliest;
             if (checkAll)
             {
                 // Check earliest Strat/TDad stats and use that if it's earlier or if "earliest" is still null...
@@ -287,7 +287,7 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
         public IStatsRange StatsRange_All(int? advId, bool includeConvs = false, bool includeSiteSummaries = false)
         {
             var ssRange = new SimpleStatsRange();
-            ssRange.UpdateWith(StatsRange_Daily(advId));
+            ssRange.UpdateWith(StatsRange_Daily(advId: advId));
             ssRange.UpdateWith(StatsRange_Strategy(advId));
             ssRange.UpdateWith(StatsRange_TDad(advId));
 
@@ -299,9 +299,11 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             return ssRange;
         }
 
-        public IStatsRange StatsRange_Daily(int? advId)
+        //TODO: allow passing in (acctId, platformId?), campId
+
+        public IStatsRange StatsRange_Daily(int? campId = null, int? advId = null)
         {
-            var sums = DailySummaries(null, null, advId: advId);
+            var sums = DailySummaries(null, null, campId: campId, advId: advId);
             return new StatsSummaryRange(sums);
         }
         public IStatsRange StatsRange_Strategy(int? advId)
