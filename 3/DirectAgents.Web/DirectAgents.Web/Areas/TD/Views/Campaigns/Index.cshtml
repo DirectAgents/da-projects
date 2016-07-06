@@ -10,32 +10,43 @@
 
 <table>
 <tr>
-    <th></th>
-    <th>Advertiser</th>
-    <th>Campaign</th>
-    <th>Ext Accts</th>
-    <th>Partners</th>
-    <th></th>
+    <th rowspan="2"></th>
+    <th rowspan="2">Advertiser /<br />Campaign</th>
+    <th rowspan="2">Partners /<br />Ext Accts</th>
+    <th colspan="2">Budgets/Percents</th>
+</tr>
+<tr>
+    <!-- Combined with above cell -->
+    <!-- Combined with above cell -->
+    <!-- Combined with above cell -->
+    <th>Earliest</th>
+    <th>Latest</th>
 </tr>
 @foreach (var camp in Model)
 {
+    var earliestBudgetInfo = camp.EarliestBudgetInfo();
+    var latestBudgetInfo = camp.LatestBudgetInfo();
 <tr>
     <td>@Html.ActionLink("Details", "Show", new { id = camp.Id })</td>
-    <td>@camp.Advertiser.Name</td>
-    <td>@camp.Name</td>
+    <td>
+        @if (camp.Advertiser.Name != camp.Name)
+        {
+            @camp.Advertiser.Name
+            <br />
+        }
+        @camp.Name
+    </td>
     <td style="text-align:center">
         @if (camp.ExtAccounts.Any()) {
+            @(string.Join(", ", camp.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name).OrderBy(n => n)))
+            <br />
             @Html.ActionLink("show(" + camp.ExtAccounts.Count + ")", "Index", "ExtAccounts", new { campId = camp.Id }, null)
-        } else {
-            <text>0</text>
+        } else if (!camp.BudgetInfos.Any() && !camp.PlatformBudgetInfos.Any()) {
+            @Html.ActionLink("[Delete Campaign]", "Delete", new { id = camp.Id }, new { onclick = "if (!confirm('Are you sure?')) return false" })
         }
     </td>
-    <td>@string.Join(", ", camp.ExtAccounts.Select(a => a.Platform).Distinct().Select(p => p.Name))</td>
-    <td>
-        @if (!camp.ExtAccounts.Any() && !camp.BudgetInfos.Any() && !camp.PlatformBudgetInfos.Any()) {
-            @Html.ActionLink("Delete", "Delete", new { id = camp.Id }, new { onclick = "if (!confirm('Are you sure?')) return false" })
-        }
-    </td>
+    <td>@(earliestBudgetInfo != null ? earliestBudgetInfo.Date.ToShortDateString() : "")</td>
+    <td>@(latestBudgetInfo != null ? latestBudgetInfo.Date.ToShortDateString() : "")</td>
 </tr>
 }
 </table>

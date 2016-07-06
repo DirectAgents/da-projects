@@ -64,6 +64,20 @@ namespace DirectAgents.Domain.Entities.TD
             return budgets.Any() ? budgets.First() : null;
         }
 
+        //TODO: have an arg... if want to check PlatBudgInfos too
+        public BudgetInfo EarliestBudgetInfo()
+        {
+            if (BudgetInfos == null || !BudgetInfos.Any())
+                return null;
+            return BudgetInfos.OrderBy(bi => bi.Date).First();
+        }
+        public BudgetInfo LatestBudgetInfo()
+        {
+            if (BudgetInfos == null || !BudgetInfos.Any())
+                return null;
+            return BudgetInfos.OrderByDescending(bi => bi.Date).First();
+        }
+
         // returns months in reverse chronological order
         public DateTime[] MonthsWithoutBudgetInfos(int monthsToCheck = 12)
         {
