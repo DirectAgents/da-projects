@@ -70,7 +70,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     }
 
  
- public sealed class AdrollSiteStatsRowMap : CsvClassMap<AdrollSiteStatsRow>
+    public sealed class AdrollSiteStatsRowMap : CsvClassMap<AdrollSiteStatsRow>
     {
         public AdrollSiteStatsRowMap()
         {

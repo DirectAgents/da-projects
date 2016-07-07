@@ -19,6 +19,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             this.revenuePerOrder = revenuePerOrder;
         }
         //TODO: if !hasAccountId, match below on "account number" -> external id ?
+        //NOTE: not handled is the case when some items have accountIds and some don't
 
         protected override int Load(List<Dictionary<string, string>> items)
         {

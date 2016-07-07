@@ -124,11 +124,16 @@ namespace BingAds
         }
 
         // returns filepath of csv
-        public string GetDailySummaries(long accountId, DateTime startDate, DateTime endDate)
+        public string GetDailySummaries(long accountId, DateTime startDate, DateTime endDate, bool forShoppingCampaigns = false)
         {
             SetCredentials(accountId);
             var authorizationData = GetAuthorizationData();
-            var reportRequest = GetReportRequest_DailySums(accountId, startDate, endDate);
+
+            ReportRequest reportRequest;
+            if (forShoppingCampaigns)
+                reportRequest = GetReportRequest_ProductDimension(accountId, startDate, endDate);
+            else
+                reportRequest = GetReportRequest_DailySums(accountId, startDate, endDate);
 
             var task = GetReportAsync(authorizationData, reportRequest);
             task.Wait();
@@ -176,6 +181,52 @@ namespace BingAds
                     ConversionPerformanceReportColumn.AccountNumber,
                     ConversionPerformanceReportColumn.CampaignId,
                     ConversionPerformanceReportColumn.CampaignName
+                }
+            };
+            return reportRequest;
+        }
+        private ReportRequest GetReportRequest_ProductDimension(long accountId, DateTime startDate, DateTime endDate)
+        {
+            var reportRequest = new ProductDimensionPerformanceReportRequest
+            {
+                Format = ReportFormat.Csv,
+                ReportName = "Product Dimension Performance Report",
+                ReturnOnlyCompleteData = true,
+                Aggregation = ReportAggregation.Daily,
+                Scope = new AccountThroughAdGroupReportScope
+                {
+                    AccountIds = new[] { accountId },
+                    AdGroups = null,
+                    Campaigns = null
+                },
+                Time = new ReportTime
+                {
+                    CustomDateRangeStart = new Date
+                    {
+                        Year = startDate.Year,
+                        Month = startDate.Month,
+                        Day = startDate.Day
+                    },
+                    CustomDateRangeEnd = new Date
+                    {
+                        Year = endDate.Year,
+                        Month = endDate.Month,
+                        Day = endDate.Day
+                    }
+                },
+                Columns = new[] {
+                    ProductDimensionPerformanceReportColumn.MerchantProductId,
+                    ProductDimensionPerformanceReportColumn.TimePeriod,
+                    ProductDimensionPerformanceReportColumn.Impressions,
+                    ProductDimensionPerformanceReportColumn.Clicks,
+                    ProductDimensionPerformanceReportColumn.Conversions,
+                    ProductDimensionPerformanceReportColumn.Spend,
+                    ProductDimensionPerformanceReportColumn.Revenue,
+                    // No AccountId
+                    ProductDimensionPerformanceReportColumn.AccountName,
+                    ProductDimensionPerformanceReportColumn.AccountNumber,
+                    ProductDimensionPerformanceReportColumn.CampaignId,
+                    ProductDimensionPerformanceReportColumn.CampaignName
                 }
             };
             return reportRequest;

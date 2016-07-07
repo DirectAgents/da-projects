@@ -32,6 +32,17 @@ namespace CakeExtracter.Commands
         public DateTime? EndDate { get; set; }
         public int? DaysAgoToStart { get; set; }
 
+        private bool? _includeShopping;
+        private bool? _includeNonShopping;
+        public bool IncludeShopping
+        {
+            get { return (!_includeShopping.HasValue || _includeShopping.Value); }
+        }   // default: true
+        public bool IncludeNonShopping
+        {
+            get { return (!_includeNonShopping.HasValue || _includeNonShopping.Value); }
+        }   // default: true
+
         public override void ResetProperties()
         {
             SearchProfileId = null;
@@ -39,6 +50,8 @@ namespace CakeExtracter.Commands
             StartDate = null;
             EndDate = null;
             DaysAgoToStart = null;
+            _includeShopping = null;
+            _includeNonShopping = null;
         }
 
         public SynchSearchDailySummariesBingCommand()
@@ -49,6 +62,8 @@ namespace CakeExtracter.Commands
             HasOption<DateTime>("s|startDate=", "Start Date (optional)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
             HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 62)", c => DaysAgoToStart = c);
+            HasOption<bool>("n|includeNonShopping=", "Include NonShopping campaigns (default is true)", c => _includeNonShopping = c);
+            HasOption<bool>("h|includeShopping=", "Include Shopping campaigns (default is true)", c => _includeShopping = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -68,7 +83,7 @@ namespace CakeExtracter.Commands
                     startDate = searchAccount.MinSynchDate.Value;
 
                 int accountId = Int32.Parse(searchAccount.AccountCode);
-                var extracter = new BingDailySummaryExtracter(accountId, startDate, endDate);
+                var extracter = new BingDailySummaryExtracter(accountId, startDate, endDate, includeShopping: IncludeShopping, includeNonShopping: IncludeNonShopping);
                 var loader = new BingLoader(searchAccount.SearchAccountId);
                 var extracterThread = extracter.Start();
                 var loaderThread = loader.Start(extracter);
