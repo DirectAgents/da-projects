@@ -1030,6 +1030,7 @@
     <Content Include="Images\creativethumb.gif" />
     <Content Include="Images\da_logo.jpg" />
     <Content Include="Images\da_logo2016.jpg" />
+    <Content Include="Images\da_logo2016_bluegrey.png" />
     <Content Include="Images\Demo\sees1.jpg" />
     <Content Include="Images\Demo\sees2.jpg" />
     <Content Include="Images\Demo\sees3.jpg" />
