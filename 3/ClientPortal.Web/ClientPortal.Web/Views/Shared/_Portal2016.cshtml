@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>@ViewBag.Title</title>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css' />
+<link href='~/Content/progstyle.css' rel="stylesheet" type="text/css" />
+
+<link href="https://kendo.cdn.telerik.com/2016.1.406/styles/kendo.common-bootstrap.min.css" rel="stylesheet" />
+<link href="https://kendo.cdn.telerik.com/2016.1.406/styles/kendo.bootstrap.min.css" rel="stylesheet" />
+
+<link href='~/Content/progstyle2.css' rel="stylesheet" type="text/css" />
+
+<script src="https://kendo.cdn.telerik.com/2016.1.406/js/jquery.min.js"></script>
+<script src="https://kendo.cdn.telerik.com/2016.1.406/js/kendo.all.min.js"></script>
+
+<script src="~/Scripts/progscript.js"></script>
+</head>
+
+<body>
+<div id="header">
+    <div id="container">
+        <div class="logo">&nbsp;</div>
+        <div id="cssmenu">
+            <ul>
+                <li class="summary-report"><a href="/Prog">Summary Report</a></li>
+                <li class="search-reports"><a href="/Prog">Search Reports</a>
+                    <ul class="submenu">
+                        <li><a href='#'>Weekly</a></li>
+                        <li><a href='#'>Monthly</a></li>
+                        <li><a href='#'>Channel Performance</a></li>
+                        <li><a href='#'>Campaign Performance</a></li>
+                        <li><a href='#'>Campaign Weekly</a></li>
+                    </ul>
+                </li>
+                <li class="programmatic-reports"><a href="@Url.Action("Index", "Home", new { Area = "Prog" })">Programmatic Reports</a>
+                    <ul class="submenu">
+                        <li><a href="@Url.Action("Index", "Home", new { Area = "Prog" })">Executive Summary</a></li>
+                        <li><a href="@Url.Action("Strategy", "Home", new { Area = "Prog" })">Strategy Summary</a></li>
+                        <li><a href="@Url.Action("Weekly", "Home", new { Area = "Prog" })">Weekly Summary</a></li>
+                        <li><a href="@Url.Action("Creative", "Home", new { Area = "Prog" })">Creative Performance</a></li>
+                    </ul>
+                </li>
+
+                <li class="logout">
+                    @Html.Partial("_LoginPartial", model: false)
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+@RenderBody()
+
+<div id="footer">
+</div>
+@RenderSection("scripts", required: false)
+</body>
+</html>

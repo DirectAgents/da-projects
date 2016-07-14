@@ -39,7 +39,8 @@
   height: 100px;
 }
 
-#cssmenu > ul > li.executive {
+#cssmenu > ul > li.executive,
+#cssmenu > ul > li.summary-report {
   float: left;
   background: #2d599d;
   height: 100px;
@@ -47,8 +48,8 @@
   border-top: 4px solid #B9D532;
 }
 
-
-#cssmenu > ul > li.strategy-summary {
+#cssmenu > ul > li.strategy-summary,
+#cssmenu > ul > li.search-reports {
   float: left;
   background: #2d599d;
   height: 100px;
@@ -56,12 +57,18 @@
   border-top:4px solid #9FC8FF;
 }
 
-
 #cssmenu > ul > li.weekly-summary {
   float: left;
   background: #2d599d;
   height: 100px;
   width:110px;
+  border-top:4px solid #F9EA12;
+}
+#cssmenu > ul > li.programmatic-reports {
+  float: left;
+  background: #2d599d;
+  height: 100px;
+  width:160px;
   border-top:4px solid #F9EA12;
 }
 
@@ -72,7 +79,6 @@
   width:140px;
   border-top:4px solid #FF8A00;
 }
-
 
 #cssmenu > ul > li.site-list {
   float: left;
@@ -206,15 +212,20 @@
   margin-left: 0;
   margin-right: 100%;
 }
+
+#cssmenu .submenu {margin-top:35px;}
+
 #cssmenu ul ul li a {
   border-bottom: 1px solid rgba(150, 150, 150, 0.15);
   padding: 11px 15px;
-  width: 170px;
+  width: 210px;
   font-size: 12px;
   text-decoration: none;
   color: #dddddd;
   font-weight: 400;
-  background: #333333;
+  background: #2d599d;
+  border:1px solid #fff;
+  z-index:100;
 }
 #cssmenu ul ul li:last-child > a,
 #cssmenu ul ul li.last-item > a {
@@ -261,6 +272,111 @@
   top: 17px;
   height: 0;
 }
+
+.section-block-left{float:left; margin-top:30px;  width:45%;}
+.section-block-right{float:right; margin-top:30px;  width:45%;}
+
+.show-export{text-align:left; margin:10px 0 30px 0;}
+.show{display:inline; width:50%; text-align:left; margin:10px 0 10px 0; clear:both;}
+.export{display:inline; float:right; width:50%; text-align:right; margin:10px 0 10px 0; clear:both;}
+
+
+/**Contact Page**/
+
+.content_box_contact_left {padding:0px;}
+.content_box_contact_right {float:left; width:99.6%; padding:0px; border-bottom:1px #666 solid; border-left:1px #666 solid; border-right:1px #666 solid;}
+.section-block-left-contact{float:left; margin-top:30px; width:34.3%;}
+.section-block-right-contact{float:right; margin-top:30px;  width:55%;}
+
+.map{border-bottom:1px #666 solid; border-left:1px #666 solid; border-right:1px #666 solid;}
+.address{border-bottom:1px #666 solid; border-left:1px #666 solid; border-right:1px #666 solid; padding:20px; color:#666666;}
+
+
+.team{float:left; width:38%; text-align: center; padding:34px;}
+
+.team .title{text-align: center; color:#666666;}
+
+.team h3{
+    font-size: 1.17em;
+    font-weight: bold;
+    line-height:0px;
+    color:#666666;
+}
+
+.team img{ width:100px; display:block; margin: 0 auto;  border-radius: 50%;}
+
+.team .email a{float:left; width:100%; margin-top:15px; text-align: center; color:#b9d342;}
+
+
+/**Manage Account Page**/
+
+.section-block-left-account{float:left; margin-top:30px; width:100%;}
+
+.content_box_account_left {padding:0px; padding:47px 0 100px 0; width:52.2%; float:left; border-left:1px #666 solid; border-right:0px #666 solid;  border-bottom:1px #666 solid; }
+
+.content_box_account_right {padding:0px; margin:0px 0 0 0; width:47.6%; float:left; border-left:1px #666 solid; border-right:0px #666 solid;  border-bottom:1px #666 solid; }
+
+.content_box_account_right img {width:100%;}
+
+.tablet{border-bottom:1px #666 solid; border-left:1px #666 solid; border-right:1px #666 solid;}
+
+.loggedin{float:left; width:100%; text-align:center; padding:20px 0 20px 0px;}
+
+.form{float:left; width:100%; text-align:center; border:none; padding:0px; color:#666666;}
+
+.section-block-left-account .row {margin:15px 0 15px 0;}
+
+.section-block-left-account .row-btn {margin:25px 0 25px 0;}
+
+.section-block-left-account input[type="text"] {
+    width: 300px;
+    padding:15px;
+    margin:0 auto;
+    display: block;
+    margin-bottom: 10px;
+    background-color: white;
+    font-size:18px;
+    border-top:0px;
+    border-left:0px;
+    border-right:0px;
+    border-bottom:1px #666666 solid;
+    text-align: center;
+    color:#5391c9;
+}
+
+.section-block-left-account input[type="submit"] {
+    width: 250px;
+    padding:20px;
+    margin:0 auto;
+    display: block;
+    margin-bottom: 10px;
+    background: #b9d342;
+    border:none;
+    font-size:18px;
+    text-align: center;
+    color:#fff;
+
+}
+
+.forgot-password{font-size:12px;}
+
+::-webkit-input-placeholder {
+   color:#5391c9;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+   color:#5391c9;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+   color:#5391c9;
+}
+
+:-ms-input-placeholder {
+   color:#5391c9;
+}
+
+
 @media all and (max-width: 768px), only screen and (-webkit-min-device-pixel-ratio: 2) and (max-width: 1024px), only screen and (min--moz-device-pixel-ratio: 2) and (max-width: 1024px), only screen and (-o-min-device-pixel-ratio: 2/1) and (max-width: 1024px), only screen and (min-device-pixel-ratio: 2) and (max-width: 1024px), only screen and (min-resolution: 192dpi) and (max-width: 1024px), only screen and (min-resolution: 2dppx) and (max-width: 1024px) {
 
   .logo {
@@ -283,7 +399,8 @@
     padding: 15px 17px 15px 17px;
   }  
 
-  #cssmenu > ul > li.executive {
+  #cssmenu > ul > li.executive,
+  #cssmenu > ul > li.summary-report {
     float: left;
     background: #2d599d;
     height: 100%;
@@ -291,7 +408,8 @@
     border-top: 4px solid #B9D532;
   }
 
-  #cssmenu > ul > li.strategy-summary {
+  #cssmenu > ul > li.strategy-summary,
+  #cssmenu > ul > li.search-reports {
     float: left;
     background: #2d599d;
     height: 100%;
@@ -299,7 +417,8 @@
     border-top:4px solid #9FC8FF;
   }
 
-  #cssmenu > ul > li.weekly-summary {
+  #cssmenu > ul > li.weekly-summary,
+  #cssmenu > ul > li.programmatic-reports {
     float: left;
     background: #2d599d;
     height: 100%;
@@ -503,4 +622,91 @@
   #cssmenu .submenu-button.submenu-opened:before {
     display: none;
   }
+
+  .section-block-left, .section-block-left-contact{float:left; margin-top:30px;  width:100%;}
+  .section-block-right, .section-block-right-contact{float:left; margin-top:30px;  width:100%;}
+
+  .show-export{text-align:left; margin:10px 0 50px 0;}
+  .show{display:inline; width:100%; text-align:left; margin:10px 0 10px 0; clear:both;}
+  .export{display:inline; float:right; width:100%; text-align:left; margin:10px 0 10px 0; clear:both;}
+}
+
+@media all and (max-width: 980px){
+
+  /**Contact Page**/
+
+  .content_box_contact_left {padding:0px;}
+  .content_box_contact_right {float:left; width:99.6%;  border-bottom:1px #666 solid; border-left:1px #666 solid; border-right:1px #666 solid;}
+  .section-block-left-contact{float:left; margin-top:30px; width:100%;}
+  .section-block-right-contact{float:right; margin-top:30px;  width:100%;}
+
+  .map{border-bottom:1px #666 solid; border-left:1px #666 solid; border-right:1px #666 solid;}
+  .map img{width:100%;}
+  .address{border-bottom:1px #666 solid; border-left:1px #666 solid; border-right:1px #666 solid; color:#666666;}
+
+  .team{float:left; width:90%; text-align: center; margin-bottom:0px;}
+
+  .team .title{text-align: center; color:#666666;}
+
+  .team h3{
+      font-size: 1.17em;
+      font-weight: bold;
+      line-height:0px;
+      color:#666666;
+  }
+
+  .team img{ width:100px; display:block; margin: 0 auto;  border-radius: 50%;}
+
+  .team .email a{float:left; width:100%; margin-top:15px; text-align: center; color:#b9d342;}
+
+
+  /**Manage Account Page**/
+
+  .section-block-left-account{float:left; margin-top:30px; width:100%;}
+
+  .content_box_account_left {padding:0px; padding:47px 0 100px 0; width:100%; text-align:center; border:none; }
+
+  .content_box_account_right {padding:0px; margin:0px 0 0 0; width:100%; float:left; border:none; }
+
+  .content_box_account_right img {width:100%;}
+
+  .tablet{border-bottom:1px #666 solid; border-left:1px #666 solid; border-right:1px #666 solid;}
+
+  .loggedin{float:left; width:100%; text-align:center; padding:20px 0 20px 0px;}
+
+  .form{float:left; width:100%; text-align:center; border:none; padding:0px; color:#666666;}
+
+  .section-block-left-account .row {margin:15px 0 15px 0;}
+
+  .section-block-left-account .row-btn {margin:25px 0 25px 0;}
+
+  .section-block-left-account input[type="text"] {
+      width: 300px;
+      padding:15px;
+      margin:0 auto;
+      display: block;
+      margin-bottom: 10px;
+      background-color: white;
+      font-size:18px;
+      border-top:0px;
+      border-left:0px;
+      border-right:0px;
+      border-bottom:1px #666666 solid;
+      text-align: center;
+      color:#5391c9;
+  }
+
+  .section-block-left-account input[type="submit"] {
+      width: 250px;
+      padding:20px;
+      margin:0 auto;
+      display: block;
+      margin-bottom: 10px;
+      background: #b9d342;
+      border:none;
+      font-size:18px;
+      text-align: center;
+      color:#fff;
+  }
+
 }
