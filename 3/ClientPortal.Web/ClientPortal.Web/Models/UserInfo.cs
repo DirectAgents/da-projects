@@ -20,7 +20,7 @@ namespace ClientPortal.Web.Models
 
         private UserProfile UserProfile { get; set; }
         private ClientPortal.Data.Contexts.Advertiser Advertiser { get; set; }
-        public TradingDeskAccount TDAccount { get; set; }
+        public TradingDeskAccount TDAccount { get; set; } // deprecated
         public DirectAgents.Domain.Entities.TD.Advertiser ProgAdvertiser { get; set; }
 
         public bool HasUserProfile

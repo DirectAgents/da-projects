@@ -1,0 +1,76 @@
+﻿@model ClientPortal.Web.Models.GenericModel
+@{
+    Layout = "~/Views/Shared/_Portal2016.cshtml";
+}
+
+<style type="text/css">
+    .client_logo {
+        background-image: url("/Prog/Home/Logo");
+    }
+    /*.k-numeric-wrap .k-input {
+        height: 1.65em;
+        line-height: 1.65em;
+    }*/
+</style>
+<div id="client_bar">
+	<div id="container">
+		<div class="client_logo"></div>
+        <div class="client_name">@Model.UserInfo.SearchProfile.SearchProfileName</div>
+        <div class="page_title">Weekly Summary</div>
+    </div>
+</div>
+
+<div id="page_content">
+    <div id="container">
+        <div id="page_content">
+
+<section>
+    <div class="show-export">
+    <div class="show">
+        Show: <input id="numweeksInput" value="8" /> weeks
+        <a class="button paddedbutton" href="#" onclick="RefreshGrid('weeksum'); return false">Refresh</a>
+    </div>
+    <div class="export"><a class="button paddedbutton" href="#" onclick="ExportWeekSumCSV(); return false">Export CSV</a></div>
+    </div>
+    <div class="heading"><p>Weekly Summary</p></div>
+    <div id="weeksumGrid"></div>
+</section>
+
+<div class="section-block-left">
+    <section>
+        <div class="heading"><p>Weekly CTR vs CPC Performance</p></div>
+        <div class="content_box">
+            <div id="trendECPA" style="height:205px"></div>
+        </div>
+    </section>
+</div>
+
+<div class="section-block-right">
+    <section>
+        <div class="heading"><p>Weekly Leads vs CPL Performance</p></div>
+        <div class="content_box">
+            <div id="trendECPA" style="height:205px"></div>
+        </div>
+    </section>
+</div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+        $('#numweeksInput').kendoNumericTextBox({
+            decimals: 0,
+            format: 'n0',
+            min: 1
+        });
+        $('#numweeksInput').data('kendoNumericTextBox').wrapper.width(65);
+    });
+
+    function ExportWeekSumCSV() {
+        window.location.href = '@Url.Action("WeekSumExport", "SearchReports")';
+    }
+</script>
+}

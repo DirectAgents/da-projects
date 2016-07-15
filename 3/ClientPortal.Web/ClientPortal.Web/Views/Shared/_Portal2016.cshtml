@@ -22,14 +22,14 @@
         <div class="logo">&nbsp;</div>
         <div id="cssmenu">
             <ul>
-                <li class="summary-report"><a href="/Prog">Summary Report</a></li>
-                <li class="search-reports"><a href="/Prog">Search Reports</a>
+                <li class="summary-report"><a href="@Url.Action("Index", "Home", new { Area = "Prog" })">Executive Summary</a></li>
+                <li class="search-reports"><a href="@Url.Action("Weekly", "Search")">Search Reports</a>
                     <ul class="submenu">
-                        <li><a href='#'>Weekly</a></li>
-                        <li><a href='#'>Monthly</a></li>
-                        <li><a href='#'>Channel Performance</a></li>
-                        <li><a href='#'>Campaign Performance</a></li>
-                        <li><a href='#'>Campaign Weekly</a></li>
+                        <li><a href="@Url.Action("Weekly", "Search")">Weekly</a></li>
+                        <li><a href="@Url.Action("Monthly", "Search")">Monthly</a></li>
+                        <li><a href="@Url.Action("ChannelPerf", "Search")">Channel Performance</a></li>
+                        <li><a href="@Url.Action("CampaignPerf", "Search")">Campaign Performance</a></li>
+                        <li><a href="@Url.Action("CampaignWeekly", "Search")">Campaign Weekly</a></li>
                     </ul>
                 </li>
                 <li class="programmatic-reports"><a href="@Url.Action("Index", "Home", new { Area = "Prog" })">Programmatic Reports</a>

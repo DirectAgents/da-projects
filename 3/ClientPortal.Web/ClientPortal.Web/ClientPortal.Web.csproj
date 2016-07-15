@@ -281,6 +281,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InvoicesController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\SearchHomeController.cs" />
     <Compile Include="Controllers\SearchReportsController.cs" />
     <Compile Include="Extensions.cs" />
@@ -295,6 +296,7 @@
     <Compile Include="Models\DashboardModel.cs" />
     <Compile Include="Models\ExportModels.cs" />
     <Compile Include="Models\FileUploadInfo.cs" />
+    <Compile Include="Models\GenericModel.cs" />
     <Compile Include="Models\GoalsModel.cs" />
     <Compile Include="Models\GoalVM.cs" />
     <Compile Include="Models\IdNameVM.cs" />
@@ -3023,6 +3025,7 @@
     <Content Include="Scripts\kendo\2015.1.408\kendo.web.min.js.map" />
     <Content Include="Scripts\kendo\2015.1.408\kendo.window.min.js.map" />
     <Content Include="Views\Shared\_Portal2016.cshtml" />
+    <Content Include="Views\Search\Weekly.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
