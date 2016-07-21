@@ -4,14 +4,14 @@ using System.Configuration;
 using System.Xml;
 using Google.Api.Ads.AdWords.Lib;
 using Google.Api.Ads.AdWords.Util.Reports;
-using Google.Api.Ads.AdWords.v201509;
+using Google.Api.Ads.AdWords.v201605;
 using Google.Api.Ads.Common.Util.Reports;
 
 namespace CakeExtracter.Etl.SearchMarketing.Extracters
 {
     public class AdWordsApiExtracter : Extracter<Dictionary<string, string>>
     {
-        const string VERSION = "v201509";
+        const string VERSION = "v201605";
         private readonly string reportFilePath = ConfigurationManager.AppSettings["AdWordsReportFilePath"];
 
         private readonly string clientCustomerId;
@@ -129,8 +129,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                         //    values = new string[] { "Transactions (us.megabus.com)" }
                         //}
                     }
-                },
-                includeZeroImpressions = false
+                }
             };
 
             try
