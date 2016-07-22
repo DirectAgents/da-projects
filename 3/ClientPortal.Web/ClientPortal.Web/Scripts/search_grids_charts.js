@@ -10,10 +10,10 @@
         pageSize: pageSize,
         transport: {
             read: {
-                type: 'post', // hard coding transport to POST
-                dataType: 'json', // hard coding transport to JSON
-                url: url, // URL sent in
-                data: readData // func to read data sent in
+                type: 'post',
+                dataType: 'json',
+                url: url,
+                data: readData
             }
         },
         schema: {

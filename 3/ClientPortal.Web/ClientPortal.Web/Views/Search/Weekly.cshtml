@@ -1,7 +1,4 @@
-﻿@model ClientPortal.Web.Models.GenericModel
-@{
-    Layout = "~/Views/Shared/_Portal2016.cshtml";
-}
+﻿@model ClientPortal.Web.Models.SearchVM
 
 <style type="text/css">
     .client_logo {
@@ -15,7 +12,7 @@
 <div id="client_bar">
 	<div id="container">
 		<div class="client_logo"></div>
-        <div class="client_name">@Model.UserInfo.SearchProfile.SearchProfileName</div>
+        <div class="client_name">@Model.SearchProfile.SearchProfileName</div>
         <div class="page_title">Weekly Summary</div>
     </div>
 </div>
@@ -59,15 +56,54 @@
 </div>
 
 @section scripts {
+<script src="~/Scripts/search_grids_charts.js"></script>
+@Html.Partial("_DateFuncs", Model.Dates)
+
 <script>
     $(document).ready(function () {
+        cultureGlobal = '@Model.UserInfo.Culture';
         $('#numweeksInput').kendoNumericTextBox({
             decimals: 0,
             format: 'n0',
             min: 1
         });
         $('#numweeksInput').data('kendoNumericTextBox').wrapper.width(65);
+
+        var weeksumDS = CreateSummaryDataSource(
+            '@Url.Action("WeekSumData", "SearchReports")',
+            function () {
+                return { numweeks: $('#numweeksInput').val() };
+            },
+            false, //don't group
+            'nosort',
+            0); //default page size
+
+    @if (Model.SearchProfile.ShowRevenue) {
+        <text>CreateSummaryGrid(weeksumDS, $('#weeksumGrid'), 300, 'Week', 10, 2, true, false, false, DetailInitWrapperWM, @(Model.SearchProfile.ShowViewThrus ? "true" : "false"));</text>
+        <text>CreateRevROASChart(weeksumDS, 'weekleftChart', 'Weekly Revenue vs. ROAS Performance');</text>
+        <text>CreateOrderCPOChart(weeksumDS, 'weekrightChart', 'Weekly Orders vs. CPO Performance');</text>
+    } else {
+        <text>CreateSummaryGridLeadGen(weeksumDS, $('#weeksumGrid'), 300, 'Week', 10, 2, true, false, false, DetailInitWrapperWM, @(Model.SearchProfile.ShowViewThrus ? "true" : "false"), @(Model.SearchProfile.ShowCalls ? "true" : "false"));</text>
+        <text>CreateCTRCPCChart(weeksumDS, 'weekleftChart', 'Weekly CTR vs. CPC Performance');</text>
+        if (Model.SearchProfile.ShowCalls) {
+            <text>CreateLeadsCPLChart(weeksumDS, 'weekrightChart', 'Weekly TotalLeads vs. CPL Performance', 'TotalLeads');</text>
+        } else {
+            <text>CreateLeadsCPLChart(weeksumDS, 'weekrightChart', 'Weekly Leads vs. CPL Performance', 'Leads');</text>
+        }
+    }
+        weeksumDS.read();
     });
+
+    function DetailInitWrapperWM(e) {
+        DetailInit(e,
+                   '@Url.Action("DeviceData", "SearchReports")',
+                   @(Model.SearchProfile.ShowRevenue ? "CreateSummaryGrid" : "CreateSummaryGridLeadGen"),
+                   @(Model.SearchProfile.ShowViewThrus ? "true" : "false"),
+                   @(Model.SearchProfile.ShowCalls ? "true" : "false"),
+                   'title',
+                   11
+                   );
+    };
 
     function ExportWeekSumCSV() {
         window.location.href = '@Url.Action("WeekSumExport", "SearchReports")';

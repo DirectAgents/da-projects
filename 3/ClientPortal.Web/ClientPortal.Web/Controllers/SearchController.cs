@@ -18,10 +18,7 @@ namespace ClientPortal.Web.Controllers
             if (!userInfo.HasSearch)
                 return RedirectToAction("Index", "Home");
 
-            var model = new GenericModel
-            {
-                UserInfo = userInfo
-            };
+            var model = new SearchVM(userInfo);
             return View(model);
         }
 	}

@@ -304,8 +304,7 @@
     <Compile Include="Models\IndexModel.cs" />
     <Compile Include="Models\QuickBooksModels.cs" />
     <Compile Include="Models\ReportModel.cs" />
-    <Compile Include="Models\SearchIndexModel.cs" />
-    <Compile Include="Models\SearchReportModel.cs" />
+    <Compile Include="Models\SearchModels.cs" />
     <Compile Include="Models\UserInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Seeder.cs" />
@@ -988,6 +987,7 @@
     <Content Include="Content\kendo\2015.1.408\Uniform\sprite_kpi.png" />
     <Content Include="Content\kendo\2015.1.408\Uniform\sprite_kpi_2x.png" />
     <Content Include="Content\portal.css" />
+    <Content Include="Content\portal2016.css" />
     <Content Include="Content\progstyle.css" />
     <Content Include="Content\progstyle2.css" />
     <Content Include="Content\themes\base\accordion.css" />
@@ -3026,6 +3026,7 @@
     <Content Include="Scripts\kendo\2015.1.408\kendo.window.min.js.map" />
     <Content Include="Views\Shared\_Portal2016.cshtml" />
     <Content Include="Views\Search\Weekly.cshtml" />
+    <Content Include="Views\Search\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
