@@ -35,18 +35,22 @@
 
 <div class="section-block-left">
     <section>
-        <div class="heading"><p>Weekly CTR vs CPC Performance</p></div>
-        <div class="content_box">
-            <div id="trendECPA" style="height:205px"></div>
+        <div class="heading"><p id="weekleftChartHeader"></p></div>
+        <div id="weekleftChartSection" class="content_box2">
+            <div class="chart-wrapper">
+                <div id="weekleftChart"></div>
+            </div>
         </div>
     </section>
 </div>
 
 <div class="section-block-right">
     <section>
-        <div class="heading"><p>Weekly Leads vs CPL Performance</p></div>
-        <div class="content_box">
-            <div id="trendECPA" style="height:205px"></div>
+        <div class="heading"><p id="weekrightChartHeader"></p></div>
+        <div id="weekrightChartSection" class="content_box2">
+            <div class="chart-wrapper">
+                <div id="weekrightChart"></div>
+            </div>
         </div>
     </section>
 </div>
@@ -60,7 +64,7 @@
 @Html.Partial("_DateFuncs", Model.Dates)
 
 <script>
-    $(document).ready(function () {
+    $(function () {
         cultureGlobal = '@Model.UserInfo.Culture';
         $('#numweeksInput').kendoNumericTextBox({
             decimals: 0,
@@ -68,7 +72,16 @@
             min: 1
         });
         $('#numweeksInput').data('kendoNumericTextBox').wrapper.width(65);
+        SetupGridAndCharts();
+        $(window).bind('resize', WindowResize);
+    });
 
+    function WindowResize() {
+        ResizeChart('weekleft', true);
+        ResizeChart('weekright', true);
+    }
+
+    function SetupGridAndCharts() {
         var weeksumDS = CreateSummaryDataSource(
             '@Url.Action("WeekSumData", "SearchReports")',
             function () {
@@ -92,7 +105,7 @@
         }
     }
         weeksumDS.read();
-    });
+    }
 
     function DetailInitWrapperWM(e) {
         DetailInit(e,

@@ -234,11 +234,11 @@ function CreateLeadsCPLChart(dataSource, elId, title, nameForLeads) {
 }
 
 function CreateSummaryChart(dataSource, elId, title, series, valueAxis) {
-    $('#' + elId).kendoChart({
-        title: title,
+    var args = {
         dataSource: dataSource,
         autoBind: false,
         chartArea: {
+            background: "transparent",
             height: 200
         },
         theme: $(document).data("kendoSkin") || "default",
@@ -257,5 +257,9 @@ function CreateSummaryChart(dataSource, elId, title, series, valueAxis) {
             //offsetX: 90,
             //offsetY: 0
         }
-    });
+    }
+    var numHeaders = $('#' + elId + 'Header').text(title).length;
+    if (numHeaders == 0)
+        args.title = title;
+    $('#' + elId).kendoChart(args);
 }

@@ -2715,6 +2715,7 @@
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\portal2016.js" />
     <Content Include="Scripts\progscript.js" />
     <Content Include="Scripts\search_grids_charts.js" />
     <Content Include="testfoundation.html" />
@@ -3027,6 +3028,7 @@
     <Content Include="Views\Shared\_Portal2016.cshtml" />
     <Content Include="Views\Search\Weekly.cshtml" />
     <Content Include="Views\Search\_ViewStart.cshtml" />
+    <Content Include="Views\Search\Monthly.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

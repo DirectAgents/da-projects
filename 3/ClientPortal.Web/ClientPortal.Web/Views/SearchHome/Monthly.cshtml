@@ -53,8 +53,8 @@
         <text>CreateRevROASChart(monthsumDS, 'monthleftChart', 'Monthly Revenue vs. ROAS Performance');</text>
         <text>CreateOrderCPOChart(monthsumDS, 'monthrightChart', 'Monthly Orders vs. CPO Performance');</text>
     } else {
-        <text>CreateSummaryGridLeadGen(monthsumDS, $('#monthsumGrid'), 300, 'Week', 10, 2, true, false, false, DetailInitWrapperWM, @(Model.SearchProfile.ShowViewThrus ? "true" : "false"), @(Model.SearchProfile.ShowCalls ? "true" : "false"));</text>
-        <text>CreateCTRCPCChart(monthsumDS, 'monthleftChart', 'Weekly CTR vs. CPC Performance');</text>
+        <text>CreateSummaryGridLeadGen(monthsumDS, $('#monthsumGrid'), 300, 'Month', 10, 2, true, false, false, DetailInitWrapperWM, @(Model.SearchProfile.ShowViewThrus ? "true" : "false"), @(Model.SearchProfile.ShowCalls ? "true" : "false"));</text>
+        <text>CreateCTRCPCChart(monthsumDS, 'monthleftChart', 'Monthly CTR vs. CPC Performance');</text>
         if (Model.SearchProfile.ShowCalls) {
             <text>CreateLeadsCPLChart(monthsumDS, 'monthrightChart', 'Monthly TotalLeads vs. CPL Performance', 'TotalLeads');</text>
         } else {

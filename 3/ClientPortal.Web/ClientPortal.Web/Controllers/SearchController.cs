@@ -12,7 +12,7 @@ namespace ClientPortal.Web.Controllers
             this.cpRepo = cpRepository;
         }
 
-        public ActionResult Weekly()
+        private ActionResult SetupView()
         {
             var userInfo = GetUserInfo();
             if (!userInfo.HasSearch)
@@ -20,6 +20,16 @@ namespace ClientPortal.Web.Controllers
 
             var model = new SearchVM(userInfo);
             return View(model);
+        }
+
+        public ActionResult Weekly()
+        {
+            return SetupView();
+        }
+
+        public ActionResult Monthly()
+        {
+            return SetupView();
         }
 	}
 }

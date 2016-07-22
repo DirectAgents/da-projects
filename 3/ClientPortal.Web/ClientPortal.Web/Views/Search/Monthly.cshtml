@@ -1,0 +1,121 @@
+﻿@model ClientPortal.Web.Models.SearchVM
+
+<style type="text/css">
+    .client_logo {
+        background-image: url("/Prog/Home/Logo");
+    }
+</style>
+<div id="client_bar">
+	<div id="container">
+		<div class="client_logo"></div>
+        <div class="client_name">@Model.SearchProfile.SearchProfileName</div>
+        <div class="page_title">Monthly Summary</div>
+    </div>
+</div>
+
+<div id="page_content">
+    <div id="container">
+        <div id="page_content">
+
+<section>
+    <div class="show-export">
+    <div class="show">
+        Show: <input id="nummonthsInput" value="6" /> months
+        <a class="button paddedbutton" href="#" onclick="RefreshGrid('monthsum'); return false">Refresh</a>
+    </div>
+    <div class="export"><a class="button paddedbutton" href="#" onclick="ExportMonthSumCSV(); return false">Export CSV</a></div>
+    </div>
+    <div class="heading"><p>Monthly Summary</p></div>
+    <div id="monthsumGrid"></div>
+</section>
+
+<div class="section-block-left">
+    <section>
+        <div class="heading"><p id="monthleftChartHeader"></p></div>
+        <div id="monthleftChartSection" class="content_box2">
+            <div class="chart-wrapper">
+                <div id="monthleftChart"></div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="section-block-right">
+    <section>
+        <div class="heading"><p id="monthrightChartHeader"></p></div>
+        <div id="monthrightChartSection" class="content_box2">
+            <div class="chart-wrapper">
+                <div id="monthrightChart"></div>
+            </div>
+        </div>
+    </section>
+</div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts {
+<script src="~/Scripts/search_grids_charts.js"></script>
+@Html.Partial("_DateFuncs", Model.Dates)
+
+<script>
+    $(function () {
+        cultureGlobal = '@Model.UserInfo.Culture';
+        $('#nummonthsInput').kendoNumericTextBox({
+            decimals: 0,
+            format: 'n0',
+            min: 1
+        });
+        $('#nummonthsInput').data('kendoNumericTextBox').wrapper.width(65);
+        SetupGridAndCharts();
+        $(window).bind('resize', WindowResize);
+    });
+
+    function WindowResize() {
+        ResizeChart('monthleft', true);
+        ResizeChart('monthright', true);
+    }
+
+    function SetupGridAndCharts() {
+        var monthsumDS = CreateSummaryDataSource(
+            '@Url.Action("MonthSumData", "SearchReports")',
+            function() {
+                return { nummonths: $('#nummonthsInput').val() };
+            },
+            false, //don't group
+            'nosort',
+            0); //default page size
+
+    @if (Model.SearchProfile.ShowRevenue) {
+        <text>CreateSummaryGrid(monthsumDS, $('#monthsumGrid'), 300, 'Month', 10, 2, true, false, false, DetailInitWrapperWM, @(Model.SearchProfile.ShowViewThrus ? "true" : "false"));</text>
+        <text>CreateRevROASChart(monthsumDS, 'monthleftChart', 'Monthly Revenue vs. ROAS Performance');</text>
+        <text>CreateOrderCPOChart(monthsumDS, 'monthrightChart', 'Monthly Orders vs. CPO Performance');</text>
+    } else {
+        <text>CreateSummaryGridLeadGen(monthsumDS, $('#monthsumGrid'), 300, 'Month', 10, 2, true, false, false, DetailInitWrapperWM, @(Model.SearchProfile.ShowViewThrus ? "true" : "false"), @(Model.SearchProfile.ShowCalls ? "true" : "false"));</text>
+        <text>CreateCTRCPCChart(monthsumDS, 'monthleftChart', 'Monthly CTR vs. CPC Performance');</text>
+        if (Model.SearchProfile.ShowCalls) {
+            <text>CreateLeadsCPLChart(monthsumDS, 'monthrightChart', 'Monthly TotalLeads vs. CPL Performance', 'TotalLeads');</text>
+        } else {
+            <text>CreateLeadsCPLChart(monthsumDS, 'monthrightChart', 'Monthly Leads vs. CPL Performance', 'Leads');</text>
+        }
+    }
+        monthsumDS.read();
+    }
+
+    function DetailInitWrapperWM(e) {
+        DetailInit(e,
+                   '@Url.Action("DeviceData", "SearchReports")',
+                   @(Model.SearchProfile.ShowRevenue ? "CreateSummaryGrid" : "CreateSummaryGridLeadGen"),
+                   @(Model.SearchProfile.ShowViewThrus ? "true" : "false"),
+                   @(Model.SearchProfile.ShowCalls ? "true" : "false"),
+                   'title',
+                   11
+                   );
+    };
+
+    function ExportMonthSumCSV() {
+        window.location.href = '@Url.Action("MonthSumExport", "SearchReports")';
+    }
+</script>
+}
