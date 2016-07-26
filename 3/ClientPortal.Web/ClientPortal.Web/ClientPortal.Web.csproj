@@ -2722,6 +2722,9 @@
     <Content Include="Views\Account\LoginOld.cshtml">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="Views\Search\CampaignPerf.cshtml">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

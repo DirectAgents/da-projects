@@ -14,6 +14,8 @@ namespace ClientPortal.Web.Models
 
         public UserInfo UserInfo { get; set; }
         public DatesModel Dates { get; set; }
+        public string StartDate { get; set; }
+        public string EndDate { get; set; }
 
         public SearchProfile SearchProfile
         {   // Instantiate one if necessary
