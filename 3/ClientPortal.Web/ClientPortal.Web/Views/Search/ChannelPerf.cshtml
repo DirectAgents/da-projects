@@ -1,0 +1,81 @@
+﻿@model ClientPortal.Web.Models.SearchVM
+@{
+    ViewBag.Title = "Channel Performance";
+}
+
+<style>
+#channelperfGrid .k-grid-footer{
+    display: none;
+}
+</style>
+
+@Html.Partial("_ClientBarSearch", Model.UserInfo)
+
+<div id="page_content">
+    <div id="container">
+        <div id="page_content">
+
+<section>
+    <div class="show-export">
+    <div class="show">
+        Show: <input id="numweeksInput" value="8" /> weeks
+        <a class="button paddedbutton" href="#" onclick="RefreshGrid('channelperf'); return false">Refresh</a>
+    </div>
+    <div class="export"><a class="button paddedbutton" href="#" onclick="ExportChannelPerfCSV(); return false">Export CSV</a></div>
+    </div>
+    <div class="heading"><p>Weekly Summary</p></div>
+    <div id="channelperfGrid"></div>
+</section>
+
+        </div>
+    </div>
+</div>
+
+@section scripts {
+<script src="~/Scripts/search_grids_charts.js"></script>
+@Html.Partial("_DateFuncs", Model.Dates)
+
+<script>
+    $(function () {
+        cultureGlobal = '@Model.UserInfo.Culture';
+        $('#numweeksInput').kendoNumericTextBox({
+            decimals: 0,
+            format: 'n0',
+            min: 1
+        });
+        $('#numweeksInput').data('kendoNumericTextBox').wrapper.width(65);
+
+        var channelperfDS = CreateSummaryDataSource(
+            '@Url.Action("ChannelPerfData", "SearchReports")',
+            function () {
+                return { numweeks: $('#numweeksChannelPerfInput').val() };
+            },
+            true, // group
+            'nosort',
+            0); //default page size
+
+    @if (Model.SearchProfile.ShowRevenue) {
+        <text>CreateSummaryGrid(channelperfDS, $('#channelperfGrid'), 550, 'Channel', 17, 2, false, false, false, DetailInitWrapper, @(Model.SearchProfile.ShowViewThrus ? "true" : "false"));</text>
+    } else {
+        <text>CreateSummaryGridLeadGen(channelperfDS, $('#channelperfGrid'), 550, 'Channel', 17, 2, false, false, false, DetailInitWrapper, @(Model.SearchProfile.ShowViewThrus ? "true" : "false"), @(Model.SearchProfile.ShowCalls ? "true" : "false"));</text>
+    }
+        channelperfDS.read();
+    });
+
+    function DetailInitWrapper(e) {
+        DetailInit(e,
+                   '@Url.Action("CampaignPerfData", "SearchReports")',
+                   @(Model.SearchProfile.ShowRevenue ? "CreateSummaryGrid" : "CreateSummaryGridLeadGen"),
+                   @(Model.SearchProfile.ShowViewThrus ? "true" : "false"),
+                   @(Model.SearchProfile.ShowCalls ? "true" : "false"),
+                   '@(Model.SearchProfile.ShowRevenue ? "revenue" : "title")',
+                   18
+                   );
+    };
+
+    function ExportChannelPerfCSV() {
+        window.location.href = '@Url.Action("ChannelPerfExport", "SearchReports")';
+    }
+
+</script>
+}

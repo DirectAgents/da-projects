@@ -1,17 +1,8 @@
 ﻿@model ClientPortal.Web.Models.SearchVM
-
-<style type="text/css">
-    .client_logo {
-        background-image: url("/Prog/Home/Logo");
-    }
-</style>
-<div id="client_bar">
-	<div id="container">
-		<div class="client_logo"></div>
-        <div class="client_name">@Model.SearchProfile.SearchProfileName</div>
-        <div class="page_title">Monthly Summary</div>
-    </div>
-</div>
+@{
+    ViewBag.Title = "Monthly Summary";
+}
+@Html.Partial("_ClientBarSearch", Model.UserInfo)
 
 <div id="page_content">
     <div id="container">

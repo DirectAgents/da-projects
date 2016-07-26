@@ -3029,6 +3029,8 @@
     <Content Include="Views\Search\Weekly.cshtml" />
     <Content Include="Views\Search\_ViewStart.cshtml" />
     <Content Include="Views\Search\Monthly.cshtml" />
+    <Content Include="Views\Shared\_ClientBarSearch.cshtml" />
+    <Content Include="Views\Search\ChannelPerf.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

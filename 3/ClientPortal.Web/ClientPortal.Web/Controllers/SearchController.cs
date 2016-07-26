@@ -31,5 +31,11 @@ namespace ClientPortal.Web.Controllers
         {
             return SetupView();
         }
+
+        public ActionResult ChannelPerf()
+        {
+            return SetupView();
+        }
+
 	}
 }

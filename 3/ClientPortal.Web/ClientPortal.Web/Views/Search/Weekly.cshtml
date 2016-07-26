@@ -1,21 +1,16 @@
 ﻿@model ClientPortal.Web.Models.SearchVM
+@{
+    ViewBag.Title = "Weekly Summary";
+}
 
 <style type="text/css">
-    .client_logo {
-        background-image: url("/Prog/Home/Logo");
-    }
     /*.k-numeric-wrap .k-input {
         height: 1.65em;
         line-height: 1.65em;
     }*/
 </style>
-<div id="client_bar">
-	<div id="container">
-		<div class="client_logo"></div>
-        <div class="client_name">@Model.SearchProfile.SearchProfileName</div>
-        <div class="page_title">Weekly Summary</div>
-    </div>
-</div>
+
+@Html.Partial("_ClientBarSearch", Model.UserInfo)
 
 <div id="page_content">
     <div id="container">
