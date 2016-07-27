@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    bool hasProg = ViewBag.HasProg ?? true;
+    bool hasSearch = ViewBag.HasSearch ?? true;
+}
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>@ViewBag.Title</title>
@@ -25,7 +29,10 @@
         <div class="logo">&nbsp;</div>
         <div id="cssmenu">
             <ul>
+@if (hasProg) {
                 <li class="summary-report"><a href="@Url.Action("Index", "Home", new { Area = "Prog" })">Executive Summary</a></li>
+}
+@if (hasSearch) {
                 <li class="search-reports"><a href="@Url.Action("Weekly", "Search")">Search Reports</a>
                     <ul class="submenu">
                         <li><a href="@Url.Action("Weekly", "Search")">Weekly</a></li>
@@ -35,6 +42,8 @@
                         <li><a href="@Url.Action("CampaignWeekly", "Search")">Campaign Weekly</a></li>
                     </ul>
                 </li>
+}
+@if (hasProg) {
                 <li class="programmatic-reports"><a href="@Url.Action("Index", "Home", new { Area = "Prog" })">Programmatic Reports</a>
                     <ul class="submenu">
                         <li><a href="@Url.Action("Index", "Home", new { Area = "Prog" })">Executive Summary</a></li>
@@ -43,7 +52,10 @@
                         <li><a href="@Url.Action("Creative", "Home", new { Area = "Prog" })">Creative Performance</a></li>
                     </ul>
                 </li>
-
+}
+@if (hasSearch) {
+                <li class="contact"><a href="@Url.Action("Contact", "Search")">Contact</a></li>
+}
                 <li class="logout">
                     @Html.Partial("_LoginPartial", model: false)
                 </li>

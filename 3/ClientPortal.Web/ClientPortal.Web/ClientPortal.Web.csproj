@@ -1033,6 +1033,7 @@
     <Content Include="Images\da_logo.jpg" />
     <Content Include="Images\da_logo2016.jpg" />
     <Content Include="Images\da_logo2016_bluegrey.png" />
+    <Content Include="Images\da_map.jpg" />
     <Content Include="Images\Demo\sees1.jpg" />
     <Content Include="Images\Demo\sees2.jpg" />
     <Content Include="Images\Demo\sees3.jpg" />
@@ -3034,6 +3035,9 @@
     <Content Include="Views\Search\Monthly.cshtml" />
     <Content Include="Views\Shared\_ClientBarSearch.cshtml" />
     <Content Include="Views\Search\ChannelPerf.cshtml" />
+    <Content Include="Views\Search\Test.cshtml" />
+    <Content Include="Views\Search\CampaignWeekly.cshtml" />
+    <Content Include="Views\Search\Contact.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

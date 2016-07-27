@@ -1,0 +1,50 @@
+﻿@model ClientPortal.Web.Models.SearchVM
+@{
+    ViewBag.Title = "Contact";
+}
+
+@Html.Partial("_ClientBarSearch", Model.UserInfo)
+
+<div id="page_content">
+    <div id="container">
+        <div id="page_content">
+
+<div class="section-block-left-contact">
+    <section>
+        <div class="heading"><p>Contact</p></div>
+        <div class="content_box_contact_left">
+            <div class="map"><img src="~/Images/da_map.jpg"></div>
+            <div class="address">
+
+Direct Agents<br>
+740 Broadway, Suite 701<br>
+New York NY 10003<br><br>
+
+<strong>P:</strong> 212 925 6558<br>
+<strong>F:</strong> 212 412 9061<br>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="section-block-right-contact">
+    <section>
+        <div class="heading"><p>Account Team</p></div>
+        <div class="content_box_contact_right">
+@foreach (var contact in Model.UserInfo.SearchProfile.SearchProfileContactsOrdered.Select(spc => spc.Contact))
+{
+    <div class="team">
+        <h3>@contact.FirstName @contact.LastName</h3>
+        <div class="title">@contact.Title</div>
+
+        <div class="email"><a href="mailto:@contact.Email">@contact.Email</a></div>
+    </div>
+}
+        </div>
+    </section>
+</div>
+
+        </div>
+    </div>
+</div>

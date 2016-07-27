@@ -1,0 +1,13 @@
+﻿@model ClientPortal.Web.Models.SearchVM
+
+<select style="width: 140px" id="campaignperf_dateRangeSel" onchange="ChangeDateRange('campaignperf')">
+    <option value="yesterday">Yesterday</option>
+</select>
+
+@section scripts {
+<script>
+    $(function () {
+        $('#campaignperf_dateRangeSel').kendoDropDownList();
+    });
+</script>
+}

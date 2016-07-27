@@ -91,6 +91,13 @@
   width:140px;
   border-top:4px solid #FF8A00;
 }
+#cssmenu > ul > li.contact {
+  float: left;
+  background: #2d599d;
+  height: 100px;
+  width:100px;
+  border-top:4px solid #FF8A00;
+}
 
 #cssmenu > ul > li.site-list {
   float: left;

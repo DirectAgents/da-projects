@@ -169,7 +169,7 @@ namespace ClientPortal.Web.Controllers
             this.CultureInfo = cultureInfo;
         }
 
-        private string DateString(DateTime dateTime)
+        public string DateString(DateTime dateTime)
         {
             return dateTime.ToString("d", this.CultureInfo);
         }
