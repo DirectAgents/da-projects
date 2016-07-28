@@ -25,6 +25,7 @@ namespace ClientPortal.Web.Controllers
         //TODO: handle the case when a non-cake user arrives... currently there's a null reference exception loading Dashboard.
 
         // after login, if no route specified
+        // also, from Account/Manage -> Cancel
         public ActionResult Go()
         {
             var userInfo = GetUserInfo();
@@ -34,7 +35,7 @@ namespace ClientPortal.Web.Controllers
             if (userInfo.IsAdmin)
                 return Redirect("/Admin");
             else if (userInfo.HasSearch)
-                return RedirectToAction("Index", "SearchHome");
+                return RedirectToAction("Index", "Search");
             else if (userInfo.HasProgrammatic(true))
                 return RedirectToAction("Index", "Home", new { area = "prog" });
             else if (userInfo.HasTradingDesk(true))
@@ -43,7 +44,7 @@ namespace ClientPortal.Web.Controllers
                 return RedirectToAction("Index");
         }
 
-        public ActionResult Index()
+        public ActionResult Index() // the main page for Cake advertisers
         {
             var userInfo = GetUserInfo();
             var result = CheckLogout(userInfo);
@@ -52,12 +53,12 @@ namespace ClientPortal.Web.Controllers
             if (!userInfo.HasCake)
             {
                 if (userInfo.HasSearch)
-                    return RedirectToAction("Index", "SearchHome");
+                    return RedirectToAction("Index", "Search");
                 else if (userInfo.HasProgrammatic())
                     return RedirectToAction("Index", "Home", new { area = "prog" });
                 else if (userInfo.HasTradingDesk())
                     return RedirectToAction("Index", "Home", new { area = "td" }); //TODO: remove
-                //TODO: force logout?
+                //TODO: what to do if doesn't have anything? force logout?
             }
             var profiler = MiniProfiler.Current;
             using (profiler.Step("Index"))

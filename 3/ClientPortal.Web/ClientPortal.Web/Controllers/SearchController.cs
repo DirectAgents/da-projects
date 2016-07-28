@@ -13,6 +13,11 @@ namespace ClientPortal.Web.Controllers
             this.cpRepo = cpRepository;
         }
 
+        public ActionResult Index()
+        {
+            return RedirectToAction("Weekly");
+        }
+
         private ActionResult SetupView()
         {
             var userInfo = GetUserInfo();

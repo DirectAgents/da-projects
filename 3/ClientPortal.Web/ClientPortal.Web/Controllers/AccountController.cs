@@ -52,6 +52,7 @@ namespace ClientPortal.Web.Controllers
                     if (returnUrl != null && returnUrl.ToLower() == "/admin") returnUrl = null;
                 }
                 return RedirectToLocal(returnUrl);
+                // if returnUrl is null, will figure out where to go...
             }
 
             // If we got this far, something failed, redisplay form
