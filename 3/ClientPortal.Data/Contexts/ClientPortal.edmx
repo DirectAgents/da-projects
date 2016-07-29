@@ -103,6 +103,14 @@
           <Property Name="CombineCreatives" Type="bit" Nullable="false" />
           <Property Name="Extra" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="ClientInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Logo" Type="varbinary(max)" />
+        </EntityType>
         <EntityType Name="Contact">
           <Key>
             <PropertyRef Name="ContactId" />
@@ -482,6 +490,7 @@
           <Property Name="TradingDeskAccountId" Type="int" />
           <Property Name="SearchProfileId" Type="int" />
           <Property Name="TDAdvertiserId" Type="int" />
+          <Property Name="ClientInfoId" Type="int" />
         </EntityType>
         <Association Name="FK_Advertiser_CakeContact">
           <End Role="CakeContact" Type="Self.CakeContact" Multiplicity="0..1" />
@@ -919,6 +928,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_UserProfile_ClientInfo">
+          <End Role="ClientInfo" Type="Self.ClientInfo" Multiplicity="0..1" />
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClientInfo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserProfile">
+              <PropertyRef Name="ClientInfoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UserProfile_SearchProfile">
           <End Role="SearchProfile" Type="Self.SearchProfile" Multiplicity="0..1" />
           <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="*" />
@@ -940,6 +961,7 @@
           <EntitySet Name="CallDailySummary" EntityType="Self.CallDailySummary" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Campaign" EntityType="Self.Campaign" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CampaignDrop" EntityType="Self.CampaignDrop" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClientInfo" EntityType="Self.ClientInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Contact" EntityType="Self.Contact" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Conversion" EntityType="Self.Conversion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ConversionData" EntityType="Self.ConversionData" Schema="dbo" store:Type="Tables" />
@@ -1114,6 +1136,10 @@
           <AssociationSet Name="FK_UserEvent_UserProfile" Association="Self.FK_UserEvent_UserProfile">
             <End Role="UserProfile" EntitySet="UserProfile" />
             <End Role="UserEvent" EntitySet="UserEvent" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserProfile_ClientInfo" Association="Self.FK_UserProfile_ClientInfo">
+            <End Role="ClientInfo" EntitySet="ClientInfo" />
+            <End Role="UserProfile" EntitySet="UserProfile" />
           </AssociationSet>
           <AssociationSet Name="FK_UserProfile_SearchProfile" Association="Self.FK_UserProfile_SearchProfile">
             <End Role="SearchProfile" EntitySet="SearchProfile" />
@@ -1306,6 +1332,11 @@
           <AssociationSet Name="FK_CurrencyConversion_Currency" Association="ClientPortalModel.FK_CurrencyConversion_Currency">
             <End Role="Currency" EntitySet="Currencies" />
             <End Role="CurrencyConversion" EntitySet="CurrencyConversions" />
+          </AssociationSet>
+          <EntitySet Name="ClientInfos" EntityType="ClientPortalModel.ClientInfo" />
+          <AssociationSet Name="FK_UserProfile_ClientInfo" Association="ClientPortalModel.FK_UserProfile_ClientInfo">
+            <End Role="ClientInfo" EntitySet="ClientInfos" />
+            <End Role="UserProfile" EntitySet="UserProfiles" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -1540,6 +1571,8 @@
           <Property Type="Int32" Name="SearchProfileId" />
           <NavigationProperty Name="SearchProfile" Relationship="ClientPortalModel.FK_UserProfile_SearchProfile" FromRole="UserProfile" ToRole="SearchProfile" />
           <Property Name="TDAdvertiserId" Type="Int32" />
+          <Property Name="ClientInfoId" Type="Int32" />
+          <NavigationProperty Name="ClientInfo" Relationship="ClientPortalModel.FK_UserProfile_ClientInfo" FromRole="UserProfile" ToRole="ClientInfo" />
         </EntityType>
         <EntityType Name="SearchDailySummary2">
           <Key>
@@ -2301,6 +2334,27 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ClientInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Logo" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="UserProfiles" Relationship="ClientPortalModel.FK_UserProfile_ClientInfo" FromRole="ClientInfo" ToRole="UserProfile" />
+        </EntityType>
+        <Association Name="FK_UserProfile_ClientInfo">
+          <End Type="ClientPortalModel.ClientInfo" Role="ClientInfo" Multiplicity="0..1" />
+          <End Type="ClientPortalModel.UserProfile" Role="UserProfile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClientInfo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserProfile">
+              <PropertyRef Name="ClientInfoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2440,6 +2494,7 @@
           <EntitySetMapping Name="UserProfiles">
             <EntityTypeMapping TypeName="ClientPortalModel.UserProfile">
               <MappingFragment StoreEntitySet="UserProfile">
+                <ScalarProperty Name="ClientInfoId" ColumnName="ClientInfoId" />
                 <ScalarProperty Name="TDAdvertiserId" ColumnName="TDAdvertiserId" />
                 <ScalarProperty Name="SearchProfileId" ColumnName="SearchProfileId" />
                 <ScalarProperty Name="TradingDeskAccountId" ColumnName="TradingDeskAccountId" />
@@ -2801,6 +2856,15 @@
                 <ScalarProperty Name="ToUSDmultiplier" ColumnName="ToUSDmultiplier" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="CurrencyId" ColumnName="CurrencyId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClientInfos">
+            <EntityTypeMapping TypeName="ClientPortalModel.ClientInfo">
+              <MappingFragment StoreEntitySet="ClientInfo">
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

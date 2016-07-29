@@ -28,9 +28,11 @@ namespace ClientPortal.Data.Contexts
         public Nullable<int> TradingDeskAccountId { get; set; }
         public Nullable<int> SearchProfileId { get; set; }
         public Nullable<int> TDAdvertiserId { get; set; }
+        public Nullable<int> ClientInfoId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserEvent> UserEvents { get; set; }
         public virtual SearchProfile SearchProfile { get; set; }
+        public virtual ClientInfo ClientInfo { get; set; }
     }
 }

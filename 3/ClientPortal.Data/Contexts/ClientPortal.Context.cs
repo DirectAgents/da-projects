@@ -63,5 +63,6 @@ namespace ClientPortal.Data.Contexts
         public virtual DbSet<CallDailySummary> CallDailySummaries { get; set; }
         public virtual DbSet<Currency> Currencies { get; set; }
         public virtual DbSet<CurrencyConversion> CurrencyConversions { get; set; }
+        public virtual DbSet<ClientInfo> ClientInfos { get; set; }
     }
 }

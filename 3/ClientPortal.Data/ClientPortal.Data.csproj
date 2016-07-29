@@ -81,6 +81,9 @@
     <Compile Include="Contexts\CampaignDrop.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\ClientInfo.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\ClientPortal.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

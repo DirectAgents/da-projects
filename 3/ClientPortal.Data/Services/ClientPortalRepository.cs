@@ -705,6 +705,12 @@ namespace ClientPortal.Data.Services
         #endregion
 
         #region User methods
+        public ClientInfo GetClientInfo(int id)
+        {
+            var clientInfo = context.ClientInfos.Find(id);
+            return clientInfo;
+        }
+
         public IQueryable<UserProfile> UserProfiles()
         {
             var userProfiles = context.UserProfiles;
