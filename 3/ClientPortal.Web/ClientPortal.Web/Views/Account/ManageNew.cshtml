@@ -1,0 +1,61 @@
+﻿@model ClientPortal.Web.Models.LocalPasswordModel
+@{
+    ViewContext.Controller.ViewBag.HasProg = false;
+    Layout = "~/Views/Shared/_Portal2016.cshtml";
+    ViewBag.Title = "Manage Account";
+
+    ViewBag.ClientName = "Test";
+}
+
+<style type="text/css">
+#container {
+	width: 100%;
+	max-width:1050px !important;
+}
+</style>
+
+@Html.Partial("_ClientBarSearch", new ClientPortal.Web.Models.UserInfo(null, null))@* TODO: Rework this *@
+
+<div id="page_content">
+    <div id="container">
+        <div id="page_content">
+
+<div class="section-block-left-account">
+    <section>
+        <div class="heading">
+            <p>Change Password</p>
+        </div>
+        <div class="content_box_account_left">
+            <div class="form">
+                <div class="loggedin">
+                    You're logged in as <strong>@User.Identity.Name</strong>
+                    @Html.ValidationSummary()
+                </div>
+
+@using (Html.BeginForm("Manage", "Account")) {
+    @Html.AntiForgeryToken()
+    <div class="row">
+        @Html.PasswordFor(m => m.OldPassword, new { placeholder="Current Password" })</div>
+    <div class="row">
+        @Html.PasswordFor(m => m.NewPassword, new { placeholder="New Password" })</div>
+    <div class="row">
+        @Html.PasswordFor(m => m.ConfirmPassword, new { placeholder="Confirm Password" })</div>
+    <div class="row-btn">
+        <input type="submit" value="Change Password"></div>
+}
+
+@*                <div class="forgot-password">Forgot Password&nbsp;| &nbsp; Cancel </div>*@
+                <div class="forgot-password">@Html.ActionLink("Cancel", "Go", "Home")</div>
+            </div>
+        </div>
+        <div class="content_box_account_right">
+            <div class="tablet">
+                <img src="~/Images/tablet.jpg" />
+            </div>
+        </div>
+    </section>
+</div>
+
+        </div>
+    </div>
+</div>

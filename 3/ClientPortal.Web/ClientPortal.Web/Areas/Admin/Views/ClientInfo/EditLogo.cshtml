@@ -1,0 +1,52 @@
+﻿@model ClientPortal.Data.Contexts.ClientInfo
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("usersTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("usersTab", httpMethod: "Post");
+}
+
+<h4>Edit Logo</h4>
+
+@if (Model.Logo != null)
+{
+    <text>Current Logo:</text><br/>
+    <img src="@Url.Action("Logo", new { id = Model.Id })" />
+}
+
+@using (Ajax.BeginForm(ajaxOpts_Post))
+{
+    <input id="logoUpload" name="logo" type="file" />
+}
+
+<div>
+    @Ajax.ActionLink("Back to Users", "Index", "Users", ajaxOptions)
+</div>
+
+<script>
+    $(function () {
+        $("#logoUpload").kendoUpload({
+            async: {
+                saveUrl: "@Url.Action("UploadLogo")",
+                autoUpload: false
+            },
+            upload: function(e) {
+                e.data = { id: @Model.Id };
+            },
+            localization: {
+                select: "Select file...",
+                uploadSelectedFiles: "Upload"
+            },
+            multiple: false,
+            complete: onUploadComplete
+        });
+    });
+
+    function onUploadComplete() {
+        $.ajax({
+            url: '@Url.Action("EditLogo")',
+            cache: false
+        }).done(function (html) {
+            $("#usersTab").html(html);
+        });
+    }
+</script>
+

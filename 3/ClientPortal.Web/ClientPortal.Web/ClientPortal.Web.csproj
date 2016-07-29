@@ -222,6 +222,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Areas\Admin\Controllers\CampaignsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ClientInfoController.cs" />
     <Compile Include="Areas\Admin\Controllers\ContactsController.cs" />
     <Compile Include="Areas\Admin\Controllers\CPMReportsController.cs">
       <SubType>Code</SubType>
@@ -273,6 +274,7 @@
     <Compile Include="Areas\TD\Models\TDHomeModel.cs" />
     <Compile Include="Areas\TD\TDAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\CPController.cs" />
     <Compile Include="Controllers\ExportController.cs" />
     <Compile Include="Controllers\FilesController.cs" />
@@ -1066,6 +1068,7 @@
     <Content Include="Images\logo_w_login.png" />
     <Content Include="Images\programmatic.png" />
     <Content Include="Images\spacer.gif" />
+    <Content Include="Images\tablet.jpg" />
     <Content Include="ReportViewerWebForm.aspx" />
     <Content Include="Scripts\blackbird.js" />
     <Content Include="Areas\Admin\Views\Web.config" />
@@ -1200,6 +1203,7 @@
     <Content Include="Areas\Prog\Views\Home\Creative.cshtml" />
     <Content Include="Areas\Prog\Views\Home\Site.cshtml" />
     <Content Include="Areas\Prog\Views\Home\Lead.cshtml" />
+    <Content Include="Areas\Admin\Views\ClientInfo\EditLogo.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />
@@ -3038,6 +3042,7 @@
     <Content Include="Views\Search\Test.cshtml" />
     <Content Include="Views\Search\CampaignWeekly.cshtml" />
     <Content Include="Views\Search\Contact.cshtml" />
+    <Content Include="Views\Account\ManageNew.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -3070,6 +3075,7 @@
   <ItemGroup>
     <Folder Include="Areas\Prog\Views\Stats\" />
     <Folder Include="Filters\" />
+    <Folder Include="Views\Client\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

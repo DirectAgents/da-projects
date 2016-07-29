@@ -91,6 +91,10 @@ namespace ClientPortal.Web.Models
             get { return (SearchProfile == null) ? false : SearchProfile.ShowSearchChannels; }
         }
 
+        public byte[] ClientLogo
+        {
+            get { return (UserProfile == null || UserProfile.ClientInfo == null) ? null : UserProfile.ClientInfo.Logo; }
+        }
 
         public bool UseAnalytics
         {

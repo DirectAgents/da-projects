@@ -1,14 +1,22 @@
 ﻿@model ClientPortal.Web.Models.UserInfo
+@{
+    string clientName;
+    if (Model != null && Model.SearchProfile != null) {
+        clientName = Model.SearchProfile.SearchProfileName;
+    } else {
+        clientName = ViewBag.ClientName;
+    }
+}
 
 <style type="text/css">
     .client_logo {
-        background-image: url("@Url.Action("Logo", "Home")");
+        background-image: url("@Url.Action("Logo", "Client")");
     }
 </style>
 <div id="client_bar">
     <div id="container">
         <div class="client_logo"></div>
-        <div class="client_name">@Model.SearchProfile.SearchProfileName</div>
+        <div class="client_name">@clientName</div>
         <div class="page_title">@ViewBag.Title</div>
     </div>
 </div>

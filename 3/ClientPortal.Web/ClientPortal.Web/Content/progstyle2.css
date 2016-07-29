@@ -340,6 +340,7 @@
 .content_box_account_right img {width:100%;}
 
 .tablet{border-bottom:1px #666 solid; border-left:1px #666 solid; border-right:1px #666 solid;}
+.tablet img {display:block;}
 
 .loggedin{float:left; width:100%; text-align:center; padding:20px 0 20px 0px;}
 
@@ -349,7 +350,7 @@
 
 .section-block-left-account .row-btn {margin:25px 0 25px 0;}
 
-.section-block-left-account input[type="text"] {
+.section-block-left-account input[type="password"] {
     width: 300px;
     padding:15px;
     margin:0 auto;
@@ -710,7 +711,7 @@
 
   .section-block-left-account .row-btn {margin:25px 0 25px 0;}
 
-  .section-block-left-account input[type="text"] {
+  .section-block-left-account input[type="password"] {
       width: 300px;
       padding:15px;
       margin:0 auto;

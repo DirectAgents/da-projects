@@ -173,6 +173,7 @@ namespace ClientPortal.Web.Controllers
             ViewBag.HasLocalPassword = true;
             ViewBag.ReturnUrl = Url.Action("Manage");
             return View();
+            //return View("ManageNew"); // IN DEVELOPMENT
         }
 
         //
@@ -236,6 +237,7 @@ namespace ClientPortal.Web.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+            //return View("ManageNew", model); // IN DEVELOPMENT
         }
 
 /*
