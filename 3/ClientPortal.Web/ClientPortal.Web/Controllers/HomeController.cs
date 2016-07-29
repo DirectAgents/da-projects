@@ -170,10 +170,10 @@ namespace ClientPortal.Web.Controllers
             using (profiler.Step("Dashboard"))
             {
                 var userInfo = GetUserInfo();
-                if (userInfo.AdvertiserId == null)
+                if (userInfo.CakeAdvertiserId == null)
                     return null;
                 
-                int? advId = userInfo.AdvertiserId;
+                int? advId = userInfo.CakeAdvertiserId;
                 bool showConversionData = userInfo.ShowConversionData;
 
                 var dates = userInfo.Dates;
@@ -248,10 +248,10 @@ namespace ClientPortal.Web.Controllers
         public PartialViewResult DashboardGoals()
         {
             var userInfo = GetUserInfo();
-            if (userInfo.AdvertiserId == null)
+            if (userInfo.CakeAdvertiserId == null)
                 return null;
 
-            var offerGoalSummaries = CreateOfferGoalSummaries(userInfo.AdvertiserId.Value, userInfo.Dates, userInfo.ShowConversionData);
+            var offerGoalSummaries = CreateOfferGoalSummaries(userInfo.CakeAdvertiserId.Value, userInfo.Dates, userInfo.ShowConversionData);
 
             ViewBag.CreateGoalCharts = true;
             return PartialView(offerGoalSummaries);
@@ -260,17 +260,17 @@ namespace ClientPortal.Web.Controllers
         public PartialViewResult OfferGoalsRow(int offerId, int? goalId)
         {
             var userInfo = GetUserInfo();
-            if (userInfo.AdvertiserId == null)
+            if (userInfo.CakeAdvertiserId == null)
                 return null;
 
-            var offer = cpRepo.Offers(userInfo.AdvertiserId).Where(o => o.OfferId == offerId).FirstOrDefault();
+            var offer = cpRepo.Offers(userInfo.CakeAdvertiserId).Where(o => o.OfferId == offerId).FirstOrDefault();
             List<Goal> goals;
             if (goalId.HasValue)
                 goals = offer.Goals.Where(g => g.Id == goalId).ToList();
             else
                 goals = offer.Goals.ToList();
 
-            var offerGoalSummary = CreateOfferGoalSummary(userInfo.AdvertiserId, offer, goals, userInfo.Dates, userInfo.ShowConversionData);
+            var offerGoalSummary = CreateOfferGoalSummary(userInfo.CakeAdvertiserId, offer, goals, userInfo.Dates, userInfo.ShowConversionData);
 
             ViewBag.CreateGoalChart = true;
             return PartialView(offerGoalSummary);

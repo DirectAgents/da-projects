@@ -36,7 +36,7 @@ namespace ClientPortal.Web.Controllers
 
             if (!start.HasValue) start = userInfo.Dates.FirstOfMonth;
 
-            var offerInfos = cpRepo.GetOfferInfos(start, end, userInfo.AdvertiserId);
+            var offerInfos = cpRepo.GetOfferInfos(start, end, userInfo.CakeAdvertiserId);
             var kgrid = new KendoGrid<OfferInfo>(request, offerInfos);
             if (offerInfos.Any())
             {
@@ -72,7 +72,7 @@ namespace ClientPortal.Web.Controllers
             DateTime? start, end;
             ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end);
 
-            var offers = cpRepo.Offers(userInfo.AdvertiserId, start, end);
+            var offers = cpRepo.Offers(userInfo.CakeAdvertiserId, start, end);
             var offerVMs = offers.ToList().Select(o => new IdNameVM { Id = o.OfferId, Name = o.DisplayName })
                 .OrderBy(o => o.Name);
 
@@ -96,7 +96,7 @@ namespace ClientPortal.Web.Controllers
 
             if (!start.HasValue) start = userInfo.Dates.FirstOfMonth;
 
-            var dailyInfos = cpRepo.GetDailyInfos(start, end, userInfo.AdvertiserId, offerid);
+            var dailyInfos = cpRepo.GetDailyInfos(start, end, userInfo.CakeAdvertiserId, offerid);
             bool anyInfos = dailyInfos.Any();
 
             DailyInfo totals = new DailyInfo()
@@ -166,7 +166,7 @@ namespace ClientPortal.Web.Controllers
 
             if (!start.HasValue) start = userInfo.Dates.FirstOfMonth;
 
-            var conversionInfos = cpRepo.GetConversionInfos(start, end, userInfo.AdvertiserId, offerid);
+            var conversionInfos = cpRepo.GetConversionInfos(start, end, userInfo.CakeAdvertiserId, offerid);
 
             var kgrid = new KendoGrid<ConversionInfo>(request, conversionInfos);
             if (conversionInfos.Any())
@@ -191,7 +191,7 @@ namespace ClientPortal.Web.Controllers
 
             if (!start.HasValue) start = userInfo.Dates.FirstOfMonth;
 
-            var conversionSummaries = cpRepo.GetConversionSummaries(start, end, userInfo.AdvertiserId, offerid);
+            var conversionSummaries = cpRepo.GetConversionSummaries(start, end, userInfo.CakeAdvertiserId, offerid);
 
             var kgrid = new KendoGrid<ConversionSummary>(request, conversionSummaries);
             // todo: aggregates?
@@ -219,7 +219,7 @@ namespace ClientPortal.Web.Controllers
             // TODO: ParseDates ?? ...& if (!start.HasValue) start = userInfo.Dates.FirstOfYear
 
             var monthlyInfos = cpRepo
-                .GetMonthlyInfos("CPM", startdate, enddate, userInfo.AdvertiserId)
+                .GetMonthlyInfos("CPM", startdate, enddate, userInfo.CakeAdvertiserId)
                 .Where(i => i.CampaignStatusId == CampaignStatus.Verified); // TODO: filter by AccountingStatus (or combine into one row)
 
             var kgrid = new KendoGrid<MonthlyInfo>(request, monthlyInfos);
@@ -250,7 +250,7 @@ namespace ClientPortal.Web.Controllers
 
             if (!start.HasValue) start = userInfo.Dates.FirstOfMonth;
 
-            var affSums = cpRepo.GetAffiliateSummaries(start, end, userInfo.AdvertiserId, offerid);
+            var affSums = cpRepo.GetAffiliateSummaries(start, end, userInfo.CakeAdvertiserId, offerid);
 
             var kgrid = new KendoGrid<AffiliateSummary>(request, affSums);
             if (affSums.Any())

@@ -13,13 +13,13 @@ namespace ClientPortal.Web.Models
         public UserInfo(UserProfile userProfile, ClientPortal.Data.Contexts.Advertiser cpAdvertiser, TradingDeskAccount tradingDeskAccount = null, DirectAgents.Domain.Entities.TD.Advertiser progAdvertiser = null)
         {
             this.UserProfile = userProfile;
-            this.Advertiser = cpAdvertiser;
+            this.CakeAdvertiser = cpAdvertiser;
             this.TDAccount = tradingDeskAccount;
             this.ProgAdvertiser = progAdvertiser;
         }
 
         private UserProfile UserProfile { get; set; }
-        private ClientPortal.Data.Contexts.Advertiser Advertiser { get; set; }
+        private ClientPortal.Data.Contexts.Advertiser CakeAdvertiser { get; set; }
         public TradingDeskAccount TDAccount { get; set; } // deprecated
         public DirectAgents.Domain.Entities.TD.Advertiser ProgAdvertiser { get; set; }
 
@@ -37,14 +37,14 @@ namespace ClientPortal.Web.Models
             return (userName == "admin");
         }
 
-        public int? AdvertiserId
+        public int? CakeAdvertiserId
         {
             get { return UserProfile.CakeAdvertiserId; }
         }
 
         public string Culture
         {
-            get { return (Advertiser == null) ? "en-US" : Advertiser.Culture; } // TODO: get from SearchProfile/TDAccount where appropriate
+            get { return (CakeAdvertiser == null) ? "en-US" : CakeAdvertiser.Culture; } // TODO: get from SearchProfile/TDAccount where appropriate
         }
         public CultureInfo CultureInfo
         {
@@ -52,24 +52,24 @@ namespace ClientPortal.Web.Models
         }
         public bool ShowCPMRep
         {
-            get { return (Advertiser == null) ? false : Advertiser.ShowCPMRep; }
+            get { return (CakeAdvertiser == null) ? false : CakeAdvertiser.ShowCPMRep; }
         }
         public bool ShowConversionData
         {
-            get { return (Advertiser == null) ? false : Advertiser.ShowConversionData; }
+            get { return (CakeAdvertiser == null) ? false : CakeAdvertiser.ShowConversionData; }
         }
         public string ConversionValueName
         {
-            get { return (Advertiser == null) ? null : Advertiser.ConversionValueName; }
+            get { return (CakeAdvertiser == null) ? null : CakeAdvertiser.ConversionValueName; }
         }
         public bool ConversionValueIsNumber
         {
-            get { return (Advertiser == null) ? false : Advertiser.ConversionValueIsNumber; }
+            get { return (CakeAdvertiser == null) ? false : CakeAdvertiser.ConversionValueIsNumber; }
         }
 
         public bool HasCake
         {
-            get { return (Advertiser != null); }
+            get { return (CakeAdvertiser != null); }
         }
 
         public bool HasSearch
@@ -77,13 +77,13 @@ namespace ClientPortal.Web.Models
             get {
                 if (UserProfile != null && UserProfile.SearchProfile != null)
                     return true;
-                return (Advertiser == null) ? false : Advertiser.HasSearch;
+                return (CakeAdvertiser == null) ? false : CakeAdvertiser.HasSearch;
             }
         }
 
         public SearchProfile SearchProfile
         {
-            get { return UserProfile.SearchProfile; }
+            get { return (UserProfile != null ? UserProfile.SearchProfile : null); }
         }
 
         public bool ShowSearchChannels
@@ -94,21 +94,21 @@ namespace ClientPortal.Web.Models
 
         public bool UseAnalytics
         {
-            get { return (Advertiser == null) ? false : !String.IsNullOrWhiteSpace(Advertiser.AnalyticsProfileId); }
+            get { return (CakeAdvertiser == null) ? false : !String.IsNullOrWhiteSpace(CakeAdvertiser.AnalyticsProfileId); }
         }
 
         public byte[] Logo
         {
-            get { return Advertiser == null ? null : Advertiser.Logo; }
+            get { return CakeAdvertiser == null ? null : CakeAdvertiser.Logo; }
         }
 
         public DateTime? LatestDaySums
         {
-            get { return (Advertiser == null) ? null : Advertiser.LatestDaySums; }
+            get { return (CakeAdvertiser == null) ? null : CakeAdvertiser.LatestDaySums; }
         }
         public DateTime? LatestClicks
         {
-            get { return (Advertiser == null) ? null : Advertiser.LatestClicks; }
+            get { return (CakeAdvertiser == null) ? null : CakeAdvertiser.LatestClicks; }
         }
 
         public bool UseYesterdayAsLatest
@@ -147,7 +147,7 @@ namespace ClientPortal.Web.Models
 
         public DayOfWeek StartDayOfWeek
         {
-            get { return (Advertiser == null) ? DayOfWeek.Sunday : (DayOfWeek)Advertiser.StartDayOfWeek; }
+            get { return (CakeAdvertiser == null) ? DayOfWeek.Sunday : (DayOfWeek)CakeAdvertiser.StartDayOfWeek; }
         }
         public DayOfWeek Search_StartDayOfWeek
         {
