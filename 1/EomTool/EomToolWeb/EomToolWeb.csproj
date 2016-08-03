@@ -66,6 +66,10 @@
       <HintPath>..\..\Solution\packages\KendoGridBinderEx.5.0.0.9\lib\net45\KendoGridBinderEx.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ManyConsole, Version=0.4.2.16, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\ManyConsole.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq">
       <HintPath>..\..\Solution\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
@@ -170,6 +174,7 @@
     <Compile Include="Controllers\AffiliatesController.cs" />
     <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\StatsController.cs" />
+    <Compile Include="Controllers\SynchController.cs" />
     <Compile Include="Controllers\TypesController.cs" />
     <Compile Include="Controllers\WikiAdminController.cs" />
     <Compile Include="Controllers\AdvertisersController.cs" />
@@ -4409,12 +4414,17 @@
     <Content Include="Views\Audit\Affiliates.cshtml" />
     <Content Include="Views\Audit\Items.cshtml" />
     <Content Include="Views\Audit\Campaigns.cshtml" />
+    <Content Include="Views\Synch\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Types\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\3\CakeExtracter\CakeExtracter\CakeExtracter.csproj">
+      <Project>{3b6c5433-5392-4165-a7e4-4aa431a75bb3}</Project>
+      <Name>CakeExtracter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\DirectAgents.Domain\DirectAgents.Domain.csproj">
       <Project>{278911ab-cb92-4316-843e-4571cd0c3410}</Project>
       <Name>DirectAgents.Domain</Name>
@@ -4449,16 +4459,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
-          <AutoAssignPort>False</AutoAssignPort>
-          <DevelopmentServerPort>58631</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/EomToolWeb</IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

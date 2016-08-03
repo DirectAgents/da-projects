@@ -73,11 +73,25 @@ namespace EomTool.Domain.Entities
 
             this.SourceName = "Other";
             this.accounting_notes = "none";
+            SetDefaultStatuses();
+            //SetDefaultTypes();
+        }
+        public void SetDefaultStatuses()
+        {
             this.item_accounting_status_id = 1;
             this.item_reporting_status_id = 1;
             this.campaign_status_id = 1;
             this.media_buyer_approval_status_id = 1;
         }
+
+        public void SetDefaultTypes()
+        {
+            this.cost_currency_id = 1;
+            this.revenue_currency_id = 1;
+            this.source_id = Source.Other;
+            this.unit_type_id = UnitType.CPA;
+        }
+        // source_id, unit_type_id, revenue_currency_id, cost_currency_id
 
         // returns null if success
         public string SetProperty(string prop, string value, IMainRepository mainRepo = null)

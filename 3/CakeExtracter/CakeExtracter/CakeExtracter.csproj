@@ -295,16 +295,19 @@
     <Compile Include="CakeMarketingApi\Entities\Role.cs" />
     <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
     <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
+    <Compile Include="Commands\EOMSynchCPCCommand.cs" />
     <Compile Include="Commands\DASynchFacebookAdPreviews.cs" />
     <Compile Include="Commands\DASynchDBMCreatives.cs" />
     <Compile Include="Commands\DASeed.cs" />
     <Compile Include="Commands\DASynchAdrollAds.cs" />
     <Compile Include="Commands\DASynchDBMStatsOld.cs" />
+    <Compile Include="Etl\CakeMarketing\Loaders\CPCLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdPreviewLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookCampaignSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdRollAdExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollSiteStatsCsvExtracter.cs" />
+    <Compile Include="Etl\CakeMarketing\Extracters\CPCExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmCreativeCloudStorageExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DBMCreativeExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\TDadSummaryExtracter.cs" />
@@ -552,6 +555,10 @@
     <ProjectReference Include="..\..\..\1\DirectAgents.Domain\DirectAgents.Domain.csproj">
       <Project>{278911ab-cb92-4316-843e-4571cd0c3410}</Project>
       <Name>DirectAgents.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\1\EomTool\EomTool.Domain\EomTool.Domain.csproj">
+      <Project>{f41da2e2-d584-479a-9f24-9b2d3d33f927}</Project>
+      <Name>EomTool.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\API\AdRoll\AdRoll.csproj">
       <Project>{feb04d4a-cf17-43bf-bf2c-635e87a38279}</Project>

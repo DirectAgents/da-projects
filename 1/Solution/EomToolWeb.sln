@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAgents.Common", "..\EomToo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectAgents.Common", "DirectAgents.Common\DirectAgents.Common.csproj", "{8F2C74B2-33CD-46EF-B3D6-397F7E69B9E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeExtracter", "..\..\3\CakeExtracter\CakeExtracter\CakeExtracter.csproj", "{3B6C5433-5392-4165-A7E4-4AA431A75BB3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeExtracter.ConsoleApplication", "..\..\3\CakeExtracter.ConsoleApplication\CakeExtracter.ConsoleApplication.csproj", "{5C9EEBEE-1F02-47F3-92B8-700542642C7D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +84,18 @@ Global
 		{8F2C74B2-33CD-46EF-B3D6-397F7E69B9E9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8F2C74B2-33CD-46EF-B3D6-397F7E69B9E9}.Try1 Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8F2C74B2-33CD-46EF-B3D6-397F7E69B9E9}.Try1 Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B6C5433-5392-4165-A7E4-4AA431A75BB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B6C5433-5392-4165-A7E4-4AA431A75BB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B6C5433-5392-4165-A7E4-4AA431A75BB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B6C5433-5392-4165-A7E4-4AA431A75BB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B6C5433-5392-4165-A7E4-4AA431A75BB3}.Try1 Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B6C5433-5392-4165-A7E4-4AA431A75BB3}.Try1 Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Try1 Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Try1 Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

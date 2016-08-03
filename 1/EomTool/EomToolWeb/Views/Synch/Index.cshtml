@@ -1,0 +1,19 @@
+﻿
+Accounting Period: <b>@ViewBag.date</b>
+<br /><br />
+
+<h2>Synch CPCs</h2>
+
+@if (ViewBag.posted == false)
+{
+
+using (Html.BeginForm()){
+    @Html.TextBox("offerID") <br />
+    <input type="submit" />    
+}
+
+}
+else 
+{
+    <p>@ViewBag.synched Items Synched for Offer @ViewBag.offer !</p>
+}

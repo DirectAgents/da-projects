@@ -178,6 +178,8 @@ namespace EomTool.Domain.Entities
 
     public partial class UnitType
     {
+        public const int CPA = 4;
+        public const int CPC = 8;
         public const int PPC = 15;
         public const int TradingDesk = 18;
         //etc...
