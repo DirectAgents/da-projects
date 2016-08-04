@@ -44,7 +44,7 @@
                 @Ajax.ActionLink("create", "CreateUserProfile", new { spId = profile.SearchProfileId }, ajaxOptions)
             }
         </td>
-		<td>@Ajax.ActionLink("Generate", "TestReports", new { spId = profile.SearchProfileId }, ajaxOptions)</td>
+		<td>@Ajax.ActionLink("Generate", "GenerateSpreadsheet", new { spId = profile.SearchProfileId }, ajaxOptions)</td>
         <td>
             @if (numReports > 1) {
                 @Ajax.ActionLink("edit", "IndexSearch", "SimpleReports", new { spId = profile.SearchProfileId }, ajaxOpts_Reports)

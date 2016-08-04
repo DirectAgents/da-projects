@@ -14,7 +14,7 @@ SearchProfile: @Model.SearchProfileName<br />
 Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)
 <br /><br />
 
-@using (Html.BeginForm("GenerateSpreadsheet", "SearchAdmin"))
+@using (Html.BeginForm())
 {
     @Html.ValidationSummary()
     <fieldset>
@@ -40,6 +40,13 @@ Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)
             <tr>
                 <td>@Html.Label("Group By SearchAccount:")</td>
                 <td>@Html.CheckBox("groupBySearchAccount", groupBySearchAccount, new { onfocus = "EnableSubmitGenSpreadsheet()"}) (leave unchecked to group by channel)</td>
+            </tr>
+            <tr>
+                <td>@Html.Label("Campaign Filter:")</td>
+                <td>
+                    <input type="text" name="campaigninclude" onfocus="EnableSubmitGenSpreadsheet()" />
+                    (Doesn't apply to "Display vs. Search" tab)
+                </td>
             </tr>
         </table>
         <br />

@@ -111,16 +111,16 @@ namespace ClientPortal.Data.Services
         // --- Search Stats ---
 
         // Returns one searchstat - for the specified SearchProfile and timeframe.
-        public SearchStat GetSearchStats(SearchProfile sp, DateTime? start, DateTime? end, bool? includeToday)
+        public SearchStat GetSearchStats(SearchProfile sp, DateTime? start, DateTime? end, bool? includeToday, string campaignNameInclude = null, string campaignNameExclude = null)
         {
-            return GetSearchStats(sp.SearchProfileId, start, end, includeToday, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru);
+            return GetSearchStats(sp.SearchProfileId, start, end, includeToday, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru, campaignNameInclude, campaignNameInclude);
         }
-        private SearchStat GetSearchStats(int searchProfileId, DateTime? start, DateTime? end, bool? includeToday, bool useAnalytics, bool includeCalls, decimal revPerViewThru)
+        private SearchStat GetSearchStats(int searchProfileId, DateTime? start, DateTime? end, bool? includeToday, bool useAnalytics, bool includeCalls, decimal revPerViewThru, string campaignNameInclude = null, string campaignNameExclude = null)
         {
             if (!includeToday.HasValue)
                 includeToday = true; // only relevant when end is null or end is >= today
 
-            var searchCampaigns = GetSearchCampaigns(null, searchProfileId, null, null, null);
+            var searchCampaigns = GetSearchCampaigns(null, searchProfileId, null, null, null, campaignNameInclude, campaignNameExclude);
             var summaries = GetSearchDailySummaries(searchCampaigns, null, start, end, includeToday.Value);
             bool any = summaries.Any();
             var searchStat = new SearchStat
@@ -580,11 +580,11 @@ namespace ClientPortal.Data.Services
             return stats.AsQueryable();
         }
 
-        public IQueryable<SearchStat> GetMonthStats(SearchProfile sp, int? numMonths, DateTime end, bool yoy)
+        public IQueryable<SearchStat> GetMonthStats(SearchProfile sp, int? numMonths, DateTime end, bool yoy, string campaignNameInclude = null, string campaignNameExclude = null)
         {
-            return GetMonthStats(sp.SearchProfileId, numMonths, end, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru, yoy);
+            return GetMonthStats(sp.SearchProfileId, numMonths, end, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru, yoy, campaignNameInclude, campaignNameExclude);
         }
-        private IQueryable<SearchStat> GetMonthStats(int searchProfileId, int? numMonths, DateTime end, bool useAnalytics, bool includeCalls, decimal revPerViewThru, bool yoy)
+        private IQueryable<SearchStat> GetMonthStats(int searchProfileId, int? numMonths, DateTime end, bool useAnalytics, bool includeCalls, decimal revPerViewThru, bool yoy, string campaignNameInclude = null, string campaignNameExclude = null)
         {
             DateTime? start = null, origStart = null;
             if (numMonths.HasValue)
@@ -596,7 +596,7 @@ namespace ClientPortal.Data.Services
                     start = start.Value.AddMonths(-12);
                 }
             }
-            var searchCampaigns = GetSearchCampaigns(null, searchProfileId, null, null, null);
+            var searchCampaigns = GetSearchCampaigns(null, searchProfileId, null, null, null, campaignNameInclude, campaignNameExclude);
             var stats = GetSearchDailySummaries(searchCampaigns, null, start, end, true)
                 .GroupBy(s => new { s.Date.Year, s.Date.Month })
                 .Select(g =>
@@ -825,7 +825,7 @@ namespace ClientPortal.Data.Services
         }
 
         // Get a SearchStat summary for each individual campaign (or if breakdown, one for each Network/Device combo)
-        public IQueryable<SearchStat> GetCampaignStats(SearchProfile sp, string channel, DateTime? start, DateTime? end, bool breakdown, bool showingCassConvs)
+        public IQueryable<SearchStat> GetCampaignStats(SearchProfile sp, string channel, DateTime? start, DateTime? end, bool breakdown, bool showingCassConvs, string campaignNameInclude = null, string campaignNameExclude = null)
         {
             if (!start.HasValue)
                 start = new DateTime(DateTime.Today.Year, 1, 1);
@@ -866,17 +866,17 @@ namespace ClientPortal.Data.Services
                         searchAccountId = searchAccount.SearchAccountId;
                 }
             }
-            return GetCampaignStatsInner(sp.SearchProfileId, channel, searchAccountId, channelPrefix, device, start, end, breakdown, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru, showingCassConvs);
+            return GetCampaignStatsInner(sp.SearchProfileId, channel, searchAccountId, channelPrefix, device, start, end, breakdown, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru, showingCassConvs, campaignNameInclude, campaignNameExclude);
         }
 
-        public IQueryable<SearchStat> GetCampaignStats(SearchProfile sp, int searchAccountId, DateTime? start, DateTime? end, bool breakdown, bool showingCassConvs)
+        public IQueryable<SearchStat> GetCampaignStats(SearchProfile sp, int searchAccountId, DateTime? start, DateTime? end, bool breakdown, bool showingCassConvs, string campaignNameInclude = null, string campaignNameExclude = null)
         {
-            return GetCampaignStatsInner(null, null, searchAccountId, null, null, start, end, breakdown, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru, showingCassConvs);
+            return GetCampaignStatsInner(null, null, searchAccountId, null, null, start, end, breakdown, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru, showingCassConvs, campaignNameInclude, campaignNameExclude);
         }
 
-        private IQueryable<SearchStat> GetCampaignStatsInner(int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, DateTime? start, DateTime? end, bool breakdown, bool useAnalytics, bool includeCalls, decimal revPerViewThru, bool showingCassConvs)
+        private IQueryable<SearchStat> GetCampaignStatsInner(int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, DateTime? start, DateTime? end, bool breakdown, bool useAnalytics, bool includeCalls, decimal revPerViewThru, bool showingCassConvs, string campaignNameInclude = null, string campaignNameExclude = null)
         {
-            var searchCampaigns = GetSearchCampaigns(null, searchProfileId, channel, searchAccountId, channelPrefix);
+            var searchCampaigns = GetSearchCampaigns(null, searchProfileId, channel, searchAccountId, channelPrefix, campaignNameInclude, campaignNameExclude);
             var summaries = GetSearchDailySummaries(searchCampaigns, device, start, end, true).ToList();
             IQueryable<SearchStat> stats;
 

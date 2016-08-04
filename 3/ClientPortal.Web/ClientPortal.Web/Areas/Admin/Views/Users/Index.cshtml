@@ -7,7 +7,7 @@
 
 <table border="1">
     <tr>
-        <th>Id</th>
+        <th colspan="2">Id&nbsp;&nbsp;Logo?</th>
         <th>Username</th>
         <th>CakeAdvertiser</th>
         <th>SearchProfile</th>
@@ -17,6 +17,7 @@
 {
     <tr>
         <td>@u.UserProfile.UserId</td>
+        <td>@(u.UserProfile.ClientInfo != null && u.UserProfile.ClientInfo.Logo != null ? "Y" : "")</td>
         <td>
             @Ajax.ActionLink(u.UserProfile.UserName, "Setup", new { id = u.UserProfile.UserId }, ajaxOptions)
         </td>

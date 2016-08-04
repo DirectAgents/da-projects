@@ -158,7 +158,8 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return RedirectToAction("SearchProfiles");
         }
 
-        public ActionResult TestReports(int spId)
+        [HttpGet]
+        public ActionResult GenerateSpreadsheet(int spId)
         {
             var searchProfile = cpRepo.GetSearchProfile(spId);
             if (searchProfile == null)
@@ -167,13 +168,14 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return View(searchProfile);
         }
 
-        public ActionResult GenerateSpreadsheet(int searchProfileId, DateTime? endDate, int numWeeks = 0, int numMonths = 0, string filename = "report.xlsx", bool groupBySearchAccount = false)
+        [HttpPost]
+        public ActionResult GenerateSpreadsheet(int searchProfileId, DateTime? endDate, int numWeeks = 0, int numMonths = 0, string filename = "report.xlsx", bool groupBySearchAccount = false, string campaignInclude = null)
         {
             string templateFolder = ConfigurationManager.AppSettings["PATH_Search"];
             if (!endDate.HasValue)
                 endDate = DateTime.Today.AddDays(-1);
 
-            var spreadsheet = DAGenerators.Spreadsheets.GeneratorCP.GenerateSearchReport(cpRepo, templateFolder, searchProfileId, numWeeks, numMonths, endDate.Value, groupBySearchAccount);
+            var spreadsheet = DAGenerators.Spreadsheets.GeneratorCP.GenerateSearchReport(cpRepo, templateFolder, searchProfileId, numWeeks, numMonths, endDate.Value, groupBySearchAccount, campaignInclude);
             if (spreadsheet == null)
                 return HttpNotFound();
 
