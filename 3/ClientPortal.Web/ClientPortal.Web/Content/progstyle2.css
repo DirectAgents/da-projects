@@ -473,7 +473,8 @@
     border-top:4px solid #b9d342;
   }
 
-  #cssmenu > ul > li.lead-id {
+  #cssmenu > ul > li.lead-id,
+  #cssmenu > ul > li.contact {
     float: left;
     background: #2d599d;
     height: 100%;

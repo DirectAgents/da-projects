@@ -1,0 +1,23 @@
+﻿@model ClientPortal.Data.Contexts.UserProfile
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("usersTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("usersTab", httpMethod: "Post");
+
+    var clientInfos = (IEnumerable<ClientPortal.Data.Contexts.ClientInfo>)ViewBag.ClientInfos;
+    var ciSelectList = new SelectList(clientInfos, "Id", "Name");
+}
+
+<h3>Assign User to Client</h3>
+
+Username: @Model.UserName
+<br /><br />
+
+@using (Ajax.BeginForm(ajaxOpts_Post))
+{
+    <table><tr><td>
+    Client: @Html.DropDownList("clientinfoid", ciSelectList)
+    </td></tr></table>
+    <input type="submit" value="Assign" />
+}
+
+@Ajax.ActionLink("Cancel", "Setup", new { id = Model.UserId }, ajaxOptions)

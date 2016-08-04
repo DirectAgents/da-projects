@@ -28,5 +28,47 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             });
             return View(userVMs);
         }
+
+        public ActionResult Setup(int id)
+        {
+            var userProfile = cpRepo.GetUserProfile(id);
+            if (userProfile == null)
+                return HttpNotFound();
+
+            return View(userProfile);
+        }
+
+        public ActionResult AssignClientInfo(int id)
+        {
+            var userProfile = cpRepo.GetUserProfile(id);
+            if (userProfile == null)
+                return HttpNotFound();
+
+            ViewBag.ClientInfos = cpRepo.ClientInfos().OrderBy(c => c.Name).ThenBy(c => c.Id);
+            return View(userProfile);
+        }
+        [HttpPost]
+        public ActionResult AssignClientInfo(int id, int clientinfoid)
+        {
+            var userProfile = cpRepo.GetUserProfile(id);
+            var clientInfo = cpRepo.GetClientInfo(clientinfoid);
+            if (userProfile != null && clientInfo != null)
+            {
+                userProfile.ClientInfo = clientInfo;
+                cpRepo.SaveChanges();
+            }
+            return RedirectToAction("Setup", new { id = id });
+        }
+
+        public ActionResult UnassignClientInfo(int id)
+        {
+            var userProfile = cpRepo.GetUserProfile(id);
+            if (userProfile != null && userProfile.ClientInfoId.HasValue)
+            {
+                userProfile.ClientInfoId = null;
+                cpRepo.SaveChanges();
+            }
+            return RedirectToAction("Setup", new { id = id });
+        }
     }
 }

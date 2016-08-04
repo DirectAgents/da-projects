@@ -705,10 +705,20 @@ namespace ClientPortal.Data.Services
         #endregion
 
         #region User methods
+        public IQueryable<ClientInfo> ClientInfos()
+        {
+            var clientInfos = context.ClientInfos;
+            return clientInfos;
+        }
         public ClientInfo GetClientInfo(int id)
         {
             var clientInfo = context.ClientInfos.Find(id);
             return clientInfo;
+        }
+        public void AddClientInfo(ClientInfo clientInfo, bool saveChanges = false)
+        {
+            context.ClientInfos.Add(clientInfo);
+            if (saveChanges) SaveChanges();
         }
 
         public IQueryable<UserProfile> UserProfiles()

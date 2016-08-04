@@ -6,6 +6,9 @@
 
 <h4>Edit Logo</h4>
 
+Client: "@Model.Name" (ID: @Model.Id)
+<br /><br />
+
 @if (Model.Logo != null)
 {
     <text>Current Logo:</text><br/>
@@ -17,9 +20,14 @@
     <input id="logoUpload" name="logo" type="file" />
 }
 
-<div>
-    @Ajax.ActionLink("Back to Users", "Index", "Users", ajaxOptions)
-</div>
+Users:<br />
+@foreach (var up in Model.UserProfiles) {
+    @Ajax.ActionLink(up.UserName, "Setup", "Users", new { id = up.UserId }, ajaxOptions)
+    <br />
+}
+
+<br />
+@Ajax.ActionLink("Back to All Users", "Index", "Users", ajaxOptions)
 
 <script>
     $(function () {

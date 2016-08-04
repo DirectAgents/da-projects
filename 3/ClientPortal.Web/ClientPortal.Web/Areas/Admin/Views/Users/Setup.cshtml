@@ -1,0 +1,32 @@
+﻿@model ClientPortal.Data.Contexts.UserProfile
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("usersTab");
+    var ajaxOpts_Confirm = RazorHelpers.GetAjaxOptions("usersTab", null, "Post", "Are you sure?");
+}
+
+<h4>Setup User</h4>
+
+Username: @Model.UserName
+<br /><br />
+
+Client:
+@if (Model.ClientInfo == null) {
+    @Ajax.ActionLink("New", "Create", "ClientInfo", new { userid = Model.UserId }, ajaxOptions)
+    <text> | </text>@Ajax.ActionLink("Assign User to Existing Client", "AssignClientInfo", new { id = Model.UserId }, ajaxOptions)
+} else {
+    <text>"@Model.ClientInfo.Name" (ID: @Model.ClientInfoId)</text>
+    <br />@Ajax.ActionLink("Reassign", "AssignClientInfo", new { id = Model.UserId }, ajaxOptions)
+    <text> | </text>@Ajax.ActionLink("Unassign", "UnassignClientInfo", new { id = Model.UserId }, ajaxOpts_Confirm)
+}
+<br /><br />
+
+@if (Model.ClientInfo != null) {
+    @Ajax.ActionLink("Edit Logo", "EditLogo", "ClientInfo", new { id = Model.ClientInfoId }, ajaxOptions)
+    if (Model.ClientInfo.Logo != null) {
+        <br />
+        <img src="@Url.Action("Logo", "ClientInfo", new { id = Model.ClientInfoId })" />
+    }
+}
+
+<br />
+@Ajax.ActionLink("Back to All Users", "Index", ajaxOptions)

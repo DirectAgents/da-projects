@@ -18,11 +18,7 @@
     <tr>
         <td>@u.UserProfile.UserId</td>
         <td>
-            @if (u.UserProfile.ClientInfoId != null) {
-                @Ajax.ActionLink(u.UserProfile.UserName, "EditLogo", "ClientInfo", new { id = u.UserProfile.ClientInfoId }, ajaxOptions)
-            } else {
-                @u.UserProfile.UserName
-            }
+            @Ajax.ActionLink(u.UserProfile.UserName, "Setup", new { id = u.UserProfile.UserId }, ajaxOptions)
         </td>
         <td>@(u.CakeAdvertiser == null ? "" : u.CakeAdvertiser.AdvertiserName)</td>
         <td>@(u.UserProfile.SearchProfile == null ? "" : u.UserProfile.SearchProfile.SearchProfileName)</td>
