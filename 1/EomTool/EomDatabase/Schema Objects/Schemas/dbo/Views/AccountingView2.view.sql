@@ -2,7 +2,21 @@
 SELECT     dbo.AccountingView1.Publisher, dbo.AccountingView1.Advertiser, dbo.AccountingView1.[Adv QB Name] AS [QB Name], dbo.AccountingView1.[Campaign Number], dbo.AccountingView1.[Campaign Name], 
                       dbo.AccountingView1.[Rev Currency], dbo.AccountingView1.[Cost Currency], dbo.AccountingView1.[Rev/Unit], dbo.AccountingView1.[Rev/Unit USD], 
                       dbo.AccountingView1.[Cost/Unit], dbo.AccountingView1.[Cost/Unit USD], dbo.AccountingView1.Units,
-                      dbo.AccountingView1.[Unit Type], dbo.AccountingView1.Revenue, dbo.AccountingView1.[Revenue USD], dbo.AccountingView1.Cost, dbo.AccountingView1.[Cost USD],
+                      dbo.AccountingView1.[Unit Type], 
+					  [Income Type] = CASE dbo.AccountingView1.[Unit Type]
+                          WHEN 'CPA' THEN 'Advertising'
+                          WHEN 'CPC' THEN 'Media Buying'
+                          WHEN 'CPM' THEN 'Media Buying'
+                          WHEN 'SEO' THEN 'Search'
+                          WHEN 'PPC' THEN 'Search'
+                          WHEN 'Social Media' THEN 'Trading Desk'
+                          WHEN 'Trading Desk' THEN 'Trading Desk'
+                          WHEN 'CPI' THEN 'Mobile'
+                          WHEN 'Affiliate Program Mgmt' THEN 'Affiliate Management'
+                          WHEN 'Creative' THEN 'Creative'
+                          WHEN 'RevShare' THEN 'Advertising'
+                      END,
+					  dbo.AccountingView1.Revenue, dbo.AccountingView1.[Revenue USD], dbo.AccountingView1.Cost, dbo.AccountingView1.[Cost USD],
                       dbo.AccountingView1.[Revenue USD] - dbo.AccountingView1.[Cost USD] AS Margin, (CASE WHEN [Revenue USD] = 0 THEN 0 ELSE ([Revenue USD] - [Cost USD]) / [Revenue USD] END) * 100 AS [%Margin],
 					  sum([Cost USD]) over(partition by [Campaign Number]) as [Total Campaign Cost USD], dbo.AccountingView1.[Media Buyer], dbo.AccountingView1.[Ad Manager], dbo.AccountingView1.[Account Manager], 
                       dbo.AccountingView1.Status, dbo.AccountingView1.[MediaBuyerApproval Status], dbo.AccountingView1.[Accounting Status], dbo.AccountingView1.name, dbo.AccountingView1.[Aff Pay Method], 
