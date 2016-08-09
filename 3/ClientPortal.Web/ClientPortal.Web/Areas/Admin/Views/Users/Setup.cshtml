@@ -1,4 +1,4 @@
-﻿@model ClientPortal.Data.Contexts.UserProfile
+﻿@model ClientPortal.Web.Areas.Admin.Models.UserVM
 @{
     var ajaxOptions = RazorHelpers.GetAjaxOptions("usersTab");
     var ajaxOpts_Confirm = RazorHelpers.GetAjaxOptions("usersTab", null, "Post", "Are you sure?");
@@ -6,25 +6,42 @@
 
 <h4>Setup User</h4>
 
-Username: @Model.UserName
+Username: @Model.UserProfile.UserName
 <br /><br />
 
 Client:
-@if (Model.ClientInfo == null) {
-    @Ajax.ActionLink("New", "Create", "ClientInfo", new { userid = Model.UserId }, ajaxOptions)
-    <text> | </text>@Ajax.ActionLink("Assign User to Existing Client", "AssignClientInfo", new { id = Model.UserId }, ajaxOptions)
+@if (Model.UserProfile.ClientInfo == null) {
+    @Ajax.ActionLink("New", "Create", "ClientInfo", new { userid = Model.UserProfile.UserId }, ajaxOptions)
+    <text> | </text>@Ajax.ActionLink("Assign User to Existing Client", "AssignClientInfo", new { id = Model.UserProfile.UserId }, ajaxOptions)
 } else {
-    <text>"@Model.ClientInfo.Name" (ID: @Model.ClientInfoId)</text>
-    <br />@Ajax.ActionLink("Reassign", "AssignClientInfo", new { id = Model.UserId }, ajaxOptions)
-    <text> | </text>@Ajax.ActionLink("Unassign", "UnassignClientInfo", new { id = Model.UserId }, ajaxOpts_Confirm)
+    <text>"@Model.UserProfile.ClientInfo.Name" (ID: @Model.UserProfile.ClientInfoId)</text>
+    <br />@Ajax.ActionLink("Reassign", "AssignClientInfo", new { id = Model.UserProfile.UserId }, ajaxOptions)
+    <text> | </text>@Ajax.ActionLink("Unassign", "UnassignClientInfo", new { id = Model.UserProfile.UserId }, ajaxOpts_Confirm)
 }
 <br /><br />
 
-@if (Model.ClientInfo != null) {
-    @Ajax.ActionLink("Edit Logo", "EditLogo", "ClientInfo", new { id = Model.ClientInfoId }, ajaxOptions)
-    if (Model.ClientInfo.Logo != null) {
+Cake Advertiser: 
+@if (Model.CakeAdvertiser != null) {
+    <text>@Model.CakeAdvertiser.AdvertiserName</text>
+}<br />
+Search Profile:
+@if (Model.UserProfile.SearchProfile != null) {
+    <text>@Model.UserProfile.SearchProfile.SearchProfileName</text>
+} <br />
+Prog Advertiser:
+@if (Model.ProgAdvertiser != null) {
+    <text>@Model.ProgAdvertiser.Name</text>
+}
+<br /><br />
+
+@if (Model.UserProfile.ClientInfo != null) {
+    //@Ajax.ActionLink("Edit Logo", "EditLogo", "ClientInfo", new { id = Model.UserProfile.ClientInfoId }, ajaxOptions)
+    if (Model.UserProfile.ClientInfo.Logo != null) {
+        @Ajax.ActionLink("Edit Logo", "EditLogo", "ClientInfo", new { id = Model.UserProfile.ClientInfoId }, ajaxOptions)
         <br />
-        <img src="@Url.Action("Logo", "ClientInfo", new { id = Model.ClientInfoId })" />
+        <img src="@Url.Action("Logo", "ClientInfo", new { id = Model.UserProfile.ClientInfoId })" />
+    } else {
+        @Ajax.ActionLink("Add Logo", "EditLogo", "ClientInfo", new { id = Model.UserProfile.ClientInfoId }, ajaxOptions)
     }
 }
 

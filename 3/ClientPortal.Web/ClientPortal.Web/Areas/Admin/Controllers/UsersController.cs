@@ -32,10 +32,17 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         public ActionResult Setup(int id)
         {
             var userProfile = cpRepo.GetUserProfile(id);
-            if (userProfile == null)
+            var userVM = new UserVM
+            {
+                UserProfile = userProfile,
+                CakeAdvertiser = userProfile.CakeAdvertiserId == null ? null : cpRepo.GetAdvertiser((int)userProfile.CakeAdvertiserId),
+                ProgAdvertiser = userProfile.TDAdvertiserId == null ? null : progRepo.Advertiser((int)userProfile.TDAdvertiserId)
+            };
+
+            if (userVM.UserProfile == null)
                 return HttpNotFound();
 
-            return View(userProfile);
+            return View(userVM);
         }
 
         public ActionResult AssignClientInfo(int id)
@@ -47,6 +54,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             ViewBag.ClientInfos = cpRepo.ClientInfos().OrderBy(c => c.Name).ThenBy(c => c.Id);
             return View(userProfile);
         }
+
         [HttpPost]
         public ActionResult AssignClientInfo(int id, int clientinfoid)
         {
