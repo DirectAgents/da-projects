@@ -1206,6 +1206,9 @@
     <Content Include="Areas\Admin\Views\ClientInfo\EditLogo.cshtml" />
     <Content Include="Areas\Admin\Views\Users\Setup.cshtml" />
     <Content Include="Areas\Admin\Views\Users\AssignClientInfo.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\AssignProgAdvertiser.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\AssignCakeAdvertiser.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\AssignSearchProfile.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

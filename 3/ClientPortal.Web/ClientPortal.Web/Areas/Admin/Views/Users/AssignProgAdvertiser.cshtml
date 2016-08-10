@@ -1,0 +1,23 @@
+﻿@model ClientPortal.Web.Areas.Admin.Models.UserVM
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("usersTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("usersTab", httpMethod: "Post");
+
+    var progAdvertisers = (IEnumerable<DirectAgents.Domain.Entities.TD.Advertiser>)ViewBag.ProgAdvertisers;
+    var piSelectList = new SelectList(progAdvertisers, "Id", "Name");
+}
+
+<h3>Assign User to Prog Advertiser</h3>
+
+Username: @Model.UserProfile.UserName
+<br /><br />
+
+@using (Ajax.BeginForm(ajaxOpts_Post))
+{
+    <table><tr><td>
+    Advertiser: @Html.DropDownList("progadvertiserid", piSelectList)
+    </td></tr></table>
+    <input type="submit" value="Assign" />
+}
+
+@Ajax.ActionLink("Cancel", "Setup", new { id = Model.UserProfile.UserId }, ajaxOptions)

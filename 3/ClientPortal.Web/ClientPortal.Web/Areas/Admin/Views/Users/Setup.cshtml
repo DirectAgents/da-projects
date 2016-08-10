@@ -23,19 +23,32 @@ Client:
 Cake Advertiser: 
 @if (Model.CakeAdvertiser != null) {
     <text>@Model.CakeAdvertiser.AdvertiserName</text>
-}<br />
+    <br />@Ajax.ActionLink("Reassign", "AssignCakeAdvertiser", new { id = Model.UserProfile.UserId }, ajaxOptions)
+    <text> | </text>@Ajax.ActionLink("Unassign", "UnassignCakeAdvertiser", new { id= Model.UserProfile.UserId }, ajaxOpts_Confirm)
+} else {
+    <br />@Ajax.ActionLink("Assign","AssignCakeAdvertiser", new { id = Model.UserProfile.UserId }, ajaxOptions)
+}
+<br /><br />
 Search Profile:
 @if (Model.UserProfile.SearchProfile != null) {
     <text>@Model.UserProfile.SearchProfile.SearchProfileName</text>
-} <br />
+    <br />@Ajax.ActionLink("Reassign", "AssignSearchProfile", new { id = Model.UserProfile.UserId },ajaxOptions)
+    <text> | </text>@Ajax.ActionLink("Unassign", "UnassignSearchProfile", new { id = Model.UserProfile.UserId }, ajaxOpts_Confirm)
+} else {
+    <br />@Ajax.ActionLink("Assign", "AssignSearchProfile", new { id = Model.UserProfile.UserId }, ajaxOptions)
+}
+<br /><br />
 Prog Advertiser:
 @if (Model.ProgAdvertiser != null) {
     <text>@Model.ProgAdvertiser.Name</text>
+    <br /> @Ajax.ActionLink("Reassign", "AssignProgAdvertiser", new { id = Model.UserProfile.UserId }, ajaxOptions)
+    <text> | </text> @Ajax.ActionLink("Unassign", "UnassignProgAdvertiser", new { id = Model.UserProfile.UserId },ajaxOpts_Confirm)
+} else {
+    <br />@Ajax.ActionLink("Assign","AssignProgAdvertiser", new { id = Model.UserProfile.UserId }, ajaxOptions)
 }
 <br /><br />
 
 @if (Model.UserProfile.ClientInfo != null) {
-    //@Ajax.ActionLink("Edit Logo", "EditLogo", "ClientInfo", new { id = Model.UserProfile.ClientInfoId }, ajaxOptions)
     if (Model.UserProfile.ClientInfo.Logo != null) {
         @Ajax.ActionLink("Edit Logo", "EditLogo", "ClientInfo", new { id = Model.UserProfile.ClientInfoId }, ajaxOptions)
         <br />

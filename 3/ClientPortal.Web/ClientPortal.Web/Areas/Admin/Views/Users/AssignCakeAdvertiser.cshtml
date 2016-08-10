@@ -1,0 +1,24 @@
+﻿@model ClientPortal.Web.Areas.Admin.Models.UserVM
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("usersTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("usersTab", httpMethod: "Post");
+
+    var cakeAdvertisers = (IEnumerable<ClientPortal.Data.Contexts.Advertiser>)ViewBag.CakeAdvertisers;
+    var ciSelectList = new SelectList(cakeAdvertisers, "AdvertiserId", "AdvertiserName");
+}
+
+<h3>Assign User to Cake Advertiser</h3>
+
+Username: @Model.UserProfile.UserName
+<br /><br />
+
+@using (Ajax.BeginForm(ajaxOpts_Post))
+{
+    <table><tr><td>
+    Advertiser: @Html.DropDownList("cakeadvertiserid", ciSelectList)
+    </td></tr></table>
+    <input type="submit" value="Assign" />
+}
+
+@Ajax.ActionLink("Cancel", "Setup", new { id = Model.UserProfile.UserId }, ajaxOptions)
+

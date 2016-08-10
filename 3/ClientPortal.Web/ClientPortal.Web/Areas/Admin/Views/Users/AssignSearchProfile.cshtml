@@ -1,0 +1,23 @@
+﻿@model ClientPortal.Data.Contexts.UserProfile
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("usersTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("usersTab", httpMethod: "Post");
+
+    var searchProfiles = (IEnumerable<ClientPortal.Data.Contexts.SearchProfile>)ViewBag.SearchProfiles;
+    var siSelectList = new SelectList(searchProfiles, "SearchProfileId", "SearchProfileName");
+}
+
+<h3>Assign User to Search Profile</h3>
+
+Username: @Model.UserName
+<br /><br />
+
+@using (Ajax.BeginForm(ajaxOpts_Post))
+{
+    <table><tr><td>
+    Advertiser: @Html.DropDownList("searchprofileid", siSelectList)
+    </td></tr></table>
+    <input type="submit" value="Assign" />
+}
+
+@Ajax.ActionLink("Cancel", "Setup", new { id = Model.UserId }, ajaxOptions)

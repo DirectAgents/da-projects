@@ -18,7 +18,9 @@
         <td>@advVM.ProgAdvertiser.Name</td>
         <td>
             @if (advVM.UserProfiles.Count() > 0) {
-                @advVM.Login
+                <text>@advVM.Login</text>
+                <text> | </text>
+                @Ajax.ActionLink("add","CreateUserProfile", new { advId = advVM.ProgAdvertiser.Id }, ajaxOptions)
             } else {
                 @Ajax.ActionLink("create", "CreateUserProfile", new { advId = advVM.ProgAdvertiser.Id }, ajaxOptions)
                 <text> | </text>
