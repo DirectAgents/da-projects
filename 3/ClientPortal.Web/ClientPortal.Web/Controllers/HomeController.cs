@@ -25,7 +25,7 @@ namespace ClientPortal.Web.Controllers
         //TODO: handle the case when a non-cake user arrives... currently there's a null reference exception loading Dashboard.
 
         // after login, if no route specified
-        // also, from Account/Manage -> Cancel
+        // also, from Account/Manage -> Cancel ... and from Combined/Index, Prog/Home/Index
         public ActionResult Go()
         {
             var userInfo = GetUserInfo();
@@ -34,6 +34,7 @@ namespace ClientPortal.Web.Controllers
 
             if (userInfo.IsAdmin)
                 return Redirect("/Admin");
+            //else if has search & prog...
             else if (userInfo.HasSearch)
                 return RedirectToAction("Index", "Search");
             else if (userInfo.HasProgrammatic(true))
@@ -52,6 +53,7 @@ namespace ClientPortal.Web.Controllers
 
             if (!userInfo.HasCake)
             {
+                //if has search & prog...
                 if (userInfo.HasSearch)
                     return RedirectToAction("Index", "Search");
                 else if (userInfo.HasProgrammatic())

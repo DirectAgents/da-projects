@@ -30,6 +30,8 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
         public ActionResult Index()
         {
             var userInfo = GetUserInfo();
+            if (!userInfo.HasProgrammatic())
+                return RedirectToAction("Go", "Home", new { area = "" });
 
             var today = DateTime.Today;
             var yesterday = today.AddDays(-1);

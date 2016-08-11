@@ -21,6 +21,7 @@ namespace ClientPortal.Web.Controllers
         private ActionResult SetupView()
         {
             var userInfo = GetUserInfo();
+            //CheckLogout...
             if (!userInfo.HasSearch)
                 return RedirectToAction("Index", "Home");
 

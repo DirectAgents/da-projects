@@ -30,7 +30,7 @@
         <div id="cssmenu">
             <ul>
 @if (hasProg) {
-                <li class="summary-report"><a href="@Url.Action("Index", "Home", new { Area = "Prog" })">Executive Summary</a></li>
+                <li class="summary-report"><a href="@Url.Action("Index", "Combined")">Overall Summary</a></li>
 }
 @if (hasSearch) {
                 <li class="search-reports"><a href="@Url.Action("Weekly", "Search")">Search Reports</a>

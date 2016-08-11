@@ -1,0 +1,82 @@
+﻿@model ClientPortal.Web.Models.CombinedVM
+@{
+    ViewBag.Title = "Overall Summary";
+    var mtd = Model.MTDStat;
+    var wtd = Model.WTDStat;
+}
+<style type="text/css">
+    .client_logo_exec {
+        background-image: url("@Url.Action("Logo")");
+    }
+</style>
+
+<div id="client_bar_exec">
+    <div id="container">
+        <div class="exec_charts">
+            @* TODO: Put in separate partial view... *@
+            <section>
+                <div class="heading"><p>Month to Date: @mtd.StartDate.ToShortDateString() thru @mtd.Date.ToShortDateString()</p></div>
+                <div class="grid">
+                    <table class="grid" cellspacing="0" width="100%">
+                        <thead>
+                            <tr class="exec">
+                                <th>Spend</th>
+                                <th>Impressions</th>
+                                <th>Clicks</th>
+                                <th>CTR</th>
+                                <th>eCPC</th>
+                                <th>Conversions</th>
+                                <th>eCPA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="grey_row">
+                                <td>@mtd.MediaSpend.ToString("C")</td>
+                                <td>@mtd.Impressions.ToString("N0")</td>
+                                <td>@mtd.Clicks.ToString("N0")</td>
+                                <td>@mtd.CTR.ToString("0.00%")</td>
+                                <td>@mtd.eCPC.ToString("C")</td>
+                                <td>@mtd.Conversions.ToString("N0")</td>
+                                <td>@mtd.eCPA.ToString("C")</td>
+                            </tr>
+		                </tbody>
+                    </table>
+                </div>
+            </section>
+            <section>
+                <div class="heading"><p>Week to Date: @wtd.StartDate.ToShortDateString() thru @wtd.Date.ToShortDateString()</p></div>
+                <div class="grid">
+                    <table class="grid" cellspacing="0" width="100%">
+                        <thead>
+                            <tr class="exec">
+                                <th>Spend</th>
+                                <th>Impressions</th>
+                                <th>Clicks</th>
+                                <th>CTR</th>
+                                <th>eCPC</th>
+                                <th>Conversions</th>
+                                <th>eCPA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="grey_row">
+                                <td>@wtd.MediaSpend.ToString("C")</td>
+                                <td>@wtd.Impressions.ToString("N0")</td>
+                                <td>@wtd.Clicks.ToString("N0")</td>
+                                <td>@wtd.CTR.ToString("0.00%")</td>
+                                <td>@wtd.eCPC.ToString("C")</td>
+                                <td>@wtd.Conversions.ToString("N0")</td>
+                                <td>@wtd.eCPA.ToString("C")</td>
+                            </tr>
+		                </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="client_logo_exec"></div>
+        <div class="client_name_exec">@Model.UserInfo.ClientName</div>
+    </div>
+</div>
+
+<div id="page_content">
+</div>

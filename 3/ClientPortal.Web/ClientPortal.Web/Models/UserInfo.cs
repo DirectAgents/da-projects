@@ -28,6 +28,16 @@ namespace ClientPortal.Web.Models
             get { return (UserProfile != null); }
         }
 
+        // For the combined portal...
+        public string ClientName
+        {
+            get { return (UserProfile != null && UserProfile.ClientInfo != null) ? UserProfile.ClientInfo.Name : null; }
+        }
+        public byte[] ClientLogo
+        {
+            get { return (UserProfile != null && UserProfile.ClientInfo != null) ? UserProfile.ClientInfo.Logo : null; }
+        }
+
         public bool IsAdmin
         {
             get { return !HasUserProfile ? false : CheckIsAdmin(UserProfile.UserName); }
@@ -35,11 +45,6 @@ namespace ClientPortal.Web.Models
         public static bool CheckIsAdmin(string userName)
         {
             return (userName == "admin");
-        }
-
-        public int? CakeAdvertiserId
-        {
-            get { return UserProfile.CakeAdvertiserId; }
         }
 
         public string Culture
@@ -67,6 +72,11 @@ namespace ClientPortal.Web.Models
             get { return (CakeAdvertiser == null) ? false : CakeAdvertiser.ConversionValueIsNumber; }
         }
 
+        public int? CakeAdvertiserId
+        {
+            get { return UserProfile.CakeAdvertiserId; }
+        }
+
         public bool HasCake
         {
             get { return (CakeAdvertiser != null); }
@@ -89,11 +99,6 @@ namespace ClientPortal.Web.Models
         public bool ShowSearchChannels
         {
             get { return (SearchProfile == null) ? false : SearchProfile.ShowSearchChannels; }
-        }
-
-        public byte[] ClientLogo
-        {
-            get { return (UserProfile == null || UserProfile.ClientInfo == null) ? null : UserProfile.ClientInfo.Logo; }
         }
 
         public bool UseAnalytics

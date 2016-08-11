@@ -6,6 +6,8 @@ using System.Web.Mvc;
 
 namespace ClientPortal.Web.Controllers
 {
+    //This is for the old version of the search portal
+
     [Authorize]
     public class SearchHomeController : CPController
     {
