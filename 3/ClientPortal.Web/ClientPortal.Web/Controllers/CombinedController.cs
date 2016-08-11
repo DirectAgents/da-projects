@@ -31,18 +31,35 @@ namespace ClientPortal.Web.Controllers
 
             var today = DateTime.Today;
             var yesterday = today.AddDays(-1);
-            var start = yesterday;
-            while (start.DayOfWeek != DayOfWeek.Monday) //TODO: use client's start-day-of-week
+            var monthStart = new DateTime(yesterday.Year, yesterday.Month, 1);
+            var weekStart = yesterday;
+            while (weekStart.DayOfWeek != DayOfWeek.Monday) //TODO: use client's start-day-of-week
             {
-                start = start.AddDays(-1);
+                weekStart = weekStart.AddDays(-1);
             }
-            int progAdvId = userInfo.ProgAdvertiser.Id; // temp
+            // Get search stats
+            var mtdSearch = cpRepo.GetSearchStats(userInfo.SearchProfile, monthStart, yesterday, false);
+            var wtdSearch = cpRepo.GetSearchStats(userInfo.SearchProfile, weekStart, yesterday, false);
+
+            // Get programmatic stats
+            int progAdvId = userInfo.ProgAdvertiser.Id;
+            var mtdProg = progRepo.MTDBasicStat(progAdvId, yesterday);
+            var wtdProg = progRepo.DateRangeBasicStat(progAdvId, weekStart, yesterday);
+
+            // Combine them
+            var mtdStat = new StatVM(monthStart, yesterday);
+            mtdStat.Add(mtdSearch);
+            mtdStat.Add(mtdProg);
+
+            var wtdStat = new StatVM(weekStart, yesterday);
+            wtdStat.Add(wtdSearch);
+            wtdStat.Add(wtdProg);
 
             var model = new CombinedVM
             {
                 UserInfo = userInfo,
-                MTDStat = progRepo.MTDBasicStat(progAdvId, yesterday), // temp
-                WTDStat = progRepo.DateRangeBasicStat(progAdvId, start, yesterday) // temp
+                MTDStat = mtdStat,
+                WTDStat = wtdStat
             };
 
             return View(model);

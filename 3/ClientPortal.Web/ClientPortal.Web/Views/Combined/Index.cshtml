@@ -15,7 +15,7 @@
         <div class="exec_charts">
             @* TODO: Put in separate partial view... *@
             <section>
-                <div class="heading"><p>Month to Date: @mtd.StartDate.ToShortDateString() thru @mtd.Date.ToShortDateString()</p></div>
+                <div class="heading"><p>Month to Date: @mtd.StartDate.ToShortDateString() thru @mtd.EndDate.ToShortDateString()</p></div>
                 <div class="grid">
                     <table class="grid" cellspacing="0" width="100%">
                         <thead>
@@ -31,20 +31,20 @@
                         </thead>
                         <tbody>
                             <tr class="grey_row">
-                                <td>@mtd.MediaSpend.ToString("C")</td>
+                                <td>@mtd.Spend.ToString("C")</td>
                                 <td>@mtd.Impressions.ToString("N0")</td>
                                 <td>@mtd.Clicks.ToString("N0")</td>
                                 <td>@mtd.CTR.ToString("0.00%")</td>
-                                <td>@mtd.eCPC.ToString("C")</td>
-                                <td>@mtd.Conversions.ToString("N0")</td>
-                                <td>@mtd.eCPA.ToString("C")</td>
+                                <td>@mtd.CPC.ToString("C")</td>
+                                <td>@mtd.Convs.ToString("N0")</td>
+                                <td>@mtd.CPA.ToString("C")</td>
                             </tr>
 		                </tbody>
                     </table>
                 </div>
             </section>
             <section>
-                <div class="heading"><p>Week to Date: @wtd.StartDate.ToShortDateString() thru @wtd.Date.ToShortDateString()</p></div>
+                <div class="heading"><p>Week to Date: @wtd.StartDate.ToShortDateString() thru @wtd.EndDate.ToShortDateString()</p></div>
                 <div class="grid">
                     <table class="grid" cellspacing="0" width="100%">
                         <thead>
@@ -60,13 +60,13 @@
                         </thead>
                         <tbody>
                             <tr class="grey_row">
-                                <td>@wtd.MediaSpend.ToString("C")</td>
+                                <td>@wtd.Spend.ToString("C")</td>
                                 <td>@wtd.Impressions.ToString("N0")</td>
                                 <td>@wtd.Clicks.ToString("N0")</td>
                                 <td>@wtd.CTR.ToString("0.00%")</td>
-                                <td>@wtd.eCPC.ToString("C")</td>
-                                <td>@wtd.Conversions.ToString("N0")</td>
-                                <td>@wtd.eCPA.ToString("C")</td>
+                                <td>@wtd.CPC.ToString("C")</td>
+                                <td>@wtd.Convs.ToString("N0")</td>
+                                <td>@wtd.CPA.ToString("C")</td>
                             </tr>
 		                </tbody>
                     </table>
@@ -80,3 +80,19 @@
 
 <div id="page_content">
 </div>
+
+@* TODO: put in div? make closer to bottom blue bar... *@
+Stats include:
+@{
+    bool first = true;
+}
+@if (Model.UserInfo.HasSearch)
+{
+    <text> Paid Search</text>
+    first = false;
+}
+@if (Model.UserInfo.HasProgrammatic())
+{
+    <text>@(first ? "" : " | ")Programmatic</text>
+    first = false;
+}

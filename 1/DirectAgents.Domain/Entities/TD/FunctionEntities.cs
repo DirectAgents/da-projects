@@ -58,6 +58,7 @@ namespace DirectAgents.Domain.Entities.TD
             eCPA = (Conversions == 0) ? 0 : (double)(MediaSpend / Conversions);
             Pacing = (Budget == 0) ? 0 : (double)MediaSpend / Budget;
         }
+        //TODO: rounding - 4 decimals?
 
         public void ComputeWeekStartDate(DayOfWeek startDayOfWeek = DayOfWeek.Monday)
         {

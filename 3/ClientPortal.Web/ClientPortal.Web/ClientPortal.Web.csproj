@@ -309,6 +309,7 @@
     <Compile Include="Models\QuickBooksModels.cs" />
     <Compile Include="Models\ReportModel.cs" />
     <Compile Include="Models\SearchModels.cs" />
+    <Compile Include="Models\StatVM.cs" />
     <Compile Include="Models\UserInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Seeder.cs" />

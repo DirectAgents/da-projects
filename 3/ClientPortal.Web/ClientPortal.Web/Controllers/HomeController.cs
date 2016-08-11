@@ -34,7 +34,8 @@ namespace ClientPortal.Web.Controllers
 
             if (userInfo.IsAdmin)
                 return Redirect("/Admin");
-            //else if has search & prog...
+            else if (userInfo.HasSearch && userInfo.HasProgrammatic())
+                return RedirectToAction("Index", "Combined");
             else if (userInfo.HasSearch)
                 return RedirectToAction("Index", "Search");
             else if (userInfo.HasProgrammatic(true))
@@ -53,8 +54,9 @@ namespace ClientPortal.Web.Controllers
 
             if (!userInfo.HasCake)
             {
-                //if has search & prog...
-                if (userInfo.HasSearch)
+                if (userInfo.HasSearch && userInfo.HasProgrammatic())
+                    return RedirectToAction("Index", "Combined");
+                else if (userInfo.HasSearch)
                     return RedirectToAction("Index", "Search");
                 else if (userInfo.HasProgrammatic())
                     return RedirectToAction("Index", "Home", new { area = "prog" });
