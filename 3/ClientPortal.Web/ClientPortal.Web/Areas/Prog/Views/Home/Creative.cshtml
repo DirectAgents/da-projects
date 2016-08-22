@@ -8,6 +8,18 @@
 <link href='~/Content/AdRoll/dashboard_da.css' rel="stylesheet" type="text/css" />
 
 @Html.Partial("_ClientBar", Model.UserInfo)
+@using (Html.BeginForm("Creative", "Home")) {
+    SelectList ranges = new SelectList(
+    new List<SelectListItem>
+    {
+        new SelectListItem { Value="campaign", Selected = true ,Text = "Campaign To Date" },
+        new SelectListItem { Value="month", Selected = false, Text = "Month To Date" },
+        new SelectListItem { Value="year", Selected = false, Text = "Year to Date" }
+    },"Value","Text",1);
+    @Html.DropDownList("daterange",ranges, new { onchange = "this.form.submit();" });
+}
+
+    
 
 <div id="page_content">
 	<div id="container">
@@ -35,7 +47,7 @@
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("Creative", "Stats")'
+                    url: '@Url.Action("Creative", "Stats", new { startdate = @Model.StartDate})'
                 }
             },
             schema: {

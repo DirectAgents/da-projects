@@ -90,6 +90,29 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public ActionResult Creative(string daterange)
+        {
+            var userInfo = GetUserInfo();
+            int advId = userInfo.ProgAdvertiser.Id;
+            DateTime yesterday = DateTime.Today.AddDays(-1);
+            DateTime startDate;
+            if (daterange == "month")
+                startDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+            else if (daterange == "campaign")
+                startDate = progRepo.EarliestStatDate(advId, checkAll: true) ?? yesterday;
+            else
+                startDate = new DateTime(DateTime.Today.Year, 1, 1);
+            var model = new ReportVM
+            {
+                UserInfo = userInfo,
+                StartDate = startDate,
+                EndDate = yesterday
+            };
+            ViewBag.start = new DateTime(DateTime.Today.Year, 5, 1);
+            return View(model);
+        }
+
         public ActionResult Site()
         {
             var userInfo = GetUserInfo();

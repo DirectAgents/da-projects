@@ -99,10 +99,10 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
 
         // --- Creative Performance ---
 
-        public JsonResult Creative()
+        public JsonResult Creative(DateTime? startdate)
         {
             var userInfo = GetUserInfo();
-            var stats = progRepo.CreativePerfBasicStats(userInfo.ProgAdvertiser.Id, includeInfo: true)
+            var stats = progRepo.CreativePerfBasicStats(userInfo.ProgAdvertiser.Id, includeInfo: true, startDate: startdate)
                 .OrderBy(s => s.eCPA == 0).ThenBy(s => s.eCPA).ThenBy(s => s.MediaSpend);
 
             string progDemoAdvs = ConfigurationManager.AppSettings["ProgDemoAdvs"] ?? "";
