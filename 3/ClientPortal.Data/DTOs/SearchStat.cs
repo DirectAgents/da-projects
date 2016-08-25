@@ -343,6 +343,17 @@ namespace ClientPortal.Data.DTOs
             }
         }
 
+        internal DateTime SingleDate // (note: setting (end) Date not required)
+        {
+            set
+            {
+                this.EndDate = value;
+                this.Days = 1;
+                // this.Range = ?
+                // this.Title = ?
+            }
+        }
+
         // will set Title only if value is not null
         internal string TitleIfNotNull
         {

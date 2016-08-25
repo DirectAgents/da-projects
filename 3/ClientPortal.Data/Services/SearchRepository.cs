@@ -194,6 +194,10 @@ namespace ClientPortal.Data.Services
             return searchCampaigns;
         }
 
+        //public IQueryable<SearchDailySummary> GetSearchDailySummaries(int searchProfileId, DateTime? start, DateTime? end, bool includeToday = false)
+        //{
+        //    return GetSearchDailySummaries(null, searchProfileId, null, null, null, null, start, end, includeToday);
+        //}
         private IQueryable<SearchDailySummary> GetSearchDailySummaries(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, DateTime? start, DateTime? end, bool includeToday)
         {
             var searchCampaigns = GetSearchCampaigns(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix);
@@ -578,6 +582,34 @@ namespace ClientPortal.Data.Services
                     CPL = (s.Orders + s.Calls == 0) ? 0 : Math.Round(s.Cost / (s.Orders + s.Calls), 2)
                 });
             return stats.AsQueryable();
+        }
+
+        public IQueryable<SearchStat> GetDailyStats(SearchProfile sp, DateTime start, DateTime end)
+        {
+            return GetDailyStats(sp.SearchProfileId, start, end, sp.RevPerViewThru);
+        }
+        //TODO: useAnalytics, includeCalls
+        public IQueryable<SearchStat> GetDailyStats(int searchProfileId, DateTime start, DateTime end, decimal revPerViewThru)
+        {
+            var searchCampaigns = GetSearchCampaigns(null, searchProfileId, null, null, null);
+            var stats = GetSearchDailySummaries(searchCampaigns, null, start, end, true)
+                .GroupBy(s => s.Date)
+                .Select(g =>
+                new SearchStat
+                {
+                    SingleDate = g.Key,
+                    Impressions = g.Sum(s => s.Impressions),
+                    Clicks = g.Sum(s => s.Clicks),
+                    Orders = g.Sum(s => s.Orders),
+                    ViewThrus = g.Sum(s => s.ViewThrus),
+                    RevPerViewThru = revPerViewThru,
+                    CassConvs = g.Sum(s => s.CassConvs),
+                    CassConVal = g.Sum(s => s.CassConVal),
+                    Revenue = g.Sum(s => s.Revenue),
+                    Cost = g.Sum(s => s.Cost)
+                })
+                .ToList().AsQueryable();
+            return stats.OrderBy(s => s.EndDate);
         }
 
         public IQueryable<SearchStat> GetMonthStats(SearchProfile sp, int? numMonths, DateTime end, bool yoy, string campaignNameInclude = null, string campaignNameExclude = null)

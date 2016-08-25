@@ -69,7 +69,7 @@ namespace DirectAgents.Domain.Abstract
         //TD Stats
         IEnumerable<BasicStat> DayOfWeekBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool mondayFirst = false);
         IEnumerable<BasicStat> WeeklyBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null);
-        IEnumerable<BasicStat> DailySummaryBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null);
+        IEnumerable<BasicStat> DailySummaryBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool computeCalculatedStats = true);
         IEnumerable<BasicStat> MTDStrategyBasicStats(int advId, DateTime endDate);
         IEnumerable<BasicStat> StrategyBasicStats(int advId, DateTime startDate, DateTime endDate);
         IEnumerable<BasicStat> CreativePerfBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool includeInfo = false);
@@ -81,11 +81,11 @@ namespace DirectAgents.Domain.Abstract
         IEnumerable<LeadInfo> LeadInfos(int advId, DateTime? startDate, DateTime? endDate);
 
         DateTime? EarliestStatDate(int? advId, bool checkAll = false);
-        IStatsRange StatsRange_All(int? advId, bool includeConvs = false, bool includeSiteSummaries = false);
-        IStatsRange StatsRange_Strategy(int? advId);
-        IStatsRange StatsRange_TDad(int? advId);
-        IStatsRange StatsRange_Site(int? advId);
-        IStatsRange StatsRange_Conv(int? advId);
+        //IStatsRange StatsRange_All(int? advId, bool includeConvs = false, bool includeSiteSummaries = false);
+        //IStatsRange StatsRange_Strategy(int? advId);
+        //IStatsRange StatsRange_TDad(int? advId);
+        //IStatsRange StatsRange_Site(int? advId);
+        //IStatsRange StatsRange_Conv(int? advId);
         TDStatsGauge GetStatsGauge(ExtAccount extAccount = null, Platform platform = null);
         TDStatsGauge GetStatsGaugeViaIds(int? acctId = null, int? platformId = null);
         DailySummary DailySummary(DateTime date, int acctId);

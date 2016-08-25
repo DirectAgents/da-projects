@@ -79,9 +79,69 @@
 </div>
 
 <div id="page_content">
+    <div id="container">
+        <div id="page_content_exec">
+            <div id="exec_leftbar">
+                <div class="heading"><p>Campaign Metrics</p></div>
+                <div class="content_box2">
+                    <ul class="exec_leftchart">
+                        <li class="axis">
+                            <div class="label">Spend</div>
+                            <div class="biglabel" id="textSpend"></div>
+                        </li>
+                        <li>
+                            <div class="exec_spark" id="sparkSpend"></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="content_box2">
+                    <ul class="exec_leftchart">
+                        <li class="axis">
+                            <div class="label">Impressions</div>
+                            <div class="biglabel" id="textImpressions"></div>
+                        </li>
+                        <li>
+                            <div class="exec_spark" id="sparkImpressions"></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="content_box2">
+                    <ul class="exec_leftchart">
+                        <li class="axis">
+                            <div class="label">Clicks</div>
+                            <div class="biglabel" id="textClicks"></div>
+                        </li>
+                        <li>
+                            <div class="exec_spark" id="sparkClicks"></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="content_box2">
+                    <ul class="exec_leftchart">
+                        <li class="axis">
+                            <div class="label">Conversions</div>
+                            <div class="biglabel" id="textConversions"></div>
+                        </li>
+                        <li>
+                            <div class="exec_spark" id="sparkConversions"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="exec_right">
+                <section>
+                    <div class="heading"><p>eCPA Trend</p></div>
+                    <div class="content_box">
+                        <div id="trendECPA" style="height:205px"></div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
 </div>
 
 @* TODO: put in div? make closer to bottom blue bar... *@
+<div style="clear:both;">
 Stats include:
 @{
     bool first = true;
@@ -95,4 +155,113 @@ Stats include:
 {
     <text>@(first ? "" : " | ")Programmatic</text>
     first = false;
+}
+</div>
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+        var datasource = GetDataSourceMain();
+        SetupCharts(datasource);
+        datasource.read();
+        datasource.bind("change", MainDataSource_OnChange);
+    });
+
+    function GetDataSourceMain() {
+        return new kendo.data.DataSource({
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("DailyStats")',
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                aggregates: 'aggregates',
+                model: {
+                    id: 'Id',
+                    fields: {
+                        Date: { type: 'date' }
+                        // rest of fields: numbers
+                    }
+                }
+            },
+            aggregate: [
+                { field: "Spend", aggregate: "sum" },
+                { field: "Impressions", aggregate: "sum" },
+                { field: "Clicks", aggregate: "sum" },
+                { field: "Convs", aggregate: "sum" }
+            ]
+        });
+    }
+    function MainDataSource_OnChange() {
+        var aggs = this.aggregates();
+        if (aggs) {
+            $('#textSpend').html(kendo.toString(aggs.Spend.sum, 'C'));
+            $('#textImpressions').html(kendo.toString(aggs.Impressions.sum, 'N0'));
+            $('#textClicks').html(kendo.toString(aggs.Clicks.sum, 'N0'));
+            $('#textConversions').html(kendo.toString(aggs.Convs.sum, 'N0'));
+        }
+    }
+
+    function SetupCharts(datasource) {
+        $("#sparkSpend").kendoSparkline({
+            dataSource: datasource,
+            autoBind: false,
+            chartArea: { background: "transparent" },
+            type: "area",
+            series: [{ field: "Spend", color: "rgb(13, 141, 214)", tooltip: { format: "{0:C}" } }],
+            categoryAxis: { field: "Date" }
+        });
+        $("#sparkImpressions").kendoSparkline({
+            dataSource: datasource,
+            autoBind: false,
+            chartArea: { background: "transparent" },
+            type: "area",
+            series: [{ field: "Impressions", color: "rgb(13, 141, 214)", tooltip: { format: "{0:N0}" } }],
+            categoryAxis: { field: "Date" }
+        });
+        $("#sparkClicks").kendoSparkline({
+            dataSource: datasource,
+            autoBind: false,
+            chartArea: { background: "transparent" },
+            type: "area",
+            series: [{ field: "Clicks", color: "rgb(13, 141, 214)", tooltip: { format: "{0:N0}" } }],
+            categoryAxis: { field: "Date" }
+        });
+        $("#sparkConversions").kendoSparkline({
+            dataSource: datasource,
+            autoBind: false,
+            chartArea: { background: "transparent" },
+            type: "area",
+            series: [{ field: "Convs", color: "rgb(13, 141, 214)", tooltip: { format: "{0:N0}" } }],
+            categoryAxis: { field: "Date" }
+        });
+        $("#trendECPA").kendoChart({
+            dataSource: datasource,
+            autoBind: false,
+            chartArea: {
+                background: "transparent"
+            },
+            series: [
+                { field: "CPA", type: "area", color: "rgb(13, 141, 214)" }
+            ],
+            categoryAxis: {
+                field: "Date",
+                labels: { rotation: -90, step: 15 },
+                axisCrossingValue: [0, 2000],
+                majorGridLines: { visible: false }
+            },
+            valueAxis: [
+                { labels: { format: "C" } }
+            ],
+            tooltip: {
+                visible: true,
+                template: "#= kendo.format('{0:d}',category) #: #= kendo.format('{0:C}',value) #"
+            }
+        });
+    }
+</script>
 }

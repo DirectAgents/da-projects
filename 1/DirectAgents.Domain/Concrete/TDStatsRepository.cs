@@ -45,12 +45,12 @@ group by DatePart(weekday, Date) order by Day";
             }
         }
 
-        public IEnumerable<BasicStat> DailySummaryBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null)
+        public IEnumerable<BasicStat> DailySummaryBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool computeCalculatedStats = true)
         {
-            return DailySummaryBasicStatsWithCompute(advId, startDate, endDate, null);
+            return DailySummaryBasicStatsWithCompute(advId, startDate, endDate, computeCalculatedStats: computeCalculatedStats);
         }
 
-        private IEnumerable<BasicStat> DailySummaryBasicStatsWithCompute(int advId, DateTime? startDate, DateTime? endDate, string sql = null, bool computeWeekStartDate = false)
+        private IEnumerable<BasicStat> DailySummaryBasicStatsWithCompute(int advId, DateTime? startDate, DateTime? endDate, string sql = null, bool computeCalculatedStats = true, bool computeWeekStartDate = false)
         {
             DateTime yesterday = DateTime.Today.AddDays(-1);
             if (!startDate.HasValue)
@@ -65,7 +65,8 @@ group by Date order by Date";
             var stats = DailySummaryBasicStatsRaw(advId, startDate.Value, endDate.Value, sql);
             foreach (var stat in stats)
             {
-                stat.ComputeCalculatedStats();
+                if (computeCalculatedStats)
+                    stat.ComputeCalculatedStats();
                 if (computeWeekStartDate)
                     stat.ComputeWeekStartDate();
                 yield return stat;

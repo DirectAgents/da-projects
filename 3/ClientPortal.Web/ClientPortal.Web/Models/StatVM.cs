@@ -1,4 +1,5 @@
 ﻿using System;
+using ClientPortal.Data.Contexts;
 using ClientPortal.Data.DTOs;
 using DirectAgents.Domain.Entities.TD;
 
@@ -6,14 +7,30 @@ namespace ClientPortal.Web.Models
 {
     public class StatVM
     {
+        public StatVM(DateTime date)
+        {
+            Date = date;
+        }
         public StatVM(DateTime startDate, DateTime endDate)
         {
             StartDate = startDate;
             EndDate = endDate;
         }
 
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        // Designed to use one or the other: [Date] or [StartDate and EndDate]
+        public DateTime Date { get; set; }
+
+        public DateTime? _startDate;
+        public DateTime StartDate
+        {
+            set { _startDate = value; }
+            get { if (_startDate.HasValue) return _startDate.Value; else return Date; }
+        }
+        public DateTime EndDate
+        {
+            set { Date = value; }
+            get { return Date; }
+        }
 
         public decimal Spend { get; set; }
 
@@ -39,6 +56,13 @@ namespace ClientPortal.Web.Models
             get { return (Convs == 0) ? 0 : Math.Round(Spend / Convs, 4); }
         }
 
+        public void Add(SearchDailySummary sds)
+        {
+            Spend += sds.Cost;
+            Impressions += sds.Impressions;
+            Clicks += sds.Clicks;
+            Convs += sds.Orders;
+        }
         public void Add(SearchStat searchStat)
         {
             Spend += searchStat.Cost;

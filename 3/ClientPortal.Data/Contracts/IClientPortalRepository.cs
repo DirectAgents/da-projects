@@ -118,8 +118,10 @@ namespace ClientPortal.Data.Contracts
         bool InitializeSearchProfileSimpleReport(int searchProfileId, string email = null);
 
         SearchStat GetSearchStats(SearchProfile sp, DateTime? start, DateTime? end, bool? includeToday, string campaignNameInclude = null, string campaignNameExclude = null);
+        //IQueryable<SearchDailySummary> GetSearchDailySummaries(int searchProfileId, DateTime? start, DateTime? end, bool includeToday = false);
         IQueryable<SearchStat> GetWeekStats(SearchProfile sp, int numWeeks, DateTime? endDate, string campaignNameInclude = null, string campaignNameExclude = null);
         IQueryable<WeeklySearchStat> GetCampaignWeekStats2(SearchProfile sp, DateTime startDate, DateTime endDate);
+        IQueryable<SearchStat> GetDailyStats(SearchProfile sp, DateTime start, DateTime end);
         IQueryable<SearchStat> GetMonthStats(SearchProfile sp, int? numMonths, DateTime end, bool yoy, string campaignNameInclude = null, string campaignNameExclude = null);
         IQueryable<SearchStat> GetChannelStats(SearchProfile sp, int numWeeks, bool includeToday, bool includeAccountBreakdown, bool includeSearchChannels);
         IQueryable<SearchStat> GetCampaignStats(SearchProfile sp, string channel, DateTime? start, DateTime? end, bool breakdown, bool showingCassConvs, string campaignNameInclude = null, string campaignNameExclude = null);
