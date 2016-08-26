@@ -32,7 +32,7 @@ namespace ClientPortal.Web.Controllers
             if (titleSort != null) titleSort.Field = "StartDate";
 
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
-            var weekStats = cpRepo.GetWeekStats(userInfo.SearchProfile, numweeks, endDate);
+            var weekStats = cpRepo.GetWeekStats(userInfo.SearchProfile, numweeks, null, endDate);
             var kgrid = new KendoGridEx<SearchStat>(request, weekStats);
 
             return CreateJsonResult(kgrid);
@@ -42,7 +42,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
-            var weekStats = cpRepo.GetWeekStats(userInfo.SearchProfile, numweeks, endDate);
+            var weekStats = cpRepo.GetWeekStats(userInfo.SearchProfile, numweeks, null, endDate);
 
             string filename = "WeeklySummary" + ControllerHelpers.DateStamp() + ".csv";
             if (userInfo.SearchProfile.ShowRevenue)
@@ -67,8 +67,7 @@ namespace ClientPortal.Web.Controllers
             if (titleSort != null) titleSort.Field = "StartDate";
 
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
-            bool yoy = false;
-            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile, nummonths, endDate, yoy);
+            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile, nummonths, null, endDate);
             var kgrid = new KendoGridEx<SearchStat>(request, monthStats);
 
             return CreateJsonResult(kgrid);
@@ -78,8 +77,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
             var endDate = userInfo.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today;
-            bool yoy = false;
-            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile, nummonths, endDate, yoy);
+            var monthStats = cpRepo.GetMonthStats(userInfo.SearchProfile, nummonths, null, endDate);
 
             string filename = "MonthlySummary" + ControllerHelpers.DateStamp() + ".csv";
             if (userInfo.SearchProfile.ShowRevenue)

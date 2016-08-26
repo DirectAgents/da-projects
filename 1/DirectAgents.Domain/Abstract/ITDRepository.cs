@@ -68,8 +68,9 @@ namespace DirectAgents.Domain.Abstract
 
         //TD Stats
         IEnumerable<BasicStat> DayOfWeekBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool mondayFirst = false);
-        IEnumerable<BasicStat> WeeklyBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null);
-        IEnumerable<BasicStat> DailySummaryBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool computeCalculatedStats = true);
+        IEnumerable<BasicStat> WeeklyBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool computeCalculatedStats = true);
+        IEnumerable<BasicStat> MonthlyBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool computeCalculatedStats = true);
+        IEnumerable<BasicStat> DailyBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool computeCalculatedStats = true);
         IEnumerable<BasicStat> MTDStrategyBasicStats(int advId, DateTime endDate);
         IEnumerable<BasicStat> StrategyBasicStats(int advId, DateTime startDate, DateTime endDate);
         IEnumerable<BasicStat> CreativePerfBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool includeInfo = false);

@@ -57,8 +57,8 @@ namespace DAGenerators.Spreadsheets
 
             //bool partialMonth = (endDate.AddDays(1).Day > 1); // it's a full month if the day after endDate is the 1st
 
-            var weeklyStats = cpRepo.GetWeekStats(searchProfile, numWeeks, endDate, campaignNameInclude);
-            var monthlyStats = cpRepo.GetMonthStats(searchProfile, numMonths, endDate, false, campaignNameInclude);
+            var weeklyStats = cpRepo.GetWeekStats(searchProfile, numWeeks, null, endDate, campaignNameInclude);
+            var monthlyStats = cpRepo.GetMonthStats(searchProfile, numMonths, null, endDate, false, campaignNameInclude);
             spreadsheet.LoadWeeklyStats(weeklyStats);
             spreadsheet.LoadMonthlyStats(monthlyStats);
 
@@ -71,7 +71,7 @@ namespace DAGenerators.Spreadsheets
             // YearOverYear full stats - for the YoY sheet/tab
             //int numMonthsYoY = numMonths; // (numMonths > 12) ? 12 : numMonths;
             int numMonthsYoY = (numMonths > 12) ? 12 : numMonths;
-            var yoyMonthlyStats = cpRepo.GetMonthStats(searchProfile, numMonthsYoY, endDate, true, campaignNameInclude);
+            var yoyMonthlyStats = cpRepo.GetMonthStats(searchProfile, numMonthsYoY, null, endDate, true, campaignNameInclude);
             spreadsheet.LoadYearOverYear_Full(yoyMonthlyStats);
 
 
@@ -154,8 +154,8 @@ namespace DAGenerators.Spreadsheets
 
             // Display vs Search tab
             //TODO: be able to use campaignNameInclude if passed in (combine terms)
-            var weeklyStats_Display = cpRepo.GetWeekStats(searchProfile, numWeeks, endDate, campaignNameInclude: "display");
-            var weeklyStats_Search = cpRepo.GetWeekStats(searchProfile, numWeeks, endDate, campaignNameExclude: "display");
+            var weeklyStats_Display = cpRepo.GetWeekStats(searchProfile, numWeeks, null, endDate, campaignNameInclude: "display");
+            var weeklyStats_Search = cpRepo.GetWeekStats(searchProfile, numWeeks, null, endDate, campaignNameExclude: "display");
             spreadsheet.LoadWeeklyDisplayStats(weeklyStats_Display);
             spreadsheet.LoadWeeklySearchStats(weeklyStats_Search);
 

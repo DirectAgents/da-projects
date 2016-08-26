@@ -88,9 +88,9 @@ namespace CakeExtracter.Commands
                 //string bucketName = "099700104058925463911409777269032_report";
                 //string bucketName = "151075984680687222131409855651304_report"; // test123 (2:34)
                 //string bucketName = "151075984680687222131409861541653_report"; // ui_created
-                string bucketName = "151075984680687222131410283081521_report"; // Betterment_creative
+                //string bucketName = "151075984680687222131410283081521_report"; // Betterment_creative
 
-                //ListBucket(service, credential);
+                ListBucket(service, credential);
                 GetBucket(service, credential);
 
                 //var request = service.Objects.List(bucketName);
@@ -107,28 +107,34 @@ namespace CakeExtracter.Commands
         }
         private void ListBucket(StorageService service, ServiceAccountCredential credential)
         {
-            string bucketName = "gdbm-479-320231"; // Betterment_creative
-            //string bucketName = "gdbm-479-320231/entity/";
+            string bucketName = "151075984680687222131440452270742_report"; // Crackle_creative
 
             // List
             var request = service.Objects.List(bucketName);
             var results = request.Execute();
             Logger.Info("Found {0} objects in the bucket.", results.Items.Count);
-            string dateString = DateTime.Today.ToString("yyyyMMdd");
+            string dateString = DateTime.Today.ToString("yyyy-MM-dd");
             var reportObject = results.Items.Where(i => i.Name.Contains(dateString)).FirstOrDefault();
 
             if (this.Download) TestDownload(credential, reportObject);
         }
         private void GetBucket(StorageService service, ServiceAccountCredential credential)
         {
-            string bucketName = "gdbm-479-320231"; // Betterment_creative
+            string bucketName = "gdbm-479-320231";
             //string bucketName = "gdbm-479-320231/entity/";
 
-            // Get
+            //var listRequest = service.Objects.List(bucketName + "/entity/");
+            var listRequest = service.Objects.List(bucketName);
+            var results = listRequest.Execute();
+            Logger.Info("Found {0} objects in the bucket.", results.Items.Count);
+            string dateString = DateTime.Today.ToString("yyyyMMdd");
+            var x = results.Items.Where(i => i.Name.Contains(dateString));
+
             var bucketRequest = service.Buckets.Get(bucketName);
             var bucketResult = bucketRequest.Execute();
-            var request = service.Objects.Get(bucketName, "entity/20160520.0.Language.json");
-            var reportObject = request.Execute();
+
+            var getRequest = service.Objects.Get(bucketName, "entity/20160523.0.Creative.json");
+            var reportObject = getRequest.Execute();
 
             if (this.Download) TestDownload(credential, reportObject);
         }

@@ -70,28 +70,46 @@ namespace ClientPortal.Web.Controllers
             return View(model);
         }
 
+        //NEXT: weekly & monthly
         public JsonResult DailyStats()
         {
-            var userInfo = GetUserInfo();
             var today = DateTime.Today;
             var oneYearAgo = today.AddYears(-1);
             var yesterday = today.AddDays(-1);
+            return IntervalStats(oneYearAgo, yesterday);
+        }
 
-            IEnumerable<SearchStat> searchDailyStats = new List<SearchStat>();
+        public JsonResult IntervalStats(DateTime start, DateTime end, string interval = "daily")
+        {
+            var userInfo = GetUserInfo();
+            IEnumerable<SearchStat> searchStats = new List<SearchStat>();
             if (userInfo.HasSearch)
-                searchDailyStats = cpRepo.GetDailyStats(userInfo.SearchProfile, oneYearAgo, yesterday);
-            IEnumerable<BasicStat> progDailyStats = new List<BasicStat>();
+            {
+                if (interval == "monthly")
+                    searchStats = cpRepo.GetMonthStats(userInfo.SearchProfile, null, start, end);
+                else if (interval == "weekly")
+                    searchStats = cpRepo.GetWeekStats(userInfo.SearchProfile, null, start, end);
+                else
+                    searchStats = cpRepo.GetDailyStats(userInfo.SearchProfile, start, end);
+            }
+            IEnumerable<BasicStat> progStats = new List<BasicStat>();
             if (userInfo.HasProgrammatic())
-                progDailyStats = progRepo.DailySummaryBasicStats(userInfo.ProgAdvertiser.Id, oneYearAgo, yesterday, computeCalculatedStats: false);
-
-            var stats = CombinedDailyStats(searchDailyStats, progDailyStats);
+            {
+                if (interval == "monthly")
+                    progStats = progRepo.MonthlyBasicStats(userInfo.ProgAdvertiser.Id, start, end, computeCalculatedStats: false);
+                else if (interval == "weekly")
+                    progStats = progRepo.WeeklyBasicStats(userInfo.ProgAdvertiser.Id, start, end, computeCalculatedStats: false);
+                else
+                    progStats = progRepo.DailyBasicStats(userInfo.ProgAdvertiser.Id, start, end, computeCalculatedStats: false);
+            }
+            var stats = CombinedStats(searchStats, progStats);
             return CreateJsonResult(stats);
         }
 
-        private IEnumerable<StatVM> CombinedDailyStats(IEnumerable<SearchStat> searchDailyStats, IEnumerable<BasicStat> progDailyStats)
+        private IEnumerable<StatVM> CombinedStats(IEnumerable<SearchStat> searchStats, IEnumerable<BasicStat> progStats)
         {
-            var searchEnumerator = searchDailyStats.GetEnumerator();
-            var progEnumerator = progDailyStats.GetEnumerator();
+            var searchEnumerator = searchStats.GetEnumerator();
+            var progEnumerator = progStats.GetEnumerator();
 
             SearchStat searchStat = null;
             if (searchEnumerator.MoveNext())
@@ -102,13 +120,13 @@ namespace ClientPortal.Web.Controllers
 
             while (searchStat != null || progStat != null)
             {
-                DateTime? searchDate = (searchStat != null) ? searchStat.EndDate : (DateTime?)null;
+                DateTime? searchDate = (searchStat != null) ? searchStat.StartDate : (DateTime?)null;
                 DateTime? progDate = (progStat != null) ? progStat.Date : (DateTime?)null;
                 var statVM = new StatVM(DateTime.Today);
                 if (progDate == null || (searchDate.HasValue && searchDate.Value <= progDate.Value))
                 {
                     // use the searchStat
-                    statVM.Date = searchStat.EndDate;
+                    statVM.Date = searchStat.StartDate;
                     statVM.Add(searchStat);
                     if (searchEnumerator.MoveNext())
                         searchStat = searchEnumerator.Current;
@@ -140,9 +158,9 @@ namespace ClientPortal.Web.Controllers
                 searchDailyStats = cpRepo.GetDailyStats(userInfo.SearchProfile, start, yesterday);
             IEnumerable<BasicStat> progDailyStats = new List<BasicStat>();
             if (userInfo.HasProgrammatic())
-                progDailyStats = progRepo.DailySummaryBasicStats(userInfo.ProgAdvertiser.Id, start, yesterday, computeCalculatedStats: false);
+                progDailyStats = progRepo.DailyBasicStats(userInfo.ProgAdvertiser.Id, start, yesterday, computeCalculatedStats: false);
 
-            var stats = CombinedDailyStats(searchDailyStats, progDailyStats);
+            var stats = CombinedStats(searchDailyStats, progDailyStats);
             var totals = new StatVM(start)
             {
                 Spend = stats.Sum(s => s.Spend),

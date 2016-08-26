@@ -128,7 +128,7 @@ namespace CakeExtracter.Reports
             var toDate = simpleReport.GetStatsEndDate();
             bool useAnalytics = false; // todo: get this from the SearchProfile when the column is moved there
 
-            var stats = cpRepo.GetWeekStats(searchProfile, numWeeks, toDate).ToList();
+            var stats = cpRepo.GetWeekStats(searchProfile, numWeeks, null, toDate).ToList();
             foreach (var stat in stats)
             {
                 stat.Title = stat.Title.Replace(" ", "");

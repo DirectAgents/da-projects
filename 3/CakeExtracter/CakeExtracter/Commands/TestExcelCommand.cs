@@ -99,14 +99,14 @@ namespace CakeExtracter.Commands
                 if (weeklyNotMonthly)
                 {
                     int numWeeks = 6;
-                    stats = cpRepo.GetWeekStats(searchProfile, numWeeks, null);
+                    stats = cpRepo.GetWeekStats(searchProfile, numWeeks, null, null);
                 }
                 else
                 {
                     int numMonths = 6;
                     var endDate = DateTime.Today.AddDays(-1);
                     bool yoy = true;
-                    stats = cpRepo.GetMonthStats(searchProfile, numMonths, endDate, yoy);
+                    stats = cpRepo.GetMonthStats(searchProfile, numMonths, null, endDate, yoy);
                 }
             }
             return stats;

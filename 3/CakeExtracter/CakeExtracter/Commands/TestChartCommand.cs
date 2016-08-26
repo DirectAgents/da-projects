@@ -103,7 +103,7 @@ namespace CakeExtracter.Commands
             {
                 var cpRepo = new ClientPortalRepository(db);
                 var searchProfile = cpRepo.GetSearchProfile(profileId);
-                stats = cpRepo.GetWeekStats(searchProfile, numWeeks, null);
+                stats = cpRepo.GetWeekStats(searchProfile, numWeeks, null, null);
             }
             return stats;
         }

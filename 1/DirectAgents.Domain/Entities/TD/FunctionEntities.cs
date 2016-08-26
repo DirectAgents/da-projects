@@ -6,7 +6,7 @@ namespace DirectAgents.Domain.Entities.TD
     {
         public int Day { get; set; }
         public DateTime Date { get; set; } // also used for End Date
-        public DateTime StartDate { get; set; } // also used for Start Day of Week
+        public DateTime StartDate { get; set; } // also used for Start Day of Week/Month
 
         public string DayName
         {
@@ -65,6 +65,10 @@ namespace DirectAgents.Domain.Entities.TD
             StartDate = Date;
             while (StartDate.DayOfWeek != startDayOfWeek)
                 StartDate = StartDate.AddDays(-1);
+        }
+        public void ComputeMonthStartDate()
+        {
+            StartDate = new DateTime(Date.Year, Date.Month, 1);
         }
     }
 

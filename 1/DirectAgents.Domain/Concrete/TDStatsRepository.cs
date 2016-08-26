@@ -16,7 +16,7 @@ namespace DirectAgents.Domain.Concrete
             var sql = @"select DatePart(weekday, Date) as Day, sum(Impressions) as Impressions, sum(Clicks) as Clicks, sum(Conversions) as Conversions, sum(MediaSpend) as MediaSpend, sum(MgmtFee) as MgmtFee
 from td.fDailySummaryBasicStats(@p1, @p2, @p3)
 group by DatePart(weekday, Date) order by Day";
-            var stats = DailySummaryBasicStatsWithCompute(advId, startDate, endDate, sql: sql);
+            var stats = DailyBasicStatsWithCompute(advId, startDate, endDate, sql: sql);
             if (mondayFirst)
             {
                 return stats.OrderBy(s => s.Day < 2).ThenBy(s => s.Day);
@@ -25,13 +25,21 @@ group by DatePart(weekday, Date) order by Day";
                 return stats;
         }
 
-        public IEnumerable<BasicStat> WeeklyBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null)
+        public IEnumerable<BasicStat> WeeklyBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool computeCalculatedStats = true)
         {
-            var dailyStats = DailySummaryBasicStatsWithCompute(advId, startDate, endDate, computeWeekStartDate: true);
-            var weekGroups = dailyStats.GroupBy(s => s.StartDate).OrderBy(g => g.Key);
-            foreach (var group in weekGroups)
+            return WeeklyMonthlyBasicStats(advId, startDate, endDate, computeCalculatedStats, weeklyNotMonthly: true);
+        }
+        public IEnumerable<BasicStat> MonthlyBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool computeCalculatedStats = true)
+        {
+            return WeeklyMonthlyBasicStats(advId, startDate, endDate, computeCalculatedStats, weeklyNotMonthly: false);
+        }
+        private IEnumerable<BasicStat> WeeklyMonthlyBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool computeCalculatedStats = true, bool weeklyNotMonthly = true)
+        {
+            var dailyStats = DailyBasicStatsWithCompute(advId, startDate, endDate, computeCalculatedStats: false, computeWeekStartDate: weeklyNotMonthly, computeMonthStartDate: !weeklyNotMonthly);
+            var groupedStats = dailyStats.GroupBy(s => s.StartDate).OrderBy(g => g.Key);
+            foreach (var group in groupedStats)
             {
-                var weekStat = new BasicStat
+                var groupStat = new BasicStat
                 {
                     Date = group.Key,
                     Impressions = group.Sum(s => s.Impressions),
@@ -40,17 +48,18 @@ group by DatePart(weekday, Date) order by Day";
                     MediaSpend = group.Sum(s => s.MediaSpend),
                     MgmtFee = group.Sum(s => s.MgmtFee)
                 };
-                weekStat.ComputeCalculatedStats();
-                yield return weekStat;
+                if (computeCalculatedStats)
+                    groupStat.ComputeCalculatedStats();
+                yield return groupStat;
             }
         }
 
-        public IEnumerable<BasicStat> DailySummaryBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool computeCalculatedStats = true)
+        public IEnumerable<BasicStat> DailyBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool computeCalculatedStats = true)
         {
-            return DailySummaryBasicStatsWithCompute(advId, startDate, endDate, computeCalculatedStats: computeCalculatedStats);
+            return DailyBasicStatsWithCompute(advId, startDate, endDate, computeCalculatedStats: computeCalculatedStats);
         }
 
-        private IEnumerable<BasicStat> DailySummaryBasicStatsWithCompute(int advId, DateTime? startDate, DateTime? endDate, string sql = null, bool computeCalculatedStats = true, bool computeWeekStartDate = false)
+        private IEnumerable<BasicStat> DailyBasicStatsWithCompute(int advId, DateTime? startDate, DateTime? endDate, string sql = null, bool computeCalculatedStats = true, bool computeWeekStartDate = false, bool computeMonthStartDate = false)
         {
             DateTime yesterday = DateTime.Today.AddDays(-1);
             if (!startDate.HasValue)
@@ -62,13 +71,15 @@ group by DatePart(weekday, Date) order by Day";
                 sql = @"select Date, sum(Impressions) as Impressions, sum(Clicks) as Clicks, sum(Conversions) as Conversions, sum(MediaSpend) as MediaSpend, sum(MgmtFee) as MgmtFee
 from td.fDailySummaryBasicStats(@p1, @p2, @p3)
 group by Date order by Date";
-            var stats = DailySummaryBasicStatsRaw(advId, startDate.Value, endDate.Value, sql);
+            var stats = DailyBasicStatsRaw(advId, startDate.Value, endDate.Value, sql);
             foreach (var stat in stats)
             {
                 if (computeCalculatedStats)
                     stat.ComputeCalculatedStats();
                 if (computeWeekStartDate)
                     stat.ComputeWeekStartDate();
+                if (computeMonthStartDate)
+                    stat.ComputeMonthStartDate();
                 yield return stat;
             }
         }
@@ -83,7 +94,7 @@ group by Date order by Date";
             string sql = @"select PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv, sum(Impressions) as Impressions, sum(Clicks) as Clicks, sum(PostClickConv) as PostClickConv,sum(PostViewConv) as PostViewConv, sum(Conversions) as Conversions, sum(MediaSpend) as MediaSpend, sum(MgmtFee) as MgmtFee
 from td.fStrategySummaryBasicStats(@p1, @p2, @p3)
 group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by PlatformAlias,MediaSpend desc,StrategyName";
-            var stats = DailySummaryBasicStatsRaw(advId, startDate, endDate, sql);
+            var stats = DailyBasicStatsRaw(advId, startDate, endDate, sql);
             foreach (var stat in stats)
             {
                 stat.ComputeCalculatedStats();
@@ -130,7 +141,7 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
                 endDate = yesterday;
 
             var sql = "select * from td.fCreativeProgressBasicStatsGroupByName(@p1, @p2, @p3, NULL)";
-            var stats = DailySummaryBasicStatsRaw(advId, startDate.Value, endDate.Value, sql);
+            var stats = DailyBasicStatsRaw(advId, startDate.Value, endDate.Value, sql);
             if (includeInfo)
                 return CreativeStatsWithInfo(stats);
             else
@@ -167,11 +178,11 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
         private IEnumerable<BasicStat> SiteSummaryBasicStatsRaw(int advId, DateTime startDate, DateTime endDate)
         {
             var sql = "select * from td.fSiteSummaryBasicStats(@p1, @p2, @p3)";
-            return DailySummaryBasicStatsRaw(advId, startDate, endDate, sql);
+            return DailyBasicStatsRaw(advId, startDate, endDate, sql);
         }
 
         // Return value is unexecuted query (?)
-        private IEnumerable<BasicStat> DailySummaryBasicStatsRaw(int advId, DateTime startDate, DateTime endDate, string sql = null)
+        private IEnumerable<BasicStat> DailyBasicStatsRaw(int advId, DateTime startDate, DateTime endDate, string sql = null)
         {
             if (sql == null)
                 sql = "select * from td.fDailySummaryBasicStats(@p1, @p2, @p3)";
@@ -194,7 +205,7 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
         //NOTE: as of now, basicstat.Budget will only be valid if startDate is the 1st and endDate is within the same month
         public BasicStat DateRangeBasicStat(int advId, DateTime startDate, DateTime endDate)
         {
-            var stats = DailySummaryBasicStatsRaw(advId, startDate, endDate).ToList();
+            var stats = DailyBasicStatsRaw(advId, startDate, endDate).ToList();
             if (stats.Count() == 0)
             {
                 return new BasicStat

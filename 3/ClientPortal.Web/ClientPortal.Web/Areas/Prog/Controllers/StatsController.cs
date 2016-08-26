@@ -49,7 +49,7 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
         public JsonResult DailyCTD() // campaign-to-date dailies
         {
             var userInfo = GetUserInfo();
-            var stats = progRepo.DailySummaryBasicStats(userInfo.ProgAdvertiser.Id);
+            var stats = progRepo.DailyBasicStats(userInfo.ProgAdvertiser.Id);
 
             var json = Json(stats, JsonRequestBehavior.AllowGet); //TODO: don't allow get
             return json;
