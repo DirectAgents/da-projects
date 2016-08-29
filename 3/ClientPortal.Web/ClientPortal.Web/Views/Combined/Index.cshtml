@@ -81,6 +81,14 @@
 <div id="page_content">
     <div id="container">
         <div id="page_content_exec">
+            <div id="interval" style="margin-bottom: 15px;">
+            <label for="intervalselect">Interval: </label>
+            <select id="intervalselect" name="intervalselect" onchange="ChangeInterval()">
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+            </select>
+            </div>
             <div id="exec_leftbar">
                 <div class="heading"><p>Campaign Metrics</p></div>
                 <div class="content_box2">
@@ -167,13 +175,24 @@ Stats include:
         datasource.bind("change", MainDataSource_OnChange);
     });
 
-    function GetDataSourceMain() {
+    function ChangeInterval() {
+        var interval = $('#intervalselect').val();
+        var cdatasource = GetDataSourceMain(interval);
+        SetupCharts(cdatasource);
+        cdatasource.read();
+        cdatasource.bind("change", MainDataSource_OnChange);
+    }
+
+    function GetDataSourceMain(range) {
+        var statInterval = (range == null) ? "daily" : range;
+        var statLink = '@Url.Action("IntervalStats", new { interval="daily" })';
+        statLink = statLink.replace("daily", statInterval);
         return new kendo.data.DataSource({
             transport: {
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("DailyStats")',
+                    url: statLink
                 }
             },
             schema: {

@@ -66,7 +66,6 @@ namespace ClientPortal.Web.Controllers
                 MTDStat = mtdStat,
                 WTDStat = wtdStat
             };
-
             return View(model);
         }
 
@@ -79,18 +78,20 @@ namespace ClientPortal.Web.Controllers
             return IntervalStats(oneYearAgo, yesterday);
         }
 
-        public JsonResult IntervalStats(DateTime start, DateTime end, string interval = "daily")
+        public JsonResult IntervalStats(DateTime? start, DateTime? end, string interval = "daily")
         {
+            DateTime startDate = (start == null) ? DateTime.Today.AddYears(-1) : start.Value;
+            DateTime endDate = (end == null) ? DateTime.Today.AddDays(-1) : end.Value;
             var userInfo = GetUserInfo();
             IEnumerable<SearchStat> searchStats = new List<SearchStat>();
             if (userInfo.HasSearch)
             {
                 if (interval == "monthly")
-                    searchStats = cpRepo.GetMonthStats(userInfo.SearchProfile, null, start, end);
+                    searchStats = cpRepo.GetMonthStats(userInfo.SearchProfile, null, startDate, endDate);
                 else if (interval == "weekly")
                     searchStats = cpRepo.GetWeekStats(userInfo.SearchProfile, null, start, end);
                 else
-                    searchStats = cpRepo.GetDailyStats(userInfo.SearchProfile, start, end);
+                    searchStats = cpRepo.GetDailyStats(userInfo.SearchProfile, startDate, endDate);
             }
             IEnumerable<BasicStat> progStats = new List<BasicStat>();
             if (userInfo.HasProgrammatic())
