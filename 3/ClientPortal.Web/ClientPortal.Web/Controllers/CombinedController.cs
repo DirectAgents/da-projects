@@ -78,9 +78,18 @@ namespace ClientPortal.Web.Controllers
             return IntervalStats(oneYearAgo, yesterday);
         }
 
-        public JsonResult IntervalStats(DateTime? start, DateTime? end, string interval = "daily")
+        public JsonResult IntervalStats(DateTime? start, DateTime? end, string interval = "daily", string startstring = "")
         {
-            DateTime startDate = (start == null) ? DateTime.Today.AddYears(-1) : start.Value;
+            DateTime startDate;
+            if (start == null) {
+                if (startstring == "") {
+                    startDate = DateTime.Today.AddDays(-1);
+                } else {
+                    startDate = Convert.ToDateTime(startstring);
+                }
+            } else {
+                startDate = start.Value;
+            }
             DateTime endDate = (end == null) ? DateTime.Today.AddDays(-1) : end.Value;
             var userInfo = GetUserInfo();
             IEnumerable<SearchStat> searchStats = new List<SearchStat>();
@@ -97,11 +106,11 @@ namespace ClientPortal.Web.Controllers
             if (userInfo.HasProgrammatic())
             {
                 if (interval == "monthly")
-                    progStats = progRepo.MonthlyBasicStats(userInfo.ProgAdvertiser.Id, start, end, computeCalculatedStats: false);
+                    progStats = progRepo.MonthlyBasicStats(userInfo.ProgAdvertiser.Id, startDate, endDate, computeCalculatedStats: false);
                 else if (interval == "weekly")
-                    progStats = progRepo.WeeklyBasicStats(userInfo.ProgAdvertiser.Id, start, end, computeCalculatedStats: false);
+                    progStats = progRepo.WeeklyBasicStats(userInfo.ProgAdvertiser.Id, startDate, endDate, computeCalculatedStats: false);
                 else
-                    progStats = progRepo.DailyBasicStats(userInfo.ProgAdvertiser.Id, start, end, computeCalculatedStats: false);
+                    progStats = progRepo.DailyBasicStats(userInfo.ProgAdvertiser.Id, startDate, endDate, computeCalculatedStats: false);
             }
             var stats = CombinedStats(searchStats, progStats);
             return CreateJsonResult(stats);

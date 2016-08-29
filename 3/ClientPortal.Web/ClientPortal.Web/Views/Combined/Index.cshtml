@@ -82,12 +82,18 @@
     <div id="container">
         <div id="page_content_exec">
             <div id="interval" style="margin-bottom: 15px;">
-            <label for="intervalselect">Interval: </label>
-            <select id="intervalselect" name="intervalselect" onchange="ChangeInterval()">
-                <option value="daily">Daily</option>
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
-            </select>
+                <label for="rangeselect">Select a Date Range</label>
+                <select id="rangeselect" name="rangeselect" onchange="ChangeStats()">
+                    <option value="prevyear" selected>Previous Year</option>
+                    <option value="mtd">Month to Date</option>
+                    <option value="ytd">Year to Date</option>
+                </select>
+                <label for="intervalselect">Interval: </label>
+                <select id="intervalselect" name="intervalselect" onchange="ChangeStats()">
+                    <option value="daily" selected>Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                </select>
             </div>
             <div id="exec_leftbar">
                 <div class="heading"><p>Campaign Metrics</p></div>
@@ -175,18 +181,34 @@ Stats include:
         datasource.bind("change", MainDataSource_OnChange);
     });
 
-    function ChangeInterval() {
+    function ChangeStats() {
         var interval = $('#intervalselect').val();
-        var cdatasource = GetDataSourceMain(interval);
+        var start = $('#rangeselect').val();
+        var cdatasource = GetDataSourceMain(interval,start);
         SetupCharts(cdatasource);
         cdatasource.read();
         cdatasource.bind("change", MainDataSource_OnChange);
     }
 
-    function GetDataSourceMain(range) {
+    function GetDataSourceMain(range, start) {
         var statInterval = (range == null) ? "daily" : range;
-        var statLink = '@Url.Action("IntervalStats", new { interval="daily" })';
+        var startDate;
+        @{
+            var yesterday = DateTime.Today.AddDays(-1);
+            var monthStart = new DateTime(yesterday.Year,yesterday.Month,1);
+            var yearStart = new DateTime(yesterday.Year,1,1);
+            var lastYear = new DateTime(yesterday.Year - 1, yesterday.Month, yesterday.Day);
+            }
+        if (start=="mtd") {
+            startDate = '@monthStart.ToLongDateString()';
+        } else if (start == "ytd") {
+            startDate = '@yearStart.ToLongDateString()';
+        } else {
+            startDate = '@lastYear.ToLongDateString()';
+        }
+        var statLink = '@Url.Action("IntervalStats", new { interval="daily"})';
         statLink = statLink.replace("daily", statInterval);
+        statLink += "&startstring=" + startDate;
         return new kendo.data.DataSource({
             transport: {
                 read: {
