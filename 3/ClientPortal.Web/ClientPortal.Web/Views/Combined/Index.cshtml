@@ -82,8 +82,8 @@
     <div id="container">
         <div id="page_content_exec">
             <div id="interval" style="margin-bottom: 15px;">
-                <label for="rangeselect">Select a Date Range</label>
-                <select id="rangeselect" name="rangeselect" onchange="ChangeStats()">
+                <label for="daterangeselect">Select a Date Range</label>
+                <select id="daterangeselect" name="daterangeselect" onchange="ChangeStats()">
                     <option value="prevyear" selected>Previous Year</option>
                     <option value="mtd">Month to Date</option>
                     <option value="ytd">Year to Date</option>
@@ -183,25 +183,25 @@ Stats include:
 
     function ChangeStats() {
         var interval = $('#intervalselect').val();
-        var start = $('#rangeselect').val();
-        var cdatasource = GetDataSourceMain(interval,start);
+        var daterange = $('#daterangeselect').val();
+        var cdatasource = GetDataSourceMain(interval,daterange);
         SetupCharts(cdatasource);
         cdatasource.read();
         cdatasource.bind("change", MainDataSource_OnChange);
     }
 
-    function GetDataSourceMain(range, start) {
-        var statInterval = (range == null) ? "daily" : range;
+@{
+    var yesterday = DateTime.Today.AddDays(-1);
+    var monthStart = new DateTime(yesterday.Year,yesterday.Month,1);
+    var yearStart = new DateTime(yesterday.Year,1,1);
+    var lastYear = new DateTime(yesterday.Year - 1, yesterday.Month, yesterday.Day);
+}
+    function GetDataSourceMain(statInterval, daterange) {
+        if (statInterval == null) statInterval = "daily";
         var startDate;
-        @{
-            var yesterday = DateTime.Today.AddDays(-1);
-            var monthStart = new DateTime(yesterday.Year,yesterday.Month,1);
-            var yearStart = new DateTime(yesterday.Year,1,1);
-            var lastYear = new DateTime(yesterday.Year - 1, yesterday.Month, yesterday.Day);
-            }
-        if (start=="mtd") {
+        if (daterange=="mtd") {
             startDate = '@monthStart.ToLongDateString()';
-        } else if (start == "ytd") {
+        } else if (daterange == "ytd") {
             startDate = '@yearStart.ToLongDateString()';
         } else {
             startDate = '@lastYear.ToLongDateString()';
