@@ -587,12 +587,12 @@ namespace ClientPortal.Data.Services
             return stats.AsQueryable();
         }
 
-        public IQueryable<SearchStat> GetDailyStats(SearchProfile sp, DateTime start, DateTime end)
+        public IQueryable<SearchStat> GetDailyStats(SearchProfile sp, DateTime? start, DateTime? end)
         {
             return GetDailyStats(sp.SearchProfileId, start, end, sp.RevPerViewThru);
         }
         //TODO: useAnalytics, includeCalls
-        public IQueryable<SearchStat> GetDailyStats(int searchProfileId, DateTime start, DateTime end, decimal revPerViewThru)
+        public IQueryable<SearchStat> GetDailyStats(int searchProfileId, DateTime? start, DateTime? end, decimal revPerViewThru)
         {
             var searchCampaigns = GetSearchCampaigns(null, searchProfileId, null, null, null);
             var stats = GetSearchDailySummaries(searchCampaigns, null, start, end, true)
@@ -616,14 +616,16 @@ namespace ClientPortal.Data.Services
         }
 
         //Note: Use one or the other... numMonths or start
-        public IQueryable<SearchStat> GetMonthStats(SearchProfile sp, int? numMonths, DateTime? start, DateTime end, bool yoy = false, string campaignNameInclude = null, string campaignNameExclude = null)
+        public IQueryable<SearchStat> GetMonthStats(SearchProfile sp, int? numMonths, DateTime? start, DateTime? end, bool yoy = false, string campaignNameInclude = null, string campaignNameExclude = null)
         {
             return GetMonthStats(sp.SearchProfileId, numMonths, start, end, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru, yoy, campaignNameInclude, campaignNameExclude);
         }
-        private IQueryable<SearchStat> GetMonthStats(int searchProfileId, int? numMonths, DateTime? start, DateTime end, bool useAnalytics, bool includeCalls, decimal revPerViewThru, bool yoy = false, string campaignNameInclude = null, string campaignNameExclude = null)
+        private IQueryable<SearchStat> GetMonthStats(int searchProfileId, int? numMonths, DateTime? start, DateTime? end, bool useAnalytics, bool includeCalls, decimal revPerViewThru, bool yoy = false, string campaignNameInclude = null, string campaignNameExclude = null)
         {
+            if (!end.HasValue)
+                end = DateTime.Today.AddDays(-1);
             if (numMonths.HasValue)
-                start = new DateTime(end.Year, end.Month, 1).AddMonths((numMonths.Value - 1) * -1);
+                start = new DateTime(end.Value.Year, end.Value.Month, 1).AddMonths((numMonths.Value - 1) * -1);
             //else, the passed in value of start is used
 
             DateTime? origStart = null;
@@ -746,10 +748,10 @@ namespace ClientPortal.Data.Services
             }
 
             // check for partial month - if "end" is not the last of the month
-            if (end.AddDays(1).Day > 1 && finalStats.Any())
+            if (end.Value.AddDays(1).Day > 1 && finalStats.Any())
             {   // Essentially, check if there were any stats at all for the partial month
                 var lastStat = finalStats.Last();
-                if (lastStat.StartDate.Year == end.Year && lastStat.StartDate.Month == end.Month)
+                if (lastStat.StartDate.Year == end.Value.Year && lastStat.StartDate.Month == end.Value.Month)
                     lastStat.Title = lastStat.Title + " (MTD)";
             }
             return finalStats.AsQueryable();

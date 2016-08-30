@@ -121,8 +121,8 @@ namespace ClientPortal.Data.Contracts
         //IQueryable<SearchDailySummary> GetSearchDailySummaries(int searchProfileId, DateTime? start, DateTime? end, bool includeToday = false);
         IQueryable<SearchStat> GetWeekStats(SearchProfile sp, int? numWeeks, DateTime? startDate, DateTime? endDate, string campaignNameInclude = null, string campaignNameExclude = null);
         IQueryable<WeeklySearchStat> GetCampaignWeekStats2(SearchProfile sp, DateTime startDate, DateTime endDate);
-        IQueryable<SearchStat> GetDailyStats(SearchProfile sp, DateTime start, DateTime end);
-        IQueryable<SearchStat> GetMonthStats(SearchProfile sp, int? numMonths, DateTime? start, DateTime end, bool yoy = false, string campaignNameInclude = null, string campaignNameExclude = null);
+        IQueryable<SearchStat> GetDailyStats(SearchProfile sp, DateTime? start, DateTime? end);
+        IQueryable<SearchStat> GetMonthStats(SearchProfile sp, int? numMonths, DateTime? start, DateTime? end, bool yoy = false, string campaignNameInclude = null, string campaignNameExclude = null);
         IQueryable<SearchStat> GetChannelStats(SearchProfile sp, int numWeeks, bool includeToday, bool includeAccountBreakdown, bool includeSearchChannels);
         IQueryable<SearchStat> GetCampaignStats(SearchProfile sp, string channel, DateTime? start, DateTime? end, bool breakdown, bool showingCassConvs, string campaignNameInclude = null, string campaignNameExclude = null);
         IQueryable<SearchStat> GetCampaignStats(SearchProfile sp, int searchAccountId, DateTime? start, DateTime? end, bool breakdown, bool showingCassConvs, string campaignNameInclude = null, string campaignNameExclude = null);
