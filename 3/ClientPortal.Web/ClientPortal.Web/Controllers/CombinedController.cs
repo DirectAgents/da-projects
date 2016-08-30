@@ -77,9 +77,25 @@ namespace ClientPortal.Web.Controllers
             var yesterday = today.AddDays(-1);
             return IntervalStats(oneYearAgo, yesterday);
         }
-        public JsonResult StatsTemp(string interval, string startstring)
+        public JsonResult StatsTemp(string interval, string daterange)
         {
-            return IntervalStats(Convert.ToDateTime(startstring), null, interval);
+            var today = DateTime.Today;
+            var yesterday = today.AddDays(-1);
+            var end = yesterday;
+            DateTime start;
+            switch (interval)
+            {
+                case "mtd":
+                    start = new DateTime(yesterday.Year, yesterday.Month, 1);
+                    break;
+                case "ytd":
+                    start = new DateTime(yesterday.Year, 1, 1);
+                    break;
+                default: // since one year ago
+                    start = today.AddYears(-1);
+                    break;
+            }
+            return IntervalStats(start, end, interval);
         }
 
         public JsonResult IntervalStats(DateTime? start, DateTime? end, string interval = "daily")

@@ -182,39 +182,23 @@ Stats include:
     });
 
     function ChangeStats() {
-        var interval = $('#intervalselect').val();
-        var daterange = $('#daterangeselect').val();
-        var cdatasource = GetDataSourceMain(interval,daterange);
-        SetupCharts(cdatasource);
-        cdatasource.read();
-        cdatasource.bind("change", MainDataSource_OnChange);
+        var ds = RetrieveDataSourceMain();
+        ds.read();
     }
 
-@{
-    var yesterday = DateTime.Today.AddDays(-1);
-    var monthStart = new DateTime(yesterday.Year,yesterday.Month,1);
-    var yearStart = new DateTime(yesterday.Year,1,1);
-    var lastYear = new DateTime(yesterday.Year - 1, yesterday.Month, yesterday.Day);
-}
-    function GetDataSourceMain(statInterval, daterange) {
-        if (statInterval == null) statInterval = "daily";
-        var startDate;
-        if (daterange=="mtd") {
-            startDate = '@monthStart.ToLongDateString()';
-        } else if (daterange == "ytd") {
-            startDate = '@yearStart.ToLongDateString()';
-        } else {
-            startDate = '@lastYear.ToLongDateString()';
-        }
-        var statLink = '@Url.Action("StatsTemp", new { interval="daily"})';
-        statLink = statLink.replace("daily", statInterval);
-        statLink += "&startstring=" + startDate;
+    function GetDataSourceMain() {
         return new kendo.data.DataSource({
             transport: {
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: statLink
+                    url: '@Url.Action("StatsTemp")',
+                    data: function () {
+                        return {
+                            interval: $('#intervalselect').val(),
+                            daterange: $('#daterangeselect').val()
+                        };
+                    }
                 }
             },
             schema: {
@@ -245,6 +229,10 @@ Stats include:
             $('#textClicks').html(kendo.toString(aggs.Clicks.sum, 'N0'));
             $('#textConversions').html(kendo.toString(aggs.Convs.sum, 'N0'));
         }
+    }
+
+    function RetrieveDataSourceMain() {
+        return $('#sparkSpend').data('kendoSparkline').dataSource;
     }
 
     function SetupCharts(datasource) {
