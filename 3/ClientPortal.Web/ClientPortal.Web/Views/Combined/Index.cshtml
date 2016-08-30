@@ -206,7 +206,7 @@ Stats include:
         } else {
             startDate = '@lastYear.ToLongDateString()';
         }
-        var statLink = '@Url.Action("IntervalStats", new { interval="daily"})';
+        var statLink = '@Url.Action("StatsTemp", new { interval="daily"})';
         statLink = statLink.replace("daily", statInterval);
         statLink += "&startstring=" + startDate;
         return new kendo.data.DataSource({

@@ -77,40 +77,33 @@ namespace ClientPortal.Web.Controllers
             var yesterday = today.AddDays(-1);
             return IntervalStats(oneYearAgo, yesterday);
         }
-
-        public JsonResult IntervalStats(DateTime? start, DateTime? end, string interval = "daily", string startstring = "")
+        public JsonResult StatsTemp(string interval, string startstring)
         {
-            DateTime startDate;
-            if (start == null) {
-                if (startstring == "") {
-                    startDate = DateTime.Today.AddDays(-1);
-                } else {
-                    startDate = Convert.ToDateTime(startstring);
-                }
-            } else {
-                startDate = start.Value;
-            }
-            DateTime endDate = (end == null) ? DateTime.Today.AddDays(-1) : end.Value;
+            return IntervalStats(Convert.ToDateTime(startstring), null, interval);
+        }
+
+        public JsonResult IntervalStats(DateTime? start, DateTime? end, string interval = "daily")
+        {
             var userInfo = GetUserInfo();
             IEnumerable<SearchStat> searchStats = new List<SearchStat>();
             if (userInfo.HasSearch)
             {
                 if (interval == "monthly")
-                    searchStats = cpRepo.GetMonthStats(userInfo.SearchProfile, null, startDate, endDate);
+                    searchStats = cpRepo.GetMonthStats(userInfo.SearchProfile, null, start, end);
                 else if (interval == "weekly")
                     searchStats = cpRepo.GetWeekStats(userInfo.SearchProfile, null, start, end);
                 else
-                    searchStats = cpRepo.GetDailyStats(userInfo.SearchProfile, startDate, endDate);
+                    searchStats = cpRepo.GetDailyStats(userInfo.SearchProfile, start, end);
             }
             IEnumerable<BasicStat> progStats = new List<BasicStat>();
             if (userInfo.HasProgrammatic())
             {
                 if (interval == "monthly")
-                    progStats = progRepo.MonthlyBasicStats(userInfo.ProgAdvertiser.Id, startDate, endDate, computeCalculatedStats: false);
+                    progStats = progRepo.MonthlyBasicStats(userInfo.ProgAdvertiser.Id, start, end, computeCalculatedStats: false);
                 else if (interval == "weekly")
-                    progStats = progRepo.WeeklyBasicStats(userInfo.ProgAdvertiser.Id, startDate, endDate, computeCalculatedStats: false);
+                    progStats = progRepo.WeeklyBasicStats(userInfo.ProgAdvertiser.Id, start, end, computeCalculatedStats: false);
                 else
-                    progStats = progRepo.DailyBasicStats(userInfo.ProgAdvertiser.Id, startDate, endDate, computeCalculatedStats: false);
+                    progStats = progRepo.DailyBasicStats(userInfo.ProgAdvertiser.Id, start, end, computeCalculatedStats: false);
             }
             var stats = CombinedStats(searchStats, progStats);
             return CreateJsonResult(stats);
