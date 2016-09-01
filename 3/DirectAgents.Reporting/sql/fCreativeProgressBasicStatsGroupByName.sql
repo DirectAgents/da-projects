@@ -8,7 +8,7 @@ ALTER FUNCTION td.fCreativeProgressBasicStatsGroupByName(
 WITH dup AS
 (
 	SELECT *
-	, ROW_NUMBER() OVER (PARTITION BY AdName ORDER BY AdId DESC) as RowNum
+	, ROW_NUMBER() OVER (PARTITION BY AdName ORDER BY AdId ASC) as RowNum
 	FROM td.fCreativeProgressBasicStats(@AdvertiserId, @StartDate, @EndDate, @KPI)
 )
 SELECT grp.AdName, adId.AdId, adId.ShowClickAndViewConv, COUNT(grp.AdName) AS DupNameCount
