@@ -144,7 +144,13 @@
             </div>
             <div id="exec_right">
                 <section>
-                    <div class="heading"><p>eCPA Trend</p></div>
+                    <div id="exec_pie_left">
+                        <div id="pieSpend" style="height:300px"></div>
+                    </div>
+                    <div id="exec_pie_right">
+                        <div id="pieKPI" style="height:300px"></div>
+                    </div>
+                    <div class="heading" style="clear:both"><p>eCPA Trend</p></div>
                     <div class="content_box">
                         <div id="trendECPA" style="height:205px"></div>
                     </div>
@@ -154,8 +160,7 @@
     </div>
 </div>
 
-@* TODO: put in div? make closer to bottom blue bar... *@
-<div style="clear:both;">
+@*<div style="clear:both;">
 Stats include:
 @{
     bool first = true;
@@ -170,20 +175,25 @@ Stats include:
     <text>@(first ? "" : " | ")Programmatic</text>
     first = false;
 }
-</div>
+</div>*@
 
 @section scripts {
 <script>
     $(document).ready(function () {
-        var datasource = GetDataSourceMain();
-        SetupCharts(datasource);
-        datasource.read();
-        datasource.bind("change", MainDataSource_OnChange);
+        var dsMain = GetDataSourceMain();
+        SetupCharts(dsMain);
+        dsMain.read();
+        dsMain.bind("change", MainDataSource_OnChange);
+        var dsPie = CreateDataSourcePie();
+        SetupPieCharts(dsPie);
+        dsPie.read();
     });
 
     function ChangeStats() {
-        var ds = RetrieveDataSourceMain();
-        ds.read();
+        var dsMain = RetrieveDataSourceMain();
+        dsMain.read();
+        var dsPie = RetrieveDataSourcePie();
+        dsPie.read();
     }
 
     function GetDataSourceMain() {
@@ -230,7 +240,6 @@ Stats include:
             $('#textConversions').html(kendo.toString(aggs.Convs.sum, 'N0'));
         }
     }
-
     function RetrieveDataSourceMain() {
         return $('#sparkSpend').data('kendoSparkline').dataSource;
     }
@@ -292,5 +301,82 @@ Stats include:
             }
         });
     }
+
+    function CreateDataSourcePie() {
+        return new kendo.data.DataSource({
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("PieStats")',
+                    data: function () {
+                        return {
+                            daterange: $('#daterangeselect').val()
+                        };
+                    }
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                model: {
+                    id: 'Id',
+                    fields: {
+                        Name: { type: 'string' }
+                        // rest of fields: numbers
+                    }
+                }
+            }
+        });
+    }
+    function RetrieveDataSourcePie() {
+        return $('#pieSpend').data('kendoChart').dataSource;
+    }
+
+    function SetupPieCharts(datasource) {
+        $("#pieSpend").kendoChart({
+            title: { text: "Spend" },
+            legend: {
+                position: "bottom"
+            },
+            dataSource: datasource,
+            autoBind: false,
+            series: [{
+                type: "pie",
+                field: "Spend",
+                categoryField: "Name"
+            }],
+            seriesColors: ["#2d599d", "rgb(13, 141, 214)", "#56abe1"],
+            seriesDefaults: {
+                labels: {
+                    template: "#= category #: #= kendo.format('{0:C}', value) #",
+                    position: "outsideEnd",
+                    visible: true
+                }
+            }
+        });
+        $("#pieKPI").kendoChart({
+            title: { text: "eCPA" },
+            legend: {
+                position: "bottom"
+            },
+            dataSource: datasource,
+            autoBind: false,
+            series: [{
+                type: "pie",
+                field: "CPA",
+                categoryField: "Name"
+            }],
+            seriesColors: ["#2d599d", "rgb(13, 141, 214)", "#56abe1"],
+            seriesDefaults: {
+                labels: {
+                    template: "#= category #: #= kendo.format('{0:C}', value) #",
+                    position: "outsideEnd",
+                    visible: true
+                }
+            }
+        });
+    }
+
 </script>
 }

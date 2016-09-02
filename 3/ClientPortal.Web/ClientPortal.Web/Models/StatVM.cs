@@ -16,6 +16,14 @@ namespace ClientPortal.Web.Models
             StartDate = startDate;
             EndDate = endDate;
         }
+        public StatVM(SearchStat stat)
+        {
+            this.Add(stat);
+        }
+        public StatVM(BasicStat stat)
+        {
+            this.Add(stat);
+        }
 
         // Designed to use one or the other: [Date] or [StartDate and EndDate]
         public DateTime Date { get; set; }
@@ -31,6 +39,8 @@ namespace ClientPortal.Web.Models
             set { Date = value; }
             get { return Date; }
         }
+
+        public string Name { get; set; }
 
         public decimal Spend { get; set; }
 

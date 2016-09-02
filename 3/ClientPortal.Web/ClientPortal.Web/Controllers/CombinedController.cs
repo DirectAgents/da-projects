@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Helpers;
 using System.Web.Mvc;
+using CakeExtracter.Common;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
 using ClientPortal.Web.Models;
@@ -77,13 +78,41 @@ namespace ClientPortal.Web.Controllers
             var yesterday = today.AddDays(-1);
             return IntervalStats(oneYearAgo, yesterday);
         }
+
         public JsonResult StatsTemp(string interval, string daterange)
+        {
+            var dates = DateRangeFromString(daterange);
+            return IntervalStats(dates.FromDate, dates.ToDate, interval);
+        }
+
+        public JsonResult PieStats(string daterange)
+        {
+            var dates = DateRangeFromString(daterange);
+            var statList = new List<StatVM>();
+
+            var userInfo = GetUserInfo();
+            if (userInfo.HasSearch)
+            {
+                var searchStat = cpRepo.GetSearchStats(userInfo.SearchProfile, dates.FromDate, dates.ToDate, null);
+                var statVM = new StatVM(searchStat) { Name = "Paid Search" };
+                statList.Add(statVM);
+            }
+            if (userInfo.HasProgrammatic())
+            {
+                var progStat = progRepo.DateRangeBasicStat(userInfo.ProgAdvertiser.Id, dates.FromDate, dates.ToDate);
+                var statVM = new StatVM(progStat) { Name = "Programmatic" };
+                statList.Add(statVM);
+            }
+            return CreateJsonResult(statList, computeAggregates: false);
+        }
+
+        private DateRange DateRangeFromString(string range)
         {
             var today = DateTime.Today;
             var yesterday = today.AddDays(-1);
             var end = yesterday;
             DateTime start;
-            switch (interval)
+            switch (range)
             {
                 case "mtd":
                     start = new DateTime(yesterday.Year, yesterday.Month, 1);
@@ -95,7 +124,8 @@ namespace ClientPortal.Web.Controllers
                     start = today.AddYears(-1);
                     break;
             }
-            return IntervalStats(start, end, interval);
+            var dateRange = new DateRange(start, end);
+            return dateRange;
         }
 
         public JsonResult IntervalStats(DateTime? start, DateTime? end, string interval = "daily")
@@ -191,12 +221,13 @@ namespace ClientPortal.Web.Controllers
             return json;
         }
 
-        private JsonResult CreateJsonResult(IEnumerable<StatVM> stats)
+        private JsonResult CreateJsonResult(IEnumerable<StatVM> stats, bool computeAggregates = true)
         {
             var kg = new KG<StatVM>();
             kg.data = stats;
             kg.total = stats.Count();
-            kg.aggregates = Aggregates(stats);
+            if (computeAggregates)
+                kg.aggregates = Aggregates(stats);
 
             var json = Json(kg);
             return json;

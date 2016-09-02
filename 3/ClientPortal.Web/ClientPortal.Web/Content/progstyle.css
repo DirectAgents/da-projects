@@ -247,6 +247,14 @@ body {
 	width:65%;
 	float:right;
 }
+#exec_pie_left {
+    width:50%;
+    float:left;
+}
+#exec_pie_right {
+    width:50%;
+    float:right;
+}
 #footer {
 	background-color:#2A579F;
 	height:100%;
