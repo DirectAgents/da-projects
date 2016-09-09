@@ -5,6 +5,7 @@ alter FUNCTION [td].[fDailySummaryBasicStats](
 ) RETURNS @ret TABLE
 	(
 	Date	datetime
+	, AccountId int
 	, Impressions	int
 	, Clicks	int
 	, CTR	float(53)
@@ -55,6 +56,7 @@ BEGIN
 	, revenue AS
 	(
 		SELECT dt.Date
+		, dt.AccountId
 		, dt.Impressions
 		, dt.Clicks
 		, dt.PostClickConv + dt.PostViewConv AS Conversions
@@ -79,6 +81,7 @@ BEGIN
 	)
 	INSERT INTO @ret
 	SELECT Date
+	, AccountId
 	, Impressions
 	, Clicks
 	, CASE WHEN Impressions = 0 THEN 0 ELSE Clicks / CAST(Impressions AS float) END AS CTR

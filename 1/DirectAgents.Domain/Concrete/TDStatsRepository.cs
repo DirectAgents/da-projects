@@ -182,10 +182,12 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
         }
 
         // Return value is unexecuted query (?)
-        private IEnumerable<BasicStat> DailyBasicStatsRaw(int advId, DateTime startDate, DateTime endDate, string sql = null)
+        private IEnumerable<BasicStat> DailyBasicStatsRaw(int advId, DateTime startDate, DateTime endDate, string sql = null, IEnumerable<int> includeAccountIds = null, IEnumerable<int> excludeAccountIds = null)
         {
             if (sql == null)
-                sql = "select * from td.fDailySummaryBasicStats(@p1, @p2, @p3)";
+            {
+                sql = "select * from td.fDailySummaryBasicStats(@p1, @p2, @p3)" + SqlForAccountIds(includeAccountIds, excludeAccountIds);
+            }
             return context.Database.SqlQuery<BasicStat>(
                 sql,
                 new SqlParameter("@p1", advId),
@@ -196,16 +198,37 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             //      Can return multiple rows per day... (one per campaign/account)
         }
 
-        public BasicStat MTDBasicStat(int advId, DateTime endDate)
+        private string SqlForAccountIds(IEnumerable<int> includeAccountIds, IEnumerable<int> excludeAccountIds)
+        {
+            bool anyIncludes = (includeAccountIds != null && includeAccountIds.Any());
+            bool anyExcludes = (excludeAccountIds != null && excludeAccountIds.Any());
+            var sql = "";
+            if (anyIncludes || anyExcludes) {
+                sql = " WHERE ";
+                if (anyIncludes)
+                {
+                    sql += "AccountId IN (" + String.Join(",", includeAccountIds) + ")";
+                    if (anyExcludes)
+                        sql += " AND";
+                }
+                if (anyExcludes)
+                {
+                    sql += "AccountId NOT IN (" + String.Join(",", excludeAccountIds) + ")";
+                }
+            }
+            return sql;
+        }
+
+        public BasicStat MTDBasicStat(int advId, DateTime endDate, IEnumerable<int> includeAccountIds = null, IEnumerable<int> excludeAccountIds = null)
         {
             var startDate = new DateTime(endDate.Year, endDate.Month, 1);
-            return DateRangeBasicStat(advId, startDate, endDate);
+            return DateRangeBasicStat(advId, startDate, endDate, includeAccountIds: includeAccountIds, excludeAccountIds: excludeAccountIds);
         }
 
         //NOTE: as of now, basicstat.Budget will only be valid if startDate is the 1st and endDate is within the same month
-        public BasicStat DateRangeBasicStat(int advId, DateTime startDate, DateTime endDate)
+        public BasicStat DateRangeBasicStat(int advId, DateTime startDate, DateTime endDate, IEnumerable<int> includeAccountIds = null, IEnumerable<int> excludeAccountIds = null)
         {
-            var stats = DailyBasicStatsRaw(advId, startDate, endDate).ToList();
+            var stats = DailyBasicStatsRaw(advId, startDate, endDate, includeAccountIds: includeAccountIds, excludeAccountIds: excludeAccountIds).ToList();
             if (stats.Count() == 0)
             {
                 return new BasicStat

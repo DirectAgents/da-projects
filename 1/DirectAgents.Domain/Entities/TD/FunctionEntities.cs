@@ -27,6 +27,8 @@ namespace DirectAgents.Domain.Entities.TD
         public double eCPC { get; set; }
         public double eCPA { get; set; }
 
+        public int AccountId { get; set; }
+
         // For Strategy/Creative Stats...
         public string PlatformAlias { get; set; }
         public int StrategyId { get; set; }

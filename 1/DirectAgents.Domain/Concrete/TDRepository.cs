@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using DirectAgents.Domain.Abstract;
@@ -378,6 +379,26 @@ namespace DirectAgents.Domain.Concrete
                 extAccounts = extAccounts.Where(a => !campaignAcctIds.Contains(a.Id));
             }
             return extAccounts;
+        }
+
+        public IQueryable<ExtAccount> ExtAccounts_Social(int? advId = null, int? campId = null)
+        {
+            var socialCodes = DirectAgents.Domain.Entities.TD.Platform.Codes_Social(); //.ToArray();
+            var extAccounts = context.ExtAccounts.Where(a => socialCodes.Contains(a.Platform.Code));
+            if (advId.HasValue || campId.HasValue)
+            {
+                extAccounts = extAccounts.Where(a => a.CampaignId.HasValue);
+                if (advId.HasValue)
+                    extAccounts = extAccounts.Where(a => a.Campaign.AdvertiserId == advId.Value);
+                if (campId.HasValue)
+                    extAccounts = extAccounts.Where(a => a.CampaignId == campId.Value);
+            }
+            return extAccounts;
+        }
+        public IEnumerable<int> ExtAccountIds_Social(int? advId = null, int? campId = null)
+        {
+            var extAccounts = ExtAccounts_Social(advId: advId, campId: campId);
+            return extAccounts.Select(a => a.Id).AsEnumerable();
         }
 
         public bool AddExtAccount(ExtAccount extAcct)

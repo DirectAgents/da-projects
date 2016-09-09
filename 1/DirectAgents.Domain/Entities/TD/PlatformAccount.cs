@@ -19,6 +19,13 @@ namespace DirectAgents.Domain.Entities.TD
         public const string Code_AdRoll = "adr";
         public const string Code_DBM = "dbm";
         public const string Code_FB = "fb";
+        public const string Code_Twitter = "tw";
+        public const string Code_Instagram = "insta";
+
+        public static IEnumerable<string> Codes_Social()
+        {
+            return new string[] { Code_FB, Code_Twitter, Code_Instagram };
+        }
     }
 
     public class PlatColMapping : ColumnMapping

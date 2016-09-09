@@ -57,6 +57,8 @@ namespace DirectAgents.Domain.Abstract
         ExtAccount ExtAccount(int id);
         IQueryable<ExtAccount> ExtAccounts(string platformCode = null, int? campId = null);
         IQueryable<ExtAccount> ExtAccountsNotInCampaign(int campId);
+        IQueryable<ExtAccount> ExtAccounts_Social(int? advId = null, int? campId = null);
+        IEnumerable<int> ExtAccountIds_Social(int? advId = null, int? campId = null);
         bool AddExtAccount(ExtAccount extAcct);
         bool SaveExtAccount(ExtAccount extAcct);
         void FillExtended(ExtAccount extAcct);
@@ -76,8 +78,8 @@ namespace DirectAgents.Domain.Abstract
         IEnumerable<BasicStat> CreativePerfBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool includeInfo = false);
         IEnumerable<BasicStat> CreativePerfBasicStats2(int advId); // *** does not compute spend markup ***
         IEnumerable<BasicStat> MTDSiteBasicStats(int advId, DateTime endDate);
-        BasicStat MTDBasicStat(int advId, DateTime endDate);
-        BasicStat DateRangeBasicStat(int advId, DateTime startDate, DateTime endDate);
+        BasicStat MTDBasicStat(int advId, DateTime endDate, IEnumerable<int> includeAccountIds = null, IEnumerable<int> excludeAccountIds = null);
+        BasicStat DateRangeBasicStat(int advId, DateTime startDate, DateTime endDate, IEnumerable<int> includeAccountIds = null, IEnumerable<int> excludeAccountIds = null);
         IEnumerable<LeadInfo> MTDLeadInfos(int advId, DateTime endDate);
         IEnumerable<LeadInfo> LeadInfos(int advId, DateTime? startDate, DateTime? endDate);
 

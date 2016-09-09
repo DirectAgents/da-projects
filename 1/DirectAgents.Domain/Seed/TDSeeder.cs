@@ -16,11 +16,11 @@ namespace DirectAgents.Domain.Seed
 
         public void SeedPlatforms()
         {
-            AddPlatformIfNotExist("adr", "AdRoll");
-            AddPlatformIfNotExist("dbm", "DBM");
-            AddPlatformIfNotExist("fb", "Facebook");
-            AddPlatformIfNotExist("tw", "Twitter");
-            AddPlatformIfNotExist("insta", "Instagram");
+            AddPlatformIfNotExist(Platform.Code_AdRoll, "AdRoll");
+            AddPlatformIfNotExist(Platform.Code_DBM, "DBM");
+            AddPlatformIfNotExist(Platform.Code_FB, "Facebook");
+            AddPlatformIfNotExist(Platform.Code_Twitter, "Twitter");
+            AddPlatformIfNotExist(Platform.Code_Instagram, "Instagram");
             AddPlatformIfNotExist("datd", "DA Trading Desk");
             AddPlatformIfNotExist("mf", "Management Fee");
             AddPlatformIfNotExist("adel", "Adelphic");

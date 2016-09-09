@@ -99,9 +99,15 @@ namespace ClientPortal.Web.Controllers
             }
             if (userInfo.HasProgrammatic())
             {
-                var progStat = progRepo.DateRangeBasicStat(userInfo.ProgAdvertiser.Id, dates.FromDate, dates.ToDate);
-                var statVM = new StatVM(progStat) { Name = "Programmatic" };
-                statList.Add(statVM);
+                var socialAccountIds = progRepo.ExtAccountIds_Social(advId: userInfo.ProgAdvertiser.Id);
+
+                var progStat = progRepo.DateRangeBasicStat(userInfo.ProgAdvertiser.Id, dates.FromDate, dates.ToDate, excludeAccountIds: socialAccountIds);
+                var progStatVM = new StatVM(progStat) { Name = "Programmatic" };
+                statList.Add(progStatVM);
+
+                var socialStat = progRepo.DateRangeBasicStat(userInfo.ProgAdvertiser.Id, dates.FromDate, dates.ToDate, includeAccountIds: socialAccountIds);
+                var socialStatVM = new StatVM(socialStat) { Name = "Social" };
+                statList.Add(socialStatVM);
             }
             return CreateJsonResult(statList, computeAggregates: false);
         }
