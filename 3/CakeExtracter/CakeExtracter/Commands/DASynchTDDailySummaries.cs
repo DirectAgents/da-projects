@@ -9,6 +9,7 @@ using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.TD;
+using CakeExtracter.Etl;
 
 namespace CakeExtracter.Commands
 {
@@ -71,8 +72,8 @@ namespace CakeExtracter.Commands
                     DoETL_Creative(mapping);
                 if (statsType.Site)
                     DoETL_Site(mapping);
-                //if (statsType.Conv)
-                // TODO: implement
+                if (statsType.Conv)
+                    DoETL_Conv(mapping);
             }
             else
             {
@@ -117,6 +118,16 @@ namespace CakeExtracter.Commands
             extracterThread.Join();
             loaderThread.Join();
         }
+        public void DoETL_Conv(ColumnMapping mapping)
+        {
+            var extracter = new TDConvExtracter(csvFilePath: FilePath,streamReader: StreamReader);
+            var loader = new TDConvLoader();
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+
 
         public static ExtAccount GetAccount(int acctId)
         {

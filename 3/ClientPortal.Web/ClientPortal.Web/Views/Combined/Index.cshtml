@@ -3,6 +3,8 @@
     ViewBag.Title = "Overall Summary";
     var mtd = Model.MTDStat;
     var wtd = Model.WTDStat;
+    var mstart = new DateTime(DateTime.Today.Year,DateTime.Today.Month,1);
+    var ystart = new DateTime(DateTime.Today.Year,1,1);
 }
 <style type="text/css">
     .client_logo_exec {
@@ -82,18 +84,24 @@
     <div id="container">
         <div id="page_content_exec">
             <div id="interval" style="margin-bottom: 15px;">
-                <label for="daterangeselect">Select a Date Range</label>
-                <select id="daterangeselect" name="daterangeselect" onchange="ChangeStats()">
-                    <option value="prevyear" selected>Previous Year</option>
-                    <option value="mtd">Month to Date</option>
-                    <option value="ytd">Year to Date</option>
-                </select>
                 <label for="intervalselect">Interval: </label>
                 <select id="intervalselect" name="intervalselect" onchange="ChangeStats()">
                     <option value="daily" selected>Daily</option>
                     <option value="weekly">Weekly</option>
                     <option value="monthly">Monthly</option>
                 </select>
+                <label for="daterangeselect">Select a Date Range</label>
+                <select id="daterangeselect" name="daterangeselect" onchange="DateRange()">
+                    <option value="prevyear" selected>Previous Year</option>
+                    <option value="mtd">Month to Date</option>
+                    <option value="ytd">Year to Date</option>
+                </select>
+                <span> OR </span>
+                <label for="startdate">From: </label>
+                <input type="date" id="startdate" name="startdate" value="@ViewBag.StartDate"/>
+                <label for="enddate">To: </label>
+                <input type="date" id="enddate" name="enddate" value="@ViewBag.EndDate"/>
+                <button type="button" onclick="ChangeStats()">Click Me!</button>
             </div>
             <div id="exec_leftbar">
                 <div class="heading"><p>Campaign Metrics</p></div>
@@ -189,6 +197,25 @@ Stats include:
         dsPie.read();
     });
 
+    function DateRange() {
+        var start;
+        var end = '@DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd")';
+        switch ($('#daterangeselect').val()) {
+            case 'prevyear':
+                start = '@DateTime.Today.AddYears(-1).ToString("yyyy-MM-dd")';
+                break;
+            case 'mtd':
+                start = '@mstart.ToString("yyyy-MM-dd")';
+                break;
+            case 'ytd':
+                start = '@ystart.ToString("yyyy-MM-dd")';
+                break;
+        }
+        $('#startdate').val(start);
+        $('#enddate').val(end);
+        ChangeStats();
+    }
+
     function ChangeStats() {
         var dsMain = RetrieveDataSourceMain();
         dsMain.read();
@@ -206,7 +233,9 @@ Stats include:
                     data: function () {
                         return {
                             interval: $('#intervalselect').val(),
-                            daterange: $('#daterangeselect').val()
+                            daterange: $('#daterangeselect').val(),
+                            start: $('#startdate').val(),
+                            end: $('#enddate').val()
                         };
                     }
                 }
@@ -311,7 +340,9 @@ Stats include:
                     url: '@Url.Action("PieStats")',
                     data: function () {
                         return {
-                            daterange: $('#daterangeselect').val()
+                            daterange: $('#daterangeselect').val(),
+                            start: $('#startdate').val(),
+                            end: $('#enddate').val()
                         };
                     }
                 }

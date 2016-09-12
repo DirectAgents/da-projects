@@ -67,6 +67,8 @@ namespace ClientPortal.Web.Controllers
                 MTDStat = mtdStat,
                 WTDStat = wtdStat
             };
+            ViewBag.EndDate = yesterday.ToString("yyyy-MM-dd");
+            ViewBag.StartDate = today.AddYears(-1).ToString("yyyy-MM-dd");
             return View(model);
         }
 
@@ -79,15 +81,15 @@ namespace ClientPortal.Web.Controllers
             return IntervalStats(oneYearAgo, yesterday);
         }
 
-        public JsonResult StatsTemp(string interval, string daterange)
+        public JsonResult StatsTemp(string interval, string daterange, DateTime? start, DateTime? end)
         {
-            var dates = DateRangeFromString(daterange);
+            var dates = DateRangeFromString(daterange, start, end);
             return IntervalStats(dates.FromDate, dates.ToDate, interval);
         }
 
-        public JsonResult PieStats(string daterange)
+        public JsonResult PieStats(string daterange, DateTime? start, DateTime? end)
         {
-            var dates = DateRangeFromString(daterange);
+            var dates = DateRangeFromString(daterange, start, end);
             var statList = new List<StatVM>();
 
             var userInfo = GetUserInfo();
@@ -112,23 +114,30 @@ namespace ClientPortal.Web.Controllers
             return CreateJsonResult(statList, computeAggregates: false);
         }
 
-        private DateRange DateRangeFromString(string range)
+        private DateRange DateRangeFromString(string range, DateTime? startdate, DateTime? enddate)
         {
             var today = DateTime.Today;
             var yesterday = today.AddDays(-1);
-            var end = yesterday;
+            var end = enddate ?? yesterday;
             DateTime start;
-            switch (range)
+            if (startdate == null)
             {
-                case "mtd":
-                    start = new DateTime(yesterday.Year, yesterday.Month, 1);
-                    break;
-                case "ytd":
-                    start = new DateTime(yesterday.Year, 1, 1);
-                    break;
-                default: // since one year ago
-                    start = today.AddYears(-1);
-                    break;
+                switch (range)
+                {
+                    case "mtd":
+                        start = new DateTime(yesterday.Year, yesterday.Month, 1);
+                        break;
+                    case "ytd":
+                        start = new DateTime(yesterday.Year, 1, 1);
+                        break;
+                    default: // since one year ago
+                        start = today.AddYears(-1);
+                        break;
+                }
+            }
+            else
+            {
+                start = startdate.Value;
             }
             var dateRange = new DateRange(start, end);
             return dateRange;
