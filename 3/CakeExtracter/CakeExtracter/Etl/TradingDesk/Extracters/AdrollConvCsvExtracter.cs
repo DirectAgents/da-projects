@@ -11,12 +11,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     {
         private readonly string csvFilePath;
         private readonly StreamReader streamReader;
+        private int platId;
         // if streamReader is not null, use it. otherwise use csvFilePath.
 
-        public AdrollConvCsvExtracter(string csvFilePath, StreamReader streamReader)
+        public AdrollConvCsvExtracter(string csvFilePath, StreamReader streamReader, int platId=1)
         {
             this.csvFilePath = csvFilePath;
             this.streamReader = streamReader;
+            this.platId = platId;
         }
 
         protected override void Extract()
@@ -51,8 +53,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 csv.Configuration.IgnoreHeaderWhiteSpace = true;
                 csv.Configuration.WillThrowOnMissingField = false;
                 csv.Configuration.SkipEmptyRecords = true;
-                csv.Configuration.RegisterClassMap<AdrollConvRowMap>();
-
+                if (this.platId == 1)
+                    csv.Configuration.RegisterClassMap<AdrollConvRowMap>();
+                else
+                    csv.Configuration.RegisterClassMap<DBMConvRowMap>();
                 var csvRows = csv.GetRecords<AdrollConvRow>().ToList();
                 for (int i = 0; i < csvRows.Count; i++)
                 {
@@ -62,27 +66,51 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         }
     }
 
+    public sealed class DBMConvRowMap : CsvClassMap<AdrollConvRow>
+    {
+        public DBMConvRowMap()
+        {
+            
+            Map(m => m.ConvTime).Name("Date");
+            //Map(m => m.Campaign).Name("Insertion Order");
+            Map(m => m.ext_data_order_id).Name("Order ID");
+            Map(m => m.ConvVal).Name("DCM Post-View Revenue");
+            /*
+            Map(m => m.ConvTime);
+            Map(m => m.ConvType);
+            Map(m => m.Campaign);
+            Map(m => m.AdGroup);
+            Map(m => m.Ad);
+            Map(m => m.Country);
+            Map(m => m.City);
+            Map(m => m.ExternalData);
+            */
+
+        }
+    }
+
     public sealed class AdrollConvRowMap : CsvClassMap<AdrollConvRow>
     {
         public AdrollConvRowMap()
         {
-            Map(m => m.ConvTime).Name("ConversionTime");
-            Map(m => m.ConvType).Name("ConversionType");
 
-            Map(m => m.Campaign);
-            Map(m => m.AdGroup);
-            Map(m => m.Ad);
-            //Map(m => m.Segment);
+                Map(m => m.ConvTime).Name("ConversionTime");
+                Map(m => m.ConvType).Name("ConversionType");
 
-            Map(m => m.ConvVal).Name("ConversionValue");
-            Map(m => m.Country);
-            Map(m => m.City);
-            //Map(m => m.FinalEvent).Name("FinalEvent");
-            //Map(m => m.FinalEventTimestamp).Name("FinalEventTimestamp");
+                Map(m => m.Campaign);
+                Map(m => m.AdGroup);
+                Map(m => m.Ad);
+                //Map(m => m.Segment);
 
-            Map(m => m.ExternalData);
-            //Map(m => m.ext_data_user_id);
-            Map(m => m.ext_data_order_id);
+                Map(m => m.ConvVal).Name("ConversionValue");
+                Map(m => m.Country);
+                Map(m => m.City);
+                //Map(m => m.FinalEvent).Name("FinalEvent");
+                //Map(m => m.FinalEventTimestamp).Name("FinalEventTimestamp");
+
+                Map(m => m.ExternalData);
+                //Map(m => m.ext_data_user_id);
+                Map(m => m.ext_data_order_id);
         }
     }
 

@@ -73,7 +73,7 @@ namespace CakeExtracter.Commands
                 if (statsType.Site)
                     DoETL_Site(mapping);
                 if (statsType.Conv)
-                    DoETL_Conv(mapping);
+                    DoETL_Conv();
             }
             else
             {
@@ -102,6 +102,7 @@ namespace CakeExtracter.Commands
         }
         public void DoETL_Creative(ColumnMapping mapping)
         {
+
             var extracter = new TDadSummaryExtracter(mapping, streamReader: StreamReader, csvFilePath: FilePath);
             var loader = new TDadSummaryLoader(AccountId);
             var extracterThread = extracter.Start();
@@ -118,10 +119,11 @@ namespace CakeExtracter.Commands
             extracterThread.Join();
             loaderThread.Join();
         }
-        public void DoETL_Conv(ColumnMapping mapping)
+        public void DoETL_Conv()
         {
+            var plat = GetAccount(AccountId).PlatformId;
             var extracter = new TDConvExtracter(csvFilePath: FilePath,streamReader: StreamReader);
-            var loader = new TDConvLoader();
+            var loader = new TDConvLoader(AccountId,plat);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();

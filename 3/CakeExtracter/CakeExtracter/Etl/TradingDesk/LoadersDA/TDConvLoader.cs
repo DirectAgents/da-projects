@@ -1,20 +1,112 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.TD;
+using CakeExtracter.Etl.TradingDesk.Extracters;
+using System.Globalization;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
-    public class TDConvLoader : Loader<Conv>
+    public class TDConvLoader : Loader<ConvRow>
     {
         //public TDConvLoader() { }
+        private readonly int accountId;
+        private readonly int platId;
+        private Dictionary<string, int> countryIdLookupByName = new Dictionary<string, int>();
+        private Dictionary<string, int> cityIdLookupByCountryCity = new Dictionary<string, int>();
 
-        protected override int Load(List<Conv> items)
+        public TDConvLoader(int acctId, int platId)
+        {
+            this.accountId = acctId;
+            this.platId = platId;
+        }
+
+        //currently only loading DBM conversions--include Adroll later
+        protected override int Load(List<ConvRow> items)
         {
             Logger.Info("Loading {0} DA-TD Convs..", items.Count);
-            var count = UpsertConvs(items);
+            var convs = items.Select(c => CreateConv(c)).ToList();
+            var count = UpsertConvs(convs);
             return count;
+        }
+
+        public Conv CreateConv(ConvRow convRow)
+        {
+            var conv = new Conv
+            {
+                AccountId = accountId,
+                Time = convRow.ConvTime,
+                //StrategyId = strategyIdLookupByCampName[convRow.Campaign], // could be null
+                //TDadId = adIdLookupByName[convRow.Ad], // could be null
+                ConvVal = decimal.Parse(convRow.ConvVal, NumberStyles.Currency),
+                //CityId = cityId,
+                ExtData = convRow.ext_data_order_id
+            };
+
+            if (platId == 2 || true)
+            {
+                if (convRow.PostClickConvs == 0)
+                    conv.ConvType = "v";
+                else
+                    conv.ConvType = "c";
+            }
+
+
+            return conv;
+        }
+
+        private void AddUpdateDependentCities(List<ConvRow> items)
+        {
+            using (var db = new DATDContext())
+            {
+                var tuples = items.Select(c => new Tuple<string, string>(c.Country, c.City)).Distinct();
+                var countryGroups = tuples.GroupBy(t => t.Item1);
+                foreach (var countryGroup in countryGroups) // first, loop through each country
+                {
+                    var countryName = countryGroup.Key;
+                    if (!countryIdLookupByName.ContainsKey(countryName))
+                    { // look for this country in the db...
+                        var country = db.ConvCountries.FirstOrDefault(c => c.Name == countryName);
+                        // (assuming just one ConvCountries with the specified Name)
+                        if (country == null)
+                        {
+                            country = new ConvCountry
+                            {
+                                Name = countryName
+                            };
+                            db.ConvCountries.Add(country);
+                            db.SaveChanges();
+                            Logger.Info("Saved new country: {0} ({1})", country.Name, country.Id);
+                        }
+                        countryIdLookupByName[countryName] = country.Id;
+                    }
+                    int countryId = countryIdLookupByName[countryName];
+                    foreach (var tuple in countryGroup) // within each country, loop through each city
+                    {
+                        var cityName = tuple.Item2;
+                        var countryCity = countryName + "_" + cityName;
+                        if (cityIdLookupByCountryCity.ContainsKey(countryCity))
+                            continue; // already encountered
+
+                        var city = db.ConvCities.Where(c => c.CountryId == countryId && c.Name == cityName).FirstOrDefault();
+                        // (assuming just one)
+                        if (city == null)
+                        {
+                            city = new ConvCity
+                            {
+                                CountryId = countryId,
+                                Name = cityName
+                            };
+                            db.ConvCities.Add(city);
+                            db.SaveChanges();
+                            Logger.Info("Saved new city: {0} ({1}), {2}", city.Name, city.Id, countryName);
+                        }
+                        cityIdLookupByCountryCity[countryCity] = city.Id;
+                    }
+                }
+            }
         }
 
         public int UpsertConvs(List<Conv> items)

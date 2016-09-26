@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 using CsvHelper;
 using CsvHelper.Configuration;
 using System.IO;
+using DirectAgents.Domain.Entities.TD;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
-    class TDConvExtracter : Extracter<
-    {
-    }
+
     public class TDConvExtracter : Extracter<ConvRow>
     {
         private readonly string csvFilePath;
@@ -71,10 +70,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     {
         public ConvRowMap()
         {
-            Map(m => m.ConvTime).Name("ConversionTime");
-            Map(m => m.ConvType).Name("ConversionType");
+            Map(m => m.Campaign).Name("InsertionOrder");
+            Map(m => m.ConvTime).Name("Date");
+            Map(m => m.ext_data_order_id).Name("OrderID");
+            Map(m => m.ConvVal).Name("DCMPost-ViewRevenue");
+            Map(m => m.PostClickConvs).Name("Post-ClickConversions");
 
-            Map(m => m.Campaign).Name("Insertion Order");
              /*
             Map(m => m.AdGroup);
             Map(m => m.Ad);
@@ -86,31 +87,33 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             //Map(m => m.FinalEvent).Name("FinalEvent");
             //Map(m => m.FinalEventTimestamp).Name("FinalEventTimestamp");
 
-            Map(m => m.ExternalData);
-            //Map(m => m.ext_data_user_id);
-            Map(m => m.ext_data_order_id);*/
+            Map(m => m.ExternalData);*/
         }
     }
 
     public class ConvRow
     {
+        public string Platform { get; set; }
+
         public DateTime ConvTime { get; set; }
         public string ConvType { get; set; }
-
+        public string ConvVal { get; set; }
         public string Campaign { get; set; }
-        /*
+
+        public int PostClickConvs { get; set; }
+        
         public string AdGroup { get; set; }
         public string Ad { get; set; }
         //public string Segment { get; set; }
 
-        public string ConvVal { get; set; } // decimal
         public string Country { get; set; }
         public string City { get; set; }
+        /*
         //public string FinalEvent { get; set; }
         //public string FinalEventTimestamp { get; set; }
 
         public string ExternalData { get; set; }
-        //public string ext_data_user_id { get; set; }
-        public string ext_data_order_id { get; set; }*/
+        //public string ext_data_user_id { get; set; }*/
+        public string ext_data_order_id { get; set; }
     }
 }
