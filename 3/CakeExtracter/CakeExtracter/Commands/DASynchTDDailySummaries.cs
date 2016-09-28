@@ -121,9 +121,9 @@ namespace CakeExtracter.Commands
         }
         public void DoETL_Conv()
         {
-            var plat = GetAccount(AccountId).PlatformId;
-            var extracter = new TDConvExtracter(csvFilePath: FilePath,streamReader: StreamReader);
-            var loader = new TDConvLoader(AccountId,plat);
+            var platId = GetAccount(AccountId).PlatformId;
+            var extracter = new TDConvExtracter(csvFilePath: FilePath, streamReader: StreamReader);
+            var loader = new TDConvLoader(AccountId, platId);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
