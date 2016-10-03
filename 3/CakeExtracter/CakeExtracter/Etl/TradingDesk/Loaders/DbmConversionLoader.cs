@@ -12,9 +12,9 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
     {
         private DbmConvConverter convConverter;
 
-        public DbmConversionLoader(int convertToTimezoneOffset) //, DateRange daylightSavingsRange)
+        public DbmConversionLoader(int convertToTimezoneOffset)
         {
-            this.convConverter = new DbmConvConverter(convertToTimezoneOffset); //, daylightSavingsRange);
+            this.convConverter = new DbmConvConverter(convertToTimezoneOffset);
         }
         public DbmConversionLoader(DbmConvConverter convConverter)
         {
@@ -88,12 +88,10 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
     public class DbmConvConverter
     {
         private readonly int convertToTimezoneOffset;
-        //private readonly DateRange daylightSavingsRange;
 
-        public DbmConvConverter(int convertToTimezoneOffset) //, DateRange daylightSavingsRange)
+        public DbmConvConverter(int convertToTimezoneOffset)
         {
             this.convertToTimezoneOffset = convertToTimezoneOffset;
-            //this.daylightSavingsRange = daylightSavingsRange;
         }
 
         public DateTime EventTime(DataTransferRow dtRow)
@@ -103,12 +101,6 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                 return eventTime.AddHours(1);
             else
                 return eventTime;
-
-            // Daylight savings check
-            //if (eventTime >= daylightSavingsRange.FromDate && eventTime < daylightSavingsRange.ToDate)
-            //    return eventTime.AddHours(1);
-            //else
-            //    return eventTime;
         }
 
         public DateTime? ViewTime(DataTransferRow dtRow)
@@ -121,12 +113,6 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                 return viewTime.AddHours(1);
             else
                 return viewTime;
-
-            // Daylight savings check
-            //if (viewTime >= daylightSavingsRange.FromDate && viewTime < daylightSavingsRange.ToDate)
-            //    return viewTime.AddHours(1);
-            //else
-            //    return viewTime;
         }
 
         public DateTime? RequestTime(DataTransferRow dtRow)
@@ -139,12 +125,6 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                 return requestTime.AddHours(1);
             else
                 return requestTime;
-
-            // Daylight savings check
-            //if (requestTime >= daylightSavingsRange.FromDate && requestTime < daylightSavingsRange.ToDate)
-            //    return requestTime.AddHours(1);
-            //else
-            //    return requestTime;
         }
     }
 }

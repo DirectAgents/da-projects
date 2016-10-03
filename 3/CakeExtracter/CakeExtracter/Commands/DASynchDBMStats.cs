@@ -41,6 +41,24 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
+        // testing...
+        public void DoConv()
+        {
+            var today = DateTime.Today;
+            var yesterday = today.AddDays(-1);
+            var dateRange = new DateRange(yesterday, EndDate ?? today);
+
+            int timezoneOffset = -5; // w/o daylight savings
+            var convConverter = new CakeExtracter.Etl.TradingDesk.Loaders.DbmConvConverter(timezoneOffset);
+
+            var extracter = new DbmConversionExtracter(dateRange, "bucketName", null, false);
+            var loader = new DbmConvLoader(convConverter);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+
         public void DoRegular()
         {
             // Note: The reportDate will be one day after the endDate of the desired stats
