@@ -45,12 +45,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 ExtData = convRow.ext_data_order_id
             };
 
-            if (platId == 2 || true)
+            if (platId == 2)
             {
-                if (convRow.PostClickConvs == 0)
-                    conv.ConvType = "v";
-                else
-                    conv.ConvType = "c";
+                conv.ConvType = (convRow.PostClickConvs == 0) ? "v" : "c";
             }
 
 

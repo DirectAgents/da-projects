@@ -37,7 +37,8 @@ namespace CakeExtracter.Commands
             if (Historical)
                 DoHistorical();
             else
-                DoRegular();
+                //DoRegular();
+                DoConv();
             return 0;
         }
 
@@ -47,11 +48,13 @@ namespace CakeExtracter.Commands
             var today = DateTime.Today;
             var yesterday = today.AddDays(-1);
             var dateRange = new DateRange(yesterday, EndDate ?? today);
+            var bucket = "gdbm-479-320231";
+            var insertOrder = 1632789;
 
             int timezoneOffset = -5; // w/o daylight savings
             var convConverter = new CakeExtracter.Etl.TradingDesk.Loaders.DbmConvConverter(timezoneOffset);
 
-            var extracter = new DbmConversionExtracter(dateRange, "bucketName", null, false);
+            var extracter = new DbmConversionExtracter(dateRange, bucket, insertOrder, true);
             var loader = new DbmConvLoader(convConverter);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
