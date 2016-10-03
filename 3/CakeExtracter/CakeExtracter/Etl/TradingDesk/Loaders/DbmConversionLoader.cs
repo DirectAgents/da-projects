@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
@@ -9,13 +10,15 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
 {
     public class DbmConversionLoader : Loader<DataTransferRow>
     {
-        private readonly int convertToTimezoneOffset;
-        private readonly DateRange daylightSavingsRange;
+        private DbmConvConverter convConverter;
 
-        public DbmConversionLoader(int convertToTimezoneOffset, DateRange daylightSavingsRange)
+        public DbmConversionLoader(int convertToTimezoneOffset) //, DateRange daylightSavingsRange)
         {
-            this.convertToTimezoneOffset = convertToTimezoneOffset;
-            this.daylightSavingsRange = daylightSavingsRange;
+            this.convConverter = new DbmConvConverter(convertToTimezoneOffset); //, daylightSavingsRange);
+        }
+        public DbmConversionLoader(DbmConvConverter convConverter)
+        {
+            this.convConverter = convConverter;
         }
 
         protected override int Load(List<DataTransferRow> items)
@@ -38,7 +41,9 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                     var source = new DBMConversion
                     {
                         AuctionID = item.auction_id,
-                        EventTime = Utility.UnixTimeStampToDateTime(item.event_time, convertToTimezoneOffset),
+                        EventTime = convConverter.EventTime(item),
+                        ViewTime = convConverter.ViewTime(item),
+                        RequestTime = convConverter.RequestTime(item),
                         InsertionOrderID = item.insertion_order_id,
                         LineItemID = item.line_item_id,
                         CreativeID = item.creative_id,
@@ -56,23 +61,6 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                         NetSpeed = item.net_speed,
                         IP = item.ip
                     };
-                    if (source.EventTime >= daylightSavingsRange.FromDate && source.EventTime < daylightSavingsRange.ToDate)
-                        source.EventTime = source.EventTime.AddHours(1);
-
-                    if (item.view_time.HasValue)
-                    {
-                        source.ViewTime = Utility.UnixTimeStampToDateTime(item.view_time.Value, convertToTimezoneOffset);
-                        // Daylight savings check
-                        if (source.ViewTime.Value >= daylightSavingsRange.FromDate && source.ViewTime.Value < daylightSavingsRange.ToDate)
-                            source.ViewTime = source.ViewTime.Value.AddHours(1);
-                    }
-                    if (item.request_time.HasValue)
-                    {
-                        source.RequestTime = Utility.UnixTimeStampToDateTime(item.request_time.Value, convertToTimezoneOffset);
-                        // Daylight savings check
-                        if (source.RequestTime.Value >= daylightSavingsRange.FromDate && source.RequestTime.Value < daylightSavingsRange.ToDate)
-                            source.RequestTime = source.RequestTime.Value.AddHours(1);
-                    }
 
                     var target = db.Set<DBMConversion>().Find(source.AuctionID, source.EventTime);
                     if (target == null)
@@ -94,6 +82,69 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                 db.SaveChanges();
             }
             return itemCount;
+        }
+    }
+
+    public class DbmConvConverter
+    {
+        private readonly int convertToTimezoneOffset;
+        //private readonly DateRange daylightSavingsRange;
+
+        public DbmConvConverter(int convertToTimezoneOffset) //, DateRange daylightSavingsRange)
+        {
+            this.convertToTimezoneOffset = convertToTimezoneOffset;
+            //this.daylightSavingsRange = daylightSavingsRange;
+        }
+
+        public DateTime EventTime(DataTransferRow dtRow)
+        {
+            var eventTime = Utility.UnixTimeStampToDateTime(dtRow.event_time, this.convertToTimezoneOffset);
+            if (TimeZoneInfo.Local.IsDaylightSavingTime(eventTime))
+                return eventTime.AddHours(1);
+            else
+                return eventTime;
+
+            // Daylight savings check
+            //if (eventTime >= daylightSavingsRange.FromDate && eventTime < daylightSavingsRange.ToDate)
+            //    return eventTime.AddHours(1);
+            //else
+            //    return eventTime;
+        }
+
+        public DateTime? ViewTime(DataTransferRow dtRow)
+        {
+            if (!dtRow.view_time.HasValue)
+                return null;
+
+            var viewTime = Utility.UnixTimeStampToDateTime(dtRow.view_time.Value, convertToTimezoneOffset);
+            if (TimeZoneInfo.Local.IsDaylightSavingTime(viewTime))
+                return viewTime.AddHours(1);
+            else
+                return viewTime;
+
+            // Daylight savings check
+            //if (viewTime >= daylightSavingsRange.FromDate && viewTime < daylightSavingsRange.ToDate)
+            //    return viewTime.AddHours(1);
+            //else
+            //    return viewTime;
+        }
+
+        public DateTime? RequestTime(DataTransferRow dtRow)
+        {
+            if (!dtRow.request_time.HasValue)
+                return null;
+
+            var requestTime = Utility.UnixTimeStampToDateTime(dtRow.request_time.Value, convertToTimezoneOffset);
+            if (TimeZoneInfo.Local.IsDaylightSavingTime(requestTime))
+                return requestTime.AddHours(1);
+            else
+                return requestTime;
+
+            // Daylight savings check
+            //if (requestTime >= daylightSavingsRange.FromDate && requestTime < daylightSavingsRange.ToDate)
+            //    return requestTime.AddHours(1);
+            //else
+            //    return requestTime;
         }
     }
 }
