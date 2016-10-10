@@ -19,8 +19,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public AdrollConvLoader(int acctId)
         {
-            //this.accountId = acctId;
-            this.convLoader = new TDConvLoader(acctId,1);
+            this.accountId = acctId;
+            this.convLoader = new TDConvLoader(acctId,Platform.Code_AdRoll);
         }
 
         protected override int Load(List<AdrollConvRow> items)
@@ -30,7 +30,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             UpdateAdLookup(items);
             AddUpdateDependentCities(items);
             var convs = items.Select(c => CreateConv(c)).ToList();
-            var count = convLoader.UpsertConvs(convs);
+            var count = TDConvLoader.UpsertConvs(convs);
             return count;
         }
 

@@ -13,11 +13,11 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
     {
         //public TDConvLoader() { }
         private readonly int accountId;
-        private readonly int platId;
+        private readonly string platId;
         private Dictionary<string, int> countryIdLookupByName = new Dictionary<string, int>();
         private Dictionary<string, int> cityIdLookupByCountryCity = new Dictionary<string, int>();
 
-        public TDConvLoader(int acctId, int platId)
+        public TDConvLoader(int acctId, string platId)
         {
             this.accountId = acctId;
             this.platId = platId;
@@ -45,7 +45,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 ExtData = convRow.ext_data_order_id
             };
 
-            if (platId == 2)
+            if (platId == Platform.Code_DBM)
             {
                 conv.ConvType = (convRow.PostClickConvs == 0) ? "v" : "c";
             }
@@ -106,7 +106,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             }
         }
 
-        public int UpsertConvs(List<Conv> items)
+        public static int UpsertConvs(List<Conv> items)
         {
             var addedCount = 0;
             var updatedCount = 0;

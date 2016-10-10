@@ -21,8 +21,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         protected override int Load(List<DataTransferRow> items)
         {
             UpdateAccountLookup(items);
-            var convs = items.Select(i => CreateConv(i)).Where(i => i.AccountId > 0).ToList();
-            var count = UpsertConversions(convs);
+            var convs = items.Select(i => CreateConv(i)).Where(i => i.AccountId > 0).ToList(); //TODO: add previously non-existent accounts to database?
+            var count = TDConvLoader.UpsertConvs(convs);
             return count;
         }
 
@@ -33,7 +33,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 AccountId = accountIdLookupByExtId[dtRow.insertion_order_id.Value],
                 Time = convConverter.EventTime(dtRow),
                 ConvType = (dtRow.event_sub_type == "postview") ? "v" : "c",
-                //ConvVal =
+                //ConvVal = 0,
                 //ExtData =
                 IP = dtRow.ip,
                 

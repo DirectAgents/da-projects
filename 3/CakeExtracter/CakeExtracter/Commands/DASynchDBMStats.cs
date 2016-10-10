@@ -34,13 +34,13 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            //DoConvTest();
+            DoConvTest();
             //return 0;
-
+            /*
             if (Historical)
                 DoHistorical();
             else
-                DoRegular();
+                DoRegular();*/
             return 0;
         }
 
@@ -49,7 +49,7 @@ namespace CakeExtracter.Commands
         {
             var today = DateTime.Today;
             var yesterday = today.AddDays(-1);
-            var dateRange = new DateRange(yesterday, EndDate ?? today);
+            var dateRange = new DateRange(EndDate ?? today, EndDate ?? today);
             var bucket = "gdbm-479-320231";
             var insertOrderId = 1632789;
 
@@ -82,6 +82,7 @@ namespace CakeExtracter.Commands
                 DoETL_Site(reportDate: reportDate);
             //if (statsType.Conv)
             // TODO: implement
+                //DoETL_Conv(reportDate: reportDate);
         }
 
         public void DoHistorical()

@@ -53,39 +53,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 csv.Configuration.IgnoreHeaderWhiteSpace = true;
                 csv.Configuration.WillThrowOnMissingField = false;
                 csv.Configuration.SkipEmptyRecords = true;
-                if (this.platId == 1)
-                    csv.Configuration.RegisterClassMap<AdrollConvRowMap>();
-                else
-                    csv.Configuration.RegisterClassMap<DBMConvRowMap>();
+                csv.Configuration.RegisterClassMap<AdrollConvRowMap>();
                 var csvRows = csv.GetRecords<AdrollConvRow>().ToList();
                 for (int i = 0; i < csvRows.Count; i++)
                 {
                     yield return csvRows[i];
                 }
             }
-        }
-    }
-
-    public sealed class DBMConvRowMap : CsvClassMap<AdrollConvRow>
-    {
-        public DBMConvRowMap()
-        {
-            
-            Map(m => m.ConvTime).Name("Date");
-            //Map(m => m.Campaign).Name("Insertion Order");
-            Map(m => m.ext_data_order_id).Name("Order ID");
-            Map(m => m.ConvVal).Name("DCM Post-View Revenue");
-            /*
-            Map(m => m.ConvTime);
-            Map(m => m.ConvType);
-            Map(m => m.Campaign);
-            Map(m => m.AdGroup);
-            Map(m => m.Ad);
-            Map(m => m.Country);
-            Map(m => m.City);
-            Map(m => m.ExternalData);
-            */
-
         }
     }
 
