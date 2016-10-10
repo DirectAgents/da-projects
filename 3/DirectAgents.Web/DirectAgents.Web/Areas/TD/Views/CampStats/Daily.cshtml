@@ -1,7 +1,8 @@
 ﻿@model DirectAgents.Web.Areas.TD.Models.ReportingVM
 @{
     var camp = Model.Campaign;
-    int numCols = 9;
+    var cols = new string[] { "Date", "Impressions", "Clicks", "TotalConv", "PostClickConv", "PostViewConv", "Spend", "CTR", "CPA" };
+    int numCols = cols.Length;
 }
 
 <h2>Daily Stats</h2>
@@ -17,17 +18,11 @@ Campaign: @camp.Name
 @section scripts {
 <script>
     $(document).ready(function () {
-        SetupDataSourceAndSpreadsheet();
-
-        var spreadsheet = $('#spreadsheet').data('kendoSpreadsheet');
-        var sheet = spreadsheet.activeSheet();
-        //sheet.range('A:A').format('dd/mm/yyyy');
-        sheet.range('B:F').format('#,0');
-        sheet.range('G:I').format('$#,0.00');
-        sheet.range('H:H').format('#,0.00%');
+        var datasource = CreateDataSource();
+        SetupSpreadsheet(datasource);
     });
 
-    function SetupDataSourceAndSpreadsheet() {
+    function CreateDataSource() {
         var datasource = new kendo.data.DataSource({
             transport: {
                 read: {
@@ -58,6 +53,24 @@ Campaign: @camp.Name
                 }
             }
         });
+        return datasource;
+    }
+
+    function SetupSpreadsheet(datasource) {
+        DoSpreadsheetConfig();
+
+        var spreadsheet = $('#spreadsheet').data('kendoSpreadsheet');
+        var sheet = spreadsheet.activeSheet();
+
+        // Setup Columns
+        sheet.setDataSource(datasource, [@Html.Raw(string.Join(",", cols.Select(c => "'" + c + "'")))]);
+        //sheet.range('A:A').format('dd/mm/yyyy');
+        sheet.range('B:F').format('#,0');
+        sheet.range('G:I').format('$#,0.00');
+        sheet.range('H:H').format('#,0.00%');
+    }
+
+    function DoSpreadsheetConfig() {
         $('#spreadsheet').kendoSpreadsheet({
             columns: @numCols,
             rows: 100,
@@ -65,19 +78,11 @@ Campaign: @camp.Name
             //sheetsbar: false,
             sheets: [{
                 name: 'Daily',
-                dataSource: datasource,
+                //dataSource: datasource,
                 frozenRows: 1,
                 columns: [
-                    { width: 100 },
-                    { width: 100 },
-                    { width: 100 },
-                    { width: 100 },
-                    { width: 100 },
-                    { width: 100 },
-                    { width: 100 },
-                    { width: 100 },
-                    { width: 100 },
-                    //{ width: 100 } // extra col
+                    @for (int i=0; i < numCols; i++)
+                    {<text>{ width: 100 },</text>}
                 ],
                 rows: [{ // define header row
                     cells: [
