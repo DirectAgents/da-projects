@@ -1,8 +1,8 @@
 ﻿@model DirectAgents.Web.Areas.TD.Models.ReportingVM
 @{
     var camp = Model.Campaign;
-    var cols = new string[] { "Date", "Impressions", "Clicks", "TotalConv", "PostClickConv", "PostViewConv", "Spend", "CTR", "CPA" };
-    int numCols = cols.Length;
+    //var cols = new string[] { "Date", "Impressions", "Clicks", "TotalConv", "PostClickConv", "PostViewConv", "Spend", "CTR", "CPA" };
+    int numCols = Model.ColumnConfigs.Count();
 }
 
 <h2>Daily Stats</h2>
@@ -63,11 +63,11 @@ Campaign: @camp.Name
         var sheet = spreadsheet.activeSheet();
 
         // Setup Columns
-        sheet.setDataSource(datasource, [@Html.Raw(string.Join(",", cols.Select(c => "'" + c + "'")))]);
-        //sheet.range('A:A').format('dd/mm/yyyy');
-        sheet.range('B:F').format('#,0');
-        sheet.range('G:I').format('$#,0.00');
-        sheet.range('H:H').format('#,0.00%');
+        sheet.setDataSource(datasource, [@Html.Raw(string.Join(",", Model.ColumnConfigs.Select(c => "'" + c.PropName + "'")))]);
+        @foreach (var config in Model.ColumnConfigs)
+        {
+            <text>sheet.range('@config.Letter:@config.Letter').format('@config.Format');</text>
+        }
     }
 
     function DoSpreadsheetConfig() {
@@ -81,7 +81,7 @@ Campaign: @camp.Name
                 //dataSource: datasource,
                 frozenRows: 1,
                 columns: [
-                    @for (int i=0; i < numCols; i++)
+                    @for (int i = 0; i < numCols; i++)
                     {<text>{ width: 100 },</text>}
                 ],
                 rows: [{ // define header row

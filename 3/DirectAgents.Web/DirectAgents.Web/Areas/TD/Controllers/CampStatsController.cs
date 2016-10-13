@@ -29,6 +29,12 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             };
             return View(model);
         }
+        // TODO: Work on this... For one campaign, how did it do each month?
+        //public ActionResult PacingByMonth(int campId)
+        //{
+        //    //var r = tdRepo.StatsRange_All(
+        //    return null;
+        //}
 
         public ActionResult PacingGrid()
         {
@@ -86,7 +92,9 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
             var campaigns = tdRepo.Campaigns();
             if (campId.HasValue)
-                campaigns = campaigns.Where(c => c.Id == campId.Value);
+                campaigns = campaigns.Where(c => c.Id == campId.Value); // the specified campaign
+            else
+                campaigns = campaigns.Where(c => !c.Name.Contains("Demo")); // all but the demo campaigns
 
             var campStatsList = new List<TDCampStats>();
             foreach (var camp in campaigns.OrderBy(c => c.Advertiser.Name).ThenBy(c => c.Name))
@@ -129,7 +137,8 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             {
                 Campaign = campaign,
                 Start = start,
-                End = end
+                End = end,
+                ColumnConfigs = ColumnConfig.BasicColumns()
             };
             return View(model);
         }
