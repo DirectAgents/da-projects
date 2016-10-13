@@ -20,7 +20,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
         private readonly bool includeClickType;
         private readonly bool clickAssistConvStats;
 
-        public AdWordsApiExtracter(string clientCustomerId, CakeExtracter.Common.DateRange dateRange, bool includeClickType, bool clickAssistConvStats)
+        public AdWordsApiExtracter(string clientCustomerId, CakeExtracter.Common.DateRange dateRange, bool includeClickType, bool clickAssistConvStats = false)
         {
             this.clientCustomerId = clientCustomerId;
             this.beginDate = dateRange.FromDate;
@@ -39,10 +39,13 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
 
             try
             {
+                string[] fields;
                 if (clickAssistConvStats)
-                    DownloadClickAssistConvReport();
+                    fields = GetFields_ClickAssistedConversions();
                 else
-                    DownloadStandardReport();
+                    fields = GetFields_StandardReport();
+
+                DownloadAdWordsXmlReport(fields);
                 var reportRows = EnumerateAdWordsXmlReportRows(this.reportFilePath);
                 Add(reportRows);
             }
@@ -53,7 +56,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             End();
         }
 
-        private void DownloadStandardReport()
+        private string[] GetFields_StandardReport()
         {
             var fieldsList = new List<string>(new string[]
             {                             // "XML ATTRIBUTE"
@@ -63,7 +66,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 "AccountTimeZoneId",   // timeZone
                 "CampaignId",    // campaignID
                 "CampaignName",  // campaign
-                "CampaignStatus",// campaignStatus
+                "CampaignStatus",// campaignStatus - ?not used?
                 "Date",        // day
                 "Impressions", // impressions
                 "Clicks",      // clicks
@@ -79,9 +82,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             {
                 fieldsList.Add("ClickType"); // clickType
             }
-            DownloadAdWordsXmlReport(fieldsList.ToArray());
+            return fieldsList.ToArray();
         }
-        private void DownloadClickAssistConvReport()
+        private string[] GetFields_ClickAssistedConversions()
         {
             var fieldsList = new List<string>(new string[]
             {
@@ -99,8 +102,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             {
                 fieldsList.Add("ClickType"); // clickType
             }
-            DownloadAdWordsXmlReport(fieldsList.ToArray());
+            return fieldsList.ToArray();
         }
+
         private void DownloadAdWordsXmlReport(string[] fieldsList)
         {
             var definition = new ReportDefinition
@@ -187,5 +191,6 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 }
             }
         }
+
     }
 }

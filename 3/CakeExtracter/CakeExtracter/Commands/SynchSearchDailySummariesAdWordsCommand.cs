@@ -73,9 +73,9 @@ namespace CakeExtracter.Commands
                     startDate = searchAccount.MinSynchDate.Value;
                 var revisedDateRange = new DateRange(startDate, dateRange.ToDate);
 
-                if (GetClickAssistConvStats != "yes")
+                if (GetClickAssistConvStats != "yes") // "yes" mean _only_ clickAssistConvStats
                 {
-                    var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType, false);
+                    var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType);
                     var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, searchAccount.UseConvertedClicks, IncludeClickType, false);
                     var extracterThread = extracter.Start();
                     var loaderThread = loader.Start(extracter);
@@ -84,7 +84,7 @@ namespace CakeExtracter.Commands
                 }
                 if (GetClickAssistConvStats == "yes" || GetClickAssistConvStats == "both")
                 {
-                    var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType, true);
+                    var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType, clickAssistConvStats: true);
                     var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, searchAccount.UseConvertedClicks, IncludeClickType, true);
                     var extracterThread = extracter.Start();
                     var loaderThread = loader.Start(extracter);
