@@ -388,6 +388,29 @@
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
           <Property Name="Device" Type="nvarchar" MaxLength="5" />
         </EntityType>
+        <EntityType Name="SearchConvSummary">
+          <Key>
+            <PropertyRef Name="SearchCampaignId" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="SearchConvTypeId" />
+            <PropertyRef Name="Network" />
+            <PropertyRef Name="Device" />
+          </Key>
+          <Property Name="SearchCampaignId" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="SearchConvTypeId" Type="int" Nullable="false" />
+          <Property Name="Network" Type="nchar" MaxLength="1" Nullable="false" />
+          <Property Name="Device" Type="nchar" MaxLength="1" Nullable="false" />
+          <Property Name="Conversions" Type="float" Nullable="false" />
+          <Property Name="ConVal" Type="decimal" Precision="18" Scale="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SearchConvType">
+          <Key>
+            <PropertyRef Name="SearchConvTypeId" />
+          </Key>
+          <Property Name="SearchConvTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
         <EntityType Name="SearchDailySummary">
           <Key>
             <PropertyRef Name="SearchCampaignId" />
@@ -844,6 +867,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SearchConvSummary_SearchCampaign">
+          <End Role="SearchCampaign" Type="Self.SearchCampaign" Multiplicity="1" />
+          <End Role="SearchConvSummary" Type="Self.SearchConvSummary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchCampaign">
+              <PropertyRef Name="SearchCampaignId" />
+            </Principal>
+            <Dependent Role="SearchConvSummary">
+              <PropertyRef Name="SearchCampaignId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SearchConvSummary_SearchConvType">
+          <End Role="SearchConvType" Type="Self.SearchConvType" Multiplicity="1" />
+          <End Role="SearchConvSummary" Type="Self.SearchConvSummary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchConvType">
+              <PropertyRef Name="SearchConvTypeId" />
+            </Principal>
+            <Dependent Role="SearchConvSummary">
+              <PropertyRef Name="SearchConvTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SearchDailySummary_SearchCampaign">
           <End Role="SearchCampaign" Type="Self.SearchCampaign" Multiplicity="1" />
           <End Role="SearchDailySummary" Type="Self.SearchDailySummary" Multiplicity="*" />
@@ -986,6 +1033,8 @@
           <EntitySet Name="SearchAccount" EntityType="Self.SearchAccount" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchCampaign" EntityType="Self.SearchCampaign" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchChannel" EntityType="Self.SearchChannel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SearchConvSummary" EntityType="Self.SearchConvSummary" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SearchConvType" EntityType="Self.SearchConvType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchDailySummary" EntityType="Self.SearchDailySummary" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchDailySummary2" EntityType="Self.SearchDailySummary2" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchProfile" EntityType="Self.SearchProfile" Schema="dbo" store:Type="Tables" />
@@ -1108,6 +1157,14 @@
           <AssociationSet Name="FK_SearchCampaign_SearchAccount1" Association="Self.FK_SearchCampaign_SearchAccount1">
             <End Role="SearchAccount" EntitySet="SearchAccount" />
             <End Role="SearchCampaign" EntitySet="SearchCampaign" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchConvSummary_SearchCampaign" Association="Self.FK_SearchConvSummary_SearchCampaign">
+            <End Role="SearchCampaign" EntitySet="SearchCampaign" />
+            <End Role="SearchConvSummary" EntitySet="SearchConvSummary" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchConvSummary_SearchConvType" Association="Self.FK_SearchConvSummary_SearchConvType">
+            <End Role="SearchConvType" EntitySet="SearchConvType" />
+            <End Role="SearchConvSummary" EntitySet="SearchConvSummary" />
           </AssociationSet>
           <AssociationSet Name="FK_SearchDailySummary_SearchCampaign" Association="Self.FK_SearchDailySummary_SearchCampaign">
             <End Role="SearchCampaign" EntitySet="SearchCampaign" />
@@ -1338,6 +1395,16 @@
             <End Role="ClientInfo" EntitySet="ClientInfos" />
             <End Role="UserProfile" EntitySet="UserProfiles" />
           </AssociationSet>
+          <EntitySet Name="SearchConvSummaries" EntityType="ClientPortalModel.SearchConvSummary" />
+          <EntitySet Name="SearchConvTypes" EntityType="ClientPortalModel.SearchConvType" />
+          <AssociationSet Name="FK_SearchConvSummary_SearchCampaign" Association="ClientPortalModel.FK_SearchConvSummary_SearchCampaign">
+            <End Role="SearchCampaign" EntitySet="SearchCampaigns" />
+            <End Role="SearchConvSummary" EntitySet="SearchConvSummaries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchConvSummary_SearchConvType" Association="ClientPortalModel.FK_SearchConvSummary_SearchConvType">
+            <End Role="SearchConvType" EntitySet="SearchConvTypes" />
+            <End Role="SearchConvSummary" EntitySet="SearchConvSummaries" />
+          </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
           <Member Name="Default" Value="1" />
@@ -1544,6 +1611,7 @@
           <NavigationProperty Name="AltSearchAccount" Relationship="ClientPortalModel.FK_SearchCampaign_SearchAccount1" FromRole="SearchCampaign" ToRole="SearchAccount" />
           <NavigationProperty Name="CallDailySummaries" Relationship="ClientPortalModel.FK_CallDailySummary_SearchCampaign" FromRole="SearchCampaign" ToRole="CallDailySummary" />
           <Property Type="String" Name="LCcmpid" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SearchConvSummaries" Relationship="ClientPortalModel.FK_SearchConvSummary_SearchCampaign" FromRole="SearchCampaign" ToRole="SearchConvSummary" />
         </EntityType>
         <Association Name="FK_SearchDailySummary_SearchCampaign">
           <End Type="ClientPortalModel.SearchCampaign" Role="SearchCampaign" Multiplicity="1" />
@@ -2355,6 +2423,55 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="SearchConvSummary">
+          <Key>
+            <PropertyRef Name="SearchCampaignId" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="SearchConvTypeId" />
+            <PropertyRef Name="Network" />
+            <PropertyRef Name="Device" />
+          </Key>
+          <Property Name="SearchCampaignId" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SearchConvTypeId" Type="Int32" Nullable="false" />
+          <Property Name="Network" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="Device" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="Conversions" Type="Double" Nullable="false" />
+          <Property Name="ConVal" Type="Decimal" Nullable="false" Precision="18" Scale="6" />
+          <NavigationProperty Name="SearchCampaign" Relationship="ClientPortalModel.FK_SearchConvSummary_SearchCampaign" FromRole="SearchConvSummary" ToRole="SearchCampaign" />
+          <NavigationProperty Name="SearchConvType" Relationship="ClientPortalModel.FK_SearchConvSummary_SearchConvType" FromRole="SearchConvSummary" ToRole="SearchConvType" />
+        </EntityType>
+        <EntityType Name="SearchConvType">
+          <Key>
+            <PropertyRef Name="SearchConvTypeId" />
+          </Key>
+          <Property Name="SearchConvTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_SearchConvSummary_SearchCampaign">
+          <End Type="ClientPortalModel.SearchCampaign" Role="SearchCampaign" Multiplicity="1" />
+          <End Type="ClientPortalModel.SearchConvSummary" Role="SearchConvSummary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchCampaign">
+              <PropertyRef Name="SearchCampaignId" />
+            </Principal>
+            <Dependent Role="SearchConvSummary">
+              <PropertyRef Name="SearchCampaignId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SearchConvSummary_SearchConvType">
+          <End Type="ClientPortalModel.SearchConvType" Role="SearchConvType" Multiplicity="1" />
+          <End Type="ClientPortalModel.SearchConvSummary" Role="SearchConvSummary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchConvType">
+              <PropertyRef Name="SearchConvTypeId" />
+            </Principal>
+            <Dependent Role="SearchConvSummary">
+              <PropertyRef Name="SearchConvTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2865,6 +2982,27 @@
                 <ScalarProperty Name="Logo" ColumnName="Logo" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SearchConvSummaries">
+            <EntityTypeMapping TypeName="ClientPortalModel.SearchConvSummary">
+              <MappingFragment StoreEntitySet="SearchConvSummary">
+                <ScalarProperty Name="ConVal" ColumnName="ConVal" />
+                <ScalarProperty Name="Conversions" ColumnName="Conversions" />
+                <ScalarProperty Name="Device" ColumnName="Device" />
+                <ScalarProperty Name="Network" ColumnName="Network" />
+                <ScalarProperty Name="SearchConvTypeId" ColumnName="SearchConvTypeId" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="SearchCampaignId" ColumnName="SearchCampaignId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SearchConvTypes">
+            <EntityTypeMapping TypeName="ClientPortalModel.SearchConvType">
+              <MappingFragment StoreEntitySet="SearchConvType">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="SearchConvTypeId" ColumnName="SearchConvTypeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -21,6 +21,7 @@ namespace ClientPortal.Data.Contexts
             this.GoogleAnalyticsSummaries = new HashSet<GoogleAnalyticsSummary>();
             this.SearchDailySummaries2 = new HashSet<SearchDailySummary2>();
             this.CallDailySummaries = new HashSet<CallDailySummary>();
+            this.SearchConvSummaries = new HashSet<SearchConvSummary>();
         }
     
         public int SearchCampaignId { get; set; }
@@ -43,5 +44,7 @@ namespace ClientPortal.Data.Contexts
         public virtual SearchAccount AltSearchAccount { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CallDailySummary> CallDailySummaries { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SearchConvSummary> SearchConvSummaries { get; set; }
     }
 }

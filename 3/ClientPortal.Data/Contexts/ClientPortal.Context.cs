@@ -64,5 +64,7 @@ namespace ClientPortal.Data.Contexts
         public virtual DbSet<Currency> Currencies { get; set; }
         public virtual DbSet<CurrencyConversion> CurrencyConversions { get; set; }
         public virtual DbSet<ClientInfo> ClientInfos { get; set; }
+        public virtual DbSet<SearchConvSummary> SearchConvSummaries { get; set; }
+        public virtual DbSet<SearchConvType> SearchConvTypes { get; set; }
     }
 }
