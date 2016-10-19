@@ -112,8 +112,9 @@ namespace CakeExtracter.Commands
                 }
                 if (GetConversionTypeStats || getAll)
                 {
+                    // Note: IncludeClickType==true is not implemented
                     var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType, conversionTypeStats: true);
-                    var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, searchAccount.UseConvertedClicks, IncludeClickType, true);
+                    var loader = new AdWordsConvSummaryLoader(searchAccount.SearchAccountId);
                     var extracterThread = extracter.Start();
                     var loaderThread = loader.Start(extracter);
                     extracterThread.Join();

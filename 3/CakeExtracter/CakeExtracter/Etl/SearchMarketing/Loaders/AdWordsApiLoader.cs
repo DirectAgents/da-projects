@@ -8,7 +8,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 {
     public class AdWordsApiLoader : Loader<Dictionary<string, string>>
     {
-        private const string googleChannel = "Google";
+        public const string GoogleChannel = "Google";
         private readonly int searchAccountId;
         private readonly bool includeClickType; // if true, we use SearchDailySummary2's
         private readonly bool useConvertedClicks; // (instead of conversions)
@@ -27,9 +27,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         protected override int Load(List<Dictionary<string, string>> items)
         {
             Logger.Info("Loading {0} SearchDailySummaries..", items.Count);
-            SetCurrencyMultipliers(items);
-            AddUpdateDependentSearchAccounts(items);
-            AddUpdateDependentSearchCampaigns(items);
+            SetCurrencyMultipliers(items, this.currencyMultipliers);
+            AddUpdateDependentSearchAccounts(items, this.searchAccountId);
+            AddUpdateDependentSearchCampaigns(items, this.searchAccountId);
             var count = UpsertSearchDailySummaries(items);
             return count;
         }
@@ -84,7 +84,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                     var searchAccount = passedInAccount;
                     if (searchAccount.ExternalId != customerId)
-                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == googleChannel);
+                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == GoogleChannel);
 
                     var sds = new SearchDailySummary
                     {   // the basic fields
@@ -103,7 +103,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     else
                     {
                         sds.Revenue = decimal.Parse(item["totalConvValue"]);
-                        sds.Cost = decimal.Parse(item["cost"]) / 1000000; // convert from mincrons to dollars
+                        sds.Cost = decimal.Parse(item["cost"]) / 1000000; // convert from microns to dollars
                         var conversions = double.Parse(item[conversionKey]);
                         sds.Orders = Convert.ToInt32(conversions); // default rounding - nearest even # if .5
                         sds.Clicks = int.Parse(item["clicks"]);
@@ -130,6 +130,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                             var toUSDmult = currencyMultipliers[code][firstOfMonth];
                             sds.Revenue = sds.Revenue * toUSDmult;
                             sds.Cost = sds.Cost * toUSDmult;
+                            //TODO? Do for CassConVal as well?
                         }
                     }
 
@@ -209,7 +210,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             }
         }
 
-        private void SetCurrencyMultipliers(List<Dictionary<string, string>> items)
+        public static void SetCurrencyMultipliers(List<Dictionary<string, string>> items, Dictionary<string, Dictionary<DateTime, decimal>> currMults)
         {
             if (!items.Any() || !items[0].Keys.Contains("currency"))
                 return;
@@ -221,17 +222,17 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
             foreach (var cg in currencyGroups) // (foreach currency code)
             {
-                if (currencyMultipliers.ContainsKey(cg.Key))
+                if (currMults.ContainsKey(cg.Key))
                 { // See if dictionary values are already set
-                    var monthsWithoutMultiplier = cg.Where(t => !currencyMultipliers[cg.Key].ContainsKey(t.Item2));
+                    var monthsWithoutMultiplier = cg.Where(t => !currMults[cg.Key].ContainsKey(t.Item2));
                     if (!monthsWithoutMultiplier.Any())
                         continue; // they're all there already
                 }
                 else
                 {
-                    currencyMultipliers.Add(cg.Key, new Dictionary<DateTime, decimal>());
+                    currMults.Add(cg.Key, new Dictionary<DateTime, decimal>());
                 }
-                var singleCurrencyMultipliers = currencyMultipliers[cg.Key];
+                var singleCurrencyMultipliers = currMults[cg.Key];
 
                 using (var db = new ClientPortalContext())
                 {
@@ -259,11 +260,11 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             }
         }
 
-        private void AddUpdateDependentSearchAccounts(List<Dictionary<string, string>> items)
+        public static void AddUpdateDependentSearchAccounts(List<Dictionary<string, string>> items, int searchAccountId)
         {
             using (var db = new ClientPortalContext())
             {
-                var searchAccount = db.SearchAccounts.Find(this.searchAccountId);
+                var searchAccount = db.SearchAccounts.Find(searchAccountId);
 
                 var accountTuples = items.Select(i => Tuple.Create(i["account"], i["customerID"])).Distinct();
                 bool multipleAccounts = accountTuples.Count() > 1;
@@ -280,9 +281,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     }
                     else
                     {   // See if there are any sibling SearchAccounts that match by customerId... or finally, by name
-                        existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.ExternalId == customerId && sa.Channel == googleChannel);
+                        existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.ExternalId == customerId && sa.Channel == GoogleChannel);
                         if (existing == null)
-                            existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.Name == accountName && sa.Channel == googleChannel);
+                            existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.Name == accountName && sa.Channel == GoogleChannel);
                     }
 
                     if (existing == null)
@@ -290,7 +291,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         searchAccount.Advertiser.SearchAccounts.Add(new SearchAccount
                         {
                             Name = accountName,
-                            Channel = googleChannel,
+                            Channel = GoogleChannel,
                             //AccountCode = , // todo: have extracter get client code
                             ExternalId = customerId
                         });
@@ -314,13 +315,14 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             }
         }
 
-        private void AddUpdateDependentSearchCampaigns(List<Dictionary<string, string>> items)
+        public static void AddUpdateDependentSearchCampaigns(List<Dictionary<string, string>> items, int searchAccountId)
         {
             using (var db = new ClientPortalContext())
             {
-                var passedInAccount = db.SearchAccounts.Find(this.searchAccountId);
+                var passedInAccount = db.SearchAccounts.Find(searchAccountId);
+                var campaignTuples = items.Select(c => Tuple.Create(c["customerID"], c["campaign"], c["campaignID"])).Distinct();
 
-                foreach (var tuple in items.Select(c => Tuple.Create(c["customerID"], c["campaign"], c["campaignID"])).Distinct())
+                foreach (var tuple in campaignTuples)
                 {
                     var customerId = tuple.Item1;
                     var campaignName = tuple.Item2;
@@ -328,7 +330,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                     var searchAccount = passedInAccount;
                     if (searchAccount.ExternalId != customerId)
-                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == googleChannel);
+                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == GoogleChannel);
 
                     var existing = searchAccount.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignId);
 

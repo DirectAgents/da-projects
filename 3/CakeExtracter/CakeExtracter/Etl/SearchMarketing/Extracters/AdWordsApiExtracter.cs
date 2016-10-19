@@ -127,8 +127,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 "AdNetworkType1",
                 "Device",
                 "ConversionTypeName", // conversionName
-                "Conversions", // conversions
-                "ConversionValue" // totalConvValue
+                "Conversions",
+                "ConversionValue"
             });
             //if (includeClickType)
             //{
