@@ -122,36 +122,15 @@ namespace ClientPortal.Web.Models
 
         public bool UseYesterdayAsLatest
         {
-            get
-            {
-                bool useYesterdayAsLatest;
-                if (Boolean.TryParse(WebConfigurationManager.AppSettings["UseYesterdayAsLatest"], out useYesterdayAsLatest))
-                    return useYesterdayAsLatest;
-                else
-                    return true; // (if not specified)
-            }
+            get { return UserSettings.UseYesterdayAsLatest; }
         }
         public bool Search_UseYesterdayAsLatest
         {
-            get
-            {
-                bool useYesterdayAsLatest;
-                if (Boolean.TryParse(WebConfigurationManager.AppSettings["Search_UseYesterdayAsLatest"], out useYesterdayAsLatest))
-                    return useYesterdayAsLatest;
-                else
-                    return true; // (if not specified)
-            }
+            get { return UserSettings.Search_UseYesterdayAsLatest; }
         }
         public bool TD_UseYesterdayAsLatest
         {
-            get
-            {
-                bool useYesterdayAsLatest;
-                if (Boolean.TryParse(WebConfigurationManager.AppSettings["TD_UseYesterdayAsLatest"], out useYesterdayAsLatest))
-                    return useYesterdayAsLatest;
-                else
-                    return true; // (if not specified)
-            }
+            get { return UserSettings.TD_UseYesterdayAsLatest; }
         }
 
         public DayOfWeek StartDayOfWeek
@@ -218,6 +197,43 @@ namespace ClientPortal.Web.Models
         public int? InsertionOrderID
         {
             get { return (TDAccount == null) ? null : TDAccount.InsertionOrderID(); }
+        }
+    }
+
+    public class UserSettings
+    {
+        public static bool UseYesterdayAsLatest
+        {
+            get
+            {
+                bool useYesterdayAsLatest;
+                if (Boolean.TryParse(WebConfigurationManager.AppSettings["UseYesterdayAsLatest"], out useYesterdayAsLatest))
+                    return useYesterdayAsLatest;
+                else
+                    return true; // (if not specified)
+            }
+        }
+        public static bool Search_UseYesterdayAsLatest
+        {
+            get
+            {
+                bool useYesterdayAsLatest;
+                if (Boolean.TryParse(WebConfigurationManager.AppSettings["Search_UseYesterdayAsLatest"], out useYesterdayAsLatest))
+                    return useYesterdayAsLatest;
+                else
+                    return true; // (if not specified)
+            }
+        }
+        public static bool TD_UseYesterdayAsLatest
+        {
+            get
+            {
+                bool useYesterdayAsLatest;
+                if (Boolean.TryParse(WebConfigurationManager.AppSettings["TD_UseYesterdayAsLatest"], out useYesterdayAsLatest))
+                    return useYesterdayAsLatest;
+                else
+                    return true; // (if not specified)
+            }
         }
     }
 }
