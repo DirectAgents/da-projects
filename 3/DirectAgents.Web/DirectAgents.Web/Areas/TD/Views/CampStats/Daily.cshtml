@@ -40,15 +40,10 @@ Campaign: @camp.Name
                 model: {
                     id: 'Id',
                     fields: {
-                        Date: { type: 'date' },
-                        Impressions: { type: 'number' },
-                        Clicks: { type: 'number' },
-                        TotalConv: { type: 'number' },
-                        PostClickConv: { type: 'number' },
-                        PostViewConv: { type: 'number' },
-                        Spend: { type: 'number' },
-                        CTR: { type: 'number' },
-                        CPA: { type: 'number' }
+                        @foreach (var config in Model.ColumnConfigs)
+                        {
+                            <text>@config.PropName: { type: '@config.KendoType' },</text>
+                        }
                     }
                 }
             }
@@ -66,7 +61,10 @@ Campaign: @camp.Name
         sheet.setDataSource(datasource, [@Html.Raw(string.Join(",", Model.ColumnConfigs.Select(c => "'" + c.PropName + "'")))]);
         @foreach (var config in Model.ColumnConfigs)
         {
-            <text>sheet.range('@config.Letter:@config.Letter').format('@config.Format');</text>
+            if (config.Format != null)
+            {
+                <text>sheet.range('@config.Letter:@config.Letter').format('@config.Format');</text>
+            }
         }
     }
 
