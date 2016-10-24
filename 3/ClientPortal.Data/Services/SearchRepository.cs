@@ -278,6 +278,58 @@ namespace ClientPortal.Data.Services
             return summaries;
         }
 
+        private IQueryable<SearchConvSummary> GetSearchConvSummaries(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, DateTime? start, DateTime? end, bool includeToday)
+        {
+            var searchCampaigns = GetSearchCampaigns(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix);
+            return GetSearchConvSummaries(searchCampaigns, start, end, includeToday);
+        }
+        private IQueryable<SearchConvSummary> GetSearchConvSummaries(IQueryable<SearchCampaign> searchCampaigns, DateTime? start, DateTime? end, bool includeToday)
+        {
+            var summaries = searchCampaigns.SelectMany(c => c.SearchConvSummaries);
+
+            if (start.HasValue) summaries = summaries.Where(s => s.Date >= start);
+            if (!includeToday)
+            {
+                var yesterday = DateTime.Today.AddDays(-1);
+                if (!end.HasValue || yesterday < end.Value) end = yesterday;
+            }
+            if (end.HasValue)
+                summaries = summaries.Where(s => s.Date <= end);
+
+            return summaries;
+        }
+
+        // TODO: allow for breakdown by or specifying searchCampaign?
+        private IDictionary<string, object> GetConversionTypeStats(int searchProfileId, DateTime? startDate, DateTime? endDate)
+        {
+            var convDict = new Dictionary<string, object>();
+
+            var convSums = GetSearchConvSummaries(null, searchProfileId, null, null, null, startDate, endDate, true);
+            var convTypeGroups = convSums.GroupBy(cs => cs.SearchConvTypeId);
+            foreach (var cGroup in convTypeGroups)
+            {
+                convDict["conv" + cGroup.Key] = cGroup.Sum(cs => cs.Conversions);
+                convDict["cval" + cGroup.Key] = cGroup.Sum(cs => cs.ConVal);
+            }
+            return convDict;
+        }
+        public IEnumerable<IDictionary<string, object>> FillInConversionTypeStats(int searchProfileId, IEnumerable<SearchStat> searchStats)
+        {
+            var ssDicts = new List<IDictionary<string, object>>();
+            foreach (var stat in searchStats)
+            {
+                // For each searchStat, convert it to a dictionary and add the convType stats
+                var statDict = stat.ToDictionary();
+                var convStats = GetConversionTypeStats(searchProfileId, stat.StartDate, stat.EndDate);
+                foreach (var key in convStats.Keys)
+                {
+                    statDict[key] = convStats[key];
+                }
+                ssDicts.Add(statDict);
+            }
+            return ssDicts;
+        }
+
         // this does sunday through saturday. would have to SET DATEFIRST 1 in sql server to get it to work correctly
         //public IQueryable<SearchStat> GetWeekStatsX()
         //{   // need to group by year also

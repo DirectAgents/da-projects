@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Controllers;
+using ClientPortal.Web.Models;
 using DAGenerators.Spreadsheets;
 using WebMatrix.WebData;
 
@@ -173,7 +174,8 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         {
             string templateFolder = ConfigurationManager.AppSettings["PATH_Search"];
             if (!endDate.HasValue)
-                endDate = DateTime.Today.AddDays(-1);
+                endDate = DateTime.Today.AddDays(-1); // if not specified; (user can always set endDate to today if desired)
+                //endDate = (UserSettings.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today);
 
             var spreadsheet = DAGenerators.Spreadsheets.GeneratorCP.GenerateSearchReport(cpRepo, templateFolder, searchProfileId, numWeeks, numMonths, endDate.Value, groupBySearchAccount, campaignInclude);
             if (spreadsheet == null)
@@ -183,6 +185,15 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             fsr.FileDownloadName = filename;
             return fsr;
             //spreadsheet.DisposeResources();
+        }
+
+        public ActionResult Components(int spId) // (Report Components, that is)
+        {
+            var searchProfile = cpRepo.GetSearchProfile(spId);
+            if (searchProfile == null)
+                return HttpNotFound();
+
+            return View(searchProfile);
         }
 
     }

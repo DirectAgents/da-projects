@@ -8,7 +8,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 {
     public class AdWordsApiLoader : Loader<Dictionary<string, string>>
     {
-        private const string googleChannel = "Google";
+        public const string GoogleChannel = "Google";
         private readonly int searchAccountId;
         private readonly bool includeClickType; // if true, we use SearchDailySummary2's
         private readonly bool useConvertedClicks; // (instead of conversions)
@@ -16,7 +16,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
         private Dictionary<string, Dictionary<DateTime, decimal>> currencyMultipliers = new Dictionary<string, Dictionary<DateTime, decimal>>();
 
-        public AdWordsApiLoader(int searchAccountId, bool useConvertedClicks, bool includeClickType, bool clickAssistConvStats)
+        public AdWordsApiLoader(int searchAccountId, bool useConvertedClicks, bool includeClickType, bool clickAssistConvStats = false)
         {
             this.searchAccountId = searchAccountId;
             this.useConvertedClicks = useConvertedClicks;
@@ -27,11 +27,38 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         protected override int Load(List<Dictionary<string, string>> items)
         {
             Logger.Info("Loading {0} SearchDailySummaries..", items.Count);
-            SetCurrencyMultipliers(items);
-            AddUpdateDependentSearchAccounts(items);
-            AddUpdateDependentSearchCampaigns(items);
+            SetCurrencyMultipliers(items, this.currencyMultipliers);
+            AddUpdateDependentSearchAccounts(items, this.searchAccountId);
+            AddUpdateDependentSearchCampaigns(items, this.searchAccountId);
             var count = UpsertSearchDailySummaries(items);
             return count;
+        }
+
+        public static string Network_StringToLetter(string network)
+        {
+            if (network == null)
+                return null;
+            else if (network == "YouTube Videos")
+                return "V"; // Y will be for "YouTube Search"
+            else
+                return network.Substring(0, 1);
+        }
+        public static string Device_StringToLetter(string device)
+        {
+            if (device == null)
+                return null;
+            else
+                return device.Substring(0, 1);
+        }
+        public static string ClickType_StringToLetter(string clickType)
+        {
+            var clickTypeAbbrev = clickType.Substring(0, 1);
+            var ctLower = clickType.ToLower();
+            if (ctLower == "product listing ad - coupon") // started on 10/18/14 for Folica|Search (conflict with "Product listing ad")
+                clickTypeAbbrev = "Q";
+            else if (ctLower == "phone calls") // noticed for The Credit Pros -> "DA Spanish Mobile" on 11/11/17
+                clickTypeAbbrev = "C";
+            return clickTypeAbbrev;
         }
 
         private int UpsertSearchDailySummaries(List<Dictionary<string, string>> items)
@@ -57,18 +84,15 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                     var searchAccount = passedInAccount;
                     if (searchAccount.ExternalId != customerId)
-                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == googleChannel);
+                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == GoogleChannel);
 
                     var sds = new SearchDailySummary
                     {   // the basic fields
                         SearchCampaignId = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId,
                         Date = DateTime.Parse(item["day"].Replace('-', '/')),
                         CurrencyId = (!item.Keys.Contains("currency") || item["currency"] == "USD") ? 1 : -1, // NOTE: non USD (if exists) -1 for now
-                        Network = item["network"].Substring(0, 1)
+                        Network = Network_StringToLetter(item["network"])
                     };
-                    if (item["network"] == "YouTube Videos")
-                        sds.Network = "V";
-                    // Y will be for "YouTube Search"
 
                     if (clickAssistConvStats)
                     {
@@ -79,18 +103,19 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     else
                     {
                         sds.Revenue = decimal.Parse(item["totalConvValue"]);
-                        sds.Cost = decimal.Parse(item["cost"]) / 1000000; // convert from mincrons to dollars
+                        sds.Cost = decimal.Parse(item["cost"]) / 1000000; // convert from microns to dollars
                         var conversions = double.Parse(item[conversionKey]);
                         sds.Orders = Convert.ToInt32(conversions); // default rounding - nearest even # if .5
                         sds.Clicks = int.Parse(item["clicks"]);
                         sds.Impressions = int.Parse(item["impressions"]);
-                        sds.Device = item["device"].Substring(0, 1);
+                        sds.Device = Device_StringToLetter(item["device"]);
                         sds.ViewThrus = int.Parse(item["viewThroughConv"]);
 
                         if (searchAccount.RevPerOrder.HasValue)
                             sds.Revenue = sds.Orders * searchAccount.RevPerOrder.Value;
                     }
 
+                    // Adjust revenue and cost if there's a Currency Multiplier...
                     if (!item.Keys.Contains("currency") || item["currency"] == "USD")
                         sds.CurrencyId = 1; // USD or not specified
                     else
@@ -105,20 +130,13 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                             var toUSDmult = currencyMultipliers[code][firstOfMonth];
                             sds.Revenue = sds.Revenue * toUSDmult;
                             sds.Cost = sds.Cost * toUSDmult;
+                            //TODO? Do for CassConVal as well?
                         }
                     }
 
                     bool added;
                     if (includeClickType)
-                    {
-                        var clickTypeAbbrev = item["clickType"].Substring(0, 1);
-                        var clickType = item["clickType"].ToLower();
-                        if (clickType == "product listing ad - coupon") // started on 10/18/14 for Folica|Search (conflict with "Product listing ad")
-                            clickTypeAbbrev = "Q";
-                        else if (clickType == "phone calls") // noticed for The Credit Pros -> "DA Spanish Mobile" on 11/11/17
-                            clickTypeAbbrev = "C";
-                        added = UpsertSearchDailySummary2(db, sds, clickTypeAbbrev);
-                    }
+                        added = UpsertSearchDailySummary2(db, sds, item["clickType"]);
                     else
                         added = UpsertSearchDailySummary(db, sds);
 
@@ -160,19 +178,20 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         }
         private bool UpsertSearchDailySummary2(ClientPortalContext db, SearchDailySummary sds, string clickType)
         {
+            var clickTypeAbbrev = ClickType_StringToLetter(clickType);
             var sds2 = new SearchDailySummary2
             {
                 SearchCampaignId = sds.SearchCampaignId,
                 Date = sds.Date,
                 Network = sds.Network,
                 Device = sds.Device,
-                ClickType = clickType,
+                ClickType = clickTypeAbbrev,
                 Revenue = sds.Revenue,
                 Cost = sds.Cost,
                 Orders = sds.Orders,
                 Clicks = sds.Clicks,
                 // HACK: ignoring impressions for rows that do not have H or C as click type
-                Impressions = (clickType == "H" || clickType == "C") ? sds.Impressions : 0,
+                Impressions = (clickTypeAbbrev == "H" || clickTypeAbbrev == "C") ? sds.Impressions : 0,
                 CurrencyId = sds.CurrencyId
             };
 
@@ -191,7 +210,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             }
         }
 
-        private void SetCurrencyMultipliers(List<Dictionary<string, string>> items)
+        public static void SetCurrencyMultipliers(List<Dictionary<string, string>> items, Dictionary<string, Dictionary<DateTime, decimal>> currMults)
         {
             if (!items.Any() || !items[0].Keys.Contains("currency"))
                 return;
@@ -203,17 +222,17 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
             foreach (var cg in currencyGroups) // (foreach currency code)
             {
-                if (currencyMultipliers.ContainsKey(cg.Key))
+                if (currMults.ContainsKey(cg.Key))
                 { // See if dictionary values are already set
-                    var monthsWithoutMultiplier = cg.Where(t => !currencyMultipliers[cg.Key].ContainsKey(t.Item2));
+                    var monthsWithoutMultiplier = cg.Where(t => !currMults[cg.Key].ContainsKey(t.Item2));
                     if (!monthsWithoutMultiplier.Any())
                         continue; // they're all there already
                 }
                 else
                 {
-                    currencyMultipliers.Add(cg.Key, new Dictionary<DateTime, decimal>());
+                    currMults.Add(cg.Key, new Dictionary<DateTime, decimal>());
                 }
-                var singleCurrencyMultipliers = currencyMultipliers[cg.Key];
+                var singleCurrencyMultipliers = currMults[cg.Key];
 
                 using (var db = new ClientPortalContext())
                 {
@@ -241,11 +260,11 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             }
         }
 
-        private void AddUpdateDependentSearchAccounts(List<Dictionary<string, string>> items)
+        public static void AddUpdateDependentSearchAccounts(List<Dictionary<string, string>> items, int searchAccountId)
         {
             using (var db = new ClientPortalContext())
             {
-                var searchAccount = db.SearchAccounts.Find(this.searchAccountId);
+                var searchAccount = db.SearchAccounts.Find(searchAccountId);
 
                 var accountTuples = items.Select(i => Tuple.Create(i["account"], i["customerID"])).Distinct();
                 bool multipleAccounts = accountTuples.Count() > 1;
@@ -262,9 +281,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     }
                     else
                     {   // See if there are any sibling SearchAccounts that match by customerId... or finally, by name
-                        existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.ExternalId == customerId && sa.Channel == googleChannel);
+                        existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.ExternalId == customerId && sa.Channel == GoogleChannel);
                         if (existing == null)
-                            existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.Name == accountName && sa.Channel == googleChannel);
+                            existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.Name == accountName && sa.Channel == GoogleChannel);
                     }
 
                     if (existing == null)
@@ -272,7 +291,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         searchAccount.Advertiser.SearchAccounts.Add(new SearchAccount
                         {
                             Name = accountName,
-                            Channel = googleChannel,
+                            Channel = GoogleChannel,
                             //AccountCode = , // todo: have extracter get client code
                             ExternalId = customerId
                         });
@@ -296,13 +315,14 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             }
         }
 
-        private void AddUpdateDependentSearchCampaigns(List<Dictionary<string, string>> items)
+        public static void AddUpdateDependentSearchCampaigns(List<Dictionary<string, string>> items, int searchAccountId)
         {
             using (var db = new ClientPortalContext())
             {
-                var passedInAccount = db.SearchAccounts.Find(this.searchAccountId);
+                var passedInAccount = db.SearchAccounts.Find(searchAccountId);
+                var campaignTuples = items.Select(c => Tuple.Create(c["customerID"], c["campaign"], c["campaignID"])).Distinct();
 
-                foreach (var tuple in items.Select(c => Tuple.Create(c["customerID"], c["campaign"], c["campaignID"])).Distinct())
+                foreach (var tuple in campaignTuples)
                 {
                     var customerId = tuple.Item1;
                     var campaignName = tuple.Item2;
@@ -310,7 +330,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                     var searchAccount = passedInAccount;
                     if (searchAccount.ExternalId != customerId)
-                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == googleChannel);
+                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == GoogleChannel);
 
                     var existing = searchAccount.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignId);
 

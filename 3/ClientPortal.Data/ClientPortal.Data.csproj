@@ -234,6 +234,12 @@
     <Compile Include="Contexts\SearchChannel.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\SearchConvSummary.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\SearchConvType.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\SearchDailySummary.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>

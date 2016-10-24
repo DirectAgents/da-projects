@@ -13,7 +13,7 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchSearchDailySummariesAdWordsCommand : ConsoleCommand
     {
-        public static int RunStatic(int? searchProfileId, DateTime? start = null, DateTime? end = null, int? daysAgoToStart = null, string getClickAssistConvStats = null)
+        public static int RunStatic(int? searchProfileId, DateTime? start = null, DateTime? end = null, int? daysAgoToStart = null, bool getClickAssistConvStats = false, bool getConversionTypeStats = false)
         {
             AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new SynchSearchDailySummariesAdWordsCommand
@@ -22,7 +22,9 @@ namespace CakeExtracter.Commands
                 StartDate = start,
                 EndDate = end,
                 DaysAgoToStart = daysAgoToStart,
-                GetClickAssistConvStats = getClickAssistConvStats
+                //TODO: GetAllStats argument
+                GetClickAssistConvStats = getClickAssistConvStats,
+                GetConversionTypeStats = getConversionTypeStats
             };
             return cmd.Run();
         }
@@ -33,7 +35,17 @@ namespace CakeExtracter.Commands
         public DateTime? EndDate { get; set; }
         public int? DaysAgoToStart { get; set; }
         public bool IncludeClickType { get; set; }
-        public string GetClickAssistConvStats { get; set; }
+
+        //TODO: make GetAllStats be bool. (change scheduled task on gogrid to use g=true)
+        public string GetAllStats { get; set; } // "true" overrides the other get-stats properties
+        public bool GetClickAssistConvStats { get; set; }
+        public bool GetConversionTypeStats { get; set; }
+
+        // If all are false, will get standard stats
+        public bool GetStandardStats
+        {
+            get { return !GetClickAssistConvStats && !GetConversionTypeStats; }
+        }
 
         public override void ResetProperties()
         {
@@ -43,7 +55,10 @@ namespace CakeExtracter.Commands
             EndDate = null;
             DaysAgoToStart = null;
             IncludeClickType = false;
-            GetClickAssistConvStats = null;
+
+            GetAllStats = null;
+            GetClickAssistConvStats = false;
+            GetConversionTypeStats = false;
         }
 
         public SynchSearchDailySummariesAdWordsCommand()
@@ -55,7 +70,10 @@ namespace CakeExtracter.Commands
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
             HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 62)", c => DaysAgoToStart = c);
             HasOption<bool>("b|includeClickType=", "Include ClickType (default is false)", c => IncludeClickType = c);
-            HasOption<string>("g|getClickAssistConvStats=", "Get click-assisted-conversion stats ('yes' or 'both', default = no)", c => GetClickAssistConvStats = c);
+
+            HasOption<string>("g|getAllStats=", "Get all types of stats ('true', 'yes' or 'both', default is false)", c => GetAllStats = c);
+            HasOption<bool>("k|getClickAssistConvStats=", "Get click-assisted-conversion stats (default is false)", c => GetClickAssistConvStats = c);
+            HasOption<bool>("n|getConversionTypeStats=", "Get conversion-type stats (default is false)", c => GetConversionTypeStats = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -73,19 +91,30 @@ namespace CakeExtracter.Commands
                     startDate = searchAccount.MinSynchDate.Value;
                 var revisedDateRange = new DateRange(startDate, dateRange.ToDate);
 
-                if (GetClickAssistConvStats != "yes")
+                bool getAll = (GetAllStats == "true" || GetAllStats == "yes" || GetAllStats == "both");
+                if (GetStandardStats || getAll)
                 {
-                    var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType, false);
-                    var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, searchAccount.UseConvertedClicks, IncludeClickType, false);
+                    var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType);
+                    var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, searchAccount.UseConvertedClicks, IncludeClickType);
                     var extracterThread = extracter.Start();
                     var loaderThread = loader.Start(extracter);
                     extracterThread.Join();
                     loaderThread.Join();
                 }
-                if (GetClickAssistConvStats == "yes" || GetClickAssistConvStats == "both")
+                if (GetClickAssistConvStats || getAll)
                 {
-                    var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType, true);
-                    var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, searchAccount.UseConvertedClicks, IncludeClickType, true);
+                    var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType, clickAssistConvStats: true);
+                    var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, searchAccount.UseConvertedClicks, IncludeClickType, clickAssistConvStats: true);
+                    var extracterThread = extracter.Start();
+                    var loaderThread = loader.Start(extracter);
+                    extracterThread.Join();
+                    loaderThread.Join();
+                }
+                if (GetConversionTypeStats || getAll)
+                {
+                    // Note: IncludeClickType==true is not implemented
+                    var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType, conversionTypeStats: true);
+                    var loader = new AdWordsConvSummaryLoader(searchAccount.SearchAccountId);
                     var extracterThread = extracter.Start();
                     var loaderThread = loader.Start(extracter);
                     extracterThread.Join();

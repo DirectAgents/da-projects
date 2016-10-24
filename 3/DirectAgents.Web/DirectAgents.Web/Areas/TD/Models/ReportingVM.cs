@@ -27,19 +27,21 @@ namespace DirectAgents.Web.Areas.TD.Models
         public string DisplayName { get; set; }
         public string Letter { get; set; }
         public string Format { get; set; }
+        public string KendoType { get; set; }
 
-        public ColumnConfig(string propName, string displayName, char letter, string format)
+        public ColumnConfig(string propName, string displayName, char letter, string format, string kendoType = "number")
         {
             this.PropName = propName;
             this.DisplayName = displayName;
             this.Letter = new String(letter, 1);
             this.Format = format;
+            this.KendoType = kendoType;
         }
 
         public static IEnumerable<ColumnConfig> BasicColumns() {
             var cols = new List<ColumnConfig>();
-            int letter = 1;
-            cols.Add(new ColumnConfig("Date", null, Alphabet[letter++], ColumnConfig.Format_Date));
+            int letter = 0;
+            cols.Add(new ColumnConfig("Date", null, Alphabet[letter++], ColumnConfig.Format_Date, kendoType: "date"));
             cols.Add(new ColumnConfig("Impressions", null, Alphabet[letter++], ColumnConfig.Format_Integer));
             cols.Add(new ColumnConfig("Clicks", null, Alphabet[letter++], ColumnConfig.Format_Integer));
             cols.Add(new ColumnConfig("TotalConv", null, Alphabet[letter++], ColumnConfig.Format_Integer));

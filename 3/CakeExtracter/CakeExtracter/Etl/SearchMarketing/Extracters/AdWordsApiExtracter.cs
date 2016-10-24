@@ -18,31 +18,44 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
         private readonly DateTime beginDate;
         private readonly DateTime endDate;
         private readonly bool includeClickType;
-        private readonly bool clickAssistConvStats;
 
-        public AdWordsApiExtracter(string clientCustomerId, CakeExtracter.Common.DateRange dateRange, bool includeClickType, bool clickAssistConvStats)
+        private readonly bool clickAssistConvStats;
+        private readonly bool conversionTypeStats;
+
+        public AdWordsApiExtracter(string clientCustomerId, CakeExtracter.Common.DateRange dateRange, bool includeClickType,
+            bool clickAssistConvStats = false, bool conversionTypeStats = false) // choose zero or one of these
         {
             this.clientCustomerId = clientCustomerId;
             this.beginDate = dateRange.FromDate;
             this.endDate = dateRange.ToDate;
             this.includeClickType = includeClickType;
+
+            //The first one that's true will be used; if none, it'll be a standard report
             this.clickAssistConvStats = clickAssistConvStats;
+            this.conversionTypeStats = conversionTypeStats;
         }
 
         protected override void Extract()
         {
             string extra = "";
-            if (clickAssistConvStats || includeClickType)
-                extra = String.Format(" [{0}{1}]", clickAssistConvStats ? "ClickAssistConvStats" : "", includeClickType ? " w/ClickType" : "");
+            if (clickAssistConvStats || conversionTypeStats || includeClickType)
+                extra = String.Format(" [{0}{1}]",
+                            clickAssistConvStats ? "ClickAssistConvStats" : (conversionTypeStats ? "ConversionTypeStats" : ""),
+                            includeClickType ? " w/ClickType" : "");
             Logger.Info("Extracting SearchDailySummaries{0} from AdWords API for {1} from {2} to {3}",
                 extra, this.clientCustomerId, this.beginDate.ToShortDateString(), this.endDate.ToShortDateString());
 
             try
             {
+                string[] fields;
                 if (clickAssistConvStats)
-                    DownloadClickAssistConvReport();
+                    fields = GetFields_ClickAssistedConversions();
+                else if (conversionTypeStats)
+                    fields = GetFields_ConversionTypeStats();
                 else
-                    DownloadStandardReport();
+                    fields = GetFields_StandardReport();
+
+                DownloadAdWordsXmlReport(fields);
                 var reportRows = EnumerateAdWordsXmlReportRows(this.reportFilePath);
                 Add(reportRows);
             }
@@ -53,7 +66,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             End();
         }
 
-        private void DownloadStandardReport()
+        private string[] GetFields_StandardReport()
         {
             var fieldsList = new List<string>(new string[]
             {                             // "XML ATTRIBUTE"
@@ -63,7 +76,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 "AccountTimeZoneId",   // timeZone
                 "CampaignId",    // campaignID
                 "CampaignName",  // campaign
-                "CampaignStatus",// campaignStatus
+                "CampaignStatus",// campaignStatus - ?not used?
                 "Date",        // day
                 "Impressions", // impressions
                 "Clicks",      // clicks
@@ -79,9 +92,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             {
                 fieldsList.Add("ClickType"); // clickType
             }
-            DownloadAdWordsXmlReport(fieldsList.ToArray());
+            return fieldsList.ToArray();
         }
-        private void DownloadClickAssistConvReport()
+        private string[] GetFields_ClickAssistedConversions()
         {
             var fieldsList = new List<string>(new string[]
             {
@@ -99,8 +112,31 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             {
                 fieldsList.Add("ClickType"); // clickType
             }
-            DownloadAdWordsXmlReport(fieldsList.ToArray());
+            return fieldsList.ToArray();
         }
+        private string[] GetFields_ConversionTypeStats()
+        {
+            var fieldsList = new List<string>(new string[]
+            {
+                "AccountDescriptiveName",
+                "AccountCurrencyCode",
+                "ExternalCustomerId",
+                "CampaignId",
+                "CampaignName",
+                "Date",
+                "AdNetworkType1",
+                "Device",
+                "ConversionTypeName", // conversionName
+                "Conversions",
+                "ConversionValue"
+            });
+            //if (includeClickType)
+            //{
+            //    fieldsList.Add("ClickType"); // clickType
+            //}
+            return fieldsList.ToArray();
+        }
+
         private void DownloadAdWordsXmlReport(string[] fieldsList)
         {
             var definition = new ReportDefinition
@@ -187,5 +223,6 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 }
             }
         }
+
     }
 }

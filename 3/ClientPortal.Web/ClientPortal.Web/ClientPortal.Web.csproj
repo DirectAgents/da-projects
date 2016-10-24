@@ -241,6 +241,7 @@
     </Compile>
     <Compile Include="Areas\Admin\Controllers\ProgAdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\SearchAdminController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SearchStatsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SimpleReportsController.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -257,6 +258,7 @@
     <Compile Include="Areas\Admin\Models\CPMReportVM.cs" />
     <Compile Include="Areas\Admin\Models\CPMReportWizardVM.cs" />
     <Compile Include="Areas\Admin\Models\CreativeStatVM.cs" />
+    <Compile Include="Areas\Admin\Models\SearchStatsVM.cs" />
     <Compile Include="Areas\Admin\Models\UserVM.cs" />
     <Compile Include="Areas\Prog\Controllers\HomeController.cs" />
     <Compile Include="Areas\Prog\Controllers\ReportsController.cs" />
@@ -1212,6 +1214,8 @@
     <Content Include="Areas\Admin\Views\Users\AssignProgAdvertiser.cshtml" />
     <Content Include="Areas\Admin\Views\Users\AssignCakeAdvertiser.cshtml" />
     <Content Include="Areas\Admin\Views\Users\AssignSearchProfile.cshtml" />
+    <Content Include="Areas\Admin\Views\SearchAdmin\Components.cshtml" />
+    <Content Include="Areas\Admin\Views\SearchStats\Weekly.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

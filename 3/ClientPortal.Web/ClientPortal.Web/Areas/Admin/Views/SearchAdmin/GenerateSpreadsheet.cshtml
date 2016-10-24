@@ -2,7 +2,7 @@
 @{
     var ajaxOpts_Profiles = RazorHelpers.GetAjaxOptions("searchProfilesTab", "navSearchProfiles");
     //var ajaxOpts_Reports = RazorHelpers.GetAjaxOptions("searchReportsTab");
-    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("searchReportsTab", null, "Post");
+    //var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("searchReportsTab", null, "Post");
     var endDate = Model.GetLast_WeekEndDate();
     string filename = Model.SearchProfileName.Replace(" ", "") + "_" + DateTime.Today.ToString("yyyyMMdd") + ".xlsx";
     bool groupBySearchAccount = Model.HasChannelWithMultipleSearchAccounts();
@@ -11,8 +11,8 @@
 <h3>Generate Spreadsheet</h3>
 
 SearchProfile: @Model.SearchProfileName<br />
-Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)
-<br /><br />
+Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)<br />
+@Ajax.ActionLink("Report Components", "Components", new { spid = Model.SearchProfileId }, ajaxOpts_Profiles)<br />
 
 @using (Html.BeginForm())
 {
