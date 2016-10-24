@@ -13,6 +13,7 @@ namespace CakeExtracter.Commands
     {
         //Note: if make a RunStatic, be sure to add 'DBM_AllSiteBucket', etc to the web.config
 
+        public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public bool Historical { get; set; }
         public string StatsType { get; set; }
@@ -27,6 +28,7 @@ namespace CakeExtracter.Commands
         public DASynchDBMStats()
         {
             IsCommand("daSynchDBMStats", "synch DBM Daily Stats - by lineitem/creative/site...");
+            HasOption<DateTime>("s|startDate=", "Start Date (default is yesterday)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
             HasOption("h|Historical=", "Get historical stats (ignore endDate)", c => Historical = bool.Parse(c));
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
@@ -34,24 +36,20 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            DoConvTest();
-            //return 0;
-            /*
+            
             if (Historical)
                 DoHistorical();
             else
-                DoRegular();*/
+                DoRegular();
             return 0;
         }
 
         // testing...
-        public void DoConvTest()
+        public void DoConvTest(int? insertOrderId) //null for all
         {
             var today = DateTime.Today;
-            var yesterday = today.AddDays(-1);
-            var dateRange = new DateRange(EndDate ?? today, EndDate ?? today);
+            var dateRange = new DateRange(StartDate ?? today, EndDate ?? today);
             var bucket = "gdbm-479-320231";
-            var insertOrderId = 1632789;
 
             int timezoneOffset = -5; // w/o daylight savings
             var convConverter = new CakeExtracter.Etl.TradingDesk.Loaders.DbmConvConverter(timezoneOffset);

@@ -21,7 +21,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         protected override int Load(List<DataTransferRow> items)
         {
             UpdateAccountLookup(items);
-            var convs = items.Select(i => CreateConv(i)).Where(i => i.AccountId > 0).ToList(); //TODO: add previously non-existent accounts to database?
+            var convs = items.Select(i => CreateConv(i)).Where(i => i.AccountId > 0).ToList();
             var count = TDConvLoader.UpsertConvs(convs);
             return count;
         }
@@ -34,36 +34,15 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 Time = convConverter.EventTime(dtRow),
                 ConvType = (dtRow.event_sub_type == "postview") ? "v" : "c",
                 //ConvVal = 0,
-                //ExtData =
-                IP = dtRow.ip,
-                
+                IP = dtRow.ip
                 //StrategyId, TDadId, CityId
             };
             return conv;
         }
 
-        // "UpsertConvs" ?
-        private int UpsertConversions(List<Conv> convs)
-        {
-            var addedCount = 0;
-            var updatedCount = 0;
-            var itemCount = 0;
-            using (var db = new DATDContext())
-            {
-                foreach (var conv in convs)
-                {
-                    itemCount++;
-                }
-                Logger.Info("Saving {0} Conv's ({1} updates, {2} additions)", itemCount, updatedCount, addedCount);
-                db.SaveChanges();
-            }
-            return itemCount;
-        }
-
         private void UpdateAccountLookup(List<DataTransferRow> items)
         {
             var acctExtIds = items.Select(i => i.insertion_order_id.Value).Distinct();
-
             using (var db = new DATDContext())
             {
                 foreach (var acctExtId in acctExtIds)
@@ -78,7 +57,18 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         accountIdLookupByExtId[acctExtId] = tdAcct.Id;
                     }
                     else
-                        accountIdLookupByExtId[acctExtId] = -1; //tag ExtAccounts that don't have Insertion_Order_Ids
+                    {
+                        var newAccount = new ExtAccount
+                        {
+                            ExternalId = acctExtId.ToString(),
+                            PlatformId = Platform.GetId(db,Platform.Code_DBM),
+                            Name = "Unknown"
+                        };
+                        db.ExtAccounts.Add(newAccount);
+                        db.SaveChanges();
+                        Logger.Info("Added new ExtAccount: InsertionOrder {1}", acctExtId);
+                        accountIdLookupByExtId[acctExtId] = newAccount.Id;
+                    }
                 }
             }
         }

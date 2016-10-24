@@ -15,14 +15,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     {
         private readonly string csvFilePath;
         private readonly StreamReader streamReader;
-        private readonly string platformId;
+        private readonly string platformCode;
         // if streamReader is not null, use it. otherwise use csvFilePath.
 
-        public TDConvExtracter(string csvFilePath, StreamReader streamReader, string platId=Platform.Code_DBM)
+        public TDConvExtracter(string csvFilePath, StreamReader streamReader, string platCode=Platform.Code_DBM)
         {
             this.csvFilePath = csvFilePath;
             this.streamReader = streamReader;
-            this.platformId = platId;
+            this.platformCode = platCode;
         }
 
         protected override void Extract()
@@ -57,7 +57,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 csv.Configuration.IgnoreHeaderWhiteSpace = true;
                 csv.Configuration.WillThrowOnMissingField = false;
                 csv.Configuration.SkipEmptyRecords = true;
-                switch(platformId) {
+                switch(platformCode) {
                     case Platform.Code_AdRoll:
                         csv.Configuration.RegisterClassMap<TestAdrollConvRowMap>();
                         break;

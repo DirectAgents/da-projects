@@ -13,14 +13,14 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
     {
         //public TDConvLoader() { }
         private readonly int accountId;
-        private readonly string platId;
+        private readonly string platCode;
         private Dictionary<string, int> countryIdLookupByName = new Dictionary<string, int>();
         private Dictionary<string, int> cityIdLookupByCountryCity = new Dictionary<string, int>();
 
-        public TDConvLoader(int acctId, string platId)
+        public TDConvLoader(int acctId, string platCode)
         {
             this.accountId = acctId;
-            this.platId = platId;
+            this.platCode = platCode;
         }
 
         //currently only loading DBM conversions--include Adroll later
@@ -45,7 +45,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 ExtData = convRow.ext_data_order_id
             };
 
-            if (platId == Platform.Code_DBM)
+            if (platCode == Platform.Code_DBM)
             {
                 conv.ConvType = (convRow.PostClickConvs == 0) ? "v" : "c";
             }
