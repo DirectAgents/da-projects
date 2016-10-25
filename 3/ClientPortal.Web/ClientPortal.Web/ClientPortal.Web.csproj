@@ -320,6 +320,7 @@
     <Content Include="App_Data\manual-migration-02142013-userProfiles.sql" />
     <Content Include="App_Data\manual-migration-03142013-fileUploads.sql" />
     <Content Include="App_Readme\blackbird_example.html" />
+    <None Include="Areas\Admin\Views\SearchStats\_ViewStart.cshtml" />
     <Content Include="Areas\Admin\Views\SimpleReports\Test.cshtml">
       <SubType>Code</SubType>
     </Content>
@@ -1030,6 +1031,7 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Images\arrow_down.jpg" />
     <Content Include="Images\arrow_up.jpg" />
@@ -3057,6 +3059,7 @@
     <Content Include="Views\Account\ManageNew.cshtml" />
     <Content Include="Views\Combined\Index.cshtml" />
     <Content Include="Views\Combined\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout2016.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

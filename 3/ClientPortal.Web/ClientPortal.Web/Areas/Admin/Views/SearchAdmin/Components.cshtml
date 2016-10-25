@@ -9,7 +9,7 @@ SearchProfile: @Model.SearchProfileName<br />
 Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)<br />
 <br />
 Stats:<br />
-@Ajax.ActionLink("Weekly", "Weekly", "SearchStats", new { spId = Model.SearchProfileId }, ajaxOpts_Profiles)
+@Html.ActionLink("Weekly", "Weekly", "SearchStats", new { spId = Model.SearchProfileId }, new { target = "_blank" })
 
 <br /><br />
 Back to:

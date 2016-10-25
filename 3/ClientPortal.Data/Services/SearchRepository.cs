@@ -299,6 +299,17 @@ namespace ClientPortal.Data.Services
             return summaries;
         }
 
+        public IQueryable<SearchConvType> GetConversionTypesForWeekStats(SearchProfile sp, int? numWeeks, DateTime? startDate, DateTime? endDate)
+        {
+            StartEndDatesForWeekStats(ref startDate, ref endDate, (DayOfWeek)sp.StartDayOfWeek, numWeeks);
+            return GetConversionTypes(sp.SearchProfileId, startDate, endDate);
+        }
+        public IQueryable<SearchConvType> GetConversionTypes(int searchProfileId, DateTime? startDate, DateTime? endDate)
+        {
+            var convSums = GetSearchConvSummaries(null, searchProfileId, null, null, null, startDate, endDate, true);
+            return convSums.Select(cs => cs.SearchConvType).Distinct();
+        }
+
         // TODO: allow for breakdown by or specifying searchCampaign?
         private IDictionary<string, object> GetConversionTypeStats(int searchProfileId, DateTime? startDate, DateTime? endDate)
         {
@@ -346,16 +357,9 @@ namespace ClientPortal.Data.Services
         //    return stats;
         //}
 
-        // if endDate is null, goes up to the latest complete week
-        public IQueryable<SearchStat> GetWeekStats(SearchProfile sp, int? numWeeks, DateTime? startDate, DateTime? endDate, string campaignNameInclude = null, string campaignNameExclude = null)
+        // Fill in startDate and endDate if null
+        private void StartEndDatesForWeekStats(ref DateTime? startDate, ref DateTime? endDate, DayOfWeek startDayOfWeek, int? numWeeks)
         {
-            return GetWeekStats(null, sp.SearchProfileId, null, null, null, null, (DayOfWeek)sp.StartDayOfWeek, numWeeks, startDate, endDate, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru, campaignNameInclude, campaignNameExclude);
-        }
-        private IQueryable<SearchStat> GetWeekStats(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, DayOfWeek startDayOfWeek, int? numWeeks, DateTime? startDate, DateTime? endDate, bool useAnalytics, bool includeCalls, decimal revPerViewThru, string campaignNameInclude = null, string campaignNameExclude = null)
-        {
-            if (!String.IsNullOrWhiteSpace(device) && useAnalytics)
-                throw new Exception("specifying a device and useAnalytics not supported");
-
             if (!endDate.HasValue)
             {
                 // Start with yesterday and see if it's the end of a week; if not, go back until it is
@@ -372,6 +376,20 @@ namespace ClientPortal.Data.Services
                 if (numWeeks.HasValue)
                     startDate = startDate.Value.AddDays(-7 * (numWeeks.Value - 1)); // then back additional weeks, as needed
             }
+        }
+
+        // if endDate is null, goes up to the latest complete week
+        public IQueryable<SearchStat> GetWeekStats(SearchProfile sp, int? numWeeks, DateTime? startDate, DateTime? endDate, string campaignNameInclude = null, string campaignNameExclude = null)
+        {
+            return GetWeekStats(null, sp.SearchProfileId, null, null, null, null, (DayOfWeek)sp.StartDayOfWeek, numWeeks, startDate, endDate, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru, campaignNameInclude, campaignNameExclude);
+        }
+        private IQueryable<SearchStat> GetWeekStats(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, DayOfWeek startDayOfWeek, int? numWeeks, DateTime? startDate, DateTime? endDate, bool useAnalytics, bool includeCalls, decimal revPerViewThru, string campaignNameInclude = null, string campaignNameExclude = null)
+        {
+            if (!String.IsNullOrWhiteSpace(device) && useAnalytics)
+                throw new Exception("specifying a device and useAnalytics not supported");
+
+            StartEndDatesForWeekStats(ref startDate, ref endDate, startDayOfWeek, numWeeks);
+
             var searchCampaigns =
                 GetSearchCampaigns(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix, campaignNameInclude, campaignNameExclude);
 
