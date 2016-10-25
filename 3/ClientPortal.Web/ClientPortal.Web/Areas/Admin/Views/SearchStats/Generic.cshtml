@@ -22,7 +22,7 @@
         var datasource = new kendo.data.DataSource({
             transport: {
                 read: {
-                    url: '@Url.Action("WeeklyData")',
+                    url: '@Url.Action(Model.StatsType + "Data")',
                     data: {
                         spId: @sp.SearchProfileId
                     },
@@ -79,7 +79,7 @@
             //toolbar: false,
             //sheetsbar: false,
             sheets: [{
-                name: 'Weekly',
+                name: '@Model.StatsType', //tab name
                 //dataSource: datasource,
                 frozenRows: 1,
                 columns: [

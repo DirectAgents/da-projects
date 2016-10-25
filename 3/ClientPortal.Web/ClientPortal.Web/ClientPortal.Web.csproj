@@ -1217,7 +1217,7 @@
     <Content Include="Areas\Admin\Views\Users\AssignCakeAdvertiser.cshtml" />
     <Content Include="Areas\Admin\Views\Users\AssignSearchProfile.cshtml" />
     <Content Include="Areas\Admin\Views\SearchAdmin\Components.cshtml" />
-    <Content Include="Areas\Admin\Views\SearchStats\Weekly.cshtml" />
+    <Content Include="Areas\Admin\Views\SearchStats\Generic.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

@@ -6,10 +6,10 @@
 <h3>Report Components</h3>
 
 SearchProfile: @Model.SearchProfileName<br />
-Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)<br />
 <br />
-Stats:<br />
-@Html.ActionLink("Weekly", "Weekly", "SearchStats", new { spId = Model.SearchProfileId }, new { target = "_blank" })
+Stats:
+@Html.ActionLink("Weekly", "Weekly", "SearchStats", new { spId = Model.SearchProfileId }, new { target = "_blank" }) |
+@Html.ActionLink("Monthly", "Monthly", "SearchStats", new { spId = Model.SearchProfileId }, new { target = "_blank" })
 
 <br /><br />
 Back to:

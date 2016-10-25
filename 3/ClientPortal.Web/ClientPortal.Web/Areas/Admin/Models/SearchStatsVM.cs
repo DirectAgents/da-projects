@@ -7,8 +7,8 @@ namespace ClientPortal.Web.Areas.Admin.Models
     public class SearchStatsVM
     {
         public SearchProfile SearchProfile { get; set; }
-
         public IEnumerable<ColumnConfig> ColumnConfigs { get; set; }
+        public string StatsType { get; set; }
     }
 
     //TODO? Put in common project - combine with DAWeb.Areas.TD.Models...

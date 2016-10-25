@@ -120,6 +120,7 @@ namespace ClientPortal.Data.Contracts
         SearchStat GetSearchStats(SearchProfile sp, DateTime? start, DateTime? end, bool? includeToday, string campaignNameInclude = null, string campaignNameExclude = null);
         //IQueryable<SearchDailySummary> GetSearchDailySummaries(int searchProfileId, DateTime? start, DateTime? end, bool includeToday = false);
         IQueryable<SearchConvType> GetConversionTypesForWeekStats(SearchProfile sp, int? numWeeks, DateTime? startDate, DateTime? endDate);
+        IQueryable<SearchConvType> GetConversionTypesForMonthStats(SearchProfile sp, int? numMonths, DateTime? start, DateTime? end);
         IQueryable<SearchConvType> GetConversionTypes(int searchProfileId, DateTime? startDate, DateTime? endDate);
         IEnumerable<IDictionary<string, object>> FillInConversionTypeStats(int searchProfileId, IEnumerable<SearchStat> searchStats);
         IQueryable<SearchStat> GetWeekStats(SearchProfile sp, int? numWeeks, DateTime? startDate, DateTime? endDate, string campaignNameInclude = null, string campaignNameExclude = null);
