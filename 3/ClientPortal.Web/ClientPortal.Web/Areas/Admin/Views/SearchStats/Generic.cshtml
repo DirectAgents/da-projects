@@ -2,13 +2,15 @@
 @{
     var sp = Model.SearchProfile;
     int numCols = Model.ColumnConfigs.Count();
+    int width = (numCols <= 9 ? 950 : (100 * numCols + 50));
+    width = (width > 1550 ? 1550 : width);
 }
 
 @sp.SearchProfileId -
 @sp.SearchProfileName
 
 <div>
-    <div id="spreadsheet" style="width:950px"></div>
+    <div id="spreadsheet" style="width:@(width)px"></div>
 </div>
 
 @section scripts {

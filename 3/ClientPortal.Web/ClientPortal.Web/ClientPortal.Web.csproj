@@ -320,7 +320,7 @@
     <Content Include="App_Data\manual-migration-02142013-userProfiles.sql" />
     <Content Include="App_Data\manual-migration-03142013-fileUploads.sql" />
     <Content Include="App_Readme\blackbird_example.html" />
-    <None Include="Areas\Admin\Views\SearchStats\_ViewStart.cshtml" />
+    <Content Include="Areas\Admin\Views\SearchStats\_ViewStart.cshtml" />
     <Content Include="Areas\Admin\Views\SimpleReports\Test.cshtml">
       <SubType>Code</SubType>
     </Content>
