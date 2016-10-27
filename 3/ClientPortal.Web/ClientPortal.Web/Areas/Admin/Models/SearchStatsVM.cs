@@ -9,6 +9,7 @@ namespace ClientPortal.Web.Areas.Admin.Models
         public SearchProfile SearchProfile { get; set; }
         public IEnumerable<ColumnConfig> ColumnConfigs { get; set; }
         public string StatsType { get; set; }
+        public int NumRows { get; set; }
     }
 
     //TODO? Put in common project - combine with DAWeb.Areas.TD.Models...

@@ -26,7 +26,8 @@
                 read: {
                     url: '@Url.Action(Model.StatsType + "Data")',
                     data: {
-                        spId: @sp.SearchProfileId
+                        spId: @sp.SearchProfileId,
+                        numRows: @Model.NumRows
                     },
                     type: 'post',
                     dataType: 'json'
@@ -54,7 +55,6 @@
         var sheet = spreadsheet.activeSheet();
 
         // Setup Columns
-        sheet.setDataSource(datasource, [@Html.Raw(string.Join(",", Model.ColumnConfigs.Select(c => "'" + c.PropName + "'")))]);
         sheet.setDataSource(datasource, [
             @foreach (var config in Model.ColumnConfigs)
             {
