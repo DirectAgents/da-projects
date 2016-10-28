@@ -34,6 +34,7 @@ namespace ClientPortal.Data.Contexts
         public bool UseConvertedClicks { get; set; }
         public bool ShowViewThrus { get; set; }
         public bool ShowCassConvs { get; set; }
+        public bool UseAllConvs { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserProfile> UserProfiles { get; set; }

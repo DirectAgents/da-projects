@@ -21,11 +21,12 @@ Conversion Type Stats:<br />
             <td><input type="text" name="numrows" value="16" style="width:100px" /></td>
         </tr>
         <tr>
-            <td colspan="2"><input type="submit" value="Generate" /></td>
+            <td colspan="2"><input type="submit" value="Generate" /> (opens in new tab)</td>
         </tr>
     </table>
 }
 
 <br />
 Back to:
-@Ajax.ActionLink("Profiles", "SearchProfiles", "SearchAdmin", ajaxOpts_Profiles)
+@Ajax.ActionLink("Profiles", "SearchProfiles", "SearchAdmin", ajaxOpts_Profiles) |
+@Ajax.ActionLink("Generate Spreadsheet", "GenerateSpreadsheet", new { spId = Model.SearchProfileId }, ajaxOpts_Profiles)

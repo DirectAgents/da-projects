@@ -84,7 +84,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                     var searchAccount = passedInAccount;
                     if (searchAccount.ExternalId != customerId)
-                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == GoogleChannel);
+                        searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == GoogleChannel);
 
                     var sds = new SearchDailySummary
                     {   // the basic fields
@@ -281,14 +281,14 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     }
                     else
                     {   // See if there are any sibling SearchAccounts that match by customerId... or finally, by name
-                        existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.ExternalId == customerId && sa.Channel == GoogleChannel);
+                        existing = searchAccount.SearchProfile.SearchAccounts.SingleOrDefault(sa => sa.ExternalId == customerId && sa.Channel == GoogleChannel);
                         if (existing == null)
-                            existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.Name == accountName && sa.Channel == GoogleChannel);
+                            existing = searchAccount.SearchProfile.SearchAccounts.SingleOrDefault(sa => sa.Name == accountName && sa.Channel == GoogleChannel);
                     }
 
                     if (existing == null)
                     {
-                        searchAccount.Advertiser.SearchAccounts.Add(new SearchAccount
+                        searchAccount.SearchProfile.SearchAccounts.Add(new SearchAccount
                         {
                             Name = accountName,
                             Channel = GoogleChannel,
@@ -330,7 +330,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                     var searchAccount = passedInAccount;
                     if (searchAccount.ExternalId != customerId)
-                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == GoogleChannel);
+                        searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == GoogleChannel);
 
                     var existing = searchAccount.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignId);
 
