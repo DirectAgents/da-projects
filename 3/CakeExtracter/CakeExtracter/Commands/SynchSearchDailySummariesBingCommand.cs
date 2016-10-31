@@ -82,13 +82,18 @@ namespace CakeExtracter.Commands
                 if (searchAccount.MinSynchDate.HasValue && (startDate < searchAccount.MinSynchDate.Value))
                     startDate = searchAccount.MinSynchDate.Value;
 
-                int accountId = Int32.Parse(searchAccount.AccountCode);
-                var extracter = new BingDailySummaryExtracter(accountId, startDate, endDate, includeShopping: IncludeShopping, includeNonShopping: IncludeNonShopping);
-                var loader = new BingLoader(searchAccount.SearchAccountId);
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
+                int accountId;
+                if (int.TryParse(searchAccount.AccountCode, out accountId))
+                {
+                    var extracter = new BingDailySummaryExtracter(accountId, startDate, endDate, includeShopping: IncludeShopping, includeNonShopping: IncludeNonShopping);
+                    var loader = new BingLoader(searchAccount.SearchAccountId);
+                    var extracterThread = extracter.Start();
+                    var loaderThread = loader.Start(extracter);
+                    extracterThread.Join();
+                    loaderThread.Join();
+                }
+                else
+                    Logger.Info("AccountCode should be an int. Skipping: {0}", searchAccount.AccountCode);
             }
             return 0;
         }

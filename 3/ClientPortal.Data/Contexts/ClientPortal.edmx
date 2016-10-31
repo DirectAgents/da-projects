@@ -466,6 +466,7 @@
           <Property Name="UseConvertedClicks" Type="bit" Nullable="false" />
           <Property Name="ShowViewThrus" Type="bit" Nullable="false" />
           <Property Name="ShowCassConvs" Type="bit" Nullable="false" />
+          <Property Name="UseAllConvs" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchProfileContact">
           <Key>
@@ -2235,6 +2236,7 @@
           <Property Name="UseConvertedClicks" Type="Boolean" Nullable="false" />
           <Property Name="ShowViewThrus" Type="Boolean" Nullable="false" />
           <Property Name="ShowCassConvs" Type="Boolean" Nullable="false" />
+          <Property Name="UseAllConvs" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_UserProfile_SearchProfile">
           <End Type="ClientPortalModel.SearchProfile" Role="SearchProfile" Multiplicity="0..1" />
@@ -2910,6 +2912,7 @@
           <EntitySetMapping Name="SearchProfiles">
             <EntityTypeMapping TypeName="ClientPortalModel.SearchProfile">
               <MappingFragment StoreEntitySet="SearchProfile">
+                <ScalarProperty Name="UseAllConvs" ColumnName="UseAllConvs" />
                 <ScalarProperty Name="ShowCassConvs" ColumnName="ShowCassConvs" />
                 <ScalarProperty Name="ShowViewThrus" ColumnName="ShowViewThrus" />
                 <ScalarProperty Name="UseConvertedClicks" ColumnName="UseConvertedClicks" />

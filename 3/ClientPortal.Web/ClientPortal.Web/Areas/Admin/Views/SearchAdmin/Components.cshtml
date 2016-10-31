@@ -6,11 +6,27 @@
 <h3>Report Components</h3>
 
 SearchProfile: @Model.SearchProfileName<br />
-Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)<br />
 <br />
-Stats:<br />
-@Ajax.ActionLink("Weekly", "Weekly", "SearchStats", new { spId = Model.SearchProfileId }, ajaxOpts_Profiles)
+Conversion Type Stats:<br />
+@using (Html.BeginForm("WeeklyMonthly", "SearchStats", FormMethod.Get, new { target = "_blank" }))
+{
+    @Html.Hidden("spid", Model.SearchProfileId)
+    <table>
+        <tr>
+            <td>Monthly:</td>
+            <td><input name="monthlyNotWeekly" type="checkbox" value="true" /> (leave unchecked for weekly)</td>
+        </tr>
+        <tr>
+            <td>NumRows:</td>
+            <td><input type="text" name="numrows" value="16" style="width:100px" /></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="submit" value="Generate" /> (opens in new tab)</td>
+        </tr>
+    </table>
+}
 
-<br /><br />
+<br />
 Back to:
-@Ajax.ActionLink("Profiles", "SearchProfiles", "SearchAdmin", ajaxOpts_Profiles)
+@Ajax.ActionLink("Profiles", "SearchProfiles", "SearchAdmin", ajaxOpts_Profiles) |
+@Ajax.ActionLink("Generate Spreadsheet", "GenerateSpreadsheet", new { spId = Model.SearchProfileId }, ajaxOpts_Profiles)

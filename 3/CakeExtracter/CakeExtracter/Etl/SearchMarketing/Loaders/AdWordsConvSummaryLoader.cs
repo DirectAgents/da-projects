@@ -46,8 +46,20 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                     var searchAccount = passedInAccount;
                     if (searchAccount.ExternalId != customerId)
-                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == AdWordsApiLoader.GoogleChannel);
+                        searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == AdWordsApiLoader.GoogleChannel);
                         // The SearchAccount is guaranteed to be there, having run AddUpdateDependentSearchAccounts().
+
+                    string fieldConversions, fieldConVal;
+                    if (passedInAccount.SearchProfile.UseAllConvs)
+                    {
+                        fieldConversions = "allConv";
+                        fieldConVal = "allConvValue";
+                    }
+                    else
+                    {
+                        fieldConversions = "conversions";
+                        fieldConVal = "totalConvValue";
+                    }
 
                     var scs = new SearchConvSummary
                     {
@@ -57,8 +69,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         SearchConvTypeId = convTypeIdLookupByName[item["conversionName"]],
                         Network = AdWordsApiLoader.Network_StringToLetter(item["network"]),
                         Device = AdWordsApiLoader.Device_StringToLetter(item["device"]),
-                        Conversions = double.Parse(item["conversions"]),
-                        ConVal = decimal.Parse(item["totalConvValue"])
+                        Conversions = double.Parse(item[fieldConversions]),
+                        ConVal = decimal.Parse(item[fieldConVal])
                     };
 
                     // Adjust ConVal if there's a Currency Multiplier...

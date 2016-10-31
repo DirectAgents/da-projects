@@ -299,6 +299,22 @@ namespace ClientPortal.Data.Services
             return summaries;
         }
 
+        public IQueryable<SearchConvType> GetConversionTypesForWeekStats(SearchProfile sp, int? numWeeks, DateTime? startDate, DateTime? endDate)
+        {
+            StartEndDatesForWeekStats(ref startDate, ref endDate, (DayOfWeek)sp.StartDayOfWeek, numWeeks);
+            return GetConversionTypes(sp.SearchProfileId, startDate, endDate);
+        }
+        public IQueryable<SearchConvType> GetConversionTypesForMonthStats(SearchProfile sp, int? numMonths, DateTime? start, DateTime? end)
+        {
+            StartEndDatesForMonthStats(ref start, ref end, numMonths);
+            return GetConversionTypes(sp.SearchProfileId, start, end);
+        }
+        public IQueryable<SearchConvType> GetConversionTypes(int searchProfileId, DateTime? startDate, DateTime? endDate)
+        {
+            var convSums = GetSearchConvSummaries(null, searchProfileId, null, null, null, startDate, endDate, true);
+            return convSums.Select(cs => cs.SearchConvType).Distinct();
+        }
+
         // TODO: allow for breakdown by or specifying searchCampaign?
         private IDictionary<string, object> GetConversionTypeStats(int searchProfileId, DateTime? startDate, DateTime? endDate)
         {
@@ -330,32 +346,9 @@ namespace ClientPortal.Data.Services
             return ssDicts;
         }
 
-        // this does sunday through saturday. would have to SET DATEFIRST 1 in sql server to get it to work correctly
-        //public IQueryable<SearchStat> GetWeekStatsX()
-        //{   // need to group by year also
-        //    var stats = context.SearchDailySummaries.GroupBy(s => SqlFunctions.DatePart("week", s.Date)).Select(g =>
-        //        new SearchStat
-        //        {
-        //            Week = g.Key ?? 0,
-        //            Impressions = g.Sum(s => s.Impressions),
-        //            Clicks = g.Sum(s => s.Clicks),
-        //            Orders = g.Sum(s => s.Orders),
-        //            Revenue = g.Sum(s => s.Revenue),
-        //            Cost = g.Sum(s => s.Cost)
-        //        });
-        //    return stats;
-        //}
-
-        // if endDate is null, goes up to the latest complete week
-        public IQueryable<SearchStat> GetWeekStats(SearchProfile sp, int? numWeeks, DateTime? startDate, DateTime? endDate, string campaignNameInclude = null, string campaignNameExclude = null)
+        // Fill in startDate and endDate if null
+        private void StartEndDatesForWeekStats(ref DateTime? startDate, ref DateTime? endDate, DayOfWeek startDayOfWeek, int? numWeeks)
         {
-            return GetWeekStats(null, sp.SearchProfileId, null, null, null, null, (DayOfWeek)sp.StartDayOfWeek, numWeeks, startDate, endDate, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru, campaignNameInclude, campaignNameExclude);
-        }
-        private IQueryable<SearchStat> GetWeekStats(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, DayOfWeek startDayOfWeek, int? numWeeks, DateTime? startDate, DateTime? endDate, bool useAnalytics, bool includeCalls, decimal revPerViewThru, string campaignNameInclude = null, string campaignNameExclude = null)
-        {
-            if (!String.IsNullOrWhiteSpace(device) && useAnalytics)
-                throw new Exception("specifying a device and useAnalytics not supported");
-
             if (!endDate.HasValue)
             {
                 // Start with yesterday and see if it's the end of a week; if not, go back until it is
@@ -372,6 +365,20 @@ namespace ClientPortal.Data.Services
                 if (numWeeks.HasValue)
                     startDate = startDate.Value.AddDays(-7 * (numWeeks.Value - 1)); // then back additional weeks, as needed
             }
+        }
+
+        // if endDate is null, goes up to the latest complete week
+        public IQueryable<SearchStat> GetWeekStats(SearchProfile sp, int? numWeeks, DateTime? startDate, DateTime? endDate, string campaignNameInclude = null, string campaignNameExclude = null)
+        {
+            return GetWeekStats(null, sp.SearchProfileId, null, null, null, null, (DayOfWeek)sp.StartDayOfWeek, numWeeks, startDate, endDate, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru, campaignNameInclude, campaignNameExclude);
+        }
+        private IQueryable<SearchStat> GetWeekStats(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, DayOfWeek startDayOfWeek, int? numWeeks, DateTime? startDate, DateTime? endDate, bool useAnalytics, bool includeCalls, decimal revPerViewThru, string campaignNameInclude = null, string campaignNameExclude = null)
+        {
+            if (!String.IsNullOrWhiteSpace(device) && useAnalytics)
+                throw new Exception("specifying a device and useAnalytics not supported");
+
+            StartEndDatesForWeekStats(ref startDate, ref endDate, startDayOfWeek, numWeeks);
+
             var searchCampaigns =
                 GetSearchCampaigns(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix, campaignNameInclude, campaignNameExclude);
 
@@ -667,6 +674,14 @@ namespace ClientPortal.Data.Services
             return stats.OrderBy(s => s.EndDate);
         }
 
+        private void StartEndDatesForMonthStats(ref DateTime? startDate, ref DateTime? endDate, int? numMonths)
+        {
+            if (!endDate.HasValue)
+                endDate = DateTime.Today.AddDays(-1);
+            if (numMonths.HasValue)
+                startDate = new DateTime(endDate.Value.Year, endDate.Value.Month, 1).AddMonths((numMonths.Value - 1) * -1);
+        }
+
         //Note: Use one or the other... numMonths or start
         public IQueryable<SearchStat> GetMonthStats(SearchProfile sp, int? numMonths, DateTime? start, DateTime? end, bool yoy = false, string campaignNameInclude = null, string campaignNameExclude = null)
         {
@@ -674,11 +689,7 @@ namespace ClientPortal.Data.Services
         }
         private IQueryable<SearchStat> GetMonthStats(int searchProfileId, int? numMonths, DateTime? start, DateTime? end, bool useAnalytics, bool includeCalls, decimal revPerViewThru, bool yoy = false, string campaignNameInclude = null, string campaignNameExclude = null)
         {
-            if (!end.HasValue)
-                end = DateTime.Today.AddDays(-1);
-            if (numMonths.HasValue)
-                start = new DateTime(end.Value.Year, end.Value.Month, 1).AddMonths((numMonths.Value - 1) * -1);
-            //else, the passed in value of start is used
+            StartEndDatesForMonthStats(ref start, ref end, numMonths);
 
             DateTime? origStart = null;
             if (yoy && start.HasValue)

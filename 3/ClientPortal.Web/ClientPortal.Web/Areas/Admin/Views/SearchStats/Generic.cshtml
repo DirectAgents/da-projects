@@ -1,0 +1,108 @@
+﻿@model ClientPortal.Web.Areas.Admin.Models.SearchStatsVM
+@{
+    var sp = Model.SearchProfile;
+    int numCols = Model.ColumnConfigs.Count();
+    int width = (numCols <= 9 ? 950 : (100 * numCols + 50));
+    width = (width > 1550 ? 1550 : width);
+}
+
+@sp.SearchProfileId -
+@sp.SearchProfileName
+
+<div>
+    <div id="spreadsheet" style="width:@(width)px"></div>
+</div>
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+        var datasource = CreateDataSource();
+        SetupSpreadsheet(datasource);
+    });
+
+    function CreateDataSource() {
+        var datasource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: '@Url.Action(Model.StatsType + "Data")',
+                    data: {
+                        spId: @sp.SearchProfileId,
+                        numRows: @Model.NumRows
+                    },
+                    type: 'post',
+                    dataType: 'json'
+                }
+            },
+            schema: {
+                model: {
+                    id: 'Id',
+                    fields: {
+                        @foreach (var config in Model.ColumnConfigs)
+                        {
+                            <text>@config.PropName: { type: '@config.KendoType' },</text>
+                        }
+                    }
+                }
+            }
+        });
+        return datasource;
+    }
+
+    function SetupSpreadsheet(datasource) {
+        DoSpreadsheetConfig();
+
+        var spreadsheet = $('#spreadsheet').data('kendoSpreadsheet');
+        var sheet = spreadsheet.activeSheet();
+
+        // Setup Columns
+        sheet.setDataSource(datasource, [
+            @foreach (var config in Model.ColumnConfigs)
+            {
+                if (config.DisplayName == null) {
+                    <text>{ field: "@config.PropName" },</text>
+                } else {
+                    <text>{ field: "@config.PropName", title: "@config.DisplayName" },</text>
+                }
+            }
+        ]);
+        @foreach (var config in Model.ColumnConfigs)
+        {
+            if (config.Format != null)
+            {
+                <text>sheet.range('@config.Letter:@config.Letter').format('@config.Format');</text>
+            }
+        }
+    }
+
+    function DoSpreadsheetConfig() {
+        $('#spreadsheet').kendoSpreadsheet({
+            columns: @numCols,
+            rows: 100,
+            //toolbar: false,
+            //sheetsbar: false,
+            sheets: [{
+                name: '@Model.StatsType', //tab name
+                //dataSource: datasource,
+                frozenRows: 1,
+                columns: [
+                    @for (int i = 0; i < numCols; i++)
+                    {<text>{ width: 100 },</text>}
+                ],
+                rows: [{ // define header row
+                    cells: [
+                    @for (int i = 0; i < numCols; i++)
+                    {<text>
+                        {
+                            bold: "true",
+                            background: "#9c27b0",
+                            textAlign: "center",
+                            color: "white"
+                        },
+                    </text>}
+                    ]
+                }],
+            }]
+        });
+    }
+</script>
+}
