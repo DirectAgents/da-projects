@@ -7,6 +7,9 @@ using CakeExtracter.Common;
 using CsvHelper;
 using Google;
 
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
+
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
     public class DbmConversionExtracter : Extracter<DataTransferRow>
@@ -15,6 +18,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         private readonly string bucketName;
         private readonly int? insertionOrderId; // null for all
         private readonly bool includeViewThrus; // (false = only include click-thrus)
+        //private Dictionary<int, string> cityLookupById;
 
         public DbmConversionExtracter(DateRange dateRange, string bucketName, int? insertionOrderId, bool includeViewThrus)
         {
@@ -48,6 +52,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 Logger.Info("Date: {0}", date);
 
                 string filename = String.Format("log/{0}.0.conversion.0.csv", date.ToString("yyyyMMdd"));
+                string geoFilename = String.Format("entity/{0}.0.GeoLocation.json",date.ToString("yyyyMMdd"));
+                //string entityfilename = String.Format("entity/{0}.0.InsertionOrder.json", date.ToString("yyyyMMdd"));
+
                 //listRequest.Prefix = filename;
                 //var matchingObjects = listRequest.Execute();
                 //if (matchingObjects.Items == null)
@@ -56,10 +63,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 //var reportObject = bucketObjects.Items.Where(i => i.Name == filename).FirstOrDefault();
 
                 var request = service.Objects.Get(bucketName, filename);
-                Google.Apis.Storage.v1.Data.Object obj;
+                var cityRequest = service.Objects.Get("gdbm-public",geoFilename);
+                Google.Apis.Storage.v1.Data.Object obj, cityObj;
                 try
                 {
                     obj = request.Execute();
+                    cityObj = cityRequest.Execute();
                 }
                 catch (GoogleApiException)
                 {
@@ -67,6 +76,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 }
                 if (obj != null)
                 {
+                    var cityStream = DbmCloudStorageExtracter.GetStreamForCloudStorageObject(cityObj, credential);
+                    UpdateCityLookup(cityStream);
                     var stream = DbmCloudStorageExtracter.GetStreamForCloudStorageObject(obj, credential);
                     using (var reader = new StreamReader(stream))
                     {
@@ -96,6 +107,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 }
             }
         }
+
+        public void UpdateCityLookup(Stream stream)
+        {
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(Stream));
+            Location result = (Location)serializer.ReadObject(stream);
+        }
+
     }
 
     // TODO: handle blank event_time / auction_id... skip that row?
@@ -124,5 +142,18 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         public int? browser_id { get; set; }
         public int? browser_timezone_offset_minutes { get; set; }
         public int? net_speed { get; set; }
+
+        public string city { get; set; }
+    }
+
+    [DataContract]
+    public class Location
+    {
+        [DataMember(Name="id")]
+        public int? id { get; set; }
+
+        [DataMember(Name="city_name")]
+        public string city { get; set; }
+
     }
 }

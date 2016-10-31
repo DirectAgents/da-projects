@@ -36,20 +36,25 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            
+            DoConvTest(2334723);
+            return 0;
+            /*
             if (Historical)
                 DoHistorical();
             else
                 DoRegular();
-            return 0;
+            return 0;*/
         }
 
         // testing...
         public void DoConvTest(int? insertOrderId) //null for all
         {
             var today = DateTime.Today;
-            var dateRange = new DateRange(StartDate ?? today, EndDate ?? today);
+            var lastweek = today.AddDays(-7);
+            var dateRange = new DateRange(StartDate ?? lastweek, EndDate ?? today);
             var bucket = "gdbm-479-320231";
+            //var entityName = "gdbm-479";
+            //var geoName = "gdbm-public";
 
             int timezoneOffset = -5; // w/o daylight savings
             var convConverter = new CakeExtracter.Etl.TradingDesk.Loaders.DbmConvConverter(timezoneOffset);
