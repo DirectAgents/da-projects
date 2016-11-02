@@ -1,6 +1,8 @@
 ﻿@model ClientPortal.Data.Contexts.SearchProfile
 @{
     var ajaxOpts_Profiles = RazorHelpers.GetAjaxOptions("searchProfilesTab", "navSearchProfiles");
+    var statsTypes = new[] { "Overall", "Campaign" };
+    var intervals = new[] { "Weekly", "Monthly" };
 }
 
 <h3>Report Components</h3>
@@ -8,13 +10,17 @@
 SearchProfile: @Model.SearchProfileName<br />
 <br />
 Conversion Type Stats:<br />
-@using (Html.BeginForm("WeeklyMonthly", "SearchStats", FormMethod.Get, new { target = "_blank" }))
+@using (Html.BeginForm("Generic", "SearchStats", FormMethod.Get, new { target = "_blank" }))
 {
     @Html.Hidden("spid", Model.SearchProfileId)
     <table>
         <tr>
-            <td>Monthly:</td>
-            <td><input name="monthlyNotWeekly" type="checkbox" value="true" /> (leave unchecked for weekly)</td>
+            <td>StatsType:</td>
+            <td>@Html.DropDownList("statsType", new SelectList(statsTypes), new { style = "margin: .2rem 0" })</td>
+        </tr>
+        <tr>
+            <td>Interval:</td>
+            <td>@Html.DropDownList("interval", new SelectList(intervals), new { style = "margin: .2rem 0" })</td>
         </tr>
         <tr>
             <td>NumRows:</td>
