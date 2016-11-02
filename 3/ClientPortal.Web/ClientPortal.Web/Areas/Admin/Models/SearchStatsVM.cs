@@ -8,6 +8,7 @@ namespace ClientPortal.Web.Areas.Admin.Models
     {
         public SearchProfile SearchProfile { get; set; }
         public IEnumerable<ColumnConfig> ColumnConfigs { get; set; }
+        public DateTime? EndDate { get; set; }
         public string StatsType { get; set; }
         public int NumPeriods { get; set; }
         public bool GroupBySearchAccount { get; set; }

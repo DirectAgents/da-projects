@@ -27,6 +27,9 @@
                     url: '@Url.Action(Model.StatsType + "Data")',
                     data: {
                         spId: @sp.SearchProfileId,
+                        @if (Model.EndDate.HasValue) {
+                            @Html.Raw("endDate: '" + Model.EndDate.Value.ToShortDateString() + "',")
+                        }
                         numPeriods: @Model.NumPeriods,
                         groupBySearchAccount: @(Model.GroupBySearchAccount ? "true" : "false")
                     },
