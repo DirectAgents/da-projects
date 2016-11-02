@@ -27,7 +27,8 @@
                     url: '@Url.Action(Model.StatsType + "Data")',
                     data: {
                         spId: @sp.SearchProfileId,
-                        numRows: @Model.NumRows
+                        numPeriods: @Model.NumPeriods,
+                        groupBySearchAccount: @(Model.GroupBySearchAccount ? "true" : "false")
                     },
                     type: 'post',
                     dataType: 'json'

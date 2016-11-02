@@ -3,6 +3,7 @@
     var ajaxOpts_Profiles = RazorHelpers.GetAjaxOptions("searchProfilesTab", "navSearchProfiles");
     var statsTypes = new[] { "Overall", "Campaign" };
     var intervals = new[] { "Weekly", "Monthly" };
+    bool groupBySearchAccount = Model.HasChannelWithMultipleSearchAccounts();
 }
 
 <h3>Report Components</h3>
@@ -15,16 +16,20 @@ Conversion Type Stats:<br />
     @Html.Hidden("spid", Model.SearchProfileId)
     <table>
         <tr>
-            <td>StatsType:</td>
+            <td>@Html.Label("StatsType:")</td>
             <td>@Html.DropDownList("statsType", new SelectList(statsTypes), new { style = "margin: .2rem 0" })</td>
         </tr>
         <tr>
-            <td>Interval:</td>
+            <td>@Html.Label("Interval:")</td>
             <td>@Html.DropDownList("interval", new SelectList(intervals), new { style = "margin: .2rem 0" })</td>
         </tr>
         <tr>
-            <td>NumRows:</td>
-            <td><input type="text" name="numrows" value="16" style="width:100px" /></td>
+            <td>@Html.Label("#Weeks/Months:")</td>
+            <td><input type="text" name="numPeriods" value="16" style="width:100px" /></td>
+        </tr>
+        <tr>
+            <td>@Html.Label("Group By SearchAccount:")</td>
+            <td><input type="checkbox" name="groupBySearchAccount" value="true" @(groupBySearchAccount ? "checked='checked' " : "")/> (leave unchecked to group by channel)</td>
         </tr>
         <tr>
             <td colspan="2"><input type="submit" value="Generate" /> (opens in new tab)</td>

@@ -14,30 +14,30 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
     [Authorize(Users = "admin")]
     public class SearchStatsController : CPController
     {
-        private const int DEFAULT_NUMROWS = 16;
+        private const int DEFAULT_NUMPERIODS = 16;
 
         public SearchStatsController(IClientPortalRepository cpRepository)
         {
             cpRepo = cpRepository;
         }
 
-        public ActionResult Generic(int spId, string statsType, string interval, int numRows = DEFAULT_NUMROWS)
+        public ActionResult Generic(int spId, string statsType, string interval, int numPeriods = DEFAULT_NUMPERIODS, bool groupBySearchAccount = false)
         {
             statsType = statsType.ToLower();
             interval = interval.ToLower();
 
             if (statsType == "overall")
             {
-                return WeeklyMonthly(spId, (interval == "monthly"), numRows);
+                return WeeklyMonthly(spId, (interval == "monthly"), numPeriods);
             }
             else if (statsType == "campaign")
             {
-                return WeeklyMonthlyBreakdown(spId, (interval == "monthly"), numRows);
+                return WeeklyMonthlyBreakdown(spId, (interval == "monthly"), numPeriods, groupBySearchAccount);
             }
             return HttpNotFound();
         }
 
-        public ActionResult WeeklyMonthly(int spId, bool monthlyNotWeekly, int numRows = DEFAULT_NUMROWS)
+        public ActionResult WeeklyMonthly(int spId, bool monthlyNotWeekly, int numPeriods = DEFAULT_NUMPERIODS)
         {
             var searchProfile = cpRepo.GetSearchProfile(spId);
             if (searchProfile == null)
@@ -47,10 +47,10 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             DateTime endDate = DateTime.Today.AddDays(-1); //TODO? determine end of last complete week, if weekly?
             IEnumerable<SearchConvType> convTypes;
             if (monthlyNotWeekly)
-                convTypes = cpRepo.GetConversionTypesForMonthStats(searchProfile, numRows, null, endDate)
+                convTypes = cpRepo.GetConversionTypesForMonthStats(searchProfile, numPeriods, null, endDate)
                                     .OrderBy(ct => ct.Name).ToList();
             else
-                convTypes = cpRepo.GetConversionTypesForWeekStats(searchProfile, numRows, null, endDate)
+                convTypes = cpRepo.GetConversionTypesForWeekStats(searchProfile, numPeriods, null, endDate)
                                     .OrderBy(ct => ct.Name).ToList();
 
             string intervalName = (monthlyNotWeekly ? "Month" : "Week");
@@ -59,11 +59,11 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 SearchProfile = searchProfile,
                 ColumnConfigs = CreateColumnConfigs(intervalName, convTypes),
                 StatsType = intervalName + "ly",
-                NumRows = numRows
+                NumPeriods = numPeriods
             };
             return View("Generic", model);
         }
-        public ActionResult WeeklyMonthlyBreakdown(int spId, bool monthlyNotWeekly, int numRows = DEFAULT_NUMROWS)
+        public ActionResult WeeklyMonthlyBreakdown(int spId, bool monthlyNotWeekly, int numPeriods = DEFAULT_NUMPERIODS, bool groupBySearchAccount = false)
         {
             //TODO: these as arguments?
             //bool groupBySearchAccount = false;
@@ -77,10 +77,10 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             DateTime endDate = DateTime.Today.AddDays(-1); //TODO? determine end of last complete week, if weekly?
             IEnumerable<SearchConvType> convTypes;
             if (monthlyNotWeekly)
-                convTypes = cpRepo.GetConversionTypesForMonthStats(searchProfile, numRows, null, endDate)
+                convTypes = cpRepo.GetConversionTypesForMonthStats(searchProfile, numPeriods, null, endDate)
                                     .OrderBy(ct => ct.Name).ToList();
             else
-                convTypes = cpRepo.GetConversionTypesForWeekStats(searchProfile, numRows, null, endDate)
+                convTypes = cpRepo.GetConversionTypesForWeekStats(searchProfile, numPeriods, null, endDate)
                                     .OrderBy(ct => ct.Name).ToList();
 
             string intervalName = (monthlyNotWeekly ? "Month" : "Week");
@@ -89,7 +89,8 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 SearchProfile = searchProfile,
                 ColumnConfigs = CreateColumnConfigs("Campaign", convTypes),
                 StatsType = intervalName + "lyBreakdown",
-                NumRows = numRows
+                NumPeriods = numPeriods,
+                GroupBySearchAccount = groupBySearchAccount
             };
             return View("Generic", model);
         }
@@ -110,17 +111,17 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         }
 
         //[HttpPost]
-        public JsonResult WeeklyData(int spId, int numRows = DEFAULT_NUMROWS)
+        public JsonResult WeeklyData(int spId, int numPeriods = DEFAULT_NUMPERIODS)
         {
-            return WeeklyMonthlyData(spId, numRows, monthlyNotWeekly: false);
+            return WeeklyMonthlyData(spId, numPeriods, monthlyNotWeekly: false);
         }
         //[HttpPost]
-        public JsonResult MonthlyData(int spId, int numRows = DEFAULT_NUMROWS)
+        public JsonResult MonthlyData(int spId, int numPeriods = DEFAULT_NUMPERIODS)
         {
-            return WeeklyMonthlyData(spId, numRows, monthlyNotWeekly: true);
+            return WeeklyMonthlyData(spId, numPeriods, monthlyNotWeekly: true);
         }
         //[HttpPost]
-        public JsonResult WeeklyMonthlyData(int spId, int numRows = DEFAULT_NUMROWS, bool monthlyNotWeekly = false)
+        public JsonResult WeeklyMonthlyData(int spId, int numPeriods = DEFAULT_NUMPERIODS, bool monthlyNotWeekly = false)
         {
             var searchProfile = cpRepo.GetSearchProfile(spId);
             if (searchProfile == null)
@@ -129,9 +130,9 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             DateTime endDate = DateTime.Today.AddDays(-1);
             IQueryable<SearchStat> stats;
             if (monthlyNotWeekly)
-                stats = cpRepo.GetMonthStats(searchProfile, numRows, null, endDate);
+                stats = cpRepo.GetMonthStats(searchProfile, numPeriods, null, endDate);
             else
-                stats = cpRepo.GetWeekStats(searchProfile, numRows, null, endDate);
+                stats = cpRepo.GetWeekStats(searchProfile, numPeriods, null, endDate);
 
             var statsDictionaries = cpRepo.FillInConversionTypeStats(searchProfile.SearchProfileId, stats);
 
@@ -141,20 +142,20 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         }
 
         //[HttpPost]
-        public JsonResult WeeklyBreakdownData(int spId, int numRows = DEFAULT_NUMROWS)
+        public JsonResult WeeklyBreakdownData(int spId, int numPeriods = DEFAULT_NUMPERIODS, bool groupBySearchAccount = false)
         {
-            return WeeklyMonthlyBreakdownData(spId, numRows, monthlyNotWeekly: false);
+            return WeeklyMonthlyBreakdownData(spId, numPeriods, groupBySearchAccount, monthlyNotWeekly: false);
         }
         //[HttpPost]
-        public JsonResult MonthlyBreakdownData(int spId, int numRows = DEFAULT_NUMROWS)
+        public JsonResult MonthlyBreakdownData(int spId, int numPeriods = DEFAULT_NUMPERIODS, bool groupBySearchAccount = false)
         {
-            return WeeklyMonthlyBreakdownData(spId, numRows, monthlyNotWeekly: true);
+            return WeeklyMonthlyBreakdownData(spId, numPeriods, groupBySearchAccount, monthlyNotWeekly: true);
         }
         //[HttpPost]
-        public JsonResult WeeklyMonthlyBreakdownData(int spId, int numPeriods = DEFAULT_NUMROWS, bool monthlyNotWeekly = false)
+        public JsonResult WeeklyMonthlyBreakdownData(int spId, int numPeriods = DEFAULT_NUMPERIODS, bool groupBySearchAccount = false, bool monthlyNotWeekly = false)
         {
             //TODO: these as arguments?
-            bool groupBySearchAccount = false;
+            //bool groupBySearchAccount = false;
             string campaignNameInclude = null;
 
             var searchProfile = cpRepo.GetSearchProfile(spId);
@@ -218,7 +219,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                     finalStatsDicts.AddRange(groupStatDicts);
 
                     var groupSummary = new Dictionary<string, object>();
-                    groupSummary["Title"] = "(End: " + groupKey + ")";
+                    groupSummary["Title"] = "*End: " + groupKey + "*";
                     finalStatsDicts.Add(groupSummary);
                 }
                 if (start.HasValue)
