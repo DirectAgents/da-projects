@@ -8,9 +8,10 @@ namespace ClientPortal.Web.Controllers
     [Authorize]
     public class SearchController : CPController
     {
-        public SearchController(IClientPortalRepository cpRepository)
+        public SearchController(IClientPortalRepository cpRepository, DirectAgents.Domain.Abstract.ITDRepository progRepository)
         {
             this.cpRepo = cpRepository;
+            this.progRepo = progRepository; // used in GetUserInfo()
         }
 
         public ActionResult Index()
@@ -24,6 +25,9 @@ namespace ClientPortal.Web.Controllers
             //CheckLogout...
             if (!userInfo.HasSearch)
                 return RedirectToAction("Index", "Home");
+
+            ViewBag.HasSearch = true;
+            ViewBag.HasProg = userInfo.HasProgrammatic();
 
             var model = new SearchVM(userInfo);
             return View(model);
@@ -48,6 +52,9 @@ namespace ClientPortal.Web.Controllers
             if (!userInfo.HasSearch)
                 return RedirectToAction("Index", "Home");
 
+            ViewBag.HasSearch = true;
+            ViewBag.HasProg = userInfo.HasProgrammatic();
+
             var model = new SearchVM(userInfo);
             model.StartDate = model.Dates.FirstOfMonth;
             model.EndDate = model.Dates.Latest;
@@ -59,6 +66,9 @@ namespace ClientPortal.Web.Controllers
             var userInfo = GetUserInfo();
             if (!userInfo.HasSearch)
                 return RedirectToAction("Index", "Home");
+
+            ViewBag.HasSearch = true;
+            ViewBag.HasProg = userInfo.HasProgrammatic();
 
             int numWeeks = 8;
             DateTime start = DateTime.Today.AddDays(-7 * numWeeks + 6);

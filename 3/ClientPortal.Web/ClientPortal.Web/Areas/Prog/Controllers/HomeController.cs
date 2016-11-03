@@ -29,7 +29,7 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
         // "Executive Summary"
         public ActionResult Index()
         {
-            var userInfo = GetUserInfo();
+            var userInfo = GetUserInfo(setViewBag: true);
             if (!userInfo.HasProgrammatic())
                 return RedirectToAction("Go", "Home", new { area = "" });
 
@@ -51,7 +51,7 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
 
         public ActionResult Strategy()
         {
-            var userInfo = GetUserInfo();
+            var userInfo = GetUserInfo(setViewBag: true);
             int advId = userInfo.ProgAdvertiser.Id;
 
             var yesterday = DateTime.Today.AddDays(-1);
@@ -65,7 +65,7 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
 
         public ActionResult Weekly()
         {
-            var userInfo = GetUserInfo();
+            var userInfo = GetUserInfo(setViewBag: true);
 
             var model = new ReportVM
             {
@@ -76,7 +76,7 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
 
         public ActionResult Creative()
         {
-            var userInfo = GetUserInfo();
+            var userInfo = GetUserInfo(setViewBag: true);
             int advId = userInfo.ProgAdvertiser.Id;
             DateTime yesterday = DateTime.Today.AddDays(-1);
             DateTime campaignStart = progRepo.EarliestStatDate(advId, checkAll: true) ?? yesterday;
@@ -92,7 +92,7 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
 
         public ActionResult Site()
         {
-            var userInfo = GetUserInfo();
+            var userInfo = GetUserInfo(setViewBag: true);
             int advId = userInfo.ProgAdvertiser.Id;
 
             var yesterday = DateTime.Today.AddDays(-1);
@@ -113,7 +113,7 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
 
         public ActionResult Lead()
         {
-            var userInfo = GetUserInfo();
+            var userInfo = GetUserInfo(setViewBag: true);
             int advId = userInfo.ProgAdvertiser.Id;
 
             var yesterday = DateTime.Today.AddDays(-1);

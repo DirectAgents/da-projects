@@ -29,17 +29,17 @@
         <div class="logo">&nbsp;</div>
         <div id="cssmenu">
             <ul>
-@if (hasProg) {
-                <li class="summary-report"><a href="@Url.Action("Index", "Combined")">Overall Summary</a></li>
+@if (hasSearch && hasProg) {
+                <li class="summary-report"><a href="@Url.Action("Index", "Combined", new { Area = "" })">Overall Summary</a></li>
 }
 @if (hasSearch) {
-                <li class="search-reports"><a href="@Url.Action("Weekly", "Search")">Search Reports</a>
+                <li class="search-reports"><a href="@Url.Action("Weekly", "Search", new { Area = "" })">Search Reports</a>
                     <ul class="submenu">
-                        <li><a href="@Url.Action("Weekly", "Search")">Weekly</a></li>
-                        <li><a href="@Url.Action("Monthly", "Search")">Monthly</a></li>
-                        <li><a href="@Url.Action("ChannelPerf", "Search")">Channel Performance</a></li>
-                        <li><a href="@Url.Action("CampaignPerf", "Search")">Campaign Performance</a></li>
-                        <li><a href="@Url.Action("CampaignWeekly", "Search")">Campaign Weekly</a></li>
+                        <li><a href="@Url.Action("Weekly", "Search", new { Area = "" })">Weekly</a></li>
+                        <li><a href="@Url.Action("Monthly", "Search", new { Area = "" })">Monthly</a></li>
+                        <li><a href="@Url.Action("ChannelPerf", "Search", new { Area = "" })">Channel Performance</a></li>
+                        <li><a href="@Url.Action("CampaignPerf", "Search", new { Area = "" })">Campaign Performance</a></li>
+                        <li><a href="@Url.Action("CampaignWeekly", "Search", new { Area = "" })">Campaign Weekly</a></li>
                     </ul>
                 </li>
 }
@@ -54,7 +54,7 @@
                 </li>
 }
 @if (hasSearch) {
-                <li class="contact"><a href="@Url.Action("Contact", "Search")">Contact</a></li>
+                <li class="contact"><a href="@Url.Action("Contact", "Search", new { Area = "" })">Contact</a></li>
 }
                 <li class="logout">
                     @Html.Partial("_LoginPartial", model: false)
