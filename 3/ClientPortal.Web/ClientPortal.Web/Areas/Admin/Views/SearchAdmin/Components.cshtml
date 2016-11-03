@@ -34,6 +34,10 @@ Conversion Type Stats:<br />
             <td><input type="text" name="numPeriods" value="16" style="width:100px" /></td>
         </tr>
         <tr>
+            <td>@Html.Label("Include ConVals:")</td>
+            <td><input type="checkbox" name="includeConVals" value="true" checked="checked" /></td>
+        </tr>
+        <tr>
             <td>@Html.Label("Group By SearchAccount:")</td>
             <td><input type="checkbox" name="groupBySearchAccount" value="true" @(groupBySearchAccount ? "checked='checked' " : "")/> (leave unchecked to group by channel)</td>
         </tr>
