@@ -14,9 +14,9 @@ namespace DirectAgents.Domain.Concrete
 {
     public partial class TDRepository : ITDRepository, IDisposable
     {
-        private DATDContext context;
+        private ClientPortalProgContext context;
 
-        public TDRepository(DATDContext context)
+        public TDRepository(ClientPortalProgContext context)
         {
             this.context = context;
         }

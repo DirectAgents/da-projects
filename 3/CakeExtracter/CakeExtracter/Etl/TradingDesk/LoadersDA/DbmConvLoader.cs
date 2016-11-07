@@ -48,7 +48,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             var addedCount = 0;
             var updatedCount = 0;
             var itemCount = 0;
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 foreach (var conv in convs)
                 {
@@ -64,7 +64,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             var acctExtIds = items.Select(i => i.insertion_order_id.Value).Distinct();
 
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 foreach (var acctExtId in acctExtIds)
                 {

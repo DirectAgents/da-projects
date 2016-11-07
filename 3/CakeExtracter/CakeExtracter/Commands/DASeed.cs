@@ -30,7 +30,7 @@ namespace CakeExtracter.Commands
 
         public void DoTDSeed()
         {
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 var tdSeeder = new TDSeeder(db);
                 tdSeeder.SeedPlatforms();

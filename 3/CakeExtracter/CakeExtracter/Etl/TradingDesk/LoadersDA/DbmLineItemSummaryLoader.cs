@@ -53,7 +53,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             var tuples = items.Select(i => Tuple.Create(((DbmRowWithLineItem)i).LineItemID, ((DbmRowWithLineItem)i).LineItem, i.InsertionOrderID)).Distinct();
 
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 foreach (var tuple in tuples)
                 {

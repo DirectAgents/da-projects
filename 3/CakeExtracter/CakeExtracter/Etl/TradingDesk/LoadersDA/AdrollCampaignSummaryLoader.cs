@@ -14,7 +14,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public AdrollCampaignSummaryLoader(string advertisableEid)
         {
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 var account = db.ExtAccounts.Where(a => a.ExternalId == advertisableEid && a.Platform.Code == Platform.Code_AdRoll)
                                             .FirstOrDefault();
@@ -58,7 +58,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         private void AddUpdateDependentStrategies(List<CampaignSummary> items)
         {
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 // Find the unique campaigns by grouping
                 var itemGroups = items.GroupBy(i => new { i.eid, i.campaign });

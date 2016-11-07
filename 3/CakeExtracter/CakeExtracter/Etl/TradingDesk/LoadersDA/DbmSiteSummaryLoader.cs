@@ -49,7 +49,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         private void AddUpdateDependentSites(List<DbmRowBase> items)
         {
             var siteNames = items.Select(i => ((DbmRowWithSite)i).Site).Distinct();
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 foreach (var siteName in siteNames)
                 {

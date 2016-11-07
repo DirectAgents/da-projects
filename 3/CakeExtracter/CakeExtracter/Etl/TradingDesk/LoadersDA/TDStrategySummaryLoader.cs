@@ -48,7 +48,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             var alreadyDeletedCount = 0;
             var skippedCount = 0;
             var itemCount = 0;
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 var itemStrategyIds = items.Select(i => i.StrategyId).Distinct().ToArray();
                 var strategyIdsInDb = db.Strategies.Select(s => s.Id).Where(i => itemStrategyIds.Contains(i)).ToArray();
@@ -110,7 +110,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public void AddUpdateDependentStrategies(List<StrategySummary> items)
         {
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 // Find the unique strategies by grouping
                 var itemGroups = items.GroupBy(i => new { i.StrategyName, i.StrategyEid });

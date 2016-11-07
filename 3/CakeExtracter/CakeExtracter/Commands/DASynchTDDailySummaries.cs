@@ -133,7 +133,7 @@ namespace CakeExtracter.Commands
 
         public static ExtAccount GetAccount(int acctId)
         {
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 return db.ExtAccounts
                     .Include(a => a.Platform.PlatColMapping)

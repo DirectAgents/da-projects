@@ -71,7 +71,7 @@ namespace CakeExtracter.Commands
 
         public IEnumerable<ExtAccount> GetAccounts()
         {
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 var accounts = db.ExtAccounts.Where(a => a.Platform.Code == Platform.Code_FB);
                 if (AccountId.HasValue)
@@ -83,7 +83,7 @@ namespace CakeExtracter.Commands
 
         public IEnumerable<string> GetAdFBIds(int accountId)
         {
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 var fbIds =
                     from a in db.TDads

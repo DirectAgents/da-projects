@@ -47,7 +47,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             var alreadyDeletedCount = 0;
             var skippedCount = 0;
             var itemCount = 0;
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 var itemTDadIds = items.Select(i => i.TDadId).Distinct().ToArray();
                 var tdAdIdsInDb = db.TDads.Select(a => a.Id).Where(i => itemTDadIds.Contains(i)).ToArray();
@@ -109,7 +109,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public void AddUpdateDependentTDads(List<TDadSummary> items)
         {
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 // Find the unique TDads by grouping
                 var itemGroups = items.GroupBy(i => new { i.TDadName, i.TDadEid });

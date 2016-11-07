@@ -63,7 +63,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         private void AddUpdateDependentCities(List<AdrollConvRow> items)
         {
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 var tuples = items.Select(c => new Tuple<string, string>(c.Country, c.City)).Distinct();
                 var countryGroups = tuples.GroupBy(t => t.Item1);
@@ -117,7 +117,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             var campNames = items.Select(i => i.Campaign).Distinct();
 
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 foreach (var campName in campNames)
                 {
@@ -140,7 +140,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             var adNames = items.Select(i => i.Ad).Distinct();
 
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 foreach (var adName in adNames)
                 {

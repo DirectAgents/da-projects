@@ -8,13 +8,13 @@ using DirectAgents.Domain.Entities.TD;
 
 namespace DirectAgents.Domain.Contexts
 {
-    public class DATDContext : DbContext
+    public class ClientPortalProgContext : DbContext
     {
         const string adrollSchema = "adr";
         const string dbmSchema = "dbm";
         const string tdSchema = "td";
 
-        public DATDContext()
+        public ClientPortalProgContext()
         {
             var adapter = (IObjectContextAdapter)this;
             var objectContext = adapter.ObjectContext;
