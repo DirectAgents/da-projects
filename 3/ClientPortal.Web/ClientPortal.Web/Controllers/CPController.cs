@@ -56,7 +56,7 @@ namespace ClientPortal.Web.Controllers
             WebSecurity.Logout();
         }
 
-        protected UserInfo GetUserInfo()
+        protected UserInfo GetUserInfo(bool setViewBag = false)
         {
             var userProfile = GetUserProfile();
 
@@ -72,6 +72,11 @@ namespace ClientPortal.Web.Controllers
                     progAdvertiser = progRepo.Advertiser(userProfile.TDAdvertiserId.Value);
             }
             var userInfo = new UserInfo(userProfile, cpAdvertiser, tradingDeskAccount: tradingDeskAccount, progAdvertiser: progAdvertiser);
+            if (setViewBag)
+            {
+                ViewBag.HasSearch = userInfo.HasSearch;
+                ViewBag.HasProg = userInfo.HasProgrammatic();
+            }
             return userInfo;
         }
 

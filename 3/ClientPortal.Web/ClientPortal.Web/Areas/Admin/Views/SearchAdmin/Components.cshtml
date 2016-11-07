@@ -1,24 +1,45 @@
 ﻿@model ClientPortal.Data.Contexts.SearchProfile
 @{
     var ajaxOpts_Profiles = RazorHelpers.GetAjaxOptions("searchProfilesTab", "navSearchProfiles");
+    var endDate = Model.GetLast_WeekEndDate();
+    var statsTypes = new[] { "Overall", "Campaign" };
+    var intervals = new[] { "Weekly", "Monthly" };
+    bool groupBySearchAccount = Model.HasChannelWithMultipleSearchAccounts();
 }
 
 <h3>Report Components</h3>
 
 SearchProfile: @Model.SearchProfileName<br />
+Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)<br />
 <br />
 Conversion Type Stats:<br />
-@using (Html.BeginForm("WeeklyMonthly", "SearchStats", FormMethod.Get, new { target = "_blank" }))
+@using (Html.BeginForm("Generic", "SearchStats", FormMethod.Get, new { target = "_blank" }))
 {
     @Html.Hidden("spid", Model.SearchProfileId)
     <table>
         <tr>
-            <td>Monthly:</td>
-            <td><input name="monthlyNotWeekly" type="checkbox" value="true" /> (leave unchecked for weekly)</td>
+            <td>@Html.Label("Stats End-Date:")</td>
+            <td><input id="spreadsheet_enddate" type="text" name="enddate" value="@endDate.ToShortDateString()" /></td>
         </tr>
         <tr>
-            <td>NumRows:</td>
-            <td><input type="text" name="numrows" value="16" style="width:100px" /></td>
+            <td>@Html.Label("StatsType:")</td>
+            <td>@Html.DropDownList("statsType", new SelectList(statsTypes), new { style = "margin: .2rem 0" })</td>
+        </tr>
+        <tr>
+            <td>@Html.Label("Interval:")</td>
+            <td>@Html.DropDownList("interval", new SelectList(intervals), new { style = "margin: .2rem 0" })</td>
+        </tr>
+        <tr>
+            <td>@Html.Label("#Weeks/Months:")</td>
+            <td><input type="text" name="numPeriods" value="16" style="width:100px" /></td>
+        </tr>
+        <tr>
+            <td>@Html.Label("Include ConVals:")</td>
+            <td><input type="checkbox" name="includeConVals" value="true" checked="checked" /></td>
+        </tr>
+        <tr>
+            <td>@Html.Label("Group By SearchAccount:")</td>
+            <td><input type="checkbox" name="groupBySearchAccount" value="true" @(groupBySearchAccount ? "checked='checked' " : "")/> (leave unchecked to group by channel)</td>
         </tr>
         <tr>
             <td colspan="2"><input type="submit" value="Generate" /> (opens in new tab)</td>
@@ -30,3 +51,9 @@ Conversion Type Stats:<br />
 Back to:
 @Ajax.ActionLink("Profiles", "SearchProfiles", "SearchAdmin", ajaxOpts_Profiles) |
 @Ajax.ActionLink("Generate Spreadsheet", "GenerateSpreadsheet", new { spId = Model.SearchProfileId }, ajaxOpts_Profiles)
+
+<script>
+    $(function () {
+        $('#spreadsheet_enddate').kendoDatePicker({ footer: ' ' });
+    });
+</script>

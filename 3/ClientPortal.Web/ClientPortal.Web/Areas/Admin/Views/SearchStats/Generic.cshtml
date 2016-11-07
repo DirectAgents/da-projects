@@ -2,8 +2,8 @@
 @{
     var sp = Model.SearchProfile;
     int numCols = Model.ColumnConfigs.Count();
-    int width = (numCols <= 9 ? 950 : (100 * numCols + 50));
-    width = (width > 1550 ? 1550 : width);
+    int width = (numCols <= 9 ? 1050 : (100 * numCols + 150));
+    width = (width > 1650 ? 1650 : width);
 }
 
 @sp.SearchProfileId -
@@ -27,7 +27,11 @@
                     url: '@Url.Action(Model.StatsType + "Data")',
                     data: {
                         spId: @sp.SearchProfileId,
-                        numRows: @Model.NumRows
+                        @if (Model.EndDate.HasValue) {
+                            @Html.Raw("endDate: '" + Model.EndDate.Value.ToShortDateString() + "',")
+                        }
+                        numPeriods: @Model.NumPeriods,
+                        groupBySearchAccount: @(Model.GroupBySearchAccount ? "true" : "false")
                     },
                     type: 'post',
                     dataType: 'json'
@@ -86,7 +90,7 @@
                 frozenRows: 1,
                 columns: [
                     @for (int i = 0; i < numCols; i++)
-                    {<text>{ width: 100 },</text>}
+                    {<text>{ width: @(i == 0 ? "200" : "100") },</text>}
                 ],
                 rows: [{ // define header row
                     cells: [

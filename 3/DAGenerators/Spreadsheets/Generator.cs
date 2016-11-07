@@ -163,7 +163,7 @@ namespace DAGenerators.Spreadsheets
         }
 
         // Get stats for one week/month/etc - grouped by channel or searchAccount
-        private static Dictionary<string, IEnumerable<SearchStat>> GetOneCampaignStatsDict(IClientPortalRepository cpRepo, SearchProfile searchProfile, DateTime periodStart, DateTime periodEnd, bool groupBySearchAccount, string campaignNameInclude = null, string campaignNameExclude = null)
+        public static Dictionary<string, IEnumerable<SearchStat>> GetOneCampaignStatsDict(IClientPortalRepository cpRepo, SearchProfile searchProfile, DateTime periodStart, DateTime periodEnd, bool groupBySearchAccount, string campaignNameInclude = null, string campaignNameExclude = null)
         {
             var campaignStatsDict = new Dictionary<string, IEnumerable<SearchStat>>();
 

@@ -166,7 +166,7 @@ namespace ClientPortal.Data.Services
             return searchStat;
         }
 
-        private IQueryable<SearchCampaign> GetSearchCampaigns(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string nameInclude = null, string nameExclude = null)
+        private IQueryable<SearchCampaign> GetSearchCampaigns(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string nameInclude = null, string nameExclude = null, int? searchCampaignId = null)
         {
             var searchCampaigns = context.SearchCampaigns.AsQueryable();
 
@@ -190,6 +190,9 @@ namespace ClientPortal.Data.Services
                 searchCampaigns = searchCampaigns.Where(c => c.SearchCampaignName.Contains(nameInclude));
             if (!String.IsNullOrWhiteSpace(nameExclude))
                 searchCampaigns = searchCampaigns.Where(c => !c.SearchCampaignName.Contains(nameExclude));
+
+            if (searchCampaignId.HasValue)
+                searchCampaigns = searchCampaigns.Where(c => c.SearchCampaignId == searchCampaignId.Value);
 
             return searchCampaigns;
         }
@@ -278,9 +281,9 @@ namespace ClientPortal.Data.Services
             return summaries;
         }
 
-        private IQueryable<SearchConvSummary> GetSearchConvSummaries(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, DateTime? start, DateTime? end, bool includeToday)
+        private IQueryable<SearchConvSummary> GetSearchConvSummaries(int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, DateTime? start, DateTime? end, bool includeToday, int? searchCampaignId = null)
         {
-            var searchCampaigns = GetSearchCampaigns(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix);
+            var searchCampaigns = GetSearchCampaigns(null, searchProfileId, channel, searchAccountId, channelPrefix, searchCampaignId: searchCampaignId);
             return GetSearchConvSummaries(searchCampaigns, start, end, includeToday);
         }
         private IQueryable<SearchConvSummary> GetSearchConvSummaries(IQueryable<SearchCampaign> searchCampaigns, DateTime? start, DateTime? end, bool includeToday)
@@ -311,16 +314,16 @@ namespace ClientPortal.Data.Services
         }
         public IQueryable<SearchConvType> GetConversionTypes(int searchProfileId, DateTime? startDate, DateTime? endDate)
         {
-            var convSums = GetSearchConvSummaries(null, searchProfileId, null, null, null, startDate, endDate, true);
+            var convSums = GetSearchConvSummaries(searchProfileId, null, null, null, startDate, endDate, true);
             return convSums.Select(cs => cs.SearchConvType).Distinct();
         }
 
         // TODO: allow for breakdown by or specifying searchCampaign?
-        private IDictionary<string, object> GetConversionTypeStats(int searchProfileId, DateTime? startDate, DateTime? endDate)
+        private IDictionary<string, object> GetConversionTypeStats(int searchProfileId, int? searchCampaignId, DateTime? startDate, DateTime? endDate)
         {
             var convDict = new Dictionary<string, object>();
 
-            var convSums = GetSearchConvSummaries(null, searchProfileId, null, null, null, startDate, endDate, true);
+            var convSums = GetSearchConvSummaries(searchProfileId, null, null, null, startDate, endDate, true, searchCampaignId: searchCampaignId);
             var convTypeGroups = convSums.GroupBy(cs => cs.SearchConvTypeId);
             foreach (var cGroup in convTypeGroups)
             {
@@ -336,7 +339,7 @@ namespace ClientPortal.Data.Services
             {
                 // For each searchStat, convert it to a dictionary and add the convType stats
                 var statDict = stat.ToDictionary();
-                var convStats = GetConversionTypeStats(searchProfileId, stat.StartDate, stat.EndDate);
+                var convStats = GetConversionTypeStats(searchProfileId, stat.CampaignId, stat.StartDate, stat.EndDate);
                 foreach (var key in convStats.Keys)
                 {
                     statDict[key] = convStats[key];
@@ -1004,6 +1007,7 @@ namespace ClientPortal.Data.Services
                 stats = summaryGroups
                     .Select(g => new SearchStat
                     {
+                        CampaignId = g.Key.SearchCampaignId,
                         EndDate = end.Value,
                         CustomByStartDate = start.Value,
                         Channel = g.Key.Channel,
@@ -1044,6 +1048,7 @@ namespace ClientPortal.Data.Services
                     stats = sums//.OrderBy(s => s.Channel).ThenBy(s => s.CampaignName)
                         .Select(s => new SearchStat
                         {
+                            CampaignId = s.CampaignId,
                             EndDate = end.Value,
                             CustomByStartDate = start.Value,
                             Channel = s.Channel,
@@ -1078,6 +1083,7 @@ namespace ClientPortal.Data.Services
                                  from gaSum in gj_sums.DefaultIfEmpty() // left join to gaSums
                                  select new SearchStat
                                  {
+                                     CampaignId = sum.CampaignId,
                                      EndDate = end.Value,
                                      CustomByStartDate = start.Value,
                                      Channel = sum.Channel,
@@ -1107,6 +1113,7 @@ namespace ClientPortal.Data.Services
                                  from callSum in gj_sums.DefaultIfEmpty() // left join to callSums
                                  select new SearchStat
                                  {
+                                     CampaignId = sum.CampaignId,
                                      EndDate = end.Value,
                                      CustomByStartDate = start.Value,
                                      Channel = sum.Channel,

@@ -161,6 +161,8 @@ namespace ClientPortal.Data.DTOs
 
         public SearchStatVals Prev { get; set; } // for the prev year's stats
 
+        public int? CampaignId { get; set; }
+
         public string Campaign { get; set; }
         public string Channel { get; set; }
         public string Title { get; set; }
