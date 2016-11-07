@@ -7,8 +7,7 @@ using CakeExtracter.Common;
 using CsvHelper;
 using Google;
 
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
+using Newtonsoft.Json;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
@@ -77,12 +76,18 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 if (obj != null)
                 {
                     var cityStream = DbmCloudStorageExtracter.GetStreamForCloudStorageObject(cityObj, credential);
-                    UpdateCityLookup(cityStream);
+                    var lookupTable = CreateCityLookup(cityStream);
                     var stream = DbmCloudStorageExtracter.GetStreamForCloudStorageObject(obj, credential);
                     using (var reader = new StreamReader(stream))
                     {
                         foreach (var row in EnumerateRowsStatic(reader))
+                        {
+                            var res = lookupTable.Where(c => c.id == row.city_id).First();
+                            Logger.Info("City {0} in Country {1} with ID {2}", res.city_name, res.country_name,row.city_id);
+                            row.city_name = res.city_name;
+                            row.country_name = res.country_name;
                             yield return row;
+                        }
                     }
                 }
             }
@@ -92,6 +97,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         {
             using (CsvReader csv = new CsvReader(reader))
             {
+                csv.Configuration.WillThrowOnMissingField = false;
                 var csvRows = csv.GetRecords<DataTransferRow>().ToList();
                 for (int i = 0; i < csvRows.Count; i++)
                 {
@@ -108,10 +114,16 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             }
         }
 
-        public void UpdateCityLookup(Stream stream)
+        public List<GeoLocation> CreateCityLookup(Stream stream)
         {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(Stream));
-            Location result = (Location)serializer.ReadObject(stream);
+            var serializer = new JsonSerializer();
+
+            using (var sr = new StreamReader(stream))
+            using (var jsonReader = new JsonTextReader(sr))
+            {
+                var jsonObjs = serializer.Deserialize<List<GeoLocation>>(jsonReader);
+                return jsonObjs;
+            }
         }
 
     }
@@ -143,17 +155,32 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         public int? browser_timezone_offset_minutes { get; set; }
         public int? net_speed { get; set; }
 
-        public string city { get; set; }
+        public string city_name { get; set; }
+        public string country_name { get; set; }
+        //public string advertiser_id { get; set; }
     }
 
-    [DataContract]
-    public class Location
+    public class GeoLocation
     {
-        [DataMember(Name="id")]
-        public int? id { get; set; }
-
-        [DataMember(Name="city_name")]
-        public string city { get; set; }
-
+        public int id { get; set; }
+        public string country_code { get; set; }
+        public string region_code { get; set; }
+        public string canonical_name { get; set; }
+        public string postal_code { get; set; }
+        public string geo_code { get; set; }
+        public string country_name
+        {
+            get
+            {
+                return canonical_name.Split(',').Last();
+            }
+        }
+        public string city_name
+        {
+            get
+            {
+                return canonical_name.Replace(country_name, "").TrimEnd(',');
+            }
+        }
     }
 }

@@ -51,8 +51,9 @@ namespace CakeExtracter.Commands
         {
             var today = DateTime.Today;
             var lastweek = today.AddDays(-7);
-            var dateRange = new DateRange(StartDate ?? lastweek, EndDate ?? today);
-            var bucket = "gdbm-479-320231";
+            var dateRange = new DateRange(StartDate ?? today, EndDate ?? today);
+            //var bucket = "gdbm-479-320231"; //bucket for Crackle TODO--add lookup values to database
+            var bucket = "gdbm-479-914580"; //bucket for Dashlane
             //var entityName = "gdbm-479";
             //var geoName = "gdbm-public";
 
