@@ -6,7 +6,7 @@ using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace DirectAgents.Domain.Concrete
 {
@@ -381,7 +381,7 @@ namespace DirectAgents.Domain.Concrete
 
         public IQueryable<ExtAccount> ExtAccounts_Social(int? advId = null, int? campId = null)
         {
-            var socialCodes = DirectAgents.Domain.Entities.TD.Platform.Codes_Social(); //.ToArray();
+            var socialCodes = DirectAgents.Domain.Entities.CPProg.Platform.Codes_Social(); //.ToArray();
             var extAccounts = context.ExtAccounts.Where(a => socialCodes.Contains(a.Platform.Code));
             if (advId.HasValue || campId.HasValue)
             {

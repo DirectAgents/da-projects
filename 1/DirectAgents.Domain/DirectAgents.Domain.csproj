@@ -75,7 +75,7 @@
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Concrete\TDRepository.cs" />
     <Compile Include="Contexts\HistoryContext.cs" />
-    <Compile Include="Contexts\TDContext.cs" />
+    <Compile Include="Contexts\ClientPortalProgContext.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
     <Compile Include="DTO\TDCampStats.cs" />
     <Compile Include="DTO\TDLineItem.cs" />
@@ -124,13 +124,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SecurityModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Entities\TD\Advertiser.cs" />
-    <Compile Include="Entities\TD\CampaignBudget.cs" />
-    <Compile Include="Entities\TD\Conv.cs" />
-    <Compile Include="Entities\TD\DailySummary.cs" />
-    <Compile Include="Entities\TD\ExtraItem.cs" />
-    <Compile Include="Entities\TD\FunctionEntities.cs" />
-    <Compile Include="Entities\TD\PlatformAccount.cs" />
+    <Compile Include="Entities\CPProg\Advertiser.cs" />
+    <Compile Include="Entities\CPProg\CampaignBudget.cs" />
+    <Compile Include="Entities\CPProg\Conv.cs" />
+    <Compile Include="Entities\CPProg\DailySummary.cs" />
+    <Compile Include="Entities\CPProg\ExtraItem.cs" />
+    <Compile Include="Entities\CPProg\FunctionEntities.cs" />
+    <Compile Include="Entities\CPProg\PlatformAccount.cs" />
     <Compile Include="Entities\Variable.cs" />
     <Compile Include="Entities\WikiPartials\Campaign.cs" />
     <Compile Include="Entities\WikiPartials\Country.cs" />

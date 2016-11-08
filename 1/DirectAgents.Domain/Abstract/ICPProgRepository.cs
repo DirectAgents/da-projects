@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace DirectAgents.Domain.Abstract
 {

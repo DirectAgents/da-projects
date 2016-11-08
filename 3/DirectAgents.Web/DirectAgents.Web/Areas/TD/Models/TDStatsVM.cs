@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DirectAgents.Domain.DTO;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace DirectAgents.Web.Areas.TD.Models
 {

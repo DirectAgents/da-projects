@@ -9,7 +9,7 @@ using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
 using ClientPortal.Web.Models;
 using DirectAgents.Domain.Abstract;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace ClientPortal.Web.Controllers
 {

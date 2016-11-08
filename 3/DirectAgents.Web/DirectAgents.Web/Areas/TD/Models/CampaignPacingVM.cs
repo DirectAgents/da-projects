@@ -22,6 +22,7 @@ namespace DirectAgents.Web.Areas.TD.Models
         public decimal Spend { get; set; }
         public double CTR { get; set; }
         public decimal CPA { get; set; }
+        public string Test { get; set; }
     }
 
     public class CampaignPacingDTO

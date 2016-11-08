@@ -1,4 +1,4 @@
-﻿@model DirectAgents.Domain.Entities.TD.Campaign
+﻿@model DirectAgents.Domain.Entities.CPProg.Campaign
 @{
     string advId = (string)Session["advId"]; // for filtering when returning back to Index
 }
@@ -107,7 +107,7 @@
         }
         </table>
 @{
-    var extAccts = (IEnumerable<DirectAgents.Domain.Entities.TD.ExtAccount>)ViewBag.ExtAccounts;
+    var extAccts = (IEnumerable<DirectAgents.Domain.Entities.CPProg.ExtAccount>)ViewBag.ExtAccounts;
     if (extAccts.Any())
     {
         <br />

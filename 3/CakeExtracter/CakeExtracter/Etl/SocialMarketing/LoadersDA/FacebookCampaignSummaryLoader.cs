@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using DirectAgents.Domain.Contexts;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.Entities.CPProg;
 using FacebookAPI;
 using FacebookAPI.Entities;
 

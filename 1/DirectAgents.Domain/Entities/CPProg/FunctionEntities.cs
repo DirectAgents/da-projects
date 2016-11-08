@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DirectAgents.Domain.Entities.TD
+namespace DirectAgents.Domain.Entities.CPProg
 {
     public class BasicStat
     {

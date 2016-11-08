@@ -4,13 +4,12 @@ using System.Web.Configuration;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Entities.TD;
 using ClientPortal.Web.Controllers;
-using DirectAgents.Domain.Entities.TD;
 
 namespace ClientPortal.Web.Models
 {
     public class UserInfo
     {
-        public UserInfo(UserProfile userProfile, ClientPortal.Data.Contexts.Advertiser cpAdvertiser, TradingDeskAccount tradingDeskAccount = null, DirectAgents.Domain.Entities.TD.Advertiser progAdvertiser = null)
+        public UserInfo(UserProfile userProfile, ClientPortal.Data.Contexts.Advertiser cpAdvertiser, TradingDeskAccount tradingDeskAccount = null, DirectAgents.Domain.Entities.CPProg.Advertiser progAdvertiser = null)
         {
             this.UserProfile = userProfile;
             this.CakeAdvertiser = cpAdvertiser;
@@ -21,7 +20,7 @@ namespace ClientPortal.Web.Models
         private UserProfile UserProfile { get; set; }
         private ClientPortal.Data.Contexts.Advertiser CakeAdvertiser { get; set; }
         public TradingDeskAccount TDAccount { get; set; } // deprecated
-        public DirectAgents.Domain.Entities.TD.Advertiser ProgAdvertiser { get; set; }
+        public DirectAgents.Domain.Entities.CPProg.Advertiser ProgAdvertiser { get; set; }
 
         public bool HasUserProfile
         {

@@ -3,7 +3,7 @@
     var ajaxOptions = RazorHelpers.GetAjaxOptions("usersTab");
     var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("usersTab", httpMethod: "Post");
 
-    var progAdvertisers = (IEnumerable<DirectAgents.Domain.Entities.TD.Advertiser>)ViewBag.ProgAdvertisers;
+    var progAdvertisers = (IEnumerable<DirectAgents.Domain.Entities.CPProg.Advertiser>)ViewBag.ProgAdvertisers;
     var piSelectList = new SelectList(progAdvertisers, "Id", "Name");
 }
 

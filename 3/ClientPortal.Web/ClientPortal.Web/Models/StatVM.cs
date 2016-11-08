@@ -1,7 +1,7 @@
 ﻿using System;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Data.DTOs;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace ClientPortal.Web.Models
 {

@@ -4,7 +4,7 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.DBM;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace DirectAgents.Domain.Contexts
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace DirectAgents.Domain.Entities.TD
+namespace DirectAgents.Domain.Entities.CPProg
 {
     public class Campaign
     {

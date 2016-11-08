@@ -1,4 +1,4 @@
-﻿@model DirectAgents.Domain.Entities.TD.BudgetInfo
+﻿@model DirectAgents.Domain.Entities.CPProg.BudgetInfo
 @{
     var month = Model.Date;
     var platformBudgetInfos = Model.Campaign.PlatformBudgetInfosFor(month).OrderBy(i => i.Platform.Name);
@@ -76,7 +76,7 @@
         }
         </table>
 @{
-    var platforms = (IEnumerable<DirectAgents.Domain.Entities.TD.Platform>)ViewBag.Platforms;
+    var platforms = (IEnumerable<DirectAgents.Domain.Entities.CPProg.Platform>)ViewBag.Platforms;
     if (platforms.Any())
     {
         <br />

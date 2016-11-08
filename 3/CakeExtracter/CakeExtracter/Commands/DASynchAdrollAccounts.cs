@@ -5,7 +5,7 @@ using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.AdRoll;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Commands
 {

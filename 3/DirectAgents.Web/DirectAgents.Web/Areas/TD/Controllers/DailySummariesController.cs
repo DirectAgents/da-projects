@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Web.Areas.TD.Models;
 
 namespace DirectAgents.Web.Areas.TD.Controllers

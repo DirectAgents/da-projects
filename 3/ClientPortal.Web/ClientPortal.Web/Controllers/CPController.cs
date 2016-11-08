@@ -60,7 +60,7 @@ namespace ClientPortal.Web.Controllers
 
             ClientPortal.Data.Contexts.Advertiser cpAdvertiser = null;
             TradingDeskAccount tradingDeskAccount = null;
-            DirectAgents.Domain.Entities.TD.Advertiser progAdvertiser = null;
+            DirectAgents.Domain.Entities.CPProg.Advertiser progAdvertiser = null;
             if (userProfile != null)
             {
                 cpAdvertiser = GetAdvertiser(userProfile.CakeAdvertiserId);

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace DirectAgents.Web.Areas.TD.Controllers
 {

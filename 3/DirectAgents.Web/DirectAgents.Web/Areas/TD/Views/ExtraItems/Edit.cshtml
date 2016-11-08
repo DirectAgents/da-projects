@@ -1,8 +1,8 @@
-﻿@model DirectAgents.Domain.Entities.TD.ExtraItem
+﻿@model DirectAgents.Domain.Entities.CPProg.ExtraItem
 @{
     string campId = (string)Session["campId"]; // for filtering when returning back to Index
     string month = (string)Session["month"];
-    var platforms = (IEnumerable<DirectAgents.Domain.Entities.TD.Platform>)ViewBag.Platforms;
+    var platforms = (IEnumerable<DirectAgents.Domain.Entities.CPProg.Platform>)ViewBag.Platforms;
     var platformSelectList = new SelectList(platforms, "Id", "Name", Model.PlatformId);
 }
 

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using ClientPortal.Web.Models;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace ClientPortal.Web.Areas.Prog.Models
 {

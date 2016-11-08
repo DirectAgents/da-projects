@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace DirectAgents.Web.Areas.TD.Models
 {

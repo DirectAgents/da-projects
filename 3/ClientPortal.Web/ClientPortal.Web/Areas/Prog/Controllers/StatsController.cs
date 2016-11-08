@@ -5,7 +5,7 @@ using System.Web.Mvc;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Controllers;
 using DirectAgents.Domain.Abstract;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace ClientPortal.Web.Areas.Prog.Controllers
 {
