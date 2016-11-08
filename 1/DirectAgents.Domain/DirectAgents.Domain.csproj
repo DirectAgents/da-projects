@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Abstract\IAdmin.cs" />
     <Compile Include="Abstract\ICampaignRepository.cs" />
+    <Compile Include="Abstract\ICPProgRepository.cs" />
     <Compile Include="Abstract\IMainRepository.cs" />
     <Compile Include="Abstract\ISecurityRepository.cs" />
     <Compile Include="Abstract\ITDRepository.cs" />
@@ -67,11 +68,12 @@
     <Compile Include="Concrete\AdminImpl.cs" />
     <Compile Include="Concrete\CampaignRepository.cs" />
     <Compile Include="Concrete\CountryLookup.cs" />
+    <Compile Include="Concrete\CPProgRepository.cs" />
+    <Compile Include="Concrete\CPProgStatsRepository.cs" />
     <Compile Include="Concrete\Extensions.cs" />
     <Compile Include="Concrete\MainRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Concrete\TDRepository.cs" />
-    <Compile Include="Concrete\TDStatsRepository.cs" />
     <Compile Include="Contexts\HistoryContext.cs" />
     <Compile Include="Contexts\TDContext.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />

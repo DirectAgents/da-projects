@@ -7,7 +7,7 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
 {
     public class TestController : CPController
     {
-        public TestController(ITDRepository progRepository)
+        public TestController(ICPProgRepository progRepository)
         {
             progRepo = progRepository;
         }

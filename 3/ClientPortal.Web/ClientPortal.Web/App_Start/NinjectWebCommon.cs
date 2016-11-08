@@ -57,7 +57,7 @@ namespace ClientPortal.Web.App_Start
         {
             kernel.Bind<IClientPortalRepository>().To<ClientPortalRepository>();
             kernel.Bind<ClientPortal.Data.Contracts.ITDRepository>().To<ClientPortal.Data.Services.TDRepository>();
-            kernel.Bind<DirectAgents.Domain.Abstract.ITDRepository>().To<DirectAgents.Domain.Concrete.TDRepository>();
+            kernel.Bind<DirectAgents.Domain.Abstract.ICPProgRepository>().To<DirectAgents.Domain.Concrete.CPProgRepository>();
         }
     }
 }

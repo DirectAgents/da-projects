@@ -1,23 +1,20 @@
-﻿using DirectAgents.Domain.Abstract;
-using DirectAgents.Domain.Entities.TD;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
+using DirectAgents.Domain.Abstract;
+using DirectAgents.Domain.Entities.TD;
 
 namespace DirectAgents.Web.Areas.TD.Controllers
 {
     public class TDadsController : DirectAgents.Web.Controllers.ControllerBase
     {
-        public TDadsController(ITDRepository tdRepository)
+        public TDadsController(ICPProgRepository cpProgRepository)
         {
-            this.tdRepo = tdRepository;
+            this.cpProgRepo = cpProgRepository;
         }
 
         public ActionResult Index(int? acctId)
         {
-            var ads = tdRepo.TDads(acctId: acctId).OrderBy(a => a.Name).ThenBy(a => a.Id);
+            var ads = cpProgRepo.TDads(acctId: acctId).OrderBy(a => a.Name).ThenBy(a => a.Id);
             Session["acctId"] = acctId.ToString();
 
             // Don't show images if not filtered (i.e. showing all creatives), unless requested explicitly
@@ -28,7 +25,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var ad = tdRepo.TDad(id);
+            var ad = cpProgRepo.TDad(id);
             if (ad == null)
                 return HttpNotFound();
             return View(ad);
@@ -39,11 +36,11 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (tdRepo.SaveTDad(ad))
+                if (cpProgRepo.SaveTDad(ad))
                     return RedirectToAction("Index", new { acctId = Session["acctId"] });
                 ModelState.AddModelError("", "Creative could not be saved.");
             }
-            tdRepo.FillExtended(ad);
+            cpProgRepo.FillExtended(ad);
             return View(ad);
         }
     }

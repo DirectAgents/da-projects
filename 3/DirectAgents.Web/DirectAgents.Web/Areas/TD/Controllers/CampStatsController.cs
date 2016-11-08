@@ -12,9 +12,9 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 {
     public class CampStatsController : DirectAgents.Web.Controllers.ControllerBase
     {
-        public CampStatsController(ITDRepository tdRepository)
+        public CampStatsController(ICPProgRepository cpProgRepository)
         {
-            this.tdRepo = tdRepository;
+            this.cpProgRepo = cpProgRepository;
         }
 
         // HTML version
@@ -32,7 +32,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         // TODO: Work on this... For one campaign, how did it do each month?
         //public ActionResult PacingByMonth(int campId)
         //{
-        //    //var r = tdRepo.StatsRange_All(
+        //    //var r = cpProgRepo.StatsRange_All(
         //    return null;
         //}
 
@@ -59,7 +59,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         public JsonResult PacingDetail(KendoGridMvcRequest request, int campId) //, DateTime? month)
         {
             DateTime currMonth = CurrentMonthTD;
-            var stat = tdRepo.GetCampStats(currMonth, campId);
+            var stat = cpProgRepo.GetCampStats(currMonth, campId);
             var dtos = stat.LineItems.Select(li => new CampaignPacingDTO(li));
             var kgrid = new KendoGridEx<CampaignPacingDTO>(request, dtos);
 
@@ -90,7 +90,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             DateTime currMonth = CurrentMonthTD;
 
-            var campaigns = tdRepo.Campaigns();
+            var campaigns = cpProgRepo.Campaigns();
             if (campId.HasValue)
                 campaigns = campaigns.Where(c => c.Id == campId.Value); // the specified campaign
             else
@@ -99,7 +99,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var campStatsList = new List<TDCampStats>();
             foreach (var camp in campaigns.OrderBy(c => c.Advertiser.Name).ThenBy(c => c.Name))
             {
-                var stat = tdRepo.GetCampStats(currMonth, camp.Id);
+                var stat = cpProgRepo.GetCampStats(currMonth, camp.Id);
                 if (!stat.AllZeros())
                     campStatsList.Add(stat);
                 // TODO: include campStats for campaigns with BudgetInfos (or PlatformBudgetInfos?), even if no stats ?
@@ -115,7 +115,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         public JsonResult SpreadsheetData(int campId)
         {
             DateTime currMonth = CurrentMonthTD;
-            var campStats = tdRepo.GetCampStats(currMonth, campId);
+            var campStats = cpProgRepo.GetCampStats(currMonth, campId);
 
             var dtos = new List<CampaignPacingDTO> { new CampaignPacingDTO(campStats) };
             foreach (var li in campStats.LineItems)
@@ -130,7 +130,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         // Daily Stats Spreadsheet
         public ActionResult Daily(int campId, DateTime? start, DateTime? end)
         {
-            var campaign = tdRepo.Campaign(campId);
+            var campaign = cpProgRepo.Campaign(campId);
             if (campaign == null)
                 return HttpNotFound();
             var model = new ReportingVM
@@ -157,7 +157,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         // Daily Stats line chart
         public ActionResult DailyChart(int campId)
         {
-            var campaign = tdRepo.Campaign(campId);
+            var campaign = cpProgRepo.Campaign(campId);
             if (campaign == null)
                 return HttpNotFound();
             return View(campaign);
@@ -173,7 +173,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
         private IEnumerable<DailyDTO> GetDailyStatsDTO(int campId, DateTime? startDate, DateTime? endDate)
         {
-            var dailyLIs = tdRepo.GetDailyStatsLI(campId, startDate, endDate);
+            var dailyLIs = cpProgRepo.GetDailyStatsLI(campId, startDate, endDate);
             var dailyDTOs = dailyLIs.Select(li => new DailyDTO
             {
                 Date = li.Date.Value,

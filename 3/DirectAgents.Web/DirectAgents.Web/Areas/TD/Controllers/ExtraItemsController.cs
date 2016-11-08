@@ -9,9 +9,9 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 {
     public class ExtraItemsController : DirectAgents.Web.Controllers.ControllerBase
     {
-        public ExtraItemsController(ITDRepository tdRepository)
+        public ExtraItemsController(ICPProgRepository cpProgRepository)
         {
-            this.tdRepo = tdRepository;
+            this.cpProgRepo = cpProgRepository;
         }
 
         public ActionResult Index(int? campId, DateTime? month)
@@ -19,7 +19,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             Campaign campaign = null;
             if (campId.HasValue)
             {
-                campaign = tdRepo.Campaign(campId.Value);
+                campaign = cpProgRepo.Campaign(campId.Value);
                 if (campaign == null)
                     return HttpNotFound();
             }
@@ -29,7 +29,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 startDate = SetChooseMonthViewData_NonCookie(month);
                 endDate = startDate.Value.AddMonths(1).AddDays(-1);
             }
-            var items = tdRepo.ExtraItems(startDate, endDate, campId: campId);
+            var items = cpProgRepo.ExtraItems(startDate, endDate, campId: campId);
 
             var model = new ExtraItemsVM
             {
@@ -44,7 +44,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
         public ActionResult CreateNew(int campId, DateTime? date)
         {
-            var platformTD = tdRepo.Platform(Platform.Code_DATradingDesk);
+            var platformTD = cpProgRepo.Platform(Platform.Code_DATradingDesk);
             if (platformTD == null)
                 return HttpNotFound();
             if (!date.HasValue)
@@ -57,21 +57,21 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 PlatformId = platformTD.Id,
                 //Description =
             };
-            if (tdRepo.AddExtraItem(extraItem))
+            if (cpProgRepo.AddExtraItem(extraItem))
                 return RedirectToAction("Index", new { campId = Session["campId"], month = Session["month"] });
             else
                 return Content("Error creating Extra Item");
         }
         public ActionResult Delete(int id)
         {
-            tdRepo.DeleteExtraItem(id);
+            cpProgRepo.DeleteExtraItem(id);
             return RedirectToAction("Index", new { campId = Session["campId"], month = Session["month"] });
         }
 
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var item = tdRepo.ExtraItem(id);
+            var item = cpProgRepo.ExtraItem(id);
             if (item == null)
                 return HttpNotFound();
             SetupForEdit();
@@ -82,17 +82,17 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (tdRepo.SaveExtraItem(item))
+                if (cpProgRepo.SaveExtraItem(item))
                     return RedirectToAction("Index", new { campId = Session["campId"], month = Session["month"] });
                 ModelState.AddModelError("", "ExtraItem could not be saved.");
             }
-            tdRepo.FillExtended(item);
+            cpProgRepo.FillExtended(item);
             SetupForEdit();
             return View(item);
         }
         private void SetupForEdit()
         {
-            ViewBag.Platforms = tdRepo.Platforms().OrderBy(p => p.Name).ToList();
+            ViewBag.Platforms = cpProgRepo.Platforms().OrderBy(p => p.Name).ToList();
             //TODO: fill campaign name? FillExtended?
         }
 	}

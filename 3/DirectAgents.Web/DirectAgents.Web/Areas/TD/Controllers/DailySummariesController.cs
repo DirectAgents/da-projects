@@ -8,14 +8,14 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 {
     public class DailySummariesController : DirectAgents.Web.Controllers.ControllerBase
     {
-        public DailySummariesController(ITDRepository tdRepository)
+        public DailySummariesController(ICPProgRepository cpProgRepository)
         {
-            this.tdRepo = tdRepository;
+            this.cpProgRepo = cpProgRepository;
         }
 
         public ActionResult Index(int acctId, DateTime? month)
         {
-            var extAcct = tdRepo.ExtAccount(acctId);
+            var extAcct = cpProgRepo.ExtAccount(acctId);
             if (extAcct == null)
                 return HttpNotFound();
             DateTime? startDate = null, endDate = null;
@@ -28,7 +28,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             {
                 ExtAccount = extAcct,
                 Month = month.HasValue ? startDate : null,
-                DailySummaries = tdRepo.DailySummaries(startDate, endDate, acctId: acctId)
+                DailySummaries = cpProgRepo.DailySummaries(startDate, endDate, acctId: acctId)
             };
             Session["month"] = (month.HasValue ? month.Value.ToShortDateString() : ""); //TODO: set to startDate?
             return View(model);
@@ -37,7 +37,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         [HttpGet]
         public ActionResult Edit(DateTime date, int acctId, bool create = false)
         {
-            var daySum = tdRepo.DailySummary(date, acctId);
+            var daySum = cpProgRepo.DailySummary(date, acctId);
             if (daySum == null)
             {
                 if (create)
@@ -47,8 +47,8 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                         Date = date,
                         AccountId = acctId
                     };
-                    if (tdRepo.AddDailySummary(daySum))
-                        tdRepo.FillExtended(daySum);
+                    if (cpProgRepo.AddDailySummary(daySum))
+                        cpProgRepo.FillExtended(daySum);
                     else
                         return Content("DailySummary could not be created");
                 }
@@ -62,11 +62,11 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (tdRepo.SaveDailySummary(daySum))
+                if (cpProgRepo.SaveDailySummary(daySum))
                     return RedirectToAction("Index", new { acctId = daySum.AccountId, month = Session["month"] });
                 ModelState.AddModelError("", "DailySummary could not be saved");
             }
-            tdRepo.FillExtended(daySum);
+            cpProgRepo.FillExtended(daySum);
             return View(daySum);
         }
 

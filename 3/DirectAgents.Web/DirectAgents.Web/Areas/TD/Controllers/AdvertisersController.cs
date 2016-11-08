@@ -8,14 +8,14 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 {
     public class AdvertisersController : DirectAgents.Web.Controllers.ControllerBase
     {
-        public AdvertisersController(ITDRepository tdRepository)
+        public AdvertisersController(ICPProgRepository cpProgRepository)
         {
-            this.tdRepo = tdRepository;
+            this.cpProgRepo = cpProgRepository;
         }
 
         public ActionResult Index()
         {
-            var advertisers = tdRepo.Advertisers() //TODO? don't load images? (also check ClientPortal.Web)
+            var advertisers = cpProgRepo.Advertisers() //TODO? don't load images? (also check ClientPortal.Web)
                 .OrderBy(a => a.Name);
 
             return View(advertisers);
@@ -27,7 +27,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             {
                 Name = "zNew"
             };
-            if (tdRepo.AddAdvertiser(advertiser))
+            if (cpProgRepo.AddAdvertiser(advertiser))
                 return RedirectToAction("Index");
             else
                 return Content("Error creating Advertiser");
@@ -36,7 +36,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var advertiser = tdRepo.Advertiser(id);
+            var advertiser = cpProgRepo.Advertiser(id);
             if (advertiser == null)
                 return HttpNotFound();
             SetupForEdit();
@@ -47,7 +47,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (tdRepo.SaveAdvertiser(adv, includeLogo: false))
+                if (cpProgRepo.SaveAdvertiser(adv, includeLogo: false))
                     return RedirectToAction("Index");
                 ModelState.AddModelError("", "Campaign could not be saved.");
             }
@@ -57,12 +57,12 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         }
         private void SetupForEdit()
         {
-            ViewBag.Employees = tdRepo.Employees().OrderBy(e => e.FirstName).ThenBy(e => e.LastName).ToList();
+            ViewBag.Employees = cpProgRepo.Employees().OrderBy(e => e.FirstName).ThenBy(e => e.LastName).ToList();
         }
 
         public FileResult Logo(int id)
         {
-            var advertiser = tdRepo.Advertiser(id);
+            var advertiser = cpProgRepo.Advertiser(id);
             if (advertiser == null)
                 return null;
             WebImage logo = new WebImage(advertiser.Logo);
@@ -70,7 +70,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         }
         public ActionResult EditLogo(int id)
         {
-            var advertiser = tdRepo.Advertiser(id);
+            var advertiser = cpProgRepo.Advertiser(id);
             if (advertiser == null)
                 return HttpNotFound();
             return View(advertiser);
@@ -78,7 +78,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         [HttpPost]
         public ActionResult UploadLogo(int id)
         {
-            var advertiser = tdRepo.Advertiser(id);
+            var advertiser = cpProgRepo.Advertiser(id);
             if (advertiser == null)
                 return null;
 
@@ -86,7 +86,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             byte[] imageBytes = logo.GetBytes();
 
             advertiser.Logo = imageBytes;
-            tdRepo.SaveChanges();
+            cpProgRepo.SaveChanges();
 
             return null;
         }

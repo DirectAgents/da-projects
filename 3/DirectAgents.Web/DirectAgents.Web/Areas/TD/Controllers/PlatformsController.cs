@@ -9,14 +9,14 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 {
     public class PlatformsController : DirectAgents.Web.Controllers.ControllerBase
     {
-        public PlatformsController(ITDRepository tdRepository)
+        public PlatformsController(ICPProgRepository cpProgRepository)
         {
-            this.tdRepo = tdRepository;
+            this.cpProgRepo = cpProgRepository;
         }
 
         public ActionResult Index()
         {
-            var platforms = tdRepo.Platforms()
+            var platforms = cpProgRepo.Platforms()
                 .OrderBy(p => p.Name);
             return View(platforms);
         }
@@ -28,7 +28,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 Code = "z",
                 Name = "zNew"
             };
-            if (tdRepo.AddPlatform(platform))
+            if (cpProgRepo.AddPlatform(platform))
                 return RedirectToAction("Index");
             else
                 return Content("Error creating Partner");
@@ -37,7 +37,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var platform = tdRepo.Platform(id);
+            var platform = cpProgRepo.Platform(id);
             if (platform == null)
                 return HttpNotFound();
             return View(platform);
@@ -47,7 +47,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (tdRepo.SavePlatform(plat))
+                if (cpProgRepo.SavePlatform(plat))
                     return RedirectToAction("Index");
                 ModelState.AddModelError("", "Platform could not be saved.");
             }
@@ -57,7 +57,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
         public ActionResult Maintenance(int id)
         {
-            var platform = tdRepo.Platform(id);
+            var platform = cpProgRepo.Platform(id);
             if (platform == null)
                 return HttpNotFound();
 
@@ -66,7 +66,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
         public ActionResult SyncAccounts(int id)
         {
-            var platform = tdRepo.Platform(id);
+            var platform = cpProgRepo.Platform(id);
             if (platform == null)
                 return HttpNotFound();
             if (platform.Code == Platform.Code_AdRoll)
@@ -78,7 +78,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
         public ActionResult SyncStats(int id, DateTime? start)
         {
-            var platform = tdRepo.Platform(id);
+            var platform = cpProgRepo.Platform(id);
             if (platform == null)
                 return HttpNotFound();
 

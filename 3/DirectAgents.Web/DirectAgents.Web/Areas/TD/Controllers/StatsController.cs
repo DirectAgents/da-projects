@@ -11,8 +11,9 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 {
     public class StatsController : DirectAgents.Web.Controllers.ControllerBase
     {
-        public StatsController(ITDRepository tdRepository)
+        public StatsController(ICPProgRepository cpProgRepository, ITDRepository tdRepository)
         {
+            this.cpProgRepo = cpProgRepository;
             this.tdRepo = tdRepository;
         }
 
@@ -22,7 +23,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 date = DateTime.Today;
             var startOfMonth = new DateTime(date.Value.Year, date.Value.Month, 1);
 
-            var campStat = tdRepo.GetCampStats(startOfMonth, campId);
+            var campStat = cpProgRepo.GetCampStats(startOfMonth, campId);
             if (campStat == null)
                 return HttpNotFound();
 
@@ -36,14 +37,14 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
             var stats = new List<TDRawStat>();
 
-            var extAccounts = tdRepo.ExtAccounts(platformCode: platform, campId: campId)
+            var extAccounts = cpProgRepo.ExtAccounts(platformCode: platform, campId: campId)
                                 .OrderBy(a => a.Platform.Code).ThenBy(a => a.Name);
             if (acctId.HasValue)
                 extAccounts = extAccounts.Where(a => a.Id == acctId.Value).OrderBy(a => a.Name); // will be only one
 
             foreach (var extAccount in extAccounts)
             {   //Note: Multiple Active Record Sets used here
-                var stat = tdRepo.GetTDStatWithAccount(startOfMonth, endOfMonth, extAccount: extAccount);
+                var stat = cpProgRepo.GetTDStatWithAccount(startOfMonth, endOfMonth, extAccount: extAccount);
                 if (!stat.AllZeros())
                     stats.Add(stat);
             }
@@ -64,7 +65,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             var startOfMonth = SetChooseMonthViewData_NonCookie(month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
-            var stats = tdRepo.GetStrategyStats(startOfMonth, endOfMonth, acctId: acctId)
+            var stats = cpProgRepo.GetStrategyStats(startOfMonth, endOfMonth, acctId: acctId)
                 .OrderBy(s => s.Strategy.Name).ThenBy(s => s.Strategy.Id);
 
             var model = new TDStatsVM
@@ -81,7 +82,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             var startOfMonth = SetChooseMonthViewData_NonCookie(month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
-            var stats = tdRepo.GetTDadStats(startOfMonth, endOfMonth, acctId: acctId)
+            var stats = cpProgRepo.GetTDadStats(startOfMonth, endOfMonth, acctId: acctId)
                 .OrderBy(s => s.TDad.Name).ThenBy(s => s.TDad.Id);
 
             var model = new TDStatsVM
@@ -98,7 +99,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             var startOfMonth = SetChooseMonthViewData_NonCookie(month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
-            var stats = tdRepo.GetSiteStats(startOfMonth, endOfMonth, acctId: acctId, minImpressions: minImp)
+            var stats = cpProgRepo.GetSiteStats(startOfMonth, endOfMonth, acctId: acctId, minImpressions: minImp)
                 .OrderByDescending(s => s.Impressions).ThenBy(s => s.Site.Name);
 
             var model = new TDStatsVM
@@ -114,7 +115,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             var startOfMonth = SetChooseMonthViewData_NonCookie(month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
-            var convs = tdRepo.Convs(startOfMonth, endOfMonth, acctId: acctId)
+            var convs = cpProgRepo.Convs(startOfMonth, endOfMonth, acctId: acctId)
                 .OrderBy(s => s.Time);
 
             var model = new TDStatsVM
@@ -125,6 +126,8 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             };
             return View(model);
         }
+
+        //TODO: remove all this... (stuff that uses tdRepo)
 
         // AdRoll Stats by Ad
         public ActionResult AdRoll(string advEid, DateTime? month)
@@ -200,8 +203,8 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             var advId = 18;
             var startDate = new DateTime(2016, 3, 1);
             var endDate = new DateTime(2016, 3, 21);
-            var stats = tdRepo.DayOfWeekBasicStats(advId, startDate, endDate);
-            //var stats = tdRepo.DailySummaryBasicStats(advId, startDate, endDate);
+            var stats = cpProgRepo.DayOfWeekBasicStats(advId, startDate, endDate);
+            //var stats = cpProgRepo.DailySummaryBasicStats(advId, startDate, endDate);
             var json = Json(stats, JsonRequestBehavior.AllowGet);
             //var json = Json(stats);
             return json;

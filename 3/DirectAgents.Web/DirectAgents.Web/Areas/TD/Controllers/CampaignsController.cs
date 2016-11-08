@@ -10,14 +10,14 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 {
     public class CampaignsController : DirectAgents.Web.Controllers.ControllerBase
     {
-        public CampaignsController(ITDRepository tdRepository)
+        public CampaignsController(ICPProgRepository cpProgRepository)
         {
-            this.tdRepo = tdRepository;
+            this.cpProgRepo = cpProgRepository;
         }
 
         public ActionResult Index(int? advId)
         {
-            var campaigns = tdRepo.Campaigns(advId: advId)
+            var campaigns = cpProgRepo.Campaigns(advId: advId)
                 .OrderBy(c => c.Advertiser.Name).ThenBy(c => c.Name);
 
             Session["advId"] = advId.ToString();
@@ -29,9 +29,9 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             DateTime currMonth = SetChooseMonthViewData();
             IEnumerable<Campaign> campaigns;
             if (all)
-                campaigns = tdRepo.Campaigns();
+                campaigns = cpProgRepo.Campaigns();
             else
-                campaigns = tdRepo.CampaignsActive(currMonth);
+                campaigns = cpProgRepo.CampaignsActive(currMonth);
 
             var model = new DashboardVM
             {
@@ -44,7 +44,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
         public ActionResult Show(int id)
         {
-            var campaign = tdRepo.Campaign(id);
+            var campaign = cpProgRepo.Campaign(id);
             if (campaign == null)
                 return HttpNotFound();
 
@@ -63,21 +63,21 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                     MarginPct = 30
                 }
             };
-            if (tdRepo.AddCampaign(campaign))
+            if (cpProgRepo.AddCampaign(campaign))
                 return RedirectToAction("Index", new { advId = Session["advId"] });
             else
                 return Content("Error creating Campaign");
         }
         public ActionResult Delete(int id)
         {
-            tdRepo.DeleteCampaign(id);
+            cpProgRepo.DeleteCampaign(id);
             return RedirectToAction("Index", new { advId = Session["advId"] });
         }
 
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var campaign = tdRepo.Campaign(id);
+            var campaign = cpProgRepo.Campaign(id);
             if (campaign == null)
                 return HttpNotFound();
             SetupForEdit(id);
@@ -88,29 +88,29 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (tdRepo.SaveCampaign(camp))
+                if (cpProgRepo.SaveCampaign(camp))
                     return RedirectToAction("Edit", new { id = camp.Id });
                     //return RedirectToAction("Index", new { advId = Session["advId"] });
                 ModelState.AddModelError("", "Campaign could not be saved.");
             }
-            tdRepo.FillExtended(camp);
+            cpProgRepo.FillExtended(camp);
             SetupForEdit(camp.Id);
             return View(camp);
         }
         private void SetupForEdit(int campId)
         {
-            ViewBag.ExtAccounts = tdRepo.ExtAccountsNotInCampaign(campId)
+            ViewBag.ExtAccounts = cpProgRepo.ExtAccountsNotInCampaign(campId)
                 .OrderBy(a => a.Platform.Name).ThenBy(a => a.Name).ThenBy(a => a.ExternalId);
         }
 
         public ActionResult AddAccount(int id, int acctId)
         {
-            tdRepo.AddExtAccountToCampaign(id, acctId);
+            cpProgRepo.AddExtAccountToCampaign(id, acctId);
             return RedirectToAction("Edit", new { id = id });
         }
         public ActionResult RemoveAccount(int id, int acctId)
         {
-            tdRepo.RemoveExtAccountFromCampaign(id, acctId);
+            cpProgRepo.RemoveExtAccountFromCampaign(id, acctId);
             return RedirectToAction("Edit", new { id = id });
         }
     }

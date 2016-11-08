@@ -11,6 +11,7 @@ namespace DirectAgents.Web.Controllers
     public class ControllerBase : Controller
     {
         protected IMainRepository daRepo;
+        protected ICPProgRepository cpProgRepo;
         protected ITDRepository tdRepo;
         protected ISecurityRepository securityRepo;
 
@@ -20,6 +21,8 @@ namespace DirectAgents.Web.Controllers
         {
             if (daRepo != null)
                 daRepo.Dispose();
+            if (cpProgRepo != null)
+                cpProgRepo.Dispose();
             if (tdRepo != null)
                 tdRepo.Dispose();
             base.Dispose(disposing);

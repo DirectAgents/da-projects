@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Helpers;
 using System.Web.Mvc;
+using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Areas.Prog.Models;
 using ClientPortal.Web.Controllers;
 using DirectAgents.Domain.Abstract;
@@ -11,7 +12,7 @@ namespace ClientPortal.Web.Areas.Prog.Controllers
     [Authorize]
     public class HomeController : CPController
     {
-        public HomeController(ITDRepository progRepository, ClientPortal.Data.Contracts.IClientPortalRepository cpRepository)
+        public HomeController(ICPProgRepository progRepository, IClientPortalRepository cpRepository)
         {
             this.progRepo = progRepository;
             this.cpRepo = cpRepository;

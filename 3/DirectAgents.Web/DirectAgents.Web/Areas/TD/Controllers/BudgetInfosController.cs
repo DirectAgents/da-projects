@@ -8,14 +8,14 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 {
     public class BudgetInfosController : DirectAgents.Web.Controllers.ControllerBase
     {
-        public BudgetInfosController(ITDRepository tdRepository)
+        public BudgetInfosController(ICPProgRepository cpProgRepository)
         {
-            this.tdRepo = tdRepository;
+            this.cpProgRepo = cpProgRepository;
         }
 
         public ActionResult CreateNew(int campId, DateTime date)
         {
-            var campaign = tdRepo.Campaign(campId);
+            var campaign = cpProgRepo.Campaign(campId);
             if (campaign == null)
                 return HttpNotFound();
             var budgetInfo = new BudgetInfo
@@ -26,14 +26,14 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 MgmtFeePct = campaign.DefaultBudgetInfo.MgmtFeePct,
                 MarginPct = campaign.DefaultBudgetInfo.MarginPct
             };
-            tdRepo.AddBudgetInfo(budgetInfo);
+            cpProgRepo.AddBudgetInfo(budgetInfo);
             return RedirectToAction("Edit", "Campaigns", new { id = campId });
         }
 
         [HttpGet]
         public ActionResult Edit(int campId, DateTime date)
         {
-            var budgetInfo = tdRepo.BudgetInfo(campId, date);
+            var budgetInfo = cpProgRepo.BudgetInfo(campId, date);
             if (budgetInfo == null)
                 return HttpNotFound();
             SetupForEdit(budgetInfo);
@@ -44,18 +44,18 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (tdRepo.SaveBudgetInfo(bi))
+                if (cpProgRepo.SaveBudgetInfo(bi))
                     return RedirectToAction("Edit", new { campId = bi.CampaignId, date = bi.Date.ToShortDateString() });
                     //return RedirectToAction("Edit", "Campaigns", new { id = bi.CampaignId });
                 ModelState.AddModelError("", "BudgetInfo could not be saved.");
             }
-            tdRepo.FillExtended(bi);
+            cpProgRepo.FillExtended(bi);
             SetupForEdit(bi);
             return View(bi);
         }
         private void SetupForEdit(BudgetInfo bi)
         {
-            ViewBag.Platforms = tdRepo.PlatformsWithoutBudgetInfo(bi.CampaignId, bi.Date).OrderBy(p => p.Name);
+            ViewBag.Platforms = cpProgRepo.PlatformsWithoutBudgetInfo(bi.CampaignId, bi.Date).OrderBy(p => p.Name);
         }
     }
 }

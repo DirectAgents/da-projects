@@ -7,14 +7,14 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 {
     public class EmployeesController : DirectAgents.Web.Controllers.ControllerBase
     {
-        public EmployeesController(ITDRepository tdRepository)
+        public EmployeesController(ICPProgRepository cpProgRepository)
         {
-            this.tdRepo = tdRepository;
+            this.cpProgRepo = cpProgRepository;
         }
 
         public ActionResult Index()
         {
-            var employees = tdRepo.Employees()
+            var employees = cpProgRepo.Employees()
                 .OrderBy(e => e.FirstName).ThenBy(e => e.LastName);
             return View(employees);
         }
@@ -26,7 +26,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                 FirstName = "zNew",
                 LastName = "Employee"
             };
-            if (tdRepo.AddEmployee(employee))
+            if (cpProgRepo.AddEmployee(employee))
                 return RedirectToAction("Index");
             else
                 return Content("Error creating Employee");
@@ -35,7 +35,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var employee = tdRepo.Employee(id);
+            var employee = cpProgRepo.Employee(id);
             if (employee == null)
                 return HttpNotFound();
             //setupforedit
@@ -46,7 +46,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (tdRepo.SaveEmployee(emp))
+                if (cpProgRepo.SaveEmployee(emp))
                     return RedirectToAction("Index");
                 ModelState.AddModelError("", "Employee could not be saved.");
             }

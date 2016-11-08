@@ -8,13 +8,14 @@ using CakeExtracter.Common;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
 using ClientPortal.Web.Models;
+using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities.TD;
 
 namespace ClientPortal.Web.Controllers
 {
     public class CombinedController : CPController
     {
-        public CombinedController(IClientPortalRepository cpRepository, DirectAgents.Domain.Abstract.ITDRepository progRepository)
+        public CombinedController(IClientPortalRepository cpRepository, ICPProgRepository progRepository)
         {
             this.cpRepo = cpRepository;
             this.progRepo = progRepository;

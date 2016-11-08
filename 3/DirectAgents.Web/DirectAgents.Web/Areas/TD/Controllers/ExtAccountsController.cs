@@ -14,14 +14,15 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 {
     public class ExtAccountsController : DirectAgents.Web.Controllers.ControllerBase
     {
-        public ExtAccountsController(ITDRepository tdRepository)
+        public ExtAccountsController(ICPProgRepository cpProgRepository, ITDRepository tdRepository)
         {
+            this.cpProgRepo = cpProgRepository;
             this.tdRepo = tdRepository;
         }
 
         public ActionResult Index(string platform, int? campId)
         {
-            var extAccounts = tdRepo.ExtAccounts(platformCode: platform, campId: campId)
+            var extAccounts = cpProgRepo.ExtAccounts(platformCode: platform, campId: campId)
                 .OrderBy(a => a.Platform.Name).ThenBy(a => a.Name);
 
             Session["platformCode"] = platform;
@@ -32,14 +33,14 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         // For each account, shows a "gauge" of what stats are loaded
         public ActionResult IndexGauge(string platform, int? campId, bool recent = false)
         {
-            var extAccounts = tdRepo.ExtAccounts(platformCode: platform, campId: campId)
+            var extAccounts = cpProgRepo.ExtAccounts(platformCode: platform, campId: campId)
                 .OrderBy(a => a.Platform.Name).ThenBy(a => a.Name);
 
             var recentDate = DateTime.Today.FirstDayOfMonth(-1); // for comparison, if recent==true
             List<TDStatsGauge> statsGauges = new List<TDStatsGauge>();
             foreach (var extAcct in extAccounts)
             {
-                var statsGauge = tdRepo.GetStatsGauge(extAccount: extAcct);
+                var statsGauge = cpProgRepo.GetStatsGauge(extAccount: extAcct);
                 if (recent == false || (statsGauge.Daily.Latest.HasValue && statsGauge.Daily.Latest.Value >= recentDate))
                     statsGauges.Add(statsGauge);
             }
@@ -78,11 +79,11 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         }
         public ActionResult IndexGaugeSummary()
         {
-            var platforms = tdRepo.Platforms().OrderBy(p => p.Name);
+            var platforms = cpProgRepo.Platforms().OrderBy(p => p.Name);
             List<TDStatsGauge> statsGauges = new List<TDStatsGauge>();
             foreach (var platform in platforms)
             {
-                var statsGauge = tdRepo.GetStatsGauge(platform: platform);
+                var statsGauge = cpProgRepo.GetStatsGauge(platform: platform);
                 statsGauges.Add(statsGauge);
             }
             var model = new StatsGaugeVM
@@ -94,7 +95,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
         public ActionResult CreateNew(string platform)
         {
-            var plat = tdRepo.Platform(platform);
+            var plat = cpProgRepo.Platform(platform);
             if (plat != null)
             {
                 var extAcct = new ExtAccount
@@ -102,7 +103,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                     PlatformId = plat.Id,
                     Name = "zNew"
                 };
-                if (tdRepo.AddExtAccount(extAcct))
+                if (cpProgRepo.AddExtAccount(extAcct))
                     return RedirectToAction("Index", new { platform = Session["platformCode"], campId = Session["campId"] });
             }
             return Content("Error creating ExtAccount");
@@ -111,7 +112,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var extAcct = tdRepo.ExtAccount(id);
+            var extAcct = cpProgRepo.ExtAccount(id);
             if (extAcct == null)
                 return HttpNotFound();
             return View(extAcct);
@@ -121,11 +122,11 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (tdRepo.SaveExtAccount(extAcct))
+                if (cpProgRepo.SaveExtAccount(extAcct))
                     return RedirectToAction("Index", new { platform = Session["platformCode"], campId = Session["campId"] });
                 ModelState.AddModelError("", "ExtAccount could not be saved.");
             }
-            tdRepo.FillExtended(extAcct);
+            cpProgRepo.FillExtended(extAcct);
             return View(extAcct);
         }
 
@@ -134,7 +135,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         // json data for Maintenance Grid
         public JsonResult IndexData(string platform)
         {
-            var extAccounts = tdRepo.ExtAccounts(platformCode: platform)
+            var extAccounts = cpProgRepo.ExtAccounts(platformCode: platform)
                 .Select(a => new
                 {
                     a.Id,
@@ -148,7 +149,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
         public ActionResult MaintenanceDetail(int id)
         {
-            var extAcct = tdRepo.ExtAccount(id);
+            var extAcct = cpProgRepo.ExtAccount(id);
             if (extAcct == null)
                 return HttpNotFound();
 
@@ -156,6 +157,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
                             extAcct.Platform.Code == Platform.Code_FB;
             if (extAcct.Platform.Code == Platform.Code_DBM)
             {
+                //TODO: check this without using tdRepo.
                 int ioID;
                 if (int.TryParse(extAcct.ExternalId, out ioID))
                 {
@@ -168,14 +170,14 @@ namespace DirectAgents.Web.Areas.TD.Controllers
             {
                 ExtAccount = extAcct,
                 Syncable = syncable,
-                StatsGauge = tdRepo.GetStatsGaugeViaIds(acctId: extAcct.Id)
+                StatsGauge = cpProgRepo.GetStatsGaugeViaIds(acctId: extAcct.Id)
             };
             return PartialView(model);
         }
 
         public JsonResult Sync(int id, DateTime? start, string level)
         {
-            var extAcct = tdRepo.ExtAccount(id);
+            var extAcct = cpProgRepo.ExtAccount(id);
             if (extAcct == null)
                 return null;
 
@@ -217,7 +219,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
         public ActionResult Strategies(int? id)
         {
-            var strategies = tdRepo.Strategies(acctId: id).OrderBy(s => s.Name);
+            var strategies = cpProgRepo.Strategies(acctId: id).OrderBy(s => s.Name);
             return View(strategies);
         }
 
@@ -225,7 +227,7 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 
         public ActionResult UploadStats(int id)
         {
-            var extAcct = tdRepo.ExtAccount(id);
+            var extAcct = cpProgRepo.ExtAccount(id);
             if (extAcct == null)
                 return HttpNotFound();
 

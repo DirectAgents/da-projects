@@ -6,18 +6,18 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 {
     public class PlatColMappingsController : DirectAgents.Web.Controllers.ControllerBase
     {
-        public PlatColMappingsController(ITDRepository tdRepository)
+        public PlatColMappingsController(ICPProgRepository cpProgRepository)
         {
-            this.tdRepo = tdRepository;
+            this.cpProgRepo = cpProgRepository;
         }
 
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var platColMapping = tdRepo.PlatColMapping(id);
+            var platColMapping = cpProgRepo.PlatColMapping(id);
             if (platColMapping == null)
             {
-                var platform = tdRepo.Platform(id);
+                var platform = cpProgRepo.Platform(id);
                 if (platform == null)
                     return HttpNotFound();
 
@@ -35,11 +35,11 @@ namespace DirectAgents.Web.Areas.TD.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (tdRepo.AddSavePlatColMapping(mapping))
+                if (cpProgRepo.AddSavePlatColMapping(mapping))
                     return RedirectToAction("Edit", "Platforms", new { id = mapping.Id });
                 ModelState.AddModelError("", "PlatColMapping could not be saved.");
             }
-            tdRepo.FillExtended(mapping);
+            cpProgRepo.FillExtended(mapping);
             return View(mapping);
         }
 	}

@@ -9,7 +9,7 @@ using DirectAgents.Domain.Entities.TD;
 
 namespace DirectAgents.Domain.Concrete
 {
-    public partial class TDRepository
+    public partial class CPProgRepository
     {
         public IEnumerable<BasicStat> DayOfWeekBasicStats(int advId, DateTime? startDate = null, DateTime? endDate = null, bool mondayFirst = false)
         {
@@ -203,7 +203,8 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             bool anyIncludes = (includeAccountIds != null && includeAccountIds.Any());
             bool anyExcludes = (excludeAccountIds != null && excludeAccountIds.Any());
             var sql = "";
-            if (anyIncludes || anyExcludes) {
+            if (anyIncludes || anyExcludes)
+            {
                 sql = " WHERE ";
                 if (anyIncludes)
                 {
@@ -253,24 +254,24 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             return stat;
         }
 
-////Doing the summing in SQL Server... only issue is with Budget which shouldn't be summed (would have to group by Budget or something)
-//        public BasicStat DateRangeBasicStatX(int advId, DateTime startDate, DateTime endDate)
-//        {
-//            var sql = @"select sum(Impressions) as Impressions, sum(Clicks) as Clicks, sum(Conversions) as Conversions, sum(MediaSpend) as MediaSpend, sum(MgmtFee) as MgmtFee
-//from td.fDailySummaryBasicStats(@p1, @p2, @p3)";
-//            var stats = context.Database.SqlQuery<BasicStat>(
-//                sql,
-//                new SqlParameter("@p1", advId),
-//                new SqlParameter("@p2", startDate),
-//                new SqlParameter("@p3", endDate)
-//                ).ToList();
-//            if (stats.Count() == 0)
-//                return new BasicStat();
-//
-//            var stat = stats.First();
-//            stat.ComputeCalculatedStats();
-//            return stat;
-//        }
+        ////Doing the summing in SQL Server... only issue is with Budget which shouldn't be summed (would have to group by Budget or something)
+        //        public BasicStat DateRangeBasicStatX(int advId, DateTime startDate, DateTime endDate)
+        //        {
+        //            var sql = @"select sum(Impressions) as Impressions, sum(Clicks) as Clicks, sum(Conversions) as Conversions, sum(MediaSpend) as MediaSpend, sum(MgmtFee) as MgmtFee
+        //from td.fDailySummaryBasicStats(@p1, @p2, @p3)";
+        //            var stats = context.Database.SqlQuery<BasicStat>(
+        //                sql,
+        //                new SqlParameter("@p1", advId),
+        //                new SqlParameter("@p2", startDate),
+        //                new SqlParameter("@p3", endDate)
+        //                ).ToList();
+        //            if (stats.Count() == 0)
+        //                return new BasicStat();
+        //
+        //            var stat = stats.First();
+        //            stat.ComputeCalculatedStats();
+        //            return stat;
+        //        }
 
         public IEnumerable<LeadInfo> MTDLeadInfos(int advId, DateTime endDate)
         {

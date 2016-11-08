@@ -11,14 +11,14 @@ namespace DirectAgents.Web.Areas.TD.Controllers
 {
     public class ReportsController : DirectAgents.Web.Controllers.ControllerBase
     {
-        public ReportsController(ITDRepository tdRepository)
+        public ReportsController(ICPProgRepository cpProgRepository)
         {
-            this.tdRepo = tdRepository;
+            this.cpProgRepo = cpProgRepository;
         }
 
         public ActionResult Home(int campId)
         {
-            var campaign = tdRepo.Campaign(campId);
+            var campaign = cpProgRepo.Campaign(campId);
             if (campaign == null)
                 return HttpNotFound();
             return View(campaign);
