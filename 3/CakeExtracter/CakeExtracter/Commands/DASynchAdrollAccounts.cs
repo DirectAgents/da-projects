@@ -38,7 +38,7 @@ namespace CakeExtracter.Commands
                 return 0;
             }
             var freshEids = freshAdvertisables.Select(a => a.eid).ToArray();
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 var dbAdvertisables = db.Advertisables.ToList();
                 var dbAdvEids = dbAdvertisables.Select(a => a.Eid).ToArray();

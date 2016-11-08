@@ -7,9 +7,9 @@ namespace DirectAgents.Domain.Seed
     public class TDSeeder
     {
         // Caller is responsible for instantiating and disposing of the context(s)
-        public DATDContext context { get; set; }
+        public ClientPortalProgContext context { get; set; }
 
-        public TDSeeder(DATDContext context)
+        public TDSeeder(ClientPortalProgContext context)
         {
             this.context = context;
         }
@@ -21,7 +21,7 @@ namespace DirectAgents.Domain.Seed
             AddPlatformIfNotExist(Platform.Code_FB, "Facebook");
             AddPlatformIfNotExist(Platform.Code_Twitter, "Twitter");
             AddPlatformIfNotExist(Platform.Code_Instagram, "Instagram");
-            AddPlatformIfNotExist("datd", "DA Trading Desk");
+            AddPlatformIfNotExist(Platform.Code_DATradingDesk, "DA Trading Desk");
             AddPlatformIfNotExist("mf", "Management Fee");
             AddPlatformIfNotExist("adel", "Adelphic");
             AddPlatformIfNotExist("adf", "Adform");

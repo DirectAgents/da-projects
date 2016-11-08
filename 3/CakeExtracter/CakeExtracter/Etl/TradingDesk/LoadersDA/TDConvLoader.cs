@@ -56,7 +56,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         private void AddUpdateDependentCities(List<ConvRow> items)
         {
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 var tuples = items.Select(c => new Tuple<string, string>(c.Country, c.City)).Distinct();
                 var countryGroups = tuples.GroupBy(t => t.Item1);
@@ -113,7 +113,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             var duplicateCount = 0;
             var unmatchedCount = 0;
             var itemCount = 0;
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 foreach (var item in items)
                 {

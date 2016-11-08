@@ -48,7 +48,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         }
         public static void AddUpdateAccounts(IEnumerable<Tuple<int, string>> ioTuples, Dictionary<int, int> accountIdLookupByIOid)
         {
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 var dbmPlatformId = Platform.GetId(db, Platform.Code_DBM);
                 var dbmAccounts = db.ExtAccounts.Where(a => a.PlatformId == dbmPlatformId);

@@ -78,7 +78,7 @@ namespace CakeExtracter.Commands
             var buckets = new List<string>();
             if (InsertionOrderID.HasValue)
             {
-                using (var db = new DATDContext())
+                using (var db = new ClientPortalProgContext())
                 {
                     var IOs = db.InsertionOrders.Where(io => io.ID == InsertionOrderID.Value);
                     foreach (var io in IOs) // should be just one
@@ -101,7 +101,7 @@ namespace CakeExtracter.Commands
         {
             Logger.Info("Updating (External) Accounts and DailySummaries for dateRange {0:d} to {1:d}", dateRange.FromDate, dateRange.ToDate);
 
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 var dbmPlatformId = db.Platforms.Where(p => p.Code == Platform.Code_DBM).First().Id;
                 var dbmAccounts = db.ExtAccounts.Where(a => a.PlatformId == dbmPlatformId);

@@ -22,7 +22,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         protected override int Load(List<Ad> items)
         {
             Logger.Info("Updating {0} Ads..", items.Count);
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 var dbAds = db.TDads.Where(a => a.AccountId == this.accountId);
 

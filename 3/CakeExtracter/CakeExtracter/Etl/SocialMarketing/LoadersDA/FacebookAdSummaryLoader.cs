@@ -78,7 +78,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
         //{
         //    var tuples = items.Select(i => Tuple.Create(i.AdId, i.AdName)).Distinct();
 
-        //    using (var db = new DATDContext())
+        //    using (var db = new ClientPortalProgContext())
         //    {
         //        foreach (var tuple in tuples)
         //        {

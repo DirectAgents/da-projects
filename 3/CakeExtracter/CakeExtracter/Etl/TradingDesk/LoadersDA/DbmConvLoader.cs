@@ -43,7 +43,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         private void UpdateAccountLookup(List<DataTransferRow> items)
         {
             var acctExtIds = items.Select(i => i.insertion_order_id.Value).Distinct();
-            using (var db = new DATDContext())
+
+            using (var db = new ClientPortalProgContext())
             {
                 foreach (var acctExtId in acctExtIds)
                 {

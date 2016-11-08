@@ -28,7 +28,7 @@ namespace DirectAgents.Domain.Entities.TD
             return new string[] { Code_FB, Code_Twitter, Code_Instagram };
         }
 
-        public static int GetId(DirectAgents.Domain.Contexts.DATDContext db, string platCode)
+        public static int GetId(DirectAgents.Domain.Contexts.ClientPortalProgContext db, string platCode)
         {
             return db.Platforms.Where(p => p.Code == platCode).First().Id;
         }

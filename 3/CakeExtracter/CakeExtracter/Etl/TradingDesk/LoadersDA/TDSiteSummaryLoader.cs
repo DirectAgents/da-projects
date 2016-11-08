@@ -47,7 +47,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             var alreadyDeletedCount = 0;
             var skippedCount = 0;
             var itemCount = 0;
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 //var itemSiteIds = items.Select(i => i.SiteId).Distinct().ToArray();
                 //var siteIdsInDb = db.Sites.Select(s => s.Id).Where(i => itemSiteIds.Contains(i)).ToArray();
@@ -115,7 +115,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         }
         public static void AddUpdateDependentSites(IEnumerable<string> siteNames, Dictionary<string, int> siteIdLookupByName)
         {
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 foreach (var siteName in siteNames)
                 {

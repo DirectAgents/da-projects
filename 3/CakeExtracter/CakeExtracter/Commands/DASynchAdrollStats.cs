@@ -77,7 +77,7 @@ namespace CakeExtracter.Commands
 
             if (AccountId.HasValue) // For now, try getting advertisable Eid from accountId, if specified
             {
-                using (var db = new DATDContext())
+                using (var db = new ClientPortalProgContext())
                 {
                     var extAcct = db.ExtAccounts.Find(AccountId.Value);
                     if (extAcct != null)
@@ -153,7 +153,7 @@ namespace CakeExtracter.Commands
             foreach (var adv in advertisables)
             {
                 ExtAccount extAccount = null;
-                using (var db = new DATDContext())
+                using (var db = new ClientPortalProgContext())
                 {
                     extAccount = db.ExtAccounts.Where(a => a.ExternalId == adv.Eid && a.Platform.Code == Platform.Code_AdRoll).FirstOrDefault();
                 }
@@ -198,7 +198,7 @@ namespace CakeExtracter.Commands
             string[] advEidsArray = new string[] { };
             if (!string.IsNullOrWhiteSpace(this.AdvertisableEids))
                 advEidsArray = this.AdvertisableEids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 var advs = db.Advertisables.AsQueryable();
                 if (advEidsArray.Any() && this.AdvertisableId.HasValue)
@@ -222,7 +222,7 @@ namespace CakeExtracter.Commands
             //TODO? call arUtility.GetAdvertisables() and take the intersection of those Eids and those in the db
 
             IEnumerable<Advertisable> advertisables;
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 advertisables = db.Advertisables.ToList();
                 advertisables = advertisables.Where(a => !string.IsNullOrWhiteSpace(a.Eid));

@@ -23,7 +23,7 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 var platformId_DBM = db.Platforms.Where(p => p.Code == Platform.Code_DBM).First().Id;
                 var extAccounts = db.ExtAccounts.Where(a => a.PlatformId == platformId_DBM && !String.IsNullOrEmpty(a.ExternalId));

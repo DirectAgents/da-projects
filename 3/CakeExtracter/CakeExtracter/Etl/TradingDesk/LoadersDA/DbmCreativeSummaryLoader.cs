@@ -60,7 +60,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 ((DbmRowWithCreative)i).CreativeHeight
             )).Distinct();
 
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 var acctIds = accountIdLookupByIOid.Values.ToArray();
                 var extAccounts = db.ExtAccounts.Where(a => acctIds.Contains(a.Id));

@@ -26,7 +26,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             var addedCount = 0;
             var updatedCount = 0;
             var itemCount = 0;
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 foreach (var item in items)
                 {
@@ -76,7 +76,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         }
         public static void AddUpdateInsertionOrders(IEnumerable<Tuple<int, string>> ioTuples)
         {
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 foreach (var ioTuple in ioTuples)
                 {
@@ -108,7 +108,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             var tuples = items.Select(i => Tuple.Create(((DbmRowWithCreative)i).CreativeID, ((DbmRowWithCreative)i).Creative)).Distinct();
 
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 foreach (var tuple in tuples)
                 {

@@ -39,7 +39,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             var deletedCount = 0;
             var alreadyDeletedCount = 0;
             var itemCount = 0;
-            using (var db = new DATDContext())
+            using (var db = new ClientPortalProgContext())
             {
                 foreach (var item in items)
                 {
