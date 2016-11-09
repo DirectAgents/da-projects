@@ -3,7 +3,7 @@ using System.Data.Entity;
 using System.Linq;
 using System;
 using DirectAgents.Domain.Contexts;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.Entities.CPProg;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using System.Globalization;
 

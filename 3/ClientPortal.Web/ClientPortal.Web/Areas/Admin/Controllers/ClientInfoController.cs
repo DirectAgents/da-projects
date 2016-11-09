@@ -4,13 +4,14 @@ using System.Web.Mvc;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Controllers;
+using DirectAgents.Domain.Abstract;
 
 namespace ClientPortal.Web.Areas.Admin.Controllers
 {
     [Authorize(Users = "admin")]
     public class ClientInfoController : CPController
     {
-        public ClientInfoController(IClientPortalRepository cpRepository, DirectAgents.Domain.Abstract.ITDRepository progRepository)
+        public ClientInfoController(IClientPortalRepository cpRepository, ICPProgRepository progRepository)
         {
             cpRepo = cpRepository;
             progRepo = progRepository;

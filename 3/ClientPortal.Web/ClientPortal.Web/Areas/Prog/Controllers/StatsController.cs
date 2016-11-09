@@ -2,16 +2,17 @@
 using System.Configuration;
 using System.Linq;
 using System.Web.Mvc;
+using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Controllers;
 using DirectAgents.Domain.Abstract;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace ClientPortal.Web.Areas.Prog.Controllers
 {
     [Authorize]
     public class StatsController : CPController
     {
-        public StatsController(ITDRepository progRepository, ClientPortal.Data.Contracts.IClientPortalRepository cpRepository)
+        public StatsController(ICPProgRepository progRepository, IClientPortalRepository cpRepository)
         {
             this.progRepo = progRepository;
             this.cpRepo = cpRepository;

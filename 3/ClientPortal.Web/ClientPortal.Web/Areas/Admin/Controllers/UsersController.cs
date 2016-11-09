@@ -3,13 +3,14 @@ using System.Web.Mvc;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Areas.Admin.Models;
 using ClientPortal.Web.Controllers;
+using DirectAgents.Domain.Abstract;
 
 namespace ClientPortal.Web.Areas.Admin.Controllers
 {
     [Authorize(Users = "admin")]
     public class UsersController : CPController
     {
-        public UsersController(IClientPortalRepository cpRepository, DirectAgents.Domain.Abstract.ITDRepository progRepository)
+        public UsersController(IClientPortalRepository cpRepository, ICPProgRepository progRepository)
         {
             cpRepo = cpRepository;
             progRepo = progRepository;

@@ -2,13 +2,14 @@
 using System.Web.Mvc;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Models;
+using DirectAgents.Domain.Abstract;
 
 namespace ClientPortal.Web.Controllers
 {
     [Authorize]
     public class SearchController : CPController
     {
-        public SearchController(IClientPortalRepository cpRepository, DirectAgents.Domain.Abstract.ITDRepository progRepository)
+        public SearchController(IClientPortalRepository cpRepository, ICPProgRepository progRepository)
         {
             this.cpRepo = cpRepository;
             this.progRepo = progRepository; // used in GetUserInfo()

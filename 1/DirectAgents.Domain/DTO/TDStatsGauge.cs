@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace DirectAgents.Domain.DTO
 {
@@ -11,6 +11,8 @@ namespace DirectAgents.Domain.DTO
         public ExtAccount ExtAccount { get; set; }
 
         public IEnumerable<TDStatsGauge> Children { get; set; }
+
+        //TODO: replace with IStatsRanges?
 
         public TDStatRange Daily;
         public TDStatRange Strategy;
@@ -32,7 +34,6 @@ namespace DirectAgents.Domain.DTO
             Conv.Latest = null;
         }
     }
-
     public struct TDStatRange
     {
         public DateTime? Earliest { get; set; }

@@ -8,6 +8,7 @@ using CakeExtracter.Commands;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Areas.Admin.Models;
 using ClientPortal.Web.Controllers;
+using DirectAgents.Domain.Abstract;
 using WebMatrix.WebData;
 
 namespace ClientPortal.Web.Areas.Admin.Controllers
@@ -15,7 +16,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
     [Authorize(Users = "admin")]
     public class ProgAdminController : CPController
     {
-        public ProgAdminController(DirectAgents.Domain.Abstract.ITDRepository progRepository, IClientPortalRepository cpRepository)
+        public ProgAdminController(ICPProgRepository progRepository, IClientPortalRepository cpRepository)
         {
             progRepo = progRepository;
             cpRepo = cpRepository;

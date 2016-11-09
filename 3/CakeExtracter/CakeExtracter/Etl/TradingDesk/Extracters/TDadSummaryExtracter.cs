@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using CsvHelper;
 using CsvHelper.Configuration;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
@@ -98,6 +98,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         PostClickConv = group.Sum(g => g.PostClickConv),
                         PostViewConv = group.Sum(g => g.PostViewConv),
                         Cost = group.Sum(g => g.Cost)
+                        //,Width = group.First().Width
                     };
                     yield return sum;
                 }
@@ -120,6 +121,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         PostClickConv = group.Sum(g => g.PostClickConv),
                         PostViewConv = group.Sum(g => g.PostViewConv),
                         Cost = group.Sum(g => g.Cost)
+                        //,Width = group.First().Width
                     };
                     yield return sum;
                 }

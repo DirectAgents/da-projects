@@ -9,6 +9,6 @@ namespace ClientPortal.Web.Areas.Admin.Models
     {
         public UserProfile UserProfile { get; set; }
         public Advertiser CakeAdvertiser { get; set; }
-        public DirectAgents.Domain.Entities.TD.Advertiser ProgAdvertiser { get; set; }
+        public DirectAgents.Domain.Entities.CPProg.Advertiser ProgAdvertiser { get; set; }
     }
 }

@@ -1,0 +1,26 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.CPProg.Advertiser>
+
+<h2>Advertisers</h2>
+
+<table>
+<tr>
+    <th></th>
+    <th>Name</th>
+    <th>Sales Rep</th>
+    <th>AM</th>
+    <th>Campaigns</th>
+</tr>
+@foreach (var adv in Model)
+{
+<tr>
+    <td>@Html.ActionLink("Edit", "Edit", new { id = adv.Id })</td>
+    <td>@adv.Name</td>
+    <td>@adv.SalesRepName()</td>
+    <td>@adv.AMName()</td>
+    <td style="text-align:center">@Html.ActionLink("show(" + adv.Campaigns.Count + ")", "Index", "Campaigns", new { advid = adv.Id }, null)</td>
+</tr>
+}
+</table>
+<br />
+@Html.ActionLink("New Advertiser", "CreateNew")
+<br />

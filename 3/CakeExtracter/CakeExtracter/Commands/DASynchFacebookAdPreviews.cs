@@ -8,7 +8,7 @@ using CakeExtracter.Common;
 using CakeExtracter.Etl.SocialMarketing.Extracters;
 using CakeExtracter.Etl.SocialMarketing.LoadersDA;
 using DirectAgents.Domain.Contexts;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.Entities.CPProg;
 using FacebookAPI;
 
 namespace CakeExtracter.Commands

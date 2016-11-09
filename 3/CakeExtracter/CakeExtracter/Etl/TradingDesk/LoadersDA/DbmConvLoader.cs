@@ -3,7 +3,7 @@ using System.Linq;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.Loaders;
 using DirectAgents.Domain.Contexts;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.Entities.CPProg;
 using System;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA

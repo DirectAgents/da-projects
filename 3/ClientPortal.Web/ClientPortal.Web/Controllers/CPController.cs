@@ -6,8 +6,6 @@ using ClientPortal.Data.Contracts;
 using ClientPortal.Data.Entities.TD;
 using ClientPortal.Web.Models;
 using DirectAgents.Domain.Abstract;
-using DirectAgents.Domain.Concrete;
-using DirectAgents.Domain.Entities.TD;
 using WebMatrix.WebData;
 
 namespace ClientPortal.Web.Controllers
@@ -16,7 +14,7 @@ namespace ClientPortal.Web.Controllers
     {
         protected IClientPortalRepository cpRepo;
         protected ClientPortal.Data.Contracts.ITDRepository cptdRepo;
-        protected DirectAgents.Domain.Abstract.ITDRepository progRepo;
+        protected ICPProgRepository progRepo;
 
         // return a redirect if needed to logout; otherwise return null
         protected ActionResult CheckLogout(UserInfo userInfo)
@@ -62,7 +60,7 @@ namespace ClientPortal.Web.Controllers
 
             ClientPortal.Data.Contexts.Advertiser cpAdvertiser = null;
             TradingDeskAccount tradingDeskAccount = null;
-            DirectAgents.Domain.Entities.TD.Advertiser progAdvertiser = null;
+            DirectAgents.Domain.Entities.CPProg.Advertiser progAdvertiser = null;
             if (userProfile != null)
             {
                 cpAdvertiser = GetAdvertiser(userProfile.CakeAdvertiserId);

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using DirectAgents.Domain.Contexts;
-using DirectAgents.Domain.Entities.TD;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace DirectAgents.Domain.Seed
 {

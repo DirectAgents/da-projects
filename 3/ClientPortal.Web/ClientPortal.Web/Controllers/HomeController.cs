@@ -15,8 +15,7 @@ namespace ClientPortal.Web.Controllers
     [Authorize]
     public class HomeController : CPController
     {
-        public HomeController(IClientPortalRepository cpRepository, ITDRepository tdRepository, DirectAgents.Domain.Abstract.ITDRepository progRepository)
-        //public HomeController(IClientPortalRepository cpRepository)
+        public HomeController(IClientPortalRepository cpRepository, ITDRepository tdRepository, DirectAgents.Domain.Abstract.ICPProgRepository progRepository)
         {
             this.cpRepo = cpRepository;
             this.cptdRepo = tdRepository; // used in GetUserInfo()
