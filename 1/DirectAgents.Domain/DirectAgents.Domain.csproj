@@ -74,6 +74,7 @@
     <Compile Include="Concrete\MainRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Concrete\TDRepository.cs" />
+    <Compile Include="Contexts\RevTrackContext.cs" />
     <Compile Include="Contexts\HistoryContext.cs" />
     <Compile Include="Contexts\ClientPortalProgContext.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Entities\DBM\InsertionOrder.cs" />
     <Compile Include="Entities\OfferBudget.cs" />
     <Compile Include="Entities\Employee.cs" />
+    <Compile Include="Entities\RevTrack\ClientVendor.cs" />
     <Compile Include="Entities\Screen\Salesperson.cs" />
     <Compile Include="Entities\Screen\SalespersonStat.cs" />
     <Compile Include="Entities\Security\Group.cs">
@@ -174,6 +176,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>WikiModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsRT\201611112036125_InitialCreate.cs" />
+    <Compile Include="MigrationsRT\201611112036125_InitialCreate.Designer.cs">
+      <DependentUpon>201611112036125_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsRT\Configuration.cs" />
     <Compile Include="MigrationsTD\201507282051383_Initial.cs" />
     <Compile Include="MigrationsTD\201507282051383_Initial.Designer.cs">
       <DependentUpon>201507282051383_Initial.cs</DependentUpon>
@@ -385,6 +392,9 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="MigrationsRT\201611112036125_InitialCreate.resx">
+      <DependentUpon>201611112036125_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201507282051383_Initial.resx">
       <DependentUpon>201507282051383_Initial.cs</DependentUpon>
     </EmbeddedResource>
