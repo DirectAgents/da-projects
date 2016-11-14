@@ -1,0 +1,17 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.RevTrack.Vendor>
+
+<h2>Vendors</h2>
+
+<table>
+<tr>
+    <th>Id</th>
+    <th>Vendor</th>
+</tr>
+@foreach (var vendor in Model)
+{
+<tr>
+    <td>@vendor.Id</td>
+    <td>@vendor.Name</td>
+</tr>
+}
+</table>
