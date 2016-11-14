@@ -11,14 +11,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     {
         private readonly string csvFilePath;
         private readonly StreamReader streamReader;
-        private int platId;
         // if streamReader is not null, use it. otherwise use csvFilePath.
 
-        public AdrollConvCsvExtracter(string csvFilePath, StreamReader streamReader, int platId=1)
+        public AdrollConvCsvExtracter(string csvFilePath, StreamReader streamReader)
         {
             this.csvFilePath = csvFilePath;
             this.streamReader = streamReader;
-            this.platId = platId;
         }
 
         protected override void Extract()

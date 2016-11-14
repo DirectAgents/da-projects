@@ -46,13 +46,31 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             //var listRequest = service.Objects.List(bucketName);
             //var bucketObjects = listRequest.Execute();
 
+            /*
+            string insertionOrderFilename = String.Format("entity/{0}.0.InsertionOrder.json", dateRange.Dates.First().ToString("yyyyMMdd"));
+            var insertionOrderRequest = service.Objects.Get("gdbm-479", insertionOrderFilename);
+
+            Google.Apis.Storage.v1.Data.Object insertObj;
+
+            try
+            {
+                insertObj = insertionOrderRequest.Execute();
+
+                if (insertObj != null)
+                {
+                    var insertOrderStream = DbmCloudStorageExtracter.GetStreamForCloudStorageObject(insertObj, credential);
+                    string advertiserName = FindAdvertiserName(insertOrderStream);
+                }
+            }
+            catch (GoogleApiException) {}
+            */
+
             foreach (var date in dateRange.Dates)
             {
                 Logger.Info("Date: {0}", date);
 
                 string filename = String.Format("log/{0}.0.conversion.0.csv", date.ToString("yyyyMMdd"));
                 string geoFilename = String.Format("entity/{0}.0.GeoLocation.json",date.ToString("yyyyMMdd"));
-                //string entityfilename = String.Format("entity/{0}.0.InsertionOrder.json", date.ToString("yyyyMMdd"));
 
                 //listRequest.Prefix = filename;
                 //var matchingObjects = listRequest.Execute();
@@ -126,6 +144,18 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             }
         }
 
+        public string FindAdvertiserName(Stream stream)
+        {
+            var serializer = new JsonSerializer();
+
+            using (var sr = new StreamReader(stream))
+            using (var jsonReader = new JsonTextReader(sr))
+            {
+                var advertiser = serializer.Deserialize<List<GoogleInsertionOrder>>(jsonReader).Where(i => i.common_data.id == insertionOrderId).First();
+                return advertiser.advertiser_id.ToString();
+            }
+        }
+
     }
 
     // TODO: handle blank event_time / auction_id... skip that row?
@@ -183,4 +213,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             }
         }
     }
+    
+    public class GoogleInsertionOrder
+    {
+        public int advertiser_id { get; set; }
+        public EntityCommonData common_data { get; set; }
+    }
+
+    public class EntityCommonData
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+    }
+    
 }

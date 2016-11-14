@@ -18,7 +18,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         private readonly string platformCode;
         // if streamReader is not null, use it. otherwise use csvFilePath.
 
-        public TDConvExtracter(string csvFilePath, StreamReader streamReader, string platCode=Platform.Code_DBM)
+        public TDConvExtracter(string csvFilePath, StreamReader streamReader, string platCode)
         {
             this.csvFilePath = csvFilePath;
             this.streamReader = streamReader;
@@ -63,6 +63,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         break;
                     case Platform.Code_DBM:
                         csv.Configuration.RegisterClassMap<ConvRowMap>();
+                        break;
+                    default:
+                        csv.Configuration.RegisterClassMap<TestAdrollConvRowMap>();
                         break;
                 }
                 var csvRows = csv.GetRecords<ConvRow>().ToList();

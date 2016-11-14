@@ -20,7 +20,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public AdrollConvLoader(int acctId)
         {
             this.accountId = acctId;
-            this.convLoader = new TDConvLoader(acctId,Platform.Code_AdRoll);
         }
 
         protected override int Load(List<AdrollConvRow> items)
