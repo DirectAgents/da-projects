@@ -15,13 +15,14 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
     public class SearchStatsController : CPController
     {
         private const int DEFAULT_NUMPERIODS = 16;
+        private const int DEFAULT_NUMROWS = 1000;
 
         public SearchStatsController(IClientPortalRepository cpRepository)
         {
             cpRepo = cpRepository;
         }
 
-        public ActionResult Generic(int spId, DateTime? endDate, string statsType, string interval, int numPeriods = DEFAULT_NUMPERIODS, bool includeConVals = false, bool groupBySearchAccount = false)
+        public ActionResult Generic(int spId, DateTime? endDate, string statsType, string interval, int numPeriods = DEFAULT_NUMPERIODS, bool includeConVals = false, bool groupBySearchAccount = false, int numRows = DEFAULT_NUMROWS)
         {
             if (!endDate.HasValue)
                 endDate = DateTime.Today.AddDays(-1); // if not specified; (user can always set endDate to today if desired)
@@ -31,16 +32,16 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
             if (statsType == "overall")
             {
-                return WeeklyMonthly(spId, (interval == "monthly"), endDate, numPeriods, includeConVals);
+                return WeeklyMonthly(spId, (interval == "monthly"), endDate, numPeriods, includeConVals, numRows);
             }
             else if (statsType == "campaign")
             {
-                return WeeklyMonthlyBreakdown(spId, (interval == "monthly"), endDate, numPeriods, includeConVals, groupBySearchAccount);
+                return WeeklyMonthlyBreakdown(spId, (interval == "monthly"), endDate, numPeriods, includeConVals, groupBySearchAccount, numRows);
             }
             return HttpNotFound();
         }
 
-        public ActionResult WeeklyMonthly(int spId, bool monthlyNotWeekly, DateTime? endDate, int numPeriods = DEFAULT_NUMPERIODS, bool includeConVals = false)
+        public ActionResult WeeklyMonthly(int spId, bool monthlyNotWeekly, DateTime? endDate, int numPeriods = DEFAULT_NUMPERIODS, bool includeConVals = false, int numRows = DEFAULT_NUMROWS)
         {
             var searchProfile = cpRepo.GetSearchProfile(spId);
             if (searchProfile == null)
@@ -62,11 +63,12 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 ColumnConfigs = CreateColumnConfigs(intervalName, convTypes, includeConVals),
                 EndDate = endDate,
                 StatsType = intervalName + "ly",
-                NumPeriods = numPeriods
+                NumPeriods = numPeriods,
+                NumRows = numRows
             };
             return View("Generic", model);
         }
-        public ActionResult WeeklyMonthlyBreakdown(int spId, bool monthlyNotWeekly, DateTime? endDate, int numPeriods = DEFAULT_NUMPERIODS, bool includeConVals = false, bool groupBySearchAccount = false)
+        public ActionResult WeeklyMonthlyBreakdown(int spId, bool monthlyNotWeekly, DateTime? endDate, int numPeriods = DEFAULT_NUMPERIODS, bool includeConVals = false, bool groupBySearchAccount = false, int numRows = DEFAULT_NUMROWS)
         {
             //TODO: these as arguments?
             //bool groupBySearchAccount = false;
@@ -93,7 +95,8 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 EndDate = endDate,
                 StatsType = intervalName + "lyBreakdown",
                 NumPeriods = numPeriods,
-                GroupBySearchAccount = groupBySearchAccount
+                GroupBySearchAccount = groupBySearchAccount,
+                NumRows = numRows
             };
             return View("Generic", model);
         }

@@ -47,11 +47,19 @@
                         }
                     }
                 }
-            }
+            },
+            //change: DataSource_change
         });
         return datasource;
     }
 
+@*    function DataSource_change(e) {
+        var spreadsheet = $('#spreadsheet').data('kendoSpreadsheet');
+        var data = this.data(); //data.length
+        spreadsheet.options.rows = data.length + 5;
+        spreadsheet.refresh();
+    }
+*@
     function SetupSpreadsheet(datasource) {
         DoSpreadsheetConfig();
 
@@ -81,7 +89,7 @@
     function DoSpreadsheetConfig() {
         $('#spreadsheet').kendoSpreadsheet({
             columns: @numCols,
-            rows: 100,
+            rows: @Model.NumRows,
             //toolbar: false,
             //sheetsbar: false,
             sheets: [{
