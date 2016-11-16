@@ -8,7 +8,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 {
     public class BingLoader : Loader<Dictionary<string, string>>
     {
-        private const string bingChannel = "Bing";
+        public const string BingChannel = "Bing";
         private readonly int searchAccountId;
         private readonly decimal? revenuePerOrder;
         private bool hasAccountId = false;
@@ -28,9 +28,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
             hasAccountId = items[0].ContainsKey("AccountId");
             if (hasAccountId)
-                AddUpdateDependentSearchAccounts(items);
-
-            AddUpdateDependentSearchCampaigns(items);
+                BingLoader.AddUpdateDependentSearchAccounts(items, this.searchAccountId);
+            BingLoader.AddUpdateDependentSearchCampaigns(items, this.searchAccountId);
             var count = UpsertSearchDailySummaries(items);
             return count;
         }
@@ -46,7 +45,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                 foreach (var item in items)
                 {
-                    var campaignName = item["CampaignName"];
+                    //var campaignName = item["CampaignName"];
                     var campaignId = int.Parse(item["CampaignId"]);
 
                     var searchAccount = passedInAccount;
@@ -54,7 +53,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     {
                         var accountCode = item["AccountId"];
                         if (searchAccount.AccountCode != accountCode)
-                            searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.AccountCode == accountCode && sa.Channel == bingChannel);
+                            searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.AccountCode == accountCode && sa.Channel == BingChannel);
                     }
 
                     var pk1 = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId;
@@ -105,11 +104,11 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             return itemCount;
         }
 
-        private void AddUpdateDependentSearchAccounts(List<Dictionary<string, string>> items)
+        public static void AddUpdateDependentSearchAccounts(List<Dictionary<string, string>> items, int searchAccountId)
         {
             using (var db = new ClientPortalContext())
             {
-                var searchAccount = db.SearchAccounts.Find(this.searchAccountId);
+                var searchAccount = db.SearchAccounts.Find(searchAccountId);
 
                 var accountTuples = items.Select(i => Tuple.Create(i["AccountName"], i["AccountId"])).Distinct();
                 bool multipleAccounts = accountTuples.Count() > 1;
@@ -126,9 +125,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     }
                     else
                     {   // See if there are any sibling SearchAccounts that match by accountCode... or finally, by name
-                        existing = searchAccount.SearchProfile.SearchAccounts.SingleOrDefault(sa => sa.AccountCode == accountCode && sa.Channel == bingChannel);
+                        existing = searchAccount.SearchProfile.SearchAccounts.SingleOrDefault(sa => sa.AccountCode == accountCode && sa.Channel == BingChannel);
                         if (existing == null)
-                            existing = searchAccount.SearchProfile.SearchAccounts.SingleOrDefault(sa => sa.Name == accountName && sa.Channel == bingChannel);
+                            existing = searchAccount.SearchProfile.SearchAccounts.SingleOrDefault(sa => sa.Name == accountName && sa.Channel == BingChannel);
                     }
 
                     if (existing == null)
@@ -136,7 +135,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         searchAccount.SearchProfile.SearchAccounts.Add(new SearchAccount
                         {
                             Name = accountName,
-                            Channel = bingChannel,
+                            Channel = BingChannel,
                             AccountCode = accountCode
                         });
                         Logger.Info("Saving new SearchAccount: {0} ({1})", accountName, accountCode);
@@ -159,14 +158,16 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             }
         }
 
-        private void AddUpdateDependentSearchCampaigns(List<Dictionary<string, string>> items)
+        public static void AddUpdateDependentSearchCampaigns(List<Dictionary<string, string>> items, int searchAccountId)
         {
+            bool itemsHaveAccountId = items[0].ContainsKey("AccountId");
+
             using (var db = new ClientPortalContext())
             {
-                var passedInAccount = db.SearchAccounts.Find(this.searchAccountId);
+                var passedInAccount = db.SearchAccounts.Find(searchAccountId);
 
                 IEnumerable<CampaignInfo> infos;
-                if (hasAccountId)
+                if (itemsHaveAccountId)
                     infos = items.Select(c => new CampaignInfo { CampaignName = c["CampaignName"], CampaignId = c["CampaignId"], AccountId = c["AccountId"] }).Distinct();
                 else
                     infos = items.Select(c => new CampaignInfo { CampaignName = c["CampaignName"], CampaignId = c["CampaignId"] }).Distinct();
@@ -175,9 +176,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     var campaignId = int.Parse(info.CampaignId);
 
                     var searchAccount = passedInAccount;
-                    if (hasAccountId && searchAccount.AccountCode != info.AccountId)
+                    if (itemsHaveAccountId && searchAccount.AccountCode != info.AccountId)
                     {
-                        searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.AccountCode == info.AccountId && sa.Channel == bingChannel);
+                        searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.AccountCode == info.AccountId && sa.Channel == BingChannel);
                     }
                     var existing = searchAccount.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignId);
 

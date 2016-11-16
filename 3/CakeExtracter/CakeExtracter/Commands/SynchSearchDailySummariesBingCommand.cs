@@ -102,7 +102,7 @@ namespace CakeExtracter.Commands
                     if (GetConversionTypeStats)
                     {
                         var extracter = new BingConvSummaryExtracter(accountId, startDate, endDate);
-                        var loader = new BingLoader(searchAccount.SearchAccountId); // TEMP!
+                        var loader = new BingConvSummaryLoader(searchAccount.SearchAccountId);
                         var extracterThread = extracter.Start();
                         var loaderThread = loader.Start(extracter);
                         extracterThread.Join();
