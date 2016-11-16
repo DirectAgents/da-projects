@@ -43,6 +43,8 @@ namespace CakeExtracter.Commands
             get { return (!_includeNonShopping.HasValue || _includeNonShopping.Value); }
         }   // default: true
 
+        public bool GetConversionTypeStats { get; set; }
+
         public override void ResetProperties()
         {
             SearchProfileId = null;
@@ -52,6 +54,7 @@ namespace CakeExtracter.Commands
             DaysAgoToStart = null;
             _includeShopping = null;
             _includeNonShopping = null;
+            GetConversionTypeStats = false;
         }
 
         public SynchSearchDailySummariesBingCommand()
@@ -62,8 +65,10 @@ namespace CakeExtracter.Commands
             HasOption<DateTime>("s|startDate=", "Start Date (optional)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
             HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 62)", c => DaysAgoToStart = c);
-            HasOption<bool>("n|includeNonShopping=", "Include NonShopping campaigns (default is true)", c => _includeNonShopping = c);
+            HasOption<bool>("r|includeRegular=", "Include Regular(NonShopping) campaigns (default is true)", c => _includeNonShopping = c);
             HasOption<bool>("h|includeShopping=", "Include Shopping campaigns (default is true)", c => _includeShopping = c);
+            HasOption<bool>("n|getConversionTypeStats=", "Get conversion-type stats (default is false)", c => GetConversionTypeStats = c);
+            //TODO? change to default:true ?
         }
 
         public override int Execute(string[] remainingArguments)
@@ -85,12 +90,24 @@ namespace CakeExtracter.Commands
                 int accountId;
                 if (int.TryParse(searchAccount.AccountCode, out accountId))
                 {
-                    var extracter = new BingDailySummaryExtracter(accountId, startDate, endDate, includeShopping: IncludeShopping, includeNonShopping: IncludeNonShopping);
-                    var loader = new BingLoader(searchAccount.SearchAccountId);
-                    var extracterThread = extracter.Start();
-                    var loaderThread = loader.Start(extracter);
-                    extracterThread.Join();
-                    loaderThread.Join();
+                    if (IncludeShopping || IncludeNonShopping)
+                    {
+                        var extracter = new BingDailySummaryExtracter(accountId, startDate, endDate, includeShopping: IncludeShopping, includeNonShopping: IncludeNonShopping);
+                        var loader = new BingLoader(searchAccount.SearchAccountId);
+                        var extracterThread = extracter.Start();
+                        var loaderThread = loader.Start(extracter);
+                        extracterThread.Join();
+                        loaderThread.Join();
+                    }
+                    if (GetConversionTypeStats)
+                    {
+                        var extracter = new BingConvSummaryExtracter(accountId, startDate, endDate);
+                        var loader = new BingLoader(searchAccount.SearchAccountId); // TEMP!
+                        var extracterThread = extracter.Start();
+                        var loaderThread = loader.Start(extracter);
+                        extracterThread.Join();
+                        loaderThread.Join();
+                    }
                 }
                 else
                     Logger.Info("AccountCode should be an int. Skipping: {0}", searchAccount.AccountCode);

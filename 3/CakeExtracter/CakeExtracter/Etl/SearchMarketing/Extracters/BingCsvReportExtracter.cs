@@ -63,7 +63,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             }
         }
 
-        public sealed class BingRowMap : CsvClassMap<BingRow>
+        private sealed class BingRowMap : CsvClassMap<BingRow>
         {
             public BingRowMap()
             {
@@ -77,7 +77,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 Map(m => m.CampaignId).Name("Campaign ID");
             }
         }
-        public class BingRow
+        private class BingRow
         {
             public string GregorianDate { get; set; }
 
