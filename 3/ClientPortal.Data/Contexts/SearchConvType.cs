@@ -16,5 +16,6 @@ namespace ClientPortal.Data.Contexts
     {
         public int SearchConvTypeId { get; set; }
         public string Name { get; set; }
+        public string Alias { get; set; }
     }
 }

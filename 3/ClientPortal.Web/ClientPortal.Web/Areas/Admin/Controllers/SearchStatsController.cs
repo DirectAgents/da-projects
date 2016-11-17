@@ -48,13 +48,11 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 return HttpNotFound();
 
             // Determine what the conversion types are & set up ColumnConfigs for them.
-            IEnumerable<SearchConvType> convTypes;
+            IQueryable<SearchConvType> convTypes;
             if (monthlyNotWeekly)
-                convTypes = cpRepo.GetConversionTypesForMonthStats(searchProfile, numPeriods, null, endDate)
-                                    .OrderBy(ct => ct.Name).ToList();
+                convTypes = cpRepo.GetConversionTypesForMonthStats(searchProfile, numPeriods, null, endDate);
             else
-                convTypes = cpRepo.GetConversionTypesForWeekStats(searchProfile, numPeriods, null, endDate)
-                                    .OrderBy(ct => ct.Name).ToList();
+                convTypes = cpRepo.GetConversionTypesForWeekStats(searchProfile, numPeriods, null, endDate);
 
             string intervalName = (monthlyNotWeekly ? "Month" : "Week");
             var model = new SearchStatsVM
@@ -79,13 +77,11 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 return HttpNotFound();
 
             // Determine what the conversion types are & set up ColumnConfigs for them.
-            IEnumerable<SearchConvType> convTypes;
+            IQueryable<SearchConvType> convTypes;
             if (monthlyNotWeekly)
-                convTypes = cpRepo.GetConversionTypesForMonthStats(searchProfile, numPeriods, null, endDate)
-                                    .OrderBy(ct => ct.Name).ToList();
+                convTypes = cpRepo.GetConversionTypesForMonthStats(searchProfile, numPeriods, null, endDate);
             else
-                convTypes = cpRepo.GetConversionTypesForWeekStats(searchProfile, numPeriods, null, endDate)
-                                    .OrderBy(ct => ct.Name).ToList();
+                convTypes = cpRepo.GetConversionTypesForWeekStats(searchProfile, numPeriods, null, endDate);
 
             string intervalName = (monthlyNotWeekly ? "Month" : "Week");
             var model = new SearchStatsVM
@@ -101,16 +97,18 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return View("Generic", model);
         }
 
-        private IEnumerable<ColumnConfig> CreateColumnConfigs(string titleColumnText, IEnumerable<SearchConvType> convTypes, bool includeConVals)
+        private IEnumerable<ColumnConfig> CreateColumnConfigs(string titleColumnText, IQueryable<SearchConvType> convTypes, bool includeConVals)
         {
+            var minIdLookupByAlias = cpRepo.MinConvTypeIdLookupByAlias();
             int letter = 0;
             var columnConfigs = new List<ColumnConfig>() {
                 new ColumnConfig("Title", titleColumnText, ColumnConfig.Alphabet[letter++], null, kendoType: "string")
             };
-            foreach (var convType in convTypes)
+            var aliasGroups = convTypes.GroupBy(ct => ct.Alias).OrderBy(g => g.Key);
+            foreach (var aliasGroup in aliasGroups)
             {
-                int id = convType.SearchConvTypeId;
-                columnConfigs.Add(new ColumnConfig("conv" + id, convType.Name, ColumnConfig.Alphabet[letter++], null));
+                int id = minIdLookupByAlias[aliasGroup.Key];
+                columnConfigs.Add(new ColumnConfig("conv" + id, aliasGroup.Key, ColumnConfig.Alphabet[letter++], null));
                 if (includeConVals)
                     columnConfigs.Add(new ColumnConfig("cval" + id, "ConVal", ColumnConfig.Alphabet[letter++], ColumnConfig.Format_Max2Dec));
             }
@@ -208,6 +206,8 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 }
             }
 
+            var minConvTypeIdLookupByAlias = cpRepo.MinConvTypeIdLookupByAlias();
+
             var finalStatsDicts = new List<IDictionary<string, object>>();
             foreach (var campaignStatsDict in periodDictStats) // loop through each time period
             {
@@ -223,7 +223,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                             end = firstStat.EndDate;
                         }
                     }
-                    var groupStatDicts = cpRepo.FillInConversionTypeStats(searchProfile.SearchProfileId, campaignStatsDict[groupKey]);
+                    var groupStatDicts = cpRepo.FillInConversionTypeStats(searchProfile.SearchProfileId, campaignStatsDict[groupKey], aliasToIdLookup: minConvTypeIdLookupByAlias);
                     finalStatsDicts.AddRange(groupStatDicts);
 
                     var groupSummary = new Dictionary<string, object>();
