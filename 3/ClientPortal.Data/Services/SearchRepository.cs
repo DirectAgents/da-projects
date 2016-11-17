@@ -305,17 +305,22 @@ namespace ClientPortal.Data.Services
         public IQueryable<SearchConvType> GetConversionTypesForWeekStats(SearchProfile sp, int? numWeeks, DateTime? startDate, DateTime? endDate)
         {
             StartEndDatesForWeekStats(ref startDate, ref endDate, (DayOfWeek)sp.StartDayOfWeek, numWeeks);
-            return GetConversionTypes(sp.SearchProfileId, null, startDate, endDate);
+            return GetSearchConvTypes(sp.SearchProfileId, null, startDate, endDate);
         }
         public IQueryable<SearchConvType> GetConversionTypesForMonthStats(SearchProfile sp, int? numMonths, DateTime? start, DateTime? end)
         {
             StartEndDatesForMonthStats(ref start, ref end, numMonths);
-            return GetConversionTypes(sp.SearchProfileId, null, start, end);
+            return GetSearchConvTypes(sp.SearchProfileId, null, start, end);
         }
-        public IQueryable<SearchConvType> GetConversionTypes(int searchProfileId, int? searchCampaignId, DateTime? startDate, DateTime? endDate)
+        public IQueryable<SearchConvType> GetSearchConvTypes(int searchProfileId, int? searchCampaignId = null, DateTime? startDate = null, DateTime? endDate = null)
         {
             var convSums = GetSearchConvSummaries(searchProfileId, null, null, null, startDate, endDate, true, searchCampaignId: searchCampaignId);
             return convSums.Select(cs => cs.SearchConvType).Distinct();
+        }
+        public SearchConvType GetSearchConvType(int id)
+        {
+            var searchConvType = context.SearchConvTypes.Find(id);
+            return searchConvType;
         }
 
         // a lookup based on all convTypes in the db...

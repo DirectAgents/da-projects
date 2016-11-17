@@ -22,6 +22,8 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             cpRepo = cpRepository;
         }
 
+        // --- Conversion Type stats ---
+
         public ActionResult Generic(int spId, DateTime? endDate, string statsType, string interval, int numPeriods = DEFAULT_NUMPERIODS, bool includeConVals = false, bool groupBySearchAccount = false, int numRows = DEFAULT_NUMROWS)
         {
             if (!endDate.HasValue)

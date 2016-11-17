@@ -196,5 +196,40 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return View(searchProfile);
         }
 
+        // --- SearchConvTypes ---
+
+        public ActionResult ConvTypes(int spId)
+        {
+            var searchProfile = cpRepo.GetSearchProfile(spId);
+
+            return View(searchProfile);
+        }
+        //[HttpPost]
+        public JsonResult ConvTypesData(int spId)
+        {
+            var searchConvTypes = cpRepo.GetSearchConvTypes(spId).OrderBy(ct => ct.Alias);
+
+            var kg = new KG<SearchConvType>();
+            kg.data = searchConvTypes;
+            kg.total = searchConvTypes.Count();
+
+            var json = Json(kg, JsonRequestBehavior.AllowGet);
+            //var json = Json(kg);
+            return json;
+        }
+        [HttpPost]
+        public ActionResult ConvTypesUpdate(SearchConvType[] models)
+        {
+            //TODO: try/catch/return errors
+            foreach (var row in models)
+            {
+                var searchConvType = cpRepo.GetSearchConvType(row.SearchConvTypeId);
+                searchConvType.Alias = row.Alias;
+            }
+            cpRepo.SaveChanges();
+
+            return Json(models);
+        }
+
     }
 }

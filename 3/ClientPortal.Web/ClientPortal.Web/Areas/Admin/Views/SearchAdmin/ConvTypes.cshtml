@@ -1,0 +1,69 @@
+﻿@model ClientPortal.Data.Contexts.SearchProfile
+
+@{
+    var ajaxOpts_Profiles = RazorHelpers.GetAjaxOptions("searchProfilesTab", "navSearchProfiles");
+}
+
+<h3>Conversion Types</h3>
+
+<div id="gridSearchConvTypes"></div>
+
+<br /><br />
+Back to:
+@Ajax.ActionLink("Report Components", "Components", new { spid = Model.SearchProfileId }, ajaxOpts_Profiles)<br />
+
+<script>
+    $(document).ready(function () {
+        var datasource = CreateDataSource();
+        SetupGrid(datasource);
+    });
+
+    function CreateDataSource() {
+        var datasource = new kendo.data.DataSource({
+            batch: true,
+            transport: {
+                read: {
+                    url: '@Url.Action("ConvTypesData")',
+                    data: {
+                        spId: @Model.SearchProfileId
+                    },
+                    type: 'post', dataType: 'json'
+                },
+                update: {
+                    url: '@Url.Action("ConvTypesUpdate")',
+                    type: 'post', dataType: 'json'
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                //aggregates: 'aggregates',
+                model: {
+                    id: 'SearchConvTypeId',
+                    fields: {
+                        SearchConvTypeId: { type: 'number', editable: false },
+                        Name: { editable: false },
+                        Alias: { type: 'string' }
+                    }
+                }
+            }
+        });
+        return datasource;
+    }
+
+    function SetupGrid(datasource)
+    {
+        $('#gridSearchConvTypes').kendoGrid({
+            dataSource: datasource,
+            height: 400,
+            editable: 'inline',
+            sortable: true,
+            columns: [
+                { field: 'SearchConvTypeId', title: 'Id', width: '65px' },
+                { field: 'Name' },
+                { field: 'Alias' },
+                { command: ['edit'], title: '&nbsp', width: '200px' },
+            ]
+        });
+    }
+</script>
