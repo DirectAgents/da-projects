@@ -11,7 +11,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
     public class AdrollConvLoader : Loader<AdrollConvRow>
     {
         private readonly int accountId;
-        private TDConvLoader convLoader;
         private Dictionary<string, int?> strategyIdLookupByCampName = new Dictionary<string, int?>();
         private Dictionary<string, int?> adIdLookupByName = new Dictionary<string, int?>();
         private Dictionary<string, int> countryIdLookupByName = new Dictionary<string, int>();

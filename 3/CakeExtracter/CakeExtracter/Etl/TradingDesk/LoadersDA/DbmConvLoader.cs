@@ -77,6 +77,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             }
         }
 
+        //TODO: don't add cities that are already in database (e.g., "Chicago,Illinois" isn't distinct from just "Chicago")
         private void UpdateDependentCities(List<DataTransferRow> items)
         {
             var cities = items.Select(i => new Tuple<string,string>(i.city_name,i.country_name)).Distinct();
@@ -97,31 +98,35 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         {
                             Name = countryName
                         };
-                        Logger.Info("Adding new country {0} with id {1} to database.", countryName,country.Id);
                         db.ConvCountries.Add(country);
                         db.SaveChanges();
+                        Logger.Info("Added new country {0} with id {1} to database.", countryName, country.Id);
                     }
-                    countryIdLookupByName[countryName] = country.Id;
-                }
 
-                foreach (var city in cities)
-                {
-                    if (cityIdLookupByName.ContainsKey(city.Item1))
-                        continue;
-                    var countryId = countryIdLookupByName[city.Item2];
-                    var cpCity = db.ConvCities.FirstOrDefault(c => c.Name == city.Item1 && c.CountryId == countryId);
-                    if (cpCity == null)
+                    countryIdLookupByName[countryName] = country.Id;
+                    int countryId = country.Id;
+
+                    foreach (var city in countryGroup)
                     {
-                        cpCity = new ConvCity
+                        if (cityIdLookupByName.ContainsKey(city.Item1))
+                            continue;
+
+                        var cpCity = db.ConvCities.FirstOrDefault(c => c.Name == city.Item1 && c.CountryId == countryId);
+
+                        if (cpCity == null)
                         {
-                            Name = city.Item1,
-                            CountryId = countryId
-                        };
-                        Logger.Info("Adding new city {0} in country {1} with id {2} to database.", city.Item1, city.Item2,cpCity.Id);
-                        db.ConvCities.Add(cpCity);
-                        db.SaveChanges();
+                            cpCity = new ConvCity
+                            {
+                                Name = city.Item1,
+                                CountryId = countryId
+                            };
+
+                            db.ConvCities.Add(cpCity);
+                            db.SaveChanges();
+                            Logger.Info("Added new city {0} in country {1} with id {2} to database.", city.Item1, countryName, cpCity.Id);
+                        }
+                        cityIdLookupByName[city.Item1] = cpCity.Id;
                     }
-                    cityIdLookupByName[city.Item1] = cpCity.Id;
                 }
             }
         }

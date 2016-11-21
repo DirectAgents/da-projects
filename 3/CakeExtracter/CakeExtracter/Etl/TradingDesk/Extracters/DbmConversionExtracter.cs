@@ -46,24 +46,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             //var listRequest = service.Objects.List(bucketName);
             //var bucketObjects = listRequest.Execute();
 
-            /*
-            string insertionOrderFilename = String.Format("entity/{0}.0.InsertionOrder.json", dateRange.Dates.First().ToString("yyyyMMdd"));
-            var insertionOrderRequest = service.Objects.Get("gdbm-479", insertionOrderFilename);
-
-            Google.Apis.Storage.v1.Data.Object insertObj;
-
-            try
-            {
-                insertObj = insertionOrderRequest.Execute();
-
-                if (insertObj != null)
-                {
-                    var insertOrderStream = DbmCloudStorageExtracter.GetStreamForCloudStorageObject(insertObj, credential);
-                    string advertiserName = FindAdvertiserName(insertOrderStream);
-                }
-            }
-            catch (GoogleApiException) {}
-            */
+            //TODO: get advertiser id for each insertion order
 
             foreach (var date in dateRange.Dates)
             {
@@ -144,17 +127,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             }
         }
 
-        public string FindAdvertiserName(Stream stream)
-        {
-            var serializer = new JsonSerializer();
-
-            using (var sr = new StreamReader(stream))
-            using (var jsonReader = new JsonTextReader(sr))
-            {
-                var advertiser = serializer.Deserialize<List<GoogleInsertionOrder>>(jsonReader).Where(i => i.common_data.id == insertionOrderId).First();
-                return advertiser.advertiser_id.ToString();
-            }
-        }
+        //TODO: GetAdvertiserName()
 
     }
 
@@ -188,6 +161,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         public string city_name { get; set; }
         public string country_name { get; set; }
         //public string advertiser_id { get; set; }
+        //public bool unique_city_name { get; set; }
+        //public string short_name { get; set; }
     }
 
     public class GeoLocation
@@ -212,18 +187,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 return canonical_name.Replace(country_name, "").TrimEnd(',');
             }
         }
-    }
-    
-    public class GoogleInsertionOrder
-    {
-        public int advertiser_id { get; set; }
-        public EntityCommonData common_data { get; set; }
+        public string short_name
+        {
+            get
+            {
+                return city_name.Split(',').First();
+            }
+        }
     }
 
-    public class EntityCommonData
-    {
-        public int id { get; set; }
-        public string name { get; set; }
-    }
-    
 }
