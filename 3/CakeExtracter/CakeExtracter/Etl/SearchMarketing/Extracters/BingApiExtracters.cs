@@ -4,24 +4,18 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using CsvHelper;
-using CsvHelper.Configuration;
 using CsvHelper.TypeConversion;
 
 namespace CakeExtracter.Etl.SearchMarketing.Extracters
 {
-    public class BingDailySummaryExtracter : Extracter<Dictionary<string, string>>
+    public class BingDailySummaryExtracter : BingExtracterBase
     {
-        private readonly long accountId; // 886985 ramjet
-        private readonly DateTime startDate;
-        private readonly DateTime endDate;
         private readonly bool includeShopping; // (shopping campaigns)
         private readonly bool includeNonShopping;
 
         public BingDailySummaryExtracter(long accountId, DateTime startDate, DateTime endDate, bool includeShopping = true, bool includeNonShopping = true)
+            : base(accountId, startDate, endDate)
         {
-            this.accountId = accountId;
-            this.startDate = startDate;
-            this.endDate = endDate;
             this.includeShopping = includeShopping;
             this.includeNonShopping = includeNonShopping;
         }
@@ -31,21 +25,21 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             Logger.Info("Extracting SearchDailySummaries for {0} from {1} to {2}", accountId, startDate, endDate);
             if (includeNonShopping)
             {
-                var items = EnumerateRows(forShoppingCampaigns: false);
+                var items = ExtractAndEnumerateRows(forShoppingCampaigns: false);
                 Add(items);
             }
             if (includeShopping)
             {
-                var items = EnumerateRows(forShoppingCampaigns: true);
+                var items = ExtractAndEnumerateRows(forShoppingCampaigns: true);
                 Add(items);
             }
             End();
         }
 
-        private IEnumerable<Dictionary<string, string>> EnumerateRows(bool forShoppingCampaigns = false)
+        private IEnumerable<Dictionary<string, string>> ExtractAndEnumerateRows(bool forShoppingCampaigns = false)
         {
             var bingUtility = new BingAds.BingUtility(m => Logger.Info(m), m => Logger.Warn(m));
-            var filepath = bingUtility.GetDailySummaries(accountId, startDate, endDate, forShoppingCampaigns: forShoppingCampaigns);
+            var filepath = bingUtility.GetReport_DailySummaries(accountId, startDate, endDate, forShoppingCampaigns: forShoppingCampaigns);
             if (filepath == null)
                 yield break;
 
@@ -53,35 +47,85 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             if (forShoppingCampaigns)
                 bingRows = GroupAndEnumerateBingRows(filepath, throwOnMissingField: false);
             else
-                bingRows = EnumerateBingRows(filepath, throwOnMissingField: true);
+                bingRows = BingExtracterBase.EnumerateRowsGeneric<BingRow>(filepath, throwOnMissingField: true);
 
-            foreach (var bingRow in bingRows)
+            foreach (var row in EnumerateRowsAsDictionaries(bingRows))
+                yield return row;
+        }
+    }
+
+    public class BingConvSummaryExtracter : BingExtracterBase
+    {
+        public BingConvSummaryExtracter(long accountId, DateTime startDate, DateTime endDate)
+            : base(accountId, startDate, endDate) { }
+
+        protected override void Extract()
+        {
+            Logger.Info("Extracting SearchConvSummaries for {0} from {1} to {2}", accountId, startDate, endDate);
+            var items = ExtractAndEnumerateRows();
+            Add(items);
+            End();
+        }
+
+        private IEnumerable<Dictionary<string, string>> ExtractAndEnumerateRows()
+        {
+            var bingUtility = new BingAds.BingUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            var filepath = bingUtility.GetReport_DailySummariesByGoal(accountId, startDate, endDate);
+            if (filepath == null)
+                yield break;
+
+            var bingRowsWithGoal = EnumerateRowsGeneric<BingRowWithGoal>(filepath, throwOnMissingField: false);
+
+            foreach (var row in EnumerateRowsAsDictionaries(bingRowsWithGoal))
+                yield return row;
+        }
+    }
+
+    // --- Base class ---
+
+    public abstract class BingExtracterBase : Extracter<Dictionary<string, string>>
+    {
+        protected readonly long accountId;
+        protected readonly DateTime startDate;
+        protected readonly DateTime endDate;
+
+        public BingExtracterBase(long accountId, DateTime startDate, DateTime endDate)
+        {
+            this.accountId = accountId;
+            this.startDate = startDate;
+            this.endDate = endDate;
+        }
+
+        protected IEnumerable<Dictionary<string, string>> EnumerateRowsAsDictionaries<T>(IEnumerable<T> rows)
+        {
+            foreach (var row in rows)
             {
-                var row = new Dictionary<string, string>();
+                var dict = new Dictionary<string, string>();
 
                 // Use reflection to add values
-                var type = typeof(BingRow);
+                var type = typeof(T);
                 var properties = type.GetProperties();
                 foreach (var propertyInfo in properties)
                 {
-                    if (propertyInfo.Name == "AccountId" && String.IsNullOrWhiteSpace(bingRow.AccountId))
-                        row["AccountId"] = this.accountId.ToString();
+                    if (propertyInfo.Name == "AccountId" && String.IsNullOrWhiteSpace((string)propertyInfo.GetValue(row)))
+                        dict["AccountId"] = this.accountId.ToString();
                     else if (propertyInfo.PropertyType == typeof(int))
-                        row[propertyInfo.Name] = ((int)propertyInfo.GetValue(bingRow)).ToString();
+                        dict[propertyInfo.Name] = ((int)propertyInfo.GetValue(row)).ToString();
                     else if (propertyInfo.PropertyType == typeof(decimal))
-                        row[propertyInfo.Name] = ((decimal)propertyInfo.GetValue(bingRow)).ToString();
+                        dict[propertyInfo.Name] = ((decimal)propertyInfo.GetValue(row)).ToString();
                     else
-                        row[propertyInfo.Name] = (string)propertyInfo.GetValue(bingRow);
+                        dict[propertyInfo.Name] = (string)propertyInfo.GetValue(row);
 
                     //TODO: Have the extracter return objects with typed properties (and have the loader handle that)
                 }
-                yield return row;
+                yield return dict;
             }
         }
 
-        private IEnumerable<BingRow> GroupAndEnumerateBingRows(string filepath, bool throwOnMissingField)
+        // ?Should this be in BingDailySummaryExtracter?
+        protected IEnumerable<BingRow> GroupAndEnumerateBingRows(string filepath, bool throwOnMissingField)
         {
-            var groups = EnumerateBingRows(filepath, throwOnMissingField)
+            var groups = EnumerateRowsGeneric<BingRow>(filepath, throwOnMissingField)
                 .GroupBy(b => new { b.GregorianDate, b.AccountId, b.AccountName, b.AccountNumber, b.CampaignId, b.CampaignName });
             foreach (var g in groups)
             {
@@ -102,7 +146,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 yield return bingRow;
             }
         }
-        private IEnumerable<BingRow> EnumerateBingRows(string filepath, bool throwOnMissingField)
+        protected static IEnumerable<T> EnumerateRowsGeneric<T>(string filepath, bool throwOnMissingField)
         {
             TypeConverterOptionsFactory.GetOptions(typeof(decimal)).NumberStyle = NumberStyles.AllowThousands | NumberStyles.AllowDecimalPoint;
 
@@ -118,10 +162,10 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
 
                     while (csv.Read())
                     {
-                        BingRow csvRow;
+                        T csvRow;
                         try
                         {
-                            csvRow = csv.GetRecord<BingRow>();
+                            csvRow = csv.GetRecord<T>();
                         }
                         catch (CsvHelperException ex)
                         {
@@ -140,7 +184,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
         //}
         //NOTE: setting globally (TypeConverterOptionsFactory options - above) instead
 
-        private class BingRow
+        protected class BingRow
         {
             public string GregorianDate { get; set; } // date
             public int Impressions { get; set; } // int
@@ -156,6 +200,12 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
 
             //public string MerchantProductId { get; set; }
             //public string CurrencyCode { get; set; }
+        }
+
+        protected class BingRowWithGoal : BingRow
+        {
+            public string GoalId { get; set; } // int?
+            public string Goal { get; set; } // string
         }
     }
 

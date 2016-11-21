@@ -6,10 +6,9 @@ using ClientPortal.Data.Contexts;
 
 namespace CakeExtracter.Etl.SearchMarketing.Loaders
 {
-    public class AdWordsConvSummaryLoader : Loader<Dictionary<string, string>>
+    public class AdWordsConvSummaryLoader : ConvSummaryLoaderBase
     {
         private readonly int searchAccountId;
-        private Dictionary<string, int> convTypeIdLookupByName = new Dictionary<string, int>();
 
         private Dictionary<string, Dictionary<DateTime, decimal>> currencyMultipliers = new Dictionary<string, Dictionary<DateTime, decimal>>();
 
@@ -21,7 +20,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         protected override int Load(List<Dictionary<string, string>> items)
         {
             Logger.Info("Loading {0} SearchConvSummaries..", items.Count);
-            AddUpdateDependentConvTypes(items);
+            AddUpdateDependentConvTypes(items, "conversionName");
             AdWordsApiLoader.SetCurrencyMultipliers(items, currencyMultipliers);
             AdWordsApiLoader.AddUpdateDependentSearchAccounts(items, this.searchAccountId);
             AdWordsApiLoader.AddUpdateDependentSearchCampaigns(items, this.searchAccountId);
@@ -62,7 +61,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     }
 
                     var scs = new SearchConvSummary
-                    {
+                    {   //TODO: use lookup for SearchCampaignId
                         SearchCampaignId = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId,
                         Date = DateTime.Parse(item["day"].Replace('-', '/')),
                         //CurrencyId = (!item.Keys.Contains("currency") || item["currency"] == "USD") ? 1 : -1, // NOTE: non USD (if exists) -1 for now
@@ -116,12 +115,19 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             }
             return itemCount;
         }
+    }
 
-        private void AddUpdateDependentConvTypes(List<Dictionary<string, string>> items)
+    public abstract class ConvSummaryLoaderBase : Loader<Dictionary<string, string>>
+    {
+        //TODO: searchCampaignIdLookupByExternalId
+
+        protected Dictionary<string, int> convTypeIdLookupByName = new Dictionary<string, int>();
+
+        protected void AddUpdateDependentConvTypes(List<Dictionary<string, string>> items, string convTypePropName)
         {
             using (var db = new ClientPortalContext())
             {
-                var convTypeNames = items.Select(i => i["conversionName"]).Distinct(); //TODO? make lower?
+                var convTypeNames = items.Select(i => i[convTypePropName]).Distinct(); //TODO? make lower?
                 foreach (var convTypeName in convTypeNames)
                 {
                     if (convTypeIdLookupByName.ContainsKey(convTypeName))
@@ -149,6 +155,5 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                 }
             }
         }
-
     }
 }

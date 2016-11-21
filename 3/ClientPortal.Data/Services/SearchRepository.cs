@@ -305,41 +305,60 @@ namespace ClientPortal.Data.Services
         public IQueryable<SearchConvType> GetConversionTypesForWeekStats(SearchProfile sp, int? numWeeks, DateTime? startDate, DateTime? endDate)
         {
             StartEndDatesForWeekStats(ref startDate, ref endDate, (DayOfWeek)sp.StartDayOfWeek, numWeeks);
-            return GetConversionTypes(sp.SearchProfileId, startDate, endDate);
+            return GetSearchConvTypes(sp.SearchProfileId, null, startDate, endDate);
         }
         public IQueryable<SearchConvType> GetConversionTypesForMonthStats(SearchProfile sp, int? numMonths, DateTime? start, DateTime? end)
         {
             StartEndDatesForMonthStats(ref start, ref end, numMonths);
-            return GetConversionTypes(sp.SearchProfileId, start, end);
+            return GetSearchConvTypes(sp.SearchProfileId, null, start, end);
         }
-        public IQueryable<SearchConvType> GetConversionTypes(int searchProfileId, DateTime? startDate, DateTime? endDate)
+        public IQueryable<SearchConvType> GetSearchConvTypes(int searchProfileId, int? searchCampaignId = null, DateTime? startDate = null, DateTime? endDate = null)
         {
-            var convSums = GetSearchConvSummaries(searchProfileId, null, null, null, startDate, endDate, true);
+            var convSums = GetSearchConvSummaries(searchProfileId, null, null, null, startDate, endDate, true, searchCampaignId: searchCampaignId);
             return convSums.Select(cs => cs.SearchConvType).Distinct();
         }
-
-        // TODO: allow for breakdown by or specifying searchCampaign?
-        private IDictionary<string, object> GetConversionTypeStats(int searchProfileId, int? searchCampaignId, DateTime? startDate, DateTime? endDate)
+        public SearchConvType GetSearchConvType(int id)
         {
+            var searchConvType = context.SearchConvTypes.Find(id);
+            return searchConvType;
+        }
+
+        // a lookup based on all convTypes in the db...
+        public Dictionary<string, int> MinConvTypeIdLookupByAlias()
+        {
+            return context.SearchConvTypes.GroupBy(ct => ct.Alias).ToDictionary<IGrouping<string, SearchConvType>, string, int>(
+                g => g.Key,
+                g => g.Min(ct => ct.SearchConvTypeId)
+                );
+        }
+
+        //...grouped by convType alias, with the minimum ConvType id that has that alias - as the group key
+        private IDictionary<string, object> GetConversionTypeStats(int searchProfileId, int? searchCampaignId, DateTime? startDate, DateTime? endDate, Dictionary<string, int> aliasToIdLookup = null)
+        {
+            if (aliasToIdLookup == null)
+                aliasToIdLookup = MinConvTypeIdLookupByAlias();
             var convDict = new Dictionary<string, object>();
 
             var convSums = GetSearchConvSummaries(searchProfileId, null, null, null, startDate, endDate, true, searchCampaignId: searchCampaignId);
-            var convTypeGroups = convSums.GroupBy(cs => cs.SearchConvTypeId);
-            foreach (var cGroup in convTypeGroups)
+            var ctAliasGroups = convSums.GroupBy(cs => cs.SearchConvType.Alias);
+            foreach (var ctAliasGroup in ctAliasGroups)
             {
-                convDict["conv" + cGroup.Key] = cGroup.Sum(cs => cs.Conversions);
-                convDict["cval" + cGroup.Key] = cGroup.Sum(cs => cs.ConVal);
+                var id = aliasToIdLookup[ctAliasGroup.Key];
+                convDict["conv" + id] = ctAliasGroup.Sum(cs => cs.Conversions);
+                convDict["cval" + id] = ctAliasGroup.Sum(cs => cs.ConVal);
             }
             return convDict;
         }
-        public IEnumerable<IDictionary<string, object>> FillInConversionTypeStats(int searchProfileId, IEnumerable<SearchStat> searchStats)
+        public IEnumerable<IDictionary<string, object>> FillInConversionTypeStats(int searchProfileId, IEnumerable<SearchStat> searchStats, Dictionary<string, int> aliasToIdLookup = null)
         {
+            if (aliasToIdLookup == null)
+                aliasToIdLookup = MinConvTypeIdLookupByAlias();
             var ssDicts = new List<IDictionary<string, object>>();
             foreach (var stat in searchStats)
             {
                 // For each searchStat, convert it to a dictionary and add the convType stats
                 var statDict = stat.ToDictionary();
-                var convStats = GetConversionTypeStats(searchProfileId, stat.CampaignId, stat.StartDate, stat.EndDate);
+                var convStats = GetConversionTypeStats(searchProfileId, stat.CampaignId, stat.StartDate, stat.EndDate, aliasToIdLookup: aliasToIdLookup);
                 foreach (var key in convStats.Keys)
                 {
                     statDict[key] = convStats[key];

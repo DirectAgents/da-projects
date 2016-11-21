@@ -123,29 +123,43 @@ namespace BingAds
             ResetCredentials();
         }
 
-        // returns filepath of csv
-        public string GetDailySummaries(long accountId, DateTime startDate, DateTime endDate, bool forShoppingCampaigns = false)
-        {
-            SetCredentials(accountId);
-            var authorizationData = GetAuthorizationData();
+        // --- GetReport... ---
 
+        // (returns filepath of csv)
+        public string GetReport_DailySummaries(long accountId, DateTime startDate, DateTime endDate, bool forShoppingCampaigns = false)
+        {
             ReportRequest reportRequest;
             if (forShoppingCampaigns)
                 reportRequest = GetReportRequest_ProductDimension(accountId, startDate, endDate);
             else
-                reportRequest = GetReportRequest_DailySums(accountId, startDate, endDate);
+                reportRequest = GetReportRequest_ConversionPerformance(accountId, startDate, endDate);
+
+            return SendReportRequest(accountId, reportRequest);
+        }
+        public string GetReport_DailySummariesByGoal(long accountId, DateTime startDate, DateTime endDate)
+        {
+            var reportRequest = GetReportRequest_Goals(accountId, startDate, endDate);
+            return SendReportRequest(accountId, reportRequest);
+        }
+
+        // --- private methods ---
+
+        private string SendReportRequest(long accountId, ReportRequest reportRequest)
+        {
+            SetCredentials(accountId);
+            var authorizationData = GetAuthorizationData();
 
             var task = GetReportAsync(authorizationData, reportRequest);
             task.Wait();
             return task.Result;
         }
 
-        private ReportRequest GetReportRequest_DailySums(long accountId, DateTime startDate, DateTime endDate)
+        private ReportRequest GetReportRequest_ConversionPerformance(long accountId, DateTime startDate, DateTime endDate)
         {
             var reportRequest = new ConversionPerformanceReportRequest
             {
                 Format = ReportFormat.Csv,
-                ReportName = "Conversion Report",
+                ReportName = "Conversion Performance Report",
                 ReturnOnlyCompleteData = true,
                 Aggregation = NonHourlyReportAggregation.Daily,
                 Scope = new AccountThroughAdGroupReportScope
@@ -231,9 +245,54 @@ namespace BingAds
             };
             return reportRequest;
         }
+        private ReportRequest GetReportRequest_Goals(long accountId, DateTime startDate, DateTime endDate)
+        {
+            var reportRequest = new GoalsAndFunnelsReportRequest
+            {
+                Format = ReportFormat.Csv,
+                ReportName = "Goals And Funnels Report",
+                ReturnOnlyCompleteData = true,
+                Aggregation = NonHourlyReportAggregation.Daily,
+                Scope = new AccountThroughAdGroupReportScope
+                {
+                    AccountIds = new[] { accountId },
+                    AdGroups = null,
+                    Campaigns = null
+                },
+                Time = new ReportTime
+                {
+                    CustomDateRangeStart = new Date
+                    {
+                        Year = startDate.Year,
+                        Month = startDate.Month,
+                        Day = startDate.Day
+                    },
+                    CustomDateRangeEnd = new Date
+                    {
+                        Year = endDate.Year,
+                        Month = endDate.Month,
+                        Day = endDate.Day
+                    }
+                },
+                Columns = new[] {
+                    GoalsAndFunnelsReportColumn.TimePeriod,
+                    GoalsAndFunnelsReportColumn.GoalId,
+                    GoalsAndFunnelsReportColumn.Goal,
+                    GoalsAndFunnelsReportColumn.Conversions,
+                    GoalsAndFunnelsReportColumn.Spend,
+                    GoalsAndFunnelsReportColumn.Revenue,
+                    GoalsAndFunnelsReportColumn.AccountId,
+                    GoalsAndFunnelsReportColumn.AccountName,
+                    GoalsAndFunnelsReportColumn.AccountNumber,
+                    GoalsAndFunnelsReportColumn.CampaignId,
+                    GoalsAndFunnelsReportColumn.CampaignName
+                }
+            };
+            return reportRequest;
+        }
 
         // returns the filepath of the report (downloaded and unzipped)
-        public async Task<string> GetReportAsync(AuthorizationData authorizationData, ReportRequest reportRequest)
+        private async Task<string> GetReportAsync(AuthorizationData authorizationData, ReportRequest reportRequest)
         {
             string filepath = null;
             try

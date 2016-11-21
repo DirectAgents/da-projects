@@ -62,6 +62,7 @@
     <Compile Include="Abstract\ICampaignRepository.cs" />
     <Compile Include="Abstract\ICPProgRepository.cs" />
     <Compile Include="Abstract\IMainRepository.cs" />
+    <Compile Include="Abstract\IRevTrackRepository.cs" />
     <Compile Include="Abstract\ISecurityRepository.cs" />
     <Compile Include="Abstract\ITDRepository.cs" />
     <Compile Include="Abstract\TopCampaignBy.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Concrete\CPProgStatsRepository.cs" />
     <Compile Include="Concrete\Extensions.cs" />
     <Compile Include="Concrete\MainRepository.cs" />
+    <Compile Include="Concrete\RevTrackRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Concrete\TDRepository.cs" />
     <Compile Include="Contexts\RevTrackContext.cs" />

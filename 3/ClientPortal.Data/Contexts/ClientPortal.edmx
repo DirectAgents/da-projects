@@ -410,6 +410,7 @@
           </Key>
           <Property Name="SearchConvTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Alias" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="SearchDailySummary">
           <Key>
@@ -2449,6 +2450,7 @@
           </Key>
           <Property Name="SearchConvTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Alias" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_SearchConvSummary_SearchCampaign">
           <End Type="ClientPortalModel.SearchCampaign" Role="SearchCampaign" Multiplicity="1" />
@@ -3004,6 +3006,7 @@
           <EntitySetMapping Name="SearchConvTypes">
             <EntityTypeMapping TypeName="ClientPortalModel.SearchConvType">
               <MappingFragment StoreEntitySet="SearchConvType">
+                <ScalarProperty Name="Alias" ColumnName="Alias" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="SearchConvTypeId" ColumnName="SearchConvTypeId" />
               </MappingFragment>

@@ -47,9 +47,10 @@ Conversion Type Stats:<br />
     </table>
 }
 
-<br />
+@Ajax.ActionLink("Conversion Types", "ConvTypes", new { spId = Model.SearchProfileId }, ajaxOpts_Profiles)
+<br /><br />
 Back to:
-@Ajax.ActionLink("Profiles", "SearchProfiles", "SearchAdmin", ajaxOpts_Profiles) |
+@Ajax.ActionLink("Profiles", "SearchProfiles", ajaxOpts_Profiles) |
 @Ajax.ActionLink("Generate Spreadsheet", "GenerateSpreadsheet", new { spId = Model.SearchProfileId }, ajaxOpts_Profiles)
 
 <script>

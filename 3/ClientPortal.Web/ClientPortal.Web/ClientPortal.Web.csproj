@@ -1218,6 +1218,7 @@
     <Content Include="Areas\Admin\Views\Users\AssignSearchProfile.cshtml" />
     <Content Include="Areas\Admin\Views\SearchAdmin\Components.cshtml" />
     <Content Include="Areas\Admin\Views\SearchStats\Generic.cshtml" />
+    <Content Include="Areas\Admin\Views\SearchAdmin\ConvTypes.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

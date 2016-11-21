@@ -304,6 +304,7 @@
     <Compile Include="Commands\DASynchDBMStatsOld.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\CPCLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AdWordsConvSummaryLoader.cs" />
+    <Compile Include="Etl\SearchMarketing\Loaders\BingConvSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdPreviewLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookCampaignSummaryLoader.cs" />
@@ -433,7 +434,7 @@
     <Compile Include="Etl\SearchMarketing\Extracters\AdWordsApiExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\AnalyticsApiExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingCsvReportExtracter.cs" />
-    <Compile Include="Etl\SearchMarketing\Extracters\BingDailySummaryExtracter.cs" />
+    <Compile Include="Etl\SearchMarketing\Extracters\BingApiExtracters.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\CriteoApiExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\CriteoApiExtracter2.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\LocalConnexApiExtracter.cs" />

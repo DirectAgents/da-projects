@@ -19,6 +19,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<Client>().ToTable("Client", adSchema);
             modelBuilder.Entity<ClientProg>().ToTable("ClientProg", adSchema);
             modelBuilder.Entity<Vendor>().ToTable("Vendor", adSchema);
+            modelBuilder.Entity<VendorProg>().ToTable("VendorProg", adSchema);
             modelBuilder.Entity<ProgBudgetInfo>().ToTable("ProgBudgetInfo", adSchema);
             modelBuilder.Entity<ProgVendorBudgetInfo>().ToTable("ProgVendorBudgetInfo", adSchema);
 
@@ -40,6 +41,7 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<Client> Clients { get; set; }
         public DbSet<ClientProg> ClientProgs { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
+        public DbSet<VendorProg> VendorProgs { get; set; }
         public DbSet<ProgBudgetInfo> ProgBudgetInfos { get; set; }
         public DbSet<ProgVendorBudgetInfo> ProgVendorBudgetInfos { get; set; }
 
