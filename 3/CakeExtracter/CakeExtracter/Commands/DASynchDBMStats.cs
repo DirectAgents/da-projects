@@ -36,22 +36,22 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            /*
+            
             DoConvTest(2334723);
             return 0;
-            */
+            /*
             if (Historical)
                 DoHistorical();
             else
                 DoRegular();
-            return 0;
+            return 0;*/
         }
 
         // testing...
         public void DoConvTest(int? insertOrderId) //null for all
         {
             var today = DateTime.Today;
-            var lastweek = today.AddDays(-7);
+            var thisMonth = new DateTime(today.Year,today.Month,7);
             var dateRange = new DateRange(StartDate ?? today, EndDate ?? today);
             //var DAbucket = "gdbm-479"; //generic DA bucket
             //var bucket = "gdbm-479-320231"; //bucket for Crackle TODO--add lookup values to database

@@ -83,10 +83,16 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                     {
                         foreach (var row in EnumerateRowsStatic(reader))
                         {
-                            var res = lookupTable.Where(c => c.id == row.city_id).First();
-                            Logger.Info("City {0} in Country {1} with ID {2}", res.city_name, res.country_name,row.city_id);
-                            row.city_name = res.city_name;
-                            row.country_name = res.country_name;
+                            var res = lookupTable.Where(c => c.id == row.city_id).FirstOrDefault();
+                            if (res != null)
+                            {
+                                var duplicateCount = lookupTable.Where(c => c.short_name == res.short_name && c.country_name == res.country_name);
+                                Logger.Info("City {0} in Country {1} with ID {2}", res.city_name, res.country_name, row.city_id);
+                                row.city_name = res.city_name;
+                                row.country_name = res.country_name;
+                                row.short_name = res.short_name;
+                                row.unique_city_name = (duplicateCount.Count() <= 1);
+                            }
                             yield return row;
                         }
                     }
@@ -161,8 +167,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         public string city_name { get; set; }
         public string country_name { get; set; }
         //public string advertiser_id { get; set; }
-        //public bool unique_city_name { get; set; }
-        //public string short_name { get; set; }
+        public bool unique_city_name { get; set; }
+        public string short_name { get; set; }
     }
 
     public class GeoLocation

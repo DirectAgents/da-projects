@@ -80,8 +80,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         //TODO: don't add cities that are already in database (e.g., "Chicago,Illinois" isn't distinct from just "Chicago")
         private void UpdateDependentCities(List<DataTransferRow> items)
         {
-            var cities = items.Select(i => new Tuple<string,string>(i.city_name,i.country_name)).Distinct();
-            var countryGroups = cities.GroupBy(c => c.Item2);
+            var cities = items.Select(i => new Tuple<string,string,string,bool>(i.city_name,i.short_name,i.country_name,i.unique_city_name)).Distinct().Where(i => i.Item1 != null);
+            var countryGroups = cities.GroupBy(c => c.Item3);
 
             using (var db = new ClientPortalProgContext())
             {
@@ -113,6 +113,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
                         var cpCity = db.ConvCities.FirstOrDefault(c => c.Name == city.Item1 && c.CountryId == countryId);
 
+                        if (cpCity == null && city.Item4 == true)
+                            cpCity = db.ConvCities.FirstOrDefault(c => c.Name == city.Item2 && c.CountryId == countryId);
+
                         if (cpCity == null)
                         {
                             cpCity = new ConvCity
@@ -124,6 +127,14 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                             db.ConvCities.Add(cpCity);
                             db.SaveChanges();
                             Logger.Info("Added new city {0} in country {1} with id {2} to database.", city.Item1, countryName, cpCity.Id);
+                        }
+
+                        else if (city.Item4 == true && cpCity.Name != city.Item1)
+                        {
+                            var formerName = cpCity.Name;
+                            cpCity.Name = city.Item1;
+                            db.SaveChanges();
+                            Logger.Info("Updated city name from {0} to {1} in database.", formerName, city.Item1);
                         }
                         cityIdLookupByName[city.Item1] = cpCity.Id;
                     }
