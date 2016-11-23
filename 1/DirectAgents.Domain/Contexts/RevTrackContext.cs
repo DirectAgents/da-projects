@@ -17,33 +17,33 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
             modelBuilder.Entity<Client>().ToTable("Client", adSchema);
-            modelBuilder.Entity<ClientProg>().ToTable("ClientProg", adSchema);
+            //modelBuilder.Entity<ClientProg>().ToTable("ClientProg", adSchema);
             modelBuilder.Entity<Vendor>().ToTable("Vendor", adSchema);
-            modelBuilder.Entity<VendorProg>().ToTable("VendorProg", adSchema);
-            modelBuilder.Entity<ProgBudgetInfo>().ToTable("ProgBudgetInfo", adSchema);
-            modelBuilder.Entity<ProgVendorBudgetInfo>().ToTable("ProgVendorBudgetInfo", adSchema);
+            //modelBuilder.Entity<VendorProg>().ToTable("VendorProg", adSchema);
+            //modelBuilder.Entity<ProgBudgetInfo>().ToTable("ProgBudgetInfo", adSchema);
+            //modelBuilder.Entity<ProgVendorBudgetInfo>().ToTable("ProgVendorBudgetInfo", adSchema);
 
-            modelBuilder.Entity<ClientProg>().Property(c => c.DefaultBudgetInfo.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
-            modelBuilder.Entity<ClientProg>().Property(c => c.DefaultBudgetInfo.MgmtFeePct).HasPrecision(10, 5).HasColumnName("MgmtFeePct");
-            modelBuilder.Entity<ClientProg>().Property(c => c.DefaultBudgetInfo.MarginPct).HasPrecision(10, 5).HasColumnName("MarginPct");
-            modelBuilder.Entity<ProgBudgetInfo>().Property(b => b.MediaSpend).HasPrecision(14, 2);
-            modelBuilder.Entity<ProgBudgetInfo>().Property(b => b.MgmtFeePct).HasPrecision(10, 5);
-            modelBuilder.Entity<ProgBudgetInfo>().Property(b => b.MarginPct).HasPrecision(10, 5);
-            modelBuilder.Entity<ProgBudgetInfo>()
-                .HasKey(b => new { b.ClientId, b.Date });
-            modelBuilder.Entity<ProgVendorBudgetInfo>().Property(b => b.MediaSpend).HasPrecision(14, 2);
-            modelBuilder.Entity<ProgVendorBudgetInfo>().Property(b => b.MgmtFeePct).HasPrecision(10, 5);
-            modelBuilder.Entity<ProgVendorBudgetInfo>().Property(b => b.MarginPct).HasPrecision(10, 5);
-            modelBuilder.Entity<ProgVendorBudgetInfo>()
-                .HasKey(b => new { b.ClientId, b.VendorId, b.Date });
+            //modelBuilder.Entity<ClientProg>().Property(c => c.DefaultBudgetInfo.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
+            //modelBuilder.Entity<ClientProg>().Property(c => c.DefaultBudgetInfo.MgmtFeePct).HasPrecision(10, 5).HasColumnName("MgmtFeePct");
+            //modelBuilder.Entity<ClientProg>().Property(c => c.DefaultBudgetInfo.MarginPct).HasPrecision(10, 5).HasColumnName("MarginPct");
+            //modelBuilder.Entity<ProgBudgetInfo>().Property(b => b.MediaSpend).HasPrecision(14, 2);
+            //modelBuilder.Entity<ProgBudgetInfo>().Property(b => b.MgmtFeePct).HasPrecision(10, 5);
+            //modelBuilder.Entity<ProgBudgetInfo>().Property(b => b.MarginPct).HasPrecision(10, 5);
+            //modelBuilder.Entity<ProgBudgetInfo>()
+            //    .HasKey(b => new { b.ClientId, b.Date });
+            //modelBuilder.Entity<ProgVendorBudgetInfo>().Property(b => b.MediaSpend).HasPrecision(14, 2);
+            //modelBuilder.Entity<ProgVendorBudgetInfo>().Property(b => b.MgmtFeePct).HasPrecision(10, 5);
+            //modelBuilder.Entity<ProgVendorBudgetInfo>().Property(b => b.MarginPct).HasPrecision(10, 5);
+            //modelBuilder.Entity<ProgVendorBudgetInfo>()
+            //    .HasKey(b => new { b.ClientId, b.VendorId, b.Date });
         }
 
         public DbSet<Client> Clients { get; set; }
-        public DbSet<ClientProg> ClientProgs { get; set; }
+        //public DbSet<ClientProg> ClientProgs { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
-        public DbSet<VendorProg> VendorProgs { get; set; }
-        public DbSet<ProgBudgetInfo> ProgBudgetInfos { get; set; }
-        public DbSet<ProgVendorBudgetInfo> ProgVendorBudgetInfos { get; set; }
+        //public DbSet<VendorProg> VendorProgs { get; set; }
+        //public DbSet<ProgBudgetInfo> ProgBudgetInfos { get; set; }
+        //public DbSet<ProgVendorBudgetInfo> ProgVendorBudgetInfos { get; set; }
 
     }
 }
