@@ -102,6 +102,7 @@
     <Compile Include="Entities\OfferBudget.cs" />
     <Compile Include="Entities\Employee.cs" />
     <Compile Include="Entities\RevTrack\ClientVendor.cs" />
+    <Compile Include="Entities\RevTrack\Prog.cs" />
     <Compile Include="Entities\Screen\Salesperson.cs" />
     <Compile Include="Entities\Screen\SalespersonStat.cs" />
     <Compile Include="Entities\Security\Group.cs">
@@ -181,6 +182,10 @@
     <Compile Include="MigrationsRT\201611112036125_InitialCreate.cs" />
     <Compile Include="MigrationsRT\201611112036125_InitialCreate.Designer.cs">
       <DependentUpon>201611112036125_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsRT\201611231701014_Mig_ProgTables.cs" />
+    <Compile Include="MigrationsRT\201611231701014_Mig_ProgTables.Designer.cs">
+      <DependentUpon>201611231701014_Mig_ProgTables.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsRT\Configuration.cs" />
     <Compile Include="MigrationsTD\201507282051383_Initial.cs" />
@@ -396,6 +401,9 @@
   <ItemGroup>
     <EmbeddedResource Include="MigrationsRT\201611112036125_InitialCreate.resx">
       <DependentUpon>201611112036125_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsRT\201611231701014_Mig_ProgTables.resx">
+      <DependentUpon>201611231701014_Mig_ProgTables.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201507282051383_Initial.resx">
       <DependentUpon>201507282051383_Initial.cs</DependentUpon>
