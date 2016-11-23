@@ -102,7 +102,6 @@
     <Compile Include="Entities\OfferBudget.cs" />
     <Compile Include="Entities\Employee.cs" />
     <Compile Include="Entities\RevTrack\ClientVendor.cs" />
-    <Compile Include="Entities\RevTrack\Prog.cs" />
     <Compile Include="Entities\Screen\Salesperson.cs" />
     <Compile Include="Entities\Screen\SalespersonStat.cs" />
     <Compile Include="Entities\Security\Group.cs">
