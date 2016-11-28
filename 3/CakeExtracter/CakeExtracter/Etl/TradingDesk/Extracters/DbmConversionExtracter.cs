@@ -8,6 +8,7 @@ using CsvHelper;
 using Google;
 
 using Newtonsoft.Json;
+using DBM.Entities;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
@@ -17,7 +18,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         private readonly string bucketName;
         private readonly int? insertionOrderId; // null for all
         private readonly bool includeViewThrus; // (false = only include click-thrus)
-        //private Dictionary<int, string> cityLookupById;
 
         public DbmConversionExtracter(DateRange dateRange, string bucketName, int? insertionOrderId, bool includeViewThrus)
         {
@@ -64,6 +64,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
                 var request = service.Objects.Get(bucketName, filename);
                 var cityRequest = service.Objects.Get("gdbm-public",geoFilename);
+
                 Google.Apis.Storage.v1.Data.Object obj, cityObj;
                 try
                 {
@@ -86,12 +87,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                             var res = lookupTable.Where(c => c.id == row.city_id).FirstOrDefault();
                             if (res != null)
                             {
-                                var duplicateCount = lookupTable.Where(c => c.short_name == res.short_name && c.country_name == res.country_name);
+                                var duplicateCount = lookupTable.Where(c => c.short_name == res.short_name && c.country_name == res.country_name).Count();
                                 Logger.Info("City {0} in Country {1} with ID {2}", res.city_name, res.country_name, row.city_id);
-                                row.city_name = res.city_name;
-                                row.country_name = res.country_name;
-                                row.short_name = res.short_name;
-                                row.unique_city_name = (duplicateCount.Count() <= 1);
+                                row.setAttributes(res.city_name, res.country_name, res.short_name, duplicateCount);
                             }
                             yield return row;
                         }
@@ -133,8 +131,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             }
         }
 
-        //TODO: GetAdvertiserName()
-
     }
 
     // TODO: handle blank event_time / auction_id... skip that row?
@@ -169,6 +165,15 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         //public string advertiser_id { get; set; }
         public bool unique_city_name { get; set; }
         public string short_name { get; set; }
+
+        public void setAttributes(string city, string country, string shortName, int uniqueCount)
+        {
+            city_name = city;
+            country_name = country;
+            short_name = shortName;
+            unique_city_name = (uniqueCount <= 1);
+            //advertiser_id = insertionOrderLookup[insertion_order_id];
+        }
     }
 
     public class GeoLocation

@@ -15,6 +15,7 @@
     string syncDailyUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, start = latestDailyStat, level = "account" });
     string syncStratUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, start = latestStrategyStat, level = "strategy" });
     string syncCreatUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, start = latestCreativeStat, level = "creative" });
+    string syncConvUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, start = latestConvStat, level = "conv" });
 }
 
 Daily Stats...
@@ -63,4 +64,9 @@ Conv Stats...
     <text>Earliest: @earliestConvStat - Latest: @latestConvStat</text>
 } else {
     <text>(none)</text>
+}
+@if (Model.Syncable && Model.ExtAccount.Platform.Code == Platform.Code_DBM)
+{
+    <text>&nbsp;&nbsp;</text>
+    <a href="#" onclick="SyncAccount(@Model.ExtAccount.Id, '@syncConvUrl'); return false">Sync</a>
 }

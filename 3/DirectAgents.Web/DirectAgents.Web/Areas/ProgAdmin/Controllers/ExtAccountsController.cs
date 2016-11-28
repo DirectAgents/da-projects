@@ -206,7 +206,8 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                 case Platform.Code_DBM: //TODO: remove/replace this
                     int ioID;
                     if (int.TryParse(extAcct.ExternalId, out ioID))
-                        DASynchDBMStatsOld.RunStatic(insertionOrderID: ioID); // gets report with stats up to yesterday (and back ?30? days)
+                        DASynchDBMStats.RunStatic(insertionOrderID: ioID,startDate: start, level: level);
+                        //DASynchDBMStatsOld.RunStatic(insertionOrderID: ioID); // gets report with stats up to yesterday (and back ?30? days)
                     break;
                 case Platform.Code_FB: //TODO: pass in statsType
                     DASynchFacebookStats.RunStatic(accountId: extAcct.Id, startDate: start);

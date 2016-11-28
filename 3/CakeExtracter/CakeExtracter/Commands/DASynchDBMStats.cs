@@ -5,6 +5,7 @@ using System.Configuration;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
+using CakeExtracter.Bootstrappers;
 
 namespace CakeExtracter.Commands
 {
@@ -12,11 +13,24 @@ namespace CakeExtracter.Commands
     public class DASynchDBMStats : ConsoleCommand
     {
         //Note: if make a RunStatic, be sure to add 'DBM_AllSiteBucket', etc to the web.config
+        public static int RunStatic(int? insertionOrderID = null, DateTime? startDate = null, DateTime? endDate = null, string level="conv")
+        {
+            AutoMapperBootstrapper.CheckRunSetup();
+            var cmd = new DASynchDBMStats
+            {
+                InsertionOrderID = insertionOrderID,
+                StartDate = startDate ?? DateTime.Today,
+                EndDate = endDate ?? DateTime.Today,
+                StatsType = level
+            };
+            return cmd.Run();
+        }
 
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public bool Historical { get; set; }
         public string StatsType { get; set; }
+        public int? InsertionOrderID { get; set; }
 
         public override void ResetProperties()
         {
@@ -32,35 +46,32 @@ namespace CakeExtracter.Commands
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
             HasOption("h|Historical=", "Get historical stats (ignore endDate)", c => Historical = bool.Parse(c));
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
+            HasOption<int?>("i|insertionOrder=", "Insertion Order", c => InsertionOrderID = c);
         }
 
         public override int Execute(string[] remainingArguments)
-        {
-            
-            DoConvTest(2334723);
-            return 0;
-            /*
+        {  
             if (Historical)
                 DoHistorical();
             else
                 DoRegular();
-            return 0;*/
+            return 0;
         }
 
         // testing...
-        public void DoConvTest(int? insertOrderId) //null for all
+        public void DoETL_Conv() //null for all
         {
             var today = DateTime.Today;
-            var thisMonth = new DateTime(today.Year,today.Month,7);
-            var dateRange = new DateRange(StartDate ?? today, EndDate ?? today);
-            //var DAbucket = "gdbm-479"; //generic DA bucket
+            var dateRange = new DateRange (StartDate.Value, EndDate.Value);
+            
+            //var bucket = "gdbm-479"; //generic DA bucket
             //var bucket = "gdbm-479-320231"; //bucket for Crackle TODO--add lookup values to database
             var bucket = "gdbm-479-914580"; //bucket for Dashlane
-
+            var buckets = BucketNamesFromConfig("DBM_AllSiteBucket_Conv");
             int timezoneOffset = -5; // w/o daylight savings
             var convConverter = new CakeExtracter.Etl.TradingDesk.Loaders.DbmConvConverter(timezoneOffset);
 
-            var extracter = new DbmConversionExtracter(dateRange, bucket, insertOrderId, true);
+            var extracter = new DbmConversionExtracter(dateRange,bucket,InsertionOrderID, true);
             var loader = new DbmConvLoader(convConverter);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -84,8 +95,8 @@ namespace CakeExtracter.Commands
                 DoETL_Creative(reportDate: reportDate);
             if (statsType.Site)
                 DoETL_Site(reportDate: reportDate);
-            //if (statsType.Conv)
-                //DoConvTest();
+            if (statsType.Conv)
+                DoETL_Conv();
         }
 
         public void DoHistorical()
