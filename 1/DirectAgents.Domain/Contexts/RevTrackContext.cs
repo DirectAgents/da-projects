@@ -7,7 +7,9 @@ namespace DirectAgents.Domain.Contexts
 {
     public class RevTrackContext : DbContext
     {
-        const string adSchema = "ad";
+        public const string adSchema = "ad";
+        public const string tblClientProg = "ClientProg";
+        public const string tblVendorProg = "VendorProg";
 
         //? set CommandTimeout in constructor ?
 
@@ -17,9 +19,9 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
             modelBuilder.Entity<Client>().ToTable("Client", adSchema);
-            modelBuilder.Entity<ClientProg>().ToTable("ClientProg", adSchema);
+            modelBuilder.Entity<ClientProg>().ToTable(tblClientProg, adSchema);
             modelBuilder.Entity<Vendor>().ToTable("Vendor", adSchema);
-            modelBuilder.Entity<VendorProg>().ToTable("VendorProg", adSchema);
+            modelBuilder.Entity<VendorProg>().ToTable(tblVendorProg, adSchema);
             modelBuilder.Entity<ProgBudgetInfo>().ToTable("ProgBudgetInfo", adSchema);
             modelBuilder.Entity<ProgVendorBudgetInfo>().ToTable("ProgVendorBudgetInfo", adSchema);
 

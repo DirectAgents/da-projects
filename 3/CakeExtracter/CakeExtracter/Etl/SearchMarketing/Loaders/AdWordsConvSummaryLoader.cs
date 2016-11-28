@@ -140,11 +140,12 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     {   // SearchConvType doesn't exist in the db; so create it and put an entry in the lookup
                         var searchConvType = new SearchConvType
                         {
-                            Name = convTypeName
+                            Name = convTypeName,
+                            Alias = convTypeName
                         };
                         db.SearchConvTypes.Add(searchConvType);
                         db.SaveChanges();
-                        Logger.Info("Saved new SearchConvType: {0} ({1})", convTypeName, searchConvType.SearchConvTypeId);
+                        Logger.Info("Saved new SearchConvType - Name+Alias: {0} ({1})", convTypeName, searchConvType.SearchConvTypeId);
                         convTypeIdLookupByName[convTypeName] = searchConvType.SearchConvTypeId;
                     }
                     else

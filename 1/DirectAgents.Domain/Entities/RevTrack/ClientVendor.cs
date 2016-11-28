@@ -17,7 +17,7 @@ namespace DirectAgents.Domain.Entities.RevTrack
     {
         [Key, ForeignKey("Client")]
         public int ClientId { get; set; }
-        [MaxLength(50), Index("CodeIndex", IsUnique = true)]
+        [MaxLength(50)] //, Index("CodeIndex", IsUnique = true)]
         public string Code { get; set; }
 
         public BudgetInfoVals DefaultBudgetInfo { get; set; }
@@ -52,12 +52,14 @@ namespace DirectAgents.Domain.Entities.RevTrack
     {
         public int Id { get; set; }
         public string Name { get; set; }
+
+        //public virtual VendorProg Prog { get; set; }
     }
     public class VendorProg //"ProgInfo" for a vendor
     {
         [Key, ForeignKey("Vendor")]
         public int VendorId { get; set; }
-        [MaxLength(50), Index("CodeIndex", IsUnique = true)]
+        [MaxLength(50)] //, Index("CodeIndex", IsUnique = true)]
         public string Code { get; set; }
 
         public virtual Vendor Vendor { get; set; }
