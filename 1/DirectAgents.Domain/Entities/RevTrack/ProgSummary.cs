@@ -5,8 +5,8 @@ namespace DirectAgents.Domain.Entities.RevTrack
     public class ProgSummary
     {
         public DateTime Date { get; set; }
-        public int ClientId { get; set; }
-        public virtual Client Client { get; set; }
+        public int ProgCampaignId { get; set; }
+        public virtual ProgCampaign ProgCampaign { get; set; }
         public int VendorId { get; set; }
         public virtual Vendor Vendor { get; set; }
 
@@ -18,8 +18,8 @@ namespace DirectAgents.Domain.Entities.RevTrack
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
-        public int ClientId { get; set; }
-        public virtual Client Client { get; set; }
+        public int ProgCampaignId { get; set; }
+        public virtual ProgCampaign ProgCampaign { get; set; }
         public int VendorId { get; set; }
         public virtual Vendor Vendor { get; set; }
 

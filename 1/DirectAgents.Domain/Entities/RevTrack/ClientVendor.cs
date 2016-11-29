@@ -28,6 +28,8 @@ namespace DirectAgents.Domain.Entities.RevTrack
 
         public virtual ICollection<ProgBudgetInfo> BudgetInfos { get; set; }
         public virtual ICollection<ProgVendorBudgetInfo> VendorBudgetInfos { get; set; }
+        public virtual ICollection<ProgSummary> Summaries { get; set; }
+        public virtual ICollection<ProgExtraItem> ExtraItems { get; set; }
     }
 
     // --- BudgetInfos ---
