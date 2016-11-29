@@ -183,9 +183,9 @@
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.Designer.cs">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="MigrationsRT\201611292029175_Mig_ProgTables.cs" />
-    <Compile Include="MigrationsRT\201611292029175_Mig_ProgTables.Designer.cs">
-      <DependentUpon>201611292029175_Mig_ProgTables.cs</DependentUpon>
+    <Compile Include="MigrationsRT\201611292252180_Mig_ProgCampaign.cs" />
+    <Compile Include="MigrationsRT\201611292252180_Mig_ProgCampaign.Designer.cs">
+      <DependentUpon>201611292252180_Mig_ProgCampaign.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsRT\Configuration.cs" />
     <Compile Include="MigrationsTD\201507282051383_Initial.cs" />
@@ -402,8 +402,8 @@
     <EmbeddedResource Include="MigrationsRT\201611292020284_InitialCreate.resx">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsRT\201611292029175_Mig_ProgTables.resx">
-      <DependentUpon>201611292029175_Mig_ProgTables.cs</DependentUpon>
+    <EmbeddedResource Include="MigrationsRT\201611292252180_Mig_ProgCampaign.resx">
+      <DependentUpon>201611292252180_Mig_ProgCampaign.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201507282051383_Initial.resx">
       <DependentUpon>201507282051383_Initial.cs</DependentUpon>
