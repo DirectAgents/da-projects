@@ -13,7 +13,7 @@ namespace DirectAgents.Domain.MigrationsRT
         
         string IMigrationMetadata.Id
         {
-            get { return "201611112036125_InitialCreate"; }
+            get { return "201611292020284_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

@@ -7,7 +7,7 @@ namespace DirectAgents.Domain.Contexts
 {
     public class RevTrackContext : DbContext
     {
-        public const string adSchema = "ad";
+        public const string rtSchema = "rt";
         public const string tblClientProg = "ClientProg";
         public const string tblVendorProg = "VendorProg";
 
@@ -18,12 +18,12 @@ namespace DirectAgents.Domain.Contexts
             base.OnModelCreating(modelBuilder);
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-            modelBuilder.Entity<Client>().ToTable("Client", adSchema);
-            modelBuilder.Entity<ClientProg>().ToTable(tblClientProg, adSchema);
-            modelBuilder.Entity<Vendor>().ToTable("Vendor", adSchema);
-            modelBuilder.Entity<VendorProg>().ToTable(tblVendorProg, adSchema);
-            modelBuilder.Entity<ProgBudgetInfo>().ToTable("ProgBudgetInfo", adSchema);
-            modelBuilder.Entity<ProgVendorBudgetInfo>().ToTable("ProgVendorBudgetInfo", adSchema);
+            modelBuilder.Entity<Client>().ToTable("Client", rtSchema);
+            modelBuilder.Entity<ClientProg>().ToTable(tblClientProg, rtSchema);
+            modelBuilder.Entity<Vendor>().ToTable("Vendor", rtSchema);
+            modelBuilder.Entity<VendorProg>().ToTable(tblVendorProg, rtSchema);
+            modelBuilder.Entity<ProgBudgetInfo>().ToTable("ProgBudgetInfo", rtSchema);
+            modelBuilder.Entity<ProgVendorBudgetInfo>().ToTable("ProgVendorBudgetInfo", rtSchema);
 
             modelBuilder.Entity<ClientProg>().Property(c => c.DefaultBudgetInfo.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
             modelBuilder.Entity<ClientProg>().Property(c => c.DefaultBudgetInfo.MgmtFeePct).HasPrecision(10, 5).HasColumnName("MgmtFeePct");

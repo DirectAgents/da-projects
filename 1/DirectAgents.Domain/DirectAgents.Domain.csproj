@@ -178,13 +178,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>WikiModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="MigrationsRT\201611112036125_InitialCreate.cs" />
-    <Compile Include="MigrationsRT\201611112036125_InitialCreate.Designer.cs">
-      <DependentUpon>201611112036125_InitialCreate.cs</DependentUpon>
+    <Compile Include="MigrationsRT\201611292020284_InitialCreate.cs" />
+    <Compile Include="MigrationsRT\201611292020284_InitialCreate.Designer.cs">
+      <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="MigrationsRT\201611231701014_Mig_ProgTables.cs" />
-    <Compile Include="MigrationsRT\201611231701014_Mig_ProgTables.Designer.cs">
-      <DependentUpon>201611231701014_Mig_ProgTables.cs</DependentUpon>
+    <Compile Include="MigrationsRT\201611292029175_Mig_ProgTables.cs" />
+    <Compile Include="MigrationsRT\201611292029175_Mig_ProgTables.Designer.cs">
+      <DependentUpon>201611292029175_Mig_ProgTables.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsRT\Configuration.cs" />
     <Compile Include="MigrationsTD\201507282051383_Initial.cs" />
@@ -398,11 +398,11 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MigrationsRT\201611112036125_InitialCreate.resx">
-      <DependentUpon>201611112036125_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="MigrationsRT\201611292020284_InitialCreate.resx">
+      <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsRT\201611231701014_Mig_ProgTables.resx">
-      <DependentUpon>201611231701014_Mig_ProgTables.cs</DependentUpon>
+    <EmbeddedResource Include="MigrationsRT\201611292029175_Mig_ProgTables.resx">
+      <DependentUpon>201611292029175_Mig_ProgTables.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201507282051383_Initial.resx">
       <DependentUpon>201507282051383_Initial.cs</DependentUpon>
