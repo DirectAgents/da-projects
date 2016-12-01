@@ -133,7 +133,7 @@ namespace DirectAgents.Domain.Concrete
             return context.Advertisers.Find(advertiserId);
         }
 
-        public IQueryable<Offer> GetOffers(bool includeExtended, int? acctMgrId, int? advertiserId, bool? withBudget, bool includeInactive, bool? hidden)
+        public IQueryable<Offer> GetOffers(bool includeExtended = false, int? acctMgrId = null, int? advertiserId = null, bool? withBudget = null, bool includeInactive = true, bool? hidden = null)
         {
             IQueryable<Offer> offers;
             if (includeExtended)

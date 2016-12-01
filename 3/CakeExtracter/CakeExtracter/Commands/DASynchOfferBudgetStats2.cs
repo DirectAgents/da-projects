@@ -48,6 +48,17 @@ namespace CakeExtracter.Commands
             DateTime from = StartDate ?? DateTime.Today.AddDays(-DaysAgoToStart); // default: today
             DateTime to = EndDate ?? from.AddDays(DaysToInclude - 1); // default: whatever from is
             var dateRange = new DateRange(from, to);
+
+            ExtractAndLoadOfferSummaries(dateRange);
+
+            // 3) Update budgeted offer stats and send out alerts
+            budgetMonitor = new BudgetMonitor();
+            budgetMonitor.CheckOfferBudgetAlerts(offers);
+
+            return 0;
+        }
+        public static void ExtractAndLoadOfferSummaries(DateRange dateRange)
+        {
             foreach (var date in dateRange.Dates)
             {
                 var extracter = new OfferSummaryExtracter(date);
@@ -57,12 +68,6 @@ namespace CakeExtracter.Commands
                 extracterThread.Join();
                 loaderThread.Join();
             }
-
-            // 3) Update budgeted offer stats and send out alerts
-            budgetMonitor = new BudgetMonitor();
-            budgetMonitor.CheckOfferBudgetAlerts(offers);
-
-            return 0;
         }
 
         private IEnumerable<Offer> GetBudgetedOffers()
@@ -71,7 +76,7 @@ namespace CakeExtracter.Commands
 
             using (var repo = new DirectAgents.Domain.Concrete.MainRepository(new DAContext()))
             {
-                var offers = repo.GetOffers(true, null, null, true, false, null);
+                var offers = repo.GetOffers(includeExtended: true, withBudget: true, includeInactive: false);
                 foreach (var offer in offers)
                 {
                     repo.FillOfferBudgetStats(offer);
