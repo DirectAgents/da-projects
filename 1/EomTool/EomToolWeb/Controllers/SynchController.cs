@@ -1,10 +1,8 @@
-﻿using EomTool.Domain.Abstract;
-using EomTool.Domain.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using EomTool.Domain.Abstract;
+using EomToolWeb.Models;
 
 namespace EomToolWeb.Controllers
 {
@@ -17,30 +15,51 @@ namespace EomToolWeb.Controllers
             this.securityRepo = securityRepository;
             this.daMain1Repo = daMain1Repository;
             this.eomEntitiesConfig = eomEntitiesConfig;
-            this.startDate = eomEntitiesConfig.CurrentEomDate;
-            ViewBag.date = startDate.ToString("MMM yyyy");
         }
 
-        private DateTime startDate;
+        //TODO: cleanup
+        //TODO: a way to automate determining what the CPC offers are
 
         public ActionResult Index()
         {
-            ViewBag.posted = false;
-            return View();
+            var model = new SynchVM
+            {
+                CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
+                Posted = false
+            };
+            return View(model);
         }
 
         [HttpPost]
-        public ActionResult Index(int offerID)
+        public ActionResult Index(string offerID)
         {
-            ViewBag.posted = true;
-            ViewBag.offer = offerID;
-            var enddate = startDate.AddMonths(1).AddDays(-1);
-            int numsynched = CakeExtracter.Commands.EOMSynchCPCCommand.RunStatic(offerID,mainRepo,startDate,enddate);
-            ViewBag.synched = numsynched;
-            return View();
-        }
+            var resultsList = new List<SynchVM.SynchResults>();
 
-        
+            //TODO: allow multiple offerIDs
+            //TODO: handle the case when no offerID(s) could be parsed
+
+            int offerIDint;
+            if (int.TryParse(offerID, out offerIDint))
+            {
+                DateTime startDate = eomEntitiesConfig.CurrentEomDate;
+                DateTime enddate = startDate.AddMonths(1).AddDays(-1);
+                int numsynched = CakeExtracter.Commands.EOMSynchCPCCommand.RunStatic(offerIDint, mainRepo, startDate, enddate);
+
+                resultsList.Add(new SynchVM.SynchResults
+                {
+                    OfferID = offerIDint,
+                    NumItemsSynched = numsynched
+                });
+            }
+
+            var model = new SynchVM
+            {
+                CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
+                Posted = true,
+                Results = resultsList
+            };
+            return View(model);
+        }
 
 	}
 }

@@ -228,6 +228,7 @@
     <Compile Include="Models\PublisherSummaryViewModel.cs" />
     <Compile Include="Models\SelectorViewModel.cs" />
     <Compile Include="Models\SettingsVM.cs" />
+    <Compile Include="Models\SynchVM.cs" />
     <Compile Include="Models\TopViewModel.cs" />
     <Compile Include="Models\TrafficTypeViewModel.cs" />
     <Compile Include="Models\WorkflowModel.cs" />
@@ -4415,6 +4416,7 @@
     <Content Include="Views\Audit\Items.cshtml" />
     <Content Include="Views\Audit\Campaigns.cshtml" />
     <Content Include="Views\Synch\Index.cshtml" />
+    <Content Include="Views\Synch\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
