@@ -8,9 +8,6 @@ namespace DirectAgents.Domain.Contexts
     public class RevTrackContext : DbContext
     {
         public const string rtSchema = "rt";
-        public const string tblClient = "Client";
-        public const string tblProgCampaign = "ProgCampaign";
-        public const string tblVendor = "Vendor";
 
         //? set CommandTimeout in constructor ?
 

@@ -7,9 +7,8 @@ namespace DirectAgents.Domain.MigrationsRT
     public partial class Mig_ProgCampaign : DbMigration
     {
         private const string indexCode = "IX_UQ_Code";
-        private const string tableClient = RevTrackContext.rtSchema + "." + RevTrackContext.tblClient;
-        private const string tableProgCampaign = RevTrackContext.rtSchema + "." + RevTrackContext.tblProgCampaign;
-        private const string tableVendor = RevTrackContext.rtSchema + "." + RevTrackContext.tblVendor;
+        private const string tableClient = RevTrackContext.rtSchema + ".Client";
+        private const string tableVendor = RevTrackContext.rtSchema + ".Vendor";
         private const string columnCode = "Code";
 
         public override void Up()
@@ -39,11 +38,6 @@ namespace DirectAgents.Domain.MigrationsRT
                 CREATE UNIQUE NONCLUSTERED INDEX {0}
                 ON {1}({2})
                 WHERE {2} IS NOT NULL;",
-                indexCode, tableProgCampaign, columnCode));
-            Sql(string.Format(@"
-                CREATE UNIQUE NONCLUSTERED INDEX {0}
-                ON {1}({2})
-                WHERE {2} IS NOT NULL;",
                 indexCode, tableVendor, columnCode));
         }
         
@@ -51,6 +45,8 @@ namespace DirectAgents.Domain.MigrationsRT
         {
             DropForeignKey("rt.ProgCampaign", "ClientId", "rt.Client");
             DropIndex("rt.ProgCampaign", new[] { "ClientId" });
+            DropIndex(tableVendor, indexCode);
+            DropIndex(tableClient, indexCode);
             DropColumn("rt.Vendor", "Code");
             DropColumn("rt.Client", "Code");
             DropTable("rt.ProgCampaign");
