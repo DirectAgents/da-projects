@@ -31,6 +31,17 @@ namespace DirectAgents.Web.Controllers
             base.Dispose(disposing);
         }
 
+        private ISuperRepository _superRepo;
+        protected ISuperRepository superRepo
+        {
+            get { return _superRepo; }
+            set
+            {   //NOTE: Be sure to set daRepo and rtRepo first.
+                _superRepo = value;
+                _superRepo.SetRepositories(daRepo, rtRepo);
+            }
+        }
+
         // Pass in null to use "CurrentMonthTD" cookie
         // Returns the selected month
         protected DateTime SetChooseMonthViewData(DateTime? month = null)

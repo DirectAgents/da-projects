@@ -1,0 +1,14 @@
+﻿@model DirectAgents.Web.Areas.RevTrack.Models.DashboardVM
+
+<h2>Dashboard</h2>
+
+<table>
+@foreach (var stat in Model.ABStats)
+{
+<tr>
+    <td>@stat.Client</td>
+    <td>@stat.Rev</td>
+    <td>@stat.Cost</td>
+</tr>
+}
+</table>
