@@ -31,6 +31,7 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<Offer> GetOffers(bool includeExtended = false, int? acctMgrId = null, int? advertiserId = null, bool? withBudget = null, bool includeInactive = true, bool? hidden = null);
         IQueryable<Offer> GetOffersUnion(bool includeExtendedInfo, bool excludeInactive, bool? withBudget, int[] offerIds);
         Offer GetOffer(int offerId, bool includeExtended, bool fillBudgetStats);
+        IEnumerable<int> OfferIds(int? advId = null);
 
         void FillOfferBudgetStats(Offer offer);
 

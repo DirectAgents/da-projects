@@ -194,6 +194,13 @@ namespace DirectAgents.Domain.Concrete
             return offer;
         }
 
+        public IEnumerable<int> OfferIds(int? advId = null)
+        {
+            var offers = GetOffers(advertiserId: advId);
+            var offerIds = offers.Select(o => o.OfferId).ToList();
+            return offerIds;
+        }
+
         public void FillOfferBudgetStats(Offer offer)
         {
             if (offer.Budget == null || offer.Budget <= 0)

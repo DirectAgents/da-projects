@@ -31,6 +31,8 @@ namespace DirectAgents.Domain.Entities.Cake
         }
 
         [NotMapped]
+        public IEnumerable<int> OfferIds { get; set; }
+        [NotMapped]
         public StatsSummary Stats { get; set; }
     }
 }
