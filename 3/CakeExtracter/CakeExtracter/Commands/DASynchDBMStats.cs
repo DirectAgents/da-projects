@@ -13,7 +13,7 @@ namespace CakeExtracter.Commands
     public class DASynchDBMStats : ConsoleCommand
     {
         //Note: if make a RunStatic, be sure to add 'DBM_AllSiteBucket', etc to the web.config
-        public static int RunStatic(int? insertionOrderID = null, DateTime? startDate = null, DateTime? endDate = null, string level="conv")
+        public static int RunStatic(int? insertionOrderID = null, DateTime? startDate = null, DateTime? endDate = null, string level="ALL")
         {
             AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new DASynchDBMStats
@@ -31,6 +31,7 @@ namespace CakeExtracter.Commands
         public bool Historical { get; set; }
         public string StatsType { get; set; }
         public int? InsertionOrderID { get; set; }
+        public int? AdvertiserID { get; set; }
 
         public override void ResetProperties()
         {
@@ -47,6 +48,7 @@ namespace CakeExtracter.Commands
             HasOption("h|Historical=", "Get historical stats (ignore endDate)", c => Historical = bool.Parse(c));
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<int?>("i|insertionOrder=", "Insertion Order", c => InsertionOrderID = c);
+            HasOption<int?>("a|advertiserId=", "Advertiser ID", c => AdvertiserID = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -56,27 +58,6 @@ namespace CakeExtracter.Commands
             else
                 DoRegular();
             return 0;
-        }
-
-        // testing...
-        public void DoETL_Conv() //null for all
-        {
-            var today = DateTime.Today;
-            var dateRange = new DateRange (StartDate.Value, EndDate.Value);
-            
-            //var bucket = "gdbm-479"; //generic DA bucket
-            //var bucket = "gdbm-479-320231"; //bucket for Crackle TODO--add lookup values to database
-            var bucket = "gdbm-479-914580"; //bucket for Dashlane
-            var buckets = BucketNamesFromConfig("DBM_AllSiteBucket_Conv");
-            int timezoneOffset = -5; // w/o daylight savings
-            var convConverter = new CakeExtracter.Etl.TradingDesk.Loaders.DbmConvConverter(timezoneOffset);
-
-            var extracter = new DbmConversionExtracter(dateRange,bucket,InsertionOrderID, true);
-            var loader = new DbmConvLoader(convConverter);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
         }
 
         public void DoRegular()
@@ -175,5 +156,27 @@ namespace CakeExtracter.Commands
             loaderThread.Join();
         }
 
+        // testing...
+        public void DoETL_Conv() //null for all
+        {
+            var today = DateTime.Today;
+            if (StartDate == null)
+            {
+                StartDate = today.AddDays(-1);
+                EndDate = today;
+            }
+
+            var dateRange = new DateRange(StartDate.Value, EndDate.Value);
+            var buckets = (AdvertiserID == null) ? (BucketNamesFromConfig("DBM_AllAdvertiserIds")) : new string[] { AdvertiserID.ToString() };
+            int timezoneOffset = -5; // w/o daylight savings
+            var convConverter = new CakeExtracter.Etl.TradingDesk.Loaders.DbmConvConverter(timezoneOffset);
+
+            var extracter = new DbmConversionExtracter(dateRange, buckets, InsertionOrderID, true);
+            var loader = new DbmConvLoader(convConverter);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
     }
 }

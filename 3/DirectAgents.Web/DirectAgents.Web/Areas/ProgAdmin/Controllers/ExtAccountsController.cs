@@ -245,12 +245,14 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             else
                 statsDateNullable = null;
 
+            var extAcct = cpProgRepo.ExtAccount(id);
+
             using (var reader = new StreamReader(file.InputStream))
             {
-                //if (statsType != null && statsType.ToUpper().StartsWith("CONV"))
-                //    DASynchAdrollConvCsv.RunStatic(id, reader); // TODO: generic Conv syncher?
-                //else
-                DASynchTDDailySummaries.RunStatic(id, reader, statsType, statsDate: statsDateNullable);
+                if (statsType != null && statsType.ToUpper().StartsWith("CONV") && extAcct.Platform.Code == Platform.Code_AdRoll)
+                    DASynchAdrollConvCsv.RunStatic(id, reader); // TODO: generic Conv syncher?
+                else
+                    DASynchTDDailySummaries.RunStatic(id, reader, statsType, statsDate: statsDateNullable);
             }
             return null;
         }

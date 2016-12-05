@@ -6,6 +6,7 @@ using System.Net;
 using CakeExtracter.Common;
 using CsvHelper;
 using Google;
+using System.Configuration;
 
 using Newtonsoft.Json;
 using DBM.Entities;
@@ -15,14 +16,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     public class DbmConversionExtracter : Extracter<DataTransferRow>
     {
         private readonly DateRange dateRange;
-        private readonly string bucketName;
         private readonly int? insertionOrderId; // null for all
         private readonly bool includeViewThrus; // (false = only include click-thrus)
+        private readonly IEnumerable<string> advertiserIds;
 
-        public DbmConversionExtracter(DateRange dateRange, string bucketName, int? insertionOrderId, bool includeViewThrus)
+        public DbmConversionExtracter(DateRange dateRange, IEnumerable<string> advertiserIds, int? insertionOrderId, bool includeViewThrus)
         {
             this.dateRange = dateRange;
-            this.bucketName = bucketName;
+            this.advertiserIds = advertiserIds;
             this.insertionOrderId = insertionOrderId;
             this.includeViewThrus = includeViewThrus;
         }
@@ -30,7 +31,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         protected override void Extract()
         {
             string includeWhat = includeViewThrus ? "all" : "click-thru";
-            Logger.Info("Extracting {0} Conversions from Data Transfer Files for {1} from {2} to {3}", includeWhat, bucketName, dateRange.FromDate, dateRange.ToDate);
+            string bucket = (advertiserIds.Count() == 1) ? advertiserIds.First() : "all buckets";
+            Logger.Info("Extracting {0} Conversions from Data Transfer Files for {1} from {2} to {3}", includeWhat, bucket, dateRange.FromDate, dateRange.ToDate);
             if (insertionOrderId.HasValue)
                 Logger.Info("InsertionOrder {0}", insertionOrderId);
             var items = EnumerateRows();
@@ -46,52 +48,49 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             //var listRequest = service.Objects.List(bucketName);
             //var bucketObjects = listRequest.Execute();
 
-            //TODO: get advertiser id for each insertion order
-
             foreach (var date in dateRange.Dates)
             {
+                string filename = string.Format("log/{0}.0.conversion.0.csv", date.ToString("yyyyMMdd"));
+                string geoFilename = String.Format("entity/{0}.0.GeoLocation.json", date.ToString("yyyyMMdd"));
                 Logger.Info("Date: {0}", date);
 
-                string filename = String.Format("log/{0}.0.conversion.0.csv", date.ToString("yyyyMMdd"));
-                string geoFilename = String.Format("entity/{0}.0.GeoLocation.json",date.ToString("yyyyMMdd"));
+                var cityRequest = service.Objects.Get("gdbm-public", geoFilename);
+                Google.Apis.Storage.v1.Data.Object cityObj = cityRequest.Execute();
+                var cityStream = DbmCloudStorageExtracter.GetStreamForCloudStorageObject(cityObj, credential);
+                var lookupTable = CreateCityLookup(cityStream);
+                var test = lookupTable.Where(c => c.canonical_name.Replace("Los Angeles", "") != c.canonical_name).ToList();
 
-                //listRequest.Prefix = filename;
-                //var matchingObjects = listRequest.Execute();
-                //if (matchingObjects.Items == null)
-                //    continue;
-
-                //var reportObject = bucketObjects.Items.Where(i => i.Name == filename).FirstOrDefault();
-
-                var request = service.Objects.Get(bucketName, filename);
-                var cityRequest = service.Objects.Get("gdbm-public",geoFilename);
-
-                Google.Apis.Storage.v1.Data.Object obj, cityObj;
-                try
+                foreach (var advertiserId in advertiserIds)
                 {
-                    obj = request.Execute();
-                    cityObj = cityRequest.Execute();
-                }
-                catch (GoogleApiException)
-                {
-                    continue; // file not found; continue.  TODO: catch this specifically?
-                }
-                if (obj != null)
-                {
-                    var cityStream = DbmCloudStorageExtracter.GetStreamForCloudStorageObject(cityObj, credential);
-                    var lookupTable = CreateCityLookup(cityStream);
-                    var stream = DbmCloudStorageExtracter.GetStreamForCloudStorageObject(obj, credential);
-                    using (var reader = new StreamReader(stream))
+                    string thisBucket = String.Format("gdbm-479-{0}", advertiserId);
+                    var request = service.Objects.Get(thisBucket,filename);
+                    Google.Apis.Storage.v1.Data.Object obj;
+
+                    try
                     {
-                        foreach (var row in EnumerateRowsStatic(reader))
+                        obj = request.Execute();
+                    }
+                    catch (GoogleApiException)
+                    {
+                        continue;
+                    }
+
+                    if (obj != null)
+                    {
+                        var stream = DbmCloudStorageExtracter.GetStreamForCloudStorageObject(obj, credential);
+                        using (var reader = new StreamReader(stream))
                         {
-                            var res = lookupTable.Where(c => c.id == row.city_id).FirstOrDefault();
-                            if (res != null)
+                            foreach (var row in EnumerateRowsStatic(reader))
                             {
-                                var duplicateCount = lookupTable.Where(c => c.short_name == res.short_name && c.country_name == res.country_name).Count();
-                                Logger.Info("City {0} in Country {1} with ID {2}", res.city_name, res.country_name, row.city_id);
-                                row.setAttributes(res.city_name, res.country_name, res.short_name, duplicateCount);
+                                var res = lookupTable.Where(c => c.id == row.city_id).FirstOrDefault();
+                                if (res != null)
+                                {
+                                    var duplicateCount = lookupTable.Where(c => c.short_name == res.short_name && c.country_name == res.country_name).Count();
+                                    Logger.Info("City {0} in Country {1} with ID {2}", res.city_name, res.country_name, row.city_id);
+                                    row.setAttributes(res.city_name, res.country_name, res.short_name, duplicateCount);
+                                }
+                                yield return row;
                             }
-                            yield return row;
                         }
                     }
                 }
@@ -121,6 +120,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         public List<GeoLocation> CreateCityLookup(Stream stream)
         {
+
             var serializer = new JsonSerializer();
 
             using (var sr = new StreamReader(stream))
@@ -130,7 +130,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 return jsonObjs;
             }
         }
-
     }
 
     // TODO: handle blank event_time / auction_id... skip that row?
