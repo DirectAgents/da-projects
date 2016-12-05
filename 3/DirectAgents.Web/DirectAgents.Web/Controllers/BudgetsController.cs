@@ -97,7 +97,8 @@ namespace DirectAgents.Web.Controllers
                 IncludeInactive = includeInactive
             };
 
-            var offers = daRepo.GetOffers(false, am, advId, withBudget, includeInactive, null);
+            bool includeExtended = false;
+            var offers = daRepo.GetOffers(includeExtended, am, advId, withBudget, includeInactive);
             foreach (var offer in offers)
             {
                 daRepo.FillOfferBudgetStats(offer);

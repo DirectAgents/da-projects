@@ -133,7 +133,7 @@ namespace DirectAgents.Domain.Concrete
             return context.Advertisers.Find(advertiserId);
         }
 
-        public IQueryable<Offer> GetOffers(bool includeExtended, int? acctMgrId, int? advertiserId, bool? withBudget, bool includeInactive, bool? hidden)
+        public IQueryable<Offer> GetOffers(bool includeExtended = false, int? acctMgrId = null, int? advertiserId = null, bool? withBudget = null, bool includeInactive = true, bool? hidden = null)
         {
             IQueryable<Offer> offers;
             if (includeExtended)
@@ -192,6 +192,13 @@ namespace DirectAgents.Domain.Concrete
             if (offer != null)
                 FillOfferBudgetStats(offer);
             return offer;
+        }
+
+        public IEnumerable<int> OfferIds(int? advId = null)
+        {
+            var offers = GetOffers(advertiserId: advId);
+            var offerIds = offers.Select(o => o.OfferId).ToList();
+            return offerIds;
         }
 
         public void FillOfferBudgetStats(Offer offer)

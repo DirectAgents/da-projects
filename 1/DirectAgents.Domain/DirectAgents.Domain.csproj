@@ -64,6 +64,7 @@
     <Compile Include="Abstract\IMainRepository.cs" />
     <Compile Include="Abstract\IRevTrackRepository.cs" />
     <Compile Include="Abstract\ISecurityRepository.cs" />
+    <Compile Include="Abstract\ISuperRepository.cs" />
     <Compile Include="Abstract\ITDRepository.cs" />
     <Compile Include="Abstract\TopCampaignBy.cs" />
     <Compile Include="Concrete\AdminImpl.cs" />
@@ -75,10 +76,12 @@
     <Compile Include="Concrete\MainRepository.cs" />
     <Compile Include="Concrete\RevTrackRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
+    <Compile Include="Concrete\SuperRepository.cs" />
     <Compile Include="Concrete\TDRepository.cs" />
     <Compile Include="Contexts\RevTrackContext.cs" />
     <Compile Include="Contexts\HistoryContext.cs" />
     <Compile Include="Contexts\ClientPortalProgContext.cs" />
+    <Compile Include="DTO\ABStat.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
     <Compile Include="DTO\TDCampStats.cs" />
     <Compile Include="DTO\TDLineItem.cs" />
@@ -102,6 +105,7 @@
     <Compile Include="Entities\OfferBudget.cs" />
     <Compile Include="Entities\Employee.cs" />
     <Compile Include="Entities\RevTrack\ClientVendor.cs" />
+    <Compile Include="Entities\RevTrack\ProgSummary.cs" />
     <Compile Include="Entities\Screen\Salesperson.cs" />
     <Compile Include="Entities\Screen\SalespersonStat.cs" />
     <Compile Include="Entities\Security\Group.cs">
@@ -178,13 +182,21 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>WikiModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="MigrationsRT\201611112036125_InitialCreate.cs" />
-    <Compile Include="MigrationsRT\201611112036125_InitialCreate.Designer.cs">
-      <DependentUpon>201611112036125_InitialCreate.cs</DependentUpon>
+    <Compile Include="MigrationsRT\201611292020284_InitialCreate.cs" />
+    <Compile Include="MigrationsRT\201611292020284_InitialCreate.Designer.cs">
+      <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="MigrationsRT\201611231701014_Mig_ProgTables.cs" />
-    <Compile Include="MigrationsRT\201611231701014_Mig_ProgTables.Designer.cs">
-      <DependentUpon>201611231701014_Mig_ProgTables.cs</DependentUpon>
+    <Compile Include="MigrationsRT\201611292252180_Mig_ProgCampaign.cs" />
+    <Compile Include="MigrationsRT\201611292252180_Mig_ProgCampaign.Designer.cs">
+      <DependentUpon>201611292252180_Mig_ProgCampaign.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsRT\201611292309548_Mig_ProgBudgetInfos.cs" />
+    <Compile Include="MigrationsRT\201611292309548_Mig_ProgBudgetInfos.Designer.cs">
+      <DependentUpon>201611292309548_Mig_ProgBudgetInfos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsRT\201611292320559_Mig_ProgSummary.cs" />
+    <Compile Include="MigrationsRT\201611292320559_Mig_ProgSummary.Designer.cs">
+      <DependentUpon>201611292320559_Mig_ProgSummary.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsRT\Configuration.cs" />
     <Compile Include="MigrationsTD\201507282051383_Initial.cs" />
@@ -398,11 +410,17 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MigrationsRT\201611112036125_InitialCreate.resx">
-      <DependentUpon>201611112036125_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="MigrationsRT\201611292020284_InitialCreate.resx">
+      <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsRT\201611231701014_Mig_ProgTables.resx">
-      <DependentUpon>201611231701014_Mig_ProgTables.cs</DependentUpon>
+    <EmbeddedResource Include="MigrationsRT\201611292252180_Mig_ProgCampaign.resx">
+      <DependentUpon>201611292252180_Mig_ProgCampaign.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsRT\201611292309548_Mig_ProgBudgetInfos.resx">
+      <DependentUpon>201611292309548_Mig_ProgBudgetInfos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsRT\201611292320559_Mig_ProgSummary.resx">
+      <DependentUpon>201611292320559_Mig_ProgSummary.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201507282051383_Initial.resx">
       <DependentUpon>201507282051383_Initial.cs</DependentUpon>

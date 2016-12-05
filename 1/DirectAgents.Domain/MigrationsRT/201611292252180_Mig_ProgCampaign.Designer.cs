@@ -7,13 +7,13 @@ namespace DirectAgents.Domain.MigrationsRT
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class InitialCreate : IMigrationMetadata
+    public sealed partial class Mig_ProgCampaign : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Mig_ProgCampaign));
         
         string IMigrationMetadata.Id
         {
-            get { return "201611112036125_InitialCreate"; }
+            get { return "201611292252180_Mig_ProgCampaign"; }
         }
         
         string IMigrationMetadata.Source

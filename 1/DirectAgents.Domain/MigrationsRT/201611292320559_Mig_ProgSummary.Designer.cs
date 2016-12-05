@@ -7,13 +7,13 @@ namespace DirectAgents.Domain.MigrationsRT
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Mig_ProgTables : IMigrationMetadata
+    public sealed partial class Mig_ProgSummary : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Mig_ProgTables));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Mig_ProgSummary));
         
         string IMigrationMetadata.Id
         {
-            get { return "201611231701014_Mig_ProgTables"; }
+            get { return "201611292320559_Mig_ProgSummary"; }
         }
         
         string IMigrationMetadata.Source

@@ -20,6 +20,9 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
             this.mainRepo = mainRepository;
         }
 
+        //TODO: move code to Upsert...()
+        // Check if campaign/affiliate exist in db; need to be added?
+
         protected override int Load(List<CampaignSummary> items)
         {
             foreach (var campaignItem in items)

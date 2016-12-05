@@ -75,27 +75,29 @@ namespace DirectAgents.Web.Controllers
                 }).ToList();
 
             IEnumerable<StatsSummary> advStats = new List<StatsSummary>();
-            var advertisers = daRepo.GetAdvertisers();
+            var advertisers = daRepo.GetAdvertisers().ToList();
             foreach (var adv in advertisers)
             {
-                //Note: Multiple Active Record Sets used here; Alt. solution: Add AdvId to StatsSummary; first pass: set adv id & name
-                var offerIds = adv.Offers.Select(o => o.OfferId).ToArray();
+                adv.OfferIds = daRepo.OfferIds(advId: adv.AdvertiserId);
 
-                var advSummaries = offerSummaries.Where(os => offerIds.Contains(os.Id.Value));
-                if (advSummaries.Any())
+                if (adv.OfferIds.Any())
                 {
-                    var stats = new StatsSummary
+                    var advSummaries = offerSummaries.Where(os => adv.OfferIds.Contains(os.Id.Value));
+                    if (advSummaries.Any())
                     {
-                        Name = adv.AdvertiserName,
-                        Views = advSummaries.Sum(ds => ds.Views),
-                        Clicks = advSummaries.Sum(ds => ds.Clicks),
-                        Conversions = advSummaries.Sum(ds => ds.Conversions),
-                        Paid = advSummaries.Sum(ds => ds.Paid),
-                        Sellable = advSummaries.Sum(ds => ds.Sellable),
-                        Revenue = advSummaries.Sum(ds => ds.Revenue),
-                        Cost = advSummaries.Sum(ds => ds.Cost)
-                    };
-                    ((List<StatsSummary>)advStats).Add(stats);
+                        var stats = new StatsSummary
+                        {
+                            Name = adv.AdvertiserName,
+                            Views = advSummaries.Sum(ds => ds.Views),
+                            Clicks = advSummaries.Sum(ds => ds.Clicks),
+                            Conversions = advSummaries.Sum(ds => ds.Conversions),
+                            Paid = advSummaries.Sum(ds => ds.Paid),
+                            Sellable = advSummaries.Sum(ds => ds.Sellable),
+                            Revenue = advSummaries.Sum(ds => ds.Revenue),
+                            Cost = advSummaries.Sum(ds => ds.Cost)
+                        };
+                        ((List<StatsSummary>)advStats).Add(stats);
+                    }
                 }
             }
             if (sort == "margin")

@@ -8,7 +8,7 @@ namespace DirectAgents.Domain.MigrationsRT
         public override void Up()
         {
             CreateTable(
-                "ad.Client",
+                "rt.Client",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
@@ -17,7 +17,7 @@ namespace DirectAgents.Domain.MigrationsRT
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "ad.Vendor",
+                "rt.Vendor",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
@@ -29,8 +29,8 @@ namespace DirectAgents.Domain.MigrationsRT
         
         public override void Down()
         {
-            DropTable("ad.Vendor");
-            DropTable("ad.Client");
+            DropTable("rt.Vendor");
+            DropTable("rt.Client");
         }
     }
 }

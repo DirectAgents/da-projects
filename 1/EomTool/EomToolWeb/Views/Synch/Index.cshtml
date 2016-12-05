@@ -1,19 +1,25 @@
-﻿
-Accounting Period: <b>@ViewBag.date</b>
+﻿@model SynchVM
+
+Accounting Period: <b>@Model.CurrentEomDateString</b>
 <br /><br />
 
 <h2>Synch CPCs</h2>
 
-@if (ViewBag.posted == false)
+@if (Model.Posted == false)
 {
 
-using (Html.BeginForm()){
+using (Html.BeginForm())
+{
+    <text>Offer ID:</text><br />
     @Html.TextBox("offerID") <br />
     <input type="submit" />    
 }
 
 }
-else 
+else
 {
-    <p>@ViewBag.synched Items Synched for Offer @ViewBag.offer !</p>
+    foreach (var result in Model.Results)
+    {
+        <text>@result.NumItemsSynched Items Synched for Offer @result.OfferID !</text><br />
+    }
 }
