@@ -47,5 +47,23 @@ namespace DirectAgents.Web.Areas.RevTrack.Controllers
 
             return clientStats;
         }
+
+        public ActionResult EditClientStat(int id, decimal? sb, decimal? cl)
+        {
+            var clientStats = (IEnumerable<ABStat>)Session["StatsByClient"];
+            foreach (var clientStat in clientStats)
+            {
+                if (clientStat.Id == id) // the one to edit
+                {
+                    if (sb.HasValue)
+                        clientStat.StartBal = sb.Value;
+                    if (cl.HasValue)
+                        clientStat.CredLim = cl.Value;
+                    break;
+                }
+            }
+            return RedirectToAction("Index");
+        }
+
 	}
 }

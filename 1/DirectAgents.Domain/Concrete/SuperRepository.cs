@@ -70,6 +70,7 @@ namespace DirectAgents.Domain.Concrete
                 {
                     var abStat = new ABStat
                     {
+                        Id = adv.AdvertiserId,
                         Client = adv.AdvertiserName,
                         Rev = ods.Sum(o => o.Revenue),
                         Cost = ods.Sum(o => o.Cost)
