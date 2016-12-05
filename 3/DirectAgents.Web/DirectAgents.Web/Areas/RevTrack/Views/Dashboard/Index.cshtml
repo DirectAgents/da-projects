@@ -3,11 +3,18 @@
 <h2>Dashboard</h2>
 
 <table>
+<tr>
+    <th>Client</th>
+    <th>Revenue</th>
+    <th>&nbsp;&nbsp;&nbsp;</th>
+    <th>Cost</th>
+</tr>
 @foreach (var stat in Model.ABStats)
 {
 <tr>
     <td>@stat.Client</td>
     <td>@stat.Rev</td>
+    <td></td>
     <td>@stat.Cost</td>
 </tr>
 }

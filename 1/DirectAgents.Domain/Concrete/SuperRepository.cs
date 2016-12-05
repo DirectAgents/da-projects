@@ -25,11 +25,45 @@ namespace DirectAgents.Domain.Concrete
         {
             DateTime monthEnd = monthStart.AddMonths(1).AddDays(-1);
             var offerDailySummaries = mainRepo.GetOfferDailySummaries(null, monthStart, monthEnd);
+            var offerStats = offerDailySummaries.GroupBy(o => o.OfferId).Select(g => new
+            {
+                OfferId = g.Key,
+                Revenue = g.Sum(o => o.Revenue),
+                Cost = g.Sum(o => o.Cost)
+            }
+            ).ToList().AsQueryable();
+
+            var statList = new List<ABStat>();
+            var advertisers = mainRepo.GetAdvertisers().OrderBy(a => a.AdvertiserName).ToList(); //TODO: include? (e.g. AcctMgr)
+            foreach (var adv in advertisers)
+            {
+                adv.OfferIds = mainRepo.OfferIds(advId: adv.AdvertiserId); // ?Could we avoid one db call per advertiser?
+                var advOfferStats = offerStats.Where(o => adv.OfferIds.Contains(o.OfferId));
+                if (advOfferStats.Any())
+                {
+                    var abStat = new ABStat
+                    {
+                        Client = adv.AdvertiserName,
+                        Rev = advOfferStats.Sum(o => o.Revenue),
+                        Cost = advOfferStats.Sum(o => o.Cost)
+                    };
+                    statList.Add(abStat);
+                }
+            }
+            return statList;
+        }
+        public IEnumerable<ABStat> StatsByClientX(DateTime monthStart, int? maxClients = null)
+        {
+            DateTime monthEnd = monthStart.AddMonths(1).AddDays(-1);
+            var offerDailySummaries = mainRepo.GetOfferDailySummaries(null, monthStart, monthEnd);
             var statList = new List<ABStat>();
 
             var advertisers = mainRepo.GetAdvertisers().OrderBy(a => a.AdvertiserName).ToList(); //TODO: include? (e.g. AcctMgr)
             foreach (var adv in advertisers)
             {
+                if (maxClients.HasValue && statList.Count >= maxClients.Value)
+                    break;
+
                 adv.OfferIds = mainRepo.OfferIds(advId: adv.AdvertiserId);
                 var ods = offerDailySummaries.Where(o => adv.OfferIds.Contains(o.OfferId));
                 if (ods.Any())
@@ -40,7 +74,9 @@ namespace DirectAgents.Domain.Concrete
                         Rev = ods.Sum(o => o.Revenue),
                         Cost = ods.Sum(o => o.Cost)
                     };
-                    statList.Add(abStat);
+                    // if maxClients is specified, get at most that number of non-zero abStats
+                    if (!maxClients.HasValue || abStat.Rev > 0 || abStat.Cost > 0)
+                        statList.Add(abStat);
                 }
             }
             return statList;
