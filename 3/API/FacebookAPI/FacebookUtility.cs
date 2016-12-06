@@ -225,6 +225,7 @@ namespace FacebookAPI
                 moreData = false;
                 var parms = new
                 {
+                    //filtering = new[] { new { field = "campaign.name", @operator = "EQUAL", value = "DA | Mobile App Installs (Android)" } },
                     //metadata = 1,
                     level = levelVal,
                     fields = fieldsVal,
