@@ -104,7 +104,7 @@
     <Compile Include="Entities\DBM\InsertionOrder.cs" />
     <Compile Include="Entities\OfferBudget.cs" />
     <Compile Include="Entities\Employee.cs" />
-    <Compile Include="Entities\RevTrack\ClientVendor.cs" />
+    <Compile Include="Entities\RevTrack\ProgClientVendor.cs" />
     <Compile Include="Entities\RevTrack\ProgSummary.cs" />
     <Compile Include="Entities\Screen\Salesperson.cs" />
     <Compile Include="Entities\Screen\SalespersonStat.cs" />

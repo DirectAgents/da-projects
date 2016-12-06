@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DirectAgents.Domain.Entities.CPProg;
 
-//TODO: rename file to ProgClientVendor ?
-
 namespace DirectAgents.Domain.Entities.RevTrack
 {
     public class ProgClient
