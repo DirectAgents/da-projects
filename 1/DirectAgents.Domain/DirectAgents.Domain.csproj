@@ -186,6 +186,18 @@
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.Designer.cs">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsRT\201612062251380_Mig_ProgCampaign.cs" />
+    <Compile Include="MigrationsRT\201612062251380_Mig_ProgCampaign.Designer.cs">
+      <DependentUpon>201612062251380_Mig_ProgCampaign.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsRT\201612062302201_Mig_ProgBudgetInfos.cs" />
+    <Compile Include="MigrationsRT\201612062302201_Mig_ProgBudgetInfos.Designer.cs">
+      <DependentUpon>201612062302201_Mig_ProgBudgetInfos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsRT\201612062313024_Mig_ProgSummary.cs" />
+    <Compile Include="MigrationsRT\201612062313024_Mig_ProgSummary.Designer.cs">
+      <DependentUpon>201612062313024_Mig_ProgSummary.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsRT\Configuration.cs" />
     <Compile Include="MigrationsTD\201507282051383_Initial.cs" />
     <Compile Include="MigrationsTD\201507282051383_Initial.Designer.cs">
@@ -400,6 +412,15 @@
   <ItemGroup>
     <EmbeddedResource Include="MigrationsRT\201611292020284_InitialCreate.resx">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsRT\201612062251380_Mig_ProgCampaign.resx">
+      <DependentUpon>201612062251380_Mig_ProgCampaign.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsRT\201612062302201_Mig_ProgBudgetInfos.resx">
+      <DependentUpon>201612062302201_Mig_ProgBudgetInfos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsRT\201612062313024_Mig_ProgSummary.resx">
+      <DependentUpon>201612062313024_Mig_ProgSummary.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201507282051383_Initial.resx">
       <DependentUpon>201507282051383_Initial.cs</DependentUpon>

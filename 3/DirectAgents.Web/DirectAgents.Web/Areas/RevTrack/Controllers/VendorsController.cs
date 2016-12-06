@@ -12,9 +12,7 @@ namespace DirectAgents.Web.Areas.RevTrack.Controllers
 
         public ActionResult Index()
         {
-            var vendors = rtRepo.Vendors();
-
-            return View(vendors);
+            return View();
         }
 	}
 }

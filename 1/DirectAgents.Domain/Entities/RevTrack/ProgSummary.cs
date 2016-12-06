@@ -7,8 +7,8 @@ namespace DirectAgents.Domain.Entities.RevTrack
         public DateTime Date { get; set; }
         public int ProgCampaignId { get; set; }
         public virtual ProgCampaign ProgCampaign { get; set; }
-        public int VendorId { get; set; }
-        public virtual Vendor Vendor { get; set; }
+        public int ProgVendorId { get; set; }
+        public virtual ProgVendor ProgVendor { get; set; }
 
         public decimal Cost { get; set; }
         // conversions? (postclick & postview?)
@@ -20,8 +20,8 @@ namespace DirectAgents.Domain.Entities.RevTrack
         public DateTime Date { get; set; }
         public int ProgCampaignId { get; set; }
         public virtual ProgCampaign ProgCampaign { get; set; }
-        public int VendorId { get; set; }
-        public virtual Vendor Vendor { get; set; }
+        public int ProgVendorId { get; set; }
+        public virtual ProgVendor ProgVendor { get; set; }
 
         public string Description { get; set; }
         public decimal Cost { get; set; }
