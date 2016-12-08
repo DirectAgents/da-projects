@@ -101,6 +101,9 @@ namespace CakeExtracter.Commands
                     }
                     if (GetConversionTypeStats)
                     {
+                        //TODO: handle dates with no stats... keep track of all dates within the range and for those missing when done, delete the SCS's
+                        //      (could do in extracter or loader or have loader return dates loaded, or missing dates, or have a method to call to delete SCS's
+                        //       that didn't have any items)
                         var extracter = new BingConvSummaryExtracter(accountId, startDate, endDate);
                         var loader = new BingConvSummaryLoader(searchAccount.SearchAccountId);
                         var extracterThread = extracter.Start();
