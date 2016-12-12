@@ -8,7 +8,7 @@ namespace DirectAgents.Domain.Abstract
     {
         void SaveChanges();
 
-        IQueryable<Client> Clients();
-        IQueryable<Vendor> Vendors();
+        IQueryable<ProgClient> ProgClients();
+        IQueryable<ProgVendor> ProgVendors();
     }
 }

@@ -7,12 +7,12 @@ using CakeExtracter.Etl.CakeMarketing.Extracters;
 namespace CakeExtracter.Commands
 {
     [Export(typeof(ConsoleCommand))]
-    public class DASynchOffersCommand : ConsoleCommand
+    public class DASynchOffers : ConsoleCommand
     {
         public static int RunStatic(int advertiserId, bool loadInactive)
         {
             AutoMapperBootstrapper.CheckRunSetup();
-            var cmd = new DASynchOffersCommand
+            var cmd = new DASynchOffers
             {
                 AdvertiserId = advertiserId,
                 LoadInactive = loadInactive
@@ -29,7 +29,7 @@ namespace CakeExtracter.Commands
             LoadInactive = false;
         }
 
-        public DASynchOffersCommand()
+        public DASynchOffers()
         {
             IsCommand("daSynchOffers", "synch Offers");
             HasOption<int>("a|advertiserId=", "Advertiser Id (0 = all (default))", c => AdvertiserId = c);

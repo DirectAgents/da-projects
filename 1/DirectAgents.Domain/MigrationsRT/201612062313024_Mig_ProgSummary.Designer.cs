@@ -13,7 +13,7 @@ namespace DirectAgents.Domain.MigrationsRT
         
         string IMigrationMetadata.Id
         {
-            get { return "201611292320559_Mig_ProgSummary"; }
+            get { return "201612062313024_Mig_ProgSummary"; }
         }
         
         string IMigrationMetadata.Source

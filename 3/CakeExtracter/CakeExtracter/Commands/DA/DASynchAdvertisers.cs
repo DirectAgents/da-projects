@@ -7,12 +7,12 @@ using CakeExtracter.Etl.CakeMarketing.Extracters;
 namespace CakeExtracter.Commands
 {
     [Export(typeof(ConsoleCommand))]
-    public class DASynchAdvertisersCommand : ConsoleCommand
+    public class DASynchAdvertisers : ConsoleCommand
     {
         public static int RunStatic(int advertiserId, bool includeContacts, bool synchOffersAlso)
         {
             AutoMapperBootstrapper.CheckRunSetup();
-            var cmd = new DASynchAdvertisersCommand
+            var cmd = new DASynchAdvertisers
             {
                 AdvertiserId = advertiserId,
                 IncludeContacts = includeContacts,
@@ -32,7 +32,7 @@ namespace CakeExtracter.Commands
             SynchOffersAlso = false;
         }
 
-        public DASynchAdvertisersCommand()
+        public DASynchAdvertisers()
         {
             IsCommand("daSynchAdvertisers", "synch Advertisers");
             HasOption<int>("a|advertiserId=", "Advertiser Id (0 = all (default))", c => AdvertiserId = c);
@@ -50,7 +50,7 @@ namespace CakeExtracter.Commands
             loaderThread.Join();
 
             if (SynchOffersAlso)
-                DASynchOffersCommand.RunStatic(AdvertiserId, false);
+                DASynchOffers.RunStatic(AdvertiserId, false);
 
             return 0;
         }

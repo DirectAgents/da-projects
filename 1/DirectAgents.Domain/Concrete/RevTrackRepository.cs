@@ -22,14 +22,14 @@ namespace DirectAgents.Domain.Concrete
 
         // ---
 
-        public IQueryable<Client> Clients()
+        public IQueryable<ProgClient> ProgClients()
         {
-            return context.Clients;
+            return context.ProgClients;
         }
 
-        public IQueryable<Vendor> Vendors()
+        public IQueryable<ProgVendor> ProgVendors()
         {
-            return context.Vendors;
+            return context.ProgVendors;
         }
 
         // ---

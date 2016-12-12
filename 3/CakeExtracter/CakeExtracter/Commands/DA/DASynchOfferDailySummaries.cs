@@ -8,12 +8,12 @@ using CakeExtracter.Etl.CakeMarketing.Extracters;
 namespace CakeExtracter.Commands
 {
     [Export(typeof(ConsoleCommand))]
-    public class DASynchOfferDailySummariesCommand : ConsoleCommand
+    public class DASynchOfferDailySummaries : ConsoleCommand
     {
         public static int RunStatic(int advertiserId, int? offerId, DateTime? startDate = null, DateTime? endDate = null)
         {
             AutoMapperBootstrapper.CheckRunSetup();
-            var cmd = new DASynchOfferDailySummariesCommand
+            var cmd = new DASynchOfferDailySummaries
             {
                 AdvertiserId = advertiserId,
                 OfferId = offerId,
@@ -36,7 +36,7 @@ namespace CakeExtracter.Commands
             EndDate = null;
         }
 
-        public DASynchOfferDailySummariesCommand()
+        public DASynchOfferDailySummaries()
         {
             IsCommand("daSynchOfferDailySummaries", "synch OfferDailySummaries for an advertisers offers in a date range");
             HasOption<int>("a|advertiserId=", "Advertiser Id (default = 0 / all advertisers)", c => AdvertiserId = c);

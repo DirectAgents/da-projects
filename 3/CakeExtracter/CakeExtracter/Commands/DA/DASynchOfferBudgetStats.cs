@@ -19,12 +19,12 @@ using DirectAgents.Domain.Entities.Cake;
 namespace CakeExtracter.Commands
 {
     [Export(typeof(ConsoleCommand))]
-    public class DASynchOfferBudgetStatsCommand : ConsoleCommand
+    public class DASynchOfferBudgetStats : ConsoleCommand
     {
         public static int RunStatic(int? offerId)
         {
             AutoMapperBootstrapper.CheckRunSetup();
-            var cmd = new DASynchOfferBudgetStatsCommand()
+            var cmd = new DASynchOfferBudgetStats()
             {
                 OfferId = offerId
             };
@@ -52,7 +52,7 @@ namespace CakeExtracter.Commands
             SleepMilliseconds = 0;
         }
 
-        public DASynchOfferBudgetStatsCommand()
+        public DASynchOfferBudgetStats()
         {
             IsCommand("daSynchOfferBudgetStats", "synch OfferDailySummaries for all offers with budgets");
             HasOption<int>("o|offerId=", "Offer Id (default = all with budgets)", c => OfferId = c);

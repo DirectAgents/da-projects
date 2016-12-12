@@ -7,7 +7,9 @@ namespace DirectAgents.Domain.Contexts
 {
     public class RevTrackContext : DbContext
     {
-        public const string rtSchema = "rt";
+        //public const string rtSchema = "rt";
+        public const string extSchema = "ext";
+        public const string tblProgVendor = "ProgVendor";
 
         //? set CommandTimeout in constructor ?
 
@@ -16,13 +18,13 @@ namespace DirectAgents.Domain.Contexts
             base.OnModelCreating(modelBuilder);
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-            modelBuilder.Entity<Client>().ToTable("Client", rtSchema);
-            modelBuilder.Entity<ProgCampaign>().ToTable("ProgCampaign", rtSchema);
-            modelBuilder.Entity<Vendor>().ToTable("Vendor", rtSchema);
-            modelBuilder.Entity<ProgBudgetInfo>().ToTable("ProgBudgetInfo", rtSchema);
-            modelBuilder.Entity<ProgVendorBudgetInfo>().ToTable("ProgVendorBudgetInfo", rtSchema);
-            modelBuilder.Entity<ProgSummary>().ToTable("ProgSummary", rtSchema);
-            modelBuilder.Entity<ProgExtraItem>().ToTable("ProgExtraItem", rtSchema);
+            modelBuilder.Entity<ProgClient>().ToTable("ProgClient", extSchema);
+            modelBuilder.Entity<ProgCampaign>().ToTable("ProgCampaign", extSchema);
+            modelBuilder.Entity<ProgVendor>().ToTable(tblProgVendor, extSchema);
+            modelBuilder.Entity<ProgBudgetInfo>().ToTable("ProgBudgetInfo", extSchema);
+            modelBuilder.Entity<ProgVendorBudgetInfo>().ToTable("ProgVendorBudgetInfo", extSchema);
+            modelBuilder.Entity<ProgSummary>().ToTable("ProgSummary", extSchema);
+            modelBuilder.Entity<ProgExtraItem>().ToTable("ProgExtraItem", extSchema);
 
             modelBuilder.Entity<ProgCampaign>().Property(c => c.DefaultBudgetInfo.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
             modelBuilder.Entity<ProgCampaign>().Property(c => c.DefaultBudgetInfo.MgmtFeePct).HasPrecision(10, 5).HasColumnName("MgmtFeePct");
@@ -36,20 +38,19 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<ProgVendorBudgetInfo>().Property(b => b.MgmtFeePct).HasPrecision(10, 5);
             modelBuilder.Entity<ProgVendorBudgetInfo>().Property(b => b.MarginPct).HasPrecision(10, 5);
             modelBuilder.Entity<ProgVendorBudgetInfo>()
-                .HasKey(b => new { b.ProgCampaignId, b.VendorId, b.Date });
+                .HasKey(b => new { b.ProgCampaignId, b.ProgVendorId, b.Date });
             modelBuilder.Entity<ProgSummary>()
-                .HasKey(p => new { p.Date, p.ProgCampaignId, p.VendorId })
+                .HasKey(p => new { p.Date, p.ProgCampaignId, p.ProgVendorId })
                 .Property(p => p.Cost).HasPrecision(18, 6);
             modelBuilder.Entity<ProgExtraItem>().Property(i => i.Cost).HasPrecision(14, 2);
             modelBuilder.Entity<ProgExtraItem>().Property(i => i.Revenue).HasPrecision(14, 2);
         }
 
-        public DbSet<Client> Clients { get; set; }
+        public DbSet<ProgClient> ProgClients { get; set; }
         public DbSet<ProgCampaign> ProgCampaigns { get; set; }
-        public DbSet<Vendor> Vendors { get; set; }
+        public DbSet<ProgVendor> ProgVendors { get; set; }
         public DbSet<ProgBudgetInfo> ProgBudgetInfos { get; set; }
         public DbSet<ProgVendorBudgetInfo> ProgVendorBudgetInfos { get; set; }
-
         public DbSet<ProgSummary> ProgSummaries { get; set; }
         public DbSet<ProgExtraItem> ProgExtraItems { get; set; }
     }
