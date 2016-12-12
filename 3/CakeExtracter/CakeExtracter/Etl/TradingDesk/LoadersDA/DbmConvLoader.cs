@@ -4,6 +4,7 @@ using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.Loaders;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.DBM;
 using System;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
@@ -14,6 +15,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         private Dictionary<int, int> accountIdLookupByExtId = new Dictionary<int, int>();
         private Dictionary<string, int> countryIdLookupByName = new Dictionary<string, int>();
         private Dictionary<string, int> cityIdLookupByName = new Dictionary<string, int>();
+        private Dictionary<int,string> bucketLookupByName = new Dictionary<int,string>();
 
         public DbmConvLoader(DbmConvConverter convConverter)
         {
@@ -23,6 +25,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         protected override int Load(List<DataTransferRow> items)
         {
             UpdateAccountLookup(items);
+            UpdateBuckets(items);
             UpdateDependentCities(items);
             var convs = items.Select(i => CreateConv(i)).Where(i => i.AccountId > 0).ToList();
             var count = TDConvLoader.UpsertConvs(convs);
@@ -36,10 +39,11 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 AccountId = accountIdLookupByExtId[dtRow.insertion_order_id.Value],
                 Time = convConverter.EventTime(dtRow),
                 ConvType = (dtRow.event_sub_type == "postview") ? "v" : "c",
-                CityId = cityIdLookupByName[dtRow.city_name],
-                //ConvVal = 0,
+                ConvVal = 0,
                 IP = dtRow.ip
             };
+            if (dtRow.city_name != null)
+                conv.CityId = cityIdLookupByName[dtRow.city_name];
             return conv;
         }
 
@@ -73,6 +77,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         Logger.Info("Added new ExtAccount: InsertionOrder {0}", acctExtId);
                         accountIdLookupByExtId[acctExtId] = newAccount.Id;
                     }
+
                 }
             }
         }
@@ -88,19 +93,21 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 foreach (var countryGroup in countryGroups)
                 {
                     var countryName = countryGroup.Key;
-                    if (countryIdLookupByName.ContainsKey(countryName))
-                        continue;
-
                     var country = db.ConvCountries.FirstOrDefault(c => c.Name == countryName);
-                    if (country == null)
+
+                    if (!countryIdLookupByName.ContainsKey(countryName))
                     {
-                        country = new ConvCountry
+                        if (country == null)
                         {
-                            Name = countryName
-                        };
-                        db.ConvCountries.Add(country);
-                        db.SaveChanges();
-                        Logger.Info("Added new country {0} with id {1} to database.", countryName, country.Id);
+                            country = new ConvCountry
+                            {
+                                Name = countryName
+                            };
+                            db.ConvCountries.Add(country);
+                            db.SaveChanges();
+                            Logger.Info("Added new country {0} with id {1} to database.", countryName, country.Id);
+
+                        }
                     }
 
                     countryIdLookupByName[countryName] = country.Id;
@@ -137,6 +144,40 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                             Logger.Info("Updated city name from {0} to {1} in database.", formerName, city.Item1);
                         }
                         cityIdLookupByName[city.Item1] = cpCity.Id;
+                    }
+                }
+            }
+        }
+
+        private void UpdateBuckets(List<DataTransferRow> items)
+        {
+            var insertOrderIds = items.Select(i => new Tuple<int,string>(i.insertion_order_id.Value,i.advertiser_id)).Distinct();
+
+            using (var db = new ClientPortalProgContext())
+            {
+                foreach (var insertOrderId in insertOrderIds)
+                {
+
+                    if (bucketLookupByName.ContainsKey(insertOrderId.Item1))
+                        continue; //already encountered
+
+                    var dbmInsertOrders = db.InsertionOrders.Where(i => i.ID == insertOrderId.Item1);
+                    if (dbmInsertOrders.Count() == 1)
+                    {
+                        var dbmInsertOrder = dbmInsertOrders.First();
+                        bucketLookupByName[insertOrderId.Item1] = dbmInsertOrder.Bucket;
+                    }
+                    else
+                    {
+                        var newInsertOrder = new InsertionOrder
+                        {
+                            ID = insertOrderId.Item1,
+                            Bucket = insertOrderId.Item2
+                        };
+                        Logger.Info("New Insertion Order {0} with bucket {1}.", insertOrderId.Item1.ToString(), insertOrderId.Item2);
+                        db.InsertionOrders.Add(newInsertOrder);
+                        db.SaveChanges();
+                        bucketLookupByName[insertOrderId.Item1] = insertOrderId.Item2;
                     }
                 }
             }

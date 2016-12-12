@@ -7,7 +7,6 @@ using CakeExtracter.Common;
 using CsvHelper;
 using Google;
 using System.Configuration;
-
 using Newtonsoft.Json;
 using DBM.Entities;
 
@@ -58,10 +57,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 Google.Apis.Storage.v1.Data.Object cityObj = cityRequest.Execute();
                 var cityStream = DbmCloudStorageExtracter.GetStreamForCloudStorageObject(cityObj, credential);
                 var lookupTable = CreateCityLookup(cityStream);
-                var test = lookupTable.Where(c => c.canonical_name.Replace("Los Angeles", "") != c.canonical_name).ToList();
 
                 foreach (var advertiserId in advertiserIds)
                 {
+                    Logger.Info("Advertiser Id {0}", advertiserId);
                     string thisBucket = String.Format("gdbm-479-{0}", advertiserId);
                     var request = service.Objects.Get(thisBucket,filename);
                     Google.Apis.Storage.v1.Data.Object obj;
@@ -86,7 +85,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                                 if (res != null)
                                 {
                                     var duplicateCount = lookupTable.Where(c => c.short_name == res.short_name && c.country_name == res.country_name).Count();
-                                    Logger.Info("City {0} in Country {1} with ID {2}", res.city_name, res.country_name, row.city_id);
+                                    //Logger.Info("City {0} in Country {1} with ID {2}", res.city_name, res.country_name, row.city_id);
                                     row.setAttributes(res.city_name, res.country_name, res.short_name, duplicateCount);
                                 }
                                 yield return row;
@@ -161,7 +160,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         public string city_name { get; set; }
         public string country_name { get; set; }
-        //public string advertiser_id { get; set; }
+        public string advertiser_id { get; set; }
         public bool unique_city_name { get; set; }
         public string short_name { get; set; }
 
