@@ -202,19 +202,19 @@ namespace DirectAgents.Web.Controllers
 
         public ActionResult SynchAdvertisers()
         {
-            DASynchAdvertisersCommand.RunStatic(0, true, false);
+            DASynchAdvertisers.RunStatic(0, true, false);
             return RedirectToAction("Advertisers");
         }
 
         public ActionResult SynchBudgetStats()
         {
-            DASynchOfferBudgetStatsCommand.RunStatic(null);
+            DASynchOfferBudgetStats.RunStatic(null);
             return Content("Synch Stats complete");
         }
 
         public ActionResult SynchStats(int offerId)
         {
-            var result = DASynchOfferBudgetStatsCommand.RunStatic(offerId);
+            var result = DASynchOfferBudgetStats.RunStatic(offerId);
 
             if (Request.IsAjaxRequest())
                 return Json(result, JsonRequestBehavior.AllowGet);
@@ -224,7 +224,7 @@ namespace DirectAgents.Web.Controllers
 
         public ActionResult SynchOffers(int advId)
         {
-            DASynchOffersCommand.RunStatic(advId, false);
+            DASynchOffers.RunStatic(advId, false);
             return Content("Synch Offers complete");
         }
 
