@@ -16,6 +16,14 @@ namespace DirectAgents.Web.Areas.RevTrack.Controllers
             this.superRepo = superRepository;
         }
 
+        public ActionResult ProgTest(int id)
+        {
+            var monthStart = new DateTime(2016, 12, 1); //testing
+            var pStats = rtRepo.GetProgClientStats(monthStart, id);
+
+            return null;
+        }
+
         public ActionResult Index(int? x)
         {
             var monthStart = new DateTime(2015, 5, 1); //TESTING
@@ -26,8 +34,7 @@ namespace DirectAgents.Web.Areas.RevTrack.Controllers
             };
             return View(model);
         }
-
-        IEnumerable<ABStat> GetStatsByClient(DateTime monthStart, int? maxClients = null)
+        private IEnumerable<ABStat> GetStatsByClient(DateTime monthStart, int? maxClients = null)
         {
             if (maxClients.HasValue && maxClients == -1)
                 Session["StatsByClient"] = null;

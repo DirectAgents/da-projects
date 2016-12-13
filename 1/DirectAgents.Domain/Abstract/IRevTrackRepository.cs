@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.RevTrack;
 
 namespace DirectAgents.Domain.Abstract
@@ -8,7 +9,18 @@ namespace DirectAgents.Domain.Abstract
     {
         void SaveChanges();
 
+        ProgClient ProgClient(int id);
         IQueryable<ProgClient> ProgClients();
+        ProgCampaign ProgCampaign(int id);
+        IQueryable<ProgCampaign> ProgCampaigns();
+        ProgVendor ProgVendor(int id);
         IQueryable<ProgVendor> ProgVendors();
+
+        // Stats
+        IQueryable<ProgSummary> ProgSummaries(DateTime? startDate, DateTime? endDate, int? clientId = null, int? campaignId = null, int? vendorId = null);
+        ProgExtraItem ProgExtraItem(int id);
+        IQueryable<ProgExtraItem> ProgExtraItems(DateTime? startDate, DateTime? endDate, int? clientId = null, int? campaignId = null, int? vendorId = null);
+
+        ProgClientStats GetProgClientStats(DateTime monthStart, int clientId);
     }
 }

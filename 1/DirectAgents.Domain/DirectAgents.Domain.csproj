@@ -83,6 +83,9 @@
     <Compile Include="Contexts\ClientPortalProgContext.cs" />
     <Compile Include="DTO\ABStat.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
+    <Compile Include="DTO\ProgClientStats.cs" />
+    <Compile Include="DTO\ProgMediaStat.cs" />
+    <Compile Include="DTO\RTLineItem.cs" />
     <Compile Include="DTO\TDCampStats.cs" />
     <Compile Include="DTO\TDLineItem.cs" />
     <Compile Include="DTO\TDStat.cs" />
