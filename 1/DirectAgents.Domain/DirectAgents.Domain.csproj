@@ -91,6 +91,7 @@
     <Compile Include="DTO\TDLineItem.cs" />
     <Compile Include="DTO\TDStat.cs" />
     <Compile Include="DTO\TDStatsGauge.cs" />
+    <Compile Include="Entities\AB\Client.cs" />
     <Compile Include="Entities\AdRoll\Ad.cs" />
     <Compile Include="Entities\AdRoll\AdDailySummary.cs" />
     <Compile Include="Entities\AdRoll\Advertisable.cs" />
@@ -201,6 +202,10 @@
     <Compile Include="MigrationsRT\201612062313024_Mig_ProgSummary.cs" />
     <Compile Include="MigrationsRT\201612062313024_Mig_ProgSummary.Designer.cs">
       <DependentUpon>201612062313024_Mig_ProgSummary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsRT\201612152025371_Mig_Client.cs" />
+    <Compile Include="MigrationsRT\201612152025371_Mig_Client.Designer.cs">
+      <DependentUpon>201612152025371_Mig_Client.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsRT\Configuration.cs" />
     <Compile Include="MigrationsTD\201507282051383_Initial.cs" />
@@ -425,6 +430,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsRT\201612062313024_Mig_ProgSummary.resx">
       <DependentUpon>201612062313024_Mig_ProgSummary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsRT\201612152025371_Mig_Client.resx">
+      <DependentUpon>201612152025371_Mig_Client.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201507282051383_Initial.resx">
       <DependentUpon>201507282051383_Initial.cs</DependentUpon>
