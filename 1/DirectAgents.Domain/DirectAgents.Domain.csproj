@@ -72,6 +72,7 @@
     <Compile Include="Concrete\CountryLookup.cs" />
     <Compile Include="Concrete\CPProgRepository.cs" />
     <Compile Include="Concrete\CPProgStatsRepository.cs" />
+    <Compile Include="Concrete\DepartmentRepository.cs" />
     <Compile Include="Concrete\Extensions.cs" />
     <Compile Include="Concrete\MainRepository.cs" />
     <Compile Include="Concrete\RevTrackRepository.cs" />

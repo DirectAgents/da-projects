@@ -26,7 +26,7 @@ namespace DirectAgents.Web.Areas.RevTrack.Controllers
 
         public ActionResult Index(int? x)
         {
-            var monthStart = new DateTime(2015, 5, 1); //TESTING
+            var monthStart = new DateTime(2016, 12, 1); //TESTING
 
             var model = new DashboardVM
             {
@@ -43,11 +43,7 @@ namespace DirectAgents.Web.Areas.RevTrack.Controllers
             if (sessionStats != null)
                 return (IEnumerable<ABStat>)sessionStats;
 
-            IEnumerable<ABStat> clientStats;
-            if (maxClients.HasValue)
-                clientStats = superRepo.StatsByClientX(monthStart, maxClients: maxClients);
-            else
-                clientStats = superRepo.StatsByClient(monthStart);
+            var clientStats = superRepo.StatsByClient(monthStart, maxClients: maxClients);
 
             if (maxClients.HasValue && maxClients > -1)
                 Session["StatsByClient"] = clientStats;

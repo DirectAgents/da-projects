@@ -13,6 +13,10 @@ namespace DirectAgents.Domain.DTO
 
         public decimal Rev { get; set; }
         public decimal Cost { get; set; }
+        public decimal Margin
+        {
+            get { return Rev - Cost; }
+        }
 
         public decimal StartBal { get; set; }
         public decimal CurrBal
