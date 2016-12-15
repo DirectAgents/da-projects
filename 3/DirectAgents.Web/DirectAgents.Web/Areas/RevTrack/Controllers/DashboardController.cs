@@ -36,7 +36,9 @@ namespace DirectAgents.Web.Areas.RevTrack.Controllers
         }
         private IEnumerable<ABStat> GetStatsByClient(DateTime monthStart, int? maxClients = null)
         {
-            if (maxClients.HasValue && maxClients == -1)
+            // If maxClients not specified, will use cached version if available
+            // If specified, clear out cached version and re-retrieve
+            if (maxClients.HasValue)
                 Session["StatsByClient"] = null;
 
             var sessionStats = Session["StatsByClient"];
@@ -45,13 +47,20 @@ namespace DirectAgents.Web.Areas.RevTrack.Controllers
 
             var clientStats = superRepo.StatsByClient(monthStart, maxClients: maxClients);
 
-            if (maxClients.HasValue && maxClients > -1)
-                Session["StatsByClient"] = clientStats;
+            //TEMP!
+            int id = 0;
+            foreach (var stat in clientStats)
+            {
+                stat.Id = id++;
+                stat.Budget = 10000;
+            }
+
+            Session["StatsByClient"] = clientStats;
 
             return clientStats;
         }
 
-        public ActionResult EditClientStat(int id, decimal? sb, decimal? cl)
+        public ActionResult EditClientStat(int id, decimal? sb, decimal? ec, decimal? ic)
         {
             var clientStats = (IEnumerable<ABStat>)Session["StatsByClient"];
             foreach (var clientStat in clientStats)
@@ -60,8 +69,10 @@ namespace DirectAgents.Web.Areas.RevTrack.Controllers
                 {
                     if (sb.HasValue)
                         clientStat.StartBal = sb.Value;
-                    if (cl.HasValue)
-                        clientStat.CredLim = cl.Value;
+                    if (ec.HasValue)
+                        clientStat.ExtCred = ec.Value;
+                    if (ic.HasValue)
+                        clientStat.IntCred = ic.Value;
                     break;
                 }
             }
