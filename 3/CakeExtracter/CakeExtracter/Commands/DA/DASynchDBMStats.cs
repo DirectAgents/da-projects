@@ -6,6 +6,9 @@ using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtracter.Bootstrappers;
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.DBM;
+using System.Linq;
 
 namespace CakeExtracter.Commands
 {
@@ -44,8 +47,8 @@ namespace CakeExtracter.Commands
         public DASynchDBMStats()
         {
             IsCommand("daSynchDBMStats", "synch DBM Daily Stats - by lineitem/creative/site...");
-            HasOption<DateTime>("s|startDate=", "Start Date (default is yesterday)", c => StartDate = c);
-            HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
+            HasOption<DateTime>("s|startDate=", "Start Date (default is today)", c => StartDate = c);
+            HasOption<DateTime>("e|endDate=", "End Date (default is yesterday (today for conversions)", c => EndDate = c);
             HasOption("h|Historical=", "Get historical stats (ignore endDate)", c => Historical = bool.Parse(c));
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<int?>("i|insertionOrder=", "Insertion Order (default: all)", c => InsertionOrderID = c);
@@ -158,21 +161,27 @@ namespace CakeExtracter.Commands
         }
 
         // testing...
+        // report for each day has data from two days ago, i.e. report for 12/11/2016 will have conv data for 12/9/2016.
         public void DoETL_Conv() //null for all
         {
             var today = DateTime.Today;
-            if (StartDate == null)
+            var dateRange = (StartDate == null) ? new DateRange(today, today) : new DateRange(StartDate.Value, EndDate.Value);
+
+            if (InsertionOrderID != null)
             {
-                StartDate = new DateTime(today.Year,today.Month,1);
-                EndDate = today;
+                using (var db = new ClientPortalProgContext())
+                {
+                    var insertionOrder = db.InsertionOrders.Where(c => c.ID == InsertionOrderID.Value).FirstOrDefault();
+                    if (insertionOrder != null)
+                        AdvertiserID = insertionOrder.Bucket.ToString();
+                }
             }
 
-            var dateRange = new DateRange(StartDate.Value, EndDate.Value);
-            var buckets = (AdvertiserID == "" || AdvertiserID == null) ? (BucketNamesFromConfig("DBM_AllAdvertiserIds")) : new string[] { AdvertiserID };
+            var advertiserIds = (AdvertiserID == "" || AdvertiserID == null) ? (BucketNamesFromConfig("DBM_AllAdvertiserIds")) : new string[] { AdvertiserID };
             int timezoneOffset = -5; // w/o daylight savings
             var convConverter = new CakeExtracter.Etl.TradingDesk.Loaders.DbmConvConverter(timezoneOffset);
 
-            var extracter = new DbmConversionExtracter(dateRange, buckets, InsertionOrderID, true);
+            var extracter = new DbmConversionExtracter(dateRange, advertiserIds, InsertionOrderID, true);
             var loader = new DbmConvLoader(convConverter);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);

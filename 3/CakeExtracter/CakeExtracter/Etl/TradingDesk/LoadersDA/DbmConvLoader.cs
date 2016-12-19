@@ -37,7 +37,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             var conv = new Conv
             {
                 AccountId = accountIdLookupByExtId[dtRow.insertion_order_id.Value],
-                Time = convConverter.EventTime(dtRow),
+                Time = RoundedTime( convConverter.EventTime(dtRow)),
                 ConvType = (dtRow.event_sub_type == "postview") ? "v" : "c",
                 ConvVal = 0,
                 IP = dtRow.ip
@@ -151,17 +151,18 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         private void UpdateBuckets(List<DataTransferRow> items)
         {
-            var insertOrderIds = items.Select(i => new Tuple<int,string>(i.insertion_order_id.Value,i.advertiser_id)).Distinct();
+            var tuples = items.Select(i => new Tuple<int,string>(i.insertion_order_id.Value,i.advertiser_id)).Distinct();
 
             using (var db = new ClientPortalProgContext())
             {
-                foreach (var insertOrderId in insertOrderIds)
+                foreach (var insertOrderId in tuples)
                 {
 
                     if (bucketLookupByName.ContainsKey(insertOrderId.Item1))
                         continue; //already encountered
 
                     var dbmInsertOrders = db.InsertionOrders.Where(i => i.ID == insertOrderId.Item1);
+                    
                     if (dbmInsertOrders.Count() == 1)
                     {
                         var dbmInsertOrder = dbmInsertOrders.First();
@@ -181,6 +182,25 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     }
                 }
             }
+        }
+
+        public static DateTime RoundedTime(DateTime dt)
+        {
+            var ticks = dt.Ticks;
+            var rt = (ticks / 100000) * 100000;
+            var extraTicks = rt - ticks;
+            long roundedTicks;
+            if (-15000 < extraTicks)
+                roundedTicks = 0;
+            else if (-45000 < extraTicks && extraTicks <= -15000)
+                roundedTicks = 30000;
+            else if (-84500 < extraTicks && extraTicks <= -45000)
+                roundedTicks = 70000;
+            else
+                roundedTicks = 100000;
+            var newDt = dt.AddTicks((long)extraTicks);
+            newDt = newDt.AddTicks(roundedTicks);
+            return newDt;
         }
     }
 }

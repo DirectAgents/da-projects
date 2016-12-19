@@ -9,6 +9,7 @@ using Google;
 using System.Configuration;
 using Newtonsoft.Json;
 using DBM.Entities;
+using DirectAgents.Domain.Contexts;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
@@ -60,6 +61,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
                 foreach (var advertiserId in advertiserIds)
                 {
+
                     Logger.Info("Advertiser Id {0}", advertiserId);
                     string thisBucket = String.Format("gdbm-479-{0}", advertiserId);
                     var request = service.Objects.Get(thisBucket,filename);
@@ -82,6 +84,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                             foreach (var row in EnumerateRowsStatic(reader))
                             {
                                 var res = lookupTable.Where(c => c.id == row.city_id).FirstOrDefault();
+
                                 if (res != null)
                                 {
                                     var duplicateCount = lookupTable.Where(c => c.short_name == res.short_name && c.country_name == res.country_name).Count();

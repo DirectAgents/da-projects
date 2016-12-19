@@ -92,7 +92,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         if (cityIdLookupByCountryCity.ContainsKey(countryCity))
                             continue; // already encountered
 
-                        var city = db.ConvCities.Where(c => c.CountryId == countryId && c.Name == cityName).FirstOrDefault();
+                        //StartsWith(cityName) creates compatibility with DBM city names.
+                        var city = db.ConvCities.Where(c => c.CountryId == countryId && c.Name.StartsWith(cityName)).FirstOrDefault();
                         // (assuming just one)
                         if (city == null)
                         {
