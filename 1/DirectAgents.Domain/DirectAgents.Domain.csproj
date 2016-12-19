@@ -361,6 +361,10 @@
     <Compile Include="Migrations\201507281756459_Mig_MoveTD.Designer.cs">
       <DependentUpon>201507281756459_Mig_MoveTD.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612191657217_Mig_ABClientId.cs" />
+    <Compile Include="Migrations\201612191657217_Mig_ABClientId.Designer.cs">
+      <DependentUpon>201612191657217_Mig_ABClientId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Seed\TDSeeder.cs" />
@@ -547,6 +551,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507281756459_Mig_MoveTD.resx">
       <DependentUpon>201507281756459_Mig_MoveTD.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612191657217_Mig_ABClientId.resx">
+      <DependentUpon>201612191657217_Mig_ABClientId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

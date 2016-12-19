@@ -30,6 +30,8 @@ namespace DirectAgents.Domain.Entities.Cake
                 return AdvertiserName.Substring(0, maxChars) + "...";
         }
 
+        public int? ABClientId { get; set; }
+
         [NotMapped]
         public IEnumerable<int> OfferIds { get; set; }
         [NotMapped]
