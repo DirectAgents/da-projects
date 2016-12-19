@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.RevTrack;
 
 namespace DirectAgents.Domain.DTO
 {
@@ -50,6 +51,12 @@ namespace DirectAgents.Domain.DTO
             Budget = new TDBudget(budget);
         }
         public TDLineItem(IEnumerable<ExtraItem> itemsToSum, decimal? budget = null)
+            : base(itemsToSum)
+        {
+            MoneyValsOnly = true;
+            Budget = new TDBudget(budget);
+        }
+        public TDLineItem(IEnumerable<ProgExtraItem> itemsToSum, decimal? budget = null)
             : base(itemsToSum)
         {
             MoneyValsOnly = true;

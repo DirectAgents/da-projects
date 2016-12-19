@@ -261,7 +261,8 @@ namespace FacebookAPI
                 if (retObj == null)
                     continue;
 
-                int impressions;
+                decimal decParseVal;
+                int intParseVal;
                 if (retObj.data != null)
                 {
                     foreach (var row in retObj.data)
@@ -269,11 +270,11 @@ namespace FacebookAPI
                         var fbSum = new FBSummary
                         {
                             Date = DateTime.Parse(row.date_start),
-                            Spend = (decimal)row.spend,
-                            //Impressions = row.impressions,
-                            UniqueClicks = (int)row.unique_clicks,
-                            LinkClicks = (int)row.inline_link_clicks,
-                            TotalActions = (int)row.total_actions,
+                            //Spend = Decimal.Parse(row.spend),
+                            //Impressions = int.Parse(row.impressions),
+                            //UniqueClicks = int.Parse(row.unique_clicks),
+                            //LinkClicks = int.Parse(row.inline_link_clicks),
+                            //TotalActions = int.Parse(row.total_actions),
                             CampaignId = row.campaign_id,
                             CampaignName = row.campaign_name,
                             AdSetId = row.adset_id,
@@ -281,8 +282,16 @@ namespace FacebookAPI
                             AdId = row.ad_id,
                             AdName = row.ad_name
                         };
-                        if (Int32.TryParse(row.impressions, out impressions))
-                            fbSum.Impressions = impressions;
+                        if (Decimal.TryParse(row.spend, out decParseVal))
+                            fbSum.Spend = decParseVal;
+                        if (Int32.TryParse(row.impressions, out intParseVal))
+                            fbSum.Impressions = intParseVal;
+                        if (Int32.TryParse(row.unique_clicks, out intParseVal))
+                            fbSum.UniqueClicks = intParseVal;
+                        if (Int32.TryParse(row.inline_link_clicks, out intParseVal))
+                            fbSum.LinkClicks = intParseVal;
+                        if (Int32.TryParse(row.total_actions, out intParseVal))
+                            fbSum.TotalActions = intParseVal;
                         var actionStats = row.actions;
                         if (actionStats != null)
                         {
@@ -291,9 +300,9 @@ namespace FacebookAPI
                                 if (stat.action_type == Conversion_ActionType)
                                 {
                                     if (((IDictionary<String, object>)stat).ContainsKey("28d_click"))
-                                        fbSum.Conversions_28d_click = (int)stat["28d_click"];
+                                        fbSum.Conversions_28d_click = int.Parse(stat["28d_click"]);
                                     if (((IDictionary<String, object>)stat).ContainsKey("1d_view"))
-                                        fbSum.Conversions_1d_view = (int)stat["1d_view"];
+                                        fbSum.Conversions_1d_view = int.Parse(stat["1d_view"]);
                                     break;
                                 }
                             }

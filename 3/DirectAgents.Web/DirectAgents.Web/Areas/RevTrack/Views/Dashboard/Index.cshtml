@@ -5,24 +5,34 @@
 <table>
 <tr>
     <th>Client</th>
-    <th>StartingBal</th>
+    <th>Budget</th>
     <th>Revenue</th>
-    <th>CurrentBal</th>
-    <th>CreditLimit</th>
-    <th>&nbsp;&nbsp;&nbsp;</th>
     <th>Cost</th>
+    <th>Margin</th>
+    <th>Budget vs Actual</th>
+    <th>%Reached</th>
+    <th>ExtCredit</th>
+    <th>IntCredit</th>
+    <th>&nbsp;&nbsp;&nbsp;</th>
+    <th>StartingBal</th>
+    <th>OpenBal</th>
 </tr>
 @foreach (var stat in Model.ABStats)
 {
 <tr>
     <td>@stat.Client</td>
-    <td>@stat.StartBal</td>
+    <td>@stat.Budget</td>
     <td>@stat.Rev</td>
-    <td>@stat.CurrBal</td>
-    <td>@stat.CredLim</td>
-    <td></td>
     <td>@stat.Cost</td>
-    <td>@Html.ActionLink("edit", "EditClientStat", new { id = stat.Id, sb = stat.StartBal, cl = stat.CredLim })</td>
+    <td>@stat.Margin</td>
+    <td>@stat.OverBudget</td>
+    <td>@stat.FractionBudget.ToString("P2")</td>
+    <td>@stat.ExtCred</td>
+    <td>@stat.IntCred</td>
+    <td></td>
+    <td>@stat.StartBal</td>
+    <td>@stat.CurrBal</td>
+    <td>@Html.ActionLink("editlink", "EditClientStat", new { id = stat.Id, sb = stat.StartBal, ec = stat.ExtCred, ic = stat.IntCred })</td>
 </tr>
 }
 </table>

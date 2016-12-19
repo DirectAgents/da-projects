@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.RevTrack;
 
 namespace DirectAgents.Domain.DTO
 {
@@ -93,6 +94,13 @@ namespace DirectAgents.Domain.DTO
             DACost = itemsToSum.Sum(i => i.Cost);
             ClientCost = itemsToSum.Sum(i => i.Revenue);
             // (no fee)
+            TotalRevenue = ClientCost;
+        }
+        public TDRawLineItem(IEnumerable<ProgExtraItem> itemsToSum)
+        {
+            DACost = itemsToSum.Sum(i => i.Cost);
+            ClientCost = itemsToSum.Sum(i => i.Revenue);
+            // (no fee?)
             TotalRevenue = ClientCost;
         }
 

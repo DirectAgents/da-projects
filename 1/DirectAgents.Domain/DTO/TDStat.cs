@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.RevTrack;
 
 namespace DirectAgents.Domain.DTO
 {
@@ -18,6 +19,11 @@ namespace DirectAgents.Domain.DTO
 
         public TDMediaStatWithBudget(IEnumerable<DailySummary> dSums, BudgetInfoVals budgetVals)
             : base(dSums, budgetVals)
+        {
+            _budget = new TDMediaBudget { MediaSpend = budgetVals.MediaSpend };
+        }
+        public TDMediaStatWithBudget(IEnumerable<ProgSummary> pSums, BudgetInfoVals budgetVals)
+            : base(pSums, budgetVals)
         {
             _budget = new TDMediaBudget { MediaSpend = budgetVals.MediaSpend };
         }
@@ -87,6 +93,11 @@ namespace DirectAgents.Domain.DTO
         //}
         public TDMediaStat(IEnumerable<DailySummary> dSums, MarginFeeVals marginFees)
             : base(dSums)
+        {
+            SetMarginFees(marginFees);
+        }
+        public TDMediaStat(IEnumerable<ProgSummary> pSums, MarginFeeVals marginFees)
+            : base(pSums)
         {
             SetMarginFees(marginFees);
         }
@@ -205,7 +216,6 @@ namespace DirectAgents.Domain.DTO
         {
             SetStatsFrom(sSums);
         }
-
         private void SetStatsFrom(IEnumerable<StatsSummary> sSums, bool roundCost = false)
         {
             if (sSums != null && sSums.Any())
@@ -215,6 +225,20 @@ namespace DirectAgents.Domain.DTO
                 this.PostClickConv = sSums.Sum(ds => ds.PostClickConv);
                 this.PostViewConv = sSums.Sum(ds => ds.PostViewConv);
                 this.Cost = sSums.Sum(ds => ds.Cost);
+                if (roundCost)
+                    this.Cost = Math.Round(this.Cost, 2);
+            }
+        }
+
+        public TDRawStat(IEnumerable<ProgSummary> pSums)
+        {
+            SetStatsFrom(pSums);
+        }
+        private void SetStatsFrom(IEnumerable<ProgSummary> pSums, bool roundCost = false)
+        {
+            if (pSums != null && pSums.Any())
+            {
+                this.Cost = pSums.Sum(ds => ds.Cost);
                 if (roundCost)
                     this.Cost = Math.Round(this.Cost, 2);
             }
