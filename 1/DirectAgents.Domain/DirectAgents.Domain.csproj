@@ -203,10 +203,6 @@
     <Compile Include="MigrationsRT\201612062313024_Mig_ProgSummary.Designer.cs">
       <DependentUpon>201612062313024_Mig_ProgSummary.cs</DependentUpon>
     </Compile>
-    <Compile Include="MigrationsRT\201612152025371_Mig_Client.cs" />
-    <Compile Include="MigrationsRT\201612152025371_Mig_Client.Designer.cs">
-      <DependentUpon>201612152025371_Mig_Client.cs</DependentUpon>
-    </Compile>
     <Compile Include="MigrationsRT\Configuration.cs" />
     <Compile Include="MigrationsTD\201507282051383_Initial.cs" />
     <Compile Include="MigrationsTD\201507282051383_Initial.Designer.cs">
@@ -434,9 +430,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsRT\201612062313024_Mig_ProgSummary.resx">
       <DependentUpon>201612062313024_Mig_ProgSummary.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsRT\201612152025371_Mig_Client.resx">
-      <DependentUpon>201612152025371_Mig_Client.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201507282051383_Initial.resx">
       <DependentUpon>201507282051383_Initial.cs</DependentUpon>

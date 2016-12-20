@@ -1,15 +1,11 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using DirectAgents.Domain.Entities;
-using DirectAgents.Domain.Entities.AB;
 using DirectAgents.Domain.Entities.RevTrack;
 
 namespace DirectAgents.Domain.Contexts
 {
     public class RevTrackContext : DbContext
     {
-        public const string abSchema = "ab";
-        public const string tblClient = "Client";
         public const string extSchema = "ext";
         public const string tblProgVendor = "ProgVendor";
 
@@ -19,9 +15,6 @@ namespace DirectAgents.Domain.Contexts
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-
-            // --- AB ---
-            modelBuilder.Entity<Client>().ToTable(tblClient, abSchema);
 
             // --- Prog ---
             modelBuilder.Entity<ProgClient>().ToTable("ProgClient", extSchema);
@@ -51,9 +44,6 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<ProgExtraItem>().Property(i => i.Cost).HasPrecision(14, 2);
             modelBuilder.Entity<ProgExtraItem>().Property(i => i.Revenue).HasPrecision(14, 2);
         }
-
-        // --- AB ---
-        public DbSet<Client> Clients { get; set; }
 
         // --- Prog ---
         public DbSet<ProgClient> ProgClients { get; set; }
