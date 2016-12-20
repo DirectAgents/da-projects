@@ -79,6 +79,7 @@
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Concrete\SuperRepository.cs" />
     <Compile Include="Concrete\TDRepository.cs" />
+    <Compile Include="Contexts\ABContext.cs" />
     <Compile Include="Contexts\RevTrackContext.cs" />
     <Compile Include="Contexts\HistoryContext.cs" />
     <Compile Include="Contexts\ClientPortalProgContext.cs" />
@@ -187,6 +188,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>WikiModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsAB\201612201825281_InitialCreate.cs" />
+    <Compile Include="MigrationsAB\201612201825281_InitialCreate.Designer.cs">
+      <DependentUpon>201612201825281_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsAB\Configuration.cs" />
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.cs" />
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.Designer.cs">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>
@@ -419,6 +425,9 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="MigrationsAB\201612201825281_InitialCreate.resx">
+      <DependentUpon>201612201825281_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MigrationsRT\201611292020284_InitialCreate.resx">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
