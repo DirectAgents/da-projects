@@ -31,7 +31,7 @@ namespace DirectAgents.Web.Areas.RevTrack.Controllers
             var rtLineItems = cake_DeptRepo.StatsByClient(monthStart);
             var advIds = rtLineItems.Select(li => li.RTId).ToArray();
 
-            var abClients = abRepo.ABClients();
+            var abClients = abRepo.Clients();
             int abClientId = abClients.Any() ? abClients.Max(c => c.Id) + 1 : 1;
 
             var clientsToAdd = new List<ABClient>();

@@ -178,6 +178,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\NinjectWebCommon.cs" />
+    <Compile Include="Areas\AB\ABAreaRegistration.cs" />
+    <Compile Include="Areas\AB\Controllers\ClientsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\CampStatsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\DailySummariesController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\ExtAccountsController.cs" />
@@ -206,7 +208,6 @@
     <Content Include="Areas\ProgAdmin\Views\Reports\ReportViewer.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Stats\Conv.cshtml" />
     <Compile Include="Areas\RevTrack\Controllers\CakeController.cs" />
-    <Compile Include="Areas\RevTrack\Controllers\ClientsController.cs" />
     <Compile Include="Areas\RevTrack\Controllers\DashboardController.cs" />
     <Compile Include="Areas\RevTrack\Controllers\VendorsController.cs" />
     <Compile Include="Areas\RevTrack\Models\DashboardVM.cs" />
@@ -836,7 +837,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Areas\RevTrack\Views\Clients\" />
+    <Folder Include="Areas\AB\Models\" />
+    <Folder Include="Areas\AB\Views\Shared\" />
     <Folder Include="Areas\RevTrack\Views\Shared\" />
     <Folder Include="Views\Test\" />
   </ItemGroup>
@@ -1009,6 +1011,9 @@
     <Content Include="Areas\RevTrack\Views\Vendors\Index.cshtml" />
     <Content Include="Areas\RevTrack\Views\Dashboard\Index.cshtml" />
     <Content Include="Areas\RevTrack\Views\Cake\Advertisers.cshtml" />
+    <Content Include="Areas\AB\Views\web.config" />
+    <Content Include="Areas\AB\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\AB\Views\Clients\Index.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

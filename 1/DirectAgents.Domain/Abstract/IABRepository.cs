@@ -9,7 +9,7 @@ namespace DirectAgents.Domain.Abstract
     {
         void SaveChanges();
 
-        IQueryable<ABClient> ABClients();
+        IQueryable<ABClient> Clients();
         bool AddClient(ABClient client);
         void AddClients(IEnumerable<ABClient> clients);
     }
