@@ -14,6 +14,7 @@ namespace DirectAgents.Web.Controllers
         protected ICPProgRepository cpProgRepo;
         protected ITDRepository tdRepo;
         protected IRevTrackRepository rtRepo;
+        protected IABRepository abRepo;
         protected ISecurityRepository securityRepo;
 
         // TODO: Make SecurityRepo disposable and dispose here:
@@ -28,6 +29,8 @@ namespace DirectAgents.Web.Controllers
                 tdRepo.Dispose();
             if (rtRepo != null)
                 rtRepo.Dispose();
+            if (abRepo != null)
+                abRepo.Dispose();
             base.Dispose(disposing);
         }
 

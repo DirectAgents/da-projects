@@ -3,7 +3,7 @@ using DirectAgents.Domain.Entities.RevTrack;
 
 namespace DirectAgents.Domain.Entities.AB
 {
-    public class Client
+    public class ABClient
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
@@ -11,7 +11,6 @@ namespace DirectAgents.Domain.Entities.AB
     }
 
     //TODO
-    // relationships with ProgClient, CakeAdvertiser, etc (IDs)
     // do proof-of-concept with ChildFund
     //
     // credit limit

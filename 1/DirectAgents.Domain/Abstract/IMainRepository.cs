@@ -24,6 +24,8 @@ namespace DirectAgents.Domain.Abstract
         void SaveVariable(Variable variable);
 
         // Cake
+        IDepartmentRepository Create_Cake_DeptRepository();
+
         Contact GetContact(int contactId);
         IQueryable<Contact> GetAccountManagers();
         IQueryable<Advertiser> GetAdvertisers(int? acctMgrId = null, bool? withBudgetedOffers = null);

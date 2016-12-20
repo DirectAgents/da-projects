@@ -5,12 +5,13 @@ namespace DirectAgents.Domain.DTO
 {
     //TODO? make an IABStat interface and change all referencing code to use that?
 
-    // "Accounting Backup" stats
+    // "Accounting Backup" stats - for the dashboard
     public class ABStat
     {
         private const int NUM_DECIMALS_FOR_ROUNDING = 5;
 
-        // ? CakeId ?
+        //TODO: RTId ?  (make nullable...? Id? ABId?)
+
         public int Id { get; set; }
 
         public string Client { get; set; }

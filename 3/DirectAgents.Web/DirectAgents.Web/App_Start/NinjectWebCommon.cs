@@ -66,6 +66,7 @@ namespace DirectAgents.Web.App_Start
             kernel.Bind<ICPProgRepository>().To<CPProgRepository>();
             kernel.Bind<ITDRepository>().To<TDRepository>();
             kernel.Bind<IRevTrackRepository>().To<RevTrackRepository>();
+            kernel.Bind<IABRepository>().To<ABRepository>();
             kernel.Bind<ISuperRepository>().To<SuperRepository>();
         }        
     }

@@ -103,6 +103,11 @@ namespace DirectAgents.Domain.Concrete
         #endregion
         #region Cake
 
+        public IDepartmentRepository Create_Cake_DeptRepository()
+        {
+            return new Cake_DeptRepository(this);
+        }
+
         public Contact GetContact(int contactId)
         {
             return context.Contacts.Find(contactId);

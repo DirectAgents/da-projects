@@ -32,16 +32,21 @@ namespace DirectAgents.Domain.Concrete
 
         public IEnumerable<ABStat> StatsByClient(DateTime monthStart, int? maxClients = null)
         {
+            //List<IRTLineItem> rtLineItemList = new List<IRTLineItem>();
+
             var overallStats = new List<ABStat>();
 
             foreach (var deptRepo in departmentRepos)
             {
-                var rtLineItems = deptRepo.StatsByClient(monthStart, maxClients);
+                var rtLineItems = deptRepo.StatsByClient(monthStart, maxClients: maxClients);
+                //rtLineItemList.AddRange(rtLineItems);
+
                 foreach (var li in rtLineItems)
                 {
                     var abStat = new ABStat
                     {
-                        Client = li.ClientName,
+                        Id = li.RTId, //TODO: switch to ABId
+                        Client = li.Name,
                         Rev = li.Revenue,
                         Cost = li.Cost
                     };
@@ -52,6 +57,19 @@ namespace DirectAgents.Domain.Concrete
                     //      Then, find a way to combine them together, merging the stats for omnichannel clients
                 }
             }
+            //var rtGroups = rtLineItemList.GroupBy(g => g.ABId);
+            //foreach (var grp in rtGroups)
+            //{
+            //    var abStat = new ABStat
+            //    {
+            //        Id = grp.Key.HasValue ? grp.Key.Value : -1,
+            //        //Client = ?
+            //        Rev = grp.Sum(li => li.Revenue),
+            //        Cost = grp.Sum(li => li.Cost)
+            //    };
+            //    overallStats.Add(abStat);
+            //}
+
             return overallStats;
         }
 

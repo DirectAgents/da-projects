@@ -58,15 +58,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\IABRepository.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Abstract\IAdmin.cs" />
     <Compile Include="Abstract\ICampaignRepository.cs" />
     <Compile Include="Abstract\ICPProgRepository.cs" />
+    <Compile Include="Abstract\IDepartmentRepository.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Abstract\IMainRepository.cs" />
     <Compile Include="Abstract\IRevTrackRepository.cs" />
     <Compile Include="Abstract\ISecurityRepository.cs" />
     <Compile Include="Abstract\ISuperRepository.cs" />
     <Compile Include="Abstract\ITDRepository.cs" />
     <Compile Include="Abstract\TopCampaignBy.cs" />
+    <Compile Include="Concrete\ABRepository.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Concrete\AdminImpl.cs" />
     <Compile Include="Concrete\CampaignRepository.cs" />
     <Compile Include="Concrete\CountryLookup.cs" />

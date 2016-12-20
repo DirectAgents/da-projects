@@ -6,11 +6,6 @@ using DirectAgents.Domain.DTO;
 
 namespace DirectAgents.Domain.Concrete
 {
-    public interface IDepartmentRepository
-    {
-        IEnumerable<IRTLineItem> StatsByClient(DateTime monthStart, int? maxClients = null);
-    }
-
     public class Cake_DeptRepository : IDepartmentRepository
     {
         // Assume this mainRepo is disposed of elsewhere
@@ -21,7 +16,7 @@ namespace DirectAgents.Domain.Concrete
             this.mainRepo = mainRepo;
         }
 
-        public IEnumerable<IRTLineItem> StatsByClient(DateTime monthStart, int? maxClients = null)
+        public IEnumerable<IRTLineItem> StatsByClient(DateTime monthStart, bool includeZeros = false, int? maxClients = null)
         {
             DateTime monthEnd = monthStart.AddMonths(1).AddDays(-1);
             var offerDailySummaries = mainRepo.GetOfferDailySummaries(null, monthStart, monthEnd);
@@ -39,12 +34,14 @@ namespace DirectAgents.Domain.Concrete
                 {
                     var lineItem = new RTLineItem
                     {
-                        ClientName = adv.AdvertiserName,
+                        ABId = adv.ABClientId,
+                        RTId = adv.AdvertiserId,
+                        Name = adv.AdvertiserName,
                         Revenue = ods.Sum(o => o.Revenue),
                         Cost = ods.Sum(o => o.Cost)
                     };
                     // if maxClients is specified, get at most that number of non-zero abStats
-                    if (!maxClients.HasValue || lineItem.Revenue > 0 || lineItem.Cost > 0)
+                    if (includeZeros || lineItem.Revenue > 0 || lineItem.Cost > 0)
                         lineItems.Add(lineItem);
                 }
             }

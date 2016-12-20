@@ -205,6 +205,7 @@
     <Content Include="Areas\ProgAdmin\Views\Campaigns\Dashboard.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Reports\ReportViewer.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Stats\Conv.cshtml" />
+    <Compile Include="Areas\RevTrack\Controllers\CakeController.cs" />
     <Compile Include="Areas\RevTrack\Controllers\ClientsController.cs" />
     <Compile Include="Areas\RevTrack\Controllers\DashboardController.cs" />
     <Compile Include="Areas\RevTrack\Controllers\VendorsController.cs" />
@@ -1007,6 +1008,7 @@
     <Content Include="Areas\RevTrack\Views\_ViewStart.cshtml" />
     <Content Include="Areas\RevTrack\Views\Vendors\Index.cshtml" />
     <Content Include="Areas\RevTrack\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\RevTrack\Views\Cake\Advertisers.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

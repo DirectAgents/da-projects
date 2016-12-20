@@ -9,10 +9,11 @@ namespace DirectAgents.Web.Areas.RevTrack.Controllers
 {
     public class DashboardController : DirectAgents.Web.Controllers.ControllerBase
     {
-        public DashboardController(IMainRepository daRepository, IRevTrackRepository revTrackRepository, ISuperRepository superRepository)
+        public DashboardController(IMainRepository daRepository, IRevTrackRepository revTrackRepository, IABRepository abRepository, ISuperRepository superRepository)
         {
             this.daRepo = daRepository;
             this.rtRepo = revTrackRepository;
+            this.abRepo = abRepository;
             this.superRepo = superRepository;
         }
 
@@ -46,14 +47,6 @@ namespace DirectAgents.Web.Areas.RevTrack.Controllers
                 return (IEnumerable<ABStat>)sessionStats;
 
             var clientStats = superRepo.StatsByClient(monthStart, maxClients: maxClients);
-
-            //TEMP!
-            int id = 0;
-            foreach (var stat in clientStats)
-            {
-                stat.Id = id++;
-                stat.Budget = 10000;
-            }
 
             Session["StatsByClient"] = clientStats;
 
