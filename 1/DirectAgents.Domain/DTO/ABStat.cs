@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DirectAgents.Domain.DTO
@@ -9,6 +11,15 @@ namespace DirectAgents.Domain.DTO
     public class ABStat
     {
         private const int NUM_DECIMALS_FOR_ROUNDING = 5;
+
+        public ABStat() { }
+        public ABStat(IEnumerable<IRTLineItem> rtLineItems)
+        {
+            //Id = ?
+            //Client = ?
+            Rev = Decimal.Round(rtLineItems.Sum(li => li.Revenue), 2);
+            Cost = Decimal.Round(rtLineItems.Sum(li => li.Cost), 2);
+        }
 
         //TODO: RTId ?  (make nullable...? Id? ABId?)
 

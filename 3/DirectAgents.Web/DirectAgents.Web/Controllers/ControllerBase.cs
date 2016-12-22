@@ -39,9 +39,9 @@ namespace DirectAgents.Web.Controllers
         {
             get { return _superRepo; }
             set
-            {   //NOTE: Be sure to set daRepo and rtRepo first.
+            {   //NOTE: Be sure to setup the required underlying repositories first.
                 _superRepo = value;
-                _superRepo.SetRepositories(daRepo, rtRepo);
+                _superRepo.SetRepositories(daRepo, rtRepo, abRepo);
             }
         }
 

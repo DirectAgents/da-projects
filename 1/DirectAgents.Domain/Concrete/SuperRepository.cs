@@ -11,6 +11,7 @@ namespace DirectAgents.Domain.Concrete
         // The underlying repositories:
         private IMainRepository mainRepo;
         private IRevTrackRepository rtRepo;
+        private IABRepository abRepo;
 
         // The department repositories
         private IEnumerable<IDepartmentRepository> departmentRepos;
@@ -18,59 +19,61 @@ namespace DirectAgents.Domain.Concrete
         //NOTE: In DAWeb, the underlying repositories are instantiated via ninject and disposed via ControllerBase.Dispose().
         //      We don't have the IRepositories in a constructor here so the controllers can access the child repositories directly.
 
-        public void SetRepositories(IMainRepository mainRepo, IRevTrackRepository rtRepo)
+        public void SetRepositories(IMainRepository mainRepo, IRevTrackRepository rtRepo, IABRepository abRepo)
         {
             this.mainRepo = mainRepo;
             this.rtRepo = rtRepo;
+            this.abRepo = abRepo;
 
             //NOTE: We _do_ set up the department repos here
             departmentRepos = new List<IDepartmentRepository>
             {
-                new Cake_DeptRepository(mainRepo)
+                new Cake_DeptRepository(mainRepo),
+                new Prog_DeptRepository(rtRepo)
             };
         }
 
         public IEnumerable<ABStat> StatsByClient(DateTime monthStart, int? maxClients = null)
         {
-            //List<IRTLineItem> rtLineItemList = new List<IRTLineItem>();
-
-            var overallStats = new List<ABStat>();
+            List<IRTLineItem> rtLineItemList = new List<IRTLineItem>();
 
             foreach (var deptRepo in departmentRepos)
             {
                 var rtLineItems = deptRepo.StatsByClient(monthStart, maxClients: maxClients);
-                //rtLineItemList.AddRange(rtLineItems);
-
-                foreach (var li in rtLineItems)
-                {
-                    var abStat = new ABStat
-                    {
-                        Id = li.RTId, //TODO: switch to ABId
-                        Client = li.Name,
-                        Rev = li.Revenue,
-                        Cost = li.Cost
-                    };
-                    //TODO: set StartBal, CurrBal, CredLim, etc
-
-                    overallStats.Add(abStat);
-                    //TODO: Instead of adding to overallStats, create a collection for each department.
-                    //      Then, find a way to combine them together, merging the stats for omnichannel clients
-                }
+                rtLineItemList.AddRange(rtLineItems);
             }
-            //var rtGroups = rtLineItemList.GroupBy(g => g.ABId);
-            //foreach (var grp in rtGroups)
-            //{
-            //    var abStat = new ABStat
-            //    {
-            //        Id = grp.Key.HasValue ? grp.Key.Value : -1,
-            //        //Client = ?
-            //        Rev = grp.Sum(li => li.Revenue),
-            //        Cost = grp.Sum(li => li.Cost)
-            //    };
-            //    overallStats.Add(abStat);
-            //}
 
-            return overallStats;
+            var orphanLineItems = rtLineItemList.Where(li => !li.ABId.HasValue).ToList();
+            var rtGroups = rtLineItemList.Where(li => li.ABId.HasValue).GroupBy(g => g.ABId.Value);
+            var abClients = abRepo.Clients();
+            var abClientIds = abClients.Select(c => c.Id).ToArray();
+
+            var orphanGroups = rtGroups.Where(g => !abClientIds.Contains(g.Key));
+            var orphanGroupLIs = orphanGroups.Select(g => new RTLineItem(g));
+            orphanLineItems.AddRange(orphanGroupLIs);
+
+            var overallABStatsList =
+                (from c in abClients.ToList()
+                 from g in rtGroups
+                 where c.Id == g.Key
+                 select new ABStat(g)
+                 {
+                     Id = c.Id,
+                     Client = c.Name
+                 }).ToList();
+
+            if (orphanLineItems.Any())
+            {
+                var orphanABStat = new ABStat(orphanLineItems)
+                {
+                    Id = -1,
+                    Client = "zUnassigned"
+                };
+                overallABStatsList.Add(orphanABStat);
+            }
+            //TODO: set StartBal, CurrBal, CredLim, etc
+
+            return overallABStatsList;
         }
 
         //public IEnumerable<ABStat> StatsByClient(DateTime monthStart, int? maxClients = null)

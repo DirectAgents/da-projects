@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.DTO;
@@ -9,10 +10,10 @@ namespace DirectAgents.Web.Areas.RevTrack.Controllers
 {
     public class DashboardController : DirectAgents.Web.Controllers.ControllerBase
     {
-        public DashboardController(IMainRepository daRepository, IRevTrackRepository revTrackRepository, IABRepository abRepository, ISuperRepository superRepository)
+        public DashboardController(IMainRepository daRepository, IRevTrackRepository rtRepository, IABRepository abRepository, ISuperRepository superRepository)
         {
             this.daRepo = daRepository;
-            this.rtRepo = revTrackRepository;
+            this.rtRepo = rtRepository;
             this.abRepo = abRepository;
             this.superRepo = superRepository;
         }

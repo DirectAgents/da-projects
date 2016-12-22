@@ -3,6 +3,11 @@
 <h2>Cake Advertisers</h2>
 
 <table>
+<tr>
+    <th>ABId</th>
+    <th>CakeId</th>
+    <th>Name</th>
+</tr>
 @foreach (var adv in Model.OrderBy(a => a.AdvertiserName))
 {
     <tr>

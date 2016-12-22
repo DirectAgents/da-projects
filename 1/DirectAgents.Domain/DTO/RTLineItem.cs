@@ -1,4 +1,6 @@
-﻿
+﻿using System.Collections.Generic;
+using System.Linq;
+
 namespace DirectAgents.Domain.DTO
 {
     public interface IRTLineItem
@@ -14,6 +16,13 @@ namespace DirectAgents.Domain.DTO
 
     public class RTLineItem : IRTLineItem
     {
+        public RTLineItem() { }
+        public RTLineItem(IEnumerable<IRTLineItem> lineItems)
+        {
+            Revenue = lineItems.Sum(li => li.Revenue);
+            Cost = lineItems.Sum(li => li.Cost);
+        }
+
         public int? ABId { get; set; }
         public int RTId { get; set; }
         public string Name { get; set; }

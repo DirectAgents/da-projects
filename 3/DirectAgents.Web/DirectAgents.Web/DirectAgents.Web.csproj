@@ -209,6 +209,7 @@
     <Content Include="Areas\ProgAdmin\Views\Stats\Conv.cshtml" />
     <Compile Include="Areas\RevTrack\Controllers\CakeController.cs" />
     <Compile Include="Areas\RevTrack\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\RevTrack\Controllers\ProgController.cs" />
     <Compile Include="Areas\RevTrack\Controllers\VendorsController.cs" />
     <Compile Include="Areas\RevTrack\Models\DashboardVM.cs" />
     <Compile Include="Areas\RevTrack\RevTrackAreaRegistration.cs" />
@@ -1014,6 +1015,7 @@
     <Content Include="Areas\AB\Views\web.config" />
     <Content Include="Areas\AB\Views\_ViewStart.cshtml" />
     <Content Include="Areas\AB\Views\Clients\Index.cshtml" />
+    <Content Include="Areas\RevTrack\Views\Prog\Clients.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
