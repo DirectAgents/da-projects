@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Web.Areas.RevTrack.Models;
 
-namespace DirectAgents.Web.Areas.RevTrack.Controllers
+namespace DirectAgents.Web.Areas.AB.Controllers
 {
     public class DashboardController : DirectAgents.Web.Controllers.ControllerBase
     {
@@ -73,5 +72,5 @@ namespace DirectAgents.Web.Areas.RevTrack.Controllers
             return RedirectToAction("Index");
         }
 
-	}
+    }
 }

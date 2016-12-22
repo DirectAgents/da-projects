@@ -180,6 +180,7 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="Areas\AB\ABAreaRegistration.cs" />
     <Compile Include="Areas\AB\Controllers\ClientsController.cs" />
+    <Compile Include="Areas\AB\Controllers\DashboardController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\CampStatsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\DailySummariesController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\ExtAccountsController.cs" />
@@ -208,9 +209,7 @@
     <Content Include="Areas\ProgAdmin\Views\Reports\ReportViewer.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Stats\Conv.cshtml" />
     <Compile Include="Areas\RevTrack\Controllers\CakeController.cs" />
-    <Compile Include="Areas\RevTrack\Controllers\DashboardController.cs" />
     <Compile Include="Areas\RevTrack\Controllers\ProgController.cs" />
-    <Compile Include="Areas\RevTrack\Controllers\VendorsController.cs" />
     <Compile Include="Areas\RevTrack\Models\DashboardVM.cs" />
     <Compile Include="Areas\RevTrack\RevTrackAreaRegistration.cs" />
     <Compile Include="Common.cs" />
@@ -1009,13 +1008,12 @@
     <Content Include="Areas\ProgAdmin\Views\TDads\Edit.cshtml" />
     <Content Include="Areas\RevTrack\Views\web.config" />
     <Content Include="Areas\RevTrack\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\RevTrack\Views\Vendors\Index.cshtml" />
-    <Content Include="Areas\RevTrack\Views\Dashboard\Index.cshtml" />
     <Content Include="Areas\RevTrack\Views\Cake\Advertisers.cshtml" />
     <Content Include="Areas\AB\Views\web.config" />
     <Content Include="Areas\AB\Views\_ViewStart.cshtml" />
     <Content Include="Areas\AB\Views\Clients\Index.cshtml" />
     <Content Include="Areas\RevTrack\Views\Prog\Clients.cshtml" />
+    <Content Include="Areas\AB\Views\Dashboard\Index.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
