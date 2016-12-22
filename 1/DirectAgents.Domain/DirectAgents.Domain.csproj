@@ -218,6 +218,10 @@
     <Compile Include="MigrationsRT\201612062313024_Mig_ProgSummary.Designer.cs">
       <DependentUpon>201612062313024_Mig_ProgSummary.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsRT\201612212101261_Mig_ProgABClientId.cs" />
+    <Compile Include="MigrationsRT\201612212101261_Mig_ProgABClientId.Designer.cs">
+      <DependentUpon>201612212101261_Mig_ProgABClientId.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsRT\Configuration.cs" />
     <Compile Include="MigrationsTD\201507282051383_Initial.cs" />
     <Compile Include="MigrationsTD\201507282051383_Initial.Designer.cs">
@@ -448,6 +452,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsRT\201612062313024_Mig_ProgSummary.resx">
       <DependentUpon>201612062313024_Mig_ProgSummary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsRT\201612212101261_Mig_ProgABClientId.resx">
+      <DependentUpon>201612212101261_Mig_ProgABClientId.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201507282051383_Initial.resx">
       <DependentUpon>201507282051383_Initial.cs</DependentUpon>

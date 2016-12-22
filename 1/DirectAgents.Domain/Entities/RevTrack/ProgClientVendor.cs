@@ -13,6 +13,8 @@ namespace DirectAgents.Domain.Entities.RevTrack
         public int Id { get; set; }
         public string Name { get; set; }
 
+        public int? ABClientId { get; set; }
+
         public virtual ICollection<ProgCampaign> ProgCampaigns { get; set; }
     }
 
