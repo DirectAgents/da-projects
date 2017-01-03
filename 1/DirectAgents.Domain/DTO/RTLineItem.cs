@@ -22,6 +22,14 @@ namespace DirectAgents.Domain.DTO
             Revenue = lineItems.Sum(li => li.Revenue);
             Cost = lineItems.Sum(li => li.Cost);
         }
+        public RTLineItem(ProgClientStats pcStats)
+        {
+            ABId = pcStats.ProgClient.ABClientId;
+            RTId = pcStats.ProgClient.Id;
+            Name = pcStats.ProgClient.Name;
+            Revenue = pcStats.TotalRevenue;
+            Cost = pcStats.DACost;
+        }
 
         public int? ABId { get; set; }
         public int RTId { get; set; }

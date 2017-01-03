@@ -20,7 +20,7 @@
 @foreach (var stat in Model.ABStats)
 {
 <tr>
-    <td>@stat.Client</td>
+    <td>@Html.ActionLink("+", "Client", new { id = stat.Id }) @stat.Client</td>
     <td>@stat.Budget</td>
     <td>@stat.Rev</td>
     <td>@stat.Cost</td>

@@ -72,5 +72,14 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             return RedirectToAction("Index");
         }
 
+        //Breakdown by department...
+        public ActionResult Client(int id)
+        {
+            var client = abRepo.Client(id);
+            if (client == null)
+                return HttpNotFound();
+
+            return View();
+        }
     }
 }

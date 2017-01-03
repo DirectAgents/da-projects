@@ -28,18 +28,19 @@ namespace DirectAgents.Domain.Concrete
                 var clientStats = rtRepo.GetProgClientStats(monthStart, client.Id);
                 if (includeZeros || clientStats.DACost > 0 || clientStats.TotalRevenue > 0)
                 {
-                    var lineItem = new RTLineItem
-                    {
-                        ABId = clientStats.ProgClient.ABClientId,
-                        RTId = clientStats.ProgClient.Id,
-                        Name = clientStats.ProgClient.Name,
-                        Revenue = clientStats.TotalRevenue,
-                        Cost = clientStats.DACost
-                    };
+                    var lineItem = new RTLineItem(clientStats);
                     lineItems.Add(lineItem);
                 }
             }
             return lineItems;
+        }
+
+        //?? how to call this from a controller ??
+        public IRTLineItem StatsForClient(int id, DateTime monthStart)
+        {
+            var progClientStats = rtRepo.GetProgClientStats(monthStart, id);
+            var lineItem = new RTLineItem(progClientStats);
+            return lineItem;
         }
     }
 

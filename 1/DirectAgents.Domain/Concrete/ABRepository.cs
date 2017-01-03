@@ -23,6 +23,11 @@ namespace DirectAgents.Domain.Concrete
 
         // ---
 
+        public ABClient Client(int id)
+        {
+            return context.ABClients.Find(id);
+        }
+
         public IQueryable<ABClient> Clients()
         {
             return context.ABClients;
