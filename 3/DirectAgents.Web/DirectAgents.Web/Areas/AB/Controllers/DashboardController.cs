@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.DTO;
-using DirectAgents.Web.Areas.RevTrack.Models;
+using DirectAgents.Web.Areas.AB.Models;
 
 namespace DirectAgents.Web.Areas.AB.Controllers
 {
@@ -83,6 +83,7 @@ namespace DirectAgents.Web.Areas.AB.Controllers
 
             var model = new DashboardVM
             {
+                ABClient = client,
                 ABStats = superRepo.StatsForClient(id, monthStart)
             };
             return View(model);

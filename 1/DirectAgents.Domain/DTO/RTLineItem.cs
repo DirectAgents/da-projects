@@ -24,11 +24,11 @@ namespace DirectAgents.Domain.DTO
         }
         public RTLineItem(ProgClientStats pcStats)
         {
-            ABId = pcStats.ProgClient.ABClientId;
-            RTId = pcStats.ProgClient.Id;
+            ABId = pcStats.ProgClient.ABClientId; // ?
+            RTId = pcStats.ProgClient.Id; // ?
             Name = pcStats.ProgClient.Name; // ?
-            Revenue = pcStats.TotalRevenue; // ?
-            Cost = pcStats.DACost; // ?
+            Revenue = pcStats.TotalRevenue;
+            Cost = pcStats.DACost;
         }
 
         public int? ABId { get; set; }

@@ -181,6 +181,7 @@
     <Compile Include="Areas\AB\ABAreaRegistration.cs" />
     <Compile Include="Areas\AB\Controllers\ClientsController.cs" />
     <Compile Include="Areas\AB\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\AB\Models\DashboardVM.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\CampStatsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\DailySummariesController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\ExtAccountsController.cs" />
@@ -210,7 +211,6 @@
     <Content Include="Areas\ProgAdmin\Views\Stats\Conv.cshtml" />
     <Compile Include="Areas\RevTrack\Controllers\CakeController.cs" />
     <Compile Include="Areas\RevTrack\Controllers\ProgController.cs" />
-    <Compile Include="Areas\RevTrack\Models\DashboardVM.cs" />
     <Compile Include="Areas\RevTrack\RevTrackAreaRegistration.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />
@@ -837,8 +837,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Areas\AB\Models\" />
     <Folder Include="Areas\AB\Views\Shared\" />
+    <Folder Include="Areas\RevTrack\Models\" />
     <Folder Include="Areas\RevTrack\Views\Shared\" />
     <Folder Include="Views\Test\" />
   </ItemGroup>

@@ -28,9 +28,13 @@ namespace DirectAgents.Domain.Concrete
         {
             return context.ProgClients.Find(id);
         }
-        public IQueryable<ProgClient> ProgClients()
+        public IQueryable<ProgClient> ProgClients(int? ABClientId = null)
         {
-            return context.ProgClients;
+            var progClients = context.ProgClients.AsQueryable();
+            if (ABClientId.HasValue)
+                progClients = progClients.Where(c => c.ABClientId == ABClientId.Value);
+
+            return progClients;
         }
 
         public ProgCampaign ProgCampaign(int id)
@@ -94,6 +98,10 @@ namespace DirectAgents.Domain.Concrete
         public ProgClientStats GetProgClientStats(DateTime monthStart, int clientId)
         {
             var progClient = ProgClient(clientId);
+            return null;
+        }
+        public ProgClientStats GetProgClientStats(DateTime monthStart, ProgClient progClient)
+        {
             if (progClient == null)
                 return null; // ?new ProgClientStats - blank?
 
@@ -101,7 +109,7 @@ namespace DirectAgents.Domain.Concrete
             var monthEnd = monthStart.AddMonths(1).AddDays(-1);
 
             // Get Media Stats
-            var progSums = ProgSummaries(monthStart, monthEnd, clientId: clientId);
+            var progSums = ProgSummaries(monthStart, monthEnd, clientId: progClient.Id);
             var progCampaigns = progSums.Select(s => s.ProgCampaign).Distinct().ToList();
             var progVendors = progSums.Select(s => s.ProgVendor).Distinct().OrderBy(v => v.Name).ToList();
             foreach (var progVendor in progVendors)
@@ -120,7 +128,7 @@ namespace DirectAgents.Domain.Concrete
             }
 
             // Get Extra Items
-            var extraItems = ProgExtraItems(monthStart, monthEnd, clientId: clientId);
+            var extraItems = ProgExtraItems(monthStart, monthEnd, clientId: progClient.Id);
             progCampaigns = extraItems.Select(i => i.ProgCampaign).Distinct().ToList();
             progVendors = extraItems.Select(i => i.ProgVendor).Distinct().OrderBy(v => v.Name).ToList();
             foreach (var progVendor in progVendors)

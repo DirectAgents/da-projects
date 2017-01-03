@@ -1,8 +1,16 @@
-﻿@model DirectAgents.Web.Areas.RevTrack.Models.DashboardVM
+﻿@model DirectAgents.Web.Areas.AB.Models.DashboardVM
 
-Breakdown By Department
+<h2>Breakdown By Department</h2>
+
+Client: @Model.ABClient.Name
+<br /><br />
 
 <table>
+<tr>
+    <th>Department</th>
+    <th>Revenue</th>
+    <th>Cost</th>
+</tr>
 @foreach (var stat in Model.ABStats)
 {
 <tr>

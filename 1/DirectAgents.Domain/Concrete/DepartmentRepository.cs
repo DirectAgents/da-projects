@@ -37,12 +37,21 @@ namespace DirectAgents.Domain.Concrete
 
         public IRTLineItem StatsForClient(int id, DateTime monthStart)
         {
-            var progClientStats = rtRepo.GetProgClientStats(monthStart, id);
-            var lineItem = new RTLineItem(progClientStats)
-            { // id(s)?
+            var lineItemList = new List<IRTLineItem>();
+            var progClients = rtRepo.ProgClients(ABClientId: id);
+
+            // Usually there's just one...
+            foreach (var progClient in progClients)
+            {
+                var progClientStats = rtRepo.GetProgClientStats(monthStart, progClient);
+                var lineItem = new RTLineItem(progClientStats);
+                lineItemList.Add(lineItem);
+            }
+            var summaryLineItem = new RTLineItem(lineItemList)
+            {
                 Name = "Programmatic"
             };
-            return lineItem;
+            return summaryLineItem;
         }
     }
 
@@ -96,14 +105,15 @@ namespace DirectAgents.Domain.Concrete
 
         public IRTLineItem StatsForClient(int id, DateTime monthStart)
         {
+            // Usually there's just one...
             var advertisers = mainRepo.GetAdvertisers(ABClientId: id);
             var advLineItems = StatsForAdvertisers(advertisers, monthStart);
 
-            var lineItem = new RTLineItem(advLineItems)
-            { // id(s)?
+            var summaryLineItem = new RTLineItem(advLineItems)
+            {
                 Name = "Cake"
             };
-            return lineItem;
+            return summaryLineItem;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace DirectAgents.Domain.Abstract
         void SaveChanges();
 
         ProgClient ProgClient(int id);
-        IQueryable<ProgClient> ProgClients();
+        IQueryable<ProgClient> ProgClients(int? ABClientId = null);
         ProgCampaign ProgCampaign(int id);
         IQueryable<ProgCampaign> ProgCampaigns();
         ProgVendor ProgVendor(int id);
@@ -22,5 +22,6 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<ProgExtraItem> ProgExtraItems(DateTime? startDate, DateTime? endDate, int? clientId = null, int? campaignId = null, int? vendorId = null);
 
         ProgClientStats GetProgClientStats(DateTime monthStart, int clientId);
+        ProgClientStats GetProgClientStats(DateTime monthStart, ProgClient progClient);
     }
 }
