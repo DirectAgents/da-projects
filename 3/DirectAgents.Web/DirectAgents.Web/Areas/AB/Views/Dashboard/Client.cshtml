@@ -1,3 +1,14 @@
-﻿
+﻿@model DirectAgents.Web.Areas.RevTrack.Models.DashboardVM
 
-Breakdown... by department
+Breakdown By Department
+
+<table>
+@foreach (var stat in Model.ABStats)
+{
+<tr>
+    <td>@stat.Name</td>
+    <td>@stat.Rev</td>
+    <td>@stat.Cost</td>
+</tr>
+}
+</table>

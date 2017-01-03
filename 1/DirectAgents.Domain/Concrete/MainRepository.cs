@@ -119,11 +119,13 @@ namespace DirectAgents.Domain.Concrete
             return accountManagers;
         }
 
-        public IQueryable<Advertiser> GetAdvertisers(int? acctMgrId = null, bool? withBudgetedOffers = null)
+        public IQueryable<Advertiser> GetAdvertisers(int? acctMgrId = null, bool? withBudgetedOffers = null, int? ABClientId = null)
         {
             var advertisers = context.Advertisers.AsQueryable();
             if (acctMgrId.HasValue)
                 advertisers = advertisers.Where(a => a.AccountManagerId == acctMgrId.Value);
+            if (ABClientId.HasValue)
+                advertisers = advertisers.Where(a => a.ABClientId == ABClientId.Value);
 
             if (withBudgetedOffers.HasValue && withBudgetedOffers.Value)
                 advertisers = advertisers.Where(a => a.Offers.Any(o => o.OfferBudgets.Any()));

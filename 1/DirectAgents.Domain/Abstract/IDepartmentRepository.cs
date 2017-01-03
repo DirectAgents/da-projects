@@ -7,5 +7,6 @@ namespace DirectAgents.Domain.Abstract
     public interface IDepartmentRepository
     {
         IEnumerable<IRTLineItem> StatsByClient(DateTime monthStart, bool includeZeros = false, int? maxClients = null);
+        IRTLineItem StatsForClient(int id, DateTime monthStart);
     }
 }

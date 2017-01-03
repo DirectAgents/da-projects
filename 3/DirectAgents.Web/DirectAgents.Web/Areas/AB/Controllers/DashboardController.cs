@@ -79,7 +79,13 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             if (client == null)
                 return HttpNotFound();
 
-            return View();
+            var monthStart = new DateTime(2016, 12, 1); //TESTING
+
+            var model = new DashboardVM
+            {
+                ABStats = superRepo.StatsForClient(id, monthStart)
+            };
+            return View(model);
         }
     }
 }

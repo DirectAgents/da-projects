@@ -20,12 +20,22 @@ namespace DirectAgents.Domain.DTO
             Rev = Decimal.Round(rtLineItems.Sum(li => li.Revenue), 2);
             Cost = Decimal.Round(rtLineItems.Sum(li => li.Cost), 2);
         }
+        public ABStat(IRTLineItem rtLineItem)
+        {
+            //Id = ?ABId / RTId?
+            Name = rtLineItem.Name;
+            Client = rtLineItem.Name; // ?
+            Rev = Decimal.Round(rtLineItem.Revenue, 2);
+            Cost = Decimal.Round(rtLineItem.Cost, 2);
+        }
 
         //TODO: RTId ?  (make nullable...? Id? ABId?)
 
         public int Id { get; set; }
 
-        public string Client { get; set; }
+        public string Name { get; set; }
+
+        public string Client { get; set; } // ?
         //public string Campaign { get; set; }
         //public string Vendor { get; set; }
 

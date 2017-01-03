@@ -76,67 +76,25 @@ namespace DirectAgents.Domain.Concrete
             return overallABStatsList;
         }
 
-        //public IEnumerable<ABStat> StatsByClient(DateTime monthStart, int? maxClients = null)
-        //{
-        //    DateTime monthEnd = monthStart.AddMonths(1).AddDays(-1);
-        //    var offerDailySummaries = mainRepo.GetOfferDailySummaries(null, monthStart, monthEnd);
-        //    var statList = new List<ABStat>();
+        // By department...
+        public IEnumerable<ABStat> StatsForClient(int id, DateTime monthStart)
+        {
+            var lineItemList = new List<IRTLineItem>();
+            foreach (var deptRepo in departmentRepos)
+            {
+                var rtLineItem = deptRepo.StatsForClient(id, monthStart);
+                lineItemList.Add(rtLineItem);
+            }
 
-        //    var advertisers = mainRepo.GetAdvertisers().OrderBy(a => a.AdvertiserName).ToList(); //TODO: include? (e.g. AcctMgr)
-        //    foreach (var adv in advertisers)
-        //    {
-        //        if (maxClients.HasValue && statList.Count >= maxClients.Value)
-        //            break;
+            var abStatList = new List<ABStat>();
+            foreach (var lineItem in lineItemList)
+            {
+                var abStat = new ABStat(lineItem);
+                abStatList.Add(abStat);
+            }
 
-        //        adv.OfferIds = mainRepo.OfferIds(advId: adv.AdvertiserId);
-        //        var ods = offerDailySummaries.Where(o => adv.OfferIds.Contains(o.OfferId));
-        //        if (ods.Any())
-        //        {
-        //            var abStat = new ABStat
-        //            {
-        //                Id = adv.AdvertiserId,
-        //                Client = adv.AdvertiserName,
-        //                Rev = ods.Sum(o => o.Revenue),
-        //                Cost = ods.Sum(o => o.Cost)
-        //            };
-        //            // if maxClients is specified, get at most that number of non-zero abStats
-        //            if (!maxClients.HasValue || abStat.Rev > 0 || abStat.Cost > 0)
-        //                statList.Add(abStat);
-        //        }
-        //    }
-        //    return statList;
-        //}
-        // attempting to make more efficient...
-        //public IEnumerable<ABStat> StatsByClient(DateTime monthStart)
-        //{
-        //    DateTime monthEnd = monthStart.AddMonths(1).AddDays(-1);
-        //    var offerDailySummaries = mainRepo.GetOfferDailySummaries(null, monthStart, monthEnd);
-        //    var offerStats = offerDailySummaries.GroupBy(o => o.OfferId).Select(g => new
-        //    {
-        //        OfferId = g.Key,
-        //        Revenue = g.Sum(o => o.Revenue),
-        //        Cost = g.Sum(o => o.Cost)
-        //    }
-        //    ).ToList().AsQueryable();
+            return abStatList;
+        }
 
-        //    var statList = new List<ABStat>();
-        //    var advertisers = mainRepo.GetAdvertisers().OrderBy(a => a.AdvertiserName).ToList(); //TODO: include? (e.g. AcctMgr)
-        //    foreach (var adv in advertisers)
-        //    {
-        //        adv.OfferIds = mainRepo.OfferIds(advId: adv.AdvertiserId); // ?Could we avoid one db call per advertiser?
-        //        var advOfferStats = offerStats.Where(o => adv.OfferIds.Contains(o.OfferId));
-        //        if (advOfferStats.Any())
-        //        {
-        //            var abStat = new ABStat
-        //            {
-        //                Client = adv.AdvertiserName,
-        //                Rev = advOfferStats.Sum(o => o.Revenue),
-        //                Cost = advOfferStats.Sum(o => o.Cost)
-        //            };
-        //            statList.Add(abStat);
-        //        }
-        //    }
-        //    return statList;
-        //}
     }
 }

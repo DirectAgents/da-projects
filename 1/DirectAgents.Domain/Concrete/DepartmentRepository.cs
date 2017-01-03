@@ -35,11 +35,13 @@ namespace DirectAgents.Domain.Concrete
             return lineItems;
         }
 
-        //?? how to call this from a controller ??
         public IRTLineItem StatsForClient(int id, DateTime monthStart)
         {
             var progClientStats = rtRepo.GetProgClientStats(monthStart, id);
-            var lineItem = new RTLineItem(progClientStats);
+            var lineItem = new RTLineItem(progClientStats)
+            { // id(s)?
+                Name = "Programmatic"
+            };
             return lineItem;
         }
     }
@@ -56,11 +58,17 @@ namespace DirectAgents.Domain.Concrete
 
         public IEnumerable<IRTLineItem> StatsByClient(DateTime monthStart, bool includeZeros = false, int? maxClients = null)
         {
+            var advertisers = mainRepo.GetAdvertisers().OrderBy(a => a.AdvertiserName).ToList(); //TODO: include? (e.g. AcctMgr)
+            var lineItems = StatsForAdvertisers(advertisers, monthStart, includeZeros, maxClients);
+            return lineItems;
+        }
+
+        private IEnumerable<IRTLineItem> StatsForAdvertisers(IEnumerable<DirectAgents.Domain.Entities.Cake.Advertiser> advertisers, DateTime monthStart, bool includeZeros = false, int? maxClients = null)
+        {
             DateTime monthEnd = monthStart.AddMonths(1).AddDays(-1);
             var offerDailySummaries = mainRepo.GetOfferDailySummaries(null, monthStart, monthEnd);
             var lineItems = new List<IRTLineItem>();
 
-            var advertisers = mainRepo.GetAdvertisers().OrderBy(a => a.AdvertiserName).ToList(); //TODO: include? (e.g. AcctMgr)
             foreach (var adv in advertisers)
             {
                 if (maxClients.HasValue && lineItems.Count >= maxClients.Value)
@@ -84,6 +92,18 @@ namespace DirectAgents.Domain.Concrete
                 }
             }
             return lineItems;
+        }
+
+        public IRTLineItem StatsForClient(int id, DateTime monthStart)
+        {
+            var advertisers = mainRepo.GetAdvertisers(ABClientId: id);
+            var advLineItems = StatsForAdvertisers(advertisers, monthStart);
+
+            var lineItem = new RTLineItem(advLineItems)
+            { // id(s)?
+                Name = "Cake"
+            };
+            return lineItem;
         }
     }
 }
