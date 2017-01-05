@@ -45,12 +45,14 @@ namespace DirectAgents.Web.Controllers
             }
         }
 
-        // Pass in null to use "CurrentMonthTD" cookie
+        // --- Getting/Setting the Current Month (i.e. Accounting Period) ---
+
+        // Pass in null to use "CurrentMonth" cookie (for the specified area)
         // Returns the selected month
-        protected DateTime SetChooseMonthViewData(DateTime? month = null)
+        protected DateTime SetChooseMonthViewData(string area, DateTime? month = null)
         {
             if (!month.HasValue)
-                month = CurrentMonthTD;
+                month = GetCurrentMonth(area);
             else if (month.Value.Day > 1) // make sure passed-in value is the 1st of a month
                 month = new DateTime(month.Value.Year, month.Value.Month, 1);
 
@@ -59,11 +61,11 @@ namespace DirectAgents.Web.Controllers
         }
 
         // Passing in null will not use the cookie
-        protected DateTime SetChooseMonthViewData_NonCookie(DateTime? month = null)
+        protected DateTime SetChooseMonthViewData_NonCookie(string area, DateTime? month = null)
         {
             if (!month.HasValue)
                 month = DateTime.Today.AddDays(-1); // if it's the 1st, use last month
-            return SetChooseMonthViewData(month);
+            return SetChooseMonthViewData(area, month);
         }
 
         protected SelectList ChooseMonthSelectList(DateTime selMonth, bool includeNextMonth = false)
@@ -82,27 +84,26 @@ namespace DirectAgents.Web.Controllers
             return new SelectList(slItems, "Value", "Text", selMonth.ToShortDateString());
         }
 
-        protected DateTime CurrentMonthTD
+        protected DateTime GetCurrentMonth(string area)
         {
-            get
+            var currMonthCookie = Request.Cookies["CurrentMonth" + area];
+            DateTime currMonth;
+            if (currMonthCookie == null || !DateTime.TryParse(currMonthCookie.Value, out currMonth))
             {
-                var currMonthCookie = Request.Cookies["CurrentMonthTD"];
-                DateTime currMonth;
-                if (currMonthCookie == null || !DateTime.TryParse(currMonthCookie.Value, out currMonth))
-                {
-                    currMonth = DateTime.Today.AddDays(-1); // default to last month if it's the 1st
-                    currMonth = new DateTime(currMonth.Year, currMonth.Month, 1);
-                    CurrentMonthTD = currMonth; // calls the setter
-                }
-                return currMonth;
+                currMonth = DateTime.Today.AddDays(-1); // default to last month if it's the 1st
+                currMonth = new DateTime(currMonth.Year, currMonth.Month, 1);
+                SetCurrentMonth(area, currMonth);
             }
-            set
-            {
-                HttpCookie cookie = new HttpCookie("CurrentMonthTD");
-                cookie.Value = value.ToString("d");
-                Response.Cookies.Add(cookie);
-            }
+            return currMonth;
         }
+        protected void SetCurrentMonth(string area, DateTime value)
+        {
+            HttpCookie cookie = new HttpCookie("CurrentMonth" + area);
+            cookie.Value = value.ToString("d");
+            Response.Cookies.Add(cookie);
+        }
+
+        // ---
 
         protected JsonResult CreateJsonResult<T>(KendoGridEx<T> kgrid, object aggregates, bool allowGet = false)
         {

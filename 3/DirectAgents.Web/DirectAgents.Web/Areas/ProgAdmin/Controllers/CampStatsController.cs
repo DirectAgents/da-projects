@@ -20,7 +20,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         // HTML version
         public ActionResult Pacing(int? campId, bool showPerfStats = false)
         {
-            DateTime currMonth = SetChooseMonthViewData();
+            DateTime currMonth = SetChooseMonthViewData("RT");
             var campStats = GetCampStats(currMonth, campId);
             var model = new CampaignPacingVM
             {
@@ -38,7 +38,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 
         public ActionResult PacingGrid()
         {
-            SetChooseMonthViewData();
+            SetChooseMonthViewData("RT");
             return View();
         }
         //[HttpPost]
@@ -48,7 +48,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             if (request.AggregateObjects != null)
                 request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
 
-            var startOfMonth = CurrentMonthTD;
+            var startOfMonth = GetCurrentMonth("RT");
             var campStats = GetCampStats(startOfMonth);
             var dtos = campStats.Select(s => new CampaignPacingDTO(s));
             var kgrid = new KendoGridEx<CampaignPacingDTO>(request, dtos);
@@ -58,7 +58,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         //[HttpPost]
         public JsonResult PacingDetail(KendoGridMvcRequest request, int campId) //, DateTime? month)
         {
-            DateTime currMonth = CurrentMonthTD;
+            DateTime currMonth = GetCurrentMonth("RT");
             var stat = cpProgRepo.GetCampStats(currMonth, campId);
             var dtos = stat.LineItems.Select(li => new CampaignPacingDTO(li));
             var kgrid = new KendoGridEx<CampaignPacingDTO>(request, dtos);
@@ -68,7 +68,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 
         public ActionResult PerformanceGrid()
         {
-            SetChooseMonthViewData();
+            SetChooseMonthViewData("RT");
             return View();
         }
         //[HttpPost]
@@ -78,7 +78,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             if (request.AggregateObjects != null)
                 request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
 
-            var startOfMonth = CurrentMonthTD;
+            var startOfMonth = GetCurrentMonth("RT");
             var campStats = GetCampStats(startOfMonth);
             var dtos = campStats.Select(s => new PerformanceDTO(s));
             var kgrid = new KendoGridEx<PerformanceDTO>(request, dtos);
@@ -88,7 +88,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 
         private IEnumerable<TDCampStats> GetCampStats(DateTime startOfMonth, int? campId = null)
         {
-            DateTime currMonth = CurrentMonthTD;
+            DateTime currMonth = GetCurrentMonth("RT");
 
             var campaigns = cpProgRepo.Campaigns();
             if (campId.HasValue)
@@ -114,7 +114,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         }
         public JsonResult SpreadsheetData(int campId)
         {
-            DateTime currMonth = CurrentMonthTD;
+            DateTime currMonth = GetCurrentMonth("RT");
             var campStats = cpProgRepo.GetCampStats(currMonth, campId);
 
             var dtos = new List<CampaignPacingDTO> { new CampaignPacingDTO(campStats) };
@@ -146,7 +146,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         public JsonResult DailyData(int campId, DateTime? start, DateTime? end)
         {
             if (!start.HasValue)
-                start = CurrentMonthTD;
+                start = GetCurrentMonth("RT");
             var dailyDTOs = GetDailyStatsDTO(campId, start, end);
 
             var json = Json(dailyDTOs, JsonRequestBehavior.AllowGet);
@@ -165,7 +165,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         //[HttpPost]
         public JsonResult DailyChartData(KendoGridMvcRequest request, int campId)
         {
-            DateTime start = CurrentMonthTD.AddMonths(-1);
+            DateTime start = GetCurrentMonth("RT").AddMonths(-1);
             var dailyDTOs = GetDailyStatsDTO(campId, start, null);
             var kgrid = new KendoGridEx<DailyDTO>(request, dailyDTOs);
             return CreateJsonResult(kgrid, null, allowGet: true);

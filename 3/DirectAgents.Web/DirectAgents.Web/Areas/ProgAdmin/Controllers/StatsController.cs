@@ -33,7 +33,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         // Stats by "external account"
         public ActionResult ExtAccount(string platform, int? campId, int? acctId, DateTime? month)
         {
-            var startOfMonth = SetChooseMonthViewData_NonCookie(month);
+            var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
             var stats = new List<TDRawStat>();
 
@@ -63,7 +63,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         // Stats by "strategy"
         public ActionResult Strategy(int? acctId, DateTime? month)
         {
-            var startOfMonth = SetChooseMonthViewData_NonCookie(month);
+            var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
             var stats = cpProgRepo.GetStrategyStats(startOfMonth, endOfMonth, acctId: acctId)
                 .OrderBy(s => s.Strategy.Name).ThenBy(s => s.Strategy.Id);
@@ -80,7 +80,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         // Stats by "TDad"
         public ActionResult Creative(int? acctId, DateTime? month)
         {
-            var startOfMonth = SetChooseMonthViewData_NonCookie(month);
+            var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
             var stats = cpProgRepo.GetTDadStats(startOfMonth, endOfMonth, acctId: acctId)
                 .OrderBy(s => s.TDad.Name).ThenBy(s => s.TDad.Id);
@@ -97,7 +97,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         // Stats by site
         public ActionResult Site(int? acctId, DateTime? month, int? minImp)
         {
-            var startOfMonth = SetChooseMonthViewData_NonCookie(month);
+            var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
             var stats = cpProgRepo.GetSiteStats(startOfMonth, endOfMonth, acctId: acctId, minImpressions: minImp)
                 .OrderByDescending(s => s.Impressions).ThenBy(s => s.Site.Name);
@@ -113,7 +113,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 
         public ActionResult Conv(int? acctId, DateTime? month)
         {
-            var startOfMonth = SetChooseMonthViewData_NonCookie(month);
+            var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
             var convs = cpProgRepo.Convs(startOfMonth, endOfMonth, acctId: acctId)
                 .OrderBy(s => s.Time);
@@ -132,7 +132,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         // AdRoll Stats by Ad
         public ActionResult AdRoll(string advEid, DateTime? month)
         {
-            var startOfMonth = SetChooseMonthViewData_NonCookie(month);
+            var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
             var stats = new List<TDRawStat>();
 
@@ -160,7 +160,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         // DBM Stats by Creative
         public ActionResult DBM(int ioID, DateTime? month)
         {
-            var startOfMonth = SetChooseMonthViewData_NonCookie(month);
+            var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
 
             var insertionOrder = tdRepo.InsertionOrder(ioID);
@@ -185,7 +185,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         }
         public JsonResult SpreadsheetData(int ioID, DateTime? month)
         {
-            var startOfMonth = SetChooseMonthViewData_NonCookie(month);
+            var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
 
             var insertionOrder = tdRepo.InsertionOrder(ioID);

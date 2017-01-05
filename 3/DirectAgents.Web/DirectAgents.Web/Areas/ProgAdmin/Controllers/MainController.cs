@@ -13,7 +13,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 
         public ActionResult ChooseMonth(DateTime month)
         {
-            CurrentMonthTD = month;
+            SetCurrentMonth("RT", month);
             return Redirect(Request.UrlReferrer.ToString());
         }
 

@@ -27,13 +27,13 @@ namespace DirectAgents.Web.Areas.AB.Controllers
 
         public ActionResult ChooseMonth(DateTime month)
         {
-            CurrentMonthTD = month;
+            SetCurrentMonth("AB", month);
             return Redirect(Request.UrlReferrer.ToString());
         }
 
         public ActionResult Index(int? x)
         {
-            DateTime currMonth = SetChooseMonthViewData();
+            DateTime currMonth = SetChooseMonthViewData("AB");
 
             var model = new DashboardVM
             {
@@ -85,7 +85,7 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             if (client == null)
                 return HttpNotFound();
 
-            DateTime currMonth = SetChooseMonthViewData();
+            DateTime currMonth = SetChooseMonthViewData("AB");
 
             var model = new DashboardVM
             {

@@ -21,7 +21,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             DateTime? startDate = null, endDate = null;
             if (month.HasValue)
             {
-                startDate = SetChooseMonthViewData_NonCookie(month);
+                startDate = SetChooseMonthViewData_NonCookie("RT", month);
                 endDate = startDate.Value.AddMonths(1).AddDays(-1);
             }
             var model = new DailySummariesVM

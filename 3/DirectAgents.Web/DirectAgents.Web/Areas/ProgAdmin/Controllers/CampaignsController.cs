@@ -26,7 +26,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 
         public ActionResult Dashboard(bool all = false)
         {
-            DateTime currMonth = SetChooseMonthViewData();
+            DateTime currMonth = SetChooseMonthViewData("RT");
             IEnumerable<Campaign> campaigns;
             if (all)
                 campaigns = cpProgRepo.Campaigns();
