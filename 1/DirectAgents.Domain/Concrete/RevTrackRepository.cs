@@ -98,7 +98,7 @@ namespace DirectAgents.Domain.Concrete
         public ProgClientStats GetProgClientStats(DateTime monthStart, int clientId)
         {
             var progClient = ProgClient(clientId);
-            return null;
+            return GetProgClientStats(monthStart, progClient);
         }
         public ProgClientStats GetProgClientStats(DateTime monthStart, ProgClient progClient)
         {

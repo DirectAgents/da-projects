@@ -837,7 +837,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Areas\AB\Views\Shared\" />
     <Folder Include="Areas\RevTrack\Models\" />
     <Folder Include="Areas\RevTrack\Views\Shared\" />
     <Folder Include="Views\Test\" />
@@ -1015,6 +1014,7 @@
     <Content Include="Areas\RevTrack\Views\Prog\Clients.cshtml" />
     <Content Include="Areas\AB\Views\Dashboard\Index.cshtml" />
     <Content Include="Areas\AB\Views\Dashboard\Client.cshtml" />
+    <Content Include="Areas\AB\Views\Shared\ChooseMonth.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

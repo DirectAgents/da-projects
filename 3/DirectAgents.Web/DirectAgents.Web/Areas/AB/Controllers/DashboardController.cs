@@ -25,13 +25,19 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             return null;
         }
 
+        public ActionResult ChooseMonth(DateTime month)
+        {
+            CurrentMonthTD = month;
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+
         public ActionResult Index(int? x)
         {
-            var monthStart = new DateTime(2016, 12, 1); //TESTING
+            DateTime currMonth = SetChooseMonthViewData();
 
             var model = new DashboardVM
             {
-                ABStats = GetStatsByClient(monthStart, x)
+                ABStats = GetStatsByClient(currMonth, x)
             };
             return View(model);
         }
@@ -79,12 +85,12 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             if (client == null)
                 return HttpNotFound();
 
-            var monthStart = new DateTime(2016, 12, 1); //TESTING
+            DateTime currMonth = SetChooseMonthViewData();
 
             var model = new DashboardVM
             {
                 ABClient = client,
-                ABStats = superRepo.StatsForClient(id, monthStart)
+                ABStats = superRepo.StatsForClient(id, currMonth)
             };
             return View(model);
         }

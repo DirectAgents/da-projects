@@ -2,6 +2,8 @@
 
 <h2>Breakdown By Department</h2>
 
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+
 Client: @Model.ABClient.Name
 <br /><br />
 
@@ -10,6 +12,7 @@ Client: @Model.ABClient.Name
     <th>Department</th>
     <th>Revenue</th>
     <th>Cost</th>
+    <th>Margin</th>
 </tr>
 @foreach (var stat in Model.ABStats)
 {
@@ -17,6 +20,7 @@ Client: @Model.ABClient.Name
     <td>@stat.Name</td>
     <td>@stat.Rev</td>
     <td>@stat.Cost</td>
+    <td>@stat.Margin</td>
 </tr>
 }
 </table>
