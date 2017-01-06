@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.RevTrack;
 
 namespace CakeExtracter.Commands.RT
@@ -22,10 +23,12 @@ namespace CakeExtracter.Commands.RT
 
         public override int Execute(string[] remainingArguments)
         {
-            CopyBudgetInfos();
-            //CopySummaries(clientId: 16);
+            //CopyProgVendors();
+            var minDate = new DateTime(2016, 12, 1);
+            CopySummariesForClient(16, minDate, clearFirst: true);
             return 0;
         }
+        // 6:Bevel 16:ChildFund
 
         //TODO
         // a way to compare the two sides (for each entity)... deletions, changes, additions
@@ -66,7 +69,7 @@ namespace CakeExtracter.Commands.RT
                         }
                     }
                 }
-                rtContext.SaveChanges();
+                int numWrites = rtContext.SaveChanges();
             }
         }
         //TODO: ?deletions - how to handle?
@@ -100,14 +103,14 @@ namespace CakeExtracter.Commands.RT
                     {
                         if (!PropertyCompare.Equal(existing, fresh) || !PropertyCompare.Equal(existing.DefaultBudgetInfo, fresh.DefaultBudgetInfo))
                         {
-                            existing.ProgClientId = fresh.ProgClientId;
+                            existing.ProgClientId = fresh.ProgClientId; // ?
                             existing.Name = fresh.Name;
                             existing.DefaultBudgetInfo.SetFrom(fresh.DefaultBudgetInfo);
                             numChanged++;
                         }
                     }
                 }
-                rtContext.SaveChanges();
+                int numWrites = rtContext.SaveChanges();
             }
         }
 
@@ -162,53 +165,96 @@ namespace CakeExtracter.Commands.RT
             }
         }
 
-        //TODO: new strategy; load fresh PBIs into memory. loop through and put "additions" in a new List. (add to db later)
-        // then, loop through existings. delete or update. then do additions from list.
-
-        public void CopyPlatformBudgetInfos()
+        public void CopyVendorBudgetInfos()
         {
             using (var cpprogContext = new ClientPortalProgContext())
             using (var rtContext = new RevTrackContext())
             {
-                var cppPBIs = cpprogContext.PlatformBudgetInfos;
-                foreach (var cppPBI in cppPBIs.OrderBy(x => x.CampaignId).ThenBy(x => x.Date).ThenBy(x => x.PlatformId))
+                var freshPBIs = cpprogContext.PlatformBudgetInfos.OrderBy(x => x.Date).ThenBy(x => x.CampaignId).ThenBy(x => x.PlatformId).ToList();
+                var rtVBIs = rtContext.ProgVendorBudgetInfos.AsQueryable();
+
+                //First make a list of PBIs that need to be added (later)
+                var freshPBIsToAdd = new List<PlatformBudgetInfo>();
+                foreach (var freshPBI in freshPBIs)
+                {
+                    if (!rtVBIs.Any(x => x.Date == freshPBI.Date && x.ProgCampaignId == freshPBI.CampaignId && x.ProgVendorId == freshPBI.PlatformId))
+                        freshPBIsToAdd.Add(freshPBI);
+                }
+
+                //Go through existing and do deletions and updates
+                foreach (var rtVBI in rtVBIs.OrderBy(x => x.Date).ThenBy(x => x.ProgCampaignId).ThenBy(x => x.ProgVendorId))
+                {
+                    var freshPBI = freshPBIs.FirstOrDefault(x => x.Date == rtVBI.Date && x.CampaignId == rtVBI.ProgCampaignId && x.PlatformId == rtVBI.ProgVendorId);
+                    if (freshPBI == null) // delete
+                        rtContext.ProgVendorBudgetInfos.Remove(rtVBI);
+                    else // update
+                        rtVBI.SetFrom(freshPBI);
+                }
+
+                //Now do the additions
+                foreach (var freshPBI in freshPBIsToAdd)
                 {
                     var progVendorBudgetInfo = new ProgVendorBudgetInfo
                     {
-                        ProgCampaignId = cppPBI.CampaignId,
-                        ProgVendorId = cppPBI.PlatformId,
-                        Date = cppPBI.Date,
-                        MediaSpend = cppPBI.MediaSpend,
-                        MgmtFeePct = cppPBI.MgmtFeePct,
-                        MarginPct = cppPBI.MarginPct
+                        ProgCampaignId = freshPBI.CampaignId,
+                        ProgVendorId = freshPBI.PlatformId,
+                        Date = freshPBI.Date,
+                        MediaSpend = freshPBI.MediaSpend,
+                        MgmtFeePct = freshPBI.MgmtFeePct,
+                        MarginPct = freshPBI.MarginPct
                     };
                     rtContext.ProgVendorBudgetInfos.Add(progVendorBudgetInfo);
                 }
-                rtContext.SaveChanges();
+                int numWrites = rtContext.SaveChanges();
             }
         }
 
+        //TODO: ?deletions?
         public void CopyProgVendors()
         {
             using (var cpprogContext = new ClientPortalProgContext())
             using (var rtContext = new RevTrackContext())
             {
                 var platforms = cpprogContext.Platforms;
+                var progVendors = rtContext.ProgVendors.AsQueryable(); // to list?
                 foreach (var platform in platforms.OrderBy(x => x.Id))
                 {
-                    var progVendor = new ProgVendor
+                    var existing = progVendors.FirstOrDefault(x => x.Id == platform.Id);
+                    if (existing == null) // add
                     {
-                        Id = platform.Id,
-                        Name = platform.Name,
-                        Code = platform.Code
-                    };
-                    rtContext.ProgVendors.Add(progVendor);
+                        var progVendor = new ProgVendor
+                        {
+                            Id = platform.Id,
+                            Name = platform.Name,
+                            Code = platform.Code
+                        };
+                        rtContext.ProgVendors.Add(progVendor);
+                    }
+                    else // update
+                    {
+                        existing.Name = platform.Name;
+                        existing.Code = platform.Code;
+                    }
                 }
-                rtContext.SaveChanges();
+                int numWrites = rtContext.SaveChanges();
             }
         }
 
-        public void CopySummaries(int clientId)
+        //TODO: handle updates if don't clearFirst
+        public void CopySummaries(DateTime? minDate = null, bool clearFirst = false)
+        {
+            int[] clientIds;
+            //Assume the ProgClients have already been updated
+            using (var rtContext = new RevTrackContext())
+            {
+                clientIds = rtContext.ProgClients.Select(x => x.Id).OrderBy(x => x).ToArray();
+            }
+            foreach (var clientId in clientIds)
+            {
+                CopySummariesForClient(clientId, minDate: minDate, clearFirst: clearFirst);
+            }
+        }
+        public void CopySummariesForClient(int clientId, DateTime? minDate = null, bool clearFirst = false)
         {
             using (var cpprogContext = new ClientPortalProgContext())
             using (var rtContext = new RevTrackContext())
@@ -216,15 +262,26 @@ namespace CakeExtracter.Commands.RT
                 var progClient = rtContext.ProgClients.Find(clientId);
                 if (progClient != null)
                 {
-                    var campIds = progClient.ProgCampaigns.Select(c => c.Id).ToList();
-                    foreach (var campId in campIds.OrderBy(x => x))
+                    //Assume the campaigns have already been copied over (so we won't miss any DailySummaries)
+                    var campIds = progClient.ProgCampaigns.Select(c => c.Id).OrderBy(x => x).ToArray();
+                    if (clearFirst)
+                    {
+                        var deletions = rtContext.ProgSummaries.Where(ps => campIds.Contains(ps.ProgCampaignId));
+                        if (minDate.HasValue)
+                            deletions = deletions.Where(ps => ps.Date >= minDate.Value);
+                        rtContext.ProgSummaries.RemoveRange(deletions);
+                        int num = rtContext.SaveChanges();
+                    }
+                    foreach (var campId in campIds)
                     {
                         var extAccounts = cpprogContext.ExtAccounts.Where(a => a.CampaignId.HasValue && a.CampaignId.Value == campId);
                         var platformGroups = extAccounts.GroupBy(a => a.PlatformId);
                         foreach (var platformGroup in platformGroups.OrderBy(x => x.Key))
                         {
-                            var acctIds = platformGroup.Select(g => g.Id).ToList();
+                            var acctIds = platformGroup.Select(g => g.Id).ToArray();
                             var dSums = cpprogContext.DailySummaries.Where(ds => acctIds.Contains(ds.AccountId));
+                            if (minDate.HasValue)
+                                dSums = dSums.Where(ds => ds.Date >= minDate.Value);
                             var progSums = dSums.GroupBy(ds => new
                             {
                                 Year = ds.Date.Year,
@@ -244,7 +301,7 @@ namespace CakeExtracter.Commands.RT
                         }
                     }
                 }
-                rtContext.SaveChanges();
+                int numWrites = rtContext.SaveChanges();
             }
         }
 
@@ -253,7 +310,7 @@ namespace CakeExtracter.Commands.RT
             using (var cpprogContext = new ClientPortalProgContext())
             using (var rtContext = new RevTrackContext())
             {
-                rtContext.SaveChanges();
+                int numWrites = rtContext.SaveChanges();
             }
         }
 
