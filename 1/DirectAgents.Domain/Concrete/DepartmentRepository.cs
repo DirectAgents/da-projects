@@ -35,10 +35,10 @@ namespace DirectAgents.Domain.Concrete
             return lineItems;
         }
 
-        public IRTLineItem StatsForClient(int id, DateTime monthStart)
+        public IRTLineItem StatSummaryForClient(int abClientId, DateTime monthStart)
         {
             var lineItemList = new List<IRTLineItem>();
-            var progClients = rtRepo.ProgClients(ABClientId: id);
+            var progClients = rtRepo.ProgClients(ABClientId: abClientId);
 
             // Usually there's just one...
             foreach (var progClient in progClients)
@@ -52,6 +52,24 @@ namespace DirectAgents.Domain.Concrete
                 Name = "Programmatic"
             };
             return summaryLineItem;
+        }
+
+        public IEnumerable<IRTLineItem> StatBreakdownByLineItem(int abClientId, DateTime monthStart)
+        {
+            var lineItemList = new List<IRTLineItem>();
+            var progClients = rtRepo.ProgClients(ABClientId: abClientId);
+
+            // Usually there's just one...
+            foreach (var progClient in progClients)
+            {
+                var progClientStats = rtRepo.GetProgClientStats(monthStart, progClient);
+                foreach (var tdLineItem in progClientStats.LineItems)
+                {
+                    var rtLineItem = new RTLineItem(tdLineItem);
+                    lineItemList.Add(rtLineItem);
+                }
+            }
+            return lineItemList;
         }
     }
 
@@ -103,10 +121,10 @@ namespace DirectAgents.Domain.Concrete
             return lineItems;
         }
 
-        public IRTLineItem StatsForClient(int id, DateTime monthStart)
+        public IRTLineItem StatSummaryForClient(int abClientId, DateTime monthStart)
         {
             // Usually there's just one...
-            var advertisers = mainRepo.GetAdvertisers(ABClientId: id);
+            var advertisers = mainRepo.GetAdvertisers(ABClientId: abClientId);
             var advLineItems = StatsForAdvertisers(advertisers, monthStart);
 
             var summaryLineItem = new RTLineItem(advLineItems)
@@ -114,6 +132,12 @@ namespace DirectAgents.Domain.Concrete
                 Name = "Cake"
             };
             return summaryLineItem;
+        }
+
+        public IEnumerable<IRTLineItem> StatBreakdownByLineItem(int abClientId, DateTime monthStart)
+        {
+            //TODO: implement
+            return new List<IRTLineItem>();
         }
     }
 }

@@ -76,23 +76,45 @@ namespace DirectAgents.Domain.Concrete
             return overallABStatsList;
         }
 
-        // By department...
-        public IEnumerable<ABStat> StatsForClient(int id, DateTime monthStart)
+        // ByDepartment...
+        public IEnumerable<ABStat> StatsForClient(int abClientId, DateTime monthStart)
         {
             var lineItemList = new List<IRTLineItem>();
             foreach (var deptRepo in departmentRepos)
             {
-                var rtLineItem = deptRepo.StatsForClient(id, monthStart);
+                var rtLineItem = deptRepo.StatSummaryForClient(abClientId, monthStart);
                 lineItemList.Add(rtLineItem);
             }
-
             var abStatList = new List<ABStat>();
             foreach (var lineItem in lineItemList)
             {
                 var abStat = new ABStat(lineItem);
                 abStatList.Add(abStat);
             }
+            return abStatList;
+        }
 
+        //TODO: (starting with programmatic) Do for other depts... [assume each dept has distinct vendors?]
+        public IEnumerable<ABStat> StatsByVendor(int abClientId, DateTime monthStart)
+        {
+            return null;
+        }
+
+        //TODO: (starting with programmatic) Do for other depts...
+        public IEnumerable<ABStat> StatsByLineItem(int abClientId, DateTime monthStart)
+        {
+            var lineItemList = new List<IRTLineItem>();
+            foreach (var deptRepo in departmentRepos)
+            {
+                var rtLineItem = deptRepo.StatBreakdownByLineItem(abClientId, monthStart);
+                lineItemList.AddRange(rtLineItem);
+            }
+            var abStatList = new List<ABStat>();
+            foreach (var lineItem in lineItemList)
+            {
+                var abStat = new ABStat(lineItem);
+                abStatList.Add(abStat);
+            }
             return abStatList;
         }
 

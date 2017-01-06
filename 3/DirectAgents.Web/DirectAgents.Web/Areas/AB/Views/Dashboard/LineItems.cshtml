@@ -1,6 +1,6 @@
 ﻿@model DirectAgents.Web.Areas.AB.Models.DashboardVM
 
-<h2>Breakdown By Department</h2>
+<h2>Breakdown</h2>
 
 @Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
 
@@ -9,7 +9,7 @@ Client: @Model.ABClient.Name
 
 <table>
 <tr>
-    <th>Department</th>
+    <th>Vendor</th>
     <th>Revenue</th>
     <th>Cost</th>
     <th>Margin</th>
@@ -24,6 +24,3 @@ Client: @Model.ABClient.Name
 </tr>
 }
 </table>
-
-<br />
-@Html.ActionLink("Breakdown", "LineItems", new { clientId = Model.ABClient.Id })

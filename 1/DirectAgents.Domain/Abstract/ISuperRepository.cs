@@ -9,6 +9,8 @@ namespace DirectAgents.Domain.Abstract
         void SetRepositories(IMainRepository mainRepo, IRevTrackRepository rtRepo, IABRepository abRepo);
 
         IEnumerable<ABStat> StatsByClient(DateTime monthStart, int? maxClients = null);
-        IEnumerable<ABStat> StatsForClient(int id, DateTime monthStart);
+        IEnumerable<ABStat> StatsForClient(int abClientId, DateTime monthStart); // by department
+        IEnumerable<ABStat> StatsByVendor(int abClientId, DateTime monthStart);
+        IEnumerable<ABStat> StatsByLineItem(int abClientId, DateTime monthStart);
     }
 }

@@ -179,6 +179,7 @@ namespace DirectAgents.Domain.DTO
         public Strategy Strategy { get; set; }
         public TDad TDad { get; set; }
         public Site Site { get; set; }
+        public ProgVendor ProgVendor { get; set; }
 
         public int Impressions { get; set; }
         public int Clicks { get; set; }

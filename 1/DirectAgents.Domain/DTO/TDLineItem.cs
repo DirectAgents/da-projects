@@ -9,6 +9,7 @@ namespace DirectAgents.Domain.DTO
     public interface ITDLineItem : ITDRawLineItem, ITDClickStats
     {
         Platform Platform { get; }
+        ProgVendor ProgVendor { get; }
 
         ITDBudget Budget { get; }
         double FractionReached();

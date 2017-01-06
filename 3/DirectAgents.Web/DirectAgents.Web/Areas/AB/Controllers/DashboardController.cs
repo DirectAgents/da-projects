@@ -94,5 +94,21 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             };
             return View(model);
         }
+
+        public ActionResult LineItems(int clientId)
+        {
+            var client = abRepo.Client(clientId);
+            if (client == null)
+                return HttpNotFound();
+
+            DateTime currMonth = SetChooseMonthViewData("AB");
+
+            var model = new DashboardVM
+            {
+                ABClient = client,
+                ABStats = superRepo.StatsByLineItem(clientId, currMonth)
+            };
+            return View(model);
+        }
     }
 }

@@ -66,6 +66,8 @@ namespace DirectAgents.Domain.DTO
         public bool MoneyValsOnly { get; set; }
         // Description?
         public Platform Platform { get; set; }
+        public ProgVendor ProgVendor { get; set; }
+
         public ITDBudget Budget { get; protected set; }
         public double FractionReached()
         {

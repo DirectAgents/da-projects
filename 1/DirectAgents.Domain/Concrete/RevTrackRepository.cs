@@ -115,16 +115,17 @@ namespace DirectAgents.Domain.Concrete
             foreach (var progVendor in progVendors)
             {
                 // Note: Often there's just one campaign, but this will handle when there's more.
-                var campStats = new List<TDMediaStatWithBudget>();
                 foreach (var progCampaign in progCampaigns)
                 {
                     var campVendorProgSums = progSums.Where(s => s.ProgCampaignId == progCampaign.Id && s.ProgVendorId == progVendor.Id);
                     var budgetInfoVals = progCampaign.ProgVendorBudgetInfoFor(monthStart, progVendor.Id, useParentValsIfNone: true);
-                    var stat = new TDMediaStatWithBudget(campVendorProgSums, budgetInfoVals); // ?assign campaign/vendor?
-                    campStats.Add(stat);
+                    var stat = new TDMediaStatWithBudget(campVendorProgSums, budgetInfoVals)
+                    {
+                        // ?assign campaign/vendor ?budget
+                        ProgVendor = progVendor
+                    };
+                    vendorLineItems.Add(stat);
                 }
-                var vendorLineItem = new TDLineItem(campStats); // budget?
-                vendorLineItems.Add(vendorLineItem);
             }
 
             // Get Extra Items
@@ -133,20 +134,18 @@ namespace DirectAgents.Domain.Concrete
             progVendors = extraItems.Select(i => i.ProgVendor).Distinct().OrderBy(v => v.Name).ToList();
             foreach (var progVendor in progVendors)
             {
-                var campLineItems = new List<ITDLineItem>();
                 foreach (var progCampaign in progCampaigns)
                 {
                     var campVendorExtraItems = extraItems.Where(i => i.ProgCampaignId == progCampaign.Id && i.ProgVendorId == progVendor.Id);
                     var budgetInfoVals = progCampaign.ProgVendorBudgetInfoFor(monthStart, progVendor.Id, useParentValsIfNone: true);
                     var lineItem = new TDLineItem(campVendorExtraItems, (budgetInfoVals != null ? budgetInfoVals.MediaSpend : (decimal?)null))
                     {
-                        // ?assign campaign/vendor?
+                        // ?assign campaign/vendor ?budget
+                        ProgVendor = progVendor,
                         MoneyValsOnly = true
                     };
-                    campLineItems.Add(lineItem);
+                    vendorLineItems.Add(lineItem);
                 }
-                var vendorLineItem = new TDLineItem(campLineItems); // budget?
-                vendorLineItems.Add(vendorLineItem);
             }
 
             var progClientStats = new ProgClientStats(progClient, vendorLineItems, monthStart);

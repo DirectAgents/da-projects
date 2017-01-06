@@ -30,6 +30,13 @@ namespace DirectAgents.Domain.DTO
             Revenue = pcStats.TotalRevenue;
             Cost = pcStats.DACost;
         }
+        public RTLineItem(ITDLineItem tdLineItem) //TODO: specify where to take Name from
+        {
+            if (tdLineItem.ProgVendor != null)
+                Name = tdLineItem.ProgVendor.Name;
+            Revenue = tdLineItem.TotalRevenue;
+            Cost = tdLineItem.DACost;
+        }
 
         public int? ABId { get; set; }
         public int RTId { get; set; }
