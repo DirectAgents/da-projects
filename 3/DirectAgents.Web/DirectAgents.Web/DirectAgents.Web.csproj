@@ -1013,7 +1013,7 @@
     <Content Include="Areas\AB\Views\Clients\Index.cshtml" />
     <Content Include="Areas\RevTrack\Views\Prog\Clients.cshtml" />
     <Content Include="Areas\AB\Views\Dashboard\Index.cshtml" />
-    <Content Include="Areas\AB\Views\Dashboard\Client.cshtml" />
+    <Content Include="Areas\AB\Views\Dashboard\BySource.cshtml" />
     <Content Include="Areas\AB\Views\Shared\ChooseMonth.cshtml" />
     <Content Include="Areas\AB\Views\Dashboard\LineItems.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />

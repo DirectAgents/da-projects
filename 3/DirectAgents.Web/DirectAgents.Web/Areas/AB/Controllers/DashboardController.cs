@@ -78,7 +78,7 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             return RedirectToAction("Index");
         }
 
-        //Breakdown by department...
+        //Breakdown by department/source...
         public ActionResult Client(int id)
         {
             var client = abRepo.Client(id);
@@ -92,7 +92,7 @@ namespace DirectAgents.Web.Areas.AB.Controllers
                 ABClient = client,
                 ABStats = superRepo.StatsForClient(id, currMonth)
             };
-            return View(model);
+            return View("BySource", model);
         }
 
         public ActionResult LineItems(int clientId)

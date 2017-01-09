@@ -49,7 +49,7 @@ namespace DirectAgents.Domain.Concrete
             }
             var summaryLineItem = new RTLineItem(lineItemList)
             {
-                Name = "Programmatic"
+                Name = "Programmatic (TD/Social)"
             };
             return summaryLineItem;
         }
@@ -129,7 +129,7 @@ namespace DirectAgents.Domain.Concrete
 
             var summaryLineItem = new RTLineItem(advLineItems)
             {
-                Name = "Cake"
+                Name = "Cake (Advertising/MediaBuying/Mobile)"
             };
             return summaryLineItem;
         }
