@@ -42,6 +42,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         private IEnumerable<DataTransferRow> EnumerateRows()
         {
+            if (advertiserIds == null || !advertiserIds.Any())
+                yield break; // skip city lookup, etc
+
             var credential = DbmCloudStorageExtracter.CreateCredential();
             var service = DbmCloudStorageExtracter.CreateStorageService(credential);
 

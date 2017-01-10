@@ -47,8 +47,8 @@ namespace CakeExtracter.Commands
         public DASynchDBMStats()
         {
             IsCommand("daSynchDBMStats", "synch DBM Daily Stats - by lineitem/creative/site...");
-            HasOption<DateTime>("s|startDate=", "Start Date (default is today)", c => StartDate = c);
-            HasOption<DateTime>("e|endDate=", "End Date (default is yesterday (today for conversions)", c => EndDate = c);
+            HasOption<DateTime>("s|startDate=", "Start Date - for conversions only (default is today & ignore end date)", c => StartDate = c);
+            HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
             HasOption("h|Historical=", "Get historical stats (ignore endDate)", c => Historical = bool.Parse(c));
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<int?>("i|insertionOrder=", "Insertion Order (default: all)", c => InsertionOrderID = c);
@@ -160,7 +160,7 @@ namespace CakeExtracter.Commands
             loaderThread.Join();
         }
 
-        // testing...
+        // to be tested...
         // report for each day has data from two days ago, i.e. report for 12/11/2016 will have conv data for 12/9/2016.
         public void DoETL_Conv() //null for all
         {
