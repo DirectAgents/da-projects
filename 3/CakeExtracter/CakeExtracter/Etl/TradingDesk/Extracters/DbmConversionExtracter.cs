@@ -6,20 +6,24 @@ using System.Net;
 using CakeExtracter.Common;
 using CsvHelper;
 using Google;
+using System.Configuration;
+using Newtonsoft.Json;
+using DBM.Entities;
+using DirectAgents.Domain.Contexts;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
     public class DbmConversionExtracter : Extracter<DataTransferRow>
     {
         private readonly DateRange dateRange;
-        private readonly string bucketName;
         private readonly int? insertionOrderId; // null for all
         private readonly bool includeViewThrus; // (false = only include click-thrus)
+        private readonly IEnumerable<string> advertiserIds;
 
-        public DbmConversionExtracter(DateRange dateRange, string bucketName, int? insertionOrderId, bool includeViewThrus)
+        public DbmConversionExtracter(DateRange dateRange, IEnumerable<string> advertiserIds, int? insertionOrderId, bool includeViewThrus)
         {
             this.dateRange = dateRange;
-            this.bucketName = bucketName;
+            this.advertiserIds = advertiserIds;
             this.insertionOrderId = insertionOrderId;
             this.includeViewThrus = includeViewThrus;
         }
@@ -27,7 +31,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         protected override void Extract()
         {
             string includeWhat = includeViewThrus ? "all" : "click-thru";
-            Logger.Info("Extracting {0} Conversions from Data Transfer Files for {1} from {2} to {3}", includeWhat, bucketName, dateRange.FromDate, dateRange.ToDate);
+            string bucket = (advertiserIds.Count() == 1) ? advertiserIds.First() : "all buckets";
+            Logger.Info("Extracting {0} Conversions from Data Transfer Files for {1} from {2} to {3}", includeWhat, bucket, dateRange.FromDate, dateRange.ToDate);
             if (insertionOrderId.HasValue)
                 Logger.Info("InsertionOrder {0}", insertionOrderId);
             var items = EnumerateRows();
@@ -45,33 +50,50 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
             foreach (var date in dateRange.Dates)
             {
+                string filename = string.Format("log/{0}.0.conversion.0.csv", date.ToString("yyyyMMdd"));
+                string geoFilename = String.Format("entity/{0}.0.GeoLocation.json", date.ToString("yyyyMMdd"));
                 Logger.Info("Date: {0}", date);
 
-                string filename = String.Format("log/{0}.0.conversion.0.csv", date.ToString("yyyyMMdd"));
-                //listRequest.Prefix = filename;
-                //var matchingObjects = listRequest.Execute();
-                //if (matchingObjects.Items == null)
-                //    continue;
+                var cityRequest = service.Objects.Get("gdbm-public", geoFilename);
+                Google.Apis.Storage.v1.Data.Object cityObj = cityRequest.Execute();
+                var cityStream = DbmCloudStorageExtracter.GetStreamForCloudStorageObject(cityObj, credential);
+                var lookupTable = CreateCityLookup(cityStream);
 
-                //var reportObject = bucketObjects.Items.Where(i => i.Name == filename).FirstOrDefault();
+                foreach (var advertiserId in advertiserIds)
+                {
 
-                var request = service.Objects.Get(bucketName, filename);
-                Google.Apis.Storage.v1.Data.Object obj;
-                try
-                {
-                    obj = request.Execute();
-                }
-                catch (GoogleApiException)
-                {
-                    continue; // file not found; continue.  TODO: catch this specifically?
-                }
-                if (obj != null)
-                {
-                    var stream = DbmCloudStorageExtracter.GetStreamForCloudStorageObject(obj, credential);
-                    using (var reader = new StreamReader(stream))
+                    Logger.Info("Advertiser Id {0}", advertiserId);
+                    string thisBucket = String.Format("gdbm-479-{0}", advertiserId);
+                    var request = service.Objects.Get(thisBucket,filename);
+                    Google.Apis.Storage.v1.Data.Object obj;
+
+                    try
                     {
-                        foreach (var row in EnumerateRowsStatic(reader))
-                            yield return row;
+                        obj = request.Execute();
+                    }
+                    catch (GoogleApiException)
+                    {
+                        continue;
+                    }
+
+                    if (obj != null)
+                    {
+                        var stream = DbmCloudStorageExtracter.GetStreamForCloudStorageObject(obj, credential);
+                        using (var reader = new StreamReader(stream))
+                        {
+                            foreach (var row in EnumerateRowsStatic(reader))
+                            {
+                                var res = lookupTable.Where(c => c.id == row.city_id).FirstOrDefault();
+
+                                if (res != null)
+                                {
+                                    var duplicateCount = lookupTable.Where(c => c.short_name == res.short_name && c.country_name == res.country_name).Count();
+                                    //Logger.Info("City {0} in Country {1} with ID {2}", res.city_name, res.country_name, row.city_id);
+                                    row.setAttributes(res.city_name, res.country_name, res.short_name, duplicateCount);
+                                }
+                                yield return row;
+                            }
+                        }
                     }
                 }
             }
@@ -81,17 +103,33 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         {
             using (CsvReader csv = new CsvReader(reader))
             {
+                csv.Configuration.WillThrowOnMissingField = false;
                 var csvRows = csv.GetRecords<DataTransferRow>().ToList();
                 for (int i = 0; i < csvRows.Count; i++)
                 {
                     if (insertionOrderId.HasValue && insertionOrderId.Value != csvRows[i].insertion_order_id)
                         continue;
-                    if (!includeViewThrus && csvRows[i].event_sub_type == "postview")
-                        continue;
                     if (!includeViewThrus)
+                    {
+                        if (csvRows[i].event_sub_type == "postview")
+                            continue;
                         Logger.Info("Extracting a conversion"); //only log this if we're just extracting clickthrus
+                    }
                     yield return csvRows[i];
                 }
+            }
+        }
+
+        public List<GeoLocation> CreateCityLookup(Stream stream)
+        {
+
+            var serializer = new JsonSerializer();
+
+            using (var sr = new StreamReader(stream))
+            using (var jsonReader = new JsonTextReader(sr))
+            {
+                var jsonObjs = serializer.Deserialize<List<GeoLocation>>(jsonReader);
+                return jsonObjs;
             }
         }
     }
@@ -122,5 +160,52 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         public int? browser_id { get; set; }
         public int? browser_timezone_offset_minutes { get; set; }
         public int? net_speed { get; set; }
+
+        public string city_name { get; set; }
+        public string country_name { get; set; }
+        public string advertiser_id { get; set; }
+        public bool unique_city_name { get; set; }
+        public string short_name { get; set; }
+
+        public void setAttributes(string city, string country, string shortName, int uniqueCount)
+        {
+            city_name = city;
+            country_name = country;
+            short_name = shortName;
+            unique_city_name = (uniqueCount <= 1);
+            //advertiser_id = insertionOrderLookup[insertion_order_id];
+        }
     }
+
+    public class GeoLocation
+    {
+        public int id { get; set; }
+        public string country_code { get; set; }
+        public string region_code { get; set; }
+        public string canonical_name { get; set; }
+        public string postal_code { get; set; }
+        public string geo_code { get; set; }
+        public string country_name
+        {
+            get
+            {
+                return canonical_name.Split(',').Last();
+            }
+        }
+        public string city_name
+        {
+            get
+            {
+                return canonical_name.Replace(country_name, "").TrimEnd(',');
+            }
+        }
+        public string short_name
+        {
+            get
+            {
+                return city_name.Split(',').First();
+            }
+        }
+    }
+
 }

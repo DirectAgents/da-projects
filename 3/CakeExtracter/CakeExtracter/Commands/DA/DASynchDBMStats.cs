@@ -5,6 +5,10 @@ using System.Configuration;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
+using CakeExtracter.Bootstrappers;
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.DBM;
+using System.Linq;
 
 namespace CakeExtracter.Commands
 {
@@ -12,10 +16,26 @@ namespace CakeExtracter.Commands
     public class DASynchDBMStats : ConsoleCommand
     {
         //Note: if make a RunStatic, be sure to add 'DBM_AllSiteBucket', etc to the web.config
+        public static int RunStatic(int? insertionOrderID = null, DateTime? startDate = null, DateTime? endDate = null, string level="ALL", string advertiserId="")
+        {
+            AutoMapperBootstrapper.CheckRunSetup();
+            var cmd = new DASynchDBMStats
+            {
+                InsertionOrderID = insertionOrderID,
+                StartDate = startDate ?? DateTime.Today,
+                EndDate = endDate ?? DateTime.Today,
+                StatsType = level,
+                AdvertiserID = advertiserId
+            };
+            return cmd.Run();
+        }
 
+        public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public bool Historical { get; set; }
         public string StatsType { get; set; }
+        public int? InsertionOrderID { get; set; }
+        public string AdvertiserID { get; set; }
 
         public override void ResetProperties()
         {
@@ -27,41 +47,21 @@ namespace CakeExtracter.Commands
         public DASynchDBMStats()
         {
             IsCommand("daSynchDBMStats", "synch DBM Daily Stats - by lineitem/creative/site...");
-            HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
+            HasOption<DateTime>("s|startDate=", "Start Date (default is today)", c => StartDate = c);
+            HasOption<DateTime>("e|endDate=", "End Date (default is yesterday (today for conversions)", c => EndDate = c);
             HasOption("h|Historical=", "Get historical stats (ignore endDate)", c => Historical = bool.Parse(c));
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
+            HasOption<int?>("i|insertionOrder=", "Insertion Order (default: all)", c => InsertionOrderID = c);
+            HasOption<string>("a|advertiserId=", "Advertiser ID (default: all)", c => AdvertiserID = c);
         }
 
         public override int Execute(string[] remainingArguments)
-        {
-            //DoConvTest();
-            //return 0;
-
+        {  
             if (Historical)
                 DoHistorical();
             else
                 DoRegular();
             return 0;
-        }
-
-        // testing...
-        public void DoConvTest()
-        {
-            var today = DateTime.Today;
-            var yesterday = today.AddDays(-1);
-            var dateRange = new DateRange(yesterday, EndDate ?? today);
-            var bucket = "gdbm-479-320231";
-            var insertOrderId = 1632789;
-
-            int timezoneOffset = -5; // w/o daylight savings
-            var convConverter = new CakeExtracter.Etl.TradingDesk.Loaders.DbmConvConverter(timezoneOffset);
-
-            var extracter = new DbmConversionExtracter(dateRange, bucket, insertOrderId, true);
-            var loader = new DbmConvLoader(convConverter);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
         }
 
         public void DoRegular()
@@ -80,8 +80,8 @@ namespace CakeExtracter.Commands
                 DoETL_Creative(reportDate: reportDate);
             if (statsType.Site)
                 DoETL_Site(reportDate: reportDate);
-            //if (statsType.Conv)
-            // TODO: implement
+            if (statsType.Conv)
+                DoETL_Conv();
         }
 
         public void DoHistorical()
@@ -160,5 +160,33 @@ namespace CakeExtracter.Commands
             loaderThread.Join();
         }
 
+        // testing...
+        // report for each day has data from two days ago, i.e. report for 12/11/2016 will have conv data for 12/9/2016.
+        public void DoETL_Conv() //null for all
+        {
+            var today = DateTime.Today;
+            var dateRange = (StartDate == null) ? new DateRange(today, today) : new DateRange(StartDate.Value, EndDate.Value);
+
+            if (InsertionOrderID != null)
+            {
+                using (var db = new ClientPortalProgContext())
+                {
+                    var insertionOrder = db.InsertionOrders.Where(c => c.ID == InsertionOrderID.Value).FirstOrDefault();
+                    if (insertionOrder != null)
+                        AdvertiserID = insertionOrder.Bucket.ToString();
+                }
+            }
+
+            var advertiserIds = (AdvertiserID == "" || AdvertiserID == null) ? (BucketNamesFromConfig("DBM_AllAdvertiserIds")) : new string[] { AdvertiserID };
+            int timezoneOffset = -5; // w/o daylight savings
+            var convConverter = new CakeExtracter.Etl.TradingDesk.Loaders.DbmConvConverter(timezoneOffset);
+
+            var extracter = new DbmConversionExtracter(dateRange, advertiserIds, InsertionOrderID, true);
+            var loader = new DbmConvLoader(convConverter);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
     }
 }

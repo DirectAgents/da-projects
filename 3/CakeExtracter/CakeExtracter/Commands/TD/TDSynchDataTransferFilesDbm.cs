@@ -34,7 +34,8 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            string bucketName = "gdbm-479-320231"; // location of our data transfer files
+            //string bucketName = "gdbm-479-320231"; // location of our data transfer files
+            var bucketEnumerable = new string[] { "320231" };
             int timezoneOffset = -5;
             //int timezoneOffset = -4; // daylight savings
 
@@ -44,7 +45,7 @@ namespace CakeExtracter.Commands
 
             var convConverter = new DbmConvConverter(timezoneOffset);
 
-            var extracter = new DbmConversionExtracter(dateRange, bucketName, InsertionOrderId, IncludeViewThrus);
+            var extracter = new DbmConversionExtracter(dateRange, bucketEnumerable, InsertionOrderId, IncludeViewThrus);
             var loader = new DbmConversionLoader(convConverter);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);

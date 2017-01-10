@@ -15,14 +15,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     {
         private readonly string csvFilePath;
         private readonly StreamReader streamReader;
-        private readonly int platformId;
+        private readonly string platformCode;
         // if streamReader is not null, use it. otherwise use csvFilePath.
 
-        public TDConvExtracter(string csvFilePath, StreamReader streamReader, int platId = 1)
+        public TDConvExtracter(string csvFilePath, StreamReader streamReader, string platCode)
         {
             this.csvFilePath = csvFilePath;
             this.streamReader = streamReader;
-            this.platformId = platId;
+            this.platformCode = platCode;
         }
 
         protected override void Extract()
@@ -57,12 +57,15 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 csv.Configuration.IgnoreHeaderWhiteSpace = true;
                 csv.Configuration.WillThrowOnMissingField = false;
                 csv.Configuration.SkipEmptyRecords = true;
-                switch(platformId) {
-                    case 1:
-                        csv.Configuration.RegisterClassMap<AdrollConvRowMap>();
+                switch(platformCode) {
+                    case Platform.Code_AdRoll:
+                        csv.Configuration.RegisterClassMap<TestAdrollConvRowMap>();
                         break;
-                    case 2:
+                    case Platform.Code_DBM:
                         csv.Configuration.RegisterClassMap<ConvRowMap>();
+                        break;
+                    default:
+                        csv.Configuration.RegisterClassMap<TestAdrollConvRowMap>();
                         break;
                 }
                 var csvRows = csv.GetRecords<ConvRow>().ToList();
@@ -73,6 +76,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             }
         }
     }
+
+    //temporary mappings until we start using PlatColMappings
 
     public sealed class ConvRowMap : CsvClassMap<ConvRow>
     {
@@ -99,9 +104,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         }
     }
 
-    /*public sealed class AdrollConvRowMap : CsvClassMap<ConvRow>
+    public sealed class TestAdrollConvRowMap : CsvClassMap<ConvRow>
     {
-        public AdrollConvRowMap()
+        public TestAdrollConvRowMap()
         {
 
             Map(m => m.ConvTime).Name("ConversionTime");
@@ -123,7 +128,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             Map(m => m.ext_data_order_id);
         }
     }
-    */
+    
     public class ConvRow
     {
         public DateTime ConvTime { get; set; }
@@ -146,8 +151,5 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         public string Platform { get; set; }
         public int PostClickConvs { get; set; }
-
-
-
     }
 }

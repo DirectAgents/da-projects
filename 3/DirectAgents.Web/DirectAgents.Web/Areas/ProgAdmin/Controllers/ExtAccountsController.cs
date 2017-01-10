@@ -9,6 +9,8 @@ using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Web.Areas.ProgAdmin.Models;
+using DirectAgents.Domain.Contexts;
+
 
 namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 {
@@ -161,6 +163,13 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                 int ioID;
                 if (int.TryParse(extAcct.ExternalId, out ioID))
                 {
+                    /*
+                    using (var db = new ClientPortalProgContext())
+                    {
+                        var insertOrder = db.InsertionOrders.Where(i => i.Name == ioID.ToString());
+                        if (insertOrder.Count() == 1)
+                            syncable = true;
+                    }*/
                     var io = tdRepo.InsertionOrder(ioID);
                     if (io != null)
                         syncable = !string.IsNullOrWhiteSpace(io.Bucket);
@@ -205,8 +214,19 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                     break;
                 case Platform.Code_DBM: //TODO: remove/replace this
                     int ioID;
+                    string advertiserId = "";
                     if (int.TryParse(extAcct.ExternalId, out ioID))
-                        DASynchDBMStatsOld.RunStatic(insertionOrderID: ioID); // gets report with stats up to yesterday (and back ?30? days)
+                    {
+                        /*
+                        using (var db = new ClientPortalProgContext())
+                        {
+                            var buckets = db.InsertionOrders.Where(i => i.Name == ioID.ToString());
+                            if (buckets.Count() >= 1)
+                                advertiserId = buckets.First().Bucket;
+                        }*/
+                        DASynchDBMStats.RunStatic(insertionOrderID: ioID, startDate: start, level: level, advertiserId: advertiserId);
+                        //DASynchDBMStatsOld.RunStatic(insertionOrderID: ioID); // gets report with stats up to yesterday (and back ?30? days)
+                    }
                     break;
                 case Platform.Code_FB: //TODO: pass in statsType
                     DASynchFacebookStats.RunStatic(accountId: extAcct.Id, startDate: start);
@@ -244,9 +264,11 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             else
                 statsDateNullable = null;
 
+            var extAcct = cpProgRepo.ExtAccount(id);
+
             using (var reader = new StreamReader(file.InputStream))
             {
-                if (statsType != null && statsType.ToUpper().StartsWith("CONV"))
+                if (statsType != null && statsType.ToUpper().StartsWith("CONV") && extAcct.Platform.Code == Platform.Code_AdRoll)
                     DASynchAdrollConvCsv.RunStatic(id, reader); // TODO: generic Conv syncher?
                 else
                     DASynchTDDailySummaries.RunStatic(id, reader, statsType, statsDate: statsDateNullable);

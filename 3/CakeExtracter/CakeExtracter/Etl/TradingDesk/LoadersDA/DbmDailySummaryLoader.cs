@@ -50,7 +50,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             using (var db = new ClientPortalProgContext())
             {
-                var dbmPlatformId = db.Platforms.Where(p => p.Code == Platform.Code_DBM).First().Id;
+                var dbmPlatformId = Platform.GetId(db, Platform.Code_DBM);
                 var dbmAccounts = db.ExtAccounts.Where(a => a.PlatformId == dbmPlatformId);
                 //var dbmExternalIds = dbmAccounts.Select(a => a.ExternalId).ToList();
 

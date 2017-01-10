@@ -11,7 +11,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
     public class AdrollConvLoader : Loader<AdrollConvRow>
     {
         private readonly int accountId;
-        private TDConvLoader convLoader;
         private Dictionary<string, int?> strategyIdLookupByCampName = new Dictionary<string, int?>();
         private Dictionary<string, int?> adIdLookupByName = new Dictionary<string, int?>();
         private Dictionary<string, int> countryIdLookupByName = new Dictionary<string, int>();
@@ -19,8 +18,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public AdrollConvLoader(int acctId)
         {
-            //this.accountId = acctId;
-            this.convLoader = new TDConvLoader(acctId,1);
+            this.accountId = acctId;
         }
 
         protected override int Load(List<AdrollConvRow> items)
@@ -30,7 +28,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             UpdateAdLookup(items);
             AddUpdateDependentCities(items);
             var convs = items.Select(c => CreateConv(c)).ToList();
-            var count = convLoader.UpsertConvs(convs);
+            var count = TDConvLoader.UpsertConvs(convs);
             return count;
         }
 
@@ -94,7 +92,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         if (cityIdLookupByCountryCity.ContainsKey(countryCity))
                             continue; // already encountered
 
-                        var city = db.ConvCities.Where(c => c.CountryId == countryId && c.Name == cityName).FirstOrDefault();
+                        //StartsWith(cityName) creates compatibility with DBM city names.
+                        var city = db.ConvCities.Where(c => c.CountryId == countryId && c.Name.StartsWith(cityName)).FirstOrDefault();
                         // (assuming just one)
                         if (city == null)
                         {

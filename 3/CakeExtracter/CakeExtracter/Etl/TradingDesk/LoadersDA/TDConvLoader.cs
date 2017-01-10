@@ -13,14 +13,14 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
     {
         //public TDConvLoader() { }
         private readonly int accountId;
-        private readonly int platId;
+        private readonly string platCode;
         private Dictionary<string, int> countryIdLookupByName = new Dictionary<string, int>();
         private Dictionary<string, int> cityIdLookupByCountryCity = new Dictionary<string, int>();
 
-        public TDConvLoader(int acctId, int platId)
+        public TDConvLoader(int acctId, string platCode)
         {
             this.accountId = acctId;
-            this.platId = platId;
+            this.platCode = platCode;
         }
 
         //currently only loading DBM conversions--include Adroll later
@@ -45,7 +45,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 ExtData = convRow.ext_data_order_id
             };
 
-            if (platId == 2)
+            if (platCode == Platform.Code_DBM)
             {
                 conv.ConvType = (convRow.PostClickConvs == 0) ? "v" : "c";
             }
@@ -106,7 +106,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             }
         }
 
-        public int UpsertConvs(List<Conv> items)
+        public static int UpsertConvs(List<Conv> items)
         {
             var addedCount = 0;
             var updatedCount = 0;
@@ -118,7 +118,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 foreach (var item in items)
                 {
                     var targets = db.Convs.Where(c => c.AccountId == item.AccountId && c.Time == item.Time);
-
+                    
                     if (targets.Count() > 1) // found more than one
                     {
                         unmatchedCount++;
