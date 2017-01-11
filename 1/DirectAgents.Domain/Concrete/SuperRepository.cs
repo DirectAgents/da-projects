@@ -60,7 +60,8 @@ namespace DirectAgents.Domain.Concrete
                  select new ABStat(g)
                  {
                      Id = c.Id,
-                     Client = c.Name
+                     Client = c.Name,
+                     Budget = c.DefaultAccountBudgetFor(monthStart)
                  }).ToList();
 
             if (orphanLineItems.Any())

@@ -17,9 +17,16 @@ namespace DirectAgents.Domain.Contexts
 
             // --- AB ---
             modelBuilder.Entity<ABClient>().ToTable("Client", abSchema);
+            modelBuilder.Entity<ClientAccount>().ToTable("ClientAccount", abSchema);
+            modelBuilder.Entity<AccountBudget>().ToTable("AccountBudget", abSchema)
+                .HasKey(x => new { x.ClientAccountId, x.Date });
+
+            modelBuilder.Entity<AccountBudget>().Property(x => x.Value).HasPrecision(14, 2);
         }
 
         // --- AB ---
         public DbSet<ABClient> ABClients { get; set; }
+        public DbSet<ClientAccount> ClientAccounts { get; set; }
+        public DbSet<AccountBudget> AccountBudgets { get; set; }
     }
 }

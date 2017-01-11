@@ -201,6 +201,10 @@
     <Compile Include="MigrationsAB\201612201825281_InitialCreate.Designer.cs">
       <DependentUpon>201612201825281_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsAB\201701102152531_Mig_ClientAccount.cs" />
+    <Compile Include="MigrationsAB\201701102152531_Mig_ClientAccount.Designer.cs">
+      <DependentUpon>201701102152531_Mig_ClientAccount.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsAB\Configuration.cs" />
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.cs" />
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.Designer.cs">
@@ -440,6 +444,9 @@
   <ItemGroup>
     <EmbeddedResource Include="MigrationsAB\201612201825281_InitialCreate.resx">
       <DependentUpon>201612201825281_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsAB\201701102152531_Mig_ClientAccount.resx">
+      <DependentUpon>201701102152531_Mig_ClientAccount.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsRT\201611292020284_InitialCreate.resx">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>
