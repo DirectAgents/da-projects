@@ -1016,6 +1016,7 @@
     <Content Include="Areas\AB\Views\Dashboard\BySource.cshtml" />
     <Content Include="Areas\AB\Views\Shared\ChooseMonth.cshtml" />
     <Content Include="Areas\AB\Views\Dashboard\LineItems.cshtml" />
+    <Content Include="Areas\AB\Views\Shared\_LayoutAB.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

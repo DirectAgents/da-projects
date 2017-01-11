@@ -33,6 +33,7 @@ namespace DirectAgents.Domain.Concrete
             };
         }
 
+        // maxClients = max # of cients per department; total could be more
         public IEnumerable<ABStat> StatsByClient(DateTime monthStart, int? maxClients = null)
         {
             List<IRTLineItem> rtLineItemList = new List<IRTLineItem>();
