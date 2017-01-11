@@ -21,6 +21,8 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<AccountBudget>().ToTable("AccountBudget", abSchema)
                 .HasKey(x => new { x.ClientAccountId, x.Date });
 
+            modelBuilder.Entity<ClientAccount>().Property(x => x.ExtCredit).HasPrecision(14, 2);
+            modelBuilder.Entity<ClientAccount>().Property(x => x.IntCredit).HasPrecision(14, 2);
             modelBuilder.Entity<AccountBudget>().Property(x => x.Value).HasPrecision(14, 2);
         }
 

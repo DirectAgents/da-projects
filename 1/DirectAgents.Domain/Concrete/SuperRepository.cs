@@ -61,7 +61,10 @@ namespace DirectAgents.Domain.Concrete
                  {
                      Id = c.Id,
                      Client = c.Name,
-                     Budget = c.DefaultAccountBudgetFor(monthStart)
+                     Budget = c.DefaultAccount().BudgetFor(monthStart),
+                     //Budget = c.DefaultAccountBudgetFor(monthStart),
+                     ExtCred = c.DefaultAccount().ExtCredit,
+                     IntCred = c.DefaultAccount().IntCredit
                  }).ToList();
 
             if (orphanLineItems.Any())

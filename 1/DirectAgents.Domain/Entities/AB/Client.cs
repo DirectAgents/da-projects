@@ -15,11 +15,18 @@ namespace DirectAgents.Domain.Entities.AB
 
         public virtual ICollection<ClientAccount> ClientAccounts { get; set; }
 
+        private ClientAccount _defaultAccount;
         public ClientAccount DefaultAccount()
         {
+            if (_defaultAccount != null)
+                return _defaultAccount;
+
             if (ClientAccounts == null || !ClientAccounts.Any())
-                return null;
-            return ClientAccounts.First();
+                _defaultAccount = new ClientAccount(); // ? guarantees returning non-null
+            else
+                _defaultAccount = ClientAccounts.First();
+
+            return _defaultAccount;
         }
         public decimal DefaultAccountBudgetFor(DateTime date)
         {
@@ -28,6 +35,8 @@ namespace DirectAgents.Domain.Entities.AB
                 return 0;
             return defaultAccount.BudgetFor(date);
         }
+
+        //? DefaultExtCredit, DefaultIntCredit ?
     }
 
     public class ClientAccount
@@ -35,6 +44,8 @@ namespace DirectAgents.Domain.Entities.AB
         public int Id { get; set; }
         public int ClientId { get; set; }
         public virtual ABClient Client { get; set; }
+        public decimal ExtCredit { get; set; }
+        public decimal IntCredit { get; set; }
 
         public virtual ICollection<AccountBudget> AccountBudgets { get; set; }
 

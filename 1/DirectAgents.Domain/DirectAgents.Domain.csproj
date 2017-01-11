@@ -205,6 +205,10 @@
     <Compile Include="MigrationsAB\201701102152531_Mig_ClientAccount.Designer.cs">
       <DependentUpon>201701102152531_Mig_ClientAccount.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsAB\201701111928532_Mig_CreditLimits.cs" />
+    <Compile Include="MigrationsAB\201701111928532_Mig_CreditLimits.Designer.cs">
+      <DependentUpon>201701111928532_Mig_CreditLimits.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsAB\Configuration.cs" />
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.cs" />
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.Designer.cs">
@@ -447,6 +451,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsAB\201701102152531_Mig_ClientAccount.resx">
       <DependentUpon>201701102152531_Mig_ClientAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsAB\201701111928532_Mig_CreditLimits.resx">
+      <DependentUpon>201701111928532_Mig_CreditLimits.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsRT\201611292020284_InitialCreate.resx">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>
