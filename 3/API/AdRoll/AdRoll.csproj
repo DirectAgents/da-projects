@@ -51,6 +51,7 @@
     <Compile Include="Entities\Ad.cs" />
     <Compile Include="Entities\AdSummary.cs" />
     <Compile Include="Entities\Advertisable.cs" />
+    <Compile Include="Entities\AttributionSummary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

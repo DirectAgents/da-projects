@@ -17,6 +17,9 @@ namespace AdRoll.Clients
         public string start_date { get; set; }
         public string end_date { get; set; }
 
+        public string advertisable_eid { get; set; }
+        public string breakdowns { get; set; }
+
         public ReportRequest()
         {
             start_date = DateTime.Today.AddDays(-1).ToString("MM-dd-yyyy");
@@ -114,6 +117,40 @@ namespace AdRoll.Clients
     public class AdSummaryReportResponse
     {
         public List<AdSummary> results { get; set; }
+    }
+
+    #endregion
+    #region Attribution
+
+    public class AttributionReportClient : ApiClient
+    {
+        public AttributionReportClient()
+            : base(1, "attributions", "advertisable", reporting: true) { }
+
+        public AttributionReportResponse DailySummaries(AttributionReportRequest request)
+        {
+            var result = Execute<AttributionReportResponse>(request);
+            return result;
+        }
+    }
+
+    public class AttributionReportRequest : ReportRequest
+    {
+        public AttributionReportRequest()
+            : base()
+        {
+            breakdowns = "date";
+        }
+    }
+    public class AttributionReportResponse
+    {
+        public AttributionReportResponseInner results { get; set; }
+    }
+    public class AttributionReportResponseInner
+    {
+        public List<AttributionSummary> date { get; set; }
+        // entity
+        // summary
     }
 
     #endregion

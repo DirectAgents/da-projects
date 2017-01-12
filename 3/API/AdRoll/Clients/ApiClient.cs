@@ -11,18 +11,18 @@ namespace AdRoll.Clients
 {
     abstract public class ApiClient
     {
-        protected const string Domain = "api.adroll.com";
         //protected const string Domain = "app.adroll.com/api";
+        protected const string Domain = "api.adroll.com";
+        protected const string ReportingDomain = "app.adroll.com/uhura";
         protected readonly string BaseUrl;
 
         private string Username { get; set; }
         private string Password { get; set; }
 
-        protected ApiClient(int version, string service, string method)
+        protected ApiClient(int version, string service, string method, bool reporting = false)
         {
-            BaseUrl = "https://" + Domain + "/v" + version + "/" + service + "/" + method;
-            //BaseUrl = "https://" + Domain + "/v" + version + "/" + service + "/";
-            //BaseUrl = "https://" + Domain + "/";
+            string domain = (reporting ? ReportingDomain : Domain);
+            BaseUrl = "https://" + domain + "/v" + version + "/" + service + "/" + method;
         }
 
         public void SetCredentials(string username, string password)

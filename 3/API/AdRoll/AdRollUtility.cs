@@ -54,6 +54,11 @@ namespace AdRoll
         {
             get { return (AdvertisableReportClient)GetClient(typeof(AdvertisableReportClient)); }
         }
+        private AttributionReportClient AttributionReportClient
+        {
+            get { return (AttributionReportClient)GetClient(typeof(AttributionReportClient)); }
+        }
+
         private GetAdvertisablesClient GetAdvertisablesClient
         {
             get { return (GetAdvertisablesClient)GetClient(typeof(GetAdvertisablesClient)); }
@@ -147,6 +152,24 @@ namespace AdRoll
                 campSum.date = date;
             }
             return campaignSummaries;
+        }
+
+        // (Daily)AttributionSummaries for an Advertisable
+        public List<AttributionSummary> AttributionSummaries(DateTime startDate, DateTime endDate, string advertisableEid)
+        {
+            var request = new AttributionReportRequest
+            {
+                start_date = startDate.ToString("MM-dd-yyyy"),
+                end_date = endDate.ToString("MM-dd-yyyy"),
+                advertisable_eid = advertisableEid
+            };
+            var response = this.AttributionReportClient.DailySummaries(request);
+            if (response == null || response.results == null)
+            {
+                LogInfo("No AttributionSummaries found for the Advertisable");
+                return new List<AttributionSummary>();
+            }
+            return response.results.date;
         }
 
         // DailySummaries for an Advertisable
