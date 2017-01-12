@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Contexts;
@@ -45,6 +46,35 @@ namespace DirectAgents.Domain.Concrete
         {
             context.ABClients.AddRange(clients);
             context.SaveChanges();
+        }
+
+        public bool SaveClient(ABClient client)
+        {
+            if (context.ABClients.Any(c => c.Id == client.Id))
+            {
+                var entry = context.Entry(client);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public ClientAccount ClientAccount(int id)
+        {
+            return context.ClientAccounts.Find(id);
+        }
+
+        public bool SaveClientAccount(ClientAccount clientAccount)
+        {
+            if (context.ClientAccounts.Any(ca => ca.Id == clientAccount.Id))
+            {
+                var entry = context.Entry(clientAccount);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            return false;
         }
 
         // ---

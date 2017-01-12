@@ -13,5 +13,9 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<ABClient> Clients();
         bool AddClient(ABClient client);
         void AddClients(IEnumerable<ABClient> clients);
+        bool SaveClient(ABClient client);
+
+        ClientAccount ClientAccount(int id);
+        bool SaveClientAccount(ClientAccount clientAccount);
     }
 }

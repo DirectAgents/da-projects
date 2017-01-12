@@ -179,6 +179,7 @@
   <ItemGroup>
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="Areas\AB\ABAreaRegistration.cs" />
+    <Compile Include="Areas\AB\Controllers\ClientAccountsController.cs" />
     <Compile Include="Areas\AB\Controllers\ClientsController.cs" />
     <Compile Include="Areas\AB\Controllers\DashboardController.cs" />
     <Compile Include="Areas\AB\Models\DashboardVM.cs" />
@@ -1017,6 +1018,8 @@
     <Content Include="Areas\AB\Views\Shared\ChooseMonth.cshtml" />
     <Content Include="Areas\AB\Views\Dashboard\LineItems.cshtml" />
     <Content Include="Areas\AB\Views\Shared\_LayoutAB.cshtml" />
+    <Content Include="Areas\AB\Views\Clients\Edit.cshtml" />
+    <Content Include="Areas\AB\Views\ClientAccounts\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
