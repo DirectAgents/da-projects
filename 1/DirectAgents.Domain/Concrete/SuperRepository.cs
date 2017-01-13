@@ -64,7 +64,8 @@ namespace DirectAgents.Domain.Concrete
                      Budget = c.DefaultAccount().BudgetFor(monthStart),
                      //Budget = c.DefaultAccountBudgetFor(monthStart),
                      ExtCred = c.DefaultAccount().ExtCredit,
-                     IntCred = c.DefaultAccount().IntCredit
+                     IntCred = c.DefaultAccount().IntCredit,
+                     StartBal = 5000 // TEMP!!!
                  }).ToList();
 
             if (orphanLineItems.Any())

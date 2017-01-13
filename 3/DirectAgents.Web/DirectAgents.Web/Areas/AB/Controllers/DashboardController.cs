@@ -31,7 +31,7 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             return Redirect(Request.UrlReferrer.ToString());
         }
 
-        public ActionResult Index(int? x)
+        public ActionResult Index(int x = 10)
         {
             DateTime currMonth = SetChooseMonthViewData("AB");
 
@@ -43,40 +43,40 @@ namespace DirectAgents.Web.Areas.AB.Controllers
         }
         private IEnumerable<ABStat> GetStatsByClient(DateTime monthStart, int? maxClients = null)
         {
-            // If maxClients not specified, will use cached version if available
-            // If specified, clear out cached version and re-retrieve
-            if (maxClients.HasValue)
-                Session["StatsByClient"] = null;
+            //// If maxClients not specified, will use cached version if available
+            //// If specified, clear out cached version and re-retrieve
+            //if (maxClients.HasValue)
+            //    Session["StatsByClient"] = null;
 
-            var sessionStats = Session["StatsByClient"];
-            if (sessionStats != null)
-                return (IEnumerable<ABStat>)sessionStats;
+            //var sessionStats = Session["StatsByClient"];
+            //if (sessionStats != null)
+            //    return (IEnumerable<ABStat>)sessionStats;
 
             var clientStats = superRepo.StatsByClient(monthStart, maxClients: maxClients);
 
-            Session["StatsByClient"] = clientStats;
+            //Session["StatsByClient"] = clientStats;
 
             return clientStats;
         }
 
-        public ActionResult EditClientStat(int id, decimal? sb, decimal? ec, decimal? ic)
-        {
-            var clientStats = (IEnumerable<ABStat>)Session["StatsByClient"];
-            foreach (var clientStat in clientStats)
-            {
-                if (clientStat.Id == id) // the one to edit
-                {
-                    if (sb.HasValue)
-                        clientStat.StartBal = sb.Value;
-                    if (ec.HasValue)
-                        clientStat.ExtCred = ec.Value;
-                    if (ic.HasValue)
-                        clientStat.IntCred = ic.Value;
-                    break;
-                }
-            }
-            return RedirectToAction("Index");
-        }
+        //public ActionResult EditClientStat(int id, decimal? sb, decimal? ec, decimal? ic)
+        //{
+        //    var clientStats = (IEnumerable<ABStat>)Session["StatsByClient"];
+        //    foreach (var clientStat in clientStats)
+        //    {
+        //        if (clientStat.Id == id) // the one to edit
+        //        {
+        //            if (sb.HasValue)
+        //                clientStat.StartBal = sb.Value;
+        //            if (ec.HasValue)
+        //                clientStat.ExtCred = ec.Value;
+        //            if (ic.HasValue)
+        //                clientStat.IntCred = ic.Value;
+        //            break;
+        //        }
+        //    }
+        //    return RedirectToAction("Index");
+        //}
 
         //Breakdown by department/source...
         public ActionResult Client(int id)
