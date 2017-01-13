@@ -1,0 +1,27 @@
+﻿@model DirectAgents.Domain.Entities.AB.ABClient
+
+<h2>Client Details</h2>
+
+Id: @Model.Id<br />
+Name: @Model.Name<br />
+[@Html.ActionLink("edit", "Edit", new { id = Model.Id })]
+<br /><br />
+@foreach (var ca in Model.ClientAccounts)
+{<div>
+    ExtCredit: @ca.ExtCredit<br />
+    IntCredit: @ca.IntCredit<br />
+    [@Html.ActionLink("edit", "Edit", "ClientAccounts", new { id = ca.Id }, null)]
+    <br /><br />
+@{
+    if (ca.AccountBudgets != null && ca.AccountBudgets.Any())
+    {
+        var ab = ca.AccountBudgets.OrderByDescending(x => x.Date).First();
+        <text>@ab.Date.ToShortDateString() Budget: @ab.Value</text>
+        <br /><br />
+        //TODO: editlink for AccountBudget
+    }
+}
+</div>}
+
+Links:<br />
+@Html.ActionLink("List Clients", "Index")

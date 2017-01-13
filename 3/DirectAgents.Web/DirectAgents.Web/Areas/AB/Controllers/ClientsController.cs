@@ -20,6 +20,15 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             return View(clients);
         }
 
+        public ActionResult Show(int id)
+        {
+            var abClient = abRepo.Client(id);
+            if (abClient == null)
+                return HttpNotFound();
+
+            return View(abClient);
+        }
+
         [HttpGet]
         public ActionResult Edit(int id)
         {
@@ -35,7 +44,7 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             if (ModelState.IsValid)
             {
                 if (abRepo.SaveClient(client))
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Show", new { id = client.Id });
                 ModelState.AddModelError("", "Client could not be saved.");
             }
             return View(client);

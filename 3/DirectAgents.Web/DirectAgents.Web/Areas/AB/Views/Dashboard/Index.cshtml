@@ -34,7 +34,7 @@
     <td></td>
     <td>@stat.StartBal</td>
     <td>@stat.CurrBal</td>
-    <td>@Html.ActionLink("edit", "Edit", "ClientAccounts", new { clientId = stat.Id }, null)</td>
+    <td>@Html.ActionLink("details", "Show", "Clients", new { id = stat.Id }, null)</td>
 @*    <td>@Html.ActionLink("test", "EditClientStat", new { id = stat.Id, sb = stat.StartBal, ec = stat.ExtCred, ic = stat.IntCred })</td>*@
 </tr>
 }

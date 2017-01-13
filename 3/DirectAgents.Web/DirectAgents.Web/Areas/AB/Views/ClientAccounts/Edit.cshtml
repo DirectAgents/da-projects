@@ -10,6 +10,10 @@
         <div style="float:left">
             <table>
                 <tr>
+                    <td>@Html.LabelFor(m => m.Client.Name, "Client")</td>
+                    <td>@Html.DisplayFor(m => m.Client.Name)</td>
+                </tr>
+                <tr>
                     <td>@Html.LabelFor(m => m.ExtCredit)</td>
                     <td>@Html.EditorFor(m => m.ExtCredit)</td>
                 </tr>
@@ -20,7 +24,7 @@
             </table>
             <br />
             <input type="submit" value="Save" />
-            &nbsp;@Html.ActionLink("cancel", "Index", "Dashboard")
+            &nbsp;@Html.ActionLink("cancel", "Show", "Clients", new { id = Model.ClientId }, null)
         </div>
     }
 </fieldset>

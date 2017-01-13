@@ -6,9 +6,9 @@
 @foreach (var client in Model.OrderBy(c => c.Name))
 {
     <tr>
-        <td>@Html.ActionLink("edit", "Edit", new { id = client.Id })</td>
         <td>@client.Id</td>
         <td>@client.Name</td>
+        <td>@Html.ActionLink("details", "Show", new { id = client.Id })</td>
     </tr>
 }
 </table>

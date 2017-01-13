@@ -13,13 +13,23 @@ namespace DirectAgents.Web.Areas.AB.Controllers
         }
 
         [HttpGet]
-        public ActionResult Edit(int clientId)
+        public ActionResult Edit(int? id, int? clientId)
         {
-            var abClient = abRepo.Client(clientId);
-            if (abClient == null || !abClient.ClientAccounts.Any())
+            ClientAccount clientAccount = null;
+            if (id.HasValue)
+            {
+                clientAccount = abRepo.ClientAccount(id.Value);
+            }
+            if (clientAccount == null && clientId.HasValue)
+            {
+                var abClient = abRepo.Client(clientId.Value);
+                if (abClient != null && abClient.ClientAccounts.Any())
+                    clientAccount = abClient.ClientAccounts.First();
+            }
+            if (clientAccount == null)
                 return HttpNotFound();
 
-            return View(abClient.ClientAccounts.First());
+            return View(clientAccount);
         }
         [HttpPost]
         public ActionResult Edit(ClientAccount clientAccount)
@@ -27,7 +37,7 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             if (ModelState.IsValid)
             {
                 if (abRepo.SaveClientAccount(clientAccount))
-                    return RedirectToAction("Index", "Dashboard");
+                    return RedirectToAction("Show", "Clients", new { id = clientAccount.ClientId });
                 ModelState.AddModelError("", "ClientAccount could not be saved.");
             }
             return View(clientAccount);
