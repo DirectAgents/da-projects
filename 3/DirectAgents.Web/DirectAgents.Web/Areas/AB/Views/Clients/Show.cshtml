@@ -16,7 +16,8 @@ Name: @Model.Name<br />
     if (ca.AccountBudgets != null && ca.AccountBudgets.Any())
     {
         var ab = ca.AccountBudgets.OrderByDescending(x => x.Date).First();
-        <text>@ab.Date.ToShortDateString() Budget: @ab.Value</text>
+        <text>@ab.Date.ToShortDateString() Budget: @ab.Value
+            &nbsp;&nbsp;@Html.ActionLink("testlink", "EditViaLink", "AccountBudgets", new { clientAccountId = ca.Id, date = ab.Date.ToShortDateString(), value = ab.Value }, null)</text>
         <br /><br />
         //TODO: editlink for AccountBudget
     }

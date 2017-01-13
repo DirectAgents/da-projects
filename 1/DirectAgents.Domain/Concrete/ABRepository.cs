@@ -77,6 +77,11 @@ namespace DirectAgents.Domain.Concrete
             return false;
         }
 
+        public AccountBudget AccountBudget(int clientAccountId, DateTime date)
+        {
+            return context.AccountBudgets.Find(clientAccountId, date);
+        }
+
         // ---
 
         private bool disposed = false;
