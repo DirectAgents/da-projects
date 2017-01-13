@@ -4,25 +4,20 @@
 
 Id: @Model.Id<br />
 Name: @Model.Name<br />
+ExtCredit: @Model.ExtCredit<br />
+IntCredit: @Model.IntCredit<br />
 [@Html.ActionLink("edit", "Edit", new { id = Model.Id })]
 <br /><br />
-@foreach (var ca in Model.ClientAccounts)
-{<div>
-    ExtCredit: @ca.ExtCredit<br />
-    IntCredit: @ca.IntCredit<br />
-    [@Html.ActionLink("edit", "Edit", "ClientAccounts", new { id = ca.Id }, null)]
-    <br /><br />
-@{
-    if (ca.AccountBudgets != null && ca.AccountBudgets.Any())
-    {
-        var ab = ca.AccountBudgets.OrderByDescending(x => x.Date).First();
-        <text>@ab.Date.ToShortDateString() Budget: @ab.Value
-            &nbsp;&nbsp;@Html.ActionLink("testlink", "EditViaLink", "AccountBudgets", new { clientAccountId = ca.Id, date = ab.Date.ToShortDateString(), value = ab.Value }, null)</text>
-        <br /><br />
-        //TODO: editlink for AccountBudget
-    }
+
+@if (Model.ClientBudgets != null && Model.ClientBudgets.Any())
+{
+    var cb = Model.ClientBudgets.OrderByDescending(x => x.Date).First();
+    <text>@cb.Date.ToShortDateString() Budget: @cb.Value</text>
+    <br /><text>TODO: edit link</text>
+} else {
+    <text>[@Html.ActionLink("new budget", "NewBudget", new { id = Model.Id })]</text>
 }
-</div>}
+<br /><br />
 
 Links:<br />
 @Html.ActionLink("List Clients", "Index")

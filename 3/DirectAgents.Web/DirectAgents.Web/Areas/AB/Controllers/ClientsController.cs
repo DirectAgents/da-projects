@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities.AB;
@@ -48,6 +49,24 @@ namespace DirectAgents.Web.Areas.AB.Controllers
                 ModelState.AddModelError("", "Client could not be saved.");
             }
             return View(client);
+        }
+
+        public ActionResult NewBudget(int id)
+        {
+            var abClient = abRepo.Client(id);
+            if (abClient == null)
+                return HttpNotFound();
+
+            if (!abClient.ClientBudgets.Any())
+            {
+                var clientBudget = new ClientBudget
+                {
+                    Date = DateTime.Today.FirstDayOfMonth()
+                };
+                abClient.ClientBudgets.Add(clientBudget);
+                abRepo.SaveChanges();
+            }
+            return RedirectToAction("Show", new { id = abClient.Id });
         }
 
 	}

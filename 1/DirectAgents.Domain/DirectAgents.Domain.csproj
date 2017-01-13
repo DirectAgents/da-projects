@@ -102,6 +102,7 @@
     <Compile Include="DTO\TDStat.cs" />
     <Compile Include="DTO\TDStatsGauge.cs" />
     <Compile Include="Entities\AB\Client.cs" />
+    <Compile Include="Entities\AB\ClientAccount.cs" />
     <Compile Include="Entities\AdRoll\Ad.cs" />
     <Compile Include="Entities\AdRoll\AdDailySummary.cs" />
     <Compile Include="Entities\AdRoll\Advertisable.cs" />
@@ -208,6 +209,10 @@
     <Compile Include="MigrationsAB\201701111928532_Mig_CreditLimits.cs" />
     <Compile Include="MigrationsAB\201701111928532_Mig_CreditLimits.Designer.cs">
       <DependentUpon>201701111928532_Mig_CreditLimits.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsAB\201701131938457_Mig_ClientBudget.cs" />
+    <Compile Include="MigrationsAB\201701131938457_Mig_ClientBudget.Designer.cs">
+      <DependentUpon>201701131938457_Mig_ClientBudget.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsAB\Configuration.cs" />
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.cs" />
@@ -454,6 +459,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsAB\201701111928532_Mig_CreditLimits.resx">
       <DependentUpon>201701111928532_Mig_CreditLimits.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsAB\201701131938457_Mig_ClientBudget.resx">
+      <DependentUpon>201701131938457_Mig_ClientBudget.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsRT\201611292020284_InitialCreate.resx">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>

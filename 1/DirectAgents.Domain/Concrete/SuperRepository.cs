@@ -53,6 +53,12 @@ namespace DirectAgents.Domain.Concrete
             var orphanGroupLIs = orphanGroups.Select(g => new RTLineItem(g));
             orphanLineItems.AddRange(orphanGroupLIs);
 
+            //FUTURE? join on ClientAccounts, not Clients
+            //FUTURE: match them up based on the department of the ClientAccount
+            //  THEN: make it be IncomeType rather than department
+            //        allow for multiple ITs/depts per ClientAccount
+            //        (allow a ClientAccount to be for _all_ ITs/depts) (if not specified?)
+
             var overallABStatsList =
                 (from c in abClients.ToList()
                  from g in rtGroups
@@ -61,10 +67,9 @@ namespace DirectAgents.Domain.Concrete
                  {
                      Id = c.Id,
                      Client = c.Name,
-                     Budget = c.DefaultAccount().BudgetFor(monthStart),
-                     //Budget = c.DefaultAccountBudgetFor(monthStart),
-                     ExtCred = c.DefaultAccount().ExtCredit,
-                     IntCred = c.DefaultAccount().IntCredit,
+                     Budget = c.BudgetFor(monthStart),
+                     ExtCred = c.ExtCredit,
+                     IntCred = c.IntCredit,
                      StartBal = 5000 // TEMP!!!
                  }).ToList();
 
