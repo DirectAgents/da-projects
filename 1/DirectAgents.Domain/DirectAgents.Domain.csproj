@@ -340,6 +340,10 @@
     <Compile Include="MigrationsTD\201606072304421_Mig_AdDestinationUrl.Designer.cs">
       <DependentUpon>201606072304421_Mig_AdDestinationUrl.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsTD\201701161616211_Mig_Revenue.cs" />
+    <Compile Include="MigrationsTD\201701161616211_Mig_Revenue.Designer.cs">
+      <DependentUpon>201701161616211_Mig_Revenue.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.Designer.cs">
@@ -555,6 +559,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201606072304421_Mig_AdDestinationUrl.resx">
       <DependentUpon>201606072304421_Mig_AdDestinationUrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201701161616211_Mig_Revenue.resx">
+      <DependentUpon>201701161616211_Mig_Revenue.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

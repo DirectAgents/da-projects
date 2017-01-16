@@ -29,6 +29,9 @@ namespace DirectAgents.Domain.Entities.CPProg
         public int AccountId { get; set; }
         [ForeignKey("AccountId")]
         public virtual ExtAccount ExtAccount { get; set; }
+
+        public decimal PostClickRev { get; set; }
+        public decimal PostViewRev { get; set; }
     }
 
     // DailySummary for a Strategy
