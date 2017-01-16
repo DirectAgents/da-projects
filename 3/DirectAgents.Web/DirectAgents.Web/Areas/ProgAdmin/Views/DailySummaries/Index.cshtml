@@ -39,7 +39,9 @@
     <th>Impressions</th>
     <th>Clicks</th>
     <th>PostClick Conv</th>
+    <th>PostClick Rev</th>
     <th>PostView Conv</th>
+    <th>PostView Rev</th>
     <th>Cost</th>
 </tr>
 @foreach (var ds in Model.DailySummaries)
@@ -54,7 +56,9 @@
     <td style="text-align:right">@ds.Impressions</td>
     <td style="text-align:right">@ds.Clicks</td>
     <td style="text-align:right">@ds.PostClickConv</td>
+    <td style="text-align:right">@ds.PostClickRev</td>
     <td style="text-align:right">@ds.PostViewConv</td>
+    <td style="text-align:right">@ds.PostViewRev</td>
     <td style="text-align:right">@ds.Cost</td>
 </tr>
 }

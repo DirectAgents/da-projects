@@ -184,7 +184,9 @@ namespace DirectAgents.Domain.DTO
         public int Impressions { get; set; }
         public int Clicks { get; set; }
         public int PostClickConv { get; set; }
+        public decimal PostClickRev { get; set; }
         public int PostViewConv { get; set; }
+        public decimal PostViewRev { get; set; }
         public decimal Cost { get; set; }
         //public int Prospects { get; set; }
 
@@ -221,13 +223,18 @@ namespace DirectAgents.Domain.DTO
         {
             if (sSums != null && sSums.Any())
             {
-                this.Impressions = sSums.Sum(ds => ds.Impressions);
-                this.Clicks = sSums.Sum(ds => ds.Clicks);
-                this.PostClickConv = sSums.Sum(ds => ds.PostClickConv);
-                this.PostViewConv = sSums.Sum(ds => ds.PostViewConv);
-                this.Cost = sSums.Sum(ds => ds.Cost);
+                this.Impressions = sSums.Sum(x => x.Impressions);
+                this.Clicks = sSums.Sum(x => x.Clicks);
+                this.PostClickConv = sSums.Sum(x => x.PostClickConv);
+                this.PostViewConv = sSums.Sum(x => x.PostViewConv);
+                this.Cost = sSums.Sum(x => x.Cost);
                 if (roundCost)
                     this.Cost = Math.Round(this.Cost, 2);
+                if (sSums.First() is DailySummary) // We're assuming they're all the same type
+                {
+                    this.PostClickRev = sSums.Sum(x => ((DailySummary)x).PostClickRev);
+                    this.PostViewRev = sSums.Sum(x => ((DailySummary)x).PostViewRev);
+                }
             }
         }
 
@@ -239,7 +246,7 @@ namespace DirectAgents.Domain.DTO
         {
             if (pSums != null && pSums.Any())
             {
-                this.Cost = pSums.Sum(ds => ds.Cost);
+                this.Cost = pSums.Sum(x => x.Cost);
                 if (roundCost)
                     this.Cost = Math.Round(this.Cost, 2);
             }

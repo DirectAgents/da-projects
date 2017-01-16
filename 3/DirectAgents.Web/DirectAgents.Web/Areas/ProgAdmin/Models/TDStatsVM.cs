@@ -28,7 +28,9 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Models
                     stat.Impressions = Stats.Sum(s => s.Impressions);
                     stat.Clicks = Stats.Sum(s => s.Clicks);
                     stat.PostClickConv = Stats.Sum(s => s.PostClickConv);
+                    stat.PostClickRev = Stats.Sum(s => s.PostClickRev);
                     stat.PostViewConv = Stats.Sum(s => s.PostViewConv);
+                    stat.PostViewRev = Stats.Sum(s => s.PostViewRev);
                     stat.Cost = Stats.Sum(s => s.Cost);
                 }
                 return stat;
