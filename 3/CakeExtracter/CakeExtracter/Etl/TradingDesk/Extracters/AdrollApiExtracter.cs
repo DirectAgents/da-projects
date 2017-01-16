@@ -95,4 +95,22 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             End();
         }
     }
+
+    public class AdrollAttributionSummariesExtracter : AdrollApiExtracter<AttributionSummary>
+    {
+        public AdrollAttributionSummariesExtracter(DateRange dateRange, string advertisableEid, AdRollUtility arUtility = null)
+            : base(arUtility, dateRange, advertisableEid)
+        { }
+
+        protected override void Extract()
+        {
+            Logger.Info("Extracting AttributionSummaries from AdRoll API for ({0}) from {1:d} to {2:d}",
+                        this.advertisableEid, this.dateRange.Value.FromDate, this.dateRange.Value.ToDate);
+
+            var attrSums = _arUtility.AttributionSummaries(dateRange.Value.FromDate, dateRange.Value.ToDate, advertisableEid);
+            if (attrSums != null)
+                Add(attrSums);
+            End();
+        }
+    }
 }

@@ -119,6 +119,14 @@ namespace CakeExtracter.Commands
                     var loaderThread = loader.Start(extracter);
                     extracterThread.Join();
                     loaderThread.Join();
+
+                    // Get attribution vals (client's revenue)
+                    var attrExtracter = new AdrollAttributionSummariesExtracter(dateRange, adv.Eid, arUtility);
+                    var attrLoader = new AdrollAttributionSummaryLoader(loader.AccountId);
+                    extracterThread = attrExtracter.Start();
+                    loaderThread = attrLoader.Start(attrExtracter);
+                    extracterThread.Join();
+                    loaderThread.Join();
                 }
                 else
                     Logger.Warn("AdRoll Account did not exist for Advertisable with Eid {0}. Cannot do ETL.", adv.Eid);

@@ -320,6 +320,7 @@
     <Compile Include="Etl\TradingDesk\Extracters\TDSiteSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\TDStrategySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdRollAdLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\AdrollAttributionSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollSiteStatsLoader.cs" />
     <Compile Include="Commands\DA\DASynchAdrollSiteStatsCsv.cs" />
     <Compile Include="Commands\DA\DASynchAdrollAccounts.cs" />

@@ -28,6 +28,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             return (accountId > -1);
         }
+        public int AccountId
+        {
+            get { return accountId; }
+        }
 
         protected override int Load(List<AdrollDailySummary> items)
         {
