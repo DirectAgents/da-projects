@@ -103,6 +103,7 @@
     <Compile Include="DTO\TDStatsGauge.cs" />
     <Compile Include="Entities\AB\Client.cs" />
     <Compile Include="Entities\AB\ClientAccount.cs" />
+    <Compile Include="Entities\AB\ClientPayment.cs" />
     <Compile Include="Entities\AdRoll\Ad.cs" />
     <Compile Include="Entities\AdRoll\AdDailySummary.cs" />
     <Compile Include="Entities\AdRoll\Advertisable.cs" />
@@ -213,6 +214,10 @@
     <Compile Include="MigrationsAB\201701131938457_Mig_ClientBudget.cs" />
     <Compile Include="MigrationsAB\201701131938457_Mig_ClientBudget.Designer.cs">
       <DependentUpon>201701131938457_Mig_ClientBudget.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsAB\201701172250032_Mig_ClientPayment.cs" />
+    <Compile Include="MigrationsAB\201701172250032_Mig_ClientPayment.Designer.cs">
+      <DependentUpon>201701172250032_Mig_ClientPayment.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsAB\Configuration.cs" />
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.cs" />
@@ -466,6 +471,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsAB\201701131938457_Mig_ClientBudget.resx">
       <DependentUpon>201701131938457_Mig_ClientBudget.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsAB\201701172250032_Mig_ClientPayment.resx">
+      <DependentUpon>201701172250032_Mig_ClientPayment.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsRT\201611292020284_InitialCreate.resx">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>

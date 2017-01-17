@@ -22,6 +22,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<ClientAccount>().ToTable("ClientAccount", abSchema);
             modelBuilder.Entity<AccountBudget>().ToTable("AccountBudget", abSchema)
                 .HasKey(x => new { x.ClientAccountId, x.Date });
+            modelBuilder.Entity<ClientPayment>().ToTable("ClientPayment", abSchema);
 
             modelBuilder.Entity<ABClient>().Property(x => x.ExtCredit).HasPrecision(14, 2);
             modelBuilder.Entity<ABClient>().Property(x => x.IntCredit).HasPrecision(14, 2);
@@ -29,6 +30,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<ClientAccount>().Property(x => x.ExtCredit).HasPrecision(14, 2);
             modelBuilder.Entity<ClientAccount>().Property(x => x.IntCredit).HasPrecision(14, 2);
             modelBuilder.Entity<AccountBudget>().Property(x => x.Value).HasPrecision(14, 2);
+            modelBuilder.Entity<ClientPayment>().Property(x => x.Value).HasPrecision(14, 2);
         }
 
         // --- AB ---
@@ -36,5 +38,6 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<ClientBudget> ClientBudgets { get; set; }
         public DbSet<ClientAccount> ClientAccounts { get; set; }
         public DbSet<AccountBudget> AccountBudgets { get; set; }
+        public DbSet<ClientPayment> ClientPayments { get; set; }
     }
 }
