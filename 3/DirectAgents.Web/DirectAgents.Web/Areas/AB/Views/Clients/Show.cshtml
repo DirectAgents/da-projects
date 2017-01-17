@@ -12,8 +12,8 @@ IntCredit: @Model.IntCredit<br />
 @if (Model.ClientBudgets != null && Model.ClientBudgets.Any())
 {
     var cb = Model.ClientBudgets.OrderByDescending(x => x.Date).First();
-    <text>@cb.Date.ToShortDateString() Budget: @cb.Value</text>
-    <br /><text>TODO: edit link</text>
+    <text>@cb.Date.ToShortDateString() Budget: @cb.Value
+    &nbsp; &nbsp;@Html.ActionLink("testlink", "EditViaLink", "ClientBudgets", new { clientId = cb.ClientId, date = cb.Date.ToShortDateString(), value = cb.Value }, null)</text>
 } else {
     <text>[@Html.ActionLink("new budget", "NewBudget", new { id = Model.Id })]</text>
 }

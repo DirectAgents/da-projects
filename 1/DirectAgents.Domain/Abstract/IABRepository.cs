@@ -15,9 +15,10 @@ namespace DirectAgents.Domain.Abstract
         void AddClients(IEnumerable<ABClient> clients);
         bool SaveClient(ABClient client);
 
+        ClientBudget ClientBudget(int clientId, DateTime date);
+
         ClientAccount ClientAccount(int id);
         bool SaveClientAccount(ClientAccount clientAccount);
-
         AccountBudget AccountBudget(int clientAccountId, DateTime date);
     }
 }

@@ -181,6 +181,7 @@
     <Compile Include="Areas\AB\ABAreaRegistration.cs" />
     <Compile Include="Areas\AB\Controllers\AccountBudgetsController.cs" />
     <Compile Include="Areas\AB\Controllers\ClientAccountsController.cs" />
+    <Compile Include="Areas\AB\Controllers\ClientBudgetsController.cs" />
     <Compile Include="Areas\AB\Controllers\ClientsController.cs" />
     <Compile Include="Areas\AB\Controllers\DashboardController.cs" />
     <Compile Include="Areas\AB\Models\DashboardVM.cs" />
@@ -840,6 +841,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\AB\Views\AccountBudgets\" />
+    <Folder Include="Areas\AB\Views\ClientBudgets\" />
     <Folder Include="Areas\RevTrack\Models\" />
     <Folder Include="Areas\RevTrack\Views\Shared\" />
     <Folder Include="Views\Test\" />
