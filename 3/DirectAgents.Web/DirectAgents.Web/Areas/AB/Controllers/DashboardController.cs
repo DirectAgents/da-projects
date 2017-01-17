@@ -79,9 +79,9 @@ namespace DirectAgents.Web.Areas.AB.Controllers
         //}
 
         //Breakdown by department/source...
-        public ActionResult Client(int id)
+        public ActionResult BySource(int clientId)
         {
-            var client = abRepo.Client(id);
+            var client = abRepo.Client(clientId);
             if (client == null)
                 return HttpNotFound();
 
@@ -90,9 +90,9 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             var model = new DashboardVM
             {
                 ABClient = client,
-                ABStats = superRepo.StatsForClient(id, currMonth)
+                ABStats = superRepo.StatsForClient(clientId, currMonth)
             };
-            return View("BySource", model);
+            return View(model);
         }
 
         public ActionResult LineItems(int clientId)
