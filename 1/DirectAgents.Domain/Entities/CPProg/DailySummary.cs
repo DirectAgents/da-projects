@@ -13,7 +13,7 @@ namespace DirectAgents.Domain.Entities.CPProg
 
         //TotalConv
 
-        public bool AllZeros()
+        public virtual bool AllZeros()
         {
             return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0);
         }
@@ -32,6 +32,11 @@ namespace DirectAgents.Domain.Entities.CPProg
 
         public decimal PostClickRev { get; set; }
         public decimal PostViewRev { get; set; }
+
+        public override bool AllZeros()
+        {
+            return base.AllZeros() && PostClickRev == 0 && PostViewRev == 0;
+        }
     }
 
     // DailySummary for a Strategy

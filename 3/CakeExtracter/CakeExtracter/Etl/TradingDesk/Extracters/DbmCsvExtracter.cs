@@ -147,7 +147,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             Map(m => m.TotalConversions);
             Map(m => m.PostClickConversions).Name("Post-ClickConversions");
             Map(m => m.PostViewConversions).Name("Post-ViewConversions");
-            Map(m => m.Revenue).Name("Revenue(USD)");
+            Map(m => m.PostClickRevenue).Name("DCMPost-ClickRevenue");
+            Map(m => m.PostViewRevenue).Name("DCMPost-ViewRevenue");
+            Map(m => m.Revenue).Name("Revenue(USD)"); // DA's revenue
         }
     }
     public sealed class DbmRowWithLineItemMap : CsvClassMap<DbmRowWithLineItem>
@@ -162,7 +164,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             Map(m => m.TotalConversions);
             Map(m => m.PostClickConversions).Name("Post-ClickConversions");
             Map(m => m.PostViewConversions).Name("Post-ViewConversions");
-            Map(m => m.Revenue).Name("Revenue(USD)");
+            Map(m => m.Revenue).Name("Revenue(USD)"); // DA's revenue
             Map(m => m.LineItem);
             Map(m => m.LineItemID);
         }
@@ -179,7 +181,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             Map(m => m.TotalConversions);
             Map(m => m.PostClickConversions).Name("Post-ClickConversions");
             Map(m => m.PostViewConversions).Name("Post-ViewConversions");
-            Map(m => m.Revenue).Name("Revenue(USD)");
+            Map(m => m.Revenue).Name("Revenue(USD)"); // DA's revenue
             Map(m => m.Creative);
             Map(m => m.CreativeID);
             Map(m => m.CreativeSource);
@@ -200,7 +202,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             Map(m => m.TotalConversions);
             Map(m => m.PostClickConversions).Name("Post-ClickConversions");
             Map(m => m.PostViewConversions).Name("Post-ViewConversions");
-            Map(m => m.Revenue).Name("Revenue(USD)");
+            Map(m => m.Revenue).Name("Revenue(USD)"); // DA's revenue
             Map(m => m.Site).Name("App/URL");
             Map(m => m.SiteID).Name("App/URLID");
         }
@@ -219,11 +221,15 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         public string PostClickConversions { get; set; } // int
         public string PostViewConversions { get; set; } // int
 
+        // DA's revenue
         public string Revenue { get; set; } // decimal
     }
 
     public class DbmRow : DbmRowBase
     {
+        // the client's revenue
+        public string PostClickRevenue { get; set; } // decimal
+        public string PostViewRevenue { get; set; } // decimal
     }
     public class DbmRowWithLineItem : DbmRowBase
     {
