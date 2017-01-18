@@ -201,7 +201,7 @@ namespace FacebookAPI
             var path = accountId + "/insights";
 
             var levelVal = "";
-            var fieldsVal = "impressions,unique_clicks,inline_link_clicks,actions,total_actions,spend";
+            var fieldsVal = "impressions,unique_clicks,inline_link_clicks,actions,action_values,total_actions,spend";
             if (byCampaign)
             {
                 levelVal = "campaign";
@@ -314,6 +314,20 @@ namespace FacebookAPI
                             //        break;
                             //    }
                             //}
+                        }
+                        var actionVals = row.action_values;
+                        if (actionVals != null)
+                        {
+                            foreach (var entity in actionVals)
+                            {
+                                if (entity.action_type == Conversion_ActionType)
+                                {
+                                    if (((IDictionary<String, object>)entity).ContainsKey("28d_click"))
+                                        fbSum.ConVal_28d_click = decimal.Parse(entity["28d_click"]);
+                                    if (((IDictionary<String, object>)entity).ContainsKey("1d_view"))
+                                        fbSum.ConVal_1d_view = decimal.Parse(entity["1d_view"]);
+                                }
+                            }
                         }
                         yield return fbSum;
                     }

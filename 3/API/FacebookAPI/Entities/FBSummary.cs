@@ -12,6 +12,8 @@ namespace FacebookAPI.Entities
         public int Conversions_28d_click { get; set; }
         public int Conversions_1d_view { get; set; }
         public int TotalActions { get; set; }
+        public decimal ConVal_28d_click { get; set; }
+        public decimal ConVal_1d_view { get; set; }
 
         public string CampaignId { get; set; }
         public string CampaignName { get; set; }
@@ -22,7 +24,7 @@ namespace FacebookAPI.Entities
 
         public bool AllZeros()
         {
-            return (Spend == 0 && Impressions == 0 && UniqueClicks == 0 && LinkClicks == 0 && Conversions_28d_click == 0 && Conversions_1d_view == 0 && TotalActions == 0);
+            return (Spend == 0 && Impressions == 0 && UniqueClicks == 0 && LinkClicks == 0 && Conversions_28d_click == 0 && Conversions_1d_view == 0 && TotalActions == 0 && ConVal_28d_click == 0 && ConVal_1d_view == 0);
         }
     }
 }

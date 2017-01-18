@@ -46,6 +46,8 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                         Clicks = item.LinkClicks,
                         PostClickConv = item.Conversions_28d_click,
                         PostViewConv = item.Conversions_1d_view,
+                        PostClickRev = item.ConVal_28d_click,
+                        PostViewRev = item.ConVal_1d_view,
                         Cost = item.Spend
                     };
                     var target = db.Set<DailySummary>().Find(item.Date, accountId);
