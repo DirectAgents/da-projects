@@ -38,6 +38,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 Clicks = int.Parse(item.Clicks),
                 PostClickConv = (int)decimal.Parse(item.PostClickConversions),
                 PostViewConv = (int)decimal.Parse(item.PostViewConversions),
+                PostClickRev = decimal.Parse(((DbmRowWithLineItem)item).PostClickRevenue),
+                PostViewRev = decimal.Parse(((DbmRowWithLineItem)item).PostViewRevenue),
                 Cost = decimal.Parse(item.Revenue)
             };
             return sSum;

@@ -56,7 +56,7 @@ namespace CakeExtracter.Commands
         }
 
         public override int Execute(string[] remainingArguments)
-        {  
+        {
             if (Historical)
                 DoHistorical();
             else

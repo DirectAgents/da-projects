@@ -164,6 +164,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             Map(m => m.TotalConversions);
             Map(m => m.PostClickConversions).Name("Post-ClickConversions");
             Map(m => m.PostViewConversions).Name("Post-ViewConversions");
+            Map(m => m.PostClickRevenue).Name("DCMPost-ClickRevenue");
+            Map(m => m.PostViewRevenue).Name("DCMPost-ViewRevenue");
             Map(m => m.Revenue).Name("Revenue(USD)"); // DA's revenue
             Map(m => m.LineItem);
             Map(m => m.LineItemID);
@@ -235,6 +237,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     {
         public string LineItem { get; set; }
         public string LineItemID { get; set; } //int
+
+        // the client's revenue
+        public string PostClickRevenue { get; set; } // decimal
+        public string PostViewRevenue { get; set; } // decimal
     }
     public class DbmRowWithCreative : DbmRowBase
     {
