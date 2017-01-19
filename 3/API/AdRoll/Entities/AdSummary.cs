@@ -49,7 +49,8 @@ namespace AdRoll.Entities
         public DateTime start_date { get; set; }
         public DateTime? end_date { get; set; }
         public double budget_USD { get; set; }
-
+        public double adjusted_attributed_click_through_rev_USD { get; set; }
+        public double adjusted_attributed_view_through_rev_USD { get; set; }
     }
 
     // used for Ad daily report

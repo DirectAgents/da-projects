@@ -80,8 +80,16 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         {
                             if (!item.AllZeros())
                             {
+                                //Preserve these. (They're updated in the AdrollAttributionSummaryLoader.)
+                                var postClickRev = target.PostClickRev;
+                                var postViewRev = target.PostViewRev;
+
                                 entry.State = EntityState.Detached;
                                 AutoMapper.Mapper.Map(source, target);
+
+                                target.PostClickRev = postClickRev;
+                                target.PostViewRev = postViewRev;
+
                                 entry.State = EntityState.Modified;
                                 updatedCount++;
                             }

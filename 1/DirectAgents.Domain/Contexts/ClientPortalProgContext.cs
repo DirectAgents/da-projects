@@ -71,6 +71,8 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<StrategySummary>()
                 .HasKey(ss => new { ss.Date, ss.StrategyId })
                 .Property(t => t.Cost).HasPrecision(18, 6);
+            modelBuilder.Entity<StrategySummary>().Property(ds => ds.PostClickRev).HasPrecision(18, 4);
+            modelBuilder.Entity<StrategySummary>().Property(ds => ds.PostViewRev).HasPrecision(18, 4);
             modelBuilder.Entity<TDadSummary>()
                 .HasKey(s => new { s.Date, s.TDadId })
                 .Property(t => t.Cost).HasPrecision(18, 6);

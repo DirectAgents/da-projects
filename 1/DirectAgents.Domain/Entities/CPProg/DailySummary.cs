@@ -23,13 +23,8 @@ namespace DirectAgents.Domain.Entities.CPProg
     {
         public DateTime Date { get; set; }
     }
-
-    public class DailySummary : DatedStatsSummary
+    public class DatedStatsSummaryWithRev : DatedStatsSummary
     {
-        public int AccountId { get; set; }
-        [ForeignKey("AccountId")]
-        public virtual ExtAccount ExtAccount { get; set; }
-
         public decimal PostClickRev { get; set; }
         public decimal PostViewRev { get; set; }
 
@@ -39,8 +34,15 @@ namespace DirectAgents.Domain.Entities.CPProg
         }
     }
 
+    public class DailySummary : DatedStatsSummaryWithRev
+    {
+        public int AccountId { get; set; }
+        [ForeignKey("AccountId")]
+        public virtual ExtAccount ExtAccount { get; set; }
+    }
+
     // DailySummary for a Strategy
-    public class StrategySummary : DatedStatsSummary
+    public class StrategySummary : DatedStatsSummaryWithRev
     {
         public int StrategyId { get; set; }
         public virtual Strategy Strategy { get; set; }
