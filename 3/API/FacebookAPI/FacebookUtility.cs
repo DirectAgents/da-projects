@@ -113,7 +113,9 @@ namespace FacebookAPI
                         LinkClicks = group.Sum(g => g.LinkClicks),
                         Conversions_28d_click = group.Sum(g => g.Conversions_28d_click),
                         Conversions_1d_view = group.Sum(g => g.Conversions_1d_view),
-                        TotalActions = group.Sum(g => g.TotalActions)
+                        TotalActions = group.Sum(g => g.TotalActions),
+                        ConVal_28d_click = group.Sum(g => g.ConVal_28d_click),
+                        ConVal_1d_view = group.Sum(g => g.ConVal_1d_view)
                     };
                     yield return fbSum;
                 }
