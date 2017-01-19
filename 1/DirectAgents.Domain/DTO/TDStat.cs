@@ -194,6 +194,10 @@ namespace DirectAgents.Domain.DTO
         {
             get { return PostClickConv + PostViewConv; }
         }
+        public decimal TotalRev
+        {
+            get { return PostClickRev + PostViewRev; }
+        }
 
         public virtual bool AllZeros()
         {
@@ -230,10 +234,10 @@ namespace DirectAgents.Domain.DTO
                 this.Cost = sSums.Sum(x => x.Cost);
                 if (roundCost)
                     this.Cost = Math.Round(this.Cost, 2);
-                if (sSums.First() is DailySummary) // We're assuming they're all the same type
+                if (sSums.First() is DatedStatsSummaryWithRev) // We're assuming they're all the same type
                 {
-                    this.PostClickRev = sSums.Sum(x => ((DailySummary)x).PostClickRev);
-                    this.PostViewRev = sSums.Sum(x => ((DailySummary)x).PostViewRev);
+                    this.PostClickRev = sSums.Sum(x => ((DatedStatsSummaryWithRev)x).PostClickRev);
+                    this.PostViewRev = sSums.Sum(x => ((DatedStatsSummaryWithRev)x).PostViewRev);
                 }
             }
         }
