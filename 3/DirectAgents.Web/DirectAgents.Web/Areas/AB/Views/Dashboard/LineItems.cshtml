@@ -1,6 +1,6 @@
 ﻿@model DirectAgents.Web.Areas.AB.Models.DashboardVM
 
-<h2>Breakdown By LineItem</h2>
+<h2>Breakdown By LineItem (MTD or Past Month)</h2>
 
 @Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
 
@@ -12,15 +12,15 @@ Client: @Model.ABClient.Name
     <th>Vendor</th>
     <th>Revenue</th>
     <th>Cost</th>
-    <th>Margin</th>
+@*    <th>Margin</th>*@
 </tr>
-@foreach (var stat in Model.ABStats)
+@foreach (var li in Model.LineItems)
 {
 <tr>
-    <td>@stat.Name</td>
-    <td>@stat.Rev</td>
-    <td>@stat.Cost</td>
-    <td>@stat.Margin</td>
+    <td>@li.Name</td>
+    <td style="text-align:right">@li.Rev</td>
+    <td style="text-align:right">@li.Cost</td>
+@*    <td style="text-align:right">@li.Margin</td>*@
 </tr>
 }
 </table>

@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DirectAgents.Domain.DTO
 {
     //TODO? make an IABStat interface and change all referencing code to use that?
+    //    ? make ABStat inherit from ABLineItem ?
 
     // "Accounting Backup" stats - for the dashboard
     public class ABStat
@@ -63,5 +64,23 @@ namespace DirectAgents.Domain.DTO
         }
         public decimal ExtCred { get; set; } // this one: usually larger
         public decimal IntCred { get; set; } // this one: provides cushion
+    }
+
+    public class ABLineItem
+    {
+        public ABLineItem(IRTLineItem rtLineItem)
+        {
+            Name = rtLineItem.Name;
+            Rev = Decimal.Round(rtLineItem.Revenue, 2);
+            Cost = Decimal.Round(rtLineItem.Cost, 2);
+        }
+
+        public string Name { get; set; }
+        public decimal Rev { get; set; }
+        public decimal Cost { get; set; }
+        public decimal Margin
+        {
+            get { return Rev - Cost; }
+        }
     }
 }

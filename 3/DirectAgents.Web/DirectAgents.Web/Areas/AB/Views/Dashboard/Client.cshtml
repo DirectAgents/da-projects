@@ -1,0 +1,24 @@
+﻿@model DirectAgents.Web.Areas.AB.Models.DetailVM
+
+<h2>Single Client Detail</h2>
+
+Client: @Model.ABClient.Name
+<br /><br />
+
+<table>
+@foreach (var monthGroup in Model.MonthGroups)
+{
+    <tr>
+        <td colspan="2">@monthGroup.Month.ToShortDateString()</td>
+    </tr>
+    foreach (var li in monthGroup.LineItems)
+    {
+        <tr>
+            <td>@li.Name</td>
+            <td style="text-align:right">@li.Rev</td>
+        </tr>
+    }
+}
+</table>
+
+<!-- then: payments -->

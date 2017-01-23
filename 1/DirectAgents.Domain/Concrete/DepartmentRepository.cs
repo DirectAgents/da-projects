@@ -123,21 +123,27 @@ namespace DirectAgents.Domain.Concrete
 
         public IRTLineItem StatSummaryForClient(int abClientId, DateTime monthStart)
         {
+            return StatSummaryForClientInner(abClientId, monthStart);
+        }
+        public IRTLineItem StatSummaryForClientInner(int abClientId, DateTime monthStart, string name = null)
+        {
             // Usually there's just one...
             var advertisers = mainRepo.GetAdvertisers(ABClientId: abClientId);
             var advLineItems = StatsForAdvertisers(advertisers, monthStart);
 
             var summaryLineItem = new RTLineItem(advLineItems)
             {
-                Name = "Cake (Advertising/MediaBuying/Mobile)"
+                Name = (name == null ? "Cake (Advertising/MediaBuying/Mobile)" : name)
             };
             return summaryLineItem;
         }
 
         public IEnumerable<IRTLineItem> StatBreakdownByLineItem(int abClientId, DateTime monthStart)
         {
-            //TODO: implement
-            return new List<IRTLineItem>();
+            //Temp: just one line item for cake; Future: by vendor(affiliate), unit cost, etc...
+            var lineItem = StatSummaryForClientInner(abClientId, monthStart, name: "Cake (vendor breakdown needed)");
+
+            return new List<IRTLineItem> { lineItem };
         }
     }
 }

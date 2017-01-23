@@ -11,6 +11,6 @@ namespace DirectAgents.Domain.Abstract
         IEnumerable<ABStat> StatsByClient(DateTime monthStart, int? maxClients = null);
         IEnumerable<ABStat> StatsForClient(int abClientId, DateTime monthStart); // by department
         IEnumerable<ABStat> StatsByVendor(int abClientId, DateTime monthStart);
-        IEnumerable<ABStat> StatsByLineItem(int abClientId, DateTime monthStart);
+        IEnumerable<ABLineItem> StatsByLineItem(int abClientId, DateTime monthStart);
     }
 }

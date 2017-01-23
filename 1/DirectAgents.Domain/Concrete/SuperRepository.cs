@@ -33,7 +33,7 @@ namespace DirectAgents.Domain.Concrete
             };
         }
 
-        // maxClients = max # of cients per department; total could be more
+        // maxClients = max # of clients per department; total could be more
         public IEnumerable<ABStat> StatsByClient(DateTime monthStart, int? maxClients = null)
         {
             List<IRTLineItem> rtLineItemList = new List<IRTLineItem>();
@@ -111,22 +111,19 @@ namespace DirectAgents.Domain.Concrete
             return null;
         }
 
-        //TODO: (starting with programmatic) Do for other depts...
-        public IEnumerable<ABStat> StatsByLineItem(int abClientId, DateTime monthStart)
+        public IEnumerable<ABLineItem> StatsByLineItem(int abClientId, DateTime monthStart)
         {
-            var lineItemList = new List<IRTLineItem>();
+            var lineItemList = new List<ABLineItem>();
             foreach (var deptRepo in departmentRepos)
             {
-                var rtLineItem = deptRepo.StatBreakdownByLineItem(abClientId, monthStart);
-                lineItemList.AddRange(rtLineItem);
+                var rtLineItems = deptRepo.StatBreakdownByLineItem(abClientId, monthStart);
+                foreach (var rtLineItem in rtLineItems)
+                {
+                    var abLineItem = new ABLineItem(rtLineItem);
+                    lineItemList.Add(abLineItem);
+                }
             }
-            var abStatList = new List<ABStat>();
-            foreach (var lineItem in lineItemList)
-            {
-                var abStat = new ABStat(lineItem);
-                abStatList.Add(abStat);
-            }
-            return abStatList;
+            return lineItemList;
         }
 
     }
