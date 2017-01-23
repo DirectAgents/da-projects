@@ -65,6 +65,11 @@ namespace DirectAgents.Domain.Concrete
             return context.ClientBudgets.Find(clientId, date);
         }
 
+        public ClientPayment ClientPayment(int id)
+        {
+            return context.ClientPayments.Find(id);
+        }
+
         public ClientAccount ClientAccount(int id)
         {
             return context.ClientAccounts.Find(id);

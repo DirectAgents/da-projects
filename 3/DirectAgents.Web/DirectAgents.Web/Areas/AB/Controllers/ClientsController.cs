@@ -57,7 +57,7 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             if (abClient == null)
                 return HttpNotFound();
 
-            if (!abClient.ClientBudgets.Any())
+            if (!abClient.ClientBudgets.Any()) // why this check?
             {
                 var clientBudget = new ClientBudget
                 {
@@ -66,6 +66,22 @@ namespace DirectAgents.Web.Areas.AB.Controllers
                 abClient.ClientBudgets.Add(clientBudget);
                 abRepo.SaveChanges();
             }
+            return RedirectToAction("Show", new { id = abClient.Id });
+        }
+
+        public ActionResult NewPayment(int id)
+        {
+            var abClient = abRepo.Client(id);
+            if (abClient == null)
+                return HttpNotFound();
+
+            var clientPayment = new ClientPayment
+            {
+                Date = DateTime.Today
+            };
+            abClient.ClientPayments.Add(clientPayment);
+            abRepo.SaveChanges();
+
             return RedirectToAction("Show", new { id = abClient.Id });
         }
 

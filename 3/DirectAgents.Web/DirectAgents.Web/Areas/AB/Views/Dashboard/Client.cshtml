@@ -9,7 +9,7 @@ Client: @Model.ABClient.Name
 @foreach (var monthGroup in Model.MonthGroups)
 {
     <tr>
-        <td colspan="2">@monthGroup.Month.ToShortDateString()</td>
+        <td colspan="2"><b>@monthGroup.Month.ToString("MMM yyyy")</b></td>
     </tr>
     foreach (var li in monthGroup.LineItems)
     {
@@ -20,5 +20,18 @@ Client: @Model.ABClient.Name
     }
 }
 </table>
+<br />
 
-<!-- then: payments -->
+<table>
+    <tr>
+        <th>Budget</th>
+        <th>Received</th>
+    </tr>
+@foreach (var payment in Model.ABClient.ClientPayments.OrderBy(x => x.Date))
+{
+    <tr>
+        <td>@payment.Date.ToShortDateString()</td>
+        <td style="text-align:right">@payment.Value</td>
+    </tr>
+}
+</table>

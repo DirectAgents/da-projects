@@ -16,6 +16,7 @@ namespace DirectAgents.Domain.Abstract
         bool SaveClient(ABClient client);
 
         ClientBudget ClientBudget(int clientId, DateTime date);
+        ClientPayment ClientPayment(int id);
 
         ClientAccount ClientAccount(int id);
         bool SaveClientAccount(ClientAccount clientAccount);

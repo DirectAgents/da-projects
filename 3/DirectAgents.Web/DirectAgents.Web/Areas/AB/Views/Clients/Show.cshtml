@@ -19,6 +19,20 @@ IntCredit: @Model.IntCredit<br />
 }
 <br /><br />
 
+Payments:
+<table>
+@foreach (var payment in Model.ClientPayments.OrderBy(x => x.Date))
+{
+    <tr>
+        <td>@payment.Date.ToShortDateString()</td>
+        <td>@payment.Value</td>
+        <td>@Html.ActionLink("testlink", "EditViaLink", "ClientPayments", new { id = payment.Id, date = payment.Date.ToShortDateString(), value = payment.Value }, null)</td>
+    </tr>
+}
+</table>
+[@Html.ActionLink("new payment", "NewPayment", new { id = Model.Id })]
+<br /><br />
+
 Links:<br />
 @Html.ActionLink("Summary View", "Client", "Dashboard", new { id = Model.Id }, null)<br />
 @Html.ActionLink("List All Clients", "Index")

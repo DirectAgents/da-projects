@@ -16,6 +16,7 @@ namespace DirectAgents.Domain.Entities.AB
         public decimal IntCredit { get; set; }
 
         public virtual ICollection<ClientBudget> ClientBudgets { get; set; }
+        public virtual ICollection<ClientPayment> ClientPayments { get; set; }
 
         public decimal BudgetFor(DateTime date)
         {
