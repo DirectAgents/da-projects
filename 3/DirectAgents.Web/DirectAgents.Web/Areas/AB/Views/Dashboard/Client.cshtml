@@ -2,7 +2,8 @@
 
 <h2>Single Client Detail</h2>
 
-Client: @Model.ABClient.Name
+Client:
+@Html.ActionLink(Model.ABClient.Name, "Show", "Clients", new { id = Model.ABClient.Id }, null)
 <br /><br />
 
 <table>
@@ -35,3 +36,5 @@ Client: @Model.ABClient.Name
     </tr>
 }
 </table>
+
+NEXT: total em up

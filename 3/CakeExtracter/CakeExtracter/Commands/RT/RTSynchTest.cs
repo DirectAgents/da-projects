@@ -23,12 +23,12 @@ namespace CakeExtracter.Commands.RT
 
         public override int Execute(string[] remainingArguments)
         {
-            //CopyProgVendors();
-            var minDate = new DateTime(2016, 12, 1);
-            CopySummariesForClient(16, minDate, clearFirst: true);
+            CopyVendorBudgetInfos();
+            //var minDate = new DateTime(2016, 1, 1);
+            //CopySummariesForClient(38, minDate, clearFirst: true);
             return 0;
         }
-        // 6:Bevel 16:ChildFund
+        // 6:Bevel 16:ChildFund 38:Catbird
 
         //TODO
         // a way to compare the two sides (for each entity)... deletions, changes, additions
@@ -108,6 +108,37 @@ namespace CakeExtracter.Commands.RT
                             existing.DefaultBudgetInfo.SetFrom(fresh.DefaultBudgetInfo);
                             numChanged++;
                         }
+                    }
+                }
+                int numWrites = rtContext.SaveChanges();
+            }
+        }
+
+        //TODO: ?deletions?
+        public void CopyProgVendors()
+        {
+            using (var cpprogContext = new ClientPortalProgContext())
+            using (var rtContext = new RevTrackContext())
+            {
+                var platforms = cpprogContext.Platforms;
+                var progVendors = rtContext.ProgVendors.AsQueryable(); // to list?
+                foreach (var platform in platforms.OrderBy(x => x.Id))
+                {
+                    var existing = progVendors.FirstOrDefault(x => x.Id == platform.Id);
+                    if (existing == null) // add
+                    {
+                        var progVendor = new ProgVendor
+                        {
+                            Id = platform.Id,
+                            Name = platform.Name,
+                            Code = platform.Code
+                        };
+                        rtContext.ProgVendors.Add(progVendor);
+                    }
+                    else // update
+                    {
+                        existing.Name = platform.Name;
+                        existing.Code = platform.Code;
                     }
                 }
                 int numWrites = rtContext.SaveChanges();
@@ -204,37 +235,6 @@ namespace CakeExtracter.Commands.RT
                         MarginPct = freshPBI.MarginPct
                     };
                     rtContext.ProgVendorBudgetInfos.Add(progVendorBudgetInfo);
-                }
-                int numWrites = rtContext.SaveChanges();
-            }
-        }
-
-        //TODO: ?deletions?
-        public void CopyProgVendors()
-        {
-            using (var cpprogContext = new ClientPortalProgContext())
-            using (var rtContext = new RevTrackContext())
-            {
-                var platforms = cpprogContext.Platforms;
-                var progVendors = rtContext.ProgVendors.AsQueryable(); // to list?
-                foreach (var platform in platforms.OrderBy(x => x.Id))
-                {
-                    var existing = progVendors.FirstOrDefault(x => x.Id == platform.Id);
-                    if (existing == null) // add
-                    {
-                        var progVendor = new ProgVendor
-                        {
-                            Id = platform.Id,
-                            Name = platform.Name,
-                            Code = platform.Code
-                        };
-                        rtContext.ProgVendors.Add(progVendor);
-                    }
-                    else // update
-                    {
-                        existing.Name = platform.Name;
-                        existing.Code = platform.Code;
-                    }
                 }
                 int numWrites = rtContext.SaveChanges();
             }

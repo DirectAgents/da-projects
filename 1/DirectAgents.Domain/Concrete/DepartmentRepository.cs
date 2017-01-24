@@ -54,10 +54,11 @@ namespace DirectAgents.Domain.Concrete
             return summaryLineItem;
         }
 
-        public IEnumerable<IRTLineItem> StatBreakdownByLineItem(int abClientId, DateTime monthStart)
+        public IEnumerable<IRTLineItem> StatBreakdownByLineItem(int abClientId, DateTime monthStart, bool separateFees = false, bool combineFees = false)
         {
             var lineItemList = new List<IRTLineItem>();
             var progClients = rtRepo.ProgClients(ABClientId: abClientId);
+            decimal totalFee = 0;
 
             // Usually there's just one...
             foreach (var progClient in progClients)
@@ -66,8 +67,38 @@ namespace DirectAgents.Domain.Concrete
                 foreach (var tdLineItem in progClientStats.LineItems)
                 {
                     var rtLineItem = new RTLineItem(tdLineItem);
-                    lineItemList.Add(rtLineItem);
+
+                    if (tdLineItem.MgmtFee > 0 && separateFees)
+                    {
+                        rtLineItem.Revenue -= tdLineItem.MgmtFee; // take out the fee and see if there's anything left
+                        if (rtLineItem.Revenue != 0 && rtLineItem.Cost != 0)
+                            lineItemList.Add(rtLineItem);
+
+                        if (combineFees)
+                            totalFee += tdLineItem.MgmtFee;
+                        else
+                        {
+                            var feeLineItem = new RTLineItem(tdLineItem); // for setting the name
+                            feeLineItem.Name = feeLineItem.Name + " - media fee";
+                            feeLineItem.Revenue = tdLineItem.MgmtFee;
+                            feeLineItem.Cost = 0;
+                            lineItemList.Add(feeLineItem);
+                        }
+                    }
+                    else // Not separating fees
+                    {
+                        lineItemList.Add(rtLineItem);
+                    }
                 }
+            }
+            if (separateFees && combineFees && totalFee > 0)
+            {
+                var feeLI = new RTLineItem
+                {
+                    Name = "Trading Desk - media fee",
+                    Revenue = totalFee
+                };
+                lineItemList.Add(feeLI);
             }
             return lineItemList;
         }
@@ -138,8 +169,10 @@ namespace DirectAgents.Domain.Concrete
             return summaryLineItem;
         }
 
-        public IEnumerable<IRTLineItem> StatBreakdownByLineItem(int abClientId, DateTime monthStart)
+        public IEnumerable<IRTLineItem> StatBreakdownByLineItem(int abClientId, DateTime monthStart, bool separateFees = false, bool combineFees = false)
         {
+            //TODO: separateFees/combineFees ?
+
             //Temp: just one line item for cake; Future: by vendor(affiliate), unit cost, etc...
             var lineItem = StatSummaryForClientInner(abClientId, monthStart, name: "Cake (vendor breakdown needed)");
 

@@ -113,7 +113,7 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             return View(model);
         }
 
-        // Client Summary - multiple months?
+        // Client Summary - multiple months
         public ActionResult Client(int id)
         {
             var client = abRepo.Client(id);
@@ -125,7 +125,7 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             var month = DateTime.Today.FirstDayOfMonth(addMonths: -2);
             for (int i = 0; i < 3; i++) // get lineitems for last three months
             {
-                var monthStats = superRepo.StatsByLineItem(id, month);
+                var monthStats = superRepo.StatsByLineItem(id, month, separateFees: true);
                 var liGroup = new LineItemGroup
                 {
                     Month = month,

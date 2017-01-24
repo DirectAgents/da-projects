@@ -111,12 +111,13 @@ namespace DirectAgents.Domain.Concrete
             return null;
         }
 
-        public IEnumerable<ABLineItem> StatsByLineItem(int abClientId, DateTime monthStart)
+        //Note: "combineFees" only applies if "separateFees" is true
+        public IEnumerable<ABLineItem> StatsByLineItem(int abClientId, DateTime monthStart, bool separateFees = false, bool combineFees = false)
         {
             var lineItemList = new List<ABLineItem>();
             foreach (var deptRepo in departmentRepos)
             {
-                var rtLineItems = deptRepo.StatBreakdownByLineItem(abClientId, monthStart);
+                var rtLineItems = deptRepo.StatBreakdownByLineItem(abClientId, monthStart, separateFees: separateFees, combineFees: combineFees);
                 foreach (var rtLineItem in rtLineItems)
                 {
                     var abLineItem = new ABLineItem(rtLineItem);
