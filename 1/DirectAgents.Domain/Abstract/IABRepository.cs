@@ -17,6 +17,7 @@ namespace DirectAgents.Domain.Abstract
 
         ClientBudget ClientBudget(int clientId, DateTime date);
         ClientPayment ClientPayment(int id);
+        ClientPaymentBit ClientPaymentBit(int id);
 
         ClientAccount ClientAccount(int id);
         bool SaveClientAccount(ClientAccount clientAccount);

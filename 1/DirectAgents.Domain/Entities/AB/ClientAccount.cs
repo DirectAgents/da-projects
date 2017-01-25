@@ -4,6 +4,8 @@ using System.Linq;
 
 namespace DirectAgents.Domain.Entities.AB
 {
+    // NOT CURRENTLY USED
+
     public class ClientAccount
     {
         public int Id { get; set; }

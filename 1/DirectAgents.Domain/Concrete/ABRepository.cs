@@ -69,6 +69,10 @@ namespace DirectAgents.Domain.Concrete
         {
             return context.ClientPayments.Find(id);
         }
+        public ClientPaymentBit ClientPaymentBit(int id)
+        {
+            return context.ClientPaymentBits.Find(id);
+        }
 
         public ClientAccount ClientAccount(int id)
         {

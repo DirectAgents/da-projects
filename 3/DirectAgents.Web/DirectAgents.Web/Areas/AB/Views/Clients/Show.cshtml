@@ -25,8 +25,8 @@ Payments:
 {
     <tr>
         <td>@payment.Date.ToShortDateString()</td>
-        <td>@payment.Value</td>
-        <td>@Html.ActionLink("testlink", "EditViaLink", "ClientPayments", new { id = payment.Id, date = payment.Date.ToShortDateString(), value = payment.Value }, null)</td>
+        <td>@payment.TotalValue()</td>
+        <td>@Html.ActionLink("testlink", "EditViaLink", "ClientPayments", new { id = payment.Id, date = payment.Date.ToShortDateString(), value = payment.TotalValue() }, null)</td>
     </tr>
 }
 </table>

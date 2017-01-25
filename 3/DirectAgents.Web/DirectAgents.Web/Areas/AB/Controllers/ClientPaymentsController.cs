@@ -19,9 +19,12 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             if (clientPayment == null)
                 return HttpNotFound();
 
-            clientPayment.Value = value;
             if (date.HasValue)
                 clientPayment.Date = date.Value;
+            if (clientPayment.Bits != null && clientPayment.Bits.Count() == 1)
+            {
+                clientPayment.Bits.First().Value = value;
+            }
             abRepo.SaveChanges();
             return RedirectToAction("Show", "Clients", new { id = clientPayment.ClientId });
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
@@ -77,7 +78,8 @@ namespace DirectAgents.Web.Areas.AB.Controllers
 
             var clientPayment = new ClientPayment
             {
-                Date = DateTime.Today
+                Date = DateTime.Today,
+                Bits = new Collection<ClientPaymentBit>() { new ClientPaymentBit() }
             };
             abClient.ClientPayments.Add(clientPayment);
             abRepo.SaveChanges();
