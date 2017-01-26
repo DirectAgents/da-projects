@@ -9,15 +9,37 @@ Client:
 <table>
 @foreach (var monthGroup in Model.MonthGroups)
 {
+    int numJobs = monthGroup.JobGroups.Count();
     <tr>
-        <td colspan="2"><b>@monthGroup.Month.ToString("MMM yyyy")</b></td>
+        <th colspan="2">@monthGroup.Month.ToString("MMM yyyy")</th>
+        @foreach (var jg in monthGroup.JobGroups)
+        {
+            <th>@jg.Job.Name</th>
+        }
     </tr>
     foreach (var li in monthGroup.LineItems)
     {
         <tr>
             <td>@li.Name</td>
             <td style="text-align:right">@li.Rev</td>
+            @foreach (var jg in monthGroup.JobGroups)
+            {
+                <td></td>
+            }
         </tr>
+    }
+    int skipCols = 1;
+    foreach (var jg in monthGroup.JobGroups)
+    {
+        foreach (var li in jg.LineItems)
+        {
+            <tr>
+                <td>@li.Name</td>
+                <td colspan="@skipCols"></td>
+                <td style="text-align:right">@li.Rev</td>
+            </tr>
+        }
+        skipCols++;
     }
 }
 </table>

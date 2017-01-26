@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using DirectAgents.Domain.Entities.AB;
 
 namespace DirectAgents.Domain.DTO
 {
@@ -73,6 +74,12 @@ namespace DirectAgents.Domain.DTO
             Name = rtLineItem.Name;
             Rev = Decimal.Round(rtLineItem.Revenue, 2);
             Cost = Decimal.Round(rtLineItem.Cost, 2);
+        }
+        public ABLineItem(ABExtraItem extraItem)
+        {
+            Name = extraItem.Description;
+            Rev = extraItem.Revenue;
+            Cost = extraItem.Cost;
         }
 
         public string Name { get; set; }

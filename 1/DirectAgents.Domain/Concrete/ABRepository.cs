@@ -74,6 +74,40 @@ namespace DirectAgents.Domain.Concrete
             return context.ClientPaymentBits.Find(id);
         }
 
+        public IQueryable<Job> ActiveJobs(int clientId, DateTime? startDate, DateTime? endDate)
+        {
+            var jobs = context.Jobs.Where(j => j.ClientId == clientId);
+            if (!startDate.HasValue && !endDate.HasValue)
+            {   // no daterange specified
+                jobs = jobs.Where(j => j.ExtraItems.Any());
+            }
+            else
+            {   // find the jobs that were active within the daterange
+                var extraItems = jobs.SelectMany(j => j.ExtraItems);
+                if (startDate.HasValue)
+                    extraItems = extraItems.Where(x => x.Date >= startDate.Value);
+                if (endDate.HasValue)
+                    extraItems = extraItems.Where(x => x.Date <= endDate.Value);
+                var jobIds = extraItems.Select(x => x.JobId).Distinct().ToArray();
+                jobs = jobs.Where(j => jobIds.Contains(j.Id));
+            }
+            return jobs;
+        }
+
+        public IQueryable<ABExtraItem> ExtraItems(DateTime? startDate, DateTime? endDate, int? jobId = null)
+        {
+            var extraItems = context.ABExtraItems.AsQueryable();
+            if (startDate.HasValue)
+                extraItems = extraItems.Where(x => x.Date >= startDate.Value);
+            if (endDate.HasValue)
+                extraItems = extraItems.Where(x => x.Date <= endDate.Value);
+            if (jobId.HasValue)
+                extraItems = extraItems.Where(x => x.JobId == jobId.Value);
+            return extraItems;
+        }
+
+        // --- UNUSED: ClientAccount and AccountBudget ---
+
         public ClientAccount ClientAccount(int id)
         {
             return context.ClientAccounts.Find(id);

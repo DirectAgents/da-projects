@@ -9,6 +9,13 @@ IntCredit: @Model.IntCredit<br />
 [@Html.ActionLink("edit", "Edit", new { id = Model.Id })]
 <br /><br />
 
+Jobs:<br />
+@foreach (var job in Model.Jobs.OrderBy(j => j.Name))
+{
+    <text>@job.Name (id: @job.Id)<br /></text>
+}
+<br />
+
 @if (Model.ClientBudgets != null && Model.ClientBudgets.Any())
 {
     var cb = Model.ClientBudgets.OrderByDescending(x => x.Date).First();

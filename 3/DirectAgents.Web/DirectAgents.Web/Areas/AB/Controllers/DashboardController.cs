@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.DTO;
@@ -120,18 +121,36 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             if (client == null)
                 return HttpNotFound();
 
-            var monthGroups = new List<LineItemGroup>();
+            var monthGroups = new List<MonthGroup>();
+            int numMonths = 3; //TODO: determine this elsewhere
 
-            var month = DateTime.Today.FirstDayOfMonth(addMonths: -2);
-            for (int i = 0; i < 3; i++) // get lineitems for last three months
+            var firstDate = DateTime.Today.FirstDayOfMonth(addMonths: -numMonths);
+            var lastDate = firstDate.AddMonths(numMonths).AddDays(-1);
+            var jobs = abRepo.ActiveJobs(id, firstDate, lastDate).OrderBy(j => j.Name);
+
+            var month = firstDate;
+            for (int i = 0; i < numMonths; i++) // get lineitems for last three months
             {
                 var monthStats = superRepo.StatsByLineItem(id, month, separateFees: true);
-                var liGroup = new LineItemGroup
+                var jobGroups = new List<JobGroup>();
+                var extraItems = abRepo.ExtraItems(month, month.AddMonths(1).AddDays(-1));
+                foreach (var job in jobs)
+                {
+                    var jobExtraItems = extraItems.Where(x => x.JobId == job.Id);
+                    var jobGroup = new JobGroup
+                    {
+                        Job = job,
+                        LineItems = jobExtraItems.OrderBy(x => x.Id).ToList().Select(x => new ABLineItem(x))
+                    };
+                    jobGroups.Add(jobGroup);
+                }
+                var monthGroup = new MonthGroup
                 {
                     Month = month,
-                    LineItems = monthStats
+                    LineItems = monthStats,
+                    JobGroups = jobGroups
                 };
-                monthGroups.Add(liGroup);
+                monthGroups.Add(monthGroup);
                 month = month.AddMonths(1);
             }
 
