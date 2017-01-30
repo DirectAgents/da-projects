@@ -1,0 +1,26 @@
+﻿@model DirectAgents.Domain.Entities.AB.ABClient
+
+<h2>Payments</h2>
+
+Client: @Model.Name
+<br /><br />
+
+<table>
+    <tr>
+        <th></th>
+        <th>Date</th>
+        <th>TotalReceived</th>
+        <th>Non-Job value</th>
+        <th>Job value</th>
+    </tr>
+@foreach (var payment in Model.ClientPayments.OrderBy(x => x.Date))
+{
+    <tr>
+        <td>@Html.ActionLink("edit", "Edit", new { id = payment.Id })</td>
+        <td>@payment.Date.ToShortDateString()</td>
+        <td style="text-align:right">@payment.TotalValue()</td>
+        <td style="text-align:right">@payment.NonJobValue()</td>
+        <td style="text-align:right">@payment.JobValue()</td>
+    </tr>
+}
+</table>

@@ -42,4 +42,5 @@ Payments:
 
 Links:<br />
 @Html.ActionLink("Summary View", "Client", "Dashboard", new { id = Model.Id }, null)<br />
+@Html.ActionLink("View/Edit Payments", "Index", "ClientPayments", new { clientId = Model.Id }, null)<br />
 @Html.ActionLink("List All Clients", "Index")

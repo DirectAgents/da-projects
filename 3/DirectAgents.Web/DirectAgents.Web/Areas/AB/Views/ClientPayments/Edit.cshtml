@@ -1,0 +1,27 @@
+﻿@model DirectAgents.Domain.Entities.AB.ClientPayment
+
+<fieldset>
+    <legend>Edit Payment</legend>
+    Client: @Model.Client.Name
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary()
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.ClientId)
+        <div style="float:left">
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Id)</td>
+                    <td>@Html.DisplayFor(m => m.Id)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Date)</td>
+                    <td>@Html.EditorFor(m => m.Date, "Date")</td>
+                </tr>
+            </table>
+            <br />
+            <input type="submit" value="Save" />
+            &nbsp; cancel?
+        </div>
+    }
+</fieldset>

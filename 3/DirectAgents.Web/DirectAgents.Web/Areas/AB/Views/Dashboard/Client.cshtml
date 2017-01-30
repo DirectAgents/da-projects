@@ -45,6 +45,7 @@ Client:
 </table>
 <br />
 
+@Html.ActionLink("Payments Received", "Index", "ClientPayments", new { clientId = Model.ABClient.Id }, null)
 <table>
     <tr>
         <th>Date</th>
@@ -62,5 +63,3 @@ Client:
     </tr>
 }
 </table>
-
-NEXT: total em up

@@ -13,6 +13,24 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             this.abRepo = abRepository;
         }
 
+        public ActionResult Index(int clientId)
+        {
+            var abClient = abRepo.Client(clientId);
+            if (abClient == null)
+                return HttpNotFound();
+
+            return View(abClient);
+        }
+
+        public ActionResult Edit(int id)
+        {
+            var clientPayment = abRepo.ClientPayment(id);
+            if (clientPayment == null)
+                return HttpNotFound();
+
+            return View(clientPayment);
+        }
+
         public ActionResult EditViaLink(int id, DateTime? date, decimal value)
         {
             var clientPayment = abRepo.ClientPayment(id);

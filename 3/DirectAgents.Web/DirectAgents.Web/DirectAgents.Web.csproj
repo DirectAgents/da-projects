@@ -843,7 +843,6 @@
   <ItemGroup>
     <Folder Include="Areas\AB\Views\AccountBudgets\" />
     <Folder Include="Areas\AB\Views\ClientBudgets\" />
-    <Folder Include="Areas\AB\Views\ClientPayments\" />
     <Folder Include="Areas\RevTrack\Models\" />
     <Folder Include="Areas\RevTrack\Views\Shared\" />
     <Folder Include="Views\Test\" />
@@ -1028,6 +1027,8 @@
     <Content Include="Areas\AB\Views\ClientAccounts\Edit.cshtml" />
     <Content Include="Areas\AB\Views\Clients\Show.cshtml" />
     <Content Include="Areas\AB\Views\Dashboard\Client.cshtml" />
+    <Content Include="Areas\AB\Views\ClientPayments\Index.cshtml" />
+    <Content Include="Areas\AB\Views\ClientPayments\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
