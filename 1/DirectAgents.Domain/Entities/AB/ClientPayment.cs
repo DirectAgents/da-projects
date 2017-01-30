@@ -21,12 +21,31 @@ namespace DirectAgents.Domain.Entities.AB
             else
                 return 0;
         }
+        public decimal NonJobValue()
+        {
+            if (Bits == null || !Bits.Any())
+                return 0;
+            var bits = Bits.Where(b => b.JobId == null);
+            return bits.Sum(b => b.Value);
+        }
+        public decimal JobValue()
+        {
+            if (Bits == null || !Bits.Any())
+                return 0;
+            var bits = Bits.Where(b => b.JobId.HasValue);
+            return bits.Sum(b => b.Value);
+        }
     }
 
     public class ClientPaymentBit
     {
         public int Id { get; set; }
         public int ClientPaymentId { get; set; }
+        public virtual ClientPayment ClientPayment { get; set; }
+
         public decimal Value { get; set; }
+
+        public int? JobId { get; set; }
+        public virtual Job Job { get; set; }
     }
 }

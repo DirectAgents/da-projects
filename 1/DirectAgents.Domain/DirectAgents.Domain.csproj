@@ -237,6 +237,10 @@
     <Compile Include="MigrationsAB\201701251946452_Mig_ExtraItem.Designer.cs">
       <DependentUpon>201701251946452_Mig_ExtraItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsAB\201701262112310_Mig_PaymentBitJob.cs" />
+    <Compile Include="MigrationsAB\201701262112310_Mig_PaymentBitJob.Designer.cs">
+      <DependentUpon>201701262112310_Mig_PaymentBitJob.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsAB\Configuration.cs" />
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.cs" />
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.Designer.cs">
@@ -505,6 +509,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsAB\201701251946452_Mig_ExtraItem.resx">
       <DependentUpon>201701251946452_Mig_ExtraItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsAB\201701262112310_Mig_PaymentBitJob.resx">
+      <DependentUpon>201701262112310_Mig_PaymentBitJob.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsRT\201611292020284_InitialCreate.resx">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>
