@@ -69,11 +69,44 @@ namespace DirectAgents.Domain.Concrete
         {
             return context.ClientPayments.Find(id);
         }
+        public bool SaveClientPayment(ClientPayment payment)
+        {
+            if (context.ClientPayments.Any(x => x.Id == payment.Id))
+            {
+                var entry = context.Entry(payment);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public void FillExtended(ClientPayment payment)
+        {
+            if (payment.Client == null)
+                payment.Client = context.ABClients.Find(payment.ClientId);
+            if (payment.Bits == null)
+                payment.Bits = ClientPaymentBits(paymentId: payment.Id).ToList();
+        }
+
         public ClientPaymentBit ClientPaymentBit(int id)
         {
             return context.ClientPaymentBits.Find(id);
         }
+        public IQueryable<ClientPaymentBit> ClientPaymentBits(int? paymentId = null)
+        {
+            var bits = context.ClientPaymentBits.AsQueryable();
+            if (paymentId.HasValue)
+                bits = bits.Where(x => x.ClientPaymentId == paymentId.Value);
+            return bits;
+        }
 
+        public IQueryable<Job> Jobs(int? clientId = null)
+        {
+            var jobs = context.Jobs.AsQueryable();
+            if (clientId.HasValue)
+                jobs = jobs.Where(j => j.ClientId == clientId.Value);
+            return jobs;
+        }
         public IQueryable<Job> ActiveJobs(int clientId, DateTime? startDate, DateTime? endDate)
         {
             var jobs = context.Jobs.Where(j => j.ClientId == clientId);

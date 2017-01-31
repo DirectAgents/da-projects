@@ -18,8 +18,13 @@ namespace DirectAgents.Domain.Abstract
         ClientBudget ClientBudget(int clientId, DateTime date);
 
         ClientPayment ClientPayment(int id);
-        ClientPaymentBit ClientPaymentBit(int id);
+        bool SaveClientPayment(ClientPayment payment);
+        void FillExtended(ClientPayment payment);
 
+        ClientPaymentBit ClientPaymentBit(int id);
+        IQueryable<ClientPaymentBit> ClientPaymentBits(int? paymentId = null);
+
+        IQueryable<Job> Jobs(int? clientId = null);
         IQueryable<Job> ActiveJobs(int clientId, DateTime? startDate, DateTime? endDate);
 
         IQueryable<ABExtraItem> ExtraItems(DateTime? startDate, DateTime? endDate, int? jobId = null);

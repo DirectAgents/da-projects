@@ -1,4 +1,7 @@
 ﻿@model DirectAgents.Domain.Entities.AB.ClientPayment
+@{
+    var jobs = (IEnumerable<DirectAgents.Domain.Entities.AB.Job>)ViewBag.Jobs;
+}
 
 <fieldset>
     <legend>Edit Payment</legend>
@@ -8,20 +11,52 @@
         @Html.ValidationSummary()
         @Html.HiddenFor(m => m.Id)
         @Html.HiddenFor(m => m.ClientId)
-        <div style="float:left">
             <table>
-                <tr>
-                    <td>@Html.LabelFor(m => m.Id)</td>
-                    <td>@Html.DisplayFor(m => m.Id)</td>
-                </tr>
                 <tr>
                     <td>@Html.LabelFor(m => m.Date)</td>
                     <td>@Html.EditorFor(m => m.Date, "Date")</td>
+                    <td>
+                        <input id="btnSubmitPayment" type="submit" value="Save" onclick="SavePayment()" />
+                        <div id="divSavePaymentMessage"></div>
+                    </td>
                 </tr>
             </table>
-            <br />
-            <input type="submit" value="Save" />
-            &nbsp; cancel?
-        </div>
+    }
+    <br />
+    @using (Html.BeginForm("SaveBits", null, FormMethod.Post, new { id = "formBits" }))
+    {
+        <text>Amounts:</text>
+        <table>
+            <tr>
+                <th>Amount</th>
+                <th>Job</th>
+            </tr>
+        @{
+            int i = 0;
+        }
+        @foreach (var bit in Model.Bits)
+        {
+            var jobSelectList = new SelectList(jobs, "Id", "Name", bit.JobId);
+            @Html.Hidden("id" + i, bit.Id)
+            <tr>
+                <td>@Html.TextBox("val" + i, bit.Value)</td>
+                <td>@Html.DropDownList("job" + i, jobSelectList, "- None -")</td>
+                <td>@(bit.JobId.HasValue ? bit.Job.Name : "")</td>
+            </tr>
+            i++;
+        }
+        </table>
+        <input type="submit" value="Save Amounts" />
+        <text>&nbsp;</text>
+        @Html.ActionLink("new amount", "NewBit", new { id = Model.Id })
+        @Html.Hidden("numBits", i)
+        @Html.Hidden("paymentId", Model.Id)
     }
 </fieldset>
+
+<script>
+    function SavePayment() {
+        $('#btnSubmitPayment').hide();
+        $('#divSavePaymentMessage').html("<i>Saving...</i>");
+    }
+</script>
