@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
@@ -20,6 +21,23 @@ namespace DirectAgents.Web.Areas.AB.Controllers
                 return HttpNotFound();
 
             return View(abClient);
+        }
+
+        public ActionResult New(int clientId)
+        {
+            var abClient = abRepo.Client(clientId);
+            if (abClient == null)
+                return HttpNotFound();
+
+            var clientPayment = new ClientPayment
+            {
+                Date = DateTime.Today,
+                Bits = new Collection<ClientPaymentBit>() { new ClientPaymentBit() }
+            };
+            abClient.ClientPayments.Add(clientPayment);
+            abRepo.SaveChanges();
+
+            return RedirectToAction("Index", new { clientId = abClient.Id });
         }
 
         [HttpGet]
@@ -88,6 +106,17 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             abRepo.SaveChanges();
 
             return RedirectToAction("Edit", new { id = payment.Id });
+        }
+        public ActionResult DeleteBit(int bitId)
+        {
+            var bit = abRepo.ClientPaymentBit(bitId);
+            if (bit == null)
+                return HttpNotFound();
+
+            int paymentId = bit.ClientPaymentId;
+            abRepo.DeleteClientPaymentBit(bit);
+
+            return RedirectToAction("Edit", new { id = paymentId });
         }
 
         public ActionResult EditViaLink(int id, DateTime? date, decimal value)

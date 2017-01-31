@@ -1,6 +1,7 @@
 ﻿@model DirectAgents.Domain.Entities.AB.ClientPayment
 @{
     var jobs = (IEnumerable<DirectAgents.Domain.Entities.AB.Job>)ViewBag.Jobs;
+    bool multipleBits = (Model.Bits.Count() > 1);
 }
 
 <fieldset>
@@ -23,10 +24,15 @@
             </table>
     }
     <br />
+    @if (multipleBits)
+    {
+        <text>Total Payment: @Model.TotalValue()</text>
+        <br /><br />
+    }
     @using (Html.BeginForm("SaveBits", null, FormMethod.Post, new { id = "formBits" }))
     {
-        <text>Amounts:</text>
-        <table>
+        <text>Breakdown:</text>
+        <table style="margin-bottom:5px">
             <tr>
                 <th>Amount</th>
                 <th>Job</th>
@@ -41,22 +47,35 @@
             <tr>
                 <td>@Html.TextBox("val" + i, bit.Value)</td>
                 <td>@Html.DropDownList("job" + i, jobSelectList, "- None -")</td>
-                <td>@(bit.JobId.HasValue ? bit.Job.Name : "")</td>
+                @if (multipleBits)
+                {
+                    <td>@Html.ActionLink("delete", "DeleteBit", new { bitId = bit.Id }, new { onclick="if (!confirm('Are you sure?')) return false" })</td>
+                }
             </tr>
             i++;
         }
         </table>
-        <input type="submit" value="Save Amounts" />
-        <text>&nbsp;</text>
-        @Html.ActionLink("new amount", "NewBit", new { id = Model.Id })
+        <div id="divSaveBits">
+            <input type="submit" value="Save Amounts" onclick="SaveBits()" />&nbsp;
+            @Html.ActionLink("new amount", "NewBit", new { id = Model.Id })
+        </div>
+        <div id="divSaveBitsMessage"></div>
         @Html.Hidden("numBits", i)
         @Html.Hidden("paymentId", Model.Id)
     }
 </fieldset>
 
+<br />
+Links:<br />
+@Html.ActionLink("List of Payments", "Index", new { clientId = Model.ClientId })
+
 <script>
     function SavePayment() {
         $('#btnSubmitPayment').hide();
         $('#divSavePaymentMessage').html("<i>Saving...</i>");
+    }
+    function SaveBits() {
+        $('#divSaveBits').hide();
+        $('#divSaveBitsMessage').html("<i>Saving...</i>");
     }
 </script>

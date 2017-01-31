@@ -99,6 +99,11 @@ namespace DirectAgents.Domain.Concrete
                 bits = bits.Where(x => x.ClientPaymentId == paymentId.Value);
             return bits;
         }
+        public void DeleteClientPaymentBit(ClientPaymentBit bit)
+        {
+            context.ClientPaymentBits.Remove(bit);
+            context.SaveChanges();
+        }
 
         public IQueryable<Job> Jobs(int? clientId = null)
         {

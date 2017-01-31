@@ -70,22 +70,5 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             return RedirectToAction("Show", new { id = abClient.Id });
         }
 
-        public ActionResult NewPayment(int id)
-        {
-            var abClient = abRepo.Client(id);
-            if (abClient == null)
-                return HttpNotFound();
-
-            var clientPayment = new ClientPayment
-            {
-                Date = DateTime.Today,
-                Bits = new Collection<ClientPaymentBit>() { new ClientPaymentBit() }
-            };
-            abClient.ClientPayments.Add(clientPayment);
-            abRepo.SaveChanges();
-
-            return RedirectToAction("Show", new { id = abClient.Id });
-        }
-
 	}
 }
