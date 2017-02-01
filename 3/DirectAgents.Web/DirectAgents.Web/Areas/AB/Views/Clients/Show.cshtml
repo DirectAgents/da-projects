@@ -1,6 +1,6 @@
 ﻿@model DirectAgents.Domain.Entities.AB.ABClient
 
-<h2>Client Info</h2>
+<h2>View/Edit Client</h2>
 
 Id: @Model.Id<br />
 Name: @Model.Name<br />
@@ -26,7 +26,8 @@ Jobs:<br />
 }
 <br /><br />
 
-Payments:
+Payments:&nbsp;
+@Html.ActionLink("view/edit", "Index", "ClientPayments", new { clientId = Model.Id }, null)
 <table>
 @foreach (var payment in Model.ClientPayments.OrderBy(x => x.Date))
 {
@@ -37,9 +38,8 @@ Payments:
     </tr>
 }
 </table>
-<br /><br />
+<br />
 
 Links:<br />
-@Html.ActionLink("Summary View", "Client", "Dashboard", new { id = Model.Id }, null)<br />
-@Html.ActionLink("View/Edit Payments", "Index", "ClientPayments", new { clientId = Model.Id }, null)<br />
+@Html.ActionLink("Single Client Detail", "Client", "Dashboard", new { id = Model.Id }, null)<br />
 @Html.ActionLink("List All Clients", "Index")
