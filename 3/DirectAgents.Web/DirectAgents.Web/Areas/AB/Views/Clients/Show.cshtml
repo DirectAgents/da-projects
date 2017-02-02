@@ -9,11 +9,16 @@ IntCredit: @Model.IntCredit<br />
 [@Html.ActionLink("edit", "Edit", new { id = Model.Id })]
 <br /><br />
 
-Jobs:<br />
+Jobs:
+@Html.ActionLink("view/edit", "Index", "Jobs", new { clientId = Model.Id }, null)
+<table>
 @foreach (var job in Model.Jobs.OrderBy(j => j.Name))
 {
-    <text>@job.Name (id: @job.Id)<br /></text>
+    <tr>
+        <td>@job.Name</td>
+    </tr>
 }
+</table>
 <br />
 
 @if (Model.ClientBudgets != null && Model.ClientBudgets.Any())

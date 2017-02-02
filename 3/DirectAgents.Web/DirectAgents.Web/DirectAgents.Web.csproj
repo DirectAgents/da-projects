@@ -185,6 +185,7 @@
     <Compile Include="Areas\AB\Controllers\ClientPaymentsController.cs" />
     <Compile Include="Areas\AB\Controllers\ClientsController.cs" />
     <Compile Include="Areas\AB\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\AB\Controllers\JobsController.cs" />
     <Compile Include="Areas\AB\Models\DashboardVM.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\CampStatsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\DailySummariesController.cs" />
@@ -1029,6 +1030,8 @@
     <Content Include="Areas\AB\Views\Dashboard\Client.cshtml" />
     <Content Include="Areas\AB\Views\ClientPayments\Index.cshtml" />
     <Content Include="Areas\AB\Views\ClientPayments\Edit.cshtml" />
+    <Content Include="Areas\AB\Views\Jobs\Index.cshtml" />
+    <Content Include="Areas\AB\Views\Jobs\JobRow.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

@@ -25,8 +25,10 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<ClientPaymentBit> ClientPaymentBits(int? paymentId = null);
         void DeleteClientPaymentBit(ClientPaymentBit bit);
 
+        Job Job(int id);
         IQueryable<Job> Jobs(int? clientId = null);
         IQueryable<Job> ActiveJobs(int clientId, DateTime? startDate, DateTime? endDate);
+        void DeleteJob(Job job);
 
         IQueryable<ABExtraItem> ExtraItems(DateTime? startDate, DateTime? endDate, int? jobId = null);
 

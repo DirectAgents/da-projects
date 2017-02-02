@@ -105,6 +105,10 @@ namespace DirectAgents.Domain.Concrete
             context.SaveChanges();
         }
 
+        public Job Job(int id)
+        {
+            return context.Jobs.Find(id);
+        }
         public IQueryable<Job> Jobs(int? clientId = null)
         {
             var jobs = context.Jobs.AsQueryable();
