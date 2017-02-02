@@ -34,22 +34,33 @@ namespace EomToolWeb.Controllers
         public ActionResult Index(string offerID)
         {
             var resultsList = new List<SynchVM.SynchResults>();
+            DateTime startDate = eomEntitiesConfig.CurrentEomDate;
+            DateTime enddate = startDate.AddMonths(1).AddDays(-1);
 
-            //TODO: allow multiple offerIDs
-            //TODO: handle the case when no offerID(s) could be parsed
+            var offerIDstrings = offerID.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-            int offerIDint;
-            if (int.TryParse(offerID, out offerIDint))
+            foreach (var offerIDstring in offerIDstrings)
             {
-                DateTime startDate = eomEntitiesConfig.CurrentEomDate;
-                DateTime enddate = startDate.AddMonths(1).AddDays(-1);
-                int numsynched = CakeExtracter.Commands.EOMSynchCPCCommand.RunStatic(offerIDint, mainRepo, startDate, enddate);
-
-                resultsList.Add(new SynchVM.SynchResults
+                int offerIDint;
+                if (int.TryParse(offerIDstring, out offerIDint))
                 {
-                    OfferID = offerIDint,
-                    NumItemsSynched = numsynched
-                });
+                    var result = new SynchVM.SynchResults
+                    {
+                        OfferID = offerIDint
+                    };
+
+                    //TODO: This doesn't work to catch exceptions, e.g. in CPCLoader
+                    //TODO: Try putting catch in command / loader, see if it catches; find a way to catch it here
+                    try
+                    {
+                        result.NumItemsSynched = CakeExtracter.Commands.EOMSynchCPCCommand.RunStatic(offerIDint, mainRepo, startDate, enddate);
+                    }
+                    catch (Exception ex)
+                    {
+                        result.Message = ex.Message;
+                    }
+                    resultsList.Add(result);
+                }
             }
 
             var model = new SynchVM

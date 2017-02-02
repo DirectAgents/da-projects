@@ -12,6 +12,7 @@ namespace EomToolWeb.Models
         {
             public int OfferID { get; set; }
             public int NumItemsSynched { get; set; }
+            public string Message { get; set; }
         }
     }
 }

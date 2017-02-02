@@ -20,6 +20,8 @@ else
 {
     foreach (var result in Model.Results)
     {
-        <text>@result.NumItemsSynched Items Synched for Offer @result.OfferID !</text><br />
+        <text>@result.NumItemsSynched Items Synched for Offer @result.OfferID [@result.Message]</text><br />
     }
+    <br />
+    @Html.ActionLink("More", "Index")
 }
