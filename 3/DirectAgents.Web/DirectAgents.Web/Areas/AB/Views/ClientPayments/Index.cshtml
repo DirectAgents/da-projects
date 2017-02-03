@@ -9,9 +9,9 @@ Client: @Model.Name
     <tr>
         <th></th>
         <th>Date</th>
-        <th>TotalReceived</th>
-        <th>Non-Job value</th>
-        <th>Job value</th>
+        <th>Total Received</th>
+        <th>General amount</th>
+        <th>Jobs value</th>
     </tr>
 @foreach (var payment in Model.ClientPayments.OrderBy(x => x.Date))
 {

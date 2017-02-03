@@ -46,7 +46,7 @@
             @Html.Hidden("id" + i, bit.Id)
             <tr>
                 <td>@Html.TextBox("val" + i, bit.Value)</td>
-                <td>@Html.DropDownList("job" + i, jobSelectList, "- None -")</td>
+                <td>@Html.DropDownList("job" + i, jobSelectList, "- General -")</td>
                 @if (multipleBits)
                 {
                     <td>@Html.ActionLink("delete", "DeleteBit", new { bitId = bit.Id }, new { onclick="if (!confirm('Are you sure?')) return false" })</td>

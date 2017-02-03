@@ -11,7 +11,8 @@ Client:
 {
     int numJobs = monthGroup.JobGroups.Count();
     <tr>
-        <th colspan="2">@monthGroup.Month.ToString("MMM yyyy")</th>
+        <th>@monthGroup.Month.ToString("MMM yyyy")</th>
+        <th>General Spend</th>
         @foreach (var jg in monthGroup.JobGroups)
         {
             <th>@jg.Job.Name</th>
@@ -49,9 +50,9 @@ Client:
 <table>
     <tr>
         <th>Date</th>
-        <th>TotalReceived</th>
-        <th>Non-Job value</th>
-        <th>Job value</th>
+        <th>Total Received</th>
+        <th>General amount</th>
+        <th>Jobs amount</th>
     </tr>
 @foreach (var payment in Model.ABClient.ClientPayments.OrderBy(x => x.Date))
 {

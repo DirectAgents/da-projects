@@ -9,7 +9,7 @@ IntCredit: @Model.IntCredit<br />
 [@Html.ActionLink("edit", "Edit", new { id = Model.Id })]
 <br /><br />
 
-Jobs:
+<b>Jobs:</b>
 @Html.ActionLink("view/edit", "Index", "Jobs", new { clientId = Model.Id }, null)
 <table>
 @foreach (var job in Model.Jobs.OrderBy(j => j.Name))
@@ -21,6 +21,7 @@ Jobs:
 </table>
 <br />
 
+<b>Budgets:</b><br />
 @if (Model.ClientBudgets != null && Model.ClientBudgets.Any())
 {
     var cb = Model.ClientBudgets.OrderByDescending(x => x.Date).First();
@@ -31,7 +32,7 @@ Jobs:
 }
 <br /><br />
 
-Payments:&nbsp;
+<b>Payments:</b>&nbsp;
 @Html.ActionLink("view/edit", "Index", "ClientPayments", new { clientId = Model.Id }, null)
 <table>
 @foreach (var payment in Model.ClientPayments.OrderBy(x => x.Date))
