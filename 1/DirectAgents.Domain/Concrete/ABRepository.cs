@@ -135,6 +135,11 @@ namespace DirectAgents.Domain.Concrete
             }
             return jobs;
         }
+        public void DeleteJob(Job job)
+        {
+            context.Jobs.Remove(job);
+            context.SaveChanges();
+        }
 
         public IQueryable<ABExtraItem> ExtraItems(DateTime? startDate, DateTime? endDate, int? jobId = null)
         {
