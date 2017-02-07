@@ -108,6 +108,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Entities\AB\Job.cs" />
+    <Compile Include="Entities\AB\ProtoCampaign.cs" />
+    <Compile Include="Entities\AB\ProtoInvoice.cs" />
+    <Compile Include="Entities\AB\ProtoPayment.cs" />
+    <Compile Include="Entities\AB\ProtoPeriod.cs" />
+    <Compile Include="Entities\AB\ProtoSpendBit.cs" />
     <Compile Include="Entities\AdRoll\Ad.cs" />
     <Compile Include="Entities\AdRoll\AdDailySummary.cs" />
     <Compile Include="Entities\AdRoll\Advertisable.cs" />
@@ -240,6 +245,10 @@
     <Compile Include="MigrationsAB\201701262112310_Mig_PaymentBitJob.cs" />
     <Compile Include="MigrationsAB\201701262112310_Mig_PaymentBitJob.Designer.cs">
       <DependentUpon>201701262112310_Mig_PaymentBitJob.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsAB\201702072052477_Mig_ProtoObjs.cs" />
+    <Compile Include="MigrationsAB\201702072052477_Mig_ProtoObjs.Designer.cs">
+      <DependentUpon>201702072052477_Mig_ProtoObjs.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsAB\Configuration.cs" />
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.cs" />
@@ -512,6 +521,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsAB\201701262112310_Mig_PaymentBitJob.resx">
       <DependentUpon>201701262112310_Mig_PaymentBitJob.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsAB\201702072052477_Mig_ProtoObjs.resx">
+      <DependentUpon>201702072052477_Mig_ProtoObjs.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsRT\201611292020284_InitialCreate.resx">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>

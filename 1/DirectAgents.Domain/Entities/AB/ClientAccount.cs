@@ -11,8 +11,10 @@ namespace DirectAgents.Domain.Entities.AB
         public int Id { get; set; }
         public int ClientId { get; set; }
         public virtual ABClient Client { get; set; }
-        public decimal ExtCredit { get; set; }
-        public decimal IntCredit { get; set; }
+        public string Name { get; set; }
+
+        public virtual ICollection<ProtoCampaign> ProtoCampaigns { get; set; }
+        public virtual ICollection<ProtoPaymentBit> ProtoPaymentBits { get; set; }
 
         public virtual ICollection<AccountBudget> AccountBudgets { get; set; }
 

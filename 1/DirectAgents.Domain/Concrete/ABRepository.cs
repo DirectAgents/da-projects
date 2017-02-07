@@ -153,7 +153,15 @@ namespace DirectAgents.Domain.Concrete
             return extraItems;
         }
 
-        // --- UNUSED: ClientAccount and AccountBudget ---
+        // --- UNUSED? ClientAccount and AccountBudget ---
+
+        public IQueryable<ClientAccount> ClientAccounts(int? clientId)
+        {
+            var clientAccounts = context.ClientAccounts.AsQueryable();
+            if (clientId.HasValue)
+                clientAccounts = clientAccounts.Where(x => x.ClientId == clientId.Value);
+            return clientAccounts;
+        }
 
         public ClientAccount ClientAccount(int id)
         {
@@ -175,6 +183,21 @@ namespace DirectAgents.Domain.Concrete
         public AccountBudget AccountBudget(int clientAccountId, DateTime date)
         {
             return context.AccountBudgets.Find(clientAccountId, date);
+        }
+
+        public IQueryable<ProtoPeriod> Periods()
+        {
+            return context.ProtoPeriods;
+        }
+
+        public IQueryable<ProtoCampaign> Campaigns(int? clientId, int? clientAccountId)
+        {
+            var campaigns = context.ProtoCampaigns.AsQueryable();
+            if (clientId.HasValue)
+                campaigns = campaigns.Where(c => c.ClientAccount.ClientId == clientId.Value);
+            if (clientAccountId.HasValue)
+                campaigns = campaigns.Where(c => c.ClientAccountId == clientAccountId.Value);
+            return campaigns;
         }
 
         // ---

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using DirectAgents.Domain.Entities.RevTrack;
 
 namespace DirectAgents.Domain.Entities.AB
 {

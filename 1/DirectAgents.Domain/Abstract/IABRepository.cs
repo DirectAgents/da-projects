@@ -33,7 +33,11 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<ABExtraItem> ExtraItems(DateTime? startDate, DateTime? endDate, int? jobId = null);
 
         ClientAccount ClientAccount(int id);
+        IQueryable<ClientAccount> ClientAccounts(int? clientId);
         bool SaveClientAccount(ClientAccount clientAccount);
         AccountBudget AccountBudget(int clientAccountId, DateTime date);
+
+        IQueryable<ProtoPeriod> Periods();
+        IQueryable<ProtoCampaign> Campaigns(int? clientId, int? clientAccountId);
     }
 }
