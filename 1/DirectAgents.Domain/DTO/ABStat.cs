@@ -81,8 +81,15 @@ namespace DirectAgents.Domain.DTO
             Rev = extraItem.Revenue;
             Cost = extraItem.Cost;
         }
+        public ABLineItem(ProtoSpendBit spendBit)
+        {
+            Name = spendBit.ProtoCampaign.Name;
+            Rev = spendBit.Revenue;
+            Note = spendBit.Desc;
+        }
 
         public string Name { get; set; }
+        public string Note { get; set; }
         public decimal Rev { get; set; }
         public decimal Cost { get; set; }
         public decimal Margin

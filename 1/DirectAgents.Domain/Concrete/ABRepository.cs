@@ -185,12 +185,18 @@ namespace DirectAgents.Domain.Concrete
             return context.AccountBudgets.Find(clientAccountId, date);
         }
 
+        // ---
+
         public IQueryable<ProtoPeriod> Periods()
         {
             return context.ProtoPeriods;
         }
 
-        public IQueryable<ProtoCampaign> Campaigns(int? clientId, int? clientAccountId)
+        public ProtoCampaign Campaign(int id)
+        {
+            return context.ProtoCampaigns.Find(id);
+        }
+        public IQueryable<ProtoCampaign> Campaigns(int? clientId = null, int? clientAccountId = null)
         {
             var campaigns = context.ProtoCampaigns.AsQueryable();
             if (clientId.HasValue)
@@ -198,6 +204,37 @@ namespace DirectAgents.Domain.Concrete
             if (clientAccountId.HasValue)
                 campaigns = campaigns.Where(c => c.ClientAccountId == clientAccountId.Value);
             return campaigns;
+        }
+        public bool SaveCampaign(ProtoCampaign campaign)
+        {
+            if (context.ProtoCampaigns.Any(c => c.Id == campaign.Id))
+            {
+                var entry = context.Entry(campaign);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public void FillExtended(ProtoCampaign campaign)
+        {
+            if (campaign.ClientAccount == null)
+                campaign.ClientAccount = context.ClientAccounts.Find(campaign.ClientAccountId);
+            //SpendBits?
+        }
+
+        public IQueryable<ProtoSpendBit> SpendBits(int? clientId = null, int? clientAccountId = null, int? campaignId = null, int? periodId = null)
+        {
+            var spendBits = context.ProtoSpendBits.AsQueryable();
+            if (clientId.HasValue)
+                spendBits = spendBits.Where(x => x.ProtoCampaign.ClientAccount.ClientId == clientId.Value);
+            if (clientAccountId.HasValue)
+                spendBits = spendBits.Where(x => x.ProtoCampaign.ClientAccountId == clientAccountId.Value);
+            if (campaignId.HasValue)
+                spendBits = spendBits.Where(x => x.ProtoCampaignId == campaignId.Value);
+            if (periodId.HasValue)
+                spendBits = spendBits.Where(x => x.ProtoPeriodId == periodId.Value);
+            return spendBits;
         }
 
         // ---

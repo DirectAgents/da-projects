@@ -38,6 +38,10 @@ namespace DirectAgents.Domain.Abstract
         AccountBudget AccountBudget(int clientAccountId, DateTime date);
 
         IQueryable<ProtoPeriod> Periods();
-        IQueryable<ProtoCampaign> Campaigns(int? clientId, int? clientAccountId);
+        ProtoCampaign Campaign(int id);
+        IQueryable<ProtoCampaign> Campaigns(int? clientId = null, int? clientAccountId = null);
+        bool SaveCampaign(ProtoCampaign campaign);
+        void FillExtended(ProtoCampaign campaign);
+        IQueryable<ProtoSpendBit> SpendBits(int? clientId = null, int? clientAccountId = null, int? campaignId = null, int? periodId = null);
     }
 }

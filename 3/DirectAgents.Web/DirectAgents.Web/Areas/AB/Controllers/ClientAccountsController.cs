@@ -12,6 +12,12 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             this.abRepo = abRepository;
         }
 
+        public ActionResult Index(int? clientId)
+        {
+            var clientAccounts = abRepo.ClientAccounts(clientId);
+            return View(clientAccounts);
+        }
+
         [HttpGet]
         public ActionResult Edit(int? id, int? clientId)
         {

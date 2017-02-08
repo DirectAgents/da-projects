@@ -20,17 +20,32 @@ namespace DirectAgents.Web.Areas.AB.Models
         public ABClient ABClient { get; set; }
         public IEnumerable<MonthGroup> MonthGroups { get; set; }
     }
-
     public class MonthGroup
     {
         public DateTime Month { get; set; }
         public IEnumerable<ABLineItem> LineItems { get; set; }
         public IEnumerable<JobGroup> JobGroups { get; set; }
     }
-
     public class JobGroup
     {
         public Job Job { get; set; }
+        public IEnumerable<ABLineItem> LineItems { get; set; }
+    }
+
+    // for Single Client Detail view
+    public class ProtoVM
+    {
+        public ABClient ABClient { get; set; }
+        public IEnumerable<PeriodGroup> PeriodGroups { get; set; }
+    }
+    public class PeriodGroup
+    {
+        public DateTime Month { get; set; } // ProtoPeriod?
+        public IEnumerable<AccountGroup> AccountGroups { get; set; }
+    }
+    public class AccountGroup
+    {
+        public string Name { get; set; }
         public IEnumerable<ABLineItem> LineItems { get; set; }
     }
 }

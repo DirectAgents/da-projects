@@ -14,6 +14,14 @@ namespace DirectAgents.Domain.Entities.AB
         public DateTime Date { get; set; }
 
         public virtual ICollection<ProtoPaymentBit> Bits { get; set; }
+
+        public decimal TotalValue()
+        {
+            if (Bits != null && Bits.Any())
+                return Bits.Sum(b => b.Value);
+            else
+                return 0;
+        }
     }
 
     public class ProtoPaymentBit

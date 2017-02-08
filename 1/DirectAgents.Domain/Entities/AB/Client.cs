@@ -17,6 +17,9 @@ namespace DirectAgents.Domain.Entities.AB
         public virtual ICollection<ClientBudget> ClientBudgets { get; set; }
         public virtual ICollection<ClientPayment> ClientPayments { get; set; }
 
+        public virtual ICollection<ProtoPayment> ProtoPayments { get; set; }
+        public virtual ICollection<ProtoInvoice> ProtoInvoices { get; set; }
+
         public decimal BudgetFor(DateTime date)
         {
             if (ClientBudgets == null)

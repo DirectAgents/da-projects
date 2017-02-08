@@ -44,40 +44,9 @@ namespace DirectAgents.Web.Areas.AB.Controllers
         }
         private IEnumerable<ABStat> GetStatsByClient(DateTime monthStart, int? maxClients = null)
         {
-            //// If maxClients not specified, will use cached version if available
-            //// If specified, clear out cached version and re-retrieve
-            //if (maxClients.HasValue)
-            //    Session["StatsByClient"] = null;
-
-            //var sessionStats = Session["StatsByClient"];
-            //if (sessionStats != null)
-            //    return (IEnumerable<ABStat>)sessionStats;
-
             var clientStats = superRepo.StatsByClient(monthStart, maxClients: maxClients);
-
-            //Session["StatsByClient"] = clientStats;
-
             return clientStats;
         }
-
-        //public ActionResult EditClientStat(int id, decimal? sb, decimal? ec, decimal? ic)
-        //{
-        //    var clientStats = (IEnumerable<ABStat>)Session["StatsByClient"];
-        //    foreach (var clientStat in clientStats)
-        //    {
-        //        if (clientStat.Id == id) // the one to edit
-        //        {
-        //            if (sb.HasValue)
-        //                clientStat.StartBal = sb.Value;
-        //            if (ec.HasValue)
-        //                clientStat.ExtCred = ec.Value;
-        //            if (ic.HasValue)
-        //                clientStat.IntCred = ic.Value;
-        //            break;
-        //        }
-        //    }
-        //    return RedirectToAction("Index");
-        //}
 
         //Breakdown by department/source...
         public ActionResult BySource(int clientId)
@@ -110,6 +79,53 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             {
                 ABClient = client,
                 LineItems = lineItems
+            };
+            return View(model);
+        }
+
+        // New version of Single Client Detail view
+        public ActionResult Proto(int id)
+        {
+            var client = abRepo.Client(id);
+            if (client == null)
+                return HttpNotFound();
+
+            //For now, we're going through all Periods in the db...
+
+            var periods = abRepo.Periods();
+            var periodGroups = new List<PeriodGroup>();
+
+            // Get "active" accounts
+            var spendBits = abRepo.SpendBits(clientId: id);
+            var accounts = spendBits.Select(x => x.ProtoCampaign.ClientAccount).Distinct().OrderBy(a => a.Id).ToList();
+            // ? better to say something like client.Accounts.where(x => x.camps.spendbits.any()) ?
+
+            foreach (var period in periods.OrderBy(x => x.Date))
+            {
+                //var spendBits = abRepo.SpendBits(clientId: id, periodId: period.Id);
+                //var accounts = spendBits.Select(x => x.ProtoCampaign.ClientAccount).Distinct().OrderBy(x => x.Id).ToList();
+                var accountGroups = new List<AccountGroup>();
+                foreach (var account in accounts)
+                {
+                    var sBits = spendBits.Where(x => x.ProtoPeriodId == period.Id && x.ProtoCampaign.ClientAccountId == account.Id);
+                    var accountGroup = new AccountGroup
+                    {
+                        Name = account.Name,
+                        LineItems = sBits.OrderBy(x => x.Id).ToList().Select(sb => new ABLineItem(sb))
+                    };
+                    accountGroups.Add(accountGroup);
+                }
+                var periodGroup = new PeriodGroup
+                {
+                    Month = period.Date,
+                    AccountGroups = accountGroups
+                };
+                periodGroups.Add(periodGroup);
+            }
+            var model = new ProtoVM
+            {
+                ABClient = client,
+                PeriodGroups = periodGroups
             };
             return View(model);
         }
