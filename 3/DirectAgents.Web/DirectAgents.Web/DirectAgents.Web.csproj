@@ -179,7 +179,6 @@
   <ItemGroup>
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="Areas\AB\ABAreaRegistration.cs" />
-    <Compile Include="Areas\AB\Controllers\AccountBudgetsController.cs" />
     <Compile Include="Areas\AB\Controllers\CampaignsController.cs" />
     <Compile Include="Areas\AB\Controllers\ClientAccountsController.cs" />
     <Compile Include="Areas\AB\Controllers\ClientBudgetsController.cs" />
@@ -843,7 +842,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Areas\AB\Views\AccountBudgets\" />
     <Folder Include="Areas\AB\Views\ClientBudgets\" />
     <Folder Include="Areas\RevTrack\Models\" />
     <Folder Include="Areas\RevTrack\Views\Shared\" />

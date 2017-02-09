@@ -153,8 +153,6 @@ namespace DirectAgents.Domain.Concrete
             return extraItems;
         }
 
-        // --- UNUSED? ClientAccount and AccountBudget ---
-
         public IQueryable<ClientAccount> ClientAccounts(int? clientId)
         {
             var clientAccounts = context.ClientAccounts.AsQueryable();
@@ -178,11 +176,6 @@ namespace DirectAgents.Domain.Concrete
                 return true;
             }
             return false;
-        }
-
-        public AccountBudget AccountBudget(int clientAccountId, DateTime date)
-        {
-            return context.AccountBudgets.Find(clientAccountId, date);
         }
 
         // ---

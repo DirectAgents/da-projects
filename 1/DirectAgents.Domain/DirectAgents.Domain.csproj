@@ -250,6 +250,10 @@
     <Compile Include="MigrationsAB\201702072052477_Mig_ProtoObjs.Designer.cs">
       <DependentUpon>201702072052477_Mig_ProtoObjs.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsAB\201702092040550_Mig_RmAccountBudget.cs" />
+    <Compile Include="MigrationsAB\201702092040550_Mig_RmAccountBudget.Designer.cs">
+      <DependentUpon>201702092040550_Mig_RmAccountBudget.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsAB\Configuration.cs" />
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.cs" />
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.Designer.cs">
@@ -524,6 +528,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsAB\201702072052477_Mig_ProtoObjs.resx">
       <DependentUpon>201702072052477_Mig_ProtoObjs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsAB\201702092040550_Mig_RmAccountBudget.resx">
+      <DependentUpon>201702092040550_Mig_RmAccountBudget.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsRT\201611292020284_InitialCreate.resx">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>
