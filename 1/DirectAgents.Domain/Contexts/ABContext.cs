@@ -32,6 +32,14 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<ProtoInvoice>().ToTable("ProtoInvoice", abSchema);
             modelBuilder.Entity<ProtoInvoiceBit>().ToTable("ProtoInvoiceBit", abSchema);
             modelBuilder.Entity<ProtoSpendBit>().ToTable("ProtoSpendBit", abSchema);
+            //---
+            modelBuilder.Entity<Period>().ToTable("Period", abSchema);
+            modelBuilder.Entity<AcctPayment>().ToTable("AcctPayment", abSchema);
+            modelBuilder.Entity<AcctPaymentBit>().ToTable("AcctPaymentBit", abSchema);
+            modelBuilder.Entity<AcctInvoice>().ToTable("AcctInvoice", abSchema);
+            modelBuilder.Entity<AcctInvoiceBit>().ToTable("AcctInvoiceBit", abSchema);
+            modelBuilder.Entity<AcctSpendBucket>().ToTable("AcctSpendBucket", abSchema);
+            modelBuilder.Entity<AcctSpendBit>().ToTable("AcctSpendBit", abSchema);
 
             modelBuilder.Entity<ABClient>().Property(x => x.ExtCredit).HasPrecision(14, 2);
             modelBuilder.Entity<ABClient>().Property(x => x.IntCredit).HasPrecision(14, 2);
@@ -43,6 +51,10 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<ProtoPaymentBit>().Property(x => x.Value).HasPrecision(14, 2);
             modelBuilder.Entity<ProtoInvoiceBit>().Property(x => x.Value).HasPrecision(14, 2);
             modelBuilder.Entity<ProtoSpendBit>().Property(x => x.Revenue).HasPrecision(14, 2);
+            //---
+            modelBuilder.Entity<AcctPaymentBit>().Property(x => x.Value).HasPrecision(14, 2);
+            modelBuilder.Entity<AcctInvoiceBit>().Property(x => x.Value).HasPrecision(14, 2);
+            modelBuilder.Entity<AcctSpendBit>().Property(x => x.Revenue).HasPrecision(14, 2);
         }
 
         // --- AB ---
@@ -61,5 +73,13 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<ProtoInvoice> ProtoInvoices { get; set; }
         public DbSet<ProtoInvoiceBit> ProtoInvoiceBits { get; set; }
         public DbSet<ProtoSpendBit> ProtoSpendBits { get; set; }
+        //---
+        public DbSet<Period> Periods { get; set; }
+        public DbSet<AcctPayment> AcctPayments { get; set; }
+        public DbSet<AcctPaymentBit> AcctPaymentBits { get; set; }
+        public DbSet<AcctInvoice> AcctInvoices { get; set; }
+        public DbSet<AcctInvoiceBit> AcctInvoiceBits { get; set; }
+        public DbSet<AcctSpendBucket> AcctSpendBuckets { get; set; }
+        public DbSet<AcctSpendBit> AcctSpendBits { get; set; }
     }
 }

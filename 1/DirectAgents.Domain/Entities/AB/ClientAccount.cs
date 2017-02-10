@@ -11,6 +11,8 @@ namespace DirectAgents.Domain.Entities.AB
 
         public virtual ICollection<ProtoCampaign> ProtoCampaigns { get; set; }
         public virtual ICollection<ProtoPaymentBit> ProtoPaymentBits { get; set; }
+
+        public virtual ICollection<AcctPayment> Payments { get; set; }
     }
 
 }

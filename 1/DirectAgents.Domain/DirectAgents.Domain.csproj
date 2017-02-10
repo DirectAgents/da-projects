@@ -101,6 +101,10 @@
     <Compile Include="DTO\TDLineItem.cs" />
     <Compile Include="DTO\TDStat.cs" />
     <Compile Include="DTO\TDStatsGauge.cs" />
+    <Compile Include="Entities\AB\AcctInvoice.cs" />
+    <Compile Include="Entities\AB\AcctPayment.cs" />
+    <Compile Include="Entities\AB\AcctSpendBucket.cs" />
+    <Compile Include="Entities\AB\Bits.cs" />
     <Compile Include="Entities\AB\Client.cs" />
     <Compile Include="Entities\AB\ClientAccount.cs" />
     <Compile Include="Entities\AB\ClientPayment.cs" />
@@ -108,6 +112,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Entities\AB\Job.cs" />
+    <Compile Include="Entities\AB\Period.cs" />
     <Compile Include="Entities\AB\ProtoCampaign.cs" />
     <Compile Include="Entities\AB\ProtoInvoice.cs" />
     <Compile Include="Entities\AB\ProtoPayment.cs" />
@@ -253,6 +258,10 @@
     <Compile Include="MigrationsAB\201702092040550_Mig_RmAccountBudget.cs" />
     <Compile Include="MigrationsAB\201702092040550_Mig_RmAccountBudget.Designer.cs">
       <DependentUpon>201702092040550_Mig_RmAccountBudget.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsAB\201702092133451_Mig_AcctPayInvCamp.cs" />
+    <Compile Include="MigrationsAB\201702092133451_Mig_AcctPayInvCamp.Designer.cs">
+      <DependentUpon>201702092133451_Mig_AcctPayInvCamp.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsAB\Configuration.cs" />
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.cs" />
@@ -531,6 +540,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsAB\201702092040550_Mig_RmAccountBudget.resx">
       <DependentUpon>201702092040550_Mig_RmAccountBudget.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsAB\201702092133451_Mig_AcctPayInvCamp.resx">
+      <DependentUpon>201702092133451_Mig_AcctPayInvCamp.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsRT\201611292020284_InitialCreate.resx">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>
