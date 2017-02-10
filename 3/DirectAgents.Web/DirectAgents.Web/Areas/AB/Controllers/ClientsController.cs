@@ -30,6 +30,14 @@ namespace DirectAgents.Web.Areas.AB.Controllers
 
             return View(abClient);
         }
+        public ActionResult ShowX(int id) // initial version
+        {
+            var abClient = abRepo.Client(id);
+            if (abClient == null)
+                return HttpNotFound();
+
+            return View(abClient);
+        }
 
         [HttpGet]
         public ActionResult Edit(int id)

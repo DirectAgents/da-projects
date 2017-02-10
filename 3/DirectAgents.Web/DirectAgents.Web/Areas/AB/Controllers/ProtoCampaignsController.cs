@@ -5,9 +5,9 @@ using DirectAgents.Domain.Entities.AB;
 
 namespace DirectAgents.Web.Areas.AB.Controllers
 {
-    public class CampaignsController : DirectAgents.Web.Controllers.ControllerBase
+    public class ProtoCampaignsController : DirectAgents.Web.Controllers.ControllerBase
     {
-        public CampaignsController(IABRepository abRepository)
+        public ProtoCampaignsController(IABRepository abRepository)
         {
             this.abRepo = abRepository;
         }
@@ -49,7 +49,7 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             {
                 if (abRepo.SaveCampaign(camp))
                     return RedirectToAction("Index", new { accountId = camp.ClientAccountId });
-                ModelState.AddModelError("", "Campaign could not be saved.");
+                ModelState.AddModelError("", "ProtoCampaign could not be saved.");
             }
             abRepo.FillExtended(camp);
             return View(camp);

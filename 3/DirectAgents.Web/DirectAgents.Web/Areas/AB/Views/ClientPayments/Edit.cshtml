@@ -5,7 +5,7 @@
 }
 
 <fieldset>
-    <legend>Edit Payment</legend>
+    <legend>Edit ClientPayment</legend>
     Client: @Model.Client.Name
     @using (Html.BeginForm())
     {
@@ -68,7 +68,7 @@
 <br />
 Links:<br />
 @Html.ActionLink("List of Payments", "Index", new { clientId = Model.ClientId })<br />
-@Html.ActionLink("View/Edit Client", "Show", "Clients", new { id = Model.ClientId }, null)
+@Html.ActionLink("View/Edit ClientX", "ShowX", "Clients", new { id = Model.ClientId }, null)
 
 <script>
     function SavePayment() {

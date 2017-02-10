@@ -179,7 +179,7 @@
   <ItemGroup>
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="Areas\AB\ABAreaRegistration.cs" />
-    <Compile Include="Areas\AB\Controllers\CampaignsController.cs" />
+    <Compile Include="Areas\AB\Controllers\ProtoCampaignsController.cs" />
     <Compile Include="Areas\AB\Controllers\ClientAccountsController.cs" />
     <Compile Include="Areas\AB\Controllers\ClientBudgetsController.cs" />
     <Compile Include="Areas\AB\Controllers\ClientPaymentsController.cs" />
@@ -1033,8 +1033,9 @@
     <Content Include="Areas\AB\Views\Jobs\JobRow.cshtml" />
     <Content Include="Areas\AB\Views\ClientAccounts\Index.cshtml" />
     <Content Include="Areas\AB\Views\Dashboard\Proto.cshtml" />
-    <Content Include="Areas\AB\Views\Campaigns\Index.cshtml" />
-    <Content Include="Areas\AB\Views\Campaigns\Edit.cshtml" />
+    <Content Include="Areas\AB\Views\ProtoCampaigns\Index.cshtml" />
+    <Content Include="Areas\AB\Views\ProtoCampaigns\Edit.cshtml" />
+    <Content Include="Areas\AB\Views\Clients\ShowX.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

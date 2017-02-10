@@ -1,6 +1,6 @@
 ﻿@model DirectAgents.Domain.Entities.AB.ABClient
 
-<h2>Payments</h2>
+<h2>ClientPayments</h2>
 
 Client: @Model.Name
 <br /><br />
@@ -28,5 +28,5 @@ Client: @Model.Name
 
 <br /><br />
 Links:<br />
-@Html.ActionLink("View/Edit Client", "Show", "Clients", new { id = Model.Id }, null)<br />
+@Html.ActionLink("View/Edit ClientX", "ShowX", "Clients", new { id = Model.Id }, null)<br />
 @Html.ActionLink("Single Client Detail", "Client", "Dashboard", new { id = Model.Id }, null)
