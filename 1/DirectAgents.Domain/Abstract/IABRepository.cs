@@ -36,7 +36,7 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<ClientAccount> ClientAccounts(int? clientId);
         bool SaveClientAccount(ClientAccount clientAccount);
 
-        IQueryable<ProtoPeriod> Periods();
+        IQueryable<ProtoPeriod> ProtoPeriods();
         ProtoCampaign Campaign(int id);
         IQueryable<ProtoCampaign> Campaigns(int? clientId = null, int? clientAccountId = null);
         bool SaveCampaign(ProtoCampaign campaign);

@@ -6,6 +6,7 @@ Client:
 @Html.ActionLink(Model.ABClient.Name, "Show", "Clients", new { id = Model.ABClient.Id }, null)
 <br /><br />
 
+@Html.ActionLink("ProtoCampaigns", "Index", "ProtoCampaigns", new { clientId = Model.ABClient.Id }, null)
 <table>
 @foreach (var periodGroup in Model.PeriodGroups)
 {

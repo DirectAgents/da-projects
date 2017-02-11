@@ -180,7 +180,7 @@ namespace DirectAgents.Domain.Concrete
 
         // ---
 
-        public IQueryable<ProtoPeriod> Periods()
+        public IQueryable<ProtoPeriod> ProtoPeriods()
         {
             return context.ProtoPeriods;
         }

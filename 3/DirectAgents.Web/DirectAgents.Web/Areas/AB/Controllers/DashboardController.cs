@@ -92,7 +92,7 @@ namespace DirectAgents.Web.Areas.AB.Controllers
 
             //For now, we're going through all Periods in the db...
 
-            var periods = abRepo.Periods();
+            var periods = abRepo.ProtoPeriods();
             var periodGroups = new List<PeriodGroup>();
 
             // Get "active" accounts
