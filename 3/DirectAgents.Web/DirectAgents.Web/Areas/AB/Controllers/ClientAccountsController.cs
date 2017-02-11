@@ -18,6 +18,15 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             return View(clientAccounts);
         }
 
+        public ActionResult Show(int id)
+        {
+            var clientAccount = abRepo.ClientAccount(id);
+            if (clientAccount == null)
+                return HttpNotFound();
+
+            return View(clientAccount);
+        }
+
         [HttpGet]
         public ActionResult Edit(int? id, int? clientId)
         {

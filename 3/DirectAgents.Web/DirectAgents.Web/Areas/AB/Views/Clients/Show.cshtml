@@ -15,7 +15,7 @@ IntCredit: @Model.IntCredit<br />
 @foreach (var acct in Model.ClientAccounts.OrderBy(j => j.Id))
 {
     <tr>
-        <td>@acct.Name</td>
+        <td>@Html.ActionLink(acct.Name, "Show", "ClientAccounts", new { id = acct.Id }, null)</td>
     </tr>
 }
 </table>

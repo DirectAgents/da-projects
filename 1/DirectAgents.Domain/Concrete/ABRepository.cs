@@ -160,12 +160,10 @@ namespace DirectAgents.Domain.Concrete
                 clientAccounts = clientAccounts.Where(x => x.ClientId == clientId.Value);
             return clientAccounts;
         }
-
         public ClientAccount ClientAccount(int id)
         {
             return context.ClientAccounts.Find(id);
         }
-
         public bool SaveClientAccount(ClientAccount clientAccount)
         {
             if (context.ClientAccounts.Any(ca => ca.Id == clientAccount.Id))
@@ -176,6 +174,14 @@ namespace DirectAgents.Domain.Concrete
                 return true;
             }
             return false;
+        }
+
+        public IQueryable<AcctPayment> AcctPayments(int? acctId)
+        {
+            var acctPayments = context.AcctPayments.AsQueryable();
+            if (acctId.HasValue)
+                acctPayments = acctPayments.Where(x => x.AcctId == acctId.Value);
+            return acctPayments;
         }
 
         // ---
