@@ -20,7 +20,7 @@
             </table>
             <br />
             <input type="submit" value="Save" />
-            &nbsp;@Html.ActionLink("cancel", "Show", "Clients", new { id = Model.ClientId }, null)
+            &nbsp;@Html.ActionLink("cancel", "Show", new { id = Model.ClientId })
         </div>
     }
 </fieldset>

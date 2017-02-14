@@ -52,7 +52,7 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             if (ModelState.IsValid)
             {
                 if (abRepo.SaveClientAccount(clientAccount))
-                    return RedirectToAction("Show", "Clients", new { id = clientAccount.ClientId });
+                    return RedirectToAction("Show", new { id = clientAccount.Id });
                 ModelState.AddModelError("", "ClientAccount could not be saved.");
             }
             return View(clientAccount);
