@@ -39,10 +39,10 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<AcctPayment> AcctPayments(int? acctId);
 
         IQueryable<ProtoPeriod> ProtoPeriods();
-        ProtoCampaign Campaign(int id);
-        IQueryable<ProtoCampaign> Campaigns(int? clientId = null, int? clientAccountId = null);
-        bool SaveCampaign(ProtoCampaign campaign);
+        ProtoCampaign ProtoCampaign(int id);
+        IQueryable<ProtoCampaign> ProtoCampaigns(int? clientId = null, int? clientAccountId = null);
+        bool SaveProtoCampaign(ProtoCampaign campaign);
         void FillExtended(ProtoCampaign campaign);
-        IQueryable<ProtoSpendBit> SpendBits(int? clientId = null, int? clientAccountId = null, int? campaignId = null, int? periodId = null);
+        IQueryable<ProtoSpendBit> ProtoSpendBits(int? clientId = null, int? clientAccountId = null, int? campaignId = null, int? periodId = null);
     }
 }

@@ -14,7 +14,7 @@ namespace DirectAgents.Web.Areas.AB.Controllers
 
         public ActionResult Index(int? clientId, int? accountId)
         {
-            var campaigns = abRepo.Campaigns(clientId: clientId, clientAccountId: accountId);
+            var campaigns = abRepo.ProtoCampaigns(clientId: clientId, clientAccountId: accountId);
             return View(campaigns);
         }
 
@@ -37,7 +37,7 @@ namespace DirectAgents.Web.Areas.AB.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var camp = abRepo.Campaign(id);
+            var camp = abRepo.ProtoCampaign(id);
             if (camp == null)
                 return HttpNotFound();
             return View(camp);
@@ -47,7 +47,7 @@ namespace DirectAgents.Web.Areas.AB.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (abRepo.SaveCampaign(camp))
+                if (abRepo.SaveProtoCampaign(camp))
                     return RedirectToAction("Index", new { accountId = camp.ClientAccountId });
                 ModelState.AddModelError("", "ProtoCampaign could not be saved.");
             }

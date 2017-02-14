@@ -96,7 +96,7 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             var periodGroups = new List<PeriodGroup>();
 
             // Get "active" accounts
-            var spendBits = abRepo.SpendBits(clientId: id);
+            var spendBits = abRepo.ProtoSpendBits(clientId: id);
             var accounts = spendBits.Select(x => x.ProtoCampaign.ClientAccount).Distinct().OrderBy(a => a.Id).ToList();
             // ? better to say something like client.Accounts.where(x => x.camps.spendbits.any()) ?
 

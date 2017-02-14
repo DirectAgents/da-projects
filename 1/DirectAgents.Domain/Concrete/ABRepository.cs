@@ -191,11 +191,11 @@ namespace DirectAgents.Domain.Concrete
             return context.ProtoPeriods;
         }
 
-        public ProtoCampaign Campaign(int id)
+        public ProtoCampaign ProtoCampaign(int id)
         {
             return context.ProtoCampaigns.Find(id);
         }
-        public IQueryable<ProtoCampaign> Campaigns(int? clientId = null, int? clientAccountId = null)
+        public IQueryable<ProtoCampaign> ProtoCampaigns(int? clientId = null, int? clientAccountId = null)
         {
             var campaigns = context.ProtoCampaigns.AsQueryable();
             if (clientId.HasValue)
@@ -204,7 +204,7 @@ namespace DirectAgents.Domain.Concrete
                 campaigns = campaigns.Where(c => c.ClientAccountId == clientAccountId.Value);
             return campaigns;
         }
-        public bool SaveCampaign(ProtoCampaign campaign)
+        public bool SaveProtoCampaign(ProtoCampaign campaign)
         {
             if (context.ProtoCampaigns.Any(c => c.Id == campaign.Id))
             {
@@ -222,7 +222,7 @@ namespace DirectAgents.Domain.Concrete
             //SpendBits?
         }
 
-        public IQueryable<ProtoSpendBit> SpendBits(int? clientId = null, int? clientAccountId = null, int? campaignId = null, int? periodId = null)
+        public IQueryable<ProtoSpendBit> ProtoSpendBits(int? clientId = null, int? clientAccountId = null, int? campaignId = null, int? periodId = null)
         {
             var spendBits = context.ProtoSpendBits.AsQueryable();
             if (clientId.HasValue)
