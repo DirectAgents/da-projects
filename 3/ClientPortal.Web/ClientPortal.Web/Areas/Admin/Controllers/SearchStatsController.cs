@@ -102,17 +102,17 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         private IEnumerable<ColumnConfig> CreateColumnConfigs(string titleColumnText, IQueryable<SearchConvType> convTypes, bool includeConVals)
         {
             var minIdLookupByAlias = cpRepo.MinConvTypeIdLookupByAlias();
-            int letter = 0;
+            int iLetter = 0;
             var columnConfigs = new List<ColumnConfig>() {
-                new ColumnConfig("Title", titleColumnText, ColumnConfig.Alphabet[letter++], null, kendoType: "string")
+                new ColumnConfig("Title", titleColumnText, ColumnConfig.Alphabet[iLetter++], null, kendoType: "string")
             };
             var aliasGroups = convTypes.GroupBy(ct => ct.Alias).OrderBy(g => g.Key);
             foreach (var aliasGroup in aliasGroups)
             {
                 int id = minIdLookupByAlias[aliasGroup.Key];
-                columnConfigs.Add(new ColumnConfig("conv" + id, aliasGroup.Key, ColumnConfig.Alphabet[letter++], null));
+                columnConfigs.Add(new ColumnConfig("conv" + id, aliasGroup.Key, iLetter++, null));
                 if (includeConVals)
-                    columnConfigs.Add(new ColumnConfig("cval" + id, "ConVal", ColumnConfig.Alphabet[letter++], ColumnConfig.Format_Max2Dec));
+                    columnConfigs.Add(new ColumnConfig("cval" + id, "ConVal", iLetter++, ColumnConfig.Format_Max2Dec));
             }
             return columnConfigs;
         }

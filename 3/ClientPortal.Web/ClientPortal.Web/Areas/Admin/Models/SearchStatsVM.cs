@@ -39,5 +39,24 @@ namespace ClientPortal.Web.Areas.Admin.Models
             this.Format = format;
             this.KendoType = kendoType;
         }
+        public ColumnConfig(string propName, string displayName, int iLetter, string format, string kendoType = "number")
+        {
+            if (iLetter < 26)
+                this.Letter = new String(Alphabet[iLetter], 1);
+            else
+            {
+                int iPrefix = -1;
+                while (iLetter >= 26)
+                {
+                    iLetter -= 26;
+                    iPrefix++;
+                }
+                this.Letter = new String(Alphabet[iPrefix], 1) + Alphabet[iLetter];
+            }
+            this.PropName = propName;
+            this.DisplayName = displayName;
+            this.Format = format;
+            this.KendoType = kendoType;
+        }
     }
 }
