@@ -9,7 +9,9 @@ namespace DirectAgents.Domain.Entities.AB
         public int AcctId { get; set; }
         [ForeignKey("AcctId")]
         public virtual ClientAccount ClientAccount { get; set; }
-        public string Name { get; set; }
+
+        public int CampaignId { get; set; }
+        public virtual Campaign Campaign { get; set; }
 
         public ICollection<AcctSpendBit> Bits { get; set; }
     }

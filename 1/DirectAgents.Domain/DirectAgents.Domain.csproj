@@ -105,6 +105,7 @@
     <Compile Include="Entities\AB\AcctPayment.cs" />
     <Compile Include="Entities\AB\AcctSpendBucket.cs" />
     <Compile Include="Entities\AB\Bits.cs" />
+    <Compile Include="Entities\AB\Campaign.cs" />
     <Compile Include="Entities\AB\Client.cs" />
     <Compile Include="Entities\AB\ClientAccount.cs" />
     <Compile Include="Entities\AB\ClientPayment.cs" />
@@ -262,6 +263,10 @@
     <Compile Include="MigrationsAB\201702092133451_Mig_AcctPayInvCamp.cs" />
     <Compile Include="MigrationsAB\201702092133451_Mig_AcctPayInvCamp.Designer.cs">
       <DependentUpon>201702092133451_Mig_AcctPayInvCamp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsAB\201702152230227_Mig_Campaign.cs" />
+    <Compile Include="MigrationsAB\201702152230227_Mig_Campaign.Designer.cs">
+      <DependentUpon>201702152230227_Mig_Campaign.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsAB\Configuration.cs" />
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.cs" />
@@ -543,6 +548,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsAB\201702092133451_Mig_AcctPayInvCamp.resx">
       <DependentUpon>201702092133451_Mig_AcctPayInvCamp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsAB\201702152230227_Mig_Campaign.resx">
+      <DependentUpon>201702152230227_Mig_Campaign.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsRT\201611292020284_InitialCreate.resx">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>
