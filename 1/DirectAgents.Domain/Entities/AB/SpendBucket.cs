@@ -25,6 +25,8 @@ namespace DirectAgents.Domain.Entities.AB
         public virtual SpendBucket SpendBucket { get; set; }
         public int VendorId { get; set; }
         public virtual ABVendor Vendor { get; set; }
+        public int UnitTypeId { get; set; }
+        public virtual UnitType UnitType { get; set; }
 
         public decimal Revenue { get; set; }
 

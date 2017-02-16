@@ -303,6 +303,7 @@
     <Compile Include="Commands\DA\DASynchAdrollAds.cs" />
     <Compile Include="Commands\DA\DASynchDBMStatsOld.cs" />
     <Compile Include="Commands\RT\RTSynchTest.cs" />
+    <Compile Include="Commands\Test\TestABCommand.cs" />
     <Compile Include="Common\Compare.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\CPCLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AdWordsConvSummaryLoader.cs" />

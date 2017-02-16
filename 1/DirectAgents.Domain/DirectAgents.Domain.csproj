@@ -119,6 +119,7 @@
     <Compile Include="Entities\AB\ProtoPeriod.cs" />
     <Compile Include="Entities\AB\ProtoSpendBit.cs" />
     <Compile Include="Entities\AB\SpendBucket.cs" />
+    <Compile Include="Entities\AB\UnitType.cs" />
     <Compile Include="Entities\AB\Vendor.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -283,6 +284,10 @@
     <Compile Include="MigrationsAB\201702162126075_Mig_Vendor.cs" />
     <Compile Include="MigrationsAB\201702162126075_Mig_Vendor.Designer.cs">
       <DependentUpon>201702162126075_Mig_Vendor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsAB\201702162147438_Mig_UnitType.cs" />
+    <Compile Include="MigrationsAB\201702162147438_Mig_UnitType.Designer.cs">
+      <DependentUpon>201702162147438_Mig_UnitType.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsAB\Configuration.cs" />
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.cs" />
@@ -473,6 +478,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Seed\ABSeeder.cs" />
     <Compile Include="Seed\TDSeeder.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -576,6 +582,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsAB\201702162126075_Mig_Vendor.resx">
       <DependentUpon>201702162126075_Mig_Vendor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsAB\201702162147438_Mig_UnitType.resx">
+      <DependentUpon>201702162147438_Mig_UnitType.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsRT\201611292020284_InitialCreate.resx">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>
