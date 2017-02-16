@@ -24,6 +24,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<ClientPaymentBit>().ToTable("ClientPaymentBit", abSchema);
             modelBuilder.Entity<Job>().ToTable("Job", abSchema);
             modelBuilder.Entity<ABExtraItem>().ToTable("ExtraItem", abSchema);
+            modelBuilder.Entity<ABVendor>().ToTable("Vendor", abSchema);
 
             modelBuilder.Entity<ProtoCampaign>().ToTable("ProtoCampaign", abSchema);
             modelBuilder.Entity<ProtoPeriod>().ToTable("ProtoPeriod", abSchema);
@@ -68,6 +69,7 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<ClientPaymentBit> ClientPaymentBits { get; set; }
         public DbSet<Job> Jobs { get; set; }
         public DbSet<ABExtraItem> ABExtraItems { get; set; }
+        public DbSet<ABVendor> ABVendors { get; set; }
 
         public DbSet<ProtoCampaign> ProtoCampaigns { get; set; }
         public DbSet<ProtoPeriod> ProtoPeriods { get; set; }

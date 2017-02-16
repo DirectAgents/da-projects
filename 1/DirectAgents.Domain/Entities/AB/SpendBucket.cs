@@ -23,6 +23,8 @@ namespace DirectAgents.Domain.Entities.AB
         public virtual Period Period { get; set; }
         public int SpendBucketId { get; set; }
         public virtual SpendBucket SpendBucket { get; set; }
+        public int VendorId { get; set; }
+        public virtual ABVendor Vendor { get; set; }
 
         public decimal Revenue { get; set; }
 
