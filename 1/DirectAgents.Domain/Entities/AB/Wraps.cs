@@ -5,9 +5,9 @@ namespace DirectAgents.Domain.Entities.AB
 {
     public class CampaignWrap
     {
-        private IGrouping<Campaign, AcctSpendBucket> BucketGroup;
+        private IGrouping<Campaign, SpendBucket> BucketGroup;
 
-        public CampaignWrap(IGrouping<Campaign, AcctSpendBucket> bucketGroup)
+        public CampaignWrap(IGrouping<Campaign, SpendBucket> bucketGroup)
         {
             this.BucketGroup = bucketGroup;
         }
@@ -17,7 +17,7 @@ namespace DirectAgents.Domain.Entities.AB
             get { return BucketGroup.Key; }
         }
 
-        public IEnumerable<AcctSpendBucket> SpendBuckets
+        public IEnumerable<SpendBucket> SpendBuckets
         {
             get { return BucketGroup; }
         }

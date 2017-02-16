@@ -14,7 +14,7 @@ namespace DirectAgents.Domain.Entities.AB
 
         public virtual ICollection<AcctPayment> Payments { get; set; }
         public virtual ICollection<AcctInvoice> Invoices { get; set; }
-        public virtual ICollection<AcctSpendBucket> SpendBuckets { get; set; }
+        public virtual ICollection<SpendBucket> SpendBuckets { get; set; }
     }
 
 }

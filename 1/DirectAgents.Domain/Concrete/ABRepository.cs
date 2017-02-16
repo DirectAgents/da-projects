@@ -192,15 +192,15 @@ namespace DirectAgents.Domain.Concrete
             var campaignWraps = CampaignBucketGroups(clientId, acctId).AsEnumerable().Select(x => new CampaignWrap(x));
             return campaignWraps;
         }
-        private IQueryable<IGrouping<Campaign, AcctSpendBucket>> CampaignBucketGroups(int? clientId = null, int? acctId = null)
+        private IQueryable<IGrouping<Campaign, SpendBucket>> CampaignBucketGroups(int? clientId = null, int? acctId = null)
         {
             var spendBuckets = SpendBuckets(clientId, acctId);
             return spendBuckets.GroupBy(sb => sb.Campaign);
         }
 
-        public IQueryable<AcctSpendBucket> SpendBuckets(int? clientId = null, int? acctId = null)
+        public IQueryable<SpendBucket> SpendBuckets(int? clientId = null, int? acctId = null)
         {
-            var spendBuckets = context.AcctSpendBuckets.AsQueryable();
+            var spendBuckets = context.SpendBuckets.AsQueryable();
             if (clientId.HasValue)
                 spendBuckets = spendBuckets.Where(x => x.ClientAccount.ClientId == clientId.Value);
             if (acctId.HasValue)

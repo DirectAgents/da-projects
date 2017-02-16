@@ -19,7 +19,7 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             if (clientAccount == null)
                 return HttpNotFound();
 
-            var spendBucket = new AcctSpendBucket();
+            var spendBucket = new SpendBucket();
             if (campId.HasValue)
             {
                 var campaign = abRepo.Campaign(campId.Value);
