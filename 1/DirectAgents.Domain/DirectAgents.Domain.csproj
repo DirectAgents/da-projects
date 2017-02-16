@@ -119,6 +119,7 @@
     <Compile Include="Entities\AB\ProtoPayment.cs" />
     <Compile Include="Entities\AB\ProtoPeriod.cs" />
     <Compile Include="Entities\AB\ProtoSpendBit.cs" />
+    <Compile Include="Entities\AB\Wraps.cs" />
     <Compile Include="Entities\AdRoll\Ad.cs" />
     <Compile Include="Entities\AdRoll\AdDailySummary.cs" />
     <Compile Include="Entities\AdRoll\Advertisable.cs" />

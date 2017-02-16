@@ -45,6 +45,9 @@ namespace DirectAgents.Domain.Entities.AB
 
             return _defaultAccount;
         }
+
+        [NotMapped]
+        public IEnumerable<CampaignWrap> CampaignWraps { get; set; }
     }
 
     public class ClientBudget

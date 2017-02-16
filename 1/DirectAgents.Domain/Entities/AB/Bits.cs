@@ -40,7 +40,7 @@ namespace DirectAgents.Domain.Entities.AB
         [ForeignKey("AcctSpendBucketId")]
         public virtual AcctSpendBucket SpendBucket { get; set; }
 
-        public virtual ICollection<AcctInvoiceBit> InvoiceBits { get; set; } // the invoicebit(s) that cover this spendbit
+        //public virtual ICollection<AcctInvoiceBit> InvoiceBits { get; set; } // the invoicebit(s) that cover this spendbit
 
         // Quantity/NumUnits ? + calculate unitprice or total rev..
         public decimal Revenue { get; set; }

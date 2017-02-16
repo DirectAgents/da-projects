@@ -1,7 +1,6 @@
 ﻿@model DirectAgents.Domain.Entities.AB.ClientAccount
 @{
-    var campaigns = (IEnumerable<DirectAgents.Domain.Entities.AB.Campaign>)ViewBag.Campaigns;
-    var bucketCampaignIds = Model.SpendBuckets.Select(x => x.CampaignId).ToArray();
+    var campWraps = (IEnumerable<DirectAgents.Domain.Entities.AB.CampaignWrap>)ViewBag.CampaignWraps;
 }
 <h2>Campaigns/SpendBuckets</h2>
 
@@ -11,19 +10,19 @@ Account: @Html.ActionLink(Model.Name, "Show", "ClientAccounts", new { id = Model
 
 <table>
 <tr>
-    <td>Campaign</td>
-    <td>Bucket?</td>
+    <th>Campaign</th>
+    <th>SpendBucket?</th>
 </tr>
-@foreach (var camp in campaigns.OrderBy(x => x.Name))
+@foreach (var cw in campWraps.OrderBy(x => x.Campaign.Name))
 {
-    bool hasBucket = bucketCampaignIds.Contains(camp.Id);
+    bool hasBucket = cw.AcctIds.Contains(Model.Id);
     <tr>
-        <td>@camp.Name</td>
+        <td>@cw.Campaign.Name</td>
         <td>
             @if (hasBucket) {
                 <text>Y</text>
             } else {
-                @Html.ActionLink("create", "New", "SpendBuckets", new { acctId = Model.Id, campId = camp.Id }, null)
+                @Html.ActionLink("create", "New", "SpendBuckets", new { acctId = Model.Id, campId = cw.Campaign.Id }, null)
             }
         </td>
     </tr>

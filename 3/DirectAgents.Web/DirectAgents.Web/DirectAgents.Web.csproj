@@ -1043,6 +1043,7 @@
     <Content Include="Areas\AB\Views\ClientAccounts\Show.cshtml" />
     <Content Include="Areas\AB\Views\AcctPayments\Index.cshtml" />
     <Content Include="Areas\AB\Views\Campaigns\BucketList.cshtml" />
+    <Content Include="Areas\AB\Views\Campaigns\Index.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

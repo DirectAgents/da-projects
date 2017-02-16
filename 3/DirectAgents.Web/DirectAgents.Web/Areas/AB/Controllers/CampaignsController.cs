@@ -12,9 +12,14 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             this.abRepo = abRepository;
         }
 
-        public ActionResult Index()
+        public ActionResult Index(int clientId)
         {
-            return View();
+            var client = abRepo.Client(clientId);
+            if (client == null)
+                return HttpNotFound();
+
+            client.CampaignWraps = abRepo.CampaignWraps(clientId: clientId);
+            return View(client);
         }
 
         public ActionResult BucketList(int acctId)
@@ -23,8 +28,8 @@ namespace DirectAgents.Web.Areas.AB.Controllers
             if (clientAccount == null)
                 return HttpNotFound();
 
-            var campaigns = abRepo.Campaigns(clientId: clientAccount.ClientId);
-            ViewBag.Campaigns = campaigns;
+            var campaignWraps = abRepo.CampaignWraps(clientId: clientAccount.ClientId);
+            ViewBag.CampaignWraps = campaignWraps;
 
             return View(clientAccount);
         }
