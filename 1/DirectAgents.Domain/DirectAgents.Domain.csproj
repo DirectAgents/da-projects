@@ -103,7 +103,6 @@
     <Compile Include="DTO\TDStatsGauge.cs" />
     <Compile Include="Entities\AB\AcctInvoice.cs" />
     <Compile Include="Entities\AB\AcctPayment.cs" />
-    <Compile Include="Entities\AB\AcctSpendBucket.cs" />
     <Compile Include="Entities\AB\Bits.cs" />
     <Compile Include="Entities\AB\Campaign.cs" />
     <Compile Include="Entities\AB\Client.cs" />
@@ -273,6 +272,10 @@
     <Compile Include="MigrationsAB\201702162051182_Mig_NewSpendBucketsBits.cs" />
     <Compile Include="MigrationsAB\201702162051182_Mig_NewSpendBucketsBits.Designer.cs">
       <DependentUpon>201702162051182_Mig_NewSpendBucketsBits.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsAB\201702162100330_Mig_RmAcctSpendBucketsBits.cs" />
+    <Compile Include="MigrationsAB\201702162100330_Mig_RmAcctSpendBucketsBits.Designer.cs">
+      <DependentUpon>201702162100330_Mig_RmAcctSpendBucketsBits.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsAB\Configuration.cs" />
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.cs" />
@@ -560,6 +563,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsAB\201702162051182_Mig_NewSpendBucketsBits.resx">
       <DependentUpon>201702162051182_Mig_NewSpendBucketsBits.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsAB\201702162100330_Mig_RmAcctSpendBucketsBits.resx">
+      <DependentUpon>201702162100330_Mig_RmAcctSpendBucketsBits.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsRT\201611292020284_InitialCreate.resx">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>

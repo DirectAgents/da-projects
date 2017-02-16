@@ -38,8 +38,6 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<AcctPaymentBit>().ToTable("AcctPaymentBit", abSchema);
             modelBuilder.Entity<AcctInvoice>().ToTable("AcctInvoice", abSchema);
             modelBuilder.Entity<AcctInvoiceBit>().ToTable("AcctInvoiceBit", abSchema);
-            modelBuilder.Entity<AcctSpendBucket>().ToTable("AcctSpendBucket", abSchema);
-            modelBuilder.Entity<AcctSpendBit>().ToTable("AcctSpendBit", abSchema);
             modelBuilder.Entity<SpendBucket>().ToTable("SpendBucket", abSchema);
             modelBuilder.Entity<SpendBit>().ToTable("SpendBit", abSchema);
             modelBuilder.Entity<Campaign>().ToTable("Campaign", abSchema);
@@ -57,7 +55,6 @@ namespace DirectAgents.Domain.Contexts
             //---
             modelBuilder.Entity<AcctPaymentBit>().Property(x => x.Value).HasPrecision(14, 2);
             modelBuilder.Entity<AcctInvoiceBit>().Property(x => x.Value).HasPrecision(14, 2);
-            modelBuilder.Entity<AcctSpendBit>().Property(x => x.Revenue).HasPrecision(14, 2);
             modelBuilder.Entity<SpendBit>().Property(x => x.Revenue).HasPrecision(14, 2);
             modelBuilder.Entity<SpendBit>().Property(x => x.Rate).HasPrecision(14, 2);
             modelBuilder.Entity<SpendBit>().Property(x => x.Cost).HasPrecision(14, 2);
@@ -85,8 +82,6 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<AcctPaymentBit> AcctPaymentBits { get; set; }
         public DbSet<AcctInvoice> AcctInvoices { get; set; }
         public DbSet<AcctInvoiceBit> AcctInvoiceBits { get; set; }
-        public DbSet<AcctSpendBucket> AcctSpendBuckets { get; set; }
-        public DbSet<AcctSpendBit> AcctSpendBits { get; set; }
         public DbSet<SpendBucket> SpendBuckets { get; set; }
         public DbSet<SpendBit> SpendBits { get; set; }
         public DbSet<Campaign> Campaigns { get; set; }
