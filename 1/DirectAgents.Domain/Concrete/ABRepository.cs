@@ -176,6 +176,18 @@ namespace DirectAgents.Domain.Concrete
             return false;
         }
 
+        public Campaign Campaign(int id)
+        {
+            return context.Campaigns.Find(id);
+        }
+        public IQueryable<Campaign> Campaigns(int? clientId = null)
+        {
+            var campaigns = context.Campaigns.AsQueryable();
+            if (clientId.HasValue)
+                campaigns = campaigns.Where(c => c.SpendBuckets.Select(b => b.ClientAccount.ClientId).Contains(clientId.Value)); // ?? best way ??
+            return campaigns;
+        }
+
         public IQueryable<AcctPayment> AcctPayments(int? acctId)
         {
             var acctPayments = context.AcctPayments.AsQueryable();

@@ -180,6 +180,7 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="Areas\AB\ABAreaRegistration.cs" />
     <Compile Include="Areas\AB\Controllers\AcctPaymentsController.cs" />
+    <Compile Include="Areas\AB\Controllers\CampaignsController.cs" />
     <Compile Include="Areas\AB\Controllers\ProtoCampaignsController.cs" />
     <Compile Include="Areas\AB\Controllers\ClientAccountsController.cs" />
     <Compile Include="Areas\AB\Controllers\ClientBudgetsController.cs" />
@@ -187,6 +188,7 @@
     <Compile Include="Areas\AB\Controllers\ClientsController.cs" />
     <Compile Include="Areas\AB\Controllers\DashboardController.cs" />
     <Compile Include="Areas\AB\Controllers\JobsController.cs" />
+    <Compile Include="Areas\AB\Controllers\SpendBucketsController.cs" />
     <Compile Include="Areas\AB\Models\DashboardVM.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\CampStatsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\DailySummariesController.cs" />
@@ -844,6 +846,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\AB\Views\ClientBudgets\" />
+    <Folder Include="Areas\AB\Views\SpendBuckets\" />
     <Folder Include="Areas\RevTrack\Models\" />
     <Folder Include="Areas\RevTrack\Views\Shared\" />
     <Folder Include="Views\Test\" />
@@ -1039,6 +1042,7 @@
     <Content Include="Areas\AB\Views\Clients\ShowX.cshtml" />
     <Content Include="Areas\AB\Views\ClientAccounts\Show.cshtml" />
     <Content Include="Areas\AB\Views\AcctPayments\Index.cshtml" />
+    <Content Include="Areas\AB\Views\Campaigns\BucketList.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

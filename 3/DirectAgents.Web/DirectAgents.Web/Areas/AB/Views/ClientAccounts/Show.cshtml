@@ -1,6 +1,6 @@
 ﻿@model DirectAgents.Domain.Entities.AB.ClientAccount
 
-<h2>View/Edit Client Account</h2>
+<h2>View ClientAccount</h2>
 
 Client: @Html.ActionLink(Model.Client.Name, "Show", "Clients", new { id = Model.ClientId }, null)<br />
 Account: @Model.Name (ID: @Model.Id)<br />
@@ -9,4 +9,4 @@ Account: @Model.Name (ID: @Model.Id)<br />
 
 @Html.ActionLink("Payments", "Index", "AcctPayments", new { acctId = @Model.Id }, null)<br />
 Invoices<br />
-Campaigns/Spend Buckets
+@Html.ActionLink("Campaigns/SpendBuckets", "BucketList", "Campaigns", new { acctId = @Model.Id }, null)
