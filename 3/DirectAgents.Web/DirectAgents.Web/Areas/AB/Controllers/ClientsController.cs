@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
@@ -16,9 +15,7 @@ namespace DirectAgents.Web.Areas.AB.Controllers
 
         public ActionResult Index()
         {
-            var clients = abRepo.Clients()
-                .OrderBy(c => c.Name);
-
+            var clients = abRepo.Clients();
             return View(clients);
         }
 

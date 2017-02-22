@@ -1,7 +1,5 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
-using DirectAgents.Domain.Entities.AB;
 
 namespace DirectAgents.Web.Areas.AB.Controllers
 {

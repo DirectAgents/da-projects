@@ -15,6 +15,9 @@ namespace DirectAgents.Domain.Abstract
         void AddClients(IEnumerable<ABClient> clients);
         bool SaveClient(ABClient client);
 
+        ABVendor Vendor(int id);
+        IQueryable<ABVendor> Vendors();
+
         ClientBudget ClientBudget(int clientId, DateTime date);
 
         ClientPayment ClientPayment(int id);

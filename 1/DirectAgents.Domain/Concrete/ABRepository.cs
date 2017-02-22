@@ -22,13 +22,12 @@ namespace DirectAgents.Domain.Concrete
             context.SaveChanges();
         }
 
-        // ---
+        // --- Clients ---
 
         public ABClient Client(int id)
         {
             return context.ABClients.Find(id);
         }
-
         public IQueryable<ABClient> Clients()
         {
             return context.ABClients;
@@ -59,6 +58,19 @@ namespace DirectAgents.Domain.Concrete
             }
             return false;
         }
+
+        // --- Vendors ---
+
+        public ABVendor Vendor(int id)
+        {
+            return context.ABVendors.Find(id);
+        }
+        public IQueryable<ABVendor> Vendors()
+        {
+            return context.ABVendors;
+        }
+
+        // ---
 
         public ClientBudget ClientBudget(int clientId, DateTime date)
         {
