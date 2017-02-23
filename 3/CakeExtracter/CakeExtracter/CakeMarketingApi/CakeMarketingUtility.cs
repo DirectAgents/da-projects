@@ -107,7 +107,7 @@ namespace CakeExtracter.CakeMarketingApi
             {
                 start_date = dateRange.FromDate.ToString("MM/dd/yyyy"),
                 end_date = dateRange.ToDate.ToString("MM/dd/yyyy"),
-                offer_id = offerId
+                site_offer_id = offerId
             };
             var response = client.CampaignSummaries(request);
             if (response == null || response.Campaigns == null)

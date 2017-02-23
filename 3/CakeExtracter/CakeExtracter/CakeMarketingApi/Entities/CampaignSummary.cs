@@ -12,18 +12,17 @@ namespace CakeExtracter.CakeMarketingApi.Entities
     public class CampaignSummary
     {
         public Campaign1 Campaign { get; set; }
-        public Affiliate1 Affiliate { get; set; }
-        public Offer1 Offer { get; set; }
-        public AccountManager1 AccountManager { get; set; }
-        public Advertiser1 Advertiser { get; set; }
-        public AccountManager1 AdvertiserManager { get; set; }
+        public SourceAffiliate1 SourceAffiliate { get; set; }
+        public SiteOffer1 SiteOffer { get; set; }
+        public BrandAdvertiser1 BrandAdvertiser { get; set; }
+        public AccountManager1 BrandAdvertiserManager { get; set; }
         // PriceFormat(e.g. CPA)
         // MediaType(e.g. Email)
         public int Views { get; set; }
         public int Clicks { get; set; }
-        public int Conversions { get; set; }
-        public int Paid { get; set; }
-        public int Sellable { get; set; }
+        public decimal MacroEventConversions { get; set; }
+        public decimal Paid { get; set; }
+        public decimal Sellable { get; set; }
         public decimal Cost { get; set; }
         public decimal Revenue { get; set; }
         // ClickThruPercentage, Events...
@@ -33,7 +32,7 @@ namespace CakeExtracter.CakeMarketingApi.Entities
         {
             Views = cs.Views;
             Clicks = cs.Clicks;
-            Conversions = cs.Conversions;
+            MacroEventConversions = cs.MacroEventConversions;
             Paid = cs.Paid;
             Sellable = cs.Sellable;
             Cost = cs.Cost;

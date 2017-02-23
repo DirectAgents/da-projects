@@ -29,4 +29,22 @@
         public string OfferName { get; set; }
     }
 
+    public class BrandAdvertiser1
+    {
+        public int BrandAdvertiserId { get; set; }
+        public string BrandAdvertiserName { get; set; }
+    }
+
+    public class SourceAffiliate1
+    {
+        public int SourceAffiliateId { get; set; }
+        public string SourceAffiliateName { get; set; }
+    }
+
+    public class SiteOffer1
+    {
+        public int SiteOfferId { get; set; }
+        public string SiteOfferName { get; set; }
+    }
+
 }

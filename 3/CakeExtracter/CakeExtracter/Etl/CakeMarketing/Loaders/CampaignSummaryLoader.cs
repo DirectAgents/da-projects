@@ -31,8 +31,8 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                 foreach (var item in items)
                 {
                     var pk1 = date;
-                    var pk2 = item.Offer.OfferId;
-                    var pk3 = item.Affiliate.AffiliateId;
+                    var pk2 = item.SiteOffer.SiteOfferId;
+                    var pk3 = item.SourceAffiliate.SourceAffiliateId;
                     var target = db.Set<ClientPortal.Data.Contexts.DailySummary>().Find(pk1, pk2, pk3);
 
                     if (target == null)
@@ -53,14 +53,14 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
 
                     target.Views = item.Views;
                     target.Clicks = item.Clicks;
-                    target.Conversions = item.Conversions;
-                    target.Paid = item.Paid;
-                    target.Sellable = item.Sellable;
+                    target.Conversions = Convert.ToInt32(item.MacroEventConversions);
+                    target.Paid = Convert.ToInt32(item.Paid);
+                    target.Sellable = Convert.ToInt32(item.Sellable);
                     target.Cost = item.Cost;
                     target.Revenue = item.Revenue;
 
                     // Record the fact that stats for this offer/affiliate were loaded.
-                    var offAffTuple = new Tuple<int,int>(item.Offer.OfferId, item.Affiliate.AffiliateId);
+                    var offAffTuple = new Tuple<int,int>(item.SiteOffer.SiteOfferId, item.SourceAffiliate.SourceAffiliateId);
                     if (offAffDict.ContainsKey(offAffTuple))
                     {
                         offAffDict[offAffTuple]++;

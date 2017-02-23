@@ -27,18 +27,18 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
         {
             foreach (var campaignItem in items)
             {
-                if (campaignItem.Affiliate.AffiliateId > 0 && campaignItem.Sellable > 0)
+                if (campaignItem.SourceAffiliate.SourceAffiliateId > 0 && campaignItem.Sellable > 0)
                 {
                     Item item = new Item
                     {
-                        affid = campaignItem.Affiliate.AffiliateId,
-                        pid = campaignItem.Offer.OfferId,
+                        affid = campaignItem.SourceAffiliate.SourceAffiliateId,
+                        pid = campaignItem.SiteOffer.SiteOfferId,
                         num_units = campaignItem.Sellable,
                         revenue_per_unit = campaignItem.Revenue / campaignItem.Sellable,
                         cost_per_unit = campaignItem.Cost / campaignItem.Sellable,
                         notes = "From Cake",
                         accounting_notes = "From Cake",
-                        name = "Cake/" + date.ToString("yyyy-MM-dd") + "/aff:" + campaignItem.Affiliate.AffiliateId + "/offer:" + campaignItem.Offer.OfferId + "/type:Click - CPC"
+                        name = "Cake/" + date.ToString("yyyy-MM-dd") + "/aff:" + campaignItem.SourceAffiliate.SourceAffiliateId + "/offer:" + campaignItem.SiteOffer.SiteOfferId + "/type:Click - CPC"
                     };
                     item.SetDefaultStatuses();
                     item.SetDefaultTypes();

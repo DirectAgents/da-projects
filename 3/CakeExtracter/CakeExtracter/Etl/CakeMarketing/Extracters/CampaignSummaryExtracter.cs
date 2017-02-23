@@ -29,17 +29,17 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
                         dateRange.FromDate, dateRange.ToDate.AddDays(-1), offerId);
 
             var campaignSummaries = CakeMarketingUtility.CampaignSummaries(dateRange, offerId: offerId);
-            var csOfferGroups = campaignSummaries.GroupBy(cs => cs.Offer.OfferId);
+            var csOfferGroups = campaignSummaries.GroupBy(cs => cs.SiteOffer.SiteOfferId);
 
             foreach (var group in csOfferGroups)
             {
                 if (group.Key < 0)
                     continue; // skip OfferIds -2 and -1
 
-                var affIds = group.Select(cs => cs.Affiliate.AffiliateId).Distinct();
+                var affIds = group.Select(cs => cs.SourceAffiliate.SourceAffiliateId).Distinct();
                 foreach (var affId in affIds)
                 {
-                    var cSums = group.Where(cs => cs.Affiliate.AffiliateId == affId);
+                    var cSums = group.Where(cs => cs.SourceAffiliate.SourceAffiliateId == affId);
                     if (cSums.Count() == 1)
                         Add(cSums);
                     else
@@ -48,7 +48,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
                         {
                             Views = cSums.Sum(cs => cs.Views),
                             Clicks = cSums.Sum(cs => cs.Clicks),
-                            Conversions = cSums.Sum(cs => cs.Conversions),
+                            MacroEventConversions = cSums.Sum(cs => cs.MacroEventConversions),
                             Paid = cSums.Sum(cs => cs.Paid),
                             Sellable = cSums.Sum(cs => cs.Sellable),
                             Cost = cSums.Sum(cs => cs.Cost),
