@@ -22,6 +22,9 @@
 	, eCPC	float(53)
 	, eCPA	float(53)
 	, PlatformAlias nvarchar(max)
+	, PostClickConVal decimal(18,6)
+	, PostViewConVal decimal(18,6)
+	, ConVal decimal(18,6)
 	)
 AS
 BEGIN
@@ -75,6 +78,9 @@ BEGIN
 		, StrategySummary.PostViewConv
 		, CAST(CASE WHEN Platform.Name = 'Facebook' THEN 0 ELSE 1 END AS bit) AS ShowClickAndViewConv
 		, StrategySummary.PostClickConv + StrategySummary.PostViewConv AS Conversions
+		, StrategySummary.PostClickRev AS PostClickConVal
+		, StrategySummary.PostViewRev AS PostViewConVal
+		, StrategySummary.PostClickRev + StrategySummary.PostViewRev AS ConVal
 		, StrategySummary.Cost
 		, CASE	WHEN dtData.MarginPct = 100 THEN StrategySummary.Cost * (1 + (dtData.MgmtFeePct / 100))
 				ELSE StrategySummary.Cost / (1 - (dtData.MarginPct / 100))
@@ -118,6 +124,9 @@ BEGIN
 	, CASE WHEN Clicks = 0 THEN 0 ELSE MediaSpend / CAST(Clicks as float) END AS eCPC
 	, CASE WHEN Conversions = 0 THEN 0 ELSE MediaSpend / CAST(Conversions as float) END AS eCPA
 	, PlatformAlias
+	, PostClickConVal
+	, PostViewConVal
+	, ConVal
 	FROM mediaSpend
 
 	RETURN
