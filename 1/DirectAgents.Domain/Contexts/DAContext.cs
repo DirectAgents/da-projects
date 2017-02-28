@@ -30,6 +30,16 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<OfferDailySummary>()
                 .HasKey(t => new { t.OfferId, t.Date })
                 .ToTable("OfferDailySummary", cakeSchema);
+            modelBuilder.Entity<CampSum>()
+                .HasKey(x => new { x.CampId, x.Date })
+                .ToTable("CampSum", cakeSchema);
+            modelBuilder.Entity<CampSum>().Property(x => x.Conversions).HasPrecision(16, 6);
+            modelBuilder.Entity<CampSum>().Property(x => x.Paid).HasPrecision(16, 6);
+            modelBuilder.Entity<CampSum>().Property(x => x.Sellable).HasPrecision(16, 6);
+            modelBuilder.Entity<CampSum>().Property(x => x.Revenue).HasPrecision(19, 4);
+            modelBuilder.Entity<CampSum>().Property(x => x.Cost).HasPrecision(19, 4);
+            modelBuilder.Entity<CampSum>().Property(x => x.RevenuePerUnit).HasPrecision(19, 4);
+            modelBuilder.Entity<CampSum>().Property(x => x.CostPerUnit).HasPrecision(19, 4);
 
             // Screen
             modelBuilder.Entity<Salesperson>().ToTable("Salesperson", screenSchema);
@@ -50,6 +60,7 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<OfferType> OfferTypes { get; set; }
         public DbSet<OfferStatus> OfferStatuses { get; set; }
         public DbSet<OfferDailySummary> OfferDailySummaries { get; set; }
+        public DbSet<CampSum> CampSums { get; set; }
 
         public DbSet<Salesperson> Salespeople { get; set; }
         public DbSet<SalespersonStat> SalespersonStats { get; set; }

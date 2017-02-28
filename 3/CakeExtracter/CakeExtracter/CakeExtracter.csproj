@@ -296,6 +296,7 @@
     <Compile Include="CakeMarketingApi\Entities\Role.cs" />
     <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
     <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
+    <Compile Include="Commands\DA\DASynchCampaignSummaries.cs" />
     <Compile Include="Commands\EOMSynchCPCCommand.cs" />
     <Compile Include="Commands\DA\DASynchFacebookAdPreviews.cs" />
     <Compile Include="Commands\DA\DASynchDBMCreatives.cs" />
@@ -305,6 +306,7 @@
     <Compile Include="Commands\RT\RTSynchTest.cs" />
     <Compile Include="Commands\Test\TestABCommand.cs" />
     <Compile Include="Common\Compare.cs" />
+    <Compile Include="Etl\CakeMarketing\DALoaders\DACampSumLoader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\CPCLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AdWordsConvSummaryLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\BingConvSummaryLoader.cs" />

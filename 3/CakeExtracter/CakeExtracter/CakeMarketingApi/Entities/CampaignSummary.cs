@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DirectAgents.Domain.Entities.Cake;
 
 namespace CakeExtracter.CakeMarketingApi.Entities
 {
@@ -37,6 +38,20 @@ namespace CakeExtracter.CakeMarketingApi.Entities
             Sellable = cs.Sellable;
             Cost = cs.Cost;
             Revenue = cs.Revenue;
+        }
+
+        // copy everything expect the primary key
+        public void CopyValuesTo(CampSum campSum)
+        {
+            campSum.OfferId = this.SiteOffer.SiteOfferId;
+            campSum.AffId = this.SourceAffiliate.SourceAffiliateId;
+            campSum.Views = this.Views;
+            campSum.Clicks = this.Clicks;
+            campSum.Conversions = this.MacroEventConversions;
+            campSum.Paid = this.Paid;
+            campSum.Sellable = this.Sellable;
+            campSum.Revenue = this.Revenue;
+            campSum.Cost = this.Cost;
         }
     }
 }

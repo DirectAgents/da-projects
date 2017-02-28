@@ -55,7 +55,7 @@ namespace CakeExtracter.Commands
                 //var existingDailySummaries = DailySummaries(date);
                 var initialOffAffs = GetOffAffs(date);
 
-                var extracter = new CampaignSummaryExtracter(date, offerId: OfferId);
+                var extracter = new CampaignSummaryExtracter(date, offerId: OfferId, groupByOffAff: true);
                 var loader = new CampaignSummaryLoader(date);
                 var extracterThread = extracter.Start();
                 var loaderThread = loader.Start(extracter);

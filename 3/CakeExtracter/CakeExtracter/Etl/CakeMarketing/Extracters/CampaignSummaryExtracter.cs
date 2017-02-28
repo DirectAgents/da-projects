@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.CakeMarketingApi;
 using CakeExtracter.CakeMarketingApi.Entities;
@@ -10,17 +11,20 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
     {
         private readonly DateRange dateRange;
         private readonly int offerId;
+        private readonly bool groupByOffAff;
 
-        public CampaignSummaryExtracter(DateRange dateRange, int offerId = 0)
+        public CampaignSummaryExtracter(DateRange dateRange, int offerId = 0, bool groupByOffAff = false)
         {
             this.dateRange = new DateRange(dateRange.FromDate, dateRange.ToDate.AddDays(1));
             //Cake needs dateRange.ToDate to be the day after the last day requested
             this.offerId = offerId;
+            this.groupByOffAff = groupByOffAff;
         }
-        public CampaignSummaryExtracter(DateTime date, int offerId = 0)
+        public CampaignSummaryExtracter(DateTime date, int offerId = 0, bool groupByOffAff = false)
         {
             this.dateRange = new DateRange(date, date.AddDays(1));
             this.offerId = offerId;
+            this.groupByOffAff = groupByOffAff;
         }
 
         protected override void Extract()
@@ -29,6 +33,29 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
                         dateRange.FromDate, dateRange.ToDate.AddDays(-1), offerId);
 
             var campaignSummaries = CakeMarketingUtility.CampaignSummaries(dateRange, offerId: offerId);
+            if (this.groupByOffAff)
+                ExtractWithGrouping(campaignSummaries);
+            else
+                ExtractWithoutGrouping(campaignSummaries);
+
+            End();
+        }
+
+        private void ExtractWithoutGrouping(IEnumerable<CampaignSummary> campaignSummaries)
+        {
+            foreach (var campSum in campaignSummaries)
+            {
+                if (campSum.SiteOffer.SiteOfferId < 0)
+                    continue; // skip OfferIds -2 and -1
+
+                //TODO: filter those with zero conversions, rev, cost... etc
+                //TODO: allow for CampSums marked for deletion - w/ CampSumWrap?
+
+                Add(campSum);
+            }
+        }
+        private void ExtractWithGrouping(IEnumerable<CampaignSummary> campaignSummaries)
+        {
             var csOfferGroups = campaignSummaries.GroupBy(cs => cs.SiteOffer.SiteOfferId);
 
             foreach (var group in csOfferGroups)
@@ -61,8 +88,6 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
                     }
                 }
             }
-
-            End();
         }
     }
 }
