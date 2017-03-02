@@ -128,6 +128,7 @@
     <Compile Include="Entities\AdRoll\AdDailySummary.cs" />
     <Compile Include="Entities\AdRoll\Advertisable.cs" />
     <Compile Include="Entities\Cake\Advertiser.cs" />
+    <Compile Include="Entities\Cake\Camp.cs" />
     <Compile Include="Entities\Cake\CampSum.cs" />
     <Compile Include="Entities\Cake\Contact.cs" />
     <Compile Include="Entities\Cake\Offer.cs" />
@@ -481,6 +482,10 @@
     <Compile Include="Migrations\201702241947054_Mig_CampSum.Designer.cs">
       <DependentUpon>201702241947054_Mig_CampSum.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702272237109_Mig_Camp.cs" />
+    <Compile Include="Migrations\201702272237109_Mig_Camp.Designer.cs">
+      <DependentUpon>201702272237109_Mig_Camp.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Seed\ABSeeder.cs" />
@@ -731,6 +736,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702241947054_Mig_CampSum.resx">
       <DependentUpon>201702241947054_Mig_CampSum.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702272237109_Mig_Camp.resx">
+      <DependentUpon>201702272237109_Mig_Camp.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

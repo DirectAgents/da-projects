@@ -54,12 +54,13 @@ namespace CakeExtracter.CakeMarketingApi
             return response.Offers;
         }
 
-        public static List<Campaign> Campaigns(int offerId)
+        public static List<Campaign> Campaigns(int offerId = 0, int campaignId = 0)
         {
             var client = new CampaignsClient();
             var request = new CampaignsRequest
             {
-                offer_id = offerId
+                offer_id = offerId,
+                campaign_id = campaignId
             };
             var response = client.Campaigns(request);
             return response.Campaigns;

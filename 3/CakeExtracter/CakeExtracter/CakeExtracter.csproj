@@ -306,6 +306,9 @@
     <Compile Include="Commands\RT\RTSynchTest.cs" />
     <Compile Include="Commands\Test\TestABCommand.cs" />
     <Compile Include="Common\Compare.cs" />
+    <Compile Include="Etl\CakeMarketing\DALoaders\DACampLoader.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Etl\CakeMarketing\DALoaders\DACampSumLoader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\CPCLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AdWordsConvSummaryLoader.cs" />

@@ -32,9 +32,7 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                 bool toDelete;
                 foreach (var item in items)
                 {
-                    //TODO: test this...
-                    //toDelete = (item.Paid == 0);
-                    toDelete = false;
+                    toDelete = (item.Paid == 0 && item.Revenue == 0 && item.Cost == 0);
 
                     var pk1 = item.Campaign.CampaignId;
                     var pk2 = this.date;

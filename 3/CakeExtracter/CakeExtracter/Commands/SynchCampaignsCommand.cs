@@ -49,7 +49,7 @@ namespace CakeExtracter.Commands
             {
                 Parallel.ForEach(offerIdBatch, offerId =>
                 {
-                    var extracter = new CampaignsExtracter(offerId);
+                    var extracter = new CampaignsExtracter(offerId: offerId);
                     var loader = new CampaignsLoader();
                     var extracterThread = extracter.Start();
                     var loaderThread = loader.Start(extracter);

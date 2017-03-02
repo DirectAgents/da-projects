@@ -1,4 +1,5 @@
-﻿namespace CakeExtracter.CakeMarketingApi.Entities
+﻿using DirectAgents.Domain.Entities.Cake;
+namespace CakeExtracter.CakeMarketingApi.Entities
 {
     public class Campaign
     {
@@ -14,5 +15,15 @@
         public Payout Payout { get; set; }
         public Currency Currency { get; set; }
         //etc
+
+        // copy everything except PK
+        public void CopyValuesTo(Camp camp)
+        {
+            camp.AffiliateId = (this.Affiliate != null) ? this.Affiliate.AffiliateId : 0;
+            camp.OfferId = (this.Offer != null) ? this.Offer.OfferId : 0;
+            camp.OfferContractId = (this.OfferContract != null) ? this.OfferContract.OfferContractId : 0;
+            camp.PayoutAmount = (this.Payout != null) ? this.Payout.Amount : 0;
+            camp.CurrencyAbbr = (this.Currency != null) ? this.Currency.CurrencyAbbr : null;
+        }
     }
 }
