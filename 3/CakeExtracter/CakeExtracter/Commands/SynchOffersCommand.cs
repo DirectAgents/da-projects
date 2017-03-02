@@ -34,7 +34,7 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            var extracter = new OffersExtracter(AdvertiserId);
+            var extracter = new OffersExtracter(advertiserId: AdvertiserId);
             var loader = new OffersLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);

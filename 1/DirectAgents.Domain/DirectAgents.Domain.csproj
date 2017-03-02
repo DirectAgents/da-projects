@@ -133,6 +133,7 @@
     <Compile Include="Entities\Cake\Contact.cs" />
     <Compile Include="Entities\Cake\Offer.cs" />
     <Compile Include="Contexts\DAContext.cs" />
+    <Compile Include="Entities\Cake\OfferContract.cs" />
     <Compile Include="Entities\Cake\OfferDailySummary.cs" />
     <Compile Include="Entities\Cake\OfferStatus.cs" />
     <Compile Include="Entities\Cake\OfferType.cs" />
@@ -486,6 +487,10 @@
     <Compile Include="Migrations\201702272237109_Mig_Camp.Designer.cs">
       <DependentUpon>201702272237109_Mig_Camp.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703012028456_Mig_OfferContract.cs" />
+    <Compile Include="Migrations\201703012028456_Mig_OfferContract.Designer.cs">
+      <DependentUpon>201703012028456_Mig_OfferContract.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Seed\ABSeeder.cs" />
@@ -739,6 +744,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702272237109_Mig_Camp.resx">
       <DependentUpon>201702272237109_Mig_Camp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703012028456_Mig_OfferContract.resx">
+      <DependentUpon>201703012028456_Mig_OfferContract.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -43,12 +43,13 @@ namespace CakeExtracter.CakeMarketingApi
             return offerIds.ToList();
         }
 
-        public static List<Offer> Offers(int advertiserId = 0)
+        public static List<Offer> Offers(int advertiserId = 0, int offerId = 0)
         {
             var client = new OffersClient();
             var request = new OffersRequest()
             {
-                advertiser_id = advertiserId
+                advertiser_id = advertiserId,
+                offer_id = offerId
             };
             var response = client.Offers(request);
             return response.Offers;

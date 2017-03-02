@@ -67,12 +67,29 @@ namespace CakeExtracter.Commands
             extracterThread.Join();
             loaderThread.Join();
 
-            //TODO: remember campIds loaded... option to synch those campaigns next
+            //TODO: option for whether to synch missing offers / campaigns
+
+            LoadMissingOffers(loader.OfferIdsSaved);
             LoadMissingCampaigns(loader.CampIdsSaved);
 
-            //TODO? same with offers / offercontracts ?
-
             return 0;
+        }
+
+        private void LoadMissingOffers(IEnumerable<int> offerIdsToCheck)
+        {
+            int[] existingOfferIds;
+            using (var db = new DAContext())
+            {
+                existingOfferIds = db.Offers.Select(x => x.OfferId).ToArray();
+            }
+            var offerIdsToLoad = offerIdsToCheck.Where(id => !existingOfferIds.Contains(id));
+
+            var extracter = new OffersExtracter(offerIds: offerIdsToLoad);
+            var loader = new DAOffersLoader(loadInactive: true);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
         }
 
         private void LoadMissingCampaigns(IEnumerable<int> campIdsToCheck)
@@ -80,19 +97,13 @@ namespace CakeExtracter.Commands
             //TODO: check if all affiliates are in db; save any that aren't
             //TODO: make camp.AffId a foreign key
 
-            //? same for offers ?
-
             int[] existingCampIds;
             using (var db = new DAContext())
             {
                 existingCampIds = db.Camps.Select(x => x.CampaignId).ToArray();
             }
-            var campIdsToLoad = new List<int>();
-            foreach (var campIdToCheck in campIdsToCheck)
-            {
-                if (!existingCampIds.Contains(campIdToCheck))
-                    campIdsToLoad.Add(campIdToCheck);
-            }
+            var campIdsToLoad = campIdsToCheck.Where(id => !existingCampIds.Contains(id));
+
             var extracter = new CampaignsExtracter(campaignIds: campIdsToLoad);
             var loader = new DACampLoader();
             var extracterThread = extracter.Start();

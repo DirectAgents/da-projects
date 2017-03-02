@@ -26,15 +26,17 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<Vertical>().ToTable("Vertical", cakeSchema);
             modelBuilder.Entity<OfferType>().ToTable("OfferType", cakeSchema);
             modelBuilder.Entity<OfferStatus>().ToTable("OfferStatus", cakeSchema);
+            modelBuilder.Entity<OfferContract>().ToTable("OfferContract", cakeSchema);
             modelBuilder.Entity<Camp>().ToTable("Camp", cakeSchema);
-
-            modelBuilder.Entity<Camp>().Property(x => x.PayoutAmount).HasPrecision(19, 4);
             modelBuilder.Entity<OfferDailySummary>()
                 .HasKey(t => new { t.OfferId, t.Date })
                 .ToTable("OfferDailySummary", cakeSchema);
             modelBuilder.Entity<CampSum>()
                 .HasKey(x => new { x.CampId, x.Date })
                 .ToTable("CampSum", cakeSchema);
+
+            modelBuilder.Entity<OfferContract>().Property(x => x.ReceivedAmount).HasPrecision(19, 4);
+            modelBuilder.Entity<Camp>().Property(x => x.PayoutAmount).HasPrecision(19, 4);
             modelBuilder.Entity<CampSum>().Property(x => x.Conversions).HasPrecision(16, 6);
             modelBuilder.Entity<CampSum>().Property(x => x.Paid).HasPrecision(16, 6);
             modelBuilder.Entity<CampSum>().Property(x => x.Sellable).HasPrecision(16, 6);
@@ -61,6 +63,7 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<Vertical> Verticals { get; set; }
         public DbSet<OfferType> OfferTypes { get; set; }
         public DbSet<OfferStatus> OfferStatuses { get; set; }
+        public DbSet<OfferContract> OfferContracts { get; set; }
         public DbSet<Camp> Camps { get; set; }
         public DbSet<OfferDailySummary> OfferDailySummaries { get; set; }
         public DbSet<CampSum> CampSums { get; set; }

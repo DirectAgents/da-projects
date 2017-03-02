@@ -95,6 +95,8 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                             var newOffer = new DirectAgents.Domain.Entities.Cake.Offer()
                             {
                                 OfferId = item.OfferId,
+
+                                //TODO: remove these? will be set below
                                 Vertical = vertical,
                                 OfferType = offerType,
                                 OfferStatus = offerStatus
@@ -115,11 +117,31 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                                                     where c.OfferContractId == item.DefaultOfferContractId
                                                     select c.PriceFormat.PriceFormatName).SingleOrDefault();
                     offer.DateCreated = item.DateCreated;
+
+                    if (item.OfferContracts != null)
+                    {
+                        foreach (var ocInfo in item.OfferContracts)
+                        {
+                            var offerContract = db.OfferContracts.Where(x => x.OfferContractId == ocInfo.OfferContractId)
+                                .SingleOrFallback(() =>
+                                {
+                                    var newOfferContract = new DirectAgents.Domain.Entities.Cake.OfferContract
+                                    {
+                                        OfferContractId = ocInfo.OfferContractId
+                                    };
+                                    db.OfferContracts.Add(newOfferContract);
+                                    return newOfferContract;
+                                });
+                            offerContract.Offer = offer;
+                            offerContract.PriceFormatName = ocInfo.PriceFormat.PriceFormatName;
+                            offerContract.ReceivedAmount = ocInfo.Received.Amount;
+                        }
+                    }
                 }
 
                 if (numInactiveSkipped > 0 || numInactiveUpdated > 0)
                     Logger.Info("Inactive Offers: {0} skipped, {1} updated(already loaded)", numInactiveSkipped, numInactiveUpdated);
-                Logger.Info(db.ChangeCountsAsString());
+                Logger.Info("ChangeCount: " + db.ChangeCountsAsString());
 
                 db.SaveChanges();
             }

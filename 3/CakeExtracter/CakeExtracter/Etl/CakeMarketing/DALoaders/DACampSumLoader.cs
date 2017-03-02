@@ -14,7 +14,12 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             this.date = date;
         }
 
-        private List<int> campIdsSaved = new List<int>();
+        private HashSet<int> offerIdsSaved = new HashSet<int>();
+        public IEnumerable<int> OfferIdsSaved
+        {
+            get { return offerIdsSaved; }
+        }
+        private HashSet<int> campIdsSaved = new HashSet<int>();
         public IEnumerable<int> CampIdsSaved
         {
             get { return campIdsSaved; }
@@ -51,6 +56,7 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                             item.CopyValuesTo(target);
                             db.CampSums.Add(target);
                             added++;
+                            offerIdsSaved.Add(target.OfferId);
                             campIdsSaved.Add(target.CampId);
                         }
                     }
@@ -65,6 +71,7 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                         {
                             item.CopyValuesTo(target);
                             updated++;
+                            offerIdsSaved.Add(target.OfferId);
                             campIdsSaved.Add(target.CampId);
                         }
                     }
