@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CakeExtracter.CakeMarketingApi.Entities;
+using CakeExtracter.Etl.CakeMarketing.Extracters;
 using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.Cake;
 
 namespace CakeExtracter.Etl.CakeMarketing.DALoaders
@@ -14,18 +17,33 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             this.date = date;
         }
 
-        private HashSet<int> offerIdsSaved = new HashSet<int>();
-        public IEnumerable<int> OfferIdsSaved
-        {
-            get { return offerIdsSaved; }
-        }
-        private HashSet<int> campIdsSaved = new HashSet<int>();
-        public IEnumerable<int> CampIdsSaved
-        {
-            get { return campIdsSaved; }
-        }
+        //private HashSet<int> offerIdsSaved = new HashSet<int>();
+        //public IEnumerable<int> OfferIdsSaved
+        //{
+        //    get { return offerIdsSaved; }
+        //}
+        //private HashSet<int> campIdsSaved = new HashSet<int>();
+        //public IEnumerable<int> CampIdsSaved
+        //{
+        //    get { return campIdsSaved; }
+        //}
+        private Dictionary<int, DirectAgents.Domain.Entities.Cake.Offer> offerLookupById = new Dictionary<int, DirectAgents.Domain.Entities.Cake.Offer>();
+        private Dictionary<int, Camp> campLookupById = new Dictionary<int, Camp>();
 
         protected override int Load(List<CampaignSummary> items)
+        {
+            Logger.Info("Loading {0} CampSums..", items.Count);
+            AddMissingOffers(items);
+            AddMissingCampaigns(items);
+            var count = UpsertCampSums(items);
+            return count;
+        }
+
+        // used to determine which items to "keep"
+        private static Func<CampaignSummary, bool> KeepFunc =
+            cs => (cs.Paid > 0 || cs.Revenue > 0 || cs.Cost > 0);
+
+        private int UpsertCampSums(List<CampaignSummary> items)
         {
             var loaded = 0;
             var added = 0;
@@ -37,43 +55,63 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                 bool toDelete;
                 foreach (var item in items)
                 {
-                    toDelete = (item.Paid == 0 && item.Revenue == 0 && item.Cost == 0);
+                    toDelete = !KeepFunc(item);
 
                     var pk1 = item.Campaign.CampaignId;
                     var pk2 = this.date;
-                    var target = db.Set<CampSum>().Find(pk1, pk2);
-                    if (target == null)
+                    var target = db.CampSums.Find(pk1, pk2);
+
+                    if (toDelete)
                     {
-                        if (toDelete)
+                        if (target == null)
                             alreadyDeleted++;
                         else
-                        {
-                            target = new CampSum
-                            {
-                                CampId = pk1,
-                                Date = pk2
-                            };
-                            item.CopyValuesTo(target);
-                            db.CampSums.Add(target);
-                            added++;
-                            offerIdsSaved.Add(target.OfferId);
-                            campIdsSaved.Add(target.CampId);
-                        }
-                    }
-                    else // exists in db
-                    {
-                        if (toDelete)
                         {
                             db.CampSums.Remove(target);
                             deleted++;
                         }
-                        else
+                    }
+                    else //to add/update
+                    {
+                        if (target == null)
                         {
+                            target = new CampSum
+                            {
+                                CampId = item.Campaign.CampaignId,
+                                Date = this.date
+                            };
+                            item.CopyValuesTo(target);
+                            db.CampSums.Add(target);
+                            added++;
+                        }
+                        else
+                        {   // update:
                             item.CopyValuesTo(target);
                             updated++;
-                            offerIdsSaved.Add(target.OfferId);
-                            campIdsSaved.Add(target.CampId);
                         }
+                        //offerIdsSaved.Add(target.OfferId);
+                        //campIdsSaved.Add(target.CampId);
+
+                        //Update currency...
+                        //var camp = db.Camps.Find(item.Campaign.CampaignId);
+                        //if (camp != null)
+                        //{
+                        //    //CostCurr
+                        //    if (camp.CurrencyAbbr == CurrencyAbbr.USD)
+                        //        target.CostCurrId = CurrencyId.USD;
+                        //    else
+                        //    { // other than USD
+                        //    }
+                        //    var offerContract = db.OfferContracts.Find(camp.OfferContractId);
+                        //    if (offerContract != null)
+                        //    {
+                        //        var offer = db.Offers.Find(offerContract.OfferId);
+                        //        if (offer != null)
+                        //        {
+                        //            //RevCurr
+                        //        }
+                        //    }
+                        //}
                     }
                     loaded++;
                 }
@@ -82,5 +120,46 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             }
             return loaded;
         }
+
+        public static void AddMissingOffers(List<CampaignSummary> items)
+        {
+            int[] existingOfferIds;
+            using (var db = new DAContext())
+            {
+                existingOfferIds = db.Offers.Select(x => x.OfferId).ToArray();
+            }
+            var neededOfferIds = items.Where(KeepFunc).Select(cs => cs.SiteOffer.SiteOfferId).Distinct();
+            var missingOfferIds = neededOfferIds.Where(id => !existingOfferIds.Contains(id));
+
+            //NOTE: this _should_ be okay since the CampSum extracter just makes one call to Cake, so that's done by now
+
+            var extracter = new OffersExtracter(offerIds: missingOfferIds);
+            var loader = new DAOffersLoader(loadInactive: true);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+
+        //TODO: check if all affiliates are in db; save any that aren't
+        //TODO: make camp.AffId a foreign key
+        public static void AddMissingCampaigns(List<CampaignSummary> items)
+        {
+            int[] existingCampIds;
+            using (var db = new DAContext())
+            {
+                existingCampIds = db.Camps.Select(x => x.CampaignId).ToArray();
+            }
+            var neededCampIds = items.Where(KeepFunc).Select(cs => cs.Campaign.CampaignId).Distinct();
+            var missingCampIds = neededCampIds.Where(id => !existingCampIds.Contains(id));
+
+            var extracter = new CampaignsExtracter(campaignIds: missingCampIds);
+            var loader = new DACampLoader();
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+
     }
 }

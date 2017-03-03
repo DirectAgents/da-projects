@@ -67,49 +67,47 @@ namespace CakeExtracter.Commands
             extracterThread.Join();
             loaderThread.Join();
 
-            //TODO: option for whether to synch missing offers / campaigns
-
-            LoadMissingOffers(loader.OfferIdsSaved);
-            LoadMissingCampaigns(loader.CampIdsSaved);
+            //LoadMissingOffers(loader.OfferIdsSaved);
+            //LoadMissingCampaigns(loader.CampIdsSaved);
 
             return 0;
         }
 
-        private void LoadMissingOffers(IEnumerable<int> offerIdsToCheck)
-        {
-            int[] existingOfferIds;
-            using (var db = new DAContext())
-            {
-                existingOfferIds = db.Offers.Select(x => x.OfferId).ToArray();
-            }
-            var offerIdsToLoad = offerIdsToCheck.Where(id => !existingOfferIds.Contains(id));
+        //private void LoadMissingOffers(IEnumerable<int> offerIdsToCheck)
+        //{
+        //    int[] existingOfferIds;
+        //    using (var db = new DAContext())
+        //    {
+        //        existingOfferIds = db.Offers.Select(x => x.OfferId).ToArray();
+        //    }
+        //    var offerIdsToLoad = offerIdsToCheck.Where(id => !existingOfferIds.Contains(id));
 
-            var extracter = new OffersExtracter(offerIds: offerIdsToLoad);
-            var loader = new DAOffersLoader(loadInactive: true);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
-        }
+        //    var extracter = new OffersExtracter(offerIds: offerIdsToLoad);
+        //    var loader = new DAOffersLoader(loadInactive: true);
+        //    var extracterThread = extracter.Start();
+        //    var loaderThread = loader.Start(extracter);
+        //    extracterThread.Join();
+        //    loaderThread.Join();
+        //}
 
-        private void LoadMissingCampaigns(IEnumerable<int> campIdsToCheck)
-        {
-            //TODO: check if all affiliates are in db; save any that aren't
-            //TODO: make camp.AffId a foreign key
+        //private void LoadMissingCampaigns(IEnumerable<int> campIdsToCheck)
+        //{
+        //    //TODO: check if all affiliates are in db; save any that aren't
+        //    //TODO: make camp.AffId a foreign key
 
-            int[] existingCampIds;
-            using (var db = new DAContext())
-            {
-                existingCampIds = db.Camps.Select(x => x.CampaignId).ToArray();
-            }
-            var campIdsToLoad = campIdsToCheck.Where(id => !existingCampIds.Contains(id));
+        //    int[] existingCampIds;
+        //    using (var db = new DAContext())
+        //    {
+        //        existingCampIds = db.Camps.Select(x => x.CampaignId).ToArray();
+        //    }
+        //    var campIdsToLoad = campIdsToCheck.Where(id => !existingCampIds.Contains(id));
 
-            var extracter = new CampaignsExtracter(campaignIds: campIdsToLoad);
-            var loader = new DACampLoader();
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
-        }
+        //    var extracter = new CampaignsExtracter(campaignIds: campIdsToLoad);
+        //    var loader = new DACampLoader();
+        //    var extracterThread = extracter.Start();
+        //    var loaderThread = loader.Start(extracter);
+        //    extracterThread.Join();
+        //    loaderThread.Join();
+        //}
     }
 }
