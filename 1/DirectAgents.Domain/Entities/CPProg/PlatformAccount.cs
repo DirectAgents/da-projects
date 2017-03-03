@@ -77,6 +77,8 @@ namespace DirectAgents.Domain.Entities.CPProg
         public string Clicks { get; set; }
         public string PostClickConv { get; set; }
         public string PostViewConv { get; set; }
+        public string PostClickRev { get; set; }
+        public string PostViewRev { get; set; }
 
         public virtual void SetDefaults()
         {
@@ -86,6 +88,8 @@ namespace DirectAgents.Domain.Entities.CPProg
             Clicks = "Clicks";
             PostClickConv = "PostClickConv";
             PostViewConv = "PostViewConv";
+            PostClickRev = "";
+            PostViewRev = "";
         }
     }
 

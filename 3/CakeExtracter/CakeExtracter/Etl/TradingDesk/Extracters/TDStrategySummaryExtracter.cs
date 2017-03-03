@@ -97,6 +97,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         Clicks = group.Sum(g => g.Clicks),
                         PostClickConv = group.Sum(g => g.PostClickConv),
                         PostViewConv = group.Sum(g => g.PostViewConv),
+                        PostClickRev = group.Sum(g => g.PostClickRev),
+                        PostViewRev = group.Sum(g => g.PostViewRev),
                         Cost = group.Sum(g => g.Cost)
                     };
                     yield return sum;
@@ -119,6 +121,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         Clicks = group.Sum(g => g.Clicks),
                         PostClickConv = group.Sum(g => g.PostClickConv),
                         PostViewConv = group.Sum(g => g.PostViewConv),
+                        PostClickRev = group.Sum(g => g.PostClickRev),
+                        PostViewRev = group.Sum(g => g.PostViewRev),
                         Cost = group.Sum(g => g.Cost)
                     };
                     yield return sum;

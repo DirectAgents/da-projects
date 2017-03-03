@@ -93,6 +93,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                     Clicks = dayGroup.Sum(g => g.Clicks),
                     PostClickConv = dayGroup.Sum(g => g.PostClickConv),
                     PostViewConv = dayGroup.Sum(g => g.PostViewConv),
+                    PostClickRev = dayGroup.Sum(g => g.PostClickRev),
+                    PostViewRev = dayGroup.Sum(g => g.PostViewRev),
                     Cost = dayGroup.Sum(g => g.Cost)
                 };
                 yield return ds;
@@ -114,6 +116,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             CheckAddPropertyMap(classMap, classType, "Clicks", colMap.Clicks);
             CheckAddPropertyMap(classMap, classType, "PostClickConv", colMap.PostClickConv);
             CheckAddPropertyMap(classMap, classType, "PostViewConv", colMap.PostViewConv);
+            CheckAddPropertyMap(classMap, classType, "PostClickRev", colMap.PostClickRev);
+            CheckAddPropertyMap(classMap, classType, "PostViewRev", colMap.PostViewRev);
         }
         public static void CheckAddPropertyMap(CsvClassMap classMap, Type classType, string propName, string colName)
         {
