@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using CakeExtracter.Commands;
@@ -9,7 +10,6 @@ using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Web.Areas.ProgAdmin.Models;
-using DirectAgents.Domain.Contexts;
 
 
 namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
@@ -266,13 +266,24 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 
             var extAcct = cpProgRepo.ExtAccount(id);
 
-            using (var reader = new StreamReader(file.InputStream))
+            if (statsType.ToUpper() == "DAILYANDSTRATEGY")
+            {
+                using (var reader = new StreamReader(file.InputStream, Encoding.UTF8, true, 1024, true)) // leaveOpen: true
+                {
+                    DASynchTDDailySummaries.RunStatic(id, reader, "daily", statsDate: statsDateNullable);
+                    reader.BaseStream.Position = 0;
+                    DASynchTDDailySummaries.RunStatic(id, reader, "strategy", statsDate: statsDateNullable);
+                }
+                file.InputStream.Dispose();
+            }
+            else using (var reader = new StreamReader(file.InputStream))
             {
                 if (statsType != null && statsType.ToUpper().StartsWith("CONV") && extAcct.Platform.Code == Platform.Code_AdRoll)
                     DASynchAdrollConvCsv.RunStatic(id, reader); // TODO: generic Conv syncher?
                 else
                     DASynchTDDailySummaries.RunStatic(id, reader, statsType, statsDate: statsDateNullable);
             }
+
             return null;
         }
 	}
