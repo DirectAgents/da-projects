@@ -19,7 +19,8 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            SeedAB();
+            //SeedAB();
+            SeedDA();
             return 0;
         }
 
@@ -29,6 +30,15 @@ namespace CakeExtracter.Commands
             {
                 var seeder = new ABSeeder(abContext);
                 seeder.SeedUnitTypes();
+            }
+        }
+
+        public static void SeedDA()
+        {
+            using (var daContext = new DAContext())
+            {
+                var seeder = new DASeeder(daContext);
+                seeder.SeedCurrencies();
             }
         }
     }

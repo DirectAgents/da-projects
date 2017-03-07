@@ -19,11 +19,16 @@ namespace DirectAgents.Domain.Entities.Cake
         public decimal Revenue { get; set; }
         public decimal Cost { get; set; }
 
-        //RevCurr, CostCurr, PriceFormat
+        public int RevCurrId { get; set; }
+        public virtual Currency RevCurr { get; set; }
+        public int CostCurrId { get; set; }
+        public virtual Currency CostCurr { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public decimal RevenuePerUnit { get; private set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public decimal CostPerUnit { get; private set; }
+
+        //PriceFormat?
     }
 }

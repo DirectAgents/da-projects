@@ -296,7 +296,7 @@
     <Compile Include="CakeMarketingApi\Entities\Role.cs" />
     <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
     <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
-    <Compile Include="Commands\DA\DASynchCampaignSummaries.cs" />
+    <Compile Include="Commands\DA\DASynchCampSums.cs" />
     <Compile Include="Commands\EOMSynchCPCCommand.cs" />
     <Compile Include="Commands\DA\DASynchFacebookAdPreviews.cs" />
     <Compile Include="Commands\DA\DASynchDBMCreatives.cs" />

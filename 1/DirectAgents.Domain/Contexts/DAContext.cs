@@ -29,11 +29,11 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<OfferContract>().ToTable("OfferContract", cakeSchema);
             modelBuilder.Entity<Camp>().ToTable("Camp", cakeSchema);
             modelBuilder.Entity<OfferDailySummary>()
-                .HasKey(t => new { t.OfferId, t.Date })
-                .ToTable("OfferDailySummary", cakeSchema);
+                .HasKey(t => new { t.OfferId, t.Date }).ToTable("OfferDailySummary", cakeSchema);
             modelBuilder.Entity<CampSum>()
-                .HasKey(x => new { x.CampId, x.Date })
-                .ToTable("CampSum", cakeSchema);
+                .HasKey(x => new { x.CampId, x.Date }).ToTable("CampSum", cakeSchema);
+            modelBuilder.Entity<CampSum>().HasRequired(x => x.CostCurr).WithMany().WillCascadeOnDelete(false);
+            modelBuilder.Entity<CampSum>().HasRequired(x => x.RevCurr).WithMany().WillCascadeOnDelete(false);
 
             modelBuilder.Entity<OfferContract>().Property(x => x.ReceivedAmount).HasPrecision(19, 4);
             modelBuilder.Entity<Camp>().Property(x => x.PayoutAmount).HasPrecision(19, 4);
@@ -73,5 +73,6 @@ namespace DirectAgents.Domain.Contexts
 
         public DbSet<OfferBudget> OfferBudgets { get; set; }
         public DbSet<Variable> Variables { get; set; }
+        public DbSet<Currency> Currencies { get; set; }
     }
 }

@@ -12,7 +12,7 @@ using DirectAgents.Domain.Contexts;
 namespace CakeExtracter.Commands
 {
     [Export(typeof(ConsoleCommand))]
-    public class DASynchCampaignSummaries : ConsoleCommand
+    public class DASynchCampSums : ConsoleCommand
     {
         public int? OfferId { get; set; }
         public DateTime? StartDate { get; set; }
@@ -25,9 +25,9 @@ namespace CakeExtracter.Commands
             EndDate = null;
         }
 
-        public DASynchCampaignSummaries()
+        public DASynchCampSums()
         {
-            IsCommand("daSynchCampaignSummaries", "synch monthly CampaignSummaries");
+            IsCommand("daSynchCampSums", "synch monthly CampaignSummaries");
             HasOption<int>("o|offerId=", "Offer Id (default = 0 / all offers)", c => OfferId = c);
             HasOption("s|startDate=", "Start Date (default is 1st of month (via yesterday))", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is last day of the same month or yesterday if current month)", c => EndDate = DateTime.Parse(c));

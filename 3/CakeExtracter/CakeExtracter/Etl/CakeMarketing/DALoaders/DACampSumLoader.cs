@@ -15,7 +15,10 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
         public DACampSumLoader(DateTime date)
         {
             this.date = date;
+            LoadCurrencies();
         }
+
+        private Dictionary<string, int> currencyIdLookupByAbbr = new Dictionary<string, int>();
 
         //private HashSet<int> offerIdsSaved = new HashSet<int>();
         //public IEnumerable<int> OfferIdsSaved
@@ -27,8 +30,8 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
         //{
         //    get { return campIdsSaved; }
         //}
-        private Dictionary<int, DirectAgents.Domain.Entities.Cake.Offer> offerLookupById = new Dictionary<int, DirectAgents.Domain.Entities.Cake.Offer>();
-        private Dictionary<int, Camp> campLookupById = new Dictionary<int, Camp>();
+        //private Dictionary<int, DirectAgents.Domain.Entities.Cake.Offer> offerLookupById = new Dictionary<int, DirectAgents.Domain.Entities.Cake.Offer>();
+        //private Dictionary<int, Camp> campLookupById = new Dictionary<int, Camp>();
 
         protected override int Load(List<CampaignSummary> items)
         {
@@ -92,26 +95,45 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                         //offerIdsSaved.Add(target.OfferId);
                         //campIdsSaved.Add(target.CampId);
 
-                        //Update currency...
-                        //var camp = db.Camps.Find(item.Campaign.CampaignId);
-                        //if (camp != null)
-                        //{
-                        //    //CostCurr
-                        //    if (camp.CurrencyAbbr == CurrencyAbbr.USD)
-                        //        target.CostCurrId = CurrencyId.USD;
-                        //    else
-                        //    { // other than USD
-                        //    }
-                        //    var offerContract = db.OfferContracts.Find(camp.OfferContractId);
-                        //    if (offerContract != null)
-                        //    {
-                        //        var offer = db.Offers.Find(offerContract.OfferId);
-                        //        if (offer != null)
-                        //        {
-                        //            //RevCurr
-                        //        }
-                        //    }
-                        //}
+                        //Update currencies...
+                        var camp = db.Camps.Find(item.Campaign.CampaignId);
+                        if (camp != null)
+                        {
+                            //CostCurr
+                            if (camp.CurrencyAbbr == CurrencyAbbr.USD)
+                                target.CostCurrId = CurrencyId.USD;
+                            else
+                            { // other than USD
+                                // find currency match from currency table
+                                if (currencyIdLookupByAbbr.ContainsKey(camp.CurrencyAbbr))
+                                {
+                                    target.CostCurrId = currencyIdLookupByAbbr[camp.CurrencyAbbr];
+                                    target.Cost = camp.PayoutAmount * item.Paid;
+                                    // recompute cost in foreign currency
+                                }
+                            }
+                            var offerContract = db.OfferContracts.Find(camp.OfferContractId);
+                            if (offerContract != null)
+                            {
+                                var offer = db.Offers.Find(offerContract.OfferId);
+                                if (offer != null)
+                                {
+                                    //RevCurr
+                                    if (offer.CurrencyAbbr == CurrencyAbbr.USD)
+                                        target.RevCurrId = CurrencyId.USD;
+                                    else
+                                    { // other than USD
+                                        // find currency match from currency table
+                                        if (currencyIdLookupByAbbr.ContainsKey(offer.CurrencyAbbr))
+                                        {
+                                            target.RevCurrId = currencyIdLookupByAbbr[offer.CurrencyAbbr];
+                                            target.Revenue = offerContract.ReceivedAmount * item.Paid;
+                                            // recompute revenue in foreign currency
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     loaded++;
                 }
@@ -119,6 +141,14 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                 db.SaveChanges();
             }
             return loaded;
+        }
+
+        private void LoadCurrencies()
+        {
+            using (var db = new DAContext())
+            {
+                currencyIdLookupByAbbr = db.Currencies.ToDictionary(c => c.Abbr, c => c.Id);
+            }
         }
 
         public static void AddMissingOffers(List<CampaignSummary> items)
