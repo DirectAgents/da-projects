@@ -44,8 +44,6 @@ namespace DirectAgents.Domain.Abstract
         IEnumerable<CampaignWrap> CampaignWraps(int? clientId = null, int? acctId = null);
         IQueryable<SpendBucket> SpendBuckets(int? clientId = null, int? acctId = null);
 
-        IQueryable<AcctPayment> AcctPayments(int? acctId);
-
         IQueryable<ProtoPeriod> ProtoPeriods();
         ProtoCampaign ProtoCampaign(int id);
         IQueryable<ProtoCampaign> ProtoCampaigns(int? clientId = null, int? clientAccountId = null);

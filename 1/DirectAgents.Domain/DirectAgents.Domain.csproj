@@ -101,9 +101,6 @@
     <Compile Include="DTO\TDLineItem.cs" />
     <Compile Include="DTO\TDStat.cs" />
     <Compile Include="DTO\TDStatsGauge.cs" />
-    <Compile Include="Entities\AB\AcctInvoice.cs" />
-    <Compile Include="Entities\AB\AcctPayment.cs" />
-    <Compile Include="Entities\AB\Bits.cs" />
     <Compile Include="Entities\AB\Campaign.cs" />
     <Compile Include="Entities\AB\Client.cs" />
     <Compile Include="Entities\AB\ClientAccount.cs" />
@@ -294,6 +291,10 @@
     <Compile Include="MigrationsAB\201702162147438_Mig_UnitType.cs" />
     <Compile Include="MigrationsAB\201702162147438_Mig_UnitType.Designer.cs">
       <DependentUpon>201702162147438_Mig_UnitType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsAB\201703071529348_Mig_RmAcctPayInv.cs" />
+    <Compile Include="MigrationsAB\201703071529348_Mig_RmAcctPayInv.Designer.cs">
+      <DependentUpon>201703071529348_Mig_RmAcctPayInv.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsAB\Configuration.cs" />
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.cs" />
@@ -614,6 +615,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsAB\201702162147438_Mig_UnitType.resx">
       <DependentUpon>201702162147438_Mig_UnitType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsAB\201703071529348_Mig_RmAcctPayInv.resx">
+      <DependentUpon>201703071529348_Mig_RmAcctPayInv.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsRT\201611292020284_InitialCreate.resx">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>

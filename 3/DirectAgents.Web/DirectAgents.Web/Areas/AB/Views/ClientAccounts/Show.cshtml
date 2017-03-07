@@ -7,6 +7,6 @@ Account: @Model.Name (ID: @Model.Id)<br />
 [@Html.ActionLink("edit", "Edit", new { id = Model.Id })]
 <br /><br />
 
-@Html.ActionLink("Payments", "Index", "AcctPayments", new { acctId = @Model.Id }, null)<br />
+Payments<br />
 Invoices<br />
 @Html.ActionLink("Campaigns/SpendBuckets", "BucketList", "Campaigns", new { acctId = @Model.Id }, null)

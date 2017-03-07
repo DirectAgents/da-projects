@@ -220,14 +220,6 @@ namespace DirectAgents.Domain.Concrete
             return spendBuckets;
         }
 
-        public IQueryable<AcctPayment> AcctPayments(int? acctId)
-        {
-            var acctPayments = context.AcctPayments.AsQueryable();
-            if (acctId.HasValue)
-                acctPayments = acctPayments.Where(x => x.AcctId == acctId.Value);
-            return acctPayments;
-        }
-
         // ---
 
         public IQueryable<ProtoPeriod> ProtoPeriods()

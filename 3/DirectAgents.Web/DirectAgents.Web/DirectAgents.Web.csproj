@@ -179,7 +179,6 @@
   <ItemGroup>
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="Areas\AB\ABAreaRegistration.cs" />
-    <Compile Include="Areas\AB\Controllers\AcctPaymentsController.cs" />
     <Compile Include="Areas\AB\Controllers\CampaignsController.cs" />
     <Compile Include="Areas\AB\Controllers\ProtoCampaignsController.cs" />
     <Compile Include="Areas\AB\Controllers\ClientAccountsController.cs" />
@@ -1042,7 +1041,6 @@
     <Content Include="Areas\AB\Views\ProtoCampaigns\Edit.cshtml" />
     <Content Include="Areas\AB\Views\Clients\ShowX.cshtml" />
     <Content Include="Areas\AB\Views\ClientAccounts\Show.cshtml" />
-    <Content Include="Areas\AB\Views\AcctPayments\Index.cshtml" />
     <Content Include="Areas\AB\Views\Campaigns\BucketList.cshtml" />
     <Content Include="Areas\AB\Views\Campaigns\Index.cshtml" />
     <Content Include="Areas\AB\Views\Vendors\Index.cshtml" />
