@@ -503,6 +503,10 @@
     <Compile Include="Migrations\201703062015043_Mig_Currency.Designer.cs">
       <DependentUpon>201703062015043_Mig_Currency.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703081656144_Mig_CampSum2.cs" />
+    <Compile Include="Migrations\201703081656144_Mig_CampSum2.Designer.cs">
+      <DependentUpon>201703081656144_Mig_CampSum2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Seed\ABSeeder.cs" />
@@ -771,6 +775,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703062015043_Mig_Currency.resx">
       <DependentUpon>201703062015043_Mig_Currency.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703081656144_Mig_CampSum2.resx">
+      <DependentUpon>201703081656144_Mig_CampSum2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

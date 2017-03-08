@@ -17,7 +17,7 @@ namespace CakeExtracter.CakeMarketingApi.Entities
         public SiteOffer1 SiteOffer { get; set; }
         public BrandAdvertiser1 BrandAdvertiser { get; set; }
         public AccountManager1 BrandAdvertiserManager { get; set; }
-        // PriceFormat(e.g. CPA)
+        public string PriceFormat { get; set; }
         // MediaType(e.g. Email)
         public int Views { get; set; }
         public int Clicks { get; set; }
@@ -52,6 +52,8 @@ namespace CakeExtracter.CakeMarketingApi.Entities
             campSum.Sellable = this.Sellable;
             campSum.Revenue = this.Revenue;
             campSum.Cost = this.Cost;
+            campSum.PriceFormat = this.PriceFormat;
+            campSum.Units = (this.PriceFormat == "CPC" ? this.Sellable : this.Paid);
         }
     }
 }

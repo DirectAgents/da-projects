@@ -84,7 +84,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
                         var first = cSums.First();
                         first.CopyStatsFrom(totals);
                         Add(first);
-                        // (Assume they all have the same AccountManager,Advertiser,AdvertiserManager, though only the stats are loaded.)
+                        // (Assume they all have the same AccountManager,Advertiser,AdvertiserManager,etc though only the stats are loaded.)
                     }
                 }
             }

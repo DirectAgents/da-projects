@@ -29,6 +29,7 @@ namespace DirectAgents.Domain.Entities.Cake
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public decimal CostPerUnit { get; private set; }
 
-        //PriceFormat?
+        public decimal Units { get; set; }
+        public string PriceFormat { get; set; }
     }
 }
