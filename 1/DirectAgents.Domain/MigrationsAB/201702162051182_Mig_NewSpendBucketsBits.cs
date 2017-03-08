@@ -16,6 +16,8 @@ namespace DirectAgents.Domain.MigrationsAB
                         CampaignId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
+                .ForeignKey("ab.ClientAccount", t => t.AcctId, cascadeDelete: true)
+                .ForeignKey("ab.Campaign", t => t.CampaignId, cascadeDelete: true)
                 .Index(t => t.AcctId)
                 .Index(t => t.CampaignId);
             
@@ -44,6 +46,8 @@ namespace DirectAgents.Domain.MigrationsAB
         {
             DropForeignKey("ab.SpendBit", "SpendBucketId", "ab.SpendBucket");
             DropForeignKey("ab.SpendBit", "PeriodId", "ab.Period");
+            DropForeignKey("ab.SpendBucket", "CampaignId", "ab.Campaign");
+            DropForeignKey("ab.SpendBucket", "AcctId", "ab.ClientAccount");
             DropIndex("ab.SpendBit", new[] { "SpendBucketId" });
             DropIndex("ab.SpendBit", new[] { "PeriodId" });
             DropIndex("ab.SpendBucket", new[] { "CampaignId" });
