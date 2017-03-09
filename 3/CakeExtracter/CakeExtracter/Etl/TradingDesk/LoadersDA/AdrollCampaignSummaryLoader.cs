@@ -50,9 +50,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 Clicks = cSum.clicks,
                 PostClickConv = cSum.click_through_conversions,
                 PostViewConv = cSum.view_through_conversions,
-                PostClickRev = (decimal)cSum.adjusted_attributed_click_through_rev_USD,
-                PostViewRev = (decimal)cSum.adjusted_attributed_view_through_rev_USD,
-                Cost = (decimal)cSum.cost_USD
+                PostClickRev = (decimal)cSum.adjusted_attributed_click_through_rev,
+                PostViewRev = (decimal)cSum.adjusted_attributed_view_through_rev,
+                Cost = (decimal)cSum.cost
                 // Prospects?
             };
             return sSum;

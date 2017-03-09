@@ -51,7 +51,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                                 Clicks = item.clicks,
                                 CTC = item.click_through_conversions,
                                 VTC = item.view_through_conversions,
-                                Cost = (decimal)item.cost_USD,
+                                Cost = (decimal)item.cost,
                                 Prospects = item.prospects
                             };
                             var target = db.Set<AdDailySummary>().Find(item.date, adId);

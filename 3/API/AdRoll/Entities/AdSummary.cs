@@ -9,12 +9,12 @@ namespace AdRoll.Entities
         public int click_through_conversions { get; set; }
         public int view_through_conversions { get; set; }
         public int clicks { get; set; }
-        public double cost_USD { get; set; }
+        public double cost { get; set; }
         public int prospects { get; set; }
 
-        public bool AllZeros(bool includeProspects = false)
+        public virtual bool AllZeros(bool includeProspects = false)
         {
-            bool allZeros = (impressions == 0 && clicks == 0 && click_through_conversions == 0 && view_through_conversions == 0 && cost_USD == 0);
+            bool allZeros = (impressions == 0 && clicks == 0 && click_through_conversions == 0 && view_through_conversions == 0 && cost == 0);
             if (includeProspects)
                 return (allZeros && prospects == 0);
             else
@@ -49,8 +49,13 @@ namespace AdRoll.Entities
         public DateTime start_date { get; set; }
         public DateTime? end_date { get; set; }
         public double budget_USD { get; set; }
-        public double adjusted_attributed_click_through_rev_USD { get; set; }
-        public double adjusted_attributed_view_through_rev_USD { get; set; }
+        public double adjusted_attributed_click_through_rev { get; set; }
+        public double adjusted_attributed_view_through_rev { get; set; }
+
+        public override bool AllZeros(bool includeProspects = false)
+        {
+            return base.AllZeros(includeProspects: includeProspects) && adjusted_attributed_click_through_rev == 0 && adjusted_attributed_view_through_rev == 0;
+        }
     }
 
     // used for Ad daily report

@@ -47,7 +47,7 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                             Clicks = item.clicks,
                             //Conversions = item.total_conversions,
                             Conversions = item.click_through_conversions + item.view_through_conversions,
-                            Spend = (decimal)item.cost_USD
+                            Spend = (decimal)item.cost
                         };
                         var target = db.Set<AdDailySummary>().Find(item.date, adId);
                         if (target == null)

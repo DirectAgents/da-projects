@@ -60,7 +60,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         Clicks = item.clicks,
                         PostClickConv = item.click_through_conversions,
                         PostViewConv = item.view_through_conversions,
-                        Cost = (decimal)item.cost_USD
+                        Cost = (decimal)item.cost
                     };
                     var target = db.Set<DailySummary>().Find(item.date, accountId);
                     if (target == null)
