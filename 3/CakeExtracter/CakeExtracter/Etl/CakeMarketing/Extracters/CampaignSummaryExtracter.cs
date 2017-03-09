@@ -10,34 +10,38 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
     public class CampaignSummaryExtracter : Extracter<CampaignSummary>
     {
         private readonly DateRange dateRange;
-        private readonly int offerId;
+        private readonly int[] offerIds;
         private readonly bool groupByOffAff;
+
+        //TODO: pass in an array for offerIds - or use "params"
 
         public CampaignSummaryExtracter(DateRange dateRange, int offerId = 0, bool groupByOffAff = false)
         {
             this.dateRange = new DateRange(dateRange.FromDate, dateRange.ToDate.AddDays(1));
             //Cake needs dateRange.ToDate to be the day after the last day requested
-            this.offerId = offerId;
+            this.offerIds = new[] { offerId };
             this.groupByOffAff = groupByOffAff;
         }
         public CampaignSummaryExtracter(DateTime date, int offerId = 0, bool groupByOffAff = false)
         {
             this.dateRange = new DateRange(date, date.AddDays(1));
-            this.offerId = offerId;
+            this.offerIds = new[] { offerId };
             this.groupByOffAff = groupByOffAff;
         }
 
         protected override void Extract()
         {
-            Logger.Info("Extracting CampaignSummaries from {0:d} to {1:d}, OffId {2}",
-                        dateRange.FromDate, dateRange.ToDate.AddDays(-1), offerId);
+            Logger.Info("Extracting CampaignSummaries from {0:d} to {1:d}, OffIds {2}",
+                        dateRange.FromDate, dateRange.ToDate.AddDays(-1), string.Join(",", offerIds));
 
-            var campaignSummaries = CakeMarketingUtility.CampaignSummaries(dateRange, offerId: offerId);
-            if (this.groupByOffAff)
-                ExtractWithGrouping(campaignSummaries);
-            else
-                ExtractWithoutGrouping(campaignSummaries);
-
+            foreach (var offerId in offerIds)
+            {
+                var campaignSummaries = CakeMarketingUtility.CampaignSummaries(dateRange, offerId: offerId);
+                if (this.groupByOffAff)
+                    ExtractWithGrouping(campaignSummaries);
+                else
+                    ExtractWithoutGrouping(campaignSummaries);
+            }
             End();
         }
 

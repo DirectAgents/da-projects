@@ -44,5 +44,7 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<OfferDailySummary> GetOfferDailySummariesForBudget(Offer offer);
 
         StatsSummary GetStatsSummary(int? offerId, DateTime? startDate, DateTime? endDate);
+
+        IQueryable<CampSum> GetCampSums(int? advertiserId = null, int? offerId = null, DateTime? monthStart = null);
     }
 }

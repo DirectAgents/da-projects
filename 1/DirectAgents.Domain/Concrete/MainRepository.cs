@@ -268,11 +268,11 @@ namespace DirectAgents.Domain.Concrete
         {
             var ods = context.OfferDailySummaries.AsQueryable();
             if (offerId.HasValue)
-                ods = ods.Where(o => o.OfferId == offerId);
+                ods = ods.Where(x => x.OfferId == offerId.Value);
             if (startDate.HasValue)
-                ods = ods.Where(o => o.Date >= startDate.Value);
+                ods = ods.Where(x => x.Date >= startDate.Value);
             if (endDate.HasValue)
-                ods = ods.Where(o => o.Date <= endDate.Value);
+                ods = ods.Where(x => x.Date <= endDate.Value);
             return ods;
         }
 
@@ -318,6 +318,21 @@ namespace DirectAgents.Domain.Concrete
                 stats = new StatsSummary();
             }
             return stats;
+        }
+
+        public IQueryable<CampSum> GetCampSums(int? advertiserId = null, int? offerId = null, DateTime? monthStart = null)
+        {
+            var cs = context.CampSums.AsQueryable();
+            if (advertiserId.HasValue)
+            {
+                var offerIds = OfferIds(advertiserId.Value);
+                cs = cs.Where(x => offerIds.Contains(x.OfferId));
+            }
+            if (offerId.HasValue)
+                cs = cs.Where(x => x.OfferId == offerId.Value);
+            if (monthStart.HasValue)
+                cs = cs.Where(x => x.Date == monthStart.Value);
+            return cs;
         }
 
         #endregion

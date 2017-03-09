@@ -13,6 +13,11 @@ namespace DirectAgents.Domain.Entities.AB
         public virtual ICollection<ProtoPaymentBit> ProtoPaymentBits { get; set; }
 
         public virtual ICollection<SpendBucket> SpendBuckets { get; set; }
+
+        public string NameNotBlank()
+        {
+            return string.IsNullOrWhiteSpace(this.Name) ? "[ClientAccount " + this.Id + "]" : this.Name;
+        }
     }
 
 }

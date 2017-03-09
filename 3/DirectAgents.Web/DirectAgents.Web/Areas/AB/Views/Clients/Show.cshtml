@@ -10,12 +10,12 @@ IntCredit: @Model.IntCredit<br />
 <br /><br />
 
 <b>Accounts:</b>
-@Html.ActionLink("view/edit", "Index", "ClientAccounts", new { clientId = Model.Id }, null)
+@Html.ActionLink("list", "Index", "ClientAccounts", new { clientId = Model.Id }, null)
 <table>
 @foreach (var acct in Model.ClientAccounts.OrderBy(j => j.Id))
 {
     <tr>
-        <td>@Html.ActionLink(acct.Name, "Show", "ClientAccounts", new { id = acct.Id }, null)</td>
+        <td>@Html.ActionLink(acct.NameNotBlank(), "Show", "ClientAccounts", new { id = acct.Id }, null)</td>
     </tr>
 }
 </table>

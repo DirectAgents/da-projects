@@ -74,6 +74,10 @@ namespace DirectAgents.Domain.DTO
             Name = rtLineItem.Name;
             Rev = Decimal.Round(rtLineItem.Revenue, 2);
             Cost = Decimal.Round(rtLineItem.Cost, 2);
+            RevCurr = rtLineItem.RevCurr;
+            CostCurr = rtLineItem.CostCurr;
+            Units = rtLineItem.Units;
+            RevPerUnit = rtLineItem.RevPerUnit;
         }
         public ABLineItem(ABExtraItem extraItem)
         {
@@ -96,5 +100,10 @@ namespace DirectAgents.Domain.DTO
         {
             get { return Rev - Cost; }
         }
+
+        public string RevCurr { get; set; }
+        public string CostCurr { get; set; }
+        public decimal? Units { get; set; }
+        public decimal? RevPerUnit { get; set; }
     }
 }

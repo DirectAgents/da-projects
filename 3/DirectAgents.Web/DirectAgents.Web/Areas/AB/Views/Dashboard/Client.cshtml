@@ -12,6 +12,7 @@ Client:
     int numJobs = monthGroup.JobGroups.Count();
     <tr>
         <th>@monthGroup.Month.ToString("MMM yyyy")</th>
+        <th>Price</th>
         <th>General Spend</th>
         @foreach (var jg in monthGroup.JobGroups)
         {
@@ -22,6 +23,13 @@ Client:
     {
         <tr>
             <td>@li.Name</td>
+            <td>
+@if (li.Units.HasValue)
+{
+    string revCurrStr = (string.IsNullOrEmpty(li.RevCurr) ? "" : "(" + li.RevCurr + ")");
+    <text>@li.Units.Value.ToString("0.####") @@ @(li.RevPerUnit.HasValue ? li.RevPerUnit.Value.ToString("0.####") + " " + revCurrStr : "")</text>
+}
+            </td>
             <td style="text-align:right">@li.Rev</td>
             @foreach (var jg in monthGroup.JobGroups)
             {
@@ -29,7 +37,7 @@ Client:
             }
         </tr>
     }
-    int skipCols = 1;
+    int skipCols = 2;
     foreach (var jg in monthGroup.JobGroups)
     {
         foreach (var li in jg.LineItems)

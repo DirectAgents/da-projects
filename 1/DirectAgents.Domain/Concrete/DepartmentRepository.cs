@@ -114,13 +114,13 @@ namespace DirectAgents.Domain.Concrete
             this.mainRepo = mainRepo;
         }
 
+        // Get one lineItem per client
         public IEnumerable<IRTLineItem> StatsByClient(DateTime monthStart, bool includeZeros = false, int? maxClients = null)
         {
             var advertisers = mainRepo.GetAdvertisers().OrderBy(a => a.AdvertiserName).ToList(); //TODO: include? (e.g. AcctMgr)
             var lineItems = StatsForAdvertisers(advertisers, monthStart, includeZeros, maxClients);
             return lineItems;
         }
-
         private IEnumerable<IRTLineItem> StatsForAdvertisers(IEnumerable<DirectAgents.Domain.Entities.Cake.Advertiser> advertisers, DateTime monthStart, bool includeZeros = false, int? maxClients = null)
         {
             DateTime monthEnd = monthStart.AddMonths(1).AddDays(-1);
@@ -154,29 +154,47 @@ namespace DirectAgents.Domain.Concrete
 
         public IRTLineItem StatSummaryForClient(int abClientId, DateTime monthStart)
         {
-            return StatSummaryForClientInner(abClientId, monthStart);
-        }
-        public IRTLineItem StatSummaryForClientInner(int abClientId, DateTime monthStart, string name = null)
-        {
             // Usually there's just one...
             var advertisers = mainRepo.GetAdvertisers(ABClientId: abClientId);
             var advLineItems = StatsForAdvertisers(advertisers, monthStart);
 
             var summaryLineItem = new RTLineItem(advLineItems)
             {
-                Name = (name == null ? "Cake (Advertising/MediaBuying/Mobile)" : name)
+                Name = "Cake (Advertising/MediaBuying/Mobile)"
             };
             return summaryLineItem;
         }
 
         public IEnumerable<IRTLineItem> StatBreakdownByLineItem(int abClientId, DateTime monthStart, bool separateFees = false, bool combineFees = false)
         {
-            //TODO: separateFees/combineFees ?
-
-            //Temp: just one line item for cake; Future: by vendor(affiliate), unit cost, etc...
-            var lineItem = StatSummaryForClientInner(abClientId, monthStart, name: "Cake (vendor breakdown needed)");
-
-            return new List<IRTLineItem> { lineItem };
+            // Usually there's just one...
+            var advertisers = mainRepo.GetAdvertisers(ABClientId: abClientId);
+            foreach (var adv in advertisers)
+            {
+                var LIs = LineItemsForAdvertiser(adv, monthStart);
+                foreach (var li in LIs)
+                    yield return li;
+            }
         }
+        private IEnumerable<IRTLineItem> LineItemsForAdvertiser(DirectAgents.Domain.Entities.Cake.Advertiser advertiser, DateTime monthStart)
+        {
+            var campSums = mainRepo.GetCampSums(advertiserId: advertiser.AdvertiserId, monthStart: monthStart);
+            var csGroups = campSums.GroupBy(x => new { x.OfferId, x.RevenuePerUnit, x.RevCurr });
+            var offers = mainRepo.GetOffers();
+
+            var li = from g in csGroups
+                     join o in offers on g.Key.OfferId equals o.OfferId
+                     select new RTLineItem
+                     {
+                         Name = o.OfferName,
+                         Revenue = g.Sum(cs => cs.Revenue),
+                         RevPerUnit = g.Key.RevenuePerUnit,
+                         RevCurr = g.Key.RevCurr.Abbr,
+                         Units = g.Sum(cs => cs.Units)
+                         //Cost, CostCurr - not used / grouped on
+                     };
+            return li;
+        }
+
     }
 }

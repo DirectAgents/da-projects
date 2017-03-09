@@ -3,6 +3,8 @@ using System.Linq;
 
 namespace DirectAgents.Domain.DTO
 {
+    // A DTO for standardizing lineItems from the RevTrack systems
+
     public interface IRTLineItem
     {
         //For the client/advertiser or whoever this lineItem applies to
@@ -12,6 +14,11 @@ namespace DirectAgents.Domain.DTO
 
         decimal Revenue { get; }
         decimal Cost { get; }
+        string RevCurr { get; }
+        string CostCurr { get; }
+
+        decimal? Units { get; }
+        decimal? RevPerUnit { get; }
     }
 
     public class RTLineItem : IRTLineItem
@@ -21,6 +28,7 @@ namespace DirectAgents.Domain.DTO
         {
             Revenue = lineItems.Sum(li => li.Revenue);
             Cost = lineItems.Sum(li => li.Cost);
+            // RevCurr, CostCurr, Units, RevPerUnit ?
         }
         public RTLineItem(ProgClientStats pcStats)
         {
@@ -29,6 +37,7 @@ namespace DirectAgents.Domain.DTO
             Name = pcStats.ProgClient.Name; // ?
             Revenue = pcStats.TotalRevenue;
             Cost = pcStats.DACost;
+            // RevCurr, CostCurr, Units, RevPerUnit ?
         }
         public RTLineItem(ITDLineItem tdLineItem) //TODO: specify where to take Name from
         {
@@ -36,6 +45,7 @@ namespace DirectAgents.Domain.DTO
                 Name = tdLineItem.ProgVendor.Name;
             Revenue = tdLineItem.TotalRevenue;
             Cost = tdLineItem.DACost;
+            // RevCurr, CostCurr, Units, RevPerUnit ?
         }
 
         public int? ABId { get; set; }
@@ -43,5 +53,9 @@ namespace DirectAgents.Domain.DTO
         public string Name { get; set; }
         public decimal Revenue { get; set; }
         public decimal Cost { get; set; }
+        public string RevCurr { get; set; }
+        public string CostCurr { get; set; }
+        public decimal? Units { get; set; }
+        public decimal? RevPerUnit { get; set; }
     }
 }
