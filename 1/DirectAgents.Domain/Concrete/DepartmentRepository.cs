@@ -190,7 +190,9 @@ namespace DirectAgents.Domain.Concrete
                          Revenue = g.Sum(cs => cs.Revenue),
                          RevPerUnit = g.Key.RevenuePerUnit,
                          RevCurr = g.Key.RevCurr.Abbr,
-                         Units = g.Sum(cs => cs.Units)
+                         Units = g.Sum(cs => cs.Units),
+                         Cost = g.Sum(cs => cs.Cost),
+                         CostCurrFromIEnumerable = g.Select(cs => cs.CostCurr.Abbr).Distinct()
                          //Cost, CostCurr - not used / grouped on
                      };
             return li;

@@ -57,5 +57,10 @@ namespace DirectAgents.Domain.DTO
         public string CostCurr { get; set; }
         public decimal? Units { get; set; }
         public decimal? RevPerUnit { get; set; }
+
+        public IEnumerable<string> CostCurrFromIEnumerable
+        {
+            set { this.CostCurr = string.Join("/", value); }
+        }
     }
 }

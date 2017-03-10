@@ -9,7 +9,8 @@ Client: @Model.ABClient.Name
 
 <table>
 <tr>
-    <th>Vendor</th>
+    <th>Campaign</th>
+    <th>Quantity/Price</th>
     <th>Revenue</th>
     <th>Cost</th>
 @*    <th>Margin</th>*@
@@ -18,6 +19,13 @@ Client: @Model.ABClient.Name
 {
 <tr>
     <td>@li.Name</td>
+    <td>
+@if (li.Units.HasValue)
+{
+    string revCurrStr = (string.IsNullOrEmpty(li.RevCurr) ? "" : "(" + li.RevCurr + ")");
+    <text>@li.Units.Value.ToString("0.####") @@ @(li.RevPerUnit.HasValue ? li.RevPerUnit.Value.ToString("0.####") + " " + revCurrStr : "")</text>
+}
+    </td>
     <td style="text-align:right">@li.Rev</td>
     <td style="text-align:right">@li.Cost</td>
 @*    <td style="text-align:right">@li.Margin</td>*@
