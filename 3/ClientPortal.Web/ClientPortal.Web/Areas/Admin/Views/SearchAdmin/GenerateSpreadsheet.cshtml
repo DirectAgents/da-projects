@@ -22,31 +22,37 @@ Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)<br />
         @Html.HiddenFor(m => m.SearchProfileId)
         <table>
             <tr>
-                <td>@Html.Label("Stats End-Date:")</td>
+                <td>@Html.Label("", "Stats End-Date:")</td>
                 <td><input id="spreadsheet_enddate" type="text" name="enddate" value="@endDate.ToShortDateString()" onfocus="EnableSubmitGenSpreadsheet()" /></td>
             </tr>
             <tr>
-                <td>@Html.Label("Weeks to include:")</td>
+                <td>@Html.Label("", "Weeks to include:")</td>
                 <td><input type="text" name="numweeks" value="16" onfocus="EnableSubmitGenSpreadsheet()" /></td>
             </tr>
             <tr>
-                <td>@Html.Label("Months to include:")</td>
+                <td>@Html.Label("", "Months to include:")</td>
                 <td><input type="text" name="nummonths" value="16" onfocus="EnableSubmitGenSpreadsheet()" /></td>
             </tr>
             <tr>
-                <td>@Html.Label("Filename:")</td>
+                <td>@Html.Label("", "Filename:")</td>
                 <td><input type="text" name="filename" value="@filename" style="min-width:300px" onfocus="EnableSubmitGenSpreadsheet()" /></td>
             </tr>
             <tr>
-                <td>@Html.Label("Group By SearchAccount:")</td>
-                <td>@Html.CheckBox("groupBySearchAccount", groupBySearchAccount, new { onfocus = "EnableSubmitGenSpreadsheet()"}) (leave unchecked to group by channel)</td>
+                <td>@Html.Label("", "Group By SearchAccount:")</td>
+                <td>@Html.CheckBox("groupBySearchAccount", groupBySearchAccount, new { onfocus = "EnableSubmitGenSpreadsheet()"})
+                    <span style="font-size:.875rem">(leave unchecked to group by channel)</span></td>
             </tr>
             <tr>
-                <td>@Html.Label("Campaign Filter:")</td>
-                <td>
-                    <input type="text" name="campaigninclude" onfocus="EnableSubmitGenSpreadsheet()" />
-                    (Doesn't apply to "Display vs. Search" tab)
-                </td>
+                <td style="text-align:right">@Html.Label("", "Campaign Filter...")</td>
+                <td><span style="font-size:.875rem">(Doesn't apply to "Display vs. Search" tab)</span></td>
+            </tr>
+            <tr>
+                <td style="text-align:right">@Html.Label("Include:")</td>
+                <td><input type="text" name="campaigninclude" onfocus="EnableSubmitGenSpreadsheet()" /></td>
+            </tr>
+            <tr>
+                <td style="text-align:right">@Html.Label("Exclude:")</td>
+                <td><input type="text" name="campaignexclude" onfocus="EnableSubmitGenSpreadsheet()" /></td>
             </tr>
         </table>
         <br />

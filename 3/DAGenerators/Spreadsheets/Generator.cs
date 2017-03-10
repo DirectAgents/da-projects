@@ -9,7 +9,7 @@ namespace DAGenerators.Spreadsheets
 {
     public class GeneratorCP
     {
-        public static SearchReportPPC GenerateSearchReport(IClientPortalRepository cpRepo, string templateFolder, int searchProfileId, int numWeeks, int numMonths, DateTime endDate, bool groupBySearchAccount, string campaignNameInclude = null)
+        public static SearchReportPPC GenerateSearchReport(IClientPortalRepository cpRepo, string templateFolder, int searchProfileId, int numWeeks, int numMonths, DateTime endDate, bool groupBySearchAccount, string campaignNameInclude = null, string campaignNameExclude = null)
         {
             var searchProfile = cpRepo.GetSearchProfile(searchProfileId);
             if (searchProfile == null)
@@ -57,8 +57,8 @@ namespace DAGenerators.Spreadsheets
 
             //bool partialMonth = (endDate.AddDays(1).Day > 1); // it's a full month if the day after endDate is the 1st
 
-            var weeklyStats = cpRepo.GetWeekStats(searchProfile, numWeeks, null, endDate, campaignNameInclude);
-            var monthlyStats = cpRepo.GetMonthStats(searchProfile, numMonths, null, endDate, false, campaignNameInclude);
+            var weeklyStats = cpRepo.GetWeekStats(searchProfile, numWeeks, null, endDate, campaignNameInclude, campaignNameExclude);
+            var monthlyStats = cpRepo.GetMonthStats(searchProfile, numMonths, null, endDate, false, campaignNameInclude, campaignNameExclude);
             spreadsheet.LoadWeeklyStats(weeklyStats);
             spreadsheet.LoadMonthlyStats(monthlyStats);
 
@@ -71,7 +71,7 @@ namespace DAGenerators.Spreadsheets
             // YearOverYear full stats - for the YoY sheet/tab
             //int numMonthsYoY = numMonths; // (numMonths > 12) ? 12 : numMonths;
             int numMonthsYoY = (numMonths > 12) ? 12 : numMonths;
-            var yoyMonthlyStats = cpRepo.GetMonthStats(searchProfile, numMonthsYoY, null, endDate, true, campaignNameInclude);
+            var yoyMonthlyStats = cpRepo.GetMonthStats(searchProfile, numMonthsYoY, null, endDate, true, campaignNameInclude, campaignNameExclude);
             spreadsheet.LoadYearOverYear_Full(yoyMonthlyStats);
 
 
@@ -80,12 +80,12 @@ namespace DAGenerators.Spreadsheets
             DateTime monthStart = new DateTime(monthToUse.Year, monthToUse.Month, 1);
             DateTime monthEnd = monthStart.AddMonths(1).AddDays(-1);
 
-            var monthStats = cpRepo.GetSearchStats(searchProfile, monthStart, monthEnd, false, campaignNameInclude);
+            var monthStats = cpRepo.GetSearchStats(searchProfile, monthStart, monthEnd, false, campaignNameInclude, campaignNameExclude);
             monthStats.Title = monthStart.ToString("MMM-yy");
 
             monthStart = monthStart.AddYears(-1);
             monthEnd = monthStart.AddMonths(1).AddDays(-1);
-            var monthStatsLastYear = cpRepo.GetSearchStats(searchProfile, monthStart, monthEnd, false, campaignNameInclude);
+            var monthStatsLastYear = cpRepo.GetSearchStats(searchProfile, monthStart, monthEnd, false, campaignNameInclude, campaignNameExclude);
             monthStatsLastYear.Title = monthStart.ToString("MMM-yy");
 
             var yoyStats_Summary = new[] { monthStatsLastYear, monthStats };
@@ -98,12 +98,12 @@ namespace DAGenerators.Spreadsheets
                 weekEnd = weekEnd.AddDays(-1);
             DateTime weekStart = weekEnd.AddDays(-6);
 
-            var weekStats = cpRepo.GetSearchStats(searchProfile, weekStart, weekEnd, false, campaignNameInclude);
+            var weekStats = cpRepo.GetSearchStats(searchProfile, weekStart, weekEnd, false, campaignNameInclude, campaignNameExclude);
             weekStats.Title = weekStart.ToString("MM/dd") + " - " + weekEnd.ToString("MM/dd");
 
             weekStart = weekStart.AddDays(-7);
             weekEnd = weekStart.AddDays(6);
-            var weekStatsLastWeek = cpRepo.GetSearchStats(searchProfile, weekStart, weekEnd, false, campaignNameInclude);
+            var weekStatsLastWeek = cpRepo.GetSearchStats(searchProfile, weekStart, weekEnd, false, campaignNameInclude, campaignNameExclude);
             weekStatsLastWeek.Title = weekStart.ToString("MM/dd") + " - " + weekEnd.ToString("MM/dd");
 
             var wowStats_Summary = new[] { weekStatsLastWeek, weekStats };
@@ -115,7 +115,7 @@ namespace DAGenerators.Spreadsheets
             var periodEnd = endDate;
             for (int i = 0; i < numMonths; i++)
             {
-                var campaignStatsDict = GetOneCampaignStatsDict(cpRepo, searchProfile, periodStart, periodEnd, groupBySearchAccount, campaignNameInclude);
+                var campaignStatsDict = GetOneCampaignStatsDict(cpRepo, searchProfile, periodStart, periodEnd, groupBySearchAccount, campaignNameInclude, campaignNameExclude);
 
                 if (campaignStatsDict.Keys.Any()) // TODO: if empty, somehow generate a row with zeros for this month
                 {
@@ -139,7 +139,7 @@ namespace DAGenerators.Spreadsheets
             // Load the weekly campaign stats, starting with the most recent and going back the number of weeks specified
             for (int i = 0; i < numWeeks; i++)
             {
-                var campaignStatsDict = GetOneCampaignStatsDict(cpRepo, searchProfile, periodStart, periodEnd, groupBySearchAccount, campaignNameInclude);
+                var campaignStatsDict = GetOneCampaignStatsDict(cpRepo, searchProfile, periodStart, periodEnd, groupBySearchAccount, campaignNameInclude, campaignNameExclude);
 
                 if (campaignStatsDict.Keys.Any()) // TODO: if empty, somehow generate a row with zeros for this week
                 {

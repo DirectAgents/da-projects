@@ -170,14 +170,14 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult GenerateSpreadsheet(int searchProfileId, DateTime? endDate, int numWeeks = 0, int numMonths = 0, string filename = "report.xlsx", bool groupBySearchAccount = false, string campaignInclude = null)
+        public ActionResult GenerateSpreadsheet(int searchProfileId, DateTime? endDate, int numWeeks = 0, int numMonths = 0, string filename = "report.xlsx", bool groupBySearchAccount = false, string campaignInclude = null, string campaignExclude = null)
         {
             string templateFolder = ConfigurationManager.AppSettings["PATH_Search"];
             if (!endDate.HasValue)
                 endDate = DateTime.Today.AddDays(-1); // if not specified; (user can always set endDate to today if desired)
                 //endDate = (UserSettings.Search_UseYesterdayAsLatest ? DateTime.Today.AddDays(-1) : DateTime.Today);
 
-            var spreadsheet = DAGenerators.Spreadsheets.GeneratorCP.GenerateSearchReport(cpRepo, templateFolder, searchProfileId, numWeeks, numMonths, endDate.Value, groupBySearchAccount, campaignInclude);
+            var spreadsheet = DAGenerators.Spreadsheets.GeneratorCP.GenerateSearchReport(cpRepo, templateFolder, searchProfileId, numWeeks, numMonths, endDate.Value, groupBySearchAccount, campaignInclude, campaignExclude);
             if (spreadsheet == null)
                 return HttpNotFound();
 
