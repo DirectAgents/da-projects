@@ -2,6 +2,7 @@
 using FacebookAPI;
 using FacebookAPI.Entities;
 using System.Collections.Generic;
+using System;
 
 namespace CakeExtracter.Etl.SocialMarketing.Extracters
 {
@@ -29,10 +30,17 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
         {
             Logger.Info("Extracting DailySummaries from Facebook API for ({0}) from {1:d} to {2:d}",
                         this.fbAccountId, this.dateRange.Value.FromDate, this.dateRange.Value.ToDate);
-            var fbSums = _fbUtility.GetDailyStats("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
-            foreach (var fbSum in fbSums)
+            try
             {
-                Add(fbSum);
+                var fbSums = _fbUtility.GetDailyStats("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
+                foreach (var fbSum in fbSums)
+                {
+                    Add(fbSum);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
             }
             End();
         }
@@ -48,10 +56,17 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
         {
             Logger.Info("Extracting Campaign Summaries from Facebook API for ({0}) from {1:d} to {2:d}",
                         this.fbAccountId, this.dateRange.Value.FromDate, this.dateRange.Value.ToDate);
-            var fbSums = _fbUtility.GetDailyCampaignStats("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
-            foreach (var fbSum in fbSums)
+            try
             {
-                Add(fbSum);
+                var fbSums = _fbUtility.GetDailyCampaignStats("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
+                foreach (var fbSum in fbSums)
+                {
+                    Add(fbSum);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
             }
             End();
         }
@@ -67,10 +82,17 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
         {
             Logger.Info("Extracting Ad Summaries from Facebook API for ({0}) from {1:d} to {2:d}",
                         this.fbAccountId, this.dateRange.Value.FromDate, this.dateRange.Value.ToDate);
-            var fbSums = _fbUtility.GetDailyAdStats("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
-            foreach (var fbSum in fbSums)
+            try
             {
-                Add(fbSum);
+                var fbSums = _fbUtility.GetDailyAdStats("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
+                foreach (var fbSum in fbSums)
+                {
+                    Add(fbSum);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
             }
             End();
         }
@@ -90,10 +112,17 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
         {
             Logger.Info("Extracting Ad Previews from Facebook API for ({0})", this.fbAccountId);
             //var fbAds = _fbUtility.GetAdPreviews("act_" + fbAccountId, fbAdIds);
-            var fbAds = _fbUtility.GetAdPreviews(fbAdIds);
-            foreach (var fbAd in fbAds)
+            try
             {
-                Add(fbAd);
+                var fbAds = _fbUtility.GetAdPreviews(fbAdIds);
+                foreach (var fbAd in fbAds)
+                {
+                    Add(fbAd);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
             }
             End();
         }

@@ -239,6 +239,8 @@ namespace FacebookAPI
                 };
                 dynamic retObj = null;
                 int tryNumber = 0;
+                int MAX_TRIES = 10;
+                bool abort = false;
                 do
                 {
                     try
@@ -249,16 +251,23 @@ namespace FacebookAPI
                     catch (Exception ex)
                     {
                         LogError(ex.Message);
-                        tryNumber++;
-                        if (tryNumber < 10)
+                        if (ex.Message.Contains("OAuthException"))
+                            abort = true;
+                        else
                         {
-                            LogInfo("Waiting 90 seconds before trying again.");
-                            Thread.Sleep(90000);
+                            tryNumber++;
+                            if (tryNumber < MAX_TRIES)
+                            {
+                                LogInfo("Waiting 90 seconds before trying again.");
+                                Thread.Sleep(90000);
+                            }
                         }
                     }
-                } while (tryNumber > 0 && tryNumber < 10);
-                if (tryNumber >= 10)
-                    throw new Exception("Tried 10 times. Throwing exception.");
+                } while (tryNumber > 0 && tryNumber < MAX_TRIES && !abort);
+                if (abort)
+                    throw new Exception("Aborting GetFBSummaries.");
+                if (tryNumber >= MAX_TRIES)
+                    throw new Exception(String.Format("Tried {0} times. Aborting GetFBSummaries.", tryNumber));
 
                 if (retObj == null)
                     continue;
