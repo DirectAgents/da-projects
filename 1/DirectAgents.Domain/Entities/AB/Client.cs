@@ -13,9 +13,11 @@ namespace DirectAgents.Domain.Entities.AB
         public decimal ExtCredit { get; set; }
         public decimal IntCredit { get; set; }
 
+        public virtual ICollection<Payment> Payments { get; set; }
+
         public virtual ICollection<Job> Jobs { get; set; }
         public virtual ICollection<ClientBudget> ClientBudgets { get; set; }
-        public virtual ICollection<ClientPayment> ClientPayments { get; set; }
+        public virtual ICollection<ClientPayment> ClientPayments { get; set; } //TO REMOVE
 
         public virtual ICollection<ProtoPayment> ProtoPayments { get; set; }
         public virtual ICollection<ProtoInvoice> ProtoInvoices { get; set; }

@@ -9,6 +9,8 @@ namespace DirectAgents.Domain.Entities.AB
         public virtual ABClient Client { get; set; }
         public string Name { get; set; }
 
+        //public virtual ICollection<PaymentBit> PaymentBits { get; set; } // navigation not needed ?
+
         public virtual ICollection<ProtoCampaign> ProtoCampaigns { get; set; }
         public virtual ICollection<ProtoPaymentBit> ProtoPaymentBits { get; set; }
 

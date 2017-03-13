@@ -109,6 +109,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Entities\AB\Job.cs" />
+    <Compile Include="Entities\AB\Payment.cs" />
     <Compile Include="Entities\AB\Period.cs" />
     <Compile Include="Entities\AB\ProtoCampaign.cs" />
     <Compile Include="Entities\AB\ProtoInvoice.cs" />
@@ -295,6 +296,10 @@
     <Compile Include="MigrationsAB\201703071529348_Mig_RmAcctPayInv.cs" />
     <Compile Include="MigrationsAB\201703071529348_Mig_RmAcctPayInv.Designer.cs">
       <DependentUpon>201703071529348_Mig_RmAcctPayInv.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsAB\201703101941100_Mig_Payment.cs" />
+    <Compile Include="MigrationsAB\201703101941100_Mig_Payment.Designer.cs">
+      <DependentUpon>201703101941100_Mig_Payment.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsAB\Configuration.cs" />
     <Compile Include="MigrationsRT\201611292020284_InitialCreate.cs" />
@@ -622,6 +627,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsAB\201703071529348_Mig_RmAcctPayInv.resx">
       <DependentUpon>201703071529348_Mig_RmAcctPayInv.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsAB\201703101941100_Mig_Payment.resx">
+      <DependentUpon>201703101941100_Mig_Payment.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsRT\201611292020284_InitialCreate.resx">
       <DependentUpon>201611292020284_InitialCreate.cs</DependentUpon>
