@@ -23,7 +23,7 @@ namespace CakeExtracter.CakeMarketingApi.Clients
        
             apiRequest.AddParameters(restRequest);
 
-            var restClient = new RestClient { BaseUrl = BaseUrl };
+            var restClient = new RestClient { BaseUrl = new Uri(BaseUrl) };
 
             if (deserializer != null)
             {

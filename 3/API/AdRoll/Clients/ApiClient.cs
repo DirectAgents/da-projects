@@ -5,6 +5,7 @@ using System.Net;
 //using System.Net.Http;
 //using System.Net.Http.Headers;
 using RestSharp;
+using RestSharp.Authenticators;
 using RestSharp.Deserializers;
 
 namespace AdRoll.Clients
@@ -129,7 +130,7 @@ namespace AdRoll.Clients
 
             var restClient = new RestClient
             {
-                BaseUrl = BaseUrl,
+                BaseUrl = new Uri(BaseUrl),
                 Authenticator = new HttpBasicAuthenticator(Username, Password)
             };
             restClient.AddHandler("text/plain", new JsonDeserializer());
