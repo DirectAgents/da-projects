@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Linq;
 
 namespace DirectAgents.Web
 {
     public class Common
     {
+        public static readonly int[] QuarterMonths = new[] { 1, 4, 7, 10 };
+
         public static DateTime FirstOfMonth()
         {
             var today = DateTime.Today;
@@ -23,6 +26,14 @@ namespace DirectAgents.Web
         {
             var firstOfMonth = new DateTime(dateTime.Year, dateTime.Month, 1);
             return firstOfMonth.AddMonths(addMonths);
+        }
+
+        public static DateTime FirstDayOfQuarter(this DateTime dateTime)
+        {
+            var first = new DateTime(dateTime.Year, dateTime.Month, 1);
+            while (!Common.QuarterMonths.Contains(first.Month))
+                first = first.AddMonths(-1);
+            return first;
         }
 
         public static string ToRouteString(this DateTime dateTime)

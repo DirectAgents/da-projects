@@ -157,24 +157,24 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 
             bool syncable = extAcct.Platform.Code == Platform.Code_AdRoll ||
                             extAcct.Platform.Code == Platform.Code_FB;
-            if (extAcct.Platform.Code == Platform.Code_DBM)
-            {
-                //TODO: check this without using tdRepo.
-                int ioID;
-                if (int.TryParse(extAcct.ExternalId, out ioID))
-                {
-                    /*
-                    using (var db = new ClientPortalProgContext())
-                    {
-                        var insertOrder = db.InsertionOrders.Where(i => i.Name == ioID.ToString());
-                        if (insertOrder.Count() == 1)
-                            syncable = true;
-                    }*/
-                    var io = tdRepo.InsertionOrder(ioID);
-                    if (io != null)
-                        syncable = !string.IsNullOrWhiteSpace(io.Bucket);
-                }
-            }
+            //if (extAcct.Platform.Code == Platform.Code_DBM)
+            //{
+            //    //TODO: check this without using tdRepo.
+            //    int ioID;
+            //    if (int.TryParse(extAcct.ExternalId, out ioID))
+            //    {
+            //        /*
+            //        using (var db = new ClientPortalProgContext())
+            //        {
+            //            var insertOrder = db.InsertionOrders.Where(i => i.Name == ioID.ToString());
+            //            if (insertOrder.Count() == 1)
+            //                syncable = true;
+            //        }*/
+            //        var io = tdRepo.InsertionOrder(ioID);
+            //        if (io != null)
+            //            syncable = !string.IsNullOrWhiteSpace(io.Bucket);
+            //    }
+            //}
             var model = new AccountMaintenanceVM
             {
                 ExtAccount = extAcct,
@@ -184,25 +184,41 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             return PartialView(model);
         }
 
-        public JsonResult Sync(int id, DateTime? start, string level)
+        public ActionResult CustomSync(int id, DateTime start, string level)
         {
             var extAcct = cpProgRepo.ExtAccount(id);
             if (extAcct == null)
-                return null;
+                return HttpNotFound();
 
-            // TODO: Go back to campaign's start date
+            DoSync(extAcct, start, null, level);
+            return RedirectToAction("Maintenance", "Platforms", new { id = extAcct.PlatformId });
+        }
+
+        public JsonResult Sync(int id, DateTime? start, DateTime? latest, string level)
+        {
+            var extAcct = cpProgRepo.ExtAccount(id);
+            DoSync(extAcct, start, latest, level);
+            return null;
+        }
+
+        private void DoSync(ExtAccount extAcct, DateTime? start, DateTime? latest, string level)
+        {
+            if (extAcct == null)
+                return;
+
             if (!start.HasValue)
-                start = Common.FirstOfMonth().AddMonths(-6);
-                //start = Common.FirstOfYear().AddYears(-1);
-            else if (start.Value.Day > 1)
-                start = new DateTime(start.Value.Year, start.Value.Month, 1);
-            // Go back to 1st of month - so as to refresh the stats
-
+            {
+                if (!latest.HasValue) // TODO: Go back to campaign's start date?
+                    start = DateTime.Today.FirstDayOfQuarter().AddMonths(-3);
+                else if (latest.Value.Day > 1)
+                    start = new DateTime(latest.Value.Year, latest.Value.Month, 1);
+                    // Go back to 1st of month - so as to refresh the month's stats
+            }
             switch (extAcct.Platform.Code)
             {
                 case Platform.Code_AdRoll:
                     string oneStatPer;
-                    if (level == "account")
+                    if (level == "daily")
                         oneStatPer = "advertisable";
                     else if (level == "strategy")
                         oneStatPer = "campaign";
@@ -228,11 +244,10 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                         //DASynchDBMStatsOld.RunStatic(insertionOrderID: ioID); // gets report with stats up to yesterday (and back ?30? days)
                     }
                     break;
-                case Platform.Code_FB: //TODO: pass in statsType
-                    DASynchFacebookStats.RunStatic(accountId: extAcct.Id, startDate: start);
+                case Platform.Code_FB:
+                    DASynchFacebookStats.RunStatic(accountId: extAcct.Id, startDate: start, statsType: level);
                     break;
             }
-            return null;
         }
 
         // --- Strats, TDads, etc

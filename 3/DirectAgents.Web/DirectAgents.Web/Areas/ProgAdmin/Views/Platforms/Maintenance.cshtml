@@ -47,6 +47,36 @@ else if (Model.Code == Platform.Code_FB)
 External Accounts:
 <div id="grid"></div>
 
+@if ((Model.Code == Platform.Code_AdRoll || Model.Code == Platform.Code_FB) && Model.ExtAccounts.Any())
+{
+    var extAcctSelectList = new SelectList(Model.ExtAccounts.OrderBy(x => x.Name), "Id", "DisplayName2");
+    var statsLevels = new[] { "Daily", "Strategy", "Creative" };
+    var statsLevelSelectList = new SelectList(statsLevels);
+    <br />
+    using (Html.BeginForm("CustomSync", "ExtAccounts", FormMethod.Post, new { onsubmit = "$('#divCustomSyncButton').hide(); $('#divCustomSyncMessage').html('Syncing... please wait')" }))
+    {
+        <text>Custom Sync:</text>
+        <table>
+        <tr>
+            <td>ExtAccount:</td>
+            <td>@Html.DropDownList("id", extAcctSelectList)</td>
+        </tr>
+        <tr>
+            <td>Stats Level:</td>
+            <td>@Html.DropDownList("level", statsLevelSelectList)</td>
+        </tr>
+        <tr>
+            <td>Go back to:</td>
+            <td>@Html.TextBox("start", firstOfMonth.ToShortDateString())</td>
+        </tr>
+        </table>
+        <div id="divCustomSyncButton">
+            <input type="submit" value="Sync" />
+        </div>
+        <div id="divCustomSyncMessage"></div>
+    }
+}
+
 @section scripts {
 <script>
     $(document).ready(function () {
@@ -92,7 +122,7 @@ External Accounts:
     }
 
     function SyncAccount(acctId, syncUrl) {
-        $('#divAcctMaint' + acctId).html('Syncing...');
+        $('#divAcctMaint' + acctId).html('Syncing... please wait');
         $.post(syncUrl, function (data) {
             LoadMaintenanceDetail(acctId);
         });

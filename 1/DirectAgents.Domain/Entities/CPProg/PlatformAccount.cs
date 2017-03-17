@@ -112,6 +112,11 @@ namespace DirectAgents.Domain.Entities.CPProg
         {
             get { return "(" + Platform.Name + ") " + Name + " [" + ExternalId + "]"; }
         }
+        [NotMapped]
+        public string DisplayName2
+        {
+            get { return Id + ". " + Name + " [" + ExternalId + "]"; }
+        }
     }
 
     public class Strategy
