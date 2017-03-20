@@ -306,6 +306,9 @@
     <Compile Include="Commands\DA\DASynchDBMStatsOld.cs" />
     <Compile Include="Commands\RT\RTSynchTest.cs" />
     <Compile Include="Commands\Test\TestABCommand.cs" />
+    <Compile Include="Commands\Test\TestYAMCommand.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Common\Compare.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DACampLoader.cs">
       <SubType>Code</SubType>
@@ -586,6 +589,10 @@
     <ProjectReference Include="..\..\API\FacebookAPI\FacebookAPI.csproj">
       <Project>{3358a07a-a5a0-4933-9680-03d4308b278c}</Project>
       <Name>FacebookAPI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\API\Yahoo\Yahoo.csproj">
+      <Project>{b5c95cb8-dbe8-4d94-9a6d-6c2ed3535a26}</Project>
+      <Name>Yahoo</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\BingAds\BingAds.csproj">
       <Project>{e2ea8ab5-abaf-4007-a446-09624cb159e6}</Project>

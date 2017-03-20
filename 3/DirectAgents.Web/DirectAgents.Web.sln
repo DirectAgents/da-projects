@@ -6,6 +6,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectAgents.Domain", "..\..\1\DirectAgents.Domain\DirectAgents.Domain.csproj", "{278911AB-CB92-4316-843E-4571CD0C3410}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeExtracter", "..\CakeExtracter\CakeExtracter\CakeExtracter.csproj", "{3B6C5433-5392-4165-A7E4-4AA431A75BB3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B5C95CB8-DBE8-4D94-9A6D-6C2ED3535A26} = {B5C95CB8-DBE8-4D94-9A6D-6C2ED3535A26}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeExtracter.ConsoleApplication", "..\CakeExtracter.ConsoleApplication\CakeExtracter.ConsoleApplication.csproj", "{5C9EEBEE-1F02-47F3-92B8-700542642C7D}"
 EndProject
@@ -18,6 +21,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacebookAPI", "..\API\FacebookAPI\FacebookAPI.csproj", "{3358A07A-A5A0-4933-9680-03D4308B278C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BingAds", "..\BingAds\BingAds.csproj", "{E2EA8AB5-ABAF-4007-A446-09624CB159E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yahoo", "..\API\Yahoo\Yahoo.csproj", "{B5C95CB8-DBE8-4D94-9A6D-6C2ED3535A26}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +62,10 @@ Global
 		{E2EA8AB5-ABAF-4007-A446-09624CB159E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2EA8AB5-ABAF-4007-A446-09624CB159E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2EA8AB5-ABAF-4007-A446-09624CB159E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5C95CB8-DBE8-4D94-9A6D-6C2ED3535A26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5C95CB8-DBE8-4D94-9A6D-6C2ED3535A26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5C95CB8-DBE8-4D94-9A6D-6C2ED3535A26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5C95CB8-DBE8-4D94-9A6D-6C2ED3535A26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,5 +75,6 @@ Global
 		{7B3C53ED-633B-4DDE-B925-6161F39FD9CA} = {9CADCD2F-2E1D-4D0D-BA87-D9A94D3F8CB7}
 		{3358A07A-A5A0-4933-9680-03D4308B278C} = {9CADCD2F-2E1D-4D0D-BA87-D9A94D3F8CB7}
 		{E2EA8AB5-ABAF-4007-A446-09624CB159E6} = {9CADCD2F-2E1D-4D0D-BA87-D9A94D3F8CB7}
+		{B5C95CB8-DBE8-4D94-9A6D-6C2ED3535A26} = {9CADCD2F-2E1D-4D0D-BA87-D9A94D3F8CB7}
 	EndGlobalSection
 EndGlobal
