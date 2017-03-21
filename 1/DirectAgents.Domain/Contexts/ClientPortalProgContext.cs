@@ -40,6 +40,8 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<DailySummary>().ToTable("DailySummary", tdSchema);
             modelBuilder.Entity<Strategy>().ToTable("Strategy", tdSchema);
             modelBuilder.Entity<StrategySummary>().ToTable("StrategySummary", tdSchema);
+            modelBuilder.Entity<AdSet>().ToTable("AdSet", tdSchema);
+            modelBuilder.Entity<AdSetSummary>().ToTable("AdSetSummary", tdSchema);
             modelBuilder.Entity<TDad>().ToTable("Ad", tdSchema);
             modelBuilder.Entity<TDadSummary>().ToTable("AdSummary", tdSchema);
             modelBuilder.Entity<Site>().ToTable("Site", tdSchema);
@@ -73,6 +75,11 @@ namespace DirectAgents.Domain.Contexts
                 .Property(t => t.Cost).HasPrecision(18, 6);
             modelBuilder.Entity<StrategySummary>().Property(ds => ds.PostClickRev).HasPrecision(18, 4);
             modelBuilder.Entity<StrategySummary>().Property(ds => ds.PostViewRev).HasPrecision(18, 4);
+            modelBuilder.Entity<AdSetSummary>()
+                .HasKey(x => new { x.Date, x.AdSetId })
+                .Property(x => x.Cost).HasPrecision(18, 6);
+            modelBuilder.Entity<AdSetSummary>().Property(ds => ds.PostClickRev).HasPrecision(18, 4);
+            modelBuilder.Entity<AdSetSummary>().Property(ds => ds.PostViewRev).HasPrecision(18, 4);
             modelBuilder.Entity<TDadSummary>()
                 .HasKey(s => new { s.Date, s.TDadId })
                 .Property(t => t.Cost).HasPrecision(18, 6);
@@ -115,6 +122,8 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<DailySummary> DailySummaries { get; set; }
         public DbSet<Strategy> Strategies { get; set; }
         public DbSet<StrategySummary> StrategySummaries { get; set; }
+        public DbSet<AdSet> AdSets { get; set; }
+        public DbSet<AdSetSummary> AdSetSummaries { get; set; }
         public DbSet<TDad> TDads { get; set; }
         public DbSet<TDadSummary> TDadSummaries { get; set; }
         public DbSet<Site> Sites { get; set; }

@@ -31,6 +31,11 @@ namespace CakeExtracter.Bootstrappers
             Mapper.CreateMap<DirectAgents.Domain.Entities.CPProg.StrategySummary, DirectAgents.Domain.Entities.CPProg.StrategySummary>()
                 .ForMember(s => s.StrategyName, opt => opt.Ignore())
                 .ForMember(s => s.StrategyEid, opt => opt.Ignore());
+            Mapper.CreateMap<DirectAgents.Domain.Entities.CPProg.AdSetSummary, DirectAgents.Domain.Entities.CPProg.AdSetSummary>()
+                .ForMember(s => s.AdSetName, opt => opt.Ignore())
+                .ForMember(s => s.AdSetEid, opt => opt.Ignore())
+                .ForMember(s => s.StrategyName, opt => opt.Ignore())
+                .ForMember(s => s.StrategyEid, opt => opt.Ignore());
             Mapper.CreateMap<DirectAgents.Domain.Entities.CPProg.TDadSummary, DirectAgents.Domain.Entities.CPProg.TDadSummary>()
                 .ForMember(s => s.TDadName, opt => opt.Ignore())
                 .ForMember(s => s.TDadEid, opt => opt.Ignore());

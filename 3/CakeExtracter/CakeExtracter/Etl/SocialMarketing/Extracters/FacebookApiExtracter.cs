@@ -72,6 +72,32 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
         }
     }
 
+    public class FacebookAdSetSummaryExtracter : FacebookApiExtracter<FBSummary>
+    {
+        public FacebookAdSetSummaryExtracter(DateRange dateRange, string fbAccountId, FacebookUtility fbUtility = null)
+            : base(fbUtility, dateRange, fbAccountId)
+        { }
+
+        protected override void Extract()
+        {
+            Logger.Info("Extracting AdSet Summaries from Facebook API for ({0}) from {1:d} to {2:d}",
+                        this.fbAccountId, this.dateRange.Value.FromDate, this.dateRange.Value.ToDate);
+            try
+            {
+                var fbSums = _fbUtility.GetDailyAdSetStats("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
+                foreach (var fbSum in fbSums)
+                {
+                    Add(fbSum);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+            End();
+        }
+    }
+
     public class FacebookAdSummaryExtracter : FacebookApiExtracter<FBSummary>
     {
         public FacebookAdSummaryExtracter(DateRange dateRange, string fbAccountId, FacebookUtility fbUtility = null)

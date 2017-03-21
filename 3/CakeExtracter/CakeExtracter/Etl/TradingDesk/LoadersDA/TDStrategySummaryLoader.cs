@@ -76,7 +76,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                             }
                         }
                     }
-                    else // Summary already exists
+                    else // StrategySummary already exists
                     {
                         var entry = db.Entry(target);
                         if (entry.State == EntityState.Unchanged)
@@ -89,7 +89,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                                 updatedCount++;
                             }
                             else
+                            {
                                 entry.State = EntityState.Deleted;
+                                deletedCount++;
+                            }
                         }
                         else
                         {
@@ -110,40 +113,42 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public void AddUpdateDependentStrategies(List<StrategySummary> items)
         {
+            var strategyNameEids = items.GroupBy(i => new { i.StrategyName, i.StrategyEid })
+                .Select(g => new NameEid { Name = g.Key.StrategyName, Eid = g.Key.StrategyEid });
+            AddUpdateDependentStrategies(strategyNameEids, this.accountId, this.strategyIdLookupByEidAndName);
+        }
+        public static void AddUpdateDependentStrategies(IEnumerable<NameEid> strategyNameEids, int accountId, Dictionary<string, int> strategyIdLookupByEidAndName)
+        {
             using (var db = new ClientPortalProgContext())
             {
-                // Find the unique strategies by grouping
-                var itemGroups = items.GroupBy(i => new { i.StrategyName, i.StrategyEid });
-                foreach (var group in itemGroups)
+                foreach (var nameEid in strategyNameEids)
                 {
-                    string eidAndName = group.Key.StrategyEid + group.Key.StrategyName;
+                    string eidAndName = nameEid.Eid + nameEid.Name;
                     if (strategyIdLookupByEidAndName.ContainsKey(eidAndName))
                         continue; // already encountered this strategy
 
                     IQueryable<Strategy> stratsInDb = null;
-                    if (!string.IsNullOrWhiteSpace(group.Key.StrategyEid))
+                    if (!string.IsNullOrWhiteSpace(nameEid.Eid))
                     {
-                        // See if a Strategy with that ExternalId exists
-                        stratsInDb = db.Strategies.Where(s => s.AccountId == accountId && s.ExternalId == group.Key.StrategyEid);
-                        if (!stratsInDb.Any())
-                            stratsInDb = null;
+                        // First see if a Strategy with that ExternalId exists
+                        stratsInDb = db.Strategies.Where(s => s.AccountId == accountId && s.ExternalId == nameEid.Eid);
+                        if (!stratsInDb.Any()) // If not, check for a match by name where ExternalId == null
+                            stratsInDb = db.Strategies.Where(s => s.AccountId == accountId && s.ExternalId == null && s.Name == nameEid.Name);
                     }
-                    if (stratsInDb == null)
+                    else
                     {
                         // Check by strategy name
-                        stratsInDb = db.Strategies.Where(s => s.AccountId == accountId && s.Name == group.Key.StrategyName);
+                        stratsInDb = db.Strategies.Where(s => s.AccountId == accountId && s.Name == nameEid.Name);
                     }
 
-                    // Assume all strategies in the group have the same properties (just different dates/stats)
-                    //var groupStrat = group.First();
-
-                    if (!stratsInDb.Any())
+                    var stratsInDbList = stratsInDb.ToList();
+                    if (!stratsInDbList.Any())
                     {   // Strategy doesn't exist in the db; so create it and put an entry in the lookup
                         var strategy = new Strategy
                         {
-                            AccountId = this.accountId,
-                            ExternalId = group.Key.StrategyEid,
-                            Name = group.Key.StrategyName
+                            AccountId = accountId,
+                            ExternalId = nameEid.Eid,
+                            Name = nameEid.Name
                             // other properties...
                         };
                         db.Strategies.Add(strategy);
@@ -154,26 +159,31 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     else
                     {   // Update & put existing Strategy in the lookup
                         // There should only be one matching Strategy in the db, but just in case...
-                        foreach (var strat in stratsInDb)
+                        foreach (var strat in stratsInDbList)
                         {
-                            if (!string.IsNullOrWhiteSpace(group.Key.StrategyEid))
-                                strat.ExternalId = group.Key.StrategyEid;
-                            if (!string.IsNullOrWhiteSpace(group.Key.StrategyName))
-                                strat.Name = group.Key.StrategyName;
+                            if (!string.IsNullOrWhiteSpace(nameEid.Eid))
+                                strat.ExternalId = nameEid.Eid;
+                            if (!string.IsNullOrWhiteSpace(nameEid.Name))
+                                strat.Name = nameEid.Name;
                             // other properties...
                         }
                         int numUpdates = db.SaveChanges();
                         if (numUpdates > 0)
                         {
-                            Logger.Info("Updated Strategy: {0}, Eid={1}", group.Key.StrategyName, group.Key.StrategyEid);
+                            Logger.Info("Updated Strategy: {0}, Eid={1}", nameEid.Name, nameEid.Eid);
                             if (numUpdates > 1)
                                 Logger.Warn("Multiple entities in db ({0})", numUpdates);
                         }
-                        strategyIdLookupByEidAndName[eidAndName] = stratsInDb.First().Id;
+                        strategyIdLookupByEidAndName[eidAndName] = stratsInDbList.First().Id;
                     }
                 }
             }
         }
 
+    }
+    public class NameEid
+    {
+        public string Name { get; set; }
+        public string Eid { get; set; }
     }
 }

@@ -73,6 +73,7 @@ namespace CakeExtracter.Commands
                 Accts_DailyOnly = string_DailyOnly.Split(new char[] { ',' });
             }   // Used when synching all accounts AND/OR all stats types...
             // So if an account is marked as "daily only", you can only load other stats by specifying the accountId and statsType
+            // TODO? remove this since we now handle exceptions in the extracter?
 
             var accounts = GetAccounts();
             foreach (var acct in accounts)
@@ -94,6 +95,8 @@ namespace CakeExtracter.Commands
 
                 if (statsType.Strategy)
                     DoETL_Strategy(dateRange, acct, fbUtility);
+                if (statsType.AdSet)
+                    DoETL_AdSet(dateRange, acct, fbUtility);
                 if (statsType.Creative)
                     DoETL_Creative(dateRange, acct, fbUtility);
                 //if (statsType.Site)
@@ -116,6 +119,15 @@ namespace CakeExtracter.Commands
         {
             var extracter = new FacebookCampaignSummaryExtracter(dateRange, account.ExternalId, fbUtility);
             var loader = new FacebookCampaignSummaryLoader(account.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+        public void DoETL_AdSet(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility = null)
+        {
+            var extracter = new FacebookAdSetSummaryExtracter(dateRange, account.ExternalId, fbUtility);
+            var loader = new FacebookAdSetSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();

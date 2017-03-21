@@ -76,7 +76,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                             //}
                         }
                     }
-                    else // Summary already exists
+                    else // SiteSummary already exists
                     {
                         var entry = db.Entry(target);
                         if (entry.State == EntityState.Unchanged)
@@ -89,7 +89,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                                 updatedCount++;
                             }
                             else
+                            {
                                 entry.State = EntityState.Deleted;
+                                deletedCount++;
+                            }
                         }
                         else
                         {

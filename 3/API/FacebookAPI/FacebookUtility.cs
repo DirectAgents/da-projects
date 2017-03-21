@@ -92,6 +92,10 @@ namespace FacebookAPI
         }
         public IEnumerable<FBSummary> GetDailyCampaignStats(string accountId, DateTime start, DateTime end)
         {
+            return GetFBSummariesLoop(accountId, start, end, byCampaign: true);
+        }
+        public IEnumerable<FBSummary> GetDailyCampaignStats2(string accountId, DateTime start, DateTime end)
+        {
             int daysPerCall = DaysPerCall_Campaign;
             while (start <= end)
             {
@@ -99,6 +103,9 @@ namespace FacebookAPI
                 if (tempEnd > end)
                     tempEnd = end;
                 var fbSummaries = GetFBSummaries(accountId, start, tempEnd, byCampaign: true);
+
+                //NOTE: Forgot why this grouping was done (instead of using GetFBSummariesLoop).
+                //      Apparently there could be two campaigns with the same name and we want to display them as one.
 
                 var groups = fbSummaries.GroupBy(s => new { s.Date, s.CampaignName });
                 foreach (var group in groups)
@@ -125,7 +132,6 @@ namespace FacebookAPI
         public IEnumerable<FBSummary> GetDailyAdSetStats(string accountId, DateTime start, DateTime end)
         {
             return GetFBSummariesLoop(accountId, start, end, byCampaign: true, byAdSet: true);
-            //TODO: test!
         }
         public IEnumerable<FBSummary> GetDailyAdStats(string accountId, DateTime start, DateTime end)
         {
@@ -231,7 +237,7 @@ namespace FacebookAPI
                     //metadata = 1,
                     level = levelVal,
                     fields = fieldsVal,
-                    action_breakdowns = "action_type",
+                    action_breakdowns = "action_type", //,action_reaction
                     action_attribution_windows = "28d_click,1d_view",
                     time_range = new { since = DateString(start), until = DateString(end) },
                     time_increment = 1,

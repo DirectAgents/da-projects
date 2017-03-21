@@ -69,7 +69,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                                 updatedCount++;
                             }
                             else
+                            {
                                 entry.State = EntityState.Deleted;
+                                deletedCount++;
+                            }
                         }
                         else
                         {
