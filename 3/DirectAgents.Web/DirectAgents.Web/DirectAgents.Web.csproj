@@ -1046,6 +1046,8 @@
     <Content Include="Areas\AB\Views\Campaigns\Index.cshtml" />
     <Content Include="Areas\AB\Views\Vendors\Index.cshtml" />
     <Content Include="Areas\AB\Views\Payments\Index.cshtml" />
+    <Content Include="Areas\ProgAdmin\Views\Stats\AdSet.cshtml" />
+    <Content Include="Areas\ProgAdmin\Views\ExtAccounts\AdSets.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

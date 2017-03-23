@@ -7,6 +7,8 @@
     string latestStrategyStat = Model.StatsGauge.Strategy.LatestDisp;
     string earliestCreativeStat = Model.StatsGauge.Creative.EarliestDisp;
     string latestCreativeStat = Model.StatsGauge.Creative.LatestDisp;
+    string earliestAdSetStat = Model.StatsGauge.AdSet.EarliestDisp;
+    string latestAdSetStat = Model.StatsGauge.AdSet.LatestDisp;
     string earliestSiteStat = Model.StatsGauge.Site.EarliestDisp;
     string latestSiteStat = Model.StatsGauge.Site.LatestDisp;
     string earliestConvStat = Model.StatsGauge.Conv.EarliestDisp;
@@ -15,6 +17,7 @@
     string syncDailyUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, latest = latestDailyStat, level = "daily" });
     string syncStratUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, latest = latestStrategyStat, level = "strategy" });
     string syncCreatUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, latest = latestCreativeStat, level = "creative" });
+    string syncAdSetUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, latest = latestAdSetStat, level = "adset" });
     string syncConvUrl = Url.Action("Sync", new { id = Model.ExtAccount.Id, latest = latestConvStat, level = "conv" });
 }
 
@@ -49,6 +52,18 @@ Creative Stats...
     {
         <text>&nbsp;&nbsp;</text>
         <a href="#" onclick="SyncAccount(@Model.ExtAccount.Id, '@syncCreatUrl'); return false">Sync</a>
+    }
+} else {
+    <text>(none)</text>
+}
+<br />
+AdSet Stats...
+@if (earliestAdSetStat != null) {
+    <text>Earliest: @earliestAdSetStat - Latest: @latestAdSetStat</text>
+    if (Model.Syncable && Model.ExtAccount.Platform.Code == Platform.Code_FB)
+    {
+        <text>&nbsp;&nbsp;</text>
+        <a href="#" onclick="SyncAccount(@Model.ExtAccount.Id, '@syncAdSetUrl'); return false">Sync</a>
     }
 } else {
     <text>(none)</text>

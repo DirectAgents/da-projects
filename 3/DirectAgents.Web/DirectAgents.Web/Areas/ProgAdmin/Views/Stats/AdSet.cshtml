@@ -1,27 +1,29 @@
-﻿@using DirectAgents.Domain.Entities.CPProg
-@model DirectAgents.Web.Areas.ProgAdmin.Models.TDStatsVM
+﻿@model DirectAgents.Web.Areas.ProgAdmin.Models.TDStatsVM
 
 @section scripts {
 <script>
     function ChangeMonth(month) {
-        var url = '@Html.Raw(Url.Action(null, new { platform = Model.PlatformCode, campId = Model.CampaignId, acctId = Model.AccountId, month = "monthVal" }))';
+        var url = '@Html.Raw(Url.Action(null, new { platform = Model.PlatformCode, campId = Model.CampaignId, acctId = Model.AccountId, stratId = Model.StratId, month = "monthVal" }))';
         location.href = url.replace('monthVal', month);
     }
 </script>
 }
-<h2>External Accounts - Raw Stats</h2>
+<h2>External Accounts - Raw Stats, by adset</h2>
 <div style="margin-bottom:10px">
 <form>
     @Html.DropDownList("month", (SelectList)ViewBag.ChooseMonthSelectList, new { onchange = "ChangeMonth(this.value)" })
 </form>
 </div>
 
+@if (Model.StratId.HasValue)
+{
+    <text>StrategyId: @(Model.StratId.Value)</text>
+}
 <table>
 <tr>
-    <th>breakdown...</th>
-    <th>Partner</th>
-    <th style="text-align:right">ID</th>
     <th>Ext Account</th>
+    <th style="text-align:right">ID</th>
+    <th>AdSet</th>
     <th>Impressions</th>
     <th>Clicks</th>
     <th>CTR</th>
@@ -38,13 +40,9 @@
 @foreach (var stat in Model.Stats)
 {
 <tr>
-    <td>
-        by:@Html.ActionLink("strategy", "Strategy", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("creative", "Creative", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("adset", "AdSet", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })
-        show:@Html.ActionLink("daily", "Index", "DailySummaries", new { acctId = stat.ExtAccount.Id, month = Model.MonthString }, null)|@Html.ActionLink("convs", "Conv", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("by-site", "Site", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })
-    </td>
-    <td>@stat.ExtAccount.Platform.Name</td>
-    <td style="text-align:right">@stat.ExtAccount.Id</td>
-    <td>@stat.ExtAccount.Name</td>
+    <td>(@stat.AdSet.ExtAccount.Platform.Name) @stat.AdSet.ExtAccount.Name</td>
+    <td style="text-align:right">@stat.AdSet.Id</td>
+    <td>@stat.AdSet.Name</td>
     <td style="text-align:right">@stat.Impressions</td>
     <td style="text-align:right">@stat.Clicks</td>
     <td style="text-align:center">@stat.CTR</td>
@@ -65,7 +63,6 @@
 <tr>
     <th></th>
     <th></th>
-    <th></th>
     <th>@tot.Name</th>
     <th style="text-align:right">@tot.Impressions</th>
     <th style="text-align:right">@tot.Clicks</th>
@@ -83,13 +80,3 @@
 }
 </table>
 <br />
-@if (!Model.CampaignId.HasValue && !Model.AccountId.HasValue)
-{
-    <text>Filter:
-    @Html.ActionLink("AdRoll", null, new { platform = Platform.Code_AdRoll }) |
-    @Html.ActionLink("DBM", null, new { platform = Platform.Code_DBM }) |
-    @Html.ActionLink("Facebook", null, new { platform = Platform.Code_FB }) |
-    @Html.ActionLink("(show all)", null)
-    </text>
-    <br />
-}

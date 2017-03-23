@@ -50,7 +50,7 @@ External Accounts:
 @if ((Model.Code == Platform.Code_AdRoll || Model.Code == Platform.Code_FB) && Model.ExtAccounts.Any())
 {
     var extAcctSelectList = new SelectList(Model.ExtAccounts.OrderBy(x => x.Name), "Id", "DisplayName2");
-    var statsLevels = new[] { "Daily", "Strategy", "Creative" };
+    var statsLevels = new[] { "Daily", "Strategy", "Creative", "AdSet (FB only)" };
     var statsLevelSelectList = new SelectList(statsLevels);
     <br />
     using (Html.BeginForm("CustomSync", "ExtAccounts", FormMethod.Post, new { onsubmit = "$('#divCustomSyncButton').hide(); $('#divCustomSyncMessage').html('Syncing... please wait')" }))

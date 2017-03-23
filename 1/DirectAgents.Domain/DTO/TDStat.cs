@@ -178,6 +178,7 @@ namespace DirectAgents.Domain.DTO
         public ExtAccount ExtAccount { get; set; }
         public Strategy Strategy { get; set; }
         public TDad TDad { get; set; }
+        public AdSet AdSet { get; set; }
         public Site Site { get; set; }
         public ProgVendor ProgVendor { get; set; }
 

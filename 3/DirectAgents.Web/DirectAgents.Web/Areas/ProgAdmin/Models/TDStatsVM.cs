@@ -13,6 +13,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Models
         public int? CampaignId { get; set; }
         public string ExternalId { get; set; }
         public int? AccountId { get; set; }
+        public int? StratId { get; set; }
 
         public DateTime Month { set { MonthString = value.ToShortDateString(); } }
         public string MonthString { get; set; }

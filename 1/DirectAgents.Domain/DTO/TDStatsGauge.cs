@@ -17,6 +17,7 @@ namespace DirectAgents.Domain.DTO
         public TDStatRange Daily;
         public TDStatRange Strategy;
         public TDStatRange Creative;
+        public TDStatRange AdSet;
         public TDStatRange Site;
         public TDStatRange Conv;
 
@@ -28,6 +29,8 @@ namespace DirectAgents.Domain.DTO
             Strategy.Latest = null;
             Creative.Earliest = null;
             Creative.Latest = null;
+            AdSet.Earliest = null;
+            AdSet.Latest = null;
             Site.Earliest = null;
             Site.Latest = null;
             Conv.Earliest = null;

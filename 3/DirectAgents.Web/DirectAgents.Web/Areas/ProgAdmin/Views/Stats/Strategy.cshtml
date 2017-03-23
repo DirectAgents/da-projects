@@ -1,5 +1,4 @@
-﻿@using DirectAgents.Domain.Entities.CPProg
-@model DirectAgents.Web.Areas.ProgAdmin.Models.TDStatsVM
+﻿@model DirectAgents.Web.Areas.ProgAdmin.Models.TDStatsVM
 
 @section scripts {
 <script>
@@ -39,7 +38,7 @@
 <tr>
     <td>(@stat.Strategy.ExtAccount.Platform.Name) @stat.Strategy.ExtAccount.Name</td>
     <td style="text-align:right">@stat.Strategy.Id</td>
-    <td>@stat.Strategy.Name</td>
+    <td>@Html.ActionLink(stat.Strategy.Name, "AdSet", new { acctId = Model.AccountId, stratId = stat.Strategy.Id, month = Model.MonthString })</td>
     <td style="text-align:right">@stat.Impressions</td>
     <td style="text-align:right">@stat.Clicks</td>
     <td style="text-align:center">@stat.CTR</td>

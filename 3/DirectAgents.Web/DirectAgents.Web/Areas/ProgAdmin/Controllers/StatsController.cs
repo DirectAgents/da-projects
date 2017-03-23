@@ -94,6 +94,24 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             return View(model);
         }
 
+        // Stats by AdSet
+        public ActionResult AdSet(int? acctId, int? stratId, DateTime? month)
+        {
+            var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
+            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+            var stats = cpProgRepo.GetAdSetStats(startOfMonth, endOfMonth, acctId: acctId, stratId: stratId)
+                .OrderBy(s => s.AdSet.Name).ThenBy(s => s.AdSet.Id);
+
+            var model = new TDStatsVM
+            {
+                Month = startOfMonth,
+                AccountId = acctId,
+                StratId = stratId,
+                Stats = stats
+            };
+            return View(model);
+        }
+
         // Stats by site
         public ActionResult Site(int? acctId, DateTime? month, int? minImp)
         {

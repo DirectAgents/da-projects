@@ -432,6 +432,14 @@ namespace DirectAgents.Domain.Concrete
             return strategies;
         }
 
+        public IQueryable<AdSet> AdSets(int? acctId)
+        {
+            var adsets = context.AdSets.AsQueryable();
+            if (acctId.HasValue)
+                adsets = adsets.Where(x => x.AccountId == acctId.Value);
+            return adsets;
+        }
+
         public TDad TDad(int id)
         {
             return context.TDads.Find(id);

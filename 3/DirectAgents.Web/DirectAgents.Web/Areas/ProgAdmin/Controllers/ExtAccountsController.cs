@@ -63,6 +63,8 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                 pGauge.Strategy.Latest = platGroup.Max(p => p.Strategy.Latest);
                 pGauge.Creative.Earliest = platGroup.Min(p => p.Creative.Earliest);
                 pGauge.Creative.Latest = platGroup.Max(p => p.Creative.Latest);
+                pGauge.AdSet.Earliest = platGroup.Min(p => p.AdSet.Earliest);
+                pGauge.AdSet.Latest = platGroup.Max(p => p.AdSet.Latest);
                 pGauge.Site.Earliest = platGroup.Min(p => p.Site.Earliest);
                 pGauge.Site.Latest = platGroup.Max(p => p.Site.Latest);
                 pGauge.Conv.Earliest = platGroup.Min(p => p.Conv.Earliest);
@@ -214,6 +216,12 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                     start = new DateTime(latest.Value.Year, latest.Value.Month, 1);
                     // Go back to 1st of month - so as to refresh the month's stats
             }
+            if (level != null)
+            {
+                level = level.ToLower();
+                if (level.StartsWith("adset"))
+                    level = "adset";
+            }
             switch (extAcct.Platform.Code)
             {
                 case Platform.Code_AdRoll:
@@ -250,12 +258,23 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             }
         }
 
-        // --- Strats, TDads, etc
+        // --- Strats, AdSets, etc
 
         public ActionResult Strategies(int? id)
         {
             var strategies = cpProgRepo.Strategies(acctId: id).OrderBy(s => s.Name);
             return View(strategies);
+        }
+
+        public ActionResult AdSets(int? id, string sort)
+        {
+            IOrderedQueryable<AdSet> orderedAdSets;
+            var adsets = cpProgRepo.AdSets(acctId: id);
+            if (sort == "strat")
+                orderedAdSets = adsets.OrderBy(x => x.Strategy.Name).ThenBy(x => x.Name);
+            else
+                orderedAdSets = adsets.OrderBy(x => x.Name);
+            return View(orderedAdSets);
         }
 
         // --- Stats Uploading ---
