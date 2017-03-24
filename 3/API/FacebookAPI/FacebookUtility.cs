@@ -15,8 +15,8 @@ namespace FacebookAPI
         public const string Pattern_ParenNums = @"^\((\d+)\)\s*";
 
         public int DaysPerCall_Campaign = 20;
-        public int DaysPerCall_AdSet = 10;
-        public int DaysPerCall_Ad = 8;
+        public int DaysPerCall_AdSet = 4;
+        public int DaysPerCall_Ad = 4;
 
         public const string Conversion_ActionType_Default = "offsite_conversion";
         public const string Conversion_ActionType_MobileAppInstall = "mobile_app_install";

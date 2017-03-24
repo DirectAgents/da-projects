@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
-using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using FacebookAPI;
 using FacebookAPI.Entities;
@@ -15,6 +13,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         public FacebookAdSetSummaryLoader(int accountId)
         {
+            this.BatchSize = FacebookUtility.RowsReturnedAtATime; //FB API only returns 25 rows at a time
             this.adsetSummaryLoader = new TDAdSetSummaryLoader(accountId);
         }
 
