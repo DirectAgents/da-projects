@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Configuration;
 using System.Linq;
+using System.Text.RegularExpressions;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.SocialMarketing.Extracters;
@@ -78,6 +79,18 @@ namespace CakeExtracter.Commands
             var accounts = GetAccounts();
             foreach (var acct in accounts)
             {
+                fbUtility.SetAll();
+                if (acct.Network != null)
+                {
+                    string network = Regex.Replace(acct.Network.Name, @"\s+", "").ToUpper();
+                    if (network == "FACEBOOK")
+                        fbUtility.SetFacebook();
+                    else if (network == "INSTAGRAM")
+                        fbUtility.SetInstagram();
+                    else if (network == "AUDIENCENETWORK")
+                        fbUtility.SetAudienceNetwork();
+                }
+
                 if (Accts_ConvAsMobAppInst.Contains(acct.ExternalId))
                     fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_MobileAppInstall;
                 else if (Accts_ConvAsPurch.Contains(acct.ExternalId))
@@ -148,7 +161,7 @@ namespace CakeExtracter.Commands
             string[] acctIdsArray = new string[] { };
             using (var db = new ClientPortalProgContext())
             {
-                var accounts = db.ExtAccounts.Where(a => a.Platform.Code == Platform.Code_FB);
+                var accounts = db.ExtAccounts.Include("Network").Where(a => a.Platform.Code == Platform.Code_FB);
                 if (AccountId.HasValue)
                     accounts = accounts.Where(a => a.Id == AccountId.Value);
 

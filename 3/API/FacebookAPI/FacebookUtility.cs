@@ -24,6 +24,12 @@ namespace FacebookAPI
         public const string Conversion_ActionType_Registration = "offsite_conversion.fb_pixel_complete_registration";
         public string Conversion_ActionType = Conversion_ActionType_Default;
 
+        private string PlatformFilter = null;
+        public void SetFacebook() { PlatformFilter = "facebook"; }
+        public void SetInstagram() { PlatformFilter = "instagram"; }
+        public void SetAudienceNetwork() { PlatformFilter = "audience_network"; }
+        public void SetAll() { PlatformFilter = null; }
+
         //public string AppId { get; set; }
         //public string AppSecret { get; set; }
         public string AccessToken { get; set; }
@@ -227,6 +233,10 @@ namespace FacebookAPI
             }
             var afterVal = "";
 
+            var filterVal = new[] { new { field = "publisher_platform", @operator = "IN", value = new[] { PlatformFilter } } };
+            if (String.IsNullOrWhiteSpace(PlatformFilter))
+                filterVal = null;
+
             bool moreData;
             do
             {
@@ -235,6 +245,7 @@ namespace FacebookAPI
                 {
                     //filtering = new[] { new { field = "campaign.name", @operator = "EQUAL", value = "DA | Mobile App Installs (Android)" } },
                     //metadata = 1,
+                    filtering = filterVal,
                     level = levelVal,
                     fields = fieldsVal,
                     action_breakdowns = "action_type", //,action_reaction

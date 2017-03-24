@@ -1,5 +1,7 @@
 ﻿@model DirectAgents.Domain.Entities.CPProg.ExtAccount
 @{
+    var networks = (IEnumerable<DirectAgents.Domain.Entities.CPProg.Network>)ViewBag.Networks;
+    var networkSelectList = new SelectList(networks, "Id", "Name", Model.NetworkId);
     string platform = (string)Session["platformCode"]; // for filtering when returning back to Index
     string campId = (string)Session["campId"];
 }
@@ -27,6 +29,10 @@
                 <tr>
                     <td>@Html.LabelFor(m => m.ExternalId)</td>
                     <td>@Html.EditorFor(m => m.ExternalId)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Network)</td>
+                    <td>@Html.DropDownListFor(m => m.NetworkId, networkSelectList, "(all)")</td>
                 </tr>
                 <tr>
                     <td>@Html.LabelFor(m => m.CreativeURLFormat)</td>

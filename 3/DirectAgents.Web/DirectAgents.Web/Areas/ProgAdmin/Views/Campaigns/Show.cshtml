@@ -41,7 +41,8 @@ External Accounts:
     <td>@Html.ActionLink("Upload", "UploadStats", "ExtAccounts", new { id = extAcct.Id }, null)</td>
     <td>
         @Html.ActionLink("Strategies", "Strategies", "ExtAccounts", new { id = extAcct.Id }, null) |
-        @Html.ActionLink("Creatives", "Index", "TDads", new { acctid = extAcct.Id }, null)
+        @Html.ActionLink("Creatives", "Index", "TDads", new { acctid = extAcct.Id }, null) |
+        @Html.ActionLink("AdSets", "AdSets", "ExtAccounts", new { id = extAcct.Id }, null)
     </td>
 </tr>
 }

@@ -119,6 +119,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             var extAcct = cpProgRepo.ExtAccount(id);
             if (extAcct == null)
                 return HttpNotFound();
+            SetupForEdit();
             return View(extAcct);
         }
         [HttpPost]
@@ -131,7 +132,12 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                 ModelState.AddModelError("", "ExtAccount could not be saved.");
             }
             cpProgRepo.FillExtended(extAcct);
+            SetupForEdit();
             return View(extAcct);
+        }
+        private void SetupForEdit()
+        {
+            ViewBag.Networks = cpProgRepo.Networks().OrderBy(n => n.Name);
         }
 
         // --- Maintenance ---
