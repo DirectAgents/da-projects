@@ -52,6 +52,7 @@ namespace DirectAgents.Domain.Abstract
         PlatColMapping PlatColMapping(int id);
         bool AddSavePlatColMapping(PlatColMapping platColMapping);
         void FillExtended(PlatColMapping platColMapping);
+        IQueryable<Network> Networks();
         ExtAccount ExtAccount(int id);
         IQueryable<ExtAccount> ExtAccounts(string platformCode = null, int? campId = null);
         IQueryable<ExtAccount> ExtAccountsNotInCampaign(int campId);

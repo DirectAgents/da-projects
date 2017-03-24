@@ -38,6 +38,13 @@ namespace DirectAgents.Domain.Seed
             AddPlatformIfNotExist("zem", "Zemanta");
         }
 
+        public void SeedNetworks()
+        {
+            AddNetworkIfNotExist(1, "Facebook");
+            AddNetworkIfNotExist(2, "Instagram");
+            AddNetworkIfNotExist(3, "Audience Network");
+        }
+
         public void AddPlatformIfNotExist(string code, string name)
         {
             if (!context.Platforms.Any(p => p.Code == code))
@@ -51,5 +58,19 @@ namespace DirectAgents.Domain.Seed
                 context.SaveChanges();
             }
         }
+        public void AddNetworkIfNotExist(int id, string name)
+        {
+            if (!context.Networks.Any(x => x.Id == id))
+            {
+                var network = new Network
+                {
+                    Id = id,
+                    Name = name
+                };
+                context.Networks.Add(network);
+                context.SaveChanges();
+            }
+        }
+
     }
 }

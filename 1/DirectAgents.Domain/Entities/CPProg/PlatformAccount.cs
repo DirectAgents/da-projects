@@ -93,12 +93,20 @@ namespace DirectAgents.Domain.Entities.CPProg
         }
     }
 
+    public class Network
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
     public class ExtAccount
     {
         public int Id { get; set; }
         public int PlatformId { get; set; }
         public virtual Platform Platform { get; set; }
-
+        public int? NetworkId { get; set; }
+        public virtual Network Network { get; set; }
         public int? CampaignId { get; set; }
         public virtual Campaign Campaign { get; set; }
 

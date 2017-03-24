@@ -37,6 +37,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<PlatColMapping>().ToTable("PlatColMapping", tdSchema);
             modelBuilder.Entity<Platform>().ToTable("Platform", tdSchema);
             modelBuilder.Entity<ExtAccount>().ToTable("Account", tdSchema);
+            modelBuilder.Entity<Network>().ToTable("Network", tdSchema);
             modelBuilder.Entity<DailySummary>().ToTable("DailySummary", tdSchema);
             modelBuilder.Entity<Strategy>().ToTable("Strategy", tdSchema);
             modelBuilder.Entity<StrategySummary>().ToTable("StrategySummary", tdSchema);
@@ -119,6 +120,7 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<PlatColMapping> PlatColMappings { get; set; }
         public DbSet<Platform> Platforms { get; set; }
         public DbSet<ExtAccount> ExtAccounts { get; set; }
+        public DbSet<Network> Networks { get; set; }
         public DbSet<DailySummary> DailySummaries { get; set; }
         public DbSet<Strategy> Strategies { get; set; }
         public DbSet<StrategySummary> StrategySummaries { get; set; }

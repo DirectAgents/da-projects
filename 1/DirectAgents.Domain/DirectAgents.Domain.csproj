@@ -443,6 +443,10 @@
     <Compile Include="MigrationsTD\201703201912582_Mig_AdSet.Designer.cs">
       <DependentUpon>201703201912582_Mig_AdSet.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsTD\201703241459105_Mig_Network.cs" />
+    <Compile Include="MigrationsTD\201703241459105_Mig_Network.Designer.cs">
+      <DependentUpon>201703241459105_Mig_Network.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.Designer.cs">
@@ -739,6 +743,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201703201912582_Mig_AdSet.resx">
       <DependentUpon>201703201912582_Mig_AdSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201703241459105_Mig_Network.resx">
+      <DependentUpon>201703241459105_Mig_Network.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

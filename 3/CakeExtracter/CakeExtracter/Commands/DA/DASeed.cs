@@ -18,12 +18,12 @@ namespace CakeExtracter.Commands
         public DASeed()
         {
             IsCommand("daSeed", "Seed the database");
-            HasRequiredOption("t|type=", "What type of seeding to do", c => this.Type = c);
+            HasOption("t|type=", "What type of seeding to do", c => this.Type = c);
         }
 
         public override int Execute(string[] remainingArguments)
         {
-            if (this.Type.ToUpper() == "TD")
+            //if (this.Type.ToUpper() == "TD")
                 DoTDSeed();
             return 0;
         }
@@ -33,7 +33,8 @@ namespace CakeExtracter.Commands
             using (var db = new ClientPortalProgContext())
             {
                 var tdSeeder = new TDSeeder(db);
-                tdSeeder.SeedPlatforms();
+                //tdSeeder.SeedPlatforms();
+                tdSeeder.SeedNetworks();
             }
         }
     }

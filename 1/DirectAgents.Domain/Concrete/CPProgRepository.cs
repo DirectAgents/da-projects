@@ -353,6 +353,11 @@ namespace DirectAgents.Domain.Concrete
 
         // ---
 
+        public IQueryable<Network> Networks()
+        {
+            return context.Networks;
+        }
+
         public ExtAccount ExtAccount(int id)
         {
             return context.ExtAccounts.Find(id);
