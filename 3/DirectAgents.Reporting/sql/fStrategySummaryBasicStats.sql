@@ -22,6 +22,7 @@
 	, eCPC	float(53)
 	, eCPA	float(53)
 	, PlatformAlias nvarchar(max)
+	, NetworkName nvarchar(max)
 	, PostClickConVal decimal(18,6)
 	, PostViewConVal decimal(18,6)
 	, ConVal decimal(18,6)
@@ -39,6 +40,7 @@ BEGIN
 		, Account.Id AS AccountId
 		, Strategy.Id As StrategyId
 		, Account.PlatformId
+		, Account.NetworkId
 		FROM td.Campaign
 		INNER JOIN td.Account ON Account.CampaignId = Campaign.Id
 		INNER JOIN td.Strategy ON Strategy.AccountId = Account.Id
@@ -70,6 +72,7 @@ BEGIN
 		, CASE	WHEN Platform.Code = 'fb' THEN 'Facebook'
 				ELSE 'DA' + CAST(Platform.Id AS varchar)
 		END AS PlatformAlias
+		, Network.Name AS NetworkName
 		, Strategy.Name AS StrategyName
 		, Strategy.Id AS StrategyId
 		, StrategySummary.Impressions
@@ -93,6 +96,7 @@ BEGIN
 		  AND (dtData.StrategyId = Strategy.Id)
 		  AND (dtData.Date = StrategySummary.Date)
 		LEFT OUTER JOIN td.Platform ON Platform.Id = dtData.PlatformId
+		LEFT OUTER JOIN td.Network ON Network.Id = dtData.NetworkId
 		WHERE (StrategySummary.Date BETWEEN @StartDate AND @EndDate)
 	)
 	, mediaSpend AS
@@ -124,6 +128,7 @@ BEGIN
 	, CASE WHEN Clicks = 0 THEN 0 ELSE MediaSpend / CAST(Clicks as float) END AS eCPC
 	, CASE WHEN Conversions = 0 THEN 0 ELSE MediaSpend / CAST(Conversions as float) END AS eCPA
 	, PlatformAlias
+	, NetworkName
 	, PostClickConVal
 	, PostViewConVal
 	, ConVal

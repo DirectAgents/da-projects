@@ -31,12 +31,15 @@ namespace CakeExtracter.Commands
         }
 
         public int? AccountId { get; set; }
+        public int? CampaignId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public string StatsType { get; set; }
 
         public override void ResetProperties()
         {
+            AccountId = null;
+            CampaignId = null;
             StartDate = null;
             EndDate = null;
             StatsType = null;
@@ -46,6 +49,7 @@ namespace CakeExtracter.Commands
         {
             IsCommand("daSynchFacebookStats", "synch Facebook stats");
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
+            HasOption<int>("c|campaignId=", "Campaign Id (optional)", c => CampaignId = c);
             HasOption("s|startDate=", "Start Date (default is seven days ago)", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
@@ -162,6 +166,8 @@ namespace CakeExtracter.Commands
             using (var db = new ClientPortalProgContext())
             {
                 var accounts = db.ExtAccounts.Include("Network").Where(a => a.Platform.Code == Platform.Code_FB);
+                if (CampaignId.HasValue)
+                    accounts = accounts.Where(a => a.CampaignId == CampaignId.Value);
                 if (AccountId.HasValue)
                     accounts = accounts.Where(a => a.Id == AccountId.Value);
 

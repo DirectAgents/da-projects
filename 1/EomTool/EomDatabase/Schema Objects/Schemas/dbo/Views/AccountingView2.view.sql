@@ -10,6 +10,7 @@ SELECT     dbo.AccountingView1.Publisher, dbo.AccountingView1.Advertiser, dbo.Ac
                           WHEN 'CPM' THEN 'Media Buying'
                           WHEN 'SEO' THEN 'Search'
                           WHEN 'PPC' THEN 'Search'
+                          WHEN 'Analytics' THEN 'Search'
                           WHEN 'Social Media' THEN 'Trading Desk'
                           WHEN 'Trading Desk' THEN 'Trading Desk'
                           WHEN 'CPI' THEN 'Mobile'
