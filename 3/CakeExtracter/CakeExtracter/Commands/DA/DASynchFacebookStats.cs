@@ -123,8 +123,9 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
-        public void DoETL_Daily(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility = null)
+        public void DoETL_Daily(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
+            fbUtility.IncludeAllActions = false;
             var extracter = new FacebookDailySummaryExtracter(dateRange, account.ExternalId, fbUtility);
             var loader = new FacebookDailySummaryLoader(account.Id);
             var extracterThread = extracter.Start();
@@ -132,8 +133,9 @@ namespace CakeExtracter.Commands
             extracterThread.Join();
             loaderThread.Join();
         }
-        public void DoETL_Strategy(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility = null)
+        public void DoETL_Strategy(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
+            fbUtility.IncludeAllActions = true;
             var extracter = new FacebookCampaignSummaryExtracter(dateRange, account.ExternalId, fbUtility);
             var loader = new FacebookCampaignSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
@@ -141,8 +143,9 @@ namespace CakeExtracter.Commands
             extracterThread.Join();
             loaderThread.Join();
         }
-        public void DoETL_AdSet(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility = null)
+        public void DoETL_AdSet(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
+            fbUtility.IncludeAllActions = false;
             var extracter = new FacebookAdSetSummaryExtracter(dateRange, account.ExternalId, fbUtility);
             var loader = new FacebookAdSetSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
@@ -150,8 +153,9 @@ namespace CakeExtracter.Commands
             extracterThread.Join();
             loaderThread.Join();
         }
-        public void DoETL_Creative(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility = null)
+        public void DoETL_Creative(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
+            fbUtility.IncludeAllActions = false;
             var extracter = new FacebookAdSummaryExtracter(dateRange, account.ExternalId, fbUtility);
             var loader = new FacebookAdSummaryLoader(account.Id);
             var extracterThread = extracter.Start();

@@ -58,6 +58,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
                         this.fbAccountId, this.dateRange.Value.FromDate, this.dateRange.Value.ToDate);
             try
             {
+                // Set _fbUtility.IncludeAllActions here?
                 var fbSums = _fbUtility.GetDailyCampaignStats("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
                 foreach (var fbSum in fbSums)
                 {

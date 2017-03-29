@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
+using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using FacebookAPI;
 using FacebookAPI.Entities;
@@ -12,6 +13,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
         //private readonly int accountId;
         private TDStrategySummaryLoader strategySummaryLoader;
         //private Dictionary<string, int> strategyIdLookupByCampaignId = new Dictionary<string, int>();
+        private Dictionary<string, int> actionTypeIdLookupByCode = new Dictionary<string, int>();
 
         public FacebookCampaignSummaryLoader(int accountId)
         {
@@ -26,6 +28,10 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             strategySummaryLoader.AddUpdateDependentStrategies(strategyItems);
             strategySummaryLoader.AssignStrategyIdToItems(strategyItems);
             var count = strategySummaryLoader.UpsertDailySummaries(strategyItems);
+
+            AddUpdateDependentActionTypes(items);
+            UpsertStrategyActions(items, strategyItems);
+
             return count;
         }
 
@@ -48,82 +54,96 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             return sum;
         }
 
-        //protected override int Load(List<FBSummary> items)
-        //{
-        //    Logger.Info("Loading {0} Campaign DailySummaries..", items.Count);
-        //    AddUpdateDependentStrategies(items);
-        //    var sItems = items.Select(i => CreateStrategySummary(i, strategyIdLookupByCampaignId[i.CampaignId])).ToList();
-        //    var count = strategySummaryLoader.UpsertDailySummaries(sItems);
-        //    return count;
-        //}
+        private void AddUpdateDependentActionTypes(List<FBSummary> items)
+        {
+            var actionTypeCodes = items.Where(i => i.Actions != null).SelectMany(i => i.Actions.Select(a => a.ActionType)).Distinct();
 
-        //public static StrategySummary CreateStrategySummary(FBSummary item, int strategyId)
-        //{
-        //    var sum = new StrategySummary
-        //    {
-        //        StrategyId = strategyId,
-        //        Date = item.Date,
-        //        Impressions = item.Impressions,
-        //        //Clicks = item.UniqueClicks,
-        //        Clicks = item.LinkClicks,
-        //        PostClickConv = item.TotalActions,
-        //        //NOTE: TotalActions- includes postclick AND postview (within 1 day)... can be configured?
-        //        //PostViewConv = 0,
-        //        Cost = item.Spend
-        //    };
-        //    return sum;
-        //}
+            using (var db = new ClientPortalProgContext())
+            {
+                foreach (var actionTypeCode in actionTypeCodes)
+                {
+                    if (actionTypeIdLookupByCode.ContainsKey(actionTypeCode))
+                        continue;
+                    var actionTypesInDb = db.ActionTypes.Where(x => x.Code == actionTypeCode);
+                    if (!actionTypesInDb.Any())
+                    {
+                        var actionType = new ActionType
+                        {
+                            Code = actionTypeCode
+                        };
+                        db.ActionTypes.Add(actionType);
+                        db.SaveChanges();
+                        Logger.Info("Saved new ActionType: {0}", actionTypeCode);
+                        actionTypeIdLookupByCode[actionTypeCode] = actionType.Id;
+                    }
+                    else
+                    {
+                        var actionType = actionTypesInDb.First();
+                        actionTypeIdLookupByCode[actionTypeCode] = actionType.Id;
+                    }
+                }
+            }
+        }
 
-        //private void AddUpdateDependentStrategies(List<FBSummary> items)
-        //{
-        //    var tuples = items.Select(i => Tuple.Create(i.CampaignId, i.CampaignName)).Distinct();
+        //Note: get the actions from the items(FBSummaries); get the strategyId from the strategySummaries
+        private void UpsertStrategyActions(List<FBSummary> items, List<StrategySummary> strategySummaries)
+        {
+            int addedCount = 0;
+            int updatedCount = 0;
+            int deletedCount = 0;
+            using (var db = new ClientPortalProgContext())
+            {
+                var itemEnumerator = items.GetEnumerator();
+                var ssEnumerator = strategySummaries.GetEnumerator();
+                while (itemEnumerator.MoveNext())
+                {
+                    ssEnumerator.MoveNext();
+                    if (itemEnumerator.Current.Actions == null)
+                        continue;
+                    var date = itemEnumerator.Current.Date;
+                    var strategyId = ssEnumerator.Current.StrategyId;
+                    var fbActions = itemEnumerator.Current.Actions;
 
-        //    using (var db = new ClientPortalProgContext())
-        //    {
-        //        foreach (var tuple in tuples)
-        //        {
-        //            string campaignId = tuple.Item1;
-        //            string campaignName = tuple.Item2;
+                    var actionTypeIds = fbActions.Select(x => actionTypeIdLookupByCode[x.ActionType]).ToArray();
+                    var existingActions = db.StrategyActions.Where(x => x.Date == date && x.StrategyId == strategyId);
 
-        //            if (strategyIdLookupByCampaignId.ContainsKey(campaignId))
-        //                continue; // already encountered this campaign
+                    //Delete actions that no longer have stats for the date/strategy
+                    foreach (var stratAction in existingActions.Where(x => !actionTypeIds.Contains(x.ActionTypeId)))
+                    {
+                        db.StrategyActions.Remove(stratAction);
+                        deletedCount++;
+                    }
 
-        //            var stratsInDb = db.Strategies.Where(a => a.AccountId == accountId && a.ExternalId == campaignId);
-        //            if (!stratsInDb.Any())
-        //            {   // Strategy doesn't exist in the db; so create it and put an entry in the lookup
-        //                var strategy = new Strategy
-        //                {
-        //                    AccountId = accountId,
-        //                    ExternalId = campaignId,
-        //                    Name = campaignName
-        //                    // other properties...
-        //                };
-        //                db.Strategies.Add(strategy);
-        //                db.SaveChanges();
-        //                Logger.Info("Saved new Strategy: {0} ({1}), ExternalId={2}", strategy.Name, strategy.Id, strategy.ExternalId);
-        //                strategyIdLookupByCampaignId[campaignId] = strategy.Id;
-        //            }
-        //            else
-        //            {   // Update & put existing Strategy in the lookup
-        //                // There should only be one matching Strategy in the db, but just in case...
-        //                foreach (var strat in stratsInDb)
-        //                {
-        //                    if (!string.IsNullOrWhiteSpace(campaignName))
-        //                        strat.Name = campaignName;
-        //                    // other properties...
-        //                }
-        //                int numUpdates = db.SaveChanges();
-        //                if (numUpdates > 0)
-        //                {
-        //                    Logger.Info("Updated Strategy: {0}, Eid={1}", campaignName, campaignId);
-        //                    if (numUpdates > 1)
-        //                        Logger.Warn("Multiple entities in db ({0})", numUpdates);
-        //                }
-        //                strategyIdLookupByCampaignId[campaignId] = stratsInDb.First().Id;
-        //            }
-        //        }
-        //    }
-        //}
+                    //Add/update the rest
+                    foreach (var fbAction in fbActions)
+                    {
+                        int actionTypeId = actionTypeIdLookupByCode[fbAction.ActionType];
+                        var actionsOfType = existingActions.Where(x => x.ActionTypeId == actionTypeId); // should be one at most
+                        if (!actionsOfType.Any())
+                        { // Create new
+                            var stratAction = new StrategyAction
+                            {
+                                Date = date,
+                                StrategyId = strategyId,
+                                ActionTypeId = actionTypeId,
+                                PostClick = fbAction.Num_28d_click ?? 0,
+                                PostView = fbAction.Num_1d_view ?? 0
+                            };
+                            db.StrategyActions.Add(stratAction);
+                            addedCount++;
+                        }
+                        else foreach (var stratAction in actionsOfType) // should be just one, but just in case
+                        { // Update
+                            stratAction.PostClick = fbAction.Num_28d_click ?? 0;
+                            stratAction.PostView = fbAction.Num_1d_view ?? 0;
+                            updatedCount++;
+                        }
+                    }
+                    db.SaveChanges();
+                } // loop through items
+                Logger.Info("Saved StrategyActions ({0} updates, {1} additions, {2} deletions)", updatedCount, addedCount, deletedCount);
+            } // using db
+        }
 
     }
 }

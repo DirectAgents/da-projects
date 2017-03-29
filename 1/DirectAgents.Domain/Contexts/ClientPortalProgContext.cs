@@ -51,6 +51,8 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<Conv>().ToTable("Conv", tdSchema);
             modelBuilder.Entity<ConvCity>().ToTable("ConvCity", tdSchema);
             modelBuilder.Entity<ConvCountry>().ToTable("ConvCountry", tdSchema);
+            modelBuilder.Entity<ActionType>().ToTable("ActionType", tdSchema);
+            modelBuilder.Entity<StrategyAction>().ToTable("StrategyAction", tdSchema);
 
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MgmtFeePct).HasPrecision(10, 5).HasColumnName("MgmtFeePct");
@@ -90,6 +92,8 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<ExtraItem>().Property(i => i.Cost).HasPrecision(14, 2);
             modelBuilder.Entity<ExtraItem>().Property(i => i.Revenue).HasPrecision(14, 2);
             modelBuilder.Entity<Conv>().Property(c => c.ConvVal).HasPrecision(18, 6);
+            modelBuilder.Entity<StrategyAction>()
+                .HasKey(x => new { x.Date, x.StrategyId, x.ActionTypeId });
 
             // AdRoll
             modelBuilder.Entity<Advertisable>().ToTable("Advertisable", adrollSchema);
@@ -134,6 +138,8 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<Conv> Convs { get; set; }
         public DbSet<ConvCity> ConvCities { get; set; }
         public DbSet<ConvCountry> ConvCountries { get; set; }
+        public DbSet<ActionType> ActionTypes { get; set; }
+        public DbSet<StrategyAction> StrategyActions { get; set; }
 
         // AdRoll
         public DbSet<Advertisable> Advertisables { get; set; }

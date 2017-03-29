@@ -24,6 +24,8 @@ namespace FacebookAPI
         public const string Conversion_ActionType_Registration = "offsite_conversion.fb_pixel_complete_registration";
         public string Conversion_ActionType = Conversion_ActionType_Default;
 
+        public bool IncludeAllActions = false;
+
         private string PlatformFilter = null;
         public void SetFacebook() { PlatformFilter = "facebook"; }
         public void SetInstagram() { PlatformFilter = "instagram"; }
@@ -320,28 +322,48 @@ namespace FacebookAPI
                             fbSum.LinkClicks = intParseVal;
                         if (Int32.TryParse(row.total_actions, out intParseVal))
                             fbSum.TotalActions = intParseVal;
+
                         var actionStats = row.actions;
                         if (actionStats != null)
                         {
-                            foreach (var stat in actionStats)
+                            if (IncludeAllActions)
                             {
-                                if (stat.action_type == Conversion_ActionType)
+                                fbSum.Actions = new List<FBAction>();
+                                foreach (var stat in actionStats)
                                 {
+                                    var action = new FBAction
+                                    {
+                                        ActionType = stat.action_type
+                                    };
                                     if (((IDictionary<String, object>)stat).ContainsKey("28d_click"))
-                                        fbSum.Conversions_28d_click = int.Parse(stat["28d_click"]);
+                                        action.Num_28d_click = int.Parse(stat["28d_click"]);
                                     if (((IDictionary<String, object>)stat).ContainsKey("1d_view"))
-                                        fbSum.Conversions_1d_view = int.Parse(stat["1d_view"]);
-                                    break;
+                                        action.Num_1d_view = int.Parse(stat["1d_view"]);
+                                    fbSum.Actions.Add(action);
+
+                                    if (stat.action_type == Conversion_ActionType) // for backward compatibility
+                                    {
+                                        if (action.Num_28d_click.HasValue)
+                                            fbSum.Conversions_28d_click = action.Num_28d_click.Value;
+                                        if (action.Num_1d_view.HasValue)
+                                            fbSum.Conversions_1d_view = action.Num_1d_view.Value;
+                                    }
                                 }
                             }
-                            //for (int i = actionStats.Count - 1; i >= 0; i--)
-                            //{ // We go in reverse order b/c if it's included, it's the last one
-                            //    if (actionStats[i].action_type == "offsite_conversion")
-                            //    {
-                            //        fbSum.Conversions = (int)actionStats[i].value;
-                            //        break;
-                            //    }
-                            //}
+                            else
+                            {
+                                foreach (var stat in actionStats)
+                                {
+                                    if (stat.action_type == Conversion_ActionType)
+                                    {
+                                        if (((IDictionary<String, object>)stat).ContainsKey("28d_click"))
+                                            fbSum.Conversions_28d_click = int.Parse(stat["28d_click"]);
+                                        if (((IDictionary<String, object>)stat).ContainsKey("1d_view"))
+                                            fbSum.Conversions_1d_view = int.Parse(stat["1d_view"]);
+                                        break;
+                                    }
+                                }
+                            }
                         }
                         var actionVals = row.action_values;
                         if (actionVals != null)
