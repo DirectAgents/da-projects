@@ -567,6 +567,26 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             return convs;
         }
 
+        public IQueryable<StrategyAction> StrategyActions(DateTime? startDate, DateTime? endDate, int? stratId = null, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null)
+        {
+            var sActions = context.StrategyActions.AsQueryable();
+            if (startDate.HasValue)
+                sActions = sActions.Where(x => x.Date >= startDate.Value);
+            if (endDate.HasValue)
+                sActions = sActions.Where(x => x.Date <= endDate.Value);
+            if (stratId.HasValue)
+                sActions = sActions.Where(x => x.StrategyId == stratId.Value);
+            if (acctId.HasValue)
+                sActions = sActions.Where(x => x.Strategy.AccountId == acctId.Value);
+            if (platformId.HasValue)
+                sActions = sActions.Where(x => x.Strategy.ExtAccount.PlatformId == platformId.Value);
+            if (campId.HasValue)
+                sActions = sActions.Where(x => x.Strategy.ExtAccount.CampaignId == campId.Value);
+            if (advId.HasValue)
+                sActions = sActions.Where(x => x.Strategy.ExtAccount.Campaign.AdvertiserId == advId.Value);
+            return sActions;
+        }
+
         //NOTE: This will sum stats for ALL campaigns if none specified.
         //public TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null)
         //{
@@ -660,6 +680,22 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
                 var stat = new TDRawStat(group)
                 {
                     Site = group.Key
+                };
+                stats.Add(stat);
+            }
+            return stats;
+        }
+
+        public IEnumerable<TDRawStat> GetStrategyActionStats(DateTime? startDate, DateTime? endDate, int? acctId = null, int? stratId = null)
+        {
+            var sActions = StrategyActions(startDate, endDate, acctId: acctId, stratId: stratId);
+            var groups = sActions.GroupBy(x => x.ActionType);
+            var stats = new List<TDRawStat>();
+            foreach (var group in groups)
+            {
+                var stat = new TDRawStat(group)
+                {
+                    ActionType = group.Key
                 };
                 stats.Add(stat);
             }

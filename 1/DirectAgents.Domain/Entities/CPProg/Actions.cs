@@ -13,15 +13,19 @@ namespace DirectAgents.Domain.Entities.CPProg
         public string DisplayName { get; set; }
     }
 
-    public class StrategyAction
+    public class ActionStats
     {
         public DateTime Date { get; set; }
-        public int StrategyId { get; set; }
-        public virtual Strategy Strategy { get; set; }
         public int ActionTypeId { get; set; }
         public virtual ActionType ActionType { get; set; }
         public int PostClick { get; set; }
         public int PostView { get; set; }
+    }
+
+    public class StrategyAction : ActionStats
+    {
+        public int StrategyId { get; set; }
+        public virtual Strategy Strategy { get; set; }
     }
 
     //TODO: StrategyActionValue

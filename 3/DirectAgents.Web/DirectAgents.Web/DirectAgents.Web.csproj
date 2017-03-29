@@ -191,6 +191,7 @@
     <Compile Include="Areas\AB\Controllers\SpendBucketsController.cs" />
     <Compile Include="Areas\AB\Controllers\VendorsController.cs" />
     <Compile Include="Areas\AB\Models\DashboardVM.cs" />
+    <Compile Include="Areas\ProgAdmin\Controllers\ActionsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\CampStatsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\DailySummariesController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\ExtAccountsController.cs" />
@@ -1048,6 +1049,8 @@
     <Content Include="Areas\AB\Views\Payments\Index.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Stats\AdSet.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\ExtAccounts\AdSets.cshtml" />
+    <Content Include="Areas\ProgAdmin\Views\Actions\Types.cshtml" />
+    <Content Include="Areas\ProgAdmin\Views\Stats\Action.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

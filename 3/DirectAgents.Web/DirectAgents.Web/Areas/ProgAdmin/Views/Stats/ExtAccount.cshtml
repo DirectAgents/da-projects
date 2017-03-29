@@ -39,7 +39,7 @@
 {
 <tr>
     <td>
-        by:@Html.ActionLink("strategy", "Strategy", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("creative", "Creative", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("adset", "AdSet", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })
+        by:@Html.ActionLink("strategy", "Strategy", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("adset", "AdSet", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("creative", "Creative", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("action", "Action", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })
         show:@Html.ActionLink("daily", "Index", "DailySummaries", new { acctId = stat.ExtAccount.Id, month = Model.MonthString }, null)|@Html.ActionLink("convs", "Conv", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("by-site", "Site", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })
     </td>
     <td>@stat.ExtAccount.Platform.Name</td>

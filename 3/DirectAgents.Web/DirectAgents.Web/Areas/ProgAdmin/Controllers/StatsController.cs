@@ -145,6 +145,24 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             return View(model);
         }
 
+        // Stats by ActionType
+        public ActionResult Action(int? acctId, int? stratId, DateTime? month)
+        {
+            var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
+            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+            var stats = cpProgRepo.GetStrategyActionStats(startOfMonth, endOfMonth, acctId: acctId, stratId: stratId)
+                .OrderBy(s => s.ActionType.Code);
+
+            var model = new TDStatsVM
+            {
+                Month = startOfMonth,
+                AccountId = acctId,
+                StratId = stratId,
+                Stats = stats
+            };
+            return View(model);
+        }
+
         //TODO: remove all this... (stuff that uses tdRepo)
 
         // AdRoll Stats by Ad

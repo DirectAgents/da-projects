@@ -4,6 +4,7 @@
 
 <table>
 <tr>
+    <th style="text-align:right">Id</th>
     <th></th>
     <th>Name</th>
     <th>Sales Rep</th>
@@ -13,6 +14,7 @@
 @foreach (var adv in Model)
 {
 <tr>
+    <td style="text-align:right">@adv.Id</td>
     <td>@Html.ActionLink("Edit", "Edit", new { id = adv.Id })</td>
     <td>@adv.Name</td>
     <td>@adv.SalesRepName()</td>

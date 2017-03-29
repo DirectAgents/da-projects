@@ -17,6 +17,7 @@
 
 <table>
 <tr>
+    <th>Stats By</th>
     <th>Ext Account</th>
     <th style="text-align:right">ID</th>
     <th>Strategy</th>
@@ -36,9 +37,13 @@
 @foreach (var stat in Model.Stats)
 {
 <tr>
+    <td>
+        @Html.ActionLink("adset", "AdSet", new { acctId = Model.AccountId, stratId = stat.Strategy.Id, month = Model.MonthString })
+        @Html.ActionLink("action", "Action", new { acctId = Model.AccountId, stratId = stat.Strategy.Id, month = Model.MonthString })
+    </td>
     <td>(@stat.Strategy.ExtAccount.Platform.Name) @stat.Strategy.ExtAccount.Name</td>
     <td style="text-align:right">@stat.Strategy.Id</td>
-    <td>@Html.ActionLink(stat.Strategy.Name, "AdSet", new { acctId = Model.AccountId, stratId = stat.Strategy.Id, month = Model.MonthString })</td>
+    <td>@stat.Strategy.Name</td>
     <td style="text-align:right">@stat.Impressions</td>
     <td style="text-align:right">@stat.Clicks</td>
     <td style="text-align:center">@stat.CTR</td>

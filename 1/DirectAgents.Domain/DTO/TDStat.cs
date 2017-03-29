@@ -180,6 +180,7 @@ namespace DirectAgents.Domain.DTO
         public TDad TDad { get; set; }
         public AdSet AdSet { get; set; }
         public Site Site { get; set; }
+        public ActionType ActionType { get; set; }
         public ProgVendor ProgVendor { get; set; }
 
         public int Impressions { get; set; }
@@ -240,6 +241,19 @@ namespace DirectAgents.Domain.DTO
                     this.PostClickRev = sSums.Sum(x => ((DatedStatsSummaryWithRev)x).PostClickRev);
                     this.PostViewRev = sSums.Sum(x => ((DatedStatsSummaryWithRev)x).PostViewRev);
                 }
+            }
+        }
+
+        public TDRawStat(IEnumerable<ActionStats> aStats)
+        {
+            SetStatsFrom(aStats);
+        }
+        private void SetStatsFrom(IEnumerable<ActionStats> aStats)
+        {
+            if (aStats != null && aStats.Any())
+            {
+                this.PostClickConv = aStats.Sum(x => x.PostClick);
+                this.PostViewConv = aStats.Sum(x => x.PostView);
             }
         }
 

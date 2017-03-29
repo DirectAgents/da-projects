@@ -473,6 +473,11 @@ namespace DirectAgents.Domain.Concrete
                 tDad.ExtAccount = ExtAccount(tDad.AccountId);
         }
 
+        public IQueryable<ActionType> ActionTypes()
+        {
+            return context.ActionTypes;
+        }
+
         #endregion
 
         // ---
