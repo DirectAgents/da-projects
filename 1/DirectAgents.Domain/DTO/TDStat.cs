@@ -184,6 +184,7 @@ namespace DirectAgents.Domain.DTO
         public ProgVendor ProgVendor { get; set; }
 
         public int Impressions { get; set; }
+        public int AllClicks { get; set; }
         public int Clicks { get; set; }
         public int PostClickConv { get; set; }
         public decimal PostClickRev { get; set; }
@@ -203,7 +204,7 @@ namespace DirectAgents.Domain.DTO
 
         public virtual bool AllZeros()
         {
-            return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0);
+            return (Impressions == 0 && AllClicks == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0);
         }
 
         public virtual void CopyFrom(TDRawStat stat)
@@ -214,6 +215,7 @@ namespace DirectAgents.Domain.DTO
             this.ExtAccount = stat.ExtAccount;
 
             this.Impressions = stat.Impressions;
+            this.AllClicks = stat.AllClicks;
             this.Clicks = stat.Clicks;
             this.PostClickConv = stat.PostClickConv;
             this.PostViewConv = stat.PostViewConv;
@@ -230,6 +232,7 @@ namespace DirectAgents.Domain.DTO
             if (sSums != null && sSums.Any())
             {
                 this.Impressions = sSums.Sum(x => x.Impressions);
+                this.AllClicks = sSums.Sum(x => x.AllClicks);
                 this.Clicks = sSums.Sum(x => x.Clicks);
                 this.PostClickConv = sSums.Sum(x => x.PostClickConv);
                 this.PostViewConv = sSums.Sum(x => x.PostViewConv);

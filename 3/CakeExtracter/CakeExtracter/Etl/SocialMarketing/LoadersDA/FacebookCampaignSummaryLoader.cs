@@ -43,7 +43,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                 StrategyName = item.CampaignName,
                 StrategyEid = item.CampaignId,
                 Impressions = item.Impressions,
-                //Clicks = item.UniqueClicks,
+                AllClicks = item.AllClicks,
                 Clicks = item.LinkClicks,
                 PostClickConv = item.Conversions_28d_click,
                 PostViewConv = item.Conversions_1d_view,

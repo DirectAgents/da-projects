@@ -124,11 +124,12 @@ namespace FacebookAPI
                         CampaignName = group.Key.CampaignName,
                         Spend = group.Sum(g => g.Spend),
                         Impressions = group.Sum(g => g.Impressions),
-                        UniqueClicks = group.Sum(g => g.UniqueClicks),
                         LinkClicks = group.Sum(g => g.LinkClicks),
+                        AllClicks = group.Sum(g => g.AllClicks),
+                        //UniqueClicks = group.Sum(g => g.UniqueClicks),
+                        //TotalActions = group.Sum(g => g.TotalActions),
                         Conversions_28d_click = group.Sum(g => g.Conversions_28d_click),
                         Conversions_1d_view = group.Sum(g => g.Conversions_1d_view),
-                        TotalActions = group.Sum(g => g.TotalActions),
                         ConVal_28d_click = group.Sum(g => g.ConVal_28d_click),
                         ConVal_1d_view = group.Sum(g => g.ConVal_1d_view)
                     };
@@ -162,11 +163,12 @@ namespace FacebookAPI
                         AdName = group.Key.AdName,
                         Spend = group.Sum(g => g.Spend),
                         Impressions = group.Sum(g => g.Impressions),
-                        UniqueClicks = group.Sum(g => g.UniqueClicks),
                         LinkClicks = group.Sum(g => g.LinkClicks),
+                        AllClicks = group.Sum(g => g.AllClicks),
+                        //UniqueClicks = group.Sum(g => g.UniqueClicks),
+                        //TotalActions = group.Sum(g => g.TotalActions),
                         Conversions_28d_click = group.Sum(g => g.Conversions_28d_click),
                         Conversions_1d_view = group.Sum(g => g.Conversions_1d_view),
-                        TotalActions = group.Sum(g => g.TotalActions),
                         AdId = group.First().AdId
                     };
                     yield return fbSum;
@@ -217,7 +219,7 @@ namespace FacebookAPI
             var path = accountId + "/insights";
 
             var levelVal = "";
-            var fieldsVal = "impressions,unique_clicks,inline_link_clicks,actions,action_values,total_actions,spend";
+            var fieldsVal = "spend,impressions,inline_link_clicks,clicks,actions,action_values"; // unique_clicks,total_actions
             if (byCampaign)
             {
                 levelVal = "campaign";
@@ -302,8 +304,9 @@ namespace FacebookAPI
                             Date = DateTime.Parse(row.date_start),
                             //Spend = Decimal.Parse(row.spend),
                             //Impressions = int.Parse(row.impressions),
-                            //UniqueClicks = int.Parse(row.unique_clicks),
                             //LinkClicks = int.Parse(row.inline_link_clicks),
+                            //AllClicks = int.Parse(row.clicks),
+                            //UniqueClicks = int.Parse(row.unique_clicks),
                             //TotalActions = int.Parse(row.total_actions),
                             CampaignId = row.campaign_id,
                             CampaignName = row.campaign_name,
@@ -316,12 +319,14 @@ namespace FacebookAPI
                             fbSum.Spend = decParseVal;
                         if (Int32.TryParse(row.impressions, out intParseVal))
                             fbSum.Impressions = intParseVal;
-                        if (Int32.TryParse(row.unique_clicks, out intParseVal))
-                            fbSum.UniqueClicks = intParseVal;
                         if (Int32.TryParse(row.inline_link_clicks, out intParseVal))
                             fbSum.LinkClicks = intParseVal;
-                        if (Int32.TryParse(row.total_actions, out intParseVal))
-                            fbSum.TotalActions = intParseVal;
+                        if (Int32.TryParse(row.clicks, out intParseVal))
+                            fbSum.AllClicks = intParseVal;
+                        //if (Int32.TryParse(row.unique_clicks, out intParseVal))
+                        //    fbSum.UniqueClicks = intParseVal;
+                        //if (Int32.TryParse(row.total_actions, out intParseVal))
+                        //    fbSum.TotalActions = intParseVal;
 
                         var actionStats = row.actions;
                         if (actionStats != null)

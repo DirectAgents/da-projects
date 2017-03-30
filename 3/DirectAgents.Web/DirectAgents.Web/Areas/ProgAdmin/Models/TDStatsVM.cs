@@ -27,6 +27,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Models
                 if (Stats != null)
                 {
                     stat.Impressions = Stats.Sum(s => s.Impressions);
+                    stat.AllClicks = Stats.Sum(s => s.AllClicks);
                     stat.Clicks = Stats.Sum(s => s.Clicks);
                     stat.PostClickConv = Stats.Sum(s => s.PostClickConv);
                     stat.PostClickRev = Stats.Sum(s => s.PostClickRev);

@@ -39,7 +39,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                 TDadName = item.AdName,
                 TDadEid = item.AdId,
                 Impressions = item.Impressions,
-                //Clicks = item.UniqueClicks,
+                AllClicks = item.AllClicks,
                 Clicks = item.LinkClicks,
                 PostClickConv = item.Conversions_28d_click,
                 PostViewConv = item.Conversions_1d_view,
