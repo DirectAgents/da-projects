@@ -28,5 +28,11 @@ namespace DirectAgents.Domain.Entities.CPProg
         public virtual Strategy Strategy { get; set; }
     }
 
-    //TODO: StrategyActionValue
+    public class AdSetAction : ActionStats
+    {
+        public int AdSetId { get; set; }
+        public virtual AdSet AdSet { get; set; }
+    }
+
+    //TODO: ActionValues?
 }

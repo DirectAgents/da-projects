@@ -10,28 +10,29 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 {
     public class FacebookCampaignSummaryLoader : Loader<FBSummary>
     {
-        //private readonly int accountId;
+        private readonly bool LoadActions;
         private TDStrategySummaryLoader strategySummaryLoader;
-        //private Dictionary<string, int> strategyIdLookupByCampaignId = new Dictionary<string, int>();
         private Dictionary<string, int> actionTypeIdLookupByCode = new Dictionary<string, int>();
 
-        public FacebookCampaignSummaryLoader(int accountId)
+        public FacebookCampaignSummaryLoader(int accountId, bool loadActions = false)
         {
             this.BatchSize = FacebookUtility.RowsReturnedAtATime; //FB API only returns 25 rows at a time
-            //this.accountId = accountId;
             this.strategySummaryLoader = new TDStrategySummaryLoader(accountId);
+            this.LoadActions = loadActions;
         }
 
         protected override int Load(List<FBSummary> items)
         {
-            var strategyItems = items.Select(i => CreateStrategySummary(i)).ToList();
-            strategySummaryLoader.AddUpdateDependentStrategies(strategyItems);
-            strategySummaryLoader.AssignStrategyIdToItems(strategyItems);
-            var count = strategySummaryLoader.UpsertDailySummaries(strategyItems);
+            var dbItems = items.Select(i => CreateStrategySummary(i)).ToList();
+            strategySummaryLoader.AddUpdateDependentStrategies(dbItems);
+            strategySummaryLoader.AssignStrategyIdToItems(dbItems);
+            var count = strategySummaryLoader.UpsertDailySummaries(dbItems);
 
-            AddUpdateDependentActionTypes(items);
-            UpsertStrategyActions(items, strategyItems);
-
+            if (LoadActions)
+            {
+                AddUpdateDependentActionTypes(items);
+                UpsertStrategyActions(items, dbItems);
+            }
             return count;
         }
 
@@ -55,6 +56,10 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
         }
 
         private void AddUpdateDependentActionTypes(List<FBSummary> items)
+        {
+            AddUpdateDependentActionTypes(items, this.actionTypeIdLookupByCode);
+        }
+        public static void AddUpdateDependentActionTypes(List<FBSummary> items, Dictionary<string, int> actionTypeIdLookupByCode)
         {
             var actionTypeCodes = items.Where(i => i.Actions != null).SelectMany(i => i.Actions.Select(a => a.ActionType)).Distinct();
 

@@ -12,9 +12,10 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
         protected DateRange? dateRange;
         protected string fbAccountId; // fb account: aka "ad account"
 
-        public FacebookApiExtracter(FacebookUtility fbUtility = null, DateRange? dateRange = null, string fbAccountId = null)
+        public FacebookApiExtracter(FacebookUtility fbUtility = null, DateRange? dateRange = null, string fbAccountId = null, bool includeAllActions = false)
         {
             this._fbUtility = fbUtility ?? new FacebookUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            this._fbUtility.IncludeAllActions = includeAllActions;
             this.dateRange = dateRange;
             this.fbAccountId = fbAccountId;
         }
@@ -22,8 +23,8 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
 
     public class FacebookDailySummaryExtracter : FacebookApiExtracter<FBSummary>
     {
-        public FacebookDailySummaryExtracter(DateRange dateRange, string fbAccountId, FacebookUtility fbUtility = null)
-            : base(fbUtility, dateRange, fbAccountId)
+        public FacebookDailySummaryExtracter(DateRange dateRange, string fbAccountId, FacebookUtility fbUtility = null, bool includeAllActions = false)
+            : base(fbUtility, dateRange, fbAccountId, includeAllActions)
         { }
 
         protected override void Extract()
@@ -48,8 +49,8 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
 
     public class FacebookCampaignSummaryExtracter : FacebookApiExtracter<FBSummary>
     {
-        public FacebookCampaignSummaryExtracter(DateRange dateRange, string fbAccountId, FacebookUtility fbUtility = null)
-            : base(fbUtility, dateRange, fbAccountId)
+        public FacebookCampaignSummaryExtracter(DateRange dateRange, string fbAccountId, FacebookUtility fbUtility = null, bool includeAllActions = false)
+            : base(fbUtility, dateRange, fbAccountId, includeAllActions)
         { }
 
         protected override void Extract()
@@ -58,7 +59,6 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
                         this.fbAccountId, this.dateRange.Value.FromDate, this.dateRange.Value.ToDate);
             try
             {
-                // Set _fbUtility.IncludeAllActions here?
                 var fbSums = _fbUtility.GetDailyCampaignStats("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
                 foreach (var fbSum in fbSums)
                 {
@@ -75,8 +75,8 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
 
     public class FacebookAdSetSummaryExtracter : FacebookApiExtracter<FBSummary>
     {
-        public FacebookAdSetSummaryExtracter(DateRange dateRange, string fbAccountId, FacebookUtility fbUtility = null)
-            : base(fbUtility, dateRange, fbAccountId)
+        public FacebookAdSetSummaryExtracter(DateRange dateRange, string fbAccountId, FacebookUtility fbUtility = null, bool includeAllActions = false)
+            : base(fbUtility, dateRange, fbAccountId, includeAllActions)
         { }
 
         protected override void Extract()
@@ -101,8 +101,8 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
 
     public class FacebookAdSummaryExtracter : FacebookApiExtracter<FBSummary>
     {
-        public FacebookAdSummaryExtracter(DateRange dateRange, string fbAccountId, FacebookUtility fbUtility = null)
-            : base(fbUtility, dateRange, fbAccountId)
+        public FacebookAdSummaryExtracter(DateRange dateRange, string fbAccountId, FacebookUtility fbUtility = null, bool includeAllActions = false)
+            : base(fbUtility, dateRange, fbAccountId, includeAllActions)
         { }
 
         protected override void Extract()
