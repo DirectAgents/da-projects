@@ -17,7 +17,11 @@
 
 @if (Model.StratId.HasValue)
 {
-    <text>StrategyId: @(Model.StratId.Value)</text>
+    <text>StrategyId: @(Model.StratId.Value)</text><br />
+}
+@if (Model.AdSetId.HasValue)
+{
+    <text>AdSetId: @(Model.AdSetId.Value)</text><br />
 }
 <table>
 <tr>

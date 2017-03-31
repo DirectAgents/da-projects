@@ -146,11 +146,11 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         }
 
         // Stats by ActionType
-        public ActionResult Action(int? acctId, int? stratId, DateTime? month)
+        public ActionResult Action(int? acctId, int? stratId, int? adsetId, DateTime? month)
         {
             var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
-            var stats = cpProgRepo.GetStrategyActionStats(startOfMonth, endOfMonth, acctId: acctId, stratId: stratId)
+            var stats = cpProgRepo.GetAdSetActionStats(startOfMonth, endOfMonth, acctId: acctId, stratId: stratId, adsetId: adsetId)
                 .OrderBy(s => s.ActionType.Code);
 
             var model = new TDStatsVM
@@ -158,6 +158,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                 Month = startOfMonth,
                 AccountId = acctId,
                 StratId = stratId,
+                AdSetId = adsetId,
                 Stats = stats
             };
             return View(model);

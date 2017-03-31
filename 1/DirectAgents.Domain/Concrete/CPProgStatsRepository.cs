@@ -715,8 +715,17 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
 
         public IEnumerable<TDRawStat> GetStrategyActionStats(DateTime? startDate, DateTime? endDate, int? acctId = null, int? stratId = null)
         {
-            var sActions = StrategyActions(startDate, endDate, acctId: acctId, stratId: stratId);
-            var groups = sActions.GroupBy(x => x.ActionType);
+            var actions = StrategyActions(startDate, endDate, acctId: acctId, stratId: stratId);
+            return GetActionStats(actions);
+        }
+        public IEnumerable<TDRawStat> GetAdSetActionStats(DateTime? startDate, DateTime? endDate, int? acctId = null, int? stratId = null, int? adsetId = null)
+        {
+            var actions = AdSetActions(startDate, endDate, acctId: acctId, stratId: stratId, adsetId: adsetId);
+            return GetActionStats(actions);
+        }
+        private IEnumerable<TDRawStat> GetActionStats(IQueryable<ActionStats> actionStats)
+        {
+            var groups = actionStats.GroupBy(x => x.ActionType);
             var stats = new List<TDRawStat>();
             foreach (var group in groups)
             {
