@@ -13,7 +13,7 @@ namespace DirectAgents.Domain.Entities.CPProg
         public string DisplayName { get; set; }
     }
 
-    public class ActionStats
+    public class ActionStats : IDatedObject
     {
         public DateTime Date { get; set; }
         public int ActionTypeId { get; set; }

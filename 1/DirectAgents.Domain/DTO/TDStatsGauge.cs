@@ -20,21 +20,41 @@ namespace DirectAgents.Domain.DTO
         public TDStatRange AdSet;
         public TDStatRange Site;
         public TDStatRange Conv;
+        public TDStatRange Action;
 
-        public void Reset()
+        //public void Reset()
+        //{
+        //    Daily.Earliest = null;
+        //    Daily.Latest = null;
+        //    Strategy.Earliest = null;
+        //    Strategy.Latest = null;
+        //    Creative.Earliest = null;
+        //    Creative.Latest = null;
+        //    AdSet.Earliest = null;
+        //    AdSet.Latest = null;
+        //    Site.Earliest = null;
+        //    Site.Latest = null;
+        //    Conv.Earliest = null;
+        //    Conv.Latest = null;
+        //    Action.Earliest = null;
+        //    Action.Latest = null;
+        //}
+        public void SetFrom(IEnumerable<TDStatsGauge> gauges)
         {
-            Daily.Earliest = null;
-            Daily.Latest = null;
-            Strategy.Earliest = null;
-            Strategy.Latest = null;
-            Creative.Earliest = null;
-            Creative.Latest = null;
-            AdSet.Earliest = null;
-            AdSet.Latest = null;
-            Site.Earliest = null;
-            Site.Latest = null;
-            Conv.Earliest = null;
-            Conv.Latest = null;
+            this.Daily.Earliest = gauges.Min(x => x.Daily.Earliest);
+            this.Daily.Latest = gauges.Max(x => x.Daily.Latest);
+            this.Strategy.Earliest = gauges.Min(x => x.Strategy.Earliest);
+            this.Strategy.Latest = gauges.Max(x => x.Strategy.Latest);
+            this.Creative.Earliest = gauges.Min(x => x.Creative.Earliest);
+            this.Creative.Latest = gauges.Max(x => x.Creative.Latest);
+            this.AdSet.Earliest = gauges.Min(x => x.AdSet.Earliest);
+            this.AdSet.Latest = gauges.Max(x => x.AdSet.Latest);
+            this.Site.Earliest = gauges.Min(x => x.Site.Earliest);
+            this.Site.Latest = gauges.Max(x => x.Site.Latest);
+            this.Conv.Earliest = gauges.Min(x => x.Conv.Earliest);
+            this.Conv.Latest = gauges.Max(x => x.Conv.Latest);
+            this.Action.Earliest = gauges.Min(x => x.Action.Earliest);
+            this.Action.Latest = gauges.Max(x => x.Action.Latest);
         }
     }
     public struct TDStatRange
@@ -85,9 +105,9 @@ namespace DirectAgents.Domain.DTO
     }
     public class StatsSummaryRange : IStatsRange
     {
-        public IQueryable<DatedStatsSummary> Summaries { get; set; }
+        public IQueryable<IDatedObject> Summaries { get; set; }
 
-        public StatsSummaryRange(IQueryable<DatedStatsSummary> summaries)
+        public StatsSummaryRange(IQueryable<IDatedObject> summaries)
         {
             this.Summaries = summaries;
         }

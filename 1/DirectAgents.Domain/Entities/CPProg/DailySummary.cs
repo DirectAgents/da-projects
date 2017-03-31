@@ -20,7 +20,12 @@ namespace DirectAgents.Domain.Entities.CPProg
         }
     }
 
-    public class DatedStatsSummary : StatsSummary
+    public interface IDatedObject
+    {
+        DateTime Date { get; }
+    }
+
+    public class DatedStatsSummary : StatsSummary, IDatedObject
     {
         public DateTime Date { get; set; }
     }

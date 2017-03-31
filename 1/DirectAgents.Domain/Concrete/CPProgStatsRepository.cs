@@ -412,6 +412,11 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             gauge.Conv.Earliest = cRange.Earliest;
             gauge.Conv.Latest = cRange.Latest;
 
+            var actions = AdSetActions(null, null, acctId: acctId, platformId: platformId);
+            ssRange = new StatsSummaryRange(actions);
+            gauge.Action.Earliest = ssRange.Earliest;
+            gauge.Action.Latest = ssRange.Latest;
+
             return gauge;
         }
 
@@ -585,6 +590,28 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             if (advId.HasValue)
                 sActions = sActions.Where(x => x.Strategy.ExtAccount.Campaign.AdvertiserId == advId.Value);
             return sActions;
+        }
+
+        public IQueryable<AdSetAction> AdSetActions(DateTime? startDate, DateTime? endDate, int? adsetId = null, int? stratId = null, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null)
+        {
+            var actions = context.AdSetActions.AsQueryable();
+            if (startDate.HasValue)
+                actions = actions.Where(x => x.Date >= startDate.Value);
+            if (endDate.HasValue)
+                actions = actions.Where(x => x.Date <= endDate.Value);
+            if (adsetId.HasValue)
+                actions = actions.Where(x => x.AdSetId == adsetId.Value);
+            if (stratId.HasValue)
+                actions = actions.Where(x => x.AdSet.StrategyId == stratId.Value);
+            if (acctId.HasValue)
+                actions = actions.Where(x => x.AdSet.AccountId == acctId.Value);
+            if (platformId.HasValue)
+                actions = actions.Where(x => x.AdSet.ExtAccount.PlatformId == platformId.Value);
+            if (campId.HasValue)
+                actions = actions.Where(x => x.AdSet.ExtAccount.CampaignId == campId.Value);
+            if (advId.HasValue)
+                actions = actions.Where(x => x.AdSet.ExtAccount.Campaign.AdvertiserId == advId.Value);
+            return actions;
         }
 
         //NOTE: This will sum stats for ALL campaigns if none specified.

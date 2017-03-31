@@ -57,19 +57,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                     Platform = platGroup.Key,
                     Children = platGroup.ToList()
                 };
-                pGauge.Daily.Earliest = platGroup.Min(p => p.Daily.Earliest);
-                pGauge.Daily.Latest = platGroup.Max(p => p.Daily.Latest);
-                pGauge.Strategy.Earliest = platGroup.Min(p => p.Strategy.Earliest);
-                pGauge.Strategy.Latest = platGroup.Max(p => p.Strategy.Latest);
-                pGauge.Creative.Earliest = platGroup.Min(p => p.Creative.Earliest);
-                pGauge.Creative.Latest = platGroup.Max(p => p.Creative.Latest);
-                pGauge.AdSet.Earliest = platGroup.Min(p => p.AdSet.Earliest);
-                pGauge.AdSet.Latest = platGroup.Max(p => p.AdSet.Latest);
-                pGauge.Site.Earliest = platGroup.Min(p => p.Site.Earliest);
-                pGauge.Site.Latest = platGroup.Max(p => p.Site.Latest);
-                pGauge.Conv.Earliest = platGroup.Min(p => p.Conv.Earliest);
-                pGauge.Conv.Latest = platGroup.Max(p => p.Conv.Latest);
-
+                pGauge.SetFrom(platGroup); // ?SetFrom(pGauge.Children) ...same thing?
                 platformGauges.Add(pGauge);
             }
 
