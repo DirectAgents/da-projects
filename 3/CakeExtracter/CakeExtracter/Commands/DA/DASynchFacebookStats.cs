@@ -70,6 +70,8 @@ namespace CakeExtracter.Commands
             var Accts_ConvAsPurch = string_ConvAsPurch.Split(new char[] { ',' });
             var string_ConvAsReg = ConfigurationManager.AppSettings["FB_ConversionsAsRegistrations"] ?? "";
             var Accts_ConvAsReg = string_ConvAsReg.Split(new char[] { ',' });
+            var string_ConvAsVideoPlay = ConfigurationManager.AppSettings["FB_ConversionsAsVideoPlays"] ?? "";
+            var Accts_ConvAsVideoPlay = string_ConvAsVideoPlay.Split(new char[] { ',' });
 
             var Accts_DailyOnly = new string[] { };
             if (!AccountId.HasValue || statsType.All)
@@ -87,11 +89,11 @@ namespace CakeExtracter.Commands
                 if (acct.Network != null)
                 {
                     string network = Regex.Replace(acct.Network.Name, @"\s+", "").ToUpper();
-                    if (network == "FACEBOOK")
+                    if (network.StartsWith( "FACEBOOK"))
                         fbUtility.SetFacebook();
-                    else if (network == "INSTAGRAM")
+                    else if (network.StartsWith("INSTAGRAM"))
                         fbUtility.SetInstagram();
-                    else if (network == "AUDIENCENETWORK")
+                    else if (network.StartsWith("AUDIENCE"))
                         fbUtility.SetAudienceNetwork();
                 }
 
@@ -101,6 +103,8 @@ namespace CakeExtracter.Commands
                     fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_Purchase;
                 else if (Accts_ConvAsReg.Contains(acct.ExternalId))
                     fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_Registration;
+                else if (Accts_ConvAsVideoPlay.Contains(acct.ExternalId))
+                    fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_VideoPlay;
                 else
                     fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_Default;
 

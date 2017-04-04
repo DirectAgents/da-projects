@@ -22,6 +22,7 @@ namespace FacebookAPI
         public const string Conversion_ActionType_MobileAppInstall = "mobile_app_install";
         public const string Conversion_ActionType_Purchase = "offsite_conversion.fb_pixel_purchase";
         public const string Conversion_ActionType_Registration = "offsite_conversion.fb_pixel_complete_registration";
+        public const string Conversion_ActionType_VideoPlay = "video_play";
         public string Conversion_ActionType = Conversion_ActionType_Default;
 
         public bool IncludeAllActions = false;
