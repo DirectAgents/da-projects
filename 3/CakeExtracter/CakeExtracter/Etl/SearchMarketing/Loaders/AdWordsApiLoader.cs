@@ -11,15 +11,13 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         public const string GoogleChannel = "Google";
         private readonly int searchAccountId;
         private readonly bool includeClickType; // if true, we use SearchDailySummary2's
-        private readonly bool useConvertedClicks; // (instead of conversions)
         private readonly bool clickAssistConvStats;
 
         private Dictionary<string, Dictionary<DateTime, decimal>> currencyMultipliers = new Dictionary<string, Dictionary<DateTime, decimal>>();
 
-        public AdWordsApiLoader(int searchAccountId, bool useConvertedClicks, bool includeClickType, bool clickAssistConvStats = false)
+        public AdWordsApiLoader(int searchAccountId, bool includeClickType, bool clickAssistConvStats = false)
         {
             this.searchAccountId = searchAccountId;
-            this.useConvertedClicks = useConvertedClicks;
             this.includeClickType = includeClickType;
             this.clickAssistConvStats = clickAssistConvStats;
         }
@@ -63,8 +61,6 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
         private int UpsertSearchDailySummaries(List<Dictionary<string, string>> items)
         {
-            var conversionKey = useConvertedClicks ? "convertedClicks" : "conversions";
-
             var addedCount = 0;
             var updatedCount = 0;
             var itemCount = 0;
@@ -104,7 +100,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     {
                         sds.Revenue = decimal.Parse(item["totalConvValue"]);
                         sds.Cost = decimal.Parse(item["cost"]) / 1000000; // convert from microns to dollars
-                        var conversions = double.Parse(item[conversionKey]);
+                        var conversions = double.Parse(item["conversions"]);
                         sds.Orders = Convert.ToInt32(conversions); // default rounding - nearest even # if .5
                         sds.Clicks = int.Parse(item["clicks"]);
                         sds.Impressions = int.Parse(item["impressions"]);

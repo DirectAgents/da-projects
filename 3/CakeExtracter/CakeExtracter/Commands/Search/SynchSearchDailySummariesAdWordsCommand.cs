@@ -95,7 +95,7 @@ namespace CakeExtracter.Commands
                 if (GetStandardStats || getAll)
                 {
                     var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType);
-                    var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, searchAccount.UseConvertedClicks, IncludeClickType);
+                    var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, IncludeClickType);
                     var extracterThread = extracter.Start();
                     var loaderThread = loader.Start(extracter);
                     extracterThread.Join();
@@ -104,7 +104,7 @@ namespace CakeExtracter.Commands
                 if (GetClickAssistConvStats || getAll)
                 {
                     var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType, clickAssistConvStats: true);
-                    var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, searchAccount.UseConvertedClicks, IncludeClickType, clickAssistConvStats: true);
+                    var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, IncludeClickType, clickAssistConvStats: true);
                     var extracterThread = extracter.Start();
                     var loaderThread = loader.Start(extracter);
                     extracterThread.Join();
@@ -179,11 +179,6 @@ namespace CakeExtracter.Commands
                             Logger.Info("SearchAccount with AccountCode {0} not found and no SearchProfileId specified", ClientId);
                         }
                     }
-                }
-                foreach (var searchAccount in searchAccounts)
-                {
-                    searchAccount.UseConvertedClicks = searchAccount.SearchProfile.UseConvertedClicks;
-                    // assign this b/c we're going to detach from the db and we'll need it later
                 }
             }
             return searchAccounts;
