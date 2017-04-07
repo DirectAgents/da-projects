@@ -32,7 +32,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             End();
         }
 
-        private IEnumerable<DailySummary> EnumerateRows()
+        public IEnumerable<DailySummary> EnumerateRows()
         {
             if (this.streamReader != null)
             {

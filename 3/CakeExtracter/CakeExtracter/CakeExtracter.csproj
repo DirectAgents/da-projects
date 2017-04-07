@@ -298,6 +298,7 @@
     <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
     <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
     <Compile Include="Commands\DA\DASynchCampSums.cs" />
+    <Compile Include="Commands\DA\DASynchYAMStats.cs" />
     <Compile Include="Commands\EOMSynchCPCCommand.cs" />
     <Compile Include="Commands\DA\DASynchFacebookAdPreviews.cs" />
     <Compile Include="Commands\DA\DASynchDBMCreatives.cs" />
@@ -330,6 +331,7 @@
     <Compile Include="Etl\TradingDesk\Extracters\TDConvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\TDSiteSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\TDStrategySummaryExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\YAMExtracters.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdRollAdLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollAttributionSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollSiteStatsLoader.cs" />

@@ -54,5 +54,11 @@ namespace Yahoo
         public const string LOS_ANGELES = "America/Los_Angeles";
     }
 
-    //CURRENCY: Seat, Advertiser, Campaign, USD(default)
+    static class Currency
+    {
+        public const int SEAT = 1;
+        public const int ADVERTISER = 2;
+        public const int CAMPAIGN = 3;
+        public const int USD = 4;
+    }
 }

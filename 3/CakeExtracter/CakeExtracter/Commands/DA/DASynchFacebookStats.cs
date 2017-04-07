@@ -128,7 +128,7 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
-        public void DoETL_Daily(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
+        private void DoETL_Daily(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
             var extracter = new FacebookDailySummaryExtracter(dateRange, account.ExternalId, fbUtility, includeAllActions: false);
             var loader = new FacebookDailySummaryLoader(account.Id);
@@ -137,7 +137,7 @@ namespace CakeExtracter.Commands
             extracterThread.Join();
             loaderThread.Join();
         }
-        public void DoETL_Strategy(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
+        private void DoETL_Strategy(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
             var extracter = new FacebookCampaignSummaryExtracter(dateRange, account.ExternalId, fbUtility, includeAllActions: false);
             var loader = new FacebookCampaignSummaryLoader(account.Id);
@@ -146,7 +146,7 @@ namespace CakeExtracter.Commands
             extracterThread.Join();
             loaderThread.Join();
         }
-        public void DoETL_AdSet(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
+        private void DoETL_AdSet(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
             var extracter = new FacebookAdSetSummaryExtracter(dateRange, account.ExternalId, fbUtility, includeAllActions: true);
             var loader = new FacebookAdSetSummaryLoader(account.Id, loadActions: true);
@@ -155,7 +155,7 @@ namespace CakeExtracter.Commands
             extracterThread.Join();
             loaderThread.Join();
         }
-        public void DoETL_Creative(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
+        private void DoETL_Creative(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
             var extracter = new FacebookAdSummaryExtracter(dateRange, account.ExternalId, fbUtility, includeAllActions: false);
             var loader = new FacebookAdSummaryLoader(account.Id);
@@ -165,7 +165,7 @@ namespace CakeExtracter.Commands
             loaderThread.Join();
         }
 
-        public IEnumerable<ExtAccount> GetAccounts()
+        private IEnumerable<ExtAccount> GetAccounts()
         {
             string[] acctIdsArray = new string[] { };
             using (var db = new ClientPortalProgContext())

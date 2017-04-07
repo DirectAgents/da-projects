@@ -31,7 +31,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             End();
         }
 
-        private IEnumerable<TDadSummary> EnumerateRows()
+        public IEnumerable<TDadSummary> EnumerateRows()
         {
             if (this.streamReader != null)
             {
