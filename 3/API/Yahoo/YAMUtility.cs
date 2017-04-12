@@ -13,13 +13,13 @@ namespace Yahoo
         private const int WAITTIME_SECONDS = 6;
         private const int NUMTRIES_GETREPORTSTATUS = 15;
 
-        public string AuthBaseUrl { get; set; }
-        public string ClientID { get; set; }
-        public string ClientSecret { get; set; }
-        public string ApplicationAccessCode { get; set; }
-        public string RefreshToken { get; set; }
-        public string AccessToken { get; set; }
-        public string YAMBaseUrl { get; set; }
+        private string AuthBaseUrl { get; set; }
+        private string ClientID { get; set; }
+        private string ClientSecret { get; set; }
+        private string ApplicationAccessCode { get; set; }
+        private string RefreshToken { get; set; }
+        private string AccessToken { get; set; }
+        private string YAMBaseUrl { get; set; }
 
         // --- Logging ---
         private Action<string> _LogInfo;
@@ -131,6 +131,8 @@ namespace Yahoo
             }
             return response;
         }
+
+        // ---
 
         // (TODO) Checks if the CreateReportResponse is valid...
         public string ObtainReportUrl(CreateReportResponse createReportResponse)

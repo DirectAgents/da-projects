@@ -307,6 +307,7 @@
     <Compile Include="Commands\DA\DASynchDBMStatsOld.cs" />
     <Compile Include="Commands\RT\RTSynchTest.cs" />
     <Compile Include="Commands\Test\TestABCommand.cs" />
+    <Compile Include="Commands\Test\TestAppleCommand.cs" />
     <Compile Include="Commands\Test\TestYAMCommand.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -585,6 +586,10 @@
     <ProjectReference Include="..\..\API\AdRoll\AdRoll.csproj">
       <Project>{feb04d4a-cf17-43bf-bf2c-635e87a38279}</Project>
       <Name>AdRoll</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\API\Apple\Apple.csproj">
+      <Project>{63f5069c-4aa1-4fa1-aba4-352fe8373e09}</Project>
+      <Name>Apple</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\API\DBM\DBM.csproj">
       <Project>{7b3c53ed-633b-4dde-b925-6161f39fd9ca}</Project>
