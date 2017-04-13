@@ -75,12 +75,13 @@ namespace Apple
 
             var response = ProcessRequest<AppleResponse>(request);
         }
-        public void Test1()
+
+        public IEnumerable<AppleStatGroup> GetCampaignDailyStats(string orgId, DateTime startDate, DateTime endDate)
         {
             var requestBody = new ReportRequest
             {
-                startTime = "2017-04-11",
-                endTime = "2017-04-12",
+                startTime = startDate.ToString("yyyy-MM-dd"),
+                endTime = endDate.ToString("yyyy-MM-dd"),
                 granularity = "DAILY",
                 selector = new Selector
                 {
@@ -89,10 +90,20 @@ namespace Apple
             };
 
             var request = new RestRequest("reports/campaigns", Method.POST);
-            request.AddHeader("Authorization", "orgId=124790"); //80760-DA, 124790-Crackle
+            request.AddHeader("Authorization", "orgId=" + orgId);
             request.AddJsonBody(requestBody);
-
             var response = ProcessRequest<AppleReportResponse>(request);
+
+            //TODO: error checking
+
+            if (response != null && response.Data != null && response.Data.data != null &&
+                response.Data.data.reportingDataResponse != null && response.Data.data.reportingDataResponse.row != null)
+            {
+                var reportRows = response.Data.data.reportingDataResponse.row;
+                return reportRows;
+            }
+            else
+                return null;
         }
     }
 }

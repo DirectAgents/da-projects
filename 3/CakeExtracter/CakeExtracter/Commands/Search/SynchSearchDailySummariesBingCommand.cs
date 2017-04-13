@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-//using System.Net;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.SearchMarketing.Extracters;
 using CakeExtracter.Etl.SearchMarketing.Loaders;

@@ -12,7 +12,7 @@ namespace Apple
         public Selector selector { get; set; }
         public string granularity { get; set; } // HOURLY, DAILY, WEEKLY, MONTHLY
         //public bool returnRowTotals { get; set; }
-        //public bool returnRecordsWithNoMetrics { get; set; }
+        public bool returnRecordsWithNoMetrics { get; set; }
     }
     public class Selector
     {
@@ -52,9 +52,9 @@ namespace Apple
     }
     public class ReportingResponse
     {
-        public List<ReportRow> row { get; set; }
+        public List<AppleStatGroup> row { get; set; }
     }
-    public class ReportRow
+    public class AppleStatGroup
     {
         public List<AppleStat> granularity { get; set; }
         public Metadata metadata { get; set; }

@@ -126,43 +126,47 @@ namespace CakeExtracter.Commands
 
         public IEnumerable<SearchAccount> GetSearchAccounts()
         {
+            return GetSearchAccounts("Google", this.SearchProfileId, this.ClientId);
+        }
+        public static IEnumerable<SearchAccount> GetSearchAccounts(string channelName, int? searchProfileId, string accountCode)
+        {
             var searchAccounts = new List<SearchAccount>();
 
             using (var db = new ClientPortalContext())
             {
-                if (this.ClientId == null) // ClientId not specified
+                if (accountCode == null) // AccountCode not specified
                 {
-                    // Start with all google SearchAccounts with an account code
-                    var searchAccountsQ = db.SearchAccounts.Where(sa => sa.Channel == "Google" && !String.IsNullOrEmpty(sa.AccountCode));
-                    if (this.SearchProfileId.HasValue)
-                        searchAccountsQ = searchAccountsQ.Where(sa => sa.SearchProfileId == this.SearchProfileId.Value); // ...for the specified SearchProfile
+                    // Start with all channel SearchAccounts with an account code
+                    var searchAccountsQ = db.SearchAccounts.Where(sa => sa.Channel == channelName && !String.IsNullOrEmpty(sa.AccountCode));
+                    if (searchProfileId.HasValue)
+                        searchAccountsQ = searchAccountsQ.Where(sa => sa.SearchProfileId == searchProfileId.Value); // ...for the specified SearchProfile
                     else
                         searchAccountsQ = searchAccountsQ.Where(sa => sa.SearchProfileId.HasValue); // ...that are children of a SearchProfile
 
                     searchAccounts = searchAccountsQ.ToList();
                 }
-                else // ClientId specified
+                else // AccountCode specified
                 {
-                    var searchAccount = db.SearchAccounts.SingleOrDefault(sa => sa.AccountCode == ClientId && sa.Channel == "Google");
+                    var searchAccount = db.SearchAccounts.SingleOrDefault(sa => sa.AccountCode == accountCode && sa.Channel == channelName);
                     if (searchAccount != null)
                     {
-                        if (SearchProfileId.HasValue && searchAccount.SearchProfileId != SearchProfileId.Value)
-                            Logger.Warn("SearchProfileId does not match that of SearchAccount specified by ClientId");
+                        if (searchProfileId.HasValue && searchAccount.SearchProfileId != searchProfileId.Value)
+                            Logger.Warn("SearchProfileId does not match that of SearchAccount specified by AccountCode");
 
                         searchAccounts.Add(searchAccount);
                     }
                     else // didn't find a matching SearchAccount; see about creating a new one
                     {
-                        if (SearchProfileId.HasValue)
+                        if (searchProfileId.HasValue)
                         {
-                            var searchProfile = db.SearchProfiles.Find(SearchProfileId.Value);
+                            var searchProfile = db.SearchProfiles.Find(searchProfileId.Value);
                             if (searchProfile != null)
                             {
                                 searchAccount = new SearchAccount()
                                 {
                                     SearchProfile = searchProfile,
-                                    Channel = "Google",
-                                    AccountCode = ClientId
+                                    Channel = channelName,
+                                    AccountCode = accountCode
                                     // to fill in later: Name, ExternalId
                                 };
                                 db.SearchAccounts.Add(searchAccount);
@@ -171,12 +175,12 @@ namespace CakeExtracter.Commands
                             }
                             else
                             {
-                                Logger.Info("SearchAccount with AccountCode {0} not found and SearchProfileId {1} not found", ClientId, SearchProfileId);
+                                Logger.Info("SearchAccount with AccountCode {0} not found and SearchProfileId {1} not found", accountCode, searchProfileId);
                             }
                         }
                         else
                         {
-                            Logger.Info("SearchAccount with AccountCode {0} not found and no SearchProfileId specified", ClientId);
+                            Logger.Info("SearchAccount with AccountCode {0} not found and no SearchProfileId specified", accountCode);
                         }
                     }
                 }

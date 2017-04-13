@@ -306,6 +306,7 @@
     <Compile Include="Commands\DA\DASynchAdrollAds.cs" />
     <Compile Include="Commands\DA\DASynchDBMStatsOld.cs" />
     <Compile Include="Commands\RT\RTSynchTest.cs" />
+    <Compile Include="Commands\Search\SynchSearchDailySummariesAppleCommand.cs" />
     <Compile Include="Commands\Test\TestABCommand.cs" />
     <Compile Include="Commands\Test\TestAppleCommand.cs" />
     <Compile Include="Commands\Test\TestYAMCommand.cs">
@@ -317,7 +318,9 @@
     </Compile>
     <Compile Include="Etl\CakeMarketing\DALoaders\DACampSumLoader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\CPCLoader.cs" />
+    <Compile Include="Etl\SearchMarketing\Extracters\AppleApiExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AdWordsConvSummaryLoader.cs" />
+    <Compile Include="Etl\SearchMarketing\Loaders\AppleApiLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\BingConvSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdPreviewLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSetSummaryLoader.cs" />
