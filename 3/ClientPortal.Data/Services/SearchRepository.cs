@@ -913,12 +913,13 @@ namespace ClientPortal.Data.Services
             {
                 var googleStats = GetWeekStats(null, sp.SearchProfileId, "Google", null, null, null, (DayOfWeek)sp.StartDayOfWeek, numWeeks, null, endDate, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru);
                 var bingStats = GetWeekStats(null, sp.SearchProfileId, "Bing", null, null, null, (DayOfWeek)sp.StartDayOfWeek, numWeeks, null, endDate, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru);
+                var appleStats = GetWeekStats(null, sp.SearchProfileId, "Apple", null, null, null, (DayOfWeek)sp.StartDayOfWeek, numWeeks, null, endDate, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru);
                 var criteoStats = GetWeekStats(null, sp.SearchProfileId, "Criteo", null, null, null, (DayOfWeek)sp.StartDayOfWeek, numWeeks, null, endDate, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru);
-                stats = googleStats.Concat(bingStats).Concat(criteoStats).AsQueryable();
+                stats = googleStats.Concat(bingStats).Concat(appleStats).Concat(criteoStats).AsQueryable();
             }
             if (includeAccountBreakdown)
             {
-                var channels = new string[] { "Google", "Bing", "Criteo" };
+                var channels = new string[] { "Google", "Bing", "Apple", "Criteo" };
                 foreach (var channel in channels)
                 {
                     var searchAccounts = sp.SearchAccounts.Where(sa => sa.Channel == channel);

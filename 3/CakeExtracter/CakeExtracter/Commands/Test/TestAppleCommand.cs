@@ -33,7 +33,7 @@ namespace CakeExtracter.Commands
             string orgId = "124790"; //80760-DA, 124790-Crackle
             var startDate = new DateTime(2017, 4, 11);
             var endDate = new DateTime(2017, 4, 12);
-            var stats = appleAdsUtility.GetCampaignDailyStats(orgId, startDate, endDate);
+            var stats = appleAdsUtility.GetCampaignDailyStats(startDate, endDate, orgId);
         }
 
         public void Test()

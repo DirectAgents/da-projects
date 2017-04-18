@@ -33,18 +33,18 @@
                     <td>@Html.LabelFor(m => m.RevPerOrder, "RevenuePerOrder:")</td>
                     <td>@Html.EditorFor(m => m.RevPerOrder) <i>(Leave blank to use API value)</i></td>
                 </tr>
+}
                 <tr>
                     <td>@Html.LabelFor(m => m.MinSynchDate, "MinSynchDate:")</td>
                     <td>@Html.TextBoxFor(m => m.MinSynchDate, "{0:d}") <i>(optional - earliest date to synch)</i></td>
                 </tr>
-}
                 <tr>
                     <td>@Html.LabelFor(m => m.Name, "Name:")</td>
-                    <td>@Html.EditorFor(m => m.Name) <i>(Gets updated by the syncer)</i></td>
+                    <td>@Html.EditorFor(m => m.Name) <i>(optional)</i></td>
                 </tr>
                 <tr>
                     <td>@Html.LabelFor(m => m.ExternalId, "ExternalId:")</td>
-                    <td>@Html.EditorFor(m => m.ExternalId) <i>(Gets updated by the syncer)</i></td>
+                    <td>@Html.EditorFor(m => m.ExternalId) <i>(optional)</i></td>
                 </tr>
             </table>
         </div>

@@ -50,6 +50,11 @@ namespace ClientPortal.Data.Contexts
             get { return this.SearchAccounts == null ? null : this.SearchAccounts.Where(sa => sa.Channel == SearchAccount.BingChannel); }
         }
         [NotMapped]
+        public IEnumerable<SearchAccount> AppleSearchAccounts
+        {
+            get { return this.SearchAccounts == null ? null : this.SearchAccounts.Where(sa => sa.Channel == SearchAccount.AppleChannel); }
+        }
+        [NotMapped]
         public IEnumerable<SearchAccount> CriteoSearchAccounts
         {
             get { return this.SearchAccounts == null ? null : this.SearchAccounts.Where(sa => sa.Channel == SearchAccount.CriteoChannel); }

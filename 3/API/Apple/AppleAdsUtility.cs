@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using RestSharp;
 using RestSharp.Deserializers;
 
 namespace Apple
 {
+    // Certificate Code comes from SearchAccount.ExternalId
+    // For clients under DA, use "DA". For others, use the same 'code' as in the p12 certificate's filename.
+    // Need to create a new certificate for non-DA clients. (Name the file "AppleCertificate[CODE].p12" and place in the 'AppleP12Location'.)
+    // https://developer.apple.com/library/content/documentation/General/Conceptual/AppStoreSearchAdsAPIReference/API_Overview.html
+
     public class AppleAdsUtility
     {
         private string AppleBaseUrl { get; set; }
@@ -54,14 +56,15 @@ namespace Apple
             AppleP12Password = ConfigurationManager.AppSettings["AppleP12Password"];
         }
 
-        private IRestResponse<T> ProcessRequest<T>(RestRequest restRequest) //, bool postNotGet = false)
+        private IRestResponse<T> ProcessRequest<T>(RestRequest restRequest, string certificateCode = "") //, bool postNotGet = false)
             where T : new()
         {
             var restClient = new RestClient(AppleBaseUrl);
             restClient.AddHandler("application/json", new JsonDeserializer());
 
+            var filename = String.Format(AppleP12Location, certificateCode);
             var certificate = new X509Certificate2();
-            certificate.Import(AppleP12Location, AppleP12Password, X509KeyStorageFlags.DefaultKeySet);
+            certificate.Import(filename, AppleP12Password, X509KeyStorageFlags.DefaultKeySet);
             restClient.ClientCertificates = new X509CertificateCollection() { certificate };
 
             var response = restClient.Execute<T>(restRequest);
@@ -76,7 +79,7 @@ namespace Apple
             var response = ProcessRequest<AppleResponse>(request);
         }
 
-        public IEnumerable<AppleStatGroup> GetCampaignDailyStats(string orgId, DateTime startDate, DateTime endDate)
+        public IEnumerable<AppleStatGroup> GetCampaignDailyStats(DateTime startDate, DateTime endDate, string orgId, string certificateCode = "")
         {
             var requestBody = new ReportRequest
             {
@@ -92,7 +95,7 @@ namespace Apple
             var request = new RestRequest("reports/campaigns", Method.POST);
             request.AddHeader("Authorization", "orgId=" + orgId);
             request.AddJsonBody(requestBody);
-            var response = ProcessRequest<AppleReportResponse>(request);
+            var response = ProcessRequest<AppleReportResponse>(request, certificateCode);
 
             //TODO: error checking
 

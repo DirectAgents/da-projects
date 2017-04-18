@@ -5,6 +5,7 @@
     var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("searchProfilesTab", null, "Post");
     var googleSearchAccounts = Model.GoogleSearchAccounts;
     var bingSearchAccounts = Model.BingSearchAccounts;
+    var appleSearchAccounts = Model.AppleSearchAccounts;
     var criteoSearchAccounts = Model.CriteoSearchAccounts;
 }
 
@@ -89,6 +90,16 @@
                 }
             }
             <i>@Ajax.ActionLink("Add", "CreateSearchAccount", new { spId = Model.SearchProfileId, channel = SearchAccount.BingChannel }, ajaxOptions)</i><br />
+            <br />
+            Apple Accounts:<br />
+            @if (appleSearchAccounts != null && appleSearchAccounts.Count() > 0)
+            {
+                foreach (var sa in appleSearchAccounts) {
+                    <span>- @sa.Name [@sa.AccountCode]</span>
+                    <i>@Ajax.ActionLink("edit", "EditSearchAccount", new { id = sa.SearchAccountId }, ajaxOptions)</i><br />
+                }
+            }
+            <i>@Ajax.ActionLink("Add", "CreateSearchAccount", new { spId = Model.SearchProfileId, channel = SearchAccount.AppleChannel }, ajaxOptions)</i><br />
             @if (criteoSearchAccounts != null && criteoSearchAccounts.Count() > 0)
             {
                 <br />

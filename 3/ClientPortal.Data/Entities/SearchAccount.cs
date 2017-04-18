@@ -6,6 +6,7 @@ namespace ClientPortal.Data.Contexts
     {
         public const string GoogleChannel = "Google";
         public const string BingChannel = "Bing";
+        public const string AppleChannel = "Apple";
         public const string CriteoChannel = "Criteo";
 
         [NotMapped]

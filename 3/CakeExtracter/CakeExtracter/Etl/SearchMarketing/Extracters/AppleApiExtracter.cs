@@ -9,12 +9,14 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
         protected readonly AppleAdsUtility appleAdsUtility;
         protected readonly DateRange dateRange;
         protected readonly string orgId;
+        protected readonly string certificateCode;
 
-        public AppleApiExtracter(AppleAdsUtility appleAdsUtility, DateRange dateRange, string orgId)
+        public AppleApiExtracter(AppleAdsUtility appleAdsUtility, DateRange dateRange, string orgId, string certificateCode)
         {
             this.appleAdsUtility = appleAdsUtility;
             this.dateRange = dateRange;
             this.orgId = orgId;
+            this.certificateCode = certificateCode;
         }
 
         //TODO: Handle gaps in the stats. Somehow pass deletion items... how to do this for all campaigns?
@@ -25,8 +27,21 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 orgId, dateRange.FromDate, dateRange.ToDate);
             try
             {
-                var appleStatGroups = appleAdsUtility.GetCampaignDailyStats(orgId, dateRange.FromDate, dateRange.ToDate);
-                Add(appleStatGroups);
+                var start = dateRange.FromDate;
+                var end = dateRange.ToDate;
+                var date90daysAfterStart = start.AddDays(90);
+                if (end > date90daysAfterStart)
+                    end = date90daysAfterStart;
+                while (start <= dateRange.ToDate)
+                {
+                    var appleStatGroups = appleAdsUtility.GetCampaignDailyStats(start, end, orgId, certificateCode);
+                    if (appleStatGroups != null)
+                        Add(appleStatGroups);
+                    start = start.AddDays(91);
+                    end = end.AddDays(91);
+                    if (end > dateRange.ToDate)
+                        end = dateRange.ToDate;
+                }
             }
             catch (Exception ex)
             {

@@ -56,7 +56,7 @@ namespace CakeExtracter.Commands.Search
                     startDate = searchAccount.MinSynchDate.Value;
                 var revisedDateRange = new DateRange(startDate, dateRange.ToDate);
 
-                var extracter = new AppleApiExtracter(appleAdsUtility, revisedDateRange, searchAccount.AccountCode);
+                var extracter = new AppleApiExtracter(appleAdsUtility, revisedDateRange, searchAccount.AccountCode, searchAccount.ExternalId);
                 var loader = new AppleApiLoader(searchAccount.SearchAccountId);
                 var extracterThread = extracter.Start();
                 var loaderThread = loader.Start(extracter);
