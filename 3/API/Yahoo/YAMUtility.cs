@@ -125,10 +125,17 @@ namespace Yahoo
                 tries++;
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized && tries < 2)
+                { // Get a new access token and use that.
                     GetAccessToken();
+                    var param = restRequest.Parameters.Find(p => p.Type == ParameterType.HttpHeader && p.Name == "X-Auth-Token");
+                    param.Value = AccessToken;
+                }
                 else
-                    done = true; //TODO: distinguish between success and failure to process request
+                    done = true; //TODO: distinguish between success and failure of ProcessRequest
             }
+            if (!String.IsNullOrWhiteSpace(response.ErrorMessage))
+                LogError(response.ErrorMessage);
+
             return response;
         }
 
@@ -138,7 +145,16 @@ namespace Yahoo
         public string ObtainReportUrl(CreateReportResponse createReportResponse)
         {
             //createReportResponse.status should be "SUBMITTED"...
-
+            if (createReportResponse == null || String.IsNullOrWhiteSpace(createReportResponse.customerReportId))
+            {
+                LogError("Invalid createReportResponse");
+                return null;
+            }
+            if (createReportResponse.status != "SUBMITTED")
+            {
+                LogError(String.Format("createReportResponse.status is: {0}", createReportResponse.status));
+                return null;
+            }
             return WaitForReportUrl(createReportResponse.customerReportId);
         }
         // Keeps checking until the report is ready, then returns the location(url) of the CSV
@@ -170,6 +186,16 @@ namespace Yahoo
             return null;
         }
 
+        public GetReportResponse GetReportStatus(string reportId)
+        {
+            var request = new RestRequest("extreport/" + reportId);
+            var response = ProcessRequest<GetReportResponse>(request);
+
+            if (response == null)
+                return null;
+            return response.Data;
+        }
+
         public CreateReportResponse RequestReport(DateTime startDate, DateTime endDate, int? accountId = null, bool byAdvertiser = false, bool byCampaign = false, bool byLine = false, bool byAd = false, bool byCreative = false)
         {
             var accountList = new List<int>();
@@ -188,7 +214,7 @@ namespace Yahoo
             if (byCreative)
                 dimensionList.Add(Dimension.CREATIVE);
 
-            var metricList = new List<int>(new[] { Metric.IMPRESSIONS, Metric.CLICKS, Metric.ADVERTISER_SPENDING, Metric.CLICK_THROUGH_CONVERSIONS, Metric.VIEW_THROUGH_CONVERSIONS }); //, Metric.ROAS_ACTION_VALUE }
+            var metricList = new List<int>(new[] { Metric.IMPRESSIONS, Metric.CLICKS, Metric.ADVERTISER_SPENDING, Metric.CLICK_THROUGH_CONVERSIONS, Metric.VIEW_THROUGH_CONVERSIONS, Metric.ROAS_ACTION_VALUE });
             var reportOption = new ReportOption
             {
                 timezone = Timezone.NEW_YORK,
@@ -209,17 +235,9 @@ namespace Yahoo
             request.AddJsonBody(json);
 
             var response = ProcessRequest<CreateReportResponse>(request, postNotGet: true);
-            //TODO: handle errors
 
-            return response.Data;
-        }
-
-        public GetReportResponse GetReportStatus(string reportId)
-        {
-            var request = new RestRequest("extreport/" + reportId);
-            var response = ProcessRequest<GetReportResponse>(request);
-            //TODO: handle errors
-
+            if (response == null)
+                return null;
             return response.Data;
         }
     }

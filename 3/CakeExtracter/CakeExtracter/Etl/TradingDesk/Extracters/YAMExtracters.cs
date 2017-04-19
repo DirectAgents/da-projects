@@ -8,10 +8,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
     public abstract class YAMApiExtracter<T> : Extracter<T>
     {
-        protected YAMUtility _yamUtility;
-        protected DateRange dateRange;
-        protected ColumnMapping columnMapping;
-        protected int yamAdvertiserId;
+        protected readonly YAMUtility _yamUtility;
+        protected readonly DateRange dateRange;
+        protected readonly ColumnMapping columnMapping;
+        protected readonly int yamAdvertiserId;
 
         public YAMApiExtracter(YAMUtility yamUtility, DateRange dateRange, ExtAccount account)
         {
@@ -49,8 +49,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 var tdExtracter = new TDDailySummaryExtracter(this.columnMapping, streamReader: streamReader);
                 var items = tdExtracter.EnumerateRows();
                 Add(items);
-                End();
             }
+            End();
         }
     }
 
