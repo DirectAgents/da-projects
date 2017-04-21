@@ -56,8 +56,8 @@ namespace CakeExtracter.Commands
                     DoETL_Daily(dateRange, account);
                 if (statsType.Strategy)
                     DoETL_Strategy(dateRange, account);
-                //if (statsType.Creative)
-
+                if (statsType.Creative)
+                    DoETL_Creative(dateRange, account);
             }
             SaveTokens();
             return 0;

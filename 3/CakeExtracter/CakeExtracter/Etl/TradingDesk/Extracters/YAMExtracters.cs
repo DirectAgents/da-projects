@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Configuration;
+using System.IO;
 using System.Net;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
@@ -17,8 +18,29 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         {
             this._yamUtility = yamUtility;
             this.dateRange = dateRange;
-            this.columnMapping = account.Platform.PlatColMapping;
             this.yamAdvertiserId = int.Parse(account.ExternalId);
+            this.columnMapping = account.Platform.PlatColMapping;
+            if (columnMapping != null)
+            { //These override the colMappings b/c the API has different col headers than the UI-generated reports
+                string mapVal = ConfigurationManager.AppSettings["YAMMap_PostClickConv"];
+                if (mapVal != null)
+                    columnMapping.PostClickConv = mapVal;
+                mapVal = ConfigurationManager.AppSettings["YAMMap_PostViewConv"];
+                if (mapVal != null)
+                    columnMapping.PostViewConv = mapVal;
+                mapVal = ConfigurationManager.AppSettings["YAMMap_PostClickRev"];
+                if (mapVal != null)
+                    columnMapping.PostClickRev = mapVal;
+                mapVal = ConfigurationManager.AppSettings["YAMMap_PostViewRev"];
+                if (mapVal != null)
+                    columnMapping.PostViewRev = mapVal;
+                mapVal = ConfigurationManager.AppSettings["YAMMap_StrategyName"];
+                if (mapVal != null)
+                    columnMapping.StrategyName = mapVal;
+                mapVal = ConfigurationManager.AppSettings["YAMMap_CreativeName"];
+                if (mapVal != null)
+                    columnMapping.TDadName = mapVal;
+            }
         }
 
         public static StreamReader CreateStreamReaderFromUrl(string url)

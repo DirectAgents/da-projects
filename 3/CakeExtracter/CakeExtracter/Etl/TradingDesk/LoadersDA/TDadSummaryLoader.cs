@@ -135,6 +135,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         // Check by TDad name
                         tdAdsInDb = db.TDads.Where(s => s.AccountId == accountId && s.Name == group.Key.TDadName);
                     }
+                    //? should do the above like in TDStrategySummaryLoader ?
 
                     // Assume all TDads in the group have the same properties (just different dates/stats)
                     //var groupTDad = group.First();

@@ -52,13 +52,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         {
             using (CsvReader csv = new CsvReader(reader))
             {
-                csv.Configuration.SkipEmptyRecords = true;
-                csv.Configuration.WillThrowOnMissingField = false;
-                csv.Configuration.IgnoreReadingExceptions = true; // This is at the row level
-                csv.Configuration.ReadingExceptionCallback = (ex, row) =>
-                {
-                    Logger.Error(ex);
-                };
+                TDDailySummaryExtracter.SetupCSVReaderConfig(csv);
 
                 var classMap = CreateCsvClassMap(this.columnMapping);
                 csv.Configuration.RegisterClassMap(classMap);

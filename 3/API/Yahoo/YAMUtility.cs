@@ -71,7 +71,7 @@ namespace Yahoo
                 BaseUrl = new Uri(AuthBaseUrl),
                 Authenticator = new HttpBasicAuthenticator(ClientID, ClientSecret)
             };
-            restClient.AddHandler("application/json", new JsonDeserializer());
+            restClient.AddHandler("application/x-www-form-urlencoded", new JsonDeserializer());
 
             var request = new RestRequest();
             request.AddParameter("redirect_uri", "oob");
@@ -166,13 +166,15 @@ namespace Yahoo
                 Thread.Sleep(waitTime);
 
                 getReportResponse = GetReportStatus(customerReportId);
-                if (getReportResponse != null && getReportResponse.status.ToUpper() == "SUCCESS")
-                    break;
-
+                if (getReportResponse != null && getReportResponse.status != null)
+                {
+                    if (getReportResponse.status.ToUpper() == "SUCCESS" || getReportResponse.status.ToUpper() == "FAILED")
+                        break;
+                }
                 LogInfo("The report is not yet ready for download.");
             }
 
-            if (getReportResponse != null && getReportResponse.status.ToUpper() == "SUCCESS")
+            if (getReportResponse != null && getReportResponse.status != null && getReportResponse.status.ToUpper() == "SUCCESS")
                 return getReportResponse.url;
 
             LogInfo("Failed to obtain report URL");
@@ -191,6 +193,11 @@ namespace Yahoo
 
         public CreateReportResponse RequestReport(DateTime startDate, DateTime endDate, int? accountId = null, bool byAdvertiser = false, bool byCampaign = false, bool byLine = false, bool byAd = false, bool byCreative = false)
         {
+            //This produced an InvalidTimeZoneException so we're just going with the system timezone, relying on it to be Eastern(daylight savings adjusted)
+            //var offset = TimeZoneInfo.FindSystemTimeZoneById(@"Eastern Standard Time\Dynamic DST").BaseUtcOffset;
+            //var start = new DateTimeOffset(startDate.Year, startDate.Month, startDate.Day, 0, 0, 0, offset);
+            //var end = new DateTimeOffset(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59, offset);
+
             var accountList = new List<int>();
             if (accountId.HasValue)
                 accountList.Add(accountId.Value);
@@ -216,13 +223,14 @@ namespace Yahoo
                 dimensionTypeIds = dimensionList.ToArray(),
                 metricTypeIds = metricList.ToArray()
             };
+            var adjustedEndDate = endDate.AddDays(1).AddSeconds(-1);
             var json = new
             {
                 reportOption = reportOption,
                 intervalTypeId = IntervalTypeId.DAY,
                 dateTypeId = DateTypeId.CUSTOM_RANGE,
-                startDate = startDate.ToString("s"),
-                endDate = endDate.ToString("s")
+                startDate = startDate.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz"),
+                endDate = adjustedEndDate.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz")
             };
             var request = new RestRequest("extreport/");
             request.AddJsonBody(json);

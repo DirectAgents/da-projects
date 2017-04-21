@@ -49,17 +49,27 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             }
         }
 
+        public static void SetupCSVReaderConfig(CsvReader csv)
+        {
+            csv.Configuration.SkipEmptyRecords = true; //ShouldSkipRecord is checked first. if false, will check if it's an empty record
+            csv.Configuration.ShouldSkipRecord = delegate(string[] fields)
+            {
+                if (fields[0] != null && fields[0].ToUpper().StartsWith("TOTAL"))
+                    return true;
+                return false;
+            };
+            csv.Configuration.WillThrowOnMissingField = false;
+            csv.Configuration.IgnoreReadingExceptions = true; // This is at the row level
+            csv.Configuration.ReadingExceptionCallback = (ex, row) =>
+            {
+                Logger.Error(ex);
+            };
+        }
         private IEnumerable<DailySummary> EnumerateRowsInner(StreamReader reader)
         {
             using (CsvReader csv = new CsvReader(reader))
             {
-                csv.Configuration.SkipEmptyRecords = true;
-                csv.Configuration.WillThrowOnMissingField = false;
-                csv.Configuration.IgnoreReadingExceptions = true; // This is at the row level
-                csv.Configuration.ReadingExceptionCallback = (ex, row) =>
-                    {
-                        Logger.Error(ex);
-                    };
+                SetupCSVReaderConfig(csv);
 
                 var classMap = CreateCsvClassMap(this.columnMapping);
                 csv.Configuration.RegisterClassMap(classMap);
@@ -122,11 +132,18 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         public static void CheckAddPropertyMap(CsvClassMap classMap, Type classType, string propName, string colName)
         {
             if (!string.IsNullOrWhiteSpace(colName))
-                classMap.PropertyMaps.Add(CreatePropertyMap(classType, propName, colName));
+            {
+                var csvPropertyMap = CreatePropertyMap(classType, propName, colName);
+                if (csvPropertyMap != null)
+                    classMap.PropertyMaps.Add(csvPropertyMap);
+            }
         }
         private static CsvPropertyMap CreatePropertyMap(Type classType, string propName, string colName)
         {
             var propertyInfo = classType.GetProperty(propName);
+            if (propertyInfo == null) // the property doesn't exist
+                return null;
+
             var propMap = new CsvPropertyMap(propertyInfo);
             propMap.Name(colName);
             if (propertyInfo.PropertyType == typeof(int) ||
