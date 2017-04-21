@@ -46,8 +46,8 @@ namespace CakeExtracter.Commands
             var oneWeekAgo = today.AddDays(-7);
             var dateRange = new DateRange(StartDate ?? oneWeekAgo, EndDate ?? today.AddDays(-1));
 
-            this.yamUtility = new YAMUtility(m => Logger.Info(m), m => Logger.Warn(m));
             var statsType = new StatsTypeAgg(this.StatsType);
+            SetupYAMUtility();
 
             var accounts = GetAccounts();
             foreach (var account in accounts)
@@ -59,7 +59,36 @@ namespace CakeExtracter.Commands
                 //if (statsType.Creative)
 
             }
+            SaveTokens();
             return 0;
+        }
+        private void SetupYAMUtility()
+        {
+            this.yamUtility = new YAMUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            using (var db = new ClientPortalProgContext())
+            {
+                var platYAM = db.Platforms.Single(x => x.Code == Platform.Code_YAM);
+                if (String.IsNullOrWhiteSpace(platYAM.Tokens))
+                {
+                    yamUtility.GetAccessToken();
+                }
+                else
+                {
+                    var tokens = platYAM.Tokens.Split(new string[] { YAMUtility.TOKEN_DELIMITER }, StringSplitOptions.None);
+                    yamUtility.AccessToken = tokens[0];
+                    if (tokens.Length > 1)
+                        yamUtility.RefreshToken = tokens[1];
+                }
+            }
+        }
+        private void SaveTokens()
+        {
+            using (var db = new ClientPortalProgContext())
+            {
+                var platYAM = db.Platforms.Single(x => x.Code == Platform.Code_YAM);
+                platYAM.Tokens = yamUtility.AccessToken + YAMUtility.TOKEN_DELIMITER + yamUtility.RefreshToken;
+                db.SaveChanges();
+            }
         }
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account)

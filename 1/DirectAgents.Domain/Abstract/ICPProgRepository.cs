@@ -23,7 +23,7 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<Platform> Platforms();
         IQueryable<Platform> PlatformsWithoutBudgetInfo(int campId, DateTime date); // (without a "PlatformBudgetInfo")
         bool AddPlatform(Platform platform);
-        bool SavePlatform(Platform platform);
+        bool SavePlatform(Platform platform, bool includeTokens = true);
         Advertiser Advertiser(int id);
         IQueryable<Advertiser> Advertisers();
         bool AddAdvertiser(Advertiser adv);

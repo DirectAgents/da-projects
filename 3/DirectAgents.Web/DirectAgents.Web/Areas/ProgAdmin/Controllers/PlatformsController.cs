@@ -47,7 +47,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (cpProgRepo.SavePlatform(plat))
+                if (cpProgRepo.SavePlatform(plat, includeTokens: false))
                     return RedirectToAction("Index");
                 ModelState.AddModelError("", "Platform could not be saved.");
             }

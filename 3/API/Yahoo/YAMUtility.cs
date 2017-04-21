@@ -10,6 +10,7 @@ namespace Yahoo
 {
     public class YAMUtility
     {
+        public const string TOKEN_DELIMITER = "|DELIMITER|";
         private const int WAITTIME_SECONDS = 6;
         private const int NUMTRIES_GETREPORTSTATUS = 15;
 
@@ -17,8 +18,8 @@ namespace Yahoo
         private string ClientID { get; set; }
         private string ClientSecret { get; set; }
         private string ApplicationAccessCode { get; set; }
-        private string RefreshToken { get; set; }
-        private string AccessToken { get; set; }
+        public string RefreshToken { get; set; }
+        public string AccessToken { get; set; }
         private string YAMBaseUrl { get; set; }
 
         // --- Logging ---
@@ -60,21 +61,10 @@ namespace Yahoo
 
             AuthBaseUrl = ConfigurationManager.AppSettings["YahooAuthBaseUrl"];
             YAMBaseUrl = ConfigurationManager.AppSettings["YAMBaseUrl"];
-
-            GetSavedTokens();
-        }
-        private void GetSavedTokens()
-        {
-            //TODO: Attempt to retrieve these from the db instead of config
-            AccessToken = ConfigurationManager.AppSettings["YahooAccessToken"];
-            RefreshToken = ConfigurationManager.AppSettings["YahooRefreshToken"];
-
-            if (String.IsNullOrEmpty(AccessToken))
-                GetAccessToken();
         }
 
         // Use the refreshToken if we have one, otherwise use the auth code
-        private void GetAccessToken()
+        public void GetAccessToken()
         {
             var restClient = new RestClient
             {
@@ -108,6 +98,9 @@ namespace Yahoo
                 BaseUrl = new Uri(YAMBaseUrl)
             };
             restClient.AddHandler("application/json", new JsonDeserializer());
+
+            if (String.IsNullOrEmpty(AccessToken))
+                GetAccessToken();
 
             restRequest.AddHeader("X-Auth-Method", "OAUTH");
             restRequest.AddHeader("X-Auth-Token", AccessToken);
@@ -150,7 +143,7 @@ namespace Yahoo
                 LogError("Invalid createReportResponse");
                 return null;
             }
-            if (createReportResponse.status != "SUBMITTED")
+            if (createReportResponse.status.ToUpper() != "SUBMITTED")
             {
                 LogError(String.Format("createReportResponse.status is: {0}", createReportResponse.status));
                 return null;

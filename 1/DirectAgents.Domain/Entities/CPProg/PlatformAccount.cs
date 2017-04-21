@@ -11,6 +11,7 @@ namespace DirectAgents.Domain.Entities.CPProg
         [MaxLength(50), Index("CodeIndex", IsUnique=true)]
         public string Code { get; set; }
         public string Name { get; set; }
+        public string Tokens { get; set; }
 
         public virtual ICollection<ExtAccount> ExtAccounts { get; set; }
         //public virtual ICollection<PlatformBudgetInfo> PlatformBudgetInfos { get; set; }

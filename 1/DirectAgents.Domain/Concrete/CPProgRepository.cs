@@ -87,12 +87,15 @@ namespace DirectAgents.Domain.Concrete
             context.SaveChanges();
             return true;
         }
-        public bool SavePlatform(Platform platform)
+        public bool SavePlatform(Platform platform, bool includeTokens = true)
         {
             if (context.Platforms.Any(p => p.Id == platform.Id))
             {
                 var entry = context.Entry(platform);
                 entry.State = EntityState.Modified;
+                if (!includeTokens)
+                    entry.Property(x => x.Tokens).IsModified = false;
+
                 context.SaveChanges();
                 return true;
             }
