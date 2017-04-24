@@ -11,8 +11,9 @@ namespace Yahoo
     public class YAMUtility
     {
         public const string TOKEN_DELIMITER = "|DELIMITER|";
+        private const int NUMTRIES_REQUESTREPORT = 10;
+        private const int NUMTRIES_GETREPORTSTATUS = 20;
         private const int WAITTIME_SECONDS = 6;
-        private const int NUMTRIES_GETREPORTSTATUS = 15;
 
         private string AuthBaseUrl { get; set; }
         private string ClientID { get; set; }
@@ -134,28 +135,14 @@ namespace Yahoo
 
         // ---
 
-        // (TODO) Checks if the CreateReportResponse is valid...
-        public string ObtainReportUrl(CreateReportResponse createReportResponse)
-        {
-            //createReportResponse.status should be "SUBMITTED"...
-            if (createReportResponse == null || String.IsNullOrWhiteSpace(createReportResponse.customerReportId))
-            {
-                LogError("Invalid createReportResponse");
-                return null;
-            }
-            if (createReportResponse.status.ToUpper() != "SUBMITTED")
-            {
-                LogError(String.Format("createReportResponse.status is: {0}", createReportResponse.status));
-                return null;
-            }
-            return WaitForReportUrl(createReportResponse.customerReportId);
-        }
         // Keeps checking until the report is ready, then returns the location(url) of the CSV
         private string WaitForReportUrl(string customerReportId)
         {
             if (String.IsNullOrWhiteSpace(customerReportId))
+            {
+                LogError("Missing Report Id");
                 return null;
-
+            }
             LogInfo("YAM Report ID: " + customerReportId);
 
             GetReportResponse getReportResponse = null;
@@ -180,8 +167,7 @@ namespace Yahoo
             LogInfo("Failed to obtain report URL");
             return null;
         }
-
-        public GetReportResponse GetReportStatus(string reportId)
+        private GetReportResponse GetReportStatus(string reportId)
         {
             var request = new RestRequest("extreport/" + reportId);
             var response = ProcessRequest<GetReportResponse>(request);
@@ -191,7 +177,39 @@ namespace Yahoo
             return response.Data;
         }
 
-        public CreateReportResponse RequestReport(DateTime startDate, DateTime endDate, int? accountId = null, bool byAdvertiser = false, bool byCampaign = false, bool byLine = false, bool byAd = false, bool byCreative = false)
+        // returns the url of the csv, or null if there was a problem
+        public string GenerateReport(DateTime startDate, DateTime endDate, int? accountId = null, bool byAdvertiser = false, bool byCampaign = false, bool byLine = false, bool byAd = false, bool byCreative = false)
+        {
+            var payload = CreateReportRequestPayload(startDate, endDate, accountId, byAdvertiser, byCampaign, byLine, byAd, byCreative);
+
+            CreateReportResponse createReportResponse = null;
+            bool okay = false;
+            int retries = NUMTRIES_REQUESTREPORT; // includes the initial attempt
+            while (!okay && retries > 0)
+            {
+                bool firstTry = (retries == NUMTRIES_REQUESTREPORT);
+                createReportResponse = RequestReport(payload, logResponse: !firstTry);
+                retries--;
+
+                if (createReportResponse != null && createReportResponse.status != null && createReportResponse.status.ToUpper() == "SUBMITTED")
+                    okay = true;
+                else
+                {
+                    var message = "Invalid createReportResponse" + (retries > 0 ? ". Will retry" : "");
+                    if (createReportResponse != null)
+                        message = message + String.Format(". status: [{0}] customerReportId: [{1}]", createReportResponse.status, createReportResponse.customerReportId);
+                    LogError(message);
+                    if (retries > 0)
+                        Thread.Sleep(new TimeSpan(0, 0, WAITTIME_SECONDS));
+                }
+            }
+            if (!okay)
+                return null;
+
+            return WaitForReportUrl(createReportResponse.customerReportId);
+        }
+
+        private ReportPayload CreateReportRequestPayload(DateTime startDate, DateTime endDate, int? accountId = null, bool byAdvertiser = false, bool byCampaign = false, bool byLine = false, bool byAd = false, bool byCreative = false)
         {
             //This produced an InvalidTimeZoneException so we're just going with the system timezone, relying on it to be Eastern(daylight savings adjusted)
             //var offset = TimeZoneInfo.FindSystemTimeZoneById(@"Eastern Standard Time\Dynamic DST").BaseUtcOffset;
@@ -223,8 +241,9 @@ namespace Yahoo
                 dimensionTypeIds = dimensionList.ToArray(),
                 metricTypeIds = metricList.ToArray()
             };
+
             var adjustedEndDate = endDate.AddDays(1).AddSeconds(-1);
-            var json = new
+            var payload = new ReportPayload
             {
                 reportOption = reportOption,
                 intervalTypeId = IntervalTypeId.DAY,
@@ -232,13 +251,23 @@ namespace Yahoo
                 startDate = startDate.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz"),
                 endDate = adjustedEndDate.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz")
             };
+            return payload;
+        }
+
+        private CreateReportResponse RequestReport(ReportPayload payload, bool logResponse = false)
+        {
             var request = new RestRequest("extreport/");
-            request.AddJsonBody(json);
+            request.AddJsonBody(payload);
 
             var response = ProcessRequest<CreateReportResponse>(request, postNotGet: true);
 
-            if (response == null)
+            if (response == null || response.Data == null)
                 return null;
+            if (logResponse)
+            {
+                //LogInfo("ResponseStatus: " + response.ResponseStatus.ToString());
+                LogInfo("StatusCode: " + response.StatusCode.ToString());
+            }
             return response.Data;
         }
     }

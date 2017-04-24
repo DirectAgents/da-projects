@@ -149,7 +149,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             if (propertyInfo.PropertyType == typeof(int) ||
                 propertyInfo.PropertyType == typeof(decimal))
             {
-                propMap.TypeConverterOption(NumberStyles.Currency);
+                propMap.TypeConverterOption(NumberStyles.Currency | NumberStyles.AllowExponent);
                 propMap.Default(0);
             }
             return propMap;

@@ -22,6 +22,14 @@ namespace Yahoo
         public string url { get; set; }
     }
 
+    public class ReportPayload
+    {
+        public ReportOption reportOption { get; set; }
+        public int intervalTypeId { get; set; }
+        public int dateTypeId { get; set; }
+        public string startDate { get; set; }
+        public string endDate { get; set; }
+    }
     public class ReportOption
     {
         public string timezone { get; set; }

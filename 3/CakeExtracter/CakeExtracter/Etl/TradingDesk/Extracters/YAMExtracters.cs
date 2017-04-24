@@ -62,8 +62,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            var response = _yamUtility.RequestReport(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId);
-            string reportUrl = _yamUtility.ObtainReportUrl(response);
+            var reportUrl = _yamUtility.GenerateReport(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId);
 
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
@@ -85,8 +84,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            var response = _yamUtility.RequestReport(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId, byLine: true);
-            string reportUrl = _yamUtility.ObtainReportUrl(response);
+            var reportUrl = _yamUtility.GenerateReport(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId, byLine: true);
 
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
@@ -94,8 +92,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 var tdExtracter = new TDStrategySummaryExtracter(this.columnMapping, streamReader: streamReader);
                 var items = tdExtracter.EnumerateRows();
                 Add(items);
-                End();
             }
+            End();
         }
     }
 
@@ -108,8 +106,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            var response = _yamUtility.RequestReport(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId, byAd: true);
-            string reportUrl = _yamUtility.ObtainReportUrl(response);
+            var reportUrl = _yamUtility.GenerateReport(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId, byAd: true);
 
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
@@ -117,8 +114,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 var tdExtracter = new TDadSummaryExtracter(this.columnMapping, streamReader: streamReader);
                 var items = tdExtracter.EnumerateRows();
                 Add(items);
-                End();
             }
+            End();
         }
     }
 }

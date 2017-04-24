@@ -30,8 +30,8 @@ namespace CakeExtracter.Commands
         {
             var yamUtility = new YAMUtility();
             //yamUtility.CreateTestReport();
-            string id = "85661025-129d-4331-9379-392e4a27a6a2";
-            yamUtility.GetReportStatus(id);
+            //string id = "85661025-129d-4331-9379-392e4a27a6a2";
+            //yamUtility.GetReportStatus(id);
             //yamUtility.ObtainReportUrl();
         }
 

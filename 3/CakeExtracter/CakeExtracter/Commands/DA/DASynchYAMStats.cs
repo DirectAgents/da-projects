@@ -52,6 +52,7 @@ namespace CakeExtracter.Commands
             var accounts = GetAccounts();
             foreach (var account in accounts)
             {
+                Logger.Info("Commencing ETL for YAM account ({0}) {1}", account.Id, account.Name);
                 if (statsType.Daily)
                     DoETL_Daily(dateRange, account);
                 if (statsType.Strategy)
