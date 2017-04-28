@@ -57,7 +57,8 @@ Extra Items:
 Stats:
 @Html.ActionLink("Budget+Pacing", "Pacing", "CampStats", new { campId = Model.Id }, null) |
 @Html.ActionLink("Raw Stats", "ExtAccount", "Stats", new { campId = Model.Id }, null) |
-@Html.ActionLink("MTD", "MTD", "Stats", new { campId = Model.Id }, null)
+@Html.ActionLink("MTD", "MTD", "Stats", new { campId = Model.Id }, null) |
+@Html.ActionLink("StatsGauge", "IndexGauge", "ExtAccounts", new { campId = Model.Id }, null)
 <br /><br />
 Generate:
 @Html.ActionLink("Report Components", "Home", "Reports", new { campId = Model.Id }, null)

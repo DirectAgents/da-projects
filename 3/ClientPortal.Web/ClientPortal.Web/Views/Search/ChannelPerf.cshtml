@@ -18,7 +18,7 @@
 <section>
     <div class="show-export">
         <div class="show">
-            Show: <input id="numweeksInput" value="8" /> weeks
+            Show: <input id="numweeksChannelPerfInput" value="8" /> weeks
             <a class="button paddedbutton" href="#" onclick="RefreshGrid('channelperf'); return false">Refresh</a>
         </div>
         <div class="export"><a class="button paddedbutton" href="#" onclick="ExportChannelPerfCSV(); return false">Export CSV</a></div>
@@ -38,12 +38,12 @@
 <script>
     $(function () {
         cultureGlobal = '@Model.UserInfo.Culture';
-        $('#numweeksInput').kendoNumericTextBox({
+        $('#numweeksChannelPerfInput').kendoNumericTextBox({
             decimals: 0,
             format: 'n0',
             min: 1
         });
-        $('#numweeksInput').data('kendoNumericTextBox').wrapper.width(65);
+        $('#numweeksChannelPerfInput').data('kendoNumericTextBox').wrapper.width(65);
 
         var channelperfDS = CreateSummaryDataSource(
             '@Url.Action("ChannelPerfData", "SearchReports")',

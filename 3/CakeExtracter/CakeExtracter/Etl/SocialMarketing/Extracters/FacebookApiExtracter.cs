@@ -34,10 +34,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
             try
             {
                 var fbSums = _fbUtility.GetDailyStats("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
-                foreach (var fbSum in fbSums)
-                {
-                    Add(fbSum);
-                }
+                Add(fbSums);
             }
             catch (Exception ex)
             {
@@ -60,10 +57,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
             try
             {
                 var fbSums = _fbUtility.GetDailyCampaignStats("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
-                foreach (var fbSum in fbSums)
-                {
-                    Add(fbSum);
-                }
+                Add(fbSums);
             }
             catch (Exception ex)
             {
@@ -86,10 +80,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
             try
             {
                 var fbSums = _fbUtility.GetDailyAdSetStats("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
-                foreach (var fbSum in fbSums)
-                {
-                    Add(fbSum);
-                }
+                Add(fbSums);
             }
             catch (Exception ex)
             {
@@ -112,10 +103,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
             try
             {
                 var fbSums = _fbUtility.GetDailyAdStats("act_" + fbAccountId, dateRange.Value.FromDate, dateRange.Value.ToDate);
-                foreach (var fbSum in fbSums)
-                {
-                    Add(fbSum);
-                }
+                Add(fbSums);
             }
             catch (Exception ex)
             {
@@ -142,10 +130,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
             try
             {
                 var fbAds = _fbUtility.GetAdPreviews(fbAdIds);
-                foreach (var fbAd in fbAds)
-                {
-                    Add(fbAd);
-                }
+                Add(fbAds);
             }
             catch (Exception ex)
             {

@@ -26,6 +26,8 @@ namespace DirectAgents.Domain.Seed
             AddPlatformIfNotExist("adel", "Adelphic");
             AddPlatformIfNotExist("adf", "Adform");
             AddPlatformIfNotExist("adt", "Adroit");
+            AddPlatformIfNotExist("amzn", "Amazon");
+            AddPlatformIfNotExist("apf", "AppsFlyer");
             AddPlatformIfNotExist("bc", "Bluecore");
             AddPlatformIfNotExist("crit", "Criteo");
             AddPlatformIfNotExist("kin", "Kinetic");

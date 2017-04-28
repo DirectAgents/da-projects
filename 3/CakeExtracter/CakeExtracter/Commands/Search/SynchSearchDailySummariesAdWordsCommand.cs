@@ -84,7 +84,8 @@ namespace CakeExtracter.Commands
             var yesterday = today.AddDays(-1);
             var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
 
-            foreach (var searchAccount in GetSearchAccounts())
+            var searchAccounts = GetSearchAccounts();
+            foreach (var searchAccount in searchAccounts)
             {
                 DateTime startDate = dateRange.FromDate;
                 if (searchAccount.MinSynchDate.HasValue && (startDate < searchAccount.MinSynchDate.Value))

@@ -27,7 +27,10 @@
     <td>@extAcct.Name</td>
     <td>@extAcct.ExternalId</td>
     <td>@(extAcct.Network != null ? extAcct.Network.Name : "")</td>
-    <td>@Html.ActionLink("Upload", "UploadStats", new { id = extAcct.Id })</td>
+    <td>
+        @Html.ActionLink("Upload", "UploadStats", new { id = extAcct.Id }) |
+        @Html.ActionLink("Raw", "ExtAccount", "Stats", new { acctid = extAcct.Id }, null)
+    </td>
     <td>
         @Html.ActionLink("Strategies", "Strategies", new { id = extAcct.Id }, null) |
         @Html.ActionLink("Creatives", "Index", "TDads", new { acctid = extAcct.Id }, null) |
