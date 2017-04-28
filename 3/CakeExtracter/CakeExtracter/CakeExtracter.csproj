@@ -308,6 +308,7 @@
     <Compile Include="Commands\RT\RTSynchTest.cs" />
     <Compile Include="Commands\Search\SynchSearchDailySummariesAppleCommand.cs" />
     <Compile Include="Commands\Test\TestABCommand.cs" />
+    <Compile Include="Commands\Test\TestAdformCommand.cs" />
     <Compile Include="Commands\Test\TestAppleCommand.cs" />
     <Compile Include="Commands\Test\TestYAMCommand.cs">
       <SubType>Code</SubType>
@@ -585,6 +586,10 @@
     <ProjectReference Include="..\..\..\1\EomTool\EomTool.Domain\EomTool.Domain.csproj">
       <Project>{f41da2e2-d584-479a-9f24-9b2d3d33f927}</Project>
       <Name>EomTool.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\API\Adform\Adform.csproj">
+      <Project>{a73b51cc-60d1-4d14-b90c-1504cde05303}</Project>
+      <Name>Adform</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\API\AdRoll\AdRoll.csproj">
       <Project>{feb04d4a-cf17-43bf-bf2c-635e87a38279}</Project>
