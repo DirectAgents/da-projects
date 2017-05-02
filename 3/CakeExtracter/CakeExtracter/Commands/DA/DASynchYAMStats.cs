@@ -63,33 +63,26 @@ namespace CakeExtracter.Commands
             SaveTokens();
             return 0;
         }
+
         private void SetupYAMUtility()
         {
             this.yamUtility = new YAMUtility(m => Logger.Info(m), m => Logger.Warn(m));
-            using (var db = new ClientPortalProgContext())
+            GetTokens();
+        }
+        private void GetTokens()
+        {
+            // Get tokens, if any, from the database
+            string[] tokens = Platform.GetPlatformTokens(Platform.Code_YAM);
+            if (tokens.Length > 0)
             {
-                var platYAM = db.Platforms.Single(x => x.Code == Platform.Code_YAM);
-                if (String.IsNullOrWhiteSpace(platYAM.Tokens))
-                {
-                    yamUtility.GetAccessToken();
-                }
-                else
-                {
-                    var tokens = platYAM.Tokens.Split(new string[] { YAMUtility.TOKEN_DELIMITER }, StringSplitOptions.None);
-                    yamUtility.AccessToken = tokens[0];
-                    if (tokens.Length > 1)
-                        yamUtility.RefreshToken = tokens[1];
-                }
+                yamUtility.AccessToken = tokens[0];
+                if (tokens.Length > 1)
+                    yamUtility.RefreshToken = tokens[1];
             }
         }
         private void SaveTokens()
         {
-            using (var db = new ClientPortalProgContext())
-            {
-                var platYAM = db.Platforms.Single(x => x.Code == Platform.Code_YAM);
-                platYAM.Tokens = yamUtility.AccessToken + YAMUtility.TOKEN_DELIMITER + yamUtility.RefreshToken;
-                db.SaveChanges();
-            }
+            Platform.SavePlatformTokens(Platform.Code_YAM, yamUtility.AccessToken, yamUtility.RefreshToken);
         }
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account)

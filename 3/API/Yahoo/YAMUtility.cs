@@ -10,18 +10,19 @@ namespace Yahoo
 {
     public class YAMUtility
     {
-        public const string TOKEN_DELIMITER = "|DELIMITER|";
         private const int NUMTRIES_REQUESTREPORT = 10;
         private const int NUMTRIES_GETREPORTSTATUS = 20;
         private const int WAITTIME_SECONDS = 6;
 
+        // From Config:
         private string AuthBaseUrl { get; set; }
         private string ClientID { get; set; }
         private string ClientSecret { get; set; }
         private string ApplicationAccessCode { get; set; }
-        public string RefreshToken { get; set; }
-        public string AccessToken { get; set; }
         private string YAMBaseUrl { get; set; }
+
+        public string AccessToken { get; set; }
+        public string RefreshToken { get; set; }
 
         // --- Logging ---
         private Action<string> _LogInfo;
@@ -87,8 +88,17 @@ namespace Yahoo
                 request.AddParameter("refresh_token", RefreshToken);
             }
             var response = restClient.ExecuteAsPost<GetTokenResponse>(request, "POST");
-            AccessToken = response.Data.access_token;
-            RefreshToken = response.Data.refresh_token; // update this in case it changed
+
+            if (response.Data == null || response.Data.access_token == null)
+                LogError("Failed to get access token");
+            if (response.Data != null && response.Data.refresh_token == null)
+                LogError("Failed to get refresh token");
+
+            if (response.Data != null)
+            {
+                AccessToken = response.Data.access_token;
+                RefreshToken = response.Data.refresh_token; // update this in case it changed
+            }
         }
 
         private IRestResponse<T> ProcessRequest<T>(RestRequest restRequest, bool postNotGet = false)

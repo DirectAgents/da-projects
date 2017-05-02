@@ -24,7 +24,7 @@ namespace DirectAgents.Domain.Seed
             AddPlatformIfNotExist(Platform.Code_DATradingDesk, "DA Trading Desk");
             AddPlatformIfNotExist("mf", "Management Fee");
             AddPlatformIfNotExist("adel", "Adelphic");
-            AddPlatformIfNotExist("adf", "Adform");
+            AddPlatformIfNotExist(Platform.Code_Adform, "Adform");
             AddPlatformIfNotExist("adt", "Adroit");
             AddPlatformIfNotExist("amzn", "Amazon");
             AddPlatformIfNotExist("apf", "AppsFlyer");
@@ -36,7 +36,7 @@ namespace DirectAgents.Domain.Seed
             AddPlatformIfNotExist("max", "Maxpoint");
             AddPlatformIfNotExist("tab", "Taboola");
             AddPlatformIfNotExist("tc", "TapCommerce");
-            AddPlatformIfNotExist("yam", "YAM");
+            AddPlatformIfNotExist(Platform.Code_YAM, "YAM");
             AddPlatformIfNotExist("zem", "Zemanta");
         }
 

@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using DirectAgents.Domain.Contexts;
 
 namespace DirectAgents.Domain.Entities.CPProg
 {
@@ -12,6 +14,7 @@ namespace DirectAgents.Domain.Entities.CPProg
         public string Code { get; set; }
         public string Name { get; set; }
         public string Tokens { get; set; }
+        public const string TOKEN_DELIMITER = "|DELIMITER|";
 
         public virtual ICollection<ExtAccount> ExtAccounts { get; set; }
         //public virtual ICollection<PlatformBudgetInfo> PlatformBudgetInfos { get; set; }
@@ -23,6 +26,7 @@ namespace DirectAgents.Domain.Entities.CPProg
         public const string Code_FB = "fb";
         public const string Code_Twitter = "tw";
         public const string Code_Instagram = "insta";
+        public const string Code_Adform = "adf";
         public const string Code_YAM = "yam";
 
         public static IEnumerable<string> Codes_Social()
@@ -35,6 +39,31 @@ namespace DirectAgents.Domain.Entities.CPProg
             return db.Platforms.Where(p => p.Code == platCode).First().Id;
         }
 
+        public static string[] GetPlatformTokens(string platformCode)
+        {
+            string[] tokens = null;
+            using (var db = new ClientPortalProgContext())
+            {
+                var platform = db.Platforms.Single(x => x.Code == platformCode);
+                if (platform != null)
+                {
+                    tokens = platform.Tokens.Split(new string[] { Platform.TOKEN_DELIMITER }, StringSplitOptions.None);
+                }
+            }
+            return (tokens != null) ? tokens : new string[] { };
+        }
+        public static void SavePlatformTokens(string platformCode, params string[] tokens)
+        {
+            using (var db = new ClientPortalProgContext())
+            {
+                var platform = db.Platforms.Single(x => x.Code == platformCode);
+                if (platform != null)
+                {
+                    platform.Tokens = String.Join(Platform.TOKEN_DELIMITER, tokens);
+                    db.SaveChanges();
+                }
+            }
+        }
     }
 
     public class PlatColMapping : ColumnMapping
