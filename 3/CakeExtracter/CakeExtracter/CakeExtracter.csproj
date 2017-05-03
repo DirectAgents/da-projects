@@ -297,6 +297,7 @@
     <Compile Include="CakeMarketingApi\Entities\Role.cs" />
     <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
     <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
+    <Compile Include="Commands\DA\DASynchAdformStats.cs" />
     <Compile Include="Commands\DA\DASynchCampSums.cs" />
     <Compile Include="Commands\DA\DASynchYAMStats.cs" />
     <Compile Include="Commands\EOMSynchCPCCommand.cs" />
@@ -327,6 +328,7 @@
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSetSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookCampaignSummaryLoader.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\AdformExtracters.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdRollAdExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollSiteStatsCsvExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\CPCExtracter.cs" />

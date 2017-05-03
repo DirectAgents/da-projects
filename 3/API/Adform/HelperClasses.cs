@@ -1,5 +1,5 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
 namespace Adform
 {
     public class GetTokenResponse
@@ -17,7 +17,13 @@ namespace Adform
     }
     public class ReportFilter
     {
-        public string date { get; set; }
+        public Dates date { get; set; }
+        public int[] client { get; set; }
+    }
+    public class Dates
+    {
+        public string from { get; set; }
+        public string to { get; set; }
     }
 
     public class ReportResponse
@@ -30,7 +36,13 @@ namespace Adform
     {
         public List<string> columnHeaders { get; set; }
         public object columns { get; set; }
-        public object rows { get; set; }
+        public List<List<object>> rows { get; set; }
         // totals?
     }
+
+    //public class AFSummary
+    //{
+    //    public int impressions { get; set; }
+    //    public int clicks { get; set; }
+    //}
 }

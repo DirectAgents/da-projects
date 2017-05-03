@@ -1,16 +1,16 @@
-﻿using CakeExtracter.Common;
+﻿using System;
+using System.Collections.Generic;
+using CakeExtracter.Common;
 using FacebookAPI;
 using FacebookAPI.Entities;
-using System.Collections.Generic;
-using System;
 
 namespace CakeExtracter.Etl.SocialMarketing.Extracters
 {
     public abstract class FacebookApiExtracter<T> : Extracter<T>
     {
-        protected FacebookUtility _fbUtility;
-        protected DateRange? dateRange;
-        protected string fbAccountId; // fb account: aka "ad account"
+        protected readonly FacebookUtility _fbUtility;
+        protected readonly DateRange? dateRange;
+        protected readonly string fbAccountId; // fb account: aka "ad account"
 
         public FacebookApiExtracter(FacebookUtility fbUtility = null, DateRange? dateRange = null, string fbAccountId = null, bool includeAllActions = false)
         {

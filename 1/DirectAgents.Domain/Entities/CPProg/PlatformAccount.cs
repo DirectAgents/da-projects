@@ -45,7 +45,7 @@ namespace DirectAgents.Domain.Entities.CPProg
             using (var db = new ClientPortalProgContext())
             {
                 var platform = db.Platforms.Single(x => x.Code == platformCode);
-                if (platform != null)
+                if (platform != null && platform.Tokens != null)
                 {
                     tokens = platform.Tokens.Split(new string[] { Platform.TOKEN_DELIMITER }, StringSplitOptions.None);
                 }

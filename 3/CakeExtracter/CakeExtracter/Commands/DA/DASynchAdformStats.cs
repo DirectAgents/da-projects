@@ -2,24 +2,24 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using Adform;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
-using Yahoo;
 
 namespace CakeExtracter.Commands
 {
     [Export(typeof(ConsoleCommand))]
-    public class DASynchYAMStats : ConsoleCommand
+    public class DASynchAdformStats : ConsoleCommand
     {
         public int? AccountId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public string StatsType { get; set; }
 
-        private YAMUtility yamUtility { get; set; }
+        private AdformUtility adformUtility { get; set; }
 
         public override void ResetProperties()
         {
@@ -29,9 +29,9 @@ namespace CakeExtracter.Commands
             StatsType = null;
         }
 
-        public DASynchYAMStats()
+        public DASynchAdformStats()
         {
-            IsCommand("daSynchYAMStats", "synch YAM Stats");
+            IsCommand("daSynchAdformStats", "synch Adform Stats");
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
             HasOption("s|startDate=", "Start Date (default is seven days ago)", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
@@ -47,66 +47,46 @@ namespace CakeExtracter.Commands
             var dateRange = new DateRange(StartDate ?? oneWeekAgo, EndDate ?? today.AddDays(-1));
 
             var statsType = new StatsTypeAgg(this.StatsType);
-            SetupYAMUtility();
+            SetupAdformUtility();
 
             var accounts = GetAccounts();
             foreach (var account in accounts)
             {
-                Logger.Info("Commencing ETL for YAM account ({0}) {1}", account.Id, account.Name);
+                Logger.Info("Commencing ETL for Adform account ({0}) {1}", account.Id, account.Name);
                 if (statsType.Daily)
                     DoETL_Daily(dateRange, account);
-                if (statsType.Strategy)
-                    DoETL_Strategy(dateRange, account);
-                if (statsType.Creative)
-                    DoETL_Creative(dateRange, account);
+                //if (statsType.Strategy)
+                //    DoETL_Strategy(dateRange, account);
+                //if (statsType.Creative)
+                //    DoETL_Creative(dateRange, account);
             }
             SaveTokens();
             return 0;
         }
 
-        private void SetupYAMUtility()
+        private void SetupAdformUtility()
         {
-            this.yamUtility = new YAMUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            this.adformUtility = new AdformUtility(m => Logger.Info(m), m => Logger.Warn(m));
             GetTokens();
         }
         private void GetTokens()
         {
             // Get tokens, if any, from the database
-            string[] tokens = Platform.GetPlatformTokens(Platform.Code_YAM);
+            string[] tokens = Platform.GetPlatformTokens(Platform.Code_Adform);
             if (tokens.Length > 0)
             {
-                yamUtility.AccessToken = tokens[0];
-                if (tokens.Length > 1)
-                    yamUtility.RefreshToken = tokens[1];
+                adformUtility.AccessToken = tokens[0];
             }
         }
         private void SaveTokens()
         {
-            Platform.SavePlatformTokens(Platform.Code_YAM, yamUtility.AccessToken, yamUtility.RefreshToken);
+            Platform.SavePlatformTokens(Platform.Code_Adform, adformUtility.AccessToken);
         }
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new YAMDailySummaryExtracter(yamUtility, dateRange, account);
+            var extracter = new AdformDailySummaryExtracter(adformUtility, dateRange, account.ExternalId);
             var loader = new TDDailySummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
-        }
-        private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
-        {
-            var extracter = new YAMStrategySummaryExtracter(yamUtility, dateRange, account);
-            var loader = new TDStrategySummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
-        }
-        private void DoETL_Creative(DateRange dateRange, ExtAccount account)
-        {
-            var extracter = new YAMTDadSummaryExtracter(yamUtility, dateRange, account);
-            var loader = new TDadSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
@@ -117,7 +97,8 @@ namespace CakeExtracter.Commands
         {
             using (var db = new ClientPortalProgContext())
             {
-                var accounts = db.ExtAccounts.Include("Platform.PlatColMapping").Where(a => a.Platform.Code == Platform.Code_YAM);
+                //var accounts = db.ExtAccounts.Include("Platform.PlatColMapping").Where(a => a.Platform.Code == Platform.Code_Adform);
+                var accounts = db.ExtAccounts.Where(a => a.Platform.Code == Platform.Code_Adform);
                 if (AccountId.HasValue)
                     accounts = accounts.Where(a => a.Id == AccountId.Value);
 

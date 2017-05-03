@@ -271,7 +271,7 @@ namespace Yahoo
 
             var response = ProcessRequest<CreateReportResponse>(request, postNotGet: true);
 
-            if (response == null || response.Data == null)
+            if (response == null)
                 return null;
             if (logResponse)
             {

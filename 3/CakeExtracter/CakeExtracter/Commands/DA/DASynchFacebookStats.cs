@@ -167,7 +167,6 @@ namespace CakeExtracter.Commands
 
         private IEnumerable<ExtAccount> GetAccounts()
         {
-            string[] acctIdsArray = new string[] { };
             using (var db = new ClientPortalProgContext())
             {
                 var accounts = db.ExtAccounts.Include("Network").Where(a => a.Platform.Code == Platform.Code_FB);

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Threading;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Deserializers;
@@ -18,7 +16,7 @@ namespace Adform
         private string ClientSecret { get; set; }
         private string BaseUrl { get; set; }
 
-        private string AccessToken { get; set; }
+        public string AccessToken { get; set; }
 
         // --- Logging ---
         private Action<string> _LogInfo;
@@ -103,13 +101,51 @@ namespace Adform
             return response;
         }
 
+        public ReportData GetReportData(DateTime startDate, DateTime endDate, int clientId)
+        {
+            var parms = CreateReportParams(startDate, endDate, clientId);
+            var request = new RestRequest("/v1/reportingstats/agency/reportdata");
+            request.AddJsonBody(parms);
+
+            var restResponse = ProcessRequest<ReportResponse>(request, postNotGet: true);
+            if (restResponse != null && restResponse.Data != null)
+            {
+                //ReportResponse reportResponse = restResponse.Data;
+                return restResponse.Data.reportData;
+            }
+            return null;
+        }
+
+        // like a constructor...
+        private ReportParams CreateReportParams(DateTime startDate, DateTime endDate, int clientId)
+        {
+            var filter = new ReportFilter
+            {
+                date = new Dates
+                {
+                    from = startDate.ToString("yyyy'-'M'-'d"),
+                    to = endDate.ToString("yyyy'-'M'-'d")
+                },
+                client = new int[] { clientId }
+            };
+            var reportParams = new ReportParams
+            {
+                dimensions = new string[] { "date" },
+                metrics = new string[] { "cost", "impressions", "clicks", "conversions" },
+                filter = filter
+            };
+            return reportParams;
+        }
+
+        //---
+
         public void TestReport()
         {
             var parms = new ReportParams
             {
                 dimensions = new string[] { "client" },
                 metrics = new string[] { "impressions", "clicks" },
-                filter = new ReportFilter { date = "campaignStartToEnd" }
+                filter = new ReportFilter { date = new Dates { from = "2017-4-1", to = "2017-4-25" } }
             };
 
             var request = new RestRequest("/v1/reportingstats/agency/reportdata");

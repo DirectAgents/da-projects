@@ -6,9 +6,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
     public abstract class AdrollApiExtracter<T> : Extracter<T>
     {
-        protected AdRollUtility _arUtility;
-        protected DateRange? dateRange;
-        protected string advertisableEid;
+        protected readonly AdRollUtility _arUtility;
+        protected readonly DateRange? dateRange;
+        protected readonly string advertisableEid;
 
         public AdrollApiExtracter(AdRollUtility arUtility = null, DateRange? dateRange = null, string advertisableEid = null)
         {

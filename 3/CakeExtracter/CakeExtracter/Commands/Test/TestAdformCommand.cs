@@ -30,7 +30,16 @@ namespace CakeExtracter.Commands
         public void Test2()
         {
             var adformUtility = new AdformUtility();
-            adformUtility.TestReport();
+            //adformUtility.TestReport();
+            var start = new DateTime(2017, 4, 20);
+            var end = new DateTime(2017, 4, 21);
+            int clientId = 54314; // G&T
+            var reportData = adformUtility.GetReportData(start, end, clientId);
+
+            foreach (var row in reportData.rows)
+            {
+                Logger.Info("row");
+            }
         }
 
         public void Test1()
