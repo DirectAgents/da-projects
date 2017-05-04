@@ -34,7 +34,8 @@ namespace CakeExtracter.Commands
             var start = new DateTime(2017, 4, 20);
             var end = new DateTime(2017, 4, 21);
             int clientId = 54314; // G&T
-            var reportData = adformUtility.GetReportData(start, end, clientId);
+            var parms = adformUtility.CreateReportParams(start, end, clientId);
+            var reportData = adformUtility.GetReportData(parms);
 
             foreach (var row in reportData.rows)
             {

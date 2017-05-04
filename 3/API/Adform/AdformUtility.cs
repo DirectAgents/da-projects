@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Net;
 using RestSharp;
@@ -116,11 +117,10 @@ namespace Adform
             return response;
         }
 
-        public ReportData GetReportData(DateTime startDate, DateTime endDate, int clientId)
+        public ReportData GetReportData(ReportParams reportParams)
         {
-            var parms = CreateReportParams(startDate, endDate, clientId);
             var request = new RestRequest("/v1/reportingstats/agency/reportdata");
-            request.AddJsonBody(parms);
+            request.AddJsonBody(reportParams);
 
             var restResponse = ProcessRequest<ReportResponse>(request, postNotGet: true);
             if (restResponse != null && restResponse.Data != null)
@@ -132,7 +132,7 @@ namespace Adform
         }
 
         // like a constructor...
-        private ReportParams CreateReportParams(DateTime startDate, DateTime endDate, int clientId)
+        public ReportParams CreateReportParams(DateTime startDate, DateTime endDate, int clientId, bool byLineItem = false)
         {
             var filter = new ReportFilter
             {
@@ -143,30 +143,17 @@ namespace Adform
                 },
                 client = new int[] { clientId }
             };
+            var dimensions = new List<string> { "date" };
+            if (byLineItem)
+                dimensions.Add("lineItem");
+
             var reportParams = new ReportParams
             {
-                dimensions = new string[] { "date" },
-                metrics = new string[] { "cost", "impressions", "clicks", "conversions" },
+                dimensions = dimensions.ToArray(),
+                metrics = new string[] { "cost", "impressions", "clicks", "conversions", "sales" },
                 filter = filter
             };
             return reportParams;
-        }
-
-        //---
-
-        public void TestReport()
-        {
-            var parms = new ReportParams
-            {
-                dimensions = new string[] { "client" },
-                metrics = new string[] { "impressions", "clicks" },
-                filter = new ReportFilter { date = new Dates { from = "2017-4-1", to = "2017-4-25" } }
-            };
-
-            var request = new RestRequest("/v1/reportingstats/agency/reportdata");
-            request.AddJsonBody(parms);
-
-            var response = ProcessRequest<ReportResponse>(request, postNotGet: true);
         }
     }
 }

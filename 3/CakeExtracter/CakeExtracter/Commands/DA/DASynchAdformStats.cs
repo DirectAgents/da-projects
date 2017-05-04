@@ -55,8 +55,8 @@ namespace CakeExtracter.Commands
                 Logger.Info("Commencing ETL for Adform account ({0}) {1}", account.Id, account.Name);
                 if (statsType.Daily)
                     DoETL_Daily(dateRange, account);
-                //if (statsType.Strategy)
-                //    DoETL_Strategy(dateRange, account);
+                if (statsType.Strategy)
+                    DoETL_Strategy(dateRange, account);
                 //if (statsType.Creative)
                 //    DoETL_Creative(dateRange, account);
             }
@@ -82,11 +82,21 @@ namespace CakeExtracter.Commands
         {
             Platform.SavePlatformTokens(Platform.Code_Adform, adformUtility.AccessToken);
         }
+        // ---
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account)
         {
             var extracter = new AdformDailySummaryExtracter(adformUtility, dateRange, account.ExternalId);
             var loader = new TDDailySummaryLoader(account.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+        private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
+        {
+            var extracter = new AdformStrategySummaryExtracter(adformUtility, dateRange, account.ExternalId);
+            var loader = new TDStrategySummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
