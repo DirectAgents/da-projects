@@ -414,9 +414,11 @@ namespace EomTool.Domain.Concrete
                         int numUnits = existingInvoiceItems.Sum(i => i.num_units);
                         ii.num_units -= numUnits;
                     }
-
-                    ii.total_amount = ii.amount_per_unit * ii.num_units;
-                    invoice.InvoiceItems.Add(ii);
+                    if (ii.num_units > 0)
+                    {
+                        ii.total_amount = ii.amount_per_unit * ii.num_units;
+                        invoice.InvoiceItems.Add(ii);
+                    }
                 }
             }
             GenerateInvoiceLineItems(invoice, true);
