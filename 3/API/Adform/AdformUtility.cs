@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Net;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Deserializers;
@@ -88,13 +89,27 @@ namespace Adform
                 GetAccessToken();
             restRequest.AddHeader("Authorization", "Bearer " + AccessToken);
 
-            //TODO: tries, handle expired token
+            bool done = false;
+            int tries = 0;
             IRestResponse<T> response = null;
-            if (postNotGet)
-                response = restClient.ExecuteAsPost<T>(restRequest, "POST");
-            else
-                response = restClient.ExecuteAsGet<T>(restRequest, "GET");
+            while (!done)
+            {
+                if (postNotGet)
+                    response = restClient.ExecuteAsPost<T>(restRequest, "POST");
+                else
+                    response = restClient.ExecuteAsGet<T>(restRequest, "GET");
 
+                tries++;
+
+                if (response.StatusCode == HttpStatusCode.Unauthorized && tries < 2)
+                { // Get a new access token and use that.
+                    GetAccessToken();
+                    var param = restRequest.Parameters.Find(p => p.Type == ParameterType.HttpHeader && p.Name == "Authorization");
+                    param.Value = "Bearer " + AccessToken;
+                }
+                else
+                    done = true; //TODO: distinguish between success and failure of ProcessRequest
+            }
             if (!String.IsNullOrWhiteSpace(response.ErrorMessage))
                 LogError(response.ErrorMessage);
 

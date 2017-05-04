@@ -38,6 +38,14 @@ namespace Adform
         public object columns { get; set; }
         public List<List<object>> rows { get; set; }
         // totals?
+
+        public Dictionary<string, int> CreateColumnLookup()
+        {
+            var columnLookup = new Dictionary<string, int>();
+            for (int i = 0; i < this.columnHeaders.Count; i++)
+                columnLookup[this.columnHeaders[i]] = i;
+            return columnLookup;
+        }
     }
 
     //public class AFSummary

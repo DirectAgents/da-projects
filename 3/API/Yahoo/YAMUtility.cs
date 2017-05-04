@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Net;
 using System.Threading;
 using RestSharp;
 using RestSharp.Authenticators;
@@ -128,7 +129,7 @@ namespace Yahoo
 
                 tries++;
 
-                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized && tries < 2)
+                if (response.StatusCode == HttpStatusCode.Unauthorized && tries < 2)
                 { // Get a new access token and use that.
                     GetAccessToken();
                     var param = restRequest.Parameters.Find(p => p.Type == ParameterType.HttpHeader && p.Name == "X-Auth-Token");

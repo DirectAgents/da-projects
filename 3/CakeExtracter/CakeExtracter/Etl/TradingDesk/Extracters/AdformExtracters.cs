@@ -48,11 +48,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         }
         private IEnumerable<DailySummary> EnumerateRows(ReportData reportData)
         {
-            var columnLookup = new Dictionary<string, int>();
-            for (int i = 0; i < reportData.columnHeaders.Count; i++)
-                columnLookup[reportData.columnHeaders[i]] = i;
-
-            var rowConverter = new AdformRowConverter(reportData.rows, columnLookup);
+            var rowConverter = new AdformRowConverter(reportData);
             return rowConverter.EnumerateDailySummaries();
         }
     }
@@ -62,11 +58,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         private List<List<object>> rows;
         private Dictionary<string, int> columnLookup;
 
-        public AdformRowConverter(List<List<object>> rows, Dictionary<string, int> columnLookup)
+        //public AdformRowConverter(List<List<object>> rows, Dictionary<string, int> columnLookup)
+        public AdformRowConverter(ReportData reportData)
         {
-            this.rows = rows;
-            this.columnLookup = columnLookup;
-            CheckColumnLookup();
+            this.rows = reportData.rows;
+            this.columnLookup = reportData.CreateColumnLookup();
         }
         private void CheckColumnLookup()
         {
@@ -78,6 +74,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         public IEnumerable<DailySummary> EnumerateDailySummaries()
         {
+            CheckColumnLookup();
+
             foreach (var row in rows)
             {
                 var daysum = RowToDailySummary(row);
