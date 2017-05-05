@@ -110,6 +110,62 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         }
     }
 
+    public class AdformTDadSummaryExtracter : AdformApiExtracter<TDadSummary>
+    {
+        public AdformTDadSummaryExtracter(AdformUtility adformUtility, DateRange dateRange, string clientId)
+            : base(adformUtility, dateRange, clientId)
+        { }
+
+        protected override void Extract()
+        {
+            Logger.Info("Extracting TDadSummaries from Adform API for ({0}) from {1:d} to {2:d}",
+                        this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
+            try
+            {
+                var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byBanner: true);
+                var reportData = _afUtility.GetReportData(parms);
+                if (reportData != null)
+                {
+                    var sums = EnumerateRows(reportData);
+                    Add(sums);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+            End();
+        }
+        private IEnumerable<TDadSummary> EnumerateRows(ReportData reportData)
+        {
+            var rowConverter = new AdformRowConverter(reportData);
+            var sums = rowConverter.EnumerateTDadSummaries();
+
+            var sGroups = sums.GroupBy(x => new { x.TDadName, x.Date });
+            foreach (var sGroup in sGroups)
+            {
+                if (sGroup.Count() == 1)
+                    yield return sGroup.First();
+                else
+                {
+                    var sum = new TDadSummary
+                    {
+                        TDadName = sGroup.Key.TDadName,
+                        Date = sGroup.Key.Date,
+                        Cost = sGroup.Sum(x => x.Cost),
+                        Impressions = sGroup.Sum(x => x.Impressions),
+                        Clicks = sGroup.Sum(x => x.Clicks),
+                        PostViewConv = sGroup.Sum(x => x.PostViewConv),
+                        //PostViewRev = sGroup.Sum(x => x.PostViewRev),
+                        //PostClickConv = sGroup.Sum(x => x.PostClickConv),
+                        //PostClickRev = sGroup.Sum(x => x.PostClickRev)
+                    };
+                    yield return sum;
+                }
+            }
+        }
+    }
+
     public class AdformRowConverter
     {
         private List<List<object>> rows;
@@ -120,11 +176,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             this.rows = reportData.rows;
             this.columnLookup = reportData.CreateColumnLookup();
         }
-        private void CheckColumnLookup(bool byLineItem = false)
+        private void CheckColumnLookup(bool byLineItem = false, bool byBanner = false)
         {
             var columnsNeeded = new List<string> { "date", "cost", "impressions", "clicks", "conversions", "sales" };
             if (byLineItem)
                 columnsNeeded.Add("lineItem");
+            if (byBanner)
+                columnsNeeded.Add("banner");
             var missingColumns = columnsNeeded.Where(c => !columnLookup.ContainsKey(c));
             if (missingColumns.Any())
                 throw new Exception("Missing columns in lookup: " + String.Join(", ", missingColumns));
@@ -146,6 +204,16 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             foreach (var row in rows)
             {
                 var sum = RowToStrategySummary(row);
+                if (sum != null)
+                    yield return sum;
+            }
+        }
+        public IEnumerable<TDadSummary> EnumerateTDadSummaries()
+        {
+            CheckColumnLookup(byBanner: true);
+            foreach (var row in rows)
+            {
+                var sum = RowToTDadSummary(row);
                 if (sum != null)
                     yield return sum;
             }
@@ -182,15 +250,33 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 return null;
             }
         }
+        public TDadSummary RowToTDadSummary(List<object> row)
+        {
+            try
+            {
+                var sum = new TDadSummary
+                {
+                    TDadName = Convert.ToString(row[columnLookup["banner"]])
+                };
+                AssignDailySummaryProperties(sum, row);
+                return sum;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return null;
+            }
+        }
 
-        private void AssignDailySummaryProperties(DatedStatsSummaryWithRev summary, List<object> row)
+        private void AssignDailySummaryProperties(DatedStatsSummary summary, List<object> row)
         {
             summary.Date = DateTime.Parse(row[columnLookup["date"]].ToString());
             summary.Cost = Convert.ToDecimal(row[columnLookup["cost"]]);
             summary.Impressions = Convert.ToInt32(row[columnLookup["impressions"]]);
             summary.Clicks = Convert.ToInt32(row[columnLookup["clicks"]]);
             summary.PostViewConv = Convert.ToInt32(row[columnLookup["conversions"]]);
-            summary.PostViewRev = Convert.ToDecimal(row[columnLookup["sales"]]);
+            if (summary is DatedStatsSummaryWithRev)
+                ((DatedStatsSummaryWithRev)summary).PostViewRev = Convert.ToDecimal(row[columnLookup["sales"]]);
         }
     }
 }

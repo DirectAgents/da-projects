@@ -57,8 +57,8 @@ namespace CakeExtracter.Commands
                     DoETL_Daily(dateRange, account);
                 if (statsType.Strategy)
                     DoETL_Strategy(dateRange, account);
-                //if (statsType.Creative)
-                //    DoETL_Creative(dateRange, account);
+                if (statsType.Creative)
+                    DoETL_Creative(dateRange, account);
             }
             SaveTokens();
             return 0;
@@ -97,6 +97,15 @@ namespace CakeExtracter.Commands
         {
             var extracter = new AdformStrategySummaryExtracter(adformUtility, dateRange, account.ExternalId);
             var loader = new TDStrategySummaryLoader(account.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+        private void DoETL_Creative(DateRange dateRange, ExtAccount account)
+        {
+            var extracter = new AdformTDadSummaryExtracter(adformUtility, dateRange, account.ExternalId);
+            var loader = new TDadSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();

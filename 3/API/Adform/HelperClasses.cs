@@ -14,6 +14,7 @@ namespace Adform
         public string[] dimensions { get; set; }
         public string[] metrics { get; set; }
         public ReportFilter filter { get; set; }
+        public Paging paging { get; set; }
     }
     public class ReportFilter
     {
@@ -25,11 +26,16 @@ namespace Adform
         public string from { get; set; }
         public string to { get; set; }
     }
+    public class Paging
+    {
+        public int offset { get; set; }
+        public int limit { get; set; }
+    }
 
     public class ReportResponse
     {
         public ReportData reportData { get; set; }
-        // totalRowCount?
+        //public int totalRowCount { get; set; } // not being supplied by the API
         public string correlationCode { get; set; }
     }
     public class ReportData

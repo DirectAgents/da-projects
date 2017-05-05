@@ -57,8 +57,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     {
         public YAMDailySummaryExtracter(YAMUtility yamUtility, DateRange dateRange, ExtAccount account)
             : base(yamUtility, dateRange, account)
-        {
-        }
+        { }
 
         protected override void Extract()
         {
@@ -79,8 +78,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     {
         public YAMStrategySummaryExtracter(YAMUtility yamUtility, DateRange dateRange, ExtAccount account)
             : base(yamUtility, dateRange, account)
-        {
-        }
+        { }
 
         protected override void Extract()
         {
@@ -101,8 +99,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     {
         public YAMTDadSummaryExtracter(YAMUtility yamUtility, DateRange dateRange, ExtAccount account)
             : base(yamUtility, dateRange, account)
-        {
-        }
+        { }
 
         protected override void Extract()
         {

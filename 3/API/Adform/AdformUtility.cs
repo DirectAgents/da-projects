@@ -132,7 +132,7 @@ namespace Adform
         }
 
         // like a constructor...
-        public ReportParams CreateReportParams(DateTime startDate, DateTime endDate, int clientId, bool byLineItem = false)
+        public ReportParams CreateReportParams(DateTime startDate, DateTime endDate, int clientId, bool byLineItem = false, bool byBanner = false)
         {
             var filter = new ReportFilter
             {
@@ -146,12 +146,19 @@ namespace Adform
             var dimensions = new List<string> { "date" };
             if (byLineItem)
                 dimensions.Add("lineItem");
+            if (byBanner)
+                dimensions.Add("banner");
 
             var reportParams = new ReportParams
             {
+                filter = filter,
                 dimensions = dimensions.ToArray(),
                 metrics = new string[] { "cost", "impressions", "clicks", "conversions", "sales" },
-                filter = filter
+                paging = new Paging
+                {
+                    offset = 0,
+                    limit = 3000
+                }
             };
             return reportParams;
         }
