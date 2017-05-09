@@ -33,7 +33,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
             try
             {
-                var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId);
+                var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, RTBonly: true);
                 var reportData = _afUtility.GetReportData(parms);
                 if (reportData != null)
                 {
@@ -66,7 +66,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
             try
             {
-                var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byLineItem: true);
+                var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byLineItem: true, RTBonly: true);
                 var reportData = _afUtility.GetReportData(parms);
                 if (reportData != null)
                 {
@@ -122,7 +122,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
             try
             {
-                var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byBanner: true);
+                var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byBanner: true, RTBonly: true);
                 var reportData = _afUtility.GetReportData(parms);
                 if (reportData != null)
                 {

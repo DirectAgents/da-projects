@@ -27,14 +27,20 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
+        public void Test3()
+        {
+            var adformUtility = new AdformUtility();
+            adformUtility.GetDimensions();
+        }
+
         public void Test2()
         {
             var adformUtility = new AdformUtility();
             //adformUtility.TestReport();
             var start = new DateTime(2017, 4, 20);
-            var end = new DateTime(2017, 4, 21);
+            var end = new DateTime(2017, 4, 20);
             int clientId = 54314; // G&T
-            var parms = adformUtility.CreateReportParams(start, end, clientId);
+            var parms = adformUtility.CreateReportParams(start, end, clientId, byMedia: true, RTBonly: false);
             var reportData = adformUtility.GetReportData(parms);
 
             foreach (var row in reportData.rows)

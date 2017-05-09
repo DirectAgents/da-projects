@@ -13,14 +13,15 @@ namespace Adform
     {
         public string[] dimensions { get; set; }
         public string[] metrics { get; set; }
-        public ReportFilter filter { get; set; }
+        public object filter { get; set; }
         public Paging paging { get; set; }
     }
-    public class ReportFilter
-    {
-        public Dates date { get; set; }
-        public int[] client { get; set; }
-    }
+    //public class ReportFilter
+    //{
+    //    public Dates date { get; set; }
+    //    public int[] client { get; set; }
+    //    public string[] media { get; set; }
+    //}
     public class Dates
     {
         public string from { get; set; }

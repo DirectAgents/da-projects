@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Dynamic;
 using System.Net;
 using RestSharp;
 using RestSharp.Authenticators;
@@ -117,6 +118,18 @@ namespace Adform
             return response;
         }
 
+        public void GetDimensions()
+        {
+            var request = new RestRequest("/v1/reportingstats/agency/metadata/dimensions");
+
+            var parms = new
+            {
+                dimensions = (object)null
+            };
+            request.AddJsonBody(parms);
+            var restResponse = ProcessRequest<object>(request, postNotGet: true);
+        }
+
         public ReportData GetReportData(ReportParams reportParams)
         {
             var request = new RestRequest("/v1/reportingstats/agency/reportdata");
@@ -132,22 +145,25 @@ namespace Adform
         }
 
         // like a constructor...
-        public ReportParams CreateReportParams(DateTime startDate, DateTime endDate, int clientId, bool byLineItem = false, bool byBanner = false)
+        public ReportParams CreateReportParams(DateTime startDate, DateTime endDate, int clientId, bool byLineItem = false, bool byBanner = false, bool byMedia = false, bool RTBonly = false)
         {
-            var filter = new ReportFilter
+            dynamic filter = new ExpandoObject();
+            filter.date = new Dates
             {
-                date = new Dates
-                {
-                    from = startDate.ToString("yyyy'-'M'-'d"),
-                    to = endDate.ToString("yyyy'-'M'-'d")
-                },
-                client = new int[] { clientId }
+                from = startDate.ToString("yyyy'-'M'-'d"),
+                to = endDate.ToString("yyyy'-'M'-'d")
             };
+            filter.client = new int[] { clientId };
+            if (RTBonly)
+                filter.media = new { name = new string[] { "Real Time Bidding" }};
+
             var dimensions = new List<string> { "date" };
             if (byLineItem)
                 dimensions.Add("lineItem");
             if (byBanner)
                 dimensions.Add("banner");
+            if (byMedia)
+                dimensions.Add("media");
 
             var reportParams = new ReportParams
             {
