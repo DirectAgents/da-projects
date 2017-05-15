@@ -34,12 +34,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             try
             {
                 var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, RTBonly: true);
-                var reportData = _afUtility.GetReportData(parms);
-                if (reportData != null)
-                {
-                    var daysums = EnumerateRows(reportData);
-                    Add(daysums);
-                }
+                var basicStatsReportData = _afUtility.GetReportData(parms);
+                parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, RTBonly: true, basicMetrics: false, convMetrics: true, byAdInteractionType: true);
+                var convStatsReportData = _afUtility.GetReportData(parms);
+
+                var daysums = EnumerateRows(basicStatsReportData, convStatsReportData);
+                Add(daysums);
             }
             catch (Exception ex)
             {
@@ -47,10 +47,39 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             }
             End();
         }
-        private IEnumerable<DailySummary> EnumerateRows(ReportData reportData)
+        private IEnumerable<DailySummary> EnumerateRows(ReportData basicStatsReportData, ReportData convStatsReportData)
         {
-            var rowConverter = new AdformRowConverter(reportData);
-            return rowConverter.EnumerateDailySummaries();
+            var rowConverter = new AdformRowConverter(basicStatsReportData, includeConvMetrics: false);
+            var daysumDict = rowConverter.EnumerateDailySummaries().ToDictionary(x => x.Date);
+
+            var convRowConverter = new AdformConvRowConverter(convStatsReportData);
+            var convsums = convRowConverter.EnumerateAFConvSummaries();
+            var convsumGroups = convsums.GroupBy(x => x.Date);
+            // Steps:
+            // loop through convsumGroups; get daysum or create blank one
+            // then go through daysums that didn't have a convsumGroup
+            foreach (var csGroup in convsumGroups)
+            {
+                DailySummary daysum;
+                if (daysumDict.ContainsKey(csGroup.Key))
+                    daysum = daysumDict[csGroup.Key];
+                else
+                    daysum = new DailySummary
+                    {
+                        Date = csGroup.Key
+                    };
+                var clickThroughs = csGroup.Where(x => x.AdInteractionType == "Click");
+                daysum.PostClickConv = clickThroughs.Sum(x => x.Conversions);
+                daysum.PostClickRev = clickThroughs.Sum(x => x.Sales);
+                var viewThroughs = csGroup.Where(x => x.AdInteractionType == "Impression");
+                daysum.PostViewConv = viewThroughs.Sum(x => x.Conversions);
+                daysum.PostViewRev = viewThroughs.Sum(x => x.Sales);
+                yield return daysum;
+            }
+            var convsumDates = convsumGroups.Select(x => x.Key).ToArray();
+            var remainingDaySums = daysumDict.Values.Where(ds => !convsumDates.Contains(ds.Date));
+            foreach (var daysum in remainingDaySums)
+                yield return daysum;
         }
     }
 
@@ -82,7 +111,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         }
         private IEnumerable<StrategySummary> EnumerateRows(ReportData reportData)
         {
-            var rowConverter = new AdformRowConverter(reportData);
+            var rowConverter = new AdformRowConverter(reportData, includeConvMetrics: true);
             var stratSums = rowConverter.EnumerateStrategySummaries();
 
             var sGroups = stratSums.GroupBy(x => new { x.StrategyName, x.Date });
@@ -138,7 +167,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         }
         private IEnumerable<TDadSummary> EnumerateRows(ReportData reportData)
         {
-            var rowConverter = new AdformRowConverter(reportData);
+            var rowConverter = new AdformRowConverter(reportData, includeConvMetrics: true);
             var sums = rowConverter.EnumerateTDadSummaries();
 
             var sGroups = sums.GroupBy(x => new { x.TDadName, x.Date });
@@ -166,19 +195,67 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         }
     }
 
-    public class AdformRowConverter
+    public class AdformConvRowConverter
     {
         private List<List<object>> rows;
         private Dictionary<string, int> columnLookup;
 
-        public AdformRowConverter(ReportData reportData)
+        public AdformConvRowConverter(ReportData reportData)
         {
             this.rows = reportData.rows;
             this.columnLookup = reportData.CreateColumnLookup();
         }
+        public IEnumerable<AFConvSummary> EnumerateAFConvSummaries()
+        {
+            foreach (var row in rows)
+            {
+                var convsum = RowToConvSummary(row);
+                if (convsum != null)
+                    yield return convsum;
+            }
+        }
+        public AFConvSummary RowToConvSummary(List<object> row)
+        {
+            try
+            {
+                var convsum = new AFConvSummary();
+                AssignConvSummaryProperties(convsum, row);
+                return convsum;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return null;
+            }
+        }
+        private void AssignConvSummaryProperties(AFConvSummary summary, List<object> row)
+        {
+            summary.AdInteractionType = Convert.ToString(row[columnLookup["adInteractionType"]]);
+            if (summary.AdInteractionType.StartsWith("Recent "))
+                summary.AdInteractionType = summary.AdInteractionType.Substring(7);
+            summary.Date = DateTime.Parse(row[columnLookup["date"]].ToString());
+            summary.Conversions = Convert.ToInt32(row[columnLookup["conversions"]]);
+            summary.Sales = Convert.ToDecimal(row[columnLookup["sales"]]);
+        }
+    }
+
+    public class AdformRowConverter
+    {
+        private List<List<object>> rows;
+        private Dictionary<string, int> columnLookup;
+        private bool includeConvMetrics;
+
+        public AdformRowConverter(ReportData reportData, bool includeConvMetrics)
+        {
+            this.rows = reportData.rows;
+            this.includeConvMetrics = includeConvMetrics;
+            this.columnLookup = reportData.CreateColumnLookup();
+        }
         private void CheckColumnLookup(bool byLineItem = false, bool byBanner = false)
         {
-            var columnsNeeded = new List<string> { "date", "cost", "impressions", "clicks", "conversions", "sales" };
+            var columnsNeeded = new List<string> { "date", "cost", "impressions", "clicks" };
+            if (includeConvMetrics)
+                columnsNeeded.AddRange(new string[] { "conversions", "sales" });
             if (byLineItem)
                 columnsNeeded.Add("lineItem");
             if (byBanner)
@@ -274,9 +351,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             summary.Cost = Convert.ToDecimal(row[columnLookup["cost"]]);
             summary.Impressions = Convert.ToInt32(row[columnLookup["impressions"]]);
             summary.Clicks = Convert.ToInt32(row[columnLookup["clicks"]]);
-            summary.PostViewConv = Convert.ToInt32(row[columnLookup["conversions"]]);
-            if (summary is DatedStatsSummaryWithRev)
-                ((DatedStatsSummaryWithRev)summary).PostViewRev = Convert.ToDecimal(row[columnLookup["sales"]]);
+            if (includeConvMetrics)
+            {
+                summary.PostViewConv = Convert.ToInt32(row[columnLookup["conversions"]]);
+                if (summary is DatedStatsSummaryWithRev)
+                    ((DatedStatsSummaryWithRev)summary).PostViewRev = Convert.ToDecimal(row[columnLookup["sales"]]);
+            }
         }
     }
 }

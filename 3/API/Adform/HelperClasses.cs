@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Adform
 {
@@ -55,9 +56,11 @@ namespace Adform
         }
     }
 
-    //public class AFSummary
-    //{
-    //    public int impressions { get; set; }
-    //    public int clicks { get; set; }
-    //}
+    public class AFConvSummary
+    {
+        public DateTime Date { get; set; }
+        public string AdInteractionType { get; set; }
+        public int Conversions { get; set; }
+        public decimal Sales { get; set; }
+    }
 }

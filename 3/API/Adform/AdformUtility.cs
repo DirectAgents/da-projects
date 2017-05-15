@@ -145,7 +145,7 @@ namespace Adform
         }
 
         // like a constructor...
-        public ReportParams CreateReportParams(DateTime startDate, DateTime endDate, int clientId, bool byLineItem = false, bool byBanner = false, bool byMedia = false, bool RTBonly = false)
+        public ReportParams CreateReportParams(DateTime startDate, DateTime endDate, int clientId, bool basicMetrics = true, bool convMetrics = false, bool byLineItem = false, bool byBanner = false, bool byMedia = false, bool byAdInteractionType = false, bool RTBonly = false)
         {
             dynamic filter = new ExpandoObject();
             filter.date = new Dates
@@ -164,12 +164,20 @@ namespace Adform
                 dimensions.Add("banner");
             if (byMedia)
                 dimensions.Add("media");
+            if (byAdInteractionType)
+                dimensions.Add("adInteractionType");
+
+            var metrics = new List<string>();
+            if (basicMetrics)
+                metrics.AddRange(new string[] { "cost", "impressions", "clicks" });
+            if (convMetrics)
+                metrics.AddRange(new string[] { "conversions", "sales" });
 
             var reportParams = new ReportParams
             {
                 filter = filter,
                 dimensions = dimensions.ToArray(),
-                metrics = new string[] { "cost", "impressions", "clicks", "conversions", "sales" },
+                metrics = metrics.ToArray(),
                 paging = new Paging
                 {
                     offset = 0,
