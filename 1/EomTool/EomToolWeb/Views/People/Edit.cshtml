@@ -1,0 +1,33 @@
+﻿@model Person
+@{
+    ViewBag.Title = "Edit Person";
+}
+
+<h3>Edit Person</h3>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary()
+    <fieldset>
+        <legend>Person</legend>
+        @Html.HiddenFor(p => p.id)
+        <table>
+            <tr>
+                <td>@Html.LabelFor(m => m.id)</td>
+                <td>@Html.DisplayFor(m => m.id)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.first_name)</td>
+                <td>@Html.EditorFor(m => m.first_name)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.last_name)</td>
+                <td>@Html.EditorFor(m => m.last_name)</td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" value="Save" />
+    </fieldset>
+}
+<br />
+@Html.ActionLink("Cancel", "Index")

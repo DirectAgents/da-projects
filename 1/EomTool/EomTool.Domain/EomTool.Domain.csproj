@@ -90,6 +90,9 @@
     <Compile Include="Entities\AffiliatePaymentMethod.cs">
       <DependentUpon>EomModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\AnalystRole.cs">
+      <DependentUpon>EomModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\Audit.cs">
       <DependentUpon>EomModel.tt</DependentUpon>
     </Compile>
@@ -210,6 +213,9 @@
     </Compile>
     <Compile Include="Entities\Permission.cs">
       <DependentUpon>EomToolSecurity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Person.cs">
+      <DependentUpon>EomModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\PubAttachment.cs">
       <DependentUpon>EomModel.tt</DependentUpon>

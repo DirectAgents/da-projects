@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Core.EntityClient;
+using System.Linq;
 using EomTool.Domain.Abstract;
 using Ninject;
 
@@ -113,6 +114,22 @@ namespace EomTool.Domain.Entities
         {
             get { return (String.IsNullOrWhiteSpace(display_name) ? campaign_name : display_name); }
         }
+        [NotMapped]
+        public IEnumerable<AnalystRole> AnalystRoles { get; set; }
+        [NotMapped]
+        public string AnalystNames
+        {
+            get //Note: if doing this more than once, should cache this
+            {
+                if (AnalystRoles != null)
+                {
+                    var peopleNames = AnalystRoles.Select(x => x.Person).ToList().Select(x => x.FullName);
+                    return string.Join(", ", peopleNames);
+                }
+                else
+                    return null;
+            }
+        }
     }
 
     public partial class MarginApproval
@@ -217,4 +234,12 @@ namespace EomTool.Domain.Entities
         }
     }
 
+    public partial class Person
+    {
+        [NotMapped]
+        public string FullName
+        {
+            get { return first_name + " " + last_name; }
+        }
+    }
 }

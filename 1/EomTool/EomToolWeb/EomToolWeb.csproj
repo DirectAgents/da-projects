@@ -172,7 +172,9 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AffiliatesController.cs" />
+    <Compile Include="Controllers\AnalystRolesController.cs" />
     <Compile Include="Controllers\AuditController.cs" />
+    <Compile Include="Controllers\PeopleController.cs" />
     <Compile Include="Controllers\StatsController.cs" />
     <Compile Include="Controllers\SynchController.cs" />
     <Compile Include="Controllers\TypesController.cs" />
@@ -212,6 +214,7 @@
     <Compile Include="Infrastructure\NinjectControllerFactory.partial.cs" />
     <Compile Include="Models\AccountingModels.cs" />
     <Compile Include="Models\AffiliatesListViewModel.cs" />
+    <Compile Include="Models\AnalystRolesVM.cs" />
     <Compile Include="Models\AuditVM.cs" />
     <Compile Include="Models\BlogPost.cs" />
     <Compile Include="Models\CampaignAffiliateAmountsModel.cs" />
@@ -4417,6 +4420,13 @@
     <Content Include="Views\Audit\Campaigns.cshtml" />
     <Content Include="Views\Synch\Index.cshtml" />
     <Content Include="Views\Synch\_ViewStart.cshtml" />
+    <Content Include="Views\People\Index.cshtml" />
+    <Content Include="Views\People\_ViewStart.cshtml" />
+    <Content Include="Views\People\Edit.cshtml" />
+    <Content Include="Views\AnalystRoles\PubAdvCampList.cshtml" />
+    <Content Include="Views\AnalystRoles\_ViewStart.cshtml" />
+    <Content Include="Views\AnalystRoles\Affiliates.cshtml" />
+    <Content Include="Views\AnalystRoles\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

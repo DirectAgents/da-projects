@@ -61,6 +61,16 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="AnalystRole">
+          <Key>
+            <PropertyRef Name="person_id" />
+            <PropertyRef Name="pid" />
+            <PropertyRef Name="affid" />
+          </Key>
+          <Property Name="person_id" Type="int" Nullable="false" />
+          <Property Name="pid" Type="int" Nullable="false" />
+          <Property Name="affid" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Audit">
           <Key>
             <PropertyRef Name="AuditID" />
@@ -293,6 +303,14 @@
           <Property Name="id" Type="int" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="first_name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="last_name" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
         <EntityType Name="PubAttachment">
           <Key>
             <PropertyRef Name="id" />
@@ -335,7 +353,7 @@
           <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DADatabaseJuly2015.dbo.CampaignsPublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'zDADatabaseApr2017Test.dbo.CampaignsPublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CampaignsPublisherReportDetails">
           <Key>
             <PropertyRef Name="CampaignStatus" />
@@ -362,7 +380,7 @@ warning 6002: The table/view 'DADatabaseJuly2015.dbo.CampaignsPublisherReportDet
           <Property Name="Total" Type="decimal" Precision="38" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DADatabaseJuly2015.dbo.CampaignsPublisherReportSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'zDADatabaseApr2017Test.dbo.CampaignsPublisherReportSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CampaignsPublisherReportSummary">
           <Key>
             <PropertyRef Name="CampaignStatus" />
@@ -381,7 +399,7 @@ warning 6002: The table/view 'DADatabaseJuly2015.dbo.CampaignsPublisherReportSum
           <Property Name="Total" Type="decimal" Precision="38" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DADatabaseJuly2015.dbo.PublisherPayments' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'zDADatabaseApr2017Test.dbo.PublisherPayments' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PublisherPayments">
           <Key>
             <PropertyRef Name="NetTermType" />
@@ -411,7 +429,7 @@ warning 6002: The table/view 'DADatabaseJuly2015.dbo.PublisherPayments' does not
           <Property Name="ItemIds" Type="nvarchar" MaxLength="4000" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DADatabaseJuly2015.dbo.PublisherPayouts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'zDADatabaseApr2017Test.dbo.PublisherPayouts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PublisherPayouts">
           <Key>
             <PropertyRef Name="affid" />
@@ -472,7 +490,7 @@ warning 6002: The table/view 'DADatabaseJuly2015.dbo.PublisherPayouts' does not 
           <Property Name="BatchIds" Type="nvarchar" MaxLength="4000" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DADatabaseJuly2015.dbo.PublisherRelatedItemCounts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'zDADatabaseApr2017Test.dbo.PublisherRelatedItemCounts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PublisherRelatedItemCounts">
           <Key>
             <PropertyRef Name="Id" />
@@ -484,7 +502,7 @@ warning 6002: The table/view 'DADatabaseJuly2015.dbo.PublisherRelatedItemCounts'
           <Property Name="NumAttachments" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DADatabaseJuly2015.dbo.PublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'zDADatabaseApr2017Test.dbo.PublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PublisherReportDetails">
           <Key>
             <PropertyRef Name="NetTermTypeName" />
@@ -511,7 +529,7 @@ warning 6002: The table/view 'DADatabaseJuly2015.dbo.PublisherReportDetails' doe
           <Property Name="ItemIDs" Type="nvarchar" MaxLength="4000" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DADatabaseJuly2015.dbo.PublisherReports' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'zDADatabaseApr2017Test.dbo.PublisherReports' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PublisherReports">
           <Key>
             <PropertyRef Name="CampaignStatus" />
@@ -538,7 +556,7 @@ warning 6002: The table/view 'DADatabaseJuly2015.dbo.PublisherReports' does not 
           <Property Name="Total" Type="decimal" Precision="38" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DADatabaseJuly2015.dbo.PublisherReportSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'zDADatabaseApr2017Test.dbo.PublisherReportSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PublisherReportSummary">
           <Key>
             <PropertyRef Name="Net Terms" />
@@ -671,6 +689,24 @@ warning 6035: The relationship 'CampaignNotes_Campaign_pid_FK_Campaign_pid_UK' h
             </Principal>
             <Dependent Role="Item">
               <PropertyRef Name="media_buyer_approval_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'FK_AnalystRole_Affiliate' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="FK_AnalystRole_Affiliate" />-->
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'FK_AnalystRole_Campaign' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="FK_AnalystRole_Campaign" />-->
+        <Association Name="FK_AnalystRole_Person">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="AnalystRole" Type="Self.AnalystRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="AnalystRole">
+              <PropertyRef Name="person_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -974,6 +1010,7 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
           <EntitySet Name="Advertiser" EntityType="Self.Advertiser" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Affiliate" EntityType="Self.Affiliate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AffiliatePaymentMethod" EntityType="Self.AffiliatePaymentMethod" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AnalystRole" EntityType="Self.AnalystRole" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Audit" EntityType="Self.Audit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Batch" EntityType="Self.Batch" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BatchBatchUpdate" EntityType="Self.BatchBatchUpdate" Schema="dbo" store:Type="Tables" />
@@ -994,6 +1031,7 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
           <EntitySet Name="NetTermType" EntityType="Self.NetTermType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PaymentBatch" EntityType="Self.PaymentBatch" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PaymentBatchState" EntityType="Self.PaymentBatchState" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Person" EntityType="Self.Person" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PubAttachment" EntityType="Self.PubAttachment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PubNotes" EntityType="Self.PubNotes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Source" EntityType="Self.Source" Schema="dbo" store:Type="Tables" />
@@ -1182,6 +1220,10 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
           <AssociationSet Name="FK__Item__media_buye__29221CFB" Association="Self.FK__Item__media_buye__29221CFB">
             <End Role="MediaBuyerApprovalStatus" EntitySet="MediaBuyerApprovalStatus" />
             <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AnalystRole_Person" Association="Self.FK_AnalystRole_Person">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="AnalystRole" EntitySet="AnalystRole" />
           </AssociationSet>
           <AssociationSet Name="FK_BatchBatchUpdate_Batch" Association="Self.FK_BatchBatchUpdate_Batch">
             <End Role="Batch" EntitySet="Batch" />
@@ -1446,6 +1488,12 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
           </AssociationSet>
           <EntitySet Name="CampaignNotes" EntityType="EomModel.CampaignNote" />
           <EntitySet Name="Audits" EntityType="EomModel.Audit" />
+          <EntitySet Name="AnalystRoles" EntityType="EomModel.AnalystRole" />
+          <EntitySet Name="People" EntityType="EomModel.Person" />
+          <AssociationSet Name="FK_AnalystRole_Person" Association="EomModel.FK_AnalystRole_Person">
+            <End Role="Person" EntitySet="People" />
+            <End Role="AnalystRole" EntitySet="AnalystRoles" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Advertiser">
           <Key>
@@ -2398,6 +2446,38 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
           <Property Name="NewValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="RowVersion" Type="Int32" />
         </EntityType>
+        <EntityType Name="AnalystRole">
+          <Key>
+            <PropertyRef Name="person_id" />
+            <PropertyRef Name="pid" />
+            <PropertyRef Name="affid" />
+          </Key>
+          <Property Name="person_id" Type="Int32" Nullable="false" />
+          <Property Name="pid" Type="Int32" Nullable="false" />
+          <Property Name="affid" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Person" Relationship="EomModel.FK_AnalystRole_Person" FromRole="AnalystRole" ToRole="Person" />
+        </EntityType>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="first_name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="last_name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="AnalystRoles" Relationship="EomModel.FK_AnalystRole_Person" FromRole="Person" ToRole="AnalystRole" />
+        </EntityType>
+        <Association Name="FK_AnalystRole_Person">
+          <End Type="EomModel.Person" Role="Person" Multiplicity="1" />
+          <End Type="EomModel.AnalystRole" Role="AnalystRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="AnalystRole">
+              <PropertyRef Name="person_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2854,6 +2934,24 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="AnalystRoles">
+            <EntityTypeMapping TypeName="EomModel.AnalystRole">
+              <MappingFragment StoreEntitySet="AnalystRole">
+                <ScalarProperty Name="affid" ColumnName="affid" />
+                <ScalarProperty Name="pid" ColumnName="pid" />
+                <ScalarProperty Name="person_id" ColumnName="person_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="People">
+            <EntityTypeMapping TypeName="EomModel.Person">
+              <MappingFragment StoreEntitySet="Person">
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -2877,7 +2975,7 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
       <Diagram Name="EomModel" ZoomLevel="78">
-        <EntityTypeShape EntityType="EomModel.Advertiser" Width="1.5" PointX="6" PointY="18.75" Height="1.5956835937500014" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.Advertiser" Width="1.5" PointX="1.375" PointY="20.125" Height="1.5956835937500014" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.Affiliate" Width="1.5" PointX="8" PointY="12.375" Height="4.480205078125" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.Campaign" Width="2" PointX="3.5" PointY="15" Height="5.634013671875" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.CampaignStatus" Width="1.625" PointX="3.875" PointY="12.75" Height="1.5956835937500031" IsExpanded="true" />
@@ -3014,7 +3112,7 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
         <EntityTypeShape EntityType="EomModel.PubAttachment" Width="1.625" PointX="13.875" PointY="9.75" />
         <EntityTypeShape EntityType="EomModel.PubNote" Width="1.75" PointX="13.75" PointY="11.75" />
         <EntityTypeShape EntityType="EomModel.PublisherRelatedItemCount" Width="2.25" PointX="13.25" PointY="15.625" />
-        <EntityTypeShape EntityType="EomModel.AccountManagerTeam" Width="2" PointX="7.75" PointY="18.625" />
+        <EntityTypeShape EntityType="EomModel.AccountManagerTeam" Width="2" PointX="5.875" PointY="19" />
         <AssociationConnector Association="EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK" />
         <EntityTypeShape EntityType="EomModel.Invoice" Width="1.5" PointX="10" PointY="8.375" />
         <EntityTypeShape EntityType="EomModel.InvoiceNote" Width="1.5" PointX="12" PointY="10.5" />
@@ -3031,10 +3129,13 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
         <EntityTypeShape EntityType="EomModel.MarginApproval" Width="1.625" PointX="5.875" PointY="12.75" />
         <AssociationConnector Association="EomModel.FK_MarginApproval_Currency" />
         <AssociationConnector Association="EomModel.FK_MarginApproval_Currency1" />
-        <EntityTypeShape EntityType="EomModel.AdManager" Width="1.5" PointX="7.75" PointY="17.125" />
+        <EntityTypeShape EntityType="EomModel.AdManager" Width="1.5" PointX="5.875" PointY="20.875" />
         <AssociationConnector Association="EomModel.Campaign_AdManager_id_FK_AdManager_id_PK" />
         <EntityTypeShape EntityType="EomModel.CampaignNote" Width="1.75" PointX="3.625" PointY="20.5" />
         <EntityTypeShape EntityType="EomModel.Audit" Width="1.5" PointX="0.5" PointY="4" />
+        <EntityTypeShape EntityType="EomModel.AnalystRole" Width="1.5" PointX="8.25" PointY="19" />
+        <EntityTypeShape EntityType="EomModel.Person" Width="1.5" PointX="10.25" PointY="19" />
+        <AssociationConnector Association="EomModel.FK_AnalystRole_Person" />
         </Diagram>
     </Diagrams>
   </Designer>

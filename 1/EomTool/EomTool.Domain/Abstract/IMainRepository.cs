@@ -13,9 +13,16 @@ namespace EomTool.Domain.Abstract
 
         Advertiser GetAdvertiser(int id);
         IQueryable<Advertiser> Advertisers(bool withActivity = false);
-
         AccountManagerTeam GetAccountManagerTeam(int id);
         IQueryable<AccountManagerTeam> AccountManagerTeams(bool withActivityOnly = false);
+        Person GetPerson(int id);
+        IQueryable<Person> People();
+        bool SavePerson(Person inPerson);
+        Person NewPerson(string first_name = "zFirst", string last_name = "zLast");
+        IQueryable<Person> AvailableAnalystPeople(int pid, int affid);
+        IQueryable<AnalystRole> AnalystRoles(int? personId = null, int? pid = null, int? affid = null);
+        void AddAnalystRole(AnalystRole analystRole);
+        bool DeleteAnalystRole(int pid, int affid, int personId);
 
         IQueryable<Campaign> Campaigns(int? amId = null, int? advertiserId = null, int? affId = null, bool activeOnly = false);
         IEnumerable<CampaignAmount> CampaignAmounts(int pid, int? campaignStatus);
@@ -72,7 +79,7 @@ namespace EomTool.Domain.Abstract
 
         Item GetItem(int id, bool fillExtended = false);
         IQueryable<Item> GetItems(IEnumerable<int> ids);
-        IQueryable<Item> GetItems(int? pid = null, int? affId = null);
+        IQueryable<Item> GetItems(int? pid = null, int? affId = null, int? advertiserId = null);
         void AddItem(Item item);
         bool ItemExists(Item item);
 

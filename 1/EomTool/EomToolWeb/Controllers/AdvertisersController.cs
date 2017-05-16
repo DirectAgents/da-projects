@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
 using EomTool.Domain.Abstract;
-using EomTool.Domain.DTOs;
 using EomTool.Domain.Entities;
 using EomToolWeb.Models;
 
@@ -54,7 +52,6 @@ namespace EomToolWeb.Controllers
 
             return View(advertiser);
         }
-
         [HttpPost]
         public ActionResult Edit(Advertiser inAdv)
         {

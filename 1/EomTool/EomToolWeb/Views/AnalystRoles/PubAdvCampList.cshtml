@@ -1,0 +1,45 @@
+﻿@model IEnumerable<EomToolWeb.Controllers.AffGroup>
+@{
+    bool firstAdvRow, firstCampRow;
+}
+
+<h3>List Analysts</h3>
+
+Accounting Period:
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+<br />
+
+<table style="border: 1px solid gray">
+    <tr>
+        <th style="text-align:left">Publisher</th>
+        <th style="text-align:left">Advertiser</th>
+        <th style="text-align:left">(PID) Campaign</th>
+        <th style="text-align:left">Analyst(s)</th>
+    </tr>
+@foreach (var affGroup in Model)
+{
+    firstAdvRow = true;
+    foreach (var advCampGroup in affGroup.AdvCampGroups)
+    {
+        firstCampRow = true;
+        foreach (var camp in advCampGroup.OrderBy(c => c.campaign_name))
+        {
+            <tr style="background-color: #eee">
+                <td>@(firstAdvRow ? affGroup.AffName : ":")</td>
+                <td>@(firstCampRow ? advCampGroup.Key.name : ":")</td>
+                <td>(@camp.pid) @camp.campaign_name</td>
+                <td>
+                    @Html.ActionLink("edit-", "Edit", new { pid = camp.pid, affid = affGroup.AffId })
+                    @camp.AnalystNames
+                </td>
+            </tr>
+            firstAdvRow = false;
+            firstCampRow = false;
+        }
+    }
+}
+</table>
+<br />
+List:
+@Html.ActionLink("People", "Index", "People") |
+@Html.ActionLink("Publishers with activity", "Affiliates", "AnalystRoles")

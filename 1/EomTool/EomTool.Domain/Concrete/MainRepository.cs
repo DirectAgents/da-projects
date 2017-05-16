@@ -41,7 +41,6 @@ namespace EomTool.Domain.Concrete
                 return context.Advertisers;
         }
 
-
         public AccountManagerTeam GetAccountManagerTeam(int id)
         {
             return context.AccountManagerTeams.FirstOrDefault(am => am.id == id);
@@ -52,6 +51,75 @@ namespace EomTool.Domain.Concrete
                 return Campaigns(activeOnly: true).Select(c => c.AccountManagerTeam).Distinct();
             else
                 return context.AccountManagerTeams;
+        }
+
+        public Person GetPerson(int id)
+        {
+            return context.People.Find(id);
+        }
+        public IQueryable<Person> People()
+        {
+            return context.People;
+        }
+        public bool SavePerson(Person inPerson)
+        {
+            var person = GetPerson(inPerson.id);
+            if (person == null)
+                return false;
+
+            person.first_name = inPerson.first_name;
+            person.last_name = inPerson.last_name;
+            SaveChanges();
+            return true;
+        }
+        public Person NewPerson(string first_name = "zFirst", string last_name = "zLast")
+        {
+            int id = context.People.Select(p => p.id).DefaultIfEmpty(0).Max() + 1;
+            var person = new Person
+            {
+                id = id,
+                first_name = first_name,
+                last_name = last_name
+            };
+            context.People.Add(person);
+            SaveChanges();
+            return person;
+        }
+
+        // Returns: the people who are not Analysts for the pid/affid combination
+        public IQueryable<Person> AvailableAnalystPeople(int pid, int affid)
+        {
+            var aRoles = AnalystRoles(pid: pid, affid: affid);
+            var analystPersonIds = aRoles.Select(x => x.person_id).ToArray();
+            var availablePeople = context.People.Where(x => !analystPersonIds.Contains(x.id));
+            return availablePeople;
+        }
+
+        public IQueryable<AnalystRole> AnalystRoles(int? personId = null, int? pid = null, int? affid = null)
+        {
+            var aRoles = context.AnalystRoles.AsQueryable();
+            if (personId.HasValue)
+                aRoles = aRoles.Where(x => x.person_id == personId.Value);
+            if (pid.HasValue)
+                aRoles = aRoles.Where(x => x.pid == pid.Value);
+            if (affid.HasValue)
+                aRoles = aRoles.Where(x => x.affid == affid.Value);
+            return aRoles;
+        }
+        public void AddAnalystRole(AnalystRole analystRole)
+        {
+            context.AnalystRoles.Add(analystRole);
+            SaveChanges();
+        }
+        public bool DeleteAnalystRole(int pid, int affid, int personId)
+        {
+            var aRole = context.AnalystRoles.SingleOrDefault(x => x.pid == pid && x.affid == affid && x.person_id == personId);
+            if (aRole == null)
+                return false;
+
+            context.AnalystRoles.Remove(aRole);
+            SaveChanges();
+            return true;
         }
 
         // ---
@@ -857,13 +925,19 @@ namespace EomTool.Domain.Concrete
         {
             return context.Items.Where(i => ids.Contains(i.id));
         }
-        public IQueryable<Item> GetItems(int? pid = null, int? affId = null)
+        public IQueryable<Item> GetItems(int? pid = null, int? affId = null, int? advertiserId = null)
         {
             var items = context.Items.AsQueryable();
             if (pid.HasValue)
                 items = items.Where(i => i.pid == pid.Value);
             if (affId.HasValue)
                 items = items.Where(i => i.affid == affId.Value);
+            if (advertiserId.HasValue)
+            {
+                var campaigns = Campaigns(advertiserId: advertiserId);
+                var pids = campaigns.Select(c => c.pid).ToArray();
+                items = items.Where(i => pids.Contains(i.pid));
+            }
             return items;
         }
 

@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Person>
+@{
+    ViewBag.Title = "People";
+}
+
+<h3>@Html.ActionLink("EOM Admin", "Index", "Admin") - People</h3>
+
+Accounting Period:
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+<br />
+
+<table style="border: 1px solid gray; border-spacing: 10px 0">
+    <tr>
+        <th></th>
+        <th>Id</th>
+        <th>FirstName</th>
+        <th>LastName</th>
+    </tr>
+@foreach (var person in Model)
+{
+    <tr>
+        <td>@Html.ActionLink("Edit", "Edit", new { id = person.id })</td>
+        <td>@person.id</td>
+        <td>@person.first_name</td>
+        <td>@person.last_name</td>
+    </tr>
+}
+</table>
+@Html.ActionLink("New Person", "NewPerson")
+<br /><br />
+
+Go To:
+@Html.ActionLink("Publishers with activity", "Affiliates", "AnalystRoles")

@@ -1,0 +1,31 @@
+﻿@model AnalystRolesVM
+
+<h3>Edit Analysts</h3>
+
+Publisher: <b>@Model.Affiliate.name2</b> @Html.ActionLink("back", "PubAdvCampList", new { affid = Model.Affiliate.affid })<br />
+Advertiser: <b>@Model.Campaign.Advertiser.name</b><br />
+Campaign: <b>@Model.Campaign.campaign_name (@Model.Campaign.pid)</b><br />
+<br />
+
+Analyst(s):<br />
+@foreach (var ar in Model.AnalystRoles)
+{
+    <b>@ar.Person.FullName</b>
+    @Html.ActionLink("remove", "Delete", "AnalystRoles",
+                     new { pid = Model.Campaign.pid, affid = Model.Affiliate.affid, personId = ar.person_id },
+                     new { onclick="if (!confirm('Are you sure?')) return false" })
+    <br />
+}
+@if (Model.AvailablePeople.Any())
+{
+    <br />
+    using (Html.BeginForm("Add", "AnalystRoles", new { pid = Model.Campaign.pid, affid = Model.Affiliate.affid }))
+    {
+        var availablePeopleSelectList = new SelectList(Model.AvailablePeople, "Id", "FullName");
+        <text>Add Analyst for this Campaign/Publisher:</text>
+        <table><tr><td>
+            @Html.DropDownList("personId", availablePeopleSelectList)
+        </td></tr></table>
+        <input type="submit" value="Add" />
+    }
+}

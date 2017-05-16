@@ -62,5 +62,7 @@ namespace EomTool.Domain.Entities
         public virtual DbSet<AdManager> AdManagers { get; set; }
         public virtual DbSet<CampaignNote> CampaignNotes { get; set; }
         public virtual DbSet<Audit> Audits { get; set; }
+        public virtual DbSet<AnalystRole> AnalystRoles { get; set; }
+        public virtual DbSet<Person> People { get; set; }
     }
 }
