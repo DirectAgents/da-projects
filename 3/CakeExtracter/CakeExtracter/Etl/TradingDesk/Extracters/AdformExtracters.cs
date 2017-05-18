@@ -33,9 +33,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
             try
             {
-                var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, RTBonly: true);
+                bool rtbOnly = true; // real-time bidding campaigns only
+                var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, RTBonly: rtbOnly);
                 var basicStatsReportData = _afUtility.GetReportData(parms);
-                parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, RTBonly: true, basicMetrics: false, convMetrics: true, byAdInteractionType: true);
+                parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, RTBonly: rtbOnly, basicMetrics: false, convMetrics: true, byAdInteractionType: true);
                 var convStatsReportData = _afUtility.GetReportData(parms);
 
                 var daysums = EnumerateRows(basicStatsReportData, convStatsReportData);
@@ -52,9 +53,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             var rowConverter = new AdformRowConverter(basicStatsReportData, includeConvMetrics: false);
             var daysumDict = rowConverter.EnumerateDailySummaries().ToDictionary(x => x.Date);
 
-            var convRowConverter = new AdformConvRowConverter(convStatsReportData);
-            var convsums = convRowConverter.EnumerateAFConvSummaries();
-            var convsumGroups = convsums.GroupBy(x => x.Date);
+            var convStatsTransformer = new AdformTransformer(convStatsReportData, convStatsOnly: true);
+            var convSums = convStatsTransformer.EnumerateAdformSummaries();
+            var convsumGroups = convSums.GroupBy(x => x.Date);
             // Steps:
             // loop through convsumGroups; get daysum or create blank one
             // then go through daysums that didn't have a convsumGroup
@@ -71,14 +72,16 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 var clickThroughs = csGroup.Where(x => x.AdInteractionType == "Click");
                 daysum.PostClickConv = clickThroughs.Sum(x => x.Conversions);
                 daysum.PostClickRev = clickThroughs.Sum(x => x.Sales);
+
                 var viewThroughs = csGroup.Where(x => x.AdInteractionType == "Impression");
                 daysum.PostViewConv = viewThroughs.Sum(x => x.Conversions);
                 daysum.PostViewRev = viewThroughs.Sum(x => x.Sales);
+
                 yield return daysum;
             }
             var convsumDates = convsumGroups.Select(x => x.Key).ToArray();
             var remainingDaySums = daysumDict.Values.Where(ds => !convsumDates.Contains(ds.Date));
-            foreach (var daysum in remainingDaySums)
+            foreach (var daysum in remainingDaySums) // the daily summaries that didn't have any conversion summaries
                 yield return daysum;
         }
     }
@@ -93,9 +96,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         {
             Logger.Info("Extracting StrategySummaries from Adform API for ({0}) from {1:d} to {2:d}",
                         this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
+            //TODO: Do X days at a time...?
             try
             {
-                var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byLineItem: true, RTBonly: true);
+                var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byLineItem: true, RTBonly: true,
+                                                          basicMetrics: true, convMetrics: true, byAdInteractionType: true);
                 var reportData = _afUtility.GetReportData(parms);
                 if (reportData != null)
                 {
@@ -111,30 +116,28 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         }
         private IEnumerable<StrategySummary> EnumerateRows(ReportData reportData)
         {
-            var rowConverter = new AdformRowConverter(reportData, includeConvMetrics: true);
-            var stratSums = rowConverter.EnumerateStrategySummaries();
-
-            var sGroups = stratSums.GroupBy(x => new { x.StrategyName, x.Date });
-            foreach (var sGroup in sGroups)
+            var adformTransformer = new AdformTransformer(reportData, byLineItem: true);
+            var afSums = adformTransformer.EnumerateAdformSummaries();
+            var liDateGroups = afSums.GroupBy(x => new { x.LineItem, x.Date });
+            foreach (var liDateGroup in liDateGroups)
             {
-                if (sGroup.Count() == 1)
-                    yield return sGroup.First();
-                else
+                var sum = new StrategySummary
                 {
-                    var sum = new StrategySummary
-                    {
-                        StrategyName = sGroup.Key.StrategyName,
-                        Date = sGroup.Key.Date,
-                        Cost = sGroup.Sum(x => x.Cost),
-                        Impressions = sGroup.Sum(x => x.Impressions),
-                        Clicks = sGroup.Sum(x => x.Clicks),
-                        PostViewConv = sGroup.Sum(x => x.PostViewConv),
-                        PostViewRev = sGroup.Sum(x => x.PostViewRev),
-                        //PostClickConv = sGroup.Sum(x => x.PostClickConv),
-                        //PostClickRev = sGroup.Sum(x => x.PostClickRev)
-                    };
-                    yield return sum;
-                }
+                    StrategyName = liDateGroup.Key.LineItem,
+                    Date = liDateGroup.Key.Date,
+                    Cost = liDateGroup.Sum(x => x.Cost),
+                    Impressions = liDateGroup.Sum(x => x.Impressions),
+                    Clicks = liDateGroup.Sum(x => x.Clicks)
+                };
+                var clickThroughs = liDateGroup.Where(x => x.AdInteractionType == "Click");
+                sum.PostClickConv = clickThroughs.Sum(x => x.Conversions);
+                sum.PostClickRev = clickThroughs.Sum(x => x.Sales);
+
+                var viewThroughs = liDateGroup.Where(x => x.AdInteractionType == "Impression");
+                sum.PostViewConv = viewThroughs.Sum(x => x.Conversions);
+                sum.PostViewRev = viewThroughs.Sum(x => x.Sales);
+
+                yield return sum;
             }
         }
     }
@@ -149,9 +152,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         {
             Logger.Info("Extracting TDadSummaries from Adform API for ({0}) from {1:d} to {2:d}",
                         this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
+            //TODO: Do X days at a time...?
             try
             {
-                var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byBanner: true, RTBonly: true);
+                var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byBanner: true, RTBonly: true,
+                                                          basicMetrics: true, convMetrics: true, byAdInteractionType: true);
                 var reportData = _afUtility.GetReportData(parms);
                 if (reportData != null)
                 {
@@ -167,196 +172,30 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         }
         private IEnumerable<TDadSummary> EnumerateRows(ReportData reportData)
         {
-            var rowConverter = new AdformRowConverter(reportData, includeConvMetrics: true);
-            var sums = rowConverter.EnumerateTDadSummaries();
-
-            var sGroups = sums.GroupBy(x => new { x.TDadName, x.Date });
-            foreach (var sGroup in sGroups)
-            {
-                if (sGroup.Count() == 1)
-                    yield return sGroup.First();
-                else
-                {
-                    var sum = new TDadSummary
-                    {
-                        TDadName = sGroup.Key.TDadName,
-                        Date = sGroup.Key.Date,
-                        Cost = sGroup.Sum(x => x.Cost),
-                        Impressions = sGroup.Sum(x => x.Impressions),
-                        Clicks = sGroup.Sum(x => x.Clicks),
-                        PostViewConv = sGroup.Sum(x => x.PostViewConv),
-                        //PostViewRev = sGroup.Sum(x => x.PostViewRev),
-                        //PostClickConv = sGroup.Sum(x => x.PostClickConv),
-                        //PostClickRev = sGroup.Sum(x => x.PostClickRev)
-                    };
-                    yield return sum;
-                }
-            }
-        }
-    }
-
-    public class AdformConvRowConverter
-    {
-        private List<List<object>> rows;
-        private Dictionary<string, int> columnLookup;
-
-        public AdformConvRowConverter(ReportData reportData)
-        {
-            this.rows = reportData.rows;
-            this.columnLookup = reportData.CreateColumnLookup();
-        }
-        public IEnumerable<AFConvSummary> EnumerateAFConvSummaries()
-        {
-            foreach (var row in rows)
-            {
-                var convsum = RowToConvSummary(row);
-                if (convsum != null)
-                    yield return convsum;
-            }
-        }
-        public AFConvSummary RowToConvSummary(List<object> row)
-        {
-            try
-            {
-                var convsum = new AFConvSummary();
-                AssignConvSummaryProperties(convsum, row);
-                return convsum;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-                return null;
-            }
-        }
-        private void AssignConvSummaryProperties(AFConvSummary summary, List<object> row)
-        {
-            summary.AdInteractionType = Convert.ToString(row[columnLookup["adInteractionType"]]);
-            if (summary.AdInteractionType.StartsWith("Recent "))
-                summary.AdInteractionType = summary.AdInteractionType.Substring(7);
-            summary.Date = DateTime.Parse(row[columnLookup["date"]].ToString());
-            summary.Conversions = Convert.ToInt32(row[columnLookup["conversions"]]);
-            summary.Sales = Convert.ToDecimal(row[columnLookup["sales"]]);
-        }
-    }
-
-    public class AdformRowConverter
-    {
-        private List<List<object>> rows;
-        private Dictionary<string, int> columnLookup;
-        private bool includeConvMetrics;
-
-        public AdformRowConverter(ReportData reportData, bool includeConvMetrics)
-        {
-            this.rows = reportData.rows;
-            this.includeConvMetrics = includeConvMetrics;
-            this.columnLookup = reportData.CreateColumnLookup();
-        }
-        private void CheckColumnLookup(bool byLineItem = false, bool byBanner = false)
-        {
-            var columnsNeeded = new List<string> { "date", "cost", "impressions", "clicks" };
-            if (includeConvMetrics)
-                columnsNeeded.AddRange(new string[] { "conversions", "sales" });
-            if (byLineItem)
-                columnsNeeded.Add("lineItem");
-            if (byBanner)
-                columnsNeeded.Add("banner");
-            var missingColumns = columnsNeeded.Where(c => !columnLookup.ContainsKey(c));
-            if (missingColumns.Any())
-                throw new Exception("Missing columns in lookup: " + String.Join(", ", missingColumns));
-        }
-
-        public IEnumerable<DailySummary> EnumerateDailySummaries()
-        {
-            CheckColumnLookup();
-            foreach (var row in rows)
-            {
-                var daysum = RowToDailySummary(row);
-                if (daysum != null)
-                    yield return daysum;
-            }
-        }
-        public IEnumerable<StrategySummary> EnumerateStrategySummaries()
-        {
-            CheckColumnLookup(byLineItem: true);
-            foreach (var row in rows)
-            {
-                var sum = RowToStrategySummary(row);
-                if (sum != null)
-                    yield return sum;
-            }
-        }
-        public IEnumerable<TDadSummary> EnumerateTDadSummaries()
-        {
-            CheckColumnLookup(byBanner: true);
-            foreach (var row in rows)
-            {
-                var sum = RowToTDadSummary(row);
-                if (sum != null)
-                    yield return sum;
-            }
-        }
-
-        public DailySummary RowToDailySummary(List<object> row)
-        {
-            try
-            {
-                var daysum = new DailySummary();
-                AssignDailySummaryProperties(daysum, row);
-                return daysum;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-                return null;
-            }
-        }
-        public StrategySummary RowToStrategySummary(List<object> row)
-        {
-            try
-            {
-                var sum = new StrategySummary
-                {
-                    StrategyName = Convert.ToString(row[columnLookup["lineItem"]])
-                };
-                AssignDailySummaryProperties(sum, row);
-                return sum;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-                return null;
-            }
-        }
-        public TDadSummary RowToTDadSummary(List<object> row)
-        {
-            try
+            var adformTransformer = new AdformTransformer(reportData, byBanner: true);
+            var afSums = adformTransformer.EnumerateAdformSummaries();
+            var bannerDateGroups = afSums.GroupBy(x => new { x.Banner, x.Date });
+            foreach (var bdGroup in bannerDateGroups)
             {
                 var sum = new TDadSummary
                 {
-                    TDadName = Convert.ToString(row[columnLookup["banner"]])
+                    TDadName = bdGroup.Key.Banner,
+                    Date = bdGroup.Key.Date,
+                    Cost = bdGroup.Sum(x => x.Cost),
+                    Impressions = bdGroup.Sum(x => x.Impressions),
+                    Clicks = bdGroup.Sum(x => x.Clicks)
                 };
-                AssignDailySummaryProperties(sum, row);
-                return sum;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-                return null;
-            }
-        }
+                var clickThroughs = bdGroup.Where(x => x.AdInteractionType == "Click");
+                sum.PostClickConv = clickThroughs.Sum(x => x.Conversions);
+                //sum.PostClickRev = clickThroughs.Sum(x => x.Sales);
 
-        private void AssignDailySummaryProperties(DatedStatsSummary summary, List<object> row)
-        {
-            summary.Date = DateTime.Parse(row[columnLookup["date"]].ToString());
-            summary.Cost = Convert.ToDecimal(row[columnLookup["cost"]]);
-            summary.Impressions = Convert.ToInt32(row[columnLookup["impressions"]]);
-            summary.Clicks = Convert.ToInt32(row[columnLookup["clicks"]]);
-            if (includeConvMetrics)
-            {
-                summary.PostViewConv = Convert.ToInt32(row[columnLookup["conversions"]]);
-                if (summary is DatedStatsSummaryWithRev)
-                    ((DatedStatsSummaryWithRev)summary).PostViewRev = Convert.ToDecimal(row[columnLookup["sales"]]);
+                var viewThroughs = bdGroup.Where(x => x.AdInteractionType == "Impression");
+                sum.PostViewConv = viewThroughs.Sum(x => x.Conversions);
+                //sum.PostViewRev = viewThroughs.Sum(x => x.Sales);
+
+                yield return sum;
             }
         }
     }
+
 }

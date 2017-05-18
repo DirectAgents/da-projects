@@ -165,7 +165,7 @@ namespace Adform
             if (byMedia)
                 dimensions.Add("media");
             if (byAdInteractionType)
-                dimensions.Add("adInteractionType");
+                dimensions.Add("adInteractionType"); // Click, Impression, etc.
 
             var metrics = new List<string>();
             if (basicMetrics)
