@@ -1,13 +1,20 @@
 ﻿@model AnalystRolesVM
 
-<h3>Edit Analysts</h3>
+<h3>Assign Analysts</h3>
 
-Publisher: <b>@Model.Affiliate.name2</b> @Html.ActionLink("back", "PubAdvCampList", new { affid = Model.Affiliate.affid })<br />
+Accounting Period: <b>@Model.CurrentEomDateString</b>
+<br /><br />
+
+Publisher: <b>@Model.Affiliate.name2</b><br />
 Advertiser: <b>@Model.Campaign.Advertiser.name</b><br />
 Campaign: <b>@Model.Campaign.campaign_name (@Model.Campaign.pid)</b><br />
 <br />
 
 Analyst(s):<br />
+@if (!Model.AnalystRoles.Any())
+{
+    <text>[none]</text><br />
+}
 @foreach (var ar in Model.AnalystRoles)
 {
     <b>@ar.Person.FullName</b>
@@ -25,7 +32,9 @@ Analyst(s):<br />
         <text>Add Analyst for this Campaign/Publisher:</text>
         <table><tr><td>
             @Html.DropDownList("personId", availablePeopleSelectList)
+            <input type="submit" value="Add" />
         </td></tr></table>
-        <input type="submit" value="Add" />
     }
 }
+<br />
+@Html.ActionLink("Done (back to Analyst List)", "PubAdvCampList", new { affid = Model.Affiliate.affid })

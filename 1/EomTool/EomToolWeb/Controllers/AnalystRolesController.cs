@@ -68,6 +68,7 @@ namespace EomToolWeb.Controllers
 
             var model = new AnalystRolesVM
             {
+                CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
                 Campaign = camp,
                 Affiliate = aff,
                 AnalystRoles = mainRepo.AnalystRoles(pid: pid, affid: affid).OrderBy(ar => ar.Person.first_name).ThenBy(ar => ar.Person.last_name),

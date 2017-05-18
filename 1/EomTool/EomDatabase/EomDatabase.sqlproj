@@ -186,6 +186,7 @@
     <Folder Include="Schema Objects\Schemas\dbo\Statistics" />
     <Folder Include="dbo\" />
     <Folder Include="dbo\Tables\" />
+    <Folder Include="dbo\Functions\" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -815,6 +816,9 @@
     <Build Include="Schema Objects\Schemas\dbo\Views\MediaBuyerConfirmation_Megan.view.sql" />
     <Build Include="Schema Objects\Database Level Objects\Security\Users\DIRECTAGENTS_MGlauberson.user.sql" />
     <Build Include="Schema Objects\Database Level Objects\Security\Users\DIRECTAGENTS_MConahan.user.sql" />
+    <Build Include="dbo\Tables\Person.sql" />
+    <Build Include="dbo\Tables\AnalystRole.sql" />
+    <Build Include="dbo\Functions\ListAnalysts.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Database Level Objects\Assemblies\SqlServerProjectForDADatabaseR3.dll">

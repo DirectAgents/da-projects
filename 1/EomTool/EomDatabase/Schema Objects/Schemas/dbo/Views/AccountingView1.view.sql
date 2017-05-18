@@ -1,4 +1,5 @@
-﻿CREATE VIEW [dbo].[AccountingView1]
+﻿
+CREATE VIEW [dbo].[AccountingView1]
 AS
 SELECT     TOP (100) PERCENT dbo.Affiliate.name2 AS Publisher, dbo.Advertiser.name AS Advertiser, dbo.Advertiser.qb_name AS [Adv QB Name],
                       dbo.Advertiser.payment_terms AS [Adv Payment Terms], dbo.Campaign.pid AS [Campaign Number], 
@@ -7,7 +8,7 @@ SELECT     TOP (100) PERCENT dbo.Affiliate.name2 AS Publisher, dbo.Advertiser.na
                       dbo.Item.cost_per_unit AS [Cost/Unit], dbo.tousd3(dbo.Item.cost_currency_id, dbo.Item.cost_per_unit) AS [Cost/Unit USD], SUM(dbo.Item.num_units) AS Units, 
                       dbo.UnitType.name AS [Unit Type], SUM(dbo.Item.total_revenue) AS Revenue, SUM(dbo.tousd3(dbo.Item.revenue_currency_id, dbo.Item.revenue_per_unit) 
                       * dbo.Item.num_units) AS [Revenue USD], SUM(dbo.Item.total_cost) AS Cost, SUM(dbo.tousd3(dbo.Item.cost_currency_id, dbo.Item.cost_per_unit) 
-                      * dbo.Item.num_units) AS [Cost USD], SUM(dbo.Item.margin) AS Margin, dbo.MediaBuyer.name AS [Media Buyer], dbo.AdManager.name AS [Ad Manager], 
+                      * dbo.Item.num_units) AS [Cost USD], SUM(dbo.Item.margin) AS Margin, dbo.MediaBuyer.name AS [Media Buyer], dbo.ListAnalysts(Item.pid,Item.affid) AS Analyst, dbo.AdManager.name AS [Ad Manager], 
                       dbo.AccountManager.name AS [Account Manager], dbo.CampaignStatus.name AS Status, dbo.MediaBuyerApprovalStatus.name AS [MediaBuyerApproval Status], 
                       dbo.ItemAccountingStatus.name AS [Accounting Status], dbo.NetTermType.name, dbo.AffiliatePaymentMethod.name AS [Aff Pay Method], dbo.Affiliate.currency_id, 
                       Currency_2.name AS Expr1, Currency_2.name AS [Pub Pay Curr], Source.name AS Source,
@@ -34,7 +35,7 @@ GROUP BY dbo.Affiliate.name2, dbo.Advertiser.name, dbo.Advertiser.qb_name, dbo.A
                       dbo.Item.cost_per_unit, dbo.MediaBuyer.name, dbo.AdManager.name, dbo.AccountManager.name, dbo.ItemAccountingStatus.name, dbo.UnitType.name, 
                       dbo.CampaignStatus.name, dbo.tousd3(dbo.Item.revenue_currency_id, dbo.Item.revenue_per_unit), dbo.tousd3(dbo.Item.cost_currency_id, dbo.Item.cost_per_unit), 
                       dbo.NetTermType.name, dbo.AffiliatePaymentMethod.name, dbo.Affiliate.currency_id, Currency_2.name, Source.name, dbo.MediaBuyerApprovalStatus.name,
-                      dbo.Affiliate.[status], dbo.Affiliate.[payment_on_hold]
+                      dbo.Affiliate.[status], dbo.Affiliate.[payment_on_hold], dbo.ListAnalysts(Item.pid,Item.affid)
 ORDER BY Publisher
 
 GO
