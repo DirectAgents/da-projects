@@ -8,6 +8,7 @@ alter FUNCTION [td].[fDailySummaryBasicStats](
 	, AccountId int
 	, Impressions	int
 	, Clicks	int
+	, AllClicks	int
 	, CTR	float(53)
 	, Conversions	int
 	, CR	float(53)
@@ -59,6 +60,7 @@ BEGIN
 		, dt.AccountId
 		, dt.Impressions
 		, dt.Clicks
+		, dt.AllClicks
 		, dt.PostClickConv + dt.PostViewConv AS Conversions
 		, dt.Cost
 		, CASE	WHEN dtData.MarginPct = 100 THEN dt.Cost * (1 + (dtData.MgmtFeePct / 100))
@@ -84,6 +86,7 @@ BEGIN
 	, AccountId
 	, Impressions
 	, Clicks
+	, AllClicks
 	, CASE WHEN Impressions = 0 THEN 0 ELSE Clicks / CAST(Impressions AS float) END AS CTR
 	, Conversions AS Conversions
 	, CASE WHEN Clicks = 0 THEN 0 ELSE Conversions / CAST(Clicks as float) END AS CR

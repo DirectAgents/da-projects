@@ -9,6 +9,7 @@
 	, StrategyId	int
 	, Impressions	int
 	, Clicks	int
+	, AllClicks	int
 	, CTR	float(53)
 	, PostClickConv	int
 	, PostViewConv	int
@@ -77,6 +78,7 @@ BEGIN
 		, Strategy.Id AS StrategyId
 		, StrategySummary.Impressions
 		, StrategySummary.Clicks
+		, StrategySummary.AllClicks
 		, StrategySummary.PostClickConv
 		, StrategySummary.PostViewConv
 		, CAST(CASE WHEN Platform.Name = 'Facebook' THEN 0 ELSE 1 END AS bit) AS ShowClickAndViewConv
@@ -113,6 +115,7 @@ BEGIN
 	, StrategyId
 	, Impressions
 	, Clicks
+	, AllClicks
 	, CASE WHEN Impressions = 0 THEN 0 ELSE Clicks / CAST(Impressions AS float) END AS CTR
 	, PostClickConv
 	, PostViewConv
