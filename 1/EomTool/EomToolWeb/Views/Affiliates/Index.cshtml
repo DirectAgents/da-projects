@@ -21,6 +21,7 @@ Accounting Period:
         <th>PaymentMethod</th>
         <th>Currency</th>
         <th>PaymentOnHold</th>
+        <th>QBName</th>
     </tr>
 @foreach (var aff in Model)
 {
@@ -35,6 +36,7 @@ Accounting Period:
         <td style="text-align:center">@aff.AffiliatePaymentMethod.name</td>
         <td style="text-align:center">@aff.Currency.name</td>
         <td>@aff.payment_on_hold</td>
+        <td>@aff.qb_name</td>
     </tr>
 }
 </table>

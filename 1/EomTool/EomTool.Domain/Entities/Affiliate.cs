@@ -31,6 +31,7 @@ namespace EomTool.Domain.Entities
         public string status { get; set; }
         public bool margin_exempt { get; set; }
         public string payment_on_hold { get; set; }
+        public string qb_name { get; set; }
     
         public virtual Currency Currency { get; set; }
         public virtual MediaBuyer MediaBuyer { get; set; }

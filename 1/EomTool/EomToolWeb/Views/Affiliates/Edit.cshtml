@@ -39,6 +39,10 @@
                 <td>@Html.LabelFor(m => m.payment_on_hold, "PaymentOnHold")</td>
                 <td id="tdPaymentOnHold">@Html.DropDownListFor(m => m.payment_on_hold, new SelectList(paymentOnHoldList))</td>
             </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.qb_name, "QBName")</td>
+                <td>@Html.EditorFor(m => m.qb_name)</td>
+            </tr>
         </table>
         <br />
         <input type="submit" value="Save" />

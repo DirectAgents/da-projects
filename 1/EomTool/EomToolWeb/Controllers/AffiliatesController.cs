@@ -75,6 +75,7 @@ namespace EomToolWeb.Controllers
             aff.status = inAff.status;
             aff.margin_exempt = inAff.margin_exempt;
             aff.payment_on_hold = inAff.payment_on_hold;
+            aff.qb_name = inAff.qb_name;
             mainRepo.SaveChanges();
             return true;
         }

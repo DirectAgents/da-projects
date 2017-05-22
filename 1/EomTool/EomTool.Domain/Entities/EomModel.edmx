@@ -53,6 +53,7 @@
           <Property Name="status" Type="varchar" MaxLength="50" />
           <Property Name="margin_exempt" Type="bit" Nullable="false" />
           <Property Name="payment_on_hold" Type="varchar" MaxLength="100" />
+          <Property Name="qb_name" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="AffiliatePaymentMethod">
           <Key>
@@ -1535,6 +1536,7 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
           <Property Type="String" Name="status" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="Boolean" Name="margin_exempt" Nullable="false" />
           <Property Type="String" Name="payment_on_hold" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="qb_name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Campaign">
           <Key>
@@ -2495,7 +2497,8 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
             <ScalarProperty Name="name" ColumnName="name" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Affiliates"><EntityTypeMapping TypeName="EomModel.Affiliate"><MappingFragment StoreEntitySet="Affiliate">
-            <ScalarProperty Name="payment_on_hold" ColumnName="payment_on_hold" />
+            <ScalarProperty Name="qb_name" ColumnName="qb_name" />
+                <ScalarProperty Name="payment_on_hold" ColumnName="payment_on_hold" />
                 <ScalarProperty Name="margin_exempt" ColumnName="margin_exempt" />
                 <ScalarProperty Name="status" ColumnName="status" />
                 <ScalarProperty Name="id" ColumnName="id" />
