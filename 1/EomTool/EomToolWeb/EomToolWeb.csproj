@@ -174,10 +174,12 @@
     <Compile Include="Controllers\AffiliatesController.cs" />
     <Compile Include="Controllers\AnalystRolesController.cs" />
     <Compile Include="Controllers\AuditController.cs" />
+    <Compile Include="Controllers\IncomeTypesController.cs" />
     <Compile Include="Controllers\PeopleController.cs" />
     <Compile Include="Controllers\StatsController.cs" />
     <Compile Include="Controllers\SynchController.cs" />
     <Compile Include="Controllers\TypesController.cs" />
+    <Compile Include="Controllers\UnitTypesController.cs" />
     <Compile Include="Controllers\WikiAdminController.cs" />
     <Compile Include="Controllers\AdvertisersController.cs" />
     <Compile Include="Controllers\BatchesController.cs" />
@@ -4427,6 +4429,12 @@
     <Content Include="Views\AnalystRoles\_ViewStart.cshtml" />
     <Content Include="Views\AnalystRoles\Affiliates.cshtml" />
     <Content Include="Views\AnalystRoles\Edit.cshtml" />
+    <Content Include="Views\IncomeTypes\Index.cshtml" />
+    <Content Include="Views\IncomeTypes\_ViewStart.cshtml" />
+    <Content Include="Views\IncomeTypes\Edit.cshtml" />
+    <Content Include="Views\UnitTypes\Index.cshtml" />
+    <Content Include="Views\UnitTypes\_ViewStart.cshtml" />
+    <Content Include="Views\UnitTypes\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

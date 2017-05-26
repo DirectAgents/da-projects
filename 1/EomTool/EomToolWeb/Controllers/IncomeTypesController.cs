@@ -5,9 +5,9 @@ using EomTool.Domain.Entities;
 
 namespace EomToolWeb.Controllers
 {
-    public class PeopleController : EOMController
+    public class IncomeTypesController : EOMController
     {
-        public PeopleController(IMainRepository mainRepository, ISecurityRepository securityRepository, IDAMain1Repository daMain1Repository, IEomEntitiesConfig eomEntitiesConfig)
+        public IncomeTypesController(IMainRepository mainRepository, ISecurityRepository securityRepository, IDAMain1Repository daMain1Repository, IEomEntitiesConfig eomEntitiesConfig)
         {
             this.mainRepo = mainRepository;
             this.securityRepo = securityRepository;
@@ -20,39 +20,39 @@ namespace EomToolWeb.Controllers
             if (!securityRepo.IsAccountantOrAdmin(User))
                 return Content("unauthorized");
 
-            var people = mainRepo.People().OrderBy(p => p.first_name).ThenBy(p => p.last_name);
+            var incomeTypes = mainRepo.IncomeTypes().OrderBy(x => x.id);
 
             SetAccountingPeriodViewData();
-            return View(people);
+            return View(incomeTypes);
         }
 
-        public ActionResult NewPerson()
+        public ActionResult New()
         {
-            mainRepo.NewPerson();
+            mainRepo.NewIncomeType();
             return RedirectToAction("Index");
         }
 
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var person = mainRepo.GetPerson(id);
-            if (person == null)
-                return Content("Person not found");
+            var incomeType = mainRepo.GetIncomeType(id);
+            if (incomeType == null)
+                return Content("IncomeType not found");
 
-            return View(person);
+            return View(incomeType);
         }
         [HttpPost]
-        public ActionResult Edit(Person inPerson)
+        public ActionResult Edit(IncomeType inIncomeType)
         {
             if (ModelState.IsValid)
             {
-                bool saved = mainRepo.SavePerson(inPerson);
+                bool saved = mainRepo.SaveIncomeType(inIncomeType);
                 if (saved)
                     return RedirectToAction("Index");
-                    //return RedirectToAction("Show", new { id = inPerson.id });
-                ModelState.AddModelError("", "Person could not be saved");
+                ModelState.AddModelError("", "IncomeType could not be saved");
             }
-            return View(inPerson);
+            return View(inIncomeType);
         }
+
     }
 }

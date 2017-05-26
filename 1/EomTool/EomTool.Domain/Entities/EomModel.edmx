@@ -171,6 +171,14 @@
           <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="to_usd_multiplier" Type="decimal" Precision="14" Scale="4" Nullable="false" />
         </EntityType>
+        <EntityType Name="IncomeType">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="qb_code" Type="varchar" MaxLength="100" />
+        </EntityType>
         <EntityType Name="Invoice">
           <Key>
             <PropertyRef Name="id" />
@@ -352,6 +360,7 @@
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="income_type_id" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'zDADatabaseApr2017Test.dbo.CampaignsPublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -915,6 +924,18 @@ warning 6035: The relationship 'FK_MarginApproval_Campaign' has columns that are
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_UnitType_IncomeType">
+          <End Role="IncomeType" Type="Self.IncomeType" Multiplicity="0..1" />
+          <End Role="UnitType" Type="Self.UnitType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IncomeType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UnitType">
+              <PropertyRef Name="income_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <!--Errors Found During Generation:
 warning 6035: The relationship 'Item_Affiliate_affid_FK_Affiliate_affid_UK' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
         <Association Name="Item_Affiliate_affid_FK_Affiliate_affid_UK" />-->
@@ -1020,6 +1041,7 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
           <EntitySet Name="CampaignNotes" EntityType="Self.CampaignNotes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CampaignStatus" EntityType="Self.CampaignStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Currency" EntityType="Self.Currency" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IncomeType" EntityType="Self.IncomeType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Invoice" EntityType="Self.Invoice" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InvoiceItem" EntityType="Self.InvoiceItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InvoiceNote" EntityType="Self.InvoiceNote" Schema="dbo" store:Type="Tables" />
@@ -1290,6 +1312,10 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
             <End Role="PaymentBatchState" EntitySet="PaymentBatchState" />
             <End Role="PaymentBatch" EntitySet="PaymentBatch" />
           </AssociationSet>
+          <AssociationSet Name="FK_UnitType_IncomeType" Association="Self.FK_UnitType_IncomeType">
+            <End Role="IncomeType" EntitySet="IncomeType" />
+            <End Role="UnitType" EntitySet="UnitType" />
+          </AssociationSet>
           <AssociationSet Name="Item_CampaignStatus_id_FK_CampaignStatus_id_PK" Association="Self.Item_CampaignStatus_id_FK_CampaignStatus_id_PK">
             <End Role="CampaignStatus" EntitySet="CampaignStatus" />
             <End Role="Item" EntitySet="Item" />
@@ -1495,6 +1521,11 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
             <End Role="Person" EntitySet="People" />
             <End Role="AnalystRole" EntitySet="AnalystRoles" />
           </AssociationSet>
+          <EntitySet Name="IncomeTypes" EntityType="EomModel.IncomeType" />
+          <AssociationSet Name="FK_UnitType_IncomeType" Association="EomModel.FK_UnitType_IncomeType">
+            <End Role="IncomeType" EntitySet="IncomeTypes" />
+            <End Role="UnitType" EntitySet="UnitTypes" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Advertiser">
           <Key>
@@ -1672,6 +1703,8 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="income_type_id" Type="Int32" />
+          <NavigationProperty Name="IncomeType" Relationship="EomModel.FK_UnitType_IncomeType" FromRole="UnitType" ToRole="IncomeType" />
         </EntityType>
         <EntityType Name="CampaignsPublisherReportDetail">
           <Key>
@@ -2480,6 +2513,27 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="IncomeType">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="qb_code" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="UnitTypes" Relationship="EomModel.FK_UnitType_IncomeType" FromRole="IncomeType" ToRole="UnitType" />
+        </EntityType>
+        <Association Name="FK_UnitType_IncomeType">
+          <End Type="EomModel.IncomeType" Role="IncomeType" Multiplicity="0..1" />
+          <End Type="EomModel.UnitType" Role="UnitType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IncomeType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UnitType">
+              <PropertyRef Name="income_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2596,7 +2650,8 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
             <ScalarProperty Name="name" ColumnName="name" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="UnitTypes"><EntityTypeMapping TypeName="EomModel.UnitType"><MappingFragment StoreEntitySet="UnitType">
-            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="income_type_id" ColumnName="income_type_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
             <ScalarProperty Name="name" ColumnName="name" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="CampaignsPublisherReportDetails"><EntityTypeMapping TypeName="EomModel.CampaignsPublisherReportDetail"><MappingFragment StoreEntitySet="CampaignsPublisherReportDetails">
@@ -2955,6 +3010,15 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="IncomeTypes">
+            <EntityTypeMapping TypeName="EomModel.IncomeType">
+              <MappingFragment StoreEntitySet="IncomeType">
+                <ScalarProperty Name="qb_code" ColumnName="qb_code" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -2983,13 +3047,13 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
         <EntityTypeShape EntityType="EomModel.Campaign" Width="2" PointX="3.5" PointY="15" Height="5.634013671875" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.CampaignStatus" Width="1.625" PointX="3.875" PointY="12.75" Height="1.5956835937500031" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.Currency" Width="1.5" PointX="6.5" PointY="10.375" Height="2.1725878906250005" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomModel.Item" Width="2.375" PointX="7" PointY="3.125" Height="6.4032194010416656" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomModel.ItemAccountingStatus" Width="2" PointX="10.75" PointY="4.375" Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.Item" Width="2.375" PointX="6.75" PointY="3.25" Height="6.4032194010416656" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.ItemAccountingStatus" Width="2" PointX="9.625" PointY="4.5" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.MediaBuyer" Width="1.5" PointX="10" PointY="16.125" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.NetTermType" Width="1.5" PointX="10" PointY="14.25" Height="1.5956835937499996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomModel.Source" Width="1.5" PointX="10.75" PointY="6.125" Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.Source" Width="1.5" PointX="9.625" PointY="2.875" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.TrackingSystem" Width="1.5" PointX="6" PointY="16.625" Height="1.7879850260416674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomModel.UnitType" Width="1.5" PointX="8.125" PointY="10.25" Height="1.5956835937500031" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.UnitType" Width="1.5" PointX="8.125" PointY="10" Height="1.5956835937500031" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.CampaignsPublisherReportDetail" Width="2.5" PointX="0.5" PointY="0.5" Height="3.7109993489583388" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.CampaignsPublisherReportSummary" Width="2.75" PointX="0.5" PointY="10" Height="2.9417936197916674" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.PublisherReportDetail" Width="2" PointX="11.25" PointY="0.5" Height="3.5186979166666674" IsExpanded="true" />
@@ -3117,12 +3181,12 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
         <EntityTypeShape EntityType="EomModel.PublisherRelatedItemCount" Width="2.25" PointX="13.25" PointY="15.625" />
         <EntityTypeShape EntityType="EomModel.AccountManagerTeam" Width="2" PointX="5.875" PointY="19" />
         <AssociationConnector Association="EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK" />
-        <EntityTypeShape EntityType="EomModel.Invoice" Width="1.5" PointX="10" PointY="8.375" />
-        <EntityTypeShape EntityType="EomModel.InvoiceNote" Width="1.5" PointX="12" PointY="10.5" />
-        <EntityTypeShape EntityType="EomModel.InvoiceStatus" Width="1.5" PointX="12" PointY="8.375" />
+        <EntityTypeShape EntityType="EomModel.Invoice" Width="1.5" PointX="10.125" PointY="9" />
+        <EntityTypeShape EntityType="EomModel.InvoiceNote" Width="1.5" PointX="12" PointY="11.125" />
+        <EntityTypeShape EntityType="EomModel.InvoiceStatus" Width="1.5" PointX="12" PointY="9" />
         <AssociationConnector Association="EomModel.FK_Invoice_InvoiceStatus" />
         <AssociationConnector Association="EomModel.FK_InvoiceNote_Invoice" />
-        <EntityTypeShape EntityType="EomModel.InvoiceItem" Width="1.5" PointX="10.125" PointY="10.625" />
+        <EntityTypeShape EntityType="EomModel.InvoiceItem" Width="1.5" PointX="10.125" PointY="11.125" />
         <AssociationConnector Association="EomModel.FK_InvoiceItem_Currency" />
         <AssociationConnector Association="EomModel.FK_InvoiceItem_Invoice" />
         <AssociationConnector Association="EomModel.FK_InvoiceItem_UnitType" />
@@ -3139,6 +3203,8 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
         <EntityTypeShape EntityType="EomModel.AnalystRole" Width="1.5" PointX="8.25" PointY="19" />
         <EntityTypeShape EntityType="EomModel.Person" Width="1.5" PointX="10.25" PointY="19" />
         <AssociationConnector Association="EomModel.FK_AnalystRole_Person" />
+        <EntityTypeShape EntityType="EomModel.IncomeType" Width="1.5" PointX="9.25" PointY="7.25" />
+        <AssociationConnector Association="EomModel.FK_UnitType_IncomeType" />
         </Diagram>
     </Diagrams>
   </Designer>

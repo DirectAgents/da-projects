@@ -710,7 +710,6 @@ namespace EomTool.Domain.Concrete
         //}
 
         //---
-
         public void ChangeUnitType(IEnumerable<int> itemIds, int unitTypeId)
         {
             var items = context.Items.Where(i => itemIds.Contains(i.id));
@@ -719,6 +718,39 @@ namespace EomTool.Domain.Concrete
                 item.unit_type_id = unitTypeId;
             }
             SaveChanges();
+        }
+
+
+        public IncomeType GetIncomeType(int id)
+        {
+            return context.IncomeTypes.Find(id);
+        }
+        public IQueryable<IncomeType> IncomeTypes()
+        {
+            return context.IncomeTypes;
+        }
+        public bool SaveIncomeType(IncomeType inIncomeType)
+        {
+            var incomeType = GetIncomeType(inIncomeType.id);
+            if (incomeType == null)
+                return false;
+
+            incomeType.name = inIncomeType.name;
+            incomeType.qb_code = inIncomeType.qb_code;
+            SaveChanges();
+            return true;
+        }
+        public IncomeType NewIncomeType(string name = "zNew")
+        {
+            int id = context.IncomeTypes.Select(x => x.id).DefaultIfEmpty(0).Max() + 1;
+            var incomeType = new IncomeType
+            {
+                id = id,
+                name = name
+            };
+            context.IncomeTypes.Add(incomeType);
+            SaveChanges();
+            return incomeType;
         }
 
         private List<UnitType> _unitTypeList;
@@ -759,6 +791,32 @@ namespace EomTool.Domain.Concrete
         public UnitType GetUnitType(string unitTypeName)
         {
             return UnitTypeList.FirstOrDefault(ut => ut.name.ToLower() == unitTypeName.ToLower());
+        }
+
+        public IQueryable<UnitType> UnitTypes()
+        {
+            return context.UnitTypes;
+        }
+        public bool SaveUnitType(UnitType inUnitType)
+        {
+            var unitType = GetUnitType(inUnitType.id);
+            if (unitType == null)
+                return false;
+
+            unitType.name = inUnitType.name;
+            unitType.income_type_id = inUnitType.income_type_id;
+            SaveChanges();
+            return true;
+        }
+        public UnitType NewUnitType(string name = "zNew")
+        {
+            var unitType = new UnitType
+            {
+                name = name
+            };
+            context.UnitTypes.Add(unitType);
+            SaveChanges();
+            return unitType;
         }
 
         //---

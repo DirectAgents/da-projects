@@ -1,0 +1,33 @@
+﻿@model IEnumerable<UnitType>
+@{
+    ViewBag.Title = "UnitTypes";
+    bool super = Request.QueryString["super"] == "1";
+}
+
+<h3>@Html.ActionLink("EOM Admin", "Index", "Admin") - UnitTypes</h3>
+
+Accounting Period:
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+<br />
+
+<table style="border: 1px solid gray; border-spacing: 10px 0">
+    <tr>
+        <th></th>
+        <th>Id</th>
+        <th>Name</th>
+        <th>IncomeType</th>
+    </tr>
+@foreach (var ut in Model)
+{
+    <tr>
+        <td>@Html.ActionLink("Edit", "Edit", new { id = ut.id })</td>
+        <td>@ut.id</td>
+        <td>@ut.name</td>
+        <td>@(ut.IncomeType != null ? ut.IncomeType.name : "")</td>
+    </tr>
+}
+    <tr><td>&nbsp;</td></tr>
+</table>
+@if (super) {
+    @Html.ActionLink("New UnitType", "New")
+}

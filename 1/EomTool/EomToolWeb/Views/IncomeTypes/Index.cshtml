@@ -1,0 +1,30 @@
+﻿@model IEnumerable<IncomeType>
+@{
+    ViewBag.Title = "IncomeTypes";
+}
+
+<h3>@Html.ActionLink("EOM Admin", "Index", "Admin") - IncomeTypes</h3>
+
+Accounting Period:
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+<br />
+
+<table style="border: 1px solid gray; border-spacing: 10px 0">
+    <tr>
+        <th></th>
+        <th>Id</th>
+        <th>Name</th>
+        <th>QB Code</th>
+    </tr>
+@foreach (var it in Model)
+{
+    <tr>
+        <td>@Html.ActionLink("Edit", "Edit", new { id = it.id })</td>
+        <td>@it.id</td>
+        <td>@it.name</td>
+        <td>@it.qb_code</td>
+    </tr>
+}
+    <tr><td>&nbsp;</td></tr>
+</table>
+@Html.ActionLink("New IncomeType", "New")

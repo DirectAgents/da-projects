@@ -46,12 +46,20 @@ namespace EomTool.Domain.Abstract
 
         void ChangeUnitType(IEnumerable<int> itemIds, int unitTypeId);
 
+        IncomeType GetIncomeType(int id);
+        IQueryable<IncomeType> IncomeTypes();
+        bool SaveIncomeType(IncomeType inIncomeType);
+        IncomeType NewIncomeType(string name = "zNew");
+
         List<UnitType> UnitTypeList { get; }
         string UnitTypeName(int unitTypeId);
         string ItemCode(int unitTypeId);
         bool UnitTypeExists(int unitTypeId);
         UnitType GetUnitType(int unitTypeId);
         UnitType GetUnitType(string unitTypeName);
+        IQueryable<UnitType> UnitTypes();
+        bool SaveUnitType(UnitType inUnitType);
+        UnitType NewUnitType(string name = "zNew");
 
         List<Currency> CurrencyList { get; }
         bool CurrencyExists(int currency);

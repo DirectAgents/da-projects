@@ -12,12 +12,19 @@ namespace EomTool.Domain.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class UnitType
+    public partial class IncomeType
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public IncomeType()
+        {
+            this.UnitTypes = new HashSet<UnitType>();
+        }
+    
         public int id { get; set; }
         public string name { get; set; }
-        public Nullable<int> income_type_id { get; set; }
+        public string qb_code { get; set; }
     
-        public virtual IncomeType IncomeType { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UnitType> UnitTypes { get; set; }
     }
 }

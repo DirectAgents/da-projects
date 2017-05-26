@@ -173,6 +173,9 @@
     <Compile Include="Entities\Group.cs">
       <DependentUpon>EomToolSecurity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\IncomeType.cs">
+      <DependentUpon>EomModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\Invoice.cs">
       <DependentUpon>EomModel.tt</DependentUpon>
     </Compile>

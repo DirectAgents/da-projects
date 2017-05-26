@@ -1,15 +1,15 @@
-﻿@model Person
+﻿@model IncomeType
 @{
-    ViewBag.Title = "Edit Person";
+    ViewBag.Title = "Edit IncomeType";
 }
 
-<h3>Edit Person</h3>
+<h3>Edit IncomeType</h3>
 
 @using (Html.BeginForm())
 {
     @Html.ValidationSummary()
     <fieldset>
-        <legend>Person</legend>
+        <legend>IncomeType</legend>
         @Html.HiddenFor(m => m.id)
         <table>
             <tr>
@@ -17,12 +17,12 @@
                 <td>@Html.DisplayFor(m => m.id)</td>
             </tr>
             <tr>
-                <td>@Html.LabelFor(m => m.first_name)</td>
-                <td>@Html.EditorFor(m => m.first_name)</td>
+                <td>@Html.LabelFor(m => m.name)</td>
+                <td>@Html.EditorFor(m => m.name)</td>
             </tr>
             <tr>
-                <td>@Html.LabelFor(m => m.last_name)</td>
-                <td>@Html.EditorFor(m => m.last_name)</td>
+                <td>@Html.LabelFor(m => m.qb_code)</td>
+                <td>@Html.EditorFor(m => m.qb_code)</td>
             </tr>
         </table>
         <br />

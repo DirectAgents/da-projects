@@ -5,9 +5,9 @@ using EomTool.Domain.Entities;
 
 namespace EomToolWeb.Controllers
 {
-    public class PeopleController : EOMController
+    public class UnitTypesController : EOMController
     {
-        public PeopleController(IMainRepository mainRepository, ISecurityRepository securityRepository, IDAMain1Repository daMain1Repository, IEomEntitiesConfig eomEntitiesConfig)
+        public UnitTypesController(IMainRepository mainRepository, ISecurityRepository securityRepository, IDAMain1Repository daMain1Repository, IEomEntitiesConfig eomEntitiesConfig)
         {
             this.mainRepo = mainRepository;
             this.securityRepo = securityRepository;
@@ -20,39 +20,40 @@ namespace EomToolWeb.Controllers
             if (!securityRepo.IsAccountantOrAdmin(User))
                 return Content("unauthorized");
 
-            var people = mainRepo.People().OrderBy(p => p.first_name).ThenBy(p => p.last_name);
+            var unitTypes = mainRepo.UnitTypes().OrderBy(x => x.id);
 
             SetAccountingPeriodViewData();
-            return View(people);
+            return View(unitTypes);
         }
 
-        public ActionResult NewPerson()
+        public ActionResult New()
         {
-            mainRepo.NewPerson();
+            mainRepo.NewUnitType();
             return RedirectToAction("Index");
         }
 
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var person = mainRepo.GetPerson(id);
-            if (person == null)
-                return Content("Person not found");
+            var unitType = mainRepo.GetUnitType(id);
+            if (unitType == null)
+                return Content("UnitType not found");
 
-            return View(person);
+            ViewBag.IncomeTypes = mainRepo.IncomeTypes().OrderBy(x => x.name);
+            return View(unitType);
         }
         [HttpPost]
-        public ActionResult Edit(Person inPerson)
+        public ActionResult Edit(UnitType inUnitType)
         {
             if (ModelState.IsValid)
             {
-                bool saved = mainRepo.SavePerson(inPerson);
+                bool saved = mainRepo.SaveUnitType(inUnitType);
                 if (saved)
                     return RedirectToAction("Index");
-                    //return RedirectToAction("Show", new { id = inPerson.id });
-                ModelState.AddModelError("", "Person could not be saved");
+                ModelState.AddModelError("", "UnitType could not be saved");
             }
-            return View(inPerson);
+            return View(inUnitType);
         }
+
     }
 }
