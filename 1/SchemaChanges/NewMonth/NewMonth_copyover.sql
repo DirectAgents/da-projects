@@ -1,6 +1,8 @@
 -- *TODO: SET APPROPRIATE DATABASES!*
 USE DADatabaseB...2017
 
+--?? some of this is in EOMcopy ??
+
 --Disable triggers
 DISABLE TRIGGER tr_Affiliate_IU ON Affiliate
 

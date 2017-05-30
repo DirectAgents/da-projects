@@ -43,7 +43,8 @@ GO
 CREATE PROCEDURE [dbo].[EOMcopyTable] 
 	@dbFrom SYSNAME, 
 	@dbTo SYSNAME,
-	@tableName SYSNAME
+	@tableName SYSNAME,
+	@identityInsert BIT
 AS
 BEGIN
 SET NOCOUNT ON;
@@ -54,10 +55,13 @@ SET @toTablePath = '[' + @dbTo + '].[dbo].[' + @tableName + ']'
 SET @fromTablePath = '[' + @dbFrom + '].[dbo].[' + @tableName + ']'
 EXEC ColumnList @dbFrom, @tableName, @colList output
 
-SET @sql = 'SET IDENTITY_INSERT ' + @toTablePath + ' ON '
-		+ 'INSERT INTO ' + @toTablePath + ' (' + @colList + ')'
+SET @sql = 'INSERT INTO ' + @toTablePath + ' (' + @colList + ')'
 		+ ' SELECT ' + @colList + ' FROM ' + @fromTablePath
+IF @identityInsert=1
+	SET @sql = 'SET IDENTITY_INSERT ' + @toTablePath + ' ON '
+		+ @sql
 		+ ' SET IDENTITY_INSERT ' + @toTablePath + ' OFF'
+
 EXEC (@sql)
 
 END
@@ -84,23 +88,26 @@ DECLARE @sql NVARCHAR(max)
 SET @sql = 'USE ' + @dbTo + '; DISABLE TRIGGER tr_Affiliate_IU ON Affiliate'
 EXEC (@sql)
 
-EXEC EOMcopyTable @dbFrom,@dbTo,'AccountManager'
-EXEC EOMcopyTable @dbFrom,@dbTo,'AdManager'
-EXEC EOMcopyTable @dbFrom,@dbTo,'Advertiser'
-EXEC EOMcopyTable @dbFrom,@dbTo,'AffiliatePaymentMethod'
-EXEC EOMcopyTable @dbFrom,@dbTo,'Currency'
-EXEC EOMcopyTable @dbFrom,@dbTo,'CampaignStatus'
-EXEC EOMcopyTable @dbFrom,@dbTo,'ItemAccountingStatus'
-EXEC EOMcopyTable @dbFrom,@dbTo,'ItemReportingStatus'
-EXEC EOMcopyTable @dbFrom,@dbTo,'DTCampaignStatus'
-EXEC EOMcopyTable @dbFrom,@dbTo,'MediaBuyer'
-EXEC EOMcopyTable @dbFrom,@dbTo,'NetTermType'
-EXEC EOMcopyTable @dbFrom,@dbTo,'Source'
-EXEC EOMcopyTable @dbFrom,@dbTo,'UnitType'
-EXEC EOMcopyTable @dbFrom,@dbTo,'Vendor'
+EXEC EOMcopyTable @dbFrom,@dbTo,'AccountManager',1
+EXEC EOMcopyTable @dbFrom,@dbTo,'AdManager',1
+EXEC EOMcopyTable @dbFrom,@dbTo,'Advertiser',1
+EXEC EOMcopyTable @dbFrom,@dbTo,'AffiliatePaymentMethod',1
+EXEC EOMcopyTable @dbFrom,@dbTo,'Currency',1
+EXEC EOMcopyTable @dbFrom,@dbTo,'CampaignStatus',1
+EXEC EOMcopyTable @dbFrom,@dbTo,'ItemAccountingStatus',1
+EXEC EOMcopyTable @dbFrom,@dbTo,'ItemReportingStatus',1
+EXEC EOMcopyTable @dbFrom,@dbTo,'DTCampaignStatus',1
+EXEC EOMcopyTable @dbFrom,@dbTo,'MediaBuyer',1
+EXEC EOMcopyTable @dbFrom,@dbTo,'NetTermType',1
+EXEC EOMcopyTable @dbFrom,@dbTo,'Source',1
+EXEC EOMcopyTable @dbFrom,@dbTo,'UnitType',1
+EXEC EOMcopyTable @dbFrom,@dbTo,'Vendor',1
 
-EXEC EOMcopyTable @dbFrom,@dbTo,'Campaign'
-EXEC EOMcopyTable @dbFrom,@dbTo,'Affiliate'
+EXEC EOMcopyTable @dbFrom,@dbTo,'Campaign',1
+EXEC EOMcopyTable @dbFrom,@dbTo,'Affiliate',1
+
+EXEC EOMcopyTable @dbFrom,@dbTo,'Person',0
+EXEC EOMcopyTable @dbFrom,@dbTo,'AnalystRole',0
 
 SET @sql = 'USE ' + @dbTo + ';'
 + ' ENABLE TRIGGER tr_Affiliate_IU ON Affiliate;'
