@@ -752,6 +752,14 @@ namespace EomTool.Domain.Concrete
             SaveChanges();
             return incomeType;
         }
+        public bool NewIncomeType(IncomeType incomeType)
+        {
+            if (context.IncomeTypes.Any(x => x.id == incomeType.id))
+                return false; // an entity with that id already exists
+            context.IncomeTypes.Add(incomeType);
+            SaveChanges();
+            return true;
+        }
 
         private List<UnitType> _unitTypeList;
         public List<UnitType> UnitTypeList

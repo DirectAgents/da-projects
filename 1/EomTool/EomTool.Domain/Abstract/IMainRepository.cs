@@ -50,6 +50,7 @@ namespace EomTool.Domain.Abstract
         IQueryable<IncomeType> IncomeTypes();
         bool SaveIncomeType(IncomeType inIncomeType);
         IncomeType NewIncomeType(string name = "zNew");
+        bool NewIncomeType(IncomeType incomeType);
 
         List<UnitType> UnitTypeList { get; }
         string UnitTypeName(int unitTypeId);
