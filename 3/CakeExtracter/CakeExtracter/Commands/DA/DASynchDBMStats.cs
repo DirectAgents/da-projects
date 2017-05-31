@@ -9,6 +9,7 @@ using CakeExtracter.Bootstrappers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.DBM;
 using System.Linq;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Commands
 {
@@ -34,14 +35,19 @@ namespace CakeExtracter.Commands
         public DateTime? EndDate { get; set; }
         public bool Historical { get; set; }
         public string StatsType { get; set; }
+        public int? AccountId { get; set; }
         public int? InsertionOrderID { get; set; }
         public string AdvertiserID { get; set; }
 
         public override void ResetProperties()
         {
+            StartDate = null;
             EndDate = null;
             Historical = false;
             StatsType = null;
+            AccountId = null;
+            InsertionOrderID = null;
+            AdvertiserID = null;
         }
 
         public DASynchDBMStats()
@@ -51,17 +57,34 @@ namespace CakeExtracter.Commands
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
             HasOption("h|Historical=", "Get historical stats (ignore endDate)", c => Historical = bool.Parse(c));
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
+            HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
             HasOption<int?>("i|insertionOrder=", "Insertion Order (default: all)", c => InsertionOrderID = c);
-            HasOption<string>("a|advertiserId=", "Advertiser ID (default: all)", c => AdvertiserID = c);
+            HasOption<string>("v|advertiserId=", "Advertiser ID (default: all)", c => AdvertiserID = c);
         }
 
         public override int Execute(string[] remainingArguments)
         {
+            SetInsertionOrderFromAccount();
             if (Historical)
                 DoHistorical();
             else
                 DoRegular();
             return 0;
+        }
+        private void SetInsertionOrderFromAccount()
+        {
+            if (InsertionOrderID.HasValue || !AccountId.HasValue)
+                return; // skip if ioID is already specified (or no account is specified)
+            using (var db = new ClientPortalProgContext())
+            {
+                var extAcct = db.ExtAccounts.Find(AccountId.Value);
+                if (extAcct != null)
+                {
+                    int externalId;
+                    if (int.TryParse(extAcct.ExternalId, out externalId))
+                        InsertionOrderID = externalId;
+                }
+            }
         }
 
         public void DoRegular()
@@ -80,7 +103,8 @@ namespace CakeExtracter.Commands
                 DoETL_Creative(reportDate: reportDate);
             if (statsType.Site)
                 DoETL_Site(reportDate: reportDate);
-            if (statsType.Conv)
+
+            if (statsType.Conv && !statsType.All) // don't include when getting "all" statstypes
                 DoETL_Conv();
         }
 
@@ -111,7 +135,7 @@ namespace CakeExtracter.Commands
             if (buckets == null)
                 buckets = new List<string> { ConfigurationManager.AppSettings["DBM_AllIOBucket"] };
 
-            var extracter = new DbmCloudStorageExtracter(reportDate, buckets);
+            var extracter = new DbmCloudStorageExtracter(reportDate, buckets, ioFilter: InsertionOrderID);
             var loader = new DbmDailySummaryLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -123,7 +147,7 @@ namespace CakeExtracter.Commands
             if (buckets == null)
                 buckets = new List<string> { ConfigurationManager.AppSettings["DBM_AllLineItemBucket"] };
 
-            var extracter = new DbmCloudStorageExtracter(reportDate, buckets, byLineItem: true);
+            var extracter = new DbmCloudStorageExtracter(reportDate, buckets, byLineItem: true, ioFilter: InsertionOrderID);
             var loader = new DbmLineItemSummaryLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -135,7 +159,7 @@ namespace CakeExtracter.Commands
             if (buckets == null)
                 buckets = new List<string> { ConfigurationManager.AppSettings["DBM_AllCreativeBucket"] };
 
-            var extracter = new DbmCloudStorageExtracter(reportDate, buckets, byCreative: true);
+            var extracter = new DbmCloudStorageExtracter(reportDate, buckets, byCreative: true, ioFilter: InsertionOrderID);
             var loader = new DbmCreativeSummaryLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -147,7 +171,7 @@ namespace CakeExtracter.Commands
             if (buckets == null)
                 buckets = new List<string> { ConfigurationManager.AppSettings["DBM_AllSiteBucket"] };
 
-            var extracter = new DbmCloudStorageExtracter(reportDate, buckets, bySite: true);
+            var extracter = new DbmCloudStorageExtracter(reportDate, buckets, bySite: true, ioFilter: InsertionOrderID);
             var impThresholdString = ConfigurationManager.AppSettings["TD_SiteStats_ImpressionThreshold"];
             int impThreshold;
             if (int.TryParse(impThresholdString, out impThreshold))

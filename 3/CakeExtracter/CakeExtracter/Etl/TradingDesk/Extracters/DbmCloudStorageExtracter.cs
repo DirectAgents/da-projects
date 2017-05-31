@@ -16,6 +16,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         // if specified, dateFilter is used to select objects (by name) within the specified buckets
         private readonly DateTime? dateFilter;
         private readonly IEnumerable<string> bucketNames;
+        private readonly int? ioFilter;
 
         private readonly bool byLineItem;
         private readonly bool byCreative;
@@ -24,13 +25,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         public int ImpressionThreshold { get; set; } // used only for site stats
 
-        public DbmCloudStorageExtracter(DateTime? dateFilter, IEnumerable<string> bucketNames, bool byLineItem = false, bool byCreative = false, bool bySite = false)
+        public DbmCloudStorageExtracter(DateTime? dateFilter, IEnumerable<string> bucketNames, bool byLineItem = false, bool byCreative = false, bool bySite = false, int? ioFilter = null)
         {
             this.dateFilter = dateFilter;
             this.bucketNames = bucketNames;
             this.byLineItem = byLineItem;
             this.byCreative = byCreative;
             this.bySite = bySite;
+            this.ioFilter = ioFilter;
         }
 
         protected override void Extract()
@@ -74,7 +76,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         if (!bySite)
                         {
                             foreach (var row in DbmCsvExtracter.EnumerateRowsStatic(reader, byLineItem: byLineItem, byCreative: byCreative, bySite: bySite))
-                                yield return row;
+                            {
+                                if (!ioFilter.HasValue || ioFilter.Value == row.InsertionOrderID)
+                                    yield return row;
+                            }
                         }
                         else
                         {   // for site stats: do filtering
@@ -83,7 +88,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                                 int impressions = int.Parse(row.Impressions);
                                 int conversions = (int)decimal.Parse(row.TotalConversions);
                                 if (impressions >= ImpressionThreshold || conversions > 0)
-                                    yield return row;
+                                {
+                                    if (!ioFilter.HasValue || ioFilter.Value == row.InsertionOrderID)
+                                        yield return row;
+                                }
                             }
                         }
                     }
