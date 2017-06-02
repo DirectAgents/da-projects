@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Configuration;
 using System.Linq;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
@@ -20,6 +21,7 @@ namespace CakeExtracter.Commands
         public string StatsType { get; set; }
 
         private YAMUtility yamUtility { get; set; }
+        private string[] extIds_UsePixelParm;
 
         public override void ResetProperties()
         {
@@ -48,6 +50,11 @@ namespace CakeExtracter.Commands
 
             var statsType = new StatsTypeAgg(this.StatsType);
             SetupYAMUtility();
+            var ppIds = ConfigurationManager.AppSettings["YAMids_UsePixelParm"];
+            if (ppIds != null)
+                extIds_UsePixelParm = ppIds.Split(new char[] { ',' });
+            else
+                extIds_UsePixelParm = new string[] { };
 
             var accounts = GetAccounts();
             foreach (var account in accounts)
@@ -93,6 +100,16 @@ namespace CakeExtracter.Commands
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
             loaderThread.Join();
+
+            if (extIds_UsePixelParm.Contains(account.ExternalId))
+            {   // Get ConVals using the pixel parameter...
+                var e = new YAMDailyConValExtracter(yamUtility, dateRange, account);
+                var l = new TDDailyConValLoader(account.Id);
+                var et = e.Start();
+                var lt = l.Start(e);
+                et.Join();
+                lt.Join();
+            }
         }
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
         {

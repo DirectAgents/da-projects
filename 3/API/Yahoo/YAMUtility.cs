@@ -189,10 +189,8 @@ namespace Yahoo
         }
 
         // returns the url of the csv, or null if there was a problem
-        public string GenerateReport(DateTime startDate, DateTime endDate, int? accountId = null, bool byAdvertiser = false, bool byCampaign = false, bool byLine = false, bool byAd = false, bool byCreative = false)
+        public string GenerateReport(ReportPayload payload)
         {
-            var payload = CreateReportRequestPayload(startDate, endDate, accountId, byAdvertiser, byCampaign, byLine, byAd, byCreative);
-
             CreateReportResponse createReportResponse = null;
             bool okay = false;
             int retries = NUMTRIES_REQUESTREPORT; // includes the initial attempt
@@ -220,7 +218,7 @@ namespace Yahoo
             return WaitForReportUrl(createReportResponse.customerReportId);
         }
 
-        private ReportPayload CreateReportRequestPayload(DateTime startDate, DateTime endDate, int? accountId = null, bool byAdvertiser = false, bool byCampaign = false, bool byLine = false, bool byAd = false, bool byCreative = false)
+        public ReportPayload CreateReportRequestPayload(DateTime startDate, DateTime endDate, int? accountId = null, bool byAdvertiser = false, bool byCampaign = false, bool byLine = false, bool byAd = false, bool byCreative = false, bool byPixelParameter = false)
         {
             //This produced an InvalidTimeZoneException so we're just going with the system timezone, relying on it to be Eastern(daylight savings adjusted)
             //var offset = TimeZoneInfo.FindSystemTimeZoneById(@"Eastern Standard Time\Dynamic DST").BaseUtcOffset;
@@ -242,8 +240,16 @@ namespace Yahoo
                 dimensionList.Add(Dimension.AD);
             if (byCreative)
                 dimensionList.Add(Dimension.CREATIVE);
+            if (byPixelParameter)
+                dimensionList.Add(Dimension.PIXEL_PARAMETER);
 
-            var metricList = new List<int>(new[] { Metric.IMPRESSIONS, Metric.CLICKS, Metric.ADVERTISER_SPENDING, Metric.CLICK_THROUGH_CONVERSIONS, Metric.VIEW_THROUGH_CONVERSIONS, Metric.ROAS_ACTION_VALUE });
+            List<int> metricList;
+            if (!byPixelParameter)
+                metricList = new List<int>(new[] { Metric.IMPRESSIONS, Metric.CLICKS, Metric.ADVERTISER_SPENDING, Metric.CLICK_THROUGH_CONVERSIONS, Metric.VIEW_THROUGH_CONVERSIONS, Metric.ROAS_ACTION_VALUE });
+            else
+                metricList = new List<int>(new[] { Metric.CLICK_THROUGH_CONVERSIONS, Metric.VIEW_THROUGH_CONVERSIONS });
+                // used to obtain the *real* conversion values from the pixel parameter
+
             var reportOption = new ReportOption
             {
                 timezone = Timezone.NEW_YORK,
