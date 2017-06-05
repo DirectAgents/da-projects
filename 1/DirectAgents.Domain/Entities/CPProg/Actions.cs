@@ -21,6 +21,11 @@ namespace DirectAgents.Domain.Entities.CPProg
         public int PostClick { get; set; }
         public int PostView { get; set; }
     }
+    public class ActionStatsWithVals : ActionStats
+    {
+        public decimal PostClickVal { get; set; }
+        public decimal PostViewVal { get; set; }
+    }
 
     public class StrategyAction : ActionStats
     {
@@ -28,11 +33,9 @@ namespace DirectAgents.Domain.Entities.CPProg
         public virtual Strategy Strategy { get; set; }
     }
 
-    public class AdSetAction : ActionStats
+    public class AdSetAction : ActionStatsWithVals
     {
         public int AdSetId { get; set; }
         public virtual AdSet AdSet { get; set; }
     }
-
-    //TODO: ActionValues?
 }

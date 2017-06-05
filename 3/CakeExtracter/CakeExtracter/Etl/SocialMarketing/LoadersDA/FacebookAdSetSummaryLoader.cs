@@ -60,7 +60,37 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private void AddUpdateDependentActionTypes(List<FBSummary> items)
         {
-            FacebookCampaignSummaryLoader.AddUpdateDependentActionTypes(items, this.actionTypeIdLookupByCode);
+            AddUpdateDependentActionTypes(items, this.actionTypeIdLookupByCode);
+        }
+        public static void AddUpdateDependentActionTypes(List<FBSummary> items, Dictionary<string, int> actionTypeIdLookupByCode)
+        {
+            var actionTypeCodes = items.Where(i => i.Actions != null).SelectMany(i => i.Actions.Keys).Distinct();
+
+            using (var db = new ClientPortalProgContext())
+            {
+                foreach (var actionTypeCode in actionTypeCodes)
+                {
+                    if (actionTypeIdLookupByCode.ContainsKey(actionTypeCode))
+                        continue;
+                    var actionTypesInDb = db.ActionTypes.Where(x => x.Code == actionTypeCode);
+                    if (!actionTypesInDb.Any())
+                    {
+                        var actionType = new ActionType
+                        {
+                            Code = actionTypeCode
+                        };
+                        db.ActionTypes.Add(actionType);
+                        db.SaveChanges();
+                        Logger.Info("Saved new ActionType: {0}", actionTypeCode);
+                        actionTypeIdLookupByCode[actionTypeCode] = actionType.Id;
+                    }
+                    else
+                    {
+                        var actionType = actionTypesInDb.First();
+                        actionTypeIdLookupByCode[actionTypeCode] = actionType.Id;
+                    }
+                }
+            }
         }
 
         //Note: get the actions from the items(FBSummaries); get the adsetId from the adsetSummaries
@@ -70,7 +100,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             int updatedCount = 0;
             int deletedCount = 0;
             using (var db = new ClientPortalProgContext())
-            {
+            { // The items and adsetSummaries have a 1-to-1 correspondence because of how the latter were instantiated above
                 var itemEnumerator = items.GetEnumerator();
                 var asEnumerator = adsetSummaries.GetEnumerator();
                 while (itemEnumerator.MoveNext())
@@ -80,7 +110,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                         continue;
                     var date = itemEnumerator.Current.Date;
                     var adsetId = asEnumerator.Current.AdSetId;
-                    var fbActions = itemEnumerator.Current.Actions;
+                    var fbActions = itemEnumerator.Current.Actions.Values;
 
                     var actionTypeIds = fbActions.Select(x => actionTypeIdLookupByCode[x.ActionType]).ToArray();
                     var existingActions = db.AdSetActions.Where(x => x.Date == date && x.AdSetId == adsetId);
@@ -105,7 +135,9 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                                 AdSetId = adsetId,
                                 ActionTypeId = actionTypeId,
                                 PostClick = fbAction.Num_28d_click ?? 0,
-                                PostView = fbAction.Num_1d_view ?? 0
+                                PostView = fbAction.Num_1d_view ?? 0,
+                                PostClickVal = fbAction.Val_28d_click ?? 0,
+                                PostViewVal = fbAction.Val_1d_view ?? 0
                             };
                             db.AdSetActions.Add(adsetAction);
                             addedCount++;
@@ -114,6 +146,8 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                             { // Update
                                 adsetAction.PostClick = fbAction.Num_28d_click ?? 0;
                                 adsetAction.PostView = fbAction.Num_1d_view ?? 0;
+                                adsetAction.PostClickVal = fbAction.Val_28d_click ?? 0;
+                                adsetAction.PostViewVal = fbAction.Val_1d_view ?? 0;
                                 updatedCount++;
                             }
                     }

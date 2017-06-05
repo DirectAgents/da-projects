@@ -330,11 +330,14 @@ namespace FacebookAPI
                         //    fbSum.TotalActions = intParseVal;
 
                         var actionStats = row.actions;
+                        var actionVals = row.action_values;
+                        if (IncludeAllActions && (actionStats != null || actionVals != null))
+                            fbSum.Actions = new Dictionary<string, FBAction>();
+
                         if (actionStats != null)
                         {
                             if (IncludeAllActions)
                             {
-                                fbSum.Actions = new List<FBAction>();
                                 foreach (var stat in actionStats)
                                 {
                                     var action = new FBAction
@@ -345,7 +348,7 @@ namespace FacebookAPI
                                         action.Num_28d_click = int.Parse(stat["28d_click"]);
                                     if (((IDictionary<String, object>)stat).ContainsKey("1d_view"))
                                         action.Num_1d_view = int.Parse(stat["1d_view"]);
-                                    fbSum.Actions.Add(action);
+                                    fbSum.Actions[stat.action_type] = action;
 
                                     if (stat.action_type == Conversion_ActionType) // for backward compatibility
                                     {
@@ -371,17 +374,40 @@ namespace FacebookAPI
                                 }
                             }
                         }
-                        var actionVals = row.action_values;
                         if (actionVals != null)
                         {
-                            foreach (var entity in actionVals)
+                            if (IncludeAllActions)
                             {
-                                if (entity.action_type == Conversion_ActionType)
+                                foreach (var entity in actionVals)
                                 {
+                                    if (!fbSum.Actions.ContainsKey(entity.action_type))
+                                        fbSum.Actions[entity.action_type] = new FBAction { ActionType = entity.action_type };
+                                    FBAction action = fbSum.Actions[entity.action_type];
                                     if (((IDictionary<String, object>)entity).ContainsKey("28d_click"))
-                                        fbSum.ConVal_28d_click = decimal.Parse(entity["28d_click"]);
+                                        action.Val_28d_click = decimal.Parse(entity["28d_click"]);
                                     if (((IDictionary<String, object>)entity).ContainsKey("1d_view"))
-                                        fbSum.ConVal_1d_view = decimal.Parse(entity["1d_view"]);
+                                        action.Val_1d_view = decimal.Parse(entity["1d_view"]);
+
+                                    if (entity.action_type == Conversion_ActionType) // for backward compatibility
+                                    {
+                                        if (action.Val_28d_click.HasValue)
+                                            fbSum.ConVal_28d_click = action.Val_28d_click.Value;
+                                        if (action.Val_1d_view.HasValue)
+                                            fbSum.ConVal_1d_view = action.Val_1d_view.Value;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                foreach (var entity in actionVals)
+                                {
+                                    if (entity.action_type == Conversion_ActionType)
+                                    {
+                                        if (((IDictionary<String, object>)entity).ContainsKey("28d_click"))
+                                            fbSum.ConVal_28d_click = decimal.Parse(entity["28d_click"]);
+                                        if (((IDictionary<String, object>)entity).ContainsKey("1d_view"))
+                                            fbSum.ConVal_1d_view = decimal.Parse(entity["1d_view"]);
+                                    }
                                 }
                             }
                         }

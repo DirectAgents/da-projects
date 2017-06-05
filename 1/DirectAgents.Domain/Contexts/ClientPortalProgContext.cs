@@ -97,6 +97,8 @@ namespace DirectAgents.Domain.Contexts
                 .HasKey(x => new { x.Date, x.StrategyId, x.ActionTypeId });
             modelBuilder.Entity<AdSetAction>()
                 .HasKey(x => new { x.Date, x.AdSetId, x.ActionTypeId });
+            modelBuilder.Entity<AdSetAction>().Property(x => x.PostClickVal).HasPrecision(18, 4);
+            modelBuilder.Entity<AdSetAction>().Property(x => x.PostViewVal).HasPrecision(18, 4);
 
             // AdRoll
             modelBuilder.Entity<Advertisable>().ToTable("Advertisable", adrollSchema);

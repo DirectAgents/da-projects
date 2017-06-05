@@ -247,16 +247,18 @@ namespace DirectAgents.Domain.DTO
             }
         }
 
-        public TDRawStat(IEnumerable<ActionStats> aStats)
+        public TDRawStat(IEnumerable<ActionStatsWithVals> aStats)
         {
             SetStatsFrom(aStats);
         }
-        private void SetStatsFrom(IEnumerable<ActionStats> aStats)
+        private void SetStatsFrom(IEnumerable<ActionStatsWithVals> aStats)
         {
             if (aStats != null && aStats.Any())
             {
                 this.PostClickConv = aStats.Sum(x => x.PostClick);
                 this.PostViewConv = aStats.Sum(x => x.PostView);
+                this.PostClickRev = aStats.Sum(x => x.PostClickVal);
+                this.PostViewRev = aStats.Sum(x => x.PostViewVal);
             }
         }
 

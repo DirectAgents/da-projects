@@ -27,8 +27,10 @@
 <tr>
     <th style="text-align:right">ID</th>
     <th>Action Code</th>
-    <th>PostClick</th>
-    <th>PostView</th>
+    <th>PostClicks</th>
+    <th>PC Val</th>
+    <th>PostViews</th>
+    <th>PV Val</th>
 </tr>
 @foreach (var stat in Model.Stats)
 {
@@ -36,7 +38,9 @@
     <td>@stat.ActionType.Id</td>
     <td>@stat.ActionType.Code</td>
     <td>@stat.PostClickConv</td>
+    <td>@stat.PostClickRev</td>
     <td>@stat.PostViewConv</td>
+    <td>@stat.PostViewRev</td>
 </tr>
 }
 </table>

@@ -464,6 +464,10 @@
     <Compile Include="MigrationsTD\201704181943349_Mig_PlatformTokens.Designer.cs">
       <DependentUpon>201704181943349_Mig_PlatformTokens.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsTD\201706032006209_Mig_AdSetActionVals.cs" />
+    <Compile Include="MigrationsTD\201706032006209_Mig_AdSetActionVals.Designer.cs">
+      <DependentUpon>201706032006209_Mig_AdSetActionVals.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.Designer.cs">
@@ -775,6 +779,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201704181943349_Mig_PlatformTokens.resx">
       <DependentUpon>201704181943349_Mig_PlatformTokens.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201706032006209_Mig_AdSetActionVals.resx">
+      <DependentUpon>201706032006209_Mig_AdSetActionVals.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

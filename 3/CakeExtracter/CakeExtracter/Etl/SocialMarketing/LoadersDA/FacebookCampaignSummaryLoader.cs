@@ -57,37 +57,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private void AddUpdateDependentActionTypes(List<FBSummary> items)
         {
-            AddUpdateDependentActionTypes(items, this.actionTypeIdLookupByCode);
-        }
-        public static void AddUpdateDependentActionTypes(List<FBSummary> items, Dictionary<string, int> actionTypeIdLookupByCode)
-        {
-            var actionTypeCodes = items.Where(i => i.Actions != null).SelectMany(i => i.Actions.Select(a => a.ActionType)).Distinct();
-
-            using (var db = new ClientPortalProgContext())
-            {
-                foreach (var actionTypeCode in actionTypeCodes)
-                {
-                    if (actionTypeIdLookupByCode.ContainsKey(actionTypeCode))
-                        continue;
-                    var actionTypesInDb = db.ActionTypes.Where(x => x.Code == actionTypeCode);
-                    if (!actionTypesInDb.Any())
-                    {
-                        var actionType = new ActionType
-                        {
-                            Code = actionTypeCode
-                        };
-                        db.ActionTypes.Add(actionType);
-                        db.SaveChanges();
-                        Logger.Info("Saved new ActionType: {0}", actionTypeCode);
-                        actionTypeIdLookupByCode[actionTypeCode] = actionType.Id;
-                    }
-                    else
-                    {
-                        var actionType = actionTypesInDb.First();
-                        actionTypeIdLookupByCode[actionTypeCode] = actionType.Id;
-                    }
-                }
-            }
+            FacebookAdSetSummaryLoader.AddUpdateDependentActionTypes(items, this.actionTypeIdLookupByCode);
         }
 
         //Note: get the actions from the items(FBSummaries); get the strategyId from the strategySummaries
@@ -107,7 +77,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                         continue;
                     var date = itemEnumerator.Current.Date;
                     var strategyId = ssEnumerator.Current.StrategyId;
-                    var fbActions = itemEnumerator.Current.Actions;
+                    var fbActions = itemEnumerator.Current.Actions.Values;
 
                     var actionTypeIds = fbActions.Select(x => actionTypeIdLookupByCode[x.ActionType]).ToArray();
                     var existingActions = db.StrategyActions.Where(x => x.Date == date && x.StrategyId == strategyId);
