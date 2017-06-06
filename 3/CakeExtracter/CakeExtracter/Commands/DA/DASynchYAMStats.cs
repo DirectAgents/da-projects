@@ -105,10 +105,10 @@ namespace CakeExtracter.Commands
             {   // Get ConVals using the pixel parameter...
                 var e = new YAMDailyConValExtracter(yamUtility, dateRange, account);
                 var l = new TDDailyConValLoader(account.Id);
-                var et = e.Start();
-                var lt = l.Start(e);
-                et.Join();
-                lt.Join();
+                var eThread = e.Start();
+                var lThread = l.Start(e);
+                eThread.Join();
+                lThread.Join();
             }
         }
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
@@ -119,6 +119,17 @@ namespace CakeExtracter.Commands
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
             loaderThread.Join();
+
+            if (extIds_UsePixelParm.Contains(account.ExternalId))
+            {   // Get ConVals using the pixel parameter...
+                string[] stratNames = GetExistingStrategyNames(dateRange, account.Id);
+                var e = new YAMStrategyConValExtracter(yamUtility, dateRange, account, existingStrategyNames: stratNames);
+                var l = new TDStrategyConValLoader(account.Id);
+                var eThread = e.Start();
+                var lThread = l.Start(e);
+                eThread.Join();
+                lThread.Join();
+            }
         }
         private void DoETL_Creative(DateRange dateRange, ExtAccount account)
         {
@@ -128,6 +139,19 @@ namespace CakeExtracter.Commands
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
             loaderThread.Join();
+        }
+
+        //Get the names of strategies that have stats for the specified dateRange and account (and whose stats' ConVals are not zero)
+        private string[] GetExistingStrategyNames(DateRange dateRange, int accountId)
+        {
+            using (var db = new ClientPortalProgContext())
+            {
+                var stratSums = db.StrategySummaries.Where(s => s.Strategy.AccountId == accountId && s.Date >= dateRange.FromDate && s.Date <= dateRange.ToDate
+                                                           && (s.PostClickRev != 0 || s.PostViewRev != 0));
+                var strategies = stratSums.Select(s => s.Strategy).Distinct();
+                var stratNames = strategies.Select(s => s.Name).Distinct().ToArray();
+                return stratNames;
+            }
         }
 
         private IEnumerable<ExtAccount> GetAccounts()

@@ -28,6 +28,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public void AssignStrategyIdToItems(List<StrategySummary> items)
         {
+            AssignStrategyIdToItems(items, this.strategyIdLookupByEidAndName);
+        }
+        public static void AssignStrategyIdToItems(List<StrategySummary> items, Dictionary<string, int> strategyIdLookupByEidAndName)
+        {
             foreach (var item in items)
             {
                 var eidAndName = item.StrategyEid + item.StrategyName;
