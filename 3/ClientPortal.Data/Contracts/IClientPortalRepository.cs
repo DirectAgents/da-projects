@@ -111,9 +111,12 @@ namespace ClientPortal.Data.Contracts
         bool SaveSearchProfile(SearchProfile searchProfile);
         bool CreateSearchProfile(SearchProfile searchProfile);
 
+        IQueryable<SearchAccount> SearchAccounts(int? searchProfileId);
         SearchAccount GetSearchAccount(int searchAccountId);
         bool SaveSearchAccount(SearchAccount searchAccount);
         bool CreateSearchAccount(SearchAccount searchAccount);
+
+        SearchCampaign GetSearchCampaign(int searchCampaignId);
 
         bool InitializeSearchProfileSimpleReport(int searchProfileId, string email = null);
 
@@ -129,9 +132,10 @@ namespace ClientPortal.Data.Contracts
         IQueryable<WeeklySearchStat> GetCampaignWeekStats2(SearchProfile sp, DateTime startDate, DateTime endDate);
         IQueryable<SearchStat> GetDailyStats(SearchProfile sp, DateTime? start, DateTime? end);
         IQueryable<SearchStat> GetMonthStats(SearchProfile sp, int? numMonths, DateTime? start, DateTime? end, bool yoy = false, string campaignNameInclude = null, string campaignNameExclude = null);
+        IQueryable<SearchStat> GetDeviceStats(SearchProfile sp, DateTime start, DateTime end, bool showingCassConvs);
         IQueryable<SearchStat> GetChannelStats(SearchProfile sp, int numWeeks, bool includeToday, bool includeAccountBreakdown, bool includeSearchChannels);
         IQueryable<SearchStat> GetCampaignStats(SearchProfile sp, string channel, DateTime? start, DateTime? end, bool breakdown, bool showingCassConvs, string campaignNameInclude = null, string campaignNameExclude = null);
         IQueryable<SearchStat> GetCampaignStats(SearchProfile sp, int searchAccountId, DateTime? start, DateTime? end, bool breakdown, bool showingCassConvs, string campaignNameInclude = null, string campaignNameExclude = null);
-        IQueryable<SearchStat> GetDeviceStats(SearchProfile sp, DateTime start, DateTime end, bool showingCassConvs);
+        bool DecreaseCampaignOrders(int searchCampaignId, DateTime start, DateTime end);
     }
 }

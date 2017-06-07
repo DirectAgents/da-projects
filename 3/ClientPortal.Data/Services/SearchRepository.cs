@@ -51,6 +51,13 @@ namespace ClientPortal.Data.Services
             return true;
         }
 
+        public IQueryable<SearchAccount> SearchAccounts(int? searchProfileId)
+        {
+            var searchAccounts = context.SearchAccounts.AsQueryable();
+            if (searchProfileId.HasValue)
+                searchAccounts = searchAccounts.Where(x => x.SearchProfileId == searchProfileId.Value);
+            return searchAccounts;
+        }
         public SearchAccount GetSearchAccount(int searchAccountId)
         {
             var searchAccount = context.SearchAccounts.Find(searchAccountId);
@@ -76,6 +83,12 @@ namespace ClientPortal.Data.Services
             context.SearchAccounts.Add(searchAccount);
             context.SaveChanges();
             return true;
+        }
+
+        public SearchCampaign GetSearchCampaign(int searchCampaignId)
+        {
+            var searchCampaign = context.SearchCampaigns.Find(searchCampaignId);
+            return searchCampaign;
         }
 
         // by default, report goes to first contact
@@ -1153,6 +1166,20 @@ namespace ClientPortal.Data.Services
                 }
             }
             return stats.Where(s => !s.AllZeros(showingCassConvs)).OrderBy(s => s.Title);
+        }
+
+        // Decrease the number of orders by 1
+        public bool DecreaseCampaignOrders(int searchCampaignId, DateTime start, DateTime end)
+        {
+            var summaries = context.SearchDailySummaries.Where(x => x.SearchCampaignId == searchCampaignId && x.Date >= start && x.Date <= end
+                                                               && x.Orders > 0);
+            if (!summaries.Any())
+                return false;
+
+            var sds = summaries.First();
+            sds.Orders--;
+            SaveChanges();
+            return true;
         }
 
         //public IQueryable<SearchStat> GetAdgroupStats()

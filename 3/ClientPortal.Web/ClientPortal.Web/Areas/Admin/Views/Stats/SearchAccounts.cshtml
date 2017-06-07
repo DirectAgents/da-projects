@@ -1,0 +1,19 @@
+﻿@model IEnumerable<ClientPortal.Data.Contexts.SearchAccount>
+
+<h2>SearchAccounts</h2>
+
+<table border="1">
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Edit Week</th>
+    </tr>
+@foreach (var searchAccount in Model.OrderBy(x => x.Channel).ThenBy(x => x.Name))
+{
+    <tr>
+        <td>@searchAccount.SearchAccountId</td>
+        <td>@searchAccount.Name</td>
+        <td style="text-align:center">@Html.ActionLink("4/3/17", "Week", new { weekStart = "4/3/17", searchAccountId = searchAccount.SearchAccountId })</td>
+    </tr>
+}
+</table>

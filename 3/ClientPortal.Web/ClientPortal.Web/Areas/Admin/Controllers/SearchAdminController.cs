@@ -5,7 +5,6 @@ using System.Web.Mvc;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Controllers;
-using ClientPortal.Web.Models;
 using DAGenerators.Spreadsheets;
 using WebMatrix.WebData;
 

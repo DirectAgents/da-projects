@@ -1,0 +1,45 @@
+﻿@model IEnumerable<ClientPortal.Data.DTOs.SearchStat>
+@{
+    ClientPortal.Data.Contexts.SearchAccount searchAccount = ViewBag.SearchAccount;
+    DateTime weekStart = ViewBag.WeekStart;
+    DateTime weekEnd = weekStart.AddDays(6);
+}
+
+<h2>Edit Week Stats</h2>
+
+Week: @weekStart.ToShortDateString() - @weekEnd.ToShortDateString()
+
+<table border="1">
+    <tr>
+        <th>Id</th>
+        <th>Campaign</th>
+        <th>Clicks</th>
+        <th>Impressions</th>
+        <th>Spend</th>
+        <th>Orders</th>
+        <th>Revenue</th>
+        <th>Edit Orders</th>
+    </tr>
+@foreach (var ss in Model.OrderByDescending(x => x.Revenue).ThenByDescending(x => x.Cost).ThenByDescending(x => x.Impressions))
+{
+    <tr>
+        <td>@ss.CampaignId</td>
+        <td>@ss.Title</td>
+        <td style="text-align:right">@ss.Clicks</td>
+        <td style="text-align:right">@ss.Impressions</td>
+        <td style="text-align:right">@ss.Cost</td>
+        <td style="text-align:right">@ss.Orders</td>
+        <td style="text-align:right">@ss.Revenue</td>
+        <td style="text-align:center">
+        @if (ss.Orders > 0) {
+            @Html.ActionLink("decrease", "DecreaseWeekOrders", new { weekStart = weekStart.ToShortDateString(), searchCampaignId = ss.CampaignId })
+        }
+        </td>
+    </tr>
+}
+</table>
+
+<br />
+@Html.ActionLink("Next Week", "Week", new { weekStart = weekStart.AddDays(7).ToShortDateString(), searchAccountId = searchAccount.SearchAccountId })
+<br /><br />
+@Html.ActionLink("Back to SearchAccounts", "SearchAccounts", new { searchProfileId = searchAccount.SearchProfileId })

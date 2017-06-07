@@ -245,6 +245,7 @@
     <Compile Include="Areas\Admin\Controllers\SimpleReportsController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Areas\Admin\Controllers\StatsController.cs" />
     <Compile Include="Areas\Admin\Controllers\TDAdminController.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1219,6 +1220,8 @@
     <Content Include="Areas\Admin\Views\SearchAdmin\Components.cshtml" />
     <Content Include="Areas\Admin\Views\SearchStats\Generic.cshtml" />
     <Content Include="Areas\Admin\Views\SearchAdmin\ConvTypes.cshtml" />
+    <Content Include="Areas\Admin\Views\Stats\SearchAccounts.cshtml" />
+    <Content Include="Areas\Admin\Views\Stats\Week.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />
