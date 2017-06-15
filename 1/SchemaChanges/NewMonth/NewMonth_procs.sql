@@ -100,6 +100,7 @@ EXEC EOMcopyTable @dbFrom,@dbTo,'DTCampaignStatus',1
 EXEC EOMcopyTable @dbFrom,@dbTo,'MediaBuyer',1
 EXEC EOMcopyTable @dbFrom,@dbTo,'NetTermType',1
 EXEC EOMcopyTable @dbFrom,@dbTo,'Source',1
+EXEC EOMcopyTable @dbFrom,@dbTo,'IncomeType',0
 EXEC EOMcopyTable @dbFrom,@dbTo,'UnitType',1
 EXEC EOMcopyTable @dbFrom,@dbTo,'Vendor',1
 
@@ -110,6 +111,7 @@ EXEC EOMcopyTable @dbFrom,@dbTo,'Person',0
 EXEC EOMcopyTable @dbFrom,@dbTo,'AnalystRole',0
 
 SET @sql = 'USE ' + @dbTo + ';'
++ ' UPDATE Affiliate SET date_created=NULL, date_modified=NULL;'
 + ' ENABLE TRIGGER tr_Affiliate_IU ON Affiliate;'
 + ' UPDATE Campaign SET campaign_status_id=3 WHERE (campaign_status_id=2) OR (campaign_status_id=4)'
 EXEC (@sql)

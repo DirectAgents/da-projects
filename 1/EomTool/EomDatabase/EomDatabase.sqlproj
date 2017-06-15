@@ -342,9 +342,6 @@
     <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Vendor_id_PK.pkey.sql">
       <SubType>Code</SubType>
     </Build>
-    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\UnitType_id_PK.pkey.sql">
-      <SubType>Code</SubType>
-    </Build>
     <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\AccountManager_id_PK.pkey.sql">
       <SubType>Code</SubType>
     </Build>
@@ -445,9 +442,6 @@
       <SubType>Code</SubType>
     </Build>
     <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Vendor_name_UK.ukey.sql">
-      <SubType>Code</SubType>
-    </Build>
-    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\UnitType_name_UK.ukey.sql">
       <SubType>Code</SubType>
     </Build>
     <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\AccountManager_name_UK.ukey.sql">
@@ -819,6 +813,7 @@
     <Build Include="dbo\Tables\Person.sql" />
     <Build Include="dbo\Tables\AnalystRole.sql" />
     <Build Include="dbo\Functions\ListAnalysts.sql" />
+    <Build Include="dbo\Tables\IncomeType.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Database Level Objects\Assemblies\SqlServerProjectForDADatabaseR3.dll">

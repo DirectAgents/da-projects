@@ -32,6 +32,7 @@ namespace EomToolWeb.Controllers
         public JsonResult UnitTypesValueText()
         {
             var valueTexts = mainRepo.UnitTypeList.Select(ut => new IntValueText() { value = ut.id, text = ut.name });
+            //var valueTexts = mainRepo.UnitTypes().Select(ut => new IntValueText() { value = ut.id, text = ut.name });
             return Json(valueTexts, JsonRequestBehavior.AllowGet);
         }
 
