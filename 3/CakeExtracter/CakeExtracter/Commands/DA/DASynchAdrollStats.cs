@@ -39,6 +39,7 @@ namespace CakeExtracter.Commands
         public bool CheckActiveAdvertisables { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public int? DaysAgoToStart { get; set; }
         public string OneStatPer { get; set; } // (per day)
         public bool UpdateAds { get; set; }
 
@@ -50,6 +51,7 @@ namespace CakeExtracter.Commands
             CheckActiveAdvertisables = false;
             StartDate = null;
             EndDate = null;
+            DaysAgoToStart = null;
             OneStatPer = null;
             UpdateAds = false;
         }
@@ -61,17 +63,21 @@ namespace CakeExtracter.Commands
             HasOption("x|advertisableEids=", "Advertisable Eids (comma-separated) (default = all)", c => AdvertisableEids = c);
             HasOption<int>("i|advertisableId=", "Advertisable Id (default = all)", c => AdvertisableId = c);
             HasOption("c|checkActive=", "Check AdRoll for Advertisables with stats (if none specified)", c => CheckActiveAdvertisables = bool.Parse(c));
-            HasOption("s|startDate=", "Start Date (default is 7 days ago)", c => StartDate = DateTime.Parse(c));
+            HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
+            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 31)", c => DaysAgoToStart = c);
             HasOption("o|oneStatPer=", "One Stat per [what] per day (advertisable/campaign/ad, default = all)", c => OneStatPer = c);
             HasOption("u|updateAds=", "After synching ad stats, update Ads? (default = false)", c => UpdateAds = bool.Parse(c));
         }
 
         public override int Execute(string[] remainingArguments)
         {
+            if (!DaysAgoToStart.HasValue)
+                DaysAgoToStart = 31; // used if StartDate==null
             var today = DateTime.Today;
-            var oneWeekAgo = today.AddDays(-7);
-            var dateRange = new DateRange(StartDate ?? oneWeekAgo, EndDate ?? today.AddDays(-1));
+            var yesterday = today.AddDays(-1);
+            var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
+            Logger.Info("AdRoll ETL. DateRange {0}.", dateRange);
 
             var arUtility = new AdRollUtility(m => Logger.Info(m), m => Logger.Warn(m));
 

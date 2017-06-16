@@ -17,6 +17,7 @@ namespace CakeExtracter.Commands
         public int? AccountId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public int? DaysAgoToStart { get; set; }
         public string StatsType { get; set; }
 
         private AdformUtility adformUtility { get; set; }
@@ -26,6 +27,7 @@ namespace CakeExtracter.Commands
             AccountId = null;
             StartDate = null;
             EndDate = null;
+            DaysAgoToStart = null;
             StatsType = null;
         }
 
@@ -33,8 +35,9 @@ namespace CakeExtracter.Commands
         {
             IsCommand("daSynchAdformStats", "synch Adform Stats");
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
-            HasOption("s|startDate=", "Start Date (default is seven days ago)", c => StartDate = DateTime.Parse(c));
+            HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
+            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 31)", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
         }
 
@@ -42,9 +45,12 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
+            if (!DaysAgoToStart.HasValue)
+                DaysAgoToStart = 31; // used if StartDate==null
             var today = DateTime.Today;
-            var oneWeekAgo = today.AddDays(-7);
-            var dateRange = new DateRange(StartDate ?? oneWeekAgo, EndDate ?? today.AddDays(-1));
+            var yesterday = today.AddDays(-1);
+            var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
+            Logger.Info("Adform ETL. DateRange {0}.", dateRange);
 
             var statsType = new StatsTypeAgg(this.StatsType);
             SetupAdformUtility();
