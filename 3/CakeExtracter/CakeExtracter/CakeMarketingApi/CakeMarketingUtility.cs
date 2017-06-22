@@ -21,8 +21,25 @@ namespace CakeExtracter.CakeMarketingApi
                 return response.Advertisers;
             else
             {
-                Logger.Error(new Exception("Could not retrieve Advertisers."));
+                Logger.Error(new Exception("Could not retrieve Advertiser(s)."));
                 return new List<Advertiser>();
+            }
+        }
+
+        public static List<Affiliate> Affiliates(int affiliateId = 0)
+        {
+            var client = new AffiliatesClient();
+            var request = new AffiliatesRequest
+            {
+                affiliate_id = affiliateId
+            };
+            var response = client.Affiliates(request);
+            if (response != null)
+                return response.Affiliates;
+            else
+            {
+                Logger.Error(new Exception("Could not retrieve Affiliate(s)."));
+                return new List<Affiliate>();
             }
         }
 

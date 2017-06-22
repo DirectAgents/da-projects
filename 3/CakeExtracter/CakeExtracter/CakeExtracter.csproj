@@ -245,6 +245,8 @@
     <Compile Include="Bootstrappers\LoggingBootstrapper.cs" />
     <Compile Include="Bootstrappers\ServicePointBootstrapper.cs" />
     <Compile Include="CakeMarketingApi\Clients\AdvertisersRequest.cs" />
+    <Compile Include="CakeMarketingApi\Clients\AffiliatesClient.cs" />
+    <Compile Include="CakeMarketingApi\Clients\AffiliatesRequest.cs" />
     <Compile Include="CakeMarketingApi\Clients\CampaignsClient.cs" />
     <Compile Include="CakeMarketingApi\Clients\CampaignsRequest.cs" />
     <Compile Include="CakeMarketingApi\Clients\CampaignSummariesClient.cs" />
@@ -264,6 +266,7 @@
     <Compile Include="CakeMarketingApi\Clients\TrafficClient.cs" />
     <Compile Include="CakeMarketingApi\Clients\TrafficRequest.cs" />
     <Compile Include="CakeMarketingApi\Entities\Advertiser.cs" />
+    <Compile Include="CakeMarketingApi\Entities\Affiliate.cs" />
     <Compile Include="CakeMarketingApi\Entities\ArrayOfTraffic.cs" />
     <Compile Include="CakeMarketingApi\Entities\Browser.cs" />
     <Compile Include="CakeMarketingApi\Entities\Campaign.cs" />
@@ -315,10 +318,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Common\Compare.cs" />
+    <Compile Include="Etl\CakeMarketing\DALoaders\DAAffiliatesLoader.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DACampLoader.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Etl\CakeMarketing\DALoaders\DACampSumLoader.cs" />
+    <Compile Include="Etl\CakeMarketing\Extracters\AffiliatesExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\CPCLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\AppleApiExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AdWordsConvSummaryLoader.cs" />

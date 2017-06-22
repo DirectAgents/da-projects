@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DirectAgents.Domain.Entities.Cake;
 
 namespace CakeExtracter.CakeMarketingApi.Entities
@@ -12,6 +13,8 @@ namespace CakeExtracter.CakeMarketingApi.Entities
 
     public class CampaignSummary
     {
+        public DateTime Date { get; set; }
+
         public Campaign1 Campaign { get; set; }
         public SourceAffiliate1 SourceAffiliate { get; set; }
         public SiteOffer1 SiteOffer { get; set; }
@@ -28,6 +31,11 @@ namespace CakeExtracter.CakeMarketingApi.Entities
         public decimal Revenue { get; set; }
         // ClickThruPercentage, Events...
         // Pending, Rejected, Approved, Returned, Orders...
+
+        public bool AllZeros()
+        {
+            return (Views == 0 && Clicks == 0 && MacroEventConversions == 0 && Paid == 0 && Sellable == 0 && Cost == 0 && Revenue == 0);
+        }
 
         public void CopyStatsFrom(CampaignSummary cs)
         {
