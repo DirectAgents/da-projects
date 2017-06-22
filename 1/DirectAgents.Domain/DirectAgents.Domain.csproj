@@ -126,6 +126,7 @@
     <Compile Include="Entities\AdRoll\AdDailySummary.cs" />
     <Compile Include="Entities\AdRoll\Advertisable.cs" />
     <Compile Include="Entities\Cake\Advertiser.cs" />
+    <Compile Include="Entities\Cake\Affiliate.cs" />
     <Compile Include="Entities\Cake\Camp.cs" />
     <Compile Include="Entities\Cake\CampSum.cs" />
     <Compile Include="Entities\Cake\Contact.cs" />
@@ -541,6 +542,14 @@
     <Compile Include="Migrations\201703081656144_Mig_CampSum2.Designer.cs">
       <DependentUpon>201703081656144_Mig_CampSum2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706211555191_Mig_Affiliate.cs" />
+    <Compile Include="Migrations\201706211555191_Mig_Affiliate.Designer.cs">
+      <DependentUpon>201706211555191_Mig_Affiliate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706212054345_Mig_CampSumFKs.cs" />
+    <Compile Include="Migrations\201706212054345_Mig_CampSumFKs.Designer.cs">
+      <DependentUpon>201706212054345_Mig_CampSumFKs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Seed\ABSeeder.cs" />
@@ -836,6 +845,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703081656144_Mig_CampSum2.resx">
       <DependentUpon>201703081656144_Mig_CampSum2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706211555191_Mig_Affiliate.resx">
+      <DependentUpon>201706211555191_Mig_Affiliate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706212054345_Mig_CampSumFKs.resx">
+      <DependentUpon>201706212054345_Mig_CampSumFKs.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

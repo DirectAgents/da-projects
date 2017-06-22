@@ -6,8 +6,11 @@ namespace DirectAgents.Domain.Entities.Cake
     public class CampSum
     {
         public int CampId { get; set; }
+        [ForeignKey("CampId")]
+        public virtual Camp Camp { get; set; }
         public DateTime Date { get; set; }
 
+        //NOTE: FKs set on Camp; not needed here?
         public int OfferId { get; set; } //TODO: index/FK
         public int AffId { get; set; }   //TODO: index/FK
 

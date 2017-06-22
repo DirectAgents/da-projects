@@ -10,7 +10,9 @@ namespace DirectAgents.Domain.Entities.Cake
         public int CampaignId { get; set; }
 
         public int AffiliateId { get; set; }
+        public virtual Affiliate Affiliate { get; set; }
         public int OfferId { get; set; }
+        public virtual Offer Offer { get; set; }
         public int OfferContractId { get; set; }
 
         public decimal PayoutAmount { get; set; }

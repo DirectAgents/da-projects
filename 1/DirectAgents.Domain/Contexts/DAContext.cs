@@ -20,6 +20,7 @@ namespace DirectAgents.Domain.Contexts
 
             // Cake
             modelBuilder.Entity<Advertiser>().ToTable("Advertiser", cakeSchema);
+            modelBuilder.Entity<Affiliate>().ToTable("Affiliate", cakeSchema);
             modelBuilder.Entity<Contact>().ToTable("Contact", cakeSchema);
             modelBuilder.Entity<Role>().ToTable("Role", cakeSchema);
             modelBuilder.Entity<Offer>().ToTable("Offer", cakeSchema);
@@ -57,6 +58,7 @@ namespace DirectAgents.Domain.Contexts
         }
 
         public DbSet<Advertiser> Advertisers { get; set; }
+        public DbSet<Affiliate> Affiliates { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Offer> Offers { get; set; }
