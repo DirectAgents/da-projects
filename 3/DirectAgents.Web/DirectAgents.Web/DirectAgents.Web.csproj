@@ -1065,6 +1065,8 @@
     <Content Include="Views\Screens\Variables.cshtml" />
     <Content Include="Views\Screens\EditSalesStats.cshtml" />
     <Content Include="Views\Screens\SalesStats.cshtml" />
+    <None Include="Properties\PublishProfiles\dagents - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\dagents - Web Deploy.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
