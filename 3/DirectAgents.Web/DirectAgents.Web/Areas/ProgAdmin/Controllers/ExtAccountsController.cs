@@ -151,8 +151,10 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             if (extAcct == null)
                 return HttpNotFound();
 
-            bool syncable = extAcct.Platform.Code == Platform.Code_AdRoll ||
-                            extAcct.Platform.Code == Platform.Code_FB;
+            bool syncable = extAcct.Platform.Code == Platform.Code_Adform ||
+                            extAcct.Platform.Code == Platform.Code_AdRoll ||
+                            extAcct.Platform.Code == Platform.Code_FB ||
+                            extAcct.Platform.Code == Platform.Code_YAM;
             //if (extAcct.Platform.Code == Platform.Code_DBM)
             //{
             //    //TODO: check this without using tdRepo.
@@ -209,6 +211,8 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                 else if (latest.Value.Day > 1)
                     start = new DateTime(latest.Value.Year, latest.Value.Month, 1);
                     // Go back to 1st of month - so as to refresh the month's stats
+                else
+                    start = latest.Value.AddMonths(-1); // if the latest stats are on the 1st
             }
             if (level != null)
             {
@@ -242,12 +246,18 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                             if (buckets.Count() >= 1)
                                 advertiserId = buckets.First().Bucket;
                         }*/
-                        DASynchDBMStats.RunStatic(insertionOrderID: ioID, startDate: start, level: level, advertiserId: advertiserId);
+                        DASynchDBMStats.RunStatic(insertionOrderID: ioID, startDate: start, statsType: level, advertiserId: advertiserId);
                         //DASynchDBMStatsOld.RunStatic(insertionOrderID: ioID); // gets report with stats up to yesterday (and back ?30? days)
                     }
                     break;
+                case Platform.Code_Adform:
+                    DASynchAdformStats.RunStatic(accountId: extAcct.Id, startDate: start, statsType: level);
+                    break;
                 case Platform.Code_FB:
                     DASynchFacebookStats.RunStatic(accountId: extAcct.Id, startDate: start, statsType: level);
+                    break;
+                case Platform.Code_YAM:
+                    DASynchYAMStats.RunStatic(accountId: extAcct.Id, startDate: start, statsType: level);
                     break;
             }
         }

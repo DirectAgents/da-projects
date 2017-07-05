@@ -82,13 +82,16 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             if (platform == null)
                 return HttpNotFound();
 
-            if (platform.Code == Platform.Code_AdRoll)
+            if (platform.Code == Platform.Code_Adform)
+                DASynchAdformStats.RunStatic(startDate: start);
+            else if (platform.Code == Platform.Code_AdRoll)
                 DASynchAdrollStats.RunStatic(startDate: start, oneStatPer: "all");
             else if (platform.Code == Platform.Code_DBM)
-                //DASynchDBMStatsOld.RunStatic();
                 DASynchDBMStats.RunStatic(startDate: start);
             else if (platform.Code == Platform.Code_FB)
                 DASynchFacebookStats.RunStatic(startDate: start);
+            else if (platform.Code == Platform.Code_YAM)
+                DASynchYAMStats.RunStatic(startDate: start);
 
             return RedirectToAction("Maintenance", new { id = id });
         }

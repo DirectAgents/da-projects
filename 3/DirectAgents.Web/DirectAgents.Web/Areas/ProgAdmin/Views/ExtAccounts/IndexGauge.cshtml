@@ -92,6 +92,7 @@ if (pGauge.Children != null)
 {
     <text>
     Filter:
+    @Html.ActionLink("Adform", "IndexGauge", new { platform = Platform.Code_Adform }) |
     @Html.ActionLink("AdRoll", "IndexGauge", new { platform = Platform.Code_AdRoll }) |
     @Html.ActionLink("DBM", "IndexGauge", new { platform = Platform.Code_DBM }) |
     @Html.ActionLink("Facebook", "IndexGauge", new { platform = Platform.Code_FB }) |

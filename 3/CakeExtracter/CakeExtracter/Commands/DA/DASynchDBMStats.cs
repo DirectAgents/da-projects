@@ -17,7 +17,7 @@ namespace CakeExtracter.Commands
     public class DASynchDBMStats : ConsoleCommand
     {
         //Note: if make a RunStatic, be sure to add 'DBM_AllSiteBucket', etc to the web.config
-        public static int RunStatic(int? insertionOrderID = null, DateTime? startDate = null, DateTime? endDate = null, string level="ALL", string advertiserId="")
+        public static int RunStatic(int? insertionOrderID = null, DateTime? startDate = null, DateTime? endDate = null, string statsType = null, string advertiserId = "")
         {
             AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new DASynchDBMStats
@@ -25,7 +25,7 @@ namespace CakeExtracter.Commands
                 InsertionOrderID = insertionOrderID,
                 StartDate = startDate ?? DateTime.Today,
                 EndDate = endDate ?? DateTime.Today,
-                StatsType = level,
+                StatsType = statsType,
                 AdvertiserID = advertiserId
             };
             return cmd.Run();

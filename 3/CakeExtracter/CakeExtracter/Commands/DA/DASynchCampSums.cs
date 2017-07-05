@@ -33,6 +33,8 @@ namespace CakeExtracter.Commands
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
         }
 
+        //TODO: an option to go back X days
+
         private DateRange GetDateRange()
         {
             var yesterday = DateTime.Today.AddDays(-1);

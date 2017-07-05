@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using Adform;
+using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
@@ -14,6 +15,19 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchAdformStats : ConsoleCommand
     {
+        public static int RunStatic(int? accountId = null, DateTime? startDate = null, DateTime? endDate = null, string statsType = null)
+        {
+            AutoMapperBootstrapper.CheckRunSetup();
+            var cmd = new DASynchAdformStats
+            {
+                AccountId = accountId,
+                StartDate = startDate,
+                EndDate = endDate,
+                StatsType = statsType
+            };
+            return cmd.Run();
+        }
+
         public int? AccountId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }

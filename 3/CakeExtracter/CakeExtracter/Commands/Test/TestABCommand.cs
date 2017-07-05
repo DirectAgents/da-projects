@@ -20,7 +20,8 @@ namespace CakeExtracter.Commands
         public override int Execute(string[] remainingArguments)
         {
             //SeedAB();
-            SeedDA();
+            //SeedDA();
+            SeedTD();
             return 0;
         }
 
@@ -39,6 +40,16 @@ namespace CakeExtracter.Commands
             {
                 var seeder = new DASeeder(daContext);
                 seeder.SeedCurrencies();
+            }
+        }
+
+        public static void SeedTD()
+        {
+            using (var cpprogContext = new ClientPortalProgContext())
+            {
+                var seeder = new TDSeeder(cpprogContext);
+                seeder.SeedPlatforms();
+                seeder.SeedNetworks();
             }
         }
     }

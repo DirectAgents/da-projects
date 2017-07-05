@@ -15,12 +15,17 @@
 @if (Model.Code == Platform.Code_AdRoll)
 {
     @Html.ActionLink("Update Accounts", "SyncAccounts", new { id = Model.Id }, new { onclick = "$('#divPlatformUpdate').html('Updating... please wait')" })
+    <text>&nbsp;&nbsp;&nbsp;&nbsp;</text>
+}
+@if (Model.Code == Platform.Code_AdRoll || Model.Code == Platform.Code_FB || Model.Code == Platform.Code_YAM)
+{
     if (super)
     {
-        <text>&nbsp;&nbsp;&nbsp;&nbsp;Sync Stats back to:</text>
+        <text>Sync Stats back to:</text>
         @Html.ActionLink(firstOfMonth.ToShortDateString(), "SyncStats", new { id = Model.Id, start = firstOfMonth.ToShortDateString() }, new { onclick = onclickJS })
         <text>&nbsp;</text>
-        if (oneWeekAgo != firstOfMonth) {
+        if (oneWeekAgo != firstOfMonth)
+        {
             @Html.ActionLink(oneWeekAgo.ToShortDateString(), "SyncStats", new { id = Model.Id, start = oneWeekAgo.ToShortDateString() }, new { onclick = onclickJS })
             <text>&nbsp;</text>
         }
@@ -34,20 +39,14 @@ else if (Model.Code == Platform.Code_DBM)
         @Html.ActionLink("Sync Stats For All Accounts", "SyncStats", new { id = Model.Id }, new { onclick = onclickJS })
     }
 }
-else if (Model.Code == Platform.Code_FB)
-{
-    if (super)
-    {
-        @Html.ActionLink("Sync Stats For All Accounts", "SyncStats", new { id = Model.Id }, new { onclick = onclickJS })
-    }
-}
 </div>
 <br />
 
 External Accounts:
 <div id="grid"></div>
 
-@if ((Model.Code == Platform.Code_AdRoll || Model.Code == Platform.Code_FB) && Model.ExtAccounts.Any())
+@if ((Model.Code == Platform.Code_Adform || Model.Code == Platform.Code_AdRoll || Model.Code == Platform.Code_FB || Model.Code == Platform.Code_YAM)
+     && Model.ExtAccounts.Any())
 {
     var extAcctSelectList = new SelectList(Model.ExtAccounts.OrderBy(x => x.Name), "Id", "DisplayName2");
     var statsLevels = new[] { "Daily", "Strategy", "Creative", "AdSet (FB only)" };
