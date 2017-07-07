@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClientPortal.Data.Contexts
 {
@@ -11,5 +12,9 @@ namespace ClientPortal.Data.Contexts
 
         [NotMapped]
         public bool UseConvertedClicks { get; set; }
+        [NotMapped]
+        public DateTime? EarliestStat { get; set; }
+        [NotMapped]
+        public DateTime? LatestStat { get; set; }
     }
 }

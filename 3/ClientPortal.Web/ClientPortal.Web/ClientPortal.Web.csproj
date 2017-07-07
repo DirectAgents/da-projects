@@ -240,6 +240,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Areas\Admin\Controllers\ProgAdminController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SearchAccountsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SearchAdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\SearchStatsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SimpleReportsController.cs">
@@ -1177,7 +1178,6 @@
     <Content Include="Areas\Admin\Views\TDAdmin\EditInsertionOrder.cshtml" />
     <Content Include="Areas\Admin\Views\TDAdmin\CreateInsertionOrder.cshtml" />
     <Content Include="Areas\Admin\Views\TDAdmin\EditAdRollProfile.cshtml" />
-    <Content Include="Areas\Admin\Views\SearchAdmin\EditSearchAccount.cshtml" />
     <Content Include="Content\kendo\2015.1.408\fonts\DejaVu\DejaVuSans-Bold.ttf" />
     <Content Include="Content\kendo\2015.1.408\fonts\DejaVu\DejaVuSans-BoldOblique.ttf" />
     <Content Include="Content\kendo\2015.1.408\fonts\DejaVu\DejaVuSans-Oblique.ttf" />
@@ -1222,6 +1222,8 @@
     <Content Include="Areas\Admin\Views\SearchAdmin\ConvTypes.cshtml" />
     <Content Include="Areas\Admin\Views\Stats\SearchAccounts.cshtml" />
     <Content Include="Areas\Admin\Views\Stats\Week.cshtml" />
+    <Content Include="Areas\Admin\Views\SearchAccounts\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\SearchAccounts\Synch.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

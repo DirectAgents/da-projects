@@ -120,36 +120,6 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return RedirectToAction("SearchProfiles");
         }
 
-        public ActionResult CreateSearchAccount(int spId, string channel)
-        {
-            var searchAccount = new SearchAccount
-            {
-                SearchProfileId = spId,
-                Channel = channel,
-                Name = "New"
-            };
-            cpRepo.CreateSearchAccount(searchAccount);
-            return RedirectToAction("EditProfile", new { spId = spId });
-        }
-        public ActionResult EditSearchAccount(int id)
-        {
-            var searchAccount = cpRepo.GetSearchAccount(id);
-            if (searchAccount == null)
-                return HttpNotFound();
-            return View(searchAccount);
-        }
-        [HttpPost]
-        public ActionResult EditSearchAccount(SearchAccount searchAccount)
-        {
-            if (ModelState.IsValid)
-            {
-                if (cpRepo.SaveSearchAccount(searchAccount))
-                    return RedirectToAction("EditProfile", new { spId = searchAccount.SearchProfileId });
-                ModelState.AddModelError("", "SearchAccount could not be saved.");
-            }
-            return View(searchAccount);
-        }
-
         // ---
 
         public ActionResult InitializeReport(int spId)

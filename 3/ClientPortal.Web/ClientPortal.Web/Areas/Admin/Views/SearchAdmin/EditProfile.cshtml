@@ -76,37 +76,38 @@
             {
                 foreach (var sa in googleSearchAccounts) {
                     <span>- @sa.Name [@sa.AccountCode]</span>
-                    <i>@Ajax.ActionLink("edit", "EditSearchAccount", new { id = sa.SearchAccountId }, ajaxOptions)</i><br />
+                    <i>@Ajax.ActionLink("edit", "Edit", "SearchAccounts", new { id = sa.SearchAccountId }, ajaxOptions) | </i>
+                    <i>@Ajax.ActionLink("sync", "Synch", "SearchAccounts", new { id = sa.SearchAccountId }, ajaxOptions)</i><br />
                 }
             }
-            <i>@Ajax.ActionLink("Add", "CreateSearchAccount", new { spId = Model.SearchProfileId, channel = SearchAccount.GoogleChannel }, ajaxOptions)</i><br />
+            <i>@Ajax.ActionLink("Add", "Create", "SearchAccounts", new { spId = Model.SearchProfileId, channel = SearchAccount.GoogleChannel }, ajaxOptions)</i><br />
             <br />
             Bing Accounts:<br />
             @if (bingSearchAccounts != null && bingSearchAccounts.Count() > 0)
             {
                 foreach (var sa in bingSearchAccounts) {
                     <span>- @sa.Name [@sa.AccountCode]</span>
-                    <i>@Ajax.ActionLink("edit", "EditSearchAccount", new { id = sa.SearchAccountId }, ajaxOptions)</i><br />
+                    <i>@Ajax.ActionLink("edit", "Edit", "SearchAccounts", new { id = sa.SearchAccountId }, ajaxOptions)</i><br />
                 }
             }
-            <i>@Ajax.ActionLink("Add", "CreateSearchAccount", new { spId = Model.SearchProfileId, channel = SearchAccount.BingChannel }, ajaxOptions)</i><br />
+            <i>@Ajax.ActionLink("Add", "Create", "SearchAccounts", new { spId = Model.SearchProfileId, channel = SearchAccount.BingChannel }, ajaxOptions)</i><br />
             <br />
             Apple Accounts:<br />
             @if (appleSearchAccounts != null && appleSearchAccounts.Count() > 0)
             {
                 foreach (var sa in appleSearchAccounts) {
                     <span>- @sa.Name [@sa.AccountCode]</span>
-                    <i>@Ajax.ActionLink("edit", "EditSearchAccount", new { id = sa.SearchAccountId }, ajaxOptions)</i><br />
+                    <i>@Ajax.ActionLink("edit", "Edit", "SearchAccounts", new { id = sa.SearchAccountId }, ajaxOptions)</i><br />
                 }
             }
-            <i>@Ajax.ActionLink("Add", "CreateSearchAccount", new { spId = Model.SearchProfileId, channel = SearchAccount.AppleChannel }, ajaxOptions)</i><br />
+            <i>@Ajax.ActionLink("Add", "Create", "SearchAccounts", new { spId = Model.SearchProfileId, channel = SearchAccount.AppleChannel }, ajaxOptions)</i><br />
             @if (criteoSearchAccounts != null && criteoSearchAccounts.Count() > 0)
             {
                 <br />
                 <span>Criteo Accounts:</span><br />
                 foreach (var sa in criteoSearchAccounts) {
                     <span>- @sa.Name [@sa.AccountCode]</span>
-                    <i>@Ajax.ActionLink("edit", "EditSearchAccount", new { id = sa.SearchAccountId }, ajaxOptions)</i><br />
+                    <i>@Ajax.ActionLink("edit", "Edit", "SearchAccounts", new { id = sa.SearchAccountId }, ajaxOptions)</i><br />
                 }
             }
         </div>

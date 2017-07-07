@@ -13,16 +13,17 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchSearchDailySummariesAdWordsCommand : ConsoleCommand
     {
-        public static int RunStatic(int? searchProfileId, DateTime? start = null, DateTime? end = null, int? daysAgoToStart = null, bool getClickAssistConvStats = false, bool getConversionTypeStats = false)
+        public static int RunStatic(int? searchProfileId = null, string clientId = null, DateTime? start = null, DateTime? end = null, int? daysAgoToStart = null, bool getClickAssistConvStats = false, bool getConversionTypeStats = false, bool getAllStats = false)
         {
             AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new SynchSearchDailySummariesAdWordsCommand
             {
                 SearchProfileId = searchProfileId,
+                ClientId = clientId,
                 StartDate = start,
                 EndDate = end,
                 DaysAgoToStart = daysAgoToStart,
-                //TODO: GetAllStats argument
+                GetAllStats = getAllStats ? "true" : null,
                 GetClickAssistConvStats = getClickAssistConvStats,
                 GetConversionTypeStats = getConversionTypeStats
             };

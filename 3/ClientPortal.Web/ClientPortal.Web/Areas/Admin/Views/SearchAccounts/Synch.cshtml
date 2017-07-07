@@ -1,0 +1,45 @@
+﻿@model ClientPortal.Data.Contexts.SearchAccount
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("searchProfilesTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("searchProfilesTab", null, "Post");
+    var yesterday = DateTime.Today.AddDays(-1);
+    var fromDate = yesterday.AddDays(-30);
+}
+
+@using (Ajax.BeginForm(ajaxOpts_Post))
+{
+    @Html.ValidationSummary()
+    <fieldset>
+        <legend>Synch SearchAccount</legend>
+        @Html.HiddenFor(m => m.SearchAccountId)
+        <div style="float:left">
+            <table>
+                <tr>
+                    <td>Account:</td>
+                    <td>@Model.SearchProfile.SearchProfileName - @Model.Channel</td>
+                </tr>
+                <tr>
+                    <td>AccountCode:</td>
+                    <td>@Model.AccountCode</td>
+                </tr>
+                <tr>
+                    <td>From:</td>
+                    <td>@Html.TextBox("from", fromDate.ToShortDateString())</td>
+                </tr>
+                <tr>
+                    <td>To:</td>
+                    <td>@Html.TextBox("to", yesterday.ToShortDateString())</td>
+                </tr>
+            </table>
+        </div>
+        <div style="float:left; margin-left:20px">
+            Earliest: @(Model.EarliestStat.HasValue ? Model.EarliestStat.Value.ToShortDateString() : null)<br />
+            Latest: @(Model.LatestStat.HasValue ? Model.LatestStat.Value.ToShortDateString() : null)<br />
+        </div>
+        <br style="clear:both" />
+        <div style="margin-top:10px">
+            <input type="submit" value="Synch" />&nbsp;
+            @Ajax.ActionLink("cancel", "EditProfile", "SearchAdmin", new { spId = Model.SearchProfileId }, ajaxOptions)
+        </div>
+    </fieldset>
+}

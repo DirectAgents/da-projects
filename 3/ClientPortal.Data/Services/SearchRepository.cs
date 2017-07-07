@@ -210,10 +210,10 @@ namespace ClientPortal.Data.Services
             return searchCampaigns;
         }
 
-        //public IQueryable<SearchDailySummary> GetSearchDailySummaries(int searchProfileId, DateTime? start, DateTime? end, bool includeToday = false)
-        //{
-        //    return GetSearchDailySummaries(null, searchProfileId, null, null, null, null, start, end, includeToday);
-        //}
+        public IQueryable<SearchDailySummary> GetSearchDailySummaries(int? searchProfileId = null, int? searchAccountId = null, DateTime? start = null, DateTime? end = null, bool includeToday = true)
+        {
+            return GetSearchDailySummaries(null, searchProfileId, null, searchAccountId, null, null, start, end, includeToday);
+        }
         private IQueryable<SearchDailySummary> GetSearchDailySummaries(int? advertiserId, int? searchProfileId, string channel, int? searchAccountId, string channelPrefix, string device, DateTime? start, DateTime? end, bool includeToday)
         {
             var searchCampaigns = GetSearchCampaigns(advertiserId, searchProfileId, channel, searchAccountId, channelPrefix);

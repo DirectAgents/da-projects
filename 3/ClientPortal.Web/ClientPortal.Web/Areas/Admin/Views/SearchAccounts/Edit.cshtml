@@ -48,10 +48,15 @@
                 </tr>
             </table>
         </div>
+        <div style="float:left; margin-left:20px">
+            Stats:<br /><br />
+            Earliest: @(Model.EarliestStat.HasValue ? Model.EarliestStat.Value.ToShortDateString() : null)<br />
+            Latest: @(Model.LatestStat.HasValue ? Model.LatestStat.Value.ToShortDateString() : null)<br />
+        </div>
         <br style="clear:both" />
         <div style="margin-top:10px">
             <input type="submit" value="Save" />&nbsp;
-            @Ajax.ActionLink("cancel", "EditProfile", new { spId = Model.SearchProfileId }, ajaxOptions)
+            @Ajax.ActionLink("cancel", "EditProfile", "SearchAdmin", new { spId = Model.SearchProfileId }, ajaxOptions)
         </div>
     </fieldset>
 }
