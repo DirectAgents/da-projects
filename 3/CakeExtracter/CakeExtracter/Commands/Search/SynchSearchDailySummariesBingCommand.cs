@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.SearchMarketing.Extracters;
 using CakeExtracter.Etl.SearchMarketing.Loaders;
@@ -12,15 +13,17 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchSearchDailySummariesBingCommand : ConsoleCommand
     {
-        public static int RunStatic(int? searchProfileId, DateTime? start = null, DateTime? end = null, int? daysAgoToStart = null)
+        public static int RunStatic(int? searchProfileId = null, int? accountId = null, DateTime? start = null, DateTime? end = null, int? daysAgoToStart = null, bool getConversionTypeStats = false)
         {
-            CakeExtracter.Bootstrappers.AutoMapperBootstrapper.CheckRunSetup();
+            AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new SynchSearchDailySummariesBingCommand
             {
                 SearchProfileId = searchProfileId,
+                AccountId = accountId ?? 0,
                 StartDate = start,
                 EndDate = end,
-                DaysAgoToStart = daysAgoToStart
+                DaysAgoToStart = daysAgoToStart,
+                GetConversionTypeStats = getConversionTypeStats
             };
             return cmd.Run();
         }

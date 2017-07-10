@@ -87,7 +87,8 @@
             {
                 foreach (var sa in bingSearchAccounts) {
                     <span>- @sa.Name [@sa.AccountCode]</span>
-                    <i>@Ajax.ActionLink("edit", "Edit", "SearchAccounts", new { id = sa.SearchAccountId }, ajaxOptions)</i><br />
+                    <i>@Ajax.ActionLink("edit", "Edit", "SearchAccounts", new { id = sa.SearchAccountId }, ajaxOptions) | </i>
+                    <i>@Ajax.ActionLink("sync", "Synch", "SearchAccounts", new { id = sa.SearchAccountId }, ajaxOptions)</i><br />
                 }
             }
             <i>@Ajax.ActionLink("Add", "Create", "SearchAccounts", new { spId = Model.SearchProfileId, channel = SearchAccount.BingChannel }, ajaxOptions)</i><br />
@@ -97,7 +98,8 @@
             {
                 foreach (var sa in appleSearchAccounts) {
                     <span>- @sa.Name [@sa.AccountCode]</span>
-                    <i>@Ajax.ActionLink("edit", "Edit", "SearchAccounts", new { id = sa.SearchAccountId }, ajaxOptions)</i><br />
+                    <i>@Ajax.ActionLink("edit", "Edit", "SearchAccounts", new { id = sa.SearchAccountId }, ajaxOptions) | </i>
+                    <i>@Ajax.ActionLink("sync", "Synch", "SearchAccounts", new { id = sa.SearchAccountId }, ajaxOptions)</i><br />
                 }
             }
             <i>@Ajax.ActionLink("Add", "Create", "SearchAccounts", new { spId = Model.SearchProfileId, channel = SearchAccount.AppleChannel }, ajaxOptions)</i><br />

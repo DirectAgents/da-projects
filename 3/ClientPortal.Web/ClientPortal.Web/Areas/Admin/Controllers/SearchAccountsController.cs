@@ -76,7 +76,20 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             if (searchAccount == null)
                 return HttpNotFound();
 
-            SynchSearchDailySummariesAdWordsCommand.RunStatic(clientId: searchAccount.AccountCode, start: from, end: to, getAllStats: true);
+            switch (searchAccount.Channel)
+            {
+                case SearchAccount.GoogleChannel:
+                    SynchSearchDailySummariesAdWordsCommand.RunStatic(clientId: searchAccount.AccountCode, start: from, end: to, getAllStats: true);
+                    break;
+                case SearchAccount.BingChannel:
+                    int accountId;
+                    if (int.TryParse(searchAccount.AccountCode, out accountId))
+                        SynchSearchDailySummariesBingCommand.RunStatic(accountId: accountId, start: from, end: to, getConversionTypeStats: true);
+                    break;
+                case SearchAccount.AppleChannel:
+                    SynchSearchDailySummariesAppleCommand.RunStatic(clientId: searchAccount.AccountCode, start: from, end: to);
+                    break;
+            }
             return RedirectToAction("Synch", new { id = id });
         }
 

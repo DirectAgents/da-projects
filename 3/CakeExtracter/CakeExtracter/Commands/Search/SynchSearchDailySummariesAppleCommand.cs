@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
 using Apple;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
@@ -9,11 +8,25 @@ using CakeExtracter.Etl.SearchMarketing.Extracters;
 using CakeExtracter.Etl.SearchMarketing.Loaders;
 using ClientPortal.Data.Contexts;
 
-namespace CakeExtracter.Commands.Search
+namespace CakeExtracter.Commands
 {
     [Export(typeof(ConsoleCommand))]
     public class SynchSearchDailySummariesAppleCommand : ConsoleCommand
     {
+        public static int RunStatic(int? searchProfileId = null, string clientId = null, DateTime? start = null, DateTime? end = null, int? daysAgoToStart = null)
+        {
+            AutoMapperBootstrapper.CheckRunSetup();
+            var cmd = new SynchSearchDailySummariesAppleCommand
+            {
+                SearchProfileId = searchProfileId,
+                ClientId = clientId,
+                StartDate = start,
+                EndDate = end,
+                DaysAgoToStart = daysAgoToStart
+            };
+            return cmd.Run();
+        }
+
         public int? SearchProfileId { get; set; }
         public string ClientId { get; set; }
         public DateTime? StartDate { get; set; }
