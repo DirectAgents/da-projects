@@ -76,7 +76,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 "AccountTimeZoneId",   // timeZone
                 "CampaignId",    // campaignID
                 "CampaignName",  // campaign
-                "CampaignStatus",// campaignStatus - ?not used?
+                "CampaignStatus",// campaignStatus (used for filtering)
+                "AdvertisingChannelSubType", //advertisingSubChannel (used for filtering)
                 "Date",        // day
                 "Impressions", // impressions
                 "Clicks",      // clicks
@@ -160,6 +161,11 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                             @operator = PredicateOperator.IN,
                             values = new string[] { "ENABLED","PAUSED" }
                         },
+                        new Predicate {
+                            field = "AdvertisingChannelSubType",
+                            @operator = PredicateOperator.NOT_IN,
+                            values = new string[] { "SEARCH_EXPRESS","DISPLAY_EXPRESS" }
+                        }
                         ////For Megabus conversion fix. Also comment out Impressions, Clicks and Cost above
                         //new Predicate {
                         //    field = "ConversionTypeName",
