@@ -91,6 +91,7 @@ namespace CakeExtracter.Commands
             var accounts = GetAccounts();
             foreach (var acct in accounts)
             {
+                Logger.Info("Facebook ETL. Account {0} - {1}", acct.Id, acct.Name);
                 fbUtility.SetAll();
                 if (acct.Network != null)
                 {
@@ -175,7 +176,8 @@ namespace CakeExtracter.Commands
         {
             using (var db = new ClientPortalProgContext())
             {
-                var accounts = db.ExtAccounts.Include("Network").Where(a => a.Platform.Code == Platform.Code_FB);
+                var accounts = db.ExtAccounts.Include("Network")
+                    .Where(a => a.Platform.Code == Platform.Code_FB  & !a.Disabled);
                 if (CampaignId.HasValue)
                     accounts = accounts.Where(a => a.CampaignId == CampaignId.Value);
                 if (AccountId.HasValue)

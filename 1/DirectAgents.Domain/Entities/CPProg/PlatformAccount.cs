@@ -145,6 +145,7 @@ namespace DirectAgents.Domain.Entities.CPProg
         public string Name { get; set; }
 
         public string CreativeURLFormat { get; set; }
+        public bool Disabled { get; set; }
 
         [NotMapped]
         public string DisplayName1

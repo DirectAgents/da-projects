@@ -52,7 +52,8 @@ namespace CakeExtracter.Commands
         {
             using (var db = new ClientPortalProgContext())
             {
-                var accounts = db.ExtAccounts.Where(a => a.Platform.Code == Platform.Code_AdRoll);
+                var accounts = db.ExtAccounts
+                    .Where(a => a.Platform.Code == Platform.Code_AdRoll && !a.Disabled);
                 if (AccountId.HasValue)
                     return accounts.Where(a => a.Id == AccountId.Value).ToList();
                 else

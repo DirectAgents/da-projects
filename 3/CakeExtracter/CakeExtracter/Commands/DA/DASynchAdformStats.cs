@@ -137,7 +137,8 @@ namespace CakeExtracter.Commands
             using (var db = new ClientPortalProgContext())
             {
                 //var accounts = db.ExtAccounts.Include("Platform.PlatColMapping").Where(a => a.Platform.Code == Platform.Code_Adform);
-                var accounts = db.ExtAccounts.Where(a => a.Platform.Code == Platform.Code_Adform);
+                var accounts = db.ExtAccounts
+                    .Where(a => a.Platform.Code == Platform.Code_Adform && !a.Disabled);
                 if (AccountId.HasValue)
                     accounts = accounts.Where(a => a.Id == AccountId.Value);
 

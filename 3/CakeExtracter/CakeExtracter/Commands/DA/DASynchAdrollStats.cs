@@ -169,7 +169,9 @@ namespace CakeExtracter.Commands
                 ExtAccount extAccount = null;
                 using (var db = new ClientPortalProgContext())
                 {
-                    extAccount = db.ExtAccounts.Where(a => a.ExternalId == adv.Eid && a.Platform.Code == Platform.Code_AdRoll).FirstOrDefault();
+                    extAccount = db.ExtAccounts
+                        .Where(a => a.ExternalId == adv.Eid && a.Platform.Code == Platform.Code_AdRoll && !a.Disabled)
+                        .FirstOrDefault();
                 }
                 if (extAccount != null)
                 {
