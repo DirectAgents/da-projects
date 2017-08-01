@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Dynamic;
 using System.Net;
+using System.Threading;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Deserializers;
@@ -109,6 +110,11 @@ namespace Adform
                     var param = restRequest.Parameters.Find(p => p.Type == ParameterType.HttpHeader && p.Name == "Authorization");
                     param.Value = "Bearer " + AccessToken;
                 }
+                else if (response.StatusDescription != null && response.StatusDescription.Contains("API calls quota exceeded") && tries < 5)
+                {
+                    LogInfo("API calls quota exceeded. Waiting 55 seconds.");
+                    Thread.Sleep(55000);
+                }
                 else
                     done = true; //TODO: distinguish between success and failure of ProcessRequest
             }
@@ -138,6 +144,8 @@ namespace Adform
             var restResponse = ProcessRequest<ReportResponse>(request, postNotGet: true);
             if (restResponse != null && restResponse.Data != null)
             {
+                if (restResponse.Data.reportData == null)
+                    return null;
                 //ReportResponse reportResponse = restResponse.Data;
                 return restResponse.Data.reportData;
             }
