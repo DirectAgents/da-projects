@@ -32,7 +32,7 @@ External Accounts:
     <th>Stats</th>
     <th>List...</th>
 </tr>
-@foreach (var extAcct in Model.ExtAccounts)
+@foreach (var extAcct in Model.ExtAccounts.OrderBy(x => x.Platform.Name).ThenBy(x => x.Name))
 {
 <tr>
     <td>@extAcct.Platform.Name</td>
