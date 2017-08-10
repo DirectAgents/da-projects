@@ -16,7 +16,7 @@ namespace FacebookAPI
 
         public int DaysPerCall_Campaign = 20;
         public int DaysPerCall_AdSet = 4;
-        public int DaysPerCall_Ad = 4;
+        public int DaysPerCall_Ad = 3;
 
         public const string Conversion_ActionType_Default = "offsite_conversion";
         public const string Conversion_ActionType_MobileAppInstall = "mobile_app_install";
