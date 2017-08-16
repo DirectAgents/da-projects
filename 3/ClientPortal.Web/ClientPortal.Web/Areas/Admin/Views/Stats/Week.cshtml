@@ -18,7 +18,7 @@ Week: @weekStart.ToShortDateString() - @weekEnd.ToShortDateString()
         <th>Spend</th>
         <th>Orders</th>
         <th>Revenue</th>
-        <th>Edit Orders</th>
+        <th>Decrease Orders</th>
     </tr>
 @foreach (var ss in Model.OrderByDescending(x => x.Revenue).ThenByDescending(x => x.Cost).ThenByDescending(x => x.Impressions))
 {
@@ -30,9 +30,18 @@ Week: @weekStart.ToShortDateString() - @weekEnd.ToShortDateString()
         <td style="text-align:right">@ss.Cost</td>
         <td style="text-align:right">@ss.Orders</td>
         <td style="text-align:right">@ss.Revenue</td>
-        <td style="text-align:center">
+        <td style="text-align:left">&nbsp;&nbsp;
         @if (ss.Orders > 0) {
-            @Html.ActionLink("decrease", "DecreaseWeekOrders", new { weekStart = weekStart.ToShortDateString(), searchCampaignId = ss.CampaignId })
+            @Html.ActionLink("by 1", "DecreaseWeekOrders", new { weekStart = weekStart.ToShortDateString(), searchCampaignId = ss.CampaignId })
+            <text>&nbsp; &nbsp;</text>
+        }
+        @if (ss.Orders >= 10) {
+            @Html.ActionLink("by 10", "DecreaseWeekOrders", new { weekStart = weekStart.ToShortDateString(), searchCampaignId = ss.CampaignId, by = 10 })
+            <text>&nbsp; &nbsp;</text>
+        }
+        @if (ss.Orders >= 100) {
+            @Html.ActionLink("by 100", "DecreaseWeekOrders", new { weekStart = weekStart.ToShortDateString(), searchCampaignId = ss.CampaignId, by = 100 })
+            <text>&nbsp; &nbsp;</text>
         }
         </td>
     </tr>

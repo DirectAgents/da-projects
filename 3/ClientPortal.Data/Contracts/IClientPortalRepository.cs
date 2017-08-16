@@ -136,6 +136,6 @@ namespace ClientPortal.Data.Contracts
         IQueryable<SearchStat> GetChannelStats(SearchProfile sp, int numWeeks, bool includeToday, bool includeAccountBreakdown, bool includeSearchChannels);
         IQueryable<SearchStat> GetCampaignStats(SearchProfile sp, string channel, DateTime? start, DateTime? end, bool breakdown, bool showingCassConvs, string campaignNameInclude = null, string campaignNameExclude = null);
         IQueryable<SearchStat> GetCampaignStats(SearchProfile sp, int searchAccountId, DateTime? start, DateTime? end, bool breakdown, bool showingCassConvs, string campaignNameInclude = null, string campaignNameExclude = null);
-        bool DecreaseCampaignOrders(int searchCampaignId, DateTime start, DateTime end);
+        bool DecreaseCampaignOrders(int searchCampaignId, DateTime start, DateTime end, int by = 1);
     }
 }

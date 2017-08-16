@@ -32,14 +32,14 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             ViewBag.WeekStart = weekStart;
             return View(stats);
         }
-        public ActionResult DecreaseWeekOrders(DateTime weekStart, int searchCampaignId)
+        public ActionResult DecreaseWeekOrders(DateTime weekStart, int searchCampaignId, int by = 1)
         {
             var weekEnd = weekStart.AddDays(6);
             var searchCampaign = cpRepo.GetSearchCampaign(searchCampaignId);
             if (searchCampaign == null)
                 return HttpNotFound();
 
-            cpRepo.DecreaseCampaignOrders(searchCampaignId, weekStart, weekEnd);
+            cpRepo.DecreaseCampaignOrders(searchCampaignId, weekStart, weekEnd, by);
 
             return RedirectToAction("Week", new { weekStart = weekStart.ToShortDateString(), searchAccountId = searchCampaign.SearchAccountId });
         }

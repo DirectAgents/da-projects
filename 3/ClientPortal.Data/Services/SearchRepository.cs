@@ -1168,18 +1168,36 @@ namespace ClientPortal.Data.Services
             return stats.Where(s => !s.AllZeros(showingCassConvs)).OrderBy(s => s.Title);
         }
 
-        // Decrease the number of orders by 1
-        public bool DecreaseCampaignOrders(int searchCampaignId, DateTime start, DateTime end)
+        // Returns true if was able to decrease by the desired amount
+        public bool DecreaseCampaignOrders(int searchCampaignId, DateTime start, DateTime end, int by = 1)
         {
             var summaries = context.SearchDailySummaries.Where(x => x.SearchCampaignId == searchCampaignId && x.Date >= start && x.Date <= end
                                                                && x.Orders > 0);
             if (!summaries.Any())
                 return false;
 
-            var sds = summaries.First();
-            sds.Orders--;
+            int decreased = 0;
+            foreach (var sds in summaries)
+            {
+                if (decreased < by)
+                {
+                    int left = by - decreased;
+                    if (sds.Orders >= left)
+                    {
+                        sds.Orders -= left;
+                        decreased += left;
+                    }
+                    else
+                    {
+                        decreased += sds.Orders;
+                        sds.Orders = 0;
+                    }
+                    if (decreased == by)
+                        break;
+                }
+            }
             SaveChanges();
-            return true;
+            return (decreased == by);
         }
 
         //public IQueryable<SearchStat> GetAdgroupStats()
