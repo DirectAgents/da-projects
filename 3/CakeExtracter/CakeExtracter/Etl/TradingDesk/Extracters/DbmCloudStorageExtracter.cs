@@ -118,7 +118,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         {
             string serviceEmail = ConfigurationManager.AppSettings["GoogleAPI_ServiceEmail"];
             string certPath = ConfigurationManager.AppSettings["GoogleAPI_Certificate"];
-            var certificate = new X509Certificate2(certPath, "notasecret", X509KeyStorageFlags.Exportable);
+            var certificate = new X509Certificate2(certPath, "notasecret", X509KeyStorageFlags.Exportable | X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
 
             var credential = new ServiceAccountCredential(
                 new ServiceAccountCredential.Initializer(serviceEmail)
