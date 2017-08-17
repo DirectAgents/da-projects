@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "EomDatabase", "..\EomTool\EomDatabase\EomDatabase.sqlproj", "{8E4F17C3-E9F3-4D9B-85A6-81C852920AF2}"
 EndProject
 Global
