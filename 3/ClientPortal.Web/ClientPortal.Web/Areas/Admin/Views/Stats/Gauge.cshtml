@@ -1,0 +1,42 @@
+﻿@model IEnumerable<ClientPortal.Data.Contexts.SearchProfile>
+@{
+    string channelFilter = ViewBag.ChannelFilter;
+    int? minYear = ViewBag.MinYear;
+    bool includeEmpty = ViewBag.IncludeEmpty;
+}
+<h2>Stats Gauge</h2>
+
+<table border="1">
+@foreach (var sp in Model)
+{
+    bool first = true;
+    foreach (var sa in sp.SearchAccounts.OrderByDescending(sa => sa.Channel))
+    {
+        if (channelFilter != null && (sa.Channel == null || sa.Channel.ToLower() != channelFilter.ToLower()))
+        {
+            continue;
+        }
+        if (minYear.HasValue && sa.LatestStat.HasValue && sa.LatestStat.Value.Year < minYear.Value)
+        {
+            continue;
+        }
+        if (includeEmpty == false && !sa.LatestStat.HasValue)
+        {
+            continue;
+        }
+        <tr>
+        @if (first) {
+            <td>@sp.SearchProfileId</td>
+            <td>@sp.SearchProfileName</td>
+        } else {
+            <td colspan="2"></td>
+        }
+            <td>@sa.Channel</td>
+            <td>@sa.SearchAccountId - @sa.Name</td>
+            <td>@(sa.EarliestStat.HasValue ? sa.EarliestStat.Value.ToShortDateString() : "")</td>
+            <td>@(sa.LatestStat.HasValue ? sa.LatestStat.Value.ToShortDateString() : "")</td>
+        </tr>
+        first = false;
+    }
+}
+</table>

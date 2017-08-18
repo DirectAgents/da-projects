@@ -34,7 +34,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             if (searchAccount == null)
                 return HttpNotFound();
 
-            FillStatsRange(searchAccount);
+            cpRepo.FillSearchAccountStatsRange(searchAccount);
             return View(searchAccount);
         }
         [HttpPost]
@@ -48,17 +48,6 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             }
             return View(searchAccount);
         }
-        
-        private void FillStatsRange(SearchAccount searchAccount)
-        {
-            var sds = cpRepo.GetSearchDailySummaries(searchAccountId: searchAccount.SearchAccountId);
-            if (sds.Any())
-            {
-                var selDate = sds.Select(x => x.Date);
-                searchAccount.EarliestStat = selDate.Min();
-                searchAccount.LatestStat = selDate.Max();
-            }
-        }
 
         public ActionResult Synch(int id)
         {
@@ -66,7 +55,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             if (searchAccount == null)
                 return HttpNotFound();
 
-            FillStatsRange(searchAccount);
+            cpRepo.FillSearchAccountStatsRange(searchAccount);
             return View(searchAccount);
         }
         [HttpPost]

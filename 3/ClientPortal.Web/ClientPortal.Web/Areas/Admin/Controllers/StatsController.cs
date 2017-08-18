@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Controllers;
@@ -13,12 +14,29 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             cpRepo = cpRepository;
         }
 
+        public ActionResult Gauge(string channel, int? minYear = null, bool includeEmpty = true)
+        {
+            var searchProfiles = cpRepo.SearchProfiles(includeSearchAccounts: true).ToList();
+            foreach (var sp in searchProfiles)
+            {
+                foreach (var sa in sp.SearchAccounts)
+                {
+                    if (channel != null && (sa.Channel == null || sa.Channel.ToLower() != channel.ToLower()))
+                        continue;
+                    cpRepo.FillSearchAccountStatsRange(sa);
+                }
+            }
+            ViewBag.ChannelFilter = channel;
+            ViewBag.MinYear = minYear;
+            ViewBag.IncludeEmpty = includeEmpty;
+            return View(searchProfiles);
+        }
+
         public ActionResult SearchAccounts(int searchProfileId)
         {
             var searchAccounts = cpRepo.SearchAccounts(searchProfileId);
             return View(searchAccounts);
         }
-
         public ActionResult Week(DateTime weekStart, int searchAccountId)
         {
             var weekEnd = weekStart.AddDays(6);

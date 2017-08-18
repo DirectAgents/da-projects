@@ -10,10 +10,12 @@ namespace ClientPortal.Data.Services
 {
     public partial class ClientPortalRepository
     {
-        public IQueryable<SearchProfile> SearchProfiles()
+        public IQueryable<SearchProfile> SearchProfiles(bool includeSearchAccounts = false)
         {
-            var searchProfiles = context.SearchProfiles;
-            return searchProfiles;
+            if (includeSearchAccounts)
+                return context.SearchProfiles.Include(sp => sp.SearchAccounts);
+            else
+                return context.SearchProfiles;
         }
 
         public int MaxSearchProfileId()
@@ -208,6 +210,17 @@ namespace ClientPortal.Data.Services
                 searchCampaigns = searchCampaigns.Where(c => c.SearchCampaignId == searchCampaignId.Value);
 
             return searchCampaigns;
+        }
+
+        public void FillSearchAccountStatsRange(SearchAccount searchAccount)
+        {
+            var sds = GetSearchDailySummaries(searchAccountId: searchAccount.SearchAccountId);
+            if (sds.Any())
+            {
+                var selDate = sds.Select(x => x.Date);
+                searchAccount.EarliestStat = selDate.Min();
+                searchAccount.LatestStat = selDate.Max();
+            }
         }
 
         public IQueryable<SearchDailySummary> GetSearchDailySummaries(int? searchProfileId = null, int? searchAccountId = null, DateTime? start = null, DateTime? end = null, bool includeToday = true)

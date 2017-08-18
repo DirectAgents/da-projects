@@ -1224,6 +1224,7 @@
     <Content Include="Areas\Admin\Views\Stats\Week.cshtml" />
     <Content Include="Areas\Admin\Views\SearchAccounts\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\SearchAccounts\Synch.cshtml" />
+    <Content Include="Areas\Admin\Views\Stats\Gauge.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

@@ -105,7 +105,7 @@ namespace ClientPortal.Data.Contracts
         IQueryable<ConversionData> ConversionData { get; }
 
         // Search
-        IQueryable<SearchProfile> SearchProfiles();
+        IQueryable<SearchProfile> SearchProfiles(bool includeSearchAccounts = false);
         int MaxSearchProfileId();
         SearchProfile GetSearchProfile(int searchProfileId);
         bool SaveSearchProfile(SearchProfile searchProfile);
@@ -120,7 +120,9 @@ namespace ClientPortal.Data.Contracts
 
         bool InitializeSearchProfileSimpleReport(int searchProfileId, string email = null);
 
+        // Search Stats
         SearchStat GetSearchStats(SearchProfile sp, DateTime? start, DateTime? end, bool? includeToday, string campaignNameInclude = null, string campaignNameExclude = null);
+        void FillSearchAccountStatsRange(SearchAccount searchAccount);
         IQueryable<SearchDailySummary> GetSearchDailySummaries(int? searchProfileId = null, int? searchAccountId = null, DateTime? start = null, DateTime? end = null, bool includeToday = true);
         IQueryable<SearchConvType> GetConversionTypesForWeekStats(SearchProfile sp, int? numWeeks, DateTime? startDate, DateTime? endDate);
         IQueryable<SearchConvType> GetConversionTypesForMonthStats(SearchProfile sp, int? numMonths, DateTime? start, DateTime? end);
