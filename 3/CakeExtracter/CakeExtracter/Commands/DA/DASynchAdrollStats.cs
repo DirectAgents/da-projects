@@ -43,6 +43,7 @@ namespace CakeExtracter.Commands
         public int? DaysAgoToStart { get; set; }
         public string OneStatPer { get; set; } // (per day)
         public bool UpdateAds { get; set; }
+        public bool UpdateAdvertisables { get; set; }
 
         public override void ResetProperties()
         {
@@ -56,6 +57,7 @@ namespace CakeExtracter.Commands
             DaysAgoToStart = null;
             OneStatPer = null;
             UpdateAds = false;
+            UpdateAdvertisables = false;
         }
 
         public DASynchAdrollStats()
@@ -71,6 +73,7 @@ namespace CakeExtracter.Commands
             HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 31)", c => DaysAgoToStart = c);
             HasOption("o|oneStatPer=", "One Stat per [what] per day (advertisable/campaign/ad, default = all)", c => OneStatPer = c);
             HasOption("u|updateAds=", "After synching ad stats, update Ads? (default = false)", c => UpdateAds = bool.Parse(c));
+            HasOption("z|updateAdvertisables=", "Before synching stats, update Advertisables? (default = false)", c => UpdateAdvertisables = bool.Parse(c));
         }
 
         public override int Execute(string[] remainingArguments)
@@ -83,7 +86,11 @@ namespace CakeExtracter.Commands
             Logger.Info("AdRoll ETL. DateRange {0}.", dateRange);
 
             var arUtility = new AdRollUtility(m => Logger.Info(m), m => Logger.Warn(m));
-
+            if (UpdateAdvertisables)
+            {
+                Logger.Info("Updating Advertisables...");
+                DASynchAdrollAccounts.UpdateAdvertisables(arUtility);
+            }
             if (AccountId.HasValue) // For now, try getting advertisable Eid from accountId, if specified
             {
                 using (var db = new ClientPortalProgContext())

@@ -30,12 +30,20 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            var arUtility = new AdRollUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            UpdateAdvertisables();
+            return 0;
+        }
+
+        public static void UpdateAdvertisables(AdRollUtility arUtility = null)
+        {
+            if (arUtility == null)
+                arUtility = new AdRollUtility(m => Logger.Info(m), m => Logger.Warn(m));
+
             var freshAdvertisables = arUtility.GetAdvertisables();
             if (!freshAdvertisables.Any())
             {
                 Logger.Warn("No Advertisables returned. Aborting synch.");
-                return 0;
+                return;
             }
             var freshEids = freshAdvertisables.Select(a => a.eid).ToArray();
             using (var db = new ClientPortalProgContext())
@@ -100,7 +108,7 @@ namespace CakeExtracter.Commands
                 }
                 db.SaveChanges();
             }
-            return 0;
+
         }
     }
 }
