@@ -71,7 +71,7 @@ namespace CakeExtracter.UnitTests
             var bingReports = new BingAds.BingUtility();
             var startDate = new DateTime(2015, 1, 1);
             var endDate = new DateTime(2015, 1, 18);
-            var filepath = bingReports.GetDailySummaries(886985, startDate, endDate); // Ramjet
+            var filepath = bingReports.GetReport_DailySummaries(886985, startDate, endDate); // Ramjet
             Console.WriteLine("Filepath: " + filepath);
         }
 

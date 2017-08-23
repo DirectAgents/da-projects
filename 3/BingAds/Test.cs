@@ -1,7 +1,8 @@
-﻿using BingAds.CampaignManagement;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.ServiceModel;
+using Microsoft.BingAds.V10.CampaignManagement;
 
 namespace BingAds
 {
@@ -14,7 +15,7 @@ namespace BingAds
         private static CampaignManagementServiceClient service = null;
 
         // 234647, 886985
-        public Campaign[] GetCampaigns(long customerId, long accountId)
+        public IList<Campaign> GetCampaigns(long customerId, long accountId)
         {
             service = new CampaignManagementServiceClient();
 
