@@ -50,6 +50,7 @@ namespace CakeExtracter.Commands
                 var oneMonthAgo = DateTime.Today.AddMonths(-1);
                 var yesterday = DateTime.Today.AddDays(-1);
                 var dateRange = new DateRange(StartDate ?? oneMonthAgo, EndDate ?? yesterday);
+                Logger.Info("Criteo ETL. DateRange {0}.", dateRange);
 
                 foreach (var searchAccount in GetSearchAccounts())
                 {
@@ -73,6 +74,7 @@ namespace CakeExtracter.Commands
             var sixDaysAgo = DateTime.Today.AddDays(-6);
             var yesterday = DateTime.Today.AddDays(-1);
             var dateRange = new DateRange(StartDate ?? sixDaysAgo, EndDate ?? yesterday);
+            Logger.Info("Criteo ETL - hourly. DateRange {0}.", dateRange);
 
             foreach (var searchAccount in GetSearchAccounts())
             {

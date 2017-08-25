@@ -36,6 +36,7 @@ namespace CakeExtracter.Commands
             var threeDaysAgo = DateTime.Today.AddDays(-3);
             var yesterday = DateTime.Today.AddDays(-1);
             var dateRange = new DateRange(StartDate ?? threeDaysAgo, EndDate ?? yesterday);
+            Logger.Info("LocalConnex ETL. DateRange {0}.", dateRange);
 
             foreach (var searchProfile in GetSearchProfiles())
             {

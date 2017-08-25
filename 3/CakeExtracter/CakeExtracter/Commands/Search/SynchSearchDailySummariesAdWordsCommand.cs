@@ -84,6 +84,7 @@ namespace CakeExtracter.Commands
             var today = DateTime.Today;
             var yesterday = today.AddDays(-1);
             var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
+            Logger.Info("AdWords ETL. DateRange {0}.", dateRange);
 
             var searchAccounts = GetSearchAccounts();
             foreach (var searchAccount in searchAccounts)
