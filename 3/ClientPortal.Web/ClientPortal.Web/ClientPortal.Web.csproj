@@ -261,6 +261,7 @@
     <Compile Include="Areas\Admin\Models\CPMReportWizardVM.cs" />
     <Compile Include="Areas\Admin\Models\CreativeStatVM.cs" />
     <Compile Include="Areas\Admin\Models\SearchStatsVM.cs" />
+    <Compile Include="Areas\Admin\Models\StatsRangeVM.cs" />
     <Compile Include="Areas\Admin\Models\UserVM.cs" />
     <Compile Include="Areas\Prog\Controllers\HomeController.cs" />
     <Compile Include="Areas\Prog\Controllers\ReportsController.cs" />
@@ -1225,6 +1226,7 @@
     <Content Include="Areas\Admin\Views\SearchAccounts\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\SearchAccounts\Synch.cshtml" />
     <Content Include="Areas\Admin\Views\Stats\Gauge.cshtml" />
+    <Content Include="Areas\Admin\Views\Stats\Summary.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

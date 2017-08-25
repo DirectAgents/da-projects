@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using ClientPortal.Data.Contracts;
+using ClientPortal.Web.Areas.Admin.Models;
 using ClientPortal.Web.Controllers;
 
 namespace ClientPortal.Web.Areas.Admin.Controllers
@@ -12,6 +14,31 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         public StatsController(IClientPortalRepository cpRepository)
         {
             cpRepo = cpRepository;
+        }
+
+        public ActionResult Summary()
+        {
+            var searchAccounts = cpRepo.SearchAccounts(null);
+            var channels = searchAccounts.Select(x => x.Channel).Distinct().OrderByDescending(x => x).ToArray();
+            var sdsAll = cpRepo.GetSearchDailySummaries().Where(x => x.SearchCampaign.SearchAccountId.HasValue);
+            var statsRanges = new List<StatsRangeVM>();
+
+            foreach (var channel in channels)
+            {
+                var saIds = searchAccounts.Where(x => x.Channel == channel).Select(x => x.SearchAccountId).ToArray();
+                var sds = sdsAll.Where(x => saIds.Contains(x.SearchCampaign.SearchAccountId.Value));
+                if (sds.Any())
+                {
+                    var statsRange = new StatsRangeVM
+                    {
+                        Name = channel,
+                        Earliest = sds.Min(x => x.Date),
+                        Latest = sds.Max(x => x.Date)
+                    };
+                    statsRanges.Add(statsRange);
+                }
+            }
+            return View(statsRanges);
         }
 
         public ActionResult Gauge(string channel, int? minYear = null, bool includeEmpty = true)

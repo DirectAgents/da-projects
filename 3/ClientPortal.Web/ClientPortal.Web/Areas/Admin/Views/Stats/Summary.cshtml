@@ -1,0 +1,17 @@
+﻿@model IEnumerable<ClientPortal.Web.Areas.Admin.Models.StatsRangeVM>
+
+<table border="1">
+    <tr>
+        <th></th>
+        <th>Earliest</th>
+        <th>Latest</th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>@item.Name</td>
+        <td>@item.EarliestDisp</td>
+        <td>@item.LatestDisp</td>
+    </tr>
+}
+</table>
