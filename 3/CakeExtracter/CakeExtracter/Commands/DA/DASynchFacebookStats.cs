@@ -176,12 +176,16 @@ namespace CakeExtracter.Commands
         {
             using (var db = new ClientPortalProgContext())
             {
-                var accounts = db.ExtAccounts.Include("Network")
-                    .Where(a => a.Platform.Code == Platform.Code_FB  & !a.Disabled);
-                if (CampaignId.HasValue)
-                    accounts = accounts.Where(a => a.CampaignId == CampaignId.Value);
-                if (AccountId.HasValue)
-                    accounts = accounts.Where(a => a.Id == AccountId.Value);
+                var accounts = db.ExtAccounts.Include("Network").Where(a => a.Platform.Code == Platform.Code_FB);
+                if (CampaignId.HasValue || AccountId.HasValue)
+                {
+                    if (CampaignId.HasValue)
+                        accounts = accounts.Where(a => a.CampaignId == CampaignId.Value);
+                    if (AccountId.HasValue)
+                        accounts = accounts.Where(a => a.Id == AccountId.Value);
+                }
+                else
+                    accounts = accounts.Where(a => !a.Disabled);
 
                 return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
             }

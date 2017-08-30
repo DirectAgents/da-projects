@@ -18,7 +18,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 var account = db.ExtAccounts.Where(a => a.ExternalId == advertisableEid && a.Platform.Code == Platform.Code_AdRoll)
                                             .FirstOrDefault();
-                if (account != null && !account.Disabled)
+                if (account != null)
                     accountId = account.Id;
                 else
                     accountId = -1;

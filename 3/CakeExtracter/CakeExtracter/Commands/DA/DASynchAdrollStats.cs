@@ -107,8 +107,22 @@ namespace CakeExtracter.Commands
             else
                 advertisables = GetAdvertisables();
 
+            // If specified specific account(s), don't worry about the Disabled property
+            var ignoreDisabled = (!String.IsNullOrWhiteSpace(AdvertisableEids) || AdvertisableId.HasValue);
+            if (!ignoreDisabled)
+            {
+                // Eliminate 'Disabled' accounts. (also removes advertisables whose Eid has been nulled out)
+                using (var db = new ClientPortalProgContext())
+                {
+                    var extAccounts = db.ExtAccounts.Where(a => a.Platform.Code == Platform.Code_AdRoll && !a.Disabled);
+                    var externalIds = extAccounts.Select(a => a.ExternalId).ToList()
+                        .Where(i => !String.IsNullOrWhiteSpace(i));
+                    advertisables = advertisables.Where(a => externalIds.Contains(a.Eid));
+                }
+            }
+
             if (string.IsNullOrWhiteSpace(AdvertisableEids))
-                AdvertisableEids = String.Join(",", advertisables.Select(a => a.Eid));
+                AdvertisableEids = String.Join(",", advertisables.Select(a => a.Eid)); // this needed?
 
             string _oneStatPer = (OneStatPer == null) ? "" : OneStatPer.ToLower();
             if (_oneStatPer.StartsWith("adv") || _oneStatPer == "")

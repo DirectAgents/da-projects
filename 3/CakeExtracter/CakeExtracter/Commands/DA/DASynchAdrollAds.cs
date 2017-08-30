@@ -52,12 +52,13 @@ namespace CakeExtracter.Commands
         {
             using (var db = new ClientPortalProgContext())
             {
-                var accounts = db.ExtAccounts
-                    .Where(a => a.Platform.Code == Platform.Code_AdRoll && !a.Disabled);
+                var accounts = db.ExtAccounts.Where(a => a.Platform.Code == Platform.Code_AdRoll);
                 if (AccountId.HasValue)
-                    return accounts.Where(a => a.Id == AccountId.Value).ToList();
+                    accounts = accounts.Where(a => a.Id == AccountId.Value);
                 else
-                    return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
+                    accounts = accounts.Where(a => !a.Disabled);
+
+                return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
             }
         }
     }
