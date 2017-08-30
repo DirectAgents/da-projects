@@ -14,6 +14,8 @@ namespace Apple
 
     public class AppleAdsUtility
     {
+        public const int RowsReturnedAtATime = 20;
+
         private string AppleBaseUrl { get; set; }
         private string AppleP12Location { get; set; }
         private string AppleP12Password { get; set; }
@@ -88,23 +90,38 @@ namespace Apple
                 granularity = "DAILY",
                 selector = new Selector
                 {
-                    orderBy = new[] { new OrderBy { field = "campaignName", sortOrder = "ASCENDING" } }
+                    orderBy = new[] { new Sel_OrderBy { field = "campaignName", sortOrder = "ASCENDING" } },
+                    pagination = new Sel_Pagination { limit = RowsReturnedAtATime }
                 }
             };
-
+            bool done = false;
+            while (!done)
+            {
+                var response = GetReport(requestBody, orgId, certificateCode);
+                done = true;
+                if (response != null && response.data != null && response.data.reportingDataResponse != null && response.data.reportingDataResponse.row != null)
+                {
+                    var statGroups = response.data.reportingDataResponse.row;
+                    foreach (var statGroup in statGroups)
+                        yield return statGroup;
+                    var pagination = response.pagination;
+                    if (pagination.startIndex + pagination.itemsPerPage < pagination.totalResults)
+                    {
+                        done = false;
+                        requestBody.selector.pagination.offset += pagination.itemsPerPage;
+                    }
+                }
+            }
+        }
+        private AppleReportResponse GetReport(ReportRequest requestBody, string orgId, string certificateCode)
+        {
             var request = new RestRequest("reports/campaigns", Method.POST);
             request.AddHeader("Authorization", "orgId=" + orgId);
             request.AddJsonBody(requestBody);
-            var response = ProcessRequest<AppleReportResponse>(request, certificateCode);
+            var restResponse = ProcessRequest<AppleReportResponse>(request, certificateCode);
 
-            //TODO: error checking
-
-            if (response != null && response.Data != null && response.Data.data != null &&
-                response.Data.data.reportingDataResponse != null && response.Data.data.reportingDataResponse.row != null)
-            {
-                var reportRows = response.Data.data.reportingDataResponse.row;
-                return reportRows;
-            }
+            if (restResponse != null)
+                return restResponse.Data;
             else
                 return null;
         }

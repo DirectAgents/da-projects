@@ -15,6 +15,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
         public AppleApiLoader(int searchAccountId)
         {
+            this.BatchSize = AppleAdsUtility.RowsReturnedAtATime;
             this.searchAccountId = searchAccountId;
         }
 

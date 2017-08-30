@@ -18,13 +18,18 @@ namespace Apple
     {
         //conditions
         //fields
-        public OrderBy[] orderBy { get; set; }
-        //pagination
+        public Sel_OrderBy[] orderBy { get; set; }
+        public Sel_Pagination pagination { get; set; }
     }
-    public class OrderBy
+    public class Sel_OrderBy
     {
         public string field { get; set; } //e.g. campaignName
         public string sortOrder { get; set; } // "ASCENDING" or "DESCENDING"
+    }
+    public class Sel_Pagination
+    {
+        public int limit { get; set; }
+        public int offset { get; set; }
     }
 
     public class AppleResponse
