@@ -33,6 +33,7 @@ namespace CakeExtracter.Commands
         public DateTime? EndDate { get; set; }
         public int? DaysAgoToStart { get; set; }
         public string StatsType { get; set; }
+        public bool DisabledOnly { get; set; }
 
         private AdformUtility adformUtility { get; set; }
 
@@ -43,6 +44,7 @@ namespace CakeExtracter.Commands
             EndDate = null;
             DaysAgoToStart = null;
             StatsType = null;
+            DisabledOnly = false;
         }
 
         public DASynchAdformStats()
@@ -53,6 +55,7 @@ namespace CakeExtracter.Commands
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
             HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 31)", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
+            HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
         }
 
         //TODO: if synching all accounts, can we make one API call to get everything?
@@ -147,8 +150,11 @@ namespace CakeExtracter.Commands
                 var accounts = db.ExtAccounts.Where(a => a.Platform.Code == Platform.Code_Adform);
                 if (AccountId.HasValue)
                     accounts = accounts.Where(a => a.Id == AccountId.Value);
-                else
+                else if (!DisabledOnly)
                     accounts = accounts.Where(a => !a.Disabled);
+
+                if (DisabledOnly)
+                    accounts = accounts.Where(a => a.Disabled);
 
                 return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
             }

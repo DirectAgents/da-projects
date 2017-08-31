@@ -44,6 +44,7 @@ namespace CakeExtracter.Commands
         public string OneStatPer { get; set; } // (per day)
         public bool UpdateAds { get; set; }
         public bool UpdateAdvertisables { get; set; }
+        public bool DisabledOnly { get; set; }
 
         public override void ResetProperties()
         {
@@ -58,13 +59,14 @@ namespace CakeExtracter.Commands
             OneStatPer = null;
             UpdateAds = false;
             UpdateAdvertisables = false;
+            DisabledOnly = false;
         }
 
         public DASynchAdrollStats()
         {
             IsCommand("daSynchAdrollStats", "synch AdRoll Stats");
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c); // takes precedence over advertisableEids
-            HasOption("x|advertisableEids=", "Advertisable Eids (comma-separated) (default = all)", c => AdvertisableEids = c);
+            //HasOption("x|advertisableEids=", "Advertisable Eids (comma-separated) (default = all)", c => AdvertisableEids = c);
             HasOption<int>("i|advertisableId=", "Advertisable Id (default = all)", c => AdvertisableId = c);
             HasOption("m|campaignEids=", "Campaign Eids (comma-separated) (default = all)", c => CampaignEids = c);
             HasOption("c|checkActive=", "Check AdRoll for Advertisables with stats (if none specified)", c => CheckActiveAdvertisables = bool.Parse(c));
@@ -74,6 +76,7 @@ namespace CakeExtracter.Commands
             HasOption("o|oneStatPer=", "One Stat per [what] per day (advertisable/campaign/ad, default = all)", c => OneStatPer = c);
             HasOption("u|updateAds=", "After synching ad stats, update Ads? (default = false)", c => UpdateAds = bool.Parse(c));
             HasOption("z|updateAdvertisables=", "Before synching stats, update Advertisables? (default = false)", c => UpdateAdvertisables = bool.Parse(c));
+            HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -107,14 +110,14 @@ namespace CakeExtracter.Commands
             else
                 advertisables = GetAdvertisables();
 
-            // If specified specific account(s), don't worry about the Disabled property
-            var ignoreDisabled = (!String.IsNullOrWhiteSpace(AdvertisableEids) || AdvertisableId.HasValue);
-            if (!ignoreDisabled)
+            // If specified certain account(s), don't worry about the Disabled property... unless DisabledOnly is set
+            var advSpecified = (!String.IsNullOrWhiteSpace(AdvertisableEids) || AdvertisableId.HasValue);
+            if (!advSpecified || DisabledOnly)
             {
-                // Eliminate 'Disabled' accounts. (also removes advertisables whose Eid has been nulled out)
+                // Filter 'Disabled' accounts. (also removes advertisables whose Eid has been nulled out)
                 using (var db = new ClientPortalProgContext())
                 {
-                    var extAccounts = db.ExtAccounts.Where(a => a.Platform.Code == Platform.Code_AdRoll && !a.Disabled);
+                    var extAccounts = db.ExtAccounts.Where(a => a.Platform.Code == Platform.Code_AdRoll && a.Disabled == DisabledOnly);
                     var externalIds = extAccounts.Select(a => a.ExternalId).ToList()
                         .Where(i => !String.IsNullOrWhiteSpace(i));
                     advertisables = advertisables.Where(a => externalIds.Contains(a.Eid));

@@ -36,6 +36,7 @@ namespace CakeExtracter.Commands
         public DateTime? EndDate { get; set; }
         public int? DaysAgoToStart { get; set; }
         public string StatsType { get; set; }
+        public bool DisabledOnly { get; set; }
 
         public override void ResetProperties()
         {
@@ -45,6 +46,7 @@ namespace CakeExtracter.Commands
             EndDate = null;
             DaysAgoToStart = null;
             StatsType = null;
+            DisabledOnly = false;
         }
 
         public DASynchFacebookStats()
@@ -56,6 +58,7 @@ namespace CakeExtracter.Commands
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
             HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 31)", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
+            HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -184,8 +187,11 @@ namespace CakeExtracter.Commands
                     if (AccountId.HasValue)
                         accounts = accounts.Where(a => a.Id == AccountId.Value);
                 }
-                else
+                else if (!DisabledOnly)
                     accounts = accounts.Where(a => !a.Disabled);
+
+                if (DisabledOnly)
+                    accounts = accounts.Where(a => a.Disabled);
 
                 return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
             }

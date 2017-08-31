@@ -13,16 +13,19 @@ namespace CakeExtracter.Commands
     public class DASynchAdrollAds : ConsoleCommand
     {
         public int? AccountId { get; set; }
+        public bool DisabledOnly { get; set; }
 
         public override void ResetProperties()
         {
             AccountId = null;
+            DisabledOnly = false;
         }
 
         public DASynchAdrollAds()
         {
             IsCommand("daSynchAdrollAds", "synch AdRoll Ads");
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
+            HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -55,8 +58,11 @@ namespace CakeExtracter.Commands
                 var accounts = db.ExtAccounts.Where(a => a.Platform.Code == Platform.Code_AdRoll);
                 if (AccountId.HasValue)
                     accounts = accounts.Where(a => a.Id == AccountId.Value);
-                else
+                else if (!DisabledOnly)
                     accounts = accounts.Where(a => !a.Disabled);
+
+                if (DisabledOnly)
+                    accounts = accounts.Where(a => a.Disabled);
 
                 return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
             }
