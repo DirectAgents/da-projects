@@ -259,6 +259,15 @@ namespace DirectAgents.Domain.Concrete
             context.SaveChanges();
             return true;
         }
+        public bool DeleteBudgetInfo(int campId, DateTime date)
+        {
+            var bi = context.BudgetInfos.Find(campId, date);
+            if (bi == null)
+                return false;
+            context.BudgetInfos.Remove(bi);
+            context.SaveChanges();
+            return true;
+        }
         public bool SaveBudgetInfo(BudgetInfo bi)
         {
             if (context.BudgetInfos.Any(b => b.CampaignId == bi.CampaignId && b.Date == bi.Date))
@@ -385,6 +394,14 @@ namespace DirectAgents.Domain.Concrete
                 extAccounts = extAccounts.Where(a => !campaignAcctIds.Contains(a.Id));
             }
             return extAccounts;
+        }
+
+        public IQueryable<int> ExtAccountIds_Active(DateTime? monthStart = null)
+        {
+            DateTime? monthEnd = monthStart.HasValue ? monthStart.Value.AddMonths(1).AddDays(-1) : (DateTime?)null;
+            var daySums = DailySummaries(monthStart, monthEnd);
+            var activeAcctIds = daySums.Select(s => s.AccountId).Distinct();
+            return activeAcctIds;
         }
 
         public IQueryable<ExtAccount> ExtAccounts_Social(int? advId = null, int? campId = null)

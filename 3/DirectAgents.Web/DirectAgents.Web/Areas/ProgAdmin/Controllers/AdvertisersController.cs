@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Helpers;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
@@ -19,6 +21,39 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                 .OrderBy(a => a.Name);
 
             return View(advertisers);
+        }
+
+        public ActionResult Percents(DateTime? month)
+        {
+            DateTime currMonth = SetChooseMonthViewData_NonCookie("RT", month);
+            //DateTime currMonth = SetChooseMonthViewData("RT");
+
+            var activeAccountIds = cpProgRepo.ExtAccountIds_Active(currMonth).ToArray();
+            var dbAdvertisers = cpProgRepo.Advertisers().OrderBy(a => a.Name);
+            var advList = new List<Advertiser>();
+            foreach (var dbAdv in dbAdvertisers)
+            {
+                bool useIt = false;
+                if (dbAdv.Campaigns != null)
+                {
+                    //See if any of the advertiser's campaign's are active (i.e. have an account with DailySummaries)
+                    foreach (var camp in dbAdv.Campaigns)
+                    {
+                        //if (camp.BudgetInfos != null && camp.BudgetInfos.Any(x => x.Date == currMonth))
+                        int[] campAcctIds = (camp.ExtAccounts != null) ? camp.ExtAccounts.Select(x => x.Id).ToArray() : new int[] { };
+                        if (campAcctIds.Any(x => activeAccountIds.Contains(x)))
+                        {
+                            useIt = true;
+                            break;
+                        }
+                    }
+                }
+                if (useIt)
+                    advList.Add(dbAdv);
+            }
+
+            ViewBag.CurrMonth = currMonth;
+            return View(advList);
         }
 
         public ActionResult CreateNew()

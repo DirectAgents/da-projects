@@ -70,6 +70,12 @@
                 <td style="text-align:center">@bi.MgmtFeePct.ToString("#0.##### \\%")</td>
                 <td style="text-align:center">@bi.MarginPct.ToString("#0.##### \\%")</td>
                 <td>@(String.Join(",", pbis.Select(i => i.Platform.Name)))</td>
+                @if (!pbis.Any())
+                {
+                    <td>@Html.ActionLink("Delete", "Delete", "BudgetInfos",
+                                         new { campId = bi.CampaignId, date = bi.Date.ToShortDateString() },
+                                         new { onclick = "if (!confirm('Are you sure?')) return false" })</td>
+                }
             </tr>
         }
         </table>

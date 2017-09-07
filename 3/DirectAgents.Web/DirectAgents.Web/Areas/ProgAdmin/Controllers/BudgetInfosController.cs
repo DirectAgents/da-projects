@@ -57,5 +57,21 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         {
             ViewBag.Platforms = cpProgRepo.PlatformsWithoutBudgetInfo(bi.CampaignId, bi.Date).OrderBy(p => p.Name);
         }
+
+        public ActionResult Delete(int campId, DateTime date)
+        {
+            bool success = cpProgRepo.DeleteBudgetInfo(campId, date);
+            if (success)
+                return RedirectToAction("Edit", "Campaigns", new { id = campId });
+            else
+                return HttpNotFound();
+        }
+
+        //public ActionResult DeleteAll(DateTime date, bool pbiAlso = false)
+        //{
+        //    // delete...
+
+        //    return RedirectToAction("Percents", "Advertisers", new { month = date });
+        //}
     }
 }

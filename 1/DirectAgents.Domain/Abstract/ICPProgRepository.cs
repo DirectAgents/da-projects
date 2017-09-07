@@ -41,6 +41,7 @@ namespace DirectAgents.Domain.Abstract
         BudgetInfo BudgetInfo(int campId, DateTime date);
         IQueryable<BudgetInfo> BudgetInfos(int? campId = null, DateTime? date = null);
         bool AddBudgetInfo(BudgetInfo bi);
+        bool DeleteBudgetInfo(int campId, DateTime date);
         bool SaveBudgetInfo(BudgetInfo bi);
         void FillExtended(BudgetInfo bi);
         PlatformBudgetInfo PlatformBudgetInfo(int campId, int platformId, DateTime date);
@@ -56,6 +57,7 @@ namespace DirectAgents.Domain.Abstract
         ExtAccount ExtAccount(int id);
         IQueryable<ExtAccount> ExtAccounts(string platformCode = null, int? campId = null);
         IQueryable<ExtAccount> ExtAccountsNotInCampaign(int campId);
+        IQueryable<int> ExtAccountIds_Active(DateTime? monthStart = null);
         IQueryable<ExtAccount> ExtAccounts_Social(int? advId = null, int? campId = null);
         IEnumerable<int> ExtAccountIds_Social(int? advId = null, int? campId = null);
         bool AddExtAccount(ExtAccount extAcct);
