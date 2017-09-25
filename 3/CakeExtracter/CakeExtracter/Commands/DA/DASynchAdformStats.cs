@@ -76,6 +76,7 @@ namespace CakeExtracter.Commands
             foreach (var account in accounts)
             {
                 Logger.Info("Commencing ETL for Adform account ({0}) {1}", account.Id, account.Name);
+                adformUtility.SetWhichAlt(account.ExternalId);
                 try
                 {
                     if (statsType.Daily)
@@ -103,14 +104,14 @@ namespace CakeExtracter.Commands
         {
             // Get tokens, if any, from the database
             string[] tokens = Platform.GetPlatformTokens(Platform.Code_Adform);
-            if (tokens.Length > 0)
+            for (int i = 0; i < tokens.Length && i < AdformUtility.NumAlts; i++)
             {
-                adformUtility.AccessToken = tokens[0];
+                adformUtility.AccessTokens[i] = tokens[i];
             }
         }
         private void SaveTokens()
         {
-            Platform.SavePlatformTokens(Platform.Code_Adform, adformUtility.AccessToken);
+            Platform.SavePlatformTokens(Platform.Code_Adform, adformUtility.AccessTokens);
         }
         // ---
 

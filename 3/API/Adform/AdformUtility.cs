@@ -13,14 +13,17 @@ namespace Adform
     public class AdformUtility
     {
         private const string Scope = "https://api.adform.com/scope/eapi";
+        public const int NumAlts = 10; // including the default (0)
 
         // From Config:
         private string AuthBaseUrl { get; set; }
-        private string ClientID { get; set; }
-        private string ClientSecret { get; set; }
         private string BaseUrl { get; set; }
 
-        public string AccessToken { get; set; }
+        private string[] AltAccountIDs = new string[NumAlts];
+        private string[] ClientIDs = new string[NumAlts];
+        private string[] ClientSecrets = new string[NumAlts];
+        public string[] AccessTokens = new string[NumAlts];
+        public int WhichAlt { get; set; } // default: 0
 
         // --- Logging ---
         private Action<string> _LogInfo;
@@ -56,9 +59,34 @@ namespace Adform
         private void Setup()
         {
             AuthBaseUrl = ConfigurationManager.AppSettings["AdformAuthBaseUrl"];
-            ClientID = ConfigurationManager.AppSettings["AdformClientID"];
-            ClientSecret = ConfigurationManager.AppSettings["AdformClientSecret"];
+            ClientIDs[0] = ConfigurationManager.AppSettings["AdformClientID"];
+            ClientSecrets[0] = ConfigurationManager.AppSettings["AdformClientSecret"];
+            for (int i = 1; i < NumAlts; i++)
+            {
+                AltAccountIDs[i] = PlaceLeadingAndTrailingCommas(ConfigurationManager.AppSettings["Adform_Alt" + i]);
+                ClientIDs[i] = ConfigurationManager.AppSettings["AdformClientID_Alt" + i];
+                ClientSecrets[i] = ConfigurationManager.AppSettings["AdformClientSecret_Alt" + i];
+            }
             BaseUrl = ConfigurationManager.AppSettings["AdformBaseUrl"];
+        }
+        private string PlaceLeadingAndTrailingCommas(string idString)
+        {
+            if (idString == null || idString.Length == 0)
+                return idString;
+            return (idString[0] == ',' ? "" : ",") + idString + (idString[idString.Length - 1] == ',' ? "" : ",");
+        }
+
+        public void SetWhichAlt(string accountId)
+        {
+            WhichAlt = 0; //default
+            for (int i = 1; i < NumAlts; i++)
+            {
+                if (AltAccountIDs[i] != null && AltAccountIDs[i].Contains(',' + accountId + ','))
+                {
+                    WhichAlt = i;
+                    break;
+                }
+            }
         }
 
         public void GetAccessToken()
@@ -66,7 +94,7 @@ namespace Adform
             var restClient = new RestClient
             {
                 BaseUrl = new Uri(AuthBaseUrl),
-                Authenticator = new HttpBasicAuthenticator(ClientID, ClientSecret)
+                Authenticator = new HttpBasicAuthenticator(ClientIDs[WhichAlt], ClientSecrets[WhichAlt])
             };
             restClient.AddHandler("application/json", new JsonDeserializer());
 
@@ -76,7 +104,7 @@ namespace Adform
 
             var response = restClient.ExecuteAsPost<GetTokenResponse>(request, "POST");
             if (response.Data != null)
-                AccessToken = response.Data.access_token;
+                AccessTokens[WhichAlt] = response.Data.access_token;
         }
 
         private IRestResponse<T> ProcessRequest<T>(RestRequest restRequest, bool postNotGet = false)
@@ -88,9 +116,9 @@ namespace Adform
             };
             restClient.AddHandler("application/json", new JsonDeserializer());
 
-            if (String.IsNullOrEmpty(AccessToken))
+            if (String.IsNullOrEmpty(AccessTokens[WhichAlt]))
                 GetAccessToken();
-            restRequest.AddHeader("Authorization", "Bearer " + AccessToken);
+            restRequest.AddHeader("Authorization", "Bearer " + AccessTokens[WhichAlt]);
 
             bool done = false;
             int tries = 0;
@@ -108,7 +136,7 @@ namespace Adform
                 { // Get a new access token and use that.
                     GetAccessToken();
                     var param = restRequest.Parameters.Find(p => p.Type == ParameterType.HttpHeader && p.Name == "Authorization");
-                    param.Value = "Bearer " + AccessToken;
+                    param.Value = "Bearer " + AccessTokens[WhichAlt];
                 }
                 else if (response.StatusDescription != null && response.StatusDescription.Contains("API calls quota exceeded") && tries < 5)
                 {
