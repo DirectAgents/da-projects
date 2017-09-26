@@ -12,6 +12,7 @@ namespace DirectAgents.Domain.Entities.CPProg
         public virtual Advertiser Advertiser { get; set; }
 
         public string Name { get; set; }
+        public decimal BaseFee { get; set; }
 
         public virtual ICollection<ExtAccount> ExtAccounts { get; set; }
         public virtual ICollection<BudgetInfo> BudgetInfos { get; set; }

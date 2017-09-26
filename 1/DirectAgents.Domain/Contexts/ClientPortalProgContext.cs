@@ -55,6 +55,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<StrategyAction>().ToTable("StrategyAction", tdSchema);
             modelBuilder.Entity<AdSetAction>().ToTable("AdSetAction", tdSchema);
 
+            modelBuilder.Entity<Campaign>().Property(c => c.BaseFee).HasPrecision(14, 2);
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MgmtFeePct).HasPrecision(10, 5).HasColumnName("MgmtFeePct");
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MarginPct).HasPrecision(10, 5).HasColumnName("MarginPct");

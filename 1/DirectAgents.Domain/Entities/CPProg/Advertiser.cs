@@ -10,6 +10,7 @@ namespace DirectAgents.Domain.Entities.CPProg
         public string Name { get; set; }
         public byte[] Logo { get; set; }
         public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         public int? SalesRepId { get; set; }
         [ForeignKey("SalesRepId")]

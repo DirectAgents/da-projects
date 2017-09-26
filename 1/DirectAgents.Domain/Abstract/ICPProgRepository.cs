@@ -53,6 +53,7 @@ namespace DirectAgents.Domain.Abstract
         PlatColMapping PlatColMapping(int id);
         bool AddSavePlatColMapping(PlatColMapping platColMapping);
         void FillExtended(PlatColMapping platColMapping);
+        void CreateBaseFees(DateTime date, int platformIdForExtraItems);
         IQueryable<Network> Networks();
         ExtAccount ExtAccount(int id);
         IQueryable<ExtAccount> ExtAccounts(string platformCode = null, int? campId = null);

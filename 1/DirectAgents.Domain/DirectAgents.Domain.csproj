@@ -473,6 +473,10 @@
     <Compile Include="MigrationsTD\201707142009302_Mig_Account_Disabled.Designer.cs">
       <DependentUpon>201707142009302_Mig_Account_Disabled.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsTD\201709082010188_Mig_CampFeeAdvEnd.cs" />
+    <Compile Include="MigrationsTD\201709082010188_Mig_CampFeeAdvEnd.Designer.cs">
+      <DependentUpon>201709082010188_Mig_CampFeeAdvEnd.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.Designer.cs">
@@ -798,6 +802,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201707142009302_Mig_Account_Disabled.resx">
       <DependentUpon>201707142009302_Mig_Account_Disabled.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201709082010188_Mig_CampFeeAdvEnd.resx">
+      <DependentUpon>201709082010188_Mig_CampFeeAdvEnd.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

@@ -363,6 +363,30 @@ namespace DirectAgents.Domain.Concrete
                 platColMapping.Platform = Platform(platColMapping.Id);
         }
 
+        public void CreateBaseFees(DateTime date, int platformIdForExtraItems)
+        {
+            var existingFeeItems = context.ExtraItems.Where(x => x.Date == date && x.PlatformId == platformIdForExtraItems && x.Cost == 0)
+                                    .ToList();
+            var campaigns = context.Campaigns.Where(c => (!c.Advertiser.StartDate.HasValue || c.Advertiser.StartDate.Value <= date) &&
+                                                         (!c.Advertiser.EndDate.HasValue || c.Advertiser.EndDate.Value >= date));
+            foreach (var camp in campaigns)
+            {
+                if (camp.BaseFee > 0 && !existingFeeItems.Any(x => x.CampaignId == camp.Id && x.Revenue == camp.BaseFee))
+                {
+                    var item = new ExtraItem
+                    {
+                        Date = date,
+                        CampaignId = camp.Id,
+                        PlatformId = platformIdForExtraItems,
+                        Revenue = camp.BaseFee
+                        // Description =
+                    };
+                    context.ExtraItems.Add(item);
+                }
+            }
+            context.SaveChanges();
+        }
+
         // ---
 
         public IQueryable<Network> Networks()
