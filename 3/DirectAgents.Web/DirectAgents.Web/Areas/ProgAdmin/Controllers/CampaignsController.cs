@@ -53,10 +53,19 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 
         public ActionResult CreateNew(int advId)
         {
+            var adv = cpProgRepo.Advertiser(advId);
+            if (adv == null)
+                return HttpNotFound();
+
+            // Make the first campaign for an advertiser have the same name as the advertiser
+            string campName = adv.Name;
+            if (adv.Campaigns != null && adv.Campaigns.Any(x => x.Name == campName))
+                campName = "zNew";
+
             var campaign = new Campaign
             {
                 AdvertiserId = advId,
-                Name = "zNew",
+                Name = campName,
                 DefaultBudgetInfo = new BudgetInfoVals
                 {
                     MgmtFeePct = 15,

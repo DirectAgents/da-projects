@@ -23,7 +23,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             return View(advertisers);
         }
 
-        public ActionResult Percents(DateTime? month)
+        public ActionResult IndexFees(DateTime? month)
         {
             DateTime currMonth = SetChooseMonthViewData_NonCookie("RT", month);
             //DateTime currMonth = SetChooseMonthViewData("RT");
@@ -33,27 +33,35 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             var advList = new List<Advertiser>();
             foreach (var dbAdv in dbAdvertisers)
             {
-                bool useIt = false;
                 if (dbAdv.Campaigns != null)
                 {
-                    //See if any of the advertiser's campaign's are active (i.e. have an account with DailySummaries)
+                    //See if any of the advertiser's campaign's are active (i.e. have an account with DailySummaries) or have BudgetInfos...
+                    bool useIt = false;
                     foreach (var camp in dbAdv.Campaigns)
                     {
-                        //if (camp.BudgetInfos != null && camp.BudgetInfos.Any(x => x.Date == currMonth))
                         int[] campAcctIds = (camp.ExtAccounts != null) ? camp.ExtAccounts.Select(x => x.Id).ToArray() : new int[] { };
                         if (campAcctIds.Any(x => activeAccountIds.Contains(x)))
-                        {
                             useIt = true;
+                        else if ((camp.BudgetInfos != null && camp.BudgetInfos.Any(x => x.Date == currMonth)) ||
+                                 (camp.PlatformBudgetInfos != null && camp.PlatformBudgetInfos.Any(x => x.Date == currMonth)))
+                            useIt = true;
+
+                        if (useIt)
                             break;
-                        }
                     }
+                    if (useIt)
+                        advList.Add(dbAdv);
                 }
-                if (useIt)
-                    advList.Add(dbAdv);
             }
 
             ViewBag.CurrMonth = currMonth;
             return View(advList);
+        }
+        public ActionResult CreateBaseFees(DateTime month)
+        {
+            var tdPlatform = cpProgRepo.Platform(Platform.Code_DATradingDesk);
+            cpProgRepo.CreateBaseFees(month, tdPlatform.Id);
+            return RedirectToAction("Index", "ExtraItems", new { month = month.ToShortDateString() });
         }
 
         public ActionResult CreateNew()

@@ -71,7 +71,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         //{
         //    // delete...
 
-        //    return RedirectToAction("Percents", "Advertisers", new { month = date });
+        //    return RedirectToAction("IndexFees", "Advertisers", new { month = date });
         //}
     }
 }

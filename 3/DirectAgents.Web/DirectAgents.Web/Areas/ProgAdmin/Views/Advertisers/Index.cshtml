@@ -9,6 +9,8 @@
     <th>Name</th>
     <th>Sales Rep</th>
     <th>AM</th>
+    <th>Start</th>
+    <th>End</th>
     <th>Campaigns</th>
 </tr>
 @foreach (var adv in Model)
@@ -19,6 +21,8 @@
     <td>@adv.Name</td>
     <td>@adv.SalesRepName()</td>
     <td>@adv.AMName()</td>
+    <td>@adv.StartDate.ToShortDateString()</td>
+    <td>@adv.EndDate.ToShortDateString()</td>
     <td style="text-align:center">@Html.ActionLink("show(" + adv.Campaigns.Count + ")", "Index", "Campaigns", new { advid = adv.Id }, null)</td>
 </tr>
 }

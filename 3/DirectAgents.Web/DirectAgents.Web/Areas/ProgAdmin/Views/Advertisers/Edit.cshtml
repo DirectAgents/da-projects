@@ -29,6 +29,14 @@
                     <td>@Html.LabelFor(m => m.AM)</td>
                     <td>@Html.DropDownListFor(m => m.AMId, amSelectList)</td>
                 </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.StartDate)</td>
+                    <td>@Html.EditorFor(m => m.StartDate, "Date")</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.EndDate)</td>
+                    <td>@Html.EditorFor(m => m.EndDate, "Date")</td>
+                </tr>
             </table>
             <br />
             <input type="submit" value="Save" />

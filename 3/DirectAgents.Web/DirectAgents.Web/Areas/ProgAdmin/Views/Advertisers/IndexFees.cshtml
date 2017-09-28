@@ -7,12 +7,12 @@
 @section scripts {
 <script>
     function ChangeMonth(month) {
-        var url = '@Html.Raw(Url.Action("Percents", new { month = "monthVal" }))';
+        var url = '@Html.Raw(Url.Action("IndexFees", new { month = "monthVal" }))';
         location.href = url.replace('monthVal', month);
     }
 </script>
 }
-<h2>Budgets/Percents...</h2>
+<h2>Budget/Fee Summary</h2>
 @Html.Partial("ChooseMonthNonSubmit", (SelectList)ViewBag.ChooseMonthSelectList)
 
 <table border="1">
@@ -21,6 +21,8 @@
     <th>Budget</th>
     <th>MgmtFeePct</th>
     <th>MarginPct</th>
+    <th></th>
+    <th>BaseFee</th>
 </tr>
 @foreach (var adv in Model)
 {
@@ -39,10 +41,8 @@
             <td>@bi.MediaSpend.ToString("C")</td>
             <td>@bi.MgmtFeePct.ToString("#0.##### \\%")</td>
             <td>@bi.MarginPct.ToString("#0.##### \\%")</td>
-            @if (usingDefaults)
-            {
-                <td>(defaults)</td>
-            }
+            <td>@(usingDefaults ? "(defaults)" : "")</td>
+            <td>@(camp.BaseFee > 0 ? camp.BaseFee.ToString("C") : "")</td>
         </tr>
         var pbis = camp.PlatformBudgetInfosFor(currMonth);
         foreach (var pbi in pbis.OrderBy(x => x.Platform.Name))
@@ -58,5 +58,8 @@
     <tr><td></td></tr>
 }
 </table>
+
+<br />
+@Html.ActionLink("Create Base Fees for the month", "CreateBaseFees", new { month = currMonth.ToShortDateString() })
 
 @*@Html.ActionLink("Delete All (including exceptions)", "Delete", "BudgetInfos", new { date = currMonth.ToShortDateString(), pbiAlso = true }, new { })*@

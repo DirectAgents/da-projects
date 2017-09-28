@@ -1071,7 +1071,7 @@
     <Content Include="Areas\ProgAdmin\Views\ExtAccounts\AdSets.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Actions\Types.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Stats\Action.cshtml" />
-    <Content Include="Areas\ProgAdmin\Views\Advertisers\Percents.cshtml" />
+    <Content Include="Areas\ProgAdmin\Views\Advertisers\IndexFees.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
