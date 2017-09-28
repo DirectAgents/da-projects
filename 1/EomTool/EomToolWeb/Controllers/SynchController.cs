@@ -72,5 +72,10 @@ namespace EomToolWeb.Controllers
             return View(model);
         }
 
+        public ActionResult RestoreX()
+        {
+            //mainRepo.RestoreX();
+            return Content("okay");
+        }
 	}
 }

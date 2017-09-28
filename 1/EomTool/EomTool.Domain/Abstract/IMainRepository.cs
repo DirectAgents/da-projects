@@ -93,6 +93,7 @@ namespace EomTool.Domain.Abstract
         bool ItemExists(Item item);
 
         // --- Auditing stuff ---
+        void RestoreX();
         IQueryable<AuditSummary> AuditSummaries();
         IQueryable<Audit> Audits(DateTime? date = null, string operation = null, string primaryKey = null, string sysUser = null);
 

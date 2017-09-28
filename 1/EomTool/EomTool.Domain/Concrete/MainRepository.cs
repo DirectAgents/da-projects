@@ -1044,6 +1044,46 @@ namespace EomTool.Domain.Concrete
 
         // --- Auditing ---
 
+        // A quick and dirty restore...
+        public void RestoreX()
+        {
+            var audits = context.Audits.Where(a => a.Operation == "d" && a.AuditDate > new DateTime(2017, 9, 8, 11, 45, 0)
+                            && (a.PrimaryKey.CompareTo("2900") < 0 || (a.PrimaryKey.CompareTo("3800") > 0 && a.PrimaryKey.CompareTo("5900") < 0)));
+            var aGroups = audits.GroupBy(a => a.PrimaryKey);
+            int count = 0;
+            foreach (var g in aGroups)
+            {
+                count++;
+                var item = new Item
+                {
+                    //name = g.Single(x => x.ColumnName == "[name]").OldValue,
+                    pid = int.Parse(g.Single(x => x.ColumnName == "[pid]").OldValue),
+                    affid = int.Parse(g.Single(x => x.ColumnName == "[affid]").OldValue),
+                    source_id = int.Parse(g.Single(x => x.ColumnName == "[source_id]").OldValue),
+                    unit_type_id = int.Parse(g.Single(x => x.ColumnName == "[unit_type_id]").OldValue),
+                    revenue_currency_id = int.Parse(g.Single(x => x.ColumnName == "[revenue_currency_id]").OldValue),
+                    cost_currency_id = int.Parse(g.Single(x => x.ColumnName == "[cost_currency_id]").OldValue),
+                    revenue_per_unit = decimal.Parse(g.Single(x => x.ColumnName == "[revenue_per_unit]").OldValue),
+                    cost_per_unit = decimal.Parse(g.Single(x => x.ColumnName == "[cost_per_unit]").OldValue),
+                    num_units = decimal.Parse(g.Single(x => x.ColumnName == "[num_units]").OldValue),
+                    notes = g.Single(x => x.ColumnName == "[notes]").OldValue,
+                    accounting_notes = g.Single(x => x.ColumnName == "[accounting_notes]").OldValue,
+                    item_accounting_status_id = int.Parse(g.Single(x => x.ColumnName == "[item_accounting_status_id]").OldValue),
+                    item_reporting_status_id = int.Parse(g.Single(x => x.ColumnName == "[item_reporting_status_id]").OldValue),
+                    campaign_status_id = int.Parse(g.Single(x => x.ColumnName == "[campaign_status_id]").OldValue),
+                    media_buyer_approval_status_id = int.Parse(g.Single(x => x.ColumnName == "[media_buyer_approval_status_id]").OldValue),
+                };
+                var audit_name = g.SingleOrDefault(x => x.ColumnName == "[name]");
+                if (audit_name != null)
+                    item.name = audit_name.OldValue;
+                var audit_batch_id = g.SingleOrDefault(x => x.ColumnName == "[batch_id]");
+                if (audit_batch_id != null)
+                    item.batch_id = int.Parse(audit_batch_id.OldValue);
+                context.Items.Add(item);
+            }
+            context.SaveChanges();
+        }
+
         // this was slower (took about 5 secs)
         public IQueryable<AuditSummary> AuditSummariesX()
         {
