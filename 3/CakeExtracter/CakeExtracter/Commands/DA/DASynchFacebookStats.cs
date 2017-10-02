@@ -56,7 +56,7 @@ namespace CakeExtracter.Commands
             HasOption<int>("c|campaignId=", "Campaign Id (optional)", c => CampaignId = c);
             HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
-            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 31)", c => DaysAgoToStart = c);
+            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 41)", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
         }
@@ -64,7 +64,7 @@ namespace CakeExtracter.Commands
         public override int Execute(string[] remainingArguments)
         {
             if (!DaysAgoToStart.HasValue)
-                DaysAgoToStart = 31; // used if StartDate==null
+                DaysAgoToStart = 41; // used if StartDate==null
             var today = DateTime.Today;
             var yesterday = today.AddDays(-1);
             var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
@@ -94,7 +94,22 @@ namespace CakeExtracter.Commands
             var accounts = GetAccounts();
             foreach (var acct in accounts)
             {
-                Logger.Info("Facebook ETL. Account {0} - {1}", acct.Id, acct.Name);
+                var acctDateRange = new DateRange(dateRange.FromDate, dateRange.ToDate);
+                if (acct.Campaign != null) // check/adjust daterange - if acct assigned to a campaign/advertiser
+                {
+                    //if FromDate came from the default value, check Advertiser's start date
+                    if (!StartDate.HasValue && acct.Campaign.Advertiser.StartDate.HasValue
+                        && acctDateRange.FromDate < acct.Campaign.Advertiser.StartDate.Value)
+                        acctDateRange.FromDate = acct.Campaign.Advertiser.StartDate.Value;
+                    //likewise for ToDate / Advertiser's end date
+                    if (!EndDate.HasValue && acct.Campaign.Advertiser.EndDate.HasValue
+                        && acctDateRange.ToDate > acct.Campaign.Advertiser.EndDate.Value)
+                        acctDateRange.ToDate = acct.Campaign.Advertiser.EndDate.Value;
+                }
+                Logger.Info("Facebook ETL. Account {0} - {1}. DateRange {2}.", acct.Id, acct.Name, acctDateRange);
+                if (acctDateRange.ToDate < acctDateRange.FromDate)
+                    continue;
+
                 fbUtility.SetAll();
                 if (acct.Network != null)
                 {
@@ -119,20 +134,20 @@ namespace CakeExtracter.Commands
                     fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_Default;
 
                 if (statsType.Daily)
-                    DoETL_Daily(dateRange, acct, fbUtility);
+                    DoETL_Daily(acctDateRange, acct, fbUtility);
 
                 if (Accts_DailyOnly.Contains(acct.ExternalId))
                     continue;
 
                 if (statsType.Strategy)
-                    DoETL_Strategy(dateRange, acct, fbUtility);
+                    DoETL_Strategy(acctDateRange, acct, fbUtility);
                 if (statsType.AdSet)
-                    DoETL_AdSet(dateRange, acct, fbUtility);
+                    DoETL_AdSet(acctDateRange, acct, fbUtility);
 
                 if (statsType.Creative && !statsType.All) // don't include when getting "all" statstypes
-                    DoETL_Creative(dateRange, acct, fbUtility);
+                    DoETL_Creative(acctDateRange, acct, fbUtility);
                 //if (statsType.Site)
-                //    DoETL_Site(dateRange, acct, fbUtility);
+                //    DoETL_Site(acctDateRange, acct, fbUtility);
             }
 
             return 0;
@@ -179,7 +194,7 @@ namespace CakeExtracter.Commands
         {
             using (var db = new ClientPortalProgContext())
             {
-                var accounts = db.ExtAccounts.Include("Network").Where(a => a.Platform.Code == Platform.Code_FB);
+                var accounts = db.ExtAccounts.Include("Network").Include("Campaign.Advertiser").Where(a => a.Platform.Code == Platform.Code_FB);
                 if (CampaignId.HasValue || AccountId.HasValue)
                 {
                     if (CampaignId.HasValue)
