@@ -41,8 +41,8 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                 Impressions = item.Impressions,
                 AllClicks = item.AllClicks,
                 Clicks = item.LinkClicks,
-                PostClickConv = item.Conversions_28d_click,
-                PostViewConv = item.Conversions_1d_view,
+                PostClickConv = item.Conversions_click,
+                PostViewConv = item.Conversions_view,
                 Cost = item.Spend
             };
             return sum;

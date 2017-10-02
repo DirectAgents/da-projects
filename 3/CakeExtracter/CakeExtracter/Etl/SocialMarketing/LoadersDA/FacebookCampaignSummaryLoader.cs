@@ -46,10 +46,10 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                 Impressions = item.Impressions,
                 AllClicks = item.AllClicks,
                 Clicks = item.LinkClicks,
-                PostClickConv = item.Conversions_28d_click,
-                PostViewConv = item.Conversions_1d_view,
-                PostClickRev = item.ConVal_28d_click,
-                PostViewRev = item.ConVal_1d_view,
+                PostClickConv = item.Conversions_click,
+                PostViewConv = item.Conversions_view,
+                PostClickRev = item.ConVal_click,
+                PostViewRev = item.ConVal_view,
                 Cost = item.Spend
             };
             return sum;
@@ -101,16 +101,16 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                                 Date = date,
                                 StrategyId = strategyId,
                                 ActionTypeId = actionTypeId,
-                                PostClick = fbAction.Num_28d_click ?? 0,
-                                PostView = fbAction.Num_1d_view ?? 0
+                                PostClick = fbAction.Num_click ?? 0,
+                                PostView = fbAction.Num_view ?? 0
                             };
                             db.StrategyActions.Add(stratAction);
                             addedCount++;
                         }
                         else foreach (var stratAction in actionsOfType) // should be just one, but just in case
                         { // Update
-                            stratAction.PostClick = fbAction.Num_28d_click ?? 0;
-                            stratAction.PostView = fbAction.Num_1d_view ?? 0;
+                            stratAction.PostClick = fbAction.Num_click ?? 0;
+                            stratAction.PostView = fbAction.Num_view ?? 0;
                             updatedCount++;
                         }
                     }

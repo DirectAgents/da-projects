@@ -25,6 +25,12 @@ namespace FacebookAPI
         public const string Conversion_ActionType_VideoPlay = "video_play";
         public string Conversion_ActionType = Conversion_ActionType_Default;
 
+        public string Click_Attribution = "28d_click";
+        public string View_Attribution = "1d_view";
+
+        public void Set_1d_click_attribution() { Click_Attribution = "1d_click"; }
+        public void Set_28d_click_attribution() { Click_Attribution = "28d_click"; }
+
         public bool IncludeAllActions = false;
 
         private string PlatformFilter = null;
@@ -129,10 +135,10 @@ namespace FacebookAPI
                         AllClicks = group.Sum(g => g.AllClicks),
                         //UniqueClicks = group.Sum(g => g.UniqueClicks),
                         //TotalActions = group.Sum(g => g.TotalActions),
-                        Conversions_28d_click = group.Sum(g => g.Conversions_28d_click),
-                        Conversions_1d_view = group.Sum(g => g.Conversions_1d_view),
-                        ConVal_28d_click = group.Sum(g => g.ConVal_28d_click),
-                        ConVal_1d_view = group.Sum(g => g.ConVal_1d_view)
+                        Conversions_click = group.Sum(g => g.Conversions_click),
+                        Conversions_view = group.Sum(g => g.Conversions_view),
+                        ConVal_click = group.Sum(g => g.ConVal_click),
+                        ConVal_view = group.Sum(g => g.ConVal_view)
                     };
                     yield return fbSum;
                 }
@@ -168,8 +174,8 @@ namespace FacebookAPI
                         AllClicks = group.Sum(g => g.AllClicks),
                         //UniqueClicks = group.Sum(g => g.UniqueClicks),
                         //TotalActions = group.Sum(g => g.TotalActions),
-                        Conversions_28d_click = group.Sum(g => g.Conversions_28d_click),
-                        Conversions_1d_view = group.Sum(g => g.Conversions_1d_view),
+                        Conversions_click = group.Sum(g => g.Conversions_click),
+                        Conversions_view = group.Sum(g => g.Conversions_view),
                         AdId = group.First().AdId
                     };
                     yield return fbSum;
@@ -254,7 +260,7 @@ namespace FacebookAPI
                     level = levelVal,
                     fields = fieldsVal,
                     action_breakdowns = "action_type", //,action_reaction
-                    action_attribution_windows = "28d_click,1d_view",
+                    action_attribution_windows = Click_Attribution + "," + View_Attribution, // e.g. "28d_click,1d_view",
                     time_range = new { since = DateString(start), until = DateString(end) },
                     time_increment = 1,
                     after = afterVal
@@ -344,18 +350,18 @@ namespace FacebookAPI
                                     {
                                         ActionType = stat.action_type
                                     };
-                                    if (((IDictionary<String, object>)stat).ContainsKey("28d_click"))
-                                        action.Num_28d_click = int.Parse(stat["28d_click"]);
-                                    if (((IDictionary<String, object>)stat).ContainsKey("1d_view"))
-                                        action.Num_1d_view = int.Parse(stat["1d_view"]);
+                                    if (((IDictionary<String, object>)stat).ContainsKey(Click_Attribution))
+                                        action.Num_click = int.Parse(stat[Click_Attribution]);
+                                    if (((IDictionary<String, object>)stat).ContainsKey(View_Attribution))
+                                        action.Num_view = int.Parse(stat[View_Attribution]);
                                     fbSum.Actions[stat.action_type] = action;
 
                                     if (stat.action_type == Conversion_ActionType) // for backward compatibility
                                     {
-                                        if (action.Num_28d_click.HasValue)
-                                            fbSum.Conversions_28d_click = action.Num_28d_click.Value;
-                                        if (action.Num_1d_view.HasValue)
-                                            fbSum.Conversions_1d_view = action.Num_1d_view.Value;
+                                        if (action.Num_click.HasValue)
+                                            fbSum.Conversions_click = action.Num_click.Value;
+                                        if (action.Num_view.HasValue)
+                                            fbSum.Conversions_view = action.Num_view.Value;
                                     }
                                 }
                             }
@@ -365,10 +371,10 @@ namespace FacebookAPI
                                 {
                                     if (stat.action_type == Conversion_ActionType)
                                     {
-                                        if (((IDictionary<String, object>)stat).ContainsKey("28d_click"))
-                                            fbSum.Conversions_28d_click = int.Parse(stat["28d_click"]);
-                                        if (((IDictionary<String, object>)stat).ContainsKey("1d_view"))
-                                            fbSum.Conversions_1d_view = int.Parse(stat["1d_view"]);
+                                        if (((IDictionary<String, object>)stat).ContainsKey(Click_Attribution))
+                                            fbSum.Conversions_click = int.Parse(stat[Click_Attribution]);
+                                        if (((IDictionary<String, object>)stat).ContainsKey(View_Attribution))
+                                            fbSum.Conversions_view = int.Parse(stat[View_Attribution]);
                                         break;
                                     }
                                 }
@@ -383,17 +389,17 @@ namespace FacebookAPI
                                     if (!fbSum.Actions.ContainsKey(entity.action_type))
                                         fbSum.Actions[entity.action_type] = new FBAction { ActionType = entity.action_type };
                                     FBAction action = fbSum.Actions[entity.action_type];
-                                    if (((IDictionary<String, object>)entity).ContainsKey("28d_click"))
-                                        action.Val_28d_click = decimal.Parse(entity["28d_click"]);
-                                    if (((IDictionary<String, object>)entity).ContainsKey("1d_view"))
-                                        action.Val_1d_view = decimal.Parse(entity["1d_view"]);
+                                    if (((IDictionary<String, object>)entity).ContainsKey(Click_Attribution))
+                                        action.Val_click = decimal.Parse(entity[Click_Attribution]);
+                                    if (((IDictionary<String, object>)entity).ContainsKey(View_Attribution))
+                                        action.Val_view = decimal.Parse(entity[View_Attribution]);
 
                                     if (entity.action_type == Conversion_ActionType) // for backward compatibility
                                     {
-                                        if (action.Val_28d_click.HasValue)
-                                            fbSum.ConVal_28d_click = action.Val_28d_click.Value;
-                                        if (action.Val_1d_view.HasValue)
-                                            fbSum.ConVal_1d_view = action.Val_1d_view.Value;
+                                        if (action.Val_click.HasValue)
+                                            fbSum.ConVal_click = action.Val_click.Value;
+                                        if (action.Val_view.HasValue)
+                                            fbSum.ConVal_view = action.Val_view.Value;
                                     }
                                 }
                             }
@@ -403,10 +409,10 @@ namespace FacebookAPI
                                 {
                                     if (entity.action_type == Conversion_ActionType)
                                     {
-                                        if (((IDictionary<String, object>)entity).ContainsKey("28d_click"))
-                                            fbSum.ConVal_28d_click = decimal.Parse(entity["28d_click"]);
-                                        if (((IDictionary<String, object>)entity).ContainsKey("1d_view"))
-                                            fbSum.ConVal_1d_view = decimal.Parse(entity["1d_view"]);
+                                        if (((IDictionary<String, object>)entity).ContainsKey(Click_Attribution))
+                                            fbSum.ConVal_click = decimal.Parse(entity[Click_Attribution]);
+                                        if (((IDictionary<String, object>)entity).ContainsKey(View_Attribution))
+                                            fbSum.ConVal_view = decimal.Parse(entity[View_Attribution]);
                                     }
                                 }
                             }

@@ -49,10 +49,10 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                 Impressions = item.Impressions,
                 AllClicks = item.AllClicks,
                 Clicks = item.LinkClicks,
-                PostClickConv = item.Conversions_28d_click,
-                PostViewConv = item.Conversions_1d_view,
-                PostClickRev = item.ConVal_28d_click,
-                PostViewRev = item.ConVal_1d_view,
+                PostClickConv = item.Conversions_click,
+                PostViewConv = item.Conversions_view,
+                PostClickRev = item.ConVal_click,
+                PostViewRev = item.ConVal_view,
                 Cost = item.Spend
             };
             return sum;
@@ -134,20 +134,20 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                                 Date = date,
                                 AdSetId = adsetId,
                                 ActionTypeId = actionTypeId,
-                                PostClick = fbAction.Num_28d_click ?? 0,
-                                PostView = fbAction.Num_1d_view ?? 0,
-                                PostClickVal = fbAction.Val_28d_click ?? 0,
-                                PostViewVal = fbAction.Val_1d_view ?? 0
+                                PostClick = fbAction.Num_click ?? 0,
+                                PostView = fbAction.Num_view ?? 0,
+                                PostClickVal = fbAction.Val_click ?? 0,
+                                PostViewVal = fbAction.Val_view ?? 0
                             };
                             db.AdSetActions.Add(adsetAction);
                             addedCount++;
                         }
                         else foreach (var adsetAction in actionsOfType) // should be just one, but just in case
                             { // Update
-                                adsetAction.PostClick = fbAction.Num_28d_click ?? 0;
-                                adsetAction.PostView = fbAction.Num_1d_view ?? 0;
-                                adsetAction.PostClickVal = fbAction.Val_28d_click ?? 0;
-                                adsetAction.PostViewVal = fbAction.Val_1d_view ?? 0;
+                                adsetAction.PostClick = fbAction.Num_click ?? 0;
+                                adsetAction.PostView = fbAction.Num_view ?? 0;
+                                adsetAction.PostClickVal = fbAction.Val_click ?? 0;
+                                adsetAction.PostViewVal = fbAction.Val_view ?? 0;
                                 updatedCount++;
                             }
                     }
