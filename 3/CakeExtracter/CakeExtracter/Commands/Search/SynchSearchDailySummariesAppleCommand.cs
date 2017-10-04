@@ -54,28 +54,37 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            if (!DaysAgoToStart.HasValue)
-                DaysAgoToStart = 62; // used if StartDate==null
-            var today = DateTime.Today;
-            var yesterday = today.AddDays(-1);
-            var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
-            Logger.Info("Apple ETL. DateRange {0}.", dateRange);
-
-            var appleAdsUtility = new AppleAdsUtility(m => Logger.Info(m), m => Logger.Warn(m));
-            var searchAccounts = GetSearchAccounts();
-            foreach (var searchAccount in searchAccounts)
+            try
             {
-                DateTime startDate = dateRange.FromDate;
-                if (searchAccount.MinSynchDate.HasValue && (startDate < searchAccount.MinSynchDate.Value))
-                    startDate = searchAccount.MinSynchDate.Value;
-                var revisedDateRange = new DateRange(startDate, dateRange.ToDate);
+                if (!DaysAgoToStart.HasValue)
+                    DaysAgoToStart = 62; // used if StartDate==null
+                var today = DateTime.Today;
+                var yesterday = today.AddDays(-1);
+                var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
+                Logger.Info("Apple ETL. DateRange {0}.", dateRange);
 
-                var extracter = new AppleApiExtracter(appleAdsUtility, revisedDateRange, searchAccount.AccountCode, searchAccount.ExternalId);
-                var loader = new AppleApiLoader(searchAccount.SearchAccountId);
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
+                var appleAdsUtility = new AppleAdsUtility(m => Logger.Info(m), m => Logger.Warn(m));
+                var searchAccounts = GetSearchAccounts();
+                Logger.Info("Returned from GetSearchAccounts().");
+
+                foreach (var searchAccount in searchAccounts)
+                {
+                    DateTime startDate = dateRange.FromDate;
+                    if (searchAccount.MinSynchDate.HasValue && (startDate < searchAccount.MinSynchDate.Value))
+                        startDate = searchAccount.MinSynchDate.Value;
+                    var revisedDateRange = new DateRange(startDate, dateRange.ToDate);
+
+                    var extracter = new AppleApiExtracter(appleAdsUtility, revisedDateRange, searchAccount.AccountCode, searchAccount.ExternalId);
+                    var loader = new AppleApiLoader(searchAccount.SearchAccountId);
+                    var extracterThread = extracter.Start();
+                    var loaderThread = loader.Start(extracter);
+                    extracterThread.Join();
+                    loaderThread.Join();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
             }
             return 0;
         }

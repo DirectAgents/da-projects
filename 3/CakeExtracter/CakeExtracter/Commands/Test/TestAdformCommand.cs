@@ -7,7 +7,7 @@ using RestSharp.Authenticators;
 using RestSharp.Deserializers;
 using Yahoo;
 
-namespace CakeExtracter.Commands
+namespace CakeExtracter.Commands.Test
 {
     [Export(typeof(ConsoleCommand))]
     public class TestAdformCommand : ConsoleCommand

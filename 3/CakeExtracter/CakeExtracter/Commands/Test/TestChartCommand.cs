@@ -13,7 +13,7 @@ using ClientPortal.Data.DTOs;
 using ClientPortal.Data.Services;
 using DAGenerators.Charts;
 
-namespace CakeExtracter.Commands
+namespace CakeExtracter.Commands.Test
 {
     [Export(typeof(ConsoleCommand))]
     public class TestChartCommand : ConsoleCommand

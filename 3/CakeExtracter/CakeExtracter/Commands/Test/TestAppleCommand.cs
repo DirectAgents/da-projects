@@ -7,7 +7,7 @@ using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Deserializers;
 
-namespace CakeExtracter.Commands
+namespace CakeExtracter.Commands.Test
 {
     [Export(typeof(ConsoleCommand))]
     public class TestAppleCommand : ConsoleCommand

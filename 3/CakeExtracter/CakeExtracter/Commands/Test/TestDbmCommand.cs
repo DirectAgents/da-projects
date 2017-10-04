@@ -12,7 +12,7 @@ using Google.Apis.Services;
 using Google.Apis.Storage.v1;
 using RestSharp.Deserializers;
 
-namespace CakeExtracter.Commands
+namespace CakeExtracter.Commands.Test
 {
     [Export(typeof(ConsoleCommand))]
     public class TestDbmCommand : ConsoleCommand

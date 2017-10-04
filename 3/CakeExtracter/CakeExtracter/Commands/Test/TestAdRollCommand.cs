@@ -3,7 +3,7 @@ using System.ComponentModel.Composition;
 using AdRoll;
 using CakeExtracter.Common;
 
-namespace CakeExtracter.Commands
+namespace CakeExtracter.Commands.Test
 {
     [Export(typeof(ConsoleCommand))]
     public class TestAdRollCommand : ConsoleCommand

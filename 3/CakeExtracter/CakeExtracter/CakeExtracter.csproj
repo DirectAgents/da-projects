@@ -313,6 +313,7 @@
     <Compile Include="Commands\Search\SynchSearchDailySummariesAppleCommand.cs" />
     <Compile Include="Commands\Test\TestABCommand.cs" />
     <Compile Include="Commands\Test\TestAdformCommand.cs" />
+    <Compile Include="Commands\Test\TestAdWordsCommand.cs" />
     <Compile Include="Commands\Test\TestAppleCommand.cs" />
     <Compile Include="Commands\Test\TestYAMCommand.cs">
       <SubType>Code</SubType>

@@ -5,7 +5,7 @@ using System.Xml;
 using CakeExtracter.Common;
 using Criteo;
 
-namespace CakeExtracter.Commands
+namespace CakeExtracter.Commands.Test
 {
     [Export(typeof(ConsoleCommand))]
     public class TestCriteoCommand : ConsoleCommand

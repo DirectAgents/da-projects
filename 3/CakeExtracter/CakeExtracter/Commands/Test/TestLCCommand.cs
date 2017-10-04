@@ -3,7 +3,7 @@ using System.ComponentModel.Composition;
 using CakeExtracter.Common;
 using LocalConnex;
 
-namespace CakeExtracter.Commands
+namespace CakeExtracter.Commands.Test
 {
     [Export(typeof(ConsoleCommand))]
     public class TestLCCommand : ConsoleCommand

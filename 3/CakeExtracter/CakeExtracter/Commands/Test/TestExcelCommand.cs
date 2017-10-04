@@ -13,7 +13,7 @@ using ClientPortal.Data.Services;
 using DAGenerators.Spreadsheets;
 using OfficeOpenXml;
 
-namespace CakeExtracter.Commands
+namespace CakeExtracter.Commands.Test
 {
     [Export(typeof(ConsoleCommand))]
     public class TestExcelCommand : ConsoleCommand

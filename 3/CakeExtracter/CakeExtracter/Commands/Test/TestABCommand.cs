@@ -3,7 +3,7 @@ using CakeExtracter.Common;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Seed;
 
-namespace CakeExtracter.Commands
+namespace CakeExtracter.Commands.Test
 {
     [Export(typeof(ConsoleCommand))]
     public class TestABCommand : ConsoleCommand
