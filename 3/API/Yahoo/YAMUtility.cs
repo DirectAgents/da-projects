@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using RestSharp;
@@ -15,15 +16,40 @@ namespace Yahoo
         private const int NUMTRIES_GETREPORTSTATUS = 20;
         private const int WAITTIME_SECONDS = 6;
 
+        private const string TOKEN_DELIMITER = "|YAMYAM|";
+        public const int NumAlts = 10; // including the default (0)
+
         // From Config:
         private string AuthBaseUrl { get; set; }
-        private string ClientID { get; set; }
-        private string ClientSecret { get; set; }
-        private string ApplicationAccessCode { get; set; }
+        private string[] ClientID = new string[NumAlts];
+        private string[] ClientSecret = new string[NumAlts];
+        private string[] ApplicationAccessCode = new string[NumAlts];
         private string YAMBaseUrl { get; set; }
 
-        public string AccessToken { get; set; }
-        public string RefreshToken { get; set; }
+        private string[] AccessToken = new string[NumAlts];
+        private string[] RefreshToken = new string[NumAlts];
+        private string[] AltAccountIDs = new string[NumAlts];
+        public int WhichAlt { get; set; } // default: 0
+
+        private IEnumerable<string> CreateTokenSets()
+        {
+            for (int i = 0; i < NumAlts; i++)
+                yield return AccessToken[i] + TOKEN_DELIMITER + RefreshToken[i];
+        }
+        public string[] TokenSets // each string in the array is a combination of Access + Refresh Token
+        {
+            get { return CreateTokenSets().ToArray(); }
+            set
+            {
+                for (int i = 0; i < value.Length; i++)
+                {
+                    var tokenSet = value[i].Split(new string[] { TOKEN_DELIMITER }, StringSplitOptions.None);
+                    AccessToken[i] = tokenSet[0];
+                    if (tokenSet.Length > 1)
+                        RefreshToken[i] = tokenSet[1];
+                }
+            }
+        }
 
         // --- Logging ---
         private Action<string> _LogInfo;
@@ -58,12 +84,38 @@ namespace Yahoo
         }
         private void Setup()
         {
-            ClientID = ConfigurationManager.AppSettings["YahooClientID"];
-            ClientSecret = ConfigurationManager.AppSettings["YahooClientSecret"];
-            ApplicationAccessCode = ConfigurationManager.AppSettings["YahooApplicationAccessCode"]; // aka Auth Code
-
+            ClientID[0] = ConfigurationManager.AppSettings["YahooClientID"];
+            ClientSecret[0] = ConfigurationManager.AppSettings["YahooClientSecret"];
+            ApplicationAccessCode[0] = ConfigurationManager.AppSettings["YahooApplicationAccessCode"]; // aka Auth Code
+            for (int i = 1; i < NumAlts; i++)
+            {
+                AltAccountIDs[i] = PlaceLeadingAndTrailingCommas(ConfigurationManager.AppSettings["Yahoo_Alt" + i]);
+                ClientID[i] = ConfigurationManager.AppSettings["YahooClientID_Alt" + i];
+                ClientSecret[i] = ConfigurationManager.AppSettings["YahooClientSecret_Alt" + i];
+                ApplicationAccessCode[i] = ConfigurationManager.AppSettings["YahooApplicationAccessCode_Alt" + i]; // aka Auth Code
+            }
             AuthBaseUrl = ConfigurationManager.AppSettings["YahooAuthBaseUrl"];
             YAMBaseUrl = ConfigurationManager.AppSettings["YAMBaseUrl"];
+        }
+        private string PlaceLeadingAndTrailingCommas(string idString)
+        {
+            if (idString == null || idString.Length == 0)
+                return idString;
+            return (idString[0] == ',' ? "" : ",") + idString + (idString[idString.Length - 1] == ',' ? "" : ",");
+        }
+
+        // for alternative credentials...
+        public void SetWhichAlt(string accountId)
+        {
+            WhichAlt = 0; //default
+            for (int i = 1; i < NumAlts; i++)
+            {
+                if (AltAccountIDs[i] != null && AltAccountIDs[i].Contains(',' + accountId + ','))
+                {
+                    WhichAlt = i;
+                    break;
+                }
+            }
         }
 
         // Use the refreshToken if we have one, otherwise use the auth code
@@ -72,21 +124,21 @@ namespace Yahoo
             var restClient = new RestClient
             {
                 BaseUrl = new Uri(AuthBaseUrl),
-                Authenticator = new HttpBasicAuthenticator(ClientID, ClientSecret)
+                Authenticator = new HttpBasicAuthenticator(ClientID[WhichAlt], ClientSecret[WhichAlt])
             };
             restClient.AddHandler("application/x-www-form-urlencoded", new JsonDeserializer());
 
             var request = new RestRequest();
             request.AddParameter("redirect_uri", "oob");
-            if (String.IsNullOrWhiteSpace(RefreshToken))
+            if (String.IsNullOrWhiteSpace(RefreshToken[WhichAlt]))
             {
                 request.AddParameter("grant_type", "authorization_code");
-                request.AddParameter("code", ApplicationAccessCode);
+                request.AddParameter("code", ApplicationAccessCode[WhichAlt]);
             }
             else
             {
                 request.AddParameter("grant_type", "refresh_token");
-                request.AddParameter("refresh_token", RefreshToken);
+                request.AddParameter("refresh_token", RefreshToken[WhichAlt]);
             }
             var response = restClient.ExecuteAsPost<GetTokenResponse>(request, "POST");
 
@@ -97,8 +149,8 @@ namespace Yahoo
 
             if (response.Data != null)
             {
-                AccessToken = response.Data.access_token;
-                RefreshToken = response.Data.refresh_token; // update this in case it changed
+                AccessToken[WhichAlt] = response.Data.access_token;
+                RefreshToken[WhichAlt] = response.Data.refresh_token; // update this in case it changed
             }
         }
 
@@ -111,11 +163,11 @@ namespace Yahoo
             };
             restClient.AddHandler("application/json", new JsonDeserializer());
 
-            if (String.IsNullOrEmpty(AccessToken))
+            if (String.IsNullOrEmpty(AccessToken[WhichAlt]))
                 GetAccessToken();
 
             restRequest.AddHeader("X-Auth-Method", "OAUTH");
-            restRequest.AddHeader("X-Auth-Token", AccessToken);
+            restRequest.AddHeader("X-Auth-Token", AccessToken[WhichAlt]);
 
             bool done = false;
             int tries = 0;
@@ -133,7 +185,7 @@ namespace Yahoo
                 { // Get a new access token and use that.
                     GetAccessToken();
                     var param = restRequest.Parameters.Find(p => p.Type == ParameterType.HttpHeader && p.Name == "X-Auth-Token");
-                    param.Value = AccessToken;
+                    param.Value = AccessToken[WhichAlt];
                 }
                 else
                     done = true; //TODO: distinguish between success and failure of ProcessRequest

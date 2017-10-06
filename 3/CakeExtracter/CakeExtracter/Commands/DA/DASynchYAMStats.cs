@@ -83,12 +83,20 @@ namespace CakeExtracter.Commands
             foreach (var account in accounts)
             {
                 Logger.Info("Commencing ETL for YAM account ({0}) {1}", account.Id, account.Name);
-                if (statsType.Daily)
-                    DoETL_Daily(dateRange, account);
-                if (statsType.Strategy)
-                    DoETL_Strategy(dateRange, account);
-                if (statsType.Creative)
-                    DoETL_Creative(dateRange, account);
+                yamUtility.SetWhichAlt(account.ExternalId);
+                try
+                {
+                    if (statsType.Daily)
+                        DoETL_Daily(dateRange, account);
+                    if (statsType.Strategy)
+                        DoETL_Strategy(dateRange, account);
+                    if (statsType.Creative)
+                        DoETL_Creative(dateRange, account);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex);
+                }
             }
             SaveTokens();
             return 0;
@@ -102,17 +110,12 @@ namespace CakeExtracter.Commands
         private void GetTokens()
         {
             // Get tokens, if any, from the database
-            string[] tokens = Platform.GetPlatformTokens(Platform.Code_YAM);
-            if (tokens.Length > 0)
-            {
-                yamUtility.AccessToken = tokens[0];
-                if (tokens.Length > 1)
-                    yamUtility.RefreshToken = tokens[1];
-            }
+            string[] tokenSets = Platform.GetPlatformTokens(Platform.Code_YAM);
+            yamUtility.TokenSets = tokenSets;
         }
         private void SaveTokens()
         {
-            Platform.SavePlatformTokens(Platform.Code_YAM, yamUtility.AccessToken, yamUtility.RefreshToken);
+            Platform.SavePlatformTokens(Platform.Code_YAM, yamUtility.TokenSets);
         }
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account)
