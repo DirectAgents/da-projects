@@ -28,7 +28,7 @@ namespace FacebookAPI
         public string Click_Attribution = "28d_click";
         public string View_Attribution = "1d_view";
 
-        public void Set_1d_click_attribution() { Click_Attribution = "1d_click"; }
+        public void Set_7d_click_attribution() { Click_Attribution = "7d_click"; }
         public void Set_28d_click_attribution() { Click_Attribution = "28d_click"; }
 
         public bool IncludeAllActions = false;
