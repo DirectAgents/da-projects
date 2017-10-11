@@ -18,11 +18,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             this.includeConvMetrics = includeConvMetrics;
             this.columnLookup = reportData.CreateColumnLookup();
         }
-        private void CheckColumnLookup(bool byLineItem = false, bool byBanner = false)
+        private void CheckColumnLookup(bool byCampaign = false, bool byLineItem = false, bool byBanner = false)
         {
             var columnsNeeded = new List<string> { "date", "cost", "impressions", "clicks" };
             if (includeConvMetrics)
                 columnsNeeded.AddRange(new string[] { "conversions", "sales" });
+            if (byCampaign)
+                columnsNeeded.Add("campaign");
             if (byLineItem)
                 columnsNeeded.Add("lineItem");
             if (byBanner)
@@ -44,10 +46,20 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         }
         public IEnumerable<StrategySummary> EnumerateStrategySummaries()
         {
-            CheckColumnLookup(byLineItem: true);
+            CheckColumnLookup(byCampaign: true);
             foreach (var row in rows)
             {
                 var sum = RowToStrategySummary(row);
+                if (sum != null)
+                    yield return sum;
+            }
+        }
+        public IEnumerable<AdSetSummary> EnumerateAdSetSummaries()
+        {
+            CheckColumnLookup(byLineItem: true);
+            foreach (var row in rows)
+            {
+                var sum = RowToAdSetSummary(row);
                 if (sum != null)
                     yield return sum;
             }
@@ -83,7 +95,24 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             {
                 var summary = new StrategySummary
                 {
-                    StrategyName = Convert.ToString(row[columnLookup["lineItem"]])
+                    StrategyName = Convert.ToString(row[columnLookup["campaign"]])
+                };
+                AssignDailySummaryProperties(summary, row);
+                return summary;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return null;
+            }
+        }
+        public AdSetSummary RowToAdSetSummary(List<object> row)
+        {
+            try
+            {
+                var summary = new AdSetSummary
+                {
+                    AdSetName = Convert.ToString(row[columnLookup["lineItem"]])
                 };
                 AssignDailySummaryProperties(summary, row);
                 return summary;
@@ -134,10 +163,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         private bool includeBasicStats;
         private bool includeConvStats;
         private bool includeAdInteractionType;
+        private bool includeCampaign;
         private bool includeLineItem;
         private bool includeBanner;
 
-        public AdformTransformer(ReportData reportData, bool basicStatsOnly = false, bool convStatsOnly = false, bool byLineItem = false, bool byBanner = false)
+        public AdformTransformer(ReportData reportData, bool basicStatsOnly = false, bool convStatsOnly = false, bool byCampaign = false, bool byLineItem = false, bool byBanner = false)
         {
             this.rows = reportData.rows;
             this.columnLookup = reportData.CreateColumnLookup();
@@ -148,6 +178,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             if (convStatsOnly)
                 this.includeBasicStats = false;
 
+            this.includeCampaign = byCampaign;
             this.includeLineItem = byLineItem;
             this.includeBanner = byBanner;
         }
@@ -195,6 +226,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 if (summary.AdInteractionType.StartsWith("Recent ")) // "Recent Impresson", "Recent Click": strip off "Recent "
                     summary.AdInteractionType = summary.AdInteractionType.Substring(7);
             }
+            if (includeCampaign)
+                summary.Campaign = Convert.ToString(row[columnLookup["campaign"]]);
             if (includeLineItem)
                 summary.LineItem = Convert.ToString(row[columnLookup["lineItem"]]);
             if (includeBanner)

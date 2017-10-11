@@ -76,6 +76,7 @@ namespace Adform
             return (idString[0] == ',' ? "" : ",") + idString + (idString[idString.Length - 1] == ',' ? "" : ",");
         }
 
+        // for alternative credentials...
         public void SetWhichAlt(string accountId)
         {
             WhichAlt = 0; //default
@@ -181,7 +182,7 @@ namespace Adform
         }
 
         // like a constructor...
-        public ReportParams CreateReportParams(DateTime startDate, DateTime endDate, int clientId, bool basicMetrics = true, bool convMetrics = false, bool byLineItem = false, bool byBanner = false, bool byMedia = false, bool byAdInteractionType = false, bool RTBonly = false)
+        public ReportParams CreateReportParams(DateTime startDate, DateTime endDate, int clientId, bool basicMetrics = true, bool convMetrics = false, bool byCampaign = false, bool byLineItem = false, bool byBanner = false, bool byMedia = false, bool byAdInteractionType = false, bool RTBonly = false)
         {
             dynamic filter = new ExpandoObject();
             filter.date = new Dates
@@ -194,6 +195,8 @@ namespace Adform
                 filter.media = new { name = new string[] { "Real Time Bidding" }};
 
             var dimensions = new List<string> { "date" };
+            if (byCampaign)
+                dimensions.Add("campaign");
             if (byLineItem)
                 dimensions.Add("lineItem");
             if (byBanner)

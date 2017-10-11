@@ -63,6 +63,7 @@ namespace Adform
         public int Clicks { get; set; }
         public decimal Cost { get; set; }
 
+        public string Campaign { get; set; }
         public string LineItem { get; set; }
         public string Banner { get; set; }
 

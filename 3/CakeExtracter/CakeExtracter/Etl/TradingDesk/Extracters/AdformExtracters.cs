@@ -99,7 +99,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             //TODO: Do X days at a time...?
             try
             {
-                var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byLineItem: true, RTBonly: true,
+                var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byCampaign: true, RTBonly: true,
                                                           basicMetrics: true, convMetrics: true, byAdInteractionType: true);
                 var reportData = _afUtility.GetReportData(parms);
                 if (reportData != null)
@@ -116,14 +116,71 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         }
         private IEnumerable<StrategySummary> EnumerateRows(ReportData reportData)
         {
+            var adformTransformer = new AdformTransformer(reportData, byCampaign: true);
+            var afSums = adformTransformer.EnumerateAdformSummaries();
+            var campDateGroups = afSums.GroupBy(x => new { x.Campaign, x.Date });
+            foreach (var campDateGroup in campDateGroups)
+            {
+                var sum = new StrategySummary
+                {
+                    StrategyName = campDateGroup.Key.Campaign,
+                    Date = campDateGroup.Key.Date,
+                    Cost = campDateGroup.Sum(x => x.Cost),
+                    Impressions = campDateGroup.Sum(x => x.Impressions),
+                    Clicks = campDateGroup.Sum(x => x.Clicks)
+                };
+                var clickThroughs = campDateGroup.Where(x => x.AdInteractionType == "Click");
+                sum.PostClickConv = clickThroughs.Sum(x => x.Conversions);
+                sum.PostClickRev = clickThroughs.Sum(x => x.Sales);
+
+                var viewThroughs = campDateGroup.Where(x => x.AdInteractionType == "Impression");
+                sum.PostViewConv = viewThroughs.Sum(x => x.Conversions);
+                sum.PostViewRev = viewThroughs.Sum(x => x.Sales);
+
+                yield return sum;
+            }
+        }
+    }
+
+    public class AdformAdSetSummaryExtracter : AdformApiExtracter<AdSetSummary>
+    {
+        public AdformAdSetSummaryExtracter(AdformUtility adformUtility, DateRange dateRange, string clientId)
+            : base(adformUtility, dateRange, clientId)
+        { }
+
+        protected override void Extract()
+        {
+            Logger.Info("Extracting AdSetSummaries from Adform API for ({0}) from {1:d} to {2:d}",
+                        this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
+            //TODO: Do X days at a time...?
+            try
+            {
+                var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byLineItem: true, RTBonly: true,
+                                                          basicMetrics: true, convMetrics: true, byAdInteractionType: true);
+                var reportData = _afUtility.GetReportData(parms);
+                if (reportData != null)
+                {
+                    var sums = EnumerateRows(reportData);
+                    Add(sums);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+            End();
+        }
+        private IEnumerable<AdSetSummary> EnumerateRows(ReportData reportData)
+        {
             var adformTransformer = new AdformTransformer(reportData, byLineItem: true);
             var afSums = adformTransformer.EnumerateAdformSummaries();
             var liDateGroups = afSums.GroupBy(x => new { x.LineItem, x.Date });
             foreach (var liDateGroup in liDateGroups)
             {
-                var sum = new StrategySummary
+                var sum = new AdSetSummary
                 {
-                    StrategyName = liDateGroup.Key.LineItem,
+                    //StrategyName = ?
+                    AdSetName = liDateGroup.Key.LineItem,
                     Date = liDateGroup.Key.Date,
                     Cost = liDateGroup.Sum(x => x.Cost),
                     Impressions = liDateGroup.Sum(x => x.Impressions),
