@@ -65,5 +65,9 @@ namespace EomTool.Domain.Entities
         public virtual DbSet<AnalystRole> AnalystRoles { get; set; }
         public virtual DbSet<Person> People { get; set; }
         public virtual DbSet<IncomeType> IncomeTypes { get; set; }
+        public virtual DbSet<Analyst> Analysts { get; set; }
+        public virtual DbSet<AnalystManager> AnalystManagers { get; set; }
+        public virtual DbSet<Strategist> Strategists { get; set; }
+        public virtual DbSet<CampAff> CampAffs { get; set; }
     }
 }

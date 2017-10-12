@@ -62,6 +62,23 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="Analyst">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="manager_id" Type="int" />
+          <Property Name="name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="comm_rate" Type="decimal" Precision="10" Scale="5" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AnalystManager">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="comm_rate" Type="decimal" Precision="10" Scale="5" Nullable="false" />
+        </EntityType>
         <EntityType Name="AnalystRole">
           <Key>
             <PropertyRef Name="person_id" />
@@ -118,6 +135,16 @@
           <Property Name="media_buyer_approval_status_id" Type="int" />
           <Property Name="extra" Type="varchar" MaxLength="255" />
           <Property Name="from_media_buyer_approval_status_id" Type="int" />
+        </EntityType>
+        <EntityType Name="CampAff">
+          <Key>
+            <PropertyRef Name="pid" />
+            <PropertyRef Name="affid" />
+          </Key>
+          <Property Name="pid" Type="int" Nullable="false" />
+          <Property Name="affid" Type="int" Nullable="false" />
+          <Property Name="analyst_id" Type="int" />
+          <Property Name="strategist_id" Type="int" />
         </EntityType>
         <EntityType Name="Campaign">
           <Key>
@@ -346,6 +373,14 @@
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Strategist">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="comm_rate" Type="decimal" Precision="10" Scale="5" Nullable="false" />
         </EntityType>
         <EntityType Name="TrackingSystem">
           <Key>
@@ -702,6 +737,18 @@ warning 6035: The relationship 'CampaignNotes_Campaign_pid_FK_Campaign_pid_UK' h
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Analyst_AnalystManager">
+          <End Role="AnalystManager" Type="Self.AnalystManager" Multiplicity="0..1" />
+          <End Role="Analyst" Type="Self.Analyst" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AnalystManager">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Analyst">
+              <PropertyRef Name="manager_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <!--Errors Found During Generation:
 warning 6035: The relationship 'FK_AnalystRole_Affiliate' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
         <Association Name="FK_AnalystRole_Affiliate" />-->
@@ -765,6 +812,36 @@ warning 6035: The relationship 'FK_AnalystRole_Campaign' has columns that are no
             </Principal>
             <Dependent Role="BatchUpdate">
               <PropertyRef Name="from_media_buyer_approval_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'FK_CampAff_Affiliate' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="FK_CampAff_Affiliate" />-->
+        <Association Name="FK_CampAff_Analyst">
+          <End Role="Analyst" Type="Self.Analyst" Multiplicity="0..1" />
+          <End Role="CampAff" Type="Self.CampAff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Analyst">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CampAff">
+              <PropertyRef Name="analyst_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'FK_CampAff_Campaign' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="FK_CampAff_Campaign" />-->
+        <Association Name="FK_CampAff_Strategist">
+          <End Role="Strategist" Type="Self.Strategist" Multiplicity="0..1" />
+          <End Role="CampAff" Type="Self.CampAff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Strategist">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CampAff">
+              <PropertyRef Name="strategist_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1032,11 +1109,14 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
           <EntitySet Name="Advertiser" EntityType="Self.Advertiser" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Affiliate" EntityType="Self.Affiliate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AffiliatePaymentMethod" EntityType="Self.AffiliatePaymentMethod" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Analyst" EntityType="Self.Analyst" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AnalystManager" EntityType="Self.AnalystManager" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AnalystRole" EntityType="Self.AnalystRole" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Audit" EntityType="Self.Audit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Batch" EntityType="Self.Batch" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BatchBatchUpdate" EntityType="Self.BatchBatchUpdate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BatchUpdate" EntityType="Self.BatchUpdate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CampAff" EntityType="Self.CampAff" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Campaign" EntityType="Self.Campaign" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CampaignNotes" EntityType="Self.CampaignNotes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CampaignStatus" EntityType="Self.CampaignStatus" Schema="dbo" store:Type="Tables" />
@@ -1058,6 +1138,7 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
           <EntitySet Name="PubAttachment" EntityType="Self.PubAttachment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PubNotes" EntityType="Self.PubNotes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Source" EntityType="Self.Source" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Strategist" EntityType="Self.Strategist" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TrackingSystem" EntityType="Self.TrackingSystem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UnitType" EntityType="Self.UnitType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CampaignsPublisherReportDetails" EntityType="Self.CampaignsPublisherReportDetails" store:Type="Views" store:Schema="dbo">
@@ -1244,6 +1325,10 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
             <End Role="MediaBuyerApprovalStatus" EntitySet="MediaBuyerApprovalStatus" />
             <End Role="Item" EntitySet="Item" />
           </AssociationSet>
+          <AssociationSet Name="FK_Analyst_AnalystManager" Association="Self.FK_Analyst_AnalystManager">
+            <End Role="AnalystManager" EntitySet="AnalystManager" />
+            <End Role="Analyst" EntitySet="Analyst" />
+          </AssociationSet>
           <AssociationSet Name="FK_AnalystRole_Person" Association="Self.FK_AnalystRole_Person">
             <End Role="Person" EntitySet="Person" />
             <End Role="AnalystRole" EntitySet="AnalystRole" />
@@ -1263,6 +1348,14 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
           <AssociationSet Name="FK_BatchUpdate_MediaBuyerApprovalStatusFrom" Association="Self.FK_BatchUpdate_MediaBuyerApprovalStatusFrom">
             <End Role="MediaBuyerApprovalStatus" EntitySet="MediaBuyerApprovalStatus" />
             <End Role="BatchUpdate" EntitySet="BatchUpdate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CampAff_Analyst" Association="Self.FK_CampAff_Analyst">
+            <End Role="Analyst" EntitySet="Analyst" />
+            <End Role="CampAff" EntitySet="CampAff" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CampAff_Strategist" Association="Self.FK_CampAff_Strategist">
+            <End Role="Strategist" EntitySet="Strategist" />
+            <End Role="CampAff" EntitySet="CampAff" />
           </AssociationSet>
           <AssociationSet Name="FK_Invoice_InvoiceStatus" Association="Self.FK_Invoice_InvoiceStatus">
             <End Role="InvoiceStatus" EntitySet="InvoiceStatus" />
@@ -1525,6 +1618,22 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
           <AssociationSet Name="FK_UnitType_IncomeType" Association="EomModel.FK_UnitType_IncomeType">
             <End Role="IncomeType" EntitySet="IncomeTypes" />
             <End Role="UnitType" EntitySet="UnitTypes" />
+          </AssociationSet>
+          <EntitySet Name="Analysts" EntityType="EomModel.Analyst" />
+          <EntitySet Name="AnalystManagers" EntityType="EomModel.AnalystManager" />
+          <EntitySet Name="Strategists" EntityType="EomModel.Strategist" />
+          <AssociationSet Name="FK_Analyst_AnalystManager" Association="EomModel.FK_Analyst_AnalystManager">
+            <End Role="AnalystManager" EntitySet="AnalystManagers" />
+            <End Role="Analyst" EntitySet="Analysts" />
+          </AssociationSet>
+          <EntitySet Name="CampAffs" EntityType="EomModel.CampAff" />
+          <AssociationSet Name="FK_CampAff_Analyst" Association="EomModel.FK_CampAff_Analyst">
+            <End Role="Analyst" EntitySet="Analysts" />
+            <End Role="CampAff" EntitySet="CampAffs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CampAff_Strategist" Association="EomModel.FK_CampAff_Strategist">
+            <End Role="Strategist" EntitySet="Strategists" />
+            <End Role="CampAff" EntitySet="CampAffs" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Advertiser">
@@ -2534,6 +2643,83 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Analyst">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Name="manager_id" Type="Int32" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="comm_rate" Type="Decimal" Nullable="false" Precision="10" Scale="5" />
+          <NavigationProperty Name="AnalystManager" Relationship="EomModel.FK_Analyst_AnalystManager" FromRole="Analyst" ToRole="AnalystManager" />
+          <NavigationProperty Name="CampAffs" Relationship="EomModel.FK_CampAff_Analyst" FromRole="Analyst" ToRole="CampAff" />
+        </EntityType>
+        <EntityType Name="AnalystManager">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="comm_rate" Type="Decimal" Nullable="false" Precision="10" Scale="5" />
+          <NavigationProperty Name="Analysts" Relationship="EomModel.FK_Analyst_AnalystManager" FromRole="AnalystManager" ToRole="Analyst" />
+        </EntityType>
+        <EntityType Name="Strategist">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="comm_rate" Type="Decimal" Nullable="false" Precision="10" Scale="5" />
+          <NavigationProperty Name="CampAffs" Relationship="EomModel.FK_CampAff_Strategist" FromRole="Strategist" ToRole="CampAff" />
+        </EntityType>
+        <Association Name="FK_Analyst_AnalystManager">
+          <End Type="EomModel.AnalystManager" Role="AnalystManager" Multiplicity="0..1" />
+          <End Type="EomModel.Analyst" Role="Analyst" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AnalystManager">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Analyst">
+              <PropertyRef Name="manager_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="CampAff">
+          <Key>
+            <PropertyRef Name="pid" />
+            <PropertyRef Name="affid" />
+          </Key>
+          <Property Name="pid" Type="Int32" Nullable="false" />
+          <Property Name="affid" Type="Int32" Nullable="false" />
+          <Property Name="analyst_id" Type="Int32" />
+          <Property Name="strategist_id" Type="Int32" />
+          <NavigationProperty Name="Analyst" Relationship="EomModel.FK_CampAff_Analyst" FromRole="CampAff" ToRole="Analyst" />
+          <NavigationProperty Name="Strategist" Relationship="EomModel.FK_CampAff_Strategist" FromRole="CampAff" ToRole="Strategist" />
+        </EntityType>
+        <Association Name="FK_CampAff_Analyst">
+          <End Type="EomModel.Analyst" Role="Analyst" Multiplicity="0..1" />
+          <End Type="EomModel.CampAff" Role="CampAff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Analyst">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CampAff">
+              <PropertyRef Name="analyst_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CampAff_Strategist">
+          <End Type="EomModel.Strategist" Role="Strategist" Multiplicity="0..1" />
+          <End Type="EomModel.CampAff" Role="CampAff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Strategist">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CampAff">
+              <PropertyRef Name="strategist_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3019,6 +3205,44 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Analysts">
+            <EntityTypeMapping TypeName="EomModel.Analyst">
+              <MappingFragment StoreEntitySet="Analyst">
+                <ScalarProperty Name="comm_rate" ColumnName="comm_rate" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="manager_id" ColumnName="manager_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AnalystManagers">
+            <EntityTypeMapping TypeName="EomModel.AnalystManager">
+              <MappingFragment StoreEntitySet="AnalystManager">
+                <ScalarProperty Name="comm_rate" ColumnName="comm_rate" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Strategists">
+            <EntityTypeMapping TypeName="EomModel.Strategist">
+              <MappingFragment StoreEntitySet="Strategist">
+                <ScalarProperty Name="comm_rate" ColumnName="comm_rate" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CampAffs">
+            <EntityTypeMapping TypeName="EomModel.CampAff">
+              <MappingFragment StoreEntitySet="CampAff">
+                <ScalarProperty Name="strategist_id" ColumnName="strategist_id" />
+                <ScalarProperty Name="analyst_id" ColumnName="analyst_id" />
+                <ScalarProperty Name="affid" ColumnName="affid" />
+                <ScalarProperty Name="pid" ColumnName="pid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -3200,11 +3424,18 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
         <AssociationConnector Association="EomModel.Campaign_AdManager_id_FK_AdManager_id_PK" />
         <EntityTypeShape EntityType="EomModel.CampaignNote" Width="1.75" PointX="3.625" PointY="20.5" />
         <EntityTypeShape EntityType="EomModel.Audit" Width="1.5" PointX="0.5" PointY="4" />
-        <EntityTypeShape EntityType="EomModel.AnalystRole" Width="1.5" PointX="8.25" PointY="19" />
-        <EntityTypeShape EntityType="EomModel.Person" Width="1.5" PointX="10.25" PointY="19" />
+        <EntityTypeShape EntityType="EomModel.AnalystRole" Width="1.5" PointX="8.25" PointY="20.625" />
+        <EntityTypeShape EntityType="EomModel.Person" Width="1.5" PointX="10.25" PointY="20.625" />
         <AssociationConnector Association="EomModel.FK_AnalystRole_Person" />
         <EntityTypeShape EntityType="EomModel.IncomeType" Width="1.5" PointX="9.25" PointY="7.25" />
         <AssociationConnector Association="EomModel.FK_UnitType_IncomeType" />
+        <EntityTypeShape EntityType="EomModel.Analyst" Width="1.5" PointX="10.25" PointY="18.125" />
+        <EntityTypeShape EntityType="EomModel.AnalystManager" Width="1.625" PointX="12.375" PointY="18.125" />
+        <EntityTypeShape EntityType="EomModel.Strategist" Width="1.5" PointX="14.375" PointY="18.125" />
+        <AssociationConnector Association="EomModel.FK_Analyst_AnalystManager" />
+        <EntityTypeShape EntityType="EomModel.CampAff" Width="1.5" PointX="8.25" PointY="18.375" />
+        <AssociationConnector Association="EomModel.FK_CampAff_Analyst" />
+        <AssociationConnector Association="EomModel.FK_CampAff_Strategist" />
         </Diagram>
     </Diagrams>
   </Designer>

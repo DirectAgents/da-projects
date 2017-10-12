@@ -90,6 +90,12 @@
     <Compile Include="Entities\AffiliatePaymentMethod.cs">
       <DependentUpon>EomModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\Analyst.cs">
+      <DependentUpon>EomModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\AnalystManager.cs">
+      <DependentUpon>EomModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\AnalystRole.cs">
       <DependentUpon>EomModel.tt</DependentUpon>
     </Compile>
@@ -100,6 +106,9 @@
       <DependentUpon>EomModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\BatchUpdate.cs">
+      <DependentUpon>EomModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CampAff.cs">
       <DependentUpon>EomModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Campaign.cs">
@@ -255,6 +264,9 @@
       <DependentUpon>DAMain1.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Source.cs">
+      <DependentUpon>EomModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Strategist.cs">
       <DependentUpon>EomModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\TrackingSystem.cs">
