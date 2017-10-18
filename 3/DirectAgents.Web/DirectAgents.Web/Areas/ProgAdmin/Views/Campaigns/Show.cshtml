@@ -17,9 +17,17 @@
         SalesRep: <b>@Model.Advertiser.SalesRepName()</b><br />
         AM: <b>@Model.Advertiser.AMName()</b>
     </td>
+@if (Model.Advertiser.StartDate.HasValue || Model.Advertiser.EndDate.HasValue)
+{
+    <td>
+        Start: <b>@Model.Advertiser.StartDate.ToShortDateString()</b><br />
+        End: <b>@Model.Advertiser.EndDate.ToShortDateString()</b>
+    </td>
+}
 </tr>
 </table>
 [@Html.ActionLink("Edit Campaign", "Edit", new { id = Model.Id })]
+| [@Html.ActionLink("Edit Advertiser", "Edit", "Advertisers", new { id = Model.AdvertiserId }, null)]
 <br /><br />
 
 External Accounts:

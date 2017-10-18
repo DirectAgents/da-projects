@@ -39,6 +39,19 @@ namespace FacebookAPI
         public void SetAudienceNetwork() { PlatformFilter = "audience_network"; }
         public void SetAll() { PlatformFilter = null; }
 
+        private string CampaignFilterOperator = null;
+        private string CampaignFilterValue = null;
+        public void SetCampaignFilter(string filter)
+        {
+            if (String.IsNullOrEmpty(filter))
+                CampaignFilterValue = null;
+            else
+            {
+                CampaignFilterValue = filter;
+                CampaignFilterOperator = "CONTAIN"; // for now; later, could implement NOT_CONTAIN, etc
+            }
+        }
+
         //public string AppId { get; set; }
         //public string AppSecret { get; set; }
         public string AccessToken { get; set; }
@@ -244,9 +257,12 @@ namespace FacebookAPI
             }
             var afterVal = "";
 
-            var filterVal = new[] { new { field = "publisher_platform", @operator = "IN", value = new[] { PlatformFilter } } };
-            if (String.IsNullOrWhiteSpace(PlatformFilter))
-                filterVal = null;
+            var filterList = new List<Filter>();
+            if (!String.IsNullOrWhiteSpace(PlatformFilter))
+                filterList.Add(new Filter { field = "publisher_platform", @operator = "IN", value = new[] { PlatformFilter } });
+            if (!String.IsNullOrEmpty(CampaignFilterValue))
+                filterList.Add(new Filter { field = "campaign.name", @operator = CampaignFilterOperator, value = CampaignFilterValue });
+            // See https://developers.facebook.com/docs/marketing-api/ad-rules-getting-started/
 
             bool moreData;
             do
@@ -256,7 +272,7 @@ namespace FacebookAPI
                 {
                     //filtering = new[] { new { field = "campaign.name", @operator = "EQUAL", value = "DA | Mobile App Installs (Android)" } },
                     //metadata = 1,
-                    filtering = filterVal,
+                    filtering = filterList.ToArray(),
                     level = levelVal,
                     fields = fieldsVal,
                     action_breakdowns = "action_type", //,action_reaction
@@ -540,6 +556,13 @@ namespace FacebookAPI
         public static string DateString(DateTime dateTime)
         {
             return dateTime.ToString("yyyy-M-d");
+        }
+
+        private class Filter
+        {
+            public string field;
+            public string @operator;
+            public object value;
         }
     }
 }

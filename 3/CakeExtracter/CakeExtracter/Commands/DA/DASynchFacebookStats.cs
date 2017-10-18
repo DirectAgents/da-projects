@@ -124,6 +124,7 @@ namespace CakeExtracter.Commands
                     else if (network.StartsWith("AUDIENCE"))
                         fbUtility.SetAudienceNetwork();
                 }
+                fbUtility.SetCampaignFilter(acct.Filter);
 
                 if (Accts_ConvAsMobAppInst.Contains(acct.ExternalId))
                     fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_MobileAppInstall;

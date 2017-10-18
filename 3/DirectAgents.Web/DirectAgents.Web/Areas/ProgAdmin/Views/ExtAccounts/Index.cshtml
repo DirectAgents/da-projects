@@ -13,7 +13,7 @@
     <th style="text-align:right">ID</th>
     <th colspan="2">Ext Account (X = disabled)</th>
     <th>External Id</th>
-    <th>Network</th>
+    <th colspan="2">Network / Filter?</th>
     <th>Stats</th>
     <th>List...</th>
     <th>Creative URL Format</th>
@@ -28,6 +28,7 @@
     <td>@(extAcct.Disabled ? "X" : "")</td>
     <td>@extAcct.ExternalId</td>
     <td>@(extAcct.Network != null ? extAcct.Network.Name : "")</td>
+    <td>@(String.IsNullOrEmpty(extAcct.Filter) ? "" : "*")</td>
     <td>
         @Html.ActionLink("Upload", "UploadStats", new { id = extAcct.Id }) |
         @Html.ActionLink("Raw", "ExtAccount", "Stats", new { acctid = extAcct.Id }, null)
