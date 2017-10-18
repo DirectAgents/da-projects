@@ -1,0 +1,15 @@
+﻿@model CampAff
+@{
+    string currentEomDateString = ViewBag.CurrentEomDateString;
+}
+<h3>Assign Roles</h3>
+
+Accounting Period: <b>@currentEomDateString</b>
+<br /><br />
+
+pid: @Model.pid<br />
+affid: @Model.affid
+@*Publisher: <b>@Model.Affiliate.name2</b><br />
+Advertiser: <b>@Model.Campaign.Advertiser.name</b><br />
+Campaign: <b>@Model.Campaign.campaign_name (@Model.Campaign.pid)</b><br />*@
+<br />

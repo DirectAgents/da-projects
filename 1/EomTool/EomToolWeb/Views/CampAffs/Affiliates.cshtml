@@ -1,0 +1,14 @@
+﻿@model IEnumerable<Affiliate>
+
+<h3>Publishers with activity</h3>
+
+Accounting Period:
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+<br />
+
+<b>Select Publisher:</b><br />
+@foreach (var aff in Model)
+{
+    @Html.ActionLink(aff.name2, "ShowRoles", new { affid = aff.affid })<br />
+}
+

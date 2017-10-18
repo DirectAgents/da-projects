@@ -124,6 +124,16 @@ namespace EomTool.Domain.Concrete
 
         // ---
 
+        public CampAff GetCampAff(int pid, int affid)
+        {
+            return context.CampAffs.Find(pid, affid);
+        }
+
+        public IQueryable<CampAff> CampAffs()
+        {
+            return context.CampAffs;
+        }
+
         public IQueryable<Campaign> Campaigns(int? amId = null, int? advertiserId = null, int? affId = null, bool activeOnly = false)
         {
             // Note: specifying an affId only works when activeOnly==true

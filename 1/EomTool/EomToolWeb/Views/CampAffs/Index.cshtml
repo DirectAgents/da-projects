@@ -1,0 +1,31 @@
+﻿@model IEnumerable<CampAff>
+@{
+    ViewBag.Title = "CampAffs";
+}
+
+<h3>@Html.ActionLink("EOM Admin", "Index", "Admin") - CampAffs</h3>
+
+Accounting Period:
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+<br />
+
+<table style="border: 1px solid gray; border-spacing: 10px 0">
+    <tr>
+        <th>pid</th>
+        <th>affid</th>
+        <th>Analyst</th>
+        <th>AnalystManager</th>
+        <th>Strategist</th>
+    </tr>
+    @foreach (var campAff in Model)
+    {
+        <tr>
+            <td>@campAff.pid</td>
+            <td>@campAff.affid</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    }
+    <tr><td>&nbsp;</td></tr>
+</table>

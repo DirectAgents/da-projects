@@ -74,6 +74,10 @@
     <Reference Include="Moq">
       <HintPath>..\..\Solution\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="MoreLinq, Version=1.0.16006.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
+      <HintPath>..\..\Solution\packages\morelinq.1.0.16006\lib\net35\MoreLinq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\Solution\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -174,6 +178,7 @@
     <Compile Include="Controllers\AffiliatesController.cs" />
     <Compile Include="Controllers\AnalystRolesController.cs" />
     <Compile Include="Controllers\AuditController.cs" />
+    <Compile Include="Controllers\CampAffsController.cs" />
     <Compile Include="Controllers\IncomeTypesController.cs" />
     <Compile Include="Controllers\PeopleController.cs" />
     <Compile Include="Controllers\StatsController.cs" />
@@ -4435,6 +4440,11 @@
     <Content Include="Views\UnitTypes\Index.cshtml" />
     <Content Include="Views\UnitTypes\_ViewStart.cshtml" />
     <Content Include="Views\UnitTypes\Edit.cshtml" />
+    <Content Include="Views\CampAffs\Index.cshtml" />
+    <Content Include="Views\CampAffs\_ViewStart.cshtml" />
+    <Content Include="Views\CampAffs\Affiliates.cshtml" />
+    <Content Include="Views\CampAffs\ShowRoles.cshtml" />
+    <Content Include="Views\CampAffs\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

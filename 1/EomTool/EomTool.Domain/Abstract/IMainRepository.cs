@@ -15,14 +15,19 @@ namespace EomTool.Domain.Abstract
         IQueryable<Advertiser> Advertisers(bool withActivity = false);
         AccountManagerTeam GetAccountManagerTeam(int id);
         IQueryable<AccountManagerTeam> AccountManagerTeams(bool withActivityOnly = false);
+
         Person GetPerson(int id);
         IQueryable<Person> People();
         bool SavePerson(Person inPerson);
         Person NewPerson(string first_name = "zFirst", string last_name = "zLast");
+
         IQueryable<Person> AvailableAnalystPeople(int pid, int affid);
         IQueryable<AnalystRole> AnalystRoles(int? personId = null, int? pid = null, int? affid = null);
         void AddAnalystRole(AnalystRole analystRole);
         bool DeleteAnalystRole(int pid, int affid, int personId);
+
+        CampAff GetCampAff(int pid, int affid);
+        IQueryable<CampAff> CampAffs();
 
         IQueryable<Campaign> Campaigns(int? amId = null, int? advertiserId = null, int? affId = null, bool activeOnly = false);
         IEnumerable<CampaignAmount> CampaignAmounts(int pid, int? campaignStatus);

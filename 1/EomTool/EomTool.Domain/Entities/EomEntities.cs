@@ -130,6 +130,16 @@ namespace EomTool.Domain.Entities
                     return null;
             }
         }
+        [NotMapped]
+        public CampAff CampAff { get; set; }
+    }
+
+    public partial class CampAff
+    {
+        [NotMapped]
+        public Campaign Campaign { get; set; }
+        [NotMapped]
+        public Affiliate Affiliate { get; set; }
     }
 
     public partial class MarginApproval
