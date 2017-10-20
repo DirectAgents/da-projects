@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
+
+    @Styles.Render("~/Content/Site2016.css")
+
+    <link href="~/Content/kendo/2015.1.408/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2015.1.408/kendo.silver.min.css" rel="stylesheet" />
+
+    <script src="~/Scripts/kendo/2015.1.408/jquery.min.js"></script>
+    <script src="~/Scripts/kendo/2015.1.408/kendo.all.min.js"></script>
+    @RenderSection("head", required: false)
+    @if (ViewBag.UseTableCSS != null && ViewBag.UseTableCSS) {
+<style type="text/css" media="screen">
+
+table {
+    border:1px solid black;
+    border-collapse:collapse;
+}
+
+table th,td {
+    border:1px solid black;
+    padding:2px;
+}
+</style>
+    }
+</head>
+
+<body>
+    @RenderBody()
+    @RenderSection("scripts", required: false)
+</body>
+</html>

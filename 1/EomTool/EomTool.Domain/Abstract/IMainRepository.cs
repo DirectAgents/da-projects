@@ -26,8 +26,22 @@ namespace EomTool.Domain.Abstract
         void AddAnalystRole(AnalystRole analystRole);
         bool DeleteAnalystRole(int pid, int affid, int personId);
 
+        Analyst GetAnalyst(int id);
+        IQueryable<Analyst> Analysts();
+        bool SaveAnalyst(Analyst analyst);
+        Analyst NewAnalyst(string name = "zNew");
+
+        AnalystManager GetAnalystManager(int id);
+        IQueryable<AnalystManager> AnalystManagers();
+        bool SaveAnalystManager(AnalystManager anMgr);
+        AnalystManager NewAnalystManager(string name = "zNew");
+
+        Strategist GetStrategist(int id);
+        IQueryable<Strategist> Strategists();
+
         CampAff GetCampAff(int pid, int affid);
         IQueryable<CampAff> CampAffs();
+        void FillExtended(CampAff campAff);
 
         IQueryable<Campaign> Campaigns(int? amId = null, int? advertiserId = null, int? affId = null, bool activeOnly = false);
         IEnumerable<CampaignAmount> CampaignAmounts(int pid, int? campaignStatus);

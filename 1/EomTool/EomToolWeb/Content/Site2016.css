@@ -1,0 +1,15 @@
+﻿body {
+    font-family: "Segoe UI" , Verdana, Helvetica, Sans-Serif;
+}
+
+fieldset {
+    display: inline-block;
+}
+
+input[type="text"] {
+    width: 400px;
+}
+
+.bold {
+    font-weight: bold;
+}

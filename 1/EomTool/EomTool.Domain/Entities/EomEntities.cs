@@ -91,6 +91,16 @@ namespace EomTool.Domain.Entities
         public Affiliate PreviousMonthAffiliate { get; set; }
     }
 
+    public partial class AnalystManager
+    {
+        public String AnalystsNames(string separator = ", ")
+        {
+            if (Analysts == null)
+                return null;
+            return String.Join(separator, Analysts.Select(x => x.name));
+        }
+    }
+
     public partial class BatchUpdate
     {
         [NotMapped]

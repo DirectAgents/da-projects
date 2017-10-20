@@ -1,0 +1,33 @@
+﻿@model IEnumerable<AnalystManager>
+@{
+    ViewBag.Title = "AnalystManagers";
+}
+
+<h3>@Html.ActionLink("EOM Admin", "Index", "Admin") - AnalystManagers</h3>
+
+Accounting Period:
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+<br />
+
+<table style="border: 1px solid gray; border-spacing: 10px 0">
+    <tr>
+        <th></th>
+        <th>Id</th>
+        <th>Name</th>
+        <th>CommRate</th>
+        <th>Analysts</th>
+    </tr>
+    @foreach (var am in Model)
+    {
+        <tr>
+            <td>@Html.ActionLink("Edit", "EditManager", new { id = am.id })</td>
+            <td>@am.id</td>
+            <td>@am.name</td>
+            <td>@am.comm_rate</td>
+            <td>@am.AnalystsNames()</td>
+        </tr>
+    }
+    <tr><td>&nbsp;</td></tr>
+</table>
+@Html.ActionLink("New AnalystManager", "NewAnalystManager")
+<br /><br />

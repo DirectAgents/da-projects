@@ -177,6 +177,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AffiliatesController.cs" />
     <Compile Include="Controllers\AnalystRolesController.cs" />
+    <Compile Include="Controllers\AnalystsController.cs" />
     <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\CampAffsController.cs" />
     <Compile Include="Controllers\IncomeTypesController.cs" />
@@ -224,6 +225,7 @@
     <Compile Include="Models\AnalystRolesVM.cs" />
     <Compile Include="Models\AuditVM.cs" />
     <Compile Include="Models\BlogPost.cs" />
+    <Compile Include="Models\CampAffVM.cs" />
     <Compile Include="Models\CampaignAffiliateAmountsModel.cs" />
     <Compile Include="Models\CampaignsByCountryViewModel.cs" />
     <Compile Include="Models\CampaignsListViewModel.cs" />
@@ -766,6 +768,7 @@
     <Content Include="Content\kendo\2015.1.408\Uniform\sprite_kpi_2x.png" />
     <Content Include="Content\PubRep.css" />
     <Content Include="Content\Site2014.css" />
+    <Content Include="Content\Site2016.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -4445,6 +4448,12 @@
     <Content Include="Views\CampAffs\Affiliates.cshtml" />
     <Content Include="Views\CampAffs\ShowRoles.cshtml" />
     <Content Include="Views\CampAffs\Edit.cshtml" />
+    <Content Include="Views\Analysts\_ViewStart.cshtml" />
+    <Content Include="Views\Analysts\Index.cshtml" />
+    <Content Include="Views\Shared\_Layout2016.cshtml" />
+    <Content Include="Views\Analysts\Edit.cshtml" />
+    <Content Include="Views\Analysts\Managers.cshtml" />
+    <Content Include="Views\Analysts\EditManager.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,15 +1,21 @@
-﻿@model CampAff
+﻿@model CampAffVM
 @{
-    string currentEomDateString = ViewBag.CurrentEomDateString;
+    var ca = Model.CampAff;
+    var analystSelectList = new SelectList(Model.Analysts, "id", "name");
+    var strategistSelectList = new SelectList(Model.Strategists, "id", "name");
 }
 <h3>Assign Roles</h3>
 
-Accounting Period: <b>@currentEomDateString</b>
+Accounting Period: <b>@Model.CurrentEomDateString</b>
 <br /><br />
 
-pid: @Model.pid<br />
-affid: @Model.affid
-@*Publisher: <b>@Model.Affiliate.name2</b><br />
-Advertiser: <b>@Model.Campaign.Advertiser.name</b><br />
-Campaign: <b>@Model.Campaign.campaign_name (@Model.Campaign.pid)</b><br />*@
+Publisher: <b>@ca.Affiliate.name2</b><br />
+Advertiser: <b>@ca.Campaign.Advertiser.name</b><br />
+Campaign: <b>@ca.Campaign.campaign_name (@ca.Campaign.pid)</b><br />
 <br />
+Analyst: <b>@(ca.Analyst != null ? ca.Analyst.name : "")</b><br />
+Strategist: <b>@(ca.Strategist != null ? ca.Strategist.name : "")</b><br/>
+<br />
+Analyst: @Html.DropDownList("analystId", analystSelectList)
+<br />
+Strategist: @Html.DropDownList("strategistId", strategistSelectList)

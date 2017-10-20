@@ -54,5 +54,13 @@ namespace EomToolWeb.Controllers
             }
             return View(inPerson);
         }
+
+        // ---
+
+        public ActionResult Strategists()
+        {
+            var strategists = mainRepo.Strategists().OrderBy(x => x.name);
+            return View(strategists);
+        }
     }
 }

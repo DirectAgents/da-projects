@@ -124,14 +124,94 @@ namespace EomTool.Domain.Concrete
 
         // ---
 
+        public Analyst GetAnalyst(int id)
+        {
+            return context.Analysts.Find(id);
+        }
+        public IQueryable<Analyst> Analysts()
+        {
+            return context.Analysts;
+        }
+        public bool SaveAnalyst(Analyst analyst)
+        {
+            if (context.Analysts.Any(x => x.id == analyst.id))
+            {
+                var entry = context.Entry(analyst);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public Analyst NewAnalyst(string name = "zNew") //comm_rate?
+        {
+            var analyst = new Analyst
+            {
+                name = name
+            };
+            context.Analysts.Add(analyst);
+            SaveChanges();
+            return analyst;
+        }
+
+        public AnalystManager GetAnalystManager(int id)
+        {
+            return context.AnalystManagers.Find(id);
+        }
+        public IQueryable<AnalystManager> AnalystManagers()
+        {
+            return context.AnalystManagers;
+        }
+        public bool SaveAnalystManager(AnalystManager anMgr)
+        {
+            if (context.AnalystManagers.Any(x => x.id == anMgr.id))
+            {
+                var entry = context.Entry(anMgr);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public AnalystManager NewAnalystManager(string name = "zNew")
+        {
+            var anMgr = new AnalystManager
+            {
+                name = name
+            };
+            context.AnalystManagers.Add(anMgr);
+            SaveChanges();
+            return anMgr;
+        }
+
+        public Strategist GetStrategist(int id)
+        {
+            return context.Strategists.Find(id);
+        }
+        public IQueryable<Strategist> Strategists()
+        {
+            return context.Strategists;
+        }
+
         public CampAff GetCampAff(int pid, int affid)
         {
             return context.CampAffs.Find(pid, affid);
         }
-
         public IQueryable<CampAff> CampAffs()
         {
             return context.CampAffs;
+        }
+        public void FillExtended(CampAff campAff)
+        {
+            if (campAff.Campaign == null)
+                campAff.Campaign = GetCampaign(campAff.pid);
+            if (campAff.Affiliate == null)
+                campAff.Affiliate = GetAffiliate(campAff.affid);
+            if (campAff.Analyst == null && campAff.analyst_id.HasValue)
+                campAff.Analyst = GetAnalyst(campAff.analyst_id.Value);
+            if (campAff.Strategist == null && campAff.strategist_id.HasValue)
+                campAff.Strategist = GetStrategist(campAff.strategist_id.Value);
+            //TODO: set Analyst/Strategist to null if id is null
         }
 
         public IQueryable<Campaign> Campaigns(int? amId = null, int? advertiserId = null, int? affId = null, bool activeOnly = false)

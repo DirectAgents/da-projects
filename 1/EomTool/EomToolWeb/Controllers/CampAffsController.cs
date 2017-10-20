@@ -56,7 +56,7 @@ namespace EomToolWeb.Controllers
                 affGroupList.Add(affGroup);
             }
             var campaigns = mainRepo.Campaigns();
-            var allCampAffs = mainRepo.CampAffs(); //todo: include analysts,etc
+            var allCampAffs = mainRepo.CampAffs();
             foreach (var affGroup in affGroupList)
             {
                 var affiliate = mainRepo.GetAffiliate(affGroup.AffId);
@@ -65,7 +65,7 @@ namespace EomToolWeb.Controllers
                 var affCampaigns = campaigns.Where(c => affGroup.Pids.Contains(c.pid));
                 affGroup.AdvCampGroups = affCampaigns.GroupBy(x => x.Advertiser).OrderBy(x => x.Key.name).ToList();
                 var campAffs = allCampAffs.Where(x => x.affid == affGroup.AffId).ToList();
-                
+
                 foreach (var advCampGroup in affGroup.AdvCampGroups)
                 {
                     foreach (var campaign in advCampGroup)
@@ -86,17 +86,25 @@ namespace EomToolWeb.Controllers
         {
             var campAff = mainRepo.GetCampAff(pid, affid);
             if (campAff == null)
+            {
                 //todo: check if camp and aff exist
                 campAff = new CampAff
                 {
                     pid = pid,
                     affid = affid
                 };
+                //NOTE: at some point this entity needs to be created in the database
+            }
+            mainRepo.FillExtended(campAff);
 
-            //todo: repo.FillCampAff()
-
-            ViewBag.CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString;
-            return View(campAff);
+            var model = new CampAffVM
+            {
+                CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
+                CampAff = campAff,
+                Analysts = mainRepo.Analysts().OrderBy(x => x.name),
+                Strategists = mainRepo.Strategists().OrderBy(x => x.name)
+            };
+            return View(model);
         }
     }
 }
