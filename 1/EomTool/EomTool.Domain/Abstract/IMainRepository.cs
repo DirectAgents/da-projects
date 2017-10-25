@@ -38,10 +38,13 @@ namespace EomTool.Domain.Abstract
 
         Strategist GetStrategist(int id);
         IQueryable<Strategist> Strategists();
+        bool SaveStrategist(Strategist strategist);
+        Strategist NewStrategist(string name = "zNew");
 
         CampAff GetCampAff(int pid, int affid);
         IQueryable<CampAff> CampAffs();
         void FillExtended(CampAff campAff);
+        bool SaveCampAff(CampAff campAff);
 
         IQueryable<Campaign> Campaigns(int? amId = null, int? advertiserId = null, int? affId = null, bool activeOnly = false);
         IEnumerable<CampaignAmount> CampaignAmounts(int pid, int? campaignStatus);

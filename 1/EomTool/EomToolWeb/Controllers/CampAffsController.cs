@@ -82,6 +82,7 @@ namespace EomToolWeb.Controllers
             return View(affGroupList.OrderBy(x => x.AffName));
         }
 
+        [HttpGet]
         public ActionResult Edit(int pid, int affid)
         {
             var campAff = mainRepo.GetCampAff(pid, affid);
@@ -106,5 +107,18 @@ namespace EomToolWeb.Controllers
             };
             return View(model);
         }
+        [HttpPost]
+        public ActionResult Edit(CampAff campAff)
+        {
+            if (ModelState.IsValid)
+            {
+                bool saved = mainRepo.SaveCampAff(campAff);
+                if (saved)
+                    return RedirectToAction("ShowRoles", new { affid = campAff.affid });
+                ModelState.AddModelError("", "Changes could not be saved");
+            }
+            return View(campAff);
+        }
+
     }
 }

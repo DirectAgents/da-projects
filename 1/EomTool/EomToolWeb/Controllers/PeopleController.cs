@@ -60,7 +60,35 @@ namespace EomToolWeb.Controllers
         public ActionResult Strategists()
         {
             var strategists = mainRepo.Strategists().OrderBy(x => x.name);
+            SetAccountingPeriodViewData();
             return View(strategists);
         }
+        public ActionResult NewStrategist()
+        {
+            mainRepo.NewStrategist();
+            return RedirectToAction("Strategists");
+        }
+        [HttpGet]
+        public ActionResult EditStrategist(int id)
+        {
+            var strategist = mainRepo.GetStrategist(id);
+            if (strategist == null)
+                return HttpNotFound();
+
+            return View(strategist);
+        }
+        [HttpPost]
+        public ActionResult EditStrategist(Strategist strategist)
+        {
+            if (ModelState.IsValid)
+            {
+                bool saved = mainRepo.SaveStrategist(strategist);
+                if (saved)
+                    return RedirectToAction("Strategists");
+                ModelState.AddModelError("", "Strategist could not be saved");
+            }
+            return View(strategist);
+        }
+
     }
 }

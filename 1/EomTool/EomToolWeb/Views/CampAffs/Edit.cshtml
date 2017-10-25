@@ -11,11 +11,20 @@ Accounting Period: <b>@Model.CurrentEomDateString</b>
 
 Publisher: <b>@ca.Affiliate.name2</b><br />
 Advertiser: <b>@ca.Campaign.Advertiser.name</b><br />
-Campaign: <b>@ca.Campaign.campaign_name (@ca.Campaign.pid)</b><br />
+Campaign: <b>@ca.Campaign.campaign_name (@ca.Campaign.pid)</b>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary()
+    @Html.HiddenFor(m => m.CampAff.pid)
+    @Html.HiddenFor(m => m.CampAff.affid)
+
+    <text>Analyst: </text>@Html.DropDownListFor(m => m.CampAff.analyst_id, analystSelectList, "(none)")
+    <br />
+    <text>Strategist: </text>@Html.DropDownListFor(m => m.CampAff.strategist_id, strategistSelectList, "(none)")
+    <br />
+    <br />
+    <input type="submit" value="Save" />
+}
 <br />
-Analyst: <b>@(ca.Analyst != null ? ca.Analyst.name : "")</b><br />
-Strategist: <b>@(ca.Strategist != null ? ca.Strategist.name : "")</b><br/>
-<br />
-Analyst: @Html.DropDownList("analystId", analystSelectList)
-<br />
-Strategist: @Html.DropDownList("strategistId", strategistSelectList)
+@Html.ActionLink("Cancel", "ShowRoles", new { affid = ca.affid })

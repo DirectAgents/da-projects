@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Strategist>
+@{
+    ViewBag.Title = "Strategists";
+}
+
+<h3>@Html.ActionLink("EOM Admin", "Index", "Admin") - Strategists</h3>
+
+Accounting Period:
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+<br />
+
+<table style="border: 1px solid gray; border-spacing: 10px 0">
+    <tr>
+        <th></th>
+        <th>Id</th>
+        <th>Name</th>
+        <th>CommRate</th>
+    </tr>
+    @foreach (var strategist in Model)
+    {
+        <tr>
+            <td>@Html.ActionLink("Edit", "EditStrategist", new { id = strategist.id })</td>
+            <td>@strategist.id</td>
+            <td>@strategist.name</td>
+            <td>@strategist.comm_rate</td>
+        </tr>
+    }
+    <tr><td>&nbsp;</td></tr>
+</table>
+@Html.ActionLink("New Strategist", "NewStrategist")
+<br /><br />

@@ -1,0 +1,33 @@
+﻿@model Strategist
+@{
+    ViewBag.Title = "Edit Strategist";
+}
+
+<h3>Edit Strategist</h3>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary()
+    <fieldset>
+        <legend>Strategist</legend>
+        @Html.HiddenFor(m => m.id)
+        <table>
+            <tr>
+                <td>@Html.LabelFor(m => m.id)</td>
+                <td>@Html.DisplayFor(m => m.id)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.name)</td>
+                <td>@Html.EditorFor(m => m.name)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.comm_rate, "Commission Rate")</td>
+                <td>@Html.TextBoxFor(m => m.comm_rate)</td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" value="Save" />
+    </fieldset>
+}
+<br />
+@Html.ActionLink("Cancel", "Strategists")

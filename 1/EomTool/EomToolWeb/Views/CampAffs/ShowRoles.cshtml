@@ -14,8 +14,9 @@ Accounting Period:
         <th style="text-align:left">Publisher</th>
         <th style="text-align:left">Advertiser</th>
         <th style="text-align:left">(PID) Campaign</th>
-        <th></th>
+        <th style="text-align:left"></th>
         <th style="text-align:left">Analyst</th>
+        <th style="text-align:left">Analyst Mgr</th>
         <th style="text-align:left">Strategist</th>
     </tr>
     @foreach (var affGroup in Model)
@@ -30,8 +31,9 @@ Accounting Period:
                     <td>@(firstAdvRow ? affGroup.AffName : ":")</td>
                     <td>@(firstCampRow ? advCampGroup.Key.name : ":")</td>
                     <td>(@camp.pid) @camp.campaign_name</td>
-                    <td>@Html.ActionLink("edit-", "Edit", new { pid = camp.pid, affid = affGroup.AffId })</td>
+                    <td>&nbsp;&nbsp;&nbsp;@Html.ActionLink("Edit-", "Edit", new { pid = camp.pid, affid = affGroup.AffId })</td>
                     <td>@(camp.CampAff.Analyst != null ? camp.CampAff.Analyst.name : "")</td>
+                    <td>@(camp.CampAff.Analyst != null && camp.CampAff.Analyst.AnalystManager != null ? camp.CampAff.Analyst.AnalystManager.name : "")</td>
                     <td>@(camp.CampAff.Strategist != null ? camp.CampAff.Strategist.name : "")</td>
                 </tr>
                 firstAdvRow = false;

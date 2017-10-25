@@ -192,6 +192,27 @@ namespace EomTool.Domain.Concrete
         {
             return context.Strategists;
         }
+        public bool SaveStrategist(Strategist strategist)
+        {
+            if (context.Strategists.Any(x => x.id == strategist.id))
+            {
+                var entry = context.Entry(strategist);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public Strategist NewStrategist(string name = "zNew")
+        {
+            var strategist = new Strategist
+            {
+                name = name
+            };
+            context.Strategists.Add(strategist);
+            SaveChanges();
+            return strategist;
+        }
 
         public CampAff GetCampAff(int pid, int affid)
         {
@@ -211,7 +232,23 @@ namespace EomTool.Domain.Concrete
                 campAff.Analyst = GetAnalyst(campAff.analyst_id.Value);
             if (campAff.Strategist == null && campAff.strategist_id.HasValue)
                 campAff.Strategist = GetStrategist(campAff.strategist_id.Value);
-            //TODO: set Analyst/Strategist to null if id is null
+            //TODO: set Analyst/Strategist to null if id is null ?
+        }
+        public bool SaveCampAff(CampAff campAff)
+        {
+            if (context.CampAffs.Any(x => x.pid == campAff.pid && x.affid == campAff.affid))
+            {
+                // Save existing
+                var entry = context.Entry(campAff);
+                entry.State = EntityState.Modified;
+            }
+            else
+            {
+                // Save New
+                context.CampAffs.Add(campAff);
+            }
+            context.SaveChanges();
+            return true;
         }
 
         public IQueryable<Campaign> Campaigns(int? amId = null, int? advertiserId = null, int? affId = null, bool activeOnly = false)

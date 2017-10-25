@@ -4454,6 +4454,8 @@
     <Content Include="Views\Analysts\Edit.cshtml" />
     <Content Include="Views\Analysts\Managers.cshtml" />
     <Content Include="Views\Analysts\EditManager.cshtml" />
+    <Content Include="Views\People\Strategists.cshtml" />
+    <Content Include="Views\People\EditStrategist.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
