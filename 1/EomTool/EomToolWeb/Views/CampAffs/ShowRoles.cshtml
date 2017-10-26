@@ -1,9 +1,10 @@
 ﻿@model IEnumerable<EomToolWeb.Controllers.AffGroup>
 @{
     bool firstAdvRow, firstCampRow;
+    var nfo = new System.Globalization.NumberFormatInfo { PercentPositivePattern = 1, PercentNegativePattern = 1 };
 }
 
-<h3>Show Roles</h3>
+<h3>@Html.ActionLink("EOM Admin", "Index", "Admin") - Show Assigned Roles</h3>
 
 Accounting Period:
 @Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
@@ -27,14 +28,17 @@ Accounting Period:
             firstCampRow = true;
             foreach (var camp in advCampGroup.OrderBy(c => c.campaign_name))
             {
+                var editText = (camp.AnalystRoles.Any() ? "*Edit-" : "Edit-");
+                var aMgr = camp.CampAff.Analyst != null ? camp.CampAff.Analyst.AnalystManager : null;
                 <tr style="background-color: #eee">
                     <td>@(firstAdvRow ? affGroup.AffName : ":")</td>
                     <td>@(firstCampRow ? advCampGroup.Key.name : ":")</td>
                     <td>(@camp.pid) @camp.campaign_name</td>
-                    <td>&nbsp;&nbsp;&nbsp;@Html.ActionLink("Edit-", "Edit", new { pid = camp.pid, affid = affGroup.AffId })</td>
-                    <td>@(camp.CampAff.Analyst != null ? camp.CampAff.Analyst.name : "")</td>
-                    <td>@(camp.CampAff.Analyst != null && camp.CampAff.Analyst.AnalystManager != null ? camp.CampAff.Analyst.AnalystManager.name : "")</td>
-                    <td>@(camp.CampAff.Strategist != null ? camp.CampAff.Strategist.name : "")</td>
+                    <td><nobr>&nbsp;&nbsp;&nbsp;
+                        @Html.ActionLink(editText, "Edit", new { pid = camp.pid, affid = affGroup.AffId })</nobr></td>
+                    <td>@(camp.CampAff.Analyst != null ? camp.CampAff.Analyst.name + " (" + camp.CampAff.Analyst.comm_rate.ToString("P", nfo) + ")" : "")</td>
+                    <td>@(aMgr != null ? aMgr.name + " (" + aMgr.comm_rate.ToString("P", nfo) + ")"  : "")</td>
+                    <td>@(camp.CampAff.Strategist != null ? camp.CampAff.Strategist.name + " (" + camp.CampAff.Strategist.comm_rate.ToString("P", nfo) + ")" : "")</td>
                 </tr>
                 firstAdvRow = false;
                 firstCampRow = false;
@@ -43,5 +47,12 @@ Accounting Period:
     }
 </table>
 <br />
-List:
+* = analyst(s) previously assigned
+<br /><br />
+Back to:
 @Html.ActionLink("Publishers with activity", "Affiliates", "CampAffs")
+<br /><br />
+List:
+@Html.ActionLink("Analysts", "Index", "Analysts") |
+@Html.ActionLink("AnalystManagers", "Managers", "Analysts") |
+@Html.ActionLink("Strategists", "Strategists", "People")

@@ -9,6 +9,13 @@ Accounting Period:
 @Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
 <br />
 
+NEW VERSION:<br />
+@Html.ActionLink("Analysts", "Index", "Analysts") |
+@Html.ActionLink("AnalystManagers", "Managers", "Analysts") |
+@Html.ActionLink("Strategists", "Strategists", "People")
+<br /><br />
+
+OLD VERSION:
 <table style="border: 1px solid gray; border-spacing: 10px 0">
     <tr>
         <th></th>
@@ -27,8 +34,4 @@ Accounting Period:
 }
     <tr><td>&nbsp;</td></tr>
 </table>
-@Html.ActionLink("New Person", "NewPerson")
-<br /><br />
-
-Go To:
-@Html.ActionLink("Publishers with activity", "Affiliates", "AnalystRoles")
+@Html.ActionLink("Create New Person", "NewPerson")

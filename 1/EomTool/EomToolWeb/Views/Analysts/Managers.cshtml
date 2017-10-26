@@ -15,7 +15,7 @@ Accounting Period:
         <th>Id</th>
         <th>Name</th>
         <th>CommRate</th>
-        <th>Analysts</th>
+        <th>Assigned Analysts</th>
     </tr>
     @foreach (var am in Model)
     {
@@ -31,3 +31,6 @@ Accounting Period:
 </table>
 @Html.ActionLink("New AnalystManager", "NewAnalystManager")
 <br /><br />
+List:
+@Html.ActionLink("Analysts", "Index", "Analysts") |
+@Html.ActionLink("Strategists", "Strategists", "People")

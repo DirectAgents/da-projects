@@ -11,10 +11,12 @@ Accounting Period:
 
 @Html.ActionLink("Advertisers", "Index", "Advertisers")<br />
 @Html.ActionLink("Affiliates", "Index", "Affiliates")<br />
-@Html.ActionLink("People", "Index", "People")<br />
-@Html.ActionLink("Assign Analysts", "Affiliates", "AnalystRoles")<br />
 @Html.ActionLink("Income Types", "Index", "IncomeTypes")<br />
 @Html.ActionLink("Unit Types", "Index", "UnitTypes")<br />
+OLD- @Html.ActionLink("Assign Analysts", "Affiliates", "AnalystRoles")<br />
+NEW- @Html.ActionLink("Assign Roles by Publisher/Campaign", "Affiliates", "CampAffs")<br />
+@Html.ActionLink("People", "Index", "People") -
+@Html.ActionLink("Analysts", "Index", "Analysts"), @Html.ActionLink("AnalystManagers", "Managers", "Analysts"), @Html.ActionLink("Strategists", "Strategists", "People")<br />
 <br />
 @Html.ActionLink("Accounting Sheet", "AccountingSheet", "Admin")<br />
 @Html.ActionLink("Affiliate Amounts", "AffiliateAmounts", "Workflow")<br />

@@ -36,7 +36,11 @@ namespace EomToolWeb.Controllers
                 return Content("unauthorized");
 
             SetAccountingPeriodViewData();
-            var activeAffiliates = mainRepo.Affiliates(true).OrderBy(a => a.name2);
+            var activeAffiliates = mainRepo.Affiliates(true).OrderBy(a => a.name2).ToArray();
+            foreach (var aff in activeAffiliates)
+            {
+                aff.AnalystRolesAssigned = mainRepo.AnalystRoles(affid: aff.affid).Any();
+            }
             return View(activeAffiliates);
         }
 
@@ -70,11 +74,12 @@ namespace EomToolWeb.Controllers
                 {
                     foreach (var campaign in advCampGroup)
                     {
-                        //campaign.AnalystRoles = mainRepo.AnalystRoles(pid: campaign.pid, affid: affGroup.AffId);
                         campaign.CampAff = campAffs.Where(x => x.pid == campaign.pid && x.affid == affGroup.AffId)
                             .SingleOrFallback(() => {
                                 return new CampAff { pid = campaign.pid, affid = affGroup.AffId };
                             });
+                        //legacy:
+                        campaign.AnalystRoles = mainRepo.AnalystRoles(pid: campaign.pid, affid: affGroup.AffId);
                     }
                 }
             }
@@ -103,7 +108,8 @@ namespace EomToolWeb.Controllers
                 CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
                 CampAff = campAff,
                 Analysts = mainRepo.Analysts().OrderBy(x => x.name),
-                Strategists = mainRepo.Strategists().OrderBy(x => x.name)
+                Strategists = mainRepo.Strategists().OrderBy(x => x.name),
+                AnalystRoles = mainRepo.AnalystRoles(pid: campAff.pid, affid: campAff.affid)
             };
             return View(model);
         }

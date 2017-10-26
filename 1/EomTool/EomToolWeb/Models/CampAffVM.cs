@@ -9,5 +9,7 @@ namespace EomToolWeb.Models
         public CampAff CampAff { get; set; }
         public IEnumerable<Analyst> Analysts { get; set; }
         public IEnumerable<Strategist> Strategists { get; set; }
+
+        public IEnumerable<AnalystRole> AnalystRoles { get; set; } //for legacy data
     }
 }

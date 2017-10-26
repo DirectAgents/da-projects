@@ -89,6 +89,8 @@ namespace EomTool.Domain.Entities
     {
         [NotMapped]
         public Affiliate PreviousMonthAffiliate { get; set; }
+        [NotMapped]
+        public bool AnalystRolesAssigned { get; set; } //legacy
     }
 
     public partial class AnalystManager

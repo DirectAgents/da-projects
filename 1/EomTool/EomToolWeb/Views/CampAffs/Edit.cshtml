@@ -4,7 +4,7 @@
     var analystSelectList = new SelectList(Model.Analysts, "id", "name");
     var strategistSelectList = new SelectList(Model.Strategists, "id", "name");
 }
-<h3>Assign Roles</h3>
+<h3>Assign Analyst/Strategist</h3>
 
 Accounting Period: <b>@Model.CurrentEomDateString</b>
 <br /><br />
@@ -25,6 +25,16 @@ Campaign: <b>@ca.Campaign.campaign_name (@ca.Campaign.pid)</b>
     <br />
     <br />
     <input type="submit" value="Save" />
+    <text>&nbsp;</text>
+    @Html.ActionLink("Cancel", "ShowRoles", new { affid = ca.affid })
 }
 <br />
-@Html.ActionLink("Cancel", "ShowRoles", new { affid = ca.affid })
+@if (Model.AnalystRoles.Any())
+{
+    <text>Previously assigned Analyst(s):</text>
+    <br />
+    foreach (var ar in Model.AnalystRoles)
+    {
+        <text>- </text>@ar.Person.FullName<br />
+    }
+}
