@@ -12,10 +12,10 @@ namespace EomTool.Domain.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class AccountManagerTeam
+    public partial class AccountManager
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public AccountManagerTeam()
+        public AccountManager()
         {
             this.Campaigns = new HashSet<Campaign>();
         }

@@ -41,16 +41,16 @@ namespace EomTool.Domain.Concrete
                 return context.Advertisers;
         }
 
-        public AccountManagerTeam GetAccountManagerTeam(int id)
+        public AccountManager GetAccountManager(int id)
         {
-            return context.AccountManagerTeams.FirstOrDefault(am => am.id == id);
+            return context.AccountManagers.FirstOrDefault(am => am.id == id);
         }
-        public IQueryable<AccountManagerTeam> AccountManagerTeams(bool withActivityOnly = false)
+        public IQueryable<AccountManager> AccountManagers(bool withActivityOnly = false)
         {
             if (withActivityOnly)
-                return Campaigns(activeOnly: true).Select(c => c.AccountManagerTeam).Distinct();
+                return Campaigns(activeOnly: true).Select(c => c.AccountManager).Distinct();
             else
-                return context.AccountManagerTeams;
+                return context.AccountManagers;
         }
 
         public Person GetPerson(int id)
@@ -471,7 +471,7 @@ namespace EomTool.Domain.Concrete
                         join cc in context.Currencies on ra.cost_currency_id equals cc.id
                         join cstatus in context.CampaignStatuses on ra.campaign_status_id equals cstatus.id
                         join astatus in context.ItemAccountingStatuses on ra.item_accounting_status_id equals astatus.id
-                        //join am in context.AccountManagerTeams on c.account_manager_id equals am.id
+                        //join am in context.AccountManagers on c.account_manager_id equals am.id
                         //join adm in context.AdManagers on c.ad_manager_id equals adm.id
                         select new { ra, c, a, u, rc, cc, cstatus, astatus };
             var caItems = query.Select(q => new CampAffItem
@@ -503,7 +503,7 @@ namespace EomTool.Domain.Concrete
                 AdMgrId = q.c.ad_manager_id,
                 AdMgrName = q.c.AdManager.name,
                 AcctMgrId = q.c.account_manager_id,
-                AcctMgrName = q.c.AccountManagerTeam.name,
+                AcctMgrName = q.c.AccountManager.name,
                 MediaBuyerId = q.a.media_buyer_id,
                 MediaBuyerName = q.a.MediaBuyer.name
             });
@@ -668,8 +668,8 @@ namespace EomTool.Domain.Concrete
                 invoice.Advertiser = campaign.Advertiser;
                 context.Entry(invoice.Advertiser).State = EntityState.Detached;
 
-                invoice.Advertiser.AccountManagerTeam = campaign.AccountManagerTeam;
-                context.Entry(invoice.Advertiser.AccountManagerTeam).State = EntityState.Detached;
+                invoice.Advertiser.AccountManager = campaign.AccountManager;
+                context.Entry(invoice.Advertiser.AccountManager).State = EntityState.Detached;
             }
         }
 
@@ -1099,8 +1099,8 @@ namespace EomTool.Domain.Concrete
                     item.CampaignName = campaign.campaign_name;
                     if (campaign.Advertiser != null)
                         item.AdvertiserName = campaign.Advertiser.name;
-                    if (campaign.AccountManagerTeam != null)
-                        item.AccountManagerName = campaign.AccountManagerTeam.name;
+                    if (campaign.AccountManager != null)
+                        item.AccountManagerName = campaign.AccountManager.name;
                     if (campaign.AdManager != null)
                         item.AdManagerName = campaign.AdManager.name;
                 }

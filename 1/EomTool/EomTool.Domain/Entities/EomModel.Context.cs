@@ -52,7 +52,7 @@ namespace EomTool.Domain.Entities
         public virtual DbSet<PubAttachment> PubAttachments { get; set; }
         public virtual DbSet<PubNote> PubNotes { get; set; }
         public virtual DbSet<PublisherRelatedItemCount> PublisherRelatedItemCounts { get; set; }
-        public virtual DbSet<AccountManagerTeam> AccountManagerTeams { get; set; }
+        public virtual DbSet<AccountManager> AccountManagers { get; set; }
         public virtual DbSet<Invoice> Invoices { get; set; }
         public virtual DbSet<InvoiceNote> InvoiceNotes { get; set; }
         public virtual DbSet<InvoiceStatus> InvoiceStatuses { get; set; }

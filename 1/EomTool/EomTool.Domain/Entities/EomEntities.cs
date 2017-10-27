@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Core.EntityClient;
 using System.Linq;
+using System.Reflection;
 using EomTool.Domain.Abstract;
 using Ninject;
 
@@ -42,9 +43,15 @@ namespace EomTool.Domain.Entities
         public static string DisplayVal(int? campaignStatus)
         {
             if (campaignStatus.HasValue)
-                return DisplayVal(campaignStatus.Value);
+                return DisplayValNotNullable(campaignStatus.Value);
             else
                 return "All";
+        }
+        private static string DisplayValNotNullable(int campaignStatus)
+        {
+            var props = typeof(CampaignStatus).GetFields(BindingFlags.Public | BindingFlags.Static);
+            var wantedProp = props.FirstOrDefault(prop => (int)prop.GetValue(null) == campaignStatus);
+            return (wantedProp == null ? null : wantedProp.Name);
         }
     }
 
@@ -79,7 +86,7 @@ namespace EomTool.Domain.Entities
     public partial class Advertiser
     {
         [NotMapped]
-        public AccountManagerTeam AccountManagerTeam { get; set; }
+        public AccountManager AccountManager { get; set; }
 
         [NotMapped]
         public Advertiser PreviousMonthAdvertiser { get; set; }

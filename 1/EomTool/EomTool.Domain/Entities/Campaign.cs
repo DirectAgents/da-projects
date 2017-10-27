@@ -40,7 +40,7 @@ namespace EomTool.Domain.Entities
         public virtual Advertiser Advertiser { get; set; }
         public virtual CampaignStatus CampaignStatus { get; set; }
         public virtual TrackingSystem TrackingSystem { get; set; }
-        public virtual AccountManagerTeam AccountManagerTeam { get; set; }
+        public virtual AccountManager AccountManager { get; set; }
         public virtual AdManager AdManager { get; set; }
     }
 }

@@ -13,8 +13,8 @@ namespace EomTool.Domain.Abstract
 
         Advertiser GetAdvertiser(int id);
         IQueryable<Advertiser> Advertisers(bool withActivity = false);
-        AccountManagerTeam GetAccountManagerTeam(int id);
-        IQueryable<AccountManagerTeam> AccountManagerTeams(bool withActivityOnly = false);
+        AccountManager GetAccountManager(int id);
+        IQueryable<AccountManager> AccountManagers(bool withActivityOnly = false);
 
         Person GetPerson(int id);
         IQueryable<Person> People();

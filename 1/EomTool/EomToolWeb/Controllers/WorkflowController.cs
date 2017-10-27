@@ -35,9 +35,9 @@ namespace EomToolWeb.Controllers
             };
             if (am.HasValue)
             {
-                var accountManagerTeam = mainRepo.GetAccountManagerTeam(am.Value);
-                if (accountManagerTeam != null)
-                    model.AccountManagerName = accountManagerTeam.name;
+                var accountManager = mainRepo.GetAccountManager(am.Value);
+                if (accountManager != null)
+                    model.AccountManagerName = accountManager.name;
             }
             return View(model);
         }

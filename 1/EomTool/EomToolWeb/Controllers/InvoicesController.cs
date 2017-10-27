@@ -61,9 +61,9 @@ namespace EomToolWeb.Controllers
         {
             SetAccountingPeriodViewData();
             var amNames = securityRepo.AccountManagersForUser(User);
-            var amTeams = mainRepo.AccountManagerTeams(true);
-            amTeams = amTeams.Where(am => amNames.Contains(am.name));
-            ViewBag.AMs = amTeams.OrderBy(a => a.name);
+            var AMs = mainRepo.AccountManagers(true);
+            AMs = AMs.Where(am => amNames.Contains(am.name));
+            ViewBag.AMs = AMs.OrderBy(a => a.name);
             ViewBag.IncludeAMall = securityRepo.IsAccountantOrAdmin(User);
             return View();
         }
@@ -82,9 +82,9 @@ namespace EomToolWeb.Controllers
             };
             if (am.HasValue)
             {
-                var accountManagerTeam = mainRepo.GetAccountManagerTeam(am.Value);
-                if (accountManagerTeam != null)
-                    model.AccountManagerName = accountManagerTeam.name;
+                var accountManager = mainRepo.GetAccountManager(am.Value);
+                if (accountManager != null)
+                    model.AccountManagerName = accountManager.name;
             }
             return View(model);
         }
