@@ -37,4 +37,9 @@ Campaign: <b>@ca.Campaign.campaign_name (@ca.Campaign.pid)</b>
     {
         <text>- </text>@ar.Person.FullName<br />
     }
+    <br />
 }
+List:
+@Html.ActionLink("Analysts", "Index", "Analysts") |
+@Html.ActionLink("AnalystManagers", "Managers", "Analysts") |
+@Html.ActionLink("Strategists", "Strategists", "People")
