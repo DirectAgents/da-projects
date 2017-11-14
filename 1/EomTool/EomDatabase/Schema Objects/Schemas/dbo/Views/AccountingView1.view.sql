@@ -2,15 +2,18 @@
 CREATE VIEW [dbo].[AccountingView1]
 AS
 SELECT     TOP (100) PERCENT dbo.Affiliate.name2 AS Publisher, dbo.affiliate.qb_name AS [Pub QB Name], dbo.Advertiser.name AS Advertiser, dbo.Advertiser.qb_name AS [Adv QB Name],
-                      dbo.Advertiser.payment_terms AS [Adv Payment Terms], dbo.Campaign.pid AS [Campaign Number], 
-                      dbo.Campaign.campaign_name AS [Campaign Name], dbo.Currency.name AS [Rev Currency], Currency_1.name AS [Cost Currency], 
-                      dbo.Item.revenue_per_unit AS [Rev/Unit], dbo.tousd3(dbo.Item.revenue_currency_id, dbo.Item.revenue_per_unit) AS [Rev/Unit USD], 
-                      dbo.Item.cost_per_unit AS [Cost/Unit], dbo.tousd3(dbo.Item.cost_currency_id, dbo.Item.cost_per_unit) AS [Cost/Unit USD], SUM(dbo.Item.num_units) AS Units, 
+                      dbo.Advertiser.payment_terms AS [Adv Payment Terms], dbo.Campaign.pid AS [Campaign Number],
+                      dbo.Campaign.campaign_name AS [Campaign Name], dbo.Currency.name AS [Rev Currency], Currency_1.name AS [Cost Currency],
+                      dbo.Item.revenue_per_unit AS [Rev/Unit], dbo.tousd3(dbo.Item.revenue_currency_id, dbo.Item.revenue_per_unit) AS [Rev/Unit USD],
+                      dbo.Item.cost_per_unit AS [Cost/Unit], dbo.tousd3(dbo.Item.cost_currency_id, dbo.Item.cost_per_unit) AS [Cost/Unit USD], SUM(dbo.Item.num_units) AS Units,
                       dbo.UnitType.name AS [Unit Type], dbo.IncomeType.name AS [Income Type], dbo.IncomeType.qb_code AS [Cost Code], SUM(dbo.Item.total_revenue) AS Revenue, SUM(dbo.tousd3(dbo.Item.revenue_currency_id, dbo.Item.revenue_per_unit) 
                       * dbo.Item.num_units) AS [Revenue USD], SUM(dbo.Item.total_cost) AS Cost, SUM(dbo.tousd3(dbo.Item.cost_currency_id, dbo.Item.cost_per_unit) 
-                      * dbo.Item.num_units) AS [Cost USD], SUM(dbo.Item.margin) AS Margin, dbo.MediaBuyer.name AS [Media Buyer], dbo.ListAnalysts(Item.pid,Item.affid) AS Analyst, dbo.AdManager.name AS [Ad Manager], 
-                      dbo.AccountManager.name AS [Account Manager], dbo.CampaignStatus.name AS Status, dbo.MediaBuyerApprovalStatus.name AS [MediaBuyerApproval Status], 
-                      dbo.ItemAccountingStatus.name AS [Accounting Status], dbo.NetTermType.name, dbo.AffiliatePaymentMethod.name AS [Aff Pay Method], dbo.Affiliate.currency_id, 
+                      * dbo.Item.num_units) AS [Cost USD], SUM(dbo.Item.margin) AS Margin, dbo.MediaBuyer.name AS [Media Buyer], dbo.ListAnalysts(Item.pid,Item.affid) AS Analysts,
+                      dbo.Analyst.name AS [Analyst], dbo.Analyst.comm_rate AS [AN CommRate], dbo.AdManager.name AS [Ad Manager],
+                      dbo.AnalystManager.name AS [Analyst Manager], dbo.AnalystManager.comm_rate AS [ANMGR CommRate],
+                      dbo.Strategist.name AS [Strategist], dbo.Strategist.comm_rate AS [STR CommRate],
+                      dbo.AccountManager.name AS [Account Manager], dbo.CampaignStatus.name AS Status, dbo.MediaBuyerApprovalStatus.name AS [MediaBuyerApproval Status],
+                      dbo.ItemAccountingStatus.name AS [Accounting Status], dbo.NetTermType.name, dbo.AffiliatePaymentMethod.name AS [Aff Pay Method], dbo.Affiliate.currency_id,
                       Currency_2.name AS Expr1, Currency_2.name AS [Pub Pay Curr], Source.name AS Source,
                       dbo.Affiliate.[status] AS [Publisher Status], dbo.Affiliate.[payment_on_hold] AS [Publisher Payment On Hold]
 FROM         dbo.Item INNER JOIN
@@ -31,12 +34,17 @@ FROM         dbo.Item INNER JOIN
                       dbo.Currency AS Currency_2 ON dbo.Affiliate.currency_id = Currency_2.id LEFT OUTER JOIN
                       dbo.NetTermType ON dbo.Affiliate.net_term_type_id = dbo.NetTermType.id LEFT OUTER JOIN
                       dbo.AffiliatePaymentMethod ON dbo.Affiliate.payment_method_id = dbo.AffiliatePaymentMethod.id LEFT OUTER JOIN
-                      dbo.IncomeType ON dbo.UnitType.income_type_id = dbo.IncomeType.id
-GROUP BY dbo.Affiliate.name2, dbo.Affiliate.qb_name, dbo.Advertiser.name, dbo.Advertiser.qb_name, dbo.Advertiser.payment_terms, dbo.Campaign.pid, dbo.Campaign.campaign_name, dbo.Currency.name, Currency_1.name, dbo.Item.revenue_per_unit, 
+                      dbo.IncomeType ON dbo.UnitType.income_type_id = dbo.IncomeType.id LEFT OUTER JOIN
+                      dbo.CampAff ON dbo.Item.pid = dbo.CampAff.pid AND dbo.Item.affid = dbo.CampAff.affid LEFT OUTER JOIN
+                      dbo.Analyst ON dbo.CampAff.analyst_id = dbo.Analyst.id LEFT OUTER JOIN
+                      dbo.AnalystManager ON dbo.Analyst.manager_id = dbo.AnalystManager.id LEFT OUTER JOIN
+                      dbo.Strategist ON dbo.CampAff.strategist_id = dbo.Strategist.id
+GROUP BY dbo.Affiliate.name2, dbo.Affiliate.qb_name, dbo.Advertiser.name, dbo.Advertiser.qb_name, dbo.Advertiser.payment_terms, dbo.Campaign.pid, dbo.Campaign.campaign_name, dbo.Currency.name, Currency_1.name, dbo.Item.revenue_per_unit,
                       dbo.Item.cost_per_unit, dbo.MediaBuyer.name, dbo.AdManager.name, dbo.AccountManager.name, dbo.ItemAccountingStatus.name, dbo.UnitType.name, dbo.IncomeType.name, dbo.IncomeType.qb_code,
-                      dbo.CampaignStatus.name, dbo.tousd3(dbo.Item.revenue_currency_id, dbo.Item.revenue_per_unit), dbo.tousd3(dbo.Item.cost_currency_id, dbo.Item.cost_per_unit), 
+                      dbo.CampaignStatus.name, dbo.tousd3(dbo.Item.revenue_currency_id, dbo.Item.revenue_per_unit), dbo.tousd3(dbo.Item.cost_currency_id, dbo.Item.cost_per_unit),
                       dbo.NetTermType.name, dbo.AffiliatePaymentMethod.name, dbo.Affiliate.currency_id, Currency_2.name, Source.name, dbo.MediaBuyerApprovalStatus.name,
-                      dbo.Affiliate.[status], dbo.Affiliate.[payment_on_hold], dbo.ListAnalysts(Item.pid,Item.affid)
+                      dbo.Affiliate.[status], dbo.Affiliate.[payment_on_hold], dbo.ListAnalysts(Item.pid,Item.affid),
+                      dbo.Analyst.name, dbo.Analyst.comm_rate, dbo.AnalystManager.name, dbo.AnalystManager.comm_rate, dbo.Strategist.name, dbo.Strategist.comm_rate
 ORDER BY Publisher
 
 GO

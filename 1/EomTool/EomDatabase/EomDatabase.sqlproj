@@ -819,6 +819,10 @@
     <Build Include="dbo\Tables\AnalystRole.sql" />
     <Build Include="dbo\Functions\ListAnalysts.sql" />
     <Build Include="dbo\Tables\IncomeType.sql" />
+    <Build Include="dbo\Tables\AnalystManager.sql" />
+    <Build Include="dbo\Tables\Strategist.sql" />
+    <Build Include="dbo\Tables\CampAff.sql" />
+    <Build Include="dbo\Tables\Analyst.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Database Level Objects\Assemblies\SqlServerProjectForDADatabaseR3.dll">
