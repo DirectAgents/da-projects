@@ -26,11 +26,16 @@ namespace CakeExtracter.Commands.Test
 
         public void FillStats()
         {
-            var dateRange = new DateRange(new DateTime(2017, 9, 25), new DateTime(2017, 10, 2));
+            int searchAccountId = 161; // Priv
+
+            //var start = new DateTime(2017, 7, 26);
+            var start = new DateTime(2017, 10, 1);
+            var yesterday = DateTime.Today.AddDays(-1);
+            var dateRange = new DateRange(start, yesterday);
 
             using (var db = new ClientPortalContext())
             {
-                var campIds = db.SearchCampaigns.Where(x => x.SearchAccountId == 161).Select(x => x.SearchCampaignId).ToArray(); // priv
+                var campIds = db.SearchCampaigns.Where(x => x.SearchAccountId == searchAccountId).Select(x => x.SearchCampaignId).ToArray();
 
                 var sdsQuery = db.SearchDailySummaries.Where(x => campIds.Contains(x.SearchCampaignId));
 
@@ -50,6 +55,7 @@ namespace CakeExtracter.Commands.Test
                         db.SearchDailySummaries.Add(sds);
                     }
                     db.SaveChanges();
+                    Logger.Info("{0} {1} added", date.ToShortDateString(), missingCampIds.Length);
                 }
             }
         }

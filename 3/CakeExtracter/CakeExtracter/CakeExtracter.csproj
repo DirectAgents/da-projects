@@ -315,6 +315,7 @@
     <Compile Include="Commands\Test\TestAdformCommand.cs" />
     <Compile Include="Commands\Test\TestAdWordsCommand.cs" />
     <Compile Include="Commands\Test\TestAppleCommand.cs" />
+    <Compile Include="Commands\Test\TestFacebookCommand.cs" />
     <Compile Include="Commands\Test\TestYAMCommand.cs">
       <SubType>Code</SubType>
     </Compile>
