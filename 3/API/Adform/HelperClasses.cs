@@ -16,6 +16,7 @@ namespace Adform
         public string[] metrics { get; set; }
         public object filter { get; set; }
         public Paging paging { get; set; }
+        public bool includeRowCount { get; set; }
     }
     //public class ReportFilter
     //{
@@ -37,7 +38,7 @@ namespace Adform
     public class ReportResponse
     {
         public ReportData reportData { get; set; }
-        //public int totalRowCount { get; set; } // not being supplied by the API
+        public int totalRowCount { get; set; }
         public string correlationCode { get; set; }
     }
     public class ReportData

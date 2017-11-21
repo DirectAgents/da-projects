@@ -14,6 +14,7 @@ namespace FacebookAPI
         public const int RowsReturnedAtATime = 25;
         public const string Pattern_ParenNums = @"^\((\d+)\)\s*";
 
+        public int? DaysPerCall_Override = null;
         public int DaysPerCall_Campaign = 20;
         public int DaysPerCall_AdSet = 4;
         public int DaysPerCall_Ad = 3;
@@ -124,7 +125,7 @@ namespace FacebookAPI
         }
         public IEnumerable<FBSummary> GetDailyCampaignStats2(string accountId, DateTime start, DateTime end)
         {
-            int daysPerCall = DaysPerCall_Campaign;
+            int daysPerCall = DaysPerCall_Override ?? DaysPerCall_Campaign;
             while (start <= end)
             {
                 var tempEnd = start.AddDays(daysPerCall - 1);
@@ -164,7 +165,7 @@ namespace FacebookAPI
         }
         public IEnumerable<FBSummary> GetDailyAdStats(string accountId, DateTime start, DateTime end)
         {
-            int daysPerCall = DaysPerCall_Ad;
+            int daysPerCall = DaysPerCall_Override ?? DaysPerCall_Ad;
             while (start <= end)
             {
                 var tempEnd = start.AddDays(daysPerCall - 1);
@@ -208,13 +209,17 @@ namespace FacebookAPI
         public IEnumerable<FBSummary> GetFBSummariesLoop(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAdSet = false, bool byAd = false)
         {
             int daysPerCall = 365; // default
-            if (byCampaign)
-                daysPerCall = DaysPerCall_Campaign;
-            if (byAdSet)
-                daysPerCall = DaysPerCall_AdSet;
-            if (byAd)
-                daysPerCall = DaysPerCall_Ad;
-
+            if (DaysPerCall_Override.HasValue)
+                daysPerCall = DaysPerCall_Override.Value;
+            else
+            {
+                if (byCampaign)
+                    daysPerCall = DaysPerCall_Campaign;
+                if (byAdSet)
+                    daysPerCall = DaysPerCall_AdSet;
+                if (byAd)
+                    daysPerCall = DaysPerCall_Ad;
+            }
             while (start <= end)
             {
                 var tempEnd = start.AddDays(daysPerCall - 1);

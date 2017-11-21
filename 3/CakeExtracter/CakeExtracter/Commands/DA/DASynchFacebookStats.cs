@@ -37,6 +37,7 @@ namespace CakeExtracter.Commands
         public int? DaysAgoToStart { get; set; }
         public string StatsType { get; set; }
         public bool DisabledOnly { get; set; }
+        public int? DaysPerCall { get; set; }
 
         public override void ResetProperties()
         {
@@ -47,6 +48,7 @@ namespace CakeExtracter.Commands
             DaysAgoToStart = null;
             StatsType = null;
             DisabledOnly = false;
+            DaysPerCall = null;
         }
 
         public DASynchFacebookStats()
@@ -59,6 +61,7 @@ namespace CakeExtracter.Commands
             HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 41)", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
+            HasOption<int>("p|daysPerCall=", "Days Per API call (default: varies per stats type)", c => DaysPerCall = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -70,8 +73,9 @@ namespace CakeExtracter.Commands
             var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
             Logger.Info("Facebook ETL. DateRange {0}.", dateRange);
 
-            var fbUtility = new FacebookUtility(m => Logger.Info(m), m => Logger.Warn(m));
             var statsType = new StatsTypeAgg(this.StatsType);
+            var fbUtility = new FacebookUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            fbUtility.DaysPerCall_Override = DaysPerCall;
 
             var string_ConvAsMobAppInst = ConfigurationManager.AppSettings["FB_ConversionsAsMobileAppInstalls"] ?? "";
             var Accts_ConvAsMobAppInst = string_ConvAsMobAppInst.Split(new char[] { ',' });

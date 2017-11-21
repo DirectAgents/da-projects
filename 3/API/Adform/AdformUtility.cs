@@ -13,6 +13,9 @@ namespace Adform
     public class AdformUtility
     {
         private const string Scope = "https://api.adform.com/scope/eapi";
+        private const string ReportDataPath = "/v1/reportingstats/agency/reportdata";
+        private const string MetadataDimensionsPath = "/v1/reportingstats/agency/metadata/dimensions";
+        public const int MaxPageSize = 3000;
         public const int NumAlts = 10; // including the default (0)
 
         // From Config:
@@ -155,7 +158,7 @@ namespace Adform
 
         public void GetDimensions()
         {
-            var request = new RestRequest("/v1/reportingstats/agency/metadata/dimensions");
+            var request = new RestRequest(MetadataDimensionsPath);
 
             var parms = new
             {
@@ -167,7 +170,7 @@ namespace Adform
 
         public ReportData GetReportData(ReportParams reportParams)
         {
-            var request = new RestRequest("/v1/reportingstats/agency/reportdata");
+            var request = new RestRequest(ReportDataPath);
             request.AddJsonBody(reportParams);
 
             var restResponse = ProcessRequest<ReportResponse>(request, postNotGet: true);
@@ -179,6 +182,42 @@ namespace Adform
                 return restResponse.Data.reportData;
             }
             return null;
+        }
+
+        public IEnumerable<ReportData> GetReportDataWithPaging(ReportParams reportParams)
+        {
+            int offset = reportParams.paging.offset;
+            int calculatedSize = CalculatePageSize(offset, MaxPageSize);
+            while (calculatedSize > 0)
+            {
+                var request = new RestRequest(ReportDataPath);
+                reportParams.paging.offset = offset;
+                reportParams.paging.limit = calculatedSize;
+                request.AddJsonBody(reportParams);
+
+                var restResponse = ProcessRequest<ReportResponse>(request, postNotGet: true);
+                if (restResponse != null && restResponse.Data != null && restResponse.Data.reportData != null)
+                {
+                    yield return restResponse.Data.reportData;
+
+                    offset += calculatedSize;
+                    calculatedSize = CalculatePageSize(offset, MaxPageSize, restResponse.Data.totalRowCount);
+                }
+                else
+                    calculatedSize = 0;
+            }
+        }
+        private static int CalculatePageSize(int offset, int limit, int total = 0)
+        {
+            int result = limit;
+            if (total > 0 && limit > 0)
+            {
+                if (offset + limit > total)
+                    result = total - offset;
+                else if (offset == total) // from api docs; don't think will ever be the case
+                    result = 0;
+            }
+            return result;
         }
 
         // like a constructor...
@@ -221,7 +260,8 @@ namespace Adform
                 {
                     offset = 0,
                     limit = 3000
-                }
+                },
+                includeRowCount = true
             };
             return reportParams;
         }

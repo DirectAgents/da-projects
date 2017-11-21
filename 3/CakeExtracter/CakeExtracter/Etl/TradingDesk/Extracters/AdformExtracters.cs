@@ -101,8 +101,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             {
                 var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byCampaign: true, RTBonly: true,
                                                           basicMetrics: true, convMetrics: true, byAdInteractionType: true);
-                var reportData = _afUtility.GetReportData(parms);
-                if (reportData != null)
+                foreach (var reportData in _afUtility.GetReportDataWithPaging(parms))
                 {
                     var sums = EnumerateRows(reportData);
                     Add(sums);
@@ -157,8 +156,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             {
                 var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byLineItem: true, RTBonly: true,
                                                           basicMetrics: true, convMetrics: true, byAdInteractionType: true);
-                var reportData = _afUtility.GetReportData(parms);
-                if (reportData != null)
+                foreach (var reportData in _afUtility.GetReportDataWithPaging(parms))
                 {
                     var sums = EnumerateRows(reportData);
                     Add(sums);
@@ -214,8 +212,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             {
                 var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byBanner: true, RTBonly: true,
                                                           basicMetrics: true, convMetrics: true, byAdInteractionType: true);
-                var reportData = _afUtility.GetReportData(parms);
-                if (reportData != null)
+                foreach (var reportData in _afUtility.GetReportDataWithPaging(parms))
                 {
                     var sums = EnumerateRows(reportData);
                     Add(sums);
