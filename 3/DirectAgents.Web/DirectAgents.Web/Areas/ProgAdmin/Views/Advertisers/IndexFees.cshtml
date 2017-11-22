@@ -26,7 +26,7 @@
 </tr>
 @foreach (var adv in Model)
 {
-    <tr><td colspan="4"><b>@adv.Name</b></td></tr>
+    <tr><td colspan="5"><b>@adv.Name</b></td></tr>
     foreach (var camp in adv.Campaigns.OrderBy(x => x.Name))
     {
         bool usingDefaults = false;
@@ -38,7 +38,7 @@
         }
         <tr>
             <td>Campaign: @camp.Name</td>
-            <td>@bi.MediaSpend.ToString("C")</td>
+            <td style="@(usingDefaults ? "" : "color:green")">@bi.MediaSpend.ToString("C")</td>
             <td>@bi.MgmtFeePct.ToString("#0.##### \\%")</td>
             <td>@bi.MarginPct.ToString("#0.##### \\%")</td>
             <td>@(usingDefaults ? "(defaults)" : "")</td>
@@ -60,6 +60,6 @@
 </table>
 
 <br />
-@Html.ActionLink("Create Base Fees for the month", "CreateBaseFees", new { month = currMonth.ToShortDateString() })
+@Html.ActionLink("Create BaseFee items for the month", "CreateBaseFees", new { month = currMonth.ToShortDateString() })
 
 @*@Html.ActionLink("Delete All (including exceptions)", "Delete", "BudgetInfos", new { date = currMonth.ToShortDateString(), pbiAlso = true }, new { })*@
