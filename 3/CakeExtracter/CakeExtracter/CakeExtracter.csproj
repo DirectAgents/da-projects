@@ -68,10 +68,6 @@
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\..\ClientPortal.Web\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
-    <Reference Include="BouncyCastle.Crypto, Version=1.7.4137.9688, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
-      <HintPath>..\..\ClientPortal.Web\packages\BouncyCastle.1.7.0\lib\Net40-Client\BouncyCastle.Crypto.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Common.Logging">
       <HintPath>..\..\ClientPortal.Web\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
@@ -94,13 +90,11 @@
       <HintPath>..\..\ClientPortal.Web\packages\EPPlus.4.0.4\lib\net20\EPPlus.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Google.Ads.Common, Version=4.0.0.0, Culture=neutral, PublicKeyToken=52807268f2b614dc, processorArchitecture=MSIL">
-      <HintPath>..\..\ClientPortal.Web\packages\Google.Ads.Common.4.0.0\lib\net452\Google.Ads.Common.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Google.Ads.Common">
+      <HintPath>..\..\DirectAgents.Web\packages\Google.Ads.Common.4.0.0\lib\net452\Google.Ads.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Google.AdWords, Version=19.1.0.0, Culture=neutral, PublicKeyToken=52807268f2b614dc, processorArchitecture=MSIL">
-      <HintPath>..\..\ClientPortal.Web\packages\Google.AdWords.19.1.0\lib\net452\Google.AdWords.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Google.AdWords">
+      <HintPath>..\..\DirectAgents.Web\packages\Google.AdWords.19.1.0\lib\net452\Google.AdWords.dll</HintPath>
     </Reference>
     <Reference Include="Google.Apis, Version=1.8.2.23762, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -301,6 +295,7 @@
     <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
     <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
     <Compile Include="Commands\DA\DASynchAdformStats.cs" />
+    <Compile Include="Commands\DA\DASynchAmazonStats.cs" />
     <Compile Include="Commands\DA\DASynchCampSums.cs" />
     <Compile Include="Commands\DA\DASynchYAMStats.cs" />
     <Compile Include="Commands\EOMSynchCPCCommand.cs" />
@@ -314,6 +309,7 @@
     <Compile Include="Commands\Test\TestABCommand.cs" />
     <Compile Include="Commands\Test\TestAdformCommand.cs" />
     <Compile Include="Commands\Test\TestAdWordsCommand.cs" />
+    <Compile Include="Commands\Test\TestAmazonCommand.cs" />
     <Compile Include="Commands\Test\TestAppleCommand.cs" />
     <Compile Include="Commands\Test\TestFacebookCommand.cs" />
     <Compile Include="Commands\Test\TestYAMCommand.cs">
@@ -335,7 +331,9 @@
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSetSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookCampaignSummaryLoader.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtracters.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtracters.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\AmazonTransformers.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformTransformers.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdRollAdExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollSiteStatsCsvExtracter.cs" />
@@ -643,6 +641,10 @@
     <ProjectReference Include="..\..\DAGenerators\DAGenerators.csproj">
       <Project>{70f3e367-5f86-4718-9a27-6edc9fef9ec9}</Project>
       <Name>DAGenerators</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DirectAgents.Web\Amazon\Amazon.csproj">
+      <Project>{5c59f9fe-a478-4701-bb84-17e7d0e5e012}</Project>
+      <Name>Amazon</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

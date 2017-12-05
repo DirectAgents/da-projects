@@ -32,7 +32,7 @@ namespace CakeExtracter
         }
 
         // --- static methods ---
-
+        [STAThread]
         public static int Main(string[] args)
         {
             var program = new Program();

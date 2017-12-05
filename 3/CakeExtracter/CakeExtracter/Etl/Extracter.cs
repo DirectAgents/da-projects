@@ -14,6 +14,7 @@ namespace CakeExtracter.Etl
         public  Thread Start()
         {
             var thread = new Thread(Extract);
+            thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
             return thread;
         }

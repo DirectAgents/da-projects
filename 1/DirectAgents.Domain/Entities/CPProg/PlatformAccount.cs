@@ -28,6 +28,7 @@ namespace DirectAgents.Domain.Entities.CPProg
         public const string Code_Instagram = "insta";
         public const string Code_Adform = "adf";
         public const string Code_YAM = "yam";
+        public const string Code_Amazon= "amazon";
 
         public static IEnumerable<string> Codes_Social()
         {
