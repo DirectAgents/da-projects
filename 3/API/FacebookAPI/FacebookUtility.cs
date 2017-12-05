@@ -38,6 +38,7 @@ namespace FacebookAPI
         public void SetFacebook() { PlatformFilter = "facebook"; }
         public void SetInstagram() { PlatformFilter = "instagram"; }
         public void SetAudienceNetwork() { PlatformFilter = "audience_network"; }
+        public void SetMessenger() { PlatformFilter = "messenger"; }
         public void SetAll() { PlatformFilter = null; }
 
         private string CampaignFilterOperator = null;

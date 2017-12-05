@@ -121,12 +121,14 @@ namespace CakeExtracter.Commands
                 if (acct.Network != null)
                 {
                     string network = Regex.Replace(acct.Network.Name, @"\s+", "").ToUpper();
-                    if (network.StartsWith( "FACEBOOK"))
+                    if (network.StartsWith("FACEBOOK"))
                         fbUtility.SetFacebook();
                     else if (network.StartsWith("INSTAGRAM"))
                         fbUtility.SetInstagram();
                     else if (network.StartsWith("AUDIENCE"))
                         fbUtility.SetAudienceNetwork();
+                    else if (network.StartsWith("MESSENGER"))
+                        fbUtility.SetMessenger();
                 }
                 fbUtility.SetCampaignFilter(acct.Filter);
 
