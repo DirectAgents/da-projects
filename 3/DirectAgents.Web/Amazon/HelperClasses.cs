@@ -15,8 +15,21 @@ namespace Amazon
         public string refresh_token { get; set; }
     }
 
+    public class ReportParams2
+    {
+        public string campaignType { get; set; }
+        public string segment { get; set; }
+        public string reportDate { get; set; }
+        public string metrics { get; set; }
+    }
+
     public class ReportParams
     {
+        public string campaignType { get; set; }
+        public string segment { get; set; }
+        public string reportDate { get; set; }
+        public string Metrics { get; set; }
+
         public string[] dimensions { get; set; }
         public string[] metrics { get; set; }
         public object filter { get; set; }

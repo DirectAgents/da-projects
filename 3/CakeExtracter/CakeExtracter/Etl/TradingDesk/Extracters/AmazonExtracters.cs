@@ -33,14 +33,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
             try
             {
-                bool rtbOnly = true; // real-time bidding campaigns only
-                var parms = _amazonUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, RTBonly: rtbOnly);
-                var basicStatsReportData = _amazonUtility.GetReportData(parms);
-                parms = _amazonUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, RTBonly: rtbOnly, basicMetrics: false, convMetrics: true, byAdInteractionType: true);
-                var convStatsReportData = _amazonUtility.GetReportData(parms);
+                //var parms = _amazonUtility.CreateReportParams2("sponsoredProducts", dateRange.ToDate.ToString("yyyymmdd"));
 
-                var daysums = EnumerateRows(basicStatsReportData, convStatsReportData);
-                Add(daysums);
+                _amazonUtility.SubmitReport("amzn1.clicksAPI.v1.p1.5A2702D8.b3966402-f80d-4eba-898f-9ffc5bee050f");
+                //var reportData = _amazonUtility.GetReport(reportInfo);
+                
+                //var daysums = EnumerateRows(basicStatsReportData, convStatsReportData);
+                //Add(daysums);
             }
             catch (Exception ex)
             {
@@ -99,15 +98,16 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             //TODO: Do X days at a time...?
             try
             {
-                var parms = _amazonUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byCampaign: true, RTBonly: true,basicMetrics: true, convMetrics: true, byAdInteractionType: true);
-                parms.Interface = "campaigns";
-
-                var reportData = _amazonUtility.GetReportData(parms);
+                string campaignType = "sponsoredProducts";
+                string segment = "";
+                string reportDate = "20171204";
+                var parms = _amazonUtility.CreateReportParams2(campaignType, reportDate);
+                var reportData = _amazonUtility.GetReportData(parms,"campaigns");
 
                 if (reportData != null)
                 {
-                    var sums = EnumerateRows(reportData);
-                    Add(sums);
+                    //var sums = EnumerateRows(reportData);
+                    //Add(sums);
                 }
             }
             catch (Exception ex)
@@ -157,14 +157,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             //TODO: Do X days at a time...?
             try
             {
-                var parms = _amazonUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byLineItem: true, RTBonly: true,
-                                                          basicMetrics: true, convMetrics: true, byAdInteractionType: true);
-                var reportData = _amazonUtility.GetReportData(parms);
-                if (reportData != null)
-                {
-                    var sums = EnumerateRows(reportData);
-                    Add(sums);
-                }
+                //var parms = _amazonUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byLineItem: true, RTBonly: true,
+                //                                          basicMetrics: true, convMetrics: true, byAdInteractionType: true);
+                //var reportData = _amazonUtility.GetReportData(parms);
+                //if (reportData != null)
+                //{
+                //    var sums = EnumerateRows(reportData);
+                //    Add(sums);
+                //}
             }
             catch (Exception ex)
             {
@@ -214,14 +214,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             //TODO: Do X days at a time...?
             try
             {
-                var parms = _amazonUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byBanner: true, RTBonly: true,
-                                                          basicMetrics: true, convMetrics: true, byAdInteractionType: true);
-                var reportData = _amazonUtility.GetReportData(parms);
-                if (reportData != null)
-                {
-                    var sums = EnumerateRows(reportData);
-                    Add(sums);
-                }
+                //var parms = _amazonUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byBanner: true, RTBonly: true,
+                //                                          basicMetrics: true, convMetrics: true, byAdInteractionType: true);
+                //var reportData = _amazonUtility.GetReportData(parms);
+                //if (reportData != null)
+                //{
+                //    var sums = EnumerateRows(reportData);
+                //    Add(sums);
+                //}
             }
             catch (Exception ex)
             {

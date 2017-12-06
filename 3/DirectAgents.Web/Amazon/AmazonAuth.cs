@@ -29,26 +29,29 @@ namespace Amazon
 
         public string _error = null;
 
-        public AmazonAuth(string username, string password, string clientId, string clientSecret)
+        public AmazonAuth(string username, string password, string clientId, string clientSecret, string refreshToken)
         {
             UserName = username;
             Password = password;
             ClientId = clientId;
             ClientSecret = clientSecret;
+            RefreshToken = refreshToken;
         }
 
         public AccessTokens GetInitialTokens()
         {
-            var code = DoLoginForm();
-            if (string.IsNullOrEmpty(code))
-                return null;
+            if (!string.IsNullOrEmpty(RefreshToken))            
+                return GetAccessTokens();
+            
+            if (string.IsNullOrEmpty(ApplicationAccessCode))
+            {
+                var code = DoLoginForm();
+                if (string.IsNullOrEmpty(code))
+                    return null;
 
-            ApplicationAccessCode = code;
-
-            //var uri = string.Format(AccessUriFormatter, TokenUri, ClientId, code, DesktopUri);            
-            AccessTokens tokens = GetAccessTokens();
-
-            return tokens;
+                ApplicationAccessCode = code;
+            }
+            return GetAccessTokens();
         }
 
         public AccessTokens GetNewTokens(string refreshToken)
