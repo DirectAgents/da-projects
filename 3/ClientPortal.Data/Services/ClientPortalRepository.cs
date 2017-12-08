@@ -13,6 +13,7 @@ namespace ClientPortal.Data.Services
         public ClientPortalRepository(ClientPortalContext clientPortalContext)
         {
             this.context = clientPortalContext;
+            context.Database.CommandTimeout = 180;
         }
 
         public void SaveChanges()
