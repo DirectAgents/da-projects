@@ -61,6 +61,22 @@ namespace Amazon
         //public int totalRowCount { get; set; } // not being supplied by the API
         public string correlationCode { get; set; }
     }
+    public class ReportRequestResponse
+    {
+        public string reportId { get; set; }
+        public string recordType { get; set; }
+        public string status { get; set; }
+        public string statusDetails { get; set; }
+    }
+    public class ReportResponseDownloadInfo
+    {
+        public string reportId { get; set; }
+        
+        public string status { get; set; }
+        public string statusDetails { get; set; }
+        public string location { get; set; }
+        public int fileSize { get; set; }
+    }
     public class ReportData
     {
         public List<string> columnHeaders { get; set; }
@@ -92,5 +108,13 @@ namespace Amazon
         public int Conversions { get; set; }
         public decimal Sales { get; set; }
     }
+    //public class AmazonDailySummary
+    //{
+    //    public string campaignId { get; set; }
+    //    public string clicks { get; set; }
+    //    public string impressions { get; set; }
+
+    //    public string cost { get; set; }
+    //}
 
 }

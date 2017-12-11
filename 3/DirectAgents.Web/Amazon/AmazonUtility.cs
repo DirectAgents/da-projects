@@ -13,6 +13,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Newtonsoft.Json;
+using System.IO;
+using System.IO.Compression;
+using Amazon.Entities;
 
 namespace Amazon
 {
@@ -42,6 +45,7 @@ namespace Amazon
         private string AuthorizeUrl { get; set; }
         private string TokenUrl { get; set; }
         private string ClientUrl { get; set; }
+        private string ProfileId { get; set; }
         public static string AccessToken { get; set; }
         public static string ApplicationAccessCode { get; set; }
 
@@ -88,6 +92,31 @@ namespace Amazon
             if (!String.IsNullOrWhiteSpace(_refreshToken))
                 RefreshToken = _refreshToken;
         }
+
+        public string GetCampaings()
+        {
+            try
+            {
+                ProfileId = "2436984122296584";
+                var client = new RestClient(_amazonApiEndpointUrl); //"https://advertising-api.amazon.com/";
+                client.AddHandler("application/json", new JsonDeserializer());
+
+                var request = new RestRequest("v1/campaigns", Method.GET);
+                request.AddHeader("Content-Type", "application/json");//
+                request.AddHeader("Amazon-Advertising-API-Scope", ProfileId);
+
+                var restResponse = ProcessRequest<AmazonCampaign>(request, postNotGet: false);
+
+                return restResponse.Content;
+
+            }
+            catch (Exception x)
+            {
+
+                throw;
+            }
+        }
+
         //private AuthorizationData GetAuthorizationData()
         //{
         //    var authorizationData = new AuthorizationData
@@ -167,6 +196,7 @@ namespace Amazon
 
             restRequest.AddHeader("Authorization", "bearer " + AccessToken);
             //restRequest.AddHeader("Content-Type", "application/json");
+            restRequest.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
 
             bool done = false;
             int tries = 0;
@@ -232,14 +262,18 @@ namespace Amazon
             request.AddJsonBody(parms);
             var restResponse = ProcessRequest<object>(request, postNotGet: true);
         }
-        public void SubmitReport(string reportId)
+        public ReportResponseDownloadInfo SubmitReport(string reportId)
         {
             try
             {
                 var request = new RestRequest("v1/reports/"+reportId);
                 request.AddHeader("Amazon-Advertising-API-Scope", "2436984122296584");
-                
-                var restResponse = ProcessRequest<ReportResponse>(request, postNotGet: false);
+                ProfileId = "2436984122296584";
+                var restResponse = ProcessRequest<ReportResponseDownloadInfo>(request, postNotGet: false);
+                if (restResponse.Data.status == "SUCCESS")
+                    return restResponse.Data;
+                return null;
+               
             }
             catch (Exception x)
             {
@@ -247,39 +281,27 @@ namespace Amazon
                 throw;
             }
         }
-        public ReportData GetReportData(ReportParams2 reportParams, string reportType)
+        public ReportData GetReport(ReportResponseDownloadInfo downloadInfo)
+        {
+
+            return null;
+        }
+        public ReportRequestResponse GetReportData(ReportParams2 reportParams, string reportType)
         {            
             var request = new RestRequest("v1/"+ reportType + "/report");
-            request.AddHeader("Amazon-Advertising-API-Scope", "2436984122296584");
+            ProfileId = "2436984122296584";
+            request.AddHeader("Amazon-Advertising-API-Scope", ProfileId);
             request.AddJsonBody(reportParams);
 
-            var restResponse = ProcessRequest<ReportResponse>(request, postNotGet: true);
-            if (restResponse != null && restResponse.Data != null)
+            var restResponse = ProcessRequest<ReportRequestResponse>(request, postNotGet: true);
+            if (restResponse != null && restResponse.Content != null)
             {
-                if (restResponse.Data.reportData == null)
-                    return null;
+
                 //ReportResponse reportResponse = restResponse.Data;
-                return restResponse.Data.reportData;
+                return restResponse.Data;
             }
             return null;
 
-
-            /////////////////////////////////////////////////////////////////////////
-            //var request = new RestRequest("/campaigns");
-            //var restResponse = ProcessRequest<ReportResponse>(request, postNotGet: true);
-
-
-            //var client = new RestClient(_amazonApiEndpointUrl); //"https://advertising-api.amazon.com/v1";
-            //client.AddHandler("application/json", new JsonDeserializer());
-           // var request = new RestRequest("v1/profiles", Method.GET);
-
-            //request.AddHeader("Content-Type", "application/json");//
-            //request.AddHeader("Authorization", "bearer " + AccessTokens.AccessToken);
-            
-            //IRestResponse response = client.Execute(request);
-            //var content = response.Content; // raw content as string
-
-            //return null;
         }
 
         public ReportParams2 CreateReportParams2(string campaignType, string reportDate)
@@ -290,7 +312,7 @@ namespace Amazon
                 campaignType = campaignType,
                 //segment = segment,
                 reportDate = reportDate,
-                metrics = "impressions,clicks"
+                metrics = "impressions,clicks,cost"
             };
             return reportParams;
         }
@@ -359,6 +381,62 @@ namespace Amazon
             {
 
                 throw;
+            }
+        }
+
+        public string GetJsonStringFromDownloadFile(string url)
+        {
+            var request = (HttpWebRequest)WebRequest.Create(url);            
+            request.Headers.Add("Authorization", "bearer " + AccessToken);
+            request.Headers.Add("Amazon-Advertising-API-Scope", ProfileId);
+            var response = (HttpWebResponse)request.GetResponse();
+            var responseStream = response.GetResponseStream();
+            var streamReader = new StreamReader(responseStream);
+
+            string filePath = @"H:\SourceCode\DirectAgents\da-projects\3\DirectAgents.Web\Amazon\download.gzip";
+            using (Stream s = File.Create(filePath))
+            {
+                responseStream.CopyTo(s);
+            }
+            FileInfo fileToDecompress = new FileInfo(filePath);
+            Decompress(fileToDecompress);
+
+            using (StreamReader r = new StreamReader(@"H:\SourceCode\DirectAgents\da-projects\3\DirectAgents.Web\Amazon\download.json"))
+            {
+                string json = r.ReadToEnd();
+                return json;
+            }
+
+            return string.Empty;
+        }
+        //public StreamReader CreateStreamReaderFromUrl(string url)
+        //{
+        //    var request = (HttpWebRequest)WebRequest.Create(url);
+        //    request.Headers.Add("Authorization", "bearer " + AccessToken);
+        //    request.Headers.Add("Amazon-Advertising-API-Scope", ProfileId);
+        //    var response = (HttpWebResponse)request.GetResponse();
+        //    var responseStream = response.GetResponseStream();
+        //    var streamReader = new StreamReader(responseStream);
+
+        //    return streamReader;
+
+        //}
+
+        public static void Decompress(FileInfo fileToDecompress)
+        {
+            using (FileStream originalFileStream = fileToDecompress.OpenRead())
+            {
+                string currentFileName = fileToDecompress.FullName;
+                string newFileName = currentFileName.Remove(currentFileName.Length - fileToDecompress.Extension.Length);
+
+                using (FileStream decompressedFileStream = File.Create(newFileName + ".json"))
+                {
+                    using (GZipStream decompressionStream = new GZipStream(originalFileStream, CompressionMode.Decompress))
+                    {
+                        decompressionStream.CopyTo(decompressedFileStream);
+                        Console.WriteLine("Decompressed: {0}", fileToDecompress.Name);
+                    }
+                }
             }
         }
     }

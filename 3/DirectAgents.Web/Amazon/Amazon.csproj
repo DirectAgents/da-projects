@@ -67,6 +67,8 @@
   <ItemGroup>
     <Compile Include="AmazonAuth.cs" />
     <Compile Include="AmazonUtility.cs" />
+    <Compile Include="Entities\AmazonCampaign.cs" />
+    <Compile Include="Entities\AmazonDailySummary.cs" />
     <Compile Include="HelperClasses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

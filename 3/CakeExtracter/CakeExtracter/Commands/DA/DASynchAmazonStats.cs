@@ -122,7 +122,7 @@ namespace CakeExtracter.Commands
         private void DoETL_Daily(DateRange dateRange, ExtAccount account)
         {
             var extracter = new AmazonDailySummaryExtracter(AmazonUtility, dateRange, account.ExternalId);
-            var loader = new TDDailySummaryLoader(account.Id);
+            var loader = new AmazonDailySummaryLoader(account.Id);
 
             
             var extracterThread = extracter.Start();            
@@ -134,8 +134,8 @@ namespace CakeExtracter.Commands
         }
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AmazonStrategySummaryExtracter(AmazonUtility, dateRange, account.ExternalId);
-            var loader = new TDStrategySummaryLoader(account.Id);
+            var extracter = new AmazonCampaignSummaryExtracter(AmazonUtility, dateRange, account.ExternalId);
+            var loader = new AmazonCampaignSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
