@@ -93,30 +93,49 @@ namespace Amazon
                 RefreshToken = _refreshToken;
         }
 
-        public string GetCampaings()
+        //Get campaigns by profile id
+        public string GetCampaings(string profileId)
         {
             try
-            {
-                ProfileId = "2436984122296584";
-                var client = new RestClient(_amazonApiEndpointUrl); //"https://advertising-api.amazon.com/";
+            {                
+                var client = new RestClient(_amazonApiEndpointUrl); //"https://advertising-api.amazon.com"
                 client.AddHandler("application/json", new JsonDeserializer());
-
                 var request = new RestRequest("v1/campaigns", Method.GET);
-                request.AddHeader("Content-Type", "application/json");//
-                request.AddHeader("Amazon-Advertising-API-Scope", ProfileId);
-
+                request.AddHeader("Content-Type", "application/json");
+                request.AddHeader("Amazon-Advertising-API-Scope", profileId);
                 var restResponse = ProcessRequest<AmazonCampaign>(request, postNotGet: false);
-
                 return restResponse.Content;
 
             }
             catch (Exception x)
-            {
-
+            {            
                 throw;
             }
         }
-
+        public List<AmazonCampaignSummary> AmazonCampaignDailySummaries(DateTime date, string advertisableEid, string campaignEid = null)
+        {
+            //var request = new CampaignReportRequest
+            //{
+            //    start_date = date.ToString("MM-dd-yyyy"),
+            //    end_date = date.ToString("MM-dd-yyyy"),
+            //    advertisables = advertisableEid,
+            //    campaigns = campaignEid, // null for all campaigns
+            //};
+            //var response = this.CampaignReportClient.CampaignSummaries(request);
+            //if (response == null)
+            //{
+            //    LogInfo("No CampaignSummaries found");
+            //    return new List<AmazonCampaignSummary>();
+            //}
+            //var campaignSummaries = response.results;
+            //foreach (var campSum in campaignSummaries)
+            //{
+            //    campSum.date = date;
+            //}
+            //return campaignSummaries;
+            //;
+            return null;
+        }
         //private AuthorizationData GetAuthorizationData()
         //{
         //    var authorizationData = new AuthorizationData
@@ -251,24 +270,14 @@ namespace Amazon
 
             AccessToken = AccessTokens.AccessToken;
         }
-        public void GetDimensions()
-        {
-            var request = new RestRequest("/v1/reportingstats/agency/metadata/dimensions");
 
-            var parms = new
-            {
-                dimensions = (object)null
-            };
-            request.AddJsonBody(parms);
-            var restResponse = ProcessRequest<object>(request, postNotGet: true);
-        }
-        public ReportResponseDownloadInfo SubmitReport(string reportId)
+        public ReportResponseDownloadInfo RequestReport(string reportId, string profileId)
         {
             try
             {
                 var request = new RestRequest("v1/reports/"+reportId);
-                request.AddHeader("Amazon-Advertising-API-Scope", "2436984122296584");
-                ProfileId = "2436984122296584";
+                request.AddHeader("Amazon-Advertising-API-Scope", profileId);
+                
                 var restResponse = ProcessRequest<ReportResponseDownloadInfo>(request, postNotGet: false);
                 if (restResponse.Data.status == "SUCCESS")
                     return restResponse.Data;
@@ -281,12 +290,7 @@ namespace Amazon
                 throw;
             }
         }
-        public ReportData GetReport(ReportResponseDownloadInfo downloadInfo)
-        {
-
-            return null;
-        }
-        public ReportRequestResponse GetReportData(ReportParams2 reportParams, string reportType)
+        public ReportRequestResponse SubmitReport(AmazonApiReportParams reportParams, string reportType)
         {            
             var request = new RestRequest("v1/"+ reportType + "/report");
             ProfileId = "2436984122296584";
@@ -304,12 +308,11 @@ namespace Amazon
 
         }
 
-        public ReportParams2 CreateReportParams2(string campaignType, string reportDate)
+        public AmazonApiReportParams CreateAmazonApiReportParams(string reportDate)
         {
-
-            var reportParams = new ReportParams2
+            var reportParams = new AmazonApiReportParams
             {
-                campaignType = campaignType,
+                campaignType = "sponsoredProducts",
                 //segment = segment,
                 reportDate = reportDate,
                 metrics = "impressions,clicks,cost"
@@ -317,51 +320,51 @@ namespace Amazon
             return reportParams;
         }
         // like a constructor...
-        public ReportParams CreateReportParams(DateTime startDate, DateTime endDate, Int64 clientId, bool basicMetrics = true, 
-            bool convMetrics = false, bool byCampaign = false, bool byLineItem = false, bool byBanner = false, 
-            bool byMedia = false, bool byAdInteractionType = false, bool RTBonly = false)
-        {
-            dynamic filter = new ExpandoObject();
-            filter.date = new Dates
-            {
-                from = startDate.ToString("yyyy'-'M'-'d"),
-                to = endDate.ToString("yyyy'-'M'-'d")
-            };
-            filter.client = new Int64[] { clientId };
-            if (RTBonly)
-                filter.media = new { name = new string[] { "Real Time Bidding" } };
+        //public ReportParams CreateReportParams(DateTime startDate, DateTime endDate, Int64 clientId, bool basicMetrics = true, 
+        //    bool convMetrics = false, bool byCampaign = false, bool byLineItem = false, bool byBanner = false, 
+        //    bool byMedia = false, bool byAdInteractionType = false, bool RTBonly = false)
+        //{
+        //    dynamic filter = new ExpandoObject();
+        //    filter.date = new Dates
+        //    {
+        //        from = startDate.ToString("yyyy'-'M'-'d"),
+        //        to = endDate.ToString("yyyy'-'M'-'d")
+        //    };
+        //    filter.client = new Int64[] { clientId };
+        //    if (RTBonly)
+        //        filter.media = new { name = new string[] { "Real Time Bidding" } };
 
-            var dimensions = new List<string> { "date" };
-            if (byCampaign)
-                dimensions.Add("campaign");
-            if (byLineItem)
-                dimensions.Add("lineItem");
-            if (byBanner)
-                dimensions.Add("banner");
-            if (byMedia)
-                dimensions.Add("media");
-            if (byAdInteractionType)
-                dimensions.Add("adInteractionType"); // Click, Impression, etc.
+        //    var dimensions = new List<string> { "date" };
+        //    if (byCampaign)
+        //        dimensions.Add("campaign");
+        //    if (byLineItem)
+        //        dimensions.Add("lineItem");
+        //    if (byBanner)
+        //        dimensions.Add("banner");
+        //    if (byMedia)
+        //        dimensions.Add("media");
+        //    if (byAdInteractionType)
+        //        dimensions.Add("adInteractionType"); // Click, Impression, etc.
 
-            var metrics = new List<string>();
-            if (basicMetrics)
-                metrics.AddRange(new string[] { "cost", "impressions", "clicks" });
-            if (convMetrics)
-                metrics.AddRange(new string[] { "conversions", "sales" });
+        //    var metrics = new List<string>();
+        //    if (basicMetrics)
+        //        metrics.AddRange(new string[] { "cost", "impressions", "clicks" });
+        //    if (convMetrics)
+        //        metrics.AddRange(new string[] { "conversions", "sales" });
 
-            var reportParams = new ReportParams
-            {
-                filter = filter,
-                dimensions = dimensions.ToArray(),
-                metrics = metrics.ToArray(),
-                paging = new Paging
-                {
-                    offset = 0,
-                    limit = 3000
-                }
-            };
-            return reportParams;
-        }
+        //    var reportParams = new ReportParams
+        //    {
+        //        filter = filter,
+        //        dimensions = dimensions.ToArray(),
+        //        metrics = metrics.ToArray(),
+        //        paging = new Paging
+        //        {
+        //            offset = 0,
+        //            limit = 3000
+        //        }
+        //    };
+        //    return reportParams;
+        //}
 
 
         public void GetProfiles()

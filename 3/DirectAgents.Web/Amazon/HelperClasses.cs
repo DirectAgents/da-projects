@@ -15,7 +15,7 @@ namespace Amazon
         public string refresh_token { get; set; }
     }
 
-    public class ReportParams2
+    public class AmazonApiReportParams
     {
         public string campaignType { get; set; }
         public string segment { get; set; }

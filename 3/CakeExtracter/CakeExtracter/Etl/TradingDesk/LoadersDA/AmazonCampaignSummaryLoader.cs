@@ -44,7 +44,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             Logger.Info("Loading {0} Amazon CampaignDailySummaries..", items.Count);
             foreach (var item in items)
             {
-                item.eid = "2436984122296584";
+                //item.eid = "2436984122296584";
             }
             AddUpdateDependentStrategies(items);
             //var ssItems = items.Select(cSum => CreateStrategySummary(cSum, strategyIdLookupByCampEid[cSum.eid])).ToList();
@@ -146,7 +146,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             using (var db = new ClientPortalProgContext())
             {
                 // Find the unique campaigns by grouping
-                var itemGroups = items.GroupBy(i => new { i.name, i.eid });
+                var itemGroups = items.GroupBy(i => new { i.name, i.campaignId });
                 foreach (var group in itemGroups)
                 {
                     if (strategyIdLookupByCampEid.ContainsKey(group.Key.name))
@@ -167,7 +167,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         var strategy = new Strategy
                         {
                             AccountId = this.accountId,
-                            ExternalId = group.Key.eid,
+                            ExternalId = group.Key.campaignId.ToString(),
                             Name = group.Key.name
                             // type, status, created, start, end, etc...
                         };
@@ -181,18 +181,18 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         // There should only be one matching Strategy in the db, but just in case...
                         foreach (var strat in stratsInDb)
                         {
-                            strat.ExternalId = group.Key.eid;
+                            strat.ExternalId = group.Key.campaignId.ToString();
                             strat.Name = group.Key.name;
                             // type, status, created, start, end, etc...
                         }
                         int numUpdates = db.SaveChanges();
                         if (numUpdates > 0)
                         {
-                            Logger.Info("Updated Strategy: {0}, Eid={1}", group.Key.name, group.Key.eid);
+                            Logger.Info("Updated Strategy: {0}, Eid={1}", group.Key.name, group.Key.campaignId.ToString());
                             if (numUpdates > 1)
                                 Logger.Warn("Multiple entities in db ({0})", numUpdates);
                         }
-                        strategyIdLookupByCampEid[group.Key.eid] = stratsInDb.First().Id;
+                        strategyIdLookupByCampEid[group.Key.campaignId.ToString()] = stratsInDb.First().Id;
                     }
                 }
             }

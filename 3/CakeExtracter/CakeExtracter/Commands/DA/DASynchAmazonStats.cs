@@ -123,12 +123,8 @@ namespace CakeExtracter.Commands
         {
             var extracter = new AmazonDailySummaryExtracter(AmazonUtility, dateRange, account.ExternalId);
             var loader = new AmazonDailySummaryLoader(account.Id);
-
-            
             var extracterThread = extracter.Start();            
             var loaderThread = loader.Start(extracter);
-
-
             extracterThread.Join();
             loaderThread.Join();
         }

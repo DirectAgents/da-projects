@@ -41,11 +41,11 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 {
                     var source = new DirectAgents.Domain.Entities.CPProg.DailySummary
                     {
-                        Date = DateTime.Now,//TODO: NEED TO REPLACE WITH CORRECT DATE
+                        Date = item.date,
                         AccountId = accountId,
                         Impressions = item.impressions,
                         Clicks = item.clicks,
-                        Cost = (decimal)item.cost
+                        Cost = item.cost
                     };
                     //var target = db.Set<DailySummary>().Find(DateTime.Now, accountId);
                     var target = (from p in db.DailySummaries

@@ -13,7 +13,7 @@ namespace Amazon.Entities
         public int click_through_conversions { get; set; }
         public int view_through_conversions { get; set; }
         public int clicks { get; set; }
-        public double cost { get; set; }
+        public decimal cost { get; set; }
         public int prospects { get; set; }
 
         public virtual bool AllZeros(bool includeProspects = false)
