@@ -4456,6 +4456,9 @@
     <Content Include="Views\Analysts\EditManager.cshtml" />
     <Content Include="Views\People\Strategists.cshtml" />
     <Content Include="Views\People\EditStrategist.cshtml" />
+    <Content Include="Views\People\AccountManagers.cshtml" />
+    <Content Include="Views\People\AdManagers.cshtml" />
+    <Content Include="Views\People\MediaBuyers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

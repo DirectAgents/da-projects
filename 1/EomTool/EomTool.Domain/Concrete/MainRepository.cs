@@ -31,7 +31,7 @@ namespace EomTool.Domain.Concrete
 
         public Advertiser GetAdvertiser(int id)
         {
-            return context.Advertisers.FirstOrDefault(a => a.id == id);
+            return context.Advertisers.Find(id);
         }
         public IQueryable<Advertiser> Advertisers(bool withActivity = false)
         {
@@ -43,7 +43,7 @@ namespace EomTool.Domain.Concrete
 
         public AccountManager GetAccountManager(int id)
         {
-            return context.AccountManagers.FirstOrDefault(am => am.id == id);
+            return context.AccountManagers.Find(id);
         }
         public IQueryable<AccountManager> AccountManagers(bool withActivityOnly = false)
         {
@@ -52,6 +52,37 @@ namespace EomTool.Domain.Concrete
             else
                 return context.AccountManagers;
         }
+        public bool SaveAccountManager(AccountManager accountManager)
+        {
+            if (context.AccountManagers.Any(x => x.id == accountManager.id))
+            {
+                var entry = context.Entry(accountManager);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public AdManager GetAdManager(int id)
+        {
+            return context.AdManagers.Find(id);
+        }
+        public IQueryable<AdManager> AdManagers()
+        {
+            return context.AdManagers;
+        }
+
+        public MediaBuyer GetMediaBuyer(int id)
+        {
+            return context.MediaBuyers.Find(id);
+        }
+        public IQueryable<MediaBuyer> MediaBuyers()
+        {
+            return context.MediaBuyers;
+        }
+
+        // ---
 
         public Person GetPerson(int id)
         {

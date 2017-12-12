@@ -1,0 +1,33 @@
+﻿@model IEnumerable<MediaBuyer>
+@{
+    ViewBag.Title = "MediaBuyers";
+}
+
+<h3>@Html.ActionLink("EOM Admin", "Index", "Admin") - MediaBuyers</h3>
+
+Accounting Period:
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+<br />
+
+<table style="border: 1px solid gray; border-spacing: 10px 0">
+    <tr>
+        <th></th>
+        <th>Id</th>
+        <th>Name</th>
+        <th>CommRate</th>
+    </tr>
+    @foreach (var mb in Model)
+    {
+        <tr>
+            <td>@Html.ActionLink("Edit", "EditMediaBuyer", new { id = mb.id })</td>
+            <td>@mb.id</td>
+            <td>@mb.name</td>
+            <td></td>
+        </tr>
+    }
+    <tr><td>&nbsp;</td></tr>
+</table>
+<br />
+List:
+@Html.ActionLink("AccountManagers", "AccountManagers") |
+@Html.ActionLink("AdManagers", "AdManagers")

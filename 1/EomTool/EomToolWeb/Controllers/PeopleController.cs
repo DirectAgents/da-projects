@@ -25,20 +25,17 @@ namespace EomToolWeb.Controllers
             SetAccountingPeriodViewData();
             return View(people);
         }
-
         public ActionResult NewPerson()
         {
             mainRepo.NewPerson();
             return RedirectToAction("Index");
         }
-
         [HttpGet]
         public ActionResult Edit(int id)
         {
             var person = mainRepo.GetPerson(id);
             if (person == null)
                 return Content("Person not found");
-
             return View(person);
         }
         [HttpPost]
@@ -55,7 +52,7 @@ namespace EomToolWeb.Controllers
             return View(inPerson);
         }
 
-        // ---
+        // --- Strategists ---
 
         public ActionResult Strategists()
         {
@@ -74,7 +71,6 @@ namespace EomToolWeb.Controllers
             var strategist = mainRepo.GetStrategist(id);
             if (strategist == null)
                 return HttpNotFound();
-
             return View(strategist);
         }
         [HttpPost]
@@ -88,6 +84,53 @@ namespace EomToolWeb.Controllers
                 ModelState.AddModelError("", "Strategist could not be saved");
             }
             return View(strategist);
+        }
+
+        // --- AccountManagers ---
+
+        public ActionResult AccountManagers()
+        {
+            var AMs = mainRepo.AccountManagers().OrderBy(x => x.name);
+            SetAccountingPeriodViewData();
+            return View(AMs);
+        }
+        [HttpGet]
+        public ActionResult EditAccountManager(int id)
+        {
+            var am = mainRepo.GetAccountManager(id);
+            if (am == null)
+                return HttpNotFound();
+            return View(am);
+        }
+        [HttpPost]
+        public ActionResult EditAccountManager(AccountManager am)
+        {
+            if (ModelState.IsValid)
+            {
+                bool saved = mainRepo.SaveAccountManager(am);
+                if (saved)
+                    return RedirectToAction("AccountManagers");
+                ModelState.AddModelError("", "AccountManager could not be saved");
+            }
+            return View(am);
+        }
+
+        // --- AdManagers ---
+
+        public ActionResult AdManagers()
+        {
+            var adMgrs = mainRepo.AdManagers().OrderBy(x => x.name);
+            SetAccountingPeriodViewData();
+            return View(adMgrs);
+        }
+
+        // --- MediaBuyers ---
+
+        public ActionResult MediaBuyers()
+        {
+            var MBs = mainRepo.MediaBuyers().OrderBy(x => x.name);
+            SetAccountingPeriodViewData();
+            return View(MBs);
         }
 
     }

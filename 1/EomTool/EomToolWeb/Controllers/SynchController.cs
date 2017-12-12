@@ -19,6 +19,7 @@ namespace EomToolWeb.Controllers
 
         //TODO: cleanup
         //TODO: a way to automate determining what the CPC offers are
+        //TODO: display exceptions to user (see below)
 
         public ActionResult Index()
         {
