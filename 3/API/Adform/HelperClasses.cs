@@ -57,6 +57,13 @@ namespace Adform
         }
     }
 
+    //--- asynchronous operations ---
+    public class CreateJobResponse
+    {
+        public string OperationLocation { get; set; }
+        public string Location { get; set; } // not used?
+    }
+
     public class AdformSummary
     {
         public DateTime Date { get; set; }

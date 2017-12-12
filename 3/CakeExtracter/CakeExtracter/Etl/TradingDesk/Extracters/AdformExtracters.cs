@@ -35,6 +35,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             {
                 bool rtbOnly = true; // real-time bidding campaigns only
                 var parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, RTBonly: rtbOnly);
+                //_afUtility.CreateDataJob(parms);
+
                 var basicStatsReportData = _afUtility.GetReportData(parms);
                 parms = _afUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, RTBonly: rtbOnly, basicMetrics: false, convMetrics: true, byAdInteractionType: true);
                 var convStatsReportData = _afUtility.GetReportData(parms);

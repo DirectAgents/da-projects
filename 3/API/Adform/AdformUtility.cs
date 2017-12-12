@@ -15,6 +15,7 @@ namespace Adform
         private const string Scope = "https://api.adform.com/scope/eapi";
         private const string ReportDataPath = "/v1/reportingstats/agency/reportdata";
         private const string MetadataDimensionsPath = "/v1/reportingstats/agency/metadata/dimensions";
+        private const string CreateDataJobPath = "/v1/buyer/stats/data";
         public const int MaxPageSize = 3000;
         public const int NumAlts = 10; // including the default (0)
 
@@ -144,8 +145,8 @@ namespace Adform
                 }
                 else if (response.StatusDescription != null && response.StatusDescription.Contains("API calls quota exceeded") && tries < 5)
                 {
-                    LogInfo("API calls quota exceeded. Waiting 55 seconds.");
-                    Thread.Sleep(55000);
+                    LogInfo("API calls quota exceeded. Waiting 62 seconds.");
+                    Thread.Sleep(62000);
                 }
                 else
                     done = true; //TODO: distinguish between success and failure of ProcessRequest
@@ -218,6 +219,15 @@ namespace Adform
                     result = 0;
             }
             return result;
+        }
+
+        // ---Asynchronous operations---
+        public void CreateDataJob(ReportParams reportParams)
+        {
+            var request = new RestRequest(CreateDataJobPath);
+            request.AddJsonBody(reportParams);
+            var restReponse = ProcessRequest<CreateJobResponse>(request, postNotGet: true);
+
         }
 
         // like a constructor...
