@@ -57,12 +57,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                     {
                         var downloadInfo = _amazonUtility.RequestReport(submissionReportResponse.reportId, this.clientId.ToString());
 
-                        if (downloadInfo!=null && !string.IsNullOrWhiteSpace(downloadInfo.location))
+                        if (downloadInfo != null && !string.IsNullOrWhiteSpace(downloadInfo.location))
                         {
                             var json = _amazonUtility.GetJsonStringFromDownloadFile(downloadInfo.location);
                             dailyStats = JsonConvert.DeserializeObject<List<AmazonDailySummary>>(json);
                             break;
-                        }                       
+                        }
                     }
                     foreach (var item in dailyStats)
                         item.date = day;
@@ -72,7 +72,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
                     Add(dailySums);
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -97,7 +97,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         }
     }
 
-    public class AmazonCampaignSummaryExtracter : AmazonApiExtracter<AmazonCampaignSummary>
+    public class AmazonCampaignSummaryExtracter : AmazonApiExtracter<StrategySummary>
     {
         protected readonly string campaignEid;
 
@@ -109,28 +109,111 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         {
             Logger.Info("Extracting StrategySummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                         this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
-            try
-            {
-                var json = _amazonUtility.GetCampaings(clientId);                
-                var items = JsonConvert.DeserializeObject<List<AmazonCampaignSummary>>(json);
+            var items = EnumerateRows();
+            Add(items);
+            End();
+        }
+        public IEnumerable<StrategySummary> EnumerateRows()
+        {
+            IEnumerable<AmazonCampaignSummary> campaignSummaries = null;
 
-                foreach (var item in items)
+            var json = _amazonUtility.GetCampaings(clientId);
+            campaignSummaries = JsonConvert.DeserializeObject<List<AmazonCampaignSummary>>(json);
+
+            foreach (DateTime day in EachDay(this.dateRange.FromDate, this.dateRange.ToDate))
+            {
+                string reportDate = day.ToString("yyyyMMdd");
+                var parms = _amazonUtility.CreateAmazonApiReportParams(reportDate);
+                var submissionReportResponse = _amazonUtility.SubmitReport(parms, "campaigns");
+                List<AmazonDailySummary> dailyStats = new List<AmazonDailySummary>();
+                //report could take awhile to be generated, therefore,we are looping until we get status SUCCESS
+                while (true)
                 {
-                    foreach (DateTime day in EachDay(this.dateRange.FromDate, this.dateRange.ToDate))
+                    var downloadInfo = _amazonUtility.RequestReport(submissionReportResponse.reportId, this.clientId.ToString());
+
+                    if (downloadInfo != null && !string.IsNullOrWhiteSpace(downloadInfo.location))
                     {
-                        //loop through for each campaign
-                        var campSums = _amazonUtility.AmazonCampaignDailySummaries(day, clientId, this.campaignEid);
-                        if (campSums != null)
-                            Add(campSums);
+                        var dailyStatsJson = _amazonUtility.GetJsonStringFromDownloadFile(downloadInfo.location);
+                        dailyStats = JsonConvert.DeserializeObject<List<AmazonDailySummary>>(dailyStatsJson);
+                        break;
                     }
                 }
-                Add(items);
+                foreach (var sum in GroupAndEnumerate(dailyStats, campaignSummaries, day))
+                    yield return sum;
             }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-            }
-            End();
+
+        }
+
+        private IEnumerable<StrategySummary> GroupAndEnumerate(List<AmazonDailySummary> dailyStats, IEnumerable<AmazonCampaignSummary> campaignSummaries, DateTime day)
+        {
+            var result = (from cs in campaignSummaries
+                          join ds in dailyStats
+                          on cs.campaignId equals ds.campaignId into q
+                          select new StrategySummary
+                          {
+                              Date = day,
+                              StrategyEid = cs.campaignId.ToString(),
+                              StrategyName = cs.name,
+                              Impressions = q.Sum(g => g.impressions),
+                              Clicks = q.Sum(g => g.clicks),
+                              Cost = q.Sum(g => g.cost)
+                          });
+            yield return (StrategySummary)result;
+            //foreach (var campaign in campaignSummaries)
+            //{
+            //    var groupedRows = campaignSummaries.GroupBy(r => new { r.Date, r.StrategyEid, r.StrategyName });
+            //    foreach (var group in groupedRows)
+            //    {
+            //        var sum = new StrategySummary
+            //        {
+            //            Date = group.Key.Date,
+            //            StrategyEid = group.Key.StrategyEid,
+            //            StrategyName = group.Key.StrategyName,
+            //            Impressions = group.Sum(g => g.Impressions),
+            //            Clicks = group.Sum(g => g.Clicks),
+            //            Cost = group.Sum(g => g.Cost)
+            //        };
+            //        yield return sum;
+            //    }
+            //}
+            //// if StrategyEid's aren't all filled in...
+            //if (campaignSummaries.Any(r => string.IsNullOrWhiteSpace(r.campaignId)))
+            //{
+            //    var groupedRows = campaignSummaries.GroupBy(r => new { r.Date, r.StrategyEid, r.StrategyName });
+            //    foreach (var group in groupedRows)
+            //    {
+            //        var sum = new StrategySummary
+            //        {
+            //            Date = group.Key.Date,
+            //            StrategyEid = group.Key.StrategyEid,
+            //            StrategyName = group.Key.StrategyName,
+            //            Impressions = group.Sum(g => g.Impressions),
+            //            Clicks = group.Sum(g => g.Clicks),
+            //            Cost = group.Sum(g => g.Cost)
+            //        };
+            //        yield return sum;
+            //    }
+            //}
+            //else // if all StrategyEid's are filled in...
+            //{
+            //var groupedRows = strategySummaries.GroupBy(r => new { r.Date, r.StrategyEid });
+            //foreach (var group in groupedRows)
+            //{
+            //    string stratName = null;
+            //    if (group.Count() == 1)
+            //        stratName = group.First().StrategyName;
+            //    var sum = new StrategySummary
+            //    {
+            //        Date = group.Key.Date,
+            //        StrategyEid = group.Key.StrategyEid,
+            //        StrategyName = stratName,
+            //        Impressions = group.Sum(g => g.Impressions),
+            //        Clicks = group.Sum(g => g.Clicks),
+            //        Cost = group.Sum(g => g.Cost)
+            //    };
+            //    yield return sum;
+            //}
+            //}
         }
     }
 
@@ -144,50 +227,41 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         {
             Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                         this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
-            //TODO: Do X days at a time...?
-            try
-            {
-                //var parms = _amazonUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byLineItem: true, RTBonly: true,
-                //                                          basicMetrics: true, convMetrics: true, byAdInteractionType: true);
-                //var reportData = _amazonUtility.GetReportData(parms);
-                //if (reportData != null)
-                //{
-                //    var sums = EnumerateRows(reportData);
-                //    Add(sums);
-                //}
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-            }
+            var items = EnumerateRows();
+            Add(items);
             End();
+
         }
-        private IEnumerable<AdSetSummary> EnumerateRows(ReportData reportData)
+        private IEnumerable<AdSetSummary> EnumerateRows()
         {
-            var adformTransformer = new AmazonTransformer(reportData, byLineItem: true);
-            var afSums = adformTransformer.EnumerateAmazonSummaries();
-            var liDateGroups = afSums.GroupBy(x => new { x.LineItem, x.Date });
-            foreach (var liDateGroup in liDateGroups)
+            List<AdSetSummary> result = new List<AdSetSummary>();
+
+
+            IEnumerable<AmazonKeyword> keywords = null;
+
+            var json = _amazonUtility.GetKeywords(clientId);
+            keywords = JsonConvert.DeserializeObject<List<AmazonKeyword>>(json);
+
+            foreach (DateTime day in EachDay(this.dateRange.FromDate, this.dateRange.ToDate))
             {
-                var sum = new AdSetSummary
+                string reportDate = day.ToString("yyyyMMdd");
+                var parms = _amazonUtility.CreateAmazonApiReportParams(reportDate);
+                var submissionReportResponse = _amazonUtility.SubmitReport(parms, "keywords");
+                List<AmazonKeywordMetric> dailyStats = new List<AmazonKeywordMetric>();
+                //report could take awhile to be generated, therefore,we are looping until we get status SUCCESS
+                while (true)
                 {
-                    //StrategyName = ?
-                    AdSetName = liDateGroup.Key.LineItem,
-                    Date = liDateGroup.Key.Date,
-                    Cost = liDateGroup.Sum(x => x.Cost),
-                    Impressions = liDateGroup.Sum(x => x.Impressions),
-                    Clicks = liDateGroup.Sum(x => x.Clicks)
-                };
-                var clickThroughs = liDateGroup.Where(x => x.AdInteractionType == "Click");
-                sum.PostClickConv = clickThroughs.Sum(x => x.Conversions);
-                sum.PostClickRev = clickThroughs.Sum(x => x.Sales);
+                    var downloadInfo = _amazonUtility.RequestReport(submissionReportResponse.reportId, this.clientId.ToString());
 
-                var viewThroughs = liDateGroup.Where(x => x.AdInteractionType == "Impression");
-                sum.PostViewConv = viewThroughs.Sum(x => x.Conversions);
-                sum.PostViewRev = viewThroughs.Sum(x => x.Sales);
-
-                yield return sum;
+                    if (downloadInfo != null && !string.IsNullOrWhiteSpace(downloadInfo.location))
+                    {
+                        var dailyStatsJson = _amazonUtility.GetJsonStringFromDownloadFile(downloadInfo.location);
+                        dailyStats = JsonConvert.DeserializeObject<List<AmazonKeywordMetric>>(dailyStatsJson);
+                        break;
+                    }
+                }
             }
+            return result;
         }
     }
 

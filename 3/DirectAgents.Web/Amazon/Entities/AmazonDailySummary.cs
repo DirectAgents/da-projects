@@ -29,7 +29,8 @@ namespace Amazon.Entities
     // used for Advertisable daily report
     public class AmazonDailySummary : StatSummary
     {
-        public DateTime date { get; set; } // not always returned from the api
+        public Int64 campaignId { get; set; }
+        public DateTime date { get; set; } 
     }
 
     // used for Campaign daily report

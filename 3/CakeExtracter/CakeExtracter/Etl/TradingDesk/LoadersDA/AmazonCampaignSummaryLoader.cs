@@ -9,10 +9,10 @@ using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
-    public class AmazonCampaignSummaryLoader : Loader<AmazonCampaignSummary>
+    public class AmazonCampaignSummaryLoader : Loader<StrategySummary>
     {
         private readonly int accountId;
-        private TDStrategySummaryLoader strategySummaryLoader;
+        private StrategySummary strategySummaryLoader;
         private Dictionary<string, int> strategyIdLookupByCampEid = new Dictionary<string, int>();
 
         //public AmazonCampaignSummaryLoader(int advertisableEid)
@@ -38,7 +38,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             return (accountId > -1);
         }
 
-        protected override int Load(List<AmazonCampaignSummary> items)
+        protected override int Load(List<StrategySummary> items)
         {
             var count = items.Count;
             Logger.Info("Loading {0} Amazon CampaignDailySummaries..", items.Count);
@@ -46,7 +46,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 //item.eid = "2436984122296584";
             }
-            AddUpdateDependentStrategies(items);
+            //AddUpdateDependentStrategies(items);
             //var ssItems = items.Select(cSum => CreateStrategySummary(cSum, strategyIdLookupByCampEid[cSum.eid])).ToList();
             //var count = strategySummaryLoader.UpsertCampaigns(items);
             return count;
@@ -141,61 +141,61 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         //    return sSum;
         //}
 
-        private void AddUpdateDependentStrategies(List<AmazonCampaignSummary> items)
-        {
-            using (var db = new ClientPortalProgContext())
-            {
-                // Find the unique campaigns by grouping
-                var itemGroups = items.GroupBy(i => new { i.name, i.campaignId });
-                foreach (var group in itemGroups)
-                {
-                    if (strategyIdLookupByCampEid.ContainsKey(group.Key.name))
-                        continue; // already encountered this eid
+        //private void AddUpdateDependentStrategies(List<StrategySummary> items)
+        //{
+        //    using (var db = new ClientPortalProgContext())
+        //    {
+        //        // Find the unique campaigns by grouping
+        //        var itemGroups = items.GroupBy(i => new { i.name, i.campaignId });
+        //        foreach (var group in itemGroups)
+        //        {
+        //            if (strategyIdLookupByCampEid.ContainsKey(group.Key.name))
+        //                continue; // already encountered this eid
 
-                    // See if a Strategy with that ExternalId exists
-                    var stratsInDb = db.Strategies.Where(s => s.AccountId == accountId && s.Name == group.Key.name);
+        //            // See if a Strategy with that ExternalId exists
+        //            var stratsInDb = db.Strategies.Where(s => s.AccountId == accountId && s.Name == group.Key.name);
 
-                    //// If not, check by name
-                    //if (stratsInDb.Count() == 0)
-                    //    stratsInDb = db.Strategies.Where(s => s.AccountId == accountId && s => s.Name == group.Key.campaign);
+        //            //// If not, check by name
+        //            //if (stratsInDb.Count() == 0)
+        //            //    stratsInDb = db.Strategies.Where(s => s.AccountId == accountId && s => s.Name == group.Key.campaign);
 
-                    // Assume all strategies in the group have the same properties (just different dates/stats)
-                    //var groupStrat = group.First();
+        //            // Assume all strategies in the group have the same properties (just different dates/stats)
+        //            //var groupStrat = group.First();
 
-                    if (!stratsInDb.Any())
-                    {   // Strategy doesn't exist in the db; so create it and put an entry in the lookup
-                        var strategy = new Strategy
-                        {
-                            AccountId = this.accountId,
-                            ExternalId = group.Key.campaignId.ToString(),
-                            Name = group.Key.name
-                            // type, status, created, start, end, etc...
-                        };
-                        db.Strategies.Add(strategy);
-                        db.SaveChanges();
-                        Logger.Info("Saved new Strategy: {0} ({1}), ExternalId={2}", strategy.Name, strategy.Id, strategy.ExternalId);
-                        strategyIdLookupByCampEid[strategy.ExternalId] = strategy.Id;
-                    }
-                    else
-                    {   // Update & put existing Strategy in the lookup
-                        // There should only be one matching Strategy in the db, but just in case...
-                        foreach (var strat in stratsInDb)
-                        {
-                            strat.ExternalId = group.Key.campaignId.ToString();
-                            strat.Name = group.Key.name;
-                            // type, status, created, start, end, etc...
-                        }
-                        int numUpdates = db.SaveChanges();
-                        if (numUpdates > 0)
-                        {
-                            Logger.Info("Updated Strategy: {0}, Eid={1}", group.Key.name, group.Key.campaignId.ToString());
-                            if (numUpdates > 1)
-                                Logger.Warn("Multiple entities in db ({0})", numUpdates);
-                        }
-                        strategyIdLookupByCampEid[group.Key.campaignId.ToString()] = stratsInDb.First().Id;
-                    }
-                }
-            }
-        }
+        //            if (!stratsInDb.Any())
+        //            {   // Strategy doesn't exist in the db; so create it and put an entry in the lookup
+        //                var strategy = new Strategy
+        //                {
+        //                    AccountId = this.accountId,
+        //                    ExternalId = group.Key.campaignId.ToString(),
+        //                    Name = group.Key.name
+        //                    // type, status, created, start, end, etc...
+        //                };
+        //                db.Strategies.Add(strategy);
+        //                db.SaveChanges();
+        //                Logger.Info("Saved new Strategy: {0} ({1}), ExternalId={2}", strategy.Name, strategy.Id, strategy.ExternalId);
+        //                strategyIdLookupByCampEid[strategy.ExternalId] = strategy.Id;
+        //            }
+        //            else
+        //            {   // Update & put existing Strategy in the lookup
+        //                // There should only be one matching Strategy in the db, but just in case...
+        //                foreach (var strat in stratsInDb)
+        //                {
+        //                    strat.ExternalId = group.Key.campaignId.ToString();
+        //                    strat.Name = group.Key.name;
+        //                    // type, status, created, start, end, etc...
+        //                }
+        //                int numUpdates = db.SaveChanges();
+        //                if (numUpdates > 0)
+        //                {
+        //                    Logger.Info("Updated Strategy: {0}, Eid={1}", group.Key.name, group.Key.campaignId.ToString());
+        //                    if (numUpdates > 1)
+        //                        Logger.Warn("Multiple entities in db ({0})", numUpdates);
+        //                }
+        //                strategyIdLookupByCampEid[group.Key.campaignId.ToString()] = stratsInDb.First().Id;
+        //            }
+        //        }
+        //    }
+        //}
     }
 }

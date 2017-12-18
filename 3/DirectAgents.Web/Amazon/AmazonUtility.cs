@@ -188,7 +188,8 @@ namespace Amazon
         public AmazonUtility()
         {
             ResetCredentials();
-            AmazonAuth = new AmazonAuth(UserName, Password, ClientId, ClientSecret, RefreshToken);
+            //AmazonAuth = new AmazonAuth(UserName, Password, ClientId, ClientSecret, RefreshToken);
+            AmazonAuth = new AmazonAuth(ClientId, ClientSecret, ApplicationAccessCode, RefreshToken);
 
             AccessTokens = AmazonAuth.GetInitialTokens();
         }
@@ -249,6 +250,25 @@ namespace Amazon
 
             return response;
         }
+
+        public string GetKeywords(string profileId)
+        {
+            try
+            {
+                var client = new RestClient(_amazonApiEndpointUrl); //"https://advertising-api.amazon.com"
+                client.AddHandler("application/json", new JsonDeserializer());
+                var request = new RestRequest("v1/keywords", Method.GET);
+                request.AddHeader("Content-Type", "application/json");
+                request.AddHeader("Amazon-Advertising-API-Scope", profileId);
+                var restResponse = ProcessRequest<AmazonKeyword>(request, postNotGet: false);
+                return restResponse.Content;
+            }
+            catch (Exception x)
+            {
+                throw;
+            }
+        }
+
         public void GetAccessToken()
         {
             //var restClient = new RestClient
@@ -367,18 +387,16 @@ namespace Amazon
         //}
 
 
-        public void GetProfiles()
+        public List<Profile> GetProfiles()
         {
             try
-            {                
-                var client = new RestClient(_amazonApiEndpointUrl); //"https://advertising-api.amazon.com/";
+            {
+                List<Profile> profiles = new List<Profile>();
+                var client = new RestClient(_amazonApiEndpointUrl);
                 client.AddHandler("application/json", new JsonDeserializer());
                 var request = new RestRequest("v1/profiles", Method.GET);
-                request.AddHeader("Content-Type", "application/json");//
-                request.AddHeader("Authorization", "bearer " + AccessTokens.AccessToken);
-                IRestResponse response = client.Execute(request);
-                var content = response.Content; // raw content as string
-
+                var restResponse = ProcessRequest<List<Profile>>(request, postNotGet: false);
+                return restResponse.Data;
             }
             catch (Exception x)
             {

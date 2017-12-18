@@ -29,6 +29,15 @@ namespace Amazon
 
         public string _error = null;
 
+
+        public AmazonAuth(string clientId, string clientSecret, string accessCode, string refreshToken)
+        {
+            ClientId = clientId;
+            ClientSecret = clientSecret;
+            ApplicationAccessCode = accessCode;
+            RefreshToken = refreshToken;
+        }
+
         public AmazonAuth(string username, string password, string clientId, string clientSecret, string refreshToken)
         {
             UserName = username;
@@ -40,9 +49,9 @@ namespace Amazon
 
         public AccessTokens GetInitialTokens()
         {
-            if (!string.IsNullOrEmpty(RefreshToken))            
+            if (!string.IsNullOrEmpty(RefreshToken))
                 return GetAccessTokens();
-            
+
             if (string.IsNullOrEmpty(ApplicationAccessCode))
             {
                 var code = DoLoginForm();

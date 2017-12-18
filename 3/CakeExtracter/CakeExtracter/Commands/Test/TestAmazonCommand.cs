@@ -24,18 +24,15 @@ namespace CakeExtracter.Commands.Test
 
         public override int Execute(string[] remainingArguments)
         {
-            string clientId = ConfigurationManager.AppSettings["AmazonClientId"];
-            string clientSecret = ConfigurationManager.AppSettings["AmazonClientSecret"];
-            string username = ConfigurationManager.AppSettings["AmazonAPIUsername"];
-            string password = ConfigurationManager.AppSettings["AmazonAPIPassword"];
-            string refreshToken = ConfigurationManager.AppSettings["AmazonRefreshToken"];
+            //string clientId = ConfigurationManager.AppSettings["AmazonClientId"];
+            //string clientSecret = ConfigurationManager.AppSettings["AmazonClientSecret"];
+            //string accessCode = ConfigurationManager.AppSettings["AmazonAccessCode"];
 
-            _amazonAuth = new AmazonAuth(username, password, clientId, clientSecret, refreshToken);
+            //_amazonAuth = new AmazonAuth(clientId, clientSecret, accessCode);
 
             
-
             ListProfiles();
-
+            Console.ReadKey();
             return 0;
         }
 
@@ -44,12 +41,14 @@ namespace CakeExtracter.Commands.Test
             var amazonUtil = new AmazonUtility();
 
             //get profiles
-            amazonUtil.GetProfiles(); 
-            //list profiles
-            //foreach (var profile in listOfProfiles)
-            //{
+            var profiles = amazonUtil.GetProfiles();
 
-            //}
+            //list profiles
+            foreach (var profile in profiles)
+            {
+                System.Console.WriteLine("Profile Name:{0}", profile.AccountInfo.BrandName);
+                System.Console.WriteLine("Profile ID:{0}", profile.ProfileId);
+            }
         }
 
         public void TestFillStrategy()
