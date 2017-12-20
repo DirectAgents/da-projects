@@ -17,10 +17,13 @@ namespace LTWeb.Service
         public LendingTreeModel(string serviceConfigName)
         {
             // Get service configuration from database by name.
-            using (var repo = new Repository(new LTWebDataContext(), false))
-            {
-                _config = repo.Single<ServiceConfig>(c => c.Name == serviceConfigName);
-            }
+            //using (var repo = new Repository(new LTWebDataContext(), false))
+            //{
+            //    _config = repo.Single<ServiceConfig>(c => c.Name == serviceConfigName);
+            //}
+            // TEMP!!!
+            _config = new ServiceConfig();
+            _config.SourceOfRequest = new SourceOfRequestType();
 
             // Initialize to new AppID
             this.AppID = Guid.NewGuid().ToString();

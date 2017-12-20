@@ -57,10 +57,14 @@ namespace LTWeb
             {
                 return SessionUility.GetOrCreate<Dictionary<string, string>>(SessionKeys.Admin, () =>
                 {
-                    using (var db = new LTWebDataContext())
-                    {
-                        return db.AdminSettings.ToDictionary(c => c.Name, c => c.Value);
-                    }
+                    //using (var db = new LTWebDataContext())
+                    //{
+                    //    return db.AdminSettings.ToDictionary(c => c.Name, c => c.Value);
+                    //}
+                    var dict = new Dictionary<string, string>();
+                    dict["Rate1"] = "3.5 %";
+                    dict["Rate2"] = "4.0 %";
+                    return dict;
                 });
             }
         }

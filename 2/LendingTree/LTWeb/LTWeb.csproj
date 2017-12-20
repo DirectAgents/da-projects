@@ -416,6 +416,7 @@
     <Content Include="Views\Test\LeadService.cshtml" />
     <Content Include="Content\images\new\lendingtree-bg.psd" />
     <None Include="Properties\PublishProfiles\LTWeb.pubxml" />
+    <None Include="Properties\PublishProfiles\LTWebDemo.pubxml" />
     <None Include="Properties\PublishProfiles\LTWebLive.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <None Include="Scripts\jquery-1.8.3.intellisense.js" />
