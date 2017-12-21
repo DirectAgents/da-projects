@@ -139,12 +139,27 @@ namespace CakeExtracter.Commands
         }
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AmazonAdSetSummaryExtracter(AmazonUtility, dateRange, account.ExternalId);
-            var loader = new TDAdSetSummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            foreach (DateTime day in EachDay(dateRange.FromDate, dateRange.ToDate))
+            {
+                var extracter = new AmazonAdSetExtracter(AmazonUtility, day, account.ExternalId);
+                var loader = new TDAdSetLoader(account.Id);
+                var extracterThread = extracter.Start();
+                var loaderThread = loader.Start(extracter);
+                extracterThread.Join();
+                loaderThread.Join();
+            }
+        }
+        private void DoETL_AdSetSummary(DateRange dateRange, ExtAccount account)
+        {
+            foreach (DateTime day in EachDay(dateRange.FromDate, dateRange.ToDate))
+            {
+                var extracter = new AmazonAdSetSummaryExtracter(AmazonUtility, day, account.ExternalId);
+                var loader = new TDAdSetSummaryLoader(account.Id);
+                var extracterThread = extracter.Start();
+                var loaderThread = loader.Start(extracter);
+                extracterThread.Join();
+                loaderThread.Join();
+            }
         }
         private void DoETL_Creative(DateRange dateRange, ExtAccount account)
         {
@@ -172,6 +187,11 @@ namespace CakeExtracter.Commands
 
                 return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
             }
+        }
+        public IEnumerable<DateTime> EachDay(DateTime from, DateTime thru)
+        {
+            for (var day = from.Date; day.Date <= thru.Date; day = day.AddDays(1))
+                yield return day;
         }
 
     }

@@ -16,6 +16,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         protected readonly AmazonUtility _amazonUtility;
         protected readonly DateRange dateRange;
         protected readonly string clientId;
+        protected readonly DateTime reportDate;
 
         public AmazonApiExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId)
         {
@@ -23,14 +24,19 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             this.dateRange = dateRange;
             this.clientId = clientId;
         }
-
+        public AmazonApiExtracter(AmazonUtility amazonUtility, DateTime reportDate, string clientId)
+        {
+            this._amazonUtility = amazonUtility;
+            this.reportDate = reportDate;
+            this.clientId = clientId;
+        }
         public IEnumerable<DateTime> EachDay(DateTime from, DateTime thru)
         {
             for (var day = from.Date; day.Date <= thru.Date; day = day.AddDays(1))
                 yield return day;
         }
     }
-
+    //Atza|IwEBIH1MkIuOQhg_GVq0u5sMIz4J4PTxPaIvD311brupG0GoBEB4GNdBDor7TlMPrY2foUq6uFzsl8MD3PUlVup5MhlRKNlwPr8ZFuAkcdL6op91Cm46Njs_-Jcu63m16yJRpKdVmiYYq86UNgtllJoSidrerRR9ppHVXt_mJxAJXTiEv-BgaAcUPIAI2RPv8fkLiean7AIxHbkYnY7X2OmVWIz7FlyjcdVay1_rZyr54eCS4wUUWhFjoN8L8a-5j2FnW2e6rHCd7gKE3i8fMhzrU1_MD7m18aIqTuO_X0c1qh4SHn7vMTBl0RMqi4ttlviQvA6lcVJ3MNKADqQVnEcSx3QreLTApF0Kwubjjbsqo4S9pn2ZdxroSoE6NsylLqBi5gerTbYZrbTWZ3IdhBm8Mf_me4h7LtKZxpkI2q0wBn7PgMc29Ij1-CT1p9keKkZwKYgQWkoSrGVYNZrgAKyFpiQ42ot2WBXJc_MoU6KDb8o7y0xTeWLifU1RWfLUVqT6lGy2C2Gs3OofLVnMOCdJemOzyxnE8NQgh48xa3_LfvjnbUSGd0YyDW4p1PYeA8-9Siq8JiymFT39pExMRucRSQnz
     //The daily extracter will load data based on date range and sum up totals of each campaign
     public class AmazonDailySummaryExtracter : AmazonApiExtracter<AmazonDailySummary>
     {
@@ -217,16 +223,53 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         }
     }
 
-    public class AmazonAdSetSummaryExtracter : AmazonApiExtracter<AdSetSummary>
+    public class AmazonAdSetExtracter : AmazonApiExtracter<AdSet>
     {
-        public AmazonAdSetSummaryExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId)
-            : base(amazonUtility, dateRange, clientId)
+        public AmazonAdSetExtracter(AmazonUtility amazonUtility, DateTime reportDate, string clientId)
+            : base(amazonUtility, reportDate, clientId)
         { }
 
         protected override void Extract()
         {
-            Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
-                        this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
+            Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) from {1:d} to {2:d}, for reporting date: {3:d}", this.clientId, this.dateRange.FromDate, this.dateRange.ToDate, this.reportDate);
+            var items = EnumerateRows();
+            Add(items);
+            End();
+
+        }
+        private IEnumerable<AdSet> EnumerateRows()
+        {
+            List<AdSet> result = new List<AdSet>();
+            IEnumerable<AmazonKeyword> keywords = null;
+
+            var json = _amazonUtility.GetKeywords(clientId);
+            keywords = JsonConvert.DeserializeObject<List<AmazonKeyword>>(json);
+
+            foreach (var keyword in keywords)
+            {
+                result.Add(new AdSet
+                {
+                    Name = keyword.KeywordText,
+                    AccountId = Convert.ToInt32(this.clientId),
+
+
+                    StrategyId = Convert.ToInt32(keyword.CampaignId),
+                    ExternalId = keyword.KeywordId.ToString()
+                });
+            }
+
+            return result;
+        }
+    }
+    public class AmazonAdSetSummaryExtracter : AmazonApiExtracter<AdSetSummary>
+    {
+        public AmazonAdSetSummaryExtracter(AmazonUtility amazonUtility, DateTime reportDate, string clientId)
+            : base(amazonUtility, reportDate, clientId)
+        { }
+
+        protected override void Extract()
+        {
+            Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) from {1:d} to {2:d}, for reporting date: {3:d}", this.clientId, this.dateRange.FromDate, this.dateRange.ToDate, this.reportDate);
             var items = EnumerateRows();
             Add(items);
             End();
@@ -235,32 +278,28 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         private IEnumerable<AdSetSummary> EnumerateRows()
         {
             List<AdSetSummary> result = new List<AdSetSummary>();
-
-
             IEnumerable<AmazonKeyword> keywords = null;
 
             var json = _amazonUtility.GetKeywords(clientId);
             keywords = JsonConvert.DeserializeObject<List<AmazonKeyword>>(json);
 
-            foreach (DateTime day in EachDay(this.dateRange.FromDate, this.dateRange.ToDate))
+            string reportDate = this.reportDate.ToString("yyyyMMdd");
+            var parms = _amazonUtility.CreateAmazonApiReportParams(reportDate);
+            var submissionReportResponse = _amazonUtility.SubmitReport(parms, "keywords");
+            List<AmazonKeywordMetric> dailyStats = new List<AmazonKeywordMetric>();
+            //report could take awhile to be generated, therefore,we are looping until we get status SUCCESS
+            while (true)
             {
-                string reportDate = day.ToString("yyyyMMdd");
-                var parms = _amazonUtility.CreateAmazonApiReportParams(reportDate);
-                var submissionReportResponse = _amazonUtility.SubmitReport(parms, "keywords");
-                List<AmazonKeywordMetric> dailyStats = new List<AmazonKeywordMetric>();
-                //report could take awhile to be generated, therefore,we are looping until we get status SUCCESS
-                while (true)
-                {
-                    var downloadInfo = _amazonUtility.RequestReport(submissionReportResponse.reportId, this.clientId.ToString());
+                var downloadInfo = _amazonUtility.RequestReport(submissionReportResponse.reportId, this.clientId.ToString());
 
-                    if (downloadInfo != null && !string.IsNullOrWhiteSpace(downloadInfo.location))
-                    {
-                        var dailyStatsJson = _amazonUtility.GetJsonStringFromDownloadFile(downloadInfo.location);
-                        dailyStats = JsonConvert.DeserializeObject<List<AmazonKeywordMetric>>(dailyStatsJson);
-                        break;
-                    }
+                if (downloadInfo != null && !string.IsNullOrWhiteSpace(downloadInfo.location))
+                {
+                    var dailyStatsJson = _amazonUtility.GetJsonStringFromDownloadFile(downloadInfo.location);
+                    dailyStats = JsonConvert.DeserializeObject<List<AmazonKeywordMetric>>(dailyStatsJson);
+                    break;
                 }
             }
+
             return result;
         }
     }
