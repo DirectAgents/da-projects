@@ -26,11 +26,13 @@ namespace FacebookAPI
         public const string Conversion_ActionType_VideoPlay = "video_play";
         public string Conversion_ActionType = Conversion_ActionType_Default;
 
-        public string Click_Attribution = "28d_click";
-        public string View_Attribution = "1d_view";
+        public string Click_Attribution = "28d_click"; //default
+        public string View_Attribution = "1d_view";    //default
 
         public void Set_7d_click_attribution() { Click_Attribution = "7d_click"; }
         public void Set_28d_click_attribution() { Click_Attribution = "28d_click"; }
+        public void Set_7d_view_attribution() { View_Attribution = "7d_view"; }
+        public void Set_1d_view_attribution() { View_Attribution = "1d_view"; }
 
         public bool IncludeAllActions = false;
 

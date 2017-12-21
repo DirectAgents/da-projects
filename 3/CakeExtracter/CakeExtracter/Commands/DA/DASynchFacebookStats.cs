@@ -88,6 +88,8 @@ namespace CakeExtracter.Commands
 
             var string_7d_click = ConfigurationManager.AppSettings["FB_7d_click"] ?? "";
             var Accts_7d_click = string_7d_click.Split(new char[] { ',' });
+            var string_7d_view = ConfigurationManager.AppSettings["FB_7d_view"] ?? "";
+            var Accts_7d_view = string_7d_view.Split(new char[] { ',' });
 
             var Accts_DailyOnly = new string[] { };
             if (!AccountId.HasValue || statsType.All)
@@ -146,7 +148,11 @@ namespace CakeExtracter.Commands
                 if (Accts_7d_click.Contains(acct.ExternalId))
                     fbUtility.Set_7d_click_attribution();
                 else
-                    fbUtility.Set_28d_click_attribution();
+                    fbUtility.Set_28d_click_attribution(); //default
+                if (Accts_7d_view.Contains(acct.ExternalId))
+                    fbUtility.Set_7d_view_attribution();
+                else
+                    fbUtility.Set_1d_view_attribution(); //default
 
                 if (statsType.Daily)
                     DoETL_Daily(acctDateRange, acct, fbUtility);
