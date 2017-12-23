@@ -33,25 +33,29 @@ namespace Amazon
         private readonly string _amazonAccessCode = ConfigurationManager.AppSettings["AmazonAccessCode"];
         private readonly string _amazonRefreshToken = ConfigurationManager.AppSettings["AmazonRefreshToken"];
 
+        private const string TOKEN_DELIMITER = "|DELIMITER|";
         private long CustomerID { get; set; }
-        private string DeveloperToken { get; set; }
-          
+        private string DeveloperToken { get; set; }          
         private string UserName { get; set; }
         private string Password { get; set; }
         private string ClientId { get; set; }
         private string ClientSecret { get; set; }
-        private string RefreshToken { get; set; }
+        
         private string ApiEndpointUrl { get; set; }
         private string AuthorizeUrl { get; set; }
         private string TokenUrl { get; set; }
         private string ClientUrl { get; set; }
         private string ProfileId { get; set; }
         public static string AccessToken { get; set; }
+        public static string RefreshToken { get; set; }
         public static string ApplicationAccessCode { get; set; }
 
         private AmazonAuth AmazonAuth = null;
-        private AccessTokens AccessTokens = null;
-
+        public AccessTokens AccessTokens = new AccessTokens();
+        private IEnumerable<string> CreateTokenSets()
+        {
+            yield return AccessTokens.AccessToken + TOKEN_DELIMITER + AccessTokens.RefreshToken;
+        }
         private void ResetCredentials()
         {
             UserName = _amazonApiUsername;
@@ -64,6 +68,21 @@ namespace Amazon
             ClientUrl = _amazonClientUrl;
             ApplicationAccessCode = _amazonAccessCode;
             RefreshToken = _amazonRefreshToken;
+        }
+        public string[] TokenSets // each string in the array is a combination of Access + Refresh Token
+        {
+            get { return CreateTokenSets().ToArray(); }
+            set
+            {
+                for (int i = 0; i < value.Length; i++)
+                {
+                    var tokenSet = value[i].Split(new string[] { TOKEN_DELIMITER }, StringSplitOptions.None);
+                    AccessTokens.access_token = AccessToken = tokenSet[0];
+
+                    if (tokenSet.Length > 1)
+                        AccessTokens.refresh_token = RefreshToken = tokenSet[1];
+                }
+            }
         }
         private void SetCredentials(long accountId)
         {
@@ -269,6 +288,24 @@ namespace Amazon
             }
         }
 
+        public string GetProductAds(string profileId)
+        {
+            try
+            {
+                var client = new RestClient(_amazonApiEndpointUrl); //"https://advertising-api.amazon.com"
+                client.AddHandler("application/json", new JsonDeserializer());
+                var request = new RestRequest("v1/productAds", Method.GET);
+                request.AddHeader("Content-Type", "application/json");
+                request.AddHeader("Amazon-Advertising-API-Scope", profileId);
+                var restResponse = ProcessRequest<AmazonProductAds>(request, postNotGet: false);
+                return restResponse.Content;
+            }
+            catch (Exception x)
+            {
+                throw;
+            }
+        }
+
         public void GetAccessToken()
         {
             //var restClient = new RestClient
@@ -289,6 +326,8 @@ namespace Amazon
             AccessTokens = AmazonAuth.GetInitialTokens();
 
             AccessToken = AccessTokens.AccessToken;
+            RefreshToken = AccessTokens.RefreshToken;
+
         }
 
         public ReportResponseDownloadInfo RequestReport(string reportId, string profileId)

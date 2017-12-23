@@ -102,13 +102,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             }
         }
     }
-
     public class AmazonCampaignSummaryExtracter : AmazonApiExtracter<StrategySummary>
     {
         protected readonly string campaignEid;
 
-        public AmazonCampaignSummaryExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignEid = null)
-            : base(amazonUtility, dateRange, clientId)
+        public AmazonCampaignSummaryExtracter(AmazonUtility amazonUtility, DateTime date, string clientId, string campaignEid = null)
+            : base(amazonUtility, date, clientId)
         { }
 
         protected override void Extract()
@@ -222,8 +221,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             //}
         }
     }
-
-    public class AmazonAdSetExtracter : AmazonApiExtracter<AdSet>
+    public class AmazonAdSetExtracter : AmazonApiExtracter<AmazonAdSet>
     {
         public AmazonAdSetExtracter(AmazonUtility amazonUtility, DateTime reportDate, string clientId)
             : base(amazonUtility, reportDate, clientId)
@@ -237,9 +235,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             End();
 
         }
-        private IEnumerable<AdSet> EnumerateRows()
+        private IEnumerable<AmazonAdSet> EnumerateRows()
         {
-            List<AdSet> result = new List<AdSet>();
+            List<AmazonAdSet> result = new List<AmazonAdSet>();
             IEnumerable<AmazonKeyword> keywords = null;
 
             var json = _amazonUtility.GetKeywords(clientId);
@@ -247,21 +245,19 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
             foreach (var keyword in keywords)
             {
-                result.Add(new AdSet
+                result.Add(new AmazonAdSet
                 {
-                    Name = keyword.KeywordText,
-                    AccountId = Convert.ToInt32(this.clientId),
-
-
-                    StrategyId = Convert.ToInt32(keyword.CampaignId),
-                    ExternalId = keyword.KeywordId.ToString()
+                    KeywordText = keyword.KeywordText,
+                    //AccountId = Convert.ToInt32(this.clientId),
+                    CampaignId = keyword.CampaignId.ToString(),
+                    KeywordId = keyword.KeywordId.ToString()
                 });
             }
 
             return result;
         }
     }
-    public class AmazonAdSetSummaryExtracter : AmazonApiExtracter<AdSetSummary>
+    public class AmazonAdSetSummaryExtracter : AmazonApiExtracter<AmazonKeywordMetric>
     {
         public AmazonAdSetSummaryExtracter(AmazonUtility amazonUtility, DateTime reportDate, string clientId)
             : base(amazonUtility, reportDate, clientId)
@@ -275,13 +271,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             End();
 
         }
-        private IEnumerable<AdSetSummary> EnumerateRows()
+        private IEnumerable<AmazonKeywordMetric> EnumerateRows()
         {
-            List<AdSetSummary> result = new List<AdSetSummary>();
-            IEnumerable<AmazonKeyword> keywords = null;
+            //IEnumerable<AmazonKeyword> keywords = null;
 
-            var json = _amazonUtility.GetKeywords(clientId);
-            keywords = JsonConvert.DeserializeObject<List<AmazonKeyword>>(json);
+            //var json = _amazonUtility.GetKeywords(clientId);
+            //keywords = JsonConvert.DeserializeObject<List<AmazonKeyword>>(json);
 
             string reportDate = this.reportDate.ToString("yyyyMMdd");
             var parms = _amazonUtility.CreateAmazonApiReportParams(reportDate);
@@ -299,64 +294,42 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                     break;
                 }
             }
-
-            return result;
+            dailyStats.Select(c => { c.Date = this.reportDate; return c; }).ToList();
+            return dailyStats;
         }
     }
-
-    public class AmazonTDadSummaryExtracter : AmazonApiExtracter<TDadSummary>
+    public class AmazonAdExtrater : AmazonApiExtracter<TDad>
     {
-        public AmazonTDadSummaryExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId)
-            : base(amazonUtility, dateRange, clientId)
+        public AmazonAdExtrater(AmazonUtility amazonUtility, DateTime date, string clientId)
+            : base(amazonUtility, date, clientId)
         { }
 
         protected override void Extract()
         {
-            Logger.Info("Extracting TDadSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
-                        this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
-            //TODO: Do X days at a time...?
-            try
-            {
-                //var parms = _amazonUtility.CreateReportParams(dateRange.FromDate, dateRange.ToDate, clientId, byBanner: true, RTBonly: true,
-                //                                          basicMetrics: true, convMetrics: true, byAdInteractionType: true);
-                //var reportData = _amazonUtility.GetReportData(parms);
-                //if (reportData != null)
-                //{
-                //    var sums = EnumerateRows(reportData);
-                //    Add(sums);
-                //}
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-            }
+            Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) from {1:d} to {2:d}, for reporting date: {3:d}", this.clientId, this.dateRange.FromDate, this.dateRange.ToDate, this.reportDate);
+            var items = EnumerateRows();
+            Add(items);
             End();
+
         }
-        private IEnumerable<TDadSummary> EnumerateRows(ReportData reportData)
+        private IEnumerable<TDad> EnumerateRows()
         {
-            var adformTransformer = new AmazonTransformer(reportData, byBanner: true);
-            var afSums = adformTransformer.EnumerateAmazonSummaries();
-            var bannerDateGroups = afSums.GroupBy(x => new { x.Banner, x.Date });
-            foreach (var bdGroup in bannerDateGroups)
+            List<TDad> result = new List<TDad>();
+            IEnumerable<AmazonProductAds> productAds = null;
+
+            var json = _amazonUtility.GetProductAds(clientId);
+            productAds = JsonConvert.DeserializeObject<List<AmazonProductAds>>(json);
+
+            foreach (var productAd in productAds)
             {
-                var sum = new TDadSummary
-                {
-                    TDadName = bdGroup.Key.Banner,
-                    Date = bdGroup.Key.Date,
-                    Cost = bdGroup.Sum(x => x.Cost),
-                    Impressions = bdGroup.Sum(x => x.Impressions),
-                    Clicks = bdGroup.Sum(x => x.Clicks)
-                };
-                var clickThroughs = bdGroup.Where(x => x.AdInteractionType == "Click");
-                sum.PostClickConv = clickThroughs.Sum(x => x.Conversions);
-                //sum.PostClickRev = clickThroughs.Sum(x => x.Sales);
-
-                var viewThroughs = bdGroup.Where(x => x.AdInteractionType == "Impression");
-                sum.PostViewConv = viewThroughs.Sum(x => x.Conversions);
-                //sum.PostViewRev = viewThroughs.Sum(x => x.Sales);
-
-                yield return sum;
+                result.Add(new TDad
+                {         
+                     ExternalId =  productAd.AdId,
+                     Name = productAd.Asin                               
+                });
             }
+
+            return result;
         }
     }
 

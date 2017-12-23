@@ -49,9 +49,6 @@ namespace Amazon
 
         public AccessTokens GetInitialTokens()
         {
-            if (!string.IsNullOrEmpty(RefreshToken))
-                return GetAccessTokens();
-
             if (string.IsNullOrEmpty(ApplicationAccessCode))
             {
                 var code = DoLoginForm();
@@ -63,13 +60,13 @@ namespace Amazon
             return GetAccessTokens();
         }
 
-        public AccessTokens GetNewTokens(string refreshToken)
-        {
-            //var uri = string.Format(RefreshUriFormatter, TokenUri, ClientId, DesktopUri, refreshToken);
-            //var uri = string.Format(RefreshUriFormatter, TokenUri, ClientId, refreshToken);
-            AccessTokens tokens = GetAccessTokens();
-            return tokens;
-        }
+        //public AccessTokens GetNewTokens(string refreshToken)
+        //{
+        //    //var uri = string.Format(RefreshUriFormatter, TokenUri, ClientId, DesktopUri, refreshToken);
+        //    //var uri = string.Format(RefreshUriFormatter, TokenUri, ClientId, refreshToken);
+        //    AccessTokens tokens = GetAccessTokens();
+        //    return tokens;
+        //}
 
         [STAThread]
         private string DoLoginForm()
@@ -98,7 +95,7 @@ namespace Amazon
                 page.LoginButton.Click();
                 browser.WaitForComplete();
                 //browser.Button(Find.ById("idBtn_Accept")).Click();
-                
+
                 //return uri should look like this: https://portal.directagents.com/Account/Login?ReturnUrl=%2f%3fcode%3dANrCxMDnqHYdFuNLGHYg%26scope%3dprofile&code=ANrCxMDnqHYdFuNLGHYg&scope=profile
                 Uri myUri = new Uri(browser.Url);
                 code = HttpUtility.ParseQueryString(myUri.Query).Get("code");
@@ -116,7 +113,7 @@ namespace Amazon
         {
             AccessTokens tokenResponse = null;
             try
-            {                
+            {
                 var restClient = new RestClient
                 {
                     BaseUrl = new Uri(TokenUri),

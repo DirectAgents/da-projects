@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DirectAgents.Domain.Entities.CPProg;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,14 +7,10 @@ using System.Threading.Tasks;
 
 namespace Amazon.Entities
 {
-    public class AmazonKeywordMetric
+    public class AmazonAdSetSummary : StatsSummary
     {
-        public string KeywordId { get; set; }
-        public decimal Cost { get; set; }
-        public int Clicks { get; set; }
-        public int Impressions { get; set; }
-
-        public DateTime Date { get; set; }
+        public DateTime date { get; set; }
+        public string eid { get; set; }
 
         public int prospects { get; set; }
 

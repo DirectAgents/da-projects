@@ -67,16 +67,26 @@
   <ItemGroup>
     <Compile Include="AmazonAuth.cs" />
     <Compile Include="AmazonUtility.cs" />
+    <Compile Include="Entities\AmazonAdSet.cs" />
+    <Compile Include="Entities\AmazonAdSetSummary.cs" />
     <Compile Include="Entities\AmazonCampaign.cs" />
     <Compile Include="Entities\AmazonClientProfile.cs" />
     <Compile Include="Entities\AmazonDailySummary.cs" />
     <Compile Include="Entities\AmazonKeyword.cs" />
     <Compile Include="Entities\AmazonKeywordMetric.cs" />
+    <Compile Include="Entities\AmazonProductAds.cs" />
+    <Compile Include="Entities\AmazonAd.cs" />
     <Compile Include="HelperClasses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\1\DirectAgents.Domain\DirectAgents.Domain.csproj">
+      <Project>{278911AB-CB92-4316-843E-4571CD0C3410}</Project>
+      <Name>DirectAgents.Domain</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

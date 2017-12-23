@@ -40,6 +40,7 @@ namespace CakeExtracter.Commands
 
         private AmazonUtility AmazonUtility { get; set; }
 
+
         public override void ResetProperties()
         {
             AccountId = null;
@@ -89,6 +90,8 @@ namespace CakeExtracter.Commands
                         DoETL_Strategy(dateRange, account);
                     if (statsType.AdSet)
                         DoETL_AdSet(dateRange, account);
+                    if (statsType.AdSetSummary)
+                        DoETL_AdSetSummary(dateRange, account);
                     if (statsType.Creative)
                         DoETL_Creative(dateRange, account);
                 }
@@ -112,37 +115,44 @@ namespace CakeExtracter.Commands
             // Get tokens, if any, from the database
             string[] tokens = Platform.GetPlatformTokens(Platform.Code_Amazon);
             AmazonUtility.AccessToken = tokens[0];
-
+            AmazonUtility.RefreshToken = tokens[1];
+            AmazonUtility.TokenSets = tokens;
         }
         private void SaveTokens()
         {
-            Platform.SavePlatformTokens(Platform.Code_Amazon, AmazonUtility.AccessToken);
+            Platform.SavePlatformTokens(Platform.Code_Amazon, AmazonUtility.TokenSets);
         }
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AmazonDailySummaryExtracter(AmazonUtility, dateRange, account.ExternalId);
-            var loader = new AmazonDailySummaryLoader(account.Id);
-            var extracterThread = extracter.Start();            
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            foreach (var date in dateRange.Dates)
+            {
+                var extracter = new AmazonDailySummaryExtracter(AmazonUtility, dateRange, account.ExternalId);
+                var loader = new AmazonDailySummaryLoader(account.Id);
+                var extracterThread = extracter.Start();
+                var loaderThread = loader.Start(extracter);
+                extracterThread.Join();
+                loaderThread.Join();
+            }
         }
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AmazonCampaignSummaryExtracter(AmazonUtility, dateRange, account.ExternalId);
-            var loader = new AmazonCampaignSummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            foreach (var date in dateRange.Dates)
+            {
+                var extracter = new AmazonCampaignSummaryExtracter(AmazonUtility, date, account.ExternalId);
+                var loader = new AmazonCampaignSummaryLoader(account.Id);
+                var extracterThread = extracter.Start();
+                var loaderThread = loader.Start(extracter);
+                extracterThread.Join();
+                loaderThread.Join();
+            }
         }
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account)
         {
-            foreach (DateTime day in EachDay(dateRange.FromDate, dateRange.ToDate))
+            foreach (var date in dateRange.Dates)
             {
-                var extracter = new AmazonAdSetExtracter(AmazonUtility, day, account.ExternalId);
-                var loader = new TDAdSetLoader(account.Id);
+                var extracter = new AmazonAdSetExtracter(AmazonUtility, date, account.ExternalId);
+                var loader = new AmazonAdSetLoader(account.Id);
                 var extracterThread = extracter.Start();
                 var loaderThread = loader.Start(extracter);
                 extracterThread.Join();
@@ -151,10 +161,10 @@ namespace CakeExtracter.Commands
         }
         private void DoETL_AdSetSummary(DateRange dateRange, ExtAccount account)
         {
-            foreach (DateTime day in EachDay(dateRange.FromDate, dateRange.ToDate))
+            foreach (var date in dateRange.Dates)
             {
-                var extracter = new AmazonAdSetSummaryExtracter(AmazonUtility, day, account.ExternalId);
-                var loader = new TDAdSetSummaryLoader(account.Id);
+                var extracter = new AmazonAdSetSummaryExtracter(AmazonUtility, date, account.ExternalId);
+                var loader = new AmazonAdSetSummaryLoader(account.Id);
                 var extracterThread = extracter.Start();
                 var loaderThread = loader.Start(extracter);
                 extracterThread.Join();
@@ -163,12 +173,15 @@ namespace CakeExtracter.Commands
         }
         private void DoETL_Creative(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AmazonTDadSummaryExtracter(AmazonUtility, dateRange, account.ExternalId);
-            var loader = new TDadSummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            foreach (var date in dateRange.Dates)
+            {
+                var extracter = new AmazonAdExtrater(AmazonUtility, date, account.ExternalId);
+                var loader = new AmazonAdLoader(account.Id);
+                var extracterThread = extracter.Start();
+                var loaderThread = loader.Start(extracter);
+                extracterThread.Join();
+                loaderThread.Join();
+            }
         }
 
         private IEnumerable<ExtAccount> GetAccounts()
@@ -188,11 +201,11 @@ namespace CakeExtracter.Commands
                 return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
             }
         }
-        public IEnumerable<DateTime> EachDay(DateTime from, DateTime thru)
-        {
-            for (var day = from.Date; day.Date <= thru.Date; day = day.AddDays(1))
-                yield return day;
-        }
+        //public IEnumerable<DateTime> EachDay(DateTime from, DateTime thru)
+        //{
+        //    for (var day = from.Date; day.Date <= thru.Date; day = day.AddDays(1))
+        //        yield return day;
+        //}
 
     }
 }
