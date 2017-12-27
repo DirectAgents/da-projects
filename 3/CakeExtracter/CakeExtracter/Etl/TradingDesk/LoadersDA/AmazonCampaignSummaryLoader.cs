@@ -12,7 +12,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
     public class AmazonCampaignSummaryLoader : Loader<StrategySummary>
     {
         private readonly int accountId;
-        private StrategySummary strategySummaryLoader;
         private Dictionary<string, int> strategyIdLookupByCampEid = new Dictionary<string, int>();
 
         //public AmazonCampaignSummaryLoader(int advertisableEid)

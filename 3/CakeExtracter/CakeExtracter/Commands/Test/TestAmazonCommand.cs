@@ -8,9 +8,7 @@ namespace CakeExtracter.Commands.Test
 {
     [Export(typeof(ConsoleCommand))]
     public class TestAmazonCommand : ConsoleCommand
-    {
-        private AmazonAuth _amazonAuth = null;
-
+    {        
         public override void ResetProperties()
         {
         }

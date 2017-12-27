@@ -25,10 +25,34 @@ namespace Amazon
         public const string RefreshUriFormatter = "{0}?client_id={1}&grant_type=refresh_token&redirect_uri={2}&refresh_token={3}";
         public const string AuthorizeUriFormatter = "{0}?client_id={1}&code={2}&grant_type=authorization_code&redirect_uri={3}";
 
-        private string UserName, Password, ClientId, ClientSecret, RefreshToken, ApplicationAccessCode, AccessToken;
+        private string UserName, Password, ClientId, ClientSecret, RefreshToken, ApplicationAccessCode;
 
         public string _error = null;
 
+        // --- Logging ---
+        private Action<string> _LogInfo;
+        private Action<string> _LogError;
+
+        private void LogInfo(string message)
+        {
+            if (_LogInfo == null)
+                Console.WriteLine(message);
+            else
+                _LogInfo("[AmazonAuth] " + message);
+        }
+
+        private void LogError(string message)
+        {
+            if (_LogError == null)
+                Console.WriteLine(message);
+            else
+                _LogError("[AmazonAuth] " + message);
+        }
+        public AmazonAuth(Action<string> logInfo, Action<string> logError)
+        {
+            _LogInfo = logInfo;
+            _LogError = logError;
+        }
 
         public AmazonAuth(string clientId, string clientSecret, string accessCode, string refreshToken)
         {
@@ -90,7 +114,8 @@ namespace Amazon
                 }
                 catch (Exception ex)
                 {
-                    //Console.Write(ex.Message + ex.StackTrace);
+                    LogError(ex.Message);
+                    Console.Write(ex.Message + ex.StackTrace);
                 }
                 page.LoginButton.Click();
                 browser.WaitForComplete();
@@ -153,7 +178,7 @@ namespace Amazon
             }
             catch (Exception x)
             {
-                throw;
+                LogError(x.Message);
             }
             return tokenResponse;
         }

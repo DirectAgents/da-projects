@@ -1,10 +1,14 @@
-﻿using RestSharp;
+﻿using Amazon.Entities;
+using Newtonsoft.Json;
+using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Deserializers;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Dynamic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
@@ -12,10 +16,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using Newtonsoft.Json;
-using System.IO;
-using System.IO.Compression;
-using Amazon.Entities;
 
 namespace Amazon
 {
@@ -52,6 +52,28 @@ namespace Amazon
 
         private AmazonAuth AmazonAuth = null;
         public AccessTokens AccessTokens = new AccessTokens();
+
+        #region Logging
+        // --- Logging ---
+        private Action<string> _LogInfo;
+        private Action<string> _LogError;
+
+        private void LogInfo(string message)
+        {
+            if (_LogInfo == null)
+                Console.WriteLine(message);
+            else
+                _LogInfo("[AmazonUtility] " + message);
+        }
+
+        private void LogError(string message)
+        {
+            if (_LogError == null)
+                Console.WriteLine(message);
+            else
+                _LogError("[AmazonUtility] " + message);
+        } 
+        #endregion
         private IEnumerable<string> CreateTokenSets()
         {
             yield return AccessTokens.AccessToken + TOKEN_DELIMITER + AccessTokens.RefreshToken;
@@ -127,10 +149,14 @@ namespace Amazon
 
             }
             catch (Exception x)
-            {            
-                throw;
+            {
+                LogError(x.Message);
             }
+
+            return string.Empty;
+
         }
+        #region NOT USED
         public List<AmazonCampaignSummary> AmazonCampaignDailySummaries(DateTime date, string advertisableEid, string campaignEid = null)
         {
             //var request = new CampaignReportRequest
@@ -180,28 +206,8 @@ namespace Amazon
         //    return authorizationData;
         //}
 
-        #region Logging
-        // --- Logging ---
-        private Action<string> _LogInfo;
-        private Action<string> _LogError;
 
-        private void LogInfo(string message)
-        {
-            if (_LogInfo == null)
-                Console.WriteLine(message);
-            else
-                _LogInfo("[BingAds.Reports] " + message);
-        }
-
-        private void LogError(string message)
-        {
-            if (_LogError == null)
-                Console.WriteLine(message);
-            else
-                _LogError("[BingAds.Reports] " + message);
-        }
         #endregion
-
         #region Constructors
         // --- Constructors ---
         public AmazonUtility()
@@ -284,8 +290,9 @@ namespace Amazon
             }
             catch (Exception x)
             {
-                throw;
+                LogError(x.Message);
             }
+            return string.Empty;
         }
 
         public string GetProductAds(string profileId)
@@ -302,8 +309,9 @@ namespace Amazon
             }
             catch (Exception x)
             {
-                throw;
+                LogError(x.Message);
             }
+            return string.Empty;
         }
 
         public void GetAccessToken()
@@ -345,9 +353,9 @@ namespace Amazon
             }
             catch (Exception x)
             {
-
-                throw;
+                LogError(x.Message);
             }
+            return null;
         }
         public ReportRequestResponse SubmitReport(AmazonApiReportParams reportParams, string reportType)
         {            
@@ -439,36 +447,43 @@ namespace Amazon
             }
             catch (Exception x)
             {
-
-                throw;
+                LogError(x.Message);
             }
+            return null;
         }
 
         public string GetJsonStringFromDownloadFile(string url)
         {
-            var request = (HttpWebRequest)WebRequest.Create(url);            
-            request.Headers.Add("Authorization", "bearer " + AccessToken);
-            request.Headers.Add("Amazon-Advertising-API-Scope", ProfileId);
-            var response = (HttpWebResponse)request.GetResponse();
-            var responseStream = response.GetResponseStream();
-            var streamReader = new StreamReader(responseStream);
-
-            string filePath = @"H:\SourceCode\DirectAgents\da-projects\3\DirectAgents.Web\Amazon\download.gzip";
-            using (Stream s = File.Create(filePath))
+            try
             {
-                responseStream.CopyTo(s);
-            }
-            FileInfo fileToDecompress = new FileInfo(filePath);
-            Decompress(fileToDecompress);
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                request.Headers.Add("Authorization", "bearer " + AccessToken);
+                request.Headers.Add("Amazon-Advertising-API-Scope", ProfileId);
+                var response = (HttpWebResponse)request.GetResponse();
+                var responseStream = response.GetResponseStream();
+                var streamReader = new StreamReader(responseStream);
 
-            using (StreamReader r = new StreamReader(@"H:\SourceCode\DirectAgents\da-projects\3\DirectAgents.Web\Amazon\download.json"))
+                string filePath = @"H:\SourceCode\DirectAgents\da-projects\3\DirectAgents.Web\Amazon\download.gzip";
+                using (Stream s = File.Create(filePath))
+                {
+                    responseStream.CopyTo(s);
+                }
+                FileInfo fileToDecompress = new FileInfo(filePath);
+                Decompress(fileToDecompress);
+
+                using (StreamReader r = new StreamReader(@"H:\SourceCode\DirectAgents\da-projects\3\DirectAgents.Web\Amazon\download.json"))
+                {
+                    string json = r.ReadToEnd();
+                    return json;
+                }
+            }
+            catch (Exception x)
             {
-                string json = r.ReadToEnd();
-                return json;
+                LogError(x.Message);
             }
-
-            return string.Empty;
+            return string.Empty;           
         }
+
         //public StreamReader CreateStreamReaderFromUrl(string url)
         //{
         //    var request = (HttpWebRequest)WebRequest.Create(url);
@@ -482,23 +497,29 @@ namespace Amazon
 
         //}
 
-        public static void Decompress(FileInfo fileToDecompress)
+        public void Decompress(FileInfo fileToDecompress)
         {
-            using (FileStream originalFileStream = fileToDecompress.OpenRead())
+            try
             {
-                string currentFileName = fileToDecompress.FullName;
-                string newFileName = currentFileName.Remove(currentFileName.Length - fileToDecompress.Extension.Length);
-
-                using (FileStream decompressedFileStream = File.Create(newFileName + ".json"))
+                using (FileStream originalFileStream = fileToDecompress.OpenRead())
                 {
-                    using (GZipStream decompressionStream = new GZipStream(originalFileStream, CompressionMode.Decompress))
+                    string currentFileName = fileToDecompress.FullName;
+                    string newFileName = currentFileName.Remove(currentFileName.Length - fileToDecompress.Extension.Length);
+
+                    using (FileStream decompressedFileStream = File.Create(newFileName + ".json"))
                     {
-                        decompressionStream.CopyTo(decompressedFileStream);
-                        Console.WriteLine("Decompressed: {0}", fileToDecompress.Name);
+                        using (GZipStream decompressionStream = new GZipStream(originalFileStream, CompressionMode.Decompress))
+                        {
+                            decompressionStream.CopyTo(decompressedFileStream);
+                            Console.WriteLine("Decompressed: {0}", fileToDecompress.Name);
+                        }
                     }
                 }
             }
+            catch (Exception x)
+            {
+                LogError(x.Message);
+            }
         }
     }
-
 }
