@@ -8,7 +8,7 @@ using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.BingAds;
-using Microsoft.BingAds.Reporting;
+using Microsoft.BingAds.V11.Reporting;
 
 namespace BingAds
 {
@@ -279,7 +279,7 @@ namespace BingAds
                     GoalsAndFunnelsReportColumn.GoalId,
                     GoalsAndFunnelsReportColumn.Goal,
                     GoalsAndFunnelsReportColumn.Conversions,
-                    GoalsAndFunnelsReportColumn.Spend,
+                    //GoalsAndFunnelsReportColumn.Spend,
                     GoalsAndFunnelsReportColumn.Revenue,
                     GoalsAndFunnelsReportColumn.AccountId,
                     GoalsAndFunnelsReportColumn.AccountName,
@@ -364,11 +364,11 @@ namespace BingAds
                 LogInfo(string.Format("Couldn't get OAuth tokens. Error: {0}. Description: {1}", ex.Details.Error, ex.Details.Description));
             }
             // Catch Reporting service exceptions
-            catch (FaultException<Microsoft.BingAds.Reporting.AdApiFaultDetail> ex)
+            catch (FaultException<Microsoft.BingAds.V11.Reporting.AdApiFaultDetail> ex)
             {
                 LogInfo(string.Join("; ", ex.Detail.Errors.Select(error => string.Format("{0}: {1}", error.Code, error.Message))));
             }
-            catch (FaultException<Microsoft.BingAds.Reporting.ApiFaultDetail> ex)
+            catch (FaultException<Microsoft.BingAds.V11.Reporting.ApiFaultDetail> ex)
             {
                 LogInfo(string.Join("; ", ex.Detail.OperationErrors.Select(error => string.Format("{0}: {1}", error.Code, error.Message))));
                 LogInfo(string.Join("; ", ex.Detail.BatchErrors.Select(error => string.Format("{0}: {1}", error.Code, error.Message))));
