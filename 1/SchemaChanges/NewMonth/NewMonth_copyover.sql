@@ -1,8 +1,8 @@
 -- *TODO: SET APPROPRIATE DATABASES!*
-USE DADatabaseB...2017
+USE DADatabaseB...2018
 
 --Copy from previous month; *SET DATABASES!*
-exec DAMain1.dbo.EOMcopy 'DADatabaseA...2017','DADatabaseB...2017'
+exec DAMain1.dbo.EOMcopy 'DADatabaseA...2018','DADatabaseB...2018'
 --(also clears affiliate dates and updates campaign statuses)
 
 
@@ -10,12 +10,12 @@ exec DAMain1.dbo.EOMcopy 'DADatabaseA...2017','DADatabaseB...2017'
 --also, make sure correct database is still set, particularly if executing one script at a time
 
 --Initialize audit (changes current db)
-:r "C:\GitHub\da-projects-kevin\1\SchemaChanges\AuditScripts\autoaudit 2.00h.sql"
+:r "G:\GitHub\da-projects\1\SchemaChanges\AuditScripts\autoaudit 2.00h.sql"
 
-USE DADatabaseB...2017
+USE DADatabaseB...2018
 
 --Add audits
-:r "C:\GitHub\da-projects-kevin\1\SchemaChanges\AuditScripts\AddAuditTables.sql"
+:r "G:\GitHub\da-projects\1\SchemaChanges\AuditScripts\AddAuditTables.sql"
 
 --Audit views
-:r "C:\GitHub\da-projects-kevin\1\SchemaChanges\AuditScripts\CampaignFinalizationAudit.view.sql"
+:r "G:\GitHub\da-projects\1\SchemaChanges\AuditScripts\CampaignFinalizationAudit.view.sql"

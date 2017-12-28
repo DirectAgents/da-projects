@@ -110,6 +110,10 @@ EXEC EOMcopyTable @dbFrom,@dbTo,'Affiliate',1
 EXEC EOMcopyTable @dbFrom,@dbTo,'Person',0
 EXEC EOMcopyTable @dbFrom,@dbTo,'AnalystRole',0
 
+EXEC EOMcopyTable @dbFrom,@dbTo,'AnalystManager',1
+EXEC EOMcopyTable @dbFrom,@dbTo,'Analyst',1
+EXEC EOMcopyTable @dbFrom,@dbTo,'Strategist',1
+
 SET @sql = 'USE ' + @dbTo + ';'
 + ' UPDATE Affiliate SET date_created=NULL, date_modified=NULL;'
 + ' ENABLE TRIGGER tr_Affiliate_IU ON Affiliate;'
