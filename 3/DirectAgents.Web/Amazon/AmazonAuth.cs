@@ -25,7 +25,7 @@ namespace Amazon
         public const string RefreshUriFormatter = "{0}?client_id={1}&grant_type=refresh_token&redirect_uri={2}&refresh_token={3}";
         public const string AuthorizeUriFormatter = "{0}?client_id={1}&code={2}&grant_type=authorization_code&redirect_uri={3}";
 
-        private string UserName, Password, ClientId, ClientSecret, RefreshToken, ApplicationAccessCode;
+        private string UserName, Password, ClientId, ClientSecret, RefreshToken, ApplicationAccessCode="NEED TO ADD CODE";
 
         public string _error = null;
 

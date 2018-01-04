@@ -90,8 +90,6 @@ namespace CakeExtracter.Commands
                         DoETL_Strategy(dateRange, account);
                     if (statsType.AdSet)
                         DoETL_AdSet(dateRange, account);
-                    if (statsType.AdSetSummary)
-                        DoETL_AdSetSummary(dateRange, account);
                     if (statsType.Creative)
                         DoETL_Creative(dateRange, account);
                 }
@@ -116,7 +114,7 @@ namespace CakeExtracter.Commands
             string[] tokens = Platform.GetPlatformTokens(Platform.Code_Amazon);
             AmazonUtility.AccessToken = tokens[0];
             AmazonUtility.RefreshToken = tokens[1];
-            AmazonUtility.TokenSets = tokens;
+            //AmazonUtility.TokenSets = tokens;
         }
         private void SaveTokens()
         {
@@ -127,7 +125,7 @@ namespace CakeExtracter.Commands
         {
             foreach (var date in dateRange.Dates)
             {
-                var extracter = new AmazonDailySummaryExtracter(AmazonUtility, dateRange, account.ExternalId);
+                var extracter = new AmazonDailySummaryExtracter(AmazonUtility, date, account.ExternalId);
                 var loader = new AmazonDailySummaryLoader(account.Id);
                 var extracterThread = extracter.Start();
                 var loaderThread = loader.Start(extracter);
@@ -157,18 +155,13 @@ namespace CakeExtracter.Commands
                 var loaderThread = loader.Start(extracter);
                 extracterThread.Join();
                 loaderThread.Join();
-            }
-        }
-        private void DoETL_AdSetSummary(DateRange dateRange, ExtAccount account)
-        {
-            foreach (var date in dateRange.Dates)
-            {
-                var extracter = new AmazonAdSetSummaryExtracter(AmazonUtility, date, account.ExternalId);
-                var loader = new AmazonAdSetSummaryLoader(account.Id);
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
+
+                var extracter1 = new AmazonAdSetSummaryExtracter(AmazonUtility, date, account.ExternalId);
+                var loader1 = new AmazonAdSetSummaryLoader(account.Id);
+                var extracterThread1 = extracter1.Start();
+                var loaderThread1 = loader1.Start(extracter1);
+                extracterThread1.Join();
+                loaderThread1.Join();
             }
         }
         private void DoETL_Creative(DateRange dateRange, ExtAccount account)
@@ -201,11 +194,5 @@ namespace CakeExtracter.Commands
                 return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
             }
         }
-        //public IEnumerable<DateTime> EachDay(DateTime from, DateTime thru)
-        //{
-        //    for (var day = from.Date; day.Date <= thru.Date; day = day.AddDays(1))
-        //        yield return day;
-        //}
-
     }
 }

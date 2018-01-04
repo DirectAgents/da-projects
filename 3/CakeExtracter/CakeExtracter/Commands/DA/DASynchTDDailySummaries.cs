@@ -148,12 +148,11 @@ namespace CakeExtracter.Commands
         public bool AdSet { get; set; }
         public bool Creative { get; set; }
         public bool Site { get; set; }
-        public bool Conv { get; set; }
-        public bool AdSetSummary { get; set; }
+        public bool Conv { get; set; }        
 
         public bool All
         {
-            get { return Daily && Strategy && AdSet && Creative && Site && Conv && AdSetSummary; }
+            get { return Daily && Strategy && AdSet && Creative && Site && Conv; }
         }
 
         public void SetAllTrue()
@@ -164,7 +163,6 @@ namespace CakeExtracter.Commands
             Creative = true;
             Site = true;
             Conv = true;
-            AdSetSummary = true;
         }
 
         public StatsTypeAgg(string statsTypeString)
@@ -176,8 +174,6 @@ namespace CakeExtracter.Commands
                 Daily = true;
             else if (statsTypeUpper.StartsWith("STRAT"))
                 Strategy = true;
-            else if (statsTypeUpper.StartsWith("ADSETSUM"))
-                AdSetSummary = true;
             else if (statsTypeUpper.StartsWith("ADSET"))
                 AdSet = true;
             else if (statsTypeUpper.StartsWith("CREAT"))

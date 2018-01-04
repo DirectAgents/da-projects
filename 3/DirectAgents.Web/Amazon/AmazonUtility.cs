@@ -78,6 +78,17 @@ namespace Amazon
         {
             yield return AccessTokens.AccessToken + TOKEN_DELIMITER + AccessTokens.RefreshToken;
         }
+        private void SetTokenSets(string[] value)
+        {
+            for (int i = 0; i < value.Length; i++)
+            {
+                var tokenSet = value[i].Split(new string[] { TOKEN_DELIMITER }, StringSplitOptions.None);
+                AccessTokens.access_token = AccessToken = tokenSet[0];
+
+                if (tokenSet.Length > 1)
+                    AccessTokens.refresh_token = RefreshToken = tokenSet[1];
+            }
+        }
         private void ResetCredentials()
         {
             UserName = _amazonApiUsername;
@@ -94,17 +105,7 @@ namespace Amazon
         public string[] TokenSets // each string in the array is a combination of Access + Refresh Token
         {
             get { return CreateTokenSets().ToArray(); }
-            set
-            {
-                for (int i = 0; i < value.Length; i++)
-                {
-                    var tokenSet = value[i].Split(new string[] { TOKEN_DELIMITER }, StringSplitOptions.None);
-                    AccessTokens.access_token = AccessToken = tokenSet[0];
-
-                    if (tokenSet.Length > 1)
-                        AccessTokens.refresh_token = RefreshToken = tokenSet[1];
-                }
-            }
+            set { SetTokenSets(value); }
         }
         private void SetCredentials(long accountId)
         {
@@ -257,15 +258,17 @@ namespace Amazon
                 tries++;
 
                 if (response.StatusCode == HttpStatusCode.Unauthorized && tries < 2)
-                { // Get a new access token and use that.
+                {
+                    // Get a new access token and use that.
                     GetAccessToken();
+
                     var param = restRequest.Parameters.Find(p => p.Type == ParameterType.HttpHeader && p.Name == "Authorization");
                     param.Value = "bearer " + AccessToken;
                 }
-                else if (response.StatusDescription != null && response.StatusDescription.Contains("API calls quota exceeded") && tries < 5)
-                {
-                    LogInfo("API calls quota exceeded. Waiting 55 seconds.");
-                    Thread.Sleep(55000);
+                else if (response.StatusDescription != null && response.StatusDescription.Contains("IN_PROGRESS") && tries < 5)
+                { 
+                    LogInfo("API calls quota exceeded. Waiting 5 seconds.");
+                    Thread.Sleep(5000);
                 }
                 else
                     done = true; //TODO: distinguish between success and failure of ProcessRequest
@@ -316,26 +319,9 @@ namespace Amazon
 
         public void GetAccessToken()
         {
-            //var restClient = new RestClient
-            //{
-            //    BaseUrl = new Uri(AuthorizeUrl),
-            //    Authenticator = new HttpBasicAuthenticator(ClientId, ClientSecret)
-            //};
-            //restClient.AddHandler("application/json", new JsonDeserializer());
-
-            //var request = new RestRequest();
-            //request.AddParameter("grant_type", "client_credentials");
-            //request.AddParameter("scope", "");
-
-            //var response = restClient.ExecuteAsPost<GetTokenResponse>(request, "POST");
-            //if (response.Data != null)
-            //    AccessToken = response.Data.access_token;
-
             AccessTokens = AmazonAuth.GetInitialTokens();
-
             AccessToken = AccessTokens.AccessToken;
             RefreshToken = AccessTokens.RefreshToken;
-
         }
 
         public ReportResponseDownloadInfo RequestReport(string reportId, string profileId)
@@ -348,8 +334,11 @@ namespace Amazon
                 var restResponse = ProcessRequest<ReportResponseDownloadInfo>(request, postNotGet: false);
                 if (restResponse.Data.status == "SUCCESS")
                     return restResponse.Data;
-                return null;
-               
+                else if (restResponse.Content.Contains("IN_PROGRESS"))
+                {
+                    LogInfo("Waiting 5 seconds for report to finish generating.");
+                    Thread.Sleep(5000);
+                }
             }
             catch (Exception x)
             {
@@ -357,11 +346,10 @@ namespace Amazon
             }
             return null;
         }
-        public ReportRequestResponse SubmitReport(AmazonApiReportParams reportParams, string reportType)
+        public ReportRequestResponse SubmitReport(AmazonApiReportParams reportParams, string reportType, string profileId)
         {            
             var request = new RestRequest("v1/"+ reportType + "/report");
-            ProfileId = "2436984122296584";
-            request.AddHeader("Amazon-Advertising-API-Scope", ProfileId);
+            request.AddHeader("Amazon-Advertising-API-Scope", profileId);
             request.AddJsonBody(reportParams);
 
             var restResponse = ProcessRequest<ReportRequestResponse>(request, postNotGet: true);
@@ -452,26 +440,26 @@ namespace Amazon
             return null;
         }
 
-        public string GetJsonStringFromDownloadFile(string url)
+        public string GetJsonStringFromDownloadFile(string url, string profileId)
         {
             try
             {
                 var request = (HttpWebRequest)WebRequest.Create(url);
                 request.Headers.Add("Authorization", "bearer " + AccessToken);
-                request.Headers.Add("Amazon-Advertising-API-Scope", ProfileId);
+                request.Headers.Add("Amazon-Advertising-API-Scope", profileId);
                 var response = (HttpWebResponse)request.GetResponse();
                 var responseStream = response.GetResponseStream();
                 var streamReader = new StreamReader(responseStream);
-
-                string filePath = @"H:\SourceCode\DirectAgents\da-projects\3\DirectAgents.Web\Amazon\download.gzip";
+                string exePath = AppDomain.CurrentDomain.BaseDirectory;
+                string filePath = Path.Combine(exePath, "download.gzip");
                 using (Stream s = File.Create(filePath))
                 {
                     responseStream.CopyTo(s);
                 }
                 FileInfo fileToDecompress = new FileInfo(filePath);
                 Decompress(fileToDecompress);
-
-                using (StreamReader r = new StreamReader(@"H:\SourceCode\DirectAgents\da-projects\3\DirectAgents.Web\Amazon\download.json"))
+                string jsonFile = Path.Combine(exePath, "download.json");
+                using (StreamReader r = new StreamReader(jsonFile))
                 {
                     string json = r.ReadToEnd();
                     return json;
