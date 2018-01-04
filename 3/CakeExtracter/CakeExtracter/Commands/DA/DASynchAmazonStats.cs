@@ -15,7 +15,7 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchAmazonStats : ConsoleCommand
     {
-        public static int RunStatic(int? accountId = null, DateTime? startDate = null, 
+        public static int RunStatic(int? accountId = null, DateTime? startDate = null,
             DateTime? endDate = null, string statsType = null)
         {
             AutoMapperBootstrapper.CheckRunSetup();
@@ -123,51 +123,39 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account)
         {
-            foreach (var date in dateRange.Dates)
-            {
-                var extracter = new AmazonDailySummaryExtracter(AmazonUtility, date, account.ExternalId);
-                var loader = new AmazonDailySummaryLoader(account.Id);
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
-            }
+            var extracter = new AmazonDailySummaryExtracter(AmazonUtility, dateRange, account.ExternalId);
+            var loader = new AmazonDailySummaryLoader(account.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
         }
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
         {
-            foreach (var date in dateRange.Dates)
-            {
-                var extracter = new AmazonCampaignSummaryExtracter(AmazonUtility, date, account.ExternalId);
-                var loader = new AmazonCampaignSummaryLoader(account.Id);
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
-            }
+            var extracter = new AmazonCampaignSummaryExtracter(AmazonUtility, dateRange, account.ExternalId);
+            var loader = new AmazonCampaignSummaryLoader(account.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
         }
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account)
         {
-            foreach (var date in dateRange.Dates)
-            {
-                var extracter = new AmazonAdSetExtracter(AmazonUtility, date, account.ExternalId);
-                var loader = new AmazonAdSetLoader(account.Id);
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
-            }
+            var extracter = new AmazonAdSetExtracter(AmazonUtility, dateRange, account.ExternalId);
+            var loader = new AmazonAdSetLoader(account.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
         }
         private void DoETL_Creative(DateRange dateRange, ExtAccount account)
         {
-            foreach (var date in dateRange.Dates)
-            {
-                var extracter = new AmazonAdExtrater(AmazonUtility, date, account.ExternalId);
-                var loader = new AmazonAdLoader(account.Id);
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
-            }
+            var extracter = new AmazonAdExtrater(AmazonUtility, dateRange, account.ExternalId);
+            var loader = new AmazonAdLoader(account.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
         }
 
         private IEnumerable<ExtAccount> GetAccounts()
