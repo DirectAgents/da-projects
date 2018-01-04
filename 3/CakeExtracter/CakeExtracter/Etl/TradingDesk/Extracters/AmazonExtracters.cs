@@ -115,7 +115,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         {
             IEnumerable<AmazonCampaignSummary> campaignSummaries = null;
 
-            var json = _amazonUtility.GetCampaings(clientId);
+            var json = _amazonUtility.GetCampaigns(clientId);
             campaignSummaries = JsonConvert.DeserializeObject<List<AmazonCampaignSummary>>(json);
 
 

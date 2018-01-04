@@ -136,7 +136,7 @@ namespace Amazon
         }
 
         //Get campaigns by profile id
-        public string GetCampaings(string profileId)
+        public string GetCampaigns(string profileId)
         {
             try
             {                
