@@ -47,8 +47,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 Logger.Info("Extracting DailySummaries from Amazon API for client id: ({0}) report date {1:d}", this.clientId, date);
                 var items = EnumerateRows(date);
                 Add(items);
-                End();
             }
+            End();
         }
         private IEnumerable<AmazonDailySummary> EnumerateRows(DateTime date)
         {
@@ -111,8 +111,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 Logger.Info("Extracting StrategySummaries from Amazon API for ({0}) for {1:d}", this.clientId, date);
                 var items = EnumerateRows(date, campaignSummaries);
                 Add(items);
-                End();
             }
+            End();
         }
 
         private IEnumerable<AmazonCampaignSummary> LoadCampaignSummariesFromAmazonAPI()
@@ -238,8 +238,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) for reporting date: {1:d}", this.clientId, date);
                 var items = EnumerateRows(date, adsets);
                 Add(items);
-                End();
             }
+            End();
         }
 
         private List<AmazonAdSet> LoadAdSetsfromAmazonAPI()
@@ -325,8 +325,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) for reporting date: {1:d}", this.clientId, this.dateRange);
                 var items = EnumerateRows(date, ads);
                 Add(items);
-                End();
             }
+            End();
         }
 
         private List<TDad> GetAdsFromAmazonAPI()
