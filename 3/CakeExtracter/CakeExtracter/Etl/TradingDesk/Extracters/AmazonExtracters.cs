@@ -104,21 +104,20 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            foreach (var date in dateRange.Dates)
-            {
-                Logger.Info("Extracting StrategySummaries from Amazon API for ({0}) for {1:d}", this.clientId, date);
-                var items = EnumerateRows(date);
-                Add(items);
-                End();
-            }
-        }
-        public IEnumerable<StrategySummary> EnumerateRows(DateTime date)
-        {
             IEnumerable<AmazonCampaignSummary> campaignSummaries = null;
             var json = _amazonUtility.GetCampaigns(clientId);
             campaignSummaries = JsonConvert.DeserializeObject<List<AmazonCampaignSummary>>(json);
 
-
+            foreach (var date in dateRange.Dates)
+            {
+                Logger.Info("Extracting StrategySummaries from Amazon API for ({0}) for {1:d}", this.clientId, date);
+                var items = EnumerateRows(date, campaignSummaries);
+                Add(items);
+                End();
+            }
+        }
+        public IEnumerable<StrategySummary> EnumerateRows(DateTime date, IEnumerable<AmazonCampaignSummary> campaignSummaries)
+        {
             string reportDate = date.ToString("yyyyMMdd");
             var parms = _amazonUtility.CreateAmazonApiReportParams(reportDate);
             var submissionReportResponse = _amazonUtility.SubmitReport(parms, "campaigns", this.clientId);
@@ -226,17 +225,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            foreach (var date in dateRange.Dates)
-            {
-                Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) for reporting date: {1:d}", this.clientId, date);
-                var items = EnumerateRows(date);
-                Add(items);
-                End();
-            }
-        }
-
-        private IEnumerable<AdSetSummary> EnumerateRows(DateTime date)
-        {
             List<AmazonAdSet> adsets = new List<AmazonAdSet>();
             IEnumerable<AmazonKeyword> keywords = null;
 
@@ -252,7 +240,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                     KeywordId = keyword.KeywordId.ToString()
                 });
             }
+            foreach (var date in dateRange.Dates)
+            {
+                Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) for reporting date: {1:d}", this.clientId, date);
+                var items = EnumerateRows(date, adsets);
+                Add(items);
+                End();
+            }
+        }
 
+        private IEnumerable<AdSetSummary> EnumerateRows(DateTime date, List<AmazonAdSet> adsets)
+        {
             string reportDate = date.ToString("yyyyMMdd");
             var parms = _amazonUtility.CreateAmazonApiReportParams(reportDate);
             var submissionReportResponse = _amazonUtility.SubmitReport(parms, "keywords", this.clientId);
@@ -306,16 +304,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            foreach (var date in dateRange.Dates)
-            {
-                Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) for reporting date: {1:d}", this.clientId, this.dateRange);
-                var items = EnumerateRows(date);
-                Add(items);
-                End();
-            }
-        }
-        private IEnumerable<TDadSummary> EnumerateRows(DateTime date)
-        {
             List<TDad> ads = new List<TDad>();
             IEnumerable<AmazonProductAds> productAds = null;
 
@@ -330,6 +318,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                     Name = productAd.Asin
                 });
             }
+
+            foreach (var date in dateRange.Dates)
+            {
+                Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) for reporting date: {1:d}", this.clientId, this.dateRange);
+                var items = EnumerateRows(date, ads);
+                Add(items);
+                End();
+            }
+        }
+        private IEnumerable<TDadSummary> EnumerateRows(DateTime date, List<TDad> ads)
+        {
             string reportDate = date.ToString("yyyyMMdd");
             var parms = _amazonUtility.CreateAmazonApiReportParams(reportDate);
             var submissionReportResponse = _amazonUtility.SubmitReport(parms, "productAds", this.clientId);
