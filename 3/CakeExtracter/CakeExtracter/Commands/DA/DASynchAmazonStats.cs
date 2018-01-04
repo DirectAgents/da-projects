@@ -155,13 +155,6 @@ namespace CakeExtracter.Commands
                 var loaderThread = loader.Start(extracter);
                 extracterThread.Join();
                 loaderThread.Join();
-
-                var extracter1 = new AmazonAdSetSummaryExtracter(AmazonUtility, date, account.ExternalId);
-                var loader1 = new AmazonAdSetSummaryLoader(account.Id);
-                var extracterThread1 = extracter1.Start();
-                var loaderThread1 = loader1.Start(extracter1);
-                extracterThread1.Join();
-                loaderThread1.Join();
             }
         }
         private void DoETL_Creative(DateRange dateRange, ExtAccount account)
