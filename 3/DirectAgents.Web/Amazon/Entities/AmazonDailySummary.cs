@@ -32,6 +32,11 @@ namespace Amazon.Entities
         public Int64 campaignId { get; set; }
         public DateTime date { get; set; } 
     }
+    public class AmazonAdDailySummary : StatSummary
+    {
+        public string adId { get; set; }
+        public DateTime date { get; set; }
+    }
 
     // used for Campaign daily report
     public class AmazonCampaignSummary : AmazonCampaign
@@ -53,4 +58,5 @@ namespace Amazon.Entities
             return AllZeros(includeProspects: includeProspects) && adjusted_attributed_click_through_rev == 0 && adjusted_attributed_view_through_rev == 0;
         }
     }
+
 }

@@ -9,45 +9,24 @@ using System.Threading.Tasks;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
-    public class AmazonAdLoader : Loader<TDad>
+    public class AmazonAdLoader : Loader<TDadSummary>
     {
-        private readonly int accountId;
-        private Dictionary<string, int> _strategyIdLookup = new Dictionary<string, int>(); // by StrategyEid and DB Id
-        private Dictionary<string, int> adsetIdLookup = new Dictionary<string, int>(); // by StrategyEid + StrategyName + AdSetEid + AdSetName
+        private TDadSummaryLoader tdAdSummaryLoader;
 
         public AmazonAdLoader(int accountId = -1)
         {
-            this.accountId = accountId;
+            this.tdAdSummaryLoader = new TDadSummaryLoader(accountId);
         }
 
-        protected override int Load(List<TDad> items)
+        protected override int Load(List<TDadSummary> tDadItems)
         {
-            Logger.Info("Loading {0} Amazon Ad data:", items.Count);
+            Logger.Info("Loading {0} Amazon ProductAd / Creative data: ", tDadItems.Count);
 
-            AddUpdateAds(items);
-            return items.Count;
-        }
+            tdAdSummaryLoader.AddUpdateDependentTDads(tDadItems);
+            tdAdSummaryLoader.AssignTDadIdToItems(tDadItems);
+            var count = tdAdSummaryLoader.UpsertDailySummaries(tDadItems);
+            return count;
 
-        private void AddUpdateAds(List<TDad> items)
-        {
-            using (var db = new ClientPortalProgContext())
-            {
-                foreach (var item in items)
-                {
-                    #region add adset to db
-                    var tdAd = new TDad
-                    {
-                        AccountId = this.accountId,
-                        ExternalId = item.ExternalId,
-                        Name = item.Name
-                    };
-                    db.TDads.Add(tdAd);
-                    db.SaveChanges();
-                    Logger.Info("Saved new AdSet: {0} ({1}), ExternalId={2}", tdAd.Name, tdAd.Id, tdAd.ExternalId);
-
-                    #endregion
-                }
-            }
         }
     }
 }

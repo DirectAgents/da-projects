@@ -35,6 +35,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     }
     //Atza|IwEBIH1MkIuOQhg_GVq0u5sMIz4J4PTxPaIvD311brupG0GoBEB4GNdBDor7TlMPrY2foUq6uFzsl8MD3PUlVup5MhlRKNlwPr8ZFuAkcdL6op91Cm46Njs_-Jcu63m16yJRpKdVmiYYq86UNgtllJoSidrerRR9ppHVXt_mJxAJXTiEv-BgaAcUPIAI2RPv8fkLiean7AIxHbkYnY7X2OmVWIz7FlyjcdVay1_rZyr54eCS4wUUWhFjoN8L8a-5j2FnW2e6rHCd7gKE3i8fMhzrU1_MD7m18aIqTuO_X0c1qh4SHn7vMTBl0RMqi4ttlviQvA6lcVJ3MNKADqQVnEcSx3QreLTApF0Kwubjjbsqo4S9pn2ZdxroSoE6NsylLqBi5gerTbYZrbTWZ3IdhBm8Mf_me4h7LtKZxpkI2q0wBn7PgMc29Ij1-CT1p9keKkZwKYgQWkoSrGVYNZrgAKyFpiQ42ot2WBXJc_MoU6KDb8o7y0xTeWLifU1RWfLUVqT6lGy2C2Gs3OofLVnMOCdJemOzyxnE8NQgh48xa3_LfvjnbUSGd0YyDW4p1PYeA8-9Siq8JiymFT39pExMRucRSQnz
     //The daily extracter will load data based on date range and sum up totals of each campaign
+    #region Daily
     public class AmazonDailySummaryExtracter : AmazonApiExtracter<AmazonDailySummary>
     {
         public AmazonDailySummaryExtracter(AmazonUtility amazonUtility, DateTime date, string clientId)
@@ -45,7 +46,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             Logger.Info("Extracting DailySummaries from Amazon API for client id: ({0}) report date {1:d}", this.clientId, this.date);
             try
             {
-                List<AmazonDailySummary> dailyStats = new List<AmazonDailySummary>();                
+                List<AmazonDailySummary> dailyStats = new List<AmazonDailySummary>();
                 string reportDate = date.ToString("yyyyMMdd");
                 var parms = _amazonUtility.CreateAmazonApiReportParams(reportDate);
                 var submissionReportResponse = _amazonUtility.SubmitReport(parms, "campaigns", this.clientId);
@@ -91,7 +92,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 yield return sum;
             }
         }
-    }
+    } 
+    #endregion
+    #region Campaign Strategy
     public class AmazonCampaignSummaryExtracter : AmazonApiExtracter<StrategySummary>
     {
         protected readonly string campaignEid;
@@ -102,7 +105,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            Logger.Info("Extracting StrategySummaries from Amazon API for ({0}) for {1:d}",this.clientId, this.date);
+            Logger.Info("Extracting StrategySummaries from Amazon API for ({0}) for {1:d}", this.clientId, this.date);
             var items = EnumerateRows();
             Add(items);
             End();
@@ -155,7 +158,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             //yield return result;
             foreach (var campaign in campaignSummaries)
             {
-                var groupedRows = dailyStats.GroupBy(x=>x.campaignId == campaign.campaignId);
+                var groupedRows = dailyStats.GroupBy(x => x.campaignId == campaign.campaignId);
                 foreach (var group in groupedRows)
                 {
                     var sum = new StrategySummary
@@ -174,20 +177,20 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             // if StrategyEid's aren't all filled in...
             // if (campaignSummaries.Any(r => string.IsNullOrWhiteSpace(r.campaignId.ToString())))
             //{
-                //var groupedRows = dailyStats.GroupBy(r => new { r.date, r.campaignId});
-                //foreach (var group in groupedRows)
-                //{
-                //    var sum = new StrategySummary
-                //    {
-                //        Date = group.Key.date,
-                //        StrategyEid = group.Key.campaignId.ToString(),
-                //        StrategyName = group.Key.StrategyName,
-                //        Impressions = group.Sum(g => g.Impressions),
-                //        Clicks = group.Sum(g => g.Clicks),
-                //        Cost = group.Sum(g => g.Cost)
-                //    };
-                //    yield return sum;
-                //}
+            //var groupedRows = dailyStats.GroupBy(r => new { r.date, r.campaignId});
+            //foreach (var group in groupedRows)
+            //{
+            //    var sum = new StrategySummary
+            //    {
+            //        Date = group.Key.date,
+            //        StrategyEid = group.Key.campaignId.ToString(),
+            //        StrategyName = group.Key.StrategyName,
+            //        Impressions = group.Sum(g => g.Impressions),
+            //        Clicks = group.Sum(g => g.Clicks),
+            //        Cost = group.Sum(g => g.Cost)
+            //    };
+            //    yield return sum;
+            //}
             //}
             //else // if all StrategyEid's are filled in...
             //{
@@ -210,7 +213,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             //    }
             //}
         }
-    }
+    } 
+    #endregion
+    #region AdSet & AdSet Summary
     public class AmazonAdSetExtracter : AmazonApiExtracter<AmazonAdSet>
     {
         public AmazonAdSetExtracter(AmazonUtility amazonUtility, DateTime reportDate, string clientId)
@@ -288,7 +293,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             return dailyStats;
         }
     }
-    public class AmazonAdExtrater : AmazonApiExtracter<TDad>
+    #endregion
+    #region Ad and Ad Summary / Creative
+    public class AmazonAdExtrater : AmazonApiExtracter<TDadSummary>
     {
         public AmazonAdExtrater(AmazonUtility amazonUtility, DateTime date, string clientId)
             : base(amazonUtility, date, clientId)
@@ -302,9 +309,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             End();
 
         }
-        private IEnumerable<TDad> EnumerateRows()
+        private IEnumerable<TDadSummary> EnumerateRows()
         {
-            List<TDad> result = new List<TDad>();
+            List<TDad> ads = new List<TDad>();
             IEnumerable<AmazonProductAds> productAds = null;
 
             var json = _amazonUtility.GetProductAds(clientId);
@@ -312,15 +319,68 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
             foreach (var productAd in productAds)
             {
-                result.Add(new TDad
+                ads.Add(new TDad
                 {
                     ExternalId = productAd.AdId,
                     Name = productAd.Asin
                 });
             }
+            string reportDate = date.ToString("yyyyMMdd");
+            var parms = _amazonUtility.CreateAmazonApiReportParams(reportDate);
+            var submissionReportResponse = _amazonUtility.SubmitReport(parms, "productAds", this.clientId);
+            List<AmazonAdDailySummary> dailyStats = new List<AmazonAdDailySummary>();
+            //report could take awhile to be generated, therefore,we are looping until we get status SUCCESS
+            while (true)
+            {
+                var downloadInfo = _amazonUtility.RequestReport(submissionReportResponse.reportId, this.clientId.ToString());
 
-            return result;
+                if (downloadInfo != null && !string.IsNullOrWhiteSpace(downloadInfo.location))
+                {
+                    var dailyStatsJson = _amazonUtility.GetJsonStringFromDownloadFile(downloadInfo.location, this.clientId);
+                    dailyStats = JsonConvert.DeserializeObject<List<AmazonAdDailySummary>>(dailyStatsJson);
+                    break;
+                }
+            }
+            foreach (var sum in GroupAndEnumerate(dailyStats, ads, date))
+                yield return sum;
         }
-    }
+        private IEnumerable<TDadSummary> GroupAndEnumerate(List<AmazonAdDailySummary> productAdsDailyStats, IEnumerable<TDad> productAds, DateTime day)
+        {
+            //var result = (from cs in productAds
+            //              join ds in productAdsDailyStats
+            //              on cs.ExternalId equals ds.adId into q
+            //              select new TDadSummary
+            //              {
+            //                  Date = day,
+            //                  TDadEid = cs.ExternalId.ToString(),
+            //                  TDadName = cs.Name,
+            //                  Impressions = q.Sum(g => g.impressions),
+            //                  Clicks = q.Sum(g => g.clicks),
+            //                  Cost = q.Sum(g => g.cost)
+            //              });
+
+            //yield return result;
+
+
+            foreach (var ad in productAds)
+            {
+                var groupedRows = productAdsDailyStats.GroupBy(x => x.adId == ad.ExternalId);
+                foreach (var group in groupedRows)
+                {
+                    var sum = new TDadSummary
+                    {
+                        Date = day,
+                        TDadEid = ad.ExternalId.ToString(),
+                        TDadName = ad.Name,
+                        Impressions = group.Sum(g => g.impressions),
+                        Clicks = group.Sum(g => g.clicks),
+                        Cost = group.Sum(g => g.cost)
+                    };
+                    yield return sum;
+                }
+            }
+        }
+    } 
+    #endregion
 
 }
