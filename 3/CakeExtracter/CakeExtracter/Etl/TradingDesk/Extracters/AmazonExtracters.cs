@@ -104,9 +104,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            IEnumerable<AmazonCampaignSummary> campaignSummaries = null;
-            var json = _amazonUtility.GetCampaigns(clientId);
-            campaignSummaries = JsonConvert.DeserializeObject<List<AmazonCampaignSummary>>(json);
+            IEnumerable<AmazonCampaignSummary> campaignSummaries = LoadCampaignSummariesFromAmazonAPI();
 
             foreach (var date in dateRange.Dates)
             {
@@ -116,6 +114,15 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 End();
             }
         }
+
+        private IEnumerable<AmazonCampaignSummary> LoadCampaignSummariesFromAmazonAPI()
+        {
+            IEnumerable<AmazonCampaignSummary> campaignSummaries = null;
+            var json = _amazonUtility.GetCampaigns(clientId);
+            campaignSummaries = JsonConvert.DeserializeObject<List<AmazonCampaignSummary>>(json);
+            return campaignSummaries;
+        }
+
         public IEnumerable<StrategySummary> EnumerateRows(DateTime date, IEnumerable<AmazonCampaignSummary> campaignSummaries)
         {
             string reportDate = date.ToString("yyyyMMdd");
@@ -225,6 +232,18 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
+            List<AmazonAdSet> adsets = LoadAdSetsfromAmazonAPI();
+            foreach (var date in dateRange.Dates)
+            {
+                Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) for reporting date: {1:d}", this.clientId, date);
+                var items = EnumerateRows(date, adsets);
+                Add(items);
+                End();
+            }
+        }
+
+        private List<AmazonAdSet> LoadAdSetsfromAmazonAPI()
+        {
             List<AmazonAdSet> adsets = new List<AmazonAdSet>();
             IEnumerable<AmazonKeyword> keywords = null;
 
@@ -240,13 +259,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                     KeywordId = keyword.KeywordId.ToString()
                 });
             }
-            foreach (var date in dateRange.Dates)
-            {
-                Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) for reporting date: {1:d}", this.clientId, date);
-                var items = EnumerateRows(date, adsets);
-                Add(items);
-                End();
-            }
+
+            return adsets;
         }
 
         private IEnumerable<AdSetSummary> EnumerateRows(DateTime date, List<AmazonAdSet> adsets)
@@ -304,6 +318,19 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
+            List<TDad> ads = GetAdsFromAmazonAPI();
+
+            foreach (var date in dateRange.Dates)
+            {
+                Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) for reporting date: {1:d}", this.clientId, this.dateRange);
+                var items = EnumerateRows(date, ads);
+                Add(items);
+                End();
+            }
+        }
+
+        private List<TDad> GetAdsFromAmazonAPI()
+        {
             List<TDad> ads = new List<TDad>();
             IEnumerable<AmazonProductAds> productAds = null;
 
@@ -319,14 +346,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 });
             }
 
-            foreach (var date in dateRange.Dates)
-            {
-                Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) for reporting date: {1:d}", this.clientId, this.dateRange);
-                var items = EnumerateRows(date, ads);
-                Add(items);
-                End();
-            }
+            return ads;
         }
+
         private IEnumerable<TDadSummary> EnumerateRows(DateTime date, List<TDad> ads)
         {
             string reportDate = date.ToString("yyyyMMdd");
