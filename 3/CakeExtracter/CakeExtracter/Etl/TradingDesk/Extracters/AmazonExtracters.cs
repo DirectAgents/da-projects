@@ -234,8 +234,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         {
             foreach (var ad in adsets)
             {
-                var groupedRows = dailyStats.GroupBy(x => x.KeywordId == ad.KeywordId);
-                foreach (var group in groupedRows)
+                var group = dailyStats.Where(x => x.KeywordId == ad.KeywordId);
+                if (group.Any())
                 {
                     var sum = new AdSetSummary
                     {
@@ -319,8 +319,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         {
             foreach (var ad in productAds)
             {
-                var groupedRows = productAdsDailyStats.GroupBy(x => x.adId == ad.ExternalId);
-                foreach (var group in groupedRows)
+                var group = productAdsDailyStats.Where(x => x.adId == ad.ExternalId);
+                if (group.Any())
                 {
                     var sum = new TDadSummary
                     {
