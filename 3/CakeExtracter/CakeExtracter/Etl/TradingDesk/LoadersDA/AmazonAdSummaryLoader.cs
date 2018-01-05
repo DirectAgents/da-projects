@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
-    public class AmazonAdLoader : Loader<TDadSummary>
+    public class AmazonAdSummaryLoader : Loader<TDadSummary>
     {
         private TDadSummaryLoader tdAdSummaryLoader;
 
-        public AmazonAdLoader(int accountId = -1)
+        public AmazonAdSummaryLoader(int accountId = -1)
         {
             this.tdAdSummaryLoader = new TDadSummaryLoader(accountId);
         }

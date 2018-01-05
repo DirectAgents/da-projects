@@ -11,8 +11,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class AmazonCampaignSummaryLoader : Loader<StrategySummary>
     {
-        private readonly int accountId;
-        private Dictionary<string, int> strategyIdLookupByCampEid = new Dictionary<string, int>();
+        //private readonly int accountId;
+        //private Dictionary<string, int> strategyIdLookupByCampEid = new Dictionary<string, int>();
 
         //public AmazonCampaignSummaryLoader(int advertisableEid)
         //{
@@ -28,28 +28,28 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         //        this.strategySummaryLoader = new TDStrategySummaryLoader(accountId);
         //    }
         //}
-        public AmazonCampaignSummaryLoader(int advertisableId)
-        {
-            this.accountId = advertisableId;
-        }
-        public bool FoundAccount()
-        {
-            return (accountId > -1);
-        }
+        //public AmazonCampaignSummaryLoader(int advertisableId)
+        //{
+        //    this.accountId = advertisableId;
+        //}
+        //public bool FoundAccount()
+        //{
+        //    return (accountId > -1);
+        //}
 
-        protected override int Load(List<StrategySummary> items)
-        {
-            var count = items.Count;
-            Logger.Info("Loading {0} Amazon CampaignDailySummaries..", items.Count);
-            foreach (var item in items)
-            {
-                //item.eid = "2436984122296584";
-            }
-            //AddUpdateDependentStrategies(items);
-            //var ssItems = items.Select(cSum => CreateStrategySummary(cSum, strategyIdLookupByCampEid[cSum.eid])).ToList();
-            //var count = strategySummaryLoader.UpsertCampaigns(items);
-            return count;
-        }
+        //protected override int Load(List<StrategySummary> items)
+        //{
+        //    var count = items.Count;
+        //    Logger.Info("Loading {0} Amazon CampaignDailySummaries..", items.Count);
+        //    foreach (var item in items)
+        //    {
+        //        //item.eid = "2436984122296584";
+        //    }
+        //    AddUpdateDependentStrategies(items);
+        //    var ssItems = items.Select(cSum => CreateStrategySummary(cSum, strategyIdLookupByCampEid[cSum.eid])).ToList();
+        //    var count = strategySummaryLoader.UpsertCampaigns(items);
+        //    return count;
+        //}
         //public int UpsertCampaigns(List<AmazonCampaignSummary> items)
         //{
         //    var addedCount = 0;
@@ -196,5 +196,22 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         //        }
         //    }
         //}
+
+        private TDStrategySummaryLoader tdStrategySummaryLoader;
+
+        public AmazonCampaignSummaryLoader(int accountId = -1)
+        {
+            this.tdStrategySummaryLoader = new TDStrategySummaryLoader(accountId);
+        }
+
+        protected override int Load(List<StrategySummary> items)
+        {
+            Logger.Info("Loading {0} Amazon Campaign Daily Summaries..", items.Count);
+            tdStrategySummaryLoader.AddUpdateDependentStrategies(items);
+            tdStrategySummaryLoader.AssignStrategyIdToItems(items);
+            var count = tdStrategySummaryLoader.UpsertDailySummaries(items);
+
+            return count;
+        }
     }
 }

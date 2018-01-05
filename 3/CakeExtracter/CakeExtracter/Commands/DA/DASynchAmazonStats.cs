@@ -142,7 +142,7 @@ namespace CakeExtracter.Commands
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account)
         {
             var extracter = new AmazonAdSetExtracter(AmazonUtility, dateRange, account.ExternalId);
-            var loader = new AmazonAdSetLoader(account.Id);
+            var loader = new AmazonAdSetSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
@@ -151,7 +151,7 @@ namespace CakeExtracter.Commands
         private void DoETL_Creative(DateRange dateRange, ExtAccount account)
         {
             var extracter = new AmazonAdExtrater(AmazonUtility, dateRange, account.ExternalId);
-            var loader = new AmazonAdLoader(account.Id);
+            var loader = new AmazonAdSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();

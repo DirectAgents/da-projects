@@ -143,30 +143,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             }
             foreach (var sum in GroupAndEnumerate(dailyStats, campaignSummaries, date))
                 yield return sum;
-
-
         }
 
         private IEnumerable<StrategySummary> GroupAndEnumerate(List<AmazonDailySummary> dailyStats, IEnumerable<AmazonCampaignSummary> campaignSummaries, DateTime day)
         {
-            //var result = (from cs in campaignSummaries
-            //              join ds in dailyStats
-            //              on cs.campaignId equals ds.campaignId into q
-            //              select new StrategySummary
-            //              {
-            //                  Date = day,
-            //                  StrategyEid = cs.campaignId.ToString(),
-            //                  StrategyName = cs.name,
-            //                  Impressions = q.Sum(g => g.impressions),
-            //                  Clicks = q.Sum(g => g.clicks),
-            //                  Cost = q.Sum(g => g.cost)
-            //              });
-
-            //yield return result;
             foreach (var campaign in campaignSummaries)
             {
-                var groupedRows = dailyStats.GroupBy(x => x.campaignId == campaign.campaignId);
-                foreach (var group in groupedRows)
+                var group = dailyStats.Where(x => x.campaignId == campaign.campaignId);
+                if (group.Any())
                 {
                     var sum = new StrategySummary
                     {
@@ -180,45 +164,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                     yield return sum;
                 }
             }
-
-            // if StrategyEid's aren't all filled in...
-            // if (campaignSummaries.Any(r => string.IsNullOrWhiteSpace(r.campaignId.ToString())))
-            //{
-            //var groupedRows = dailyStats.GroupBy(r => new { r.date, r.campaignId});
-            //foreach (var group in groupedRows)
-            //{
-            //    var sum = new StrategySummary
-            //    {
-            //        Date = group.Key.date,
-            //        StrategyEid = group.Key.campaignId.ToString(),
-            //        StrategyName = group.Key.StrategyName,
-            //        Impressions = group.Sum(g => g.Impressions),
-            //        Clicks = group.Sum(g => g.Clicks),
-            //        Cost = group.Sum(g => g.Cost)
-            //    };
-            //    yield return sum;
-            //}
-            //}
-            //else // if all StrategyEid's are filled in...
-            //{
-            //    var groupedRows = dailyStats.GroupBy(r => new { r.date, r.campaignId });
-            //    foreach (var group in groupedRows)
-            //    {
-            //        string stratName = null;
-            //        if (group.Count() == 1)
-            //            stratName = group.First().StrategyName;
-            //        var sum = new StrategySummary
-            //        {
-            //            Date = group.Key.Date,
-            //            StrategyEid = group.Key.StrategyEid,
-            //            StrategyName = stratName,
-            //            Impressions = group.Sum(g => g.Impressions),
-            //            Clicks = group.Sum(g => g.Clicks),
-            //            Cost = group.Sum(g => g.Cost)
-            //        };
-            //        yield return sum;
-            //    }
-            //}
         }
     }
     #endregion
