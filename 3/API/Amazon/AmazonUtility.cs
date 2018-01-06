@@ -316,7 +316,7 @@ namespace Amazon
                 campaignType = "sponsoredProducts",
                 //segment = segment,
                 reportDate = reportDate,
-                metrics = "impressions,clicks,cost"
+                metrics = "impressions,clicks,cost,attributedConversions30d"
             };
             return reportParams;
         }

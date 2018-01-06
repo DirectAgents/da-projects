@@ -87,7 +87,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                     date = campDateGroup.Key.date,
                     cost = campDateGroup.Sum(x => x.cost),
                     impressions = campDateGroup.Sum(x => x.impressions),
-                    clicks = campDateGroup.Sum(x => x.clicks)
+                    clicks = campDateGroup.Sum(x => x.clicks),
+                    attributedConversions30d = campDateGroup.Sum(g => g.attributedConversions30d)
                 };
                 yield return sum;
             }
@@ -163,7 +164,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         StrategyName = campaign.name,
                         Impressions = group.Sum(g => g.impressions),
                         Clicks = group.Sum(g => g.clicks),
-                        Cost = group.Sum(g => g.cost)
+                        Cost = group.Sum(g => g.cost),
+                        PostClickConv = group.Sum(g => g.attributedConversions30d)
                     };
                     yield return sum;
                 }
@@ -251,7 +253,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         AdSetName = ad.KeywordText,
                         Impressions = group.Sum(g => g.Impressions),
                         Clicks = group.Sum(g => g.Clicks),
-                        Cost = group.Sum(g => g.Cost)
+                        Cost = group.Sum(g => g.Cost),
+                        PostClickConv = group.Sum(g => g.AttributedConversions30d)
                     };
                     yield return sum;
                 }
@@ -337,7 +340,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         TDadName = ad.Name,
                         Impressions = group.Sum(g => g.impressions),
                         Clicks = group.Sum(g => g.clicks),
-                        Cost = group.Sum(g => g.cost)
+                        Cost = group.Sum(g => g.cost),
+                        PostClickConv = group.Sum(g => g.attributedConversions30d)
                     };
                     yield return sum;
                 }

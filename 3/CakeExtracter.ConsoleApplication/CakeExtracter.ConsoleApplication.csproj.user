@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>DASynchAmazonStats --accountId=1 --disabledOnly=False --startDate="12/06/2017"  --endDate "12/6/2017" --statsType="Strategy"</StartArguments>
+    <StartArguments>DASynchAmazonStats --accountId=1 --disabledOnly=False --startDate="12/06/2017"  --endDate "12/6/2017" --statsType="Daily"</StartArguments>
     <StartWorkingDirectory>
     </StartWorkingDirectory>
   </PropertyGroup>
