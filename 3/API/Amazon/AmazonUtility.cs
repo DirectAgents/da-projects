@@ -136,7 +136,7 @@ namespace Amazon
         }
 
         //Get campaigns by profile id
-        public string GetCampaigns(string profileId)
+        public List<AmazonCampaign> GetCampaigns(string profileId)
         {
             try
             {                
@@ -145,17 +145,14 @@ namespace Amazon
                 var request = new RestRequest("v1/campaigns", Method.GET);
                 request.AddHeader("Content-Type", "application/json");
                 request.AddHeader("Amazon-Advertising-API-Scope", profileId);
-                var restResponse = ProcessRequest<AmazonCampaign>(request, postNotGet: false);
-                return restResponse.Content;
-
+                var restResponse = ProcessRequest<List<AmazonCampaign>>(request, postNotGet: false);
+                return restResponse.Data;
             }
             catch (Exception x)
             {
                 LogError(x.Message);
             }
-
-            return string.Empty;
-
+            return null;
         }
 
         #region Constructors
@@ -228,7 +225,7 @@ namespace Amazon
             return response;
         }
 
-        public string GetKeywords(string profileId)
+        public List<AmazonKeyword> GetKeywords(string profileId)
         {
             try
             {
@@ -237,17 +234,17 @@ namespace Amazon
                 var request = new RestRequest("v1/keywords", Method.GET);
                 request.AddHeader("Content-Type", "application/json");
                 request.AddHeader("Amazon-Advertising-API-Scope", profileId);
-                var restResponse = ProcessRequest<AmazonKeyword>(request, postNotGet: false);
-                return restResponse.Content;
+                var restResponse = ProcessRequest<List<AmazonKeyword>>(request, postNotGet: false);
+                return restResponse.Data;
             }
             catch (Exception x)
             {
                 LogError(x.Message);
             }
-            return string.Empty;
+            return null;
         }
 
-        public string GetProductAds(string profileId)
+        public List<AmazonProductAds> GetProductAds(string profileId)
         {
             try
             {
@@ -256,14 +253,14 @@ namespace Amazon
                 var request = new RestRequest("v1/productAds", Method.GET);
                 request.AddHeader("Content-Type", "application/json");
                 request.AddHeader("Amazon-Advertising-API-Scope", profileId);
-                var restResponse = ProcessRequest<AmazonProductAds>(request, postNotGet: false);
-                return restResponse.Content;
+                var restResponse = ProcessRequest<List<AmazonProductAds>>(request, postNotGet: false);
+                return restResponse.Data;
             }
             catch (Exception x)
             {
                 LogError(x.Message);
             }
-            return string.Empty;
+            return null;
         }
 
         public void GetAccessToken()

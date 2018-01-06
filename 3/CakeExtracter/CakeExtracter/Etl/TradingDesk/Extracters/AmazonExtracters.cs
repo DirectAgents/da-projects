@@ -106,23 +106,24 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            IEnumerable<AmazonCampaign> campaignSummaries = LoadCampaignsFromAmazonAPI();
             Logger.Info("Extracting StrategySummaries from Amazon API for ({0}) from {1:d} to {2:d}", 
                 this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
 
-            foreach (var date in dateRange.Dates)
+            List<AmazonCampaign> campaignSummaries = LoadCampaignsFromAmazonAPI();
+            if (campaignSummaries != null)
             {
-                var items = EnumerateRows(date, campaignSummaries);
-                Add(items);
+                foreach (var date in dateRange.Dates)
+                {
+                    var items = EnumerateRows(date, campaignSummaries);
+                    Add(items);
+                }
             }
             End();
         }
 
-        private IEnumerable<AmazonCampaign> LoadCampaignsFromAmazonAPI()
-        {
-            IEnumerable<AmazonCampaign> campaignSummaries = null;
-            var json = _amazonUtility.GetCampaigns(clientId);
-            campaignSummaries = JsonConvert.DeserializeObject<List<AmazonCampaign>>(json);
+        private List<AmazonCampaign> LoadCampaignsFromAmazonAPI()
+        {            
+            var campaignSummaries = _amazonUtility.GetCampaigns(clientId);
             return campaignSummaries;
         }
 
@@ -179,14 +180,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         { }
 
         protected override void Extract()
-        {
-            List<AmazonAdSet> adsets = LoadAdSetsfromAmazonAPI();
+        {            
             Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
-            foreach (var date in dateRange.Dates)
-            {                
-                var items = EnumerateRows(date, adsets);
-                Add(items);
+            List<AmazonAdSet> adsets = LoadAdSetsfromAmazonAPI();
+            if (adsets != null)
+            {
+                foreach (var date in dateRange.Dates)
+                {
+                    var items = EnumerateRows(date, adsets);
+                    Add(items);
+                }
             }
             End();
         }
@@ -194,10 +198,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         private List<AmazonAdSet> LoadAdSetsfromAmazonAPI()
         {
             List<AmazonAdSet> adsets = new List<AmazonAdSet>();
-            IEnumerable<AmazonKeyword> keywords = null;
+            var keywords = _amazonUtility.GetKeywords(clientId);
 
-            var json = _amazonUtility.GetKeywords(clientId);
-            keywords = JsonConvert.DeserializeObject<List<AmazonKeyword>>(json);
+            if (keywords == null) return null;
 
             foreach (var keyword in keywords)
             {
@@ -267,26 +270,26 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            List<TDad> ads = GetAdsFromAmazonAPI();
-            Logger.Info("Extracting TDadSummaries from Amazon API for ({0}) from {1:d} to {2:d}", 
+            Logger.Info("Extracting TDadSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
 
-            foreach (var date in dateRange.Dates)
+            List<TDad> ads = GetAdsFromAmazonAPI();
+            if (ads != null)
             {
-                var items = EnumerateRows(date, ads);
-                Add(items);
+                foreach (var date in dateRange.Dates)
+                {
+                    var items = EnumerateRows(date, ads);
+                    Add(items);
+                }
             }
             End();
         }
 
         private List<TDad> GetAdsFromAmazonAPI()
         {
-            List<TDad> ads = new List<TDad>();
-            IEnumerable<AmazonProductAds> productAds = null;
-
-            var json = _amazonUtility.GetProductAds(clientId);
-            productAds = JsonConvert.DeserializeObject<List<AmazonProductAds>>(json);
-
+            List<TDad> ads = new List<TDad>();            
+            var productAds = _amazonUtility.GetProductAds(clientId);
+            if (productAds == null) return null;
             foreach (var productAd in productAds)
             {
                 ads.Add(new TDad
