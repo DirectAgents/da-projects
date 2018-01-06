@@ -610,6 +610,10 @@
       <Project>{feb04d4a-cf17-43bf-bf2c-635e87a38279}</Project>
       <Name>AdRoll</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\API\Amazon\Amazon.csproj">
+      <Project>{5c59f9fe-a478-4701-bb84-17e7d0e5e012}</Project>
+      <Name>Amazon</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\API\Apple\Apple.csproj">
       <Project>{63f5069c-4aa1-4fa1-aba4-352fe8373e09}</Project>
       <Name>Apple</Name>
