@@ -42,9 +42,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         { }
         protected override void Extract()
         {
+            Logger.Info("Extracting DailySummaries from Amazon API for ({0}) from {1:d} to {2:d}",
+            this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
+
             foreach (var date in dateRange.Dates)
             {
-                Logger.Info("Extracting DailySummaries from Amazon API for client id: ({0}) report date {1:d}", this.clientId, date);
                 var items = EnumerateRows(date);
                 Add(items);
             }
@@ -105,10 +107,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         protected override void Extract()
         {
             IEnumerable<AmazonCampaignSummary> campaignSummaries = LoadCampaignSummariesFromAmazonAPI();
+            Logger.Info("Extracting StrategySummaries from Amazon API for ({0}) from {1:d} to {2:d}", 
+                this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
 
             foreach (var date in dateRange.Dates)
             {
-                Logger.Info("Extracting StrategySummaries from Amazon API for ({0}) for {1:d}", this.clientId, date);
                 var items = EnumerateRows(date, campaignSummaries);
                 Add(items);
             }
@@ -178,9 +181,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         protected override void Extract()
         {
             List<AmazonAdSet> adsets = LoadAdSetsfromAmazonAPI();
+            Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
+                this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
             foreach (var date in dateRange.Dates)
-            {
-                Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) for reporting date: {1:d}", this.clientId, date);
+            {                
                 var items = EnumerateRows(date, adsets);
                 Add(items);
             }
@@ -264,10 +268,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         protected override void Extract()
         {
             List<TDad> ads = GetAdsFromAmazonAPI();
+            Logger.Info("Extracting TDadSummaries from Amazon API for ({0}) from {1:d} to {2:d}", 
+                this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
 
             foreach (var date in dateRange.Dates)
             {
-                Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) for reporting date: {1:d}", this.clientId, this.dateRange);
                 var items = EnumerateRows(date, ads);
                 Add(items);
             }
