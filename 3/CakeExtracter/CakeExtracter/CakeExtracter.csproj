@@ -646,10 +646,6 @@
       <Project>{70f3e367-5f86-4718-9a27-6edc9fef9ec9}</Project>
       <Name>DAGenerators</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\DirectAgents.Web\Amazon\Amazon.csproj">
-      <Project>{5c59f9fe-a478-4701-bb84-17e7d0e5e012}</Project>
-      <Name>Amazon</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
