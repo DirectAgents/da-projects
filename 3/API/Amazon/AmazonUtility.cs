@@ -157,58 +157,7 @@ namespace Amazon
             return string.Empty;
 
         }
-        #region NOT USED
-        public List<AmazonCampaignSummary> AmazonCampaignDailySummaries(DateTime date, string advertisableEid, string campaignEid = null)
-        {
-            //var request = new CampaignReportRequest
-            //{
-            //    start_date = date.ToString("MM-dd-yyyy"),
-            //    end_date = date.ToString("MM-dd-yyyy"),
-            //    advertisables = advertisableEid,
-            //    campaigns = campaignEid, // null for all campaigns
-            //};
-            //var response = this.CampaignReportClient.CampaignSummaries(request);
-            //if (response == null)
-            //{
-            //    LogInfo("No CampaignSummaries found");
-            //    return new List<AmazonCampaignSummary>();
-            //}
-            //var campaignSummaries = response.results;
-            //foreach (var campSum in campaignSummaries)
-            //{
-            //    campSum.date = date;
-            //}
-            //return campaignSummaries;
-            //;
-            return null;
-        }
-        //private AuthorizationData GetAuthorizationData()
-        //{
-        //    var authorizationData = new AuthorizationData
-        //    {
-        //        CustomerId = CustomerID,
-        //        //AccountId: not needed?
-        //        DeveloperToken = DeveloperToken
-        //    };
-        //    if (UserName.Contains('@')) // is an email address (Microsoft account); can't use PasswordAuthentication
-        //    {
-        //        string redirString = ConfigurationManager.AppSettings["BingRedirectionUri"];
-        //        var authorization = new OAuthWebAuthCodeGrant(ClientId, ClientSecret, new Uri(redirString));
-        //        var task = authorization.RequestAccessAndRefreshTokensAsync(RefreshToken);
-        //        task.Wait();
-        //        // TODO: see if refreshtoken changed; if so, save the new one
 
-        //        authorizationData.Authentication = authorization;
-        //    }
-        //    else
-        //    {   // old style: BingAds username
-        //        authorizationData.Authentication = new PasswordAuthentication(UserName, Password);
-        //    }
-        //    return authorizationData;
-        //}
-
-
-        #endregion
         #region Constructors
         // --- Constructors ---
         public AmazonUtility()
