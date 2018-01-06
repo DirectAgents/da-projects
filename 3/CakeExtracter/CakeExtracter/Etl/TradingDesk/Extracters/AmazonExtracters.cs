@@ -106,7 +106,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            IEnumerable<AmazonCampaignSummary> campaignSummaries = LoadCampaignSummariesFromAmazonAPI();
+            IEnumerable<AmazonCampaign> campaignSummaries = LoadCampaignsFromAmazonAPI();
             Logger.Info("Extracting StrategySummaries from Amazon API for ({0}) from {1:d} to {2:d}", 
                 this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
 
@@ -118,15 +118,15 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             End();
         }
 
-        private IEnumerable<AmazonCampaignSummary> LoadCampaignSummariesFromAmazonAPI()
+        private IEnumerable<AmazonCampaign> LoadCampaignsFromAmazonAPI()
         {
-            IEnumerable<AmazonCampaignSummary> campaignSummaries = null;
+            IEnumerable<AmazonCampaign> campaignSummaries = null;
             var json = _amazonUtility.GetCampaigns(clientId);
-            campaignSummaries = JsonConvert.DeserializeObject<List<AmazonCampaignSummary>>(json);
+            campaignSummaries = JsonConvert.DeserializeObject<List<AmazonCampaign>>(json);
             return campaignSummaries;
         }
 
-        public IEnumerable<StrategySummary> EnumerateRows(DateTime date, IEnumerable<AmazonCampaignSummary> campaignSummaries)
+        public IEnumerable<StrategySummary> EnumerateRows(DateTime date, IEnumerable<AmazonCampaign> campaignSummaries)
         {
             string reportDate = date.ToString("yyyyMMdd");
             var parms = _amazonUtility.CreateAmazonApiReportParams(reportDate);
@@ -148,7 +148,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 yield return sum;
         }
 
-        private IEnumerable<StrategySummary> GroupAndEnumerate(List<AmazonDailySummary> dailyStats, IEnumerable<AmazonCampaignSummary> campaignSummaries, DateTime day)
+        private IEnumerable<StrategySummary> GroupAndEnumerate(List<AmazonDailySummary> dailyStats, IEnumerable<AmazonCampaign> campaignSummaries, DateTime day)
         {
             foreach (var campaign in campaignSummaries)
             {
