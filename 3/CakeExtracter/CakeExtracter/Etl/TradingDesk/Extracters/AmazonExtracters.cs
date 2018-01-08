@@ -110,12 +110,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             Logger.Info("Extracting StrategySummaries from Amazon API for ({0}) from {1:d} to {2:d}", 
                 this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
 
-            List<AmazonCampaign> campaignSummaries = LoadCampaignsFromAmazonAPI();
-            if (campaignSummaries != null)
+            List<AmazonCampaign> campaigns = LoadCampaignsFromAmazonAPI();
+            if (campaigns != null)
             {
                 foreach (var date in dateRange.Dates)
                 {
-                    var items = EnumerateRows(date, campaignSummaries);
+                    var items = EnumerateRows(date, campaigns);
                     Add(items);
                 }
             }
@@ -124,11 +124,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         private List<AmazonCampaign> LoadCampaignsFromAmazonAPI()
         {            
-            var campaignSummaries = _amazonUtility.GetCampaigns(clientId);
-            return campaignSummaries;
+            var campaigns = _amazonUtility.GetCampaigns(clientId);
+            return campaigns;
         }
 
-        public IEnumerable<StrategySummary> EnumerateRows(DateTime date, IEnumerable<AmazonCampaign> campaignSummaries)
+        public IEnumerable<StrategySummary> EnumerateRows(DateTime date, IEnumerable<AmazonCampaign> campaigns)
         {
             string reportDate = date.ToString("yyyyMMdd");
             var parms = _amazonUtility.CreateAmazonApiReportParams(reportDate);
@@ -146,13 +146,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                     break;
                 }
             }
-            foreach (var sum in GroupAndEnumerate(dailyStats, campaignSummaries, date))
+            foreach (var sum in GroupAndEnumerate(dailyStats, campaigns, date))
                 yield return sum;
         }
 
-        private IEnumerable<StrategySummary> GroupAndEnumerate(List<AmazonDailySummary> dailyStats, IEnumerable<AmazonCampaign> campaignSummaries, DateTime day)
+        private IEnumerable<StrategySummary> GroupAndEnumerate(List<AmazonDailySummary> dailyStats, IEnumerable<AmazonCampaign> campaigns, DateTime day)
         {
-            foreach (var campaign in campaignSummaries)
+            foreach (var campaign in campaigns)
             {
                 var group = dailyStats.Where(x => x.campaignId == campaign.campaignId);
                 if (group.Any())

@@ -148,7 +148,7 @@ namespace CakeExtracter.Commands
         public bool AdSet { get; set; }
         public bool Creative { get; set; }
         public bool Site { get; set; }
-        public bool Conv { get; set; }        
+        public bool Conv { get; set; }
 
         public bool All
         {
