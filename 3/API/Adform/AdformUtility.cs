@@ -203,15 +203,17 @@ namespace Adform
 
                     offset += calculatedSize;
                     calculatedSize = CalculatePageSize(offset, MaxPageSize, restResponse.Data.totalRowCount);
+                    if (calculatedSize > 0)
+                        LogInfo(String.Format("Next page. offset {0} limit {1} totalRows {2}", offset, calculatedSize, restResponse.Data.totalRowCount));
                 }
                 else
                     calculatedSize = 0;
             }
         }
-        private static int CalculatePageSize(int offset, int limit, int total = 0)
+        private static int CalculatePageSize(int offset, int limit, int total = -1)
         {
             int result = limit;
-            if (total > 0 && limit > 0)
+            if (total >= 0 && limit > 0)
             {
                 if (offset + limit > total)
                     result = total - offset;
