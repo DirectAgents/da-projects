@@ -66,7 +66,7 @@ namespace CakeExtracter.Commands
             HasOption<int>("v|accountId=", "Account Id", c => AccountId = c);
             HasOption<DateTime>("s|startDate=", "Start Date (optional)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
-            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 62)", c => DaysAgoToStart = c);
+            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 41)", c => DaysAgoToStart = c);
             HasOption<bool>("r|includeRegular=", "Include Regular(NonShopping) campaigns (default is true)", c => _includeNonShopping = c);
             HasOption<bool>("h|includeShopping=", "Include Shopping campaigns (default is true)", c => _includeShopping = c);
             HasOption<bool>("n|getConversionTypeStats=", "Get conversion-type stats (default is false)", c => GetConversionTypeStats = c);
@@ -77,7 +77,7 @@ namespace CakeExtracter.Commands
         {
             //GlobalProxySelection.Select = new WebProxy("127.0.0.1", 8888);
             if (!DaysAgoToStart.HasValue)
-                DaysAgoToStart = 62; // used if StartDate==null
+                DaysAgoToStart = 41; // used if StartDate==null
             var today = DateTime.Today;
             var yesterday = today.AddDays(-1);
             var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);

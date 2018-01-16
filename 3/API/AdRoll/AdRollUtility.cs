@@ -132,7 +132,7 @@ namespace AdRoll
         }
 
         // Daily Summaries by Campaign (also one day per call)
-        public List<CampaignSummary> CampaignDailySummaries(DateTime date, string advertisableEid, string campaignEid = null)
+        public List<CampaignSummary> CampaignDailySummaries(DateTime date, string advertisableEid, string campaignEid = null, string externalCampaignEid = null)
         {
             var request = new CampaignReportRequest
             {
@@ -140,6 +140,7 @@ namespace AdRoll
                 end_date = date.ToString("MM-dd-yyyy"),
                 advertisables = advertisableEid,
                 campaigns = campaignEid, // null for all campaigns
+                external_campaigns = externalCampaignEid
             };
             var response = this.CampaignReportClient.CampaignSummaries(request);
             if (response == null)

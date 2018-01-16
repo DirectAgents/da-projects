@@ -37,6 +37,7 @@ namespace CakeExtracter.Commands
         public int? AdvertisableId { get; set; }
         public string AdvertisableEids { get; set; } // if NullOrWhitespace, gets filled in during Run()
         public string CampaignEids { get; set; }
+        public string ExternalCampaignEids { get; set; } // for newer facebook campaigns; used in DoETL_CampaignLevel
         public bool CheckActiveAdvertisables { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
@@ -52,6 +53,7 @@ namespace CakeExtracter.Commands
             AdvertisableId = null;
             AdvertisableEids = null;
             CampaignEids = null;
+            ExternalCampaignEids = null;
             CheckActiveAdvertisables = false;
             StartDate = null;
             EndDate = null;
@@ -69,6 +71,7 @@ namespace CakeExtracter.Commands
             //HasOption("x|advertisableEids=", "Advertisable Eids (comma-separated) (default = all)", c => AdvertisableEids = c);
             HasOption<int>("i|advertisableId=", "Advertisable Id (default = all)", c => AdvertisableId = c);
             HasOption("m|campaignEids=", "Campaign Eids (comma-separated) (default = all)", c => CampaignEids = c);
+            HasOption("n|externalCampaignEids=", "ExternalCampaign Eids (comma-separated) (default = all)", c => ExternalCampaignEids = c);
             HasOption("c|checkActive=", "Check AdRoll for Advertisables with stats (if none specified)", c => CheckActiveAdvertisables = bool.Parse(c));
             HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
@@ -172,7 +175,7 @@ namespace CakeExtracter.Commands
             //TODO: same as AdLevel todo
             foreach (var adv in advertisables)
             {
-                var extracter = new AdrollCampaignDailySummariesExtracter(dateRange, adv.Eid, arUtility, campaignEid: this.CampaignEids);
+                var extracter = new AdrollCampaignDailySummariesExtracter(dateRange, adv.Eid, arUtility, campaignEid: this.CampaignEids, externalCampaignEid: this.ExternalCampaignEids);
                 var loader = new AdrollCampaignSummaryLoader(adv.Eid);
                 if (loader.FoundAccount())
                 {

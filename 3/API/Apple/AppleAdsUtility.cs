@@ -65,8 +65,9 @@ namespace Apple
             restClient.AddHandler("application/json", new JsonDeserializer());
 
             var filename = String.Format(AppleP12Location, certificateCode);
+            //LogInfo("certificate location: " + filename);
             var certificate = new X509Certificate2();
-            certificate.Import(filename, AppleP12Password, X509KeyStorageFlags.DefaultKeySet);
+            certificate.Import(filename, AppleP12Password, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable);
             restClient.ClientCertificates = new X509CertificateCollection() { certificate };
 
             var response = restClient.Execute<T>(restRequest);
@@ -98,6 +99,8 @@ namespace Apple
             while (!done)
             {
                 var response = GetReport(requestBody, orgId, certificateCode);
+                if (response != null && response.error != null)
+                    LogError("response.error: " + response.error);
                 done = true;
                 if (response != null && response.data != null && response.data.reportingDataResponse != null && response.data.reportingDataResponse.row != null)
                 {

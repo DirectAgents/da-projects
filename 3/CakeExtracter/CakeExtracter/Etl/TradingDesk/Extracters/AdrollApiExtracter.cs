@@ -55,11 +55,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     public class AdrollCampaignDailySummariesExtracter : AdrollApiExtracter<CampaignSummary>
     {
         protected readonly string campaignEid;
+        protected readonly string externalCampaignEid;
 
-        public AdrollCampaignDailySummariesExtracter(DateRange dateRange, string advertisableEid, AdRollUtility arUtility = null, string campaignEid = null)
+        public AdrollCampaignDailySummariesExtracter(DateRange dateRange, string advertisableEid, AdRollUtility arUtility = null, string campaignEid = null, string externalCampaignEid = null)
             : base(arUtility, dateRange, advertisableEid)
         {
             this.campaignEid = campaignEid;
+            this.externalCampaignEid = externalCampaignEid;
         }
         //Note: this.dateRange is guaranteed to be non-null
 
@@ -70,7 +72,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
             foreach (var date in dateRange.Value.Dates)
             {
-                var campSums = _arUtility.CampaignDailySummaries(date, this.advertisableEid, this.campaignEid);
+                var campSums = _arUtility.CampaignDailySummaries(date, this.advertisableEid, this.campaignEid, this.externalCampaignEid);
                 if (campSums != null)
                     Add(campSums);
             }

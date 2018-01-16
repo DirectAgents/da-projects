@@ -307,14 +307,14 @@ namespace BingAds
 
                 LogInfo("Report Request ID: " + reportRequestId);
 
-                var waitTime = new TimeSpan(0, 0, 6);
+                var waitTime = new TimeSpan(0, 0, 10);
                 ReportRequestStatus reportRequestStatus = null;
 
                 // Poll every X seconds.
                 // If the call succeeds, stop polling. If the call or 
                 // download fails, the call throws a fault.
 
-                for (int i = 0; i < 15; i++)
+                for (int i = 0; i < 6 * 10; i++) // 6 * # of minutes
                 {
                     LogInfo(String.Format("Will check if the report is ready in {0} seconds...", waitTime.Seconds));
                     Thread.Sleep(waitTime);
