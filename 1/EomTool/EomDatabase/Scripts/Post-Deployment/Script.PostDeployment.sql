@@ -61,11 +61,11 @@ INSERT INTO [dbo].[PaymentBatchState] VALUES
 	,('6', 'Complete')
 GO
 
-GRANT EXECUTE ON [dbo].[tousd3] TO [DIRECTAGENTS\Account Managers]
+GRANT EXECUTE ON [dbo].[tousd3] TO [accountManagersOnly]
 GO
-GRANT CONNECT TO [DIRECTAGENTS\Account Managers]
+GRANT CONNECT TO [accountManagersOnly]
 GO
-ALTER USER [DIRECTAGENTS\Account Managers] WITH DEFAULT_SCHEMA=[dbo]
+ALTER USER [accountManagersOnly] WITH DEFAULT_SCHEMA=[dbo]
 GO
 
 GRANT SELECT ON [dbo].[MediaBuyerConfirmation_Megan] TO [DIRECTAGENTS\MConahan]
