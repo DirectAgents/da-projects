@@ -89,6 +89,7 @@
     <Compile Include="Concrete\SuperRepository.cs" />
     <Compile Include="Concrete\TDRepository.cs" />
     <Compile Include="Contexts\ABContext.cs" />
+    <Compile Include="Contexts\ClientPortalSearchContext.cs" />
     <Compile Include="Contexts\RevTrackContext.cs" />
     <Compile Include="Contexts\HistoryContext.cs" />
     <Compile Include="Contexts\ClientPortalProgContext.cs" />
@@ -139,6 +140,12 @@
     <Compile Include="Entities\Cake\Role.cs" />
     <Compile Include="Entities\Cake\Vertical.cs" />
     <Compile Include="Entities\CPProg\Actions.cs" />
+    <Compile Include="Entities\CPSearch\SearchAccount.cs" />
+    <Compile Include="Entities\CPSearch\SearchCampaign.cs" />
+    <Compile Include="Entities\CPSearch\SearchConvSummary.cs" />
+    <Compile Include="Entities\CPSearch\SearchConvType.cs" />
+    <Compile Include="Entities\CPSearch\SearchDailySummary.cs" />
+    <Compile Include="Entities\CPSearch\SearchProfile.cs" />
     <Compile Include="Entities\Currency.cs">
       <SubType>Code</SubType>
     </Compile>
