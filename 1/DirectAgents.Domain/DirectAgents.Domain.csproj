@@ -64,6 +64,7 @@
     <Compile Include="Abstract\IAdmin.cs" />
     <Compile Include="Abstract\ICampaignRepository.cs" />
     <Compile Include="Abstract\ICPProgRepository.cs" />
+    <Compile Include="Abstract\ICPSearchRepository.cs" />
     <Compile Include="Abstract\IDepartmentRepository.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -81,6 +82,7 @@
     <Compile Include="Concrete\CountryLookup.cs" />
     <Compile Include="Concrete\CPProgRepository.cs" />
     <Compile Include="Concrete\CPProgStatsRepository.cs" />
+    <Compile Include="Concrete\CPSearchRepository.cs" />
     <Compile Include="Concrete\DepartmentRepository.cs" />
     <Compile Include="Concrete\Extensions.cs" />
     <Compile Include="Concrete\MainRepository.cs" />

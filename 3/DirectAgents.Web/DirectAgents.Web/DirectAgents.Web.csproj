@@ -241,6 +241,9 @@
     <Compile Include="Areas\RevTrack\Controllers\CakeController.cs" />
     <Compile Include="Areas\RevTrack\Controllers\ProgController.cs" />
     <Compile Include="Areas\RevTrack\RevTrackAreaRegistration.cs" />
+    <Compile Include="Areas\SearchAdmin\Controllers\SearchAccountsController.cs" />
+    <Compile Include="Areas\SearchAdmin\Controllers\SearchProfilesController.cs" />
+    <Compile Include="Areas\SearchAdmin\SearchAdminAreaRegistration.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
@@ -871,6 +874,7 @@
     <Folder Include="Areas\AB\Views\SpendBuckets\" />
     <Folder Include="Areas\RevTrack\Models\" />
     <Folder Include="Areas\RevTrack\Views\Shared\" />
+    <Folder Include="Areas\SearchAdmin\Models\" />
     <Folder Include="Views\Test\" />
   </ItemGroup>
   <ItemGroup>
@@ -1072,6 +1076,12 @@
     <Content Include="Areas\ProgAdmin\Views\Actions\Types.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Stats\Action.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Advertisers\IndexFees.cshtml" />
+    <Content Include="Areas\SearchAdmin\Views\web.config" />
+    <Content Include="Areas\SearchAdmin\Views\Shared\_LayoutSearch.cshtml" />
+    <Content Include="Areas\SearchAdmin\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\SearchAdmin\Views\SearchProfiles\Index.cshtml" />
+    <Content Include="Areas\SearchAdmin\Views\SearchAccounts\Index.cshtml" />
+    <Content Include="Areas\SearchAdmin\Views\SearchAccounts\IndexGauge.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

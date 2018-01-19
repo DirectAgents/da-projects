@@ -46,5 +46,14 @@
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SearchCampaign> AltSearchCampaigns { get; set; }
+
+        [NotMapped]
+        public DateTime? MinDaySum { get; set; }
+        [NotMapped]
+        public DateTime? MaxDaySum { get; set; }
+        [NotMapped]
+        public DateTime? MinConvSum { get; set; }
+        [NotMapped]
+        public DateTime? MaxConvSum { get; set; }
     }
 }

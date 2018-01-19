@@ -12,6 +12,7 @@ namespace DirectAgents.Web.Controllers
     {
         protected IMainRepository daRepo;
         protected ICPProgRepository cpProgRepo;
+        protected ICPSearchRepository cpSearchRepo;
         protected ITDRepository tdRepo;
         protected IRevTrackRepository rtRepo;
         protected IABRepository abRepo;
@@ -25,6 +26,8 @@ namespace DirectAgents.Web.Controllers
                 daRepo.Dispose();
             if (cpProgRepo != null)
                 cpProgRepo.Dispose();
+            if (cpSearchRepo != null)
+                cpSearchRepo.Dispose();
             if (tdRepo != null)
                 tdRepo.Dispose();
             if (rtRepo != null)

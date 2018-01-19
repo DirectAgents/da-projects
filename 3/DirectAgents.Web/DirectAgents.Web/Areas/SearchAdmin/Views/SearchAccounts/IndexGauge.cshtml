@@ -1,0 +1,28 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.CPSearch.SearchAccount>
+
+<h2>SearchAccounts - StatsGauge</h2>
+
+<table>
+    <tr>
+        <th style="text-align:right">spId</th>
+        <th style="text-align:right">Id</th>
+        <th>Name</th>
+        <th>Channel</th>
+        <th style="text-align:center">DaySums</th>
+        <th style="text-align:center">ConvSums</th>
+    </tr>
+    @foreach (var sa in Model)
+    {
+        <tr>
+            <td style="text-align:right">@sa.SearchProfileId</td>
+            <td style="text-align:right">@sa.SearchAccountId</td>
+            <td>@sa.Name</td>
+            <td>@sa.Channel</td>
+            <td style="text-align:center">@sa.MinDaySum.ToShortDateString() - @sa.MaxDaySum.ToShortDateString()</td>
+            <td style="text-align:center">@sa.MinConvSum.ToShortDateString() - @sa.MaxConvSum.ToShortDateString()</td>
+        </tr>
+    }
+</table>
+<br />
+
+@Html.ActionLink("Show All", "IndexGauge")
