@@ -20,6 +20,8 @@
         public virtual DbSet<SearchDailySummary> SearchDailySummaries { get; set; }
         public virtual DbSet<SearchProfile> SearchProfiles { get; set; }
 
+        public virtual DbSet<ClientReport> ClientReports { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SearchAccount>()

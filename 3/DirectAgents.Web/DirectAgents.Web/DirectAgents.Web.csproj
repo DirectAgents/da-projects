@@ -246,6 +246,7 @@
     <Compile Include="Areas\SearchAdmin\SearchAdminAreaRegistration.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />
+    <Compile Include="Controllers\ClientReportsController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\ScreensController.cs" />
     <Compile Include="Controllers\StatsController.cs" />
@@ -1098,6 +1099,7 @@
     <Content Include="Views\Screens\SalesStats.cshtml" />
     <None Include="Properties\PublishProfiles\dagents - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\dagents - Web Deploy.pubxml" />
+    <Content Include="Views\ClientReports\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -95,6 +95,13 @@ namespace DirectAgents.Domain.Concrete
 
         // ---
 
+        public IQueryable<ClientReport> ClientReports()
+        {
+            return context.ClientReports;
+        }
+
+        // ---
+
         private bool disposed = false;
 
         protected virtual void Dispose(bool disposing)

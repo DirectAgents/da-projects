@@ -16,5 +16,7 @@ namespace DirectAgents.Domain.Abstract
 
         IQueryable<SearchDailySummary> DailySummaries(int? spId = null, int? searchAccountId = null);
         IQueryable<SearchConvSummary> ConvSummaries(int? spId = null, int? searchAccountId = null);
+
+        IQueryable<ClientReport> ClientReports();
     }
 }
