@@ -1,0 +1,28 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.CPSearch.SearchProfile>
+
+<h2>SearchProfiles</h2>
+
+<table>
+    <tr>
+        <th style="text-align:right">Id</th>
+        <th></th>
+        <th>Name</th>
+        <th>SearchAccounts</th>
+        <th>StartDayOfWeek</th>
+    </tr>
+@foreach (var sp in Model)
+{
+    int numAccts = sp.SearchAccounts.Count;
+<tr>
+    <td style="text-align:right">@sp.SearchProfileId</td>
+    <td></td>
+    <td>@sp.SearchProfileName</td>
+    <td>
+        @Html.ActionLink("List(" + numAccts + ")", "Index", "SearchAccounts", new { spId = sp.SearchProfileId }, null) |
+        @Html.ActionLink("StatsGauge", "IndexGauge", "SearchAccounts", new { spId = sp.SearchProfileId }, null)
+    </td>
+    <td style="text-align:center">@((DayOfWeek)sp.StartDayOfWeek)</td>
+</tr>
+}
+</table>
+<br />

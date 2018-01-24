@@ -34,6 +34,7 @@ namespace DirectAgents.Domain.Seed
             AddPlatformIfNotExist("li", "LiveIntent");
             AddPlatformIfNotExist("mg", "Magnetic");
             AddPlatformIfNotExist("max", "Maxpoint");
+            AddPlatformIfNotExist("qnt", "Quantcast");
             AddPlatformIfNotExist("tab", "Taboola");
             AddPlatformIfNotExist("tc", "TapCommerce");
             AddPlatformIfNotExist(Platform.Code_YAM, "YAM");

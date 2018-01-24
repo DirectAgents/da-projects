@@ -13,9 +13,9 @@
     <th colspan="4" style="text-align:right">X = disabled</th>
     <th colspan="2">Daily</th>
     <th colspan="2">Strategy</th>
-    <th colspan="2">Creative</th>
     <th colspan="2">AdSet</th>
     <th colspan="2">Actions</th>
+    <th colspan="2">Creative</th>
     <th colspan="2">Site</th>
     <th colspan="2">Conv</th>
 </tr>
@@ -48,12 +48,12 @@ if (!Model.CampaignId.HasValue) // don't show Partner summaries if filtering by 
         <td style="text-align:right">@pGauge.Daily.LatestDisp</td>
         <td style="text-align:right">@pGauge.Strategy.EarliestDisp</td>
         <td style="text-align:right">@pGauge.Strategy.LatestDisp</td>
-        <td style="text-align:right">@pGauge.Creative.EarliestDisp</td>
-        <td style="text-align:right">@pGauge.Creative.LatestDisp</td>
         <td style="text-align:right">@pGauge.AdSet.EarliestDisp</td>
         <td style="text-align:right">@pGauge.AdSet.LatestDisp</td>
         <td style="text-align:right">@pGauge.Action.EarliestDisp</td>
         <td style="text-align:right">@pGauge.Action.LatestDisp</td>
+        <td style="text-align:right">@pGauge.Creative.EarliestDisp</td>
+        <td style="text-align:right">@pGauge.Creative.LatestDisp</td>
         <td style="text-align:right">@pGauge.Site.EarliestDisp</td>
         <td style="text-align:right">@pGauge.Site.LatestDisp</td>
         <td style="text-align:right">@pGauge.Conv.EarliestDisp</td>
@@ -73,12 +73,12 @@ if (pGauge.Children != null)
         <td style="text-align:right">@gauge.Daily.LatestDisp</td>
         <td style="text-align:right">@gauge.Strategy.EarliestDisp</td>
         <td style="text-align:right">@gauge.Strategy.LatestDisp</td>
-        <td style="text-align:right">@gauge.Creative.EarliestDisp</td>
-        <td style="text-align:right">@gauge.Creative.LatestDisp</td>
         <td style="text-align:right">@gauge.AdSet.EarliestDisp</td>
         <td style="text-align:right">@gauge.AdSet.LatestDisp</td>
         <td style="text-align:right">@gauge.Action.EarliestDisp</td>
         <td style="text-align:right">@gauge.Action.LatestDisp</td>
+        <td style="text-align:right">@gauge.Creative.EarliestDisp</td>
+        <td style="text-align:right">@gauge.Creative.LatestDisp</td>
         <td style="text-align:right">@gauge.Site.EarliestDisp</td>
         <td style="text-align:right">@gauge.Site.LatestDisp</td>
         <td style="text-align:right">@gauge.Conv.EarliestDisp</td>

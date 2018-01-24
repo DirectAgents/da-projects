@@ -242,8 +242,12 @@
     <Compile Include="Areas\RevTrack\Controllers\CakeController.cs" />
     <Compile Include="Areas\RevTrack\Controllers\ProgController.cs" />
     <Compile Include="Areas\RevTrack\RevTrackAreaRegistration.cs" />
+    <Compile Include="Areas\SearchAdmin\Controllers\SearchAccountsController.cs" />
+    <Compile Include="Areas\SearchAdmin\Controllers\SearchProfilesController.cs" />
+    <Compile Include="Areas\SearchAdmin\SearchAdminAreaRegistration.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />
+    <Compile Include="Controllers\ClientReportsController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\ScreensController.cs" />
     <Compile Include="Controllers\StatsController.cs" />
@@ -872,6 +876,7 @@
     <Folder Include="Areas\AB\Views\SpendBuckets\" />
     <Folder Include="Areas\RevTrack\Models\" />
     <Folder Include="Areas\RevTrack\Views\Shared\" />
+    <Folder Include="Areas\SearchAdmin\Models\" />
     <Folder Include="Views\Test\" />
   </ItemGroup>
   <ItemGroup>
@@ -1075,6 +1080,12 @@
     <Content Include="Areas\ProgAdmin\Views\Actions\Types.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Stats\Action.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Advertisers\IndexFees.cshtml" />
+    <Content Include="Areas\SearchAdmin\Views\web.config" />
+    <Content Include="Areas\SearchAdmin\Views\Shared\_LayoutSearch.cshtml" />
+    <Content Include="Areas\SearchAdmin\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\SearchAdmin\Views\SearchProfiles\Index.cshtml" />
+    <Content Include="Areas\SearchAdmin\Views\SearchAccounts\Index.cshtml" />
+    <Content Include="Areas\SearchAdmin\Views\SearchAccounts\IndexGauge.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
@@ -1091,6 +1102,7 @@
     <Content Include="Views\Screens\SalesStats.cshtml" />
     <None Include="Properties\PublishProfiles\dagents - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\dagents - Web Deploy.pubxml" />
+    <Content Include="Views\ClientReports\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

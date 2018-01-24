@@ -21,7 +21,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
         }
 
         //TODO: move code to Upsert...()
-        // Check if campaign/affiliate exist in db; need to be added?
+        // Check if campaign and/or affiliate exist in db; add if needed?
 
         protected override int Load(List<CampaignSummary> items)
         {

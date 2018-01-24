@@ -37,6 +37,7 @@ namespace CakeExtracter.Commands
         public int? DaysAgoToStart { get; set; }
         public string StatsType { get; set; }
         public bool DisabledOnly { get; set; }
+        public int? DaysPerCall { get; set; }
 
         public override void ResetProperties()
         {
@@ -47,6 +48,7 @@ namespace CakeExtracter.Commands
             DaysAgoToStart = null;
             StatsType = null;
             DisabledOnly = false;
+            DaysPerCall = null;
         }
 
         public DASynchFacebookStats()
@@ -59,6 +61,7 @@ namespace CakeExtracter.Commands
             HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 41)", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
+            HasOption<int>("p|daysPerCall=", "Days Per API call (default: varies per stats type)", c => DaysPerCall = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -70,8 +73,9 @@ namespace CakeExtracter.Commands
             var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
             Logger.Info("Facebook ETL. DateRange {0}.", dateRange);
 
-            var fbUtility = new FacebookUtility(m => Logger.Info(m), m => Logger.Warn(m));
             var statsType = new StatsTypeAgg(this.StatsType);
+            var fbUtility = new FacebookUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            fbUtility.DaysPerCall_Override = DaysPerCall;
 
             var string_ConvAsMobAppInst = ConfigurationManager.AppSettings["FB_ConversionsAsMobileAppInstalls"] ?? "";
             var Accts_ConvAsMobAppInst = string_ConvAsMobAppInst.Split(new char[] { ',' });
@@ -84,6 +88,8 @@ namespace CakeExtracter.Commands
 
             var string_7d_click = ConfigurationManager.AppSettings["FB_7d_click"] ?? "";
             var Accts_7d_click = string_7d_click.Split(new char[] { ',' });
+            var string_7d_view = ConfigurationManager.AppSettings["FB_7d_view"] ?? "";
+            var Accts_7d_view = string_7d_view.Split(new char[] { ',' });
 
             var Accts_DailyOnly = new string[] { };
             if (!AccountId.HasValue || statsType.All)
@@ -117,12 +123,14 @@ namespace CakeExtracter.Commands
                 if (acct.Network != null)
                 {
                     string network = Regex.Replace(acct.Network.Name, @"\s+", "").ToUpper();
-                    if (network.StartsWith( "FACEBOOK"))
+                    if (network.StartsWith("FACEBOOK"))
                         fbUtility.SetFacebook();
                     else if (network.StartsWith("INSTAGRAM"))
                         fbUtility.SetInstagram();
                     else if (network.StartsWith("AUDIENCE"))
                         fbUtility.SetAudienceNetwork();
+                    else if (network.StartsWith("MESSENGER"))
+                        fbUtility.SetMessenger();
                 }
                 fbUtility.SetCampaignFilter(acct.Filter);
 
@@ -140,7 +148,11 @@ namespace CakeExtracter.Commands
                 if (Accts_7d_click.Contains(acct.ExternalId))
                     fbUtility.Set_7d_click_attribution();
                 else
-                    fbUtility.Set_28d_click_attribution();
+                    fbUtility.Set_28d_click_attribution(); //default
+                if (Accts_7d_view.Contains(acct.ExternalId))
+                    fbUtility.Set_7d_view_attribution();
+                else
+                    fbUtility.Set_1d_view_attribution(); //default
 
                 if (statsType.Daily)
                     DoETL_Daily(acctDateRange, acct, fbUtility);

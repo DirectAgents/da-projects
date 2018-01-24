@@ -1,0 +1,32 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.CPSearch.SearchAccount>
+
+<h2>SearchAccounts</h2>
+
+<table>
+    <tr>
+        <th style="text-align:right">spId</th>
+        <th style="text-align:right">Id</th>
+        <th></th>
+        <th>Name</th>
+        <th>Channel</th>
+        <th>AccountCode</th>
+        <th>ExternalId</th>
+        <th>MinSynchDate</th>
+        <th>RevPerOrder</th>
+    </tr>
+    @foreach (var sa in Model)
+    {
+        <tr>
+            <td style="text-align:right">@sa.SearchProfileId</td>
+            <td style="text-align:right">@sa.SearchAccountId</td>
+            <td></td>
+            <td>@sa.Name</td>
+            <td>@sa.Channel</td>
+            <td>@sa.AccountCode</td>
+            <td>@sa.ExternalId</td>
+            <td style="text-align:center">@sa.MinSynchDate.ToShortDateString()</td>
+            <td>@sa.RevPerOrder</td>
+        </tr>
+    }
+</table>
+<br />

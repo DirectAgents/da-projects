@@ -1,1 +1,1 @@
-﻿CREATE USER [DIRECTAGENTS\Account Managers] FOR LOGIN [DIRECTAGENTS\Account Managers] WITH DEFAULT_SCHEMA=[dbo];
+﻿CREATE USER [accountManagersOnly] FOR LOGIN [DIRECTAGENTS\AccountManagersOnly] WITH DEFAULT_SCHEMA=[dbo];

@@ -7,6 +7,7 @@ namespace AdRoll.Clients
     public abstract class ReportRequest : ApiRequest
     {
         public string campaigns { get; set; }
+        public string external_campaigns { get; set; }
         public string adgroups { get; set; }
         public string ads { get; set; }
         public string advertisables { get; set; }

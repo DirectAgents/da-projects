@@ -26,10 +26,11 @@ namespace CakeExtracter.Commands.Test
 
         public void FillStats()
         {
-            int searchAccountId = 161; // Priv
+            //int searchAccountId = 161; // Priv
+            int searchAccountId = 182; // BritBox
 
-            //var start = new DateTime(2017, 7, 26);
-            var start = new DateTime(2017, 10, 1);
+            //var start = new DateTime(2017, 8, 6);
+            var start = new DateTime(2017, 8, 7);
             var yesterday = DateTime.Today.AddDays(-1);
             var dateRange = new DateRange(start, yesterday);
 
@@ -50,12 +51,13 @@ namespace CakeExtracter.Commands.Test
                             SearchCampaignId = campId,
                             Date = date,
                             Network = "S",
-                            Device = "M"
+                            Device = "M",
+                            CurrencyId = 1
                         };
                         db.SearchDailySummaries.Add(sds);
                     }
                     db.SaveChanges();
-                    Logger.Info("{0} {1} added", date.ToShortDateString(), missingCampIds.Length);
+                    Logger.Info("{0} {1} existed, {2} added", date.ToShortDateString(), sdsForDate.Length, missingCampIds.Length);
                 }
             }
         }

@@ -128,7 +128,7 @@ namespace ClientPortal.Data.Services
         // Returns one searchstat - for the specified SearchProfile and timeframe.
         public SearchStat GetSearchStats(SearchProfile sp, DateTime? start, DateTime? end, bool? includeToday, string campaignNameInclude = null, string campaignNameExclude = null)
         {
-            return GetSearchStats(sp.SearchProfileId, start, end, includeToday, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru, campaignNameInclude, campaignNameInclude);
+            return GetSearchStats(sp.SearchProfileId, start, end, includeToday, sp.UseAnalytics, sp.ShowCalls, sp.RevPerViewThru, campaignNameInclude, campaignNameExclude);
         }
         private SearchStat GetSearchStats(int searchProfileId, DateTime? start, DateTime? end, bool? includeToday, bool useAnalytics, bool includeCalls, decimal revPerViewThru, string campaignNameInclude = null, string campaignNameExclude = null)
         {

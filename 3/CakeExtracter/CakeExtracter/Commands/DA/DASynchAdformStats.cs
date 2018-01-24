@@ -63,7 +63,7 @@ namespace CakeExtracter.Commands
         public override int Execute(string[] remainingArguments)
         {
             if (!DaysAgoToStart.HasValue)
-                DaysAgoToStart = 31; // used if StartDate==null
+                DaysAgoToStart = 41; // used if StartDate==null
             var today = DateTime.Today;
             var yesterday = today.AddDays(-1);
             var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);

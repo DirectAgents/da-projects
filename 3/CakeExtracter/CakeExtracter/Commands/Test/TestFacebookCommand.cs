@@ -21,16 +21,17 @@ namespace CakeExtracter.Commands.Test
 
         public override int Execute(string[] remainingArguments)
         {
-            //FillStats();
+            FillStats();
             return 0;
         }
 
         public void FillStats()
         {
-            int[] acctIds = new int[] { 1294, 1295, 1296 }; // Priv
+            //int[] acctIds = new int[] { 1294, 1295, 1296 }; // Priv
+            int[] acctIds = new int[] { 1324, 1325 }; // britbox
 
             var yesterday = DateTime.Today.AddDays(-1);
-            var dateRange = new DateRange(new DateTime(2017, 7, 26), yesterday);
+            var dateRange = new DateRange(new DateTime(2017, 10, 1), yesterday);
 
             foreach (var acctId in acctIds)
             {

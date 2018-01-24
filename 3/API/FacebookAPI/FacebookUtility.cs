@@ -14,6 +14,7 @@ namespace FacebookAPI
         public const int RowsReturnedAtATime = 25;
         public const string Pattern_ParenNums = @"^\((\d+)\)\s*";
 
+        public int? DaysPerCall_Override = null;
         public int DaysPerCall_Campaign = 20;
         public int DaysPerCall_AdSet = 4;
         public int DaysPerCall_Ad = 3;
@@ -25,11 +26,13 @@ namespace FacebookAPI
         public const string Conversion_ActionType_VideoPlay = "video_play";
         public string Conversion_ActionType = Conversion_ActionType_Default;
 
-        public string Click_Attribution = "28d_click";
-        public string View_Attribution = "1d_view";
+        public string Click_Attribution = "28d_click"; //default
+        public string View_Attribution = "1d_view";    //default
 
         public void Set_7d_click_attribution() { Click_Attribution = "7d_click"; }
         public void Set_28d_click_attribution() { Click_Attribution = "28d_click"; }
+        public void Set_7d_view_attribution() { View_Attribution = "7d_view"; }
+        public void Set_1d_view_attribution() { View_Attribution = "1d_view"; }
 
         public bool IncludeAllActions = false;
 
@@ -37,6 +40,7 @@ namespace FacebookAPI
         public void SetFacebook() { PlatformFilter = "facebook"; }
         public void SetInstagram() { PlatformFilter = "instagram"; }
         public void SetAudienceNetwork() { PlatformFilter = "audience_network"; }
+        public void SetMessenger() { PlatformFilter = "messenger"; }
         public void SetAll() { PlatformFilter = null; }
 
         private string CampaignFilterOperator = null;
@@ -124,7 +128,7 @@ namespace FacebookAPI
         }
         public IEnumerable<FBSummary> GetDailyCampaignStats2(string accountId, DateTime start, DateTime end)
         {
-            int daysPerCall = DaysPerCall_Campaign;
+            int daysPerCall = DaysPerCall_Override ?? DaysPerCall_Campaign;
             while (start <= end)
             {
                 var tempEnd = start.AddDays(daysPerCall - 1);
@@ -164,7 +168,7 @@ namespace FacebookAPI
         }
         public IEnumerable<FBSummary> GetDailyAdStats(string accountId, DateTime start, DateTime end)
         {
-            int daysPerCall = DaysPerCall_Ad;
+            int daysPerCall = DaysPerCall_Override ?? DaysPerCall_Ad;
             while (start <= end)
             {
                 var tempEnd = start.AddDays(daysPerCall - 1);
@@ -208,13 +212,17 @@ namespace FacebookAPI
         public IEnumerable<FBSummary> GetFBSummariesLoop(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAdSet = false, bool byAd = false)
         {
             int daysPerCall = 365; // default
-            if (byCampaign)
-                daysPerCall = DaysPerCall_Campaign;
-            if (byAdSet)
-                daysPerCall = DaysPerCall_AdSet;
-            if (byAd)
-                daysPerCall = DaysPerCall_Ad;
-
+            if (DaysPerCall_Override.HasValue)
+                daysPerCall = DaysPerCall_Override.Value;
+            else
+            {
+                if (byCampaign)
+                    daysPerCall = DaysPerCall_Campaign;
+                if (byAdSet)
+                    daysPerCall = DaysPerCall_AdSet;
+                if (byAd)
+                    daysPerCall = DaysPerCall_Ad;
+            }
             while (start <= end)
             {
                 var tempEnd = start.AddDays(daysPerCall - 1);

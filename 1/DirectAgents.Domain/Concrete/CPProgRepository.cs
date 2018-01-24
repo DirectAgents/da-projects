@@ -387,6 +387,42 @@ namespace DirectAgents.Domain.Concrete
             context.SaveChanges();
         }
 
+        // REVIEW THIS !!!
+        public void CopyBudgetInfos(int campId, DateTime toDate, DateTime? fromDate)
+        {
+            if (!fromDate.HasValue)
+                fromDate = toDate.AddMonths(-1);
+
+            var budgetInfos = context.BudgetInfos.Where(x => x.Date == fromDate.Value && x.CampaignId == campId);
+            foreach (var budgetInfo in budgetInfos)
+            {
+                var bi = new BudgetInfo
+                {
+                    Date = toDate,
+                    CampaignId = campId,
+                    MediaSpend = budgetInfo.MediaSpend,
+                    MgmtFeePct = budgetInfo.MgmtFeePct,
+                    MarginPct = budgetInfo.MarginPct
+                };
+                context.BudgetInfos.Add(bi);
+            }
+            var platformBudgetInfos = context.PlatformBudgetInfos.Where(x => x.Date == fromDate.Value && x.CampaignId == campId);
+            foreach (var platformBudgetInfo in platformBudgetInfos)
+            {
+                var pbi = new PlatformBudgetInfo
+                {
+                    Date = toDate,
+                    CampaignId = campId,
+                    PlatformId = platformBudgetInfo.PlatformId,
+                    MediaSpend = platformBudgetInfo.MediaSpend,
+                    MgmtFeePct = platformBudgetInfo.MgmtFeePct,
+                    MarginPct = platformBudgetInfo.MarginPct
+                };
+                context.PlatformBudgetInfos.Add(pbi);
+            }
+            context.SaveChanges();
+        }
+
         // ---
 
         public IQueryable<Network> Networks()
