@@ -25,7 +25,7 @@ namespace Amazon
         public const string RefreshUriFormatter = "{0}?client_id={1}&grant_type=refresh_token&redirect_uri={2}&refresh_token={3}";
         public const string AuthorizeUriFormatter = "{0}?client_id={1}&code={2}&grant_type=authorization_code&redirect_uri={3}";
 
-        private string UserName, Password, ClientId, ClientSecret, RefreshToken, ApplicationAccessCode="NEED TO ADD CODE";
+        private string UserName, Password, ClientId, ClientSecret, ApplicationAccessCode="NEED TO ADD CODE";
 
         public string _error = null;
 
@@ -54,24 +54,25 @@ namespace Amazon
             _LogError = logError;
         }
 
-        public AmazonAuth(string clientId, string clientSecret, string accessCode, string refreshToken)
+        public AmazonAuth(string clientId, string clientSecret, string accessCode)//, string refreshToken)
         {
             ClientId = clientId;
             ClientSecret = clientSecret;
             ApplicationAccessCode = accessCode;
-            RefreshToken = refreshToken;
+            //RefreshToken = refreshToken;
         }
 
-        public AmazonAuth(string username, string password, string clientId, string clientSecret, string refreshToken)
+        public AmazonAuth(string clientId, string clientSecret, string username, string password)//, string refreshToken)
         {
-            UserName = username;
-            Password = password;
             ClientId = clientId;
             ClientSecret = clientSecret;
-            RefreshToken = refreshToken;
+            UserName = username;
+            Password = password;
+            //RefreshToken = refreshToken;
         }
 
-        public AccessTokens GetInitialTokens()
+        // not used?
+        public AccessRefreshTokens GetInitialTokens(string refreshToken = null)
         {
             if (string.IsNullOrEmpty(ApplicationAccessCode))
             {
@@ -81,7 +82,7 @@ namespace Amazon
 
                 ApplicationAccessCode = code;
             }
-            return GetAccessTokens();
+            return GetAccessRefreshTokens(refreshToken);
         }
 
         //public AccessTokens GetNewTokens(string refreshToken)
@@ -126,17 +127,15 @@ namespace Amazon
                 code = HttpUtility.ParseQueryString(myUri.Query).Get("code");
                 if (string.IsNullOrEmpty(code))
                 {
-
                     _error = "Missing code value. The URL is missing code value. Check the URL for Code or check if Amazon changed their AUTH mechanism.";
                 }
-
             }
             return code;
         }
 
-        public AccessTokens GetAccessTokens()
+        public AccessRefreshTokens GetAccessRefreshTokens(string refreshToken = null)
         {
-            AccessTokens tokenResponse = null;
+            AccessRefreshTokens tokenResponse = null;
             try
             {
                 var restClient = new RestClient
@@ -148,7 +147,7 @@ namespace Amazon
 
                 var request = new RestRequest();
                 request.AddParameter("redirect_uri", "https://portal.directagents.com");
-                if (String.IsNullOrWhiteSpace(RefreshToken))
+                if (String.IsNullOrWhiteSpace(refreshToken))
                 {
                     request.AddParameter("grant_type", "authorization_code");
                     request.AddParameter("code", ApplicationAccessCode);
@@ -156,7 +155,7 @@ namespace Amazon
                 else
                 {
                     request.AddParameter("grant_type", "refresh_token");
-                    request.AddParameter("refresh_token", RefreshToken);
+                    request.AddParameter("refresh_token", refreshToken);
                 }
                 var response = restClient.ExecuteAsPost<GetTokenResponse>(request, "POST");
 
@@ -168,7 +167,7 @@ namespace Amazon
 
                 if (response.Data != null)
                 {
-                    tokenResponse = new AccessTokens
+                    tokenResponse = new AccessRefreshTokens
                     {
                         access_token = response.Data.access_token,
                         refresh_token = response.Data.refresh_token         // update this in case it changed
@@ -232,11 +231,11 @@ namespace Amazon
 
 
     [DataContract]
-    public class AccessTokens
+    public class AccessRefreshTokens
     {
-        [DataMember]
+        //[DataMember]
         // Indicates the duration in seconds until the access token will expire.
-        internal int expires_in = 0;
+        //internal int expires_in = 0;
 
         [DataMember]
         // When calling Bing Ads service operations, the access token is used as  
@@ -248,7 +247,7 @@ namespace Amazon
         internal string refresh_token = null;
 
         public string AccessToken { get { return access_token; } }
-        public int ExpiresIn { get { return expires_in; } }
+        //public int ExpiresIn { get { return expires_in; } }
         public string RefreshToken { get { return refresh_token; } }
     }
 

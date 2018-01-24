@@ -127,20 +127,18 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     {
                         // See if a TDad with that ExternalId exists
                         tdAdsInDb = db.TDads.Where(a => a.AccountId == accountId && a.ExternalId == group.Key.TDadEid);
-                        if (!tdAdsInDb.Any())
-                            tdAdsInDb = null;
+                        //if (!tdAdsInDb.Any()) // If not, check for a match by name where ExternalId == null
+                        //    tdAdsInDb = db.TDads.Where(x => x.AccountId == accountId && x.ExternalId == null && x.Name == group.Key.TDadName);
                     }
-                    if (tdAdsInDb == null)
+                    else
                     {
                         // Check by TDad name
                         tdAdsInDb = db.TDads.Where(s => s.AccountId == accountId && s.Name == group.Key.TDadName);
                     }
-                    //? should do the above like in TDStrategySummaryLoader ?
+                    //Note: If we're grouping by ad name, then the ads in the db and the ads to-be-loaded shouldn't have externalIds filled in.
 
-                    // Assume all TDads in the group have the same properties (just different dates/stats)
-                    //var groupTDad = group.First();
-
-                    if (!tdAdsInDb.Any())
+                    var tdAdsInDbList = tdAdsInDb.ToList();
+                    if (!tdAdsInDbList.Any())
                     {   // TDad doesn't exist in the db; so create it and put an entry in the lookup
                         var tdAd = new TDad
                         {
@@ -157,7 +155,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     else
                     {   // Update & put existing TDad in the lookup
                         // There should only be one matching TDad in the db, but just in case...
-                        foreach (var tdAd in tdAdsInDb)
+                        foreach (var tdAd in tdAdsInDbList)
                         {
                             if (!string.IsNullOrWhiteSpace(group.Key.TDadEid))
                                 tdAd.ExternalId = group.Key.TDadEid;
@@ -172,7 +170,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                             if (numUpdates > 1)
                                 Logger.Warn("Multiple entities in db ({0})", numUpdates);
                         }
-                        tdAdIdLookupByEidAndName[eidAndName] = tdAdsInDb.First().Id;
+                        tdAdIdLookupByEidAndName[eidAndName] = tdAdsInDbList.First().Id;
                     }
                 }
             }

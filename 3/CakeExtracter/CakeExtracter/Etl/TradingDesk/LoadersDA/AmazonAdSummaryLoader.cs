@@ -26,7 +26,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             tdAdSummaryLoader.AssignTDadIdToItems(tDadItems);
             var count = tdAdSummaryLoader.UpsertDailySummaries(tDadItems);
             return count;
-
         }
     }
 }

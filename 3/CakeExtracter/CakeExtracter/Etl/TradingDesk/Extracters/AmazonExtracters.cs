@@ -88,7 +88,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                     cost = campDateGroup.Sum(x => x.cost),
                     impressions = campDateGroup.Sum(x => x.impressions),
                     clicks = campDateGroup.Sum(x => x.clicks),
-                    attributedConversions30d = campDateGroup.Sum(g => g.attributedConversions30d)
+                    attributedConversions30d = campDateGroup.Sum(g => g.attributedConversions30d),
+                    attributedSales30d = campDateGroup.Sum(g => g.attributedSales30d)
                 };
                 yield return sum;
             }
@@ -165,7 +166,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         Impressions = group.Sum(g => g.impressions),
                         Clicks = group.Sum(g => g.clicks),
                         Cost = group.Sum(g => g.cost),
-                        PostClickConv = group.Sum(g => g.attributedConversions30d)
+                        PostClickConv = group.Sum(g => g.attributedConversions30d),
+                        PostClickRev = group.Sum(g => g.attributedSales30d)
                     };
                     yield return sum;
                 }
@@ -216,6 +218,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
             return adsets;
         }
+        //private List<string> LoadDistinctKeywordsfromAmazonAPI()
+        //{
+        //    var keywords = _amazonUtility.GetKeywords(clientId);
+        //    if (keywords == null) return null;
+
+        //    var uniqueKeywords = keywords.Select(x => x.KeywordText).Distinct().ToList();
+        //    return uniqueKeywords;
+        //}
 
         private IEnumerable<AdSetSummary> EnumerateRows(DateTime date, List<AmazonAdSet> adsets)
         {
@@ -241,20 +251,23 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         }
         private IEnumerable<AdSetSummary> GroupAndEnumerate(List<AmazonKeywordMetric> dailyStats, IEnumerable<AmazonAdSet> adsets, DateTime day)
         {
-            foreach (var ad in adsets)
+            var keywordGroups = adsets.GroupBy(x => x.KeywordText); //TODO: do this outside of loop-by-day (above)
+
+            foreach (var keywordGroup in keywordGroups)
             {
-                var group = dailyStats.Where(x => x.KeywordId == ad.KeywordId);
-                if (group.Any())
+                var keywordIds = keywordGroup.Select(x => x.KeywordId).ToArray();
+                var statsGroup = dailyStats.Where(x => keywordIds.Contains(x.KeywordId));
+                if (statsGroup.Any())
                 {
                     var sum = new AdSetSummary
                     {
                         Date = day,
-                        AdSetEid = ad.KeywordId.ToString(),
-                        AdSetName = ad.KeywordText,
-                        Impressions = group.Sum(g => g.Impressions),
-                        Clicks = group.Sum(g => g.Clicks),
-                        Cost = group.Sum(g => g.Cost),
-                        PostClickConv = group.Sum(g => g.AttributedConversions30d)
+                        AdSetName = keywordGroup.Key,
+                        Impressions = statsGroup.Sum(g => g.Impressions),
+                        Clicks = statsGroup.Sum(g => g.Clicks),
+                        Cost = statsGroup.Sum(g => g.Cost),
+                        PostClickConv = statsGroup.Sum(g => g.AttributedConversions30d),
+                        PostClickRev = statsGroup.Sum(g => g.AttributedSales30d)
                     };
                     yield return sum;
                 }
@@ -276,7 +289,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             Logger.Info("Extracting TDadSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
 
-            List<TDad> ads = GetAdsFromAmazonAPI();
+            List<TDad> ads = LoadAdsFromAmazonAPI();
             if (ads != null)
             {
                 foreach (var date in dateRange.Dates)
@@ -288,22 +301,36 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             End();
         }
 
-        private List<TDad> GetAdsFromAmazonAPI()
+        private List<TDad> LoadAdsFromAmazonAPI()
         {
             List<TDad> ads = new List<TDad>();            
             var productAds = _amazonUtility.GetProductAds(clientId);
             if (productAds == null) return null;
-            foreach (var productAd in productAds)
+            foreach (var productAdGroup in productAds.GroupBy(x => x.AdId))
             {
-                ads.Add(new TDad
+                var ad = new TDad
                 {
-                    ExternalId = productAd.AdId,
-                    Name = productAd.Asin
-                });
+                    ExternalId = productAdGroup.Key,
+                    Name = productAdGroup.First().Asin
+                };
+                if (productAdGroup.Count() > 1)
+                {
+                    Logger.Info("Multiple ads for {0}", productAdGroup.Key);
+                    var names = productAdGroup.Select(x => x.Asin).ToArray();
+                    ad.Name = String.Join(",", names);
+                }
+                ads.Add(ad);
             }
-
             return ads;
         }
+        //private List<string> LoadDistinctAdNamesFromAmazonAPI()
+        //{
+        //    var productAds = _amazonUtility.GetProductAds(clientId);
+        //    if (productAds == null) return null;
+
+        //    var uniqueAdNames = productAds.Select(x => x.Asin).Distinct().ToList();
+        //    return uniqueAdNames;
+        //}
 
         private IEnumerable<TDadSummary> EnumerateRows(DateTime date, List<TDad> ads)
         {
@@ -328,20 +355,23 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         }
         private IEnumerable<TDadSummary> GroupAndEnumerate(List<AmazonAdDailySummary> productAdsDailyStats, IEnumerable<TDad> productAds, DateTime day)
         {
-            foreach (var ad in productAds)
+            var adNameGroups = productAds.GroupBy(x => x.Name); //TODO: do this outside of loop-by-day (above)
+
+            foreach (var adNameGroup in adNameGroups)
             {
-                var group = productAdsDailyStats.Where(x => x.adId == ad.ExternalId);
-                if (group.Any())
+                var adIds = adNameGroup.Select(x => x.ExternalId).ToArray();
+                var statsGroup = productAdsDailyStats.Where(x => adIds.Contains(x.adId));
+                if (statsGroup.Any())
                 {
                     var sum = new TDadSummary
                     {
                         Date = day,
-                        TDadEid = ad.ExternalId.ToString(),
-                        TDadName = ad.Name,
-                        Impressions = group.Sum(g => g.impressions),
-                        Clicks = group.Sum(g => g.clicks),
-                        Cost = group.Sum(g => g.cost),
-                        PostClickConv = group.Sum(g => g.attributedConversions30d)
+                        //TDadEid =
+                        TDadName = adNameGroup.Key,
+                        Impressions = statsGroup.Sum(g => g.impressions),
+                        Clicks = statsGroup.Sum(g => g.clicks),
+                        Cost = statsGroup.Sum(g => g.cost),
+                        PostClickConv = statsGroup.Sum(g => g.attributedConversions30d),
                     };
                     yield return sum;
                 }

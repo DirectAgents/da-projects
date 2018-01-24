@@ -38,8 +38,7 @@ namespace CakeExtracter.Commands
         public string StatsType { get; set; }
         public bool DisabledOnly { get; set; }
 
-        private AmazonUtility AmazonUtility { get; set; }
-
+        private AmazonUtility amazonUtility { get; set; }
 
         public override void ResetProperties()
         {
@@ -81,7 +80,7 @@ namespace CakeExtracter.Commands
             foreach (var account in accounts)
             {
                 Logger.Info("Commencing ETL for Amazon account ({0}) {1}", account.Id, account.Name);
-                //AmazonUtility.SetWhichAlt(account.ExternalId);
+                //amazonUtility.SetWhichAlt(account.ExternalId);
                 try
                 {
                     if (statsType.Daily)
@@ -105,25 +104,23 @@ namespace CakeExtracter.Commands
 
         private void SetupAmazonUtility()
         {
-            this.AmazonUtility = new AmazonUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            this.amazonUtility = new AmazonUtility(m => Logger.Info(m), m => Logger.Warn(m));
             GetTokens();
         }
         private void GetTokens()
         {
             // Get tokens, if any, from the database
             string[] tokens = Platform.GetPlatformTokens(Platform.Code_Amazon);
-            AmazonUtility.AccessToken = tokens[0];
-            AmazonUtility.RefreshToken = tokens[1];
-            //AmazonUtility.TokenSets = tokens;
+            amazonUtility.TokenSets = tokens;
         }
         private void SaveTokens()
         {
-            Platform.SavePlatformTokens(Platform.Code_Amazon, AmazonUtility.TokenSets);
+            Platform.SavePlatformTokens(Platform.Code_Amazon, amazonUtility.TokenSets);
         }
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AmazonDailySummaryExtracter(AmazonUtility, dateRange, account.ExternalId);
+            var extracter = new AmazonDailySummaryExtracter(amazonUtility, dateRange, account.ExternalId);
             var loader = new AmazonDailySummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -132,7 +129,7 @@ namespace CakeExtracter.Commands
         }
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AmazonCampaignSummaryExtracter(AmazonUtility, dateRange, account.ExternalId);
+            var extracter = new AmazonCampaignSummaryExtracter(amazonUtility, dateRange, account.ExternalId);
             var loader = new AmazonCampaignSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -141,7 +138,7 @@ namespace CakeExtracter.Commands
         }
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AmazonAdSetExtracter(AmazonUtility, dateRange, account.ExternalId);
+            var extracter = new AmazonAdSetExtracter(amazonUtility, dateRange, account.ExternalId);
             var loader = new AmazonAdSetSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -150,7 +147,7 @@ namespace CakeExtracter.Commands
         }
         private void DoETL_Creative(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AmazonAdExtrater(AmazonUtility, dateRange, account.ExternalId);
+            var extracter = new AmazonAdExtrater(amazonUtility, dateRange, account.ExternalId);
             var loader = new AmazonAdSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);

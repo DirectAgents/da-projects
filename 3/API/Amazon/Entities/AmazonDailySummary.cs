@@ -13,6 +13,7 @@ namespace Amazon.Entities
         public int click_through_conversions { get; set; }
         public int view_through_conversions { get; set; }
         public int attributedConversions30d { get; set; }
+        public decimal attributedSales30d { get; set; }
         public int clicks { get; set; }
         public decimal cost { get; set; }
         public int prospects { get; set; }
@@ -39,25 +40,25 @@ namespace Amazon.Entities
         public DateTime date { get; set; }
     }
 
-    // used for Campaign daily report
-    public class AmazonCampaignSummary : AmazonCampaign
-    {
-        public string eid { get; set; }
-        public string campaign { get; set; } // campaign name
-        public string advertiser { get; set; } // advertisable name
-        public string type { get; set; } // e.g. "Retargeting"
-        public string status { get; set; } // e.g. "approved"
-        public DateTime created_date { get; set; }
-        public DateTime start_date { get; set; }
-        public DateTime? end_date { get; set; }
-        public double budget_USD { get; set; }
-        public double adjusted_attributed_click_through_rev { get; set; }
-        public double adjusted_attributed_view_through_rev { get; set; }
+    //// used for Campaign daily report
+    //public class AmazonCampaignSummary : AmazonCampaign
+    //{
+    //    public string eid { get; set; }
+    //    public string campaign { get; set; } // campaign name
+    //    public string advertiser { get; set; } // advertisable name
+    //    public string type { get; set; } // e.g. "Retargeting"
+    //    public string status { get; set; } // e.g. "approved"
+    //    public DateTime created_date { get; set; }
+    //    public DateTime start_date { get; set; }
+    //    public DateTime? end_date { get; set; }
+    //    public double budget_USD { get; set; }
+    //    public double adjusted_attributed_click_through_rev { get; set; }
+    //    public double adjusted_attributed_view_through_rev { get; set; }
 
-        public bool AllZeros(bool includeProspects = false)
-        {
-            return AllZeros(includeProspects: includeProspects) && adjusted_attributed_click_through_rev == 0 && adjusted_attributed_view_through_rev == 0;
-        }
-    }
+    //    public bool AllZeros(bool includeProspects = false)
+    //    {
+    //        return AllZeros(includeProspects: includeProspects) && adjusted_attributed_click_through_rev == 0 && adjusted_attributed_view_through_rev == 0;
+    //    }
+    //}
 
 }

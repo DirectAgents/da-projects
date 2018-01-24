@@ -24,8 +24,8 @@ namespace Amazon
         // From Config File
         private readonly string _amazonApiClientId = ConfigurationManager.AppSettings["AmazonClientId"];
         private readonly string _amazonClientSecret = ConfigurationManager.AppSettings["AmazonClientSecret"];
-        private readonly string _amazonApiUsername = ConfigurationManager.AppSettings["AmazonAPIUsername"];
-        private readonly string _amazonApiPassword = ConfigurationManager.AppSettings["AmazonAPIPassword"];        
+        //private readonly string _amazonApiUsername = ConfigurationManager.AppSettings["AmazonAPIUsername"];
+        //private readonly string _amazonApiPassword = ConfigurationManager.AppSettings["AmazonAPIPassword"];
         private readonly string _amazonApiEndpointUrl = ConfigurationManager.AppSettings["AmazonAPIEndpointUrl"];
         private readonly string _amazonAuthorizeUrl = ConfigurationManager.AppSettings["AmazonAuthorizeUrl"];
         private readonly string _amazonTokenUrl = ConfigurationManager.AppSettings["AmazonTokenUrl"];
@@ -33,28 +33,26 @@ namespace Amazon
         private readonly string _amazonAccessCode = ConfigurationManager.AppSettings["AmazonAccessCode"];
         private readonly string _amazonRefreshToken = ConfigurationManager.AppSettings["AmazonRefreshToken"];
 
-        private const string TOKEN_DELIMITER = "|DELIMITER|";
-        private long CustomerID { get; set; }
-        private string DeveloperToken { get; set; }          
-        private string UserName { get; set; }
-        private string Password { get; set; }
-        private string ClientId { get; set; }
-        private string ClientSecret { get; set; }
+        private const string TOKEN_DELIMITER = "|AMZNAMZN|";
+        //private long CustomerID { get; set; }
+        //private string DeveloperToken { get; set; }
+        //private string UserName { get; set; }
+        //private string Password { get; set; }
+        //private string ClientId { get; set; }
+        //private string ClientSecret { get; set; }
         
         private string ApiEndpointUrl { get; set; }
         private string AuthorizeUrl { get; set; }
         private string TokenUrl { get; set; }
         private string ClientUrl { get; set; }
-        private string ProfileId { get; set; }
+        //private string ProfileId { get; set; }
         public static string AccessToken { get; set; }
         public static string RefreshToken { get; set; }
-        public static string ApplicationAccessCode { get; set; }
+        //public static string ApplicationAccessCode { get; set; }
 
         private AmazonAuth AmazonAuth = null;
-        public AccessTokens AccessTokens = new AccessTokens();
 
         #region Logging
-        // --- Logging ---
         private Action<string> _LogInfo;
         private Action<string> _LogError;
 
@@ -74,105 +72,95 @@ namespace Amazon
                 _LogError("[AmazonUtility] " + message);
         } 
         #endregion
+
         private IEnumerable<string> CreateTokenSets()
         {
-            yield return AccessTokens.AccessToken + TOKEN_DELIMITER + AccessTokens.RefreshToken;
+            yield return AccessToken + TOKEN_DELIMITER + RefreshToken;
+            //TODO: handle multiple token sets (access/refresh tokens)
         }
         private void SetTokenSets(string[] value)
         {
             for (int i = 0; i < value.Length; i++)
             {
                 var tokenSet = value[i].Split(new string[] { TOKEN_DELIMITER }, StringSplitOptions.None);
-                AccessTokens.access_token = AccessToken = tokenSet[0];
-
+                AccessToken = tokenSet[0];
                 if (tokenSet.Length > 1)
-                    AccessTokens.refresh_token = RefreshToken = tokenSet[1];
+                    RefreshToken = tokenSet[1];
+                //TODO: handle multiple token sets (access/refresh tokens)
             }
-        }
-        private void ResetCredentials()
-        {
-            UserName = _amazonApiUsername;
-            Password = _amazonApiPassword;
-            ClientId = _amazonApiClientId;
-            ClientSecret = _amazonClientSecret;
-            ApiEndpointUrl = _amazonApiEndpointUrl;
-            AuthorizeUrl = _amazonAuthorizeUrl;
-            TokenUrl = _amazonTokenUrl;
-            ClientUrl = _amazonClientUrl;
-            ApplicationAccessCode = _amazonAccessCode;
-            RefreshToken = _amazonRefreshToken;
         }
         public string[] TokenSets // each string in the array is a combination of Access + Refresh Token
         {
             get { return CreateTokenSets().ToArray(); }
             set { SetTokenSets(value); }
         }
-        private void SetCredentials(long accountId)
+
+        private void ResetCredentials()
         {
-            ResetCredentials();
-
-            string customerID = ConfigurationManager.AppSettings["BingCustomerID" + accountId];
-            if (!String.IsNullOrWhiteSpace(customerID))
-                CustomerID = Convert.ToInt64(customerID);
-            string token = ConfigurationManager.AppSettings["BingApiToken" + accountId];
-            if (!String.IsNullOrWhiteSpace(token))
-                DeveloperToken = token;
-            string username = ConfigurationManager.AppSettings["BingApiUsername" + accountId];
-            if (!String.IsNullOrWhiteSpace(username))
-                UserName = username;
-            string password = ConfigurationManager.AppSettings["BingApiPassword" + accountId];
-            if (!String.IsNullOrWhiteSpace(password))
-                Password = password;
-
-            string _clientId = ConfigurationManager.AppSettings["BingClientId" + accountId];
-            if (!String.IsNullOrWhiteSpace(_clientId))
-                ClientId = _clientId;
-            string _clientSecret = ConfigurationManager.AppSettings["BingClientSecret" + accountId];
-            if (!String.IsNullOrWhiteSpace(_clientSecret))
-                ClientSecret = _clientSecret;
-            string _refreshToken = ConfigurationManager.AppSettings["BingRefreshToken" + accountId];
-            if (!String.IsNullOrWhiteSpace(_refreshToken))
-                RefreshToken = _refreshToken;
+            //UserName = _amazonApiUsername;
+            //Password = _amazonApiPassword;
+            //ClientId = _amazonApiClientId;
+            //ClientSecret = _amazonClientSecret;
+            ApiEndpointUrl = _amazonApiEndpointUrl;
+            AuthorizeUrl = _amazonAuthorizeUrl;
+            TokenUrl = _amazonTokenUrl;
+            ClientUrl = _amazonClientUrl;
+            //ApplicationAccessCode = _amazonAccessCode;
+            RefreshToken = _amazonRefreshToken;
         }
+        //private void SetCredentials(long accountId)
+        //{
+        //    ResetCredentials();
 
-        //Get campaigns by profile id
-        public List<AmazonCampaign> GetCampaigns(string profileId)
-        {
-            try
-            {                
-                var client = new RestClient(_amazonApiEndpointUrl); //"https://advertising-api.amazon.com"
-                client.AddHandler("application/json", new JsonDeserializer());
-                var request = new RestRequest("v1/campaigns", Method.GET);
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("Amazon-Advertising-API-Scope", profileId);
-                var restResponse = ProcessRequest<List<AmazonCampaign>>(request, postNotGet: false);
-                return restResponse.Data;
-            }
-            catch (Exception x)
-            {
-                LogError(x.Message);
-            }
-            return null;
-        }
+        //    string customerID = ConfigurationManager.AppSettings["BingCustomerID" + accountId];
+        //    if (!String.IsNullOrWhiteSpace(customerID))
+        //        CustomerID = Convert.ToInt64(customerID);
+        //    string token = ConfigurationManager.AppSettings["BingApiToken" + accountId];
+        //    if (!String.IsNullOrWhiteSpace(token))
+        //        DeveloperToken = token;
+        //    string username = ConfigurationManager.AppSettings["BingApiUsername" + accountId];
+        //    if (!String.IsNullOrWhiteSpace(username))
+        //        UserName = username;
+        //    string password = ConfigurationManager.AppSettings["BingApiPassword" + accountId];
+        //    if (!String.IsNullOrWhiteSpace(password))
+        //        Password = password;
+
+        //    string _clientId = ConfigurationManager.AppSettings["BingClientId" + accountId];
+        //    if (!String.IsNullOrWhiteSpace(_clientId))
+        //        ClientId = _clientId;
+        //    string _clientSecret = ConfigurationManager.AppSettings["BingClientSecret" + accountId];
+        //    if (!String.IsNullOrWhiteSpace(_clientSecret))
+        //        ClientSecret = _clientSecret;
+        //    string _refreshToken = ConfigurationManager.AppSettings["BingRefreshToken" + accountId];
+        //    if (!String.IsNullOrWhiteSpace(_refreshToken))
+        //        RefreshToken = _refreshToken;
+        //}
 
         #region Constructors
-        // --- Constructors ---
         public AmazonUtility()
         {
             ResetCredentials();
             //AmazonAuth = new AmazonAuth(UserName, Password, ClientId, ClientSecret, RefreshToken);
-            AmazonAuth = new AmazonAuth(ClientId, ClientSecret, ApplicationAccessCode, RefreshToken);
+            AmazonAuth = new AmazonAuth(_amazonApiClientId, _amazonClientSecret, _amazonAccessCode);
 
-            AccessTokens = AmazonAuth.GetInitialTokens();
+            //ARTokens = AmazonAuth.GetInitialTokens();
         }
         public AmazonUtility(Action<string> logInfo, Action<string> logError)
         {
             _LogInfo = logInfo;
             _LogError = logError;
             ResetCredentials();
-            AmazonAuth = new AmazonAuth(UserName, Password, ClientId, ClientSecret, RefreshToken);
+            //AmazonAuth = new AmazonAuth(UserName, Password, ClientId, ClientSecret, RefreshToken);
+            AmazonAuth = new AmazonAuth(_amazonApiClientId, _amazonClientSecret, _amazonAccessCode);
         }
         #endregion
+
+        public void GetNewAccessToken()
+        {
+            var arTokens = AmazonAuth.GetAccessRefreshTokens(RefreshToken);
+            AccessToken = arTokens.AccessToken;
+            RefreshToken = arTokens.RefreshToken;
+        }
 
         private IRestResponse<T> ProcessRequest<T>(RestRequest restRequest, bool postNotGet = false)
     where T : new()
@@ -184,7 +172,7 @@ namespace Amazon
             //restClient.AddHandler("application/json", new JsonDeserializer());
 
             if (String.IsNullOrEmpty(AccessToken))
-                GetAccessToken();
+                GetNewAccessToken();
 
             restRequest.AddHeader("Authorization", "bearer " + AccessToken);
             //restRequest.AddHeader("Content-Type", "application/json");
@@ -206,7 +194,7 @@ namespace Amazon
                 if (response.StatusCode == HttpStatusCode.Unauthorized && tries < 2)
                 {
                     // Get a new access token and use that.
-                    GetAccessToken();
+                    GetNewAccessToken();
 
                     var param = restRequest.Parameters.Find(p => p.Type == ParameterType.HttpHeader && p.Name == "Authorization");
                     param.Value = "bearer " + AccessToken;
@@ -223,6 +211,26 @@ namespace Amazon
                 LogError(response.ErrorMessage);
 
             return response;
+        }
+
+        //Get campaigns by profile id
+        public List<AmazonCampaign> GetCampaigns(string profileId)
+        {
+            try
+            {
+                var client = new RestClient(_amazonApiEndpointUrl); //"https://advertising-api.amazon.com"
+                client.AddHandler("application/json", new JsonDeserializer());
+                var request = new RestRequest("v1/campaigns", Method.GET);
+                request.AddHeader("Content-Type", "application/json");
+                request.AddHeader("Amazon-Advertising-API-Scope", profileId);
+                var restResponse = ProcessRequest<List<AmazonCampaign>>(request, postNotGet: false);
+                return restResponse.Data;
+            }
+            catch (Exception x)
+            {
+                LogError(x.Message);
+            }
+            return null;
         }
 
         public List<AmazonKeyword> GetKeywords(string profileId)
@@ -261,13 +269,6 @@ namespace Amazon
                 LogError(x.Message);
             }
             return null;
-        }
-
-        public void GetAccessToken()
-        {
-            AccessTokens = AmazonAuth.GetInitialTokens();
-            AccessToken = AccessTokens.AccessToken;
-            RefreshToken = AccessTokens.RefreshToken;
         }
 
         public ReportResponseDownloadInfo RequestReport(string reportId, string profileId)
@@ -316,7 +317,7 @@ namespace Amazon
                 campaignType = "sponsoredProducts",
                 //segment = segment,
                 reportDate = reportDate,
-                metrics = "impressions,clicks,cost,attributedConversions30d"
+                metrics = "impressions,clicks,cost,attributedConversions30d,attributedSales30d"
             };
             return reportParams;
         }

@@ -12,6 +12,7 @@ namespace Amazon.Entities
         public decimal Cost { get; set; }
         public int Clicks { get; set; }
         public int AttributedConversions30d { get; set; }
+        public decimal AttributedSales30d { get; set; }
         
         public int Impressions { get; set; }
 
