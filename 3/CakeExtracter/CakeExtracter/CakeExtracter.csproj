@@ -338,6 +338,7 @@
     <Compile Include="Etl\TradingDesk\Extracters\AdRollAdExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollSiteStatsCsvExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\CPCExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\DatabaseExtracters.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmCreativeCloudStorageExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DBMCreativeExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\TDadSummaryExtracter.cs" />

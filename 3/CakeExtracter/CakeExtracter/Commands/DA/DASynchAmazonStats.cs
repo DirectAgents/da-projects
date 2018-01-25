@@ -37,6 +37,7 @@ namespace CakeExtracter.Commands
         public int? DaysAgoToStart { get; set; }
         public string StatsType { get; set; }
         public bool DisabledOnly { get; set; }
+        public bool FromDatabase { get; set; }
 
         private AmazonUtility amazonUtility { get; set; }
 
@@ -49,11 +50,12 @@ namespace CakeExtracter.Commands
             DaysAgoToStart = null;
             StatsType = null;
             DisabledOnly = false;
+            FromDatabase = false;
         }
 
         public DASynchAmazonStats()
         {
-            IsCommand("DASynchAmazonStats", "Synch Amazon Stats");
+            IsCommand("daSynchAmazonStats", "Synch Amazon Stats");
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
             //HasOption<int>("c|campaignId=", "Campaign Id ", c => CampaignId = c);
             HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
@@ -61,6 +63,7 @@ namespace CakeExtracter.Commands
             HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 41)", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
+            HasOption<bool>("z|fromDatabase=", "Retrieve from database instead of API (where implemented)", c => FromDatabase = c);
         }
 
 
@@ -83,10 +86,15 @@ namespace CakeExtracter.Commands
                 //amazonUtility.SetWhichAlt(account.ExternalId);
                 try
                 {
-                    if (statsType.Daily)
+                    if (statsType.Daily && !FromDatabase)
+                    {
                         DoETL_Daily(dateRange, account);
+                    }
                     if (statsType.Strategy)
                         DoETL_Strategy(dateRange, account);
+                    if (statsType.Daily && FromDatabase)
+                        DoETL_DailyFromStrategyInDatabase(dateRange, account); // need to update strat stats first
+
                     if (statsType.AdSet)
                         DoETL_AdSet(dateRange, account);
                     if (statsType.Creative)
@@ -127,6 +135,16 @@ namespace CakeExtracter.Commands
             extracterThread.Join();
             loaderThread.Join();
         }
+        private void DoETL_DailyFromStrategyInDatabase(DateRange dateRange, ExtAccount account)
+        {
+            var extracter = new DatabaseStrategyToDailySummaryExtracter(dateRange, account.Id);
+            var loader = new TDDailySummaryLoader(account.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
         {
             var extracter = new AmazonCampaignSummaryExtracter(amazonUtility, dateRange, account.ExternalId);
