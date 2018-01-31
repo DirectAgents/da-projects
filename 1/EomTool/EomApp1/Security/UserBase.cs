@@ -84,5 +84,17 @@ namespace EomApp1.Security
         {
             return PermissionTags.Contains(permissionTag);
         }
+
+        private List<string> _FinalizeList;
+        public List<string> FinalizeList // for which AMs can the current user finalize?
+        {
+            get
+            {
+                if (_FinalizeList == null)
+                    _FinalizeList = PermissionTags.Where(x => x.StartsWith("Workflow.Finalize."))
+                        .Select(x => x.Substring(18)).ToList();
+                return _FinalizeList;
+            }
+        }
     }
 }

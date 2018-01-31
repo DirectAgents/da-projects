@@ -33,10 +33,24 @@ namespace EomApp1.Screens.Final
             SetRevBreakdownColumnsVisibility(false);
             SetRevBreakdownColumnsStyle();
 
+            var finalizeConcat = (!Security.User.Current.FinalizeList.Any() ? "''" :
+                String.Join(",", Security.User.Current.FinalizeList.Select(x => "'" + x + "'")));
+
+            accountManagerBindingSource.Filter = "name in ('default'," + finalizeConcat + ")";
+            AddToBindingSourceFilter(campaignBindingSource, "AM in (" + finalizeConcat + ")");
+            AddToBindingSourceFilter(campaignBindingSource1, "AM in (" + finalizeConcat + ")");
+
             // Security
-            campaignsToFinalizeGrid.Sorted += (s, e) => DisableFinalizeButtons();
-            campaignBindingSource.ListChanged += (s, e) => DisableFinalizeButtons();
+            //campaignsToFinalizeGrid.Sorted += (s, e) => DisableFinalizeButtons();
+            //campaignBindingSource.ListChanged += (s, e) => DisableFinalizeButtons();
             DisableVerifyAndReview();
+        }
+        private void AddToBindingSourceFilter(BindingSource bindingSource, string moreFilter)
+        {
+            string prefix = "";
+            if (!String.IsNullOrWhiteSpace(bindingSource.Filter))
+                prefix = bindingSource.Filter + " and ";
+            bindingSource.Filter = prefix + moreFilter;
         }
 
         private void DisableVerifyAndReview()
@@ -48,11 +62,11 @@ namespace EomApp1.Screens.Final
             }
             else
             {
-                verifyCol.Visible = false;
-                colReview.Visible = false;
-                ApprovalCol.Visible = false;
-                mbApprovalButton.Visible = false;
-                finalizedRevenueButton.Visible = false;
+                verifyCol.Visible = false; // verify button
+                colReview.Visible = false; // review button
+                ApprovalCol.Visible = false; // mediabuyer approval - send button
+                mbApprovalButton.Visible = false; // link at top
+                finalizedRevenueButton.Visible = false; // link at top
             }
         }
 
@@ -101,30 +115,39 @@ namespace EomApp1.Screens.Final
         private void FinalizeForm1_Load(object sender, EventArgs e)
         {
             accountManagerTableAdapter.Fill(accountManagersForFinalDataSet1.AccountManager);
-            FillCampaigns();
+            DoFillCampaigns();
         }
 
-        private void FillCampaigns()
+        private void FillCampaignsAll()
         {
-            FinalizeDataSet1.CampaignDataTable x = finalizeDataSet1.Campaign;
-            campaignTableAdapter.Fill(x);
+            FinalizeDataSet1.CampaignDataTable dataTable = finalizeDataSet1.Campaign;
+            campaignTableAdapter.Fill(dataTable);
 
             // Security... Note: maybe it's not necessary to call these here b/c they are called during the Fill when the
             // "Sorted" and "ListChanged" events are triggered.
-            DisableFinalizeButtons();
-            DisableBottomButtons();
+            //DisableFinalizeButtons();
+            //DisableBottomButtons();
         }
 
         // Security        
-        private void DisableFinalizeButtons()
-        {
-            if (campaignsToFinalizeGrid.Rows.Count > 0)
-                foreach (var button in from row in campaignsToFinalizeGrid.Rows.Cast<DataGridViewRow>()
-                                       let am = ((row.DataBoundItem as DataRowView).Row as FinalizeDataSet1.CampaignRow).AM
-                                       where !Security.User.Current.CanFinalizeForAccountManager(am)
-                                       select (DataGridViewDisableButtonCell)row.Cells[FinalizeCol.Index])
-                    button.Enabled = false;
-        }
+        //private void DisableFinalizeButtons()
+        //{
+        //    if (campaignsToFinalizeGrid.Rows.Count > 0)
+        //    {
+        //        //campaignsToFinalizeGrid.CurrentCell = null; // so can set row.Visible to false
+        //        int finalizeColIndex = FinalizeCol.Index;
+        //        var noAccessRows =
+        //            from row in campaignsToFinalizeGrid.Rows.Cast<DataGridViewRow>()
+        //            let am = ((row.DataBoundItem as DataRowView).Row as FinalizeDataSet1.CampaignRow).AM
+        //            where !Security.User.Current.CanFinalizeForAccountManager(am)
+        //            select row;
+        //        foreach (var row in noAccessRows)
+        //        {
+        //            ((DataGridViewDisableButtonCell)row.Cells[finalizeColIndex]).Enabled = false;
+        //            //row.Visible = false;
+        //        }
+        //    }
+        //}
 
         private void DisableBottomButtons()
         {
@@ -136,11 +159,17 @@ namespace EomApp1.Screens.Final
         static private void DisableButtons(DataGridView grid, Func<FinalizeDataSet1.CampaignRow, bool> condition, DataGridViewDisableButtonColumn buttonCol)
         {
             if (grid.Rows.Count > 0)
-                foreach (var button in from gridRow in grid.Rows.Cast<DataGridViewRow>()
-                                       let dataRow = ((gridRow.DataBoundItem as DataRowView).Row as FinalizeDataSet1.CampaignRow)
-                                       where condition(dataRow)
-                                       select (DataGridViewDisableButtonCell)gridRow.Cells[buttonCol.Index])
-                    button.Enabled = false;
+            {
+                var rows =
+                    from gridRow in grid.Rows.Cast<DataGridViewRow>()
+                    let dataRow = ((gridRow.DataBoundItem as DataRowView).Row as FinalizeDataSet1.CampaignRow)
+                    where condition(dataRow)
+                    select gridRow;
+                foreach (var row in rows)
+                {
+                    ((DataGridViewDisableButtonCell)row.Cells[buttonCol.Index]).Enabled = false;
+                }
+            }
         }
 
         private void FillCampaigns(string am)
@@ -148,7 +177,7 @@ namespace EomApp1.Screens.Final
             campaignTableAdapter.FillByAM(finalizeDataSet1.Campaign, am);
 
             // Security
-            DisableFinalizeButtons();
+            //DisableFinalizeButtons();
         }
 
         // Click handlers for TOP Pane
@@ -156,7 +185,7 @@ namespace EomApp1.Screens.Final
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
-            var grid = sender as DataGridView; 
+            var grid = sender as DataGridView;
             var cell = grid[e.ColumnIndex, e.RowIndex];
 
             if (cell is DataGridViewDisableButtonCell && !(cell as DataGridViewDisableButtonCell).Enabled)
@@ -208,7 +237,7 @@ namespace EomApp1.Screens.Final
             if (e.ColumnIndex == ApprovalCol.Index)
             {
                 UpdateMediaBuyerApprovalStatus("default", "Queued", itemIds);
-                FillCampaigns();
+                DoFillCampaigns();
             }
             // Verify Button
             else if (e.ColumnIndex == grid.Columns["verifyCol"].Index)
@@ -217,7 +246,7 @@ namespace EomApp1.Screens.Final
                 {
                     VerifyCampaign(pid, currency);
                     CampaignNoteUtility.AddCampaignNote(pid, note);
-                    FillCampaigns();
+                    DoFillCampaigns();
                 }
             }
             // Review Button
@@ -227,7 +256,7 @@ namespace EomApp1.Screens.Final
                 {
                     ReviewCampaign(pid, currency);
                     CampaignNoteUtility.AddCampaignNote(pid, note);
-                    FillCampaigns();
+                    DoFillCampaigns();
                 }
             }
             // #Pubs Button
@@ -355,19 +384,8 @@ namespace EomApp1.Screens.Final
 
         public void RefreshCampaigns()
         {
-            string am = comboBox1.Text;
-
             campaignsToFinalizeGrid.EndEdit();
-
-            if (am == "default")
-            {
-                FillCampaigns();
-            }
-            else
-            {
-                FillCampaigns(am);
-            }
-
+            DoFillCampaigns();
             campaignsToFinalizeGrid.Refresh();
         }
 
@@ -388,9 +406,9 @@ namespace EomApp1.Screens.Final
 
         private void DoFillCampaigns()
         {
-            string s = this.selectedAM;
-            if (s == "default")
-                FillCampaigns();
+            string am = this.selectedAM;
+            if (am == "default")
+                FillCampaignsAll();
             else
                 FillCampaigns(this.selectedAM);
         }

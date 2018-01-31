@@ -37,6 +37,11 @@ namespace DAgents.Common
                 if (_CurrentUsersGroups == null)
                 {
                     _CurrentUsersGroups = new List<string>();
+                    //TEST!!!
+                    //_CurrentUsersGroups.Add("DIRECTAGENTS\\ACCOUNT MANAGERS");
+                    ////_CurrentUsersGroups.Add("DIRECTAGENTS\\JVOLKERTS");
+                    //_CurrentUsersGroups.Add("DIRECTAGENTS\\NBOUCHARD");
+
                     var groups = WindowsIdentity.GetCurrent().Groups;
                     foreach (var group in groups)
                     {

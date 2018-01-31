@@ -1,14 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Windows.Forms;
-using DAgents.Common;
-using EomAppControls;
-using EomAppControls.Filtering;
-using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.Resources;
 using System.Linq;
+using System.Windows.Forms;
+using EomAppControls;
+using EomAppControls.Filtering;
 
 namespace EomApp1.Screens.Extra
 {
@@ -46,6 +43,7 @@ namespace EomApp1.Screens.Extra
         // Security
         private void DisableRows(object sender, EventArgs e)
         {
+            //itemsGrid.CurrentCell = null; // so can set row.Visible to false
             using (var db = EomApp1.Screens.Final.Models.Eom.Create())
             {
                 var amByPID = db.Campaigns.ToDictionary(c => c.pid, c => c.AccountManager.name);
@@ -62,6 +60,7 @@ namespace EomApp1.Screens.Extra
                         {
                             item.Row.DefaultCellStyle.BackColor = DisabledBackColor;
                             item.Row.ReadOnly = true;
+                            //item.Row.Visible = false;
                         }
                         else if (item.Status != "default")
                         {
@@ -84,9 +83,13 @@ namespace EomApp1.Screens.Extra
 
         public void Initialize()
         {
+            Initialize(null);
+        }
+        public void Initialize(string accountManagerName)
+        {
             if (Running)
             {
-                FillTableAdapters();
+                FillTableAdapters(accountManagerName);
                 SetupFilters();
                 SetupCampaignBindings();
             }
@@ -204,16 +207,15 @@ namespace EomApp1.Screens.Extra
             comboBoxColumn.HeaderCell = filterHeaderCell;
         }
 
-        private void FillTableAdapters()
+        private void FillTableAdapters(string accountManagerName = null)
         {
             currencyTableAdapter.Fill(extraItems.Currency);
             unitTypeTableAdapter.Fill(extraItems.UnitType);
-            FillAdvertisers(null);
-            campaignTableAdapter.Fill(extraItems.Campaign);
             affiliateTableAdapter.Fill(extraItems.Affiliate);
             sourceTableAdapter.Fill(extraItems.Source);
             itemReportingStatusTableAdapter.Fill(extraItems.ItemReportingStatus);
-            itemTableAdapter.Fill(extraItems.Item);
+
+            FilterByAccountManager(accountManagerName);
         }
 
         private void FillAdvertisers(string accountManagerName)
@@ -236,7 +238,8 @@ namespace EomApp1.Screens.Extra
             this.itemFilter.Apply();
         }
 
-        public void SaveAndFilterByAccountManager(string accountManagerName)
+        // clears out any edits if the user chooses not to save
+        public void CheckSave()
         {
             Validate();
             this.itemBindingSource.EndEdit();
@@ -256,9 +259,12 @@ namespace EomApp1.Screens.Extra
                     this.itemFilter.EditedIds.Clear();
                 }
             }
+        }
 
+        public void FilterByAccountManager(string accountManagerName)
+        {
             itemBindingSource.ListChanged -= DisableRows;
-            if (accountManagerName == "default")
+            if (accountManagerName == null || accountManagerName == "default")
             {
                 itemTableAdapter.Fill(extraItems.Item);
                 FillAdvertisers(null);
