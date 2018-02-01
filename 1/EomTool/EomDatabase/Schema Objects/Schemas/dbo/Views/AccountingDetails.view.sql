@@ -19,7 +19,8 @@ FROM         dbo.Item INNER JOIN
                       dbo.AccountManager ON dbo.Campaign.account_manager_id = dbo.AccountManager.id INNER JOIN
                       dbo.AdManager ON dbo.Campaign.ad_manager_id = dbo.AdManager.id INNER JOIN
                       dbo.ItemAccountingStatus ON dbo.Item.item_accounting_status_id = dbo.ItemAccountingStatus.id INNER JOIN
-                      dbo.UnitType ON dbo.Item.unit_type_id = dbo.UnitType.id
+                      dbo.UnitType ON dbo.Item.unit_type_id = dbo.UnitType.id INNER JOIN
+                      dbo.AccountManagerAccessList ON dbo.AccountManager.name = dbo.AccountManagerAccessList.name
 GROUP BY COALESCE (dbo.Publisher.name, dbo.Affiliate.name), dbo.Affiliate.name, dbo.Advertiser.name, dbo.Campaign.pid, dbo.Campaign.campaign_name, 
                       dbo.Currency.name, Currency_1.name, Currency_2.name, dbo.Item.revenue_per_unit, dbo.Item.cost_per_unit, dbo.MediaBuyer.name, dbo.AdManager.name, 
                       dbo.AccountManager.name, dbo.ItemAccountingStatus.name, dbo.UnitType.name

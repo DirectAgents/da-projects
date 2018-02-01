@@ -491,7 +491,7 @@
     <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Stat_apiurl_UK.ukey.sql">
       <SubType>Code</SubType>
     </Build>
-    <Build Include="Schema Objects\Database Level Objects\Security\Users\DIRECTAGENTS_EGil.user.sql">
+    <Build Include="Schema Objects\Database Level Objects\Security\Users\DIRECTAGENTS_Accounting.user.sql">
       <SubType>Code</SubType>
     </Build>
     <Build Include="Schema Objects\Database Level Objects\Security\Users\DIRECTAGENTS_AccountMangers.user.sql">
@@ -802,7 +802,6 @@
     <Build Include="Schema Objects\Schemas\dbo\Tables\PubAttachment.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Views\PublisherRelatedItemCounts.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Views\CommissionView.sql" />
-    <Build Include="Schema Objects\Database Level Objects\Security\Users\DIRECTAGENTS_RAkhtar.user.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Tables\Invoice.table.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Tables\InvoiceItem.table.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Tables\InvoiceNote.table.sql" />
@@ -823,6 +822,7 @@
     <Build Include="dbo\Tables\Strategist.sql" />
     <Build Include="dbo\Tables\CampAff.sql" />
     <Build Include="dbo\Tables\Analyst.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Views\AccountManagerAccessList.view.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Database Level Objects\Assemblies\SqlServerProjectForDADatabaseR3.dll">
@@ -889,5 +889,18 @@
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="EomDatabase.refactorlog" />
+  </ItemGroup>
+  <ItemGroup>
+    <ArtifactReference Include="EomToolSecurity.dacpac">
+      <HintPath>EomToolSecurity.dacpac</HintPath>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+      <DatabaseSqlCmdVariable>EomToolSecurity</DatabaseSqlCmdVariable>
+    </ArtifactReference>
+  </ItemGroup>
+  <ItemGroup>
+    <SqlCmdVariable Include="EomToolSecurity">
+      <DefaultValue>EomToolSecurity</DefaultValue>
+      <Value>$(SqlCmdVar__1)</Value>
+    </SqlCmdVariable>
   </ItemGroup>
 </Project>

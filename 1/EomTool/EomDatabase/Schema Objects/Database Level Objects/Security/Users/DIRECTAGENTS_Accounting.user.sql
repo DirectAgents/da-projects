@@ -1,0 +1,1 @@
+﻿CREATE USER [accounting] FOR LOGIN [DIRECTAGENTS\Accounting] WITH DEFAULT_SCHEMA=[dbo];

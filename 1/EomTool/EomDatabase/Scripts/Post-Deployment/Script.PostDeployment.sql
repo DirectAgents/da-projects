@@ -61,11 +61,15 @@ INSERT INTO [dbo].[PaymentBatchState] VALUES
 	,('6', 'Complete')
 GO
 
+DENY VIEW DEFINITION ON SCHEMA::[dbo] TO [accountManagersOnly]
+GO
+GRANT EXECUTE ON [dbo].[ListAnalysts] TO [accountManagersOnly]
+GO
 GRANT EXECUTE ON [dbo].[tousd3] TO [accountManagersOnly]
 GO
-GRANT CONNECT TO [accountManagersOnly]
+GRANT CONNECT TO [accountManagersOnly] /* not needed? */
 GO
-ALTER USER [accountManagersOnly] WITH DEFAULT_SCHEMA=[dbo]
+ALTER USER [accountManagersOnly] WITH DEFAULT_SCHEMA=[dbo] /* not needed? */
 GO
 
 GRANT SELECT ON [dbo].[MediaBuyerConfirmation_Megan] TO [DIRECTAGENTS\MConahan]

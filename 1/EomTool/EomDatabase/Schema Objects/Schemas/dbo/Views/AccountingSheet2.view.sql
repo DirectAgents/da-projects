@@ -48,7 +48,8 @@ WITH T AS (
 		dbo.MediaBuyer ON dbo.Affiliate.media_buyer_id = dbo.MediaBuyer.id LEFT OUTER JOIN
 		dbo.Currency AS Currency_2 ON dbo.Affiliate.currency_id = Currency_2.id LEFT OUTER JOIN
 		dbo.NetTermType ON dbo.Affiliate.net_term_type_id = dbo.NetTermType.id LEFT OUTER JOIN
-		dbo.AffiliatePaymentMethod ON dbo.Affiliate.payment_method_id = dbo.AffiliatePaymentMethod.id
+		dbo.AffiliatePaymentMethod ON dbo.Affiliate.payment_method_id = dbo.AffiliatePaymentMethod.id INNER JOIN
+		dbo.AccountManagerAccessList ON dbo.AccountManager.name = dbo.AccountManagerAccessList.name
 	GROUP BY 
 		  dbo.Affiliate.name2
 		, dbo.Advertiser.name

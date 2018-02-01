@@ -19,7 +19,8 @@ FROM         dbo.Item INNER JOIN
                       dbo.ItemAccountingStatus ON dbo.Item.item_accounting_status_id = dbo.ItemAccountingStatus.id INNER JOIN
                       dbo.UnitType ON dbo.Item.unit_type_id = dbo.UnitType.id INNER JOIN
                       dbo.CampaignStatus ON dbo.Campaign.campaign_status_id = dbo.CampaignStatus.id INNER JOIN
-					  dbo.[Source] ON dbo.Item.source_id = dbo.Source.id
+                      dbo.[Source] ON dbo.Item.source_id = dbo.Source.id INNER JOIN
+                      dbo.AccountManagerAccessList ON dbo.AccountManager.name = dbo.AccountManagerAccessList.name
 GROUP BY dbo.Affiliate.name2, dbo.Advertiser.name, dbo.Campaign.pid, dbo.Campaign.campaign_name, dbo.Currency.name, Currency_1.name, dbo.Item.revenue_per_unit, 
                       dbo.Item.cost_per_unit, dbo.MediaBuyer.name, dbo.AdManager.name, dbo.AccountManager.name, dbo.ItemAccountingStatus.name, dbo.UnitType.name, 
                       dbo.CampaignStatus.name, dbo.[Source].name

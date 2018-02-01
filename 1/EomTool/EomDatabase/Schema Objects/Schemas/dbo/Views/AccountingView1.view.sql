@@ -38,7 +38,8 @@ FROM         dbo.Item INNER JOIN
                       dbo.CampAff ON dbo.Item.pid = dbo.CampAff.pid AND dbo.Item.affid = dbo.CampAff.affid LEFT OUTER JOIN
                       dbo.Analyst ON dbo.CampAff.analyst_id = dbo.Analyst.id LEFT OUTER JOIN
                       dbo.AnalystManager ON dbo.Analyst.manager_id = dbo.AnalystManager.id LEFT OUTER JOIN
-                      dbo.Strategist ON dbo.CampAff.strategist_id = dbo.Strategist.id
+                      dbo.Strategist ON dbo.CampAff.strategist_id = dbo.Strategist.id INNER JOIN
+                      dbo.AccountManagerAccessList ON dbo.AccountManager.name = dbo.AccountManagerAccessList.name
 GROUP BY dbo.Affiliate.name2, dbo.Affiliate.qb_name, dbo.Advertiser.name, dbo.Advertiser.qb_name, dbo.Advertiser.payment_terms, dbo.Campaign.pid, dbo.Campaign.campaign_name, dbo.Currency.name, Currency_1.name, dbo.Item.revenue_per_unit,
                       dbo.Item.cost_per_unit, dbo.MediaBuyer.name, dbo.AdManager.name, dbo.AccountManager.name, dbo.ItemAccountingStatus.name, dbo.UnitType.name, dbo.IncomeType.name, dbo.IncomeType.qb_code,
                       dbo.CampaignStatus.name, dbo.tousd3(dbo.Item.revenue_currency_id, dbo.Item.revenue_per_unit), dbo.tousd3(dbo.Item.cost_currency_id, dbo.Item.cost_per_unit),
