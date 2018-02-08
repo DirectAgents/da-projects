@@ -119,7 +119,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AdformDailySummaryExtracter(adformUtility, dateRange, account.ExternalId);
+            var extracter = new AdformDailySummaryExtracter(adformUtility, dateRange, account);
             var loader = new TDDailySummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -128,7 +128,7 @@ namespace CakeExtracter.Commands
         }
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AdformStrategySummaryExtracter(adformUtility, dateRange, account.ExternalId);
+            var extracter = new AdformStrategySummaryExtracter(adformUtility, dateRange, account);
             var loader = new TDStrategySummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -137,7 +137,7 @@ namespace CakeExtracter.Commands
         }
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AdformAdSetSummaryExtracter(adformUtility, dateRange, account.ExternalId);
+            var extracter = new AdformAdSetSummaryExtracter(adformUtility, dateRange, account);
             var loader = new TDAdSetSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -146,7 +146,7 @@ namespace CakeExtracter.Commands
         }
         private void DoETL_Creative(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AdformTDadSummaryExtracter(adformUtility, dateRange, account.ExternalId);
+            var extracter = new AdformTDadSummaryExtracter(adformUtility, dateRange, account);
             var loader = new TDadSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -158,8 +158,8 @@ namespace CakeExtracter.Commands
         {
             using (var db = new ClientPortalProgContext())
             {
-                //var accounts = db.ExtAccounts.Include("Platform.PlatColMapping").Where(a => a.Platform.Code == Platform.Code_Adform);
-                var accounts = db.ExtAccounts.Where(a => a.Platform.Code == Platform.Code_Adform);
+                var accounts = db.ExtAccounts.Include("Campaign.BudgetInfos").Include("Campaign.PlatformBudgetInfos")
+                    .Where(a => a.Platform.Code == Platform.Code_Adform);
                 if (AccountId.HasValue)
                     accounts = accounts.Where(a => a.Id == AccountId.Value);
                 else if (!DisabledOnly)

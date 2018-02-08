@@ -8,23 +8,53 @@ using DirectAgents.Domain.Entities.CPProg;
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
     public abstract class AdformApiExtracter<T> : Extracter<T>
+        where T : DatedStatsSummary
     {
         protected readonly AdformUtility _afUtility;
         protected readonly DateRange dateRange;
         protected readonly int clientId;
+        protected Dictionary<DateTime, decimal> monthlyCostMultipliers = new Dictionary<DateTime, decimal>();
 
-        public AdformApiExtracter(AdformUtility adformUtility, DateRange dateRange, string clientId)
+        public AdformApiExtracter(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
         {
             this._afUtility = adformUtility;
             this.dateRange = dateRange;
-            this.clientId = Int32.Parse(clientId);
+            this.clientId = Int32.Parse(account.ExternalId);
+
+            // Starting 2/1/18, Adform pulls in "client cost" rather than "DA cost" so we have to convert back to "client cost"
+            var specialConversionStart = new DateTime(2018, 2, 1);
+            if (account.Campaign != null)
+            {
+                var firstOfMonth = new DateTime(dateRange.FromDate.Year, dateRange.FromDate.Month, 1);
+                while (firstOfMonth <= dateRange.ToDate)
+                {
+                    if (firstOfMonth >= specialConversionStart)
+                    {
+                        var pbi = account.Campaign.PlatformBudgetInfoFor(firstOfMonth, account.PlatformId, useParentValsIfNone: true);
+                        monthlyCostMultipliers[firstOfMonth] = pbi.MediaSpendToRevMultiplier * pbi.RevToCostMultiplier;
+                    }
+                    firstOfMonth = firstOfMonth.AddMonths(1);
+                }
+            }
+        }
+
+        protected IEnumerable<T> AdjustItems(IEnumerable<T> items)
+        {
+            foreach (var item in items)
+            {
+                var monthStart = new DateTime(item.Date.Year, item.Date.Month, 1);
+                if (monthlyCostMultipliers.ContainsKey(monthStart))
+                    item.Cost *= monthlyCostMultipliers[monthStart];
+                yield return item;
+            }
         }
     }
+    //public abstract class // inherits from AdformApiExtracter, but uses type StatsSummary
 
     public class AdformDailySummaryExtracter : AdformApiExtracter<DailySummary>
     {
-        public AdformDailySummaryExtracter(AdformUtility adformUtility, DateRange dateRange, string clientId)
-            : base(adformUtility, dateRange, clientId)
+        public AdformDailySummaryExtracter(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
+            : base(adformUtility, dateRange, account)
         { }
 
         protected override void Extract()
@@ -42,6 +72,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 var convStatsReportData = _afUtility.GetReportData(parms);
 
                 var daysums = EnumerateRows(basicStatsReportData, convStatsReportData);
+                daysums = AdjustItems(daysums);
                 Add(daysums);
             }
             catch (Exception ex)
@@ -90,8 +121,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
     public class AdformStrategySummaryExtracter : AdformApiExtracter<StrategySummary>
     {
-        public AdformStrategySummaryExtracter(AdformUtility adformUtility, DateRange dateRange, string clientId)
-            : base(adformUtility, dateRange, clientId)
+        public AdformStrategySummaryExtracter(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
+            : base(adformUtility, dateRange, account)
         { }
 
         protected override void Extract()
@@ -106,6 +137,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 foreach (var reportData in _afUtility.GetReportDataWithPaging(parms))
                 {
                     var sums = EnumerateRows(reportData);
+                    sums = AdjustItems(sums);
                     Add(sums);
                 }
             }
@@ -145,8 +177,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
     public class AdformAdSetSummaryExtracter : AdformApiExtracter<AdSetSummary>
     {
-        public AdformAdSetSummaryExtracter(AdformUtility adformUtility, DateRange dateRange, string clientId)
-            : base(adformUtility, dateRange, clientId)
+        public AdformAdSetSummaryExtracter(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
+            : base(adformUtility, dateRange, account)
         { }
 
         protected override void Extract()
@@ -161,6 +193,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 foreach (var reportData in _afUtility.GetReportDataWithPaging(parms))
                 {
                     var sums = EnumerateRows(reportData);
+                    sums = AdjustItems(sums);
                     Add(sums);
                 }
             }
@@ -201,8 +234,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
     public class AdformTDadSummaryExtracter : AdformApiExtracter<TDadSummary>
     {
-        public AdformTDadSummaryExtracter(AdformUtility adformUtility, DateRange dateRange, string clientId)
-            : base(adformUtility, dateRange, clientId)
+        public AdformTDadSummaryExtracter(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
+            : base(adformUtility, dateRange, account)
         { }
 
         protected override void Extract()
@@ -217,6 +250,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 foreach (var reportData in _afUtility.GetReportDataWithPaging(parms))
                 {
                     var sums = EnumerateRows(reportData);
+                    sums = AdjustItems(sums);
                     Add(sums);
                 }
             }
