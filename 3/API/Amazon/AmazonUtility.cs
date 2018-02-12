@@ -1,28 +1,22 @@
-﻿using Amazon.Entities;
-using Newtonsoft.Json;
-using RestSharp;
-using RestSharp.Authenticators;
-using RestSharp.Deserializers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Dynamic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
+using Amazon.Entities;
+using RestSharp;
+using RestSharp.Authenticators;
+using RestSharp.Deserializers;
 
 namespace Amazon
 {
     public class AmazonUtility
     {
         // From Config File
-        private readonly string _amazonApiClientId = ConfigurationManager.AppSettings["AmazonClientId"];
+        private readonly string _amazonClientId = ConfigurationManager.AppSettings["AmazonClientId"];
         private readonly string _amazonClientSecret = ConfigurationManager.AppSettings["AmazonClientSecret"];
         //private readonly string _amazonApiUsername = ConfigurationManager.AppSettings["AmazonAPIUsername"];
         //private readonly string _amazonApiPassword = ConfigurationManager.AppSettings["AmazonAPIPassword"];
@@ -30,27 +24,35 @@ namespace Amazon
         private readonly string _amazonAuthorizeUrl = ConfigurationManager.AppSettings["AmazonAuthorizeUrl"];
         private readonly string _amazonTokenUrl = ConfigurationManager.AppSettings["AmazonTokenUrl"];
         private readonly string _amazonClientUrl = ConfigurationManager.AppSettings["AmazonClientUrl"];
-        private readonly string _amazonAccessCode = ConfigurationManager.AppSettings["AmazonAccessCode"];
+        //private readonly string _amazonAccessCode = ConfigurationManager.AppSettings["AmazonAccessCode"];
         private readonly string _amazonRefreshToken = ConfigurationManager.AppSettings["AmazonRefreshToken"];
 
         private const string TOKEN_DELIMITER = "|AMZNAMZN|";
+        public const int NumAlts = 10; // including the default (0)
+
         //private long CustomerID { get; set; }
         //private string DeveloperToken { get; set; }
         //private string UserName { get; set; }
         //private string Password { get; set; }
         //private string ClientId { get; set; }
         //private string ClientSecret { get; set; }
+
+        private string[] AuthCode = new string[NumAlts];
+        private string[] AccessToken = new string[NumAlts];
+        private string[] RefreshToken = new string[NumAlts];
+        private string[] AltAccountIDs = new string[NumAlts];
+        public int WhichAlt { get; set; } // default: 0
         
         private string ApiEndpointUrl { get; set; }
         private string AuthorizeUrl { get; set; }
         private string TokenUrl { get; set; }
         private string ClientUrl { get; set; }
         //private string ProfileId { get; set; }
-        public static string AccessToken { get; set; }
-        public static string RefreshToken { get; set; }
+        //public static string AccessToken { get; set; }
+        //public static string RefreshToken { get; set; }
         //public static string ApplicationAccessCode { get; set; }
 
-        private AmazonAuth AmazonAuth = null;
+        //private AmazonAuth AmazonAuth = null;
 
         #region Logging
         private Action<string> _LogInfo;
@@ -75,24 +77,22 @@ namespace Amazon
 
         private IEnumerable<string> CreateTokenSets()
         {
-            yield return AccessToken + TOKEN_DELIMITER + RefreshToken;
-            //TODO: handle multiple token sets (access/refresh tokens)
-        }
-        private void SetTokenSets(string[] value)
-        {
-            for (int i = 0; i < value.Length; i++)
-            {
-                var tokenSet = value[i].Split(new string[] { TOKEN_DELIMITER }, StringSplitOptions.None);
-                AccessToken = tokenSet[0];
-                if (tokenSet.Length > 1)
-                    RefreshToken = tokenSet[1];
-                //TODO: handle multiple token sets (access/refresh tokens)
-            }
+            for (int i = 0; i < NumAlts; i++)
+                yield return AccessToken[i] + TOKEN_DELIMITER + RefreshToken[i];
         }
         public string[] TokenSets // each string in the array is a combination of Access + Refresh Token
         {
             get { return CreateTokenSets().ToArray(); }
-            set { SetTokenSets(value); }
+            set
+            {
+                for (int i = 0; i < value.Length; i++)
+                {
+                    var tokenSet = value[i].Split(new string[] { TOKEN_DELIMITER }, StringSplitOptions.None);
+                    AccessToken[i] = tokenSet[0];
+                    if (tokenSet.Length > 1)
+                        RefreshToken[i] = tokenSet[1];
+                }
+            }
         }
 
         private void ResetCredentials()
@@ -106,64 +106,92 @@ namespace Amazon
             TokenUrl = _amazonTokenUrl;
             ClientUrl = _amazonClientUrl;
             //ApplicationAccessCode = _amazonAccessCode;
-            RefreshToken = _amazonRefreshToken;
+            //RefreshToken = _amazonRefreshToken;
         }
-        //private void SetCredentials(long accountId)
-        //{
-        //    ResetCredentials();
-
-        //    string customerID = ConfigurationManager.AppSettings["BingCustomerID" + accountId];
-        //    if (!String.IsNullOrWhiteSpace(customerID))
-        //        CustomerID = Convert.ToInt64(customerID);
-        //    string token = ConfigurationManager.AppSettings["BingApiToken" + accountId];
-        //    if (!String.IsNullOrWhiteSpace(token))
-        //        DeveloperToken = token;
-        //    string username = ConfigurationManager.AppSettings["BingApiUsername" + accountId];
-        //    if (!String.IsNullOrWhiteSpace(username))
-        //        UserName = username;
-        //    string password = ConfigurationManager.AppSettings["BingApiPassword" + accountId];
-        //    if (!String.IsNullOrWhiteSpace(password))
-        //        Password = password;
-
-        //    string _clientId = ConfigurationManager.AppSettings["BingClientId" + accountId];
-        //    if (!String.IsNullOrWhiteSpace(_clientId))
-        //        ClientId = _clientId;
-        //    string _clientSecret = ConfigurationManager.AppSettings["BingClientSecret" + accountId];
-        //    if (!String.IsNullOrWhiteSpace(_clientSecret))
-        //        ClientSecret = _clientSecret;
-        //    string _refreshToken = ConfigurationManager.AppSettings["BingRefreshToken" + accountId];
-        //    if (!String.IsNullOrWhiteSpace(_refreshToken))
-        //        RefreshToken = _refreshToken;
-        //}
 
         #region Constructors
         public AmazonUtility()
         {
             ResetCredentials();
-            //AmazonAuth = new AmazonAuth(UserName, Password, ClientId, ClientSecret, RefreshToken);
-            AmazonAuth = new AmazonAuth(_amazonApiClientId, _amazonClientSecret, _amazonAccessCode);
-
-            //ARTokens = AmazonAuth.GetInitialTokens();
+            //AmazonAuth = new AmazonAuth(_amazonApiClientId, _amazonClientSecret, _amazonAccessCode);
+            Setup();
         }
         public AmazonUtility(Action<string> logInfo, Action<string> logError)
+            : this()
         {
             _LogInfo = logInfo;
             _LogError = logError;
-            ResetCredentials();
-            //AmazonAuth = new AmazonAuth(UserName, Password, ClientId, ClientSecret, RefreshToken);
-            AmazonAuth = new AmazonAuth(_amazonApiClientId, _amazonClientSecret, _amazonAccessCode);
+        }
+        private void Setup()
+        {
+            AuthCode[0] = ConfigurationManager.AppSettings["AmazonAuthCode"];
+            for (int i = 1; i < NumAlts; i++)
+            {
+                AltAccountIDs[i] = PlaceLeadingAndTrailingCommas(ConfigurationManager.AppSettings["Amazon_Alt" + i]);
+                AuthCode[i] = ConfigurationManager.AppSettings["AmazonAuthCode_Alt" + i];
+            }
+        }
+        private string PlaceLeadingAndTrailingCommas(string idString)
+        {
+            if (idString == null || idString.Length == 0)
+                return idString;
+            return (idString[0] == ',' ? "" : ",") + idString + (idString[idString.Length - 1] == ',' ? "" : ",");
         }
         #endregion
 
-        public void GetNewAccessToken()
+        // for alternative credentials...
+        public void SetWhichAlt(string accountId)
         {
-            var arTokens = AmazonAuth.GetAccessRefreshTokens(RefreshToken);
-            AccessToken = arTokens.AccessToken;
-            RefreshToken = arTokens.RefreshToken;
+            WhichAlt = 0; //default
+            for (int i = 1; i < NumAlts; i++)
+            {
+                if (AltAccountIDs[i] != null && AltAccountIDs[i].Contains(',' + accountId + ','))
+                {
+                    WhichAlt = i;
+                    break;
+                }
+            }
+        }
+
+        // Use the refreshToken if we have one, otherwise use the auth code
+        public void GetAccessToken()
+        {
+            var restClient = new RestClient
+            {
+                BaseUrl = new Uri(_amazonTokenUrl),
+                Authenticator = new HttpBasicAuthenticator(_amazonClientId, _amazonClientSecret)
+            };
+            restClient.AddHandler("application/x-www-form-urlencoded", new JsonDeserializer());
+
+            var request = new RestRequest();
+            request.AddParameter("redirect_uri", "https://portal.directagents.com");
+            if (String.IsNullOrWhiteSpace(RefreshToken[WhichAlt]))
+            {
+                request.AddParameter("grant_type", "authorization_code");
+                request.AddParameter("code", AuthCode[WhichAlt]);
+            }
+            else
+            {
+                request.AddParameter("grant_type", "refresh_token");
+                request.AddParameter("refresh_token", RefreshToken[WhichAlt]);
+            }
+            var response = restClient.ExecuteAsPost<GetTokenResponse>(request, "POST");
+
+            if (response.Data == null || response.Data.access_token == null)
+                LogError("Failed to get access token");
+
+            if (response.Data != null && response.Data.refresh_token == null)
+                LogError("Failed to get refresh token");
+
+            if (response.Data != null)
+            {
+                AccessToken[WhichAlt] = response.Data.access_token;
+                RefreshToken[WhichAlt] = response.Data.refresh_token; // update this in case it changed
+            }
         }
 
         private IRestResponse<T> ProcessRequest<T>(RestRequest restRequest, bool postNotGet = false)
-    where T : new()
+            where T : new()
         {
             var restClient = new RestClient
             {
@@ -171,10 +199,10 @@ namespace Amazon
             };
             //restClient.AddHandler("application/json", new JsonDeserializer());
 
-            if (String.IsNullOrEmpty(AccessToken))
-                GetNewAccessToken();
+            if (String.IsNullOrEmpty(AccessToken[WhichAlt]))
+                GetAccessToken();
 
-            restRequest.AddHeader("Authorization", "bearer " + AccessToken);
+            restRequest.AddHeader("Authorization", "bearer " + AccessToken[WhichAlt]);
             //restRequest.AddHeader("Content-Type", "application/json");
             restRequest.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
 
@@ -194,10 +222,10 @@ namespace Amazon
                 if (response.StatusCode == HttpStatusCode.Unauthorized && tries < 2)
                 {
                     // Get a new access token and use that.
-                    GetNewAccessToken();
+                    GetAccessToken();
 
                     var param = restRequest.Parameters.Find(p => p.Type == ParameterType.HttpHeader && p.Name == "Authorization");
-                    param.Value = "bearer " + AccessToken;
+                    param.Value = "bearer " + AccessToken[WhichAlt];
                 }
                 else if (response.StatusDescription != null && response.StatusDescription.Contains("IN_PROGRESS") && tries < 5)
                 { 
@@ -321,53 +349,6 @@ namespace Amazon
             };
             return reportParams;
         }
-        // like a constructor...
-        //public ReportParams CreateReportParams(DateTime startDate, DateTime endDate, Int64 clientId, bool basicMetrics = true, 
-        //    bool convMetrics = false, bool byCampaign = false, bool byLineItem = false, bool byBanner = false, 
-        //    bool byMedia = false, bool byAdInteractionType = false, bool RTBonly = false)
-        //{
-        //    dynamic filter = new ExpandoObject();
-        //    filter.date = new Dates
-        //    {
-        //        from = startDate.ToString("yyyy'-'M'-'d"),
-        //        to = endDate.ToString("yyyy'-'M'-'d")
-        //    };
-        //    filter.client = new Int64[] { clientId };
-        //    if (RTBonly)
-        //        filter.media = new { name = new string[] { "Real Time Bidding" } };
-
-        //    var dimensions = new List<string> { "date" };
-        //    if (byCampaign)
-        //        dimensions.Add("campaign");
-        //    if (byLineItem)
-        //        dimensions.Add("lineItem");
-        //    if (byBanner)
-        //        dimensions.Add("banner");
-        //    if (byMedia)
-        //        dimensions.Add("media");
-        //    if (byAdInteractionType)
-        //        dimensions.Add("adInteractionType"); // Click, Impression, etc.
-
-        //    var metrics = new List<string>();
-        //    if (basicMetrics)
-        //        metrics.AddRange(new string[] { "cost", "impressions", "clicks" });
-        //    if (convMetrics)
-        //        metrics.AddRange(new string[] { "conversions", "sales" });
-
-        //    var reportParams = new ReportParams
-        //    {
-        //        filter = filter,
-        //        dimensions = dimensions.ToArray(),
-        //        metrics = metrics.ToArray(),
-        //        paging = new Paging
-        //        {
-        //            offset = 0,
-        //            limit = 3000
-        //        }
-        //    };
-        //    return reportParams;
-        //}
-
 
         public List<Profile> GetProfiles()
         {
@@ -392,7 +373,7 @@ namespace Amazon
             try
             {
                 var request = (HttpWebRequest)WebRequest.Create(url);
-                request.Headers.Add("Authorization", "bearer " + AccessToken);
+                request.Headers.Add("Authorization", "bearer " + AccessToken[WhichAlt]);
                 request.Headers.Add("Amazon-Advertising-API-Scope", profileId);
                 var response = (HttpWebResponse)request.GetResponse();
                 var responseStream = response.GetResponseStream();
@@ -418,19 +399,6 @@ namespace Amazon
             }
             return string.Empty;           
         }
-
-        //public StreamReader CreateStreamReaderFromUrl(string url)
-        //{
-        //    var request = (HttpWebRequest)WebRequest.Create(url);
-        //    request.Headers.Add("Authorization", "bearer " + AccessToken);
-        //    request.Headers.Add("Amazon-Advertising-API-Scope", ProfileId);
-        //    var response = (HttpWebResponse)request.GetResponse();
-        //    var responseStream = response.GetResponseStream();
-        //    var streamReader = new StreamReader(responseStream);
-
-        //    return streamReader;
-
-        //}
 
         public void Decompress(FileInfo fileToDecompress)
         {

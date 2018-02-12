@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Amazon;
+using Amazon.Entities;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
-using Amazon;
-using System.IO;
-using System.Net;
 using Newtonsoft.Json;
-using Amazon.Entities;
-using System.Threading;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
@@ -133,22 +130,25 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         {
             string reportDate = date.ToString("yyyyMMdd");
             var parms = _amazonUtility.CreateAmazonApiReportParams(reportDate);
-            var submissionReportResponse = _amazonUtility.SubmitReport(parms, "campaigns", this.clientId);
-            List<AmazonDailySummary> dailyStats = new List<AmazonDailySummary>();
-            //report could take awhile to be generated, therefore,we are looping until we get status SUCCESS
-            while (true)
+            var submitReportResponse = _amazonUtility.SubmitReport(parms, "campaigns", this.clientId);
+            if (!String.IsNullOrWhiteSpace(submitReportResponse.reportId))
             {
-                var downloadInfo = _amazonUtility.RequestReport(submissionReportResponse.reportId, this.clientId.ToString());
-
-                if (downloadInfo != null && !string.IsNullOrWhiteSpace(downloadInfo.location))
+                List<AmazonDailySummary> dailyStats = new List<AmazonDailySummary>();
+                //report could take awhile to be generated, therefore,we are looping until we get status SUCCESS
+                while (true)
                 {
-                    var dailyStatsJson = _amazonUtility.GetJsonStringFromDownloadFile(downloadInfo.location, this.clientId);
-                    dailyStats = JsonConvert.DeserializeObject<List<AmazonDailySummary>>(dailyStatsJson);
-                    break;
+                    var downloadInfo = _amazonUtility.RequestReport(submitReportResponse.reportId, this.clientId.ToString());
+
+                    if (downloadInfo != null && !string.IsNullOrWhiteSpace(downloadInfo.location))
+                    {
+                        var dailyStatsJson = _amazonUtility.GetJsonStringFromDownloadFile(downloadInfo.location, this.clientId);
+                        dailyStats = JsonConvert.DeserializeObject<List<AmazonDailySummary>>(dailyStatsJson);
+                        break;
+                    }
                 }
+                foreach (var sum in GroupAndEnumerate(dailyStats, campaigns, date))
+                    yield return sum;
             }
-            foreach (var sum in GroupAndEnumerate(dailyStats, campaigns, date))
-                yield return sum;
         }
 
         private IEnumerable<StrategySummary> GroupAndEnumerate(List<AmazonDailySummary> dailyStats, IEnumerable<AmazonCampaign> campaigns, DateTime day)

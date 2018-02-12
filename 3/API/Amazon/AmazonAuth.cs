@@ -54,6 +54,8 @@ namespace Amazon
             _LogError = logError;
         }
 
+        // accessCode == authorization code
+
         public AmazonAuth(string clientId, string clientSecret, string accessCode)//, string refreshToken)
         {
             ClientId = clientId;
@@ -71,19 +73,19 @@ namespace Amazon
             //RefreshToken = refreshToken;
         }
 
-        // not used?
-        public AccessRefreshTokens GetInitialTokens(string refreshToken = null)
-        {
-            if (string.IsNullOrEmpty(ApplicationAccessCode))
-            {
-                var code = DoLoginForm();
-                if (string.IsNullOrEmpty(code))
-                    return null;
+        //// not used?
+        //public AccessRefreshTokens GetInitialTokens(string refreshToken = null)
+        //{
+        //    if (string.IsNullOrEmpty(ApplicationAccessCode))
+        //    {
+        //        var code = DoLoginForm();
+        //        if (string.IsNullOrEmpty(code))
+        //            return null;
 
-                ApplicationAccessCode = code;
-            }
-            return GetAccessRefreshTokens(refreshToken);
-        }
+        //        ApplicationAccessCode = code;
+        //    }
+        //    return GetAccessRefreshTokens(refreshToken);
+        //}
 
         //public AccessTokens GetNewTokens(string refreshToken)
         //{

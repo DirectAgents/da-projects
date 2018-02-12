@@ -83,7 +83,7 @@ namespace CakeExtracter.Commands
             foreach (var account in accounts)
             {
                 Logger.Info("Commencing ETL for Amazon account ({0}) {1}", account.Id, account.Name);
-                //amazonUtility.SetWhichAlt(account.ExternalId);
+                amazonUtility.SetWhichAlt(account.ExternalId);
                 try
                 {
                     if (statsType.Daily && !FromDatabase)
