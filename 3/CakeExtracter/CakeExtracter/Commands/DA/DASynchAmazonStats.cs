@@ -128,7 +128,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AmazonDailySummaryExtracter(amazonUtility, dateRange, account.ExternalId);
+            var extracter = new AmazonDailySummaryExtracter(amazonUtility, dateRange, account.ExternalId, campaignFilter: account.Filter);
             var loader = new AmazonDailySummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -147,7 +147,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AmazonCampaignSummaryExtracter(amazonUtility, dateRange, account.ExternalId);
+            var extracter = new AmazonCampaignSummaryExtracter(amazonUtility, dateRange, account.ExternalId, campaignFilter: account.Filter);
             var loader = new AmazonCampaignSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -156,7 +156,7 @@ namespace CakeExtracter.Commands
         }
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AmazonAdSetExtracter(amazonUtility, dateRange, account.ExternalId);
+            var extracter = new AmazonAdSetExtracter(amazonUtility, dateRange, account.ExternalId, campaignFilter: account.Filter);
             var loader = new AmazonAdSetSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -165,7 +165,7 @@ namespace CakeExtracter.Commands
         }
         private void DoETL_Creative(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AmazonAdExtrater(amazonUtility, dateRange, account.ExternalId);
+            var extracter = new AmazonAdExtrater(amazonUtility, dateRange, account.ExternalId, campaignFilter: account.Filter);
             var loader = new AmazonAdSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);

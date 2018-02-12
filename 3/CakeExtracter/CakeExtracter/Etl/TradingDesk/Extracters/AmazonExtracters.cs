@@ -14,6 +14,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         protected readonly AmazonUtility _amazonUtility;
         protected readonly DateRange dateRange;
         protected readonly string clientId;
+        protected readonly string campaignFilter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AmazonApiExtracter{T}"/> class.
@@ -21,11 +22,21 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         /// <param name="amazonUtility">The amazon utility.</param>
         /// <param name="date">The date.</param>
         /// <param name="clientId">The client identifier.</param>
-        public AmazonApiExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId)
+        public AmazonApiExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignFilter = null)
         {
             this._amazonUtility = amazonUtility;
             this.dateRange = dateRange;
             this.clientId = clientId;
+            this.campaignFilter = campaignFilter;
+        }
+
+        protected List<AmazonCampaign> LoadCampaignsFromAmazonAPI()
+        {
+            var campaigns = _amazonUtility.GetCampaigns(clientId);
+            if (String.IsNullOrEmpty(campaignFilter))
+                return campaigns;
+            else
+                return campaigns.Where(x => x.name.Contains(campaignFilter)).ToList();
         }
 
     }
@@ -34,13 +45,18 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     //The daily extracter will load data based on date range and sum up totals of each campaign
     public class AmazonDailySummaryExtracter : AmazonApiExtracter<AmazonDailySummary>
     {
-        public AmazonDailySummaryExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId)
-            : base(amazonUtility, dateRange, clientId)
+        private long[] campaignIds;
+
+        public AmazonDailySummaryExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignFilter = null)
+            : base(amazonUtility, dateRange, clientId, campaignFilter: campaignFilter)
         { }
         protected override void Extract()
         {
             Logger.Info("Extracting DailySummaries from Amazon API for ({0}) from {1:d} to {2:d}",
-            this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
+                this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
+
+            var campaigns = LoadCampaignsFromAmazonAPI();
+            this.campaignIds = campaigns.Select(x => x.campaignId).ToArray();
 
             foreach (var date in dateRange.Dates)
             {
@@ -76,6 +92,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         }
         private IEnumerable<AmazonDailySummary> AggregateDailyStats(List<AmazonDailySummary> dailyItems)
         {
+            if (this.campaignIds != null)
+                dailyItems = dailyItems.Where(x => this.campaignIds.Contains(x.campaignId)).ToList();
+
             var campDateGroups = dailyItems.GroupBy(x => new { x.date });
             foreach (var campDateGroup in campDateGroups)
             {
@@ -97,10 +116,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     #region Campaign/Strategy
     public class AmazonCampaignSummaryExtracter : AmazonApiExtracter<StrategySummary>
     {
-        protected readonly string campaignEid;
-
-        public AmazonCampaignSummaryExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignEid = null)
-            : base(amazonUtility, dateRange, clientId)
+        public AmazonCampaignSummaryExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignFilter = null)
+            : base(amazonUtility, dateRange, clientId, campaignFilter: campaignFilter)
         { }
 
         protected override void Extract()
@@ -118,12 +135,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 }
             }
             End();
-        }
-
-        private List<AmazonCampaign> LoadCampaignsFromAmazonAPI()
-        {            
-            var campaigns = _amazonUtility.GetCampaigns(clientId);
-            return campaigns;
         }
 
         public IEnumerable<StrategySummary> EnumerateRows(DateTime date, IEnumerable<AmazonCampaign> campaigns)
@@ -176,18 +187,22 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     }
     #endregion
 
-    #region AdSet & AdSet Summary
+    #region AdSet (Keyword)
     public class AmazonAdSetExtracter : AmazonApiExtracter<AdSetSummary>
     {
-        public AmazonAdSetExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId)
-            : base(amazonUtility, dateRange, clientId)
+        public AmazonAdSetExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignFilter = null)
+            : base(amazonUtility, dateRange, clientId, campaignFilter: campaignFilter)
         { }
 
         protected override void Extract()
         {            
             Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
-            List<AmazonAdSet> adsets = LoadAdSetsfromAmazonAPI();
+
+            var campaigns = LoadCampaignsFromAmazonAPI();
+            var campIds = campaigns.Select(x => x.campaignId).ToArray();
+            List<AmazonAdSet> adsets = LoadAdSetsfromAmazonAPI(campaignIds: campIds);
+
             if (adsets != null)
             {
                 foreach (var date in dateRange.Dates)
@@ -199,7 +214,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             End();
         }
 
-        private List<AmazonAdSet> LoadAdSetsfromAmazonAPI()
+        private List<AmazonAdSet> LoadAdSetsfromAmazonAPI(long[] campaignIds = null)
         {
             List<AmazonAdSet> adsets = new List<AmazonAdSet>();
             var keywords = _amazonUtility.GetKeywords(clientId);
@@ -208,14 +223,16 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
             foreach (var keyword in keywords)
             {
-                adsets.Add(new AmazonAdSet
+                if (campaignIds == null || campaignIds.Contains(keyword.CampaignId))
                 {
-                    KeywordText = keyword.KeywordText,
-                    CampaignId = keyword.CampaignId.ToString(),
-                    KeywordId = keyword.KeywordId.ToString()
-                });
+                    adsets.Add(new AmazonAdSet
+                    {
+                        KeywordText = keyword.KeywordText,
+                        CampaignId = keyword.CampaignId.ToString(),
+                        KeywordId = keyword.KeywordId.ToString()
+                    });
+                }
             }
-
             return adsets;
         }
         //private List<string> LoadDistinctKeywordsfromAmazonAPI()
@@ -277,11 +294,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     }
     #endregion
 
-    #region Ad and Ad Summary / Creative
+    #region Ad (ProductAd)
     public class AmazonAdExtrater : AmazonApiExtracter<TDadSummary>
     {
-        public AmazonAdExtrater(AmazonUtility amazonUtility, DateRange dateRange, string clientId)
-            : base(amazonUtility, dateRange, clientId)
+        //TODO: Allow to use campaignFilter
+
+        public AmazonAdExtrater(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignFilter = null)
+            : base(amazonUtility, dateRange, clientId, campaignFilter: campaignFilter)
         { }
 
         protected override void Extract()
@@ -289,7 +308,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             Logger.Info("Extracting TDadSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
 
-            List<TDad> ads = LoadAdsFromAmazonAPI();
+            // This didn't work. The stats (e.g. spend) were larger than what we got at the campaign/keyword levels.
+            var campaigns = LoadCampaignsFromAmazonAPI();
+            var campIds = campaigns.Select(x => x.campaignId).ToArray();
+            List<TDad> ads = LoadAdsFromAmazonAPI(campaignIds: campIds);
+
+            //List<TDad> ads = LoadAdsFromAmazonAPI();
+
             if (ads != null)
             {
                 foreach (var date in dateRange.Dates)
@@ -301,11 +326,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             End();
         }
 
-        private List<TDad> LoadAdsFromAmazonAPI()
+        private List<TDad> LoadAdsFromAmazonAPI(long[] campaignIds = null)
         {
             List<TDad> ads = new List<TDad>();            
             var productAds = _amazonUtility.GetProductAds(clientId);
             if (productAds == null) return null;
+            if (campaignIds != null)
+                productAds = productAds.Where(x => campaignIds.Contains(x.CampaignId)).ToList();
+
             foreach (var productAdGroup in productAds.GroupBy(x => x.AdId))
             {
                 var ad = new TDad
