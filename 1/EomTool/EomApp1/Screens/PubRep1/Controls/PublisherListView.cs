@@ -236,11 +236,11 @@ namespace EomApp1.Screens.PubRep1.Controls
                 var paidCell = _dgv[paidColumn.Index, dataGridViewRow.Index];
 
                 // Verify
-                if (row.Unverified > 0 && promoting && canVerify)
+                if (row.Unverified != 0 && promoting && canVerify)
                     unverifiedCell.Tag = new Action(() => pendingStatusUpdates.Add(row.Publisher, "Unverified", "Verified", row.Unverified));
 
                 // Approve/Unverify
-                if (row.Verified > 0)
+                if (row.Verified != 0)
                 {
                     string fromStatus = "Verified";
                     string toStatus = (promoting && canApprove) ? "Approved" : (demoting && canUnverify) ? "Unverified" : null;
@@ -249,7 +249,7 @@ namespace EomApp1.Screens.PubRep1.Controls
                 }
 
                 // Pay/Unapprove
-                if (row.Approved > 0)
+                if (row.Approved != 0)
                 {
                     string fromStatus = "Approved";
                     string toStatus = (promoting && canPay) ? "Paid" : (demoting && canUnpay) ? "Verified" : null;
@@ -258,7 +258,7 @@ namespace EomApp1.Screens.PubRep1.Controls
                 }
 
                 // Unpay
-                if (row.Paid > 0 && demoting && canUnpay)
+                if (row.Paid != 0 && demoting && canUnpay)
                 {
                     paidCell = EnableLinkCell(paidColumn.Index, dataGridViewRow.Index);
                     paidCell.Tag = new Action(() => pendingStatusUpdates.Add(row.Publisher, "Paid", "Approved", row.Paid));
