@@ -11,6 +11,7 @@
         public ClientPortalSearchContext()
             : base("name=ClientPortalSearchContext")
         {
+            Database.SetInitializer<ClientPortalSearchContext>(null);
         }
 
         public virtual DbSet<SearchAccount> SearchAccounts { get; set; }
