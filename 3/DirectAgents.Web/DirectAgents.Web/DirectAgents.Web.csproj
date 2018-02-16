@@ -242,6 +242,7 @@
     <Compile Include="Areas\RevTrack\Controllers\CakeController.cs" />
     <Compile Include="Areas\RevTrack\Controllers\ProgController.cs" />
     <Compile Include="Areas\RevTrack\RevTrackAreaRegistration.cs" />
+    <Compile Include="Areas\SearchAdmin\Controllers\OldController.cs" />
     <Compile Include="Areas\SearchAdmin\Controllers\SearchAccountsController.cs" />
     <Compile Include="Areas\SearchAdmin\Controllers\SearchProfilesController.cs" />
     <Compile Include="Areas\SearchAdmin\SearchAdminAreaRegistration.cs" />
@@ -896,6 +897,14 @@
       <Project>{3b6c5433-5392-4165-a7e4-4aa431a75bb3}</Project>
       <Name>CakeExtracter</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\ClientPortal.Data\ClientPortal.Data.csproj">
+      <Project>{2e621b59-9455-4fa5-b9bd-6bdc418ffbfa}</Project>
+      <Name>ClientPortal.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DAGenerators\DAGenerators.csproj">
+      <Project>{70f3e367-5f86-4718-9a27-6edc9fef9ec9}</Project>
+      <Name>DAGenerators</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Budgets\Advertisers.cshtml" />
@@ -1086,6 +1095,7 @@
     <Content Include="Areas\SearchAdmin\Views\SearchProfiles\Index.cshtml" />
     <Content Include="Areas\SearchAdmin\Views\SearchAccounts\Index.cshtml" />
     <Content Include="Areas\SearchAdmin\Views\SearchAccounts\IndexGauge.cshtml" />
+    <Content Include="Areas\SearchAdmin\Views\Old\GenerateSpreadsheet.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

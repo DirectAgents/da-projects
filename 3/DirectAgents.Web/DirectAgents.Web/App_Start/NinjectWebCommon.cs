@@ -69,6 +69,8 @@ namespace DirectAgents.Web.App_Start
             kernel.Bind<IRevTrackRepository>().To<RevTrackRepository>();
             kernel.Bind<IABRepository>().To<ABRepository>();
             kernel.Bind<ISuperRepository>().To<SuperRepository>();
+
+            kernel.Bind<ClientPortal.Data.Contracts.IClientPortalRepository>().To<ClientPortal.Data.Services.ClientPortalRepository>();
         }        
     }
 }

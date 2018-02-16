@@ -8,6 +8,7 @@
         <th></th>
         <th>Name</th>
         <th>SearchAccounts</th>
+        <th>Spreadsheet</th>
         <th>StartDayOfWeek</th>
     </tr>
 @foreach (var sp in Model)
@@ -21,6 +22,7 @@
         @Html.ActionLink("List(" + numAccts + ")", "Index", "SearchAccounts", new { spId = sp.SearchProfileId }, null) |
         @Html.ActionLink("StatsGauge", "IndexGauge", "SearchAccounts", new { spId = sp.SearchProfileId }, null)
     </td>
+    <td style="text-align:center">@Html.ActionLink("Generate", "GenerateSpreadsheet", "Old", new { spId = sp.SearchProfileId }, null)</td>
     <td style="text-align:center">@((DayOfWeek)sp.StartDayOfWeek)</td>
 </tr>
 }
