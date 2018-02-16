@@ -54,6 +54,11 @@ namespace DirectAgents.Domain.Concrete
             return searchAccounts;
         }
 
+        public SearchAccount GetSearchAccount(int id)
+        {
+            return context.SearchAccounts.Find(id);
+        }
+
         public IQueryable<SearchDailySummary> DailySummaries(int? spId = null, int? searchAccountId = null)
         {
             var sds = context.SearchDailySummaries.AsQueryable();

@@ -13,6 +13,7 @@ namespace DirectAgents.Domain.Abstract
 
         IQueryable<SearchProfile> SearchProfiles();
         IQueryable<SearchAccount> SearchAccounts(int? spId = null, bool includeGauges = false);
+        SearchAccount GetSearchAccount(int id);
 
         IQueryable<SearchDailySummary> DailySummaries(int? spId = null, int? searchAccountId = null);
         IQueryable<SearchConvSummary> ConvSummaries(int? spId = null, int? searchAccountId = null);

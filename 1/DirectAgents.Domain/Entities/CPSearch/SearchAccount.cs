@@ -9,6 +9,11 @@
     [Table("SearchAccount")]
     public partial class SearchAccount
     {
+        public const string GoogleChannel = "Google";
+        public const string BingChannel = "Bing";
+        public const string AppleChannel = "Apple";
+        //public const string CriteoChannel = "Criteo";
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public SearchAccount()
         {
@@ -47,6 +52,8 @@
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SearchCampaign> AltSearchCampaigns { get; set; }
 
+        [NotMapped]
+        public string DisplayName1 { get { return "[" + SearchAccountId + "] " + Name; } }
         [NotMapped]
         public DateTime? MinDaySum { get; set; }
         [NotMapped]

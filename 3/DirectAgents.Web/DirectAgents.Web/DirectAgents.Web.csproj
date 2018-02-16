@@ -1113,6 +1113,7 @@
     <None Include="Properties\PublishProfiles\dagents - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\dagents - Web Deploy.pubxml" />
     <Content Include="Views\ClientReports\Index.cshtml" />
+    <None Include="Properties\PublishProfiles\dagents__staging.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

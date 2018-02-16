@@ -1,4 +1,11 @@
 ﻿@model IEnumerable<DirectAgents.Domain.Entities.CPSearch.SearchAccount>
+@{
+    string spId = Request.Params["spid"];
+    bool showSync = !String.IsNullOrWhiteSpace(spId);
+    var searchAccountSelectList = new SelectList(Model, "SearchAccountId", "DisplayName1");
+    DateTime default_to = DateTime.Today.AddDays(-1);
+    DateTime default_from = (default_to.Day == 1 ? default_to.AddMonths(-1) : new DateTime(default_to.Year, default_to.Month, 1));
+}
 
 <h2>SearchAccounts - StatsGauge</h2>
 
@@ -25,4 +32,46 @@
 </table>
 <br />
 
-@Html.ActionLink("Show All", "IndexGauge")
+@if (showSync)
+{
+    <h3>Sync Stats</h3>
+    using (Html.BeginForm("Sync", "SearchAccounts", FormMethod.Post, new { id = "formSync" }))
+    {
+    @Html.ValidationSummary()
+    @Html.Hidden("spId", spId)
+    <table>
+        <tr>
+            <td>@Html.Label("", "Account:")</td>
+            <td>@Html.DropDownList("id", searchAccountSelectList)</td>
+        </tr>
+        <tr>
+            <td>@Html.Label("", "From:")</td>
+            <td><input type="text" id="sync_from" name="from" value="@default_from.ToShortDateString()" /></td>
+        </tr>
+        <tr>
+            <td>@Html.Label("", "To:")</td>
+            <td><input type="text" id="sync_to" name="to" value="@default_to.ToShortDateString()" /></td>
+        </tr>
+    </table>
+    <br />
+    <div id="divSyncButton">
+        <input type="submit" value="Sync" onclick="DoSync()" />
+        <br /><br />
+        @Html.ActionLink("Back to SearchProfiles", "Index", "SearchProfiles")
+    </div>
+    <div id="divSyncMessage"></div>
+    }
+
+    <script>
+        $(function () {
+            $('#sync_from').kendoDatePicker({ footer: ' ' });
+            $('#sync_to').kendoDatePicker({ footer: ' ' });
+        });
+
+        function DoSync() {
+            //$('#formSync').submit();
+            $('#divSyncButton').hide();
+            $('#divSyncMessage').html("<i>Syncing... Please wait.</i>");
+        }
+    </script>
+}

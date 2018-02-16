@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using CakeExtracter.Commands;
 using DirectAgents.Domain.Abstract;
+using DirectAgents.Domain.Entities.CPSearch;
 
 namespace DirectAgents.Web.Areas.SearchAdmin.Controllers
 {
@@ -22,6 +24,34 @@ namespace DirectAgents.Web.Areas.SearchAdmin.Controllers
         {
             var searchAccounts = cpSearchRepo.SearchAccounts(spId: spId, includeGauges: true);
             return View(searchAccounts.OrderBy(x => x.SearchProfileId));
+        }
+
+        [HttpPost]
+        public ActionResult Sync(int id, DateTime? from, DateTime? to)
+        {
+            var searchAccount = cpSearchRepo.GetSearchAccount(id);
+            if (searchAccount == null)
+                return HttpNotFound();
+
+            switch (searchAccount.Channel)
+            {
+                case SearchAccount.GoogleChannel:
+                    SynchSearchDailySummariesAdWordsCommand.RunStatic(clientId: searchAccount.AccountCode, start: from, end: to, getAllStats: true);
+                    break;
+                case SearchAccount.BingChannel:
+                    int accountId;
+                    if (int.TryParse(searchAccount.AccountCode, out accountId))
+                        SynchSearchDailySummariesBingCommand.RunStatic(accountId: accountId, start: from, end: to, getConversionTypeStats: true);
+                    break;
+                case SearchAccount.AppleChannel:
+                    SynchSearchDailySummariesAppleCommand.RunStatic(clientId: searchAccount.AccountCode, start: from, end: to);
+                    break;
+            }
+
+            if (searchAccount.SearchProfileId == null)
+                return Content("SearchProfileId not set.");
+            else
+                return RedirectToAction("IndexGauge", new { spId = searchAccount.SearchProfileId.Value });
         }
     }
 }
