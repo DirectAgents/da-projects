@@ -15,6 +15,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         protected readonly DateRange dateRange;
         protected readonly string clientId;
         protected readonly string campaignFilter;
+        protected readonly string campaignFilterOut;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AmazonApiExtracter{T}"/> class.
@@ -22,21 +23,24 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         /// <param name="amazonUtility">The amazon utility.</param>
         /// <param name="date">The date.</param>
         /// <param name="clientId">The client identifier.</param>
-        public AmazonApiExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignFilter = null)
+        public AmazonApiExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignFilter = null, string campaignFilterOut = null)
         {
             this._amazonUtility = amazonUtility;
             this.dateRange = dateRange;
             this.clientId = clientId;
             this.campaignFilter = campaignFilter;
+            this.campaignFilterOut = campaignFilterOut;
         }
 
         protected List<AmazonCampaign> LoadCampaignsFromAmazonAPI()
         {
-            var campaigns = _amazonUtility.GetCampaigns(clientId);
-            if (String.IsNullOrEmpty(campaignFilter))
-                return campaigns;
-            else
-                return campaigns.Where(x => x.name.Contains(campaignFilter)).ToList();
+            List<AmazonCampaign> campaigns = _amazonUtility.GetCampaigns(clientId);
+            if (!String.IsNullOrEmpty(campaignFilter))
+                campaigns = campaigns.Where(x => x.name.Contains(campaignFilter)).ToList();
+            if (!String.IsNullOrEmpty(campaignFilterOut))
+                campaigns = campaigns.Where(x => !x.name.Contains(campaignFilterOut)).ToList();
+
+            return campaigns;
         }
 
     }
@@ -47,8 +51,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     {
         private long[] campaignIds;
 
-        public AmazonDailySummaryExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignFilter = null)
-            : base(amazonUtility, dateRange, clientId, campaignFilter: campaignFilter)
+        public AmazonDailySummaryExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignFilter = null, string campaignFilterOut = null)
+            : base(amazonUtility, dateRange, clientId, campaignFilter: campaignFilter, campaignFilterOut: campaignFilterOut)
         { }
         protected override void Extract()
         {
@@ -116,8 +120,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     #region Campaign/Strategy
     public class AmazonCampaignSummaryExtracter : AmazonApiExtracter<StrategySummary>
     {
-        public AmazonCampaignSummaryExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignFilter = null)
-            : base(amazonUtility, dateRange, clientId, campaignFilter: campaignFilter)
+        public AmazonCampaignSummaryExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignFilter = null, string campaignFilterOut = null)
+            : base(amazonUtility, dateRange, clientId, campaignFilter: campaignFilter, campaignFilterOut: campaignFilterOut)
         { }
 
         protected override void Extract()
@@ -190,8 +194,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     #region AdSet (Keyword)
     public class AmazonAdSetExtracter : AmazonApiExtracter<AdSetSummary>
     {
-        public AmazonAdSetExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignFilter = null)
-            : base(amazonUtility, dateRange, clientId, campaignFilter: campaignFilter)
+        public AmazonAdSetExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignFilter = null, string campaignFilterOut = null)
+            : base(amazonUtility, dateRange, clientId, campaignFilter: campaignFilter, campaignFilterOut: campaignFilterOut)
         { }
 
         protected override void Extract()
@@ -299,8 +303,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     {
         //TODO: Allow to use campaignFilter
 
-        public AmazonAdExtrater(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignFilter = null)
-            : base(amazonUtility, dateRange, clientId, campaignFilter: campaignFilter)
+        public AmazonAdExtrater(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignFilter = null, string campaignFilterOut = null)
+            : base(amazonUtility, dateRange, clientId, campaignFilter: campaignFilter, campaignFilterOut: campaignFilterOut)
         { }
 
         protected override void Extract()

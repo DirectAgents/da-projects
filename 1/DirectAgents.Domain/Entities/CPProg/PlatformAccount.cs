@@ -148,6 +148,12 @@ namespace DirectAgents.Domain.Entities.CPProg
         public string CreativeURLFormat { get; set; }
         public bool Disabled { get; set; }
         public string Filter { get; set; }
+        //public string FilterOut { get; set; }
+
+        public bool HasAnyFilter()
+        {
+            return !String.IsNullOrEmpty(Filter); // || !String.IsNullOrEmpty(FilterOut);
+        }
 
         [NotMapped]
         public string DisplayName1

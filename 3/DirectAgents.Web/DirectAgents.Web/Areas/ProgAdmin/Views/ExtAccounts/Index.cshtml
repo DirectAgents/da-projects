@@ -28,7 +28,7 @@
     <td>@(extAcct.Disabled ? "X" : "")</td>
     <td>@extAcct.ExternalId</td>
     <td>@(extAcct.Network != null ? extAcct.Network.Name : "")</td>
-    <td>@(String.IsNullOrEmpty(extAcct.Filter) ? "" : "*")</td>
+    <td>@(extAcct.HasAnyFilter() ? "*" : "")</td>
     <td>
         @Html.ActionLink("Upload", "UploadStats", new { id = extAcct.Id }) |
         @Html.ActionLink("Raw", "ExtAccount", "Stats", new { acctid = extAcct.Id }, null)
