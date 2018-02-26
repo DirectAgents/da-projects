@@ -55,7 +55,11 @@ Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)<br />
             </table>
             <br />
             <input id="submitGenSpreadsheet" type="submit" value="Generate" onclick="this.form.submit(); this.disabled=true" />
-            &nbsp;@Html.ActionLink("Cancel", "Index", "SearchProfiles")
+            <br /><br />
+            Go to:
+            @Html.ActionLink("StatsGauge", "IndexGauge", "SearchAccounts", new { spId = @Model.SearchProfileId }, null)
+            <br /><br />
+            @Html.ActionLink("Back to SearchProfiles", "Index", "SearchProfiles")
         </div>
         }
 </fieldset>

@@ -1,5 +1,8 @@
 ﻿@model IEnumerable<DirectAgents.Domain.Entities.CPSearch.SearchAccount>
-
+@{
+    string spId = Request.Params["spid"];
+    bool oneProfile = !String.IsNullOrWhiteSpace(spId);
+}
 <h2>SearchAccounts</h2>
 
 <table>
@@ -30,3 +33,11 @@
     }
 </table>
 <br />
+
+@if (oneProfile)
+{
+    <text>Go to:</text>
+    @Html.ActionLink("StatsGauge", "IndexGauge", new { spId = @spId })
+    <br /><br />
+}
+@Html.ActionLink("Back to SearchProfiles", "Index", "SearchProfiles")

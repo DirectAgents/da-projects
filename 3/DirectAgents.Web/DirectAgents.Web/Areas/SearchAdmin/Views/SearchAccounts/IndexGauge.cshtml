@@ -34,7 +34,7 @@
 
 @if (showSync)
 {
-    <h3>Sync Stats</h3>
+    <h4>Re-Sync Stats</h4>
     using (Html.BeginForm("Sync", "SearchAccounts", FormMethod.Post, new { id = "formSync" }))
     {
     @Html.ValidationSummary()
@@ -56,6 +56,9 @@
     <br />
     <div id="divSyncButton">
         <input type="submit" value="Sync" onclick="DoSync()" />
+        <br /><br />
+        Go to:
+        @Html.ActionLink("Generate Spreadsheet", "GenerateSpreadsheet", "Old", new { spId = @spId }, null)
         <br /><br />
         @Html.ActionLink("Back to SearchProfiles", "Index", "SearchProfiles")
     </div>

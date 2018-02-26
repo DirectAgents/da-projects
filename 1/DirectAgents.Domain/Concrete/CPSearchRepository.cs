@@ -24,9 +24,18 @@ namespace DirectAgents.Domain.Concrete
             context.SaveChanges();
         }
 
-        public IQueryable<SearchProfile> SearchProfiles()
+        public IQueryable<SearchProfile> SearchProfiles(DateTime? activeSince = null)
         {
-            return context.SearchProfiles;
+            var searchProfiles = context.SearchProfiles.AsQueryable();
+            if (activeSince.HasValue)
+            {
+                // First, filter out SPs that don't have any dailysummaries
+                searchProfiles = searchProfiles.Where(sp => sp.SearchAccounts.Any(sa => sa.SearchCampaigns.Any(sc => sc.SearchDailySummaries.Any())));
+                searchProfiles = searchProfiles.Where(sp =>
+                    sp.SearchAccounts.SelectMany(sa => sa.SearchCampaigns).SelectMany(sc => sc.SearchDailySummaries)
+                    .OrderByDescending(x => x.Date).FirstOrDefault().Date >= activeSince.Value);
+            }
+            return searchProfiles;
         }
 
         public IQueryable<SearchAccount> SearchAccounts(int? spId = null, bool includeGauges = false)

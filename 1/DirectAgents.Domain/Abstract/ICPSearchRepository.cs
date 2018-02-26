@@ -11,7 +11,7 @@ namespace DirectAgents.Domain.Abstract
     {
         void SaveChanges();
 
-        IQueryable<SearchProfile> SearchProfiles();
+        IQueryable<SearchProfile> SearchProfiles(DateTime? activeSince = null);
         IQueryable<SearchAccount> SearchAccounts(int? spId = null, bool includeGauges = false);
         SearchAccount GetSearchAccount(int id);
 

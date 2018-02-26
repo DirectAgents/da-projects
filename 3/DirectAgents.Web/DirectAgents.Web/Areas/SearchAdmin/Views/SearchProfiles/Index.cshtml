@@ -1,12 +1,17 @@
 ﻿@model IEnumerable<DirectAgents.Domain.Entities.CPSearch.SearchProfile>
+@{
+    string orderBy = ViewBag.OrderBy;
+    bool showAll = ViewBag.ShowAll;
+    string activeSinceMonths = Request["activeSinceMonths"]; //used for links
+}
 
 <h2>SearchProfiles</h2>
 
 <table>
     <tr>
-        <th style="text-align:right">Id</th>
+        <th style="text-align:right">@Html.ActionLink("ID", "Index", new { orderBy = "id", activeSinceMonths = activeSinceMonths })</th>
         <th></th>
-        <th>Name</th>
+        <th>@Html.ActionLink("Name", "Index", new { orderBy = "name", activeSinceMonths = activeSinceMonths })</th>
         <th>SearchAccounts</th>
         <th>Spreadsheet</th>
         <th>StartDayOfWeek</th>
@@ -27,4 +32,13 @@
 </tr>
 }
 </table>
+
 <br />
+@if (showAll)
+{
+    @Html.ActionLink("Show active", "Index", new { orderBy = orderBy })
+}
+else
+{
+    @Html.ActionLink("Show all", "Index", new { orderBy = orderBy, activeSinceMonths = -1 })
+}

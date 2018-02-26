@@ -12,16 +12,21 @@ namespace DirectAgents.Web.Areas.SearchAdmin.Controllers
             this.cpSearchRepo = cpSearchRepository;
         }
 
-        public ActionResult Test()
+        public ActionResult Index(string orderBy, int? activeSinceMonths = 1)
         {
-            var searchProfiles = cpSearchRepo.SearchProfiles();
-            var sps = String.Join(" ", searchProfiles.Select(x => x.SearchProfileName).ToArray());
-            return Content(sps);
-        }
+            // use -1 for activeSinceMonths to show all profiles
+            DateTime? activeSince = null;
+            if (activeSinceMonths.HasValue && activeSinceMonths >= 0) // if 0, use yesterday. otherwise, X months prior to today
+                activeSince = (activeSinceMonths.Value == 0) ? DateTime.Today.AddDays(-1) : DateTime.Today.AddMonths(-activeSinceMonths.Value);
+            var searchProfiles = cpSearchRepo.SearchProfiles(activeSince: activeSince);
 
-        public ActionResult Index()
-        {
-            var searchProfiles = cpSearchRepo.SearchProfiles();
+            if (orderBy != null && orderBy.ToLower() == "id")
+                searchProfiles = searchProfiles.OrderBy(x => x.SearchProfileId);
+            else
+                searchProfiles = searchProfiles.OrderBy(x => x.SearchProfileName);
+
+            ViewBag.OrderBy = orderBy;
+            ViewBag.ShowAll = (activeSince == null);
             return View(searchProfiles);
         }
     }
