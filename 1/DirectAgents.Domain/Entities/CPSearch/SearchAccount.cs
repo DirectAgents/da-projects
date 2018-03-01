@@ -62,5 +62,9 @@
         public DateTime? MinConvSum { get; set; }
         [NotMapped]
         public DateTime? MaxConvSum { get; set; }
+        [NotMapped]
+        public DateTime? MinCallSum { get; set; }
+        [NotMapped]
+        public DateTime? MaxCallSum { get; set; }
     }
 }

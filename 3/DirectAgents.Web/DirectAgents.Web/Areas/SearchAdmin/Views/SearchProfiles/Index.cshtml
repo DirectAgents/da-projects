@@ -21,7 +21,10 @@
     int numAccts = sp.SearchAccounts.Count;
 <tr>
     <td style="text-align:right">@sp.SearchProfileId</td>
-    <td></td>
+    <td>
+        @(sp.ShowRevenue ? "$" : "")
+        @(sp.ShowCalls ? "+" : "")
+    </td>
     <td>@sp.SearchProfileName</td>
     <td>
         @Html.ActionLink("List(" + numAccts + ")", "Index", "SearchAccounts", new { spId = sp.SearchProfileId }, null) |
@@ -32,8 +35,9 @@
 </tr>
 }
 </table>
+$ = include revenue &nbsp;&nbsp;&nbsp; + = include calls
 
-<br />
+<br /><br />
 @if (showAll)
 {
     @Html.ActionLink("Show active", "Index", new { orderBy = orderBy })

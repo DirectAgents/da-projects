@@ -47,7 +47,7 @@ namespace DirectAgents.Domain.Concrete
                 searchAccounts = SetGauges(searchAccounts).AsQueryable();
             return searchAccounts;
         }
-        public IEnumerable<SearchAccount> SetGauges(IEnumerable<SearchAccount> searchAccounts)
+        private IEnumerable<SearchAccount> SetGauges(IEnumerable<SearchAccount> searchAccounts)
         {
             foreach (var sa in searchAccounts)
             {
@@ -59,6 +59,10 @@ namespace DirectAgents.Domain.Concrete
                 any = scs.Any();
                 sa.MinConvSum = any ? scs.Min(x => x.Date) : (DateTime?)null;
                 sa.MaxConvSum = any ? scs.Max(x => x.Date) : (DateTime?)null;
+                var cds = CallSummaries(searchAccountId: sa.SearchAccountId);
+                any = cds.Any();
+                sa.MinCallSum = any ? cds.Min(x => x.Date) : (DateTime?)null;
+                sa.MaxCallSum = any ? cds.Max(x => x.Date) : (DateTime?)null;
             }
             return searchAccounts;
         }
@@ -68,7 +72,47 @@ namespace DirectAgents.Domain.Concrete
             return context.SearchAccounts.Find(id);
         }
 
-        public IQueryable<SearchDailySummary> DailySummaries(int? spId = null, int? searchAccountId = null)
+        // ---
+
+        public IQueryable<SearchCampaign> SearchCampaigns(int? spId = null, int? searchAccountId = null, bool includeGauges = false)
+        {
+            var sc = context.SearchCampaigns.AsQueryable();
+            if (spId.HasValue)
+                sc = sc.Where(x => x.SearchAccount.SearchProfileId == spId.Value);
+            if (searchAccountId.HasValue)
+                sc = sc.Where(x => x.SearchAccountId == searchAccountId.Value);
+            if (includeGauges)
+                sc = SetGauges(sc).AsQueryable();
+            return sc;
+        }
+        private IEnumerable<SearchCampaign> SetGauges(IEnumerable<SearchCampaign> searchCampaigns)
+        {
+            foreach (var sc in searchCampaigns)
+            {
+                var sds = DailySummaries(searchCampaignId: sc.SearchCampaignId);
+                bool any = sds.Any();
+                sc.MinDaySum = any ? sds.Min(x => x.Date) : (DateTime?)null;
+                sc.MaxDaySum = any ? sds.Max(x => x.Date) : (DateTime?)null;
+                var scs = ConvSummaries(searchCampaignId: sc.SearchCampaignId);
+                any = scs.Any();
+                sc.MinConvSum = any ? scs.Min(x => x.Date) : (DateTime?)null;
+                sc.MaxConvSum = any ? scs.Max(x => x.Date) : (DateTime?)null;
+                var cds = CallSummaries(searchCampaignId: sc.SearchCampaignId);
+                any = cds.Any();
+                sc.MinCallSum = any ? cds.Min(x => x.Date) : (DateTime?)null;
+                sc.MaxCallSum = any ? cds.Max(x => x.Date) : (DateTime?)null;
+            }
+            return searchCampaigns;
+        }
+
+        public SearchCampaign GetSearchCampaign(int id)
+        {
+            return context.SearchCampaigns.Find(id);
+        }
+
+        // ---
+
+        public IQueryable<SearchDailySummary> DailySummaries(int? spId = null, int? searchAccountId = null, int? searchCampaignId = null)
         {
             var sds = context.SearchDailySummaries.AsQueryable();
             if (spId.HasValue)
@@ -86,10 +130,11 @@ namespace DirectAgents.Domain.Concrete
                                 .SelectMany(x => x.SearchCampaigns).Select(x => x.SearchCampaignId).ToArray();
                 sds = sds.Where(x => campIds.Contains(x.SearchCampaignId));
             }
+            if (searchCampaignId.HasValue)
+                sds = sds.Where(x => x.SearchCampaignId == searchCampaignId.Value);
             return sds;
         }
-
-        public IQueryable<SearchConvSummary> ConvSummaries(int? spId = null, int? searchAccountId = null)
+        public IQueryable<SearchConvSummary> ConvSummaries(int? spId = null, int? searchAccountId = null, int? searchCampaignId = null)
         {
             var scs = context.SearchConvSummaries.AsQueryable();
             if (spId.HasValue)
@@ -104,7 +149,28 @@ namespace DirectAgents.Domain.Concrete
                                 .SelectMany(x => x.SearchCampaigns).Select(x => x.SearchCampaignId).ToArray();
                 scs = scs.Where(x => campIds.Contains(x.SearchCampaignId));
             }
+            if (searchCampaignId.HasValue)
+                scs = scs.Where(x => x.SearchCampaignId == searchCampaignId.Value);
             return scs;
+        }
+        public IQueryable<CallDailySummary> CallSummaries(int? spId = null, int? searchAccountId = null, int? searchCampaignId = null)
+        {
+            var cds = context.CallDailySummaries.AsQueryable();
+            if (spId.HasValue)
+            {
+                var campIds = context.SearchProfiles.Where(x => x.SearchProfileId == spId.Value).SelectMany(x => x.SearchAccounts)
+                                .SelectMany(x => x.SearchCampaigns).Select(x => x.SearchCampaignId).ToArray();
+                cds = cds.Where(x => campIds.Contains(x.SearchCampaignId));
+            }
+            if (searchAccountId.HasValue)
+            {
+                var campIds = context.SearchAccounts.Where(x => x.SearchAccountId == searchAccountId.Value)
+                                .SelectMany(x => x.SearchCampaigns).Select(x => x.SearchCampaignId).ToArray();
+                cds = cds.Where(x => campIds.Contains(x.SearchCampaignId));
+            }
+            if (searchCampaignId.HasValue)
+                cds = cds.Where(x => x.SearchCampaignId == searchCampaignId.Value);
+            return cds;
         }
 
         // ---

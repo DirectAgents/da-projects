@@ -20,6 +20,7 @@
         public virtual DbSet<SearchConvType> SearchConvTypes { get; set; }
         public virtual DbSet<SearchDailySummary> SearchDailySummaries { get; set; }
         public virtual DbSet<SearchProfile> SearchProfiles { get; set; }
+        public virtual DbSet<CallDailySummary> CallDailySummaries { get; set; }
 
         public virtual DbSet<ClientReport> ClientReports { get; set; }
 

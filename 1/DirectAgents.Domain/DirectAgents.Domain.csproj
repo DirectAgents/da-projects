@@ -142,6 +142,7 @@
     <Compile Include="Entities\Cake\Role.cs" />
     <Compile Include="Entities\Cake\Vertical.cs" />
     <Compile Include="Entities\CPProg\Actions.cs" />
+    <Compile Include="Entities\CPSearch\CallDailySummary.cs" />
     <Compile Include="Entities\CPSearch\ClientReport.cs" />
     <Compile Include="Entities\CPSearch\SearchAccount.cs" />
     <Compile Include="Entities\CPSearch\SearchCampaign.cs" />

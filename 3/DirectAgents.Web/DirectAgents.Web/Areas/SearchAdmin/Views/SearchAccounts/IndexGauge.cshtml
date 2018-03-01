@@ -17,6 +17,8 @@
         <th>Channel</th>
         <th style="text-align:center">DaySums</th>
         <th style="text-align:center">ConvSums</th>
+        <th style="text-align:center">CallSums</th>
+        <th>By Campaign</th>
     </tr>
     @foreach (var sa in Model)
     {
@@ -27,9 +29,15 @@
             <td>@sa.Channel</td>
             <td style="text-align:center">@sa.MinDaySum.ToShortDateString() - @sa.MaxDaySum.ToShortDateString()</td>
             <td style="text-align:center">@sa.MinConvSum.ToShortDateString() - @sa.MaxConvSum.ToShortDateString()</td>
+            <td style="text-align:center">@sa.MinCallSum.ToShortDateString() - @sa.MaxCallSum.ToShortDateString()</td>
+            <td style="text-align:center">@Html.ActionLink("view", "IndexGauge", "SearchCampaigns", new { saId = @sa.SearchAccountId }, null)</td>
         </tr>
     }
 </table>
+@if (!String.IsNullOrWhiteSpace(spId))
+{
+    <text>&nbsp;</text>@Html.ActionLink("View All by Campaign", "IndexGauge", "SearchCampaigns", new { spId = @spId }, null)
+}
 <br />
 
 @if (showSync)
