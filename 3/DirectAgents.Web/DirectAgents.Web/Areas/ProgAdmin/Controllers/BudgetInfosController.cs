@@ -18,14 +18,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             var campaign = cpProgRepo.Campaign(campId);
             if (campaign == null)
                 return HttpNotFound();
-            var budgetInfo = new BudgetInfo
-            {
-                CampaignId = campId,
-                Date = date,
-                MediaSpend = campaign.DefaultBudgetInfo.MediaSpend,
-                MgmtFeePct = campaign.DefaultBudgetInfo.MgmtFeePct,
-                MarginPct = campaign.DefaultBudgetInfo.MarginPct
-            };
+            var budgetInfo = new BudgetInfo(campId, date, valuesToSet: campaign.DefaultBudgetInfo);
             cpProgRepo.AddBudgetInfo(budgetInfo);
             return RedirectToAction("Edit", "Campaigns", new { id = campId });
         }

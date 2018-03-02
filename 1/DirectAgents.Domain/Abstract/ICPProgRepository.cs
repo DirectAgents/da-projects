@@ -25,7 +25,7 @@ namespace DirectAgents.Domain.Abstract
         bool AddPlatform(Platform platform);
         bool SavePlatform(Platform platform, bool includeTokens = true);
         Advertiser Advertiser(int id);
-        IQueryable<Advertiser> Advertisers();
+        IQueryable<Advertiser> Advertisers(bool includePlatforms = false);
         bool AddAdvertiser(Advertiser adv);
         bool SaveAdvertiser(Advertiser adv, bool includeLogo = false);
         Campaign Campaign(int id);
@@ -40,13 +40,13 @@ namespace DirectAgents.Domain.Abstract
         //void CreateBudgetIfNotExists(Campaign campaign, DateTime monthToCreate);
         BudgetInfo BudgetInfo(int campId, DateTime date);
         IQueryable<BudgetInfo> BudgetInfos(int? campId = null, DateTime? date = null);
-        bool AddBudgetInfo(BudgetInfo bi);
+        bool AddBudgetInfo(BudgetInfo bi, bool saveChanges = true);
         bool DeleteBudgetInfo(int campId, DateTime date);
         bool SaveBudgetInfo(BudgetInfo bi);
         void FillExtended(BudgetInfo bi);
         PlatformBudgetInfo PlatformBudgetInfo(int campId, int platformId, DateTime date);
         IQueryable<PlatformBudgetInfo> PlatformBudgetInfos(int? campId = null, int? platformId = null, DateTime? date = null);
-        bool AddPlatformBudgetInfo(PlatformBudgetInfo pbi);
+        bool AddPlatformBudgetInfo(PlatformBudgetInfo pbi, bool saveChanges = true);
         bool DeletePlatformBudgetInfo(int campId, int platformId, DateTime date);
         bool SavePlatformBudgetInfo(PlatformBudgetInfo pbi);
         void FillExtended(PlatformBudgetInfo pbi);

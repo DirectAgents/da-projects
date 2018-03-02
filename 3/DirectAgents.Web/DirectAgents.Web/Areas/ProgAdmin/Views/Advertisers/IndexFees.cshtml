@@ -2,6 +2,7 @@
 @using DirectAgents.Domain.Entities.CPProg;
 @{
     DateTime currMonth = ViewBag.CurrMonth;
+    bool activeLastMonth = ViewBag.ActiveLastMonth;
 }
 
 @section scripts {
@@ -60,6 +61,8 @@
 </table>
 
 <br />
+@Html.ActionLink("Copy Budgets,Percents&Exceptions from last month", "CopyInfos", new { month = currMonth.ToShortDateString(), activeLastMonth = activeLastMonth })
+<br /><br />
 @Html.ActionLink("Create BaseFee items for the month", "CreateBaseFees", new { month = currMonth.ToShortDateString() })
 
 @*@Html.ActionLink("Delete All (including exceptions)", "Delete", "BudgetInfos", new { date = currMonth.ToShortDateString(), pbiAlso = true }, new { })*@

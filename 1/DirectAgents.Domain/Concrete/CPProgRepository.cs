@@ -106,9 +106,12 @@ namespace DirectAgents.Domain.Concrete
         {
             return context.Advertisers.Find(id);
         }
-        public IQueryable<Advertiser> Advertisers()
+        public IQueryable<Advertiser> Advertisers(bool includePlatforms = false)
         {
-            return context.Advertisers;
+            if (includePlatforms)
+                return context.Advertisers.Include("Campaigns.PlatformBudgetInfos.Platform");
+            else
+                return context.Advertisers;
         }
 
         public bool AddAdvertiser(Advertiser adv)
@@ -251,12 +254,13 @@ namespace DirectAgents.Domain.Concrete
                 budgetInfos = budgetInfos.Where(b => b.Date == date.Value);
             return budgetInfos;
         }
-        public bool AddBudgetInfo(BudgetInfo bi)
+        public bool AddBudgetInfo(BudgetInfo bi, bool saveChanges = true)
         {
             if (context.BudgetInfos.Any(b => b.CampaignId == bi.CampaignId && b.Date == bi.Date))
                 return false;
             context.BudgetInfos.Add(bi);
-            context.SaveChanges();
+            if (saveChanges)
+                context.SaveChanges();
             return true;
         }
         public bool DeleteBudgetInfo(int campId, DateTime date)
@@ -300,12 +304,13 @@ namespace DirectAgents.Domain.Concrete
                 infos = infos.Where(i => i.Date == date.Value);
             return infos;
         }
-        public bool AddPlatformBudgetInfo(PlatformBudgetInfo pbi)
+        public bool AddPlatformBudgetInfo(PlatformBudgetInfo pbi, bool saveChanges = true)
         {
             if (context.PlatformBudgetInfos.Any(i => i.CampaignId == pbi.CampaignId && i.PlatformId == pbi.PlatformId && i.Date == pbi.Date))
                 return false;
             context.PlatformBudgetInfos.Add(pbi);
-            context.SaveChanges();
+            if (saveChanges)
+                context.SaveChanges();
             return true;
         }
         public bool DeletePlatformBudgetInfo(int campId, int platformId, DateTime date)
@@ -396,28 +401,13 @@ namespace DirectAgents.Domain.Concrete
             var budgetInfos = context.BudgetInfos.Where(x => x.Date == fromDate.Value && x.CampaignId == campId);
             foreach (var budgetInfo in budgetInfos)
             {
-                var bi = new BudgetInfo
-                {
-                    Date = toDate,
-                    CampaignId = campId,
-                    MediaSpend = budgetInfo.MediaSpend,
-                    MgmtFeePct = budgetInfo.MgmtFeePct,
-                    MarginPct = budgetInfo.MarginPct
-                };
+                var bi = new BudgetInfo(campId, toDate, valuesToSet: budgetInfo);
                 context.BudgetInfos.Add(bi);
             }
             var platformBudgetInfos = context.PlatformBudgetInfos.Where(x => x.Date == fromDate.Value && x.CampaignId == campId);
             foreach (var platformBudgetInfo in platformBudgetInfos)
             {
-                var pbi = new PlatformBudgetInfo
-                {
-                    Date = toDate,
-                    CampaignId = campId,
-                    PlatformId = platformBudgetInfo.PlatformId,
-                    MediaSpend = platformBudgetInfo.MediaSpend,
-                    MgmtFeePct = platformBudgetInfo.MgmtFeePct,
-                    MarginPct = platformBudgetInfo.MarginPct
-                };
+                var pbi = new PlatformBudgetInfo(campId, platformBudgetInfo.PlatformId, toDate, valuesToSet: platformBudgetInfo);
                 context.PlatformBudgetInfos.Add(pbi);
             }
             context.SaveChanges();

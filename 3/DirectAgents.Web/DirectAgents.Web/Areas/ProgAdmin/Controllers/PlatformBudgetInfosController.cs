@@ -23,15 +23,12 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             if (defaultBudgetInfo == null)
                 defaultBudgetInfo = campaign.DefaultBudgetInfo;
             var prevMonthPBI = cpProgRepo.PlatformBudgetInfo(campId, platId, date.AddMonths(-1));
-            var pbi = new PlatformBudgetInfo
-            {
-                CampaignId = campId,
-                PlatformId = platId,
-                Date = date,
-                MediaSpend = (prevMonthPBI != null ? prevMonthPBI.MediaSpend : 0),
-                MgmtFeePct = (prevMonthPBI != null ? prevMonthPBI.MgmtFeePct : defaultBudgetInfo.MgmtFeePct),
-                MarginPct = (prevMonthPBI != null ? prevMonthPBI.MarginPct : defaultBudgetInfo.MarginPct)
-            };
+
+            var pbi = new PlatformBudgetInfo(campId, platId, date);
+            pbi.MediaSpend = (prevMonthPBI != null ? prevMonthPBI.MediaSpend : 0);
+            pbi.MgmtFeePct = (prevMonthPBI != null ? prevMonthPBI.MgmtFeePct : defaultBudgetInfo.MgmtFeePct);
+            pbi.MarginPct = (prevMonthPBI != null ? prevMonthPBI.MarginPct : defaultBudgetInfo.MarginPct);
+
             cpProgRepo.AddPlatformBudgetInfo(pbi);
             return RedirectToAction("Edit", "BudgetInfos", new { campId = campId, date = date.ToShortDateString() });
         }

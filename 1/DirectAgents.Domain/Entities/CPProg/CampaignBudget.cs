@@ -110,6 +110,16 @@ namespace DirectAgents.Domain.Entities.CPProg
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; } // used for SSRS report
+
+        // Constructor
+        public BudgetInfo(int campaignId, DateTime date, BudgetInfoVals valuesToSet = null)
+        {
+            CampaignId = campaignId;
+            Date = date;
+            if (valuesToSet != null)
+                SetFrom(valuesToSet);
+        }
+        private BudgetInfo() { } // required for EF
     }
 
     public class PlatformBudgetInfo : BudgetInfoVals
@@ -123,6 +133,17 @@ namespace DirectAgents.Domain.Entities.CPProg
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; } // used for SSRS report
+
+        // Constructor
+        public PlatformBudgetInfo(int campaignId, int platformId, DateTime date, BudgetInfoVals valuesToSet = null)
+        {
+            CampaignId = campaignId;
+            PlatformId = platformId;
+            Date = date;
+            if (valuesToSet != null)
+                SetFrom(valuesToSet);
+        }
+        private PlatformBudgetInfo() { } // required for EF
     }
 
     public class BudgetInfoVals : MarginFeeVals
