@@ -12,8 +12,8 @@ namespace Amazon.Entities
         // paid_impressions
         public int click_through_conversions { get; set; }
         public int view_through_conversions { get; set; }
-        public int attributedConversions30d { get; set; }
-        public decimal attributedSales30d { get; set; }
+        public int attributedConversions14d { get; set; }
+        public decimal attributedSales14d { get; set; }
         public int clicks { get; set; }
         public decimal cost { get; set; }
         public int prospects { get; set; }

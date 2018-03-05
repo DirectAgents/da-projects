@@ -46,8 +46,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         Impressions = item.impressions,
                         Clicks = item.clicks,
                         Cost = item.cost,
-                        PostClickConv = item.attributedConversions30d,
-                        PostClickRev = item.attributedSales30d
+                        PostClickConv = item.attributedConversions14d,
+                        PostClickRev = item.attributedSales14d
                     };
                     //var target = db.Set<DailySummary>().Find(DateTime.Now, accountId);
                     var target = (from p in db.DailySummaries

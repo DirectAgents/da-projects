@@ -108,8 +108,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                     cost = campDateGroup.Sum(x => x.cost),
                     impressions = campDateGroup.Sum(x => x.impressions),
                     clicks = campDateGroup.Sum(x => x.clicks),
-                    attributedConversions30d = campDateGroup.Sum(g => g.attributedConversions30d),
-                    attributedSales30d = campDateGroup.Sum(g => g.attributedSales30d)
+                    attributedConversions14d = campDateGroup.Sum(g => g.attributedConversions14d),
+                    attributedSales14d = campDateGroup.Sum(g => g.attributedSales14d)
                 };
                 yield return sum;
             }
@@ -181,8 +181,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         Impressions = group.Sum(g => g.impressions),
                         Clicks = group.Sum(g => g.clicks),
                         Cost = group.Sum(g => g.cost),
-                        PostClickConv = group.Sum(g => g.attributedConversions30d),
-                        PostClickRev = group.Sum(g => g.attributedSales30d)
+                        PostClickConv = group.Sum(g => g.attributedConversions14d),
+                        PostClickRev = group.Sum(g => g.attributedSales14d)
                     };
                     yield return sum;
                 }
@@ -403,7 +403,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         Impressions = statsGroup.Sum(g => g.impressions),
                         Clicks = statsGroup.Sum(g => g.clicks),
                         Cost = statsGroup.Sum(g => g.cost),
-                        PostClickConv = statsGroup.Sum(g => g.attributedConversions30d),
+                        PostClickConv = statsGroup.Sum(g => g.attributedConversions14d),
                     };
                     yield return sum;
                 }
