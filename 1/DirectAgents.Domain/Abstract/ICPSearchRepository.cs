@@ -12,8 +12,10 @@ namespace DirectAgents.Domain.Abstract
         void SaveChanges();
 
         IQueryable<SearchProfile> SearchProfiles(DateTime? activeSince = null);
+        IEnumerable<SearchAccount> StatsGaugesByChannel();
         IQueryable<SearchAccount> SearchAccounts(int? spId = null, bool includeGauges = false);
         SearchAccount GetSearchAccount(int id);
+        bool SaveSearchAccount(SearchAccount searchAccount, bool createIfDoesntExist = false);
         IQueryable<SearchCampaign> SearchCampaigns(int? spId = null, int? searchAccountId = null, bool includeGauges = false);
         SearchCampaign GetSearchCampaign(int id);
 

@@ -38,6 +38,25 @@ namespace DirectAgents.Domain.Concrete
             return searchProfiles;
         }
 
+        public IEnumerable<SearchAccount> StatsGaugesByChannel()
+        {
+            var searchAccounts = new List<SearchAccount>();
+            var allSDS = DailySummaries().Where(x => x.SearchCampaign.SearchAccountId.HasValue);
+            var allSCS = ConvSummaries().Where(x => x.SearchCampaign.SearchAccountId.HasValue);
+            var allCDS = CallSummaries().Where(x => x.SearchCampaign.SearchAccountId.HasValue);
+            var channels = context.SearchAccounts.Select(sa => sa.Channel).Distinct().OrderBy(ch => ch);
+            foreach (var channel in channels)
+            {
+                var searchAccount = new SearchAccount { Channel = channel };
+                var sds = allSDS.Where(x => x.SearchCampaign.SearchAccount.Channel == channel);
+                var scs = allSCS.Where(x => x.SearchCampaign.SearchAccount.Channel == channel);
+                var cds = allCDS.Where(x => x.SearchCampaign.SearchAccount.Channel == channel);
+                SetGauges(searchAccount, sds, scs, cds);
+                searchAccounts.Add(searchAccount);
+            }
+            return searchAccounts;
+        }
+
         public IQueryable<SearchAccount> SearchAccounts(int? spId = null, bool includeGauges = false)
         {
             var searchAccounts = context.SearchAccounts.AsQueryable();
@@ -52,24 +71,52 @@ namespace DirectAgents.Domain.Concrete
             foreach (var sa in searchAccounts)
             {
                 var sds = DailySummaries(searchAccountId: sa.SearchAccountId);
-                bool any = sds.Any();
-                sa.MinDaySum = any ? sds.Min(x => x.Date) : (DateTime?)null;
-                sa.MaxDaySum = any ? sds.Max(x => x.Date) : (DateTime?)null;
                 var scs = ConvSummaries(searchAccountId: sa.SearchAccountId);
-                any = scs.Any();
-                sa.MinConvSum = any ? scs.Min(x => x.Date) : (DateTime?)null;
-                sa.MaxConvSum = any ? scs.Max(x => x.Date) : (DateTime?)null;
                 var cds = CallSummaries(searchAccountId: sa.SearchAccountId);
-                any = cds.Any();
-                sa.MinCallSum = any ? cds.Min(x => x.Date) : (DateTime?)null;
-                sa.MaxCallSum = any ? cds.Max(x => x.Date) : (DateTime?)null;
+                SetGauges(sa, sds, scs, cds);
             }
             return searchAccounts;
+        }
+        private void SetGauges(SearchAccount searchAccount, IQueryable<SearchDailySummary> sds, IQueryable<SearchConvSummary> scs, IQueryable<CallDailySummary> cds)
+        {
+            if (sds != null && sds.Any())
+            {
+                searchAccount.MinDaySum = sds.Min(x => x.Date);
+                searchAccount.MaxDaySum = sds.Max(x => x.Date);
+            }
+            if (scs != null && scs.Any())
+            {
+                searchAccount.MinConvSum = scs.Min(x => x.Date);
+                searchAccount.MaxConvSum = scs.Max(x => x.Date);
+            }
+            if (cds != null && cds.Any())
+            {
+                searchAccount.MinCallSum = cds.Min(x => x.Date);
+                searchAccount.MaxCallSum = cds.Max(x => x.Date);
+            }
         }
 
         public SearchAccount GetSearchAccount(int id)
         {
             return context.SearchAccounts.Find(id);
+        }
+
+        public bool SaveSearchAccount(SearchAccount searchAccount, bool createIfDoesntExist = false)
+        {
+            if (context.SearchAccounts.Any(sa => sa.SearchAccountId == searchAccount.SearchAccountId))
+            {
+                var entry = context.Entry(searchAccount);
+                entry.State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            else if (createIfDoesntExist)
+            {
+                context.SearchAccounts.Add(searchAccount);
+                context.SaveChanges();
+                return true;
+            }
+            return false; // not saved/created
         }
 
         // ---

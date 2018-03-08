@@ -26,6 +26,37 @@ namespace DirectAgents.Web.Areas.SearchAdmin.Controllers
             return View(searchAccounts.OrderBy(x => x.SearchProfileId));
         }
 
+        public ActionResult Create(int spId, string channel)
+        {
+            var searchAccount = new SearchAccount
+            {
+                SearchProfileId = spId,
+                Channel = channel,
+                Name = "New"
+            };
+            cpSearchRepo.SaveSearchAccount(searchAccount, createIfDoesntExist: true);
+            return RedirectToAction("Index", "SearchAccounts", new { spId = spId });
+        }
+
+        public ActionResult Edit(int id)
+        {
+            var searchAccount = cpSearchRepo.GetSearchAccount(id);
+            if (searchAccount == null)
+                return HttpNotFound();
+            return View(searchAccount);
+        }
+        [HttpPost]
+        public ActionResult Edit(SearchAccount searchAccount)
+        {
+            if (ModelState.IsValid)
+            {
+                if (cpSearchRepo.SaveSearchAccount(searchAccount))
+                    return RedirectToAction("Index", new { spId = searchAccount.SearchProfileId });
+                ModelState.AddModelError("", "SearchAccount could not be saved.");
+            }
+            return View(searchAccount);
+        }
+
         [HttpPost]
         public ActionResult Sync(int id, DateTime? from, DateTime? to)
         {

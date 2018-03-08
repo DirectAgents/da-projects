@@ -19,5 +19,7 @@
         public DateTime Date { get; set; }
 
         public int Calls { get; set; }
+
+        public virtual SearchCampaign SearchCampaign { get; set; }
     }
 }

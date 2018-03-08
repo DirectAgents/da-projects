@@ -22,7 +22,7 @@
         <tr>
             <td style="text-align:right">@sa.SearchProfileId</td>
             <td style="text-align:right">@sa.SearchAccountId</td>
-            <td></td>
+            <td>@Html.ActionLink("edit", "Edit", new { id = sa.SearchAccountId })</td>
             <td>@sa.Name</td>
             <td>@sa.Channel</td>
             <td>@sa.AccountCode</td>
@@ -38,6 +38,13 @@
 {
     <text>Go to:</text>
     @Html.ActionLink("StatsGauge", "IndexGauge", new { spId = @spId })
+    <br /><br />
+    <text>Create New SearchAccount:</text>
+    @Html.ActionLink("google", "Create", new { spId = @spId, channel = "Google" })
+    <text> | </text>
+    @Html.ActionLink("bing", "Create", new { spId = @spId, channel = "Bing" })
+    <text> | </text>
+    @Html.ActionLink("apple", "Create", new { spId = @spId, channel = "Apple" })
     <br /><br />
 }
 @Html.ActionLink("Back to SearchProfiles", "Index", "SearchProfiles")

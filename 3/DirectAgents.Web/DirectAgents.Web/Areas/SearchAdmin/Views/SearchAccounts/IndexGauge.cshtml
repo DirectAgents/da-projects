@@ -7,7 +7,7 @@
     DateTime default_from = (default_to.Day == 1 ? default_to.AddMonths(-1) : new DateTime(default_to.Year, default_to.Month, 1));
 }
 
-<h2>SearchAccounts - StatsGauge</h2>
+<h2>StatsGauge by SearchAccount</h2>
 
 <table>
     <tr>
@@ -85,4 +85,8 @@
             $('#divSyncMessage').html("<i>Syncing... Please wait.</i>");
         }
     </script>
+}
+else
+{
+    @Html.ActionLink("By Channel", "Index", "StatsGauges")
 }
