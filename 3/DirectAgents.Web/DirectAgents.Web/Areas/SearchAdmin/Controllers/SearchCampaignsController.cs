@@ -20,9 +20,9 @@ namespace DirectAgents.Web.Areas.SearchAdmin.Controllers
             return View(searchCamps.OrderBy(x => x.SearchAccountId).ThenBy(x => x.SearchCampaignName));
         }
 
-        public ActionResult IndexGauge(int? spId, int? saId)
+        public ActionResult IndexGauge(int? spId, int? saId, string channel)
         {
-            var searchCamps = cpSearchRepo.SearchCampaigns(spId: spId, searchAccountId: saId, includeGauges: true);
+            var searchCamps = cpSearchRepo.SearchCampaigns(spId: spId, searchAccountId: saId, channel: channel, includeGauges: true);
             return View(searchCamps.OrderBy(x => x.SearchAccountId).ThenBy(x => x.SearchCampaignName));
         }
 

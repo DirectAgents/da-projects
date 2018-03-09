@@ -1,13 +1,15 @@
 ﻿@model IEnumerable<DirectAgents.Domain.Entities.CPSearch.SearchAccount>
 @{
     string spId = Request.Params["spid"];
-    bool showSync = !String.IsNullOrWhiteSpace(spId);
+    bool oneProfile = !String.IsNullOrWhiteSpace(spId);
+    string channel = Request.Params["channel"];
+    bool oneChannel = !String.IsNullOrWhiteSpace(channel);
     var searchAccountSelectList = new SelectList(Model, "SearchAccountId", "DisplayName1");
     DateTime default_to = DateTime.Today.AddDays(-1);
     DateTime default_from = (default_to.Day == 1 ? default_to.AddMonths(-1) : new DateTime(default_to.Year, default_to.Month, 1));
 }
 
-<h2>StatsGauge by SearchAccount</h2>
+<h2>StatsGauge - SearchAccounts</h2>
 
 <table>
     <tr>
@@ -34,14 +36,23 @@
         </tr>
     }
 </table>
-@if (!String.IsNullOrWhiteSpace(spId))
+@if (oneProfile)
 {
-    <text>&nbsp;</text>@Html.ActionLink("View All by Campaign", "IndexGauge", "SearchCampaigns", new { spId = @spId }, null)
+    <text>&nbsp;</text>@Html.ActionLink("View All by Campaign", "IndexGauge", "SearchCampaigns", new { spId = @spId, channel = channel }, null)
+    <br />
 }
-<br />
 
-@if (showSync)
+@if (oneChannel)
 {
+    <br />
+    <text>Channel:</text>
+    @Html.ActionLink("Google", "IndexGauge", new { channel = "google", spId = @spId })<text> | </text>
+    @Html.ActionLink("Apple", "IndexGauge", new { channel = "apple", spId = @spId })<text> | </text>
+    @Html.ActionLink("Bing", "IndexGauge", new { channel = "bing", spId = @spId })<text> | </text>
+    @Html.ActionLink("Criteo", "IndexGauge", new { channel = "criteo", spId = @spId })
+}
+else if (oneProfile)
+{ // (and channel not specified)
     <h4>Re-Sync Stats</h4>
     using (Html.BeginForm("Sync", "SearchAccounts", FormMethod.Post, new { id = "formSync" }))
     {
@@ -86,7 +97,8 @@
         }
     </script>
 }
-else
+else // no channel or profile specified
 {
+    <br />
     @Html.ActionLink("By Channel", "Index", "StatsGauges")
 }

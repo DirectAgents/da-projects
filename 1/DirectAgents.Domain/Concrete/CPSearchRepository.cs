@@ -57,11 +57,13 @@ namespace DirectAgents.Domain.Concrete
             return searchAccounts;
         }
 
-        public IQueryable<SearchAccount> SearchAccounts(int? spId = null, bool includeGauges = false)
+        public IQueryable<SearchAccount> SearchAccounts(int? spId = null, string channel = null, bool includeGauges = false)
         {
             var searchAccounts = context.SearchAccounts.AsQueryable();
             if (spId.HasValue)
                 searchAccounts = searchAccounts.Where(x => x.SearchProfileId == spId.Value);
+            if (!String.IsNullOrWhiteSpace(channel))
+                searchAccounts = searchAccounts.Where(x => x.Channel == channel);
             if (includeGauges)
                 searchAccounts = SetGauges(searchAccounts).AsQueryable();
             return searchAccounts;
@@ -121,13 +123,15 @@ namespace DirectAgents.Domain.Concrete
 
         // ---
 
-        public IQueryable<SearchCampaign> SearchCampaigns(int? spId = null, int? searchAccountId = null, bool includeGauges = false)
+        public IQueryable<SearchCampaign> SearchCampaigns(int? spId = null, int? searchAccountId = null, string channel = null, bool includeGauges = false)
         {
             var sc = context.SearchCampaigns.AsQueryable();
             if (spId.HasValue)
                 sc = sc.Where(x => x.SearchAccount.SearchProfileId == spId.Value);
             if (searchAccountId.HasValue)
                 sc = sc.Where(x => x.SearchAccountId == searchAccountId.Value);
+            if (!String.IsNullOrWhiteSpace(channel))
+                sc = sc.Where(x => x.SearchAccount.Channel == channel);
             if (includeGauges)
                 sc = SetGauges(sc).AsQueryable();
             return sc;
