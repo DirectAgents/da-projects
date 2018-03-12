@@ -20,6 +20,7 @@ FROM         dbo.Campaign INNER JOIN
                       dbo.Currency ON dbo.Item.revenue_currency_id = dbo.Currency.id INNER JOIN
                       dbo.CampaignStatus AS CampaignStatus_1 ON dbo.Item.campaign_status_id = CampaignStatus_1.id LEFT OUTER JOIN
                       dbo.LatestCampaignNote ON dbo.Campaign.pid = dbo.LatestCampaignNote.campaign_id INNER JOIN
-                      dbo.Affiliate ON dbo.Item.affid = dbo.Affiliate.affid
+                      dbo.Affiliate ON dbo.Item.affid = dbo.Affiliate.affid INNER JOIN
+                      dbo.AccountManagerAccessList ON dbo.AccountManager.name = dbo.AccountManagerAccessList.name
 GROUP BY dbo.Campaign.id, dbo.Campaign.pid, dbo.Campaign.campaign_name, dbo.Campaign.modified, dbo.AccountManager.name, dbo.Advertiser.name, dbo.Currency.name,
                        dbo.CampaignStatus.name, dbo.LatestCampaignNote.note, CampaignStatus_1.name

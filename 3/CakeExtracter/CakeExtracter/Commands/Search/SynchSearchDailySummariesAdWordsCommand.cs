@@ -36,6 +36,7 @@ namespace CakeExtracter.Commands
         public DateTime? EndDate { get; set; }
         public int? DaysAgoToStart { get; set; }
         public bool IncludeClickType { get; set; }
+        public int? MinSearchAccountId { get; set; }
 
         //TODO: make GetAllStats be bool. (change scheduled task on gogrid to use g=true)
         public string GetAllStats { get; set; } // "true" overrides the other get-stats properties
@@ -56,6 +57,7 @@ namespace CakeExtracter.Commands
             EndDate = null;
             DaysAgoToStart = null;
             IncludeClickType = false;
+            MinSearchAccountId = null;
 
             GetAllStats = null;
             GetClickAssistConvStats = false;
@@ -71,6 +73,7 @@ namespace CakeExtracter.Commands
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
             HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 41)", c => DaysAgoToStart = c);
             HasOption<bool>("b|includeClickType=", "Include ClickType (default is false)", c => IncludeClickType = c);
+            HasOption<int>("m|minSearchAccountId=", "Include this and all higher searchAccountIds (optional)", c => MinSearchAccountId = c);
 
             HasOption<string>("g|getAllStats=", "Get all types of stats ('true', 'yes' or 'both', default is false)", c => GetAllStats = c);
             HasOption<bool>("k|getClickAssistConvStats=", "Get click-assisted-conversion stats (default is false)", c => GetClickAssistConvStats = c);
@@ -129,9 +132,9 @@ namespace CakeExtracter.Commands
 
         public IEnumerable<SearchAccount> GetSearchAccounts()
         {
-            return GetSearchAccounts("Google", this.SearchProfileId, this.ClientId);
+            return GetSearchAccounts("Google", this.SearchProfileId, this.ClientId, minAccountId: this.MinSearchAccountId);
         }
-        public static IEnumerable<SearchAccount> GetSearchAccounts(string channelName, int? searchProfileId, string accountCode)
+        public static IEnumerable<SearchAccount> GetSearchAccounts(string channelName, int? searchProfileId, string accountCode, int? minAccountId = null)
         {
             var searchAccounts = new List<SearchAccount>();
 
@@ -146,7 +149,11 @@ namespace CakeExtracter.Commands
                     else
                         searchAccountsQ = searchAccountsQ.Where(sa => sa.SearchProfileId.HasValue); // ...that are children of a SearchProfile
 
-                    searchAccounts = searchAccountsQ.ToList();
+                    if (minAccountId.HasValue)
+                        searchAccountsQ = searchAccountsQ.Where(sa => sa.SearchAccountId >= minAccountId.Value);
+
+                    searchAccounts = searchAccountsQ.OrderBy(sa => sa.SearchAccountId).ToList();
+                    //searchAccounts = searchAccountsQ.OrderBy(sa => sa.SearchProfileId).ThenBy(sa => sa.SearchAccountId).ToList();
                 }
                 else // AccountCode specified
                 {

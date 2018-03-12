@@ -20,7 +20,7 @@ namespace DBM
             if (_LogInfo == null)
                 Console.WriteLine(message);
             else
-                _LogInfo("[AdRollUtility] " + message);
+                _LogInfo("[DBMUtility] " + message);
         }
 
         private void LogError(string message)
@@ -28,7 +28,7 @@ namespace DBM
             if (_LogError == null)
                 Console.WriteLine(message);
             else
-                _LogError("[AdRollUtility] " + message);
+                _LogError("[DBMUtility] " + message);
         }
 
         // --- Constructors ---

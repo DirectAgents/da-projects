@@ -131,7 +131,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 "Conversions",
                 "ConversionValue",
                 "AllConversions", // allConv
-                "AllConversionValue" // allConvValue
+                "AllConversionValue", // allConvValue
+                //"ViewThroughConversions" // viewThroughConv
             });
             //if (includeClickType)
             //{
