@@ -45,14 +45,23 @@ namespace CakeExtracter.Commands.Test
         // Try DBM API
         public void Test0()
         {
-            string serviceEmail = ConfigurationManager.AppSettings["GoogleAPI_ServiceEmail"];
-            string certPath = ConfigurationManager.AppSettings["GoogleAPI_Certificate"];
-            var certificate = new X509Certificate2(certPath, "notasecret", X509KeyStorageFlags.Exportable);
-            var credential = new ServiceAccountCredential(
-                new ServiceAccountCredential.Initializer(serviceEmail)
-                {
-                    Scopes = new[] { "https://www.googleapis.com/auth/doubleclickbidmanager" }
-                }.FromCertificate(certificate));
+            GoogleCredential credential;
+            using (Stream stream = new FileStream(@"DA Client Portal-25eb1ddf22b5.json", FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                credential = GoogleCredential.FromStream(stream);
+            }
+            credential = credential.CreateScoped(new[] {
+                "https://www.googleapis.com/auth/doubleclickbidmanager"
+            });
+
+            //string serviceEmail = ConfigurationManager.AppSettings["GoogleAPI_ServiceEmail"];
+            //string certPath = ConfigurationManager.AppSettings["GoogleAPI_Certificate"];
+            //var certificate = new X509Certificate2(certPath, "notasecret", X509KeyStorageFlags.Exportable);
+            //var credential = new ServiceAccountCredential(
+            //    new ServiceAccountCredential.Initializer(serviceEmail)
+            //    {
+            //        Scopes = new[] { "https://www.googleapis.com/auth/doubleclickbidmanager" }
+            //    }.FromCertificate(certificate));
             var service = new DoubleClickBidManagerService(new BaseClientService.Initializer()
             {
                 HttpClientInitializer = credential,
