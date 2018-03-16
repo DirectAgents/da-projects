@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Amazon.Entities
 {
-    public class AmazonProductAds
+    public class AmazonProductAd
     {
         public string AdId { get; set; }
         public string AdGroupId { get; set; }

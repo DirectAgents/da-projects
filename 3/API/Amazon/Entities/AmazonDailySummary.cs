@@ -8,57 +8,57 @@ namespace Amazon.Entities
 {
     public class StatSummary
     {
+        public decimal cost { get; set; }
         public int impressions { get; set; }
-        // paid_impressions
-        public int click_through_conversions { get; set; }
-        public int view_through_conversions { get; set; }
+        public int clicks { get; set; }
         public int attributedConversions14d { get; set; }
         public decimal attributedSales14d { get; set; }
-        public int clicks { get; set; }
-        public decimal cost { get; set; }
-        public int prospects { get; set; }
 
-        public virtual bool AllZeros(bool includeProspects = false)
+        public virtual bool AllZeros()
         {
-            bool allZeros = (impressions == 0 && clicks == 0 && click_through_conversions == 0 && view_through_conversions == 0 && cost == 0);
-            if (includeProspects)
-                return (allZeros && prospects == 0);
+            return (cost == 0 && impressions == 0 && clicks == 0 && attributedConversions14d == 0 && attributedSales14d == 0);
+        }
+
+        public void SetAllZeros()
+        {
+            cost = attributedSales14d = 0;
+            impressions = clicks = attributedConversions14d = 0;
+
+        }
+
+        public void SetStatTotals(IEnumerable<StatSummary> stats)
+        {
+            if (stats != null && stats.Any())
+            {
+                cost = stats.Sum(x => x.cost);
+                impressions = stats.Sum(x => x.impressions);
+                clicks = stats.Sum(x => x.clicks);
+                attributedConversions14d = stats.Sum(x => x.attributedConversions14d);
+                attributedSales14d = stats.Sum(x => x.attributedSales14d);
+            }
             else
-                return allZeros;
+            {
+                SetAllZeros();
+            }
         }
     }
 
-    // used for Advertisable daily report
     public class AmazonDailySummary : StatSummary
     {
         public Int64 campaignId { get; set; }
+        public string campaignName { get; set; }
         public DateTime date { get; set; } 
     }
+
     public class AmazonAdDailySummary : StatSummary
     {
         public string adId { get; set; }
         public DateTime date { get; set; }
     }
 
-    //// used for Campaign daily report
-    //public class AmazonCampaignSummary : AmazonCampaign
-    //{
-    //    public string eid { get; set; }
-    //    public string campaign { get; set; } // campaign name
-    //    public string advertiser { get; set; } // advertisable name
-    //    public string type { get; set; } // e.g. "Retargeting"
-    //    public string status { get; set; } // e.g. "approved"
-    //    public DateTime created_date { get; set; }
-    //    public DateTime start_date { get; set; }
-    //    public DateTime? end_date { get; set; }
-    //    public double budget_USD { get; set; }
-    //    public double adjusted_attributed_click_through_rev { get; set; }
-    //    public double adjusted_attributed_view_through_rev { get; set; }
-
-    //    public bool AllZeros(bool includeProspects = false)
-    //    {
-    //        return AllZeros(includeProspects: includeProspects) && adjusted_attributed_click_through_rev == 0 && adjusted_attributed_view_through_rev == 0;
-    //    }
-    //}
-
+    public class AmazonKeywordDailySummary : StatSummary
+    {
+        public string KeywordId { get; set; }
+        public DateTime date { get; set; }
+    }
 }

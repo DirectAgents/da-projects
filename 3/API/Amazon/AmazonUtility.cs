@@ -29,6 +29,8 @@ namespace Amazon
 
         private const string TOKEN_DELIMITER = "|AMZNAMZN|";
         public const int NumAlts = 10; // including the default (0)
+        public const string CAMPAIGNTYPE_SPONSOREDPRODUCTS = "sponsoredProducts";
+        public const string CAMPAIGNTYPE_HSA = "headlineSearch";
 
         //private long CustomerID { get; set; }
         //private string DeveloperToken { get; set; }
@@ -241,7 +243,26 @@ namespace Amazon
             return response;
         }
 
+        public List<Profile> GetProfiles()
+        {
+            try
+            {
+                List<Profile> profiles = new List<Profile>();
+                var client = new RestClient(_amazonApiEndpointUrl);
+                client.AddHandler("application/json", new JsonDeserializer());
+                var request = new RestRequest("v1/profiles", Method.GET);
+                var restResponse = ProcessRequest<List<Profile>>(request, postNotGet: false);
+                return restResponse.Data;
+            }
+            catch (Exception x)
+            {
+                LogError(x.Message);
+            }
+            return null;
+        }
+
         //Get campaigns by profile id
+        // for sponsored product campaigns only - as of v.20180312
         public List<AmazonCampaign> GetCampaigns(string profileId)
         {
             try
@@ -280,7 +301,7 @@ namespace Amazon
             return null;
         }
 
-        public List<AmazonProductAds> GetProductAds(string profileId)
+        public List<AmazonProductAd> GetProductAds(string profileId)
         {
             try
             {
@@ -289,7 +310,7 @@ namespace Amazon
                 var request = new RestRequest("v1/productAds", Method.GET);
                 request.AddHeader("Content-Type", "application/json");
                 request.AddHeader("Amazon-Advertising-API-Scope", profileId);
-                var restResponse = ProcessRequest<List<AmazonProductAds>>(request, postNotGet: false);
+                var restResponse = ProcessRequest<List<AmazonProductAd>>(request, postNotGet: false);
                 return restResponse.Data;
             }
             catch (Exception x)
@@ -299,31 +320,20 @@ namespace Amazon
             return null;
         }
 
-        public ReportResponseDownloadInfo RequestReport(string reportId, string profileId)
+        public AmazonApiReportParams CreateAmazonApiReportParams(string campaignType, DateTime date, bool includeCampaignName = false)
         {
-            try
+            var reportParams = new AmazonApiReportParams
             {
-                var request = new RestRequest("v1/reports/"+reportId);
-                request.AddHeader("Amazon-Advertising-API-Scope", profileId);
-                
-                var restResponse = ProcessRequest<ReportResponseDownloadInfo>(request, postNotGet: false);
-                if (restResponse.Data.status == "SUCCESS")
-                    return restResponse.Data;
-                else if (restResponse.Content.Contains("IN_PROGRESS"))
-                {
-                    LogInfo("Waiting 5 seconds for report to finish generating.");
-                    Thread.Sleep(5000);
-                }
-            }
-            catch (Exception x)
-            {
-                LogError(x.Message);
-            }
-            return null;
+                campaignType = campaignType,
+                //segment = segment,
+                reportDate = date.ToString("yyyyMMdd"),
+                metrics = "cost,impressions,clicks,attributedConversions14d,attributedSales14d" + (includeCampaignName ? ",campaignName" : "")
+            };
+            return reportParams;
         }
-        public ReportRequestResponse SubmitReport(AmazonApiReportParams reportParams, string reportType, string profileId)
-        {            
-            var request = new RestRequest("v1/"+ reportType + "/report");
+        public ReportRequestResponse SubmitReport(AmazonApiReportParams reportParams, string recordType, string profileId)
+        {
+            var request = new RestRequest("v1/" + recordType + "/report");
             request.AddHeader("Amazon-Advertising-API-Scope", profileId);
             request.AddJsonBody(reportParams);
 
@@ -335,31 +345,40 @@ namespace Amazon
                 return restResponse.Data;
             }
             return null;
-
         }
 
-        public AmazonApiReportParams CreateAmazonApiReportParams(string reportDate)
+        // returns json string (or null)
+        public string WaitForReportAndDownload(string reportId, string profileId)
         {
-            var reportParams = new AmazonApiReportParams
+            int triesLeft = 60; // 5 minutes
+            while (triesLeft > 0)
             {
-                campaignType = "sponsoredProducts",
-                //segment = segment,
-                reportDate = reportDate,
-                metrics = "impressions,clicks,cost,attributedConversions14d,attributedSales14d"
-            };
-            return reportParams;
+                var downloadInfo = RequestReport(reportId, profileId);
+                if (downloadInfo != null && !String.IsNullOrWhiteSpace(downloadInfo.location))
+                {
+                    var json = GetJsonStringFromDownloadFile(downloadInfo.location, profileId);
+                    return json;
+                }
+                triesLeft--;
+            }
+            return null;
         }
 
-        public List<Profile> GetProfiles()
+        public ReportResponseDownloadInfo RequestReport(string reportId, string profileId)
         {
             try
             {
-                List<Profile> profiles = new List<Profile>();
-                var client = new RestClient(_amazonApiEndpointUrl);
-                client.AddHandler("application/json", new JsonDeserializer());
-                var request = new RestRequest("v1/profiles", Method.GET);
-                var restResponse = ProcessRequest<List<Profile>>(request, postNotGet: false);
-                return restResponse.Data;
+                var request = new RestRequest("v1/reports/" + reportId);
+                request.AddHeader("Amazon-Advertising-API-Scope", profileId);
+
+                var restResponse = ProcessRequest<ReportResponseDownloadInfo>(request, postNotGet: false);
+                if (restResponse.Data.status == "SUCCESS")
+                    return restResponse.Data;
+                else if (restResponse.Content.Contains("IN_PROGRESS"))
+                {
+                    LogInfo("Waiting 5 seconds for report to finish generating.");
+                    Thread.Sleep(5000);
+                }
             }
             catch (Exception x)
             {
@@ -414,7 +433,7 @@ namespace Amazon
                         using (GZipStream decompressionStream = new GZipStream(originalFileStream, CompressionMode.Decompress))
                         {
                             decompressionStream.CopyTo(decompressedFileStream);
-                            Console.WriteLine("Decompressed: {0}", fileToDecompress.Name);
+                            //Console.WriteLine("Decompressed: {0}", fileToDecompress.Name);
                         }
                     }
                 }
