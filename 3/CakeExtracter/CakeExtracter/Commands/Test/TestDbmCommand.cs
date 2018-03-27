@@ -5,8 +5,13 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
+using System.Threading.Tasks;
 using CakeExtracter.Common;
+using DBM;
 using Google.Apis.Auth.OAuth2;
+using Google.Apis.Auth.OAuth2.Flows;
+using Google.Apis.Auth.OAuth2.Responses;
 using Google.Apis.DoubleClickBidManager.v1;
 using Google.Apis.Services;
 using Google.Apis.Storage.v1;
@@ -35,15 +40,62 @@ namespace CakeExtracter.Commands.Test
 
         public override int Execute(string[] remainingArguments)
         {
-            if (Mode == 1)
+            if (Mode == 2)
+                TestUtil();
+            else if (Mode == 1)
                 Test1();
             else
                 Test0();
             return 0;
         }
 
-        // Try DBM API
-        public void Test0()
+        public void TestUtil()
+        {
+            var dbmUtility = new DBMUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            dbmUtility.TokenSets = new string[] { "|DBMDBM|1/VC8MQArCKHna2NmLFYg4GVcftxtgMo1p4lpw-ZeLXRo" };
+            dbmUtility.Test();
+        }
+
+        public ClientSecrets GetClientSecrets()
+        {
+            string clientId = ConfigurationManager.AppSettings["GoogleAPI_ClientId"];
+            string clientSecret = ConfigurationManager.AppSettings["GoogleAPI_ClientSecret"];
+            return new ClientSecrets
+            {
+                ClientId = clientId,
+                ClientSecret = clientSecret
+            };
+        }
+        public async Task<UserCredential> GetUserCredential()
+        {
+            //using (var stream = new FileStream("google_client_secret_0.json", FileMode.Open, FileAccess.Read))
+            //{
+            //    var secrets = GoogleClientSecrets.Load(stream).Secrets;
+                var secrets = GetClientSecrets();
+                return await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                    secrets,
+                    new[] { "https://www.googleapis.com/auth/doubleclickbidmanager" },
+                    "user", CancellationToken.None);
+            //}
+        }
+        public UserCredential GetUserCredential2()
+        {
+            var secrets = GetClientSecrets();
+            var flow = new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
+            {
+                ClientSecrets = secrets,
+                Scopes = new[] { "https://www.googleapis.com/auth/doubleclickbidmanager" }
+            });
+            var tokens = new TokenResponse
+            {
+                //AccessToken = "",
+                RefreshToken = "1/VC8MQArCKHna2NmLFYg4GVcftxtgMo1p4lpw-ZeLXRo"
+            };
+            var credential = new UserCredential(flow, "user", tokens);
+            return credential;
+        }
+
+        public ServiceAccountCredential GetServiceAccountCredential()
         {
             string serviceEmail = ConfigurationManager.AppSettings["GoogleAPI_ServiceEmail"];
             string certPath = ConfigurationManager.AppSettings["GoogleAPI_Certificate"];
@@ -53,6 +105,17 @@ namespace CakeExtracter.Commands.Test
                 {
                     Scopes = new[] { "https://www.googleapis.com/auth/doubleclickbidmanager" }
                 }.FromCertificate(certificate));
+
+            return credential;
+        }
+
+        // Try DBM API
+        public void Test0()
+        {
+            //var credential = GetServiceAccountCredential();
+            //var credential = GetUserCredential().Result;
+            var credential = GetUserCredential2();
+
             var service = new DoubleClickBidManagerService(new BaseClientService.Initializer()
             {
                 HttpClientInitializer = credential,

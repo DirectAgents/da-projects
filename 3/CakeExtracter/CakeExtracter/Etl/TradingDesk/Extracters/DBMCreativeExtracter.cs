@@ -21,9 +21,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             Logger.Info("Attempting to extract {0} DBM Creatives", CreativeEids.Count());
             foreach (string creativeEid in CreativeEids)
             {
-                var creative = _dbmUtility.GetCreative(creativeEid);
-                if (creative != null)
-                    Add(creative);
+                //var creative = _dbmUtility.GetCreative(creativeEid);
+                //if (creative != null)
+                //    Add(creative);
             }
             End();
         }
