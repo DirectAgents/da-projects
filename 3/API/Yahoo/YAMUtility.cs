@@ -13,7 +13,7 @@ namespace Yahoo
     public class YAMUtility
     {
         private const int NUMTRIES_REQUESTREPORT = 12; // 120 sec (2 min)
-        private const int NUMTRIES_GETREPORTSTATUS = 30; // 300 sec (5 min)
+        private const int NUMTRIES_GETREPORTSTATUS = 36; // 360 sec (6 min)
         private const int WAITTIME_SECONDS = 10;
 
         private const string TOKEN_DELIMITER = "|YAMYAM|";
