@@ -331,6 +331,9 @@
     <Compile Include="Etl\TradingDesk\Extracters\DatabaseExtracters.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmCreativeCloudStorageExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DBMCreativeExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\TDAdSetSummaryExtracter.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Etl\TradingDesk\Extracters\TDadSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\TDConvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\TDSiteSummaryExtracter.cs" />

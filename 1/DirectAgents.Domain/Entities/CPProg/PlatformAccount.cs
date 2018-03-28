@@ -76,6 +76,13 @@ namespace DirectAgents.Domain.Entities.CPProg
     {
         public string StrategyName { get; set; }
         public string StrategyEid { get; set; }
+
+        //TODO: AdSet Name and Eid (update in db)
+        [NotMapped]
+        public string AdSetName { get; set; }
+        [NotMapped]
+        public string AdSetEid { get; set; }
+
         public string TDadName { get; set; }
         public string TDadEid { get; set; }
         public string SiteName { get; set; }
@@ -86,6 +93,8 @@ namespace DirectAgents.Domain.Entities.CPProg
             base.SetDefaults();
             StrategyName = "Campaign";
             StrategyEid = "";
+            AdSetName = "Line Item";
+            AdSetEid = "";
             TDadName = "Creative";
             TDadEid = "";
             SiteName = "Website";

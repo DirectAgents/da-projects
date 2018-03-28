@@ -51,11 +51,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         public static void SetupCSVReaderConfig(CsvReader csv)
         {
-            csv.Configuration.SkipEmptyRecords = true; //ShouldSkipRecord is checked first. if false, will check if it's an empty record
+            csv.Configuration.SkipEmptyRecords = true; //ShouldSkipRecord is checked first. if false, will check if it's empty (all fields)
             csv.Configuration.ShouldSkipRecord = delegate(string[] fields)
-            {
-                if (fields[0] != null && fields[0].ToUpper().StartsWith("TOTAL"))
+            { // assume 0 == the column number for the date field
+                if (String.IsNullOrWhiteSpace(fields[0]))
                     return true;
+                //if (fields[0] != null && fields[0].ToUpper().StartsWith("TOTAL"))
+                //    return true; // should be handled by the ReadingExceptionCallback
                 return false;
             };
             csv.Configuration.WillThrowOnMissingField = false;
@@ -96,17 +98,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             var groupedRows = csvRows.GroupBy(r => r.Date);
             foreach (var dayGroup in groupedRows)
             {
-                var ds = new DailySummary
-                {
-                    Date = dayGroup.Key,
-                    Impressions = dayGroup.Sum(g => g.Impressions),
-                    Clicks = dayGroup.Sum(g => g.Clicks),
-                    PostClickConv = dayGroup.Sum(g => g.PostClickConv),
-                    PostViewConv = dayGroup.Sum(g => g.PostViewConv),
-                    PostClickRev = dayGroup.Sum(g => g.PostClickRev),
-                    PostViewRev = dayGroup.Sum(g => g.PostViewRev),
-                    Cost = dayGroup.Sum(g => g.Cost)
-                };
+                var ds = new DailySummary { Date = dayGroup.Key };
+                ds.SetStats(dayGroup);
                 yield return ds;
             }
         }

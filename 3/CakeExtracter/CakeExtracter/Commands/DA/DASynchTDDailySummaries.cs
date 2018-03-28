@@ -62,12 +62,19 @@ namespace CakeExtracter.Commands
                 if (mapping == null)
                     mapping = ColumnMapping.CreateDefault();
 
+                //TESTING!
+                mapping.AdSetName = "Line Item";
+                mapping.AdSetEid = "Line Item ID";
+                //TODO: allow saving to db
+
                 var statsType = new StatsTypeAgg(this.StatsType);
 
                 if (statsType.Daily)
                     DoETL_Daily(mapping);
                 if (statsType.Strategy)
                     DoETL_Strategy(mapping);
+                if (statsType.AdSet)
+                    DoETL_AdSet(mapping);
                 if (statsType.Creative)
                     DoETL_Creative(mapping);
                 if (statsType.Site)
@@ -95,6 +102,15 @@ namespace CakeExtracter.Commands
         {
             var extracter = new TDStrategySummaryExtracter(mapping, streamReader: StreamReader, csvFilePath: FilePath);
             var loader = new TDStrategySummaryLoader(AccountId);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+        public void DoETL_AdSet(ColumnMapping mapping)
+        {
+            var extracter = new TDAdSetSummaryExtracter(mapping, streamReader: StreamReader, csvFilePath: FilePath);
+            var loader = new TDAdSetSummaryLoader(AccountId);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();

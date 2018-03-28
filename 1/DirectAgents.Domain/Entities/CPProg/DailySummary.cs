@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace DirectAgents.Domain.Entities.CPProg
 {
@@ -17,6 +19,28 @@ namespace DirectAgents.Domain.Entities.CPProg
         public virtual bool AllZeros()
         {
             return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0);
+        }
+        public virtual void SetStats(StatsSummary stat)
+        {
+            Impressions = stat.Impressions;
+            Clicks = stat.Clicks;
+            AllClicks = stat.AllClicks;
+            PostClickConv = stat.PostClickConv;
+            PostViewConv = stat.PostViewConv;
+            Cost = stat.Cost;
+        }
+        public void SetStats(IEnumerable<StatsSummary> stats)
+        {
+            SetBasicStats(stats);
+        } // (to avoid naming conflict in derived class)
+        protected void SetBasicStats(IEnumerable<StatsSummary> stats)
+        {
+            Impressions = stats.Sum(x => x.Impressions);
+            Clicks = stats.Sum(x => x.Clicks);
+            AllClicks = stats.Sum(x => x.AllClicks);
+            PostClickConv = stats.Sum(x => x.PostClickConv);
+            PostViewConv = stats.Sum(x => x.PostViewConv);
+            Cost = stats.Sum(x => x.Cost);
         }
     }
 
@@ -37,6 +61,21 @@ namespace DirectAgents.Domain.Entities.CPProg
         public override bool AllZeros()
         {
             return base.AllZeros() && PostClickRev == 0 && PostViewRev == 0;
+        }
+        public override void SetStats(StatsSummary stat)
+        {
+            base.SetStats(stat);
+            if (stat is DatedStatsSummaryWithRev)
+            {
+                PostClickRev = ((DatedStatsSummaryWithRev)stat).PostClickRev;
+                PostViewRev = ((DatedStatsSummaryWithRev)stat).PostViewRev;
+            }
+        }
+        public void SetStats(IEnumerable<DatedStatsSummaryWithRev> stats)
+        {
+            SetBasicStats(stats);
+            PostClickRev = stats.Sum(x => x.PostClickRev);
+            PostViewRev = stats.Sum(x => x.PostViewRev);
         }
     }
 

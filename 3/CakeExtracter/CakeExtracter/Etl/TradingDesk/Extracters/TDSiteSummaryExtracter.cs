@@ -97,13 +97,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 var sum = new SiteSummary
                 {
                     Date = group.Key.Date,
-                    SiteName = group.Key.SiteName,
-                    Impressions = group.Sum(g => g.Impressions),
-                    Clicks = group.Sum(g => g.Clicks),
-                    PostClickConv = group.Sum(g => g.PostClickConv),
-                    PostViewConv = group.Sum(g => g.PostViewConv),
-                    Cost = group.Sum(g => g.Cost)
+                    SiteName = group.Key.SiteName
                 };
+                sum.SetStats(group);
                 yield return sum;
             }
         }

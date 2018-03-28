@@ -8,7 +8,7 @@ using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
-    public class TDStrategySummaryExtracter : Extracter<StrategySummary>
+    public class TDAdSetSummaryExtracter : Extracter<AdSetSummary>
     {
         // if streamReader is not null, use it. otherwise use csvFilePath.
         private readonly StreamReader streamReader;
@@ -16,7 +16,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         private readonly ColumnMapping columnMapping;
 
-        public TDStrategySummaryExtracter(ColumnMapping columnMapping, StreamReader streamReader = null, string csvFilePath = null)
+        public TDAdSetSummaryExtracter(ColumnMapping columnMapping, StreamReader streamReader = null, string csvFilePath = null)
         {
             this.columnMapping = columnMapping;
             this.streamReader = streamReader;
@@ -25,13 +25,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            Logger.Info("Extracting StrategySummaries from {0}", csvFilePath ?? "StreamReader");
+            Logger.Info("Extracting AdSetSummaries from {0}", csvFilePath ?? "StreamReader");
             var items = EnumerateRows();
             Add(items);
             End();
         }
 
-        public IEnumerable<StrategySummary> EnumerateRows()
+        public IEnumerable<AdSetSummary> EnumerateRows()
         {
             if (this.streamReader != null)
             {
@@ -48,7 +48,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             }
         }
 
-        private IEnumerable<StrategySummary> EnumerateRowsInner(StreamReader reader)
+        private IEnumerable<AdSetSummary> EnumerateRowsInner(StreamReader reader)
         {
             using (CsvReader csv = new CsvReader(reader))
             {
@@ -57,10 +57,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 var classMap = CreateCsvClassMap(this.columnMapping);
                 csv.Configuration.RegisterClassMap(classMap);
 
-                List<StrategySummary> csvRows = null;
+                List<AdSetSummary> csvRows = null;
                 try
                 {
-                    csvRows = csv.GetRecords<StrategySummary>().ToList();
+                    csvRows = csv.GetRecords<AdSetSummary>().ToList();
                 }
                 catch (CsvHelperException ex)
                 {
@@ -74,33 +74,35 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             }
         }
 
-        private IEnumerable<StrategySummary> GroupAndEnumerate(List<StrategySummary> csvRows)
+        private IEnumerable<AdSetSummary> GroupAndEnumerate(List<AdSetSummary> csvRows)
         {
-            // if StrategyEid's aren't all filled in...
-            if (csvRows.Any(r => string.IsNullOrWhiteSpace(r.StrategyEid)))
+            // if AdSetEid's aren't all filled in...
+            if (csvRows.Any(r => string.IsNullOrWhiteSpace(r.AdSetEid)))
             {
-                var groupedRows = csvRows.GroupBy(r => new { r.Date, r.StrategyEid, r.StrategyName });
+                var groupedRows = csvRows.GroupBy(r => new { r.Date, r.AdSetEid, r.AdSetName });
                 foreach (var group in groupedRows)
                 {
-                    var sum = new StrategySummary
+                    var sum = new AdSetSummary
                     {
                         Date = group.Key.Date,
-                        StrategyEid = group.Key.StrategyEid,
-                        StrategyName = group.Key.StrategyName
+                        AdSetEid = group.Key.AdSetEid,
+                        AdSetName = group.Key.AdSetName
                     };
                     sum.SetStats(group);
                     yield return sum;
                 }
             }
-            else // if all StrategyEid's are filled in...
+            else // if all AdSetEid's are filled in...
             {
-                var groupedRows = csvRows.GroupBy(r => new { r.Date, r.StrategyEid });
+                var groupedRows = csvRows.GroupBy(r => new { r.Date, r.AdSetEid });
                 foreach (var group in groupedRows)
                 {
-                    var sum = new StrategySummary
+                    var sum = new AdSetSummary
                     {
                         Date = group.Key.Date,
-                        StrategyEid = group.Key.StrategyEid,
+                        AdSetEid = group.Key.AdSetEid,
+                        AdSetName = AdSetNameIfSame(group),
+                        StrategyEid = StrategyEidIfSame(group),
                         StrategyName = StrategyNameIfSame(group)
                     };
                     sum.SetStats(group);
@@ -108,7 +110,21 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 }
             }
         }
-        public static string StrategyNameIfSame(IEnumerable<StrategySummary> stats)
+        public static string AdSetNameIfSame(IEnumerable<AdSetSummary> stats)
+        {
+            var adsetNames = stats.Select(x => x.AdSetName).Distinct().ToList();
+            if (adsetNames.Count() == 1)
+                return adsetNames.First();
+            return null;
+        }
+        public static string StrategyEidIfSame(IEnumerable<AdSetSummary> stats)
+        {
+            var stratEids = stats.Select(x => x.StrategyEid).Distinct().ToList();
+            if (stratEids.Count() == 1)
+                return stratEids.First();
+            return null;
+        }
+        public static string StrategyNameIfSame(IEnumerable<AdSetSummary> stats)
         {
             var stratNames = stats.Select(x => x.StrategyName).Distinct().ToList();
             if (stratNames.Count() == 1)
@@ -118,11 +134,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         private CsvClassMap CreateCsvClassMap(ColumnMapping colMap)
         {
-            var classMap = new DefaultCsvClassMap<StrategySummary>();
-            Type classType = typeof(StrategySummary);
+            var classMap = new DefaultCsvClassMap<AdSetSummary>();
+            Type classType = typeof(AdSetSummary);
             TDDailySummaryExtracter.AddBasicPropertyMaps(classMap, classType, colMap);
-            TDDailySummaryExtracter.CheckAddPropertyMap(classMap, classType, "StrategyName", colMap.StrategyName);
-            TDDailySummaryExtracter.CheckAddPropertyMap(classMap, classType, "StrategyEid", colMap.StrategyEid);
+            TDDailySummaryExtracter.CheckAddPropertyMap(classMap, classType, "StrategyName", colMap.StrategyName); //optional ?
+            TDDailySummaryExtracter.CheckAddPropertyMap(classMap, classType, "StrategyEid", colMap.StrategyEid); //optional ?
+            TDDailySummaryExtracter.CheckAddPropertyMap(classMap, classType, "AdSetName", colMap.AdSetName);
+            TDDailySummaryExtracter.CheckAddPropertyMap(classMap, classType, "AdSetEid", colMap.AdSetEid);
             return classMap;
         }
     }

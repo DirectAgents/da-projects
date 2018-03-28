@@ -87,13 +87,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         Date = group.Key.Date,
                         TDadEid = group.Key.TDadEid,
                         TDadName = group.Key.TDadName,
-                        Impressions = group.Sum(g => g.Impressions),
-                        Clicks = group.Sum(g => g.Clicks),
-                        PostClickConv = group.Sum(g => g.PostClickConv),
-                        PostViewConv = group.Sum(g => g.PostViewConv),
-                        Cost = group.Sum(g => g.Cost)
                         //,Width = group.First().Width
                     };
+                    sum.SetStats(group);
                     yield return sum;
                 }
             }
@@ -110,13 +106,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         Date = group.Key.Date,
                         TDadEid = group.Key.TDadEid,
                         TDadName = tdAdName,
-                        Impressions = group.Sum(g => g.Impressions),
-                        Clicks = group.Sum(g => g.Clicks),
-                        PostClickConv = group.Sum(g => g.PostClickConv),
-                        PostViewConv = group.Sum(g => g.PostViewConv),
-                        Cost = group.Sum(g => g.Cost)
                         //,Width = group.First().Width
                     };
+                    sum.SetStats(group);
                     yield return sum;
                 }
             }
