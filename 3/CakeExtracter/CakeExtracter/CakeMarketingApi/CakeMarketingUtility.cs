@@ -296,6 +296,20 @@ namespace CakeExtracter.CakeMarketingApi
             return response.Conversions.ToList();
         }
 
+        public static List<EventConversion> EventConversions(DateRange dateRange, int advertiserId, int offerId)
+        {
+            var request = new EventConversionsRequest
+            {
+                start_date = dateRange.FromDate.ToString("MM/dd/yyyy"),
+                end_date = dateRange.ToDate.ToString("MM/dd/yyyy"),
+                brand_advertiser_id = advertiserId,
+                site_offer_id = offerId
+            };
+            var client = new EventConversionsClient();
+            var response = client.EventConversions(request);
+            return response.EventConversions.ToList();
+        }
+
         public static List<Traffic> Traffic(DateRange dateRange)
         {
             var request = new TrafficRequest

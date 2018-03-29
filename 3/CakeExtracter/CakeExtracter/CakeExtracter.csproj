@@ -234,6 +234,8 @@
     <Compile Include="CakeMarketingApi\Clients\CampaignSummariesRequest.cs" />
     <Compile Include="CakeMarketingApi\Clients\CreativesClient.cs" />
     <Compile Include="CakeMarketingApi\Clients\CreativesRequest.cs" />
+    <Compile Include="CakeMarketingApi\Clients\EventConversionsClient.cs" />
+    <Compile Include="CakeMarketingApi\Clients\EventConversionsRequest.cs" />
     <Compile Include="CakeMarketingApi\Clients\OfferSummariesClient.cs" />
     <Compile Include="CakeMarketingApi\Entities\AdvertiserExportResponse.cs" />
     <Compile Include="CakeMarketingApi\Clients\AdvertisersClient.cs" />
@@ -268,12 +270,15 @@
     <Compile Include="CakeMarketingApi\Entities\Currency.cs" />
     <Compile Include="CakeMarketingApi\Entities\DateRangeTraffic.cs" />
     <Compile Include="CakeMarketingApi\Entities\Device.cs" />
+    <Compile Include="CakeMarketingApi\Entities\EventConversion.cs" />
     <Compile Include="CakeMarketingApi\Entities\IdNameEntities.cs" />
+    <Compile Include="CakeMarketingApi\Entities\MoneyAmount.cs" />
     <Compile Include="CakeMarketingApi\Entities\OfferAffiliateDailySummary.cs" />
     <Compile Include="CakeMarketingApi\Entities\OfferContractInfo.cs" />
     <Compile Include="CakeMarketingApi\Entities\OfferStatus.cs" />
     <Compile Include="CakeMarketingApi\Entities\OfferSummary.cs" />
     <Compile Include="CakeMarketingApi\Entities\OfferType.cs" />
+    <Compile Include="CakeMarketingApi\Entities\OperatingSystem.cs" />
     <Compile Include="CakeMarketingApi\Entities\Payout.cs" />
     <Compile Include="CakeMarketingApi\Entities\PriceFormat.cs" />
     <Compile Include="CakeMarketingApi\Entities\Received.cs" />

@@ -17,30 +17,30 @@ namespace CakeExtracter.CakeMarketingApi.Clients
             var result = Execute<ConversionReportResponse>(request, new ConversionsDeserializer());
             return result;
         }
+    }
 
-        public class ConversionsDeserializer : IDeserializer
+    public class ConversionsDeserializer : IDeserializer
+    {
+        private XmlDeserializer restSharpXmlDeserializer;
+
+        public ConversionsDeserializer()
         {
-            private XmlDeserializer restSharpXmlDeserializer;
-
-            public ConversionsDeserializer()
-            {
-                Culture = CultureInfo.InvariantCulture;
-                restSharpXmlDeserializer = new XmlDeserializer();
-            }
-
-            public T Deserialize<T>(IRestResponse response)
-            {
-                response.Content = response.Content.Replace(@"xsi:nil=""true""", "");
-                return restSharpXmlDeserializer.Deserialize<T>(response);
-            }
-
-            public string RootElement { get; set; }
-
-            public string Namespace { get; set; }
-
-            public string DateFormat { get; set; }
-
-            public CultureInfo Culture { get; set; }
+            Culture = CultureInfo.InvariantCulture;
+            restSharpXmlDeserializer = new XmlDeserializer();
         }
+
+        public T Deserialize<T>(IRestResponse response)
+        {
+            response.Content = response.Content.Replace(@"xsi:nil=""true""", "");
+            return restSharpXmlDeserializer.Deserialize<T>(response);
+        }
+
+        public string RootElement { get; set; }
+
+        public string Namespace { get; set; }
+
+        public string DateFormat { get; set; }
+
+        public CultureInfo Culture { get; set; }
     }
 }
