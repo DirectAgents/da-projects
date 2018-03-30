@@ -35,6 +35,11 @@ namespace DirectAgents.Domain.Contexts
                 .HasKey(x => new { x.CampId, x.Date }).ToTable("CampSum", cakeSchema);
             modelBuilder.Entity<CampSum>().HasRequired(x => x.CostCurr).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<CampSum>().HasRequired(x => x.RevCurr).WithMany().WillCascadeOnDelete(false);
+            modelBuilder.Entity<Event>().ToTable("Event", cakeSchema);
+            modelBuilder.Entity<PriceFormat>().ToTable("PriceFormat", cakeSchema);
+            modelBuilder.Entity<EventConversion>().ToTable("EventConversion", cakeSchema);
+            modelBuilder.Entity<EventConversion>().HasRequired(x => x.ReceivedCurr).WithMany().WillCascadeOnDelete(false);
+            modelBuilder.Entity<EventConversion>().HasRequired(x => x.PaidCurr).WithMany().WillCascadeOnDelete(false);
 
             modelBuilder.Entity<OfferContract>().Property(x => x.ReceivedAmount).HasPrecision(19, 4);
             modelBuilder.Entity<Camp>().Property(x => x.PayoutAmount).HasPrecision(19, 4);
@@ -45,6 +50,8 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<CampSum>().Property(x => x.Cost).HasPrecision(19, 4);
             modelBuilder.Entity<CampSum>().Property(x => x.RevenuePerUnit).HasPrecision(19, 4);
             modelBuilder.Entity<CampSum>().Property(x => x.CostPerUnit).HasPrecision(19, 4);
+            modelBuilder.Entity<EventConversion>().Property(x => x.Received).HasPrecision(19, 4);
+            modelBuilder.Entity<EventConversion>().Property(x => x.Paid).HasPrecision(19, 4);
 
             // Screen
             modelBuilder.Entity<Salesperson>().ToTable("Salesperson", screenSchema);
@@ -69,6 +76,9 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<Camp> Camps { get; set; }
         public DbSet<OfferDailySummary> OfferDailySummaries { get; set; }
         public DbSet<CampSum> CampSums { get; set; }
+        public DbSet<Event> Events { get; set; }
+        public DbSet<PriceFormat> PriceFormats { get; set; }
+        public DbSet<EventConversion> EventConversions { get; set; }
 
         public DbSet<Salesperson> Salespeople { get; set; }
         public DbSet<SalespersonStat> SalespersonStats { get; set; }
