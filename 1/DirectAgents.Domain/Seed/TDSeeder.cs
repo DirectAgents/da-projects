@@ -29,7 +29,7 @@ namespace DirectAgents.Domain.Seed
             AddPlatformIfNotExist(Platform.Code_Amazon, "Amazon");
             AddPlatformIfNotExist("apf", "AppsFlyer");
             AddPlatformIfNotExist("bc", "Bluecore");
-            AddPlatformIfNotExist("crit", "Criteo");
+            AddPlatformIfNotExist(Platform.Code_Criteo, "Criteo");
             AddPlatformIfNotExist("kin", "Kinetic");
             AddPlatformIfNotExist("li", "LiveIntent");
             AddPlatformIfNotExist("mg", "Magnetic");

@@ -11,16 +11,19 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         // Note accountId is only used in AddUpdateDependentStrategies() (i.e. not by AdrollCampaignSummaryLoader)
         private readonly int accountId;
         private Dictionary<string, int> strategyIdLookupByEidAndName = new Dictionary<string, int>();
+        private bool preLoadStrategies;
 
-        public TDStrategySummaryLoader(int accountId = -1)
+        public TDStrategySummaryLoader(int accountId = -1, bool preLoadStrategies = false)
         {
             this.accountId = accountId;
+            this.preLoadStrategies = preLoadStrategies;
         }
 
         protected override int Load(List<StrategySummary> items)
         {
             Logger.Info("Loading {0} DA-TD StrategySummaries..", items.Count);
-            AddUpdateDependentStrategies(items);
+            if (!preLoadStrategies)
+                AddUpdateDependentStrategies(items);
             AssignStrategyIdToItems(items);
             var count = UpsertDailySummaries(items);
             return count;
@@ -119,6 +122,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             var strategyNameEids = items.GroupBy(i => new { i.StrategyName, i.StrategyEid })
                 .Select(g => new NameEid { Name = g.Key.StrategyName, Eid = g.Key.StrategyEid });
+            AddUpdateDependentStrategies(strategyNameEids, this.accountId, this.strategyIdLookupByEidAndName);
+        }
+        public void AddUpdateDependentStrategies(IEnumerable<NameEid> strategyNameEids)
+        {
             AddUpdateDependentStrategies(strategyNameEids, this.accountId, this.strategyIdLookupByEidAndName);
         }
         public static void AddUpdateDependentStrategies(IEnumerable<NameEid> strategyNameEids, int accountId, Dictionary<string, int> strategyIdLookupByEidAndName)
