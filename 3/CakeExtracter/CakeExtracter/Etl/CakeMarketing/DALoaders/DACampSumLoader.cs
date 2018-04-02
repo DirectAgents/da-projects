@@ -173,8 +173,13 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             var missingOfferIds = neededOfferIds.Where(id => !existingOfferIds.Contains(id));
 
             //NOTE: this _should_ be okay since the CampSum extracter just makes one call to Cake, so that's done by now
-
-            var extracter = new OffersExtracter(offerIds: missingOfferIds);
+            QuickETL_Offers(missingOfferIds);
+        }
+        public static void QuickETL_Offers(IEnumerable<int> offerIds)
+        {
+            if (!offerIds.Any())
+                return;
+            var extracter = new OffersExtracter(offerIds: offerIds);
             var loader = new DAOffersLoader(loadInactive: true);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -194,8 +199,13 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
 
             // ?Could just use the SourceAffiliateId and SourceAffiliateName?
             // ?future: may be interested in other attributes?
-
-            var extracter = new AffiliatesExtracter(affiliateIds: missingAffIds);
+            QuickETL_Affiliates(missingAffIds);
+        }
+        public static void QuickETL_Affiliates(IEnumerable<int> affIds)
+        {
+            if (!affIds.Any())
+                return;
+            var extracter = new AffiliatesExtracter(affiliateIds: affIds);
             var loader = new DAAffiliatesLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -214,7 +224,13 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             var neededCampIds = items.Where(KeepFunc).Select(cs => cs.Campaign.CampaignId).Distinct();
             var missingCampIds = neededCampIds.Where(id => !existingCampIds.Contains(id));
 
-            var extracter = new CampaignsExtracter(campaignIds: missingCampIds);
+            QuickETL_Campaigns(missingCampIds);
+        }
+        public static void QuickETL_Campaigns(IEnumerable<int> campIds)
+        {
+            if (!campIds.Any())
+                return;
+            var extracter = new CampaignsExtracter(campaignIds: campIds);
             var loader = new DACampLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);

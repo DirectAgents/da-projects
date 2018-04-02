@@ -30,6 +30,8 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
                 foreach (int campaignId in campaignIds)
                 {
                     var campaigns = CakeMarketingUtility.Campaigns(offerId: offerId, campaignId: campaignId);
+                    if (!campaigns.Any())
+                        Logger.Info("Couldn't retrieve campaign {0} from Cake (offer {1})", campaignId, offerId);
                     Add(campaigns);
                 }
             }

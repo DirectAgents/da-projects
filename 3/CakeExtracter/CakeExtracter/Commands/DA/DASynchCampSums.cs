@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
-using CakeExtracter.Bootstrappers;
-using CakeExtracter.CakeMarketingApi;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.CakeMarketing.DALoaders;
 using CakeExtracter.Etl.CakeMarketing.Extracters;
-using DirectAgents.Domain.Contexts;
 
 namespace CakeExtracter.Commands
 {

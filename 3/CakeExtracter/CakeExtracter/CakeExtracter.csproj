@@ -288,6 +288,9 @@
     <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
     <Compile Include="Commands\DA\DASynchAdformStats.cs" />
     <Compile Include="Commands\DA\DASynchAmazonStats.cs" />
+    <Compile Include="Commands\DA\DASynchCakeEventConversions.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Commands\DA\DASynchCampSums.cs" />
     <Compile Include="Commands\DA\DASynchYAMStats.cs" />
     <Compile Include="Commands\EOMSynchCPCCommand.cs" />
@@ -314,7 +317,13 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Etl\CakeMarketing\DALoaders\DACampSumLoader.cs" />
+    <Compile Include="Etl\CakeMarketing\DALoaders\DAEventConversionLoader.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Etl\CakeMarketing\Extracters\AffiliatesExtracter.cs" />
+    <Compile Include="Etl\CakeMarketing\Extracters\EventConversionExtracter.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Etl\CakeMarketing\Loaders\CPCLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\AppleApiExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\DbExtracters.cs" />

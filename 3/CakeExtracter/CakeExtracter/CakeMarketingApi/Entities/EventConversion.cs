@@ -66,5 +66,24 @@ namespace CakeExtracter.CakeMarketingApi.Entities
         public OperatingSystem OperatingSystem { get; set; }
         public Browser Browser { get; set; }
         //Note
+
+        public void CopyValuesTo(DirectAgents.Domain.Entities.Cake.EventConversion ec)
+        {
+            ec.ConvDate = this.EventConversionDate;
+            ec.ClickDate = this.ClickDate;
+            ec.EventId = this.EventInfo.EventId;
+            ec.AffiliateId = this.SourceAffiliate.SourceAffiliateId;
+            ec.OfferId = this.SiteOffer.SiteOfferId;
+            ec.SubId1 = this.SubId1;
+            ec.SubId2 = this.SubId2;
+            ec.SubId3 = this.SubId3;
+            ec.SubId4 = this.SubId4;
+            ec.SubId5 = this.SubId5;
+            ec.PriceFormatId = this.PriceFormat.PriceFormatId;
+            ec.Paid = this.Paid.Amount;
+            ec.Received = this.Received.Amount;
+            ec.PaidCurrId = this.Paid.CurrencyId;
+            ec.ReceivedCurrId = this.Received.CurrencyId;
+        }
     }
 }
