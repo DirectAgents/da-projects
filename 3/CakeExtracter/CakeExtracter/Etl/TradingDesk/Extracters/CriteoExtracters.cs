@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using CakeExtracter.Common;
+using CakeExtracter.Etl.SearchMarketing.Extracters;
 using Criteo;
 using Criteo.CriteoAPI;
 using DirectAgents.Domain.Entities.CPProg;
@@ -17,36 +18,75 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         protected readonly int timezoneOffset;
 
         protected CriteoUtility _criteoUtility;
+        //TODO: make it so that within the criteoUtility, it doesn't need to open and close the service for every call
 
-        public CriteoApiExtracter(string accountCode, DateRange dateRange, int timezoneOffset)
+        public CriteoApiExtracter(CriteoUtility criteoUtility, string accountCode, DateRange dateRange, int timezoneOffset = 0)
         {
             this.accountCode = accountCode;
             this.dateRange = dateRange;
             this.timezoneOffset = timezoneOffset;
-            _criteoUtility = new CriteoUtility(m => Logger.Info(m), m => Logger.Warn(m));
-            _criteoUtility.SetCredentials(accountCode);
+            if (criteoUtility != null)
+            {
+                this._criteoUtility = criteoUtility;
+            }
+            else
+            {
+                _criteoUtility = new CriteoUtility(m => Logger.Info(m), m => Logger.Warn(m));
+                _criteoUtility.SetCredentials(accountCode);
+            }
         }
 
-        public campaign[] GetCampaigns()
+        protected IEnumerable<StrategySummary> EnumerateXmlReportRows(string reportUrl)
         {
-            return _criteoUtility.GetCampaigns();
+            var rows = CriteoApiExtracter.EnumerateCriteoXmlReportRows(reportUrl);
+            foreach (var row in rows)
+            {
+                var sum = new StrategySummary
+                {
+                    StrategyEid = row["campaignID"],
+                    Date = DateTime.Parse(row["dateTime"]).AddHours(timezoneOffset).Date,
+                    Cost = decimal.Parse(row["cost"]),
+                    Impressions = int.Parse(row["impressions"]),
+                    Clicks = int.Parse(row["click"]),
+                    PostClickConv = int.Parse(row["sales"]),
+                    PostClickRev = decimal.Parse(row["orderValue"]),
+                };
+                yield return sum;
+            }
         }
-    }
 
-    //NOTE: this modeled after ETL/SearchMarketing/Extracters/CriteoApiExtracter2
-    //TODO: allow to pass in CriteoUtility
+        //public campaign[] GetCampaigns()
+        //{
+        //    return _criteoUtility.GetCampaigns();
+        //}
+    }
 
     public class CriteoStrategySummaryExtracter : CriteoApiExtracter<StrategySummary>
     {
-        public CriteoStrategySummaryExtracter(string accountCode, DateRange dateRange, int timezoneOffset)
-            : base(accountCode, dateRange, timezoneOffset)
+        public CriteoStrategySummaryExtracter(CriteoUtility criteoUtility, string accountCode, DateRange dateRange, int timezoneOffset)
+            : base(criteoUtility, accountCode, dateRange, timezoneOffset)
         { }
 
         protected override void Extract()
         {
             Logger.Info("Extracting StrategySummaries from Criteo API for {0} from {1:d} to {2:d}",
                         this.accountCode, this.dateRange.FromDate, this.dateRange.ToDate);
+            if (this.timezoneOffset == 0)
+                Extract_Daily();
+            else
+                Extract_Hourly();
+        }
 
+        private void Extract_Daily()
+        {
+            var reportUrl = _criteoUtility.GetCampaignReport(dateRange.FromDate, dateRange.ToDate);
+            var reportRows = EnumerateXmlReportRows(reportUrl);
+            Add(reportRows);
+            End();
+        }
+
+        private void Extract_Hourly()
+        {
             var adjustedBeginDate = this.dateRange.FromDate;
             var adjustedEndDate = this.dateRange.ToDate;
             if (this.timezoneOffset < 0)
@@ -54,16 +94,15 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             else if (this.timezoneOffset > 0)
                 adjustedBeginDate = adjustedBeginDate.AddDays(-1);
 
-            var reportUrl = _criteoUtility.GetCampaignReport(adjustedBeginDate, adjustedEndDate, true);
+            var reportUrl = _criteoUtility.GetCampaignReport(adjustedBeginDate, adjustedEndDate, hourly: true);
 
-            var dailySummaries = EnumerateRows(reportUrl);
+            var dailySummaries = EnumerateRows_Hourly(reportUrl);
             Add(dailySummaries);
             End();
         }
-
-        private IEnumerable<StrategySummary> EnumerateRows(string reportUrl)
+        private IEnumerable<StrategySummary> EnumerateRows_Hourly(string reportUrl)
         {
-            IEnumerable<StrategySummary> hourlySummaries = EnumerateHourlyXmlReportRows(reportUrl).ToList();
+            IEnumerable<StrategySummary> hourlySummaries = EnumerateXmlReportRows(reportUrl).ToList();
             hourlySummaries = hourlySummaries.Where(s => s.Date >= this.dateRange.FromDate && s.Date <= this.dateRange.ToDate);
             var dailyGroups = hourlySummaries.GroupBy(s => new { s.StrategyEid, s.Date });
             foreach (var group in dailyGroups)
@@ -75,56 +114,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 };
                 sum.SetStats(group);
                 yield return sum;
-            }
-        }
-
-        private IEnumerable<StrategySummary> EnumerateHourlyXmlReportRows(string reportUrl)
-        {
-            using (var reader = XmlReader.Create(reportUrl))
-            {
-                var columnNames = new List<string>(new[] { "campaignID", "dateTime" });
-                while (reader.Read())
-                {
-                    switch (reader.NodeType)
-                    {
-                        case XmlNodeType.Element:
-                            switch (reader.Name)
-                            {
-                                case "column":
-                                    if (reader.MoveToAttribute("name"))
-                                    {
-                                        columnNames.Add(reader.Value);
-                                    }
-                                    break;
-                                case "row":
-                                    {
-                                        var row = new Dictionary<string, string>();
-                                        foreach (var columnName in columnNames)
-                                        {
-                                            if (reader.MoveToAttribute(columnName))
-                                            {
-                                                row.Add(reader.Name, reader.Value);
-                                            }
-                                            else
-                                                throw new Exception("could not move to column " + columnName);
-                                        }
-                                        var sum = new StrategySummary
-                                        {
-                                            StrategyEid = row["campaignID"],
-                                            Date = DateTime.Parse(row["dateTime"]).AddHours(timezoneOffset).Date,
-                                            Cost = decimal.Parse(row["cost"]),
-                                            Impressions = int.Parse(row["impressions"]),
-                                            Clicks = int.Parse(row["click"]),
-                                            PostClickConv = int.Parse(row["sales"]),
-                                            PostClickRev = decimal.Parse(row["orderValue"]),
-                                        };
-                                        yield return sum;
-                                    }
-                                    break;
-                            }
-                            break;
-                    }
-                }
             }
         }
     }

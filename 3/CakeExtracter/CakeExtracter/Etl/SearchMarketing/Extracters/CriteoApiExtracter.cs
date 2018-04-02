@@ -41,7 +41,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             End();
         }
 
-        private static IEnumerable<Dictionary<string, string>> EnumerateCriteoXmlReportRows(string reportUrl)
+        public static IEnumerable<Dictionary<string, string>> EnumerateCriteoXmlReportRows(string reportUrl)
         {
             using (var reader = XmlReader.Create(reportUrl))
             {
