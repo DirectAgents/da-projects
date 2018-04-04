@@ -5,7 +5,7 @@ using System.Net;
 
 namespace LocalConnex
 {
-    [XmlRpcUrl("http://api.voicestar.com/api/xmlrpc/1")]
+    [XmlRpcUrl("https://api.marchex.io/api/xmlrpc/1")]
     public interface IVoicestar : IXmlRpcProxy
     {
         [XmlRpcMethod("call.search")]
