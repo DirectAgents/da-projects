@@ -38,6 +38,27 @@ namespace DirectAgents.Domain.Concrete
             return searchProfiles;
         }
 
+        public bool SaveSearchProfile(SearchProfile searchProfile, bool saveIfExists = true, bool createIfDoesntExist = false)
+        {
+            if (context.SearchProfiles.Any(x => x.SearchProfileId == searchProfile.SearchProfileId))
+            {
+                if (saveIfExists)
+                {
+                    var entry = context.Entry(searchProfile);
+                    entry.State = EntityState.Modified;
+                    context.SaveChanges();
+                    return true;
+                }
+            }
+            else if (createIfDoesntExist)
+            {
+                context.SearchProfiles.Add(searchProfile);
+                context.SaveChanges();
+                return true;
+            }
+            return false; // not saved/created
+        }
+
         public IEnumerable<SearchAccount> StatsGaugesByChannel()
         {
             var searchAccounts = new List<SearchAccount>();

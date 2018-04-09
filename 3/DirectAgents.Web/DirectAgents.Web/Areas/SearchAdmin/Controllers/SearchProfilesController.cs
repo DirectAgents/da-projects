@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
+using DirectAgents.Domain.Entities.CPSearch;
 
 namespace DirectAgents.Web.Areas.SearchAdmin.Controllers
 {
@@ -23,11 +24,30 @@ namespace DirectAgents.Web.Areas.SearchAdmin.Controllers
             if (orderBy != null && orderBy.ToLower() == "id")
                 searchProfiles = searchProfiles.OrderBy(x => x.SearchProfileId);
             else
-                searchProfiles = searchProfiles.OrderBy(x => x.SearchProfileName);
+                searchProfiles = searchProfiles.OrderBy(x => x.SearchProfileName).ThenBy(x => x.SearchProfileId);
 
             ViewBag.OrderBy = orderBy;
             ViewBag.ShowAll = (activeSince == null);
             return View(searchProfiles);
+        }
+
+        public ActionResult CreateNew(string name)
+        {
+            int maxId = 0;
+            var searchProfiles = cpSearchRepo.SearchProfiles();
+            if (searchProfiles.Any())
+            {
+                maxId = searchProfiles.Max(x => x.SearchProfileId);
+            }
+            var searchProfile = new SearchProfile
+            {
+                SearchProfileId = maxId + 1,
+                SearchProfileName = String.IsNullOrEmpty(name) ? "zNew" : name,
+                StartDayOfWeek = (int)DayOfWeek.Monday,
+                ShowRevenue = true
+            };
+            cpSearchRepo.SaveSearchProfile(searchProfile, createIfDoesntExist: true, saveIfExists: false);
+            return RedirectToAction("Index", new { activeSinceMonths = -1 });
         }
     }
 }

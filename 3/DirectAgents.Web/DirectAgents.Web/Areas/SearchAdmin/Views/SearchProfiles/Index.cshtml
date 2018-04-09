@@ -3,6 +3,7 @@
     string orderBy = ViewBag.OrderBy;
     bool showAll = ViewBag.ShowAll;
     string activeSinceMonths = Request["activeSinceMonths"]; //used for links
+    bool super = Request.QueryString["super"] == "1";
 }
 
 <h2>SearchProfiles</h2>
@@ -45,4 +46,9 @@ $ = include revenue &nbsp;&nbsp;&nbsp; + = include calls
 else
 {
     @Html.ActionLink("Show all", "Index", new { orderBy = orderBy, activeSinceMonths = -1 })
+}
+@if (super)
+{
+    <br /><br />
+    @Html.ActionLink("New SearchProfile", "CreateNew")
 }

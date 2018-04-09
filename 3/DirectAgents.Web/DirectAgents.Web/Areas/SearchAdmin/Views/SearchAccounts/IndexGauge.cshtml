@@ -78,13 +78,13 @@ else if (oneProfile)
         <input type="submit" value="Sync" onclick="DoSync()" />
         <br /><br />
         Go to:
+        @Html.ActionLink("SearchAccounts", "Index", new { spId = @spId }) |
         @Html.ActionLink("Generate Spreadsheet", "GenerateSpreadsheet", "Old", new { spId = @spId }, null)
         <br /><br />
         @Html.ActionLink("Back to SearchProfiles", "Index", "SearchProfiles")
     </div>
     <div id="divSyncMessage"></div>
     }
-
     <script>
         $(function () {
             $('#sync_from').kendoDatePicker({ footer: ' ' });
