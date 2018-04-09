@@ -21,16 +21,20 @@ namespace DirectAgents.Domain.Entities.CPProg
         public virtual PlatColMapping PlatColMapping { get; set; }
 
         public const string Code_DATradingDesk = "datd";
-        public const string Code_AdRoll = "adr";
-        public const string Code_DBM = "dbm";
-        public const string Code_FB = "fb";
-        public const string Code_Twitter = "tw";
-        public const string Code_Instagram = "insta";
         public const string Code_Adform = "adf";
-        public const string Code_YAM = "yam";
+        public const string Code_AdRoll = "adr";
         public const string Code_Amazon = "amzn";
         public const string Code_Criteo = "crit";
+        public const string Code_DBM = "dbm";
+        public const string Code_FB = "fb";
+        public const string Code_Instagram = "insta";
+        public const string Code_Twitter = "tw";
+        public const string Code_YAM = "yam";
 
+        public static IEnumerable<string> Codes_Syncable()
+        {
+            return new string[] { Code_Adform, Code_AdRoll, Code_Amazon, Code_Criteo, Code_FB, Code_YAM };
+        }
         public static IEnumerable<string> Codes_Social()
         {
             return new string[] { Code_FB, Code_Twitter, Code_Instagram };

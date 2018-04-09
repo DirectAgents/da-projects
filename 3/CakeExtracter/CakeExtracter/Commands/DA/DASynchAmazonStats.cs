@@ -15,8 +15,7 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchAmazonStats : ConsoleCommand
     {
-        public static int RunStatic(int? accountId = null, DateTime? startDate = null,
-            DateTime? endDate = null, string statsType = null)
+        public static int RunStatic(int? accountId = null, DateTime? startDate = null, DateTime? endDate = null, string statsType = null, bool fromDatabase = false)
         {
             AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new DASynchAmazonStats
@@ -25,7 +24,8 @@ namespace CakeExtracter.Commands
                 //CampaignId = campaignId,
                 StartDate = startDate,
                 EndDate = endDate,
-                StatsType = statsType
+                StatsType = statsType,
+                FromDatabase = fromDatabase
             };
             return cmd.Run();
         }

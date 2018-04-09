@@ -5,6 +5,7 @@
     if (Model.StatsGauges.Any(s => s.Children != null && s.Children.Any())) {
         by = "ExtAccount";
     }
+    bool super = Request.QueryString["super"] == "1";
 }
 <h2>Stats Gauge - By @by</h2>
 
@@ -95,10 +96,72 @@ if (pGauge.Children != null)
     Filter:
     @Html.ActionLink("Adform", "IndexGauge", new { platform = Platform.Code_Adform }) |
     @Html.ActionLink("AdRoll", "IndexGauge", new { platform = Platform.Code_AdRoll }) |
+    @Html.ActionLink("Amazon", "IndexGauge", new { platform = Platform.Code_Amazon }) |
+    @Html.ActionLink("Criteo", "IndexGauge", new { platform = Platform.Code_Criteo }) |
     @Html.ActionLink("DBM", "IndexGauge", new { platform = Platform.Code_DBM }) |
     @Html.ActionLink("Facebook", "IndexGauge", new { platform = Platform.Code_FB }) |
     @Html.ActionLink("YAM", "IndexGauge", new { platform = Platform.Code_YAM }) |
     @Html.ActionLink("(show all)", "IndexGauge")
     </text>
     <br /><br />
+}
+else if (super) //CampaignId specified
+{
+    var extAccts = Model.ExtAccounts(syncableOnly: true);
+    var extAcctSelectList = new SelectList(extAccts, "Id", "DisplayName1");
+    var statsTypeList = new[] { "Daily", "Strategy", "AdSet+Actions (Adform/FB only)" };
+    DateTime default_to = DateTime.Today.AddDays(-1);
+    DateTime default_from = (default_to.Day == 1 ? default_to.AddMonths(-1) : new DateTime(default_to.Year, default_to.Month, 1));
+
+    <h4>Re-Sync/Clear Stats</h4>
+    using (Html.BeginForm("StatsGaugeSyncClear", "ExtAccounts", FormMethod.Post, new { id = "formSync" }))
+    {
+        @Html.ValidationSummary()
+        <table>
+            <tr>
+                <td>@Html.Label("", "ExtAccount:")</td>
+                <td>@Html.DropDownList("id", extAcctSelectList)</td>
+            </tr>
+            <tr>
+                <td>@Html.Label("", "Stats Level:")</td>
+                <td>@Html.DropDownList("level", new SelectList(statsTypeList))</td>
+            </tr>
+            <tr>
+                <td>@Html.Label("", "From:")</td>
+                <td><input type="text" id="sync_from" name="from" value="@default_from.ToShortDateString()" /></td>
+            </tr>
+            <tr>
+                <td>@Html.Label("", "To:")</td>
+                <td><input type="text" id="sync_to" name="to" value="@default_to.ToShortDateString()" /></td>
+            </tr>
+            <tr>
+                <td>@Html.Label("", "Clear Stats:")</td>
+                <td>@Html.CheckBox("clear") <i>(prior to syncing)</i></td>
+            </tr>
+            <tr>
+                <td>@Html.Label("", "Sync Stats:")</td>
+                <td>@Html.CheckBox("sync", true)</td>
+            </tr>
+        </table>
+        <br />
+        <div id="divSyncButton">
+            <input type="submit" value="Go..." onclick="DoSync()" />
+        </div>
+        <div id="divSyncMessage"></div>
+    }
+    <script>
+        $(function () {
+            $('#sync_from').kendoDatePicker({ footer: ' ' });
+            $('#sync_to').kendoDatePicker({ footer: ' ' });
+        });
+
+        function DoSync() {
+            var verb = "Sync";
+            if (document.getElementById('clear').checked && !document.getElementById('sync').checked)
+                verb = "Clear";
+            //$('#formSync').submit();
+            $('#divSyncButton').hide();
+            $('#divSyncMessage').html("<i>" + verb + "ing... Please wait.</i>");
+        }
+    </script>
 }

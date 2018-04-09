@@ -155,24 +155,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                             extAcct.Platform.Code == Platform.Code_AdRoll ||
                             extAcct.Platform.Code == Platform.Code_FB ||
                             extAcct.Platform.Code == Platform.Code_YAM;
-            //if (extAcct.Platform.Code == Platform.Code_DBM)
-            //{
-            //    //TODO: check this without using tdRepo.
-            //    int ioID;
-            //    if (int.TryParse(extAcct.ExternalId, out ioID))
-            //    {
-            //        /*
-            //        using (var db = new ClientPortalProgContext())
-            //        {
-            //            var insertOrder = db.InsertionOrders.Where(i => i.Name == ioID.ToString());
-            //            if (insertOrder.Count() == 1)
-            //                syncable = true;
-            //        }*/
-            //        var io = tdRepo.InsertionOrder(ioID);
-            //        if (io != null)
-            //            syncable = !string.IsNullOrWhiteSpace(io.Bucket);
-            //    }
-            //}
+
             var model = new AccountMaintenanceVM
             {
                 ExtAccount = extAcct,
@@ -182,6 +165,16 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             return PartialView(model);
         }
 
+        // Called from links on ExtAccounts/MaintenanceDetail view - via Platforms/Maintenance json (SyncAccount)
+        public JsonResult Sync(int id, DateTime? start, DateTime? latest, string level)
+        {
+            var extAcct = cpProgRepo.ExtAccount(id);
+            if (extAcct != null)
+                DoSync(extAcct, start, latest, level);
+            return null;
+        }
+
+        // Maintenance/Detail form handler
         public ActionResult CustomSync(int id, DateTime start, string level)
         {
             var extAcct = cpProgRepo.ExtAccount(id);
@@ -192,18 +185,50 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             return RedirectToAction("Maintenance", "Platforms", new { id = extAcct.PlatformId });
         }
 
-        public JsonResult Sync(int id, DateTime? start, DateTime? latest, string level)
+        // Called from the StatsGauge for a campaign
+        public ActionResult StatsGaugeSyncClear(int id, DateTime from, DateTime to, string level, bool clear, bool sync)
         {
             var extAcct = cpProgRepo.ExtAccount(id);
-            DoSync(extAcct, start, latest, level);
-            return null;
+            if (extAcct == null)
+                return HttpNotFound();
+
+            if (clear)
+                DoClear(extAcct, from, to, level);
+            if (sync)
+                DoSync2(extAcct, from, to, level);
+
+            if (extAcct.CampaignId.HasValue)
+                return RedirectToAction("IndexGauge", new { campId = extAcct.CampaignId.Value, super = 1 });
+            else
+                return Content("Done sync");
+        }
+
+        private void DoClear(ExtAccount extAcct, DateTime? start, DateTime? end, string statsType)
+        {
+            if (!start.HasValue || !end.HasValue || statsType == null)
+                return;
+            statsType = NormalizeStatsType(statsType);
+            switch (statsType)
+            {
+                case "daily":
+                    var dsums = cpProgRepo.DailySummaries(start, end, acctId: extAcct.Id);
+                    cpProgRepo.DeleteDailySummaries(dsums);
+                    break;
+                case "strategy":
+                    var ssums = cpProgRepo.StrategySummaries(start, end, acctId: extAcct.Id);
+                    cpProgRepo.DeleteStrategySummaries(ssums);
+                    break;
+                case "adset":
+                    var actions = cpProgRepo.AdSetActions(start, end, acctId: extAcct.Id);
+                    cpProgRepo.DeleteAdSetActionStats(actions);
+                    var asums = cpProgRepo.AdSetSummaries(start, end, acctId: extAcct.Id);
+                    cpProgRepo.DeleteAdSetSummaries(asums);
+                    break;
+            }
         }
 
         private void DoSync(ExtAccount extAcct, DateTime? start, DateTime? latest, string level)
         {
-            if (extAcct == null)
-                return;
-
             if (!start.HasValue)
             {
                 if (!latest.HasValue) // TODO: Go back to campaign's start date?
@@ -214,52 +239,50 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                 else
                     start = latest.Value.AddMonths(-1); // if the latest stats are on the 1st
             }
-            if (level != null)
-            {
-                level = level.ToLower();
-                if (level.StartsWith("adset"))
-                    level = "adset";
-            }
+            DoSync2(extAcct, start, null, level);
+        }
+        private void DoSync2(ExtAccount extAcct, DateTime? start, DateTime? end, string statsType)
+        {
+            statsType = NormalizeStatsType(statsType);
             switch (extAcct.Platform.Code)
             {
                 case Platform.Code_AdRoll:
                     string oneStatPer;
-                    if (level == "daily")
+                    if (statsType == "daily")
                         oneStatPer = "advertisable";
-                    else if (level == "strategy")
+                    else if (statsType == "strategy")
                         oneStatPer = "campaign";
-                    else if (level == "creative")
+                    else if (statsType == "creative")
                         oneStatPer = "ad";
                     else
-                        oneStatPer = level;
-                    DASynchAdrollStats.RunStatic(accountId: extAcct.Id, startDate: start, oneStatPer: oneStatPer);
-                    break;
-                case Platform.Code_DBM: //TODO: remove/replace this
-                    int ioID;
-                    string advertiserId = "";
-                    if (int.TryParse(extAcct.ExternalId, out ioID))
-                    {
-                        /*
-                        using (var db = new ClientPortalProgContext())
-                        {
-                            var buckets = db.InsertionOrders.Where(i => i.Name == ioID.ToString());
-                            if (buckets.Count() >= 1)
-                                advertiserId = buckets.First().Bucket;
-                        }*/
-                        DASynchDBMStats.RunStatic(insertionOrderID: ioID, startDate: start, statsType: level, advertiserId: advertiserId);
-                        //DASynchDBMStatsOld.RunStatic(insertionOrderID: ioID); // gets report with stats up to yesterday (and back ?30? days)
-                    }
+                        oneStatPer = statsType;
+                    DASynchAdrollStats.RunStatic(accountId: extAcct.Id, startDate: start, endDate: end, oneStatPer: oneStatPer);
                     break;
                 case Platform.Code_Adform:
-                    DASynchAdformStats.RunStatic(accountId: extAcct.Id, startDate: start, statsType: level);
+                    DASynchAdformStats.RunStatic(accountId: extAcct.Id, startDate: start, endDate: end, statsType: statsType);
+                    break;
+                case Platform.Code_Amazon:
+                    DASynchAmazonStats.RunStatic(accountId: extAcct.Id, startDate: start, endDate: end, statsType: statsType, fromDatabase: true);
+                    //Note: daily stats are just summed by day from strategy stats
                     break;
                 case Platform.Code_FB:
-                    DASynchFacebookStats.RunStatic(accountId: extAcct.Id, startDate: start, statsType: level);
+                    DASynchFacebookStats.RunStatic(accountId: extAcct.Id, startDate: start, endDate: end, statsType: statsType);
                     break;
                 case Platform.Code_YAM:
-                    DASynchYAMStats.RunStatic(accountId: extAcct.Id, startDate: start, statsType: level);
+                    DASynchYAMStats.RunStatic(accountId: extAcct.Id, startDate: start, endDate: end, statsType: statsType);
                     break;
             }
+        }
+
+        private string NormalizeStatsType(string statsType)
+        {
+            if (statsType != null)
+            {
+                statsType = statsType.ToLower();
+                if (statsType.StartsWith("adset"))
+                    statsType = "adset";
+            }
+            return statsType;
         }
 
         // --- Strats, AdSets, etc

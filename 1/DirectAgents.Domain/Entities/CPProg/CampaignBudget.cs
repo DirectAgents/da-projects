@@ -119,7 +119,8 @@ namespace DirectAgents.Domain.Entities.CPProg
             if (valuesToSet != null)
                 SetFrom(valuesToSet);
         }
-        private BudgetInfo() { } // required for EF
+        public BudgetInfo() { } // required for EF
+        //NOTE: making this private caused lazy-loading issues - e.g. BudgetInfos/Edit
     }
 
     public class PlatformBudgetInfo : BudgetInfoVals
@@ -143,7 +144,8 @@ namespace DirectAgents.Domain.Entities.CPProg
             if (valuesToSet != null)
                 SetFrom(valuesToSet);
         }
-        private PlatformBudgetInfo() { } // required for EF
+        public PlatformBudgetInfo() { } // required for EF
+        //NOTE: making this private caused lazy-loading issues - e.g. Campaigns/Edit
     }
 
     public class BudgetInfoVals : MarginFeeVals

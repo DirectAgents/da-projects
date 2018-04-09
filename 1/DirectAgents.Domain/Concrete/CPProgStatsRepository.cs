@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.CPProg;
+using Z.EntityFramework.Plus;
 
 namespace DirectAgents.Domain.Concrete
 {
@@ -612,6 +613,32 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             if (advId.HasValue)
                 actions = actions.Where(x => x.AdSet.ExtAccount.Campaign.AdvertiserId == advId.Value);
             return actions;
+        }
+
+        public void DeleteDailySummaries(IQueryable<DailySummary> sums)
+        {
+            sums.Delete();
+            context.SaveChanges();
+        }
+        public void DeleteStrategySummaries(IQueryable<StrategySummary> sums)
+        {
+            sums.Delete();
+            context.SaveChanges();
+        }
+        public void DeleteAdSetSummaries(IQueryable<AdSetSummary> sums)
+        {
+            sums.Delete();
+            context.SaveChanges();
+        }
+        public void DeleteTDadSummaries(IQueryable<TDadSummary> sums)
+        {
+            sums.Delete();
+            context.SaveChanges();
+        }
+        public void DeleteAdSetActionStats(IQueryable<AdSetAction> actionStats)
+        {
+            actionStats.Delete();
+            context.SaveChanges();
         }
 
         //NOTE: This will sum stats for ALL campaigns if none specified.

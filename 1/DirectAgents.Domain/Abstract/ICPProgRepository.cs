@@ -99,6 +99,7 @@ namespace DirectAgents.Domain.Abstract
         bool AddDailySummary(DailySummary daySum);
         bool SaveDailySummary(DailySummary daySum);
         void FillExtended(DailySummary daySum);
+
         IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null);
         IQueryable<StrategySummary> StrategySummaries(DateTime? startDate, DateTime? endDate, int? stratId = null, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null);
         IQueryable<TDadSummary> TDadSummaries(DateTime? startDate, DateTime? endDate, int? tdadId = null, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null);
@@ -107,6 +108,12 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<Conv> Convs(DateTime? startDate, DateTime? endDate, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null);
         IQueryable<StrategyAction> StrategyActions(DateTime? startDate, DateTime? endDate, int? stratId = null, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null);
         IQueryable<AdSetAction> AdSetActions(DateTime? startDate, DateTime? endDate, int? adsetId = null, int? stratId = null, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null);
+        void DeleteDailySummaries(IQueryable<DailySummary> sums);
+        void DeleteStrategySummaries(IQueryable<StrategySummary> sums);
+        void DeleteAdSetSummaries(IQueryable<AdSetSummary> sums);
+        void DeleteTDadSummaries(IQueryable<TDadSummary> sums);
+        void DeleteAdSetActionStats(IQueryable<AdSetAction> actionStats);
+
         //TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null);
         TDRawStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null);
         IEnumerable<TDRawStat> GetStrategyStats(DateTime? startDate, DateTime? endDate, int? acctId = null);
