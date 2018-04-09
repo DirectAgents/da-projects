@@ -10,6 +10,7 @@ using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.DBM;
 using System.Linq;
 using DirectAgents.Domain.Entities.CPProg;
+using DBM;
 
 namespace CakeExtracter.Commands
 {
@@ -39,6 +40,8 @@ namespace CakeExtracter.Commands
         public int? InsertionOrderID { get; set; }
         public string AdvertiserID { get; set; }
 
+        private DBMUtility dbmUtility { get; set; }
+
         public override void ResetProperties()
         {
             StartDate = null;
@@ -62,8 +65,33 @@ namespace CakeExtracter.Commands
             HasOption<string>("v|advertiserId=", "Advertiser ID (default: all)", c => AdvertiserID = c);
         }
 
+        private void Test()
+        {
+            SetupDBMUtility();
+            //dbmUtility.TokenSets = new string[] { "|DBMDBM|1/VC8MQArCKHna2NmLFYg4GVcftxtgMo1p4lpw-ZeLXRo" };
+            dbmUtility.Test();
+            SaveTokens();
+        }
+        private void SetupDBMUtility()
+        {
+            this.dbmUtility = new DBMUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            GetTokens();
+        }
+        private void GetTokens()
+        {
+            // Get tokens, if any, from the database
+            string[] tokenSets = Platform.GetPlatformTokens(Platform.Code_DBM);
+            dbmUtility.TokenSets = tokenSets;
+        }
+        private void SaveTokens()
+        {
+            Platform.SavePlatformTokens(Platform.Code_DBM, dbmUtility.TokenSets);
+        }
+
         public override int Execute(string[] remainingArguments)
         {
+            //Test();
+
             SetInsertionOrderFromAccount();
             if (Historical)
                 DoHistorical();
