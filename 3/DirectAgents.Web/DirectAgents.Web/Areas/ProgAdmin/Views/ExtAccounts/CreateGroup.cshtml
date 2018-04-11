@@ -1,0 +1,27 @@
+﻿@model DirectAgents.Domain.Entities.CPProg.Platform
+
+<fieldset>
+    <legend>Create ExtAccount Group</legend>
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary()
+        @Html.Hidden("PlatformId", Model.Id)
+        <div style="float:left">
+            Partner: @Model.Name
+            <br /><br />
+            <table>
+                <tr>
+                    <td>@Html.Label("", "Name")</td>
+                    <td><input type="text" name="Name" style="min-width:300px" /></td>
+                </tr>
+                <tr>
+                    <td>@Html.Label("", "ExternalId")</td>
+                    <td><input type="text" name="ExternalId" style="min-width:300px" /></td>
+                </tr>
+            </table>
+            <br />
+            <input type="submit" value="Create" />
+            &nbsp;@Html.ActionLink("cancel", "Index", new { platform = Model.Code })
+        </div>
+        }
+</fieldset>

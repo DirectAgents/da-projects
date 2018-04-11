@@ -46,5 +46,10 @@
 @if (!string.IsNullOrWhiteSpace(platformCode))
 {
     @Html.ActionLink("New ExtAccount", "CreateNew", new { platform = platformCode })
+    if (platformCode == DirectAgents.Domain.Entities.CPProg.Platform.Code_FB)
+    {
+        <text> | </text>
+        @Html.ActionLink("New FB Group", "CreateGroup", new { platform = platformCode })
+    }
     <br />
 }

@@ -1103,6 +1103,7 @@
     <Content Include="Areas\SearchAdmin\Views\SearchCampaigns\Edit.cshtml" />
     <Content Include="Areas\SearchAdmin\Views\SearchAccounts\Edit.cshtml" />
     <Content Include="Areas\SearchAdmin\Views\StatsGauges\Index.cshtml" />
+    <Content Include="Areas\ProgAdmin\Views\ExtAccounts\CreateGroup.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

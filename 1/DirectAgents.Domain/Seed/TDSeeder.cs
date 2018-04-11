@@ -43,9 +43,10 @@ namespace DirectAgents.Domain.Seed
 
         public void SeedNetworks()
         {
-            AddNetworkIfNotExist(1, "Facebook");
-            AddNetworkIfNotExist(2, "Instagram");
-            AddNetworkIfNotExist(3, "Audience Network");
+            AddNetworkIfNotExist(Network.ID_Facebook, "Facebook");
+            AddNetworkIfNotExist(Network.ID_Instagram, "Instagram");
+            AddNetworkIfNotExist(Network.ID_AudNetwork, "Audience Network");
+            AddNetworkIfNotExist(Network.ID_Messenger, "Messenger");
         }
 
         public void AddPlatformIfNotExist(string code, string name)

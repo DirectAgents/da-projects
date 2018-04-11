@@ -101,6 +101,40 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             return Content("Error creating ExtAccount");
         }
 
+        //Used for creating the group of 4 ExtAccounts for FB
+        [HttpGet]
+        public ActionResult CreateGroup(string platform)
+        {
+            var plat = cpProgRepo.Platform(platform);
+            if (plat == null)
+                return HttpNotFound();
+            return View(plat);
+        }
+        [HttpPost]
+        public ActionResult CreateGroup(ExtAccount extAcct)
+        {
+            CreateAddExtAccount(extAcct, " - Facebook", Network.ID_Facebook);
+            CreateAddExtAccount(extAcct, " - Instagram", Network.ID_Instagram);
+            CreateAddExtAccount(extAcct, " _AudNetwork", Network.ID_AudNetwork);
+            CreateAddExtAccount(extAcct, " _Messenger", Network.ID_Messenger);
+
+            var plat = cpProgRepo.Platform(extAcct.PlatformId);
+            if (plat == null)
+                return HttpNotFound();
+            return RedirectToAction("Index", new { platform = plat.Code });
+        }
+        private void CreateAddExtAccount(ExtAccount baseAcct, string nameSuffix, int networkId)
+        {
+            var extAcct = new ExtAccount
+            {
+                PlatformId = baseAcct.PlatformId,
+                ExternalId = baseAcct.ExternalId,
+                Name = baseAcct.Name + nameSuffix,
+                NetworkId = networkId
+            };
+            cpProgRepo.AddExtAccount(extAcct);
+        }
+
         [HttpGet]
         public ActionResult Edit(int id)
         {

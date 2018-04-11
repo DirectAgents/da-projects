@@ -141,6 +141,11 @@ namespace DirectAgents.Domain.Entities.CPProg
 
     public class Network
     {
+        public const int ID_Facebook = 1;
+        public const int ID_Instagram = 2;
+        public const int ID_AudNetwork = 3;
+        public const int ID_Messenger = 4;
+
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
         public string Name { get; set; }
