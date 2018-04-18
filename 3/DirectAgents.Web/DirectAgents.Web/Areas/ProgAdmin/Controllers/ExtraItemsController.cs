@@ -35,7 +35,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             {
                 Campaign = campaign,
                 Month = month.HasValue ? startDate : null,
-                Items = items.OrderBy(i => i.Date).ThenBy(i => i.Id)
+                Items = items.OrderBy(i => i.Date).ThenBy(i => i.Campaign.Name).ThenBy(i => i.Platform.Name).ThenBy(i => i.Id)
             };
             Session["campId"] = campId.ToString();
             Session["month"] = (month.HasValue ? month.Value.ToShortDateString() : ""); //TODO: set to startDate?

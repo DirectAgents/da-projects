@@ -24,7 +24,7 @@ namespace DirectAgents.Domain.Concrete
             context.SaveChanges();
         }
 
-        public IQueryable<SearchProfile> SearchProfiles(DateTime? activeSince = null)
+        public IQueryable<SearchProfile> SearchProfiles(DateTime? activeSince = null, bool includeGauges = false)
         {
             var searchProfiles = context.SearchProfiles.AsQueryable();
             if (activeSince.HasValue)
@@ -34,6 +34,21 @@ namespace DirectAgents.Domain.Concrete
                 searchProfiles = searchProfiles.Where(sp =>
                     sp.SearchAccounts.SelectMany(sa => sa.SearchCampaigns).SelectMany(sc => sc.SearchDailySummaries)
                     .OrderByDescending(x => x.Date).FirstOrDefault().Date >= activeSince.Value);
+            }
+            if (includeGauges)
+                SetGauges(searchProfiles);
+            return searchProfiles;
+        }
+        private IEnumerable<SearchProfile> SetGauges(IEnumerable<SearchProfile> searchProfiles)
+        {
+            foreach (var sp in searchProfiles)
+            {
+                var sds = DailySummaries(spId: sp.SearchProfileId);
+                var scs = ConvSummaries(spId: sp.SearchProfileId);
+                var cds = CallSummaries(spId: sp.SearchProfileId);
+                SetGauges(sp, sds, scs, cds);
+//?? need the method to return something? (if not, modify below)
+//? Do a searchAccounts.ToList() so that in SetGauges() it's not doing multiple active record sets
             }
             return searchProfiles;
         }
@@ -87,6 +102,7 @@ namespace DirectAgents.Domain.Concrete
                 searchAccounts = searchAccounts.Where(x => x.Channel == channel);
             if (includeGauges)
                 searchAccounts = SetGauges(searchAccounts).AsQueryable();
+                //? Do a searchAccounts.ToList() so that in SetGauges() it's not doing multiple active record sets
             return searchAccounts;
         }
         private IEnumerable<SearchAccount> SetGauges(IEnumerable<SearchAccount> searchAccounts)
@@ -100,22 +116,22 @@ namespace DirectAgents.Domain.Concrete
             }
             return searchAccounts;
         }
-        private void SetGauges(SearchAccount searchAccount, IQueryable<SearchDailySummary> sds, IQueryable<SearchConvSummary> scs, IQueryable<CallDailySummary> cds)
+        private void SetGauges(ISearchGauge searchGauge, IQueryable<SearchDailySummary> sds, IQueryable<SearchConvSummary> scs, IQueryable<CallDailySummary> cds)
         {
             if (sds != null && sds.Any())
             {
-                searchAccount.MinDaySum = sds.Min(x => x.Date);
-                searchAccount.MaxDaySum = sds.Max(x => x.Date);
+                searchGauge.MinDaySum = sds.Min(x => x.Date);
+                searchGauge.MaxDaySum = sds.Max(x => x.Date);
             }
             if (scs != null && scs.Any())
             {
-                searchAccount.MinConvSum = scs.Min(x => x.Date);
-                searchAccount.MaxConvSum = scs.Max(x => x.Date);
+                searchGauge.MinConvSum = scs.Min(x => x.Date);
+                searchGauge.MaxConvSum = scs.Max(x => x.Date);
             }
             if (cds != null && cds.Any())
             {
-                searchAccount.MinCallSum = cds.Min(x => x.Date);
-                searchAccount.MaxCallSum = cds.Max(x => x.Date);
+                searchGauge.MinCallSum = cds.Min(x => x.Date);
+                searchGauge.MaxCallSum = cds.Max(x => x.Date);
             }
         }
 

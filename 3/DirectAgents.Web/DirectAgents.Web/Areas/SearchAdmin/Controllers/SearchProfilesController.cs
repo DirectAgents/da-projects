@@ -31,6 +31,12 @@ namespace DirectAgents.Web.Areas.SearchAdmin.Controllers
             return View(searchProfiles);
         }
 
+        public ActionResult IndexGauge()
+        {
+            var searchProfiles = cpSearchRepo.SearchProfiles(includeGauges: true);
+            return View(searchProfiles.OrderBy(x => x.SearchProfileName));
+        }
+
         public ActionResult CreateNew(string name)
         {
             int maxId = 0;

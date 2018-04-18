@@ -7,7 +7,7 @@
     using System.Data.Entity.Spatial;
 
     [Table("SearchAccount")]
-    public partial class SearchAccount
+    public partial class SearchAccount : ISearchGauge
     {
         public const string GoogleChannel = "Google";
         public const string BingChannel = "Bing";

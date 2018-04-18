@@ -149,6 +149,7 @@
     <Compile Include="Entities\CPProg\Actions.cs" />
     <Compile Include="Entities\CPSearch\CallDailySummary.cs" />
     <Compile Include="Entities\CPSearch\ClientReport.cs" />
+    <Compile Include="Entities\CPSearch\ISearchGauge.cs" />
     <Compile Include="Entities\CPSearch\SearchAccount.cs" />
     <Compile Include="Entities\CPSearch\SearchCampaign.cs" />
     <Compile Include="Entities\CPSearch\SearchConvSummary.cs" />

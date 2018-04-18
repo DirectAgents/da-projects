@@ -7,7 +7,7 @@
     using System.Data.Entity.Spatial;
 
     [Table("SearchProfile")]
-    public partial class SearchProfile
+    public partial class SearchProfile : ISearchGauge
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public SearchProfile()
@@ -47,5 +47,18 @@
         {
             get { return !String.IsNullOrWhiteSpace(this.LCaccid); }
         }
+
+        [NotMapped]
+        public DateTime? MinDaySum { get; set; }
+        [NotMapped]
+        public DateTime? MaxDaySum { get; set; }
+        [NotMapped]
+        public DateTime? MinConvSum { get; set; }
+        [NotMapped]
+        public DateTime? MaxConvSum { get; set; }
+        [NotMapped]
+        public DateTime? MinCallSum { get; set; }
+        [NotMapped]
+        public DateTime? MaxCallSum { get; set; }
     }
 }
