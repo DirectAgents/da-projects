@@ -368,9 +368,12 @@ namespace DirectAgents.Domain.Concrete
                 platColMapping.Platform = Platform(platColMapping.Id);
         }
 
-        public void CreateBaseFees(DateTime date, int platformIdForExtraItems)
+        public void CreateBaseFees(DateTime date, int? platformIdForExtraItems = null)
         {
-            var existingFeeItems = context.ExtraItems.Where(x => x.Date == date && x.PlatformId == platformIdForExtraItems && x.Cost == 0)
+            if (!platformIdForExtraItems.HasValue)
+                platformIdForExtraItems = Platform(DirectAgents.Domain.Entities.CPProg.Platform.Code_DATradingDesk).Id;
+
+            var existingFeeItems = context.ExtraItems.Where(x => x.Date == date && x.PlatformId == platformIdForExtraItems.Value && x.Cost == 0)
                                     .ToList();
             var campaigns = context.Campaigns.Where(c => (!c.Advertiser.StartDate.HasValue || c.Advertiser.StartDate.Value <= date) &&
                                                          (!c.Advertiser.EndDate.HasValue || c.Advertiser.EndDate.Value >= date));
@@ -382,7 +385,7 @@ namespace DirectAgents.Domain.Concrete
                     {
                         Date = date,
                         CampaignId = camp.Id,
-                        PlatformId = platformIdForExtraItems,
+                        PlatformId = platformIdForExtraItems.Value,
                         Revenue = camp.BaseFee
                         // Description =
                     };
@@ -392,23 +395,43 @@ namespace DirectAgents.Domain.Concrete
             context.SaveChanges();
         }
 
-        // REVIEW THIS !!!
-        public void CopyBudgetInfos(int campId, DateTime toDate, DateTime? fromDate)
+        // Copy the BudgetInfos & PlatformBudgetInfos to the specified month from the month prior.
+        // Do this for active campaigns/platforms. (can specify activeLastMonth)
+        public void CopyBudgetInfosTo(DateTime month, bool activeLastMonth = false, bool overwrite = false)
         {
-            if (!fromDate.HasValue)
-                fromDate = toDate.AddMonths(-1);
-
-            var budgetInfos = context.BudgetInfos.Where(x => x.Date == fromDate.Value && x.CampaignId == campId);
-            foreach (var budgetInfo in budgetInfos)
+            var prevMonth = month.AddMonths(-1);
+            var whichMonthToCheck = activeLastMonth ? prevMonth : month;
+            var campaigns = CampaignsActive(monthStart: whichMonthToCheck);
+            foreach (var camp in campaigns)
             {
-                var bi = new BudgetInfo(campId, toDate, valuesToSet: budgetInfo);
-                context.BudgetInfos.Add(bi);
-            }
-            var platformBudgetInfos = context.PlatformBudgetInfos.Where(x => x.Date == fromDate.Value && x.CampaignId == campId);
-            foreach (var platformBudgetInfo in platformBudgetInfos)
-            {
-                var pbi = new PlatformBudgetInfo(campId, platformBudgetInfo.PlatformId, toDate, valuesToSet: platformBudgetInfo);
-                context.PlatformBudgetInfos.Add(pbi);
+                var prevBI = camp.BudgetInfoFor(prevMonth);
+                if (prevBI != null)
+                {
+                    var existingBI = camp.BudgetInfoFor(month);
+                    if (existingBI == null)
+                    {
+                        var newBI = new BudgetInfo(camp.Id, month, valuesToSet: prevBI);
+                        AddBudgetInfo(newBI, saveChanges: false);
+                    }
+                    else if (overwrite)
+                    {
+                        existingBI.SetFrom(prevBI);
+                    }
+                }
+                var pbis = camp.PlatformBudgetInfosFor(prevMonth).ToList();
+                foreach (var prevPBI in pbis)
+                {
+                    var existingPBI = camp.PlatformBudgetInfoFor(month, prevPBI.PlatformId, false);
+                    if (existingPBI == null)
+                    {
+                        var newPBI = new PlatformBudgetInfo(camp.Id, prevPBI.PlatformId, month, valuesToSet: prevPBI);
+                        AddPlatformBudgetInfo(newPBI, saveChanges: false);
+                    }
+                    else if (overwrite)
+                    {
+                        existingPBI.SetFrom(prevPBI);
+                    }
+                }
             }
             context.SaveChanges();
         }

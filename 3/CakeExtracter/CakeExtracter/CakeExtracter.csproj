@@ -286,6 +286,7 @@
     <Compile Include="CakeMarketingApi\Entities\Role.cs" />
     <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
     <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
+    <Compile Include="Commands\DA\DAMonthlyMaintenance.cs" />
     <Compile Include="Commands\DA\DASynchAdformStats.cs" />
     <Compile Include="Commands\DA\DASynchAmazonStats.cs" />
     <Compile Include="Commands\DA\DASynchCakeEventConversions.cs">

@@ -71,49 +71,13 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         // Do this for active campaigns/platforms. (can specify activeLastMonth)
         public ActionResult CopyInfos(DateTime month, bool activeLastMonth = false, bool overwrite = false)
         {
-            var prevMonth = month.AddMonths(-1);
-            var whichMonthToCheck = activeLastMonth ? prevMonth : month;
-            var campaigns = cpProgRepo.CampaignsActive(monthStart: whichMonthToCheck);
-            foreach (var camp in campaigns)
-            {
-                var prevBI = camp.BudgetInfoFor(prevMonth);
-                if (prevBI != null)
-                {
-                    var existingBI = camp.BudgetInfoFor(month);
-                    if (existingBI == null)
-                    {
-                        var newBI = new BudgetInfo(camp.Id, month, valuesToSet: prevBI);
-                        cpProgRepo.AddBudgetInfo(newBI, saveChanges: false);
-                    }
-                    else if (overwrite)
-                    {
-                        existingBI.SetFrom(prevBI);
-                    }
-                }
-                var pbis = camp.PlatformBudgetInfosFor(prevMonth).ToList();
-                foreach (var prevPBI in pbis)
-                {
-                    var existingPBI = camp.PlatformBudgetInfoFor(month, prevPBI.PlatformId, false);
-                    if (existingPBI == null)
-                    {
-                        var newPBI = new PlatformBudgetInfo(camp.Id, prevPBI.PlatformId, month, valuesToSet: prevPBI);
-                        cpProgRepo.AddPlatformBudgetInfo(newPBI, saveChanges: false);
-                    }
-                    else if (overwrite)
-                    {
-                        existingPBI.SetFrom(prevPBI);
-                    }
-                }
-            }
-            cpProgRepo.SaveChanges();
-
+            cpProgRepo.CopyBudgetInfosTo(month, activeLastMonth: activeLastMonth, overwrite: overwrite);
             return RedirectToAction("IndexFees", new { month = month.ToShortDateString(), activeLastMonth = activeLastMonth });
         }
 
         public ActionResult CreateBaseFees(DateTime month)
         {
-            var tdPlatform = cpProgRepo.Platform(Platform.Code_DATradingDesk);
-            cpProgRepo.CreateBaseFees(month, tdPlatform.Id);
+            cpProgRepo.CreateBaseFees(month);
             return RedirectToAction("Index", "ExtraItems", new { month = month.ToShortDateString() });
         }
 
