@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.CPProg;
 
@@ -22,6 +23,24 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Models
                 extAccts = extAccts.Where(x => codesSyncable.Contains(x.Platform.Code));
             }
             return extAccts;
+        }
+
+        public List<SelectListItem> ExtAccountSelectListItems(bool syncableOnly = false, bool includePlatforms = false)
+        {
+            var slItems = new List<SelectListItem>();
+            var extAccounts = ExtAccounts(syncableOnly: true);
+            var extAcctGroups = extAccounts.GroupBy(x => x.Platform);
+            foreach (var platGroup in extAcctGroups)
+            {
+                foreach (var extAcct in platGroup)
+                {
+                    slItems.Add(new SelectListItem { Text = extAcct.DisplayName1, Value = extAcct.Id.ToString() });
+                }
+                if (includePlatforms && (!syncableOnly || platGroup.Key.Code == Platform.Code_FB))
+                    slItems.Add(new SelectListItem { Text = "(" + platGroup.Key.Name + ") <<all for this campaign>>", Value = (0 - platGroup.Key.Id).ToString() });
+                    // Set the value to the negative of the platformId
+            }
+            return slItems;
         }
     }
 }

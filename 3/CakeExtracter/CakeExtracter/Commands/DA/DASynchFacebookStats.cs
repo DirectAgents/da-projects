@@ -17,11 +17,12 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchFacebookStats : ConsoleCommand
     {
-        public static int RunStatic(int? accountId = null, DateTime? startDate = null, DateTime? endDate = null, string statsType = null)
+        public static int RunStatic(int? campaignId = null, int? accountId = null, DateTime? startDate = null, DateTime? endDate = null, string statsType = null)
         {
             AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new DASynchFacebookStats
             {
+                CampaignId = campaignId,
                 AccountId = accountId,
                 StartDate = startDate,
                 EndDate = endDate,

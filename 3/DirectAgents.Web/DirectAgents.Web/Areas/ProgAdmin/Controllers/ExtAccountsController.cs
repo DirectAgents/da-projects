@@ -204,7 +204,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         {
             var extAcct = cpProgRepo.ExtAccount(id);
             if (extAcct != null)
-                DoSync(extAcct, start, latest, level);
+                DoSync(start, latest, level, extAcct);
             return null;
         }
 
@@ -215,29 +215,43 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             if (extAcct == null)
                 return HttpNotFound();
 
-            DoSync(extAcct, start, null, level);
+            DoSync(start, null, level, extAcct);
             return RedirectToAction("Maintenance", "Platforms", new { id = extAcct.PlatformId });
         }
 
         // Called from the StatsGauge for a campaign
-        public ActionResult StatsGaugeSyncClear(int id, DateTime from, DateTime to, string level, bool clear, bool sync)
+        public ActionResult StatsGaugeSyncClear(int id, int? campId, DateTime from, DateTime to, string level, bool clear, bool sync)
         {
-            var extAcct = cpProgRepo.ExtAccount(id);
-            if (extAcct == null)
-                return HttpNotFound();
+            if (id < 0 && campId.HasValue) // (negative)id => platformId, clear/sync platform+campaign
+            {
+                int platformId = -id;
+                var platform = cpProgRepo.Platform(platformId);
+                if (platform == null)
+                    return HttpNotFound();
 
-            if (clear)
-                DoClear(extAcct, from, to, level);
-            if (sync)
-                DoSync2(extAcct, from, to, level);
+                if (clear)
+                    DoClear(from, to, level, campId: campId, platformId: platform.Id);
+                if (sync)
+                    DoSyncForCampaign(from, to, level, campId.Value, platform);
+            }
+            else // clear/sync one extAccount
+            {
+                var extAcct = cpProgRepo.ExtAccount(id);
+                if (extAcct == null)
+                    return HttpNotFound();
 
-            if (extAcct.CampaignId.HasValue)
-                return RedirectToAction("IndexGauge", new { campId = extAcct.CampaignId.Value, super = 1 });
+                if (clear)
+                    DoClear(from, to, level, acctId: extAcct.Id);
+                if (sync)
+                    DoSyncForAccount(from, to, level, extAcct);
+            }
+            if (campId.HasValue)
+                return RedirectToAction("IndexGauge", new { campId = campId.Value, super = 1 });
             else
                 return Content("Done sync");
         }
 
-        private void DoClear(ExtAccount extAcct, DateTime? start, DateTime? end, string statsType)
+        private void DoClear(DateTime? start, DateTime? end, string statsType, int? acctId = null, int? campId = null, int? platformId = null)
         {
             if (!start.HasValue || !end.HasValue || statsType == null)
                 return;
@@ -245,23 +259,23 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             switch (statsType)
             {
                 case "daily":
-                    var dsums = cpProgRepo.DailySummaries(start, end, acctId: extAcct.Id);
+                    var dsums = cpProgRepo.DailySummaries(start, end, acctId: acctId, campId: campId, platformId: platformId);
                     cpProgRepo.DeleteDailySummaries(dsums);
                     break;
                 case "strategy":
-                    var ssums = cpProgRepo.StrategySummaries(start, end, acctId: extAcct.Id);
+                    var ssums = cpProgRepo.StrategySummaries(start, end, acctId: acctId, campId: campId, platformId: platformId);
                     cpProgRepo.DeleteStrategySummaries(ssums);
                     break;
                 case "adset":
-                    var actions = cpProgRepo.AdSetActions(start, end, acctId: extAcct.Id);
+                    var actions = cpProgRepo.AdSetActions(start, end, acctId: acctId, campId: campId, platformId: platformId);
                     cpProgRepo.DeleteAdSetActionStats(actions);
-                    var asums = cpProgRepo.AdSetSummaries(start, end, acctId: extAcct.Id);
+                    var asums = cpProgRepo.AdSetSummaries(start, end, acctId: acctId, campId: campId, platformId: platformId);
                     cpProgRepo.DeleteAdSetSummaries(asums);
                     break;
             }
         }
 
-        private void DoSync(ExtAccount extAcct, DateTime? start, DateTime? latest, string level)
+        private static void DoSync(DateTime? start, DateTime? latest, string level, ExtAccount extAcct)
         {
             if (!start.HasValue)
             {
@@ -273,9 +287,9 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                 else
                     start = latest.Value.AddMonths(-1); // if the latest stats are on the 1st
             }
-            DoSync2(extAcct, start, null, level);
+            DoSyncForAccount(start, null, level, extAcct);
         }
-        private void DoSync2(ExtAccount extAcct, DateTime? start, DateTime? end, string statsType)
+        private static void DoSyncForAccount(DateTime? start, DateTime? end, string statsType, ExtAccount extAcct)
         {
             statsType = NormalizeStatsType(statsType);
             switch (extAcct.Platform.Code)
@@ -307,8 +321,18 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                     break;
             }
         }
+        private static void DoSyncForCampaign(DateTime? start, DateTime? end, string statsType, int campaignId, Platform platform)
+        {
+            statsType = NormalizeStatsType(statsType);
+            switch (platform.Code)
+            {
+                case Platform.Code_FB:
+                    DASynchFacebookStats.RunStatic(campaignId: campaignId, startDate: start, endDate: end, statsType: statsType);
+                    break;
+            }
+        }
 
-        private string NormalizeStatsType(string statsType)
+        private static string NormalizeStatsType(string statsType)
         {
             if (statsType != null)
             {
