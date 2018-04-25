@@ -19,6 +19,7 @@ namespace FacebookAPI
         public int DaysPerCall_AdSet = 4;
         public int DaysPerCall_Ad = 3;
 
+        //TODO: type MobileAppPurchase - app_custom_event.fb_mobile_purchase (for FUNimation)
         public const string Conversion_ActionType_Default = "offsite_conversion";
         public const string Conversion_ActionType_MobileAppInstall = "mobile_app_install";
         public const string Conversion_ActionType_Purchase = "offsite_conversion.fb_pixel_purchase";

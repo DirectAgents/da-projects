@@ -39,6 +39,8 @@ namespace CakeExtracter.Commands
         public string StatsType { get; set; }
         public bool DisabledOnly { get; set; }
         public int? DaysPerCall { get; set; }
+        public int? ClickWindow { get; set; }
+        public int? ViewWindow { get; set; }
 
         public override void ResetProperties()
         {
@@ -50,6 +52,8 @@ namespace CakeExtracter.Commands
             StatsType = null;
             DisabledOnly = false;
             DaysPerCall = null;
+            ClickWindow = null;
+            ViewWindow = null;
         }
 
         public DASynchFacebookStats()
@@ -63,6 +67,8 @@ namespace CakeExtracter.Commands
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
             HasOption<int>("p|daysPerCall=", "Days Per API call (default: varies per stats type)", c => DaysPerCall = c);
+            HasOption<int>("u|clickWindow=", "Click attribution window (can set to 7 or 28, otherwise will be default or from config)", c => ClickWindow = c);
+            HasOption<int>("v|viewWindow=", "View attribution window (can set to 7 or 1, otherwise will be default or from config)", c => ViewWindow = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -135,6 +141,7 @@ namespace CakeExtracter.Commands
                 }
                 fbUtility.SetCampaignFilter(acct.Filter);
 
+                // Conversion Type to use
                 if (Accts_ConvAsMobAppInst.Contains(acct.ExternalId))
                     fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_MobileAppInstall;
                 else if (Accts_ConvAsPurch.Contains(acct.ExternalId))
@@ -146,11 +153,12 @@ namespace CakeExtracter.Commands
                 else
                     fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_Default;
 
-                if (Accts_7d_click.Contains(acct.ExternalId))
+                // Attribution windows
+                if (ClickWindow == 7 || (Accts_7d_click.Contains(acct.ExternalId) && ClickWindow != 28))
                     fbUtility.Set_7d_click_attribution();
                 else
                     fbUtility.Set_28d_click_attribution(); //default
-                if (Accts_7d_view.Contains(acct.ExternalId))
+                if (ViewWindow == 7 || (Accts_7d_view.Contains(acct.ExternalId) && ViewWindow != 1))
                     fbUtility.Set_7d_view_attribution();
                 else
                     fbUtility.Set_1d_view_attribution(); //default
