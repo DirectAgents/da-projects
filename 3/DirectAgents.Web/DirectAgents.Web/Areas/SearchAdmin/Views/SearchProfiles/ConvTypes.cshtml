@@ -1,0 +1,66 @@
+﻿@model DirectAgents.Domain.Entities.CPSearch.SearchProfile
+
+<h2>Conversion Types</h2>
+
+SearchProfile: <b>@Model.SearchProfileName</b> (@Model.SearchProfileId)
+
+<div id="gridSearchConvTypes" style="width:1000px"></div>
+
+<br />
+Back to: @Html.ActionLink("SearchProfile", "Show", new { id = @Model.SearchProfileId })
+
+<script>
+    $(document).ready(function () {
+        var datasource = CreateDataSource();
+        SetupGrid(datasource);
+    });
+
+    function CreateDataSource() {
+        var datasource = new kendo.data.DataSource({
+            batch: true,
+            transport: {
+                read: {
+                    url: '@Url.Action("ConvTypesData")',
+                    data: {
+                        id: @Model.SearchProfileId
+                    },
+                    type: 'post', dataType: 'json'
+                },
+                update: {
+                    url: '@Url.Action("ConvTypesUpdate")',
+                    type: 'post', dataType: 'json'
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                //aggregates: 'aggregates',
+                model: {
+                    id: 'SearchConvTypeId',
+                    fields: {
+                        SearchConvTypeId: { type: 'number', editable: false },
+                        Name: { editable: false },
+                        Alias: { type: 'string' }
+                    }
+                }
+            }
+        });
+        return datasource;
+    }
+
+    function SetupGrid(datasource)
+    {
+        $('#gridSearchConvTypes').kendoGrid({
+            dataSource: datasource,
+            height: 400,
+            editable: 'inline',
+            sortable: true,
+            columns: [
+                { field: 'SearchConvTypeId', title: 'Id', width: '65px' },
+                { field: 'Name' },
+                { field: 'Alias' },
+                { command: ['edit'], title: '&nbsp', width: '200px' },
+            ]
+        });
+    }
+</script>

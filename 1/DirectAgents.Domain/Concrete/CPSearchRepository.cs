@@ -53,6 +53,11 @@ namespace DirectAgents.Domain.Concrete
             return searchProfiles;
         }
 
+        public SearchProfile GetSearchProfile(int id)
+        {
+            return context.SearchProfiles.Find(id);
+        }
+
         public bool SaveSearchProfile(SearchProfile searchProfile, bool saveIfExists = true, bool createIfDoesntExist = false)
         {
             if (context.SearchProfiles.Any(x => x.SearchProfileId == searchProfile.SearchProfileId))
@@ -259,6 +264,19 @@ namespace DirectAgents.Domain.Concrete
             if (searchCampaignId.HasValue)
                 cds = cds.Where(x => x.SearchCampaignId == searchCampaignId.Value);
             return cds;
+        }
+
+        public IEnumerable<SearchConvType> GetConvTypes(int spId, int? searchAccountId = null, int? searchCampaignId = null)
+        {
+            var convSums = ConvSummaries(spId, searchAccountId, searchCampaignId);
+            var convTypeIds = convSums.Select(x => x.SearchConvTypeId).Distinct().ToArray();
+            var convTypes = context.SearchConvTypes.Where(x => convTypeIds.Contains(x.SearchConvTypeId));
+            return convTypes.AsEnumerable();
+        }
+        public SearchConvType GetConvType(int id)
+        {
+            var searchConvType = context.SearchConvTypes.Find(id);
+            return searchConvType;
         }
 
         // ---

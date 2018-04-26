@@ -21,7 +21,7 @@
 {
     int numAccts = sp.SearchAccounts.Count;
 <tr>
-    <td style="text-align:right">@sp.SearchProfileId</td>
+    <td style="text-align:right">@Html.ActionLink(sp.SearchProfileId.ToString(), "Show", new { id = sp.SearchProfileId })</td>
     <td>
         @(sp.ShowRevenue ? "$" : "")
         @(sp.ShowCalls ? "+" : "")

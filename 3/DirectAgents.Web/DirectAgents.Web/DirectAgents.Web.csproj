@@ -1107,6 +1107,8 @@
     <Content Include="Areas\ProgAdmin\Views\ExtAccounts\CreateGroup.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Maintenance\Index.cshtml" />
     <Content Include="Areas\SearchAdmin\Views\SearchProfiles\IndexGauge.cshtml" />
+    <Content Include="Areas\SearchAdmin\Views\SearchProfiles\Show.cshtml" />
+    <Content Include="Areas\SearchAdmin\Views\SearchProfiles\ConvTypes.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

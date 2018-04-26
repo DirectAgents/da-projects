@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
@@ -55,5 +56,54 @@ namespace DirectAgents.Web.Areas.SearchAdmin.Controllers
             cpSearchRepo.SaveSearchProfile(searchProfile, createIfDoesntExist: true, saveIfExists: false);
             return RedirectToAction("Index", new { activeSinceMonths = -1 });
         }
+
+        public ActionResult Show(int id)
+        {
+            var searchProfile = cpSearchRepo.GetSearchProfile(id);
+            if (searchProfile == null)
+                return HttpNotFound();
+            return View(searchProfile);
+        }
+
+        public ActionResult ConvTypes(int id)
+        {
+            var searchProfile = cpSearchRepo.GetSearchProfile(id);
+            if (searchProfile == null)
+                return HttpNotFound();
+            return View(searchProfile);
+        }
+        //[HttpPost]
+        public JsonResult ConvTypesData(int id)
+        {
+            var searchConvTypes = cpSearchRepo.GetConvTypes(id).OrderBy(ct => ct.Alias);
+
+            var kg = new KG<SearchConvType>();
+            kg.data = searchConvTypes;
+            kg.total = searchConvTypes.Count();
+
+            var json = Json(kg, JsonRequestBehavior.AllowGet);
+            //var json = Json(kg);
+            return json;
+        }
+        [HttpPost]
+        public ActionResult ConvTypesUpdate(SearchConvType[] models)
+        {
+            //TODO: try/catch/return errors
+            foreach (var row in models)
+            {
+                var searchConvType = cpSearchRepo.GetConvType(row.SearchConvTypeId);
+                searchConvType.Alias = row.Alias;
+            }
+            cpSearchRepo.SaveChanges();
+
+            return Json(models);
+        }
+    }
+
+    class KG<T>
+    {
+        public IEnumerable<T> data { get; set; }
+        public int total { get; set; }
+        public object aggregates { get; set; }
     }
 }

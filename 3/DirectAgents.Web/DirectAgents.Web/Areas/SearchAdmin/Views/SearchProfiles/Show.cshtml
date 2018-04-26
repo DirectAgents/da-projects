@@ -1,0 +1,15 @@
+﻿@model DirectAgents.Domain.Entities.CPSearch.SearchProfile
+
+<h2>SearchProfile</h2>
+
+Name: <b>@Model.SearchProfileName</b>
+(ID: @Model.SearchProfileId)
+<br /><br />
+
+@Html.ActionLink("SearchAccounts", "Index", "SearchAccounts", new { spId = @Model.SearchProfileId }, null)
+<br />
+@Html.ActionLink("StatsGauge", "IndexGauge", "SearchAccounts", new { spId = @Model.SearchProfileId }, null)
+<br />
+@Html.ActionLink("Generate Spreadsheet", "GenerateSpreadsheet", "Old", new { spId = @Model.SearchProfileId }, null)
+<br />
+@Html.ActionLink("ConvTypes", "ConvTypes", new { id = @Model.SearchProfileId })

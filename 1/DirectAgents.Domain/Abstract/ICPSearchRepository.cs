@@ -12,6 +12,7 @@ namespace DirectAgents.Domain.Abstract
         void SaveChanges();
 
         IQueryable<SearchProfile> SearchProfiles(DateTime? activeSince = null, bool includeGauges = false);
+        SearchProfile GetSearchProfile(int id);
         bool SaveSearchProfile(SearchProfile searchProfile, bool saveIfExists = true, bool createIfDoesntExist = false);
         IEnumerable<SearchAccount> StatsGaugesByChannel();
         IQueryable<SearchAccount> SearchAccounts(int? spId = null, string channel = null, bool includeGauges = false);
@@ -23,6 +24,8 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<SearchDailySummary> DailySummaries(int? spId = null, int? searchAccountId = null, int? searchCampaignId = null);
         IQueryable<SearchConvSummary> ConvSummaries(int? spId = null, int? searchAccountId = null, int? searchCampaignId = null);
         IQueryable<CallDailySummary> CallSummaries(int? spId = null, int? searchAccountId = null, int? searchCampaignId = null);
+        IEnumerable<SearchConvType> GetConvTypes(int spId, int? searchAccountId = null, int? searchCampaignId = null);
+        SearchConvType GetConvType(int id);
 
         IQueryable<ClientReport> ClientReports();
     }
