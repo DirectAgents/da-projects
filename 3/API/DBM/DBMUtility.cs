@@ -26,6 +26,9 @@ namespace DBM
         private string[] AltAccountIDs = new string[NumAlts];
         public int WhichAlt { get; set; } // default: 0
 
+        private DoubleClickBidManagerService DBMService { get; set; }
+        private QueriesResource QueriesResource { get; set; }
+
         private IEnumerable<string> CreateTokenSets()
         {
             for (int i = 0; i < NumAlts; i++)
@@ -111,15 +114,17 @@ namespace DBM
 
         // -----
 
-        private ClientSecrets GetClientSecrets()
+        public void SetupService()
         {
-            var clientSecrets = new ClientSecrets
+            var credential = GetUserCredential();
+            DBMService = new DoubleClickBidManagerService(new BaseClientService.Initializer()
             {
-                ClientId = ClientID[WhichAlt],
-                ClientSecret = ClientSecret[WhichAlt]
-            };
-            return clientSecrets;
+                HttpClientInitializer = credential,
+                ApplicationName = "DA Client Portal"
+            });
+            QueriesResource = new QueriesResource(DBMService);
         }
+
         private UserCredential GetUserCredential()
         {
             var flow = new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
@@ -139,20 +144,42 @@ namespace DBM
             var credential = new UserCredential(flow, "user", tokens);
             return credential;
         }
+        private ClientSecrets GetClientSecrets()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ClientId = ClientID[WhichAlt],
+                ClientSecret = ClientSecret[WhichAlt]
+            };
+            return clientSecrets;
+        }
 
-        // --- test ---
+        // ---
+
+        public string GetURLForReport(long queryId)
+        {
+            var request = QueriesResource.Getquery(queryId);
+            var query = request.Execute();
+            if (query != null)
+                return query.Metadata.GoogleCloudStoragePathForLatestReport;
+            else
+                return null;
+        }
 
         public void Test()
         {
-            var credential = GetUserCredential();
-            var service = new DoubleClickBidManagerService(new BaseClientService.Initializer()
-            {
-                HttpClientInitializer = credential,
-                ApplicationName = "DA Client Portal"
-            });
-            var resource = new QueriesResource(service);
-            var request = resource.Listqueries();
+            if (QueriesResource == null)
+                SetupService();
+
+            var request = QueriesResource.Listqueries();
             var response = request.Execute();
+            if (response != null && response.Queries != null)
+            {
+                foreach (var query in response.Queries)
+                {
+                    LogInfo(query.Metadata.GoogleCloudStoragePathForLatestReport);
+                }
+            }
         }
 
         // --- Implementation of IDataStore ---

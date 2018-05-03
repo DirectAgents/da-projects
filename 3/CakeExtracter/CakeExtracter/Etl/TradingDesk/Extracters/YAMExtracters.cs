@@ -1,6 +1,4 @@
 ﻿using System.Configuration;
-using System.IO;
-using System.Net;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
 using Yahoo;
@@ -42,15 +40,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                     columnMapping.TDadName = mapVal;
             }
         }
-
-        public static StreamReader CreateStreamReaderFromUrl(string url)
-        {
-            var request = (HttpWebRequest)WebRequest.Create(url);
-            var response = (HttpWebResponse)request.GetResponse();
-            var responseStream = response.GetResponseStream();
-            var streamReader = new StreamReader(responseStream);
-            return streamReader;
-        }
     }
 
     public class YAMDailySummaryExtracter : YAMApiExtracter<DailySummary>
@@ -66,7 +55,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
-                var streamReader = CreateStreamReaderFromUrl(reportUrl);
+                var streamReader = TDDailySummaryExtracter.CreateStreamReaderFromUrl(reportUrl);
                 var tdExtracter = new TDDailySummaryExtracter(this.columnMapping, streamReader: streamReader);
                 var items = tdExtracter.EnumerateRows();
                 Add(items);
@@ -88,7 +77,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
-                var streamReader = CreateStreamReaderFromUrl(reportUrl);
+                var streamReader = TDDailySummaryExtracter.CreateStreamReaderFromUrl(reportUrl);
                 var tdExtracter = new TDStrategySummaryExtracter(this.columnMapping, streamReader: streamReader);
                 var items = tdExtracter.EnumerateRows();
                 Add(items);
@@ -110,7 +99,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
-                var streamReader = CreateStreamReaderFromUrl(reportUrl);
+                var streamReader = TDDailySummaryExtracter.CreateStreamReaderFromUrl(reportUrl);
                 var tdExtracter = new TDadSummaryExtracter(this.columnMapping, streamReader: streamReader);
                 var items = tdExtracter.EnumerateRows();
                 Add(items);

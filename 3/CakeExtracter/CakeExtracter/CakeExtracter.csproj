@@ -294,6 +294,7 @@
     </Compile>
     <Compile Include="Commands\DA\DASynchCampSums.cs" />
     <Compile Include="Commands\DA\DASynchCriteoStats.cs" />
+    <Compile Include="Commands\DA\DASynchDBMStats2.cs" />
     <Compile Include="Commands\DA\DASynchYAMStats.cs" />
     <Compile Include="Commands\EOMSynchCPCCommand.cs" />
     <Compile Include="Commands\DA\DASynchFacebookAdPreviews.cs" />

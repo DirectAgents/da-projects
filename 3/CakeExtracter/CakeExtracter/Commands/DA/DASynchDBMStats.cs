@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Configuration;
+using System.Linq;
+using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
-using CakeExtracter.Bootstrappers;
-using DirectAgents.Domain.Contexts;
-using DirectAgents.Domain.Entities.DBM;
-using System.Linq;
-using DirectAgents.Domain.Entities.CPProg;
 using DBM;
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Commands
 {

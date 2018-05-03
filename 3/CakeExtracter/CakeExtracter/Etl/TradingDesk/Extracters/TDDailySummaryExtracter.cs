@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using CsvHelper;
 using CsvHelper.Configuration;
 using DirectAgents.Domain.Entities.CPProg;
@@ -53,11 +54,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         {
             csv.Configuration.SkipEmptyRecords = true; //ShouldSkipRecord is checked first. if false, will check if it's empty (all fields)
             csv.Configuration.ShouldSkipRecord = delegate(string[] fields)
-            { // assume 0 == the column number for the date field
+            { // assume column 0 is a required field (e.g. the date field)
                 if (String.IsNullOrWhiteSpace(fields[0]))
                     return true;
-                //if (fields[0] != null && fields[0].ToUpper().StartsWith("TOTAL"))
-                //    return true; // should be handled by the ReadingExceptionCallback
+                if (fields[0][fields[0].Length - 1] == ':') // last character in first column
+                    return true;
                 return false;
             };
             csv.Configuration.WillThrowOnMissingField = false;
@@ -146,6 +147,15 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 propMap.Default(0);
             }
             return propMap;
+        }
+
+        public static StreamReader CreateStreamReaderFromUrl(string url)
+        {
+            var request = (HttpWebRequest)WebRequest.Create(url);
+            var response = (HttpWebResponse)request.GetResponse();
+            var responseStream = response.GetResponseStream();
+            var streamReader = new StreamReader(responseStream);
+            return streamReader;
         }
     }
 }

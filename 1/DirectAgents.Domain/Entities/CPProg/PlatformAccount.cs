@@ -175,6 +175,19 @@ namespace DirectAgents.Domain.Entities.CPProg
         }
 
         [NotMapped]
+        public int? ExternalId_int
+        {
+            get
+            {
+                int tempId;
+                if (int.TryParse(ExternalId, out tempId))
+                    return tempId;
+                else
+                    return null;
+            }
+        }
+
+        [NotMapped]
         public string DisplayName1
         {
             get { return "(" + Platform.Name + ") " + Name + " [" + ExternalId + "]"; }

@@ -53,7 +53,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             var reportUrl = _yamUtility.GenerateReport(payload);
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
-                var streamReader = YAMApiExtracter<DailySummary>.CreateStreamReaderFromUrl(reportUrl);
+                var streamReader = TDDailySummaryExtracter.CreateStreamReaderFromUrl(reportUrl);
                 var items = EnumerateRows(streamReader);
                 Add(items);
             }
@@ -130,7 +130,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             var reportUrl = _yamUtility.GenerateReport(payload);
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
-                var streamReader = YAMApiExtracter<DailySummary>.CreateStreamReaderFromUrl(reportUrl);
+                var streamReader = TDDailySummaryExtracter.CreateStreamReaderFromUrl(reportUrl);
                 var items = EnumerateRows(streamReader);
                 Add(items);
             }
