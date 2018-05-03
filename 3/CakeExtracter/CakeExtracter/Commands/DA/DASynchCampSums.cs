@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.CakeMarketing.DALoaders;
@@ -9,13 +10,13 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchCampSums : ConsoleCommand
     {
-        public int? OfferId { get; set; }
+        public string OfferIds { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
         public override void ResetProperties()
         {
-            OfferId = null;
+            OfferIds = null;
             StartDate = null;
             EndDate = null;
         }
@@ -23,7 +24,7 @@ namespace CakeExtracter.Commands
         public DASynchCampSums()
         {
             IsCommand("daSynchCampSums", "synch monthly CampaignSummaries");
-            HasOption<int>("o|offerId=", "Offer Id (default = 0 / all offers)", c => OfferId = c);
+            HasOption("o|offerIds=", "Offer Ids (default = all offers)", c => OfferIds = c);
             HasOption("s|startDate=", "Start Date (default is 1st of month (via yesterday))", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
         }
@@ -43,16 +44,31 @@ namespace CakeExtracter.Commands
             var dateRange = GetDateRange();
             //TODO: option to delete all first
 
-            var extracter = new CampaignSummaryExtracter(dateRange, offerId: OfferId ?? 0, groupByOffAff: false, getDailyStats: true);
-            var loader = new DACampSumLoader(keepAllNonZero: true);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            var offerIds = new List<int>();
+            if (this.OfferIds != null)
+            {
+                var offerIds_string = this.OfferIds.Split(new char[] { ',' });
+                int tempInt;
+                foreach (var offerId_string in offerIds_string)
+                {
+                    if (int.TryParse(offerId_string, out tempInt))
+                        offerIds.Add(tempInt);
+                }
+            }
+            if (offerIds.Count == 0)
+                offerIds.Add(0); // all offers
 
-            //LoadMissingOffers(loader.OfferIdsSaved);
-            //LoadMissingCampaigns(loader.CampIdsSaved);
-
+            foreach (var offerId in offerIds)
+            {
+                var extracter = new CampaignSummaryExtracter(dateRange, offerId: offerId, groupByOffAff: false, getDailyStats: true);
+                var loader = new DACampSumLoader(keepAllNonZero: true);
+                var extracterThread = extracter.Start();
+                var loaderThread = loader.Start(extracter);
+                extracterThread.Join();
+                loaderThread.Join();
+                //LoadMissingOffers(loader.OfferIdsSaved);
+                //LoadMissingCampaigns(loader.CampIdsSaved);
+            }
             return 0;
         }
 

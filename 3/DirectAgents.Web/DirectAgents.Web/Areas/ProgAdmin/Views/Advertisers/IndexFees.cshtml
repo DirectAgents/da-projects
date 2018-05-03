@@ -3,6 +3,7 @@
 @{
     DateTime currMonth = ViewBag.CurrMonth;
     bool activeLastMonth = ViewBag.ActiveLastMonth;
+    bool super = Request.QueryString["super"] == "1";
 }
 
 @section scripts {
@@ -27,7 +28,8 @@
 </tr>
 @foreach (var adv in Model)
 {
-    <tr><td colspan="5"><b>@adv.Name</b></td></tr>
+    var endedString = (adv.EndDate.HasValue ? " [End: " + adv.EndDate.Value.ToShortDateString() + "]" : "");
+    <tr><td colspan="5"><b>@adv.Name</b>@endedString</td></tr>
     foreach (var camp in adv.Campaigns.OrderBy(x => x.Name))
     {
         bool usingDefaults = false;
@@ -60,9 +62,12 @@
 }
 </table>
 
-<br />
-@Html.ActionLink("Copy Budgets,Percents&Exceptions from last month", "CopyInfos", new { month = currMonth.ToShortDateString(), activeLastMonth = activeLastMonth })
-<br /><br />
-@Html.ActionLink("Create BaseFee items for the month", "CreateBaseFees", new { month = currMonth.ToShortDateString() })
-
-@*@Html.ActionLink("Delete All (including exceptions)", "Delete", "BudgetInfos", new { date = currMonth.ToShortDateString(), pbiAlso = true }, new { })*@
+@if (super)
+{
+    <br />
+    @Html.ActionLink("Copy Budgets,Percents&Exceptions from last month", "CopyInfos", new { month = currMonth.ToShortDateString(), activeLastMonth = activeLastMonth })
+    <text> - for campaigns with activity</text>
+    <br /><br />
+    @Html.ActionLink("Create BaseFee items for the month", "CreateBaseFees", new { month = currMonth.ToShortDateString() })
+    <text> - for advertisers that haven't ended</text>
+}

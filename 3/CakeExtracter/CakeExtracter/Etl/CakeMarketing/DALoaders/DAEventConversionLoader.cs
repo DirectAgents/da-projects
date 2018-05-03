@@ -10,6 +10,7 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
 {
     public class DAEventConversionLoader : Loader<EventConversion>
     {
+        private DateTime MinDate = new DateTime(1900, 1, 1);
 
         protected override int Load(List<EventConversion> items)
         {
@@ -32,6 +33,9 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             {
                 foreach (var item in items)
                 {
+                    if (item.ClickDate < MinDate)
+                        item.ClickDate = MinDate;
+
                     var pk1 = item.EventConversionId;
                     var target = db.EventConversions.Find(pk1);
                     if (target == null)

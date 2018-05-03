@@ -13,7 +13,7 @@ namespace Yahoo
     public class YAMUtility
     {
         private const int NUMTRIES_REQUESTREPORT = 12; // 120 sec (2 min)
-        private const int NUMTRIES_GETREPORTSTATUS = 36; // 360 sec (6 min)
+        private const int NUMTRIES_GETREPORTSTATUS_DEFAULT = 48; // 480 sec (8 min)
         private const int WAITTIME_SECONDS = 10;
 
         private const string TOKEN_DELIMITER = "|YAMYAM|";
@@ -25,6 +25,7 @@ namespace Yahoo
         private string[] ClientSecret = new string[NumAlts];
         private string[] ApplicationAccessCode = new string[NumAlts];
         private string YAMBaseUrl { get; set; }
+        private int NumTries_GetReportStatus { get; set; }
 
         private string[] AccessToken = new string[NumAlts];
         private string[] RefreshToken = new string[NumAlts];
@@ -96,6 +97,12 @@ namespace Yahoo
             }
             AuthBaseUrl = ConfigurationManager.AppSettings["YahooAuthBaseUrl"];
             YAMBaseUrl = ConfigurationManager.AppSettings["YAMBaseUrl"];
+            int tmpInt;
+            var numTries_GetReportStatus_String = ConfigurationManager.AppSettings["YAM_NumTries_GetReportStatus"];
+            if (int.TryParse(numTries_GetReportStatus_String, out tmpInt))
+                this.NumTries_GetReportStatus = tmpInt;
+            else
+                this.NumTries_GetReportStatus = NUMTRIES_GETREPORTSTATUS_DEFAULT;
         }
         private string PlaceLeadingAndTrailingCommas(string idString)
         {
@@ -210,7 +217,7 @@ namespace Yahoo
 
             GetReportResponse getReportResponse = null;
             var waitTime = new TimeSpan(0, 0, WAITTIME_SECONDS);
-            for (int i = 0; i < NUMTRIES_GETREPORTSTATUS; i++)
+            for (int i = 0; i < this.NumTries_GetReportStatus; i++)
             {
                 LogInfo(String.Format("Will check if the report is ready in {0} seconds...", waitTime.Seconds));
                 Thread.Sleep(waitTime);

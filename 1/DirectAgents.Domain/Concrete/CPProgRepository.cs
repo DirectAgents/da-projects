@@ -401,7 +401,7 @@ namespace DirectAgents.Domain.Concrete
         {
             var prevMonth = month.AddMonths(-1);
             var whichMonthToCheck = activeLastMonth ? prevMonth : month;
-            var campaigns = CampaignsActive(monthStart: whichMonthToCheck);
+            var campaigns = CampaignsActive(monthStart: whichMonthToCheck).ToList();
             foreach (var camp in campaigns)
             {
                 var prevBI = camp.BudgetInfoFor(prevMonth);

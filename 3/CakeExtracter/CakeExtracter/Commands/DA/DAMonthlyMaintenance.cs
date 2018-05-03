@@ -9,26 +9,35 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DAMonthlyMaintenance : ConsoleCommand
     {
-        public bool CopyBudgetInfos { get; set; }
-        public bool CreateBaseFees { get; set; }
         public bool ActiveLastMonth { get; set; }
         public bool Overwrite { get; set; }
 
+        private bool? _copyBudgetInfos;
+        private bool? _createBaseFees;
+        public bool CopyBudgetInfos
+        {
+            get { return (!_copyBudgetInfos.HasValue || _copyBudgetInfos.Value); }
+        }   // default: true
+        public bool CreateBaseFees
+        {
+            get { return (!_createBaseFees.HasValue || _createBaseFees.Value); }
+        }   // default: true
+
         public override void ResetProperties()
         {
-            this.CopyBudgetInfos = true;
-            this.CreateBaseFees = true;
-            this.ActiveLastMonth = false;
-            this.Overwrite = false;
+            _copyBudgetInfos = null;
+            _createBaseFees = null;
+            ActiveLastMonth = false;
+            Overwrite = false;
         }
 
         public DAMonthlyMaintenance()
         {
             IsCommand("daMonthlyMaintenance", "perform monthly maintenance");
-            HasOption<bool>("b|copyBudgetInfos=", "Step1- Copy BudgetInfos (default: true)", c => this.CopyBudgetInfos = c);
-            HasOption<bool>("c|createBaseFees=", "Step2- Create BaseFees (default: true)", c => this.CreateBaseFees = c);
-            HasOption<bool>("a|activeLastMonth=", "Copy budgetinfos for campaigns that were active last month (as opposed to this month) (default: false)", c => this.ActiveLastMonth = c);
-            HasOption<bool>("o|overwrite=", "Overwrite any existing budgetinfos (default: false)", c => this.Overwrite = c);
+            HasOption<bool>("b|copyBudgetInfos=", "Step1- Copy BudgetInfos (default: true)", c => _copyBudgetInfos = c);
+            HasOption<bool>("c|createBaseFees=", "Step2- Create BaseFees (default: true)", c => _createBaseFees = c);
+            HasOption<bool>("a|activeLastMonth=", "Copy budgetinfos for campaigns that were active last month (as opposed to this month) (default: false)", c => ActiveLastMonth = c);
+            HasOption<bool>("o|overwrite=", "Overwrite any existing budgetinfos (default: false)", c => Overwrite = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -40,9 +49,15 @@ namespace CakeExtracter.Commands
             using (var repo = new CPProgRepository(db))
             {
                 if (CopyBudgetInfos)
+                {
+                    Logger.Info("Copying BudgetInfos...");
                     repo.CopyBudgetInfosTo(month, activeLastMonth: ActiveLastMonth, overwrite: Overwrite);
+                }
                 if (CreateBaseFees)
-                    repo.CreateBaseFees(month);
+                {
+                    Logger.Info("Creating Base Fees...");
+                    repo.CreateBaseFees(month); // for advertisers that haven't ended
+                }
             }
             return 0;
         }

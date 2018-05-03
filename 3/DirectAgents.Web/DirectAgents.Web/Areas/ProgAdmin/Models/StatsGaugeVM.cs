@@ -28,7 +28,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Models
         public List<SelectListItem> ExtAccountSelectListItems(bool syncableOnly = false, bool includePlatforms = false)
         {
             var slItems = new List<SelectListItem>();
-            var extAccounts = ExtAccounts(syncableOnly: true);
+            var extAccounts = ExtAccounts(syncableOnly: syncableOnly);
             var extAcctGroups = extAccounts.GroupBy(x => x.Platform);
             foreach (var platGroup in extAcctGroups)
             {
@@ -36,7 +36,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Models
                 {
                     slItems.Add(new SelectListItem { Text = extAcct.DisplayName1, Value = extAcct.Id.ToString() });
                 }
-                if (includePlatforms && (!syncableOnly || platGroup.Key.Code == Platform.Code_FB))
+                if (includePlatforms && (platGroup.Count() > 1) && (!syncableOnly || platGroup.Key.Code == Platform.Code_FB))
                     slItems.Add(new SelectListItem { Text = "(" + platGroup.Key.Name + ") <<all for this campaign>>", Value = (0 - platGroup.Key.Id).ToString() });
                     // Set the value to the negative of the platformId
             }
