@@ -62,6 +62,11 @@ namespace EomApp1.Screens.Synch
             /// an item for each day with stats.
             /// </summary>
             public bool GroupItemsToFirstDayOfMonth { get; set; }
+
+            /// <summary>
+            /// If true, don't create items with $0 revenue and $0 cost
+            /// </summary>
+            public bool SkipZeros { get; set; }
         }
 
         private readonly Parameters parameters;
@@ -310,6 +315,13 @@ namespace EomApp1.Screens.Synch
                     var conversionSummaryKeys = this.itemsFromConversionSummaries.Keys.Where(s => s.ConversionType == conversionType).ToList();
                     foreach (var conversionSummary in conversionSummaryKeys)
                     {
+                        if (this.parameters.SkipZeros && conversionSummary.PricePaid == 0 && conversionSummary.PriceReceived == 0)
+                        {
+                            logger.Log(string.Format("Skipping item for Pid {0}, Affid {1}, {2:d} with no revenue or cost.",
+                                conversionSummary.Offer_Id, conversionSummary.Affiliate_Id, conversionSummary.ConversionDate));
+                            continue;
+                        }
+
                         // check the dictionary of conversionSummary to existing item
                         var item = this.itemsFromConversionSummaries[conversionSummary];
 

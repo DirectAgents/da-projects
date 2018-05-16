@@ -311,7 +311,8 @@ namespace EomApp1.Screens.Synch
                 Month = Properties.Settings.Default.StatsMonth,
                 FromDay = startDay,
                 ToDay = endDay,
-                GroupItemsToFirstDayOfMonth = _groupItemsToFirstDayOfMonthCheckBox.Checked
+                GroupItemsToFirstDayOfMonth = _groupItemsToFirstDayOfMonthCheckBox.Checked,
+                SkipZeros = _skipZerosCheckBox.Checked
             };
             var cakeSyncher = new CakeSyncher(this.Logger, parameters);
             cakeSyncher.SynchStatsForOfferId();

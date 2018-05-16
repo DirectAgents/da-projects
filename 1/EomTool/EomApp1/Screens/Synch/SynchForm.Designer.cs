@@ -51,6 +51,7 @@
             this.loggerBox1 = new Mainn.Controls.Logging.LoggerBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this._skipZerosCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -256,11 +257,22 @@
         "of items created.");
             this.pictureBox2.Visible = false;
             // 
+            // _skipZerosCheckBox
+            // 
+            this._skipZerosCheckBox.AutoSize = true;
+            this._skipZerosCheckBox.Location = new System.Drawing.Point(179, 35);
+            this._skipZerosCheckBox.Name = "_skipZerosCheckBox";
+            this._skipZerosCheckBox.Size = new System.Drawing.Size(77, 17);
+            this._skipZerosCheckBox.TabIndex = 16;
+            this._skipZerosCheckBox.Text = "Skip Zeros";
+            this._skipZerosCheckBox.UseVisualStyleBackColor = true;
+            // 
             // SynchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(372, 404);
+            this.Controls.Add(this._skipZerosCheckBox);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.loggerBox1);
             this.Controls.Add(this.groupBox1);
@@ -306,5 +318,6 @@
         private System.Windows.Forms.CheckBox _groupItemsToFirstDayOfMonthCheckBox;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.CheckBox _skipZerosCheckBox;
     }
 }
