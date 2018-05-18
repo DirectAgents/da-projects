@@ -249,6 +249,10 @@ namespace FacebookAPI
 
             var levelVal = "";
             var fieldsVal = "spend,impressions,inline_link_clicks,clicks,actions,action_values"; // unique_clicks,total_actions
+            if (IncludeAllActions)
+            {
+                fieldsVal += ",video_10_sec_watched_actions,video_p100_watched_actions"; // video fields
+            }
             if (byCampaign)
             {
                 levelVal = "campaign";
@@ -311,8 +315,8 @@ namespace FacebookAPI
                             tryNumber++;
                             if (tryNumber < MAX_TRIES)
                             {
-                                LogInfo("Waiting 90 seconds before trying again.");
-                                Thread.Sleep(90000);
+                                LogInfo("Waiting 45 seconds before trying again.");
+                                Thread.Sleep(45000);
                             }
                         }
                     }
@@ -362,9 +366,40 @@ namespace FacebookAPI
 
                         var actionStats = row.actions;
                         var actionVals = row.action_values;
-                        if (IncludeAllActions && (actionStats != null || actionVals != null))
+                        var videoStats1 = row.video_10_sec_watched_actions;
+                        var videoStats2 = row.video_p100_watched_actions;
+                        if (IncludeAllActions && (actionStats != null || actionVals != null || videoStats1 != null || videoStats2 != null))
                             fbSum.Actions = new Dictionary<string, FBAction>();
 
+                        if (IncludeAllActions)
+                        {
+                            if (videoStats1 != null)
+                            {
+                                foreach (var videoStat in videoStats1)
+                                {
+                                    var action = new FBAction { ActionType = "video_10_sec_watched" };
+                                    if (((IDictionary<String, object>)videoStat).ContainsKey(Click_Attribution))
+                                        action.Num_click = int.Parse(videoStat[Click_Attribution]);
+                                    if (((IDictionary<String, object>)videoStat).ContainsKey(View_Attribution))
+                                        action.Num_view = int.Parse(videoStat[View_Attribution]);
+                                    fbSum.Actions[action.ActionType] = action;
+                                    break; // should be just one videoStat
+                                }
+                            }
+                            if (videoStats2 != null)
+                            {
+                                foreach (var videoStat in videoStats2)
+                                {
+                                    var action = new FBAction { ActionType = "video_p100_watched" };
+                                    if (((IDictionary<String, object>)videoStat).ContainsKey(Click_Attribution))
+                                        action.Num_click = int.Parse(videoStat[Click_Attribution]);
+                                    if (((IDictionary<String, object>)videoStat).ContainsKey(View_Attribution))
+                                        action.Num_view = int.Parse(videoStat[View_Attribution]);
+                                    fbSum.Actions[action.ActionType] = action;
+                                    break; // should be just one videoStat
+                                }
+                            }
+                        }
                         if (actionStats != null)
                         {
                             if (IncludeAllActions)
