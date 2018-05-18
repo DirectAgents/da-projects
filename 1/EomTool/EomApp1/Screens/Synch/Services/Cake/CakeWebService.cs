@@ -144,17 +144,20 @@ namespace EomApp1.Screens.Synch.Services.Cake
             return affiliate;
         }
 
-        public List<EomApp1.Cake.WebServices._4.Reports.conversion> Conversions(int offerID, DateTime fromDate, DateTime toDate)
+        public List<EomApp1.Cake.WebServices._4.Reports.conversion> Conversions(int offerID, int? affiliateID, DateTime fromDate, DateTime toDate)
         {
             // Cake treats the to-date as exclusive, so we go one day past it
             toDate = toDate.AddDays(1);
+
+            if (!affiliateID.HasValue)
+                affiliateID = 0;
 
             var result = new List<EomApp1.Cake.WebServices._4.Reports.conversion>();
             bool success = false;
 
             try
             {
-                result.AddRange(ConversionsLocal(offerID, fromDate, toDate));
+                result.AddRange(ConversionsLocal(offerID, fromDate, toDate, affiliateID.Value));
                 success = true;
             }
             catch (Exception ex)
@@ -175,7 +178,7 @@ namespace EomApp1.Screens.Synch.Services.Cake
                 {
                     logger.Log("Current date range is " + dateRange.Item1.ToShortDateString() + " to " + dateRange.Item2.ToShortDateString());
 
-                    result.AddRange(ConversionsLocal(offerID, dateRange.Item1, dateRange.Item2));
+                    result.AddRange(ConversionsLocal(offerID, dateRange.Item1, dateRange.Item2, affiliateID.Value));
                 }
             }
 
@@ -195,7 +198,7 @@ namespace EomApp1.Screens.Synch.Services.Cake
             yield return Tuple.Create(start, end);
         }
 
-        private List<EomApp1.Cake.WebServices._4.Reports.conversion> ConversionsLocal(int offerID, DateTime fromDate, DateTime toDate)
+        private List<EomApp1.Cake.WebServices._4.Reports.conversion> ConversionsLocal(int offerID, DateTime fromDate, DateTime toDate, int affiliateID = 0)
         {
             const int batchSize = 5000;
             var client = GetReportsServiceV4();
@@ -205,7 +208,7 @@ namespace EomApp1.Screens.Synch.Services.Cake
                 logger.Log("Extracting conversions, starting at row " + start);
 
                 var resp = client.Conversions(api_key: ApiKey, start_date: fromDate, end_date: toDate,
-                                              affiliate_id: 0, advertiser_id: 0, offer_id: offerID, campaign_id: 0,
+                                              affiliate_id: affiliateID, advertiser_id: 0, offer_id: offerID, campaign_id: 0,
                                               creative_id: 0, include_tests: false, start_at_row: start, row_limit: batchSize,
                                               sort_field: EomApp1.Cake.WebServices._4.Reports.ConversionsSortFields.conversion_id,
                                               sort_descending: false);

@@ -48,10 +48,13 @@
             this._activeCampaignsCheckBox = new System.Windows.Forms.CheckBox();
             this._updateABCheckBox = new System.Windows.Forms.CheckBox();
             this._groupItemsToFirstDayOfMonthCheckBox = new System.Windows.Forms.CheckBox();
-            this.loggerBox1 = new Mainn.Controls.Logging.LoggerBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this._skipZerosCheckBox = new System.Windows.Forms.CheckBox();
+            this.loggerBox1 = new Mainn.Controls.Logging.LoggerBox();
+            this.affIdTextBox = new System.Windows.Forms.TextBox();
+            this.affIdLabel = new System.Windows.Forms.Label();
+            this.affOptLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -225,7 +228,7 @@
             // _groupItemsToFirstDayOfMonthCheckBox
             // 
             this._groupItemsToFirstDayOfMonthCheckBox.AutoSize = true;
-            this._groupItemsToFirstDayOfMonthCheckBox.Location = new System.Drawing.Point(179, 64);
+            this._groupItemsToFirstDayOfMonthCheckBox.Location = new System.Drawing.Point(239, 10);
             this._groupItemsToFirstDayOfMonthCheckBox.Name = "_groupItemsToFirstDayOfMonthCheckBox";
             this._groupItemsToFirstDayOfMonthCheckBox.Size = new System.Drawing.Size(95, 17);
             this._groupItemsToFirstDayOfMonthCheckBox.TabIndex = 14;
@@ -234,20 +237,10 @@
             this._groupItemsToFirstDayOfMonthCheckBox.Visible = false;
             this._groupItemsToFirstDayOfMonthCheckBox.EnabledChanged += new System.EventHandler(this._groupItemsToFirstDayOfMonthCheckBox_EnabledChanged);
             // 
-            // loggerBox1
-            // 
-            this.loggerBox1.Location = new System.Drawing.Point(12, 113);
-            this.loggerBox1.Name = "loggerBox1";
-            this.loggerBox1.ShowErrorMessages = true;
-            this.loggerBox1.ShowLogMessages = true;
-            this.loggerBox1.Size = new System.Drawing.Size(344, 274);
-            this.loggerBox1.TabIndex = 14;
-            this.loggerBox1.Load += new System.EventHandler(this.loggerBox1_Load);
-            // 
             // pictureBox2
             // 
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(269, 66);
+            this.pictureBox2.Location = new System.Drawing.Point(331, 11);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(16, 16);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -260,18 +253,57 @@
             // _skipZerosCheckBox
             // 
             this._skipZerosCheckBox.AutoSize = true;
-            this._skipZerosCheckBox.Location = new System.Drawing.Point(179, 35);
+            this._skipZerosCheckBox.Location = new System.Drawing.Point(270, 34);
             this._skipZerosCheckBox.Name = "_skipZerosCheckBox";
             this._skipZerosCheckBox.Size = new System.Drawing.Size(77, 17);
-            this._skipZerosCheckBox.TabIndex = 16;
+            this._skipZerosCheckBox.TabIndex = 9;
             this._skipZerosCheckBox.Text = "Skip Zeros";
             this._skipZerosCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // loggerBox1
+            // 
+            this.loggerBox1.Location = new System.Drawing.Point(12, 113);
+            this.loggerBox1.Name = "loggerBox1";
+            this.loggerBox1.ShowErrorMessages = true;
+            this.loggerBox1.ShowLogMessages = true;
+            this.loggerBox1.Size = new System.Drawing.Size(344, 274);
+            this.loggerBox1.TabIndex = 14;
+            this.loggerBox1.TabStop = false;
+            this.loggerBox1.Load += new System.EventHandler(this.loggerBox1_Load);
+            // 
+            // affIdTextBox
+            // 
+            this.affIdTextBox.Location = new System.Drawing.Point(270, 58);
+            this.affIdTextBox.Name = "affIdTextBox";
+            this.affIdTextBox.Size = new System.Drawing.Size(78, 20);
+            this.affIdTextBox.TabIndex = 10;
+            // 
+            // affIdLabel
+            // 
+            this.affIdLabel.AutoSize = true;
+            this.affIdLabel.Location = new System.Drawing.Point(235, 61);
+            this.affIdLabel.Name = "affIdLabel";
+            this.affIdLabel.Size = new System.Drawing.Size(32, 13);
+            this.affIdLabel.TabIndex = 18;
+            this.affIdLabel.Text = "AffId:";
+            // 
+            // affOptLabel
+            // 
+            this.affOptLabel.AutoSize = true;
+            this.affOptLabel.Location = new System.Drawing.Point(284, 78);
+            this.affOptLabel.Name = "affOptLabel";
+            this.affOptLabel.Size = new System.Drawing.Size(50, 13);
+            this.affOptLabel.TabIndex = 19;
+            this.affOptLabel.Text = "(optional)";
             // 
             // SynchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(372, 404);
+            this.Controls.Add(this.affOptLabel);
+            this.Controls.Add(this.affIdLabel);
+            this.Controls.Add(this.affIdTextBox);
             this.Controls.Add(this._skipZerosCheckBox);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.loggerBox1);
@@ -319,5 +351,8 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.CheckBox _skipZerosCheckBox;
+        private System.Windows.Forms.TextBox affIdTextBox;
+        private System.Windows.Forms.Label affIdLabel;
+        private System.Windows.Forms.Label affOptLabel;
     }
 }

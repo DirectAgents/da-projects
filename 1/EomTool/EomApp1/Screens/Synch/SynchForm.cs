@@ -125,10 +125,12 @@ namespace EomApp1.Screens.Synch
         private void ExtractIntegerItemsFromSpaceAndLineDelimitedList(string s, out List<int> list)
         {
             list = new List<int>();
-            var split = s.Split(new char[] {' ', '\n'}, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var pid in split.Select(c => Convert.ToInt32(c)))
+            var split = s.Split(new char[] {' ', '\n', ','}, StringSplitOptions.RemoveEmptyEntries);
+            int tmpInt;
+            foreach (var pid in split)
             {
-                list.Add(pid);
+                if (int.TryParse(pid, out tmpInt))
+                    list.Add(tmpInt);
             }
         }
 
@@ -263,11 +265,17 @@ namespace EomApp1.Screens.Synch
         private void SynchStats(int pid, int redirectedPID)
         {
             Log("SynchStats begin..");
-            int startDay = Convert.ToInt32(fromDayTextBox.Text);
-            int endDay = Convert.ToInt32(toDayTextBox.Text);
             try
             {
-                SynchStatsFromCake(pid, startDay, endDay);
+                int startDay = Convert.ToInt32(fromDayTextBox.Text);
+                int endDay = Convert.ToInt32(toDayTextBox.Text);
+
+                int? affId = null;
+                int tmp;
+                if (int.TryParse(affIdTextBox.Text, out tmp))
+                    affId = tmp;
+
+                SynchStatsFromCake(pid, startDay, endDay, affID: affId);
             }
             catch (Exception ex)
             {
@@ -283,7 +291,7 @@ namespace EomApp1.Screens.Synch
             Log("SynchStats end.");
         }
 
-        private void SynchStatsFromCake(int offerID, int startDay, int endDay)
+        private void SynchStatsFromCake(int offerID, int startDay, int endDay, int? affID = null)
         {
             int campaignID = offerID;
             try
@@ -312,7 +320,8 @@ namespace EomApp1.Screens.Synch
                 FromDay = startDay,
                 ToDay = endDay,
                 GroupItemsToFirstDayOfMonth = _groupItemsToFirstDayOfMonthCheckBox.Checked,
-                SkipZeros = _skipZerosCheckBox.Checked
+                SkipZeros = _skipZerosCheckBox.Checked,
+                AffiliateId = affID
             };
             var cakeSyncher = new CakeSyncher(this.Logger, parameters);
             cakeSyncher.SynchStatsForOfferId();

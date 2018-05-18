@@ -67,6 +67,11 @@ namespace EomApp1.Screens.Synch
             /// If true, don't create items with $0 revenue and $0 cost
             /// </summary>
             public bool SkipZeros { get; set; }
+
+            /// <summary>
+            /// Optional - affiliate filter
+            /// </summary>
+            public int? AffiliateId { get; set; }
         }
 
         private readonly Parameters parameters;
@@ -126,9 +131,11 @@ namespace EomApp1.Screens.Synch
         {
             this.logger.Log("Deleting existing conversions for offer " + this.parameters.CampaignExternalId + "...");
 
-            var existingConversions = this.cakeEntities.CakeConversions.ByOfferIdAndDateRange(this.parameters.CampaignExternalId,
-                                                                                              this.parameters.FromDate,
-                                                                                              this.parameters.ToDate);
+            var existingConversions = this.cakeEntities.CakeConversions.ByOfferIdAndDateRange(this.parameters.CampaignExternalId);
+            // Note: deleting conversions for all dates ... previously had: this.parameters.FromDate, this.parameters.ToDate);
+
+            if (this.parameters.AffiliateId.HasValue)
+                existingConversions = existingConversions.Where(x => x.Affiliate_Id == this.parameters.AffiliateId.Value);
 
             int numConversions = existingConversions.Count();
             if (numConversions > 0)
@@ -154,6 +161,8 @@ namespace EomApp1.Screens.Synch
                                    c.pid == this.parameters.CampaignId &&
                                    c.Source.name == "Cake"
                                 select c;
+            if (this.parameters.AffiliateId.HasValue)
+                existingItems = existingItems.Where(x => x.affid == this.parameters.AffiliateId.Value);
 
             existingItems.ToList().ForEach(c => this.eomEntities.Items.DeleteObject(c));
 
@@ -168,6 +177,7 @@ namespace EomApp1.Screens.Synch
             logger.Log("Extracting conversions...");
 
             var extracted = this.cakeService.Conversions(this.parameters.CampaignExternalId,
+                                                         this.parameters.AffiliateId,
                                                          this.parameters.FromDate,
                                                          this.parameters.ToDate).ToList();
 
@@ -211,13 +221,12 @@ namespace EomApp1.Screens.Synch
         private void ReadConversionSummaries()
         {
             // step 8
-            // CakeConversionSummaries is a view that groups conversions by offerId and Date, and gives them a unique string name key
-            // SET conversionSummaries to rows from special view for offerId and date range
+            // CakeConversionSummaries is a view that groups conversions by Date, offerId, affId, etc... and gives them a unique string name key
             var conversionSummariesFromView = cakeEntities.CakeConversionSummaries.ByOfferIdAndDateRange(
                                                                                 this.parameters.CampaignExternalId,
                                                                                 this.parameters.FromDate,
-                                                                                this.parameters.ToDate).ToList();
-
+                                                                                this.parameters.ToDate,
+                                                                                this.parameters.AffiliateId).ToList();
             if (this.parameters.GroupItemsToFirstDayOfMonth)
             {
                 int conversionSummaryCountBeforeGrouping = conversionSummariesFromView.Count;
@@ -351,7 +360,8 @@ namespace EomApp1.Screens.Synch
                         }
                         catch (CannotChangePromotedItemException)
                         {
-                            logger.Log(string.Format("Item for Pid {0} not being updated; already promoted.", this.parameters.CampaignId));
+                            logger.Log(string.Format("Item for Pid {0}, Affid {1} not being updated; already promoted.",
+                                this.parameters.CampaignId, conversionSummary.Affiliate_Id));
                             continue;
                         }
                         if (needToAddItem)
