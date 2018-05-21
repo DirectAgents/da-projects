@@ -107,7 +107,6 @@ if (pGauge.Children != null)
 }
 else if (super) //CampaignId specified
 {
-    var extAccts = Model.ExtAccounts(syncableOnly: true);
     var extAcctSelectList = Model.ExtAccountSelectListItems(syncableOnly: true, includePlatforms: true);
     var statsTypeList = new[] { "Daily", "Strategy", "AdSet+Actions (Adform/FB only)" };
     DateTime default_to = DateTime.Today.AddDays(-1);

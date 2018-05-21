@@ -463,9 +463,9 @@ namespace FacebookAPI
         private void SetVal_ClickView(FBAction action, dynamic stat)
         {
             if (((IDictionary<String, object>)stat).ContainsKey(Click_Attribution))
-                action.Val_click = int.Parse(stat[Click_Attribution]);
+                action.Val_click = decimal.Parse(stat[Click_Attribution]);
             if (((IDictionary<String, object>)stat).ContainsKey(View_Attribution))
-                action.Val_view = int.Parse(stat[View_Attribution]);
+                action.Val_view = decimal.Parse(stat[View_Attribution]);
         }
 
         //public IEnumerable<FBAdPreview> GetAdPreviews(string accountId, IEnumerable<string> fbAdIds)
