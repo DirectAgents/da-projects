@@ -378,10 +378,7 @@ namespace FacebookAPI
                                 foreach (var videoStat in videoStats1)
                                 {
                                     var action = new FBAction { ActionType = "video_10_sec_watched" };
-                                    if (((IDictionary<String, object>)videoStat).ContainsKey(Click_Attribution))
-                                        action.Num_click = int.Parse(videoStat[Click_Attribution]);
-                                    if (((IDictionary<String, object>)videoStat).ContainsKey(View_Attribution))
-                                        action.Num_view = int.Parse(videoStat[View_Attribution]);
+                                    SetNum_ClickView(action, videoStat);
                                     fbSum.Actions[action.ActionType] = action;
                                     break; // should be just one videoStat
                                 }
@@ -391,52 +388,30 @@ namespace FacebookAPI
                                 foreach (var videoStat in videoStats2)
                                 {
                                     var action = new FBAction { ActionType = "video_p100_watched" };
-                                    if (((IDictionary<String, object>)videoStat).ContainsKey(Click_Attribution))
-                                        action.Num_click = int.Parse(videoStat[Click_Attribution]);
-                                    if (((IDictionary<String, object>)videoStat).ContainsKey(View_Attribution))
-                                        action.Num_view = int.Parse(videoStat[View_Attribution]);
+                                    SetNum_ClickView(action, videoStat);
                                     fbSum.Actions[action.ActionType] = action;
                                     break; // should be just one videoStat
                                 }
                             }
                         }
+
                         if (actionStats != null)
                         {
-                            if (IncludeAllActions)
+                            foreach (var stat in actionStats)
                             {
-                                foreach (var stat in actionStats)
-                                {
-                                    var action = new FBAction
-                                    {
-                                        ActionType = stat.action_type
-                                    };
-                                    if (((IDictionary<String, object>)stat).ContainsKey(Click_Attribution))
-                                        action.Num_click = int.Parse(stat[Click_Attribution]);
-                                    if (((IDictionary<String, object>)stat).ContainsKey(View_Attribution))
-                                        action.Num_view = int.Parse(stat[View_Attribution]);
-                                    fbSum.Actions[stat.action_type] = action;
+                                if (!IncludeAllActions && stat.action_type != Conversion_ActionType)
+                                    continue;
 
-                                    if (stat.action_type == Conversion_ActionType) // for backward compatibility
-                                    {
-                                        if (action.Num_click.HasValue)
-                                            fbSum.Conversions_click = action.Num_click.Value;
-                                        if (action.Num_view.HasValue)
-                                            fbSum.Conversions_view = action.Num_view.Value;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                foreach (var stat in actionStats)
+                                var action = new FBAction { ActionType = stat.action_type };
+                                SetNum_ClickView(action, stat);
+                                if (IncludeAllActions)
+                                    fbSum.Actions[action.ActionType] = action;
+
+                                if (stat.action_type == Conversion_ActionType)
                                 {
-                                    if (stat.action_type == Conversion_ActionType)
-                                    {
-                                        if (((IDictionary<String, object>)stat).ContainsKey(Click_Attribution))
-                                            fbSum.Conversions_click = int.Parse(stat[Click_Attribution]);
-                                        if (((IDictionary<String, object>)stat).ContainsKey(View_Attribution))
-                                            fbSum.Conversions_view = int.Parse(stat[View_Attribution]);
+                                    fbSum.SetNumConvsFromAction(action); // for backward compatibility
+                                    if (!IncludeAllActions)
                                         break;
-                                    }
                                 }
                             }
                         }
@@ -444,35 +419,27 @@ namespace FacebookAPI
                         {
                             if (IncludeAllActions)
                             {
-                                foreach (var entity in actionVals)
+                                foreach (var stat in actionVals)
                                 {
-                                    if (!fbSum.Actions.ContainsKey(entity.action_type))
-                                        fbSum.Actions[entity.action_type] = new FBAction { ActionType = entity.action_type };
-                                    FBAction action = fbSum.Actions[entity.action_type];
-                                    if (((IDictionary<String, object>)entity).ContainsKey(Click_Attribution))
-                                        action.Val_click = decimal.Parse(entity[Click_Attribution]);
-                                    if (((IDictionary<String, object>)entity).ContainsKey(View_Attribution))
-                                        action.Val_view = decimal.Parse(entity[View_Attribution]);
+                                    if (!fbSum.Actions.ContainsKey(stat.action_type))
+                                        fbSum.Actions[stat.action_type] = new FBAction { ActionType = stat.action_type };
+                                    FBAction action = fbSum.Actions[stat.action_type];
+                                    SetVal_ClickView(action, stat);
 
-                                    if (entity.action_type == Conversion_ActionType) // for backward compatibility
-                                    {
-                                        if (action.Val_click.HasValue)
-                                            fbSum.ConVal_click = action.Val_click.Value;
-                                        if (action.Val_view.HasValue)
-                                            fbSum.ConVal_view = action.Val_view.Value;
-                                    }
+                                    if (stat.action_type == Conversion_ActionType)
+                                        fbSum.SetConValsFromAction(action); // for backward compatibility
                                 }
                             }
                             else
                             {
-                                foreach (var entity in actionVals)
+                                foreach (var stat in actionVals)
                                 {
-                                    if (entity.action_type == Conversion_ActionType)
+                                    if (stat.action_type == Conversion_ActionType)
                                     {
-                                        if (((IDictionary<String, object>)entity).ContainsKey(Click_Attribution))
-                                            fbSum.ConVal_click = decimal.Parse(entity[Click_Attribution]);
-                                        if (((IDictionary<String, object>)entity).ContainsKey(View_Attribution))
-                                            fbSum.ConVal_view = decimal.Parse(entity[View_Attribution]);
+                                        var action = new FBAction(); // temp holding object
+                                        SetVal_ClickView(action, stat);
+                                        fbSum.SetConValsFromAction(action);
+                                        break;
                                     }
                                 }
                             }
@@ -484,6 +451,21 @@ namespace FacebookAPI
                 if (moreData)
                     afterVal = retObj.paging.cursors.after;
             } while (moreData);
+        }
+
+        private void SetNum_ClickView(FBAction action, dynamic stat)
+        {
+            if (((IDictionary<String, object>)stat).ContainsKey(Click_Attribution))
+                action.Num_click = int.Parse(stat[Click_Attribution]);
+            if (((IDictionary<String, object>)stat).ContainsKey(View_Attribution))
+                action.Num_view = int.Parse(stat[View_Attribution]);
+        }
+        private void SetVal_ClickView(FBAction action, dynamic stat)
+        {
+            if (((IDictionary<String, object>)stat).ContainsKey(Click_Attribution))
+                action.Val_click = int.Parse(stat[Click_Attribution]);
+            if (((IDictionary<String, object>)stat).ContainsKey(View_Attribution))
+                action.Val_view = int.Parse(stat[View_Attribution]);
         }
 
         //public IEnumerable<FBAdPreview> GetAdPreviews(string accountId, IEnumerable<string> fbAdIds)
