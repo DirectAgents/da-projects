@@ -22,7 +22,7 @@ namespace EomApp1.Properties
             else
             {
                 if (this.DADatabaseName == "Test")
-                    this.DADatabaseName = "Dec 10";
+                    this.DADatabaseName = "Jan " + DateTime.Today.Year;
 
                 string name = this.DADatabaseName;
                 var database = DADatabase.ByName(name);

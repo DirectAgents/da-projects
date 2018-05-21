@@ -294,6 +294,7 @@ namespace EomApp1.Screens.Synch
         private void SynchStatsFromCake(int offerID, int startDay, int endDay, int? affID = null)
         {
             int campaignID = offerID;
+            int? localAffID = affID;
             try
             {
                 using (var db = EomDatabaseEntities.Create())
@@ -305,6 +306,16 @@ namespace EomApp1.Screens.Synch
                     if (campaign != null)
                     {
                         campaignID = campaign.pid;
+                    }
+
+                    if (affID.HasValue)
+                    {
+                        // Check if affID is redirected
+                        var affiliate = (from c in db.Affiliates
+                                         where c.external_id == affID.Value && c.TrackingSystem.name == "Cake Marketing"
+                                         select c).SingleOrDefault();
+                        if (affiliate != null)
+                            localAffID = affiliate.affid;
                     }
                 }
             }
@@ -321,7 +332,8 @@ namespace EomApp1.Screens.Synch
                 ToDay = endDay,
                 GroupItemsToFirstDayOfMonth = _groupItemsToFirstDayOfMonthCheckBox.Checked,
                 SkipZeros = _skipZerosCheckBox.Checked,
-                AffiliateId = affID
+                AffiliateId = localAffID,
+                AffiliateExternalId = affID
             };
             var cakeSyncher = new CakeSyncher(this.Logger, parameters);
             cakeSyncher.SynchStatsForOfferId();

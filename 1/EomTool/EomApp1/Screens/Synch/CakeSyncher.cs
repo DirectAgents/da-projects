@@ -72,6 +72,11 @@ namespace EomApp1.Screens.Synch
             /// Optional - affiliate filter
             /// </summary>
             public int? AffiliateId { get; set; }
+
+            /// <summary>
+            /// The ID of the corresponding Affiliate in Cake
+            /// </summary>
+            public int? AffiliateExternalId { get; set; }
         }
 
         private readonly Parameters parameters;
@@ -129,13 +134,17 @@ namespace EomApp1.Screens.Synch
         // step 1
         private void DeleteExistingConversions()
         {
-            this.logger.Log("Deleting existing conversions for offer " + this.parameters.CampaignExternalId + "...");
+            string logMessage = "Deleting existing conversions for offer " + this.parameters.CampaignExternalId + "...";
 
             var existingConversions = this.cakeEntities.CakeConversions.ByOfferIdAndDateRange(this.parameters.CampaignExternalId);
             // Note: deleting conversions for all dates ... previously had: this.parameters.FromDate, this.parameters.ToDate);
 
-            if (this.parameters.AffiliateId.HasValue)
-                existingConversions = existingConversions.Where(x => x.Affiliate_Id == this.parameters.AffiliateId.Value);
+            if (this.parameters.AffiliateExternalId.HasValue)
+            {
+                existingConversions = existingConversions.Where(x => x.Affiliate_Id == this.parameters.AffiliateExternalId.Value);
+                logMessage = logMessage + " aff " + this.parameters.AffiliateExternalId.Value + "...";
+            }
+            this.logger.Log(logMessage);
 
             int numConversions = existingConversions.Count();
             if (numConversions > 0)
@@ -177,7 +186,7 @@ namespace EomApp1.Screens.Synch
             logger.Log("Extracting conversions...");
 
             var extracted = this.cakeService.Conversions(this.parameters.CampaignExternalId,
-                                                         this.parameters.AffiliateId,
+                                                         this.parameters.AffiliateExternalId,
                                                          this.parameters.FromDate,
                                                          this.parameters.ToDate).ToList();
 
@@ -226,7 +235,7 @@ namespace EomApp1.Screens.Synch
                                                                                 this.parameters.CampaignExternalId,
                                                                                 this.parameters.FromDate,
                                                                                 this.parameters.ToDate,
-                                                                                this.parameters.AffiliateId).ToList();
+                                                                                this.parameters.AffiliateExternalId).ToList();
             if (this.parameters.GroupItemsToFirstDayOfMonth)
             {
                 int conversionSummaryCountBeforeGrouping = conversionSummariesFromView.Count;
