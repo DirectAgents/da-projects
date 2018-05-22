@@ -33,7 +33,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         }
 
         // For each account, shows a "gauge" of what stats are loaded
-        public ActionResult IndexGauge(string platform, int? campId, bool recent = false)
+        public ActionResult IndexGauge(string platform, int? campId, bool recent = false, bool extended = false)
         {
             var extAccounts = cpProgRepo.ExtAccounts(platformCode: platform, campId: campId)
                 .OrderBy(a => a.Platform.Name).ThenBy(a => a.Name);
@@ -42,7 +42,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             List<TDStatsGauge> statsGauges = new List<TDStatsGauge>();
             foreach (var extAcct in extAccounts)
             {
-                var statsGauge = cpProgRepo.GetStatsGauge(extAccount: extAcct);
+                var statsGauge = cpProgRepo.GetStatsGauge(extAccount: extAcct, extended: extended);
                 if (recent == false || (statsGauge.Daily.Latest.HasValue && statsGauge.Daily.Latest.Value >= recentDate))
                     statsGauges.Add(statsGauge);
             }
@@ -65,22 +65,24 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             {
                 PlatformCode = platform,
                 CampaignId = campId,
-                StatsGauges = platformGauges
+                StatsGauges = platformGauges,
+                Extended = extended
             };
             return View(model);
         }
-        public ActionResult IndexGaugeSummary()
+        public ActionResult IndexGaugeSummary(bool extended = false)
         {
-            var platforms = cpProgRepo.Platforms().OrderBy(p => p.Name);
+            var platforms = cpProgRepo.Platforms().OrderBy(p => p.Name).ToList();
             List<TDStatsGauge> statsGauges = new List<TDStatsGauge>();
             foreach (var platform in platforms)
             {
-                var statsGauge = cpProgRepo.GetStatsGauge(platform: platform);
+                var statsGauge = cpProgRepo.GetStatsGauge(platform: platform, extended: extended);
                 statsGauges.Add(statsGauge);
             }
             var model = new StatsGaugeVM
             {
-                StatsGauges = statsGauges
+                StatsGauges = statsGauges,
+                Extended = extended
             };
             return View("IndexGauge", model);
         }

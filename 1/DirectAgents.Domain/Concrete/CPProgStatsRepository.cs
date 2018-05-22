@@ -364,13 +364,14 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             return new ConvRange(convs);
         }
 
-        public TDStatsGauge GetStatsGauge(ExtAccount extAccount = null, Platform platform = null)
+        public TDStatsGauge GetStatsGauge(ExtAccount extAccount = null, Platform platform = null, bool extended = false)
         {
             if (extAccount != null || platform != null)
             {
                 var gauge = GetStatsGaugeViaIds(
                     acctId: (extAccount != null) ? (int?)extAccount.Id : null,
-                    platformId: (platform != null) ? (int?)platform.Id : null
+                    platformId: (platform != null) ? (int?)platform.Id : null,
+                    extended: extended
                 );
                 gauge.ExtAccount = extAccount;
                 gauge.Platform = platform;
@@ -379,7 +380,8 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             else
                 return GetStatsGaugeViaIds();
         }
-        public TDStatsGauge GetStatsGaugeViaIds(int? acctId = null, int? platformId = null) //Note: doesn't fill in ExtAccount or Platform
+        //Note: doesn't fill in ExtAccount or Platform
+        public TDStatsGauge GetStatsGaugeViaIds(int? acctId = null, int? platformId = null, bool extended = false)
         {
             var gauge = new TDStatsGauge();
 
@@ -403,16 +405,18 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             gauge.AdSet.Earliest = ssRange.Earliest;
             gauge.AdSet.Latest = ssRange.Latest;
 
-            var siteSums = SiteSummaries(null, null, acctId: acctId, platformId: platformId);
-            ssRange = new StatsSummaryRange(siteSums);
-            gauge.Site.Earliest = ssRange.Earliest;
-            gauge.Site.Latest = ssRange.Latest;
+            if (extended) // the following are older / not used much
+            {
+                var siteSums = SiteSummaries(null, null, acctId: acctId, platformId: platformId);
+                ssRange = new StatsSummaryRange(siteSums);
+                gauge.Site.Earliest = ssRange.Earliest;
+                gauge.Site.Latest = ssRange.Latest;
 
-            var convs = Convs(null, null, acctId: acctId, platformId: platformId);
-            var cRange = new ConvRange(convs);
-            gauge.Conv.Earliest = cRange.Earliest;
-            gauge.Conv.Latest = cRange.Latest;
-
+                var convs = Convs(null, null, acctId: acctId, platformId: platformId);
+                var cRange = new ConvRange(convs);
+                gauge.Conv.Earliest = cRange.Earliest;
+                gauge.Conv.Latest = cRange.Latest;
+            }
             var actions = AdSetActions(null, null, acctId: acctId, platformId: platformId);
             ssRange = new StatsSummaryRange(actions);
             gauge.Action.Earliest = ssRange.Earliest;

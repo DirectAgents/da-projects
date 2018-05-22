@@ -17,8 +17,11 @@
     <th colspan="2">AdSet</th>
     <th colspan="2">Actions</th>
     <th colspan="2">Creative</th>
+@if (Model.Extended)
+{
     <th colspan="2">Site</th>
     <th colspan="2">Conv</th>
+}
 </tr>
 <tr>
     <th>Partner</th>
@@ -34,10 +37,13 @@
     <th>Latest</th>
     <th>Earliest</th>
     <th>Latest</th>
+@if (Model.Extended)
+{
     <th>Earliest</th>
     <th>Latest</th>
     <th>Earliest</th>
     <th>Latest</th>
+}
 </tr>
 @foreach (var pGauge in Model.StatsGauges)
 {
@@ -55,10 +61,13 @@ if (!Model.CampaignId.HasValue) // don't show Partner summaries if filtering by 
         <td style="text-align:right">@pGauge.Action.LatestDisp</td>
         <td style="text-align:right">@pGauge.Creative.EarliestDisp</td>
         <td style="text-align:right">@pGauge.Creative.LatestDisp</td>
+@if (Model.Extended)
+{
         <td style="text-align:right">@pGauge.Site.EarliestDisp</td>
         <td style="text-align:right">@pGauge.Site.LatestDisp</td>
         <td style="text-align:right">@pGauge.Conv.EarliestDisp</td>
         <td style="text-align:right">@pGauge.Conv.LatestDisp</td>
+}
     </tr>
 }
 if (pGauge.Children != null)
@@ -80,10 +89,13 @@ if (pGauge.Children != null)
         <td style="text-align:right">@gauge.Action.LatestDisp</td>
         <td style="text-align:right">@gauge.Creative.EarliestDisp</td>
         <td style="text-align:right">@gauge.Creative.LatestDisp</td>
+@if (Model.Extended)
+{
         <td style="text-align:right">@gauge.Site.EarliestDisp</td>
         <td style="text-align:right">@gauge.Site.LatestDisp</td>
         <td style="text-align:right">@gauge.Conv.EarliestDisp</td>
         <td style="text-align:right">@gauge.Conv.LatestDisp</td>
+}
     </tr>
     }
 }

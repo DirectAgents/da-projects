@@ -160,31 +160,40 @@ namespace DirectAgents.Domain.DTO
             this.Convs = convs;
         }
 
-        private bool earliestSet;
+        private bool? _anyConvs;
+        private bool AnyConvs
+        {
+            get
+            {
+                if (!_anyConvs.HasValue)
+                {
+                    _anyConvs = (Convs != null && Convs.Any());
+                }
+                return _anyConvs.Value;
+            }
+        }
+
         private DateTime? _earliest;
         public DateTime? Earliest
         {
             get
             {
-                if (!earliestSet)
+                if (!_earliest.HasValue && this.AnyConvs)
                 {
-                    _earliest = (Convs == null || !Convs.Any()) ? null : (DateTime?)Convs.Min(s => s.Time);
-                    earliestSet = true;
+                    _earliest = Convs.Min(x => x.Time);
                 }
                 return _earliest;
             }
         }
 
-        private bool latestSet;
         private DateTime? _latest;
         public DateTime? Latest
         {
             get
             {
-                if (!latestSet)
+                if (!_latest.HasValue && this.AnyConvs)
                 {
-                    _latest = (Convs == null || !Convs.Any()) ? null : (DateTime?)Convs.Max(s => s.Time);
-                    latestSet = true;
+                    _earliest = Convs.Max(x => x.Time);
                 }
                 return _latest;
             }

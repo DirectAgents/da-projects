@@ -94,8 +94,8 @@ namespace DirectAgents.Domain.Abstract
         //IStatsRange StatsRange_TDad(int? advId);
         //IStatsRange StatsRange_Site(int? advId);
         //IStatsRange StatsRange_Conv(int? advId);
-        TDStatsGauge GetStatsGauge(ExtAccount extAccount = null, Platform platform = null);
-        TDStatsGauge GetStatsGaugeViaIds(int? acctId = null, int? platformId = null);
+        TDStatsGauge GetStatsGauge(ExtAccount extAccount = null, Platform platform = null, bool extended = false);
+        TDStatsGauge GetStatsGaugeViaIds(int? acctId = null, int? platformId = null, bool extended = false);
         DailySummary DailySummary(DateTime date, int acctId);
         bool AddDailySummary(DailySummary daySum);
         bool SaveDailySummary(DailySummary daySum);

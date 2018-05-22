@@ -10,6 +10,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Models
     {
         public string PlatformCode { get; set; }
         public int? CampaignId { get; set; }
+        public bool Extended { get; set; }
 
         public IEnumerable<TDStatsGauge> StatsGauges { get; set; }
 
