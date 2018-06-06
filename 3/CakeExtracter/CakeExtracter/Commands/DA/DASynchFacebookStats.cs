@@ -38,6 +38,7 @@ namespace CakeExtracter.Commands
         public int? DaysAgoToStart { get; set; }
         public string StatsType { get; set; }
         public bool DisabledOnly { get; set; }
+        public int? MinAccountId { get; set; }
         public int? DaysPerCall { get; set; }
         public int? ClickWindow { get; set; }
         public int? ViewWindow { get; set; }
@@ -51,6 +52,7 @@ namespace CakeExtracter.Commands
             DaysAgoToStart = null;
             StatsType = null;
             DisabledOnly = false;
+            MinAccountId = null;
             DaysPerCall = null;
             ClickWindow = null;
             ViewWindow = null;
@@ -66,6 +68,7 @@ namespace CakeExtracter.Commands
             HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 41)", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
+            HasOption<int>("m|minAccountId=", "Include this and all higher accountIds (optional)", c => MinAccountId = c);
             HasOption<int>("p|daysPerCall=", "Days Per API call (default: varies per stats type)", c => DaysPerCall = c);
             HasOption<int>("u|clickWindow=", "Click attribution window (can set to 7 or 28, otherwise will be default or from config)", c => ClickWindow = c);
             HasOption<int>("v|viewWindow=", "View attribution window (can set to 7 or 1, otherwise will be default or from config)", c => ViewWindow = c);
@@ -233,12 +236,14 @@ namespace CakeExtracter.Commands
                         accounts = accounts.Where(a => a.Id == AccountId.Value);
                 }
                 else if (!DisabledOnly)
-                    accounts = accounts.Where(a => !a.Disabled);
+                    accounts = accounts.Where(a => !a.Disabled); //all accounts that aren't disabled
 
                 if (DisabledOnly)
                     accounts = accounts.Where(a => a.Disabled);
+                if (MinAccountId.HasValue)
+                    accounts = accounts.Where(a => a.Id >= MinAccountId.Value);
 
-                return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
+                return accounts.OrderBy(a => a.Id).ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
             }
         }
     }

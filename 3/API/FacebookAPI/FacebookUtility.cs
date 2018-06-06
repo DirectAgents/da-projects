@@ -13,10 +13,11 @@ namespace FacebookAPI
     {
         public const int RowsReturnedAtATime = 25;
         public const string Pattern_ParenNums = @"^\((\d+)\)\s*";
+        public const int InitialWaitMillisecs = 1500;
 
         public int? DaysPerCall_Override = null;
-        public int DaysPerCall_Campaign = 20;
-        public int DaysPerCall_AdSet = 4;
+        public int DaysPerCall_Campaign = 15;
+        public int DaysPerCall_AdSet = 7;
         public int DaysPerCall_Ad = 3;
 
         //TODO: type MobileAppPurchase - app_custom_event.fb_mobile_purchase (for FUNimation)
@@ -135,7 +136,8 @@ namespace FacebookAPI
                 var tempEnd = start.AddDays(daysPerCall - 1);
                 if (tempEnd > end)
                     tempEnd = end;
-                var fbSummaries = GetFBSummaries(accountId, start, tempEnd, byCampaign: true);
+                var clientParms = GetClientAndParms(accountId, start, tempEnd, byCampaign: true);
+                var fbSummaries = GetFBSummaries(clientParms);
 
                 //NOTE: Forgot why this grouping was done (instead of using GetFBSummariesLoop).
                 //      Apparently there could be two campaigns with the same name and we want to display them as one.
@@ -170,13 +172,24 @@ namespace FacebookAPI
         public IEnumerable<FBSummary> GetDailyAdStats(string accountId, DateTime start, DateTime end)
         {
             int daysPerCall = DaysPerCall_Override ?? DaysPerCall_Ad;
+            var clientParmsList = new List<ClientAndParms>();
             while (start <= end)
             {
                 var tempEnd = start.AddDays(daysPerCall - 1);
                 if (tempEnd > end)
                     tempEnd = end;
-                var fbSummaries = GetFBSummaries(accountId, start, tempEnd, byAd: true);
 
+                var clientParms = GetClientAndParms(accountId, start, tempEnd, byAd: true);
+                clientParms.GetRunId(); // fire off the job
+
+                clientParmsList.Add(clientParms);
+                start = start.AddDays(daysPerCall);
+            }
+            Thread.Sleep(InitialWaitMillisecs);
+
+            foreach (var clientParms in clientParmsList)
+            {
+                var fbSummaries = GetFBSummaries(clientParms);
                 fbSummaries = RemoveIds(fbSummaries);
 
                 var groups = fbSummaries.GroupBy(s => new { s.Date, s.AdName });
@@ -198,7 +211,6 @@ namespace FacebookAPI
                     };
                     yield return fbSum;
                 }
-                start = start.AddDays(daysPerCall);
             }
         }
         public static IEnumerable<FBSummary> RemoveIds(IEnumerable<FBSummary> fbSummaries)
@@ -224,29 +236,33 @@ namespace FacebookAPI
                 if (byAd)
                     daysPerCall = DaysPerCall_Ad;
             }
+
+            var clientParmsList = new List<ClientAndParms>();
             while (start <= end)
             {
                 var tempEnd = start.AddDays(daysPerCall - 1);
                 if (tempEnd > end)
                     tempEnd = end;
-                var fbSummaries = GetFBSummaries(accountId, start, tempEnd, byCampaign: byCampaign, byAdSet: byAdSet, byAd: byAd);
+
+                var clientParms = GetClientAndParms(accountId, start, tempEnd, byCampaign: byCampaign, byAdSet: byAdSet, byAd: byAd);
+                clientParms.GetRunId(); // fire off the job
+
+                clientParmsList.Add(clientParms);
+                start = start.AddDays(daysPerCall);
+            }
+            Thread.Sleep(InitialWaitMillisecs);
+
+            foreach (var clientParms in clientParmsList)
+            {
+                var fbSummaries = GetFBSummaries(clientParms);
                 foreach (var fbSum in fbSummaries)
                 {
                     yield return fbSum;
                 }
-                start = start.AddDays(daysPerCall);
             }
         }
-        public IEnumerable<FBSummary> GetFBSummaries(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAdSet = false, bool byAd = false)
+        private ClientAndParms GetClientAndParms(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAdSet = false, bool byAd = false)
         {
-            string by = byCampaign ? " by Campaign" : "";
-            by += byAdSet ? " by AdSet" : "";
-            by += byAd ? " by Ad" : "";
-            LogInfo(string.Format("GetFBSummaries {0:d} - {1:d} ({2}{3})", start, end, accountId, by));
-
-            var fbClient = CreateFBClient();
-            var path = accountId + "/insights";
-
             var levelVal = "";
             var fieldsVal = "spend,impressions,inline_link_clicks,clicks,actions,action_values"; // unique_clicks,total_actions
             if (IncludeAllActions)
@@ -268,7 +284,6 @@ namespace FacebookAPI
                 levelVal = "ad";
                 fieldsVal += ",ad_id,ad_name";
             }
-            var afterVal = "";
 
             var filterList = new List<Filter>();
             if (!String.IsNullOrWhiteSpace(PlatformFilter))
@@ -277,48 +292,83 @@ namespace FacebookAPI
                 filterList.Add(new Filter { field = "campaign.name", @operator = CampaignFilterOperator, value = CampaignFilterValue });
             // See https://developers.facebook.com/docs/marketing-api/ad-rules-getting-started/
 
-            bool moreData;
+            var parameters = new
+            {
+                //filtering = new[] { new { field = "campaign.name", @operator = "EQUAL", value = "DA | Mobile App Installs (Android)" } },
+                //metadata = 1,
+                filtering = filterList.ToArray(),
+                level = levelVal,
+                fields = fieldsVal,
+                action_breakdowns = "action_type", //,action_reaction
+                action_attribution_windows = Click_Attribution + "," + View_Attribution, // e.g. "28d_click,1d_view",
+                time_range = new { since = DateString(start), until = DateString(end) },
+                time_increment = 1,
+                //after = afterVal
+            };
+
+            string by = byCampaign ? " by Campaign" : "";
+            by += byAdSet ? " by AdSet" : "";
+            by += byAd ? " by Ad" : "";
+            string logMessage = string.Format("GetFBSummaries {0:d} - {1:d} ({2}{3})", start, end, accountId, by);
+
+            return new ClientAndParms
+            {
+                fbClient = CreateFBClient(),
+                path = accountId + "/insights",
+                parms = parameters,
+                logMessage = logMessage
+            };
+        }
+
+        private IEnumerable<FBSummary> GetFBSummaries(ClientAndParms clientParms)
+        {
+            LogInfo(clientParms.logMessage);
+
+            bool moreData = false;
+            var afterVal = ""; // later, used for paging
             do
             {
-                moreData = false;
-                var parms = new
-                {
-                    //filtering = new[] { new { field = "campaign.name", @operator = "EQUAL", value = "DA | Mobile App Installs (Android)" } },
-                    //metadata = 1,
-                    filtering = filterList.ToArray(),
-                    level = levelVal,
-                    fields = fieldsVal,
-                    action_breakdowns = "action_type", //,action_reaction
-                    action_attribution_windows = Click_Attribution + "," + View_Attribution, // e.g. "28d_click,1d_view",
-                    time_range = new { since = DateString(start), until = DateString(end) },
-                    time_increment = 1,
-                    after = afterVal
-                };
                 dynamic retObj = null;
                 int tryNumber = 0;
-                int MAX_TRIES = 10;
+                int MAX_TRIES = 20;
                 bool abort = false;
                 do
                 {
                     try
                     {
-                        retObj = fbClient.Get(path, parms);
-                        tryNumber = 0; // Mark as call succeeded (no exception)
+                        var runId = clientParms.GetRunId();
+                        if (!moreData) // skip this when getting page 2+
+                        {
+                            retObj = clientParms.fbClient.Get(runId); // check to see if job complete
+                            int numCalls = 1;
+                            int waitMillisecs = InitialWaitMillisecs;
+                            while (retObj.async_status != "Job Completed" || retObj.async_percent_completion < 100)
+                            {
+                                waitMillisecs += 500;
+                                Thread.Sleep(waitMillisecs);
+                                retObj = clientParms.fbClient.Get(runId);
+                                numCalls++;
+                            }
+                            LogInfo(String.Format("{0} call(s) to check if job completed", numCalls));
+                        }
+                        retObj = clientParms.fbClient.Get(runId + "/insights", new { after = afterVal }); // get the actual data
+                        tryNumber = 0; // mark as call succeeded (no exception)
                     }
+                    //catch (FacebookOAuthException ex)
                     catch (Exception ex)
                     {
                         LogError(ex.Message);
-                        if (ex.Message.Contains("OAuthException"))
-                            abort = true;
-                        else
+                        int secondsToWait = 2;
+                        if (ex.Message.Contains("request limit") || ex.Message.Contains("rate limit"))
+                            secondsToWait = 31;
+
+                        tryNumber++;
+                        if (tryNumber < MAX_TRIES)
                         {
-                            tryNumber++;
-                            if (tryNumber < MAX_TRIES)
-                            {
-                                LogInfo("Waiting 45 seconds before trying again.");
-                                Thread.Sleep(45000);
-                            }
+                            LogInfo(String.Format("Waiting {0} seconds before trying again.", secondsToWait));
+                            Thread.Sleep(secondsToWait * 1000);
                         }
+                        //abort = true; //TODO: when to abort?
                     }
                 } while (tryNumber > 0 && tryNumber < MAX_TRIES && !abort);
                 if (abort)
@@ -582,6 +632,26 @@ namespace FacebookAPI
         public static string DateString(DateTime dateTime)
         {
             return dateTime.ToString("yyyy-M-d");
+        }
+
+        private class ClientAndParms
+        {
+            public FacebookClient fbClient;
+            public string path;
+            public object parms;
+            public string logMessage;
+
+            private string runId;
+            public string GetRunId(int waitMillisecs = 0)
+            {
+                if (String.IsNullOrWhiteSpace(runId))
+                {
+                    dynamic retObj = fbClient.Post(path, parms); // initial async call
+                    runId = retObj.report_run_id;
+                    Thread.Sleep(waitMillisecs);
+                }
+                return runId;
+            }
         }
 
         private class Filter
