@@ -7,6 +7,61 @@ namespace DirectAgents.Domain.DTO
 {
     public class TDStatsGauge
     {
+        public TDStatsGauge()
+        { }
+        public TDStatsGauge(IStatsRange dailyRange, IStatsRange stratRange, IStatsRange adsetRange, IStatsRange actionRange, IStatsRange creativeRange, IStatsRange siteRange, IStatsRange convRange)
+        {
+            if (dailyRange != null)
+            {
+                if (dailyRange.Earliest.HasValue)
+                    this.Daily.Earliest = dailyRange.Earliest.Value;
+                if (dailyRange.Latest.HasValue)
+                    this.Daily.Latest = dailyRange.Latest.Value;
+            }
+            if (stratRange != null)
+            {
+                if (stratRange.Earliest.HasValue)
+                    this.Strategy.Earliest = stratRange.Earliest.Value;
+                if (stratRange.Latest.HasValue)
+                    this.Strategy.Latest = stratRange.Latest.Value;
+            }
+            if (adsetRange != null)
+            {
+                if (adsetRange.Earliest.HasValue)
+                    this.AdSet.Earliest = adsetRange.Earliest.Value;
+                if (adsetRange.Latest.HasValue)
+                    this.AdSet.Latest = adsetRange.Latest.Value;
+            }
+            if (actionRange != null)
+            {
+                if (actionRange.Earliest.HasValue)
+                    this.Action.Earliest = actionRange.Earliest.Value;
+                if (actionRange.Latest.HasValue)
+                    this.Action.Latest = actionRange.Latest.Value;
+            }
+            if (creativeRange != null)
+            {
+                if (creativeRange.Earliest.HasValue)
+                    this.Creative.Earliest = creativeRange.Earliest.Value;
+                if (creativeRange.Latest.HasValue)
+                    this.Creative.Latest = creativeRange.Latest.Value;
+            }
+            if (siteRange != null)
+            {
+                if (siteRange.Earliest.HasValue)
+                    this.Site.Earliest = siteRange.Earliest.Value;
+                if (siteRange.Latest.HasValue)
+                    this.Site.Latest = siteRange.Latest.Value;
+            }
+            if (convRange != null)
+            {
+                if (convRange.Earliest.HasValue)
+                    this.Conv.Earliest = convRange.Earliest.Value;
+                if (convRange.Latest.HasValue)
+                    this.Conv.Latest = convRange.Latest.Value;
+            }
+        }
+
         public Platform Platform { get; set; }
         public ExtAccount ExtAccount { get; set; }
 
@@ -21,6 +76,11 @@ namespace DirectAgents.Domain.DTO
         public TDStatRange Site;
         public TDStatRange Conv;
         public TDStatRange Action;
+
+        public bool HasStats()
+        {
+            return Daily.HasStats() || Strategy.HasStats() || AdSet.HasStats() || Action.HasStats() || Creative.HasStats() || Site.HasStats() || Conv.HasStats();
+        }
 
         //public void Reset()
         //{
@@ -70,6 +130,11 @@ namespace DirectAgents.Domain.DTO
         {
             get { return Latest.HasValue ? Latest.Value.ToShortDateString() : null; }
         }
+
+        public bool HasStats()
+        {
+            return Earliest.HasValue || Latest.HasValue;
+        }
     }
 
     public interface IStatsRange
@@ -80,6 +145,19 @@ namespace DirectAgents.Domain.DTO
 
     public class SimpleStatsRange : IStatsRange
     {
+        public static IEnumerable<SimpleStatsRange> EmptyIEnumerable()
+        { return new List<SimpleStatsRange>(); }
+
+        public SimpleStatsRange()
+        { }
+        public SimpleStatsRange(DateTime? earliest, DateTime? latest)
+        {
+            this.Earliest = earliest;
+            this.Latest = latest;
+        }
+
+        public int Id { get; set; }
+
         public DateTime? Earliest { get; set; }
         public DateTime? Latest { get; set; }
 

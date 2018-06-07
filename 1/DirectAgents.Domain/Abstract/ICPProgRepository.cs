@@ -57,7 +57,7 @@ namespace DirectAgents.Domain.Abstract
         void CopyBudgetInfosTo(DateTime month, bool activeLastMonth = false, bool overwrite = false);
         IQueryable<Network> Networks();
         ExtAccount ExtAccount(int id);
-        IQueryable<ExtAccount> ExtAccounts(string platformCode = null, int? campId = null);
+        IQueryable<ExtAccount> ExtAccounts(string platformCode = null, int? platformId = null, int? campId = null, bool includePlatform = false);
         IQueryable<ExtAccount> ExtAccountsNotInCampaign(int campId);
         IQueryable<int> ExtAccountIds_Active(DateTime? monthStart = null);
         IQueryable<ExtAccount> ExtAccounts_Social(int? advId = null, int? campId = null);
@@ -96,6 +96,10 @@ namespace DirectAgents.Domain.Abstract
         //IStatsRange StatsRange_Conv(int? advId);
         TDStatsGauge GetStatsGauge(ExtAccount extAccount = null, Platform platform = null, bool extended = false);
         TDStatsGauge GetStatsGaugeViaIds(int? acctId = null, int? platformId = null, bool extended = false);
+
+        IEnumerable<TDStatsGauge> StatsGaugesByPlatform(bool extended = false);
+        IEnumerable<TDStatsGauge> StatsGaugesByAccount(int? platformId = null, int? campId = null, DateTime? minDate = null, bool extended = false);
+
         DailySummary DailySummary(DateTime date, int acctId);
         bool AddDailySummary(DailySummary daySum);
         bool SaveDailySummary(DailySummary daySum);

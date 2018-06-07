@@ -447,11 +447,16 @@ namespace DirectAgents.Domain.Concrete
         {
             return context.ExtAccounts.Find(id);
         }
-        public IQueryable<ExtAccount> ExtAccounts(string platformCode = null, int? campId = null)
+        public IQueryable<ExtAccount> ExtAccounts(string platformCode = null, int? platformId = null, int? campId = null, bool includePlatform = false)
         {
             var extAccounts = context.ExtAccounts.AsQueryable();
+            if (includePlatform)
+                extAccounts = extAccounts.Include(x => x.Platform);
+
             if (!string.IsNullOrWhiteSpace(platformCode))
                 extAccounts = extAccounts.Where(a => a.Platform.Code == platformCode);
+            if (platformId.HasValue)
+                extAccounts = extAccounts.Where(a => a.PlatformId == platformId.Value);
             if (campId.HasValue)
                 extAccounts = extAccounts.Where(a => a.CampaignId == campId.Value);
             return extAccounts;

@@ -425,6 +425,233 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
             return gauge;
         }
 
+        private IEnumerable<SimpleStatsRange> DailySummaryRangesByPlatform()
+        {
+            var platGroups =
+                from sum in context.DailySummaries
+                group sum by sum.ExtAccount.PlatformId
+                    into g
+                    select new SimpleStatsRange
+                    {
+                        Id = g.Key,
+                        Earliest = g.Min(x => x.Date),
+                        Latest = g.Max(x => x.Date)
+                    };
+            return platGroups.ToList();
+        }
+        private IEnumerable<SimpleStatsRange> StrategySummaryRangesByPlatform()
+        {
+            var platGroups =
+                from sum in context.StrategySummaries
+                group sum by sum.Strategy.ExtAccount.PlatformId
+                    into g
+                    select new SimpleStatsRange
+                    {
+                        Id = g.Key,
+                        Earliest = g.Min(x => x.Date),
+                        Latest = g.Max(x => x.Date)
+                    };
+            return platGroups.ToList();
+        }
+        private IEnumerable<SimpleStatsRange> AdSetSummaryRangesByPlatform()
+        {
+            var platGroups =
+                from sum in context.AdSetSummaries
+                group sum by sum.AdSet.ExtAccount.PlatformId
+                    into g
+                    select new SimpleStatsRange
+                    {
+                        Id = g.Key,
+                        Earliest = g.Min(x => x.Date),
+                        Latest = g.Max(x => x.Date)
+                    };
+            return platGroups.ToList();
+        }
+        private IEnumerable<SimpleStatsRange> AdSetActionRangesByPlatform()
+        {
+            var platGroups =
+                from stat in context.AdSetActions
+                group stat by stat.AdSet.ExtAccount.PlatformId
+                    into g
+                    select new SimpleStatsRange
+                    {
+                        Id = g.Key,
+                        Earliest = g.Min(x => x.Date),
+                        Latest = g.Max(x => x.Date)
+                    };
+            return platGroups.ToList();
+        }
+        private IEnumerable<SimpleStatsRange> TDadSummaryRangesByPlatform()
+        {
+            var platGroups =
+                from sum in context.TDadSummaries
+                group sum by sum.TDad.ExtAccount.PlatformId
+                    into g
+                    select new SimpleStatsRange
+                    {
+                        Id = g.Key,
+                        Earliest = g.Min(x => x.Date),
+                        Latest = g.Max(x => x.Date)
+                    };
+            return platGroups.ToList();
+        }
+        private IEnumerable<SimpleStatsRange> SiteSummaryRangesByPlatform()
+        {
+            var platGroups =
+                from sum in context.SiteSummaries
+                group sum by sum.ExtAccount.PlatformId
+                    into g
+                    select new SimpleStatsRange
+                    {
+                        Id = g.Key,
+                        Earliest = g.Min(x => x.Date),
+                        Latest = g.Max(x => x.Date)
+                    };
+            return platGroups.ToList();
+        }
+        private IEnumerable<SimpleStatsRange> ConvRangesByPlatform()
+        {
+            var platGroups =
+                from conv in context.Convs
+                group conv by conv.ExtAccount.PlatformId
+                    into g
+                    select new SimpleStatsRange
+                    {
+                        Id = g.Key,
+                        Earliest = g.Min(x => x.Time),
+                        Latest = g.Max(x => x.Time)
+                    };
+            return platGroups.ToList();
+        }
+
+        private IEnumerable<SimpleStatsRange> DailySummaryRangesByAccount(int? platformId = null, int? campId = null, DateTime? minDate = null)
+        {
+            var sums = DailySummaries(minDate, null, platformId: platformId, campId: campId);
+            var acctRanges = sums.GroupBy(x => x.AccountId).Select(g =>
+                new SimpleStatsRange { Id = g.Key, Earliest = g.Min(x => x.Date), Latest = g.Max(x => x.Date) });
+            return acctRanges.ToList();
+        }
+        private IEnumerable<SimpleStatsRange> StrategySummaryRangesByAccount(int? platformId = null, int? campId = null, DateTime? minDate = null)
+        {
+            var sums = StrategySummaries(minDate, null, platformId: platformId, campId: campId);
+            var acctRanges = sums.GroupBy(x => x.Strategy.AccountId).Select(g =>
+                new SimpleStatsRange { Id = g.Key, Earliest = g.Min(x => x.Date), Latest = g.Max(x => x.Date) });
+            return acctRanges.ToList();
+        }
+        private IEnumerable<SimpleStatsRange> AdSetSummaryRangesByAccount(int? platformId = null, int? campId = null, DateTime? minDate = null)
+        {
+            var sums = AdSetSummaries(minDate, null, platformId: platformId, campId: campId);
+            var acctRanges = sums.GroupBy(x => x.AdSet.AccountId).Select(g =>
+                new SimpleStatsRange { Id = g.Key, Earliest = g.Min(x => x.Date), Latest = g.Max(x => x.Date) });
+            return acctRanges.ToList();
+        }
+        private IEnumerable<SimpleStatsRange> AdSetActionRangesByAccount(int? platformId = null, int? campId = null, DateTime? minDate = null)
+        {
+            var actionStats = AdSetActions(minDate, null, platformId: platformId, campId: campId);
+            var acctRanges = actionStats.GroupBy(x => x.AdSet.AccountId).Select(g =>
+                new SimpleStatsRange { Id = g.Key, Earliest = g.Min(x => x.Date), Latest = g.Max(x => x.Date) });
+            return acctRanges.ToList();
+        }
+        private IEnumerable<SimpleStatsRange> TDadSummaryRangesByAccount(int? platformId = null, int? campId = null, DateTime? minDate = null)
+        {
+            var sums = TDadSummaries(minDate, null, platformId: platformId, campId: campId);
+            var acctRanges = sums.GroupBy(x => x.TDad.AccountId).Select(g =>
+                new SimpleStatsRange { Id = g.Key, Earliest = g.Min(x => x.Date), Latest = g.Max(x => x.Date) });
+            return acctRanges.ToList();
+        }
+        private IEnumerable<SimpleStatsRange> SiteSummaryRangeByAccount(int? platformId = null, int? campId = null, DateTime? minDate = null)
+        {
+            var sums = SiteSummaries(minDate, null, platformId: platformId, campId: campId);
+            var acctRanges = sums.GroupBy(x => x.AccountId).Select(g =>
+                new SimpleStatsRange { Id = g.Key, Earliest = g.Min(x => x.Date), Latest = g.Max(x => x.Date) });
+            return acctRanges.ToList();
+        }
+        private IEnumerable<SimpleStatsRange> ConvRangeByAccount(int? platformId = null, int? campId = null, DateTime? minDate = null)
+        {
+            var convs = Convs(minDate, null, platformId: platformId, campId: campId);
+            var acctRanges = convs.GroupBy(x => x.AccountId).Select(g =>
+                new SimpleStatsRange { Id = g.Key, Earliest = g.Min(x => x.Time), Latest = g.Max(x => x.Time) });
+            return acctRanges.ToList();
+        }
+
+        public IEnumerable<TDStatsGauge> StatsGaugesByPlatform(bool extended = false)
+        {
+            var dsRanges = DailySummaryRangesByPlatform();
+            var ssRanges = StrategySummaryRangesByPlatform();
+            var adsRanges = AdSetSummaryRangesByPlatform();
+            var actRanges = AdSetActionRangesByPlatform();
+            var adRanges = TDadSummaryRangesByPlatform();
+            var siteRanges = extended ? SiteSummaryRangesByPlatform() : SimpleStatsRange.EmptyIEnumerable();
+            var convRanges = extended ? ConvRangesByPlatform() : SimpleStatsRange.EmptyIEnumerable();
+            var platforms = Platforms().ToList();
+            var x = from plat in platforms
+                    join dsRange in dsRanges
+                    on plat.Id equals dsRange.Id into dsJoined
+                    from dsr in dsJoined.DefaultIfEmpty() // left join
+                    join ssRange in ssRanges
+                    on plat.Id equals ssRange.Id into ssJoined
+                    from ssr in ssJoined.DefaultIfEmpty() // left join
+                    join adsRange in adsRanges
+                    on plat.Id equals adsRange.Id into adsJoined
+                    from adsr in adsJoined.DefaultIfEmpty() // left join
+                    join actRange in actRanges
+                    on plat.Id equals actRange.Id into actJoined
+                    from act in actJoined.DefaultIfEmpty() // left join
+                    join adRange in adRanges
+                    on plat.Id equals adRange.Id into adJoined
+                    from ad in adJoined.DefaultIfEmpty() // left join
+                    join siteRange in siteRanges
+                    on plat.Id equals siteRange.Id into siteJoined
+                    from site in siteJoined.DefaultIfEmpty() // left join
+                    join convRange in convRanges
+                    on plat.Id equals convRange.Id into convJoined
+                    from conv in convJoined.DefaultIfEmpty() // left join
+                    select new TDStatsGauge(dsr, ssr, adsr, act, ad, site, conv)
+                    {
+                        Platform = plat
+                    };
+            return x; // ToList() needed?
+        }
+
+        public IEnumerable<TDStatsGauge> StatsGaugesByAccount(int? platformId = null, int? campId = null, DateTime? minDate = null, bool extended = false)
+        {
+            var dsRanges = DailySummaryRangesByAccount(platformId: platformId, campId: campId, minDate: minDate);
+            var ssRanges = StrategySummaryRangesByAccount(platformId: platformId, campId: campId, minDate: minDate);
+            var adsRanges = AdSetSummaryRangesByAccount(platformId: platformId, campId: campId, minDate: minDate);
+            var actRanges = AdSetActionRangesByAccount(platformId: platformId, campId: campId, minDate: minDate);
+            var adRanges = TDadSummaryRangesByAccount(platformId: platformId, campId: campId, minDate: minDate);
+            var siteRanges = extended ? SiteSummaryRangeByAccount(platformId: platformId, campId: campId, minDate: minDate) : SimpleStatsRange.EmptyIEnumerable();
+            var convRanges = extended ? ConvRangeByAccount(platformId: platformId, campId: campId, minDate: minDate) : SimpleStatsRange.EmptyIEnumerable();
+            var extAccts = ExtAccounts(platformId: platformId, campId: campId, includePlatform: true).ToList();
+            var x = from acct in extAccts
+                    join dsRange in dsRanges
+                    on acct.Id equals dsRange.Id into dsJoined
+                    from dsr in dsJoined.DefaultIfEmpty() // left join
+                    join ssRange in ssRanges
+                    on acct.Id equals ssRange.Id into ssJoined
+                    from ssr in ssJoined.DefaultIfEmpty() // left join
+                    join adsRange in adsRanges
+                    on acct.Id equals adsRange.Id into adsJoined
+                    from adsr in adsJoined.DefaultIfEmpty() // left join
+                    join actRange in actRanges
+                    on acct.Id equals actRange.Id into actJoined
+                    from act in actJoined.DefaultIfEmpty() // left join
+                    join adRange in adRanges
+                    on acct.Id equals adRange.Id into adJoined
+                    from ad in adJoined.DefaultIfEmpty() // left join
+                    join siteRange in siteRanges
+                    on acct.Id equals siteRange.Id into siteJoined
+                    from site in siteJoined.DefaultIfEmpty() // left join
+                    join convRange in convRanges
+                    on acct.Id equals convRange.Id into convJoined
+                    from conv in convJoined.DefaultIfEmpty() // left join
+                    select new TDStatsGauge(dsr, ssr, adsr, act, ad, site, conv)
+                    {
+                        ExtAccount = acct
+                    };
+            return x; // ToList() needed?
+        }
+
         public DailySummary DailySummary(DateTime date, int acctId)
         {
             return context.DailySummaries.Find(date, acctId);
