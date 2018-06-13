@@ -16,6 +16,19 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchCriteoStats : ConsoleCommand
     {
+        public static int RunStatic(int? accountId = null, DateTime? startDate = null, DateTime? endDate = null, string statsType = null)
+        {
+            AutoMapperBootstrapper.CheckRunSetup();
+            var cmd = new DASynchCriteoStats
+            {
+                AccountId = accountId,
+                StartDate = startDate,
+                EndDate = endDate,
+                StatsType = statsType
+            };
+            return cmd.Run();
+        }
+
         public int? AccountId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
@@ -76,6 +89,8 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
+        // Note: for daily stats, we just extract what's in the db for strategy stats
+
         private void DoETL_Daily(DateRange dateRange, ExtAccount account)
         {
             var extracter = new DatabaseStrategyToDailySummaryExtracter(dateRange, account.Id);
@@ -95,10 +110,12 @@ namespace CakeExtracter.Commands
             var loader = new TDStrategySummaryLoader(account.Id, preLoadStrategies: true);
 
             var campaigns = criteoUtility.GetCampaigns();
-            var nameEids = campaigns.Select(x => new NameEid { Eid = x.campaignID.ToString() });
-            loader.AddUpdateDependentStrategies(nameEids);
-            //Only using Eids in the lookup because that's what the loader will use later (the extracter doesn't get campaign names)
-
+            if (campaigns != null)
+            {
+                var nameEids = campaigns.Select(x => new NameEid { Eid = x.campaignID.ToString() });
+                loader.AddUpdateDependentStrategies(nameEids);
+                //Only using Eids in the lookup because that's what the loader will use later (the extracter doesn't get campaign names)
+            }
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
