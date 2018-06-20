@@ -14,6 +14,7 @@ namespace FacebookAPI
         public const int RowsReturnedAtATime = 25;
         public const string Pattern_ParenNums = @"^\((\d+)\)\s*";
         public const int InitialWaitMillisecs = 1500;
+        public const int MaxRetries = 20;
 
         public int? DaysPerCall_Override = null;
         public int DaysPerCall_Campaign = 15;
@@ -180,7 +181,7 @@ namespace FacebookAPI
                     tempEnd = end;
 
                 var clientParms = GetClientAndParms(accountId, start, tempEnd, byAd: true);
-                clientParms.GetRunId(); // fire off the job
+                GetRunId_withRetry(clientParms); // fire off the job
 
                 clientParmsList.Add(clientParms);
                 start = start.AddDays(daysPerCall);
@@ -245,7 +246,7 @@ namespace FacebookAPI
                     tempEnd = end;
 
                 var clientParms = GetClientAndParms(accountId, start, tempEnd, byCampaign: byCampaign, byAdSet: byAdSet, byAd: byAd);
-                clientParms.GetRunId(); // fire off the job
+                GetRunId_withRetry(clientParms); // fire off the job
 
                 clientParmsList.Add(clientParms);
                 start = start.AddDays(daysPerCall);
@@ -320,6 +321,39 @@ namespace FacebookAPI
             };
         }
 
+        private string GetRunId_withRetry(ClientAndParms clientParms)
+        {
+            int tryNumber = 0;
+            string runId = null;
+            do
+            {
+                try
+                {
+                    runId = clientParms.GetRunId();
+                    tryNumber = 0; // mark as call succeeded (no exception)
+                }
+                //catch (FacebookOAuthException ex)
+                catch (Exception ex)
+                {
+                    LogError(ex.Message);
+                    int secondsToWait = 2;
+                    if (ex.Message.Contains("request limit") || ex.Message.Contains("rate limit"))
+                        secondsToWait = 31;
+
+                    tryNumber++;
+                    if (tryNumber < MaxRetries)
+                    {
+                        LogInfo(String.Format("Waiting {0} seconds before trying again.", secondsToWait));
+                        Thread.Sleep(secondsToWait * 1000);
+                    }
+                }
+            } while (tryNumber > 0 && tryNumber < MaxRetries);
+            if (tryNumber >= MaxRetries)
+                throw new Exception(String.Format("Tried {0} times. Aborting GetRunId_withRetry.", tryNumber));
+
+            return runId;
+        }
+
         private IEnumerable<FBSummary> GetFBSummaries(ClientAndParms clientParms)
         {
             LogInfo(clientParms.logMessage);
@@ -330,8 +364,6 @@ namespace FacebookAPI
             {
                 dynamic retObj = null;
                 int tryNumber = 0;
-                int MAX_TRIES = 20;
-                bool abort = false;
                 do
                 {
                     try
@@ -363,17 +395,14 @@ namespace FacebookAPI
                             secondsToWait = 31;
 
                         tryNumber++;
-                        if (tryNumber < MAX_TRIES)
+                        if (tryNumber < MaxRetries)
                         {
                             LogInfo(String.Format("Waiting {0} seconds before trying again.", secondsToWait));
                             Thread.Sleep(secondsToWait * 1000);
                         }
-                        //abort = true; //TODO: when to abort?
                     }
-                } while (tryNumber > 0 && tryNumber < MAX_TRIES && !abort);
-                if (abort)
-                    throw new Exception("Aborting GetFBSummaries.");
-                if (tryNumber >= MAX_TRIES)
+                } while (tryNumber > 0 && tryNumber < MaxRetries);
+                if (tryNumber >= MaxRetries)
                     throw new Exception(String.Format("Tried {0} times. Aborting GetFBSummaries.", tryNumber));
 
                 if (retObj == null)
@@ -647,6 +676,7 @@ namespace FacebookAPI
                 if (String.IsNullOrWhiteSpace(runId))
                 {
                     dynamic retObj = fbClient.Post(path, parms); // initial async call
+
                     runId = retObj.report_run_id;
                     Thread.Sleep(waitMillisecs);
                 }

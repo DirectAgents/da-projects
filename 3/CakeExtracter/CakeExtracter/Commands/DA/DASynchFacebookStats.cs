@@ -166,15 +166,17 @@ namespace CakeExtracter.Commands
                 else
                     fbUtility.Set_1d_view_attribution(); //default
 
+                int? numDailyItems = null;
                 if (statsType.Daily)
-                    DoETL_Daily(acctDateRange, acct, fbUtility);
+                    numDailyItems = DoETL_Daily(acctDateRange, acct, fbUtility);
 
                 if (Accts_DailyOnly.Contains(acct.ExternalId))
                     continue;
 
-                if (statsType.Strategy)
+                // Skip strategy & adset stats if there were no dailies
+                if (statsType.Strategy && (numDailyItems == null || numDailyItems.Value > 0))
                     DoETL_Strategy(acctDateRange, acct, fbUtility);
-                if (statsType.AdSet)
+                if (statsType.AdSet && (numDailyItems == null || numDailyItems.Value > 0))
                     DoETL_AdSet(acctDateRange, acct, fbUtility);
 
                 if (statsType.Creative && !statsType.All) // don't include when getting "all" statstypes
@@ -186,7 +188,7 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
-        private void DoETL_Daily(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
+        private int DoETL_Daily(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
             var extracter = new FacebookDailySummaryExtracter(dateRange, account.ExternalId, fbUtility, includeAllActions: false);
             var loader = new FacebookDailySummaryLoader(account.Id);
@@ -194,6 +196,7 @@ namespace CakeExtracter.Commands
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
             loaderThread.Join();
+            return extracter.Added;
         }
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
