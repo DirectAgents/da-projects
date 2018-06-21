@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using RestSharp;
 using RestSharp.Deserializers;
@@ -53,6 +54,7 @@ namespace Apple
         }
         private void Setup()
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
             AppleBaseUrl = ConfigurationManager.AppSettings["AppleBaseUrl"];
             AppleP12Location = ConfigurationManager.AppSettings["AppleP12Location"];
             AppleP12Password = ConfigurationManager.AppSettings["AppleP12Password"];

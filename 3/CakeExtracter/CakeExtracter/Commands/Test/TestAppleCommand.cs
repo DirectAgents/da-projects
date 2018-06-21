@@ -25,6 +25,7 @@ namespace CakeExtracter.Commands.Test
         public override int Execute(string[] remainingArguments)
         {
             //FillStats();
+            Test();
             return 0;
         }
 
@@ -75,15 +76,17 @@ namespace CakeExtracter.Commands.Test
 
         public void Test()
         {
-            var restClient = new RestClient("https://api.searchads.apple.com/api/v1/campaigns");
+            //var url = "https://api.searchads.apple.com/api/v1/campaigns";
+            var url = "https://api.searchads.apple.com/api/v1/acls";
+            var restClient = new RestClient(url);
             restClient.AddHandler("application/json", new JsonDeserializer());
 
             var certificate = new X509Certificate2();
-            certificate.Import(@"G:\work\sp\apple\Certificates\AppleCertificateDA.p12", "appleda1", X509KeyStorageFlags.DefaultKeySet);
+            certificate.Import(@"C:\DA\portal\API\AppleCertificateDA.p12", "appleda1", X509KeyStorageFlags.DefaultKeySet);
             restClient.ClientCertificates = new X509CertificateCollection() { certificate };
 
             var request = new RestRequest();
-            request.AddHeader("Authorization", "orgId=124790"); //80760-DA, 124790-Crackle
+            request.AddHeader("Authorization", "orgId=443010"); //80760-DA, 124790-Crackle, 443010-britbox
 
             var response = restClient.Execute<AppleResponse>(request);
         }

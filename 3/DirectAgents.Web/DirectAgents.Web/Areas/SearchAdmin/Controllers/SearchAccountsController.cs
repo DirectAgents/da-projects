@@ -14,9 +14,9 @@ namespace DirectAgents.Web.Areas.SearchAdmin.Controllers
             this.cpSearchRepo = cpSearchRepository;
         }
 
-        public ActionResult Index(int? spId)
+        public ActionResult Index(int? spId, string channel)
         {
-            var searchAccounts = cpSearchRepo.SearchAccounts(spId: spId);
+            var searchAccounts = cpSearchRepo.SearchAccounts(spId: spId, channel: channel);
             return View(searchAccounts.OrderBy(x => x.SearchProfileId));
         }
 

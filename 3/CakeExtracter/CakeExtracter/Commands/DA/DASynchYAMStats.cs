@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Configuration;
 using System.Linq;
+//using System.Threading.Tasks;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
@@ -80,6 +81,7 @@ namespace CakeExtracter.Commands
                 extIds_UsePixelParm = new string[] { };
 
             var accounts = GetAccounts();
+            //Parallel.ForEach(accounts, (account) =>
             foreach (var account in accounts)
             {
                 Logger.Info("Commencing ETL for YAM account ({0}) {1}", account.Id, account.Name);
@@ -98,6 +100,7 @@ namespace CakeExtracter.Commands
                     Logger.Error(ex);
                 }
             }
+            //});
             SaveTokens();
             return 0;
         }
