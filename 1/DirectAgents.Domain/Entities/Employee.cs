@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace DirectAgents.Domain.Entities
 {
@@ -13,5 +15,10 @@ namespace DirectAgents.Domain.Entities
         {
             get { return FirstName + " " + LastName; }
         }
+
+        [NotMapped]
+        public IEnumerable<Advertiser> SalesRepFor { get; set; }
+        [NotMapped]
+        public IEnumerable<Advertiser> AMFor { get; set; }
     }
 }

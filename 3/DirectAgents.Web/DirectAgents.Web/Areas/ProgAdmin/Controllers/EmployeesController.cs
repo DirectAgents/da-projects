@@ -32,6 +32,19 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                 return Content("Error creating Employee");
         }
 
+        public ActionResult Show(int id)
+        {
+            var employee = cpProgRepo.Employee(id);
+            if (employee == null)
+                return HttpNotFound();
+
+            var advertisers = cpProgRepo.Advertisers();
+            employee.SalesRepFor = advertisers.Where(x => x.SalesRepId == employee.Id).OrderBy(x => x.Name);
+            employee.AMFor = advertisers.Where(x => x.AMId == employee.Id).OrderBy(x => x.Name);
+
+            return View(employee);
+        }
+
         [HttpGet]
         public ActionResult Edit(int id)
         {

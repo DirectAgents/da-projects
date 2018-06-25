@@ -1,0 +1,17 @@
+﻿@model DirectAgents.Domain.Entities.Employee
+
+Id: @Model.Id<br />
+FirstName: @Model.FirstName<br />
+LastName: @Model.LastName<br />
+<br />
+SalesRep for:<br />
+@foreach (var adv in @Model.SalesRepFor)
+{
+    <text> - </text>@adv.Name<br />
+}
+<br />
+AM for:<br />
+@foreach (var adv in @Model.AMFor)
+{
+    <text> - </text>@adv.Name<br />
+}

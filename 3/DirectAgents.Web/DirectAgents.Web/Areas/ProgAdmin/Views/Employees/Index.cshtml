@@ -7,6 +7,7 @@
     <th></th>
     <th>First</th>
     <th>Last</th>
+    <th></th>
 </tr>
 @foreach (var emp in Model)
 {
@@ -14,6 +15,7 @@
     <td>@Html.ActionLink("Edit", "Edit", new { id = emp.Id })</td>
     <td>@emp.FirstName</td>
     <td>@emp.LastName</td>
+    <td>@Html.ActionLink("assignments", "Show", new { id = emp.Id })</td>
 </tr>
 }
 </table>
