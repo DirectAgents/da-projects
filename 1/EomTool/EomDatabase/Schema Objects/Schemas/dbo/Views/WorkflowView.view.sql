@@ -16,7 +16,10 @@ SELECT TOP 100 PERCENT
 	, COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 1 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet7
 	, COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 2 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet15
 	, COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 3 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet30
-	, COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 4 THEN Item.affid ELSE NULL END) AS NumAffiliatesNetBiWeekly
+	, COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 4 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet7BiWeekly
+	, COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 5 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet15BiWeekly
+	, COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 6 THEN Item.affid ELSE NULL END) AS NumAffiliatesWeekly
+	, COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 7 THEN Item.affid ELSE NULL END) AS NumAffiliatesBiWeekly
 	, COUNT(DISTINCT CASE Item.campaign_status_id WHEN 1 THEN Item.affid ELSE NULL END) AS NumDefault
 	, COUNT(DISTINCT CASE Item.campaign_status_id WHEN 2 THEN Item.affid ELSE NULL END) AS NumFinalized
 	, COUNT(DISTINCT CASE Item.campaign_status_id WHEN 4 THEN Item.affid ELSE NULL END) AS NumVerified
