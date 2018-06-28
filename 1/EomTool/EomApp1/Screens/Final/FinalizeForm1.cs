@@ -20,12 +20,15 @@ namespace EomApp1.Screens.Final
         {
             InitializeComponent();
 
-            this.numPubColsTop = new[] { NumPubsToFinalizeCol, NumAffiliatesNet7, NumAffiliatesNet15, NumAffiliatesNet30, NumAffiliatesNetBiWeekly };
-            this.numPubColsBottom = new[] { NumPubsToVerifyCol, dataGridViewLinkColumn1, dataGridViewLinkColumn2, dataGridViewLinkColumn3, dataGridViewLinkColumn4 };
+            this.numPubColsTop = new[] { NumPubsToFinalizeCol, NumAffiliatesNet7, NumAffiliatesNet15, NumAffiliatesNet30, NumAffiliatesNet7Bi, NumAffiliatesNet15Bi, NumAffiliatesWeekly, NumAffiliatesBiWeekly };
+            this.numPubColsBottom = new[] { NumPubsToVerifyCol, dataGridViewLinkColumn1, dataGridViewLinkColumn2, dataGridViewLinkColumn3, dataGridViewLinkColumn4, dataGridViewLinkColumn5, dataGridViewLinkColumn6, dataGridViewLinkColumn7 };
             this.pubColHeaderTextToFilter.Add("#Net7", "Net 7");
             this.pubColHeaderTextToFilter.Add("#Net15", "Net 15");
             this.pubColHeaderTextToFilter.Add("#Net30", "Net 30");
-            this.pubColHeaderTextToFilter.Add("#BiWkly", "Net 7/Biweekly");
+            this.pubColHeaderTextToFilter.Add("#Net7Bi", "Net 7/Biweekly");
+            this.pubColHeaderTextToFilter.Add("#Net15Bi", "Net 15/Biweekly");
+            this.pubColHeaderTextToFilter.Add("#Wkly", "Weekly");
+            this.pubColHeaderTextToFilter.Add("#BiWkly", "Biweekly");
             this.notesListForm = new NotesListForm1();
 
             SetNetTermColumnsVisibility(false);
