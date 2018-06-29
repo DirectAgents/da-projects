@@ -85,7 +85,8 @@ namespace CakeExtracter.Commands
                         DoETL_Strategy(dateRange, account);
                     if (statsType.AdSet)
                         DoETL_AdSet(dateRange, account);
-                    if (statsType.Creative)
+
+                    if (statsType.Creative && !statsType.All) // don't include when getting "all" statstypes
                         DoETL_Creative(dateRange, account);
                 }
                 catch (Exception ex)

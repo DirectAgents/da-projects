@@ -34,6 +34,7 @@ namespace CakeExtracter.CakeMarketingApi
                 affiliate_id = affiliateId
             };
             var response = client.Affiliates(request);
+            //Note: when affId was -1, the above threw an exception. So todo: put in a try/catch
             if (response != null)
                 return response.Affiliates;
             else

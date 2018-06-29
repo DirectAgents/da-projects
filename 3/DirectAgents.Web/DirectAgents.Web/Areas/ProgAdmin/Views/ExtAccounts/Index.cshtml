@@ -1,8 +1,7 @@
 ﻿@model IEnumerable<DirectAgents.Domain.Entities.CPProg.ExtAccount>
 @{
     string platformCode = (string)Session["platformCode"];
-    var yesterday = DateTime.Today.AddDays(-1);
-    var month = new DateTime(yesterday.Year, yesterday.Month, 1);
+    string campId = (string)Session["campId"];
 }
 <h2>External Accounts</h2>
 
@@ -46,10 +45,15 @@
 @if (!string.IsNullOrWhiteSpace(platformCode))
 {
     @Html.ActionLink("New ExtAccount", "CreateNew", new { platform = platformCode })
+    <text> | </text>
     if (platformCode == DirectAgents.Domain.Entities.CPProg.Platform.Code_FB)
     {
-        <text> | </text>
         @Html.ActionLink("New FB Group", "CreateGroup", new { platform = platformCode })
+        <text> | </text>
     }
+}
+@if (!string.IsNullOrWhiteSpace(platformCode) || !string.IsNullOrWhiteSpace(campId))
+{
+    @Html.ActionLink("StatsGauge", "IndexGauge", new { platform = platformCode, campId = campId })
     <br />
 }

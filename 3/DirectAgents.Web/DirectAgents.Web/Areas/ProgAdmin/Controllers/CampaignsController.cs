@@ -122,5 +122,17 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             cpProgRepo.RemoveExtAccountFromCampaign(id, acctId);
             return RedirectToAction("Edit", new { id = id });
         }
+
+        public ActionResult AddAccounts(int id, string acctIds)
+        {
+            var acctIdsSplit = acctIds.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var acctIdStr in acctIdsSplit)
+            {
+                int acctId;
+                if (int.TryParse(acctIdStr, out acctId))
+                    cpProgRepo.AddExtAccountToCampaign(id, acctId);
+            }
+            return RedirectToAction("Edit", new { id = id });
+        }
     }
 }
