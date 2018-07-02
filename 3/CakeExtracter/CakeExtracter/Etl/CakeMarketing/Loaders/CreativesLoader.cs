@@ -2,7 +2,6 @@
 using System.Linq;
 using CakeExtracter.CakeMarketingApi.Entities;
 using CakeExtracter.Common;
-using MoreLinq;
 
 namespace CakeExtracter.Etl.CakeMarketing.Loaders
 {
@@ -25,32 +24,28 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                 var newCreativeTypes = new List<ClientPortal.Data.Contexts.CreativeType>();
                 foreach (var item in items)
                 {
-                    var creativeType = db.CreativeTypes.Where(ct => ct.CreativeTypeId == item.CreativeType.CreativeTypeId)
-                                        .SingleOrFallback(() =>
-                                            {
-                                                var newCreativeType = newCreativeTypes.SingleOrDefault(ct => ct.CreativeTypeId == item.CreativeType.CreativeTypeId);
-                                                if (newCreativeType == null)
-                                                {
-                                                    Logger.Info("Adding new CreativeType: {0} ({1})", item.CreativeType.CreativeTypeName, item.CreativeType.CreativeTypeId);
-                                                    newCreativeType = new ClientPortal.Data.Contexts.CreativeType
-                                                    {
-                                                        CreativeTypeId = item.CreativeType.CreativeTypeId,
-                                                        CreativeTypeName = item.CreativeType.CreativeTypeName
-                                                    };
-                                                    newCreativeTypes.Add(newCreativeType);
-                                                }
-                                                return newCreativeType;
-                                            });
+                    var creativeType = db.CreativeTypes.Where(ct => ct.CreativeTypeId == item.CreativeType.CreativeTypeId).SingleOrDefault();
+                    if (creativeType == null)
+                        creativeType = newCreativeTypes.SingleOrDefault(ct => ct.CreativeTypeId == item.CreativeType.CreativeTypeId);
+                    if (creativeType == null)
+                    {
+                        Logger.Info("Adding new CreativeType: {0} ({1})", item.CreativeType.CreativeTypeName, item.CreativeType.CreativeTypeId);
+                        creativeType = new ClientPortal.Data.Contexts.CreativeType
+                        {
+                            CreativeTypeId = item.CreativeType.CreativeTypeId,
+                            CreativeTypeName = item.CreativeType.CreativeTypeName
+                        };
+                        newCreativeTypes.Add(creativeType);
+                    }
 
-                    var creative = db.Creatives.Where(c => c.CreativeId == item.CreativeId)
-                                        .SingleOrFallback(() =>
-                                            {
-                                                var newCreative = new ClientPortal.Data.Contexts.Creative();
-                                                newCreative.CreativeId = item.CreativeId;
-                                                newCreative.CreativeName = item.CreativeName; // always set the name for a new creative
-                                                db.Creatives.Add(newCreative);
-                                                return newCreative;
-                                            });
+                    var creative = db.Creatives.Where(c => c.CreativeId == item.CreativeId).SingleOrDefault();
+                    if (creative == null)
+                    {
+                        creative = new ClientPortal.Data.Contexts.Creative();
+                        creative.CreativeId = item.CreativeId;
+                        creative.CreativeName = item.CreativeName; // always set the name for a new creative
+                        db.Creatives.Add(creative);
+                    }
                     if (overwriteNames)
                         creative.CreativeName = item.CreativeName;
 
@@ -66,15 +61,13 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                         Logger.Info("Synching {0} CreativeFiles for Creative {1}...", item.CreativeFiles.Count, item.CreativeId);
                     foreach (var file in item.CreativeFiles)
                     {
-                        var creativeFile = db.CreativeFiles.Where(cf => cf.CreativeFileId == file.CreativeFileId)
-                                            .SingleOrFallback(() =>
-                                                {
-                                                    var newCreativeFile = new ClientPortal.Data.Contexts.CreativeFile();
-                                                    newCreativeFile.CreativeFileId = file.CreativeFileId;
-                                                    db.CreativeFiles.Add(newCreativeFile);
-                                                    return newCreativeFile;
-                                                });
-
+                        var creativeFile = db.CreativeFiles.Where(cf => cf.CreativeFileId == file.CreativeFileId).SingleOrDefault();
+                        if (creativeFile == null)
+                        {
+                            creativeFile = new ClientPortal.Data.Contexts.CreativeFile();
+                            creativeFile.CreativeFileId = file.CreativeFileId;
+                            db.CreativeFiles.Add(creativeFile);
+                        }
                         creativeFile.CreativeFileName = file.CreativeFileName;
                         creativeFile.CreativeFileLink = file.CreativeFileLink;
                         creativeFile.Preview = file.Preview;

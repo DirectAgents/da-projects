@@ -4,7 +4,6 @@ using System.Web.Mvc;
 using EomTool.Domain.Abstract;
 using EomTool.Domain.Entities;
 using EomToolWeb.Models;
-using MoreLinq;
 
 namespace EomToolWeb.Controllers
 {
@@ -74,10 +73,9 @@ namespace EomToolWeb.Controllers
                 {
                     foreach (var campaign in advCampGroup)
                     {
-                        campaign.CampAff = campAffs.Where(x => x.pid == campaign.pid && x.affid == affGroup.AffId)
-                            .SingleOrFallback(() => {
-                                return new CampAff { pid = campaign.pid, affid = affGroup.AffId };
-                            });
+                        campaign.CampAff = campAffs.Where(x => x.pid == campaign.pid && x.affid == affGroup.AffId).SingleOrDefault();
+                        if (campaign.CampAff == null)
+                            campaign.CampAff = new CampAff { pid = campaign.pid, affid = affGroup.AffId };
                         //legacy:
                         campaign.AnalystRoles = mainRepo.AnalystRoles(pid: campaign.pid, affid: affGroup.AffId);
                     }

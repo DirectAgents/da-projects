@@ -2,7 +2,6 @@
 using System.Linq;
 using CakeExtracter.CakeMarketingApi.Entities;
 using CakeExtracter.Common;
-using MoreLinq;
 
 namespace CakeExtracter.Etl.CakeMarketing.Loaders
 {
@@ -24,11 +23,10 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
 
                 foreach (var item in items)
                 {
-                    var advertiser = db.Advertisers
-                        .Where(a => a.AdvertiserId == item.AdvertiserId)
-                        .SingleOrFallback(() =>
-                        {
-                            var newAdvertiser = new ClientPortal.Data.Contexts.Advertiser
+                    var advertiser = db.Advertisers.Where(a => a.AdvertiserId == item.AdvertiserId).SingleOrDefault();
+                    if (advertiser == null)
+                    {
+                        advertiser = new ClientPortal.Data.Contexts.Advertiser
                             {
                                 AdvertiserId = item.AdvertiserId,
                                 Culture = "en-US",
@@ -38,9 +36,8 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                                 ConversionValueIsNumber = false,
                                 HasSearch = false
                             };
-                            db.Advertisers.Add(newAdvertiser);
-                            return newAdvertiser;
-                        });
+                        db.Advertisers.Add(advertiser);
+                    }
 
                     advertiser.AdvertiserName = item.AdvertiserName;
 
@@ -49,35 +46,30 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                         Logger.Info("Synching {0} contacts...", item.Contacts.Count);
                         foreach (var ci in item.Contacts)
                         {
-                            var cakeRole = db.CakeRoles.Where(cr => cr.CakeRoleId == ci.Role.RoleId)
-                                .SingleOrFallback(() =>
+                            var cakeRole = db.CakeRoles.Where(cr => cr.CakeRoleId == ci.Role.RoleId).SingleOrDefault();
+                            if (cakeRole == null)
+                                cakeRole = newCakeRoles.SingleOrDefault(cr => cr.CakeRoleId == ci.Role.RoleId);
+                            if (cakeRole == null)
+                            {
+                                Logger.Info("Adding new CakeRole: {0} ({1})", ci.Role.RoleName, ci.Role.RoleId);
+                                cakeRole = new ClientPortal.Data.Contexts.CakeRole
                                 {
-                                    var newCakeRole = newCakeRoles.SingleOrDefault(cr => cr.CakeRoleId == ci.Role.RoleId);
-                                    if (newCakeRole == null)
-                                    {
-                                        Logger.Info("Adding new CakeRole: {0} ({1})", ci.Role.RoleName, ci.Role.RoleId);
-                                        newCakeRole = new ClientPortal.Data.Contexts.CakeRole
-                                        {
-                                            CakeRoleId = ci.Role.RoleId,
-                                            RoleName = ci.Role.RoleName
-                                        };
-                                        newCakeRoles.Add(newCakeRole);
-                                    }
-                                    return newCakeRole;
-                                });
+                                    CakeRoleId = ci.Role.RoleId,
+                                    RoleName = ci.Role.RoleName
+                                };
+                                newCakeRoles.Add(cakeRole);
+                            }
 
-                            var cakeContact = db.CakeContacts
-                                .Where(c => c.CakeContactId == ci.ContactId)
-                                .SingleOrFallback(() =>
+                            var cakeContact = db.CakeContacts.Where(c => c.CakeContactId == ci.ContactId).SingleOrDefault();
+                            if (cakeContact == null)
+                            {
+                                cakeContact = new ClientPortal.Data.Contexts.CakeContact
                                 {
-                                    var newCakeContact = new ClientPortal.Data.Contexts.CakeContact
-                                    {
-                                        CakeContactId = ci.ContactId,
-                                        CakeRole = cakeRole
-                                    };
-                                    db.CakeContacts.Add(newCakeContact);
-                                    return newCakeContact;
-                                });
+                                    CakeContactId = ci.ContactId,
+                                    CakeRole = cakeRole
+                                };
+                                db.CakeContacts.Add(cakeContact);
+                            }
 
                             cakeContact.CakeRole = cakeRole;
                             cakeContact.FirstName = ci.FirstName;

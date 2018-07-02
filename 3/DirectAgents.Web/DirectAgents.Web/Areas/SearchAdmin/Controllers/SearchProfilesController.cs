@@ -38,17 +38,21 @@ namespace DirectAgents.Web.Areas.SearchAdmin.Controllers
             return View(searchProfiles.OrderBy(x => x.SearchProfileName));
         }
 
-        public ActionResult CreateNew(string name)
+        public ActionResult CreateNew(string name, int? id)
         {
-            int maxId = 0;
-            var searchProfiles = cpSearchRepo.SearchProfiles();
-            if (searchProfiles.Any())
+            if (id == null)
             {
-                maxId = searchProfiles.Max(x => x.SearchProfileId);
+                int maxId = 0;
+                var searchProfiles = cpSearchRepo.SearchProfiles();
+                if (searchProfiles.Any())
+                {
+                    maxId = searchProfiles.Max(x => x.SearchProfileId);
+                }
+                id = maxId + 1;
             }
             var searchProfile = new SearchProfile
             {
-                SearchProfileId = maxId + 1,
+                SearchProfileId = id.Value,
                 SearchProfileName = String.IsNullOrEmpty(name) ? "zNew" : name,
                 StartDayOfWeek = (int)DayOfWeek.Monday,
                 ShowRevenue = true
