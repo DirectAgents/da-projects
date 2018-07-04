@@ -40,9 +40,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ClientPortal.Web\packages\ManyConsole.0.4.2.16\lib\ManyConsole.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.BingAds, Version=10.4.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\ClientPortal.Web\packages\Microsoft.BingAds.SDK.10.4.6\lib\net45\Microsoft.BingAds.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.BingAds, Version=11.5.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\ClientPortal.Web\packages\Microsoft.BingAds.SDK.11.5.7\lib\net45\Microsoft.BingAds.dll</HintPath>
     </Reference>
     <Reference Include="NDesk.Options, Version=0.2.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
