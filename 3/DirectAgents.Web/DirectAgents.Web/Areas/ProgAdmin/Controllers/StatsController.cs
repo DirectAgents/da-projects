@@ -30,13 +30,16 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             return View(campStat);
         }
 
-        // Stats by "external account"
-        public ActionResult ExtAccount(string platform, int? campId, int? acctId, DateTime? month)
-        {
-            var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
-            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
-            var stats = new List<TDRawStat>();
+        // For the dates, set either start (only) OR both start and end
 
+        // Stats by "external account"
+        public ActionResult ExtAccount(string platform, int? campId, int? acctId, DateTime? start, DateTime? end)
+        {
+            start = SetChooseMonthViewData_NonCookie(start);
+            if (!end.HasValue)
+                end = start.Value.AddMonths(1).AddDays(-1);
+
+            var stats = new List<TDRawStat>();
             var extAccounts = cpProgRepo.ExtAccounts(platformCode: platform, campId: campId)
                                 .OrderBy(a => a.Platform.Code).ThenBy(a => a.Name);
             if (acctId.HasValue)
@@ -44,33 +47,40 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 
             foreach (var extAccount in extAccounts)
             {   //Note: Multiple Active Record Sets used here
-                var stat = cpProgRepo.GetTDStatWithAccount(startOfMonth, endOfMonth, extAccount: extAccount);
+                var stat = cpProgRepo.GetTDStatWithAccount(start, end, extAccount: extAccount);
                 if (!stat.AllZeros())
                     stats.Add(stat);
             }
             var model = new TDStatsVM
             {
                 //Name =
-                Month = startOfMonth,
+                Start = start.Value,
+                End = end.Value,
+                CustomDates = AreDatesCustom(start, end),
                 PlatformCode = platform,
                 CampaignId = campId,
                 AccountId = acctId,
                 Stats = stats
             };
+
             return View(model);
         }
 
         // Stats by "strategy"
-        public ActionResult Strategy(int? acctId, DateTime? month)
+        public ActionResult Strategy(int? acctId, DateTime? start, DateTime? end)
         {
-            var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
-            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
-            var stats = cpProgRepo.GetStrategyStats(startOfMonth, endOfMonth, acctId: acctId)
+            start = SetChooseMonthViewData_NonCookie(start);
+            if (!end.HasValue)
+                end = start.Value.AddMonths(1).AddDays(-1);
+
+            var stats = cpProgRepo.GetStrategyStats(start, end, acctId: acctId)
                 .OrderBy(s => s.Strategy.Name).ThenBy(s => s.Strategy.Id);
 
             var model = new TDStatsVM
             {
-                Month = startOfMonth,
+                Start = start.Value,
+                End = end.Value,
+                CustomDates = AreDatesCustom(start, end),
                 AccountId = acctId,
                 Stats = stats
             };
@@ -78,16 +88,20 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         }
 
         // Stats by "TDad"
-        public ActionResult Creative(int? acctId, DateTime? month)
+        public ActionResult Creative(int? acctId, DateTime? start, DateTime? end)
         {
-            var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
-            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
-            var stats = cpProgRepo.GetTDadStats(startOfMonth, endOfMonth, acctId: acctId)
+            start = SetChooseMonthViewData_NonCookie(start);
+            if (!end.HasValue)
+                end = start.Value.AddMonths(1).AddDays(-1);
+
+            var stats = cpProgRepo.GetTDadStats(start, end, acctId: acctId)
                 .OrderBy(s => s.TDad.Name).ThenBy(s => s.TDad.Id);
 
             var model = new TDStatsVM
             {
-                Month = startOfMonth,
+                Start = start.Value,
+                End = end.Value,
+                CustomDates = AreDatesCustom(start, end),
                 AccountId = acctId,
                 Stats = stats
             };
@@ -95,16 +109,20 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         }
 
         // Stats by AdSet
-        public ActionResult AdSet(int? acctId, int? stratId, DateTime? month)
+        public ActionResult AdSet(int? acctId, int? stratId, DateTime? start, DateTime? end)
         {
-            var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
-            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
-            var stats = cpProgRepo.GetAdSetStats(startOfMonth, endOfMonth, acctId: acctId, stratId: stratId)
+            start = SetChooseMonthViewData_NonCookie(start);
+            if (!end.HasValue)
+                end = start.Value.AddMonths(1).AddDays(-1);
+
+            var stats = cpProgRepo.GetAdSetStats(start, end, acctId: acctId, stratId: stratId)
                 .OrderBy(s => s.AdSet.Name).ThenBy(s => s.AdSet.Id);
 
             var model = new TDStatsVM
             {
-                Month = startOfMonth,
+                Start = start.Value,
+                End = end.Value,
+                CustomDates = AreDatesCustom(start, end),
                 AccountId = acctId,
                 StratId = stratId,
                 Stats = stats
@@ -113,32 +131,40 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         }
 
         // Stats by site
-        public ActionResult Site(int? acctId, DateTime? month, int? minImp)
+        public ActionResult Site(int? acctId, DateTime? start, DateTime? end, int? minImp)
         {
-            var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
-            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
-            var stats = cpProgRepo.GetSiteStats(startOfMonth, endOfMonth, acctId: acctId, minImpressions: minImp)
+            start = SetChooseMonthViewData_NonCookie(start);
+            if (!end.HasValue)
+                end = start.Value.AddMonths(1).AddDays(-1);
+
+            var stats = cpProgRepo.GetSiteStats(start, end, acctId: acctId, minImpressions: minImp)
                 .OrderByDescending(s => s.Impressions).ThenBy(s => s.Site.Name);
 
             var model = new TDStatsVM
             {
-                Month = startOfMonth,
+                Start = start.Value,
+                End = end.Value,
+                CustomDates = AreDatesCustom(start, end),
                 AccountId = acctId,
                 Stats = stats
             };
             return View(model);
         }
 
-        public ActionResult Conv(int? acctId, DateTime? month)
+        public ActionResult Conv(int? acctId, DateTime? start, DateTime? end)
         {
-            var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
-            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
-            var convs = cpProgRepo.Convs(startOfMonth, endOfMonth, acctId: acctId)
+            start = SetChooseMonthViewData_NonCookie(start);
+            if (!end.HasValue)
+                end = start.Value.AddMonths(1).AddDays(-1);
+
+            var convs = cpProgRepo.Convs(start, end, acctId: acctId)
                 .OrderBy(s => s.Time);
 
             var model = new TDStatsVM
             {
-                Month = startOfMonth,
+                Start = start.Value,
+                End = end.Value,
+                CustomDates = AreDatesCustom(start, end),
                 AccountId = acctId,
                 Convs = convs
             };
@@ -146,16 +172,20 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         }
 
         // Stats by ActionType
-        public ActionResult Action(int? acctId, int? stratId, int? adsetId, DateTime? month)
+        public ActionResult Action(int? acctId, int? stratId, int? adsetId, DateTime? start, DateTime? end)
         {
-            var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
-            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
-            var stats = cpProgRepo.GetAdSetActionStats(startOfMonth, endOfMonth, acctId: acctId, stratId: stratId, adsetId: adsetId)
+            start = SetChooseMonthViewData_NonCookie(start);
+            if (!end.HasValue)
+                end = start.Value.AddMonths(1).AddDays(-1);
+
+            var stats = cpProgRepo.GetAdSetActionStats(start, end, acctId: acctId, stratId: stratId, adsetId: adsetId)
                 .OrderBy(s => s.ActionType.Code);
 
             var model = new TDStatsVM
             {
-                Month = startOfMonth,
+                Start = start.Value,
+                End = end.Value,
+                CustomDates = AreDatesCustom(start, end),
                 AccountId = acctId,
                 StratId = stratId,
                 AdSetId = adsetId,
@@ -169,7 +199,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         // AdRoll Stats by Ad
         public ActionResult AdRoll(string advEid, DateTime? month)
         {
-            var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
+            var startOfMonth = SetChooseMonthViewData_NonCookie(month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
             var stats = new List<TDRawStat>();
 
@@ -188,7 +218,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             {
                 Name = "ExtAccount: " + advertisable.Name + "(AdRoll)",
                 ExternalId = advEid,
-                Month = startOfMonth,
+                //Month = startOfMonth,
                 Stats = stats.OrderBy(a => a.Name).ToList()
             };
             return View(model);
@@ -197,7 +227,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         // DBM Stats by Creative
         public ActionResult DBM(int ioID, DateTime? month)
         {
-            var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
+            var startOfMonth = SetChooseMonthViewData_NonCookie(month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
 
             var insertionOrder = tdRepo.InsertionOrder(ioID);
@@ -209,7 +239,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             {
                 Name = "ExtAccount: " + insertionOrder.Name + "(DBM)",
                 ExternalId = ioID.ToString(),
-                Month = startOfMonth,
+                //Month = startOfMonth,
                 Stats = stats.OrderBy(a => a.Name).ToList()
             };
             return View("Generic", model);
@@ -222,7 +252,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         }
         public JsonResult SpreadsheetData(int ioID, DateTime? month)
         {
-            var startOfMonth = SetChooseMonthViewData_NonCookie("RT", month);
+            var startOfMonth = SetChooseMonthViewData_NonCookie(month);
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
 
             var insertionOrder = tdRepo.InsertionOrder(ioID);

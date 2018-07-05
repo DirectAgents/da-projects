@@ -25,7 +25,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 
         public ActionResult IndexFees(DateTime? month, bool activeLastMonth = false)
         {
-            DateTime currMonth = SetChooseMonthViewData_NonCookie("RT", month);
+            DateTime currMonth = SetChooseMonthViewData_NonCookie(month);
             //DateTime currMonth = SetChooseMonthViewData("RT");
 
             var whichMonthToCheck = activeLastMonth ? currMonth.AddMonths(-1) : currMonth;
