@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Threading.Tasks;
 using Amazon;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
@@ -80,7 +81,7 @@ namespace CakeExtracter.Commands
             SetupAmazonUtility();
 
             var accounts = GetAccounts();
-            foreach (var account in accounts)
+            Parallel.ForEach(accounts, account =>
             {
                 Logger.Info("Commencing ETL for Amazon account ({0}) {1}", account.Id, account.Name);
                 amazonUtility.SetWhichAlt(account.ExternalId);
@@ -104,7 +105,7 @@ namespace CakeExtracter.Commands
                 {
                     Logger.Error(ex);
                 }
-            }
+            });
 
             SaveTokens();
             return 0;
