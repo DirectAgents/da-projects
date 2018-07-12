@@ -11,7 +11,7 @@ namespace CakeExtracter.Etl
         private readonly BlockingCollection<T> items = new BlockingCollection<T>(5000);
         private readonly object locker = new object();
 
-        public  Thread Start()
+        public Thread Start()
         {
             var thread = new Thread(Extract);
             thread.SetApartmentState(ApartmentState.STA);

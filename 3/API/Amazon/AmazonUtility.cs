@@ -15,6 +15,8 @@ namespace Amazon
 {
     public class AmazonUtility
     {
+        private static readonly object RequestLock = new object();
+        private static readonly object FileLock = new object();
         // From Config File
         private readonly string _amazonClientId = ConfigurationManager.AppSettings["AmazonClientId"];
         private readonly string _amazonClientSecret = ConfigurationManager.AppSettings["AmazonClientSecret"];
@@ -370,14 +372,16 @@ namespace Amazon
             {
                 var request = new RestRequest("v1/reports/" + reportId);
                 request.AddHeader("Amazon-Advertising-API-Scope", profileId);
-
-                var restResponse = ProcessRequest<ReportResponseDownloadInfo>(request, postNotGet: false);
-                if (restResponse.Data.status == "SUCCESS")
-                    return restResponse.Data;
-                else if (restResponse.Content.Contains("IN_PROGRESS"))
+                lock (RequestLock)
                 {
-                    LogInfo("Waiting 5 seconds for report to finish generating.");
-                    Thread.Sleep(5000);
+                    var restResponse = ProcessRequest<ReportResponseDownloadInfo>(request, postNotGet: false);
+                    if (restResponse.Data.status == "SUCCESS")
+                        return restResponse.Data;
+                    else if (restResponse.Content.Contains("IN_PROGRESS"))
+                    {
+                        LogInfo("Waiting 5 seconds for report to finish generating.");
+                        Thread.Sleep(5000);
+                    }
                 }
             }
             catch (Exception x)
@@ -396,20 +400,27 @@ namespace Amazon
                 request.Headers.Add("Amazon-Advertising-API-Scope", profileId);
                 var response = (HttpWebResponse)request.GetResponse();
                 var responseStream = response.GetResponseStream();
-                var streamReader = new StreamReader(responseStream);
+
                 string exePath = AppDomain.CurrentDomain.BaseDirectory;
                 string filePath = Path.Combine(exePath, "download.gzip");
-                using (Stream s = File.Create(filePath))
+                lock (FileLock)
                 {
-                    responseStream.CopyTo(s);
+                    using (Stream s = File.Create(filePath))
+                    {
+                        responseStream.CopyTo(s);
+                    }
+                    FileInfo fileToDecompress = new FileInfo(filePath);
+                    Decompress(fileToDecompress);
                 }
-                FileInfo fileToDecompress = new FileInfo(filePath);
-                Decompress(fileToDecompress);
+                
                 string jsonFile = Path.Combine(exePath, "download.json");
-                using (StreamReader r = new StreamReader(jsonFile))
+                lock (FileLock)
                 {
-                    string json = r.ReadToEnd();
-                    return json;
+                    using (StreamReader r = new StreamReader(jsonFile))
+                    {
+                        string json = r.ReadToEnd();
+                        return json;
+                    }
                 }
             }
             catch (Exception x)

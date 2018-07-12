@@ -11,6 +11,8 @@ namespace FacebookAPI
 {
     public class FacebookUtility
     {
+        private static readonly object RequestLock = new object();
+
         public const int RowsReturnedAtATime = 25;
         public const string Pattern_ParenNums = @"^\((\d+)\)\s*";
         public const int InitialWaitMillisecs = 1500;

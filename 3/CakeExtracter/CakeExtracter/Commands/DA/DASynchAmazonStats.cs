@@ -40,8 +40,6 @@ namespace CakeExtracter.Commands
         public bool DisabledOnly { get; set; }
         public bool FromDatabase { get; set; }
 
-        private AmazonUtility amazonUtility { get; set; }
-
         public override void ResetProperties()
         {
             AccountId = null;
@@ -78,28 +76,34 @@ namespace CakeExtracter.Commands
             Logger.Info("Amazon ETL. DateRange {0}.", dateRange);
 
             var statsType = new StatsTypeAgg(this.StatsType);
-            SetupAmazonUtility();
 
             var accounts = GetAccounts();
+            var tokens = GetTokens();
             Parallel.ForEach(accounts, account =>
             {
                 Logger.Info("Commencing ETL for Amazon account ({0}) {1}", account.Id, account.Name);
+
+                var amazonUtility = new AmazonUtility(m => Logger.Info(m), m => Logger.Warn(m))
+                {
+                    TokenSets = tokens
+                };
                 amazonUtility.SetWhichAlt(account.ExternalId);
+
                 try
                 {
                     if (statsType.Daily && !FromDatabase)
                     {
-                        DoETL_Daily(dateRange, account);
+                        DoETL_Daily(dateRange, account, amazonUtility);
                     }
                     if (statsType.Strategy)
-                        DoETL_Strategy(dateRange, account);
+                        DoETL_Strategy(dateRange, account, amazonUtility);
                     if (statsType.Daily && FromDatabase)
                         DoETL_DailyFromStrategyInDatabase(dateRange, account); // need to update strat stats first
 
                     if (statsType.AdSet)
-                        DoETL_AdSet(dateRange, account);
+                        DoETL_AdSet(dateRange, account, amazonUtility);
                     if (statsType.Creative)
-                        DoETL_Creative(dateRange, account);
+                        DoETL_Creative(dateRange, account, amazonUtility);
                 }
                 catch (Exception ex)
                 {
@@ -107,27 +111,22 @@ namespace CakeExtracter.Commands
                 }
             });
 
-            SaveTokens();
+            SaveTokens(tokens);
             return 0;
         }
 
-        private void SetupAmazonUtility()
-        {
-            this.amazonUtility = new AmazonUtility(m => Logger.Info(m), m => Logger.Warn(m));
-            GetTokens();
-        }
-        private void GetTokens()
+        private string[] GetTokens()
         {
             // Get tokens, if any, from the database
-            string[] tokens = Platform.GetPlatformTokens(Platform.Code_Amazon);
-            amazonUtility.TokenSets = tokens;
-        }
-        private void SaveTokens()
-        {
-            Platform.SavePlatformTokens(Platform.Code_Amazon, amazonUtility.TokenSets);
+            return Platform.GetPlatformTokens(Platform.Code_Amazon);
         }
 
-        private void DoETL_Daily(DateRange dateRange, ExtAccount account)
+        private void SaveTokens(string[] tokens)
+        {
+            Platform.SavePlatformTokens(Platform.Code_Amazon, tokens);
+        }
+
+        private void DoETL_Daily(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
             //var extracter = new AmazonDailySummaryExtracter(amazonUtility, dateRange, account.ExternalId, campaignFilter: account.Filter, campaignFilterOut: account.FilterOut);
             var extracter = new AmazonDailySummaryExtracter(amazonUtility, dateRange, account.ExternalId, campaignFilter: account.Filter);
@@ -147,7 +146,7 @@ namespace CakeExtracter.Commands
             loaderThread.Join();
         }
 
-        private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
+        private void DoETL_Strategy(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
             //var extracter = new AmazonCampaignSummaryExtracter(amazonUtility, dateRange, account.ExternalId, campaignFilter: account.Filter, campaignFilterOut: account.FilterOut);
             var extracter = new AmazonCampaignSummaryExtracter(amazonUtility, dateRange, account.ExternalId, campaignFilter: account.Filter);
@@ -157,7 +156,7 @@ namespace CakeExtracter.Commands
             extracterThread.Join();
             loaderThread.Join();
         }
-        private void DoETL_AdSet(DateRange dateRange, ExtAccount account)
+        private void DoETL_AdSet(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
             //var extracter = new AmazonAdSetExtracter(amazonUtility, dateRange, account.ExternalId, campaignFilter: account.Filter, campaignFilterOut: account.FilterOut);
             var extracter = new AmazonAdSetExtracter(amazonUtility, dateRange, account.ExternalId, campaignFilter: account.Filter);
@@ -167,7 +166,7 @@ namespace CakeExtracter.Commands
             extracterThread.Join();
             loaderThread.Join();
         }
-        private void DoETL_Creative(DateRange dateRange, ExtAccount account)
+        private void DoETL_Creative(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
             //var extracter = new AmazonAdExtrater(amazonUtility, dateRange, account.ExternalId, campaignFilter: account.Filter, campaignFilterOut: account.FilterOut);
             var extracter = new AmazonAdExtrater(amazonUtility, dateRange, account.ExternalId, campaignFilter: account.Filter);

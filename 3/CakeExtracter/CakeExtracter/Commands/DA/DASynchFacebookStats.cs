@@ -85,8 +85,6 @@ namespace CakeExtracter.Commands
             Logger.Info("Facebook ETL. DateRange {0}.", dateRange);
 
             var statsType = new StatsTypeAgg(this.StatsType);
-            var fbUtility = new FacebookUtility(m => Logger.Info(m), m => Logger.Warn(m));
-            fbUtility.DaysPerCall_Override = DaysPerCall;
 
             var string_ConvAsMobAppInst = ConfigurationManager.AppSettings["FB_ConversionsAsMobileAppInstalls"] ?? "";
             var Accts_ConvAsMobAppInst = string_ConvAsMobAppInst.Split(new char[] { ',' });
@@ -114,6 +112,9 @@ namespace CakeExtracter.Commands
             var accounts = GetAccounts();
             Parallel.ForEach(accounts, (acct) => 
             {
+                var fbUtility = new FacebookUtility(m => Logger.Info(m), m => Logger.Warn(m));
+                fbUtility.DaysPerCall_Override = DaysPerCall;
+
                 var acctDateRange = new DateRange(dateRange.FromDate, dateRange.ToDate);
                 if (acct.Campaign != null) // check/adjust daterange - if acct assigned to a campaign/advertiser
                 {
