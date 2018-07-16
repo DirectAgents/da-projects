@@ -1,0 +1,45 @@
+﻿@model DirectAgents.Domain.Entities.CPSearch.ClientReport
+@{
+    var progCamps = (IEnumerable<DirectAgents.Domain.Entities.CPProg.Campaign>)ViewBag.ProgCampaigns;
+    var searchProfiles = (IEnumerable<DirectAgents.Domain.Entities.CPSearch.SearchProfile>)ViewBag.SearchProfiles;
+    var progCampSelectList = new SelectList(progCamps, "Id", "NameWithAdvertiser", Model.ProgCampaignId);
+    var searchProfileSelectList = new SelectList(searchProfiles, "SearchProfileId", "SearchProfileName", Model.SearchProfileId);
+}
+
+<fieldset>
+    <legend>Edit ClientReport</legend>
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary()
+        @Html.HiddenFor(m => m.Id)
+        <div style="float:left">
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Id)</td>
+                    <td>@Html.DisplayFor(m => m.Id)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Name)</td>
+                    <td>@Html.EditorFor(m => m.Name)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.StartDayOfWeek)</td>
+                    <td>@Html.EditorFor(m => m.StartDayOfWeek, "DayOfWeek")</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.ProgCampaignId, "ProgCampaign")</td>
+                    <td>@Html.DropDownListFor(m => m.ProgCampaignId, progCampSelectList, "(none)")</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.SearchProfileId, "SearchProfile")</td>
+                    <td>@Html.DropDownListFor(m => m.SearchProfileId, searchProfileSelectList, "(none)")</td>
+                </tr>
+            </table>
+            <br />
+            <input type="submit" value="Save" />
+            &nbsp;@Html.ActionLink("cancel", "Index")
+        </div>
+    }
+</fieldset>
+<br />
+@Html.ActionLink("[Delete ClientReport]", "Delete", new { id = Model.Id }, new { onclick = "if (!confirm('Are you sure?')) return false" })

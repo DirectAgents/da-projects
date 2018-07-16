@@ -4,13 +4,11 @@ using System.Data.Entity;
 using System.Linq;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Contexts;
-using DirectAgents.Domain.DTO;
-using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.CPSearch;
 
 namespace DirectAgents.Domain.Concrete
 {
-    public class CPSearchRepository : ICPSearchRepository, IDisposable
+    public partial class CPSearchRepository : ICPSearchRepository, IDisposable
     {
         private ClientPortalSearchContext context;
 
@@ -277,13 +275,6 @@ namespace DirectAgents.Domain.Concrete
         {
             var searchConvType = context.SearchConvTypes.Find(id);
             return searchConvType;
-        }
-
-        // ---
-
-        public IQueryable<ClientReport> ClientReports()
-        {
-            return context.ClientReports;
         }
 
         // ---

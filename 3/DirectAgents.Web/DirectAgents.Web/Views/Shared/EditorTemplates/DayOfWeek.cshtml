@@ -1,0 +1,15 @@
+﻿@model int
+
+@{
+    var items = new[] {
+        new SelectListItem() { Value = "0", Text = "Sunday" },
+        new SelectListItem() { Value = "1", Text = "Monday" },
+        new SelectListItem() { Value = "2", Text = "Tuesday" },
+        new SelectListItem() { Value = "3", Text = "Wednesday" },
+        new SelectListItem() { Value = "4", Text = "Thursday" },
+        new SelectListItem() { Value = "5", Text = "Friday" },
+        new SelectListItem() { Value = "6", Text = "Saturday" }
+    };
+    var slist = new SelectList(items, "Value", "Text", Model);
+}
+@Html.DropDownList("", slist)

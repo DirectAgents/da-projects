@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DirectAgents.Domain.DTO;
-using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.CPSearch;
 
 namespace DirectAgents.Domain.Abstract
@@ -28,5 +26,8 @@ namespace DirectAgents.Domain.Abstract
         SearchConvType GetConvType(int id);
 
         IQueryable<ClientReport> ClientReports();
+        ClientReport GetClientReport(int id);
+        bool SaveClientReport(ClientReport clientReport, bool saveIfExists = true, bool createIfDoesntExist = false);
+        bool DeleteClientReport(int id);
     }
 }

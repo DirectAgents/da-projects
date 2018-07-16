@@ -41,6 +41,17 @@ namespace DirectAgents.Web.Controllers
             base.Dispose(disposing);
         }
 
+        private IClientRepository _clientRepo;
+        protected IClientRepository clientRepo
+        {
+            get { return _clientRepo; }
+            set
+            {   //NOTE: Be sure to setup the required underlying repositories first.
+                _clientRepo = value;
+                _clientRepo.SetRepositories(cpProgRepo, cpSearchRepo);
+            }
+        }
+
         private ISuperRepository _superRepo;
         protected ISuperRepository superRepo
         {

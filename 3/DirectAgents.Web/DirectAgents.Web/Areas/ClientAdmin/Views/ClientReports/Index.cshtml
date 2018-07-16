@@ -1,0 +1,27 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.CPSearch.ClientReport>
+
+<h2>ClientReports</h2>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th></th>
+        <th>Name</th>
+        <th>StartDayOfWeek</th>
+        <th>ProgAdvertiser/Campaign</th>
+        <th>SearchProfile</th>
+    </tr>
+@foreach (var rep in Model)
+{
+    <tr>
+        <td style="text-align:right">@rep.Id</td>
+        <td>@Html.ActionLink("Edit", "Edit", new { id = rep.Id })</td>
+        <td>@rep.Name</td>
+        <td style="text-align:center">@((DayOfWeek)rep.StartDayOfWeek)</td>
+        <td>@(rep.ProgCampaign == null ? "" : rep.ProgCampaign.NameWithAdvertiser)</td>
+        <td>@(rep.SearchProfile == null ? "" : rep.SearchProfile.SearchProfileName)</td>
+    </tr>
+}
+</table>
+<br />
+@Html.ActionLink("New ClientReport", "CreateNew")
