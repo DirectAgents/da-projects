@@ -17,6 +17,7 @@ namespace Amazon
     {
         private static readonly object RequestLock = new object();
         private static readonly object FileLock = new object();
+        private static readonly object AccessTokenLock = new object();
         // From Config File
         private readonly string _amazonClientId = ConfigurationManager.AppSettings["AmazonClientId"];
         private readonly string _amazonClientSecret = ConfigurationManager.AppSettings["AmazonClientSecret"];
@@ -42,8 +43,8 @@ namespace Amazon
         //private string ClientSecret { get; set; }
 
         private string[] AuthCode = new string[NumAlts];
-        private string[] AccessToken = new string[NumAlts];
-        private string[] RefreshToken = new string[NumAlts];
+        private static string[] AccessToken = new string[NumAlts];
+        private static string[] RefreshToken = new string[NumAlts];
         private string[] AltAccountIDs = new string[NumAlts];
         public int WhichAlt { get; set; } // default: 0
         
@@ -79,22 +80,25 @@ namespace Amazon
         } 
         #endregion
 
-        private IEnumerable<string> CreateTokenSets()
+        private static IEnumerable<string> CreateTokenSets()
         {
             for (int i = 0; i < NumAlts; i++)
                 yield return AccessToken[i] + TOKEN_DELIMITER + RefreshToken[i];
         }
-        public string[] TokenSets // each string in the array is a combination of Access + Refresh Token
+        public static string[] TokenSets // each string in the array is a combination of Access + Refresh Token
         {
             get { return CreateTokenSets().ToArray(); }
             set
             {
-                for (int i = 0; i < value.Length; i++)
+                lock (AccessTokenLock)
                 {
-                    var tokenSet = value[i].Split(new string[] { TOKEN_DELIMITER }, StringSplitOptions.None);
-                    AccessToken[i] = tokenSet[0];
-                    if (tokenSet.Length > 1)
-                        RefreshToken[i] = tokenSet[1];
+                    for (int i = 0; i < value.Length; i++)
+                    {
+                        var tokenSet = value[i].Split(new string[] {TOKEN_DELIMITER}, StringSplitOptions.None);
+                        AccessToken[i] = tokenSet[0];
+                        if (tokenSet.Length > 1)
+                            RefreshToken[i] = tokenSet[1];
+                    }
                 }
             }
         }
@@ -179,6 +183,7 @@ namespace Amazon
                 request.AddParameter("grant_type", "refresh_token");
                 request.AddParameter("refresh_token", RefreshToken[WhichAlt]);
             }
+
             var response = restClient.ExecuteAsPost<GetTokenResponse>(request, "POST");
 
             if (response.Data == null || response.Data.access_token == null)

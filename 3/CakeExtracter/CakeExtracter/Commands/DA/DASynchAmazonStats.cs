@@ -79,7 +79,7 @@ namespace CakeExtracter.Commands
             var statsType = new StatsTypeAgg(this.StatsType);
 
             var accounts = GetAccounts();
-            var tokens = GetTokens();
+            AmazonUtility.TokenSets = GetTokens();
 
             Parallel.ForEach(accounts, account =>
             {
@@ -112,10 +112,9 @@ namespace CakeExtracter.Commands
                     Logger.Error(ex);
                 }
                 Logger.Info("Finished ETL for Amazon account ({0}) {1}", account.Id, account.Name);
-                Interlocked.Exchange(ref tokens, amazonUtility.TokenSets);
             });
 
-            SaveTokens(tokens);
+            SaveTokens(AmazonUtility.TokenSets);
             return 0;
         }
 
