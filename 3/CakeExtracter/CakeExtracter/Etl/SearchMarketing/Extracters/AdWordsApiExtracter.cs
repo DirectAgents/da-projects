@@ -4,14 +4,14 @@ using System.Configuration;
 using System.Xml;
 using Google.Api.Ads.AdWords.Lib;
 using Google.Api.Ads.AdWords.Util.Reports;
-using Google.Api.Ads.AdWords.v201710;
+using Google.Api.Ads.AdWords.v201802;
 using Google.Api.Ads.Common.Util.Reports;
 
 namespace CakeExtracter.Etl.SearchMarketing.Extracters
 {
     public class AdWordsApiExtracter : Extracter<Dictionary<string, string>>
     {
-        const string VERSION = "v201710";
+        const string VERSION = "v201802";
         private readonly string reportFilePath = ConfigurationManager.AppSettings["AdWordsReportFilePath"];
 
         private readonly string clientCustomerId;
