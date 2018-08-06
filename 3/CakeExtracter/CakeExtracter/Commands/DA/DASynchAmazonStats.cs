@@ -85,10 +85,7 @@ namespace CakeExtracter.Commands
             {
                 Logger.Info("Commencing ETL for Amazon account ({0}) {1}", account.Id, account.Name);
 
-                var amazonUtility = new AmazonUtility(m => Logger.Info(m), m => Logger.Warn(m))
-                {
-                    TokenSets = tokens
-                };
+                var amazonUtility = new AmazonUtility(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m));
                 amazonUtility.SetWhichAlt(account.ExternalId);
 
                 try
