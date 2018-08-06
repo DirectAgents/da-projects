@@ -1,0 +1,23 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.CPSearch.SearchConvType>
+
+
+<h2>SearchConvTypes - StatsGauge</h2>
+
+<table>
+    <tr>
+        <th style="text-align:right">Id</th>
+        <th>Name</th>
+        <th>Alias</th>
+        <th style="text-align:center">ConvSums</th>
+    </tr>
+    @foreach (var ct in Model)
+    {
+        <tr>
+            <td style="text-align:right">@ct.SearchConvTypeId</td>
+            <td>@ct.Name</td>
+            <td>@ct.Alias</td>
+            <td style="text-align:center">@ct.MinConvSum.ToShortDateString() - @ct.MaxConvSum.ToShortDateString()</td>
+        </tr>
+    }
+</table>
+<br />

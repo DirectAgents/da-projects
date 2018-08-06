@@ -26,5 +26,10 @@
 
         //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         //public virtual ICollection<SearchConvSummary> SearchConvSummaries { get; set; }
+
+        [NotMapped]
+        public DateTime? MinConvSum { get; set; }
+        [NotMapped]
+        public DateTime? MaxConvSum { get; set; }
     }
 }

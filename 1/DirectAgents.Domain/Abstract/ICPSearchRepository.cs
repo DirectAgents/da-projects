@@ -20,9 +20,9 @@ namespace DirectAgents.Domain.Abstract
         SearchCampaign GetSearchCampaign(int id);
 
         IQueryable<SearchDailySummary> DailySummaries(int? spId = null, int? searchAccountId = null, int? searchCampaignId = null);
-        IQueryable<SearchConvSummary> ConvSummaries(int? spId = null, int? searchAccountId = null, int? searchCampaignId = null);
+        IQueryable<SearchConvSummary> ConvSummaries(int? spId = null, int? searchAccountId = null, int? searchCampaignId = null, int? searchConvTypeId = null);
         IQueryable<CallDailySummary> CallSummaries(int? spId = null, int? searchAccountId = null, int? searchCampaignId = null);
-        IEnumerable<SearchConvType> GetConvTypes(int spId, int? searchAccountId = null, int? searchCampaignId = null);
+        IEnumerable<SearchConvType> GetConvTypes(int? spId = null, int? searchAccountId = null, int? searchCampaignId = null, bool includeGauges = false);
         SearchConvType GetConvType(int id);
 
         IQueryable<ClientReport> ClientReports();

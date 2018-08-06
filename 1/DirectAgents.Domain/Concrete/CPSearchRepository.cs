@@ -225,7 +225,7 @@ namespace DirectAgents.Domain.Concrete
                 sds = sds.Where(x => x.SearchCampaignId == searchCampaignId.Value);
             return sds;
         }
-        public IQueryable<SearchConvSummary> ConvSummaries(int? spId = null, int? searchAccountId = null, int? searchCampaignId = null)
+        public IQueryable<SearchConvSummary> ConvSummaries(int? spId = null, int? searchAccountId = null, int? searchCampaignId = null, int? searchConvTypeId = null)
         {
             var scs = context.SearchConvSummaries.AsQueryable();
             if (spId.HasValue)
@@ -242,6 +242,8 @@ namespace DirectAgents.Domain.Concrete
             }
             if (searchCampaignId.HasValue)
                 scs = scs.Where(x => x.SearchCampaignId == searchCampaignId.Value);
+            if (searchConvTypeId.HasValue)
+                scs = scs.Where(x => x.SearchConvTypeId == searchConvTypeId.Value);
             return scs;
         }
         public IQueryable<CallDailySummary> CallSummaries(int? spId = null, int? searchAccountId = null, int? searchCampaignId = null)
@@ -264,13 +266,27 @@ namespace DirectAgents.Domain.Concrete
             return cds;
         }
 
-        public IEnumerable<SearchConvType> GetConvTypes(int spId, int? searchAccountId = null, int? searchCampaignId = null)
+        public IEnumerable<SearchConvType> GetConvTypes(int? spId = null, int? searchAccountId = null, int? searchCampaignId = null, bool includeGauges = false)
         {
             var convSums = ConvSummaries(spId, searchAccountId, searchCampaignId);
             var convTypeIds = convSums.Select(x => x.SearchConvTypeId).Distinct().ToArray();
             var convTypes = context.SearchConvTypes.Where(x => convTypeIds.Contains(x.SearchConvTypeId));
+            if (includeGauges)
+                convTypes = SetGauges(convTypes, convSums).AsQueryable();
             return convTypes.AsEnumerable();
         }
+        private IEnumerable<SearchConvType> SetGauges(IEnumerable<SearchConvType> searchConvTypes, IQueryable<SearchConvSummary> convSums)
+        {
+            foreach (var ct in searchConvTypes)
+            {
+                var scs = convSums.Where(x => x.SearchConvTypeId == ct.SearchConvTypeId);
+                bool any = scs.Any();
+                ct.MinConvSum = any ? scs.Min(x => x.Date) : (DateTime?)null;
+                ct.MaxConvSum = any ? scs.Max(x => x.Date) : (DateTime?)null;
+            }
+            return searchConvTypes;
+        }
+
         public SearchConvType GetConvType(int id)
         {
             var searchConvType = context.SearchConvTypes.Find(id);

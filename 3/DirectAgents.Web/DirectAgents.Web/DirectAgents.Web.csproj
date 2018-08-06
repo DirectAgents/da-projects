@@ -249,6 +249,7 @@
     <Compile Include="Areas\SearchAdmin\Controllers\OldController.cs" />
     <Compile Include="Areas\SearchAdmin\Controllers\SearchAccountsController.cs" />
     <Compile Include="Areas\SearchAdmin\Controllers\SearchCampaignsController.cs" />
+    <Compile Include="Areas\SearchAdmin\Controllers\SearchConvTypesController.cs" />
     <Compile Include="Areas\SearchAdmin\Controllers\SearchProfilesController.cs" />
     <Compile Include="Areas\SearchAdmin\Controllers\StatsGaugesController.cs" />
     <Compile Include="Areas\SearchAdmin\SearchAdminAreaRegistration.cs" />
@@ -1118,6 +1119,7 @@
     <Content Include="Areas\ClientAdmin\Views\_ViewStart.cshtml" />
     <Content Include="Areas\ClientAdmin\Views\ClientReports\Index.cshtml" />
     <Content Include="Areas\ClientAdmin\Views\ClientReports\Edit.cshtml" />
+    <Content Include="Areas\SearchAdmin\Views\SearchConvTypes\IndexGauge.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
