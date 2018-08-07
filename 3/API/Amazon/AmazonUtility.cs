@@ -202,52 +202,58 @@ namespace Amazon
         private IRestResponse<T> ProcessRequest<T>(RestRequest restRequest, bool postNotGet = false)
             where T : new()
         {
-            var restClient = new RestClient
+            lock (RequestLock)
             {
-                BaseUrl = new Uri(_amazonApiEndpointUrl)
-            };
-            //restClient.AddHandler("application/json", new JsonDeserializer());
-
-            if (String.IsNullOrEmpty(AccessToken[WhichAlt]))
-                GetAccessToken();
-
-            restRequest.AddHeader("Authorization", "bearer " + AccessToken[WhichAlt]);
-            //restRequest.AddHeader("Content-Type", "application/json");
-            restRequest.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
-
-            bool done = false;
-            int tries = 0;
-            IRestResponse<T> response = null;
-            while (!done)
-            {
-                if (postNotGet)
-                    response = restClient.ExecuteAsPost<T>(restRequest, "POST");
-                else
-                    response = restClient.ExecuteAsGet<T>(restRequest, "GET");
-
-                //var jsonResponse = JsonConvert.DeserializeObject(response.Content);
-                tries++;
-
-                if (response.StatusCode == HttpStatusCode.Unauthorized && tries < 2)
+                var restClient = new RestClient
                 {
-                    // Get a new access token and use that.
+                    BaseUrl = new Uri(_amazonApiEndpointUrl)
+                };
+                //restClient.AddHandler("application/json", new JsonDeserializer());
+
+                if (String.IsNullOrEmpty(AccessToken[WhichAlt]))
                     GetAccessToken();
 
-                    var param = restRequest.Parameters.Find(p => p.Type == ParameterType.HttpHeader && p.Name == "Authorization");
-                    param.Value = "bearer " + AccessToken[WhichAlt];
-                }
-                else if (response.StatusDescription != null && response.StatusDescription.Contains("IN_PROGRESS") && tries < 5)
-                { 
-                    LogInfo("API calls quota exceeded. Waiting 5 seconds.");
-                    Thread.Sleep(5000);
-                }
-                else
-                    done = true; //TODO: distinguish between success and failure of ProcessRequest
-            }
-            if (!String.IsNullOrWhiteSpace(response.ErrorMessage))
-                LogError(response.ErrorMessage);
+                restRequest.AddHeader("Authorization", "bearer " + AccessToken[WhichAlt]);
+                //restRequest.AddHeader("Content-Type", "application/json");
+                restRequest.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
 
-            return response;
+                bool done = false;
+                int tries = 0;
+                IRestResponse<T> response = null;
+                while (!done)
+                {
+                    if (postNotGet)
+                        response = restClient.ExecuteAsPost<T>(restRequest, "POST");
+                    else
+                        response = restClient.ExecuteAsGet<T>(restRequest, "GET");
+
+                    //var jsonResponse = JsonConvert.DeserializeObject(response.Content);
+                    tries++;
+
+                    if (response.StatusCode == HttpStatusCode.Unauthorized && tries < 2)
+                    {
+                        // Get a new access token and use that.
+                        GetAccessToken();
+
+                        var param = restRequest.Parameters.Find(p =>
+                            p.Type == ParameterType.HttpHeader && p.Name == "Authorization");
+                        param.Value = "bearer " + AccessToken[WhichAlt];
+                    }
+                    else if (response.StatusDescription != null && response.StatusDescription.Contains("IN_PROGRESS") &&
+                             tries < 5)
+                    {
+                        LogInfo("API calls quota exceeded. Waiting 5 seconds.");
+                        Thread.Sleep(5000);
+                    }
+                    else
+                        done = true; //TODO: distinguish between success and failure of ProcessRequest
+                }
+
+                if (!String.IsNullOrWhiteSpace(response.ErrorMessage))
+                    LogError(response.ErrorMessage);
+
+                return response;
+            }
         }
 
         public List<Profile> GetProfiles()
@@ -377,17 +383,16 @@ namespace Amazon
             {
                 var request = new RestRequest("v1/reports/" + reportId);
                 request.AddHeader("Amazon-Advertising-API-Scope", profileId);
-                lock (RequestLock)
+
+                var restResponse = ProcessRequest<ReportResponseDownloadInfo>(request, postNotGet: false);
+                if (restResponse.Data.status == "SUCCESS")
+                    return restResponse.Data;
+                else if (restResponse.Content.Contains("IN_PROGRESS"))
                 {
-                    var restResponse = ProcessRequest<ReportResponseDownloadInfo>(request, postNotGet: false);
-                    if (restResponse.Data.status == "SUCCESS")
-                        return restResponse.Data;
-                    else if (restResponse.Content.Contains("IN_PROGRESS"))
-                    {
-                        LogInfo("Waiting 5 seconds for report to finish generating.");
-                        Thread.Sleep(5000);
-                    }
+                    LogInfo("Waiting 5 seconds for report to finish generating.");
+                    Thread.Sleep(5000);
                 }
+                
             }
             catch (Exception x)
             {
