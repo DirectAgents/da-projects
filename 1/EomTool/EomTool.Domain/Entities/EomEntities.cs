@@ -151,6 +151,8 @@ namespace EomTool.Domain.Entities
         }
         [NotMapped]
         public CampAff CampAff { get; set; }
+        [NotMapped]
+        public Campaign PreviousMonthCampaign { get; set; }
     }
 
     public partial class CampAff
