@@ -341,6 +341,7 @@
     <Compile Include="Commands\Test\TestAdWordsCommand.cs" />
     <Compile Include="Commands\Test\TestAmazonCommand.cs" />
     <Compile Include="Commands\Test\TestAppleCommand.cs" />
+    <Compile Include="Commands\Test\TestCakeCommand.cs" />
     <Compile Include="Commands\Test\TestFacebookCommand.cs" />
     <Compile Include="Commands\Test\TestYAMCommand.cs">
       <SubType>Code</SubType>

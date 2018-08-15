@@ -23,9 +23,20 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            //if (this.Type.ToUpper() == "TD")
+            if (this.Type.ToUpper() == "DA")
+                DoDASeed();
+            if (this.Type.ToUpper() == "TD")
                 DoTDSeed();
             return 0;
+        }
+
+        public static void DoDASeed()
+        {
+            using (var daContext = new DAContext())
+            {
+                var seeder = new DASeeder(daContext);
+                seeder.SeedCurrencies();
+            }
         }
 
         public void DoTDSeed()
