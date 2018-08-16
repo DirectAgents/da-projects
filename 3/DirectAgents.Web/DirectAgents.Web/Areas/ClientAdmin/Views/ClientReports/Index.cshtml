@@ -8,7 +8,7 @@
         <th></th>
         <th>Name</th>
         <th>StartDayOfWeek</th>
-        <th>ProgAdvertiser/Campaign</th>
+        <th>ProgCampaign</th>
         <th>SearchProfile</th>
     </tr>
 @foreach (var rep in Model)
@@ -18,8 +18,18 @@
         <td>@Html.ActionLink("Edit", "Edit", new { id = rep.Id })</td>
         <td>@rep.Name</td>
         <td style="text-align:center">@((DayOfWeek)rep.StartDayOfWeek)</td>
-        <td>@(rep.ProgCampaign == null ? "" : rep.ProgCampaign.NameWithAdvertiser)</td>
-        <td>@(rep.SearchProfile == null ? "" : rep.SearchProfile.SearchProfileName)</td>
+        <td style="text-align:center">
+@if (rep.ProgCampaign != null)
+{
+    @Html.ActionLink(rep.ProgCampaign.NameWithAdvertiser, "Show", "Campaigns", new { area = "ProgAdmin", id = rep.ProgCampaignId }, null)
+}
+        </td>
+        <td style="text-align:center">
+@if (rep.SearchProfile != null)
+{
+    @Html.ActionLink(rep.SearchProfile.SearchProfileName, "IndexGauge", "SearchAccounts", new { area = "SearchAdmin", spid = rep.SearchProfileId }, null)
+}
+        </td>
     </tr>
 }
 </table>
