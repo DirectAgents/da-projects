@@ -14,7 +14,8 @@ namespace FacebookAPI
         public const int RowsReturnedAtATime = 25;
         public const string Pattern_ParenNums = @"^\((\d+)\)\s*";
         public const int InitialWaitMillisecs = 1500;
-        public const int MaxRetries = 20;
+        public const int MaxRetries = 20; //??reduce??
+        public const int SecondsToWaitIfLimitReached = 61;
 
         public int? DaysPerCall_Override = null;
         public int DaysPerCall_Campaign = 15;
@@ -338,7 +339,7 @@ namespace FacebookAPI
                     LogError(ex.Message);
                     int secondsToWait = 2;
                     if (ex.Message.Contains("request limit") || ex.Message.Contains("rate limit"))
-                        secondsToWait = 31;
+                        secondsToWait = SecondsToWaitIfLimitReached;
 
                     tryNumber++;
                     if (tryNumber < MaxRetries)
@@ -392,7 +393,7 @@ namespace FacebookAPI
                         LogError(ex.Message);
                         int secondsToWait = 2;
                         if (ex.Message.Contains("request limit") || ex.Message.Contains("rate limit"))
-                            secondsToWait = 31;
+                            secondsToWait = SecondsToWaitIfLimitReached;
 
                         tryNumber++;
                         if (tryNumber < MaxRetries)

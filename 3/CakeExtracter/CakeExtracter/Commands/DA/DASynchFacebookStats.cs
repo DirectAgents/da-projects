@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.Configuration;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.SocialMarketing.Extracters;
@@ -84,8 +85,6 @@ namespace CakeExtracter.Commands
             Logger.Info("Facebook ETL. DateRange {0}.", dateRange);
 
             var statsType = new StatsTypeAgg(this.StatsType);
-            var fbUtility = new FacebookUtility(m => Logger.Info(m), m => Logger.Warn(m));
-            fbUtility.DaysPerCall_Override = DaysPerCall;
 
             var string_ConvAsMobAppInst = ConfigurationManager.AppSettings["FB_ConversionsAsMobileAppInstalls"] ?? "";
             var Accts_ConvAsMobAppInst = string_ConvAsMobAppInst.Split(new char[] { ',' });
@@ -111,8 +110,11 @@ namespace CakeExtracter.Commands
             // TODO? remove this since we now handle exceptions in the extracter?
 
             var accounts = GetAccounts();
-            foreach (var acct in accounts)
+            Parallel.ForEach(accounts, (acct) =>
             {
+                var fbUtility = new FacebookUtility(m => Logger.Info(m), m => Logger.Warn(m));
+                fbUtility.DaysPerCall_Override = DaysPerCall;
+
                 var acctDateRange = new DateRange(dateRange.FromDate, dateRange.ToDate);
                 if (acct.Campaign != null) // check/adjust daterange - if acct assigned to a campaign/advertiser
                 {
@@ -127,7 +129,7 @@ namespace CakeExtracter.Commands
                 }
                 Logger.Info("Facebook ETL. Account {0} - {1}. DateRange {2}.", acct.Id, acct.Name, acctDateRange);
                 if (acctDateRange.ToDate < acctDateRange.FromDate)
-                    continue;
+                    return;
 
                 fbUtility.SetAll();
                 if (acct.Network != null)
@@ -171,7 +173,7 @@ namespace CakeExtracter.Commands
                     numDailyItems = DoETL_Daily(acctDateRange, acct, fbUtility);
 
                 if (Accts_DailyOnly.Contains(acct.ExternalId))
-                    continue;
+                    return;
 
                 // Skip strategy & adset stats if there were no dailies
                 if (statsType.Strategy && (numDailyItems == null || numDailyItems.Value > 0))
@@ -183,7 +185,7 @@ namespace CakeExtracter.Commands
                     DoETL_Creative(acctDateRange, acct, fbUtility);
                 //if (statsType.Site)
                 //    DoETL_Site(acctDateRange, acct, fbUtility);
-            }
+            });
 
             return 0;
         }
