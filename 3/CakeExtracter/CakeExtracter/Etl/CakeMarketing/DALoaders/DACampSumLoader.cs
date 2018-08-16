@@ -19,9 +19,11 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
         {
             //this.date = date;
             if (keepAllNonZero)
-                this.KeepFunc = cs => !cs.AllZeros();
+                this.KeepFunc = cs => (cs.SourceAffiliate.SourceAffiliateId > 0 && cs.Campaign.CampaignId > 0)
+                                      && !cs.AllZeros();
             else
-                this.KeepFunc = cs => (cs.Paid > 0 || cs.Revenue > 0 || cs.Cost > 0);
+                this.KeepFunc = cs => (cs.SourceAffiliate.SourceAffiliateId > 0 && cs.Campaign.CampaignId > 0)
+                                      && (cs.Paid > 0 || cs.Revenue > 0 || cs.Cost > 0);
 
             LoadCurrencies();
         }

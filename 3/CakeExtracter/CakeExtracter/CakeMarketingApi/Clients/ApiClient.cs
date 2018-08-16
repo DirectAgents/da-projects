@@ -18,6 +18,7 @@ namespace CakeExtracter.CakeMarketingApi.Clients
         public T Execute<T>(ApiRequest apiRequest, IDeserializer deserializer = null) where T : new()
         {
             var restRequest = new RestRequest();
+            //restRequest.Timeout = 300000; // testing!
 
             restRequest.AddParameter("api_key", ApiKey);
        

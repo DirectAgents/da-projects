@@ -5,7 +5,6 @@ using System.Linq;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.Cake;
-using MoreLinq;
 
 namespace CakeExtracter.Etl.CakeMarketing.DALoaders
 {
@@ -53,35 +52,30 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                         Logger.Info("Synching {0} contacts...", item.Contacts.Count);
                         foreach (var ci in item.Contacts)
                         {
-                            var role = db.Roles.Where(r => r.RoleId == ci.Role.RoleId)
-                                .SingleOrFallback(() =>
+                            var role = db.Roles.Where(r => r.RoleId == ci.Role.RoleId).SingleOrDefault();
+                            if (role == null)
+                                role = newRoles.SingleOrDefault(r => r.RoleId == ci.Role.RoleId);
+                            if (role == null)
+                            {
+                                Logger.Info("Adding new Role: {0} ({1})", ci.Role.RoleName, ci.Role.RoleId);
+                                role = new Role
                                 {
-                                    var newRole = newRoles.SingleOrDefault(r => r.RoleId == ci.Role.RoleId);
-                                    if (newRole == null)
-                                    {
-                                        Logger.Info("Adding new Role: {0} ({1})", ci.Role.RoleName, ci.Role.RoleId);
-                                        newRole = new Role
-                                        {
-                                            RoleId = ci.Role.RoleId,
-                                            RoleName = ci.Role.RoleName
-                                        };
-                                        newRoles.Add(newRole);
-                                    }
-                                    return newRole;
-                                });
+                                    RoleId = ci.Role.RoleId,
+                                    RoleName = ci.Role.RoleName
+                                };
+                                newRoles.Add(role);
+                            }
 
-                            var contact = db.Contacts
-                                .Where(c => c.ContactId == ci.ContactId)
-                                .SingleOrFallback(() =>
+                            var contact = db.Contacts.Where(c => c.ContactId == ci.ContactId).SingleOrDefault();
+                            if (contact == null)
+                            {
+                                contact = new Contact
                                 {
-                                    var newContact = new Contact
-                                    {
-                                        ContactId = ci.ContactId,
-                                        Role = role
-                                    };
-                                    db.Contacts.Add(newContact);
-                                    return newContact;
-                                });
+                                    ContactId = ci.ContactId,
+                                    Role = role
+                                };
+                                db.Contacts.Add(contact);
+                            }
 
                             contact.Role = role;
                             contact.FirstName = ci.FirstName;

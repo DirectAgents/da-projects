@@ -1,6 +1,6 @@
 ﻿@model PeriodMaintenanceVM
 
-Accounting Period: <b>@Model.CurrentEomDateString</b>
+<span>Accounting Period: </span><b>@Model.CurrentEomDateString</b>
 <br /><br />
 
 <b>"Changed" Advertisers (different name last month):</b>
@@ -26,7 +26,7 @@ else
 <br />
 @foreach (var adv in Model.NewAdvertisers.OrderBy(a => a.name))
 {
-    @adv.id<text>: </text>@Html.ActionLink(adv.name, "Edit", "Advertisers", new { id = adv.id}, null)<br />
+    @adv.id<text>: </text>@Html.ActionLink(adv.name, "Edit", "Advertisers", new { id = adv.id }, null)<br />
 }
 
 <br />

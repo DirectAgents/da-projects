@@ -1,19 +1,29 @@
 ﻿@model DirectAgents.Web.Areas.ProgAdmin.Models.TDStatsVM
 
 @section scripts {
+@if (!Model.CustomDates)
+{
 <script>
     function ChangeMonth(month) {
-        var url = '@Html.Raw(Url.Action(null, new { platform = Model.PlatformCode, campId = Model.CampaignId, acctId = Model.AccountId, stratId = Model.StratId, month = "monthVal" }))';
-        location.href = url.replace('monthVal', month);
+        var url = '@Html.Raw(Url.Action(null, new { platform = Model.PlatformCode, campId = Model.CampaignId, acctId = Model.AccountId, stratId = Model.StratId, month = "startVal" }))';
+        location.href = url.replace('startVal', month);
     }
 </script>
 }
+}
 <h2>External Accounts - Raw Stats, by adset</h2>
+@if (Model.CustomDates)
+{
+    <div>Dates: @Model.StartString - @Model.EndString</div>
+}
+else
+{
 <div style="margin-bottom:10px">
 <form>
     @Html.DropDownList("month", (SelectList)ViewBag.ChooseMonthSelectList, new { onchange = "ChangeMonth(this.value)" })
 </form>
 </div>
+}
 
 @if (Model.StratId.HasValue)
 {
@@ -43,7 +53,7 @@
 {
 <tr>
     <td>
-        @Html.ActionLink("action", "Action", new { acctId = Model.AccountId, adsetId = stat.AdSet.Id, month = Model.MonthString })
+        @Html.ActionLink("action", "Action", new { acctId = Model.AccountId, adsetId = stat.AdSet.Id, start = Model.StartString, end = Model.EndString })
     </td>
     <td>(@stat.AdSet.ExtAccount.Platform.Name) @stat.AdSet.ExtAccount.Name</td>
     <td style="text-align:right">@stat.AdSet.Id</td>

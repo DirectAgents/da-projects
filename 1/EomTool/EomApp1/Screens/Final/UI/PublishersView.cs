@@ -117,7 +117,7 @@ namespace EomApp1.Screens.Final.UI
             }
             else if (selectedIndex > 0)
             {
-                this.finalizePublishersBindingSource.Filter = "NetTerms LIKE '%" + netTermsComboBox.Items[selectedIndex] + "%'";
+                this.finalizePublishersBindingSource.Filter = "NetTerms = '" + netTermsComboBox.Items[selectedIndex] + "'";
             }
             grid.ClearSelection();
 

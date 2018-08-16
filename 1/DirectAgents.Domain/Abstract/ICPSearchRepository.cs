@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DirectAgents.Domain.DTO;
-using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.CPSearch;
 
 namespace DirectAgents.Domain.Abstract
@@ -22,11 +20,14 @@ namespace DirectAgents.Domain.Abstract
         SearchCampaign GetSearchCampaign(int id);
 
         IQueryable<SearchDailySummary> DailySummaries(int? spId = null, int? searchAccountId = null, int? searchCampaignId = null);
-        IQueryable<SearchConvSummary> ConvSummaries(int? spId = null, int? searchAccountId = null, int? searchCampaignId = null);
+        IQueryable<SearchConvSummary> ConvSummaries(int? spId = null, int? searchAccountId = null, int? searchCampaignId = null, int? searchConvTypeId = null);
         IQueryable<CallDailySummary> CallSummaries(int? spId = null, int? searchAccountId = null, int? searchCampaignId = null);
-        IEnumerable<SearchConvType> GetConvTypes(int spId, int? searchAccountId = null, int? searchCampaignId = null);
+        IEnumerable<SearchConvType> GetConvTypes(int? spId = null, int? searchAccountId = null, int? searchCampaignId = null, bool includeGauges = false);
         SearchConvType GetConvType(int id);
 
         IQueryable<ClientReport> ClientReports();
+        ClientReport GetClientReport(int id);
+        bool SaveClientReport(ClientReport clientReport, bool saveIfExists = true, bool createIfDoesntExist = false);
+        bool DeleteClientReport(int id);
     }
 }

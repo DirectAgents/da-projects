@@ -42,9 +42,6 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\ClientPortal.Web\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="MoreLinq">
-      <HintPath>..\ClientPortal.Web\packages\morelinq.1.0.16006\lib\net35\MoreLinq.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />

@@ -2,7 +2,6 @@
 using System.Linq;
 using CakeExtracter.CakeMarketingApi.Entities;
 using CakeExtracter.Common;
-using MoreLinq;
 
 namespace CakeExtracter.Etl.CakeMarketing.DALoaders
 {
@@ -41,70 +40,62 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                             continue;
                         }
                     }
-                    var vertical = db.Verticals.Where(v => v.VerticalId == item.Vertical.VerticalId)
-                        .SingleOrFallback(() =>
+
+                    var vertical = db.Verticals.Where(v => v.VerticalId == item.Vertical.VerticalId).SingleOrDefault();
+                    if (vertical == null)
+                        vertical = newVerticals.SingleOrDefault(v => v.VerticalId == item.Vertical.VerticalId);
+                    if (vertical == null)
+                    {
+                        vertical = new DirectAgents.Domain.Entities.Cake.Vertical()
                         {
-                            var newVertical = newVerticals.SingleOrDefault(v => v.VerticalId == item.Vertical.VerticalId);
-                            if (newVertical == null)
-                            {
-                                newVertical = new DirectAgents.Domain.Entities.Cake.Vertical()
-                                {
-                                    VerticalId = item.Vertical.VerticalId,
-                                    VerticalName = item.Vertical.VerticalName
-                                };
-                                newVerticals.Add(newVertical);
-                            }
-                            return newVertical;
-                        });
-                    var offerType = db.OfferTypes.Where(o => o.OfferTypeId == item.OfferType.OfferTypeId)
-                        .SingleOrFallback(() =>
+                            VerticalId = item.Vertical.VerticalId,
+                            VerticalName = item.Vertical.VerticalName
+                        };
+                        newVerticals.Add(vertical);
+                    }
+
+                    var offerType = db.OfferTypes.Where(o => o.OfferTypeId == item.OfferType.OfferTypeId).SingleOrDefault();
+                    if (offerType == null)
+                        offerType = newOfferTypes.SingleOrDefault(o => o.OfferTypeId == item.OfferType.OfferTypeId);
+                    if (offerType == null)
+                    {
+                        offerType = new DirectAgents.Domain.Entities.Cake.OfferType()
                         {
-                            var newOfferType = newOfferTypes.SingleOrDefault(o => o.OfferTypeId == item.OfferType.OfferTypeId);
-                            if (newOfferType == null)
-                            {
-                                newOfferType = new DirectAgents.Domain.Entities.Cake.OfferType()
-                                {
-                                    OfferTypeId = item.OfferType.OfferTypeId,
-                                    OfferTypeName = item.OfferType.OfferTypeName
-                                };
-                                newOfferTypes.Add(newOfferType);
-                            }
-                            return newOfferType;
-                        });
-                    var offerStatus = db.OfferStatuses.Where(o => o.OfferStatusId == item.OfferStatus.OfferStatusId)
-                        .SingleOrFallback(() =>
+                            OfferTypeId = item.OfferType.OfferTypeId,
+                            OfferTypeName = item.OfferType.OfferTypeName
+                        };
+                        newOfferTypes.Add(offerType);
+                    }
+
+                    var offerStatus = db.OfferStatuses.Where(o => o.OfferStatusId == item.OfferStatus.OfferStatusId).SingleOrDefault();
+                    if (offerStatus == null)
+                        offerStatus = newOfferStatuses.SingleOrDefault(o => o.OfferStatusId == item.OfferStatus.OfferStatusId);
+                    if (offerStatus == null)
+                    {
+                        offerStatus = new DirectAgents.Domain.Entities.Cake.OfferStatus()
                         {
-                            var newOfferStatus = newOfferStatuses.SingleOrDefault(o => o.OfferStatusId == item.OfferStatus.OfferStatusId);
-                            if (newOfferStatus == null)
-                            {
-                                newOfferStatus = new DirectAgents.Domain.Entities.Cake.OfferStatus()
-                                {
-                                    OfferStatusId = item.OfferStatus.OfferStatusId,
-                                    OfferStatusName = item.OfferStatus.OfferStatusName
-                                };
-                                newOfferStatuses.Add(newOfferStatus);
-                            }
-                            return newOfferStatus;
-                        });
+                            OfferStatusId = item.OfferStatus.OfferStatusId,
+                            OfferStatusName = item.OfferStatus.OfferStatusName
+                        };
+                        newOfferStatuses.Add(offerStatus);
+                    }
 
                     //TODO: check if advertiser exists??
 
-                    var offer = db.Offers.Where(o => o.OfferId == item.OfferId)
-                        .SingleOrFallback(() =>
+                    var offer = db.Offers.Where(o => o.OfferId == item.OfferId).SingleOrDefault();
+                    if (offer == null)
+                    {
+                        offer = new DirectAgents.Domain.Entities.Cake.Offer()
                         {
-                            var newOffer = new DirectAgents.Domain.Entities.Cake.Offer()
-                            {
-                                OfferId = item.OfferId,
+                            OfferId = item.OfferId,
 
-                                //TODO: remove these? will be set below
-                                Vertical = vertical,
-                                OfferType = offerType,
-                                OfferStatus = offerStatus
-                            };
-                            db.Offers.Add(newOffer);
-                            return newOffer;
-                        });
-
+                            //TODO: remove these? will be set below
+                            Vertical = vertical,
+                            OfferType = offerType,
+                            OfferStatus = offerStatus
+                        };
+                        db.Offers.Add(offer);
+                    }
                     offer.Vertical = vertical;
                     offer.OfferType = offerType;
                     offer.OfferStatus = offerStatus;
@@ -122,16 +113,15 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                     {
                         foreach (var ocInfo in item.OfferContracts)
                         {
-                            var offerContract = db.OfferContracts.Where(x => x.OfferContractId == ocInfo.OfferContractId)
-                                .SingleOrFallback(() =>
+                            var offerContract = db.OfferContracts.Where(x => x.OfferContractId == ocInfo.OfferContractId).SingleOrDefault();
+                            if (offerContract == null)
+                            {
+                                offerContract = new DirectAgents.Domain.Entities.Cake.OfferContract
                                 {
-                                    var newOfferContract = new DirectAgents.Domain.Entities.Cake.OfferContract
-                                    {
-                                        OfferContractId = ocInfo.OfferContractId
-                                    };
-                                    db.OfferContracts.Add(newOfferContract);
-                                    return newOfferContract;
-                                });
+                                    OfferContractId = ocInfo.OfferContractId
+                                };
+                                db.OfferContracts.Add(offerContract);
+                            }
                             offerContract.Offer = offer;
                             offerContract.PriceFormatName = ocInfo.PriceFormat.PriceFormatName;
                             offerContract.ReceivedAmount = ocInfo.Received.Amount;

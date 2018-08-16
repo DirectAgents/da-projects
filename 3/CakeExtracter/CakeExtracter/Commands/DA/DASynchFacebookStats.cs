@@ -5,6 +5,7 @@ using System.ComponentModel.Composition;
 using System.Configuration;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.SocialMarketing.Extracters;
@@ -110,7 +111,7 @@ namespace CakeExtracter.Commands
             // TODO? remove this since we now handle exceptions in the extracter?
 
             var accounts = GetAccounts();
-            Parallel.ForEach(accounts, (acct) => 
+            Parallel.ForEach(accounts, (acct) =>
             {
                 var fbUtility = new FacebookUtility(m => Logger.Info(m), m => Logger.Warn(m));
                 fbUtility.DaysPerCall_Override = DaysPerCall;

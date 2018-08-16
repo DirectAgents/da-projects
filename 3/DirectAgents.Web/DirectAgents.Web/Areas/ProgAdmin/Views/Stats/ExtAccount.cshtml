@@ -2,19 +2,29 @@
 @model DirectAgents.Web.Areas.ProgAdmin.Models.TDStatsVM
 
 @section scripts {
+@if (!Model.CustomDates)
+{
 <script>
     function ChangeMonth(month) {
-        var url = '@Html.Raw(Url.Action(null, new { platform = Model.PlatformCode, campId = Model.CampaignId, acctId = Model.AccountId, month = "monthVal" }))';
-        location.href = url.replace('monthVal', month);
+        var url = '@Html.Raw(Url.Action(null, new { platform = Model.PlatformCode, campId = Model.CampaignId, acctId = Model.AccountId, start = "startVal" }))';
+        location.href = url.replace('startVal', month);
     }
 </script>
 }
+}
 <h2>External Accounts - Raw Stats</h2>
+@if (Model.CustomDates)
+{
+    <div>Dates: @Model.StartString - @Model.EndString</div>
+}
+else
+{
 <div style="margin-bottom:10px">
 <form>
     @Html.DropDownList("month", (SelectList)ViewBag.ChooseMonthSelectList, new { onchange = "ChangeMonth(this.value)" })
 </form>
 </div>
+}
 
 <table>
 <tr>
@@ -40,8 +50,8 @@
 {
 <tr>
     <td>
-        by:@Html.ActionLink("strategy", "Strategy", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("adset", "AdSet", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("creative", "Creative", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("action", "Action", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })
-        show:@Html.ActionLink("daily", "Index", "DailySummaries", new { acctId = stat.ExtAccount.Id, month = Model.MonthString }, null)|@Html.ActionLink("convs", "Conv", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })|@Html.ActionLink("by-site", "Site", new { acctId = stat.ExtAccount.Id, month = Model.MonthString })
+        by:@Html.ActionLink("strategy", "Strategy", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString })|@Html.ActionLink("adset", "AdSet", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString })|@Html.ActionLink("creative", "Creative", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString })|@Html.ActionLink("action", "Action", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString })
+        show:@Html.ActionLink("daily", "Index", "DailySummaries", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString }, null)|@Html.ActionLink("convs", "Conv", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString })|@Html.ActionLink("by-site", "Site", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString })
     </td>
     <td>@stat.ExtAccount.Platform.Name</td>
     <td style="text-align:right">@stat.ExtAccount.Id</td>
@@ -89,9 +99,13 @@
 @if (!Model.CampaignId.HasValue && !Model.AccountId.HasValue)
 {
     <text>Filter:
-    @Html.ActionLink("AdRoll", null, new { platform = Platform.Code_AdRoll }) |
-    @Html.ActionLink("DBM", null, new { platform = Platform.Code_DBM }) |
-    @Html.ActionLink("Facebook", null, new { platform = Platform.Code_FB }) |
+    @Html.ActionLink("Adform", null, new { platform = Platform.Code_Adform, start = Model.StartString, end = Model.EndString }) |
+    @Html.ActionLink("AdRoll", null, new { platform = Platform.Code_AdRoll, start = Model.StartString, end = Model.EndString }) |
+    @Html.ActionLink("Amazon", null, new { platform = Platform.Code_Amazon, start = Model.StartString, end = Model.EndString }) |
+    @Html.ActionLink("Criteo", null, new { platform = Platform.Code_Criteo, start = Model.StartString, end = Model.EndString }) |
+    @Html.ActionLink("DBM", null, new { platform = Platform.Code_DBM, start = Model.StartString, end = Model.EndString }) |
+    @Html.ActionLink("Facebook", null, new { platform = Platform.Code_FB, start = Model.StartString, end = Model.EndString }) |
+    @Html.ActionLink("YAM", null, new { platform = Platform.Code_YAM, start = Model.StartString, end = Model.EndString }) |
     @Html.ActionLink("(show all)", null)
     </text>
     <br />

@@ -41,6 +41,17 @@ namespace DirectAgents.Web.Controllers
             base.Dispose(disposing);
         }
 
+        private IClientRepository _clientRepo;
+        protected IClientRepository clientRepo
+        {
+            get { return _clientRepo; }
+            set
+            {   //NOTE: Be sure to setup the required underlying repositories first.
+                _clientRepo = value;
+                _clientRepo.SetRepositories(cpProgRepo, cpSearchRepo);
+            }
+        }
+
         private ISuperRepository _superRepo;
         protected ISuperRepository superRepo
         {
@@ -54,7 +65,7 @@ namespace DirectAgents.Web.Controllers
 
         // --- Getting/Setting the Current Month (i.e. Accounting Period) ---
 
-        // Pass in null to use "CurrentMonth" cookie (for the specified area)
+        // Pass in null for month to use "CurrentMonth" cookie (for the specified area)
         // Returns the selected month
         protected DateTime SetChooseMonthViewData(string area, DateTime? month = null)
         {
@@ -67,12 +78,12 @@ namespace DirectAgents.Web.Controllers
             return month.Value;
         }
 
-        // Passing in null will not use the cookie
-        protected DateTime SetChooseMonthViewData_NonCookie(string area, DateTime? month = null)
+        // Passing in null for month will not use the cookie (like the previous method does)
+        protected DateTime SetChooseMonthViewData_NonCookie(DateTime? month = null)
         {
             if (!month.HasValue)
                 month = DateTime.Today.AddDays(-1); // if it's the 1st, use last month
-            return SetChooseMonthViewData(area, month);
+            return SetChooseMonthViewData(null, month); // area not needed b/c month always has a value
         }
 
         protected SelectList ChooseMonthSelectList(DateTime selMonth, bool includeNextMonth = false)
@@ -91,6 +102,7 @@ namespace DirectAgents.Web.Controllers
             return new SelectList(slItems, "Value", "Text", selMonth.ToShortDateString());
         }
 
+        // First check for a cookie. If none, set it to a default value. Either way, return the "current month".
         protected DateTime GetCurrentMonth(string area)
         {
             var currMonthCookie = Request.Cookies["CurrentMonth" + area];
@@ -108,6 +120,13 @@ namespace DirectAgents.Web.Controllers
             HttpCookie cookie = new HttpCookie("CurrentMonth" + area);
             cookie.Value = value.ToString("d");
             Response.Cookies.Add(cookie);
+        }
+
+        public static bool AreDatesCustom(DateTime? start, DateTime? end)
+        {
+            if (!start.HasValue || !end.HasValue)
+                return true;
+            return (start.Value.Day != 1) || (start.Value.AddMonths(1).AddDays(-1) != end.Value);
         }
 
         // ---

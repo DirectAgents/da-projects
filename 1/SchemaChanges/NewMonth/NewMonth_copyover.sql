@@ -18,4 +18,4 @@ USE DADatabaseB...2018
 :r "G:\GitHub\da-projects\1\SchemaChanges\AuditScripts\AddAuditTables.sql"
 
 --Audit views
-:r "G:\GitHub\da-projects\1\SchemaChanges\AuditScripts\CampaignFinalizationAudit.view.sql"
+:r "G:\GitHub\da-projects\1\SchemaChanges\AuditScripts\AddAuditViews.sql"

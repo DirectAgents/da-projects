@@ -13,24 +13,32 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             this.cpProgRepo = cpProgRepository;
         }
 
-        public ActionResult Index(int acctId, DateTime? month)
+        public ActionResult Index(int acctId, DateTime? start, DateTime? end)
         {
             var extAcct = cpProgRepo.ExtAccount(acctId);
             if (extAcct == null)
                 return HttpNotFound();
-            DateTime? startDate = null, endDate = null;
-            if (month.HasValue)
-            {
-                startDate = SetChooseMonthViewData_NonCookie("RT", month);
-                endDate = startDate.Value.AddMonths(1).AddDays(-1);
-            }
+
+            if (start.HasValue && start.Value.Day == 1 && !end.HasValue)
+                end = start.Value.AddMonths(1).AddDays(-1);
+
+            bool customDates = true;
+            if (start.HasValue && end.HasValue)
+                customDates = AreDatesCustom(start.Value, end.Value);
+
+            if (!customDates)
+                SetChooseMonthViewData_NonCookie(start);
+
             var model = new DailySummariesVM
             {
                 ExtAccount = extAcct,
-                Month = month.HasValue ? startDate : null,
-                DailySummaries = cpProgRepo.DailySummaries(startDate, endDate, acctId: acctId)
+                Start = start,
+                End = end,
+                CustomDates = AreDatesCustom(start, end),
+                DailySummaries = cpProgRepo.DailySummaries(start, end, acctId: acctId)
             };
-            Session["month"] = (month.HasValue ? month.Value.ToShortDateString() : ""); //TODO: set to startDate?
+            Session["start"] = (start.HasValue ? start.Value.ToShortDateString() : "");
+            Session["end"] = (end.HasValue ? end.Value.ToShortDateString() : "");
             return View(model);
         }
 
@@ -63,7 +71,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             if (ModelState.IsValid)
             {
                 if (cpProgRepo.SaveDailySummary(daySum))
-                    return RedirectToAction("Index", new { acctId = daySum.AccountId, month = Session["month"] });
+                    return RedirectToAction("Index", new { acctId = daySum.AccountId, start = Session["start"], end = Session["end"] });
                 ModelState.AddModelError("", "DailySummary could not be saved");
             }
             cpProgRepo.FillExtended(daySum);

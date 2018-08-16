@@ -16,8 +16,12 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Models
         public int? StratId { get; set; }
         public int? AdSetId { get; set; }
 
-        public DateTime Month { set { MonthString = value.ToShortDateString(); } }
-        public string MonthString { get; set; }
+        public DateTime Start { set { StartString = value.ToShortDateString(); } }
+        public string StartString { get; set; }
+        public DateTime End { set { EndString = value.ToShortDateString(); } }
+        public string EndString { get; set; }
+
+        public bool CustomDates { get; set; }
 
         public IEnumerable<TDRawStat> Stats { get; set; }
         public TDRawStat StatsTotal

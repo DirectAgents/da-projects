@@ -14,6 +14,18 @@ namespace DirectAgents.Domain.Entities.CPProg
         public string Name { get; set; }
         public decimal BaseFee { get; set; }
 
+        [NotMapped]
+        public string NameWithAdvertiser
+        {
+            get
+            {
+                if (Advertiser == null || Advertiser.Name == Name)
+                    return Name;
+                else
+                    return Advertiser.Name + "- " + Name;
+            }
+        }
+
         public virtual ICollection<ExtAccount> ExtAccounts { get; set; }
         public virtual ICollection<BudgetInfo> BudgetInfos { get; set; }
         public BudgetInfoVals DefaultBudgetInfo { get; set; }

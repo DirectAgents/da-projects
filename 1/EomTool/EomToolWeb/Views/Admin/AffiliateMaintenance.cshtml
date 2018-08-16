@@ -1,6 +1,6 @@
 ﻿@model PeriodMaintenanceVM
 
-Accounting Period: <b>@Model.CurrentEomDateString</b>
+<span>Accounting Period: </span><b>@Model.CurrentEomDateString</b>
 <br /><br />
 
 <b>"Changed" Affiliates (different name last month):</b>
@@ -10,8 +10,8 @@ Accounting Period: <b>@Model.CurrentEomDateString</b>
     @foreach (var aff in Model.ChangedAffiliates.OrderBy(a => a.name))
     {
         <tr>
-            <td>@aff.id: @Html.ActionLink(aff.name, "Edit", "Affiliates", new { id = aff.id}, null)</td>
-            <td>[Previously: @aff.PreviousMonthAffiliate.name]</td>
+            <td>@aff.id: @Html.ActionLink(aff.name2, "Edit", "Affiliates", new { id = aff.id}, null)</td>
+            <td>[Previously: @aff.PreviousMonthAffiliate.name2]</td>
         </tr>
     }
     </table>
@@ -26,7 +26,7 @@ else
 <br />
 @foreach (var aff in Model.NewAffiliates.OrderBy(a => a.name))
 {
-    @aff.id<text>: </text>@Html.ActionLink(aff.name, "Edit", "Affiliates", new { id = aff.id}, null)<br />
+    @aff.id<text>: </text>@Html.ActionLink(aff.name2, "Edit", "Affiliates", new { id = aff.id }, null)<br />
 }
 
 <br />
@@ -36,7 +36,7 @@ else
 {
     foreach (var aff in Model.ExpiredAffiliates.OrderBy(a => a.name))
     {
-        @aff.id<text>: </text>@aff.name<br />
+        @aff.id<text>: </text>@aff.name2<br />
     }
 }
 else

@@ -107,6 +107,39 @@ namespace EomToolWeb.Controllers
             return View(model);
         }
 
+        public ActionResult CampaignMaintenance()
+        {
+            var campaigns = mainRepo.Campaigns().ToList();
+            var campPids = campaigns.Select(x => x.pid).ToList();
+
+            var prevRepo = CreateMainRepository(eomEntitiesConfig.CurrentEomDate.AddMonths(-1));
+            var prevCampaigns = prevRepo.Campaigns().ToList();
+            var prevCampPids = prevCampaigns.Select(x => x.pid).ToList();
+
+            var newCampaigns = campaigns.Where(x => !prevCampPids.Contains(x.pid));
+            var expiredCampaigns = prevCampaigns.Where(x => !campPids.Contains(x.pid));
+
+            List<Campaign> changedCampaigns = new List<Campaign>();
+            foreach (var camp in campaigns)
+            {
+                var prevCamp = prevCampaigns.Where(x => x.pid == camp.pid).SingleOrDefault();
+                if (prevCamp != null && camp.campaign_name != prevCamp.campaign_name)
+                {
+                    camp.PreviousMonthCampaign = prevCamp;
+                    changedCampaigns.Add(camp);
+                }
+            }
+
+            var model = new PeriodMaintenanceVM
+            {
+                CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
+                NewCampaigns = newCampaigns,
+                ExpiredCampaigns = expiredCampaigns,
+                ChangedCampaigns = changedCampaigns
+            };
+            return View(model);
+        }
+
         public ActionResult AffiliateMaintenance()
         {
             var affiliates = mainRepo.Affiliates().ToList();
@@ -123,7 +156,7 @@ namespace EomToolWeb.Controllers
             foreach (var aff in affiliates)
             {
                 var prevAff = prevAffiliates.Where(a => a.id == aff.id).SingleOrDefault();
-                if (prevAff != null && aff.name != prevAff.name)
+                if (prevAff != null && (aff.name != prevAff.name || aff.affid != prevAff.affid))
                 {
                     aff.PreviousMonthAffiliate = prevAff;
                     changedAffiliates.Add(aff);

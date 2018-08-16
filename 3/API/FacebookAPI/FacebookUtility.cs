@@ -16,7 +16,7 @@ namespace FacebookAPI
         public const int RowsReturnedAtATime = 25;
         public const string Pattern_ParenNums = @"^\((\d+)\)\s*";
         public const int InitialWaitMillisecs = 1500;
-        public const int MaxRetries = 5;
+        public const int MaxRetries = 20; //??reduce??
         public const int SecondsToWaitIfLimitReached = 61;
 
         public int? DaysPerCall_Override = null;

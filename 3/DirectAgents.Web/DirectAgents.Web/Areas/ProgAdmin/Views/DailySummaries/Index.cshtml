@@ -4,24 +4,29 @@
 }
 
 @section scripts {
+@if (!Model.CustomDates)
+{
 <script>
     function ChangeMonth(month) {
-        var url = '@Html.Raw(Url.Action("Index", new { acctId = Model.ExtAccount.Id, month = "monthVal" }))';
-        location.href = url.replace('monthVal', month);
+        var url = '@Html.Raw(Url.Action("Index", new { acctId = Model.ExtAccount.Id, start = "startVal" }))';
+        location.href = url.replace('startVal', month);
     }
 </script>
 }
+}
 <h2>Daily Summaries (Raw)</h2>
 
-@if (Model.Month.HasValue) {
+@if (Model.CustomDates)
+{
+    <div>Dates: @Model.StartString - @Model.EndString</div>
+}
+else
+{
     <div style="margin-bottom:10px">
     <form>
         @Html.DropDownList("month", (SelectList)ViewBag.ChooseMonthSelectList, new { onchange = "ChangeMonth(this.value)" })
     </form>
     </div>
-} else {
-    <text>Month: (all)</text>
-    <br />
 }
 
 @if (Model.ExtAccount != null)
@@ -69,7 +74,7 @@
 @if (!Model.DailySummaries.Any() && super)
 {
     DateTime yesterday = DateTime.Today.AddDays(-1);
-    DateTime date = Model.Month.HasValue ? Model.Month.Value : new DateTime(yesterday.Year, yesterday.Month, 1);
+    DateTime date = Model.Start.HasValue ? Model.Start.Value : new DateTime(yesterday.Year, yesterday.Month, 1);
     @Html.ActionLink("New", "Edit", new { date = date.ToShortDateString(), acctId = Model.ExtAccount.Id, create = true })
     <br />
 }

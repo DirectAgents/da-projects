@@ -5,7 +5,7 @@
       <DataSource DefaultConnectionIndex="1" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
         <Connections>
           <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="DADatabaseR1ConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="DADatabaseR1ConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.EomApp1.Properties.Settings.GlobalReference.Default.DADatabaseR1ConnectionString" Provider="System.Data.SqlClient" />
-          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="DADatabaseR1ConnectionString2" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="DADatabaseR1ConnectionString2 (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.EomApp1.Properties.Settings.GlobalReference.Default.DADatabaseR1ConnectionString2" Provider="System.Data.SqlClient" />
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="DADatabaseR1ConnectionString2" IsAppSettingsProperty="true" Modifier="Assembly" Name="DADatabaseR1ConnectionString2 (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.EomApp1.Properties.Settings.GlobalReference.Default.DADatabaseR1ConnectionString2" Provider="System.Data.SqlClient" />
         </Connections>
         <Tables>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CampaignTableAdapter" GeneratorDataComponentClassName="CampaignTableAdapter" Name="Campaign" UserDataComponentName="CampaignTableAdapter">
@@ -13,7 +13,7 @@
               <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="DADatabaseR1.dbo.WorkflowView" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="true">
-                    <CommandText>select * from WorkflowView order by campaign_name</CommandText>
+                    <CommandText>SELECT id, pid, campaign_name, modified, AM, Advertiser, Curr, Revenue, RevDefault, RevFinalized, RevVerified, Status, Note, ItemCampaignStatus, NumAffiliates, NumAffiliatesNet7, NumAffiliatesNet15, NumAffiliatesNet30, NumAffiliatesNet7BiWeekly, NumAffiliatesNet15BiWeekly, NumAffiliatesWeekly, NumAffiliatesBiWeekly, NumDefault, NumFinalized, NumVerified, MediaBuyerApprovalStatus, ItemIds FROM WorkflowView ORDER BY campaign_name</CommandText>
                     <Parameters />
                   </DbCommand>
                 </SelectCommand>
@@ -38,22 +38,21 @@
               <Mapping SourceColumn="NumAffiliatesNet7" DataSetColumn="NumAffiliatesNet7" />
               <Mapping SourceColumn="NumAffiliatesNet15" DataSetColumn="NumAffiliatesNet15" />
               <Mapping SourceColumn="NumAffiliatesNet30" DataSetColumn="NumAffiliatesNet30" />
-              <Mapping SourceColumn="NumAffiliatesNetBiWeekly" DataSetColumn="NumAffiliatesNetBiWeekly" />
               <Mapping SourceColumn="RevDefault" DataSetColumn="RevDefault" />
               <Mapping SourceColumn="RevFinalized" DataSetColumn="RevFinalized" />
               <Mapping SourceColumn="RevVerified" DataSetColumn="RevVerified" />
               <Mapping SourceColumn="MediaBuyerApprovalStatus" DataSetColumn="MediaBuyerApprovalStatus" />
               <Mapping SourceColumn="ItemIds" DataSetColumn="ItemIds" />
+              <Mapping SourceColumn="NumAffiliatesNet7BiWeekly" DataSetColumn="NumAffiliatesNet7BiWeekly" />
+              <Mapping SourceColumn="NumAffiliatesNet15BiWeekly" DataSetColumn="NumAffiliatesNet15BiWeekly" />
+              <Mapping SourceColumn="NumAffiliatesWeekly" DataSetColumn="NumAffiliatesWeekly" />
+              <Mapping SourceColumn="NumAffiliatesBiWeekly" DataSetColumn="NumAffiliatesBiWeekly" />
             </Mappings>
             <Sources>
               <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="DADatabaseR1.dbo.WorkflowView" DbObjectType="View" FillMethodModifier="Public" FillMethodName="FillByAM" GenerateMethods="Fill" GenerateShortCommands="true" GeneratorSourceName="FillByAM" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="FillByAM">
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="true">
-                    <CommandText>SELECT        id, pid, campaign_name, modified, AM, Advertiser, Curr, Revenue, RevDefault, RevFinalized, RevVerified, Status, Note, ItemCampaignStatus, NumAffiliates, 
-                         NumAffiliatesNet7, NumAffiliatesNet15, NumAffiliatesNet30, NumAffiliatesNetBiWeekly, NumDefault, NumFinalized, NumVerified, MediaBuyerApprovalStatus, 
-                         ItemIds
-FROM            WorkflowView
-WHERE        (AM = @1)</CommandText>
+                    <CommandText>SELECT AM, Advertiser, Curr, ItemCampaignStatus, ItemIds, MediaBuyerApprovalStatus, Note, NumAffiliates, NumAffiliatesBiWeekly, NumAffiliatesNet15, NumAffiliatesNet15BiWeekly, NumAffiliatesNet30, NumAffiliatesNet7, NumAffiliatesNet7BiWeekly, NumAffiliatesWeekly, NumDefault, NumFinalized, NumVerified, RevDefault, RevFinalized, RevVerified, Revenue, Status, campaign_name, id, modified, pid FROM WorkflowView WHERE (AM = @1)</CommandText>
                     <Parameters>
                       <Parameter AllowDbNull="false" AutogeneratedName="1" ColumnName="AM" DataSourceName="DADatabaseR1.dbo.WorkflowView" DataTypeServer="varchar(50)" DbType="AnsiString" Direction="Input" ParameterName="@1" Precision="0" ProviderType="VarChar" Scale="0" Size="50" SourceColumn="AM" SourceColumnNullMapping="false" SourceVersion="Current" />
                     </Parameters>
@@ -174,7 +173,7 @@ SELECT id, campaign_id, note, added_by_system_user FROM CampaignNotes WHERE (id 
   <xs:element name="FinalizeDataSet1" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msdata:EnforceConstraints="False" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="FinalizeDataSet1" msprop:Generator_UserDSName="FinalizeDataSet1">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="Campaign" msprop:Generator_TableClassName="CampaignDataTable" msprop:Generator_TableVarName="tableCampaign" msprop:Generator_TablePropName="Campaign" msprop:Generator_RowDeletingName="CampaignRowDeleting" msprop:Generator_UserTableName="Campaign" msprop:Generator_RowChangingName="CampaignRowChanging" msprop:Generator_RowEvHandlerName="CampaignRowChangeEventHandler" msprop:Generator_RowDeletedName="CampaignRowDeleted" msprop:Generator_RowEvArgName="CampaignRowChangeEvent" msprop:Generator_RowChangedName="CampaignRowChanged" msprop:Generator_RowClassName="CampaignRow">
+        <xs:element name="Campaign" msprop:Generator_TableClassName="CampaignDataTable" msprop:Generator_TableVarName="tableCampaign" msprop:Generator_RowChangedName="CampaignRowChanged" msprop:Generator_TablePropName="Campaign" msprop:Generator_RowDeletingName="CampaignRowDeleting" msprop:Generator_RowChangingName="CampaignRowChanging" msprop:Generator_RowEvHandlerName="CampaignRowChangeEventHandler" msprop:Generator_RowDeletedName="CampaignRowDeleted" msprop:Generator_RowClassName="CampaignRow" msprop:Generator_UserTableName="Campaign" msprop:Generator_RowEvArgName="CampaignRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
@@ -237,7 +236,6 @@ SELECT id, campaign_id, note, added_by_system_user FROM CampaignNotes WHERE (id 
               <xs:element name="NumAffiliatesNet7" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnNumAffiliatesNet7" msprop:Generator_ColumnPropNameInRow="NumAffiliatesNet7" msprop:Generator_ColumnPropNameInTable="NumAffiliatesNet7Column" msprop:Generator_UserColumnName="NumAffiliatesNet7" type="xs:int" minOccurs="0" />
               <xs:element name="NumAffiliatesNet15" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnNumAffiliatesNet15" msprop:Generator_ColumnPropNameInRow="NumAffiliatesNet15" msprop:Generator_ColumnPropNameInTable="NumAffiliatesNet15Column" msprop:Generator_UserColumnName="NumAffiliatesNet15" type="xs:int" minOccurs="0" />
               <xs:element name="NumAffiliatesNet30" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnNumAffiliatesNet30" msprop:Generator_ColumnPropNameInRow="NumAffiliatesNet30" msprop:Generator_ColumnPropNameInTable="NumAffiliatesNet30Column" msprop:Generator_UserColumnName="NumAffiliatesNet30" type="xs:int" minOccurs="0" />
-              <xs:element name="NumAffiliatesNetBiWeekly" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnNumAffiliatesNetBiWeekly" msprop:Generator_ColumnPropNameInRow="NumAffiliatesNetBiWeekly" msprop:Generator_ColumnPropNameInTable="NumAffiliatesNetBiWeeklyColumn" msprop:Generator_UserColumnName="NumAffiliatesNetBiWeekly" type="xs:int" minOccurs="0" />
               <xs:element name="RevDefault" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnRevDefault" msprop:Generator_ColumnPropNameInRow="RevDefault" msprop:Generator_ColumnPropNameInTable="RevDefaultColumn" msprop:Generator_UserColumnName="RevDefault" type="xs:decimal" minOccurs="0" />
               <xs:element name="RevFinalized" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnRevFinalized" msprop:Generator_ColumnPropNameInRow="RevFinalized" msprop:Generator_ColumnPropNameInTable="RevFinalizedColumn" msprop:Generator_UserColumnName="RevFinalized" type="xs:decimal" minOccurs="0" />
               <xs:element name="RevVerified" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnRevVerified" msprop:Generator_ColumnPropNameInRow="RevVerified" msprop:Generator_ColumnPropNameInTable="RevVerifiedColumn" msprop:Generator_UserColumnName="RevVerified" type="xs:decimal" minOccurs="0" />
@@ -255,10 +253,14 @@ SELECT id, campaign_id, note, added_by_system_user FROM CampaignNotes WHERE (id 
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
+              <xs:element name="NumAffiliatesNet7BiWeekly" msprop:Generator_ColumnVarNameInTable="columnNumAffiliatesNet7BiWeekly" msprop:Generator_ColumnPropNameInRow="NumAffiliatesNet7BiWeekly" msprop:Generator_ColumnPropNameInTable="NumAffiliatesNet7BiWeeklyColumn" msprop:Generator_UserColumnName="NumAffiliatesNet7BiWeekly" type="xs:int" minOccurs="0" />
+              <xs:element name="NumAffiliatesNet15BiWeekly" msprop:Generator_ColumnVarNameInTable="columnNumAffiliatesNet15BiWeekly" msprop:Generator_ColumnPropNameInRow="NumAffiliatesNet15BiWeekly" msprop:Generator_ColumnPropNameInTable="NumAffiliatesNet15BiWeeklyColumn" msprop:Generator_UserColumnName="NumAffiliatesNet15BiWeekly" type="xs:int" minOccurs="0" />
+              <xs:element name="NumAffiliatesWeekly" msprop:Generator_ColumnVarNameInTable="columnNumAffiliatesWeekly" msprop:Generator_ColumnPropNameInRow="NumAffiliatesWeekly" msprop:Generator_ColumnPropNameInTable="NumAffiliatesWeeklyColumn" msprop:Generator_UserColumnName="NumAffiliatesWeekly" type="xs:int" minOccurs="0" />
+              <xs:element name="NumAffiliatesBiWeekly" msprop:Generator_ColumnVarNameInTable="columnNumAffiliatesBiWeekly" msprop:Generator_ColumnPropNameInRow="NumAffiliatesBiWeekly" msprop:Generator_ColumnPropNameInTable="NumAffiliatesBiWeeklyColumn" msprop:Generator_UserColumnName="NumAffiliatesBiWeekly" type="xs:int" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="CampaignStatus" msprop:Generator_TableClassName="CampaignStatusDataTable" msprop:Generator_TableVarName="tableCampaignStatus" msprop:Generator_TablePropName="CampaignStatus" msprop:Generator_RowDeletingName="CampaignStatusRowDeleting" msprop:Generator_UserTableName="CampaignStatus" msprop:Generator_RowChangingName="CampaignStatusRowChanging" msprop:Generator_RowEvHandlerName="CampaignStatusRowChangeEventHandler" msprop:Generator_RowDeletedName="CampaignStatusRowDeleted" msprop:Generator_RowEvArgName="CampaignStatusRowChangeEvent" msprop:Generator_RowChangedName="CampaignStatusRowChanged" msprop:Generator_RowClassName="CampaignStatusRow">
+        <xs:element name="CampaignStatus" msprop:Generator_TableClassName="CampaignStatusDataTable" msprop:Generator_TableVarName="tableCampaignStatus" msprop:Generator_RowChangedName="CampaignStatusRowChanged" msprop:Generator_TablePropName="CampaignStatus" msprop:Generator_RowDeletingName="CampaignStatusRowDeleting" msprop:Generator_RowChangingName="CampaignStatusRowChanging" msprop:Generator_RowEvHandlerName="CampaignStatusRowChangeEventHandler" msprop:Generator_RowDeletedName="CampaignStatusRowDeleted" msprop:Generator_RowClassName="CampaignStatusRow" msprop:Generator_UserTableName="CampaignStatus" msprop:Generator_RowEvArgName="CampaignStatusRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
@@ -272,7 +274,7 @@ SELECT id, campaign_id, note, added_by_system_user FROM CampaignNotes WHERE (id 
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="CampaignNotes" msprop:Generator_TableClassName="CampaignNotesDataTable" msprop:Generator_TableVarName="tableCampaignNotes" msprop:Generator_TablePropName="CampaignNotes" msprop:Generator_RowDeletingName="CampaignNotesRowDeleting" msprop:Generator_UserTableName="CampaignNotes" msprop:Generator_RowChangingName="CampaignNotesRowChanging" msprop:Generator_RowEvHandlerName="CampaignNotesRowChangeEventHandler" msprop:Generator_RowDeletedName="CampaignNotesRowDeleted" msprop:Generator_RowEvArgName="CampaignNotesRowChangeEvent" msprop:Generator_RowChangedName="CampaignNotesRowChanged" msprop:Generator_RowClassName="CampaignNotesRow">
+        <xs:element name="CampaignNotes" msprop:Generator_TableClassName="CampaignNotesDataTable" msprop:Generator_TableVarName="tableCampaignNotes" msprop:Generator_RowChangedName="CampaignNotesRowChanged" msprop:Generator_TablePropName="CampaignNotes" msprop:Generator_RowDeletingName="CampaignNotesRowDeleting" msprop:Generator_RowChangingName="CampaignNotesRowChanging" msprop:Generator_RowEvHandlerName="CampaignNotesRowChangeEventHandler" msprop:Generator_RowDeletedName="CampaignNotesRowDeleted" msprop:Generator_RowClassName="CampaignNotesRow" msprop:Generator_UserTableName="CampaignNotes" msprop:Generator_RowEvArgName="CampaignNotesRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
@@ -311,7 +313,7 @@ SELECT id, campaign_id, note, added_by_system_user FROM CampaignNotes WHERE (id 
   </xs:element>
   <xs:annotation>
     <xs:appinfo>
-      <msdata:Relationship name="Campaign_CampaignNotes" msdata:parent="Campaign" msdata:child="CampaignNotes" msdata:parentkey="pid" msdata:childkey="campaign_id" msprop:Generator_UserChildTable="CampaignNotes" msprop:Generator_ChildPropName="GetCampaignNotesRows" msprop:Generator_UserParentTable="Campaign" msprop:Generator_UserRelationName="Campaign_CampaignNotes" msprop:Generator_RelationVarName="relationCampaign_CampaignNotes" msprop:Generator_ParentPropName="CampaignRow" />
+      <msdata:Relationship name="Campaign_CampaignNotes" msdata:parent="Campaign" msdata:child="CampaignNotes" msdata:parentkey="pid" msdata:childkey="campaign_id" msprop:Generator_UserChildTable="CampaignNotes" msprop:Generator_ChildPropName="GetCampaignNotesRows" msprop:Generator_UserRelationName="Campaign_CampaignNotes" msprop:Generator_ParentPropName="CampaignRow" msprop:Generator_RelationVarName="relationCampaign_CampaignNotes" msprop:Generator_UserParentTable="Campaign" />
     </xs:appinfo>
   </xs:annotation>
 </xs:schema>

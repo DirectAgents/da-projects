@@ -1,6 +1,8 @@
 ﻿@model DirectAgents.Domain.Entities.CPProg.DailySummary
 @{
-    string month = (string)Session["month"]; // for filtering when returning back to Index
+    // for filtering when returning back to Index
+    string start = (string)Session["start"];
+    string end = (string)Session["end"];
 }
 
 <fieldset>
@@ -53,7 +55,7 @@
             </table>
             <br />
             <input type="submit" value="Save" />
-            &nbsp;@Html.ActionLink("cancel", "Index", new { acctId = Model.AccountId, month = month })
+            &nbsp;@Html.ActionLink("cancel", "Index", new { acctId = Model.AccountId, start = start, end = end })
         </div>
     }
 </fieldset>

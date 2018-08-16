@@ -38,6 +38,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
             {
                 foreach (var date in dateRange.Dates)
                 {
+                    Logger.Info("Extracting CampaignSummaries for {0:d}", date);
                     LoopThroughOffers(new DateRange(date, date.AddDays(1)));
                 }
             }
@@ -52,6 +53,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
         {
             foreach (var offerId in offerIds)
             {
+                Logger.Info("Extracting CampaignSummaries for offer {0}", offerId);
                 var campaignSummaries = CakeMarketingUtility.CampaignSummaries(dateRangeForStats, offerId: offerId);
                 if (this.groupByOffAff)
                     ExtractWithGrouping(campaignSummaries, dateRangeForStats.FromDate);

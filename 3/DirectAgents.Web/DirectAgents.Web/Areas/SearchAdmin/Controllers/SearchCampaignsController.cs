@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
-using CakeExtracter.Commands;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities.CPSearch;
 
