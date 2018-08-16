@@ -28,6 +28,7 @@ namespace EomTool.Domain.Entities
         public string comments { get; set; }
         public string prev_open_balance { get; set; }
         public string qb_name { get; set; }
+        public string alt_name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Campaign> Campaigns { get; set; }

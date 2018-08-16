@@ -31,6 +31,7 @@
           <Property Name="comments" Type="varchar" MaxLength="255" />
           <Property Name="prev_open_balance" Type="varchar" MaxLength="100" />
           <Property Name="qb_name" Type="varchar" MaxLength="100" />
+          <Property Name="alt_name" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="Affiliate">
           <Key>
@@ -1649,6 +1650,7 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
           <Property Type="String" Name="comments" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="prev_open_balance" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="qb_name" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="alt_name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Affiliate">
           <Key>
@@ -2727,6 +2729,7 @@ warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has column
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="EomModelStoreContainer" CdmEntityContainer="EomEntities">
           <EntitySetMapping Name="Advertisers"><EntityTypeMapping TypeName="EomModel.Advertiser"><MappingFragment StoreEntitySet="Advertiser">
+                <ScalarProperty Name="alt_name" ColumnName="alt_name" />
                 <ScalarProperty Name="qb_name" ColumnName="qb_name" />
                 <ScalarProperty Name="prev_open_balance" ColumnName="prev_open_balance" />
                 <ScalarProperty Name="comments" ColumnName="comments" />

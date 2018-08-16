@@ -77,6 +77,7 @@ namespace EomToolWeb.Controllers
             adv.comments = inAdv.comments;
             adv.prev_open_balance = inAdv.prev_open_balance;
             adv.qb_name = inAdv.qb_name;
+            adv.alt_name = inAdv.alt_name;
             mainRepo.SaveChanges();
             return true;
         }

@@ -1,6 +1,7 @@
 ﻿
 CREATE VIEW [dbo].[CommissionView] AS
-SELECT     dbo.AccountingView1.Publisher, dbo.AccountingView1.Advertiser,
+SELECT     dbo.AccountingView1.Publisher,
+           CASE WHEN [Adv Alt Name] <> '' THEN [Adv Alt Name] ELSE dbo.AccountingView1.Advertiser END AS [Advertiser],
            dbo.AccountingView1.[Campaign Number], dbo.AccountingView1.[Campaign Name],
            dbo.AccountingView1.[Rev/Unit USD], dbo.AccountingView1.[Cost/Unit USD], dbo.AccountingView1.Units,
            dbo.AccountingView1.[Revenue USD], dbo.AccountingView1.[Cost USD],

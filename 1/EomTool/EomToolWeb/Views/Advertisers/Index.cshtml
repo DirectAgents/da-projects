@@ -13,20 +13,25 @@ Accounting Period:
     <tr>
         <th></th>
         <th>Id</th>
-        <th>Name</th>
-        <th>Status</th>
-        <th>PaymentTerms</th>
-        <th>InvoicingStatus</th>
-        <th>Comments</th>
-        <th>PreviousPeriodsOpenBalance</th>
-        <th>QBName</th>
+        <th style="text-align:left">Name</th>
+        <th style="text-align:left">Status</th>
+        <th style="text-align:left">PaymentTerms</th>
+        <th style="text-align:left">InvoicingStatus</th>
+        <th style="text-align:left">Comments</th>
+        <th style="text-align:left">PreviousPeriodsOpenBalance</th>
+        <th style="text-align:left">QBName</th>
     </tr>
 @foreach (var adv in Model)
 {
     <tr>
         <td>@Html.ActionLink("edit", "Edit", new { id = adv.id })</td>
         <td style="text-align:right">@adv.id</td>
-        <td>@Html.ActionLink(adv.name, "Show", new { id = adv.id})</td>
+        <td>@Html.ActionLink(adv.name, "Show", new { id = adv.id})
+@if (!String.IsNullOrEmpty(adv.alt_name))
+{
+    <br /><b>Alt:</b> @adv.alt_name
+}
+        </td>
         <td>@adv.status</td>
         <td>@adv.payment_terms</td>
         <td>@adv.invoicing_status</td>

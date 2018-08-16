@@ -1,7 +1,7 @@
 ﻿
 CREATE VIEW [dbo].[AccountingView1]
 AS
-SELECT     TOP (100) PERCENT dbo.Affiliate.name2 AS Publisher, dbo.affiliate.qb_name AS [Pub QB Name], dbo.Advertiser.name AS Advertiser, dbo.Advertiser.qb_name AS [Adv QB Name],
+SELECT     TOP (100) PERCENT dbo.Affiliate.name2 AS Publisher, dbo.affiliate.qb_name AS [Pub QB Name], dbo.Advertiser.name AS Advertiser, dbo.Advertiser.qb_name AS [Adv QB Name], dbo.Advertiser.alt_name AS [Adv Alt Name],
                       dbo.Advertiser.payment_terms AS [Adv Payment Terms], dbo.Campaign.pid AS [Campaign Number],
                       dbo.Campaign.campaign_name AS [Campaign Name], dbo.Currency.name AS [Rev Currency], Currency_1.name AS [Cost Currency],
                       dbo.Item.revenue_per_unit AS [Rev/Unit], dbo.tousd3(dbo.Item.revenue_currency_id, dbo.Item.revenue_per_unit) AS [Rev/Unit USD],
@@ -40,7 +40,7 @@ FROM         dbo.Item INNER JOIN
                       dbo.AnalystManager ON dbo.Analyst.manager_id = dbo.AnalystManager.id LEFT OUTER JOIN
                       dbo.Strategist ON dbo.CampAff.strategist_id = dbo.Strategist.id INNER JOIN
                       dbo.AccountManagerAccessList ON dbo.AccountManager.name = dbo.AccountManagerAccessList.name
-GROUP BY dbo.Affiliate.name2, dbo.Affiliate.qb_name, dbo.Advertiser.name, dbo.Advertiser.qb_name, dbo.Advertiser.payment_terms, dbo.Campaign.pid, dbo.Campaign.campaign_name, dbo.Currency.name, Currency_1.name, dbo.Item.revenue_per_unit,
+GROUP BY dbo.Affiliate.name2, dbo.Affiliate.qb_name, dbo.Advertiser.name, dbo.Advertiser.qb_name, dbo.Advertiser.alt_name, dbo.Advertiser.payment_terms, dbo.Campaign.pid, dbo.Campaign.campaign_name, dbo.Currency.name, Currency_1.name, dbo.Item.revenue_per_unit,
                       dbo.Item.cost_per_unit, dbo.MediaBuyer.name, dbo.AdManager.name, dbo.AccountManager.name, dbo.ItemAccountingStatus.name, dbo.UnitType.name, dbo.IncomeType.name, dbo.IncomeType.qb_code,
                       dbo.CampaignStatus.name, dbo.tousd3(dbo.Item.revenue_currency_id, dbo.Item.revenue_per_unit), dbo.tousd3(dbo.Item.cost_currency_id, dbo.Item.cost_per_unit),
                       dbo.NetTermType.name, dbo.AffiliatePaymentMethod.name, dbo.Affiliate.currency_id, Currency_2.name, Source.name, dbo.MediaBuyerApprovalStatus.name,

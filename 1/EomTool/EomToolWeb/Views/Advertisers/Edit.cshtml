@@ -25,6 +25,10 @@
                 <td>@Html.DisplayFor(m => m.name)</td>
             </tr>
             <tr>
+                <td>@Html.LabelFor(m => m.alt_name)</td>
+                <td>@Html.EditorFor(m => m.alt_name)</td>
+            </tr>
+            <tr>
                 <td>@Html.LabelFor(m => m.status)</td>
                 <td>@Html.DropDownListFor(m => m.status, new SelectList(statusList))</td>
             </tr>
