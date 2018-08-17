@@ -111,31 +111,31 @@ namespace CakeExtracter.Commands
             // TODO? remove this since we now handle exceptions in the extracter?
 
             var accounts = GetAccounts();
-            Parallel.ForEach(accounts, (acct) =>
+            Parallel.ForEach(accounts, (account) =>
             {
-                var fbUtility = new FacebookUtility(m => Logger.Info(m), m => Logger.Warn(m));
+                var fbUtility = new FacebookUtility(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m));
                 fbUtility.DaysPerCall_Override = DaysPerCall;
 
                 var acctDateRange = new DateRange(dateRange.FromDate, dateRange.ToDate);
-                if (acct.Campaign != null) // check/adjust daterange - if acct assigned to a campaign/advertiser
+                if (account.Campaign != null) // check/adjust daterange - if acct assigned to a campaign/advertiser
                 {
                     //if FromDate came from the default value, check Advertiser's start date
-                    if (!StartDate.HasValue && acct.Campaign.Advertiser.StartDate.HasValue
-                        && acctDateRange.FromDate < acct.Campaign.Advertiser.StartDate.Value)
-                        acctDateRange.FromDate = acct.Campaign.Advertiser.StartDate.Value;
+                    if (!StartDate.HasValue && account.Campaign.Advertiser.StartDate.HasValue
+                        && acctDateRange.FromDate < account.Campaign.Advertiser.StartDate.Value)
+                        acctDateRange.FromDate = account.Campaign.Advertiser.StartDate.Value;
                     //likewise for ToDate / Advertiser's end date
-                    if (!EndDate.HasValue && acct.Campaign.Advertiser.EndDate.HasValue
-                        && acctDateRange.ToDate > acct.Campaign.Advertiser.EndDate.Value)
-                        acctDateRange.ToDate = acct.Campaign.Advertiser.EndDate.Value;
+                    if (!EndDate.HasValue && account.Campaign.Advertiser.EndDate.HasValue
+                        && acctDateRange.ToDate > account.Campaign.Advertiser.EndDate.Value)
+                        acctDateRange.ToDate = account.Campaign.Advertiser.EndDate.Value;
                 }
-                Logger.Info("Facebook ETL. Account {0} - {1}. DateRange {2}.", acct.Id, acct.Name, acctDateRange);
+                Logger.Info(account.Id, "Facebook ETL. Account {0} - {1}. DateRange {2}.", account.Id, account.Name, acctDateRange);
                 if (acctDateRange.ToDate < acctDateRange.FromDate)
                     return;
 
                 fbUtility.SetAll();
-                if (acct.Network != null)
+                if (account.Network != null)
                 {
-                    string network = Regex.Replace(acct.Network.Name, @"\s+", "").ToUpper();
+                    string network = Regex.Replace(account.Network.Name, @"\s+", "").ToUpper();
                     if (network.StartsWith("FACEBOOK"))
                         fbUtility.SetFacebook();
                     else if (network.StartsWith("INSTAGRAM"))
@@ -145,45 +145,45 @@ namespace CakeExtracter.Commands
                     else if (network.StartsWith("MESSENGER"))
                         fbUtility.SetMessenger();
                 }
-                fbUtility.SetCampaignFilter(acct.Filter);
+                fbUtility.SetCampaignFilter(account.Filter);
 
                 // Conversion Type to use
-                if (Accts_ConvAsMobAppInst.Contains(acct.ExternalId))
+                if (Accts_ConvAsMobAppInst.Contains(account.ExternalId))
                     fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_MobileAppInstall;
-                else if (Accts_ConvAsPurch.Contains(acct.ExternalId))
+                else if (Accts_ConvAsPurch.Contains(account.ExternalId))
                     fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_Purchase;
-                else if (Accts_ConvAsReg.Contains(acct.ExternalId))
+                else if (Accts_ConvAsReg.Contains(account.ExternalId))
                     fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_Registration;
-                else if (Accts_ConvAsVideoPlay.Contains(acct.ExternalId))
+                else if (Accts_ConvAsVideoPlay.Contains(account.ExternalId))
                     fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_VideoPlay;
                 else
                     fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_Default;
 
                 // Attribution windows
-                if (ClickWindow == 7 || (Accts_7d_click.Contains(acct.ExternalId) && ClickWindow != 28))
+                if (ClickWindow == 7 || (Accts_7d_click.Contains(account.ExternalId) && ClickWindow != 28))
                     fbUtility.Set_7d_click_attribution();
                 else
                     fbUtility.Set_28d_click_attribution(); //default
-                if (ViewWindow == 7 || (Accts_7d_view.Contains(acct.ExternalId) && ViewWindow != 1))
+                if (ViewWindow == 7 || (Accts_7d_view.Contains(account.ExternalId) && ViewWindow != 1))
                     fbUtility.Set_7d_view_attribution();
                 else
                     fbUtility.Set_1d_view_attribution(); //default
 
                 int? numDailyItems = null;
                 if (statsType.Daily)
-                    numDailyItems = DoETL_Daily(acctDateRange, acct, fbUtility);
+                    numDailyItems = DoETL_Daily(acctDateRange, account, fbUtility);
 
-                if (Accts_DailyOnly.Contains(acct.ExternalId))
+                if (Accts_DailyOnly.Contains(account.ExternalId))
                     return;
 
                 // Skip strategy & adset stats if there were no dailies
                 if (statsType.Strategy && (numDailyItems == null || numDailyItems.Value > 0))
-                    DoETL_Strategy(acctDateRange, acct, fbUtility);
+                    DoETL_Strategy(acctDateRange, account, fbUtility);
                 if (statsType.AdSet && (numDailyItems == null || numDailyItems.Value > 0))
-                    DoETL_AdSet(acctDateRange, acct, fbUtility);
+                    DoETL_AdSet(acctDateRange, account, fbUtility);
 
                 if (statsType.Creative && !statsType.All) // don't include when getting "all" statstypes
-                    DoETL_Creative(acctDateRange, acct, fbUtility);
+                    DoETL_Creative(acctDateRange, account, fbUtility);
                 //if (statsType.Site)
                 //    DoETL_Site(acctDateRange, acct, fbUtility);
             });

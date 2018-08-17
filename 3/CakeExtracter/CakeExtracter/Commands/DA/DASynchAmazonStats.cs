@@ -83,9 +83,9 @@ namespace CakeExtracter.Commands
 
             Parallel.ForEach(accounts, account =>
             {
-                Logger.Info("Commencing ETL for Amazon account ({0}) {1}", account.Id, account.Name);
+                Logger.Info(account.Id, "Commencing ETL for Amazon account ({0}) {1}", account.Id, account.Name);
 
-                var amazonUtility = new AmazonUtility(m => Logger.Info(m), m => Logger.Warn(m));
+                var amazonUtility = new AmazonUtility(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m));
                 amazonUtility.SetWhichAlt(account.ExternalId);
 
                 try
@@ -108,7 +108,7 @@ namespace CakeExtracter.Commands
                 {
                     Logger.Error(ex);
                 }
-                Logger.Info("Finished ETL for Amazon account ({0}) {1}", account.Id, account.Name);
+                Logger.Info(account.Id, "Finished ETL for Amazon account ({0}) {1}", account.Id, account.Name);
             });
 
             SaveTokens(AmazonUtility.TokenSets);
