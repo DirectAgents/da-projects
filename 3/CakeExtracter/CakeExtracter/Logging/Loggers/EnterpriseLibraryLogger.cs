@@ -39,5 +39,33 @@ namespace CakeExtracter.Logging.Loggers
         {
             Write(LogEntry(TraceEventType.Verbose, format, args));
         }
+
+        public void Info(int accountId, string format, params object[] args)
+        {
+            var entry = LogEntry(TraceEventType.Information, format, args);
+            entry.ExtendedProperties.Add("AccountId", accountId);
+            Write(entry);
+        }
+
+        public void Warn(int accountId, string format, params object[] args)
+        {
+            var entry = LogEntry(TraceEventType.Warning, format, args);
+            entry.ExtendedProperties.Add("AccountId", accountId);
+            Write(entry);
+        }
+
+        public void Error(int accountId, Exception exception)
+        {
+            var entry = LogEntry(TraceEventType.Error, "{0}", exception.Message);
+            entry.ExtendedProperties.Add("AccountId", accountId);
+            Write(entry);
+        }
+
+        public void Trace(int accountId, string format, params object[] args)
+        {
+            var entry = LogEntry(TraceEventType.Verbose, format, args);
+            entry.ExtendedProperties.Add("AccountId", accountId);
+            Write(entry);
+        }
     }
 }

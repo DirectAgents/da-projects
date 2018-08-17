@@ -16,7 +16,23 @@ namespace CakeExtracter.Logging.Loggers
         {
         }
 
-        public void Trace(string format, params object[] args)
+        void ILogger.Trace(string format, params object[] args)
+        {
+        }
+
+        void ILogger.Info(int accountId, string format, params object[] args)
+        {
+        }
+
+        void ILogger.Warn(int accountId, string format, params object[] args)
+        {
+        }
+
+        void ILogger.Error(int accountId, Exception exception)
+        {
+        }
+
+        void ILogger.Trace(int accountId, string format, params object[] args)
         {
         }
     }

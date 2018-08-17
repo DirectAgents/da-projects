@@ -23,5 +23,25 @@ namespace CakeExtracter.Logging.Loggers
         {
             Console.WriteLine("Trace: " + format, args);
         }
+
+        public void Info(int accountId, string format, params object[] args)
+        {
+            Console.WriteLine("Info: " + format, args);
+        }
+
+        public void Warn(int accountId, string format, params object[] args)
+        {
+            Console.WriteLine("Warn: " + format, args);
+        }
+
+        public void Error(int accountId, Exception exception)
+        {
+            Console.WriteLine("Exception: " + exception.Message);
+        }
+
+        public void Trace(int accountId, string format, params object[] args)
+        {
+            Console.WriteLine("Trace: " + format, args);
+        }
     }
 }

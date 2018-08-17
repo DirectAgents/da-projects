@@ -21,5 +21,21 @@ namespace CakeExtracter
         {
             Instance.Error(exception);
         }
+
+        public static void Info(int accountId, string format, params object[] args)
+        {
+            Instance.Info(accountId, format, args);
+        }
+
+        public static void Warn(int accountId, string format, params object[] args)
+        {
+            Instance.Warn(accountId, format, args);
+        }
+
+        public static void Error(int accountId, Exception exception)
+        {
+            Instance.Error(accountId, exception);
+        }
+
     }
 }
