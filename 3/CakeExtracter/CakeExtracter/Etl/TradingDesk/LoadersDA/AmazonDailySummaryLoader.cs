@@ -14,14 +14,14 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         private readonly int accountId;
         private Dictionary<string, int> adIdLookupByEid = new Dictionary<string, int>();
 
-        public AmazonDailySummaryLoader(int advertisableId)
+        public AmazonDailySummaryLoader(int accountId)
         {
-            this.accountId = advertisableId;
+            this.accountId = accountId;
         }
 
         protected override int Load(List<AmazonDailySummary> items)
         {
-            Logger.Info("Loading {0} AmazonDailySummaries..", items.Count);
+            Logger.Info(accountId, "Loading {0} AmazonDailySummaries..", items.Count);
           
             var count = UpsertDailySummaries(items);
             return count;
@@ -94,7 +94,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     }
                     itemCount++;
                 }
-                Logger.Info("Saving {0} DailySummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted)",
+                Logger.Info(accountId, "Saving {0} DailySummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted)",
                             itemCount, updatedCount, addedCount, duplicateCount, deletedCount, alreadyDeletedCount);
                 int numChanges = db.SaveChanges();
             }

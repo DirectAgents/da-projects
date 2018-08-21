@@ -13,7 +13,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     {
         protected readonly AmazonUtility _amazonUtility;
         protected readonly DateRange dateRange;
-        protected readonly string clientId;
+        protected readonly int accountId;   // in our db
+        protected readonly string clientId; // external id
         protected readonly string campaignFilter;
         protected readonly string campaignFilterOut;
 
@@ -27,11 +28,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         /// <param name="amazonUtility">The amazon utility.</param>
         /// <param name="date">The date.</param>
         /// <param name="clientId">The client identifier.</param>
-        public AmazonApiExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignFilter = null, string campaignFilterOut = null)
+        public AmazonApiExtracter(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
         {
             this._amazonUtility = amazonUtility;
             this.dateRange = dateRange;
-            this.clientId = clientId;
+            this.accountId = account.Id;
+            this.clientId = account.ExternalId;
             this.campaignFilter = campaignFilter;
             this.campaignFilterOut = campaignFilterOut;
         }
@@ -77,13 +79,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     //The daily extracter will load data based on date range and sum up the total of all campaigns
     public class AmazonDailySummaryExtracter : AmazonApiExtracter<AmazonDailySummary>
     {
-        public AmazonDailySummaryExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignFilter = null, string campaignFilterOut = null)
-            : base(amazonUtility, dateRange, clientId, campaignFilter: campaignFilter, campaignFilterOut: campaignFilterOut)
+        public AmazonDailySummaryExtracter(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
+            : base(amazonUtility, dateRange, account, campaignFilter: campaignFilter, campaignFilterOut: campaignFilterOut)
         { }
 
         protected override void Extract()
         {
-            Logger.Info("Extracting DailySummaries from Amazon API for ({0}) from {1:d} to {2:d}",
+            Logger.Info(accountId, "Extracting DailySummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
 
             long[] campaignIds = null;
@@ -135,13 +137,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     #region Campaign/Strategy
     public class AmazonCampaignSummaryExtracter : AmazonApiExtracter<StrategySummary>
     {
-        public AmazonCampaignSummaryExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignFilter = null, string campaignFilterOut = null)
-            : base(amazonUtility, dateRange, clientId, campaignFilter: campaignFilter, campaignFilterOut: campaignFilterOut)
+        public AmazonCampaignSummaryExtracter(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
+            : base(amazonUtility, dateRange, account, campaignFilter: campaignFilter, campaignFilterOut: campaignFilterOut)
         { }
 
         protected override void Extract()
         {
-            Logger.Info("Extracting StrategySummaries from Amazon API for ({0}) from {1:d} to {2:d}", 
+            Logger.Info(accountId, "Extracting StrategySummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
 
             var campaigns = LoadCampaignsFromAmazonAPI();
@@ -227,8 +229,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     #region AdSet (Keyword)
     public class AmazonAdSetExtracter : AmazonApiExtracter<AdSetSummary>
     {
-        public AmazonAdSetExtracter(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignFilter = null, string campaignFilterOut = null)
-            : base(amazonUtility, dateRange, clientId, campaignFilter: campaignFilter, campaignFilterOut: campaignFilterOut)
+        public AmazonAdSetExtracter(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
+            : base(amazonUtility, dateRange, account, campaignFilter: campaignFilter, campaignFilterOut: campaignFilterOut)
         { }
 
         //Note: The API only returns keywords for sponsoredProduct campaigns, and they are at the adgroup level.  So presumably two Keyword objects
@@ -238,8 +240,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         // (where a Keyword is actually a set of keywords)
 
         protected override void Extract()
-        {            
-            Logger.Info("Extracting AdSetSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
+        {
+            Logger.Info(accountId, "Extracting AdSetSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
 
             var campaigns = LoadCampaignsFromAmazonAPI();
@@ -335,13 +337,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         // - a productAdId metric is not available anyway
         // (as of v.20180314)
 
-        public AmazonAdExtrater(AmazonUtility amazonUtility, DateRange dateRange, string clientId, string campaignFilter = null, string campaignFilterOut = null)
-            : base(amazonUtility, dateRange, clientId, campaignFilter: campaignFilter, campaignFilterOut: campaignFilterOut)
+        public AmazonAdExtrater(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
+            : base(amazonUtility, dateRange, account, campaignFilter: campaignFilter, campaignFilterOut: campaignFilterOut)
         { }
 
         protected override void Extract()
         {
-            Logger.Info("Extracting TDadSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
+            Logger.Info(accountId, "Extracting TDadSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
 
             // This didn't work. The stats (e.g. spend) were larger than what we got at the campaign/keyword levels.
