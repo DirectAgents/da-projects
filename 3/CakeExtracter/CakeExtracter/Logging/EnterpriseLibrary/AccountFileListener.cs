@@ -48,7 +48,7 @@ namespace CakeExtracter.Logging.EnterpriseLibrary
         public override void TraceData(TraceEventCache eventCache, string source, TraceEventType eventType, int id, object data)
         {
             var logEntry = (LogEntry) data;
-            var message = data.ToString();
+            var message = Formatter.Format(logEntry);
             if (logEntry.ExtendedProperties.ContainsKey("AccountId"))
             {
                 var accountId = logEntry.ExtendedProperties["AccountId"].ToString();
@@ -69,7 +69,7 @@ namespace CakeExtracter.Logging.EnterpriseLibrary
         {
             FileStream logFileStream = new FileStream(fileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
             StreamWriter logWriter = new StreamWriter(logFileStream);
-            logWriter.WriteLine(Environment.NewLine + message);
+            logWriter.WriteLine(message);
             logWriter.BaseStream.Seek(0, SeekOrigin.End);
             logWriter.Flush();
             logWriter.Close();
