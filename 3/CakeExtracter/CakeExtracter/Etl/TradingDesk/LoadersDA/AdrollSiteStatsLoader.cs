@@ -9,16 +9,15 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class AdrollSiteStatsLoader : Loader<AdrollSiteStatsRow>
     {
-        private readonly int accountId;
         private readonly DateTime date;
         private TDSiteSummaryLoader siteSummaryLoader;
         private Dictionary<string, int> siteIdLookupByName = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
         public AdrollSiteStatsLoader(int accountId, DateTime date)
+            : base(accountId)
         {
-            this.accountId = accountId;
             this.date = date;
-            this.siteSummaryLoader = new TDSiteSummaryLoader();
+            this.siteSummaryLoader = new TDSiteSummaryLoader(accountId);
         }
 
         protected override int Load(List<AdrollSiteStatsRow> items)

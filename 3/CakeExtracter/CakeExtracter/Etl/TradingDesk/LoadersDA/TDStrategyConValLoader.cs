@@ -8,13 +8,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class TDStrategyConValLoader : Loader<StrategySummary>
     {
-        private readonly int accountId;
         private Dictionary<string, int> strategyIdLookupByEidAndName = new Dictionary<string, int>();
 
-        public TDStrategyConValLoader(int accountId)
-        {
-            this.accountId = accountId;
-        }
+        public TDStrategyConValLoader(int accountId) : base(accountId) { }
 
         protected override int Load(List<StrategySummary> items)
         {

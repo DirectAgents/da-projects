@@ -10,7 +10,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class AdrollAdSummaryLoader : Loader<AdSummary>
     {
-        private readonly int accountId;
         private Dictionary<string, int> TDadIdLookupByEid = new Dictionary<string, int>();
 
         public string[] AdEids
@@ -18,10 +17,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             get { return TDadIdLookupByEid.Keys.ToArray(); }
         }
 
-        public AdrollAdSummaryLoader(int acctId)
-        {
-            this.accountId = acctId;
-        }
+        public AdrollAdSummaryLoader(int accountId) : base(accountId) { }
 
         protected override int Load(List<AdSummary> items)
         {

@@ -7,16 +7,14 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
     {
         private TDAdSetSummaryLoader tdAdSetSummaryLoader;
 
-        public int AccountId { get { return tdAdSetSummaryLoader.AccountId; } }
-
-        public AmazonAdSetSummaryLoader(int accountId = -1)
+        public AmazonAdSetSummaryLoader(int accountId)
         {
             this.tdAdSetSummaryLoader = new TDAdSetSummaryLoader(accountId);
         }
 
         protected override int Load(List<AdSetSummary> items)
         {
-            Logger.Info(AccountId, "Loading {0} Amazon AdSet and Summary data:", items.Count);
+            Logger.Info(accountId, "Loading {0} Amazon AdSet and Summary data:", items.Count);
 
             tdAdSetSummaryLoader.AddUpdateDependentStrategies(items);
             tdAdSetSummaryLoader.AddUpdateDependentAdSets(items);

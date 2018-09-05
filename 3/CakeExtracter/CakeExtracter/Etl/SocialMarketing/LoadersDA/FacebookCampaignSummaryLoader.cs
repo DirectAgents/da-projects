@@ -14,9 +14,8 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
         private TDStrategySummaryLoader strategySummaryLoader;
         private Dictionary<string, int> actionTypeIdLookupByCode = new Dictionary<string, int>();
 
-        public int AccountId { get { return strategySummaryLoader.AccountId; } }
-
         public FacebookCampaignSummaryLoader(int accountId, bool loadActions = false)
+            : base(accountId)
         {
             this.BatchSize = FacebookUtility.RowsReturnedAtATime; //FB API only returns 25 rows at a time
             this.strategySummaryLoader = new TDStrategySummaryLoader(accountId);
@@ -59,7 +58,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private void AddUpdateDependentActionTypes(List<FBSummary> items)
         {
-            FacebookAdSetSummaryLoader.AddUpdateDependentActionTypes(items, this.actionTypeIdLookupByCode, this.AccountId);
+            FacebookAdSetSummaryLoader.AddUpdateDependentActionTypes(items, this.actionTypeIdLookupByCode, this.accountId);
         }
 
         //Note: get the actions from the items(FBSummaries); get the strategyId from the strategySummaries
@@ -118,7 +117,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                     }
                     db.SaveChanges();
                 } // loop through items
-                Logger.Info(AccountId, "Saved StrategyActions ({0} updates, {1} additions, {2} deletions)", updatedCount, addedCount, deletedCount);
+                Logger.Info(accountId, "Saved StrategyActions ({0} updates, {1} additions, {2} deletions)", updatedCount, addedCount, deletedCount);
             } // using db
         }
 

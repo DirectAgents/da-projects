@@ -193,16 +193,15 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         private TDStrategySummaryLoader tdStrategySummaryLoader;
 
-        public int AccountId { get { return tdStrategySummaryLoader.AccountId; } }
-
-        public AmazonCampaignSummaryLoader(int accountId = -1)
+        public AmazonCampaignSummaryLoader(int accountId)
+            : base(accountId)
         {
             this.tdStrategySummaryLoader = new TDStrategySummaryLoader(accountId);
         }
 
         protected override int Load(List<StrategySummary> items)
         {
-            Logger.Info(AccountId, "Loading {0} Amazon Campaign Daily Summaries..", items.Count);
+            Logger.Info(accountId, "Loading {0} Amazon Campaign Daily Summaries..", items.Count);
 
             tdStrategySummaryLoader.AddUpdateDependentStrategies(items);
             tdStrategySummaryLoader.AssignStrategyIdToItems(items);

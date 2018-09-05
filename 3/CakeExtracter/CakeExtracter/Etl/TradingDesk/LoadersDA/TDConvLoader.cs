@@ -1,25 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
-using System;
+using CakeExtracter.Etl.TradingDesk.Extracters;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
-using CakeExtracter.Etl.TradingDesk.Extracters;
-using System.Globalization;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class TDConvLoader : Loader<ConvRow>
     {
         //public TDConvLoader() { }
-        private readonly int accountId;
         private readonly string platCode;
         private Dictionary<string, int> countryIdLookupByName = new Dictionary<string, int>();
         private Dictionary<string, int> cityIdLookupByCountryCity = new Dictionary<string, int>();
 
-        public TDConvLoader(int acctId, string platCode)
+        public TDConvLoader(int accountId, string platCode)
+            : base(accountId)
         {
-            this.accountId = acctId;
             this.platCode = platCode;
         }
 

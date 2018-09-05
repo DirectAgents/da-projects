@@ -10,16 +10,12 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class AdrollConvLoader : Loader<AdrollConvRow>
     {
-        private readonly int accountId;
         private Dictionary<string, int?> strategyIdLookupByCampName = new Dictionary<string, int?>();
         private Dictionary<string, int?> adIdLookupByName = new Dictionary<string, int?>();
         private Dictionary<string, int> countryIdLookupByName = new Dictionary<string, int>();
         private Dictionary<string, int> cityIdLookupByCountryCity = new Dictionary<string, int>();
 
-        public AdrollConvLoader(int acctId)
-        {
-            this.accountId = acctId;
-        }
+        public AdrollConvLoader(int accountId) : base(accountId) { }
 
         protected override int Load(List<AdrollConvRow> items)
         {

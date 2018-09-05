@@ -8,12 +8,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class AdrollAttributionSummaryLoader : Loader<AttributionSummary>
     {
-        private readonly int accountId;
-
-        public AdrollAttributionSummaryLoader(int accountId)
-        {
-            this.accountId = accountId;
-        }
+        public AdrollAttributionSummaryLoader(int accountId) : base(accountId) { }
 
         protected override int Load(List<AttributionSummary> items)
         {

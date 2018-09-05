@@ -10,12 +10,10 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 {
     public class FacebookDailySummaryLoader : Loader<FBSummary>
     {
-        private readonly int accountId;
-
         public FacebookDailySummaryLoader(int accountId)
+            : base(accountId)
         {
             this.BatchSize = FacebookUtility.RowsReturnedAtATime; //FB API only returns 25 rows at a time
-            this.accountId = accountId;
         }
 
         protected override int Load(List<FBSummary> items)

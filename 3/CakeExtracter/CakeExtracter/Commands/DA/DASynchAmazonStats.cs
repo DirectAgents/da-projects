@@ -106,7 +106,7 @@ namespace CakeExtracter.Commands
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error(ex);
+                    Logger.Error(account.Id, ex);
                 }
                 Logger.Info(account.Id, "Finished ETL for Amazon account ({0}) {1}", account.Id, account.Name);
             });

@@ -28,7 +28,7 @@ namespace CakeExtracter
 
         public static void Info(int accountId, string format, params object[] args)
         {
-            if (LogToOneFile)
+            if (LogToOneFile || accountId < 0)
                 Instance.Info(format, args);
             else
                 Instance.Info(accountId, format, args);
@@ -36,7 +36,7 @@ namespace CakeExtracter
 
         public static void Warn(int accountId, string format, params object[] args)
         {
-            if (LogToOneFile)
+            if (LogToOneFile || accountId < 0)
                 Instance.Warn(format, args);
             else
                 Instance.Warn(accountId, format, args);
@@ -44,7 +44,7 @@ namespace CakeExtracter
 
         public static void Error(int accountId, Exception exception)
         {
-            if (LogToOneFile)
+            if (LogToOneFile || accountId < 0)
                 Instance.Error(exception);
             else
                 Instance.Error(accountId, exception);

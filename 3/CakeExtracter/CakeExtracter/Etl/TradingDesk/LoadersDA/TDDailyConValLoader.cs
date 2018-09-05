@@ -7,12 +7,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class TDDailyConValLoader : Loader<DailySummary>
     {
-        private readonly int accountId;
-
-        public TDDailyConValLoader(int accountId)
-        {
-            this.accountId = accountId;
-        }
+        public TDDailyConValLoader(int accountId) : base(accountId) { }
 
         protected override int Load(List<DailySummary> items)
         {

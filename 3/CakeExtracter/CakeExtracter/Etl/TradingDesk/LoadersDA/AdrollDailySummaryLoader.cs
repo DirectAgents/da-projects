@@ -9,9 +9,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class AdrollDailySummaryLoader : Loader<AdrollDailySummary>
     {
-        private readonly int accountId;
+        private readonly new int accountId;
 
         public AdrollDailySummaryLoader(string advertisableEid)
+            : base(-1) //TODO: if this is ever made to run in parallel, change constructor to take accountId - so can pass to base class
         {
             using (var db = new ClientPortalProgContext())
             {

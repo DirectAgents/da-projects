@@ -8,13 +8,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class TDadPreviewLoader : Loader<TDad>
     {
-        private readonly int accountId; // only used in AddUpdateDependentTDads()
         private Dictionary<string, int> tdAdIdLookupByEidAndName = new Dictionary<string, int>();
 
-        public TDadPreviewLoader(int accountId = -1)
-        {
-            this.accountId = accountId;
-        }
+        public TDadPreviewLoader(int accountId = -1) : base(accountId) { }
 
         protected override int Load(List<TDad> items)
         {

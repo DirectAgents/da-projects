@@ -9,15 +9,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class AdRollAdLoader : Loader<Ad>
     {
-        private readonly int accountId;
-
         private const string patternAdUrl = @"img src=&#34;(.*?)&#34;";
         private Regex regexAdUrl = new Regex(patternAdUrl);
 
-        public AdRollAdLoader(int acctId)
-        {
-            this.accountId = acctId;
-        }
+        public AdRollAdLoader(int accountId) : base(accountId) { }
 
         protected override int Load(List<Ad> items)
         {

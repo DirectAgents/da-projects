@@ -9,13 +9,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class TDSiteSummaryLoader : Loader<SiteSummary>
     {
-        private readonly int accountId;
         private Dictionary<string, int> siteIdLookupByName = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
-        public TDSiteSummaryLoader(int accountId = -1)
-        {
-            this.accountId = accountId;
-        }
+        public TDSiteSummaryLoader(int accountId = -1) : base(accountId) { }
 
         protected override int Load(List<SiteSummary> items)
         {

@@ -1,24 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
-using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
-using FacebookAPI;
 using FacebookAPI.Entities;
 
 namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 {
     public class FacebookAdSummaryLoader : Loader<FBSummary>
     {
-        //private readonly int accountId;
         private TDadSummaryLoader tdAdSummaryLoader;
         //private Dictionary<string, int> tdAdIdLookupByFBAdId = new Dictionary<string, int>();
 
         public FacebookAdSummaryLoader(int accountId)
+            : base(accountId)
         {
             //this.BatchSize = // the extracter groups the summaries by Date+AdName before yielding, so just use the default batch size
-            //this.accountId = accountId;
             this.tdAdSummaryLoader = new TDadSummaryLoader(accountId);
         }
 

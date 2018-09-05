@@ -14,9 +14,17 @@ namespace CakeExtracter.Etl
             BatchSize = 100;
         }
 
+        protected Loader(int accountId)
+            : this()
+        {
+            this.accountId = accountId;
+        }
+
         public int BatchSize { get; set; }
         public int LoadedCount;
         public int ExtractedCount;
+
+        protected readonly int accountId;
 
         public Thread Start(Extracter<T> source)
         {
@@ -38,14 +46,14 @@ namespace CakeExtracter.Etl
                 Interlocked.Add(ref LoadedCount, loadCount);
                 ExtractedCount = extracter.Added;
 
-                Logger.Info("Extracted: {0} Loaded: {1} Queue: {2} Done: {3}", ExtractedCount, LoadedCount,
+                Logger.Info(accountId, "Extracted: {0} Loaded: {1} Queue: {2} Done: {3}", ExtractedCount, LoadedCount,
                             extracter.Count, extracter.Done);
             }
 
             if (LoadedCount != ExtractedCount)
             {
                 var ex = new Exception(string.Format("Unmatched counts: loaded {0}, extracted {1}", LoadedCount, ExtractedCount));
-                Logger.Error(ex);
+                Logger.Error(accountId, ex);
                 throw ex;
             }
 

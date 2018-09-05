@@ -3,21 +3,14 @@ using System.Data.Entity;
 using System.Linq;
 using Amazon.Entities;
 using DirectAgents.Domain.Contexts;
-using DirectAgents.Domain.Entities.AdRoll;
-using CakeExtracter.CakeMarketingApi.Entities;
-using System;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class AmazonDailySummaryLoader : Loader<AmazonDailySummary>
     {
-        private readonly int accountId;
         private Dictionary<string, int> adIdLookupByEid = new Dictionary<string, int>();
 
-        public AmazonDailySummaryLoader(int accountId)
-        {
-            this.accountId = accountId;
-        }
+        public AmazonDailySummaryLoader(int accountId) : base(accountId) { }
 
         protected override int Load(List<AmazonDailySummary> items)
         {

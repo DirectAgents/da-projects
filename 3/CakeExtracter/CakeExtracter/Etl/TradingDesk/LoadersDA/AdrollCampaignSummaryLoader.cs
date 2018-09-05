@@ -8,11 +8,13 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class AdrollCampaignSummaryLoader : Loader<CampaignSummary>
     {
-        private readonly int accountId;
+        private readonly new int accountId;
+
         private TDStrategySummaryLoader strategySummaryLoader;
         private Dictionary<string, int> strategyIdLookupByCampEid = new Dictionary<string, int>();
 
         public AdrollCampaignSummaryLoader(string advertisableEid)
+            : base(-1) //TODO: if this is ever made to run in parallel, change constructor to take accountId - so can pass to base class
         {
             using (var db = new ClientPortalProgContext())
             {
