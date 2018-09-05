@@ -9,19 +9,19 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
     public class TDStrategySummaryLoader : Loader<StrategySummary>
     {
         // Note accountId is only used in AddUpdateDependentStrategies() (i.e. not by AdrollCampaignSummaryLoader)
-        private readonly int accountId;
+        public readonly int AccountId;
         private Dictionary<string, int> strategyIdLookupByEidAndName = new Dictionary<string, int>();
         private bool preLoadStrategies;
 
         public TDStrategySummaryLoader(int accountId = -1, bool preLoadStrategies = false)
         {
-            this.accountId = accountId;
+            this.AccountId = accountId;
             this.preLoadStrategies = preLoadStrategies;
         }
 
         protected override int Load(List<StrategySummary> items)
         {
-            Logger.Info("Loading {0} DA-TD StrategySummaries..", items.Count);
+            Logger.Info(AccountId, "Loading {0} DA-TD StrategySummaries..", items.Count);
             if (!preLoadStrategies)
                 AddUpdateDependentStrategies(items);
             AssignStrategyIdToItems(items);
@@ -78,7 +78,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                             }
                             else
                             {
-                                Logger.Warn("Skipping load of item. Strategy with id {0} does not exist.", item.StrategyId);
+                                Logger.Warn(AccountId, "Skipping load of item. Strategy with id {0} does not exist.", item.StrategyId);
                                 skippedCount++;
                             }
                         }
@@ -103,16 +103,16 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         }
                         else
                         {
-                            Logger.Warn("Encountered duplicate for {0:d} - Strategy {1}", item.Date, item.StrategyId);
+                            Logger.Warn(AccountId, "Encountered duplicate for {0:d} - Strategy {1}", item.Date, item.StrategyId);
                             duplicateCount++;
                         }
                     }
                     itemCount++;
                 }
-                Logger.Info("Saving {0} StrategySummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
+                Logger.Info(AccountId, "Saving {0} StrategySummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
                             itemCount, updatedCount, addedCount, duplicateCount, deletedCount, alreadyDeletedCount, skippedCount);
                 if (duplicateCount > 0)
-                    Logger.Warn("Encountered {0} duplicates which were skipped", duplicateCount);
+                    Logger.Warn(AccountId, "Encountered {0} duplicates which were skipped", duplicateCount);
                 int numChanges = db.SaveChanges();
             }
             return itemCount;
@@ -122,11 +122,11 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             var strategyNameEids = items.GroupBy(i => new { i.StrategyName, i.StrategyEid })
                 .Select(g => new NameEid { Name = g.Key.StrategyName, Eid = g.Key.StrategyEid });
-            AddUpdateDependentStrategies(strategyNameEids, this.accountId, this.strategyIdLookupByEidAndName);
+            AddUpdateDependentStrategies(strategyNameEids, this.AccountId, this.strategyIdLookupByEidAndName);
         }
         public void AddUpdateDependentStrategies(IEnumerable<NameEid> strategyNameEids)
         {
-            AddUpdateDependentStrategies(strategyNameEids, this.accountId, this.strategyIdLookupByEidAndName);
+            AddUpdateDependentStrategies(strategyNameEids, this.AccountId, this.strategyIdLookupByEidAndName);
         }
         public static void AddUpdateDependentStrategies(IEnumerable<NameEid> strategyNameEids, int accountId, Dictionary<string, int> strategyIdLookupByEidAndName)
         {
@@ -164,7 +164,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         };
                         db.Strategies.Add(strategy);
                         db.SaveChanges();
-                        Logger.Info("Saved new Strategy: {0} ({1}), ExternalId={2}", strategy.Name, strategy.Id, strategy.ExternalId);
+                        Logger.Info(accountId, "Saved new Strategy: {0} ({1}), ExternalId={2}", strategy.Name, strategy.Id, strategy.ExternalId);
                         strategyIdLookupByEidAndName[eidAndName] = strategy.Id;
                     }
                     else
@@ -181,9 +181,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         int numUpdates = db.SaveChanges();
                         if (numUpdates > 0)
                         {
-                            Logger.Info("Updated Strategy: {0}, Eid={1}", nameEid.Name, nameEid.Eid);
+                            Logger.Info(accountId, "Updated Strategy: {0}, Eid={1}", nameEid.Name, nameEid.Eid);
                             if (numUpdates > 1)
-                                Logger.Warn("Multiple entities in db ({0})", numUpdates);
+                                Logger.Warn(accountId, "Multiple entities in db ({0})", numUpdates);
                         }
                         strategyIdLookupByEidAndName[eidAndName] = stratsInDbList.First().Id;
                     }

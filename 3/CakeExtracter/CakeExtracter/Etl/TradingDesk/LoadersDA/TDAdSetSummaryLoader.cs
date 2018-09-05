@@ -8,18 +8,18 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class TDAdSetSummaryLoader : Loader<AdSetSummary>
     {
-        private readonly int accountId;
+        public readonly int AccountId;
         private Dictionary<string, int> strategyIdLookup = new Dictionary<string, int>(); // by StrategyEid + StrategyName
         private Dictionary<string, int> adsetIdLookup = new Dictionary<string, int>(); // by StrategyEid + StrategyName + AdSetEid + AdSetName
 
         public TDAdSetSummaryLoader(int accountId = -1)
         {
-            this.accountId = accountId;
+            this.AccountId = accountId;
         }
 
         protected override int Load(List<AdSetSummary> items)
         {
-            Logger.Info("Loading {0} DA-TD AdSetSummaries..", items.Count);
+            Logger.Info(AccountId, "Loading {0} DA-TD AdSetSummaries..", items.Count);
             AddUpdateDependentStrategies(items);
             AddUpdateDependentAdSets(items);
             AssignAdSetIdToItems(items);
@@ -71,7 +71,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                             }
                             else
                             {
-                                Logger.Warn("Skipping load of item. AdSet with id {0} does not exist.", item.AdSetId);
+                                Logger.Warn(AccountId, "Skipping load of item. AdSet with id {0} does not exist.", item.AdSetId);
                                 skippedCount++;
                             }
                         }
@@ -96,16 +96,16 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         }
                         else
                         {
-                            Logger.Warn("Encountered duplicate for {0:d} - AdSet {1}", item.Date, item.AdSetId);
+                            Logger.Warn(AccountId, "Encountered duplicate for {0:d} - AdSet {1}", item.Date, item.AdSetId);
                             duplicateCount++;
                         }
                     }
                     itemCount++;
                 }
-                Logger.Info("Saving {0} AdSetSummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
+                Logger.Info(AccountId, "Saving {0} AdSetSummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
                             itemCount, updatedCount, addedCount, duplicateCount, deletedCount, alreadyDeletedCount, skippedCount);
                 if (duplicateCount > 0)
-                    Logger.Warn("Encountered {0} duplicates which were skipped", duplicateCount);
+                    Logger.Warn(AccountId, "Encountered {0} duplicates which were skipped", duplicateCount);
                 int numChanges = db.SaveChanges();
             }
             return itemCount;
@@ -116,7 +116,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             var strategyNameEids = items.GroupBy(i => new { i.StrategyName, i.StrategyEid })
                 .Select(g => new NameEid { Name = g.Key.StrategyName, Eid = g.Key.StrategyEid })
                 .Where(x => !string.IsNullOrWhiteSpace(x.Name) || !string.IsNullOrWhiteSpace(x.Eid));
-            TDStrategySummaryLoader.AddUpdateDependentStrategies(strategyNameEids, this.accountId, this.strategyIdLookup);
+            TDStrategySummaryLoader.AddUpdateDependentStrategies(strategyNameEids, this.AccountId, this.strategyIdLookup);
         }
 
         public void AddUpdateDependentAdSets(List<AdSetSummary> items)
@@ -141,12 +141,12 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     if (!string.IsNullOrWhiteSpace(group.Key.AdSetEid))
                     {
                         // First see if an AdSet with that ExternalId exists
-                        adsetsInDb = db.AdSets.Where(x => x.AccountId == accountId && x.ExternalId == group.Key.AdSetEid);
+                        adsetsInDb = db.AdSets.Where(x => x.AccountId == AccountId && x.ExternalId == group.Key.AdSetEid);
 
                         // If not, check for a match by name where ExternalId == null
                         if (!adsetsInDb.Any())
                         {
-                            adsetsInDb = db.AdSets.Where(x => x.AccountId == accountId && x.ExternalId == null && x.Name == group.Key.AdSetName);
+                            adsetsInDb = db.AdSets.Where(x => x.AccountId == AccountId && x.ExternalId == null && x.Name == group.Key.AdSetName);
                             if (stratId.HasValue)
                                 adsetsInDb = adsetsInDb.Where(x => x.StrategyId == stratId.Value);
                         }
@@ -154,7 +154,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     else
                     {
                         // Check by adset name
-                        adsetsInDb = db.AdSets.Where(x => x.AccountId == accountId && x.Name == group.Key.AdSetName);
+                        adsetsInDb = db.AdSets.Where(x => x.AccountId == AccountId && x.Name == group.Key.AdSetName);
                         if (stratId.HasValue)
                             adsetsInDb = adsetsInDb.Where(x => x.StrategyId == stratId.Value);
                     }
@@ -164,14 +164,14 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     {   // AdSet doesn't exist in the db; so create it and put an entry in the lookup
                         var adset = new AdSet
                         {
-                            AccountId = this.accountId,
+                            AccountId = this.AccountId,
                             StrategyId = stratId,
                             ExternalId = group.Key.AdSetEid,
                             Name = group.Key.AdSetName
                         };
                         db.AdSets.Add(adset);
                         db.SaveChanges();
-                        Logger.Info("Saved new AdSet: {0} ({1}), ExternalId={2}", adset.Name, adset.Id, adset.ExternalId);
+                        Logger.Info(AccountId, "Saved new AdSet: {0} ({1}), ExternalId={2}", adset.Name, adset.Id, adset.ExternalId);
                         adsetIdLookup[adsetKey] = adset.Id;
                     }
                     else
@@ -190,9 +190,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         int numUpdates = db.SaveChanges();
                         if (numUpdates > 0)
                         {
-                            Logger.Info("Updated AdSet: {0}, Eid={1}", group.Key.AdSetName, group.Key.AdSetEid);
+                            Logger.Info(AccountId, "Updated AdSet: {0}, Eid={1}", group.Key.AdSetName, group.Key.AdSetEid);
                             if (numUpdates > 1)
-                                Logger.Warn("Multiple entities in db ({0})", numUpdates);
+                                Logger.Warn(AccountId, "Multiple entities in db ({0})", numUpdates);
                         }
                         adsetIdLookup[adsetKey] = adsetsInDbList.First().Id;
                     }

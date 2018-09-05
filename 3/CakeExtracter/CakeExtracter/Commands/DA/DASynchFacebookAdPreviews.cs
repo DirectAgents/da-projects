@@ -55,12 +55,12 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
-        public void DoETL_AdPreview(ExtAccount account, FacebookUtility fbUtility = null)
+        public void DoETL_AdPreview(ExtAccount account, FacebookUtility fbUtility)
         {
             var fbIds = GetAdFBIds(account.Id);
             if (fbIds.Count() > 0)
             {
-                var extracter = new FacebookAdPreviewExtracter(account.ExternalId, GetAdFBIds(account.Id), fbUtility);
+                var extracter = new FacebookAdPreviewExtracter(account, GetAdFBIds(account.Id), fbUtility);
                 var loader = new FacebookAdPreviewLoader(account.Id);
                 var extracterThread = extracter.Start();
                 var loaderThread = loader.Start(extracter);

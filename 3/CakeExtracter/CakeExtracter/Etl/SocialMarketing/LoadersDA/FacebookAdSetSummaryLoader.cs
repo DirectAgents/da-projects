@@ -14,6 +14,8 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
         private TDAdSetSummaryLoader adsetSummaryLoader;
         private Dictionary<string, int> actionTypeIdLookupByCode = new Dictionary<string, int>();
 
+        public int AccountId { get { return adsetSummaryLoader.AccountId; } }
+
         public FacebookAdSetSummaryLoader(int accountId, bool loadActions = false)
         {
             this.BatchSize = FacebookUtility.RowsReturnedAtATime; //FB API only returns 25 rows at a time
@@ -153,7 +155,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                     }
                     db.SaveChanges();
                 } // loop through items
-                Logger.Info("Saved AdSetActions ({0} updates, {1} additions, {2} deletions)", updatedCount, addedCount, deletedCount);
+                Logger.Info(AccountId, "Saved AdSetActions ({0} updates, {1} additions, {2} deletions)", updatedCount, addedCount, deletedCount);
             } // using db
         }
 

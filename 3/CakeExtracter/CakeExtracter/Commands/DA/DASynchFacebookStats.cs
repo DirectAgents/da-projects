@@ -193,7 +193,7 @@ namespace CakeExtracter.Commands
 
         private int DoETL_Daily(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
-            var extracter = new FacebookDailySummaryExtracter(dateRange, account.ExternalId, fbUtility, includeAllActions: false);
+            var extracter = new FacebookDailySummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
             var loader = new FacebookDailySummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -203,7 +203,7 @@ namespace CakeExtracter.Commands
         }
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
-            var extracter = new FacebookCampaignSummaryExtracter(dateRange, account.ExternalId, fbUtility, includeAllActions: false);
+            var extracter = new FacebookCampaignSummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
             var loader = new FacebookCampaignSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -212,7 +212,7 @@ namespace CakeExtracter.Commands
         }
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
-            var extracter = new FacebookAdSetSummaryExtracter(dateRange, account.ExternalId, fbUtility, includeAllActions: true);
+            var extracter = new FacebookAdSetSummaryExtracter(dateRange, account, fbUtility, includeAllActions: true);
             var loader = new FacebookAdSetSummaryLoader(account.Id, loadActions: true);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -221,7 +221,7 @@ namespace CakeExtracter.Commands
         }
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
-            var extracter = new FacebookAdSummaryExtracter(dateRange, account.ExternalId, fbUtility, includeAllActions: false);
+            var extracter = new FacebookAdSummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
             var loader = new FacebookAdSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);

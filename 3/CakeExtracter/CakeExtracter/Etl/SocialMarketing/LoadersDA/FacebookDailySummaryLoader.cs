@@ -20,7 +20,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         protected override int Load(List<FBSummary> items)
         {
-            Logger.Info("Loading {0} Facebook DailySummaries..", items.Count);
+            Logger.Info(accountId, "Loading {0} Facebook DailySummaries..", items.Count);
             var count = UpsertDailySummaries(items);
             return count;
         }
@@ -78,16 +78,16 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                         }
                         else
                         {
-                            Logger.Warn("Encountered duplicate for {0:d} - Acct {1}", item.Date, accountId);
+                            Logger.Warn(accountId, "Encountered duplicate DailySummary for {0:d}", item.Date);
                             duplicateCount++;
                         }
                     }
                     itemCount++;
                 }
-                Logger.Info("Saving {0} DailySummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted)",
+                Logger.Info(accountId, "Saving {0} DailySummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted)",
                             itemCount, updatedCount, addedCount, duplicateCount, deletedCount, alreadyDeletedCount);
                 if (duplicateCount > 0)
-                    Logger.Warn("Encountered {0} duplicates which were skipped", duplicateCount);
+                    Logger.Warn(accountId, "Encountered {0} duplicates which were skipped", duplicateCount);
                 int numChanges = db.SaveChanges();
             }
             return itemCount;
