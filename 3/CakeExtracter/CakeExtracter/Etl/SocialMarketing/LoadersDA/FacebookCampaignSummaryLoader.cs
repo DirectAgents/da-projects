@@ -59,7 +59,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private void AddUpdateDependentActionTypes(List<FBSummary> items)
         {
-            FacebookAdSetSummaryLoader.AddUpdateDependentActionTypes(items, this.actionTypeIdLookupByCode);
+            FacebookAdSetSummaryLoader.AddUpdateDependentActionTypes(items, this.actionTypeIdLookupByCode, this.AccountId);
         }
 
         //Note: get the actions from the items(FBSummaries); get the strategyId from the strategySummaries

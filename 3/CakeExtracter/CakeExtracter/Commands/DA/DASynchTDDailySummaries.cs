@@ -55,6 +55,8 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
+            Logger.LogToOneFile = true;
+
             var account = GetAccount(AccountId);
             if (account != null)
             {

@@ -1,10 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using Amazon.Entities;
-using DirectAgents.Domain.Contexts;
-using CakeExtracter.CakeMarketingApi.Entities;
-using System;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
@@ -199,6 +193,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         private TDStrategySummaryLoader tdStrategySummaryLoader;
 
+        public int AccountId { get { return tdStrategySummaryLoader.AccountId; } }
+
         public AmazonCampaignSummaryLoader(int accountId = -1)
         {
             this.tdStrategySummaryLoader = new TDStrategySummaryLoader(accountId);
@@ -206,7 +202,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         protected override int Load(List<StrategySummary> items)
         {
-            Logger.Info("Loading {0} Amazon Campaign Daily Summaries..", items.Count);
+            Logger.Info(AccountId, "Loading {0} Amazon Campaign Daily Summaries..", items.Count);
+
             tdStrategySummaryLoader.AddUpdateDependentStrategies(items);
             tdStrategySummaryLoader.AssignStrategyIdToItems(items);
             var count = tdStrategySummaryLoader.UpsertDailySummaries(items);

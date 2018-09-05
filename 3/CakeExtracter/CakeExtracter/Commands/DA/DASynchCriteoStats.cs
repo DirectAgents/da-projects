@@ -64,6 +64,8 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
+            Logger.LogToOneFile = true;
+
             //if (TimeZoneOffset != 0) ...
             // (See SynchSearchDailySummariesCriteoCommand)
 

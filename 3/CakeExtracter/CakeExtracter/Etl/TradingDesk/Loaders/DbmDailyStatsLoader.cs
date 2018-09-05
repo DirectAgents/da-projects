@@ -24,10 +24,10 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
 
         private int UpsertDailyLocationStats(List<DailyLocationStatRow> items)
         {
-            var addedCount = 0;
-            var updatedCount = 0;
-            var skippedCount = 0;
-            var itemCount = 0;
+            //var addedCount = 0;
+            //var updatedCount = 0;
+            //var skippedCount = 0;
+            //var itemCount = 0;
             using (var db = new TDContext())
             {
                 foreach (var item in items)

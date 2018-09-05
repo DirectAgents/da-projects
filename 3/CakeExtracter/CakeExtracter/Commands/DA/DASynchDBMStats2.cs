@@ -33,6 +33,7 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
+            Logger.LogToOneFile = true;
             SetupDBMUtility();
 
             var string_StrategiesFromLineItems = ConfigurationManager.AppSettings["DBM_StrategiesFromLineItems"] ?? "";

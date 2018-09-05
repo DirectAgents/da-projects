@@ -62,9 +62,9 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private void AddUpdateDependentActionTypes(List<FBSummary> items)
         {
-            AddUpdateDependentActionTypes(items, this.actionTypeIdLookupByCode);
+            AddUpdateDependentActionTypes(items, this.actionTypeIdLookupByCode, this.AccountId);
         }
-        public static void AddUpdateDependentActionTypes(List<FBSummary> items, Dictionary<string, int> actionTypeIdLookupByCode)
+        public static void AddUpdateDependentActionTypes(List<FBSummary> items, Dictionary<string, int> actionTypeIdLookupByCode, int accountId)
         {
             var actionTypeCodes = items.Where(i => i.Actions != null).SelectMany(i => i.Actions.Keys).Distinct();
 
@@ -83,7 +83,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                         };
                         db.ActionTypes.Add(actionType);
                         db.SaveChanges();
-                        Logger.Info("Saved new ActionType: {0}", actionTypeCode);
+                        Logger.Info(accountId, "Saved new ActionType: {0}", actionTypeCode);
                         actionTypeIdLookupByCode[actionTypeCode] = actionType.Id;
                     }
                     else

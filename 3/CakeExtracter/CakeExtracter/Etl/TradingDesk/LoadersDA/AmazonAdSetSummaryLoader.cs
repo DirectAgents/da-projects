@@ -1,18 +1,13 @@
-﻿using Amazon.Entities;
-using DirectAgents.Domain.Contexts;
+﻿using System.Collections.Generic;
 using DirectAgents.Domain.Entities.CPProg;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class AmazonAdSetSummaryLoader : Loader<AdSetSummary>
     {
         private TDAdSetSummaryLoader tdAdSetSummaryLoader;
+
+        public int AccountId { get { return tdAdSetSummaryLoader.AccountId; } }
 
         public AmazonAdSetSummaryLoader(int accountId = -1)
         {
@@ -21,7 +16,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         protected override int Load(List<AdSetSummary> items)
         {
-            Logger.Info("Loading {0} Amazon AdSet and Summary data:", items.Count);
+            Logger.Info(AccountId, "Loading {0} Amazon AdSet and Summary data:", items.Count);
 
             tdAdSetSummaryLoader.AddUpdateDependentStrategies(items);
             tdAdSetSummaryLoader.AddUpdateDependentAdSets(items);

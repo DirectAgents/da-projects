@@ -62,6 +62,8 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
+            Logger.LogToOneFile = true;
+
             if (!DaysAgoToStart.HasValue)
                 DaysAgoToStart = 41; // used if StartDate==null
             var today = DateTime.Today;
