@@ -113,6 +113,7 @@ EXEC EOMcopyTable @dbFrom,@dbTo,'AnalystRole',0
 EXEC EOMcopyTable @dbFrom,@dbTo,'AnalystManager',1
 EXEC EOMcopyTable @dbFrom,@dbTo,'Analyst',1
 EXEC EOMcopyTable @dbFrom,@dbTo,'Strategist',1
+EXEC EOMcopyTable @dbFrom,@dbTo,'CampAff',0
 
 SET @sql = 'USE ' + @dbTo + ';'
 + ' UPDATE Affiliate SET date_created=NULL, date_modified=NULL;'

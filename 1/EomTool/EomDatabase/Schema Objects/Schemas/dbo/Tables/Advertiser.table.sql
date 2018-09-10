@@ -6,6 +6,7 @@
     [invoicing_status] VARCHAR(50) NULL, 
     [comments] VARCHAR(255) NULL, 
     [prev_open_balance] VARCHAR(100) NULL, 
-    [qb_name] VARCHAR(100) NULL
+    [qb_name] VARCHAR(100) NULL, 
+    [alt_name] VARCHAR(100) NULL
 );
 

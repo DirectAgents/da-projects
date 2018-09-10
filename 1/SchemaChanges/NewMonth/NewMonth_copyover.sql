@@ -10,12 +10,12 @@ exec DAMain1.dbo.EOMcopy 'DADatabaseA...2018','DADatabaseB...2018'
 --also, make sure correct database is still set, particularly if executing one script at a time
 
 --Initialize audit (changes current db)
-:r "G:\GitHub\da-projects\1\SchemaChanges\AuditScripts\autoaudit 2.00h.sql"
+:r "G:\GitHub\da-projects2\1\SchemaChanges\AuditScripts\autoaudit 2.00h.sql"
 
 USE DADatabaseB...2018
 
 --Add audits
-:r "G:\GitHub\da-projects\1\SchemaChanges\AuditScripts\AddAuditTables.sql"
+:r "G:\GitHub\da-projects2\1\SchemaChanges\AuditScripts\AddAuditTables.sql"
 
 --Audit views
-:r "G:\GitHub\da-projects\1\SchemaChanges\AuditScripts\AddAuditViews.sql"
+:r "G:\GitHub\da-projects2\1\SchemaChanges\AuditScripts\AddAuditViews.sql"
