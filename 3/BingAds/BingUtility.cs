@@ -18,6 +18,9 @@ namespace BingAds
 
         private readonly string _customerID = ConfigurationManager.AppSettings["BingCustomerID"];
         private readonly string _developerToken = ConfigurationManager.AppSettings["BingApiToken"];
+        private readonly string _clientId = ConfigurationManager.AppSettings["BingClientId"];
+        private readonly string _refreshToken = ConfigurationManager.AppSettings["BingRefreshtoken"];
+
         private readonly string _userName = ConfigurationManager.AppSettings["BingApiUsername"];
         private readonly string _password = ConfigurationManager.AppSettings["BingApiPassword"];
         private readonly string _folder = ConfigurationManager.AppSettings["BingReportFolder"];
@@ -36,6 +39,9 @@ namespace BingAds
         {
             CustomerID = Convert.ToInt64(_customerID);
             DeveloperToken = _developerToken;
+            ClientId = _clientId;
+            ClientSecret = "";
+            RefreshToken = _refreshToken;
             UserName = _userName;
             Password = _password;
         }
@@ -74,7 +80,7 @@ namespace BingAds
                 //AccountId: not needed?
                 DeveloperToken = DeveloperToken
             };
-            if (UserName.Contains('@')) // is an email address (Microsoft account); can't use PasswordAuthentication
+            if (String.IsNullOrWhiteSpace(UserName) || UserName.Contains('@')) // is an email address (Microsoft account); can't use PasswordAuthentication
             {
                 string redirString = ConfigurationManager.AppSettings["BingRedirectionUri"];
                 var authorization = new OAuthWebAuthCodeGrant(ClientId, ClientSecret, new Uri(redirString));
