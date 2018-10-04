@@ -67,6 +67,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             {
                 Logger.Error(ex);
             };
+            csv.Configuration.IsHeaderCaseSensitive = false;
+            //Note: once the CsvHelper package is updated, change the above line to:
+            //csv.Configuration.PrepareHeaderForMatch = header => header.ToLower();
         }
         private IEnumerable<DailySummary> EnumerateRowsInner(StreamReader reader)
         {

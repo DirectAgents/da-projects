@@ -12,7 +12,9 @@ namespace Yahoo
 {
     public class YAMUtility
     {
+        //TODO: make this a default / config setting
         private const int NUMTRIES_REQUESTREPORT = 12; // 240 sec (4 min)
+
         private const int NUMTRIES_GETREPORTSTATUS_DEFAULT = 24; // 480 sec (8 min)
         private const int WAITTIME_SECONDS_DEFAULT = 20;
 
@@ -227,7 +229,7 @@ namespace Yahoo
             var waitTime = new TimeSpan(0, 0, WaitTime_Seconds);
             for (int i = 0; i < this.NumTries_GetReportStatus; i++)
             {
-                LogInfo(String.Format("Will check if the report is ready in {0} seconds...", waitTime.Seconds));
+                LogInfo(String.Format("Will check if the report is ready in {0:N0} seconds...", waitTime.TotalSeconds));
                 Thread.Sleep(waitTime);
 
                 getReportResponse = GetReportStatus(customerReportId);
