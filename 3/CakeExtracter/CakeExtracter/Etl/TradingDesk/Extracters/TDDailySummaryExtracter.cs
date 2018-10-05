@@ -62,6 +62,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 return false;
             };
             csv.Configuration.WillThrowOnMissingField = false;
+            csv.Configuration.CultureInfo = CultureInfo.InvariantCulture;
             csv.Configuration.IgnoreReadingExceptions = true; // This is at the row level
             csv.Configuration.ReadingExceptionCallback = (ex, row) =>
             {

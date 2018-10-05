@@ -12,6 +12,9 @@ namespace Yahoo
 {
     public class YAMUtility
     {
+        private static readonly object RequestLock = new object();
+        private static readonly object AccessTokenLock = new object();
+
         //TODO: make this a default / config setting
         private const int NUMTRIES_REQUESTREPORT = 12; // 240 sec (4 min)
 
@@ -45,12 +48,15 @@ namespace Yahoo
             get { return CreateTokenSets().ToArray(); }
             set
             {
-                for (int i = 0; i < value.Length; i++)
+                lock (AccessTokenLock)
                 {
-                    var tokenSet = value[i].Split(new string[] { TOKEN_DELIMITER }, StringSplitOptions.None);
-                    AccessToken[i] = tokenSet[0];
-                    if (tokenSet.Length > 1)
-                        RefreshToken[i] = tokenSet[1];
+                    for (int i = 0; i < value.Length; i++)
+                    {
+                        var tokenSet = value[i].Split(new string[] { TOKEN_DELIMITER }, StringSplitOptions.None);
+                        AccessToken[i] = tokenSet[0];
+                        if (tokenSet.Length > 1)
+                            RefreshToken[i] = tokenSet[1];
+                    }
                 }
             }
         }
@@ -174,43 +180,46 @@ namespace Yahoo
         private IRestResponse<T> ProcessRequest<T>(RestRequest restRequest, bool postNotGet = false)
             where T : new()
         {
-            var restClient = new RestClient
+            lock (RequestLock)
             {
-                BaseUrl = new Uri(YAMBaseUrl)
-            };
-            restClient.AddHandler("application/json", new JsonDeserializer());
+                var restClient = new RestClient
+                {
+                    BaseUrl = new Uri(YAMBaseUrl)
+                };
+                restClient.AddHandler("application/json", new JsonDeserializer());
 
-            if (String.IsNullOrEmpty(AccessToken[WhichAlt]))
-                GetAccessToken();
-
-            restRequest.AddHeader("X-Auth-Method", "OAUTH");
-            restRequest.AddHeader("X-Auth-Token", AccessToken[WhichAlt]);
-
-            bool done = false;
-            int tries = 0;
-            IRestResponse<T> response = null;
-            while (!done)
-            {
-                if (postNotGet)
-                    response = restClient.ExecuteAsPost<T>(restRequest, "POST");
-                else
-                    response = restClient.ExecuteAsGet<T>(restRequest, "GET");
-
-                tries++;
-
-                if (response.StatusCode == HttpStatusCode.Unauthorized && tries < 2)
-                { // Get a new access token and use that.
+                if (String.IsNullOrEmpty(AccessToken[WhichAlt]))
                     GetAccessToken();
-                    var param = restRequest.Parameters.Find(p => p.Type == ParameterType.HttpHeader && p.Name == "X-Auth-Token");
-                    param.Value = AccessToken[WhichAlt];
-                }
-                else
-                    done = true; //TODO: distinguish between success and failure of ProcessRequest
-            }
-            if (!String.IsNullOrWhiteSpace(response.ErrorMessage))
-                LogError(response.ErrorMessage);
 
-            return response;
+                restRequest.AddHeader("X-Auth-Method", "OAUTH");
+                restRequest.AddHeader("X-Auth-Token", AccessToken[WhichAlt]);
+
+                bool done = false;
+                int tries = 0;
+                IRestResponse<T> response = null;
+                while (!done)
+                {
+                    if (postNotGet)
+                        response = restClient.ExecuteAsPost<T>(restRequest, "POST");
+                    else
+                        response = restClient.ExecuteAsGet<T>(restRequest, "GET");
+
+                    tries++;
+
+                    if (response.StatusCode == HttpStatusCode.Unauthorized && tries < 2)
+                    { // Get a new access token and use that.
+                        GetAccessToken();
+                        var param = restRequest.Parameters.Find(p => p.Type == ParameterType.HttpHeader && p.Name == "X-Auth-Token");
+                        param.Value = AccessToken[WhichAlt];
+                    }
+                    else
+                        done = true; //TODO: distinguish between success and failure of ProcessRequest
+                }
+                if (!String.IsNullOrWhiteSpace(response.ErrorMessage))
+                    LogError(response.ErrorMessage);
+
+                return response;
+            }
         }
 
         // ---
@@ -317,7 +326,7 @@ namespace Yahoo
                 metricList = new List<int>(new[] { Metric.IMPRESSIONS, Metric.CLICKS, Metric.ADVERTISER_SPENDING, Metric.CLICK_THROUGH_CONVERSIONS, Metric.VIEW_THROUGH_CONVERSIONS, Metric.ROAS_ACTION_VALUE });
             else
                 metricList = new List<int>(new[] { Metric.CLICK_THROUGH_CONVERSIONS, Metric.VIEW_THROUGH_CONVERSIONS });
-                // used to obtain the *real* conversion values from the pixel parameter
+            // used to obtain the *real* conversion values from the pixel parameter
 
             var reportOption = new ReportOption
             {
