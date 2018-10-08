@@ -33,17 +33,17 @@ namespace Yahoo
         private int NumTries_GetReportStatus { get; set; }
         private int WaitTime_Seconds { get; set; }
 
-        private string[] AccessToken = new string[NumAlts];
-        private string[] RefreshToken = new string[NumAlts];
+        private static string[] AccessToken = new string[NumAlts];
+        private static string[] RefreshToken = new string[NumAlts];
         private string[] AltAccountIDs = new string[NumAlts];
         public int WhichAlt { get; set; } // default: 0
 
-        private IEnumerable<string> CreateTokenSets()
+        private static IEnumerable<string> CreateTokenSets()
         {
             for (int i = 0; i < NumAlts; i++)
                 yield return AccessToken[i] + TOKEN_DELIMITER + RefreshToken[i];
         }
-        public string[] TokenSets // each string in the array is a combination of Access + Refresh Token
+        public static string[] TokenSets // each string in the array is a combination of Access + Refresh Token
         {
             get { return CreateTokenSets().ToArray(); }
             set

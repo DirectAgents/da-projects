@@ -11,7 +11,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         protected override int Load(List<DailySummary> items)
         {
-            Logger.Info("Loading {0} DA-TD DailySummary ConVals..", items.Count);
+            Logger.Info(accountId, "Loading {0} DA-TD DailySummary ConVals..", items.Count);
             var count = UpsertDailySummaryConVals(items);
             return count;
         }
@@ -56,16 +56,16 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         }
                         else
                         {
-                            Logger.Warn("Encountered duplicate for {0:d} - Acct {1}", item.Date, item.AccountId);
+                            Logger.Warn(accountId, "Encountered duplicate for {0:d} - Acct {1}", item.Date, item.AccountId);
                             duplicateCount++;
                         }
                     }
                     itemCount++;
                 }
-                Logger.Info("Saving {0} DailySummary ConVals ({1} updates, {2} additions, {3} duplicates, {4} already-deleted)",
+                Logger.Info(accountId, "Saving {0} DailySummary ConVals ({1} updates, {2} additions, {3} duplicates, {4} already-deleted)",
                             itemCount, updatedCount, addedCount, duplicateCount, alreadyDeletedCount);
                 if (duplicateCount > 0)
-                    Logger.Warn("Encountered {0} duplicates which were skipped", duplicateCount);
+                    Logger.Warn(accountId, "Encountered {0} duplicates which were skipped", duplicateCount);
                 int numChanges = db.SaveChanges();
             }
             return itemCount;

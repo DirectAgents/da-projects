@@ -14,7 +14,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         protected override int Load(List<StrategySummary> items)
         {
-            Logger.Info("Loading {0} DA-TD StrategySummary ConVals..", items.Count);
+            Logger.Info(accountId, "Loading {0} DA-TD StrategySummary ConVals..", items.Count);
             AddUpdateDependentStrategies(items);
             AssignStrategyIdToItems(items);
             var count = UpsertStrategySummaryConVals(items);
@@ -72,16 +72,16 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         }
                         else
                         {
-                            Logger.Warn("Encountered duplicate for {0:d} - StrategyId {1}", item.Date, item.StrategyId);
+                            Logger.Warn(accountId, "Encountered duplicate for {0:d} - StrategyId {1}", item.Date, item.StrategyId);
                             duplicateCount++;
                         }
                     }
                     itemCount++;
                 }
-                Logger.Info("Saving {0} StrategySummary ConVals ({1} updates, {2} additions, {3} duplicates, {4} already-deleted)",
+                Logger.Info(accountId, "Saving {0} StrategySummary ConVals ({1} updates, {2} additions, {3} duplicates, {4} already-deleted)",
                             itemCount, updatedCount, addedCount, duplicateCount, alreadyDeletedCount);
                 if (duplicateCount > 0)
-                    Logger.Warn("Encountered {0} duplicates which were skipped", duplicateCount);
+                    Logger.Warn(accountId, "Encountered {0} duplicates which were skipped", duplicateCount);
                 int numChanges = db.SaveChanges();
             }
             return itemCount;

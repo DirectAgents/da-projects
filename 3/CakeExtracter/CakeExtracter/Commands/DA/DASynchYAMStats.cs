@@ -38,7 +38,6 @@ namespace CakeExtracter.Commands
         public string StatsType { get; set; }
         public bool DisabledOnly { get; set; }
 
-        private YAMUtility yamUtility { get; set; }
         private string[] extIds_UsePixelParm;
 
         public override void ResetProperties()
@@ -66,8 +65,6 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            Logger.LogToOneFile = true;
-
             if (!DaysAgoToStart.HasValue)
                 DaysAgoToStart = 31; // used if StartDate==null
             var today = DateTime.Today;
@@ -76,53 +73,48 @@ namespace CakeExtracter.Commands
             Logger.Info("YAM ETL. DateRange {0}.", dateRange);
 
             var statsType = new StatsTypeAgg(this.StatsType);
-            SetupYAMUtility();
             var ppIds = ConfigurationManager.AppSettings["YAMids_UsePixelParm"];
-            if (ppIds != null)
-                extIds_UsePixelParm = ppIds.Split(new char[] { ',' });
-            else
-                extIds_UsePixelParm = new string[] { };
+            extIds_UsePixelParm = ppIds != null ? ppIds.Split(',') : new string[] { };
 
             var accounts = GetAccounts();
+            YAMUtility.TokenSets = GetTokens();
             Parallel.ForEach(accounts, account =>
             {
-                Logger.Info("Commencing ETL for YAM account ({0}) {1}", account.Id, account.Name);
+                Logger.Info(account.Id, "Commencing ETL for YAM account ({0}) {1}", account.Id, account.Name);
+
+                var yamUtility = new YAMUtility(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m));
                 yamUtility.SetWhichAlt(account.ExternalId);
+
                 try
                 {
                     if (statsType.Daily)
-                        DoETL_Daily(dateRange, account);
+                        DoETL_Daily(dateRange, account, yamUtility);
                     if (statsType.Strategy)
-                        DoETL_Strategy(dateRange, account);
+                        DoETL_Strategy(dateRange, account, yamUtility);
                     if (statsType.Creative)
-                        DoETL_Creative(dateRange, account);
+                        DoETL_Creative(dateRange, account, yamUtility);
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error(ex);
+                    Logger.Error(account.Id, ex);
                 }
             });
             SaveTokens();
             return 0;
         }
 
-        private void SetupYAMUtility()
-        {
-            this.yamUtility = new YAMUtility(m => Logger.Info(m), m => Logger.Warn(m));
-            GetTokens();
-        }
-        private void GetTokens()
+        private string[] GetTokens()
         {
             // Get tokens, if any, from the database
-            string[] tokenSets = Platform.GetPlatformTokens(Platform.Code_YAM);
-            yamUtility.TokenSets = tokenSets;
-        }
-        private void SaveTokens()
-        {
-            Platform.SavePlatformTokens(Platform.Code_YAM, yamUtility.TokenSets);
+            return Platform.GetPlatformTokens(Platform.Code_YAM);
         }
 
-        private void DoETL_Daily(DateRange dateRange, ExtAccount account)
+        private void SaveTokens()
+        {
+            Platform.SavePlatformTokens(Platform.Code_YAM, YAMUtility.TokenSets);
+        }
+
+        private void DoETL_Daily(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
         {
             var extracter = new YAMDailySummaryExtracter(yamUtility, dateRange, account);
             var loader = new TDDailySummaryLoader(account.Id);
@@ -141,7 +133,7 @@ namespace CakeExtracter.Commands
                 lThread.Join();
             }
         }
-        private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
+        private void DoETL_Strategy(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
         {
             var extracter = new YAMStrategySummaryExtracter(yamUtility, dateRange, account);
             var loader = new TDStrategySummaryLoader(account.Id);
@@ -161,7 +153,7 @@ namespace CakeExtracter.Commands
                 lThread.Join();
             }
         }
-        private void DoETL_Creative(DateRange dateRange, ExtAccount account)
+        private void DoETL_Creative(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
         {
             var extracter = new YAMTDadSummaryExtracter(yamUtility, dateRange, account);
             var loader = new TDadSummaryLoader(account.Id);

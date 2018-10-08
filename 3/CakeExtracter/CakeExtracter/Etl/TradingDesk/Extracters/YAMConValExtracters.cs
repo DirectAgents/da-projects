@@ -16,11 +16,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         protected readonly YAMUtility _yamUtility;
         protected readonly DateRange dateRange;
         protected readonly int yamAdvertiserId;
+        protected readonly int accountId;
 
         public YAMConValExtracter(YAMUtility yamUtility, DateRange dateRange, ExtAccount account)
         {
             this._yamUtility = yamUtility;
             this.dateRange = dateRange;
+            this.accountId = account.Id;
             this.yamAdvertiserId = int.Parse(account.ExternalId);
         }
 
@@ -73,7 +75,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 }
                 catch (CsvHelperException ex)
                 {
-                    Logger.Error(ex);
+                    Logger.Error(accountId, ex);
                 }
                 if (csvRows != null)
                 {
@@ -150,7 +152,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 }
                 catch (CsvHelperException ex)
                 {
-                    Logger.Error(ex);
+                    Logger.Error(accountId, ex);
                 }
                 if (csvRows != null)
                 {
