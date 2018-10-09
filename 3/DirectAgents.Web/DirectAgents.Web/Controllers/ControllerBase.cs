@@ -4,7 +4,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using DirectAgents.Domain.Abstract;
-using KendoGridBinderEx;
+using KendoGridBinder;
 
 namespace DirectAgents.Web.Controllers
 {
@@ -131,7 +131,7 @@ namespace DirectAgents.Web.Controllers
 
         // ---
 
-        protected JsonResult CreateJsonResult<T>(KendoGridEx<T> kgrid, object aggregates, bool allowGet = false)
+        protected JsonResult CreateJsonResult<T>(KendoGrid<T> kgrid, object aggregates, bool allowGet = false)
         {
             var kg = new KG<T>();
             kg.data = kgrid.Data;

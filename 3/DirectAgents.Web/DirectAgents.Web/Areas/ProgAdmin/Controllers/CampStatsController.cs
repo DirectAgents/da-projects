@@ -5,8 +5,8 @@ using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Web.Areas.ProgAdmin.Models;
-using KendoGridBinderEx;
-using KendoGridBinderEx.ModelBinder.Mvc;
+using KendoGridBinder;
+using KendoGridBinder.ModelBinder.Mvc;
 
 namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 {
@@ -51,7 +51,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             var startOfMonth = GetCurrentMonth("RT");
             var campStats = GetCampStats(startOfMonth);
             var dtos = campStats.Select(s => new CampaignPacingDTO(s));
-            var kgrid = new KendoGridEx<CampaignPacingDTO>(request, dtos);
+            var kgrid = new KendoGrid<CampaignPacingDTO>(request, dtos);
 
             return CreateJsonResult(kgrid, Aggregates(kgrid), allowGet: true);
         }
@@ -61,7 +61,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             DateTime currMonth = GetCurrentMonth("RT");
             var stat = cpProgRepo.GetCampStats(currMonth, campId);
             var dtos = stat.LineItems.Select(li => new CampaignPacingDTO(li));
-            var kgrid = new KendoGridEx<CampaignPacingDTO>(request, dtos);
+            var kgrid = new KendoGrid<CampaignPacingDTO>(request, dtos);
 
             return CreateJsonResult(kgrid, Aggregates(kgrid), allowGet: true);
         }
@@ -81,7 +81,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             var startOfMonth = GetCurrentMonth("RT");
             var campStats = GetCampStats(startOfMonth);
             var dtos = campStats.Select(s => new PerformanceDTO(s));
-            var kgrid = new KendoGridEx<PerformanceDTO>(request, dtos);
+            var kgrid = new KendoGrid<PerformanceDTO>(request, dtos);
 
             return CreateJsonResult(kgrid, Aggregates(kgrid), allowGet: true);
         }
@@ -167,7 +167,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         {
             DateTime start = GetCurrentMonth("RT").AddMonths(-1);
             var dailyDTOs = GetDailyStatsDTO(campId, start, null);
-            var kgrid = new KendoGridEx<DailyDTO>(request, dailyDTOs);
+            var kgrid = new KendoGrid<DailyDTO>(request, dailyDTOs);
             return CreateJsonResult(kgrid, null, allowGet: true);
         }
 
@@ -190,7 +190,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         }
 
         // T could be CampaignPacingDTO, PerformanceDTO...
-        public static object Aggregates<T>(KendoGridEx<T> kgrid)
+        public static object Aggregates<T>(KendoGrid<T> kgrid)
         {
             if (kgrid.Total == 0 || kgrid.Aggregates == null) return null;
 
