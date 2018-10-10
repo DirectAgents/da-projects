@@ -1,0 +1,15 @@
+﻿@model IEnumerable<IGrouping<DirectAgents.Domain.Entities.Cake.Affiliate, DirectAgents.Domain.Entities.Cake.EventConversion>>
+@{
+    ViewBag.Title = "ConvSums";
+}
+<h2>ConvSums</h2>
+
+<table>
+@foreach (var grp in Model)
+{
+    <tr>
+        <td>@grp.Key.AffiliateName</td>
+        <td>@grp.Count()</td>
+    </tr>
+}
+</table>

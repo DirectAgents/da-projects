@@ -1,0 +1,25 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.Cake.Offer>
+@{
+    ViewBag.Title = "Cake Offers";
+}
+<h2>Cake Offers</h2>
+
+<table>
+    <tr>
+        <th>AdvId</th>
+        <th>OfferId</th>
+        <th>Name</th>
+        <th>#Camps</th>
+        <th>#EventConvs</th>
+    </tr>
+@foreach (var off in Model)
+{
+    <tr>
+        <td>@off.AdvertiserId</td>
+        <td>@off.OfferId</td>
+        <td>@off.OfferName</td>
+        <td style="text-align:center">@Html.ActionLink(off.Camps.Count().ToString(), "Index", "Camps", new { offId = off.OfferId }, null)</td>
+        <td style="text-align:center">@Html.ActionLink(off.EventConversions.Count().ToString(), "ConvSums", "Offers", new { offId = off.OfferId }, null)</td>
+    </tr>
+}
+</table>

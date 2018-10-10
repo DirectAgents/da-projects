@@ -212,6 +212,10 @@
     <Compile Include="Areas\AB\Controllers\SpendBucketsController.cs" />
     <Compile Include="Areas\AB\Controllers\VendorsController.cs" />
     <Compile Include="Areas\AB\Models\DashboardVM.cs" />
+    <Compile Include="Areas\Cake\CakeAreaRegistration.cs" />
+    <Compile Include="Areas\Cake\Controllers\AdvertisersController.cs" />
+    <Compile Include="Areas\Cake\Controllers\CampsController.cs" />
+    <Compile Include="Areas\Cake\Controllers\OffersController.cs" />
     <Compile Include="Areas\ClientAdmin\ClientAdminAreaRegistration.cs" />
     <Compile Include="Areas\ClientAdmin\Controllers\ClientReportsController.cs" />
     <Compile Include="Areas\ProgAdmin\Controllers\ActionsController.cs" />
@@ -881,6 +885,7 @@
   <ItemGroup>
     <Folder Include="Areas\AB\Views\ClientBudgets\" />
     <Folder Include="Areas\AB\Views\SpendBuckets\" />
+    <Folder Include="Areas\Cake\Models\" />
     <Folder Include="Areas\ClientAdmin\Models\" />
     <Folder Include="Areas\RevTrack\Models\" />
     <Folder Include="Areas\RevTrack\Views\Shared\" />
@@ -1120,6 +1125,13 @@
     <Content Include="Areas\ClientAdmin\Views\ClientReports\Index.cshtml" />
     <Content Include="Areas\ClientAdmin\Views\ClientReports\Edit.cshtml" />
     <Content Include="Areas\SearchAdmin\Views\SearchConvTypes\IndexGauge.cshtml" />
+    <Content Include="Areas\Cake\Views\web.config" />
+    <Content Include="Areas\Cake\Views\Shared\_LayoutCake.cshtml" />
+    <Content Include="Areas\Cake\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Cake\Views\Advertisers\Index.cshtml" />
+    <Content Include="Areas\Cake\Views\Offers\Index.cshtml" />
+    <Content Include="Areas\Cake\Views\Camps\Index.cshtml" />
+    <Content Include="Areas\Cake\Views\Offers\ConvSums.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

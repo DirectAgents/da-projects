@@ -30,7 +30,9 @@ namespace DirectAgents.Domain.Entities.Cake
         public string CurrencyAbbr { get; set; }
         public DateTime DateCreated { get; set; }
 
+        public virtual ICollection<Camp> Camps { get; set; }
         public virtual ICollection<OfferContract> OfferContracts { get; set; }
+        public virtual ICollection<EventConversion> EventConversions { get; set; }
 
         public virtual List<OfferBudget> OfferBudgets { get; set; }
 

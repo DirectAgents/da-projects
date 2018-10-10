@@ -1,11 +1,26 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using CakeExtracter.Commands;
+using DirectAgents.Domain.Abstract;
 
 namespace DirectAgents.Web.Controllers
 {
     public class TestController : ControllerBase
     {
+        public TestController(IMainRepository mainRepository)
+        {
+            this.daRepo = mainRepository;
+        }
+
+        public ActionResult Cake()
+        {
+            var adv = daRepo.GetAdvertisers();
+            var names = adv.Select(x => x.AdvertiserName).ToArray();
+            var text = String.Join("\n", names);
+            return Content(text);
+        }
+
         public ActionResult SynchSearch()
         {
             int searchProfileId = 40;

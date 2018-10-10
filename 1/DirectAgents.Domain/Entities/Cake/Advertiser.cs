@@ -18,7 +18,7 @@ namespace DirectAgents.Domain.Entities.Cake
         [ForeignKey("AdManagerId")]
         public virtual Contact AdManager { get; set; }
 
-        public virtual List<Offer> Offers { get; set; }
+        public virtual ICollection<Offer> Offers { get; set; }
 
         public string AdvertiserNameTrimmed(int maxChars)
         {

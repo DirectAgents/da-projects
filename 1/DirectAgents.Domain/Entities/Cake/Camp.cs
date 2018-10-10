@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DirectAgents.Domain.Entities.Cake
@@ -18,5 +19,6 @@ namespace DirectAgents.Domain.Entities.Cake
         public decimal PayoutAmount { get; set; }
         public string CurrencyAbbr { get; set; }
 
+        public virtual ICollection<CampSum> CampSums { get; set; }
     }
 }

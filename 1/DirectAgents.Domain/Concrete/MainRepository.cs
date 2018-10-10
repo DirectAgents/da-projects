@@ -320,6 +320,18 @@ namespace DirectAgents.Domain.Concrete
             return stats;
         }
 
+        // --- Camps, CampSums, etc ---
+
+        public IQueryable<Camp> GetCamps(int? offerId = null, int? affiliateId = null)
+        {
+            var camps = context.Camps.AsQueryable();
+            if (offerId.HasValue)
+                camps = camps.Where(x => x.OfferId == offerId.Value);
+            if (affiliateId.HasValue)
+                camps = camps.Where(x => x.AffiliateId == affiliateId.Value);
+            return camps;
+        }
+
         public IQueryable<CampSum> GetCampSums(int? advertiserId = null, int? offerId = null, DateTime? monthStart = null)
         {
             var cs = context.CampSums.AsQueryable();
@@ -333,6 +345,16 @@ namespace DirectAgents.Domain.Concrete
             if (monthStart.HasValue)
                 cs = cs.Where(x => x.Date == monthStart.Value);
             return cs;
+        }
+
+        public IQueryable<EventConversion> GetEventConversions(int? offerId = null, int? affiliateId = null)
+        {
+            var ec = context.EventConversions.AsQueryable();
+            if (offerId.HasValue)
+                ec = ec.Where(x => x.OfferId == offerId.Value);
+            if (affiliateId.HasValue)
+                ec = ec.Where(x => x.AffiliateId == affiliateId.Value);
+            return ec;
         }
 
         #endregion

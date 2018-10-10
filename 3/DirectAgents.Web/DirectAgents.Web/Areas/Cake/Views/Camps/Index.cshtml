@@ -1,0 +1,27 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.Cake.Camp>
+@{
+    ViewBag.Title = "Cake Camps";
+}
+<h2>Cake Camps</h2>
+
+<table>
+    <tr>
+        <th>CampId</th>
+        <th>Offer</th>
+        <th>Affiliate</th>
+        <th>Payout</th>
+        <th>Curr</th>
+        <th>#CampSums</th>
+    </tr>
+@foreach (var camp in Model)
+{
+    <tr>
+        <td>@camp.CampaignId</td>
+        <td>@(camp.OfferId + ": " + camp.Offer.OfferName)</td>
+        <td>@(camp.AffiliateId + ": " + camp.Affiliate.AffiliateName)</td>
+        <td>@camp.PayoutAmount</td>
+        <td>@camp.CurrencyAbbr</td>
+        <td style="text-align:center">@camp.CampSums.Count().ToString()</td>
+    </tr>
+}
+</table>

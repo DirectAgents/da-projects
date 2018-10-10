@@ -1,0 +1,21 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.Cake.Advertiser>
+@{
+    ViewBag.Title = "Cake Advertisers";
+}
+<h2>Cake Advertisers</h2>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>#Offers</th>
+    </tr>
+@foreach (var adv in Model)
+{
+    <tr>
+        <td>@adv.AdvertiserId</td>
+        <td>@adv.AdvertiserName</td>
+        <td style="text-align:center">@Html.ActionLink(adv.Offers.Count().ToString(), "Index", "Offers", new { advId = adv.AdvertiserId }, null)</td>
+    </tr>
+}
+</table>
