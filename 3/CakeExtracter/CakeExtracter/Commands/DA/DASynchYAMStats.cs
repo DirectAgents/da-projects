@@ -4,8 +4,6 @@ using System.ComponentModel.Composition;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
-using BingAds.Reporting;
-//using System.Threading.Tasks;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
