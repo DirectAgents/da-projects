@@ -1,0 +1,27 @@
+﻿@model IEnumerable<IGrouping<DirectAgents.Domain.Entities.Cake.Affiliate, DirectAgents.Domain.Entities.Cake.EventConversion>>
+@{
+    ViewBag.Title = "AffSum";
+    var offer = (DirectAgents.Domain.Entities.Cake.Offer)ViewBag.Offer;
+    string offerIdString = (offer != null ? offer.OfferId.ToString() : "");
+}
+<h2>Affiliate Summary</h2>
+
+@if (offer != null) {
+    <text>Offer: </text>@offer.OfferName<br />
+}
+
+<table>
+    <tr>
+        <th>AffId</th>
+        <th>Affiliate</th>
+        <th>#EventConvs</th>
+    </tr>
+    @foreach (var grp in Model)
+    {
+        <tr>
+            <td>@grp.Key.AffiliateId</td>
+            <td>@grp.Key.AffiliateName</td>
+            <td style="text-align:center">@Html.ActionLink(grp.Count().ToString(), "Index", new { offId = offerIdString, affId = grp.Key.AffiliateId })</td>
+        </tr>
+    }
+</table>

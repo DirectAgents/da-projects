@@ -15,7 +15,13 @@ namespace DirectAgents.Web.Areas.Cake.Controllers
         public ActionResult Index(int? offId)
         {
             var camps = daRepo.GetCamps(offerId: offId);
-            return View(camps);
+            if (camps.Any())
+            {
+                var firstCamp = camps.First();
+                if (offId.HasValue)
+                    ViewBag.Offer = firstCamp.Offer;
+            }
+            return View(camps.OrderBy(x => x.Affiliate.AffiliateName).ThenBy(x => x.CampaignId));
         }
     }
 }

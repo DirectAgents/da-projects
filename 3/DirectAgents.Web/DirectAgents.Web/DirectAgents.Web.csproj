@@ -45,10 +45,6 @@
       <HintPath>..\packages\AutoMapper.7.0.1\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
     <Reference Include="HttpAuthModule, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HttpAuthModule.2.2.2.0\lib\net45\HttpAuthModule.dll</HintPath>
       <Private>True</Private>
@@ -215,6 +211,7 @@
     <Compile Include="Areas\Cake\CakeAreaRegistration.cs" />
     <Compile Include="Areas\Cake\Controllers\AdvertisersController.cs" />
     <Compile Include="Areas\Cake\Controllers\CampsController.cs" />
+    <Compile Include="Areas\Cake\Controllers\ConversionsController.cs" />
     <Compile Include="Areas\Cake\Controllers\OffersController.cs" />
     <Compile Include="Areas\ClientAdmin\ClientAdminAreaRegistration.cs" />
     <Compile Include="Areas\ClientAdmin\Controllers\ClientReportsController.cs" />
@@ -1131,7 +1128,8 @@
     <Content Include="Areas\Cake\Views\Advertisers\Index.cshtml" />
     <Content Include="Areas\Cake\Views\Offers\Index.cshtml" />
     <Content Include="Areas\Cake\Views\Camps\Index.cshtml" />
-    <Content Include="Areas\Cake\Views\Offers\ConvSums.cshtml" />
+    <Content Include="Areas\Cake\Views\Conversions\AffSum.cshtml" />
+    <Content Include="Areas\Cake\Views\Conversions\Index.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

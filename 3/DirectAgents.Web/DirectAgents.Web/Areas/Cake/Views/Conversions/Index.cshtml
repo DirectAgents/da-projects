@@ -1,0 +1,94 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.Cake.EventConversion>
+@{
+    ViewBag.Title = "EventConversions";
+    var offer = (DirectAgents.Domain.Entities.Cake.Offer)ViewBag.Offer;
+    var affiliate = (DirectAgents.Domain.Entities.Cake.Affiliate)ViewBag.Affiliate;
+}
+<h2>EventConversions</h2>
+
+@if (offer != null) {
+    <text>Offer: </text>@offer.OfferName<br />
+}
+@if (affiliate != null) {
+    <text>Affiliate: </text>@affiliate.AffiliateName<br />
+}
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>ConvDate</th>
+        <th>ClickDate</th>
+        <th>Event</th>
+@if (offer == null) {
+        <th>Offer</th>
+}
+@if (affiliate == null) {
+        <th>Affiliate</th>
+}
+        <th>PriceFormat</th>
+        <th colspan="2">Paid</th>
+        <th colspan="2">Received</th>
+        <th>SubId1</th>
+        <th>SubId2</th>
+        <th>SubId3</th>
+        <th>SubId4</th>
+        <th>SubId5</th>
+    </tr>
+@foreach (var conv in Model)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(x => conv.Id)
+        </td>
+        <td style="white-space:nowrap">
+            @Html.DisplayFor(x => conv.ConvDate)
+        </td>
+        <td style="white-space:nowrap">
+            @Html.DisplayFor(x => conv.ClickDate)
+        </td>
+        <td>
+            @Html.DisplayFor(x => conv.Event.Name)
+        </td>
+@if (offer == null) {
+        <td style="white-space:nowrap">
+            @Html.DisplayFor(x => conv.Offer.OfferName)
+        </td>
+}
+@if (affiliate == null) {
+        <td>
+            @Html.DisplayFor(x => conv.Affiliate.AffiliateName)
+        </td>
+}
+        <td>
+            @Html.DisplayFor(x => conv.PriceFormat.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(x => conv.Paid)
+        </td>
+        <td>
+            @Html.DisplayFor(x => conv.PaidCurr.Abbr)
+        </td>
+        <td>
+            @Html.DisplayFor(x => conv.Received)
+        </td>
+        <td>
+            @Html.DisplayFor(x => conv.ReceivedCurr.Abbr)
+        </td>
+        <td>
+            @Html.DisplayFor(x => conv.SubId1)
+        </td>
+        <td>
+            @Html.DisplayFor(x => conv.SubId2)
+        </td>
+        <td>
+            @Html.DisplayFor(x => conv.SubId3)
+        </td>
+        <td>
+            @Html.DisplayFor(x => conv.SubId4)
+        </td>
+        <td>
+            @Html.DisplayFor(x => conv.SubId5)
+        </td>
+    </tr>
+}
+</table>

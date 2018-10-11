@@ -1,14 +1,22 @@
 ﻿@model IEnumerable<DirectAgents.Domain.Entities.Cake.Camp>
 @{
     ViewBag.Title = "Cake Camps";
+    var offer = (DirectAgents.Domain.Entities.Cake.Offer)ViewBag.Offer;
 }
 <h2>Cake Camps</h2>
+
+@if (offer != null) {
+    <text>Offer: </text>@offer.OfferName<br />
+}
 
 <table>
     <tr>
         <th>CampId</th>
+@if (offer == null) {
         <th>Offer</th>
+}
         <th>Affiliate</th>
+        <th>Offer<br />Contract</th>
         <th>Payout</th>
         <th>Curr</th>
         <th>#CampSums</th>
@@ -17,8 +25,11 @@
 {
     <tr>
         <td>@camp.CampaignId</td>
+@if (offer == null) {
         <td>@(camp.OfferId + ": " + camp.Offer.OfferName)</td>
+}
         <td>@(camp.AffiliateId + ": " + camp.Affiliate.AffiliateName)</td>
+        <td>@camp.OfferContractId</td>
         <td>@camp.PayoutAmount</td>
         <td>@camp.CurrencyAbbr</td>
         <td style="text-align:center">@camp.CampSums.Count().ToString()</td>

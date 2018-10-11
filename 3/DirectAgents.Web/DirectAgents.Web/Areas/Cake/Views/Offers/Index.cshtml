@@ -1,25 +1,41 @@
 ﻿@model IEnumerable<DirectAgents.Domain.Entities.Cake.Offer>
 @{
     ViewBag.Title = "Cake Offers";
+    var advertiser = (DirectAgents.Domain.Entities.Cake.Advertiser)ViewBag.Advertiser;
 }
 <h2>Cake Offers</h2>
 
+@if (advertiser != null) {
+    <text>Advertiser: </text>@advertiser.AdvertiserName<br />
+}
+
 <table>
     <tr>
+@if (advertiser == null) {
         <th>AdvId</th>
+        <th>Advertiser</th>
+}
         <th>OfferId</th>
         <th>Name</th>
         <th>#Camps</th>
+        <th>#Affs</th>
         <th>#EventConvs</th>
     </tr>
 @foreach (var off in Model)
 {
+    //int numAffs = off.EventConversions.Select(x => x.AffiliateId).Distinct().Count(); //similar performance?
+    int numAffs = off.EventConversions.GroupBy(x => x.AffiliateId).Count();
+    int numConvs = off.EventConversions.Count();
     <tr>
+@if (advertiser == null) {
         <td>@off.AdvertiserId</td>
+        <td>@off.Advertiser.AdvertiserName</td>
+}
         <td>@off.OfferId</td>
         <td>@off.OfferName</td>
         <td style="text-align:center">@Html.ActionLink(off.Camps.Count().ToString(), "Index", "Camps", new { offId = off.OfferId }, null)</td>
-        <td style="text-align:center">@Html.ActionLink(off.EventConversions.Count().ToString(), "ConvSums", "Offers", new { offId = off.OfferId }, null)</td>
+        <td style="text-align:center">@Html.ActionLink(numAffs.ToString(), "AffSum", "Conversions", new { offId = off.OfferId }, null)</td>
+        <td style="text-align:center">@Html.ActionLink(numConvs.ToString(), "Index", "Conversions", new { offId = off.OfferId }, null)</td>
     </tr>
 }
 </table>
