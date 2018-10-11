@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
+using BingAds.Reporting;
 //using System.Threading.Tasks;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
@@ -39,6 +40,7 @@ namespace CakeExtracter.Commands
         public bool DisabledOnly { get; set; }
 
         private string[] extIds_UsePixelParm;
+        private List<Action> etlList;
 
         public override void ResetProperties()
         {
@@ -78,30 +80,39 @@ namespace CakeExtracter.Commands
 
             var accounts = GetAccounts();
             YAMUtility.TokenSets = GetTokens();
-            Parallel.ForEach(accounts, account =>
+
+            etlList = new List<Action>();
+            foreach (var account in accounts)
             {
                 Logger.Info(account.Id, "Commencing ETL for YAM account ({0}) {1}", account.Id, account.Name);
-
                 var yamUtility = new YAMUtility(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m));
                 yamUtility.SetWhichAlt(account.ExternalId);
 
+                AddEnabledEtl(statsType.Daily, account, () => DoETL_Daily(dateRange, account, yamUtility));
+                AddEnabledEtl(statsType.Strategy, account, () => DoETL_Strategy(dateRange, account, yamUtility));
+                //don't include when getting "all" statstypes
+                AddEnabledEtl(statsType.Creative && !statsType.All, account, () => DoETL_Creative(dateRange, account, yamUtility));
+            }
+            Parallel.Invoke(etlList.ToArray());
+
+            SaveTokens();
+            return 0;
+        }
+
+        private void AddEnabledEtl(bool etlEnabled, ExtAccount account, Action etlAction)
+        {
+            if (!etlEnabled) return;
+            etlList.Add(() =>
+            {
                 try
                 {
-                    if (statsType.Daily)
-                        DoETL_Daily(dateRange, account, yamUtility);
-                    if (statsType.Strategy)
-                        DoETL_Strategy(dateRange, account, yamUtility);
-
-                    if (statsType.Creative && !statsType.All) // don't include when getting "all" statstypes
-                        DoETL_Creative(dateRange, account, yamUtility);
+                    etlAction();
                 }
                 catch (Exception ex)
                 {
                     Logger.Error(account.Id, ex);
                 }
             });
-            SaveTokens();
-            return 0;
         }
 
         private string[] GetTokens()

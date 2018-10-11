@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -32,6 +33,10 @@ namespace Yahoo
         private string YAMBaseUrl { get; set; }
         private int NumTries_GetReportStatus { get; set; }
         private int WaitTime_Seconds { get; set; }
+
+        private const int REQUEST_PER_MINUTE_LIMIT = 5;
+        private const int SECOND_INTERVAL_FOR_LIMIT = 63; // 1 min + 3 sec for errors
+        private static readonly ConcurrentQueue<DateTime> timesOfRequestPerMinute = new ConcurrentQueue<DateTime>();
 
         private static string[] AccessToken = new string[NumAlts];
         private static string[] RefreshToken = new string[NumAlts];
@@ -82,6 +87,13 @@ namespace Yahoo
         }
 
         // --- Constructors ---
+        static YAMUtility()
+        {
+            for (var i = 0; i < REQUEST_PER_MINUTE_LIMIT; i++)
+            {
+                timesOfRequestPerMinute.Enqueue(DateTime.MinValue);
+            }
+        }
         public YAMUtility()
         {
             Setup();
@@ -122,7 +134,7 @@ namespace Yahoo
         }
         private string PlaceLeadingAndTrailingCommas(string idString)
         {
-            if (idString == null || idString.Length == 0)
+            if (string.IsNullOrEmpty(idString))
                 return idString;
             return (idString[0] == ',' ? "" : ",") + idString + (idString[idString.Length - 1] == ',' ? "" : ",");
         }
@@ -199,11 +211,10 @@ namespace Yahoo
                 IRestResponse<T> response = null;
                 while (!done)
                 {
-                    if (postNotGet)
-                        response = restClient.ExecuteAsPost<T>(restRequest, "POST");
-                    else
-                        response = restClient.ExecuteAsGet<T>(restRequest, "GET");
-
+                    WaitUntilLimitExpires();
+                    response = postNotGet
+                        ? restClient.ExecuteAsPost<T>(restRequest, "POST")
+                        : restClient.ExecuteAsGet<T>(restRequest, "GET");
                     tries++;
 
                     if (response.StatusCode == HttpStatusCode.Unauthorized && tries < 2)
@@ -260,10 +271,7 @@ namespace Yahoo
         {
             var request = new RestRequest("extreport/" + reportId);
             var response = ProcessRequest<GetReportResponse>(request);
-
-            if (response == null)
-                return null;
-            return response.Data;
+            return response?.Data;
         }
 
         // returns the url of the csv, or null if there was a problem
@@ -364,6 +372,19 @@ namespace Yahoo
                 LogInfo("StatusCode: " + response.StatusCode.ToString());
             }
             return response.Data;
+        }
+
+        private void WaitUntilLimitExpires()
+        {
+            DateTime requestTime;
+            while (!timesOfRequestPerMinute.TryDequeue(out requestTime)) { }
+            var timeDifference = requestTime.AddSeconds(SECOND_INTERVAL_FOR_LIMIT) - DateTime.Now;
+            if (timeDifference.TotalSeconds > 0)
+            {
+                var timeSpan = new TimeSpan(timeDifference.Hours, timeDifference.Minutes, timeDifference.Seconds);
+                Thread.Sleep(timeSpan);
+            }
+            timesOfRequestPerMinute.Enqueue(DateTime.Now);
         }
     }
 
