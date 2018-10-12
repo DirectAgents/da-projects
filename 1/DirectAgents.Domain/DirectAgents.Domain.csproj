@@ -121,6 +121,7 @@
     <Compile Include="Contexts\HistoryContext.cs" />
     <Compile Include="Contexts\ClientPortalProgContext.cs" />
     <Compile Include="DTO\ABStat.cs" />
+    <Compile Include="DTO\CakeGauge.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
     <Compile Include="DTO\ProgClientStats.cs" />
     <Compile Include="DTO\ProgMediaStat.cs" />

@@ -357,6 +357,44 @@ namespace DirectAgents.Domain.Concrete
             return ec;
         }
 
+        public IQueryable<CakeGauge> GetGaugesByAdvertiser(bool includeThoseWithNoStats = false)
+        {
+            var advs = GetAdvertisers();
+            var ews = advs.Select(adv => new EntityWithStats
+            {
+                Advertiser = adv,
+                CampSums = adv.Offers.AsQueryable().SelectMany(o => o.Camps).SelectMany(c => c.CampSums),
+                EventConvs = adv.Offers.AsQueryable().SelectMany(o => o.EventConversions)
+            });
+            if (!includeThoseWithNoStats)
+                ews = ews.Where(x => x.CampSums.Any() || x.EventConvs.Any());
+            var gauges = ews.Select(x => new CakeGauge()
+            {
+                Advertiser = x.Advertiser,
+                CampSums = new CakeGauge.Range() { Earliest = x.CampSums.Min(cs => (DateTime?)cs.Date), Latest = x.CampSums.Max(cs => (DateTime?)cs.Date) },
+                EventConvs = new CakeGauge.Range() { Earliest = x.EventConvs.Min(ec => (DateTime?)ec.ConvDate), Latest = x.EventConvs.Max(ec => (DateTime?)ec.ConvDate) }
+            });
+            return gauges;
+        }
+
+        //This one does an inner join, so only includes adv with campsums and eventconvs...
+        public IQueryable<CakeGauge> GetGaugesByAdvertiserX()
+        {
+            var advertisers = context.Advertisers.AsQueryable();
+            var advCampSumGroups = context.CampSums.Where(x => x.Camp.Offer.AdvertiserId.HasValue).GroupBy(x => x.Camp.Offer.AdvertiserId.Value);
+            var advEventConvGroups = context.EventConversions.Where(x => x.Offer.AdvertiserId.HasValue).GroupBy(x => x.Offer.AdvertiserId.Value);
+            var gauges = from adv in advertisers
+                         join csGrp in advCampSumGroups on adv.AdvertiserId equals csGrp.Key
+                         join ecGrp in advEventConvGroups on adv.AdvertiserId equals ecGrp.Key
+                         select new CakeGauge()
+                         {
+                             Advertiser = adv,
+                             CampSums = new CakeGauge.Range() { Earliest = csGrp.Min(x => x.Date), Latest = csGrp.Max(x => x.Date) },
+                             EventConvs = new CakeGauge.Range() { Earliest = ecGrp.Min(x => x.ConvDate), Latest = ecGrp.Max(x => x.ConvDate) }
+                         };
+            return gauges;
+        }
+
         #endregion
         // ---
 

@@ -48,5 +48,7 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<Camp> GetCamps(int? offerId = null, int? affiliateId = null);
         IQueryable<CampSum> GetCampSums(int? advertiserId = null, int? offerId = null, DateTime? monthStart = null);
         IQueryable<EventConversion> GetEventConversions(int? offerId = null, int? affiliateId = null);
+
+        IQueryable<CakeGauge> GetGaugesByAdvertiser(bool includeThoseWithNoStats = false);
     }
 }
