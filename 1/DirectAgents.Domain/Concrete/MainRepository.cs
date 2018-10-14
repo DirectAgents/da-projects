@@ -332,18 +332,24 @@ namespace DirectAgents.Domain.Concrete
             return camps;
         }
 
-        public IQueryable<CampSum> GetCampSums(int? advertiserId = null, int? offerId = null, DateTime? monthStart = null)
+        public IQueryable<CampSum> GetCampSums(int? advertiserId = null, int? offerId = null, int? campId = null, DateTime? startDate = null, DateTime? endDate = null)
         {
             var cs = context.CampSums.AsQueryable();
-            if (advertiserId.HasValue)
+
+            if (advertiserId.HasValue) // ?should check cs.Camp.Offer.AdvertiserId?
             {
                 var offerIds = OfferIds(advertiserId.Value);
                 cs = cs.Where(x => offerIds.Contains(x.OfferId));
             }
-            if (offerId.HasValue)
+            if (offerId.HasValue) // ?should check cs.Camp.OfferId?
                 cs = cs.Where(x => x.OfferId == offerId.Value);
-            if (monthStart.HasValue)
-                cs = cs.Where(x => x.Date == monthStart.Value);
+
+            if (campId.HasValue)
+                cs = cs.Where(x => x.CampId == campId.Value);
+            if (startDate.HasValue)
+                cs = cs.Where(x => x.Date >= startDate.Value);
+            if (endDate.HasValue)
+                cs = cs.Where(x => x.Date <= endDate.Value);
             return cs;
         }
 

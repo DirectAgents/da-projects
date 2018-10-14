@@ -178,7 +178,8 @@ namespace DirectAgents.Domain.Concrete
         }
         private IEnumerable<IRTLineItem> LineItemsForAdvertiser(DirectAgents.Domain.Entities.Cake.Advertiser advertiser, DateTime monthStart)
         {
-            var campSums = mainRepo.GetCampSums(advertiserId: advertiser.AdvertiserId, monthStart: monthStart);
+            DateTime monthEnd = monthStart.AddMonths(1).AddDays(-1);
+            var campSums = mainRepo.GetCampSums(advertiserId: advertiser.AdvertiserId, startDate: monthStart, endDate: monthEnd);
             var csGroups = campSums.GroupBy(x => new { x.OfferId, x.RevenuePerUnit, x.RevCurr });
             var offers = mainRepo.GetOffers();
 

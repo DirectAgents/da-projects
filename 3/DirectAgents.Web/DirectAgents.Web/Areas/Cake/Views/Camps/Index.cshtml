@@ -35,7 +35,7 @@
         <td>@camp.OfferContractId</td>
         <td>@camp.PayoutAmount</td>
         <td>@camp.CurrencyAbbr</td>
-        <td style="text-align:center">@camp.CampSums.Count().ToString()</td>
+        <td style="text-align:center">@Html.ActionLink(camp.CampSums.Count().ToString(), "Index", "CampSums", new { campId = camp.CampaignId }, null)</td>
     </tr>
 }
 </table>

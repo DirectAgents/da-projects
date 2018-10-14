@@ -219,6 +219,7 @@
     <Compile Include="Areas\Cake\CakeAreaRegistration.cs" />
     <Compile Include="Areas\Cake\Controllers\AdvertisersController.cs" />
     <Compile Include="Areas\Cake\Controllers\CampsController.cs" />
+    <Compile Include="Areas\Cake\Controllers\CampSumsController.cs" />
     <Compile Include="Areas\Cake\Controllers\ConversionsController.cs" />
     <Compile Include="Areas\Cake\Controllers\HomeController.cs" />
     <Compile Include="Areas\Cake\Controllers\OffersController.cs" />
@@ -1141,6 +1142,7 @@
     <Content Include="Areas\Cake\Views\Conversions\Index.cshtml" />
     <Content Include="Areas\Cake\Views\Advertisers\IndexGauge.cshtml" />
     <Content Include="Areas\Cake\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Cake\Views\CampSums\Index.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

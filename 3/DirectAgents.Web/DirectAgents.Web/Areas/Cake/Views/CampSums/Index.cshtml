@@ -1,0 +1,93 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.Cake.CampSum>
+@{
+    ViewBag.Title = "CampSums";
+    var camp = (DirectAgents.Domain.Entities.Cake.Camp)ViewBag.Camp;
+}
+<h2>@ViewBag.Title</h2>
+
+@if (camp != null)
+{
+    if (camp.Offer.Advertiser != null)
+    {
+        <text>Advertiser: </text>@camp.Offer.Advertiser.AdvertiserName<br />
+    }
+    <text>Offer: </text>@camp.Offer.OfferName<br />
+    <text>Affiliate: </text>@camp.Affiliate.AffiliateName<br />
+    <text>CampId: </text>@camp.CampaignId
+}
+
+<table>
+    <tr>
+        <th>OfferId</th>
+        <th>AffId</th>
+        <th>CampId</th>
+        <th>Date</th>
+        <th>Views</th>
+        <th>Clicks</th>
+        <th>Convs</th>
+        <th>Paid</th>
+        <th>Sellable</th>
+        <th colspan="2">Revenue</th>
+        <th colspan="2">Cost</th>
+        <th>Units</th>
+        <th>RevPerUnit</th>
+        <th>CostPerUnit</th>
+        <th>PriceFormat</th>
+    </tr>
+@foreach (var cs in Model)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(x => cs.OfferId)@* non-foreign key *@
+        </td>
+        <td>
+            @Html.DisplayFor(x => cs.AffId)@* non-foreign key *@
+        </td>
+        <td>
+            @Html.DisplayFor(x => cs.CampId)
+        </td>
+        <td>
+            @Html.DisplayFor(x => cs.Date)
+        </td>
+        <td>
+            @Html.DisplayFor(x => cs.Views)
+        </td>
+        <td>
+            @Html.DisplayFor(x => cs.Clicks)
+        </td>
+        <td>
+            @Html.DisplayFor(x => cs.Conversions)
+        </td>
+        <td>
+            @Html.DisplayFor(x => cs.Paid)
+        </td>
+        <td>
+            @Html.DisplayFor(x => cs.Sellable)
+        </td>
+        <td>
+            @Html.DisplayFor(x => cs.Revenue)
+        </td>
+        <td>
+            @Html.DisplayFor(x => cs.RevCurr.Abbr)
+        </td>
+        <td>
+            @Html.DisplayFor(x => cs.Cost)
+        </td>
+        <td>
+            @Html.DisplayFor(x => cs.CostCurr.Abbr)
+        </td>
+        <td>
+            @Html.DisplayFor(x => cs.Units)
+        </td>
+        <td>
+            @Html.DisplayFor(x => cs.RevenuePerUnit)
+        </td>
+        <td>
+            @Html.DisplayFor(x => cs.CostPerUnit)
+        </td>
+        <td>
+            @Html.DisplayFor(x => cs.PriceFormat)
+        </td>
+    </tr>
+}
+</table>
