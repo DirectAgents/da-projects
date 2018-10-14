@@ -3,7 +3,7 @@
     ViewBag.Title = "Cake Offers";
     var advertiser = (DirectAgents.Domain.Entities.Cake.Advertiser)ViewBag.Advertiser;
 }
-<h2>Cake Offers</h2>
+<h2>@ViewBag.Title</h2>
 
 @if (advertiser != null) {
     <text>Advertiser: </text>@advertiser.AdvertiserName<br />
