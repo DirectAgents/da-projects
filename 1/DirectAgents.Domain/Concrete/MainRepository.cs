@@ -354,6 +354,7 @@ namespace DirectAgents.Domain.Concrete
             return cs;
         }
 
+        //TODO: Have these call the corresponding static methods in MainHelper...?
         public IQueryable<EventConversion> GetEventConversions(int? advertiserId = null, int? offerId = null, int? affiliateId = null, DateTime? startDate = null, DateTime? endDate = null)
         {
             var ec = context.EventConversions.AsQueryable();
@@ -372,7 +373,6 @@ namespace DirectAgents.Domain.Concrete
             }
             return ec;
         }
-
         public void DeleteEventConversions(IQueryable<EventConversion> eventConvs)
         {
             eventConvs.Delete();

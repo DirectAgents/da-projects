@@ -1,13 +1,15 @@
 ﻿@model IEnumerable<DirectAgents.Domain.DTO.CakeGauge>
 @{
     ViewBag.Title = "Cake Advertisers";
+    var today = DateTime.Today;
+    var monthStart = new DateTime(today.Year, today.Month, 1);
 }
 <h2>@ViewBag.Title</h2>
 
 <table>
     <tr>
         <th colspan="3"></th>
-        <th colspan="2">CampSums</th>
+        <th colspan="4">Convs(MTD) - CampSums</th>
         <th colspan="3">EventConvs...</th>
         <th colspan="2">Sync (EventConvs)</th>
     </tr>
@@ -15,6 +17,8 @@
         <th>ID</th>
         <th>Name</th>
         <th>#Offers</th>
+        <th style="text-align:center">#</th>
+        <th>Paid</th>
         <th>Earliest</th>
         <th>Latest</th>
         <th style="text-align:center">#</th>
@@ -26,10 +30,13 @@
     @foreach (var gauge in Model)
     {
         var adv = gauge.Advertiser;
+        var campsumsMTD = adv.Offers.SelectMany(o => o.Camps).SelectMany(c => c.CampSums).Where(cs => cs.Date >= monthStart);
         <tr>
             <td>@adv.AdvertiserId</td>
             <td>@adv.AdvertiserName</td>
             <td style="text-align:center">@Html.ActionLink(adv.Offers.Count().ToString(), "Index", "Offers", new { advId = adv.AdvertiserId }, null)</td>
+            <td style="text-align:right">@((int)campsumsMTD.Sum(x => x.Conversions))</td>
+            <td style="text-align:right">@((int)campsumsMTD.Sum(x => x.Paid))</td>
             <td>@Html.DisplayFor(x => gauge.CampSums.Earliest)</td>
             <td>@Html.DisplayFor(x => gauge.CampSums.Latest)</td>
             <td style="text-align:right">@adv.Offers.SelectMany(o => o.EventConversions).Count()</td>

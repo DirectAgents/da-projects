@@ -75,13 +75,18 @@ namespace CakeExtracter.Commands
             HasOption<int>("v|viewWindow=", "View attribution window (can set to 7 or 1, otherwise will be default or from config)", c => ViewWindow = c);
         }
 
-        public override int Execute(string[] remainingArguments)
+        private DateRange GetDateRange()
         {
             if (!DaysAgoToStart.HasValue)
                 DaysAgoToStart = 41; // used if StartDate==null
             var today = DateTime.Today;
             var yesterday = today.AddDays(-1);
-            var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
+            return new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
+        }
+
+        public override int Execute(string[] remainingArguments)
+        {
+            var dateRange = GetDateRange();
             Logger.Info("Facebook ETL. DateRange {0}.", dateRange);
 
             var statsType = new StatsTypeAgg(this.StatsType);

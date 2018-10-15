@@ -264,6 +264,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>WikiModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\MainHelper.cs" />
     <Compile Include="MigrationsAB\201612201825281_InitialCreate.cs" />
     <Compile Include="MigrationsAB\201612201825281_InitialCreate.Designer.cs">
       <DependentUpon>201612201825281_InitialCreate.cs</DependentUpon>
