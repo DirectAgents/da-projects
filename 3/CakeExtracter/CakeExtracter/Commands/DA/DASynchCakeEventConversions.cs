@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.CakeMarketing.DALoaders;
 using CakeExtracter.Etl.CakeMarketing.Extracters;
@@ -9,6 +10,18 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchCakeEventConversions : ConsoleCommand
     {
+        public static int RunStatic(int? advertiserId = null, int? offerId = null, DateTime? startDate = null, DateTime? endDate = null)
+        {
+            AutoMapperBootstrapper.CheckRunSetup();
+            var cmd = new DASynchCakeEventConversions
+            {
+                AdvertiserId = advertiserId,
+                OfferId = offerId,
+                StartDate = startDate,
+                EndDate = endDate
+            };
+            return cmd.Run();
+        }
         public int? AdvertiserId { get; set; }
         public int? OfferId { get; set; }
         public DateTime? StartDate { get; set; }
@@ -21,6 +34,8 @@ namespace CakeExtracter.Commands
             StartDate = null;
             EndDate = null;
         }
+
+        // e.g. daSynchCakeEventConversions -a=806 -s=9/17/18 -e=10/1/18
 
         public DASynchCakeEventConversions()
         {

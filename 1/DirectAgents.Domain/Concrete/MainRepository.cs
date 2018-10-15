@@ -7,6 +7,7 @@ using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.Cake;
 using DirectAgents.Domain.Entities.Screen;
+using Z.EntityFramework.Plus;
 
 namespace DirectAgents.Domain.Concrete
 {
@@ -353,14 +354,29 @@ namespace DirectAgents.Domain.Concrete
             return cs;
         }
 
-        public IQueryable<EventConversion> GetEventConversions(int? offerId = null, int? affiliateId = null)
+        public IQueryable<EventConversion> GetEventConversions(int? advertiserId = null, int? offerId = null, int? affiliateId = null, DateTime? startDate = null, DateTime? endDate = null)
         {
             var ec = context.EventConversions.AsQueryable();
+            if (advertiserId.HasValue)
+                ec = ec.Where(x => x.Offer.AdvertiserId == advertiserId.Value);
             if (offerId.HasValue)
                 ec = ec.Where(x => x.OfferId == offerId.Value);
             if (affiliateId.HasValue)
                 ec = ec.Where(x => x.AffiliateId == affiliateId.Value);
+            if (startDate.HasValue)
+                ec = ec.Where(x => x.ConvDate >= startDate.Value);
+            if (endDate.HasValue)
+            {
+                var endDatePlusOne = endDate.Value.AddDays(1);
+                ec = ec.Where(x => x.ConvDate < endDatePlusOne);
+            }
             return ec;
+        }
+
+        public void DeleteEventConversions(IQueryable<EventConversion> eventConvs)
+        {
+            eventConvs.Delete();
+            context.SaveChanges();
         }
 
         public IQueryable<CakeGauge> GetGaugesByAdvertiser(bool includeThoseWithNoStats = false)
