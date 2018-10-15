@@ -17,10 +17,15 @@ namespace Amazon
 
     public class AmazonApiReportParams
     {
-        public string campaignType { get; set; }
         public string segment { get; set; }
         public string reportDate { get; set; }
         public string metrics { get; set; }
+    }
+
+    public class AmazonApiSnapshotParams
+    {
+        public string campaignType { get; set; }
+        public string stateFilter { get; set; }
     }
 
     public class ReportParams
@@ -61,22 +66,42 @@ namespace Amazon
         //public int totalRowCount { get; set; } // not being supplied by the API
         public string correlationCode { get; set; }
     }
-    public class ReportRequestResponse
+
+    public class ReportRequestResponse : PreparedDataRequestResponse
     {
         public string reportId { get; set; }
+    }
+
+    public class SnapshotRequestResponse : PreparedDataRequestResponse
+    {
+        public string snapshotId { get; set; }
+    }
+
+    public class PreparedDataRequestResponse
+    {
         public string recordType { get; set; }
         public string status { get; set; }
         public string statusDetails { get; set; }
     }
-    public class ReportResponseDownloadInfo
+
+    public class SnapshotResponseDownloadInfo : ResponseDownloadInfo
+    {
+        public string snapshotId { get; set; }
+    }
+
+    public class ReportResponseDownloadInfo : ResponseDownloadInfo
     {
         public string reportId { get; set; }
-        
+    }
+
+    public class ResponseDownloadInfo
+    {
         public string status { get; set; }
         public string statusDetails { get; set; }
         public string location { get; set; }
         public int fileSize { get; set; }
     }
+
     public class ReportData
     {
         public List<string> columnHeaders { get; set; }

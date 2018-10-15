@@ -66,7 +66,6 @@ namespace CakeExtracter.Commands
             HasOption<bool>("z|fromDatabase=", "Retrieve from database instead of API (where implemented)", c => FromDatabase = c);
         }
 
-
         public override int Execute(string[] remainingArguments)
         {
             if (!DaysAgoToStart.HasValue)
@@ -136,6 +135,7 @@ namespace CakeExtracter.Commands
             extracterThread.Join();
             loaderThread.Join();
         }
+
         private void DoETL_DailyFromStrategyInDatabase(DateRange dateRange, ExtAccount account)
         {
             var extracter = new DatabaseStrategyToDailySummaryExtracter(dateRange, account.Id);
@@ -156,6 +156,7 @@ namespace CakeExtracter.Commands
             extracterThread.Join();
             loaderThread.Join();
         }
+
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
             //var extracter = new AmazonAdSetExtracter(amazonUtility, dateRange, account, campaignFilter: account.Filter, campaignFilterOut: account.FilterOut);
@@ -166,6 +167,7 @@ namespace CakeExtracter.Commands
             extracterThread.Join();
             loaderThread.Join();
         }
+
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
             //var extracter = new AmazonAdExtrater(amazonUtility, dateRange, account, campaignFilter: account.Filter, campaignFilterOut: account.FilterOut);
