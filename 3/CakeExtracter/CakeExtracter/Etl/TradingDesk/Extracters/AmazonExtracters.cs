@@ -5,7 +5,6 @@ using Amazon;
 using Amazon.Entities;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
-using Newtonsoft.Json;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
@@ -45,47 +44,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 reportEntities = reportEntities.Where(x => !getFilterProp(x).Contains(campaignFilterOut));
             }
             return reportEntities.ToList();
-        }
-
-        protected IEnumerable<TEntity> GetEntities<TEntity>(EntitesType entitesType, CampaignType campaignType)
-        {
-            var entities = _amazonUtility.GetEntities<TEntity>(entitesType, campaignType, this.clientId);
-            return entities.ToList();
-        }
-
-        //By using snapshot API calls
-        //This method returns an internal Amazon server error.
-
-        //protected IEnumerable<TEntity> GetEntities<TEntity>(EntitesType entitesType, CampaignType campaignType)
-        //{
-        //    var parms = _amazonUtility.CreateAmazonApiSnapshotParams(campaignType);
-        //    var submitReportResponse = _amazonUtility.SubmitSnapshot(parms, campaignType, entitesType, this.clientId);
-        //    if (submitReportResponse != null)
-        //    {
-        //        var json = _amazonUtility.WaitForSnapshotAndDownload(submitReportResponse.snapshotId, this.clientId);
-        //        if (json != null)
-        //        {
-        //            var stats = JsonConvert.DeserializeObject<List<TEntity>>(json);
-        //            return stats;
-        //        }
-        //    }
-        //    return new List<TEntity>();
-        //}
-
-        protected IEnumerable<TStat> GetReportInfo<TStat>(EntitesType reportType, CampaignType campaignType, DateTime date, bool includeCampaignName = false)
-        {
-            var parms = _amazonUtility.CreateAmazonApiReportParams(reportType, date, includeCampaignName);
-            var submitReportResponse = _amazonUtility.SubmitReport(parms, campaignType, reportType, this.clientId);
-            if (submitReportResponse != null)
-            {
-                var json = _amazonUtility.WaitForReportAndDownload(submitReportResponse.reportId, this.clientId);
-                if (json != null)
-                {
-                    var stats = JsonConvert.DeserializeObject<List<TStat>>(json);
-                    return stats;
-                }
-            }
-            return new List<TStat>();
         }
 
         protected static void SetCPProgStats(StatsSummary cpProgStats, IEnumerable<StatSummary> amazonStats)
@@ -131,8 +89,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         private IEnumerable<AmazonDailySummary> ExtractSummaries(DateTime date)
         {
-            var spSums = GetReportInfo<AmazonDailySummary>(EntitesType.Campaigns, CampaignType.SponsoredProducts, date, true);
-            var sbSums = GetReportInfo<AmazonDailySummary>(EntitesType.Campaigns, CampaignType.SponsoredBrands, date, true);
+            var spSums = _amazonUtility.ReportCampaigns(CampaignType.SponsoredProducts, date, clientId, true);
+            var sbSums = _amazonUtility.ReportCampaigns(CampaignType.SponsoredBrands, date, clientId, true);
             var sums = spSums.Concat(sbSums);
             sums = FilterByCampaigns(sums, x => x.campaignName);
             return sums;
@@ -176,8 +134,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         public IEnumerable<AmazonDailySummary> ExtractSummaries(DateTime date)
         {
-            var spSums = GetReportInfo<AmazonDailySummary>(EntitesType.Campaigns, CampaignType.SponsoredProducts, date, true);
-            var sbSums = GetReportInfo<AmazonDailySummary>(EntitesType.Campaigns, CampaignType.SponsoredBrands, date, true);
+            var spSums = _amazonUtility.ReportCampaigns(CampaignType.SponsoredProducts, date, clientId, true);
+            var sbSums = _amazonUtility.ReportCampaigns(CampaignType.SponsoredBrands, date, clientId, true);
             var sums = spSums.Concat(sbSums);
             sums = FilterByCampaigns(sums, x => x.campaignName);
             return sums;
@@ -236,17 +194,16 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         private IEnumerable<AmazonCampaign> LoadCampaignsFromAmazonApi()
         {
-            var campaigns = GetEntities<AmazonCampaign>(EntitesType.Campaigns, CampaignType.SponsoredProducts);
-            campaigns = FilterByCampaigns(campaigns, x => x.name);
-            return campaigns;
+            var campaigns = _amazonUtility.GetCampaigns(CampaignType.SponsoredProducts, clientId);
+            var filteredCampaigns = FilterByCampaigns(campaigns, x => x.name);
+            return filteredCampaigns;
         }
 
         private IEnumerable<AmazonAdSet> LoadAdSetsFromAmazonApi(IEnumerable<AmazonCampaign> campaigns)
         {
-            var keywords = GetEntities<AmazonKeyword>(EntitesType.Keywords, CampaignType.SponsoredProducts); // only for sponsoredProduct
             var campaignIds = campaigns.Select(x => x.campaignId).ToArray();
-            var filteredKeywords = keywords.Where(x => campaignIds.Contains(x.CampaignId));
-            var adSets = filteredKeywords.Select(x =>
+            var keywords = _amazonUtility.GetKeywords(clientId, campaignIds);
+            var adSets = keywords.Select(x =>
                 new AmazonAdSet
                 {
                     KeywordText = x.KeywordText,
@@ -267,7 +224,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         public IEnumerable<AmazonKeywordDailySummary> ExtractSummaries(DateTime date)
         {
-            var sums = GetReportInfo<AmazonKeywordDailySummary>(EntitesType.Keywords, CampaignType.SponsoredProducts, date);
+            var sums = _amazonUtility.ReportKeywords(CampaignType.SponsoredProducts, date, clientId);
             return sums;
         }
 
@@ -327,21 +284,16 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         private IEnumerable<AmazonCampaign> LoadCampaignsFromAmazonApi()
         {
-            var campaigns = GetEntities<AmazonCampaign>(EntitesType.Campaigns, CampaignType.SponsoredProducts);
-            campaigns = FilterByCampaigns(campaigns, x => x.name);
-            return campaigns;
+            var campaigns = _amazonUtility.GetCampaigns(CampaignType.SponsoredProducts, clientId);
+            var filteredCampaigns = FilterByCampaigns(campaigns, x => x.name);
+            return filteredCampaigns;
         }
 
         //NOTE: This only retrieves SponsoredProduct ads
         private IEnumerable<TDad> LoadAdsFromAmazonApi(IEnumerable<AmazonCampaign> campaigns)
         {
-            var productAds = GetEntities<AmazonProductAd>(EntitesType.ProductAds, CampaignType.SponsoredProducts); // only for sponsoredProduct
-            if (productAds == null)
-            {
-                return null;
-            }
             var campaignIds = campaigns.Select(x => x.campaignId).ToArray();
-            productAds = productAds.Where(x => campaignIds.Contains(x.CampaignId));
+            var productAds = _amazonUtility.GetProductAds(clientId, campaignIds);
             var ads = productAds.GroupBy(x => x.AdId).Select(MapProductAdGroup);
             return ads.ToList();
         }
@@ -374,7 +326,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         private IEnumerable<AmazonAdDailySummary> ExtractSummaries(DateTime date)
         {
-            var sums = GetReportInfo<AmazonAdDailySummary>(EntitesType.ProductAds, CampaignType.SponsoredProducts, date);
+            var sums = _amazonUtility.ReportProductAds(date, clientId);
             return sums;
         }
 

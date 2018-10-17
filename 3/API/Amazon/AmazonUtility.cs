@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using Amazon.Entities;
+using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Deserializers;
@@ -255,11 +256,59 @@ namespace Amazon
             return GetEntities<Profile>(EntitesType.Profiles);
         }
 
-        public List<T> GetEntities<T>(EntitesType entitiesType, CampaignType campaignType = CampaignType.Empty, string profileId = null)
+        public List<AmazonCampaign> GetCampaigns(CampaignType campaignType, string profileId)
+        {
+            return GetEntities<AmazonCampaign>(EntitesType.Campaigns, campaignType, null, profileId);
+        }
+
+        // Only for Sponsored Product
+        public List<AmazonKeyword> GetKeywords(string profileId, IEnumerable<long> campaignIds)
+        {
+            var parameters = new Dictionary<string, string>();
+            AddParameter(parameters, "campaignIdFilter", campaignIds);
+            return GetEntities<AmazonKeyword>(EntitesType.Keywords, CampaignType.SponsoredProducts, parameters, profileId);
+        }
+
+        // Only for Sponsored Product
+        public List<AmazonProductAd> GetProductAds(string profileId, IEnumerable<long> campaignIds)
+        {
+            var parameters = new Dictionary<string, string>();
+            AddParameter(parameters, "campaignIdFilter", campaignIds);
+            return GetEntities<AmazonProductAd>(EntitesType.ProductAds, CampaignType.SponsoredProducts, parameters, profileId);
+        }
+
+        public List<AmazonDailySummary> ReportCampaigns(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName = false)
+        {
+            var param = CreateBaseAmazonApiReportParams(date, includeCampaignName);
+            return GetReportInfo<AmazonDailySummary>(EntitesType.Campaigns, campaignType, param, profileId);
+        }
+
+        public List<AmazonKeywordDailySummary> ReportKeywords(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName = false)
+        {
+            var param = CreateBaseAmazonApiReportParams(date, includeCampaignName);
+            return GetReportInfo<AmazonKeywordDailySummary>(EntitesType.Keywords, campaignType, param, profileId);
+        }
+
+        // Only for Sponsored Product
+        public List<AmazonAdDailySummary> ReportProductAds(DateTime date, string profileId, bool includeCampaignName = false)
+        {
+            var param = CreateBaseAmazonApiReportParams(date, includeCampaignName);
+            return GetReportInfo<AmazonAdDailySummary>(EntitesType.ProductAds, CampaignType.SponsoredProducts, param, profileId);
+        }
+
+        private void AddParameter<T>(Dictionary<string, string> parameters, string paramName, IEnumerable<T> values)
+        {
+            var paramValue = string.Join(",", values);
+            parameters.Add(paramName, paramValue);
+        }
+
+        private List<T> GetEntities<T>(EntitesType entitiesType, CampaignType campaignType = CampaignType.Empty,
+            Dictionary<string, string> parameters = null, string profileId = null)
         {
             try
             {
-                var data = GetEntityList<T>(entitiesType, campaignType, profileId);
+                parameters = parameters ?? new Dictionary<string, string>();
+                var data = GetEntityList<T>(entitiesType, campaignType, parameters, profileId);
                 return data;
             }
             catch (Exception x)
@@ -269,27 +318,64 @@ namespace Amazon
             return null;
         }
 
-        public AmazonApiReportParams CreateAmazonApiReportParams(EntitesType reportType, DateTime date, bool includeCampaignName = false)
+        // Use it instead of the GetEntities method when you need to extract a large number of objects (more than 15,000) and you know about it.
+        private List<TEntity> GetSnapshotInfo<TEntity>(EntitesType entitesType, CampaignType campaignType, string profileId)
         {
+            var submitReportResponse = SubmitSnapshot(campaignType, entitesType, profileId);
+            if (submitReportResponse != null)
+            {
+                var json = DownloadPreparedData<ReportResponseDownloadInfo>("snapshots", submitReportResponse.snapshotId, profileId);
+                if (json != null)
+                {
+                    var stats = JsonConvert.DeserializeObject<List<TEntity>>(json);
+                    return stats;
+                }
+            }
+            return new List<TEntity>();
+        }
+
+        private AmazonApiReportParams CreateBaseAmazonApiReportParams(DateTime date, bool includeCampaignName)
+        {
+            var allMetrics = "cost,impressions,clicks,attributedConversions14d,attributedSales14d,attributedUnitsOrdered14d,attributedSales14dSameSKU";
+            allMetrics += includeCampaignName ? ",campaignName" : "";
             var reportParams = new AmazonApiReportParams
             {
-                //segment = "query",
                 reportDate = date.ToString("yyyyMMdd"),
-                metrics = GetReportMetrics(reportType, includeCampaignName)
+                metrics = allMetrics
             };
             return reportParams;
         }
 
-        public AmazonApiSnapshotParams CreateAmazonApiSnapshotParams(CampaignType campaignType)
+        private List<TStat> GetReportInfo<TStat>(EntitesType reportType, CampaignType campaignType, AmazonApiReportParams parameters, string profileId)
         {
-            var snapshotParams = new AmazonApiSnapshotParams
+            var submitReportResponse = SubmitReport(parameters, campaignType, reportType, profileId);
+            if (submitReportResponse != null)
             {
-                campaignType = campaignTypeNames[campaignType]
-            };
-            return snapshotParams;
+                var json = DownloadPreparedData<ReportResponseDownloadInfo>("reports", submitReportResponse.reportId, profileId);
+                if (json != null)
+                {
+                    var stats = JsonConvert.DeserializeObject<List<TStat>>(json);
+                    return stats;
+                }
+            }
+            return new List<TStat>();
         }
 
-        public ReportRequestResponse SubmitReport(AmazonApiReportParams reportParams, CampaignType campaignType, EntitesType recordType, string profileId)
+        private SnapshotRequestResponse SubmitSnapshot(CampaignType campaignType, EntitesType recordType, string profileId)
+        {
+            try
+            {
+                var snapshotParams = new AmazonApiSnapshotParams { stateFilter = "enabled,paused,archived" };
+                return SubmitRequestForPreparedData<SnapshotRequestResponse>("snapshot", snapshotParams, campaignType, recordType, profileId);
+            }
+            catch (Exception x)
+            {
+                LogError(x.Message);
+            }
+            return null;
+        }
+
+        private ReportRequestResponse SubmitReport(AmazonApiReportParams reportParams, CampaignType campaignType, EntitesType recordType, string profileId)
         {
             try
             {
@@ -302,37 +388,19 @@ namespace Amazon
             return null;
         }
 
-        public SnapshotRequestResponse SubmitSnapshot(AmazonApiSnapshotParams snapshotParams, CampaignType campaignType, EntitesType recordType, string profileId)
+        private List<T> GetEntityList<T>(EntitesType entitiesType, CampaignType campaignType, Dictionary<string, string> parameters,
+            string profileId, bool retrieveAllData = true)
         {
-            try
-            {
-                return SubmitRequestForPreparedData<SnapshotRequestResponse>("snapshot", snapshotParams, campaignType, recordType, profileId);
-            }
-            catch (Exception x)
-            {
-                LogError(x.Message);
-            }
-            return null;
-        }
-
-        // returns json string (or null)
-        public string WaitForReportAndDownload(string reportId, string profileId)
-        {
-            return DownloadPreparedData<ReportResponseDownloadInfo>("reports", reportId, profileId);
-        }
-
-        public string WaitForSnapshotAndDownload(string snapshotId, string profileId)
-        {
-            return DownloadPreparedData<ReportResponseDownloadInfo>("snapshots", snapshotId, profileId);
-        }
-
-        private List<T> GetEntityList<T>(EntitesType entitiesType, CampaignType campaignType, string profileId, bool retrieveAllData = true)
-        {
-            var resourcePath = $"v2/{campaignTypeNames[campaignType]}/{entitiesTypeName[entitiesType]}";
+            var campaignTypePath = campaignType == CampaignType.Empty ? "" : campaignTypeNames[campaignType] + "/";
+            var resourcePath = $"v2/{campaignTypePath}{entitiesTypeName[entitiesType]}";
             var request = new RestRequest(resourcePath, Method.GET);
             request.AddHeader("Content-Type", "application/json");
             request.AddHeader("Amazon-Advertising-API-Scope", profileId);
-            if (retrieveAllData)
+            foreach (var param in parameters)
+            {
+                request.AddQueryParameter(param.Key, param.Value);
+            }
+            if (retrieveAllData && campaignType != CampaignType.Empty)
             {
                 return RetrieveAllData<T>(request);
             }
@@ -352,13 +420,6 @@ namespace Amazon
                 isCompleted = restResponse.Data.Count < LimitOfReturnedValues;
             }
             return data;
-        }
-        
-        private static string GetReportMetrics(EntitesType reportType, bool includeCampaignName)
-        {
-            var allMetrics = "cost,impressions,clicks,attributedConversions14d,attributedSales14d,attributedSales14dSameSKU";
-            allMetrics += (includeCampaignName ? ",campaignName," : ",");
-            return allMetrics;
         }
 
         private T SubmitRequestForPreparedData<T>(string dataType, object requestParams, CampaignType campaignType, EntitesType entitiesType, string profileId)
@@ -403,7 +464,7 @@ namespace Amazon
                 }
                 if (restResponse.Content.Contains("IN_PROGRESS"))
                 {
-                    LogInfo($"Waiting {WaitTimeSeconds} seconds for report to finish generating.");
+                    LogInfo($"Waiting {WaitTimeSeconds} seconds for {dataType} to finish generating.");
                     var timeSpan = new TimeSpan(0, 0, WaitTimeSeconds);
                     Thread.Sleep(timeSpan);
                 }
@@ -483,7 +544,6 @@ namespace Amazon
                     GetAccessToken();
                 }
                 AddAuthorizationHeader(restRequest);
-                //restRequest.AddHeader("Content-Type", "application/json");
                 restRequest.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
                 restRequest.AddHeader("Amazon-Advertising-API-ClientId", _amazonClientId);
 
@@ -495,7 +555,6 @@ namespace Amazon
                     response = postNotGet
                         ? restClient.ExecuteAsPost<T>(restRequest, "POST")
                         : restClient.ExecuteAsGet<T>(restRequest, "GET");
-                    //var jsonResponse = JsonConvert.DeserializeObject(response.Content);
                     tries++;
 
                     if (response.StatusCode == HttpStatusCode.Unauthorized && tries < 2)
