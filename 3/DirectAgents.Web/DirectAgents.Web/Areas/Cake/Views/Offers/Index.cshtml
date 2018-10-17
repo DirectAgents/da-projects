@@ -2,6 +2,8 @@
 @{
     ViewBag.Title = "Cake Offers";
     var advertiser = (DirectAgents.Domain.Entities.Cake.Advertiser)ViewBag.Advertiser;
+    var today = DateTime.Today;
+    var monthStart = new DateTime(today.Year, today.Month, 1);
 }
 <h2>@ViewBag.Title</h2>
 
@@ -24,8 +26,9 @@
 @foreach (var off in Model)
 {
     //int numAffs = off.EventConversions.Select(x => x.AffiliateId).Distinct().Count(); //similar performance?
-    int numAffs = off.EventConversions.GroupBy(x => x.AffiliateId).Count();
-    int numConvs = off.EventConversions.Count();
+    var convs = off.EventConversions.Where(x => x.ConvDate >= monthStart);
+    int numAffs = convs.GroupBy(x => x.AffiliateId).Count();
+    int numConvs = convs.Count();
     <tr>
 @if (advertiser == null) {
         <td>@off.AdvertiserId</td>

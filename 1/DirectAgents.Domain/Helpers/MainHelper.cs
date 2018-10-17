@@ -8,7 +8,8 @@ namespace DirectAgents.Domain.Helpers
 {
     public class MainHelper
     {
-        //Somehow this doesn't work when called from a CakeExtracter command. Give a NullReferenceException when calling .Where()
+        //Somehow this doesn't work when called from a CakeExtracter command. Gives a NullReferenceException when calling .Where()
+        //See DASynchCakeEventConversions
 
         //public static IQueryable<EventConversion> FilterEventConversions(IQueryable<EventConversion> ec, int? advertiserId = null, int? offerId = null, int? affiliateId = null, DateTime? startDate = null, DateTime? endDate = null)
         //{
@@ -31,6 +32,12 @@ namespace DirectAgents.Domain.Helpers
         public static void DeleteEventConversions(DAContext db, IQueryable<EventConversion> eventConvs)
         {
             eventConvs.Delete();
+            db.SaveChanges();
+        }
+
+        public static void DeleteCampSums(DAContext db, IQueryable<CampSum> campSums)
+        {
+            campSums.Delete();
             db.SaveChanges();
         }
     }

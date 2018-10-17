@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.CakeMarketing.DALoaders;
 using CakeExtracter.Etl.CakeMarketing.Extracters;
@@ -10,6 +11,21 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchCampSums : ConsoleCommand
     {
+        public static int RunStatic(string advertiserIds = null, string offerIds = null, DateTime? startDate = null, DateTime? endDate = null, int? daysAgoToStart = null)
+        {
+            AutoMapperBootstrapper.CheckRunSetup();
+            var cmd = new DASynchCampSums
+            {
+                AdvertiserIds = advertiserIds,
+                OfferIds = offerIds,
+                StartDate = startDate,
+                EndDate = endDate,
+                DaysAgoToStart = daysAgoToStart
+            };
+            return cmd.Run();
+        }
+
+        public string AdvertiserIds { get; set; }
         public string OfferIds { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
@@ -17,15 +33,18 @@ namespace CakeExtracter.Commands
 
         public override void ResetProperties()
         {
+            AdvertiserIds = null;
             OfferIds = null;
             StartDate = null;
             EndDate = null;
             DaysAgoToStart = null;
         }
 
+        //Note: If non-zero advIds and offIds are specified, will extract for advs and offs separately.
         public DASynchCampSums()
         {
             IsCommand("daSynchCampSums", "synch daily CampaignSummaries");
+            HasOption("a|advertiserIds=", "Advertiser Ids (default: all advertisers)", c => AdvertiserIds = c);
             HasOption("o|offerIds=", "Offer Ids (default: all offers)", c => OfferIds = c);
             HasOption("s|startDate=", "Start Date (default: 'daysAgo')", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default: today)", c => EndDate = DateTime.Parse(c));
@@ -54,33 +73,40 @@ namespace CakeExtracter.Commands
             var dateRange = GetDateRange();
             Logger.Info("Cake CampSums ETL. DateRange {0}.", dateRange);
 
-            var offerIds = new List<int>();
-            if (this.OfferIds != null)
-            {
-                var offerIds_string = this.OfferIds.Split(new char[] { ',' });
-                int tempInt;
-                foreach (var offerId_string in offerIds_string)
-                {
-                    if (int.TryParse(offerId_string, out tempInt))
-                        offerIds.Add(tempInt);
-                }
-            }
-            if (offerIds.Count == 0)
-                offerIds.Add(0); // all offers
+            IEnumerable<int> advIds = ParseIds(this.AdvertiserIds);
+            IEnumerable<int> offIds = ParseIds(this.OfferIds);
 
-            foreach (var offerId in offerIds)
-            {
-                var extracter = new CampaignSummaryExtracter(dateRange, offerId: offerId, groupByOffAff: false, getDailyStats: true);
-                var loader = new DACampSumLoader(keepAllNonZero: true);
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
-                //LoadMissingOffers(loader.OfferIdsSaved);
-                //LoadMissingCampaigns(loader.CampIdsSaved);
-            }
+            var extracter = new CampaignSummaryExtracter(dateRange, advertiserIds: advIds, offerIds: offIds, groupByOffAff: false, getDailyStats: true);
+            var loader = new DACampSumLoader(keepAllNonZero: true);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
             return 0;
         }
+
+        private static IEnumerable<int> ParseIds(string ids)
+        {
+            var idsList = new List<int>();
+            if (ids != null)
+            {
+                var ids_string = ids.Split(new char[] { ',' });
+                int tempInt;
+                foreach (var id_string in ids_string)
+                {
+                    if (int.TryParse(id_string, out tempInt))
+                        idsList.Add(tempInt);
+                }
+            }
+            if (idsList.Count == 0)
+                idsList.Add(0); // 0 means all items in Cake
+
+            return idsList;
+        }
+
+        //*Previously, called these two methods after joining the extracter and loader threads...
+        //LoadMissingOffers(loader.OfferIdsSaved);
+        //LoadMissingCampaigns(loader.CampIdsSaved);
 
         //private void LoadMissingOffers(IEnumerable<int> offerIdsToCheck)
         //{

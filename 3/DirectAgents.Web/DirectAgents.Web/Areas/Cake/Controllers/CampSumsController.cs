@@ -12,9 +12,12 @@ namespace DirectAgents.Web.Areas.Cake.Controllers
             this.daRepo = mainRepository;
         }
 
-        public ActionResult Index(int? campId)
+        public ActionResult Index(int? campId, DateTime? start, DateTime? end)
         {
-            var campSums = daRepo.GetCampSums(campId: campId);
+            var today = DateTime.Today;
+            start = start ?? new DateTime(today.Year, today.Month, 1);
+
+            var campSums = daRepo.GetCampSums(campId: campId, startDate: start, endDate: end);
             if (campSums.Any())
             {
                 var firstCampSum = campSums.First();

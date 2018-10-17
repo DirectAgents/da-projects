@@ -7,12 +7,6 @@ namespace DirectAgents.Domain.DTO
 {
     public class CakeGauge
     {
-        public class Range
-        {
-            public DateTime? Earliest { get; set; }
-            public DateTime? Latest { get; set; }
-        }
-
         public CakeGauge()
         {
             this.CampSums = new Range();
@@ -23,6 +17,15 @@ namespace DirectAgents.Domain.DTO
 
         public Range CampSums { get; set; }
         public Range EventConvs { get; set; }
+
+        public class Range
+        {
+            public DateTime? Earliest { get; set; }
+            public DateTime? Latest { get; set; }
+
+            public decimal NumConvs { get; set; }
+            public decimal NumConvsPaid { get; set; }
+        }
     }
 
     public class EntityWithStats

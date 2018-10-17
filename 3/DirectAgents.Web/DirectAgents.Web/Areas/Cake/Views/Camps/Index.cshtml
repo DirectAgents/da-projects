@@ -2,6 +2,8 @@
 @{
     ViewBag.Title = "Cake Camps";
     var offer = (DirectAgents.Domain.Entities.Cake.Offer)ViewBag.Offer;
+    var today = DateTime.Today;
+    var monthStart = new DateTime(today.Year, today.Month, 1);
 }
 <h2>@ViewBag.Title</h2>
 
@@ -26,6 +28,7 @@
     </tr>
 @foreach (var camp in Model)
 {
+    int numCampSums = camp.CampSums.Where(x => x.Date >= monthStart).Count();
     <tr>
         <td>@camp.CampaignId</td>
 @if (offer == null) {
@@ -35,7 +38,7 @@
         <td>@camp.OfferContractId</td>
         <td>@camp.PayoutAmount</td>
         <td>@camp.CurrencyAbbr</td>
-        <td style="text-align:center">@Html.ActionLink(camp.CampSums.Count().ToString(), "Index", "CampSums", new { campId = camp.CampaignId }, null)</td>
+        <td style="text-align:center">@Html.ActionLink(numCampSums.ToString(), "Index", "CampSums", new { campId = camp.CampaignId }, null)</td>
     </tr>
 }
 </table>

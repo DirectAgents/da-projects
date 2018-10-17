@@ -120,14 +120,16 @@ namespace CakeExtracter.CakeMarketingApi
                 return new List<OfferSummary>();
         }
 
-        public static List<CampaignSummary> CampaignSummaries(DateRange dateRange, int offerId = 0)
+        public static List<CampaignSummary> CampaignSummaries(DateRange dateRange, int advertiserId = 0, int offerId = 0, int campaignId = 0)
         {
             var client = new CampaignSummariesClient();
             var request = new CampaignSummariesRequest
             {
                 start_date = dateRange.FromDate.ToString("MM/dd/yyyy"),
                 end_date = dateRange.ToDate.ToString("MM/dd/yyyy"),
-                site_offer_id = offerId
+                brand_advertiser_manager_id = advertiserId,
+                site_offer_id = offerId,
+                campaign_id = campaignId
             };
             var response = client.CampaignSummaries(request);
             if (response == null || response.Campaigns == null)
