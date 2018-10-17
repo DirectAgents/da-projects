@@ -3,6 +3,8 @@
     ViewBag.Title = "Cake Advertisers";
     var today = DateTime.Today;
     var monthStart = new DateTime(today.Year, today.Month, 1);
+    var formatNum = Request.QueryString["commas"] != null ? "#,##0.###" : "0.###";
+    bool super = Request.QueryString["super"] == "1";
 }
 <h2>@ViewBag.Title</h2>
 
@@ -33,18 +35,21 @@
     @foreach (var gauge in Model)
     {
         var adv = gauge.Advertiser;
-        <tr>
+        bool isTotal = adv.AdvertiserId == 0;
+        <tr @(isTotal ? "style=font-weight:bold" : "")>
             <td>@adv.AdvertiserId</td>
             <td>@adv.AdvertiserName</td>
-            <td style="text-align:center">@Html.ActionLink(adv.Offers.Count().ToString(), "Index", "Offers", new { advId = adv.AdvertiserId }, null)</td>
-            <td style="text-align:right">@gauge.CampSums.NumConvs.ToString("0.###")</td>
-            <td style="text-align:right">@gauge.CampSums.NumConvsPaid.ToString("0.###")</td>
+            <td style="text-align:center">@Html.ActionLink(gauge.NumOffers.ToString(), "Index", "Offers", new { advId = isTotal ? null : (int?)adv.AdvertiserId }, null)</td>
+            <td style="text-align:right">@gauge.CampSums.NumConvs.ToString(formatNum)</td>
+            <td style="text-align:right">@gauge.CampSums.NumConvsPaid.ToString(formatNum)</td>
             <td>@Html.DisplayFor(x => gauge.CampSums.Earliest)</td>
             <td>@Html.DisplayFor(x => gauge.CampSums.Latest)</td>
             <td>
                 <div id="divCmds1_@(adv.AdvertiserId)" class="divCmds divCmds1">
-                    @Html.ActionLink("clear", "ClearCampSums", new { id = adv.AdvertiserId }, new { onclick = "DoClear(" + adv.AdvertiserId + ", 1)" }) |
+@if (!isTotal || super) {
+                    @Html.ActionLink("clear", "ClearCampSums", new { id = adv.AdvertiserId }, new { onclick = "DoClear(" + adv.AdvertiserId + ", 1)" })<text> |</text>
                     @Html.ActionLink("load", "LoadCampSums", new { id = adv.AdvertiserId }, new { onclick = "DoLoad(" + adv.AdvertiserId + ", 1)" })
+}
                 </div>
             </td>
             <td>
@@ -53,13 +58,15 @@
                     @Html.ActionLink("load", "LoadCampSums", new { id = adv.AdvertiserId, justToday = true }, new { onclick = "DoLoad(" + adv.AdvertiserId + ", 2)" })
                 </div>
             </td>
-            <td style="text-align:right">@gauge.EventConvs.NumConvs.ToString("0.###")</td>
+            <td style="text-align:right">@gauge.EventConvs.NumConvs.ToString(formatNum)</td>
             <td>@Html.DisplayFor(x => gauge.EventConvs.Earliest)</td>
             <td>@Html.DisplayFor(x => gauge.EventConvs.Latest)</td>
             <td>
                 <div id="divCmds3_@(adv.AdvertiserId)" class="divCmds divCmds3">
-                    @Html.ActionLink("clear", "ClearConvs", new { id = adv.AdvertiserId }, new { onclick = "DoClear(" + adv.AdvertiserId + ", 3)" }) |
+@if (!isTotal || super) {
+                    @Html.ActionLink("clear", "ClearConvs", new { id = adv.AdvertiserId }, new { onclick = "DoClear(" + adv.AdvertiserId + ", 3)" })<text> |</text>
                     @Html.ActionLink("load", "LoadConvs", new { id = adv.AdvertiserId }, new { onclick="DoLoad(" + adv.AdvertiserId + ", 3)" })
+}
                 </div>
             </td>
             <td>
@@ -71,6 +78,7 @@
         </tr>
     }
 </table>
+<br />
 
 <script>
     function DoClear(id, cmdCol) {

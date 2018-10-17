@@ -25,8 +25,10 @@ namespace DirectAgents.Web.Areas.Cake.Controllers
         {
             var today = DateTime.Today;
             var monthStart = new DateTime(today.Year, today.Month, 1);
-            var advGauges = daRepo.GetGaugesByAdvertiser(startDateForStats: monthStart);
-            return View(advGauges.OrderBy(x => x.Advertiser.AdvertiserName));
+            var advGaugesQuery = daRepo.GetGaugesByAdvertiser(startDateForStats: monthStart);
+            var advGauges = advGaugesQuery.OrderBy(x => x.Advertiser.AdvertiserName).ToList();
+            advGauges.Add(daRepo.GetGaugeForAllAdvertisers(startDateForStats: monthStart));
+            return View(advGauges);
         }
 
         public ActionResult ClearCampSums(int id, bool justToday = false)

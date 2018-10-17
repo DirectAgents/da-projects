@@ -51,6 +51,7 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<EventConversion> GetEventConversions(int? advertiserId = null, int? offerId = null, int? affiliateId = null, DateTime? startDate = null, DateTime? endDate = null);
         void DeleteEventConversions(IQueryable<EventConversion> eventConvs);
 
+        CakeGauge GetGaugeForAllAdvertisers(DateTime? startDateForStats = null);
         IQueryable<CakeGauge> GetGaugesByAdvertiser(bool includeThoseWithNoStats = false, DateTime? startDateForStats = null);
     }
 }

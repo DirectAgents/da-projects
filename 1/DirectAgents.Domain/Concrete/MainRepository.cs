@@ -384,6 +384,35 @@ namespace DirectAgents.Domain.Concrete
             context.SaveChanges();
         }
 
+        // --- Stats Gauges ---
+
+        public CakeGauge GetGaugeForAllAdvertisers(DateTime? startDateForStats = null)
+        {
+            var allOffers = GetOffers();
+            var allCampSums = GetCampSums();
+            var campSumsForStats = startDateForStats.HasValue ? allCampSums.Where(cs => cs.Date >= startDateForStats.Value) : allCampSums;
+            var allConvs = GetEventConversions();
+            var convsForStats = startDateForStats.HasValue ? allConvs.Where(ec => ec.ConvDate >= startDateForStats.Value) : allConvs;
+            var gauge = new CakeGauge
+            {
+                Advertiser = new Advertiser { AdvertiserId = 0, AdvertiserName = "All Advertisers" },
+                NumOffers = allOffers.Count(),
+                CampSums = new CakeGauge.Range {
+                    Earliest = allCampSums.Min(cs => (DateTime?)cs.Date),
+                    Latest = allCampSums.Max(cs => (DateTime?)cs.Date),
+                    NumConvs = campSumsForStats.Sum(cs => (decimal?)cs.Conversions) ?? 0,
+                    NumConvsPaid = campSumsForStats.Sum(cs => (decimal?)cs.Paid) ?? 0
+                },
+                EventConvs = new CakeGauge.Range {
+                    Earliest = allConvs.Min(ec => (DateTime?)ec.ConvDate),
+                    Latest = allConvs.Max(ec => (DateTime?)ec.ConvDate),
+                    NumConvs = convsForStats.Count(),
+                    NumConvsPaid = 0
+                }
+            };
+            return gauge;
+        }
+
         public IQueryable<CakeGauge> GetGaugesByAdvertiser(bool includeThoseWithNoStats = false, DateTime? startDateForStats = null)
         {
             var advs = GetAdvertisers();
@@ -402,6 +431,7 @@ namespace DirectAgents.Domain.Concrete
                 gauges = ews.Select(x => new CakeGauge()
                 {
                     Advertiser = x.Advertiser,
+                    NumOffers = x.Advertiser.Offers.Count(),
                     CampSums = new CakeGauge.Range() {
                         Earliest = x.CampSums.Min(cs => (DateTime?)cs.Date),
                         Latest = x.CampSums.Max(cs => (DateTime?)cs.Date),

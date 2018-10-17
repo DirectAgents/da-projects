@@ -20,8 +20,8 @@
         <th>OfferId</th>
         <th>Name</th>
         <th>#Camps</th>
-        <th>#Affs</th>
-        <th>#EventConvs</th>
+        <th>#Affs(MTD)</th>
+        <th>#EventConvs(MTD)</th>
     </tr>
 @foreach (var off in Model)
 {
@@ -32,7 +32,7 @@
     <tr>
 @if (advertiser == null) {
         <td>@off.AdvertiserId</td>
-        <td>@off.Advertiser.AdvertiserName</td>
+        <td>@(off.Advertiser != null ? off.Advertiser.AdvertiserName : "")</td>@* (because off.AdvertiserId is nullable) *@
 }
         <td>@off.OfferId</td>
         <td>@off.OfferName</td>
@@ -42,3 +42,4 @@
     </tr>
 }
 </table>
+<br />

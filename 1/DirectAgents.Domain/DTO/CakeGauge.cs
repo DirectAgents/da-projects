@@ -14,6 +14,7 @@ namespace DirectAgents.Domain.DTO
         }
 
         public Advertiser Advertiser { get; set; }
+        public int NumOffers { get; set; }
 
         public Range CampSums { get; set; }
         public Range EventConvs { get; set; }
