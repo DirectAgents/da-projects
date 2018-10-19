@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.CakeMarketing.DALoaders;
 using CakeExtracter.Etl.CakeMarketing.Extracters;
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.Cake;
 
 namespace CakeExtracter.Commands
 {
@@ -73,10 +76,10 @@ namespace CakeExtracter.Commands
             var dateRange = GetDateRange();
             Logger.Info("Cake CampSums ETL. DateRange {0}.", dateRange);
 
-            IEnumerable<int> advIds = ParseIds(this.AdvertiserIds);
-            IEnumerable<int> offIds = ParseIds(this.OfferIds);
+            var advs = GetAdvertisers();
+            var offIds = ParseIds(this.OfferIds);
 
-            var extracter = new CampaignSummaryExtracter(dateRange, advertiserIds: advIds, offerIds: offIds, groupByOffAff: false, getDailyStats: true);
+            var extracter = new CampaignSummaryExtracter(dateRange, advertisers: advs, offerIds: offIds, groupByOffAff: false, getDailyStats: true);
             var loader = new DACampSumLoader(keepAllNonZero: true);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -85,7 +88,7 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
-        private static IEnumerable<int> ParseIds(string ids)
+        private static List<int> ParseIds(string ids)
         {
             var idsList = new List<int>();
             if (ids != null)
@@ -102,6 +105,20 @@ namespace CakeExtracter.Commands
                 idsList.Add(0); // 0 means all items in Cake
 
             return idsList;
+        }
+
+        private IEnumerable<Advertiser> GetAdvertisers()
+        {
+            var advIds = ParseIds(this.AdvertiserIds).ToArray();
+            bool wantAllAdvertisers = (advIds == null) || !advIds.Any() || advIds.Any(id => id == 0);
+            if (wantAllAdvertisers)
+                return null;
+
+            using (var db = new DAContext())
+            {
+                var advertisers = db.Advertisers.Where(x => advIds.Contains(x.AdvertiserId));
+                return advertisers.ToList();
+            }
         }
 
         //*Previously, called these two methods after joining the extracter and loader threads...

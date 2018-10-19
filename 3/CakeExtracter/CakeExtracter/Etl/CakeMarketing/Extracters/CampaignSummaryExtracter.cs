@@ -10,15 +10,15 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
     public class CampaignSummaryExtracter : Extracter<CampaignSummary>
     {
         private readonly DateRange dateRange;
-        private readonly IEnumerable<int> advertiserIds;
+        private readonly IEnumerable<DirectAgents.Domain.Entities.Cake.Advertiser> advertisers;
         private readonly IEnumerable<int> offerIds;
         private readonly bool groupByOffAff;
         private readonly bool getDailyStats;
 
-        public CampaignSummaryExtracter(DateRange dateRange, IEnumerable<int> advertiserIds = null, IEnumerable<int> offerIds = null, bool groupByOffAff = false, bool getDailyStats = false)
+        public CampaignSummaryExtracter(DateRange dateRange, IEnumerable<DirectAgents.Domain.Entities.Cake.Advertiser> advertisers = null, IEnumerable<int> offerIds = null, bool groupByOffAff = false, bool getDailyStats = false)
         {
             this.dateRange = dateRange;
-            this.advertiserIds = (advertiserIds == null) ? new[] { 0 } : advertiserIds;
+            this.advertisers = (advertisers == null || !advertisers.Any()) ? new[] { new DirectAgents.Domain.Entities.Cake.Advertiser { AdvertiserId = 0 } } : advertisers;
             this.offerIds = (offerIds == null) ? new[] { 0 } : offerIds;
             this.groupByOffAff = groupByOffAff;
             this.getDailyStats = getDailyStats;
@@ -26,15 +26,17 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
 
         protected override void Extract()
         {
+            var advIdsString = String.Join(",", advertisers.Select(x => x.AdvertiserId));
             Logger.Info("Extracting CampaignSummaries from {0:d} to {1:d}, AdvIds {2}, OffIds {3}",
-                        dateRange.FromDate, dateRange.ToDate, string.Join(",", advertiserIds), string.Join(",", offerIds));
+                        dateRange.FromDate, dateRange.ToDate, advIdsString, string.Join(",", offerIds));
 
             if (getDailyStats)
             {
                 foreach (var date in dateRange.Dates)
                 {
                     Logger.Info("Extracting CampaignSummaries for {0:d}...", date);
-                    LoopAsNeeded(new DateRange(date, date.AddDays(1)));
+                    var oneDay = new DateRange(date, date.AddDays(1));
+                    LoopAsNeeded(oneDay);
                 }
             }
             else
@@ -51,7 +53,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
         //If advId and offId are both != 0, will loop through advIds, then loop through offIds.
         private void LoopAsNeeded(DateRange dateRange)
         {
-            bool zeroAdvId = !advertiserIds.Any(x => x != 0);
+            bool zeroAdvId = !advertisers.Any(x => x.AdvertiserId != 0);
             bool zeroOfferId = !offerIds.Any(x => x != 0);
             bool bothNonZero = !zeroAdvId && !zeroOfferId;
 
@@ -63,10 +65,16 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
 
         private void LoopThroughAdvertisers(DateRange dateRangeForStats)
         {
-            foreach (var advId in advertiserIds)
+            foreach (var adv in advertisers)
             {
-                Logger.Info("Extracting CampaignSummaries for advertiser {0}", advId);
-                var campaignSummaries = CakeMarketingUtility.CampaignSummaries(dateRangeForStats, advertiserId: advId);
+                Logger.Info("Extracting CampaignSummaries for advertiser {0}", adv.AdvertiserId);
+
+                // Since the CampaignSummaries API call doesn't accept advertiserId as a filter, we use advertiserManagerId and filter the results...
+                int advMgrId = (adv.AdvertiserId == 0 || adv.AccountManagerId == null) ? 0 : adv.AccountManagerId.Value;
+                IEnumerable<CampaignSummary> campaignSummaries = CakeMarketingUtility.CampaignSummaries(dateRangeForStats, advertiserManagerId: advMgrId);
+                if (adv.AdvertiserId != 0)
+                    campaignSummaries = campaignSummaries.Where(x => x.BrandAdvertiser != null && x.BrandAdvertiser.BrandAdvertiserId == adv.AdvertiserId);
+
                 if (this.groupByOffAff)
                     ExtractWithGrouping(campaignSummaries, dateRangeForStats.FromDate);
                 else

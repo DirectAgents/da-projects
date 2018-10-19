@@ -43,14 +43,7 @@ namespace DirectAgents.Web.Areas.Cake.Controllers
         {
             var today = DateTime.Today;
             var startDate = justToday ? today : new DateTime(today.Year, today.Month, 1); // beginning of month
-
-            //Not working to specify advertiser id
-            //DASynchCampSums.RunStatic(advertiserIds: id.ToString(), startDate: startDate, endDate: today);
-
-            var offerIds = CakeMarketingUtility.OfferIds(id);
-            var offerIdsString = String.Join(",", offerIds);
-            DASynchCampSums.RunStatic(offerIds: offerIdsString, startDate: startDate, endDate: today);
-
+            DASynchCampSums.RunStatic(advertiserIds: id.ToString(), startDate: startDate, endDate: today);
             return RedirectToAction("IndexGauge");
         }
 
