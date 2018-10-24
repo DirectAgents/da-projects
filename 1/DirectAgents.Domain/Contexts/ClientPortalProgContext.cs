@@ -44,6 +44,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<AdSet>().ToTable("AdSet", tdSchema);
             modelBuilder.Entity<AdSetSummary>().ToTable("AdSetSummary", tdSchema);
             modelBuilder.Entity<TDad>().ToTable("Ad", tdSchema);
+            modelBuilder.Entity<TDadExternalId>().ToTable("AdExternalId", tdSchema);
             modelBuilder.Entity<TDadSummary>().ToTable("AdSummary", tdSchema);
             modelBuilder.Entity<Site>().ToTable("Site", tdSchema);
             modelBuilder.Entity<SiteSummary>().ToTable("SiteSummary", tdSchema);
@@ -54,6 +55,18 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<ActionType>().ToTable("ActionType", tdSchema);
             modelBuilder.Entity<StrategyAction>().ToTable("StrategyAction", tdSchema);
             modelBuilder.Entity<AdSetAction>().ToTable("AdSetAction", tdSchema);
+            modelBuilder.Entity<EntityType>().ToTable("Type", tdSchema);
+            modelBuilder.Entity<Keyword>().ToTable("Keyword", tdSchema);
+            modelBuilder.Entity<KeywordSummary>().ToTable("KeywordSummary", tdSchema);
+            modelBuilder.Entity<SearchTerm>().ToTable("SearchTerm", tdSchema);
+            modelBuilder.Entity<SearchTermSummary>().ToTable("SearchTermSummary", tdSchema);
+            modelBuilder.Entity<MetricType>().ToTable("MetricType", tdSchema);
+            modelBuilder.Entity<DailySummaryMetric>().ToTable("DailySummaryMetric", tdSchema);
+            modelBuilder.Entity<StrategySummaryMetric>().ToTable("StrategySummaryMetric", tdSchema);
+            modelBuilder.Entity<AdSetSummaryMetric>().ToTable("AdSetSummaryMetric", tdSchema);
+            modelBuilder.Entity<TDadSummaryMetric>().ToTable("AdSummaryMetric", tdSchema);
+            modelBuilder.Entity<KeywordSummaryMetric>().ToTable("KeywordSummaryMetric", tdSchema);
+            modelBuilder.Entity<SearchTermSummaryMetric>().ToTable("SearchTermSummaryMetric", tdSchema);
 
             modelBuilder.Entity<Campaign>().Property(c => c.BaseFee).HasPrecision(14, 2);
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
@@ -88,6 +101,12 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<TDadSummary>()
                 .HasKey(s => new { s.Date, s.TDadId })
                 .Property(t => t.Cost).HasPrecision(18, 6);
+            modelBuilder.Entity<KeywordSummary>()
+                .HasKey(s => new { s.Date, s.KeywordId })
+                .Property(t => t.Cost).HasPrecision(18, 6);
+            modelBuilder.Entity<SearchTermSummary>()
+                .HasKey(s => new { s.Date, s.SearchTermId })
+                .Property(t => t.Cost).HasPrecision(18, 6);
             modelBuilder.Entity<SiteSummary>()
                 .HasKey(s => new { s.Date, s.SiteId, s.AccountId })
                 .Property(t => t.Cost).HasPrecision(18, 6);
@@ -100,6 +119,25 @@ namespace DirectAgents.Domain.Contexts
                 .HasKey(x => new { x.Date, x.AdSetId, x.ActionTypeId });
             modelBuilder.Entity<AdSetAction>().Property(x => x.PostClickVal).HasPrecision(18, 4);
             modelBuilder.Entity<AdSetAction>().Property(x => x.PostViewVal).HasPrecision(18, 4);
+            modelBuilder.Entity<TDadExternalId>().HasKey(x => new { x.AdId, x.TypeId });
+            modelBuilder.Entity<DailySummaryMetric>()
+                .HasKey(s => new { s.Date, s.AccountId })
+                .Property(t => t.Value).HasPrecision(18, 6);
+            modelBuilder.Entity<StrategySummaryMetric>()
+                .HasKey(s => new { s.Date, s.StrategyId })
+                .Property(t => t.Value).HasPrecision(18, 6);
+            modelBuilder.Entity<AdSetSummaryMetric>()
+                .HasKey(s => new { s.Date, s.AdSetId })
+                .Property(t => t.Value).HasPrecision(18, 6);
+            modelBuilder.Entity<TDadSummaryMetric>()
+                .HasKey(s => new { s.Date, s.TDadId })
+                .Property(t => t.Value).HasPrecision(18, 6);
+            modelBuilder.Entity<KeywordSummaryMetric>()
+                .HasKey(s => new { s.Date, s.KeywordId })
+                .Property(t => t.Value).HasPrecision(18, 6);
+            modelBuilder.Entity<SearchTermSummaryMetric>()
+                .HasKey(s => new { s.Date, s.SearchTermId })
+                .Property(t => t.Value).HasPrecision(18, 6);
 
             // AdRoll
             modelBuilder.Entity<Advertisable>().ToTable("Advertisable", adrollSchema);
@@ -137,6 +175,7 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<AdSet> AdSets { get; set; }
         public DbSet<AdSetSummary> AdSetSummaries { get; set; }
         public DbSet<TDad> TDads { get; set; }
+        public DbSet<TDadExternalId> TDadExternalIds { get; set; }
         public DbSet<TDadSummary> TDadSummaries { get; set; }
         public DbSet<Site> Sites { get; set; }
         public DbSet<SiteSummary> SiteSummaries { get; set; }
@@ -147,6 +186,18 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<ActionType> ActionTypes { get; set; }
         public DbSet<StrategyAction> StrategyActions { get; set; }
         public DbSet<AdSetAction> AdSetActions { get; set; }
+        public DbSet<EntityType> Types { get; set; }
+        public DbSet<Keyword> Keywords { get; set; }
+        public DbSet<KeywordSummary> KeywordSummaries { get; set; }
+        public DbSet<SearchTerm> SearchTerms { get; set; }
+        public DbSet<SearchTermSummary> SearchTermSummaries { get; set; }
+        public DbSet<MetricType> MetricTypes { get; set; }
+        public DbSet<DailySummaryMetric> DailySummaryMetrics { get; set; }
+        public DbSet<StrategySummaryMetric> StrategySummaryMetrics { get; set; }
+        public DbSet<AdSetSummaryMetric> AdSetSummaryMetrics { get; set; }
+        public DbSet<TDadSummaryMetric> TDadSummaryMetrics { get; set; }
+        public DbSet<KeywordSummaryMetric> KeywordSummaryMetrics { get; set; }
+        public DbSet<SearchTermSummaryMetric> SearchTermSummaryMetrics { get; set; }
 
         // AdRoll
         public DbSet<Advertisable> Advertisables { get; set; }

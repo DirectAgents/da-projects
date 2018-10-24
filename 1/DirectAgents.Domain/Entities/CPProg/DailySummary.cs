@@ -96,6 +96,8 @@ namespace DirectAgents.Domain.Entities.CPProg
         public string StrategyName { get; set; }
         [NotMapped]
         public string StrategyEid { get; set; } // external id
+        [NotMapped]
+        public string StrategyType { get; set; }
     }
 
     // DailySummary for an AdSet
@@ -148,10 +150,77 @@ namespace DirectAgents.Domain.Entities.CPProg
         private string _sitename;
     }
 
+    // DailySummary for a Keyword
+    public class KeywordSummary : DatedStatsSummary
+    {
+        public int KeywordId { get; set; }
+        public virtual Keyword Keyword { get; set; }
+    }
+
+    // DailySummary for a SearchTerm
+    public class SearchTermSummary : DatedStatsSummary
+    {
+        public int SearchTermId { get; set; }
+        public virtual SearchTerm SearchTerm { get; set; }
+    }
+
     public class Site
     {
         public int Id { get; set; }
         public string Name { get; set; }
     }
 
+    public class MetricType
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int? DaysInterval { get; set; }
+    }
+
+    public class SummaryMetric
+    {
+        public DateTime Date { get; set; }
+
+        public int MetricTypeId { get; set; }
+        public virtual MetricType MetricType { get; set; }
+
+        public decimal Value { get; set; }
+    }
+
+    public class DailySummaryMetric : SummaryMetric
+    {
+        public int AccountId { get; set; }
+        [ForeignKey("AccountId")]
+        public virtual ExtAccount ExtAccount { get; set; }
+    }
+
+    public class TDadSummaryMetric : SummaryMetric
+    {
+        public int TDadId { get; set; }
+        public virtual TDad TDad { get; set; }
+    }
+
+    public class AdSetSummaryMetric : SummaryMetric
+    {
+        public int AdSetId { get; set; }
+        public virtual AdSet AdSet { get; set; }
+    }
+
+    public class StrategySummaryMetric : SummaryMetric
+    {
+        public int StrategyId { get; set; }
+        public virtual Strategy Strategy { get; set; }
+    }
+
+    public class KeywordSummaryMetric : SummaryMetric
+    {
+        public int KeywordId { get; set; }
+        public virtual Keyword Keyword { get; set; }
+    }
+
+    public class SearchTermSummaryMetric : SummaryMetric
+    {
+        public int SearchTermId { get; set; }
+        public virtual SearchTerm SearchTerm { get; set; }
+    }
 }

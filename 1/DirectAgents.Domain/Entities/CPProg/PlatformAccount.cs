@@ -198,6 +198,12 @@ namespace DirectAgents.Domain.Entities.CPProg
             get { return Id + ". " + Name + " [" + ExternalId + "]"; }
         }
     }
+    
+    public class EntityType
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
 
     public class Strategy
     {
@@ -205,6 +211,9 @@ namespace DirectAgents.Domain.Entities.CPProg
         public int AccountId { get; set; }
         [ForeignKey("AccountId")]
         public virtual ExtAccount ExtAccount { get; set; }
+        
+        public int? TypeId { get; set; }
+        public virtual EntityType Type { get; set; }
 
         public string ExternalId { get; set; }
         public string Name { get; set; }
@@ -229,6 +238,9 @@ namespace DirectAgents.Domain.Entities.CPProg
         public int AccountId { get; set; }
         [ForeignKey("AccountId")]
         public virtual ExtAccount ExtAccount { get; set; }
+
+        public int? AdSetId { get; set; }
+        public virtual AdSet AdSet { get; set; }
 
         public string ExternalId { get; set; }
         public string Name { get; set; }
@@ -258,5 +270,41 @@ namespace DirectAgents.Domain.Entities.CPProg
 
 
         // ? nullable StrategyId ?
+    }
+
+    public class TDadExternalId
+    {
+        public int AdId { get; set; }
+        public virtual TDad Ad { get; set; }
+        
+        public int TypeId { get; set; }
+        public virtual EntityType Type { get; set; }
+
+        public string ExternalId { get; set; }
+    }
+
+    public class Keyword
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+
+        public int AccountId { get; set; }
+        [ForeignKey("AccountId")]
+        public virtual ExtAccount ExtAccount { get; set; }
+
+        public int? StrategyId { get; set; }
+        public virtual Strategy Strategy { get; set; }
+
+        public int? AdSetId { get; set; }
+        public virtual AdSet AdSet { get; set; }
+    }
+
+    public class SearchTerm
+    {
+        public int Id { get; set; }
+        public string Query { get; set; }
+
+        public int KeywordId { get; set; }
+        public virtual Keyword Keyword { get; set; }
     }
 }

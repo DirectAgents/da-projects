@@ -519,6 +519,34 @@
     <Compile Include="MigrationsTD\201710162039159_Mig_AccountFilter.Designer.cs">
       <DependentUpon>201710162039159_Mig_AccountFilter.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsTD\201810240850396_Mig_AddTypeTable.cs" />
+    <Compile Include="MigrationsTD\201810240850396_Mig_AddTypeTable.Designer.cs">
+      <DependentUpon>201810240850396_Mig_AddTypeTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201810240900589_Mig_AdExternalId.cs" />
+    <Compile Include="MigrationsTD\201810240900589_Mig_AdExternalId.Designer.cs">
+      <DependentUpon>201810240900589_Mig_AdExternalId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201810240922232_Mig_Keyword.cs" />
+    <Compile Include="MigrationsTD\201810240922232_Mig_Keyword.Designer.cs">
+      <DependentUpon>201810240922232_Mig_Keyword.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201810240923503_Mig_SearchTerm.cs" />
+    <Compile Include="MigrationsTD\201810240923503_Mig_SearchTerm.Designer.cs">
+      <DependentUpon>201810240923503_Mig_SearchTerm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201810240932289_Mig_KeywordAndSearchTermSummaries.cs" />
+    <Compile Include="MigrationsTD\201810240932289_Mig_KeywordAndSearchTermSummaries.Designer.cs">
+      <DependentUpon>201810240932289_Mig_KeywordAndSearchTermSummaries.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201810240938138_Mig_MetricType.cs" />
+    <Compile Include="MigrationsTD\201810240938138_Mig_MetricType.Designer.cs">
+      <DependentUpon>201810240938138_Mig_MetricType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MigrationsTD\201810241008127_Mig_SummaryMetrics.cs" />
+    <Compile Include="MigrationsTD\201810241008127_Mig_SummaryMetrics.Designer.cs">
+      <DependentUpon>201810241008127_Mig_SummaryMetrics.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.Designer.cs">
@@ -854,6 +882,27 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201710162039159_Mig_AccountFilter.resx">
       <DependentUpon>201710162039159_Mig_AccountFilter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201810240850396_Mig_AddTypeTable.resx">
+      <DependentUpon>201810240850396_Mig_AddTypeTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201810240900589_Mig_AdExternalId.resx">
+      <DependentUpon>201810240900589_Mig_AdExternalId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201810240922232_Mig_Keyword.resx">
+      <DependentUpon>201810240922232_Mig_Keyword.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201810240923503_Mig_SearchTerm.resx">
+      <DependentUpon>201810240923503_Mig_SearchTerm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201810240932289_Mig_KeywordAndSearchTermSummaries.resx">
+      <DependentUpon>201810240932289_Mig_KeywordAndSearchTermSummaries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201810240938138_Mig_MetricType.resx">
+      <DependentUpon>201810240938138_Mig_MetricType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201810241008127_Mig_SummaryMetrics.resx">
+      <DependentUpon>201810241008127_Mig_SummaryMetrics.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>
