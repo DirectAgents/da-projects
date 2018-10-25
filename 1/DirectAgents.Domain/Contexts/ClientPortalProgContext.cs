@@ -120,24 +120,12 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<AdSetAction>().Property(x => x.PostClickVal).HasPrecision(18, 4);
             modelBuilder.Entity<AdSetAction>().Property(x => x.PostViewVal).HasPrecision(18, 4);
             modelBuilder.Entity<TDadExternalId>().HasKey(x => new { x.AdId, x.TypeId });
-            modelBuilder.Entity<DailySummaryMetric>()
-                .HasKey(s => new { s.Date, s.AccountId })
-                .Property(t => t.Value).HasPrecision(18, 6);
-            modelBuilder.Entity<StrategySummaryMetric>()
-                .HasKey(s => new { s.Date, s.StrategyId })
-                .Property(t => t.Value).HasPrecision(18, 6);
-            modelBuilder.Entity<AdSetSummaryMetric>()
-                .HasKey(s => new { s.Date, s.AdSetId })
-                .Property(t => t.Value).HasPrecision(18, 6);
-            modelBuilder.Entity<TDadSummaryMetric>()
-                .HasKey(s => new { s.Date, s.TDadId })
-                .Property(t => t.Value).HasPrecision(18, 6);
-            modelBuilder.Entity<KeywordSummaryMetric>()
-                .HasKey(s => new { s.Date, s.KeywordId })
-                .Property(t => t.Value).HasPrecision(18, 6);
-            modelBuilder.Entity<SearchTermSummaryMetric>()
-                .HasKey(s => new { s.Date, s.SearchTermId })
-                .Property(t => t.Value).HasPrecision(18, 6);
+            SetupSummaryMetricModel<DailySummaryMetric>(modelBuilder, "AccountId");
+            SetupSummaryMetricModel<StrategySummaryMetric>(modelBuilder, "StrategyId");
+            SetupSummaryMetricModel<AdSetSummaryMetric>(modelBuilder, "AdSetId");
+            SetupSummaryMetricModel<TDadSummaryMetric>(modelBuilder, "TDadId");
+            SetupSummaryMetricModel<KeywordSummaryMetric>(modelBuilder, "KeywordId");
+            SetupSummaryMetricModel<SearchTermSummaryMetric>(modelBuilder, "SearchTermId");
 
             // AdRoll
             modelBuilder.Entity<Advertisable>().ToTable("Advertisable", adrollSchema);
@@ -208,5 +196,13 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<InsertionOrder> InsertionOrders { get; set; }
         public DbSet<Creative> Creatives { get; set; }
         public DbSet<CreativeDailySummary> DBMCreativeDailySummaries { get; set; }
+
+        public void SetupSummaryMetricModel<TSummaryMetric>(DbModelBuilder modelBuilder, string entityColumnName)
+            where TSummaryMetric : SummaryMetric
+        {
+            modelBuilder.Entity<TSummaryMetric>().HasKey(s => new {s.Date, s.EntityId, s.MetricTypeId});
+            modelBuilder.Entity<TSummaryMetric>().Property(x => x.EntityId).HasColumnName(entityColumnName);
+            modelBuilder.Entity<TSummaryMetric>().Property(t => t.Value).HasPrecision(18, 6);
+        }
     }
 }

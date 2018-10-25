@@ -13,13 +13,15 @@ namespace DirectAgents.Domain.Entities.CPProg
         public int PostClickConv { get; set; }
         public int PostViewConv { get; set; }
         public decimal Cost { get; set; }
+        public virtual IEnumerable<SummaryMetric> Metrics { get; set; }
 
         //TotalConv
 
         public virtual bool AllZeros()
         {
-            return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0);
+            return Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0 && (Metrics == null || !Metrics.Any());
         }
+
         public virtual void SetStats(StatsSummary stat)
         {
             Impressions = stat.Impressions;
@@ -53,6 +55,7 @@ namespace DirectAgents.Domain.Entities.CPProg
     {
         public DateTime Date { get; set; }
     }
+
     public class DatedStatsSummaryWithRev : DatedStatsSummary
     {
         public decimal PostClickRev { get; set; }
@@ -179,6 +182,7 @@ namespace DirectAgents.Domain.Entities.CPProg
 
     public class SummaryMetric
     {
+        public int EntityId { get; set; }
         public DateTime Date { get; set; }
 
         public int MetricTypeId { get; set; }
@@ -189,38 +193,37 @@ namespace DirectAgents.Domain.Entities.CPProg
 
     public class DailySummaryMetric : SummaryMetric
     {
-        public int AccountId { get; set; }
-        [ForeignKey("AccountId")]
+        [ForeignKey("EntityId")]
         public virtual ExtAccount ExtAccount { get; set; }
     }
 
     public class TDadSummaryMetric : SummaryMetric
     {
-        public int TDadId { get; set; }
+        [ForeignKey("EntityId")]
         public virtual TDad TDad { get; set; }
     }
 
     public class AdSetSummaryMetric : SummaryMetric
     {
-        public int AdSetId { get; set; }
+        [ForeignKey("EntityId")]
         public virtual AdSet AdSet { get; set; }
     }
 
     public class StrategySummaryMetric : SummaryMetric
     {
-        public int StrategyId { get; set; }
+        [ForeignKey("EntityId")]
         public virtual Strategy Strategy { get; set; }
     }
 
     public class KeywordSummaryMetric : SummaryMetric
     {
-        public int KeywordId { get; set; }
+        [ForeignKey("EntityId")]
         public virtual Keyword Keyword { get; set; }
     }
 
     public class SearchTermSummaryMetric : SummaryMetric
     {
-        public int SearchTermId { get; set; }
+        [ForeignKey("EntityId")]
         public virtual SearchTerm SearchTerm { get; set; }
     }
 }
