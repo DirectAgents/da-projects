@@ -47,6 +47,22 @@ namespace DirectAgents.Web.Areas.Cake.Controllers
             return RedirectToAction("IndexGauge");
         }
 
+        public ActionResult ClearAffSubSums(int id, bool justToday = false)
+        {
+            var today = DateTime.Today;
+            var startDate = justToday ? today : new DateTime(today.Year, today.Month, 1); // beginning of month
+            var affSubSums = daRepo.GetAffSubSummaries(advertiserId: id, startDate: startDate);
+            daRepo.DeleteAffSubSummaries(affSubSums);
+            return RedirectToAction("IndexGauge");
+        }
+        public ActionResult LoadAffSubSums(int id, bool justToday = false)
+        {
+            var today = DateTime.Today;
+            var startDate = justToday ? today : new DateTime(today.Year, today.Month, 1); // beginning of month
+            DASynchAffSubSums.RunStatic(advertiserId: id, startDate: startDate, endDate: today);
+            return RedirectToAction("IndexGauge");
+        }
+
         public ActionResult ClearConvs(int id, bool justToday = false)
         {
             var today = DateTime.Today;

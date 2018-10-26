@@ -10,6 +10,7 @@ namespace DirectAgents.Domain.DTO
         public CakeGauge()
         {
             this.CampSums = new Range();
+            this.AffSubSums = new Range();
             this.EventConvs = new Range();
         }
 
@@ -17,6 +18,7 @@ namespace DirectAgents.Domain.DTO
         public int NumOffers { get; set; }
 
         public Range CampSums { get; set; }
+        public Range AffSubSums { get; set; }
         public Range EventConvs { get; set; }
 
         public class Range
@@ -34,6 +36,7 @@ namespace DirectAgents.Domain.DTO
         public Advertiser Advertiser { get; set; }
 
         public IQueryable<CampSum> CampSums { get; set; }
+        public IQueryable<AffSubSummary> AffSubSums { get; set; }
         public IQueryable<EventConversion> EventConvs { get; set; }
     }
 }

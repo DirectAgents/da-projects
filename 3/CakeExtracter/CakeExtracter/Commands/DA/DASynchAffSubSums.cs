@@ -1,20 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.CakeMarketing.DALoaders;
 using CakeExtracter.Etl.CakeMarketing.Extracters;
-using DirectAgents.Domain.Contexts;
-using DirectAgents.Domain.Entities.Cake;
 
 namespace CakeExtracter.Commands
 {
     [Export(typeof(ConsoleCommand))]
     public class DASynchAffSubSums : ConsoleCommand
     {
-        //RunStatic
+        public static int RunStatic(int? affiliateId = null, int? advertiserId = null, int? offerId = null, DateTime? startDate = null, DateTime? endDate = null, int? daysAgoToStart = null)
+            //, bool clearFirst = false)
+        {
+            AutoMapperBootstrapper.CheckRunSetup();
+            var cmd = new DASynchAffSubSums
+            {
+                AffiliateId = affiliateId,
+                AdvertiserId = advertiserId,
+                OfferId = offerId,
+                StartDate = startDate,
+                EndDate = endDate,
+                DaysAgoToStart = daysAgoToStart
+            };
+            return cmd.Run();
+        }
 
         public int? AffiliateId { get; set; }
         public int? AdvertiserId { get; set; }
@@ -22,6 +32,7 @@ namespace CakeExtracter.Commands
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public int? DaysAgoToStart { get; set; }
+        //public bool ClearFirst { get; set; }
 
         public override void ResetProperties()
         {
@@ -31,6 +42,7 @@ namespace CakeExtracter.Commands
             StartDate = null;
             EndDate = null;
             DaysAgoToStart = null;
+            //ClearFirst = false;
         }
 
         //Note: Uses CampSums to determine which Affs & Offers to loop thru (i.e. those with campsum stats)
@@ -43,6 +55,7 @@ namespace CakeExtracter.Commands
             HasOption("s|startDate=", "Start Date (default: 'daysAgo')", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default: today)", c => EndDate = DateTime.Parse(c));
             HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default: -1 == first-of-month)", c => DaysAgoToStart = c);
+            //HasOption<bool>("w|wipeFirst=", "Clear existing convs in the db first (default: false)", c => ClearFirst = c);
         }
 
         private DateRange GetDateRange()
