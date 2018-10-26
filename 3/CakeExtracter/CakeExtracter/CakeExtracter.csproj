@@ -249,6 +249,10 @@
       <HintPath>..\..\DirectAgents.Web\packages\WatiN.2.1.0\lib\net40\WatiN.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Z.EntityFramework.Plus.EF6, Version=1.7.15.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DirectAgents.Web\packages\Z.EntityFramework.Plus.EF6.1.7.15\lib\net45\Z.EntityFramework.Plus.EF6.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrappers\AutoMapperBootstrapper.cs" />
@@ -390,6 +394,7 @@
     <Compile Include="Etl\TradingDesk\Extracters\TDStrategySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\YAMConValExtracters.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\YAMExtracters.cs" />
+    <Compile Include="Etl\TradingDesk\Helpers\EntityIdStorage.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdRollAdLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollAttributionSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollSiteStatsLoader.cs" />
@@ -537,6 +542,7 @@
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonCampaignSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\DbmConvLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\SummaryMetricLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\TDadPreviewLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\DBMCreativeDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\DbmCreativeSummaryLoader.cs" />
@@ -560,6 +566,7 @@
     <Compile Include="Etl\TradingDesk\Loaders\DbmDailyStatsLoader.cs" />
     <Compile Include="Etl\TradingDesk\Loaders\DbmDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\Loaders\DbmUserListStatLoader.cs" />
+    <Compile Include="Etl\TradingDesk\Helpers\LoadingProgress.cs" />
     <Compile Include="Etl\Transformer.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\AdWordsXmlReportExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AdWordsLoader.cs" />

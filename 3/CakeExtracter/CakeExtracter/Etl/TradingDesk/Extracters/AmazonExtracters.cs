@@ -9,6 +9,7 @@ using DirectAgents.Domain.Entities.CPProg;
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
     public abstract class AmazonApiExtracter<T> : Extracter<T>
+        where T : DatedStatsSummary
     {
         protected readonly AmazonUtility _amazonUtility;
         protected readonly DateRange dateRange;
@@ -46,28 +47,76 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             return reportEntities.ToList();
         }
 
-        protected static void SetCPProgStats(StatsSummary cpProgStats, IEnumerable<StatSummary> amazonStats)
+        protected static void SetCPProgStats(T stats, IEnumerable<StatSummary> amazonStats, DateTime date)
         {
-            var any = amazonStats != null && amazonStats.Any();
-            if (!any)
+            stats.Date = date;
+            if (amazonStats == null || !amazonStats.Any())
             {
-                return;   //note: not setting stats to 0 if !any
+                return; //note: not setting stats to 0 if !any
             }
-            cpProgStats.Cost = amazonStats.Sum(x => x.cost);
-            cpProgStats.Impressions = amazonStats.Sum(x => x.impressions);
-            cpProgStats.Clicks = amazonStats.Sum(x => x.clicks);
-            cpProgStats.PostClickConv = amazonStats.Sum(x => x.attributedConversions14d);
-            var rev = cpProgStats as DatedStatsSummaryWithRev;
+
+            stats.Cost = amazonStats.Sum(x => x.cost);
+            stats.Impressions = amazonStats.Sum(x => x.impressions);
+            stats.Clicks = amazonStats.Sum(x => x.clicks);
+            stats.PostClickConv = amazonStats.Sum(x => x.attributedConversions14d);
+            var rev = stats as DatedStatsSummaryWithRev;
             if (rev != null)
             {
                 rev.PostClickRev = amazonStats.Sum(x => x.attributedSales14d);
             }
+            stats.Metrics = GetMetrics(amazonStats, date);
+        }
+
+        private static List<SummaryMetric> GetMetrics(IEnumerable<StatSummary> amazonStats, DateTime date)
+        {
+            var metrics = new List<SummaryMetric>();
+            AddMetric(metrics, SummaryMetricType.attributedConversions, 1, date, amazonStats.Sum(x => x.attributedConversions1d));
+            AddMetric(metrics, SummaryMetricType.attributedConversions, 7, date, amazonStats.Sum(x => x.attributedConversions7d));
+            AddMetric(metrics, SummaryMetricType.attributedConversions, 14, date, amazonStats.Sum(x => x.attributedConversions14d));
+            AddMetric(metrics, SummaryMetricType.attributedConversions, 30, date, amazonStats.Sum(x => x.attributedConversions30d));
+            AddMetric(metrics, SummaryMetricType.attributedConversionsSameSKU, 1, date, amazonStats.Sum(x => x.attributedConversions1dSameSKU));
+            AddMetric(metrics, SummaryMetricType.attributedConversionsSameSKU, 7, date, amazonStats.Sum(x => x.attributedConversions7dSameSKU));
+            AddMetric(metrics, SummaryMetricType.attributedConversionsSameSKU, 14, date, amazonStats.Sum(x => x.attributedConversions14dSameSKU));
+            AddMetric(metrics, SummaryMetricType.attributedConversionsSameSKU, 30, date, amazonStats.Sum(x => x.attributedConversions30dSameSKU));
+            AddMetric(metrics, SummaryMetricType.attributedSales, 1, date, amazonStats.Sum(x => x.attributedSales1d));
+            AddMetric(metrics, SummaryMetricType.attributedSales, 7, date, amazonStats.Sum(x => x.attributedSales7d));
+            AddMetric(metrics, SummaryMetricType.attributedSales, 14, date, amazonStats.Sum(x => x.attributedSales14d));
+            AddMetric(metrics, SummaryMetricType.attributedSales, 30, date, amazonStats.Sum(x => x.attributedSales30d));
+            AddMetric(metrics, SummaryMetricType.attributedSalesSameSKU, 1, date, amazonStats.Sum(x => x.attributedSales1dSameSKU));
+            AddMetric(metrics, SummaryMetricType.attributedSalesSameSKU, 7, date, amazonStats.Sum(x => x.attributedSales7dSameSKU));
+            AddMetric(metrics, SummaryMetricType.attributedSalesSameSKU, 14, date, amazonStats.Sum(x => x.attributedSales14dSameSKU));
+            AddMetric(metrics, SummaryMetricType.attributedSalesSameSKU, 30, date, amazonStats.Sum(x => x.attributedSales30dSameSKU));
+            AddMetric(metrics, SummaryMetricType.attributedUnitsOrdered, 1, date, amazonStats.Sum(x => x.attributedUnitsOrdered1d));
+            AddMetric(metrics, SummaryMetricType.attributedUnitsOrdered, 7, date, amazonStats.Sum(x => x.attributedUnitsOrdered7d));
+            AddMetric(metrics, SummaryMetricType.attributedUnitsOrdered, 14, date, amazonStats.Sum(x => x.attributedUnitsOrdered14d));
+            AddMetric(metrics, SummaryMetricType.attributedUnitsOrdered, 30, date, amazonStats.Sum(x => x.attributedUnitsOrdered30d));
+            return metrics;
+        }
+
+        private static void AddMetric(List<SummaryMetric> metrics, SummaryMetricType type, int daysInterval, DateTime date, decimal metricValue)
+        {
+            if (metricValue == 0.0M)
+            {
+                return;
+            }
+
+            var metric = new SummaryMetric()
+            {
+                Date = date,
+                MetricType = new MetricType
+                {
+                    Name = type.ToString(),
+                    DaysInterval = daysInterval
+                },
+                Value = metricValue
+            };
+            metrics.Add(metric);
         }
     }
 
     #region Daily
     //The daily extracter will load data based on date range and sum up the total of all campaigns
-    public class AmazonDailySummaryExtracter : AmazonApiExtracter<AmazonDailySummary>
+    public class AmazonDailySummaryExtracter : AmazonApiExtracter<DailySummary>
     {
         public AmazonDailySummaryExtracter(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
             : base(amazonUtility, dateRange, account, campaignFilter: campaignFilter, campaignFilterOut: campaignFilterOut)
@@ -96,13 +145,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             return sums;
         }
 
-        private AmazonDailySummary TransformSummaries(IEnumerable<AmazonDailySummary> sums, DateTime date)
+        private DailySummary TransformSummaries(IEnumerable<AmazonDailySummary> sums, DateTime date)
         {
-            var dailySum = new AmazonDailySummary
-            {
-                date = date,
-            };
-            dailySum.SetStatTotals(sums);
+            var dailySum = new DailySummary();
+            SetCPProgStats(dailySum, sums, date);
             return dailySum;
         }
     }

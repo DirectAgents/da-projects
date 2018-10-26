@@ -261,7 +261,7 @@ namespace Amazon
             return GetEntities<AmazonCampaign>(EntitesType.Campaigns, campaignType, null, profileId);
         }
 
-        // Only for Sponsored Product
+        /// Only for Sponsored Product
         public List<AmazonKeyword> GetKeywords(string profileId, IEnumerable<long> campaignIds)
         {
             var parameters = new Dictionary<string, string>();
@@ -269,7 +269,7 @@ namespace Amazon
             return GetEntities<AmazonKeyword>(EntitesType.Keywords, CampaignType.SponsoredProducts, parameters, profileId);
         }
 
-        // Only for Sponsored Product
+        /// Only for Sponsored Product
         public List<AmazonProductAd> GetProductAds(string profileId, IEnumerable<long> campaignIds)
         {
             var parameters = new Dictionary<string, string>();
@@ -277,25 +277,37 @@ namespace Amazon
             return GetEntities<AmazonProductAd>(EntitesType.ProductAds, CampaignType.SponsoredProducts, parameters, profileId);
         }
 
-        public List<AmazonDailySummary> ReportCampaigns(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName = false)
+        public List<AmazonDailySummary> ReportCampaigns(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
-            var param = CreateBaseAmazonApiReportParams(date, includeCampaignName);
+            var param = CreateBaseAmazonApiReportParams(campaignType, date, includeCampaignName);
             return GetReportInfo<AmazonDailySummary>(EntitesType.Campaigns, campaignType, param, profileId);
         }
 
-        public List<AmazonKeywordDailySummary> ReportKeywords(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName = false)
+        public List<AmazonKeywordDailySummary> ReportKeywords(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
-            var param = CreateBaseAmazonApiReportParams(date, includeCampaignName);
+            var param = CreateBaseAmazonApiReportParams(campaignType, date, includeCampaignName);
+            param.metrics += ",keywordText";
+            param.segment = "query";
             return GetReportInfo<AmazonKeywordDailySummary>(EntitesType.Keywords, campaignType, param, profileId);
         }
 
-        // Only for Sponsored Product
-        public List<AmazonAdDailySummary> ReportProductAds(DateTime date, string profileId, bool includeCampaignName = false)
+        public List<AmazonSearchTermDailySummary> ReportSearchTerms(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
-            var param = CreateBaseAmazonApiReportParams(date, includeCampaignName);
-            return GetReportInfo<AmazonAdDailySummary>(EntitesType.ProductAds, CampaignType.SponsoredProducts, param, profileId);
+            var param = CreateBaseAmazonApiReportParams(campaignType, date, includeCampaignName);
+            param.segment = "query";
+            return GetReportInfo<AmazonSearchTermDailySummary>(EntitesType.Keywords, campaignType, param, profileId);
         }
 
+        /// Only for Sponsored Product
+        /// sku metric - is not available
+        public List<AmazonAdDailySummary> ReportProductAds(DateTime date, string profileId, bool includeCampaignName = false)
+        {
+            var campaignType = CampaignType.SponsoredProducts;
+            var param = CreateBaseAmazonApiReportParams(campaignType, date, includeCampaignName);
+            param.metrics += ",asin";
+            return GetReportInfo<AmazonAdDailySummary>(EntitesType.ProductAds, campaignType, param, profileId);
+        }
+        
         private void AddParameter<T>(Dictionary<string, string> parameters, string paramName, IEnumerable<T> values)
         {
             var paramValue = string.Join(",", values);
@@ -318,7 +330,7 @@ namespace Amazon
             return null;
         }
 
-        // Use it instead of the GetEntities method when you need to extract a large number of objects (more than 15,000) and you know about it.
+        /// Use it instead of the GetEntities method when you need to extract a large number of objects (more than 15,000) and you know about it.
         private List<TEntity> GetSnapshotInfo<TEntity>(EntitesType entitesType, CampaignType campaignType, string profileId)
         {
             var submitReportResponse = SubmitSnapshot(campaignType, entitesType, profileId);
@@ -334,16 +346,29 @@ namespace Amazon
             return new List<TEntity>();
         }
 
-        private AmazonApiReportParams CreateBaseAmazonApiReportParams(DateTime date, bool includeCampaignName)
+        private AmazonApiReportParams CreateBaseAmazonApiReportParams(CampaignType campaignType, DateTime date, bool includeCampaignName)
         {
-            var allMetrics = "cost,impressions,clicks,attributedConversions14d,attributedSales14d,attributedUnitsOrdered14d,attributedSales14dSameSKU";
-            allMetrics += includeCampaignName ? ",campaignName" : "";
+            var allMetrics = GetReportMetrics(campaignType, includeCampaignName);
             var reportParams = new AmazonApiReportParams
             {
                 reportDate = date.ToString("yyyyMMdd"),
                 metrics = allMetrics
             };
             return reportParams;
+        }
+
+        private string GetReportMetrics(CampaignType campaignType, bool includeCampaignName)
+        {
+            var metrics = "cost,impressions,clicks,";
+            metrics += campaignType == CampaignType.SponsoredBrands
+                ? "attributedSales14d,attributedSales14dSameSKU,attributedConversions14d,attributedConversions14dSameSKU"
+                : "attributedConversions1d,attributedConversions7d,attributedConversions14d,attributedConversions30d," +
+                  "attributedConversions1dSameSKU,attributedConversions7dSameSKU,attributedConversions14dSameSKU,attributedConversions30dSameSKU," +
+                  "attributedUnitsOrdered1d,attributedUnitsOrdered7d,attributedUnitsOrdered14d,attributedUnitsOrdered30d," +
+                  "attributedSales1d,attributedSales7d,attributedSales14d,attributedSales30d," +
+                  "attributedSales1dSameSKU,attributedSales7dSameSKU,attributedSales14dSameSKU,attributedSales30dSameSKU";
+            metrics += includeCampaignName ? ",campaignName" : "";
+            return metrics;
         }
 
         private List<TStat> GetReportInfo<TStat>(EntitesType reportType, CampaignType campaignType, AmazonApiReportParams parameters, string profileId)
@@ -425,7 +450,8 @@ namespace Amazon
         private T SubmitRequestForPreparedData<T>(string dataType, object requestParams, CampaignType campaignType, EntitesType entitiesType, string profileId)
             where T : PreparedDataRequestResponse, new()
         {
-            var resourcePath = $"v2/{campaignTypeNames[campaignType]}/{entitiesTypeName[entitiesType]}/{dataType}";
+            var campaignTypePath = campaignType == CampaignType.Empty ? "" : campaignTypeNames[campaignType] + "/";
+            var resourcePath = $"v2/{campaignTypePath}{entitiesTypeName[entitiesType]}/{dataType}";
             var request = new RestRequest(resourcePath);
             request.AddHeader("Amazon-Advertising-API-Scope", profileId);
             request.AddJsonBody(requestParams);
