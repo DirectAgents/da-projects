@@ -8,4 +8,13 @@ namespace DirectAgents.Domain.Entities.Cake
         public int AffiliateId { get; set; }
         public string AffiliateName { get; set; }
     }
+
+    public class AffSub
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+
+        public int AffiliateId { get; set; }
+        public virtual Affiliate Affiliate { get; set; }
+    }
 }

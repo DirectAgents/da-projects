@@ -156,6 +156,7 @@
     <Compile Include="Entities\AdRoll\Advertisable.cs" />
     <Compile Include="Entities\Cake\Advertiser.cs" />
     <Compile Include="Entities\Cake\Affiliate.cs" />
+    <Compile Include="Entities\Cake\AffSubSummary.cs" />
     <Compile Include="Entities\Cake\Camp.cs" />
     <Compile Include="Entities\Cake\CampSum.cs" />
     <Compile Include="Entities\Cake\Contact.cs" />
@@ -606,6 +607,10 @@
     <Compile Include="Migrations\201803281659222_Mig_EventConversion.Designer.cs">
       <DependentUpon>201803281659222_Mig_EventConversion.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810232032208_Mig_AffSubSummary.cs" />
+    <Compile Include="Migrations\201810232032208_Mig_AffSubSummary.Designer.cs">
+      <DependentUpon>201810232032208_Mig_AffSubSummary.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Seed\ABSeeder.cs" />
@@ -919,6 +924,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201803281659222_Mig_EventConversion.resx">
       <DependentUpon>201803281659222_Mig_EventConversion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810232032208_Mig_AffSubSummary.resx">
+      <DependentUpon>201810232032208_Mig_AffSubSummary.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

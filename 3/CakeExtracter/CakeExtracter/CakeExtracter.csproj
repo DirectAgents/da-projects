@@ -268,6 +268,7 @@
     <Compile Include="CakeMarketingApi\Clients\EventConversionsClient.cs" />
     <Compile Include="CakeMarketingApi\Clients\EventConversionsRequest.cs" />
     <Compile Include="CakeMarketingApi\Clients\OfferSummariesClient.cs" />
+    <Compile Include="CakeMarketingApi\Clients\SubIdSummariesClient.cs" />
     <Compile Include="CakeMarketingApi\Entities\AdvertiserExportResponse.cs" />
     <Compile Include="CakeMarketingApi\Clients\AdvertisersClient.cs" />
     <Compile Include="CakeMarketingApi\Clients\ApiClient.cs" />
@@ -315,10 +316,12 @@
     <Compile Include="CakeMarketingApi\Entities\Received.cs" />
     <Compile Include="CakeMarketingApi\Entities\Region.cs" />
     <Compile Include="CakeMarketingApi\Entities\Role.cs" />
+    <Compile Include="CakeMarketingApi\Entities\SubIdSummary.cs" />
     <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
     <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
     <Compile Include="Commands\DA\DAMonthlyMaintenance.cs" />
     <Compile Include="Commands\DA\DASynchAdformStats.cs" />
+    <Compile Include="Commands\DA\DASynchAffSubSums.cs" />
     <Compile Include="Commands\DA\DASynchAmazonStats.cs" />
     <Compile Include="Commands\DA\DASynchCakeEventConversions.cs">
       <SubType>Code</SubType>
@@ -348,6 +351,7 @@
     </Compile>
     <Compile Include="Common\Compare.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DAAffiliatesLoader.cs" />
+    <Compile Include="Etl\CakeMarketing\DALoaders\DAAffSubSummaryLoader.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DACampLoader.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -359,6 +363,7 @@
     <Compile Include="Etl\CakeMarketing\Extracters\EventConversionExtracter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Etl\CakeMarketing\Extracters\SubIdSummariesExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\CPCLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\AppleApiExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\DbExtracters.cs" />

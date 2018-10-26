@@ -143,6 +143,28 @@ namespace CakeExtracter.CakeMarketingApi
                 return new List<CampaignSummary>();
         }
 
+        public static List<SubIdSummary> SubIdSummaries(DateRange dateRange, int affiliateId, int offerId = 0)
+        {
+            var client = new SubIdSummariesClient();
+            var request = new SubIdSummariesRequest
+            {
+                start_date = dateRange.FromDate.ToString("MM/dd/yyyy"),
+                end_date = dateRange.ToDate.ToString("MM/dd/yyyy"),
+                source_affiliate_id = affiliateId,
+                site_offer_id = offerId
+            };
+            var response = client.SubIdSummaries(request);
+            if (response == null || response.SubIds == null)
+            {
+                Logger.Info("Unable to retrieve subid summaries. Trying again...");
+                response = client.SubIdSummaries(request);
+            }
+            if (response != null)
+                return response.SubIds;
+            else
+                return new List<SubIdSummary>();
+        }
+
         public static List<DailySummary> DailySummaries(DateRange dateRange, int advertiserId, int offerId, int creativeId, int affiliateId)
         {
             var client = new DailySummariesClient();
