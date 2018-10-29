@@ -113,10 +113,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public void AddUpdateDependentStrategies(List<AdSetSummary> items)
         {
-            var strategyNameEids = items.GroupBy(i => new { i.StrategyName, i.StrategyEid })
-                .Select(g => new NameEid { Name = g.Key.StrategyName, Eid = g.Key.StrategyEid })
-                .Where(x => !string.IsNullOrWhiteSpace(x.Name) || !string.IsNullOrWhiteSpace(x.Eid));
-            TDStrategySummaryLoader.AddUpdateDependentStrategies(strategyNameEids, this.AccountId, this.strategyIdLookup);
+            var strategies = items.GroupBy(i => new { i.StrategyName, i.StrategyEid })
+                .Select(g => new Strategy { Name = g.Key.StrategyName, ExternalId = g.Key.StrategyEid })
+                .Where(x => !string.IsNullOrWhiteSpace(x.Name) || !string.IsNullOrWhiteSpace(x.ExternalId));
+            TDStrategySummaryLoader.AddUpdateDependentStrategies(strategies, this.AccountId);
         }
 
         public void AddUpdateDependentAdSets(List<AdSetSummary> items)

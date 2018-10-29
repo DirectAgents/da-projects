@@ -2,6 +2,7 @@
 using System.ComponentModel.Composition;
 using AutoMapper;
 using ClientPortal.Data.Contexts;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Bootstrappers
 {
@@ -34,6 +35,11 @@ namespace CakeExtracter.Bootstrappers
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.StrategySummary, DirectAgents.Domain.Entities.CPProg.StrategySummary>()
                     .ForMember(s => s.StrategyName, opt => opt.Ignore())
                     .ForMember(s => s.StrategyEid, opt => opt.Ignore());
+                cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.StrategySummary, DirectAgents.Domain.Entities.CPProg.Strategy>()
+                    .ForMember(d => d.Id, opt => opt.MapFrom(s => s.StrategyId))
+                    .ForMember(d => d.Name, opt => opt.MapFrom(s => s.StrategyName))
+                    .ForMember(d => d.ExternalId, opt => opt.MapFrom(s => s.StrategyEid))
+                    .ForMember(d => d.Type, opt => opt.MapFrom(s => new EntityType {Name = s.StrategyType}));
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.AdSetSummary, DirectAgents.Domain.Entities.CPProg.AdSetSummary>()
                     .ForMember(s => s.AdSetName, opt => opt.Ignore())
                     .ForMember(s => s.AdSetEid, opt => opt.Ignore())
@@ -48,7 +54,9 @@ namespace CakeExtracter.Bootstrappers
                 cfg.CreateMap<DirectAgents.Domain.Entities.AdRoll.AdDailySummary, DirectAgents.Domain.Entities.AdRoll.AdDailySummary>();
                 cfg.CreateMap<DirectAgents.Domain.Entities.DBM.CreativeDailySummary, DirectAgents.Domain.Entities.DBM.CreativeDailySummary>();
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SummaryMetric, DirectAgents.Domain.Entities.CPProg.DailySummaryMetric>()
-                    .ForMember(dest => dest.ExtAccount, map => map.AllowNull());
+                    .ForMember(s => s.ExtAccount, map => map.AllowNull());
+                cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SummaryMetric, DirectAgents.Domain.Entities.CPProg.StrategySummaryMetric>()
+                    .ForMember(s => s.Strategy, map => map.AllowNull());
             });
         }
 
