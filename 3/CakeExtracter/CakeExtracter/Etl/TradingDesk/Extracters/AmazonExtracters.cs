@@ -47,6 +47,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             return reportEntities.ToList();
         }
 
+        protected static void SetCPProgStats(T stats, StatSummary amazonStat, DateTime date)
+        {
+            SetCPProgStats(stats, new[] { amazonStat }, date);
+        }
+
         protected static void SetCPProgStats(T stats, IEnumerable<StatSummary> amazonStats, DateTime date)
         {
             stats.Date = date;
@@ -218,90 +223,51 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
     #endregion
 
-    #region AdSet (Keyword)
+    #region AdSet (Ad group)
     public class AmazonAdSetExtracter : AmazonApiExtracter<AdSetSummary>
     {
         public AmazonAdSetExtracter(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
             : base(amazonUtility, dateRange, account, campaignFilter: campaignFilter, campaignFilterOut: campaignFilterOut)
         { }
 
-        //Note: The API only returns keywords for sponsoredProduct campaigns, and they are at the adgroup level.  So presumably two Keyword objects
-        // could have the same text but be for two different adgroups in the same campaign.
-
-        //TODO: Instead of keyword stats, get adgroup level stats here.  If needed, establish a new stats level in the db: Keyword, KeywordSummary
-        // (where a Keyword is actually a set of keywords)
-
         protected override void Extract()
         {
             Logger.Info(accountId, "Extracting AdSetSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
 
-            var campaigns = LoadCampaignsFromAmazonApi();
-            var adSets = LoadAdSetsFromAmazonApi(campaigns);
-            var keywordGroups = adSets.GroupBy(x => x.KeywordText);
-
             foreach (var date in dateRange.Dates)
             {
                 var sums = ExtractSummaries(date);
-                var items = TransformSummaries(sums, date, keywordGroups);
+                var items = TransformSummaries(sums, date);
                 Add(items);
             }
             End();
         }
 
-        private IEnumerable<AmazonCampaign> LoadCampaignsFromAmazonApi()
+        public IEnumerable<AmazonAdGroupSummary> ExtractSummaries(DateTime date)
         {
-            var campaigns = _amazonUtility.GetCampaigns(CampaignType.SponsoredProducts, clientId);
-            var filteredCampaigns = FilterByCampaigns(campaigns, x => x.name);
-            return filteredCampaigns;
+            var spSums = _amazonUtility.ReportAdGroups(CampaignType.SponsoredProducts, date, clientId, true);
+            var sbSums = _amazonUtility.ReportAdGroups(CampaignType.SponsoredBrands, date, clientId, true);
+            var sums = spSums.Concat(sbSums);
+            var filteredSums = FilterByCampaigns(sums, x => x.campaignName);
+            return filteredSums;
         }
 
-        private IEnumerable<AmazonAdSet> LoadAdSetsFromAmazonApi(IEnumerable<AmazonCampaign> campaigns)
+        private IEnumerable<AdSetSummary> TransformSummaries(IEnumerable<AmazonAdGroupSummary> adGroupStats, DateTime date)
         {
-            var campaignIds = campaigns.Select(x => x.campaignId).ToArray();
-            var keywords = _amazonUtility.GetKeywords(clientId, campaignIds);
-            var adSets = keywords.Select(x =>
-                new AmazonAdSet
-                {
-                    KeywordText = x.KeywordText,
-                    CampaignId = x.CampaignId.ToString(),
-                    KeywordId = x.KeywordId.ToString()
-                });
-            return adSets.ToList();
-        }
-
-        //private List<string> LoadDistinctKeywordsfromAmazonAPI()
-        //{
-        //    var keywords = _amazonUtility.GetKeywords(clientId);
-        //    if (keywords == null) return null;
-
-        //    var uniqueKeywords = keywords.Select(x => x.KeywordText).Distinct().ToList();
-        //    return uniqueKeywords;
-        //}
-
-        public IEnumerable<AmazonKeywordDailySummary> ExtractSummaries(DateTime date)
-        {
-            var sums = _amazonUtility.ReportKeywords(CampaignType.SponsoredProducts, date, clientId);
-            return sums;
-        }
-
-        private IEnumerable<AdSetSummary> TransformSummaries(IEnumerable<AmazonKeywordDailySummary> dailyStats, DateTime date,
-            IEnumerable<IGrouping<string, AmazonAdSet>> keywordGroups)
-        {
-            foreach (var keywordGroup in keywordGroups)
+            adGroupStats = adGroupStats.Where(x => !x.AllZeros());
+            foreach (var adGroupStat in adGroupStats)
             {
-                var keywordIds = keywordGroup.Select(x => x.KeywordId).ToArray();
-                var statsGroup = dailyStats.Where(x => keywordIds.Contains(x.KeywordId) && !x.AllZeros());
-                if (statsGroup.Any())
+                var sum = new AdSetSummary
                 {
-                    var sum = new AdSetSummary
-                    {
-                        Date = date,
-                        AdSetName = keywordGroup.Key
-                    };
-                    SetCPProgStats(sum, statsGroup);
-                    yield return sum;
-                }
+                    Date = date,
+                    AdSetEid = adGroupStat.adGroupId.ToString(),
+                    AdSetName = adGroupStat.adGroupName,
+                    StrategyEid = adGroupStat.campaignId.ToString(),
+                    StrategyName = adGroupStat.campaignName
+                };
+                SetCPProgStats(sum, adGroupStat, date);
+                yield return sum;
             }
         }
     }

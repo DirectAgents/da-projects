@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Amazon.Entities
 {
@@ -51,6 +49,14 @@ namespace Amazon.Entities
         public Int64 campaignId { get; set; }
         public string campaignName { get; set; }
         public DateTime date { get; set; }
+    }
+
+    public class AmazonAdGroupSummary : StatSummary
+    {
+        public Int64 adGroupId { get; set; }
+        public string adGroupName { get; set; }
+        public Int64 campaignId { get; set; }
+        public string campaignName { get; set; }
     }
 
     public class AmazonAdDailySummary : StatSummary

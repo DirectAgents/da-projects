@@ -16,6 +16,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             Logger.Info(accountId, "Loading {0} Amazon AdSet and Summary data:", items.Count);
 
+            tdAdSetSummaryLoader.PrepareData(items);
             tdAdSetSummaryLoader.AddUpdateDependentStrategies(items);
             tdAdSetSummaryLoader.AddUpdateDependentAdSets(items);
             tdAdSetSummaryLoader.AssignAdSetIdToItems(items);

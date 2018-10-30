@@ -269,25 +269,33 @@ namespace Amazon
             return GetEntities<AmazonKeyword>(EntitesType.Keywords, CampaignType.SponsoredProducts, parameters, profileId);
         }
 
-        /// Only for Sponsored Product
-        public List<AmazonProductAd> GetProductAds(string profileId, IEnumerable<long> campaignIds)
-        {
-            var parameters = new Dictionary<string, string>();
-            AddParameter(parameters, "campaignIdFilter", campaignIds);
-            return GetEntities<AmazonProductAd>(EntitesType.ProductAds, CampaignType.SponsoredProducts, parameters, profileId);
-        }
-
         public List<AmazonDailySummary> ReportCampaigns(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
             var param = CreateBaseAmazonApiReportParams(campaignType, date, includeCampaignName);
             return GetReportInfo<AmazonDailySummary>(EntitesType.Campaigns, campaignType, param, profileId);
         }
+        
+        public List<AmazonAdGroupSummary> ReportAdGroups(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
+        {
+            var param = CreateBaseAmazonApiReportParams(campaignType, date, includeCampaignName);
+            param.metrics += ",campaignId,adGroupName";
+            return GetReportInfo<AmazonAdGroupSummary>(EntitesType.AdGroups, campaignType, param, profileId);
+        }
+
+        /// Only for Sponsored Product
+        /// sku metric - is not available
+        public List<AmazonAdDailySummary> ReportProductAds(DateTime date, string profileId, bool includeCampaignName)
+        {
+            const CampaignType campaignType = CampaignType.SponsoredProducts;
+            var param = CreateBaseAmazonApiReportParams(campaignType, date, includeCampaignName);
+            param.metrics += ",adGroupId,adGroupName,asin";
+            return GetReportInfo<AmazonAdDailySummary>(EntitesType.ProductAds, campaignType, param, profileId);
+        }
 
         public List<AmazonKeywordDailySummary> ReportKeywords(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
             var param = CreateBaseAmazonApiReportParams(campaignType, date, includeCampaignName);
-            param.metrics += ",keywordText";
-            param.segment = "query";
+            param.metrics += ",keywordText,campaignId";
             return GetReportInfo<AmazonKeywordDailySummary>(EntitesType.Keywords, campaignType, param, profileId);
         }
 
@@ -295,17 +303,8 @@ namespace Amazon
         {
             var param = CreateBaseAmazonApiReportParams(campaignType, date, includeCampaignName);
             param.segment = "query";
+            param.metrics += ",keywordText,campaignId";
             return GetReportInfo<AmazonSearchTermDailySummary>(EntitesType.Keywords, campaignType, param, profileId);
-        }
-
-        /// Only for Sponsored Product
-        /// sku metric - is not available
-        public List<AmazonAdDailySummary> ReportProductAds(DateTime date, string profileId, bool includeCampaignName = false)
-        {
-            var campaignType = CampaignType.SponsoredProducts;
-            var param = CreateBaseAmazonApiReportParams(campaignType, date, includeCampaignName);
-            param.metrics += ",asin";
-            return GetReportInfo<AmazonAdDailySummary>(EntitesType.ProductAds, campaignType, param, profileId);
         }
         
         private void AddParameter<T>(Dictionary<string, string> parameters, string paramName, IEnumerable<T> values)
