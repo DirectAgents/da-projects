@@ -7,8 +7,8 @@ using EomTool.Domain.Abstract;
 using EomTool.Domain.DTOs;
 using EomTool.Domain.Entities;
 using EomToolWeb.Models;
-using KendoGridBinderEx;
-using KendoGridBinderEx.ModelBinder.Mvc;
+using KendoGridBinder;
+using KendoGridBinder.ModelBinder.Mvc;
 
 namespace EomToolWeb.Controllers
 {
@@ -275,16 +275,18 @@ namespace EomToolWeb.Controllers
             // The "agg" aggregates will get computed outside of KendoGridEx
             request.AggregateObjects = request.AggregateObjects.Where(ao => ao.Aggregate != "agg");
 
-            var affSort = request.SortObjects.SingleOrDefault(so => so.Field == "AffId");
-            if (affSort != null) affSort.Field = "AffName";
-            var advSort = request.SortObjects.SingleOrDefault(so => so.Field == "AdvId");
-            if (advSort != null) advSort.Field = "AdvName";
-            var unitTypeSort = request.SortObjects.SingleOrDefault(so => so.Field == "UnitTypeId");
-            if (unitTypeSort != null) unitTypeSort.Field = "UnitTypeName";
-
+            if (request.SortObjects != null)
+            {
+                var affSort = request.SortObjects.SingleOrDefault(so => so.Field == "AffId");
+                if (affSort != null) affSort.Field = "AffName";
+                var advSort = request.SortObjects.SingleOrDefault(so => so.Field == "AdvId");
+                if (advSort != null) advSort.Field = "AdvName";
+                var unitTypeSort = request.SortObjects.SingleOrDefault(so => so.Field == "UnitTypeId");
+                if (unitTypeSort != null) unitTypeSort.Field = "UnitTypeName";
+            }
             //TODO: replace CampAffItems() with a new method that returns a new class (collection) with only the necessary fields (e.g. id, not name)
             var data = mainRepo.CampAffItems(true);
-            var kgrid = new KendoGridEx<CampAffItem>(request, data);
+            var kgrid = new KendoGrid<CampAffItem>(request, data);
 
             return CreateJsonResult(kgrid);
         }
@@ -397,7 +399,7 @@ namespace EomToolWeb.Controllers
 
         // ---
 
-        private JsonResult CreateJsonResult(KendoGridEx<CampAffItem> kgrid)
+        private JsonResult CreateJsonResult(KendoGrid<CampAffItem> kgrid)
         {
             var kg = new KG<CampAffItem>();
             kg.data = kgrid.Data;
@@ -420,7 +422,7 @@ namespace EomToolWeb.Controllers
         //decimal sumRevUSD = (decimal)type1.GetProperty("sum").GetValue(revAgg);
         //decimal sumCostUSD = (decimal)type1.GetProperty("sum").GetValue(costAgg);
 
-        private object Aggregates(KendoGridEx<CampAffItem> kgrid)
+        private object Aggregates(KendoGrid<CampAffItem> kgrid)
         {
             if (kgrid.Total == 0) return null;
             decimal sumRevUSD = ((dynamic)kgrid.Aggregates)["RevUSD"]["sum"];
