@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DirectAgents.Domain</RootNamespace>
     <AssemblyName>DirectAgents.Domain</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -83,7 +83,6 @@
     <Compile Include="Abstract\IABRepository.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Abstract\IAdmin.cs" />
     <Compile Include="Abstract\ICampaignRepository.cs" />
     <Compile Include="Abstract\IClientRepository.cs" />
     <Compile Include="Abstract\ICPProgRepository.cs" />
@@ -100,10 +99,8 @@
     <Compile Include="Concrete\ABRepository.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Concrete\AdminImpl.cs" />
     <Compile Include="Concrete\CampaignRepository.cs" />
     <Compile Include="Concrete\ClientRepository.cs" />
-    <Compile Include="Concrete\CountryLookup.cs" />
     <Compile Include="Concrete\CPClientRepository.cs" />
     <Compile Include="Concrete\CPProgRepository.cs" />
     <Compile Include="Concrete\CPProgStatsRepository.cs" />
@@ -618,16 +615,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Seed\TDSeeder.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Cake.Data.Wsdl\Cake.Data.Wsdl.csproj">
-      <Project>{8656B9B9-82A6-400A-A7B7-44AF044321E3}</Project>
-      <Name>Cake.Data.Wsdl</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cake.Model\Cake.Model.csproj">
-      <Project>{B3B19DA1-2335-4597-8DBE-9C7A12B7E92E}</Project>
-      <Name>Cake.Model</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
