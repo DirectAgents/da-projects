@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.ServiceModel;
-using Microsoft.BingAds.V11.CampaignManagement;
+using Microsoft.BingAds.V12.CampaignManagement;
 
 namespace BingAds
 {

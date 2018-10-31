@@ -57,7 +57,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     }
 
                     var pk1 = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId;
-                    var pk2 = DateTime.Parse(item["GregorianDate"]);
+                    var pk2 = DateTime.Parse(item["TimePeriod"]);
                     var pk3 = ".";
                     var pk4 = ".";
                     //var pk5 = ".";

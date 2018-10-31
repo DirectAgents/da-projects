@@ -126,12 +126,12 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
         protected IEnumerable<BingRow> GroupAndEnumerateBingRows(string filepath, bool throwOnMissingField)
         {
             var groups = EnumerateRowsGeneric<BingRow>(filepath, throwOnMissingField)
-                .GroupBy(b => new { b.GregorianDate, b.AccountId, b.AccountName, b.AccountNumber, b.CampaignId, b.CampaignName });
+                .GroupBy(b => new { b.TimePeriod, b.AccountId, b.AccountName, b.AccountNumber, b.CampaignId, b.CampaignName });
             foreach (var g in groups)
             {
                 var bingRow = new BingRow
                 {
-                    GregorianDate = g.Key.GregorianDate,
+                    TimePeriod = g.Key.TimePeriod,
                     AccountId = g.Key.AccountId,
                     AccountName = g.Key.AccountName,
                     AccountNumber = g.Key.AccountNumber,
@@ -186,7 +186,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
 
         protected class BingRow
         {
-            public string GregorianDate { get; set; } // date
+            public string TimePeriod { get; set; } // date
             public int Impressions { get; set; } // int
             public int Clicks { get; set; } // int
             public int Conversions { get; set; } // int

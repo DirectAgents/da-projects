@@ -5,6 +5,9 @@ debug
 Debug - EOM
 *.csproj.user
 
+# Visual Studio 2015/2017 cache/options directory
+.vs/
+
 # mstest test results
 TestResults
 

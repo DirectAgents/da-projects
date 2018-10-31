@@ -55,7 +55,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     var scs = new SearchConvSummary
                     {   //TODO: use lookup for SearchCampaignId
                         SearchCampaignId = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId,
-                        Date = DateTime.Parse(item["GregorianDate"]),
+                        Date = DateTime.Parse(item["TimePeriod"]),
                         SearchConvTypeId = convTypeIdLookupByName[item["Goal"]],
                         Network = ".",
                         Device = ".",
