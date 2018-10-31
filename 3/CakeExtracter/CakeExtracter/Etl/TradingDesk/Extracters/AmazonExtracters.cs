@@ -5,6 +5,7 @@ using Amazon;
 using Amazon.Entities;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
+using StatSummary = Amazon.Entities.StatSummary;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
@@ -147,7 +148,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             var sbSums = _amazonUtility.ReportCampaigns(CampaignType.SponsoredBrands, date, clientId, true);
             var sums = spSums.Concat(sbSums);
             sums = FilterByCampaigns(sums, x => x.campaignName);
-            return sums;
+            return sums.ToList();
         }
 
         private DailySummary TransformSummaries(IEnumerable<AmazonDailySummary> sums, DateTime date)
@@ -190,7 +191,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             var sbCampaigns = _amazonUtility.GetCampaigns(CampaignType.SponsoredBrands, clientId);
             var campaigns = spCampaigns.Concat(sbCampaigns);
             var filteredCampaigns = FilterByCampaigns(campaigns, x => x.name);
-            return filteredCampaigns;
+            return filteredCampaigns.ToList();
         }
 
         public IEnumerable<AmazonDailySummary> ExtractSummaries(DateTime date)
@@ -198,7 +199,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             var spSums = _amazonUtility.ReportCampaigns(CampaignType.SponsoredProducts, date, clientId, false);
             var sbSums = _amazonUtility.ReportCampaigns(CampaignType.SponsoredBrands, date, clientId, false);
             var sums = spSums.Concat(sbSums);
-            return sums;
+            return sums.ToList();
         }
 
         private IEnumerable<StrategySummary> TransformSummaries(IEnumerable<AmazonDailySummary> dailyStats, IEnumerable<AmazonCampaign> campaigns, DateTime date)
@@ -250,17 +251,16 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             var sbSums = _amazonUtility.ReportAdGroups(CampaignType.SponsoredBrands, date, clientId, true);
             var sums = spSums.Concat(sbSums);
             var filteredSums = FilterByCampaigns(sums, x => x.campaignName);
-            return filteredSums;
+            return filteredSums.ToList();
         }
 
         private IEnumerable<AdSetSummary> TransformSummaries(IEnumerable<AmazonAdGroupSummary> adGroupStats, DateTime date)
         {
-            adGroupStats = adGroupStats.Where(x => !x.AllZeros());
+            adGroupStats = adGroupStats.Where(x => !x.AllZeros()).ToList();
             foreach (var adGroupStat in adGroupStats)
             {
                 var sum = new AdSetSummary
                 {
-                    Date = date,
                     AdSetEid = adGroupStat.adGroupId.ToString(),
                     AdSetName = adGroupStat.adGroupName,
                     StrategyEid = adGroupStat.campaignId.ToString(),
@@ -278,9 +278,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     {
         //NOTE: We can only get ad stats for SponsoredProduct campaigns, for these reasons:
         // - the get-ProductAds call only returns SP ads
-        // - for HSA reports, recordType call only be campaigns, adGroups or keywords
+        // - for Sponsored Brands reports, recordType call only be campaigns, adGroups or keywords
         // - a productAdId metric is not available anyway
-        // (as of v.20180314)
 
         public AmazonAdExtrater(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
             : base(amazonUtility, dateRange, account, campaignFilter: campaignFilter, campaignFilterOut: campaignFilterOut)
@@ -291,86 +290,55 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             Logger.Info(accountId, "Extracting TDadSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
 
-            // This didn't work. The stats (e.g. spend) were larger than what we got at the campaign/keyword levels.
-            var campaigns = LoadCampaignsFromAmazonApi();
-            var productAds = LoadAdsFromAmazonApi(campaigns);
-            var adNameGroups = productAds.GroupBy(x => x.Name);
-
             foreach (var date in dateRange.Dates)
             {
                 var sums = ExtractSummaries(date);
-                var items = TransformSummaries(sums, date, adNameGroups);
+                var items = TransformSummaries(sums, date);
                 Add(items);
             }
             End();
         }
 
-        private IEnumerable<AmazonCampaign> LoadCampaignsFromAmazonApi()
-        {
-            var campaigns = _amazonUtility.GetCampaigns(CampaignType.SponsoredProducts, clientId);
-            var filteredCampaigns = FilterByCampaigns(campaigns, x => x.name);
-            return filteredCampaigns;
-        }
-
-        //NOTE: This only retrieves SponsoredProduct ads
-        private IEnumerable<TDad> LoadAdsFromAmazonApi(IEnumerable<AmazonCampaign> campaigns)
-        {
-            var campaignIds = campaigns.Select(x => x.campaignId).ToArray();
-            var productAds = _amazonUtility.GetProductAds(clientId, campaignIds);
-            var ads = productAds.GroupBy(x => x.AdId).Select(MapProductAdGroup);
-            return ads.ToList();
-        }
-
-        private TDad MapProductAdGroup(IGrouping<string, AmazonProductAd> productAdGroup)
-        {
-            var ad = new TDad
-            {
-                ExternalId = productAdGroup.Key,
-                Name = productAdGroup.First().Asin
-            };
-            if (productAdGroup.Count() <= 1)
-            {
-                return ad;
-            }
-            Logger.Info("Multiple ads for {0}", productAdGroup.Key);
-            var names = productAdGroup.Select(x => x.Asin).ToArray();
-            ad.Name = String.Join(",", names);
-            return ad;
-        }
-
-        //private List<string> LoadDistinctAdNamesFromAmazonAPI()
-        //{
-        //    var productAds = _amazonUtility.GetProductAds(clientId);
-        //    if (productAds == null) return null;
-
-        //    var uniqueAdNames = productAds.Select(x => x.Asin).Distinct().ToList();
-        //    return uniqueAdNames;
-        //}
-
         private IEnumerable<AmazonAdDailySummary> ExtractSummaries(DateTime date)
         {
-            var sums = _amazonUtility.ReportProductAds(date, clientId);
-            return sums;
+            var sums = _amazonUtility.ReportProductAds(date, clientId, true);
+            var filteredSums = FilterByCampaigns(sums, x => x.campaignName);
+            return filteredSums.ToList();
         }
 
-        private IEnumerable<TDadSummary> TransformSummaries(IEnumerable<AmazonAdDailySummary> productAdsDailyStats, DateTime date, 
-            IEnumerable<IGrouping<string, TDad>> adNameGroups)
+        private IEnumerable<TDadSummary> TransformSummaries(IEnumerable<AmazonAdDailySummary> adStats, DateTime date)
         {
-            foreach (var adNameGroup in adNameGroups)
+            foreach (var adSum in adStats)
             {
-                var adIds = adNameGroup.Select(x => x.ExternalId).ToArray();
-                var statsGroup = productAdsDailyStats.Where(x => adIds.Contains(x.adId) && !x.AllZeros());
-                if (statsGroup.Any())
+                var sum = new TDadSummary
                 {
-                    var sum = new TDadSummary
-                    {
-                        Date = date,
-                        TDadName = adNameGroup.Key,
-                    };
-                    SetCPProgStats(sum, statsGroup);
-                    yield return sum;
-                }
+                    TDadEid = adSum.adId,
+                    TDadName = adSum.adGroupName,
+                    AdSetEid = adSum.adGroupId.ToString(),
+                    AdSetName = adSum.adGroupName
+                };
+                var externalIds = new List<TDadExternalId>();
+                AddAdExternalId(externalIds, ProductAdIdType.ASIN, adSum.asin);
+                //AddAdExternalId(externalIds, ProductAdIdType.SKU, adSum.sku);
+                sum.ExternalIds = externalIds;
+                SetCPProgStats(sum, adSum, date);
+                yield return sum;
             }
+        }
+
+        private void AddAdExternalId(List<TDadExternalId> ids, ProductAdIdType type, string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return;
+            }
+
+            var id = new TDadExternalId
+            {
+                Type = new EntityType {Name = type.ToString()},
+                ExternalId = value
+            };
+            ids.Add(id);
         }
     }
     #endregion

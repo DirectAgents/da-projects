@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 using AutoMapper;
 using CakeExtracter.Etl.TradingDesk.Helpers;
 using DirectAgents.Domain.Contexts;
@@ -99,7 +100,13 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         private void UpsertSummaryMetrics(ClientPortalProgContext db, DailySummary item)
         {
+            if (item.Metrics == null || !item.Metrics.Any())
+            {
+                return;
+            }
             item.Metrics.ForEach(x => x.EntityId = item.AccountId);
+            metricLoader.AddDependentMetricTypes(item.Metrics);
+            metricLoader.AssignMetricTypeIdToItems(item.Metrics);
             metricLoader.UpsertSummaryMetrics<DailySummaryMetric>(db, item.Metrics);
         }
     }

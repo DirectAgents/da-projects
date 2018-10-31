@@ -35,9 +35,7 @@ namespace CakeExtracter.Bootstrappers
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SummaryMetric, DirectAgents.Domain.Entities.CPProg.DailySummaryMetric>()
                     .ForMember(s => s.ExtAccount, map => map.AllowNull());
 
-                cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.StrategySummary, DirectAgents.Domain.Entities.CPProg.StrategySummary>()
-                    .ForMember(s => s.StrategyName, opt => opt.Ignore())
-                    .ForMember(s => s.StrategyEid, opt => opt.Ignore());
+                cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.StrategySummary, DirectAgents.Domain.Entities.CPProg.StrategySummary>();
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.StrategySummary, DirectAgents.Domain.Entities.CPProg.Strategy>()
                     .ForMember(d => d.Id, opt => opt.MapFrom(s => s.StrategyId))
                     .ForMember(d => d.Name, opt => opt.MapFrom(s => s.StrategyName))
@@ -46,11 +44,7 @@ namespace CakeExtracter.Bootstrappers
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SummaryMetric, DirectAgents.Domain.Entities.CPProg.StrategySummaryMetric>()
                     .ForMember(s => s.Strategy, map => map.AllowNull());
 
-                cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.AdSetSummary, DirectAgents.Domain.Entities.CPProg.AdSetSummary>()
-                    .ForMember(s => s.AdSetName, opt => opt.Ignore())
-                    .ForMember(s => s.AdSetEid, opt => opt.Ignore())
-                    .ForMember(s => s.StrategyName, opt => opt.Ignore())
-                    .ForMember(s => s.StrategyEid, opt => opt.Ignore());
+                cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.AdSetSummary, DirectAgents.Domain.Entities.CPProg.AdSetSummary>();
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.AdSetSummary, DirectAgents.Domain.Entities.CPProg.AdSet>()
                     .ForMember(d => d.Id, opt => opt.MapFrom(s => s.AdSetId))
                     .ForMember(d => d.Name, opt => opt.MapFrom(s => s.AdSetName))
@@ -59,9 +53,16 @@ namespace CakeExtracter.Bootstrappers
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SummaryMetric, DirectAgents.Domain.Entities.CPProg.AdSetSummaryMetric>()
                     .ForMember(s => s.AdSet, map => map.AllowNull());
 
-                cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.TDadSummary, DirectAgents.Domain.Entities.CPProg.TDadSummary>()
-                    .ForMember(s => s.TDadName, opt => opt.Ignore())
-                    .ForMember(s => s.TDadEid, opt => opt.Ignore());
+                cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.TDadSummary, DirectAgents.Domain.Entities.CPProg.TDadSummary>();
+                cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.TDadSummary, DirectAgents.Domain.Entities.CPProg.TDad>()
+                    .ForMember(d => d.Id, opt => opt.MapFrom(s => s.TDadId))
+                    .ForMember(d => d.Name, opt => opt.MapFrom(s => s.TDadName))
+                    .ForMember(d => d.ExternalId, opt => opt.MapFrom(s => s.TDadEid))
+                    .ForMember(d => d.ExternalIds, opt => opt.MapFrom(s => s.ExternalIds))
+                    .ForMember(d => d.AdSet, opt => opt.MapFrom(s => new AdSet { Name = s.AdSetName, ExternalId = s.AdSetEid }));
+                cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SummaryMetric, DirectAgents.Domain.Entities.CPProg.TDadSummaryMetric>()
+                    .ForMember(s => s.TDad, map => map.AllowNull());
+
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SiteSummary, DirectAgents.Domain.Entities.CPProg.SiteSummary>()
                     .ForMember(s => s.SiteName, opt => opt.Ignore());
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.Conv, DirectAgents.Domain.Entities.CPProg.Conv>();

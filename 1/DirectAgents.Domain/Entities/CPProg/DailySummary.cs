@@ -130,6 +130,12 @@ namespace DirectAgents.Domain.Entities.CPProg
         [NotMapped]
         public string TDadEid { get; set; } // external id
         [NotMapped]
+        public string AdSetName { get; set; }
+        [NotMapped]
+        public string AdSetEid { get; set; }
+        [NotMapped]
+        public IEnumerable<TDadExternalId> ExternalIds { get; set; }
+        [NotMapped]
         public int Width { get; set; }
         //[NotMapped]
     }

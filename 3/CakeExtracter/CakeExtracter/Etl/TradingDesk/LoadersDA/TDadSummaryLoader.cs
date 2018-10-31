@@ -1,38 +1,69 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using AutoMapper;
+using CakeExtracter.Etl.TradingDesk.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
+using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class TDadSummaryLoader : Loader<TDadSummary>
     {
         public readonly int AccountId; // only used in AddUpdateDependentTDads()
-        private Dictionary<string, int> tdAdIdLookupByEidAndName = new Dictionary<string, int>();
+        public static EntityIdStorage<TDad> TDadStorage;
+
+        private readonly TDAdSetSummaryLoader adSetLoader;
+        private readonly EntityIdStorage<AdSet> adSetStorage;
+        private readonly EntityIdStorage<EntityType> typeStorage;
+        private readonly SummaryMetricLoader metricLoader;
+
+        static TDadSummaryLoader()
+        {
+            TDadStorage = new EntityIdStorage<TDad>(x => x.Id, x => $"{x.AdSetId}{x.Name}{x.ExternalId}", x => $"{x.Name}{x.ExternalId}");
+        }
 
         public TDadSummaryLoader(int accountId = -1)
         {
             this.AccountId = accountId;
+            this.adSetLoader = new TDAdSetSummaryLoader(accountId);
+            this.adSetStorage = TDAdSetSummaryLoader.AdSetStorage;
+            this.typeStorage = new EntityIdStorage<EntityType>(x => x.Id, x => x.Name);
+            this.metricLoader = new SummaryMetricLoader();
         }
 
         protected override int Load(List<TDadSummary> items)
         {
             Logger.Info(AccountId, "Loading {0} DA-TD AdSummaries..", items.Count);
+            PrepareData(items);
+            AddUpdateDependentAdSets(items);
             AddUpdateDependentTDads(items);
             AssignTDadIdToItems(items);
             var count = UpsertDailySummaries(items);
             return count;
         }
 
+        public void PrepareData(List<TDadSummary> items)
+        {
+            items.ForEach(x =>
+            {
+                if (x.TDad == null)
+                {
+                    x.TDad = new TDad();
+                }
+                Mapper.Map(x, x.TDad);
+            });
+        }
+
         public void AssignTDadIdToItems(List<TDadSummary> items)
         {
             foreach (var item in items)
             {
-                var eidAndName = item.TDadEid + item.TDadName;
-                if (tdAdIdLookupByEidAndName.ContainsKey(eidAndName))
+                if (TDadStorage.IsEntityInStorage(item.TDad))
                 {
-                    item.TDadId = tdAdIdLookupByEidAndName[eidAndName];
+                    item.TDadId = TDadStorage.GetEntityIdFromStorage(item.TDad);
+                    item.TDad = null;
                 }
                 // otherwise it will get skipped; no TDad to use for the foreign key
             }
@@ -40,13 +71,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public int UpsertDailySummaries(List<TDadSummary> items)
         {
-            var addedCount = 0;
-            var updatedCount = 0;
-            var duplicateCount = 0;
-            var deletedCount = 0;
-            var alreadyDeletedCount = 0;
-            var skippedCount = 0;
-            var itemCount = 0;
+            var progress = new LoadingProgress();
             using (var db = new ClientPortalProgContext())
             {
                 var itemTDadIds = items.Select(i => i.TDadId).Distinct().ToArray();
@@ -57,124 +82,283 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     var target = db.Set<TDadSummary>().Find(item.Date, item.TDadId);
                     if (target == null)
                     {
-                        if (item.AllZeros())
-                        {
-                            alreadyDeletedCount++;
-                        }
-                        else
-                        {
-                            if (tdAdIdsInDb.Contains(item.TDadId))
-                            {
-                                db.TDadSummaries.Add(item);
-                                addedCount++;
-                            }
-                            else
-                            {
-                                Logger.Warn(AccountId, "Skipping load of item. TDad with id {0} does not exist.", item.TDadId);
-                                skippedCount++;
-                            }
-                        }
+                        TryToAddSummary(db, item, tdAdIdsInDb, progress);
                     }
                     else // TDadSummary already exists
                     {
-                        var entry = db.Entry(target);
-                        if (entry.State == EntityState.Unchanged)
-                        {
-                            if (!item.AllZeros())
-                            {
-                                entry.State = EntityState.Detached;
-                                AutoMapper.Mapper.Map(item, target);
-                                entry.State = EntityState.Modified;
-                                updatedCount++;
-                            }
-                            else
-                            {
-                                entry.State = EntityState.Deleted;
-                                deletedCount++;
-                            }
-                        }
-                        else
-                        {
-                            Logger.Warn(AccountId, "Encountered duplicate for {0:d} - TDad {1}", item.Date, item.TDadId);
-                            duplicateCount++;
-                        }
+                        TryToUpdateSummary(db, item, target, progress);
                     }
-                    itemCount++;
+                    progress.ItemCount++;
                 }
                 Logger.Info(AccountId, "Saving {0} TDadSummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
-                            itemCount, updatedCount, addedCount, duplicateCount, deletedCount, alreadyDeletedCount, skippedCount);
-                if (duplicateCount > 0)
-                    Logger.Warn(AccountId, "Encountered {0} duplicates which were skipped", duplicateCount);
-                int numChanges = db.SaveChanges();
+                            progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount, progress.SkippedCount);
+                if (progress.DuplicateCount > 0)
+                {
+                    Logger.Warn(AccountId, "Encountered {0} duplicates which were skipped", progress.DuplicateCount);
+                }
+                var numChanges = db.SaveChanges();
             }
-            return itemCount;
+            return progress.ItemCount;
+        }
+
+        public void AddUpdateDependentAdSets(List<TDadSummary> items)
+        {
+            var adSets = items
+                .GroupBy(x => new { x.TDad.AdSet?.StrategyId, x.TDad.AdSet?.ExternalId, x.TDad.AdSet?.Name })
+                .Select(x => x.First().TDad.AdSet)
+                .Where(x => x != null && (!string.IsNullOrWhiteSpace(x.Name) || !string.IsNullOrWhiteSpace(x.ExternalId)))
+                .ToList();
+            adSetLoader.AddUpdateDependentAdSets(adSets, AccountId);
+            AssignAdSetIdToItems(items);
         }
 
         public void AddUpdateDependentTDads(List<TDadSummary> items)
         {
+            var tdAds = items
+                .GroupBy(i => new { i.TDad.AdSetId, i.TDad.Name, i.TDad.ExternalId })
+                .Select(x => x.First().TDad)
+                .ToList();
+            AddUpdateDependentTDads(tdAds);
+        }
+
+        private void AddUpdateDependentTDads(List<TDad> items)
+        {
             using (var db = new ClientPortalProgContext())
             {
-                // Find the unique TDads by grouping
-                var itemGroups = items.GroupBy(i => new { i.TDadName, i.TDadEid });
-                foreach (var group in itemGroups)
+                AddDependentExternalIdTypes(db, items.SelectMany(x => x.ExternalIds));
+                foreach (var tdAd in items)
                 {
-                    string eidAndName = group.Key.TDadEid + group.Key.TDadName;
-                    if (tdAdIdLookupByEidAndName.ContainsKey(eidAndName))
+                    if (TDadStorage.IsEntityInStorage(tdAd))
+                    {
                         continue; // already encountered this TDad
-
-                    IQueryable<TDad> tdAdsInDb = null;
-                    if (!string.IsNullOrWhiteSpace(group.Key.TDadEid))
-                    {
-                        // See if a TDad with that ExternalId exists
-                        tdAdsInDb = db.TDads.Where(a => a.AccountId == AccountId && a.ExternalId == group.Key.TDadEid);
-                        //if (!tdAdsInDb.Any()) // If not, check for a match by name where ExternalId == null
-                        //    tdAdsInDb = db.TDads.Where(x => x.AccountId == accountId && x.ExternalId == null && x.Name == group.Key.TDadName);
                     }
-                    else
-                    {
-                        // Check by TDad name
-                        tdAdsInDb = db.TDads.Where(s => s.AccountId == AccountId && s.Name == group.Key.TDadName);
-                    }
-                    //Note: If we're grouping by ad name, then the ads in the db and the ads to-be-loaded shouldn't have externalIds filled in.
 
-                    var tdAdsInDbList = tdAdsInDb.ToList();
+                    var tdAdsInDbList = GetTDadSets(db, tdAd, AccountId);
                     if (!tdAdsInDbList.Any())
                     {   // TDad doesn't exist in the db; so create it and put an entry in the lookup
-                        var tdAd = new TDad
-                        {
-                            AccountId = this.AccountId,
-                            ExternalId = group.Key.TDadEid,
-                            Name = group.Key.TDadName
-                            // other properties...
-                        };
-                        db.TDads.Add(tdAd);
-                        db.SaveChanges();
-                        Logger.Info(AccountId, "Saved new TDad: {0} ({1}), ExternalId={2}", tdAd.Name, tdAd.Id, tdAd.ExternalId);
-                        tdAdIdLookupByEidAndName[eidAndName] = tdAd.Id;
+                        var tdAdInDB = AddTDad(db, tdAd, AccountId);
+                        Logger.Info(AccountId, "Saved new TDad: {0} ({1}), ExternalId={2}", tdAdInDB.Name, tdAdInDB.Id, tdAdInDB.ExternalId);
+                        TDadStorage.AddEntityIdToStorage(tdAdInDB);
                     }
                     else
                     {   // Update & put existing TDad in the lookup
                         // There should only be one matching TDad in the db, but just in case...
-                        foreach (var tdAd in tdAdsInDbList)
-                        {
-                            if (!string.IsNullOrWhiteSpace(group.Key.TDadEid))
-                                tdAd.ExternalId = group.Key.TDadEid;
-                            if (!string.IsNullOrWhiteSpace(group.Key.TDadName))
-                                tdAd.Name = group.Key.TDadName;
-                            // other properties...
-                        }
-                        int numUpdates = db.SaveChanges();
+                        var numUpdates = UpdateTDads(db, tdAdsInDbList, tdAd);
                         if (numUpdates > 0)
                         {
-                            Logger.Info(AccountId, "Updated TDad: {0}, Eid={1}", group.Key.TDadName, group.Key.TDadEid);
+                            Logger.Info(AccountId, "Updated TDad: {0}, Eid={1}", tdAd.Name, tdAd.ExternalId);
                             if (numUpdates > 1)
+                            {
                                 Logger.Warn(AccountId, "Multiple entities in db ({0})", numUpdates);
+                            }
                         }
-                        tdAdIdLookupByEidAndName[eidAndName] = tdAdsInDbList.First().Id;
+                        TDadStorage.AddEntityIdToStorage(tdAdsInDbList.First());
                     }
                 }
             }
         }
 
+        private void AssignAdSetIdToItems(List<TDadSummary> items)
+        {
+            foreach (var item in items)
+            {
+                if (adSetStorage.IsEntityInStorage(item.TDad.AdSet))
+                {
+                    item.TDad.AdSetId = adSetStorage.GetEntityIdFromStorage(item.TDad.AdSet);
+                }
+                item.TDad.AdSet = null;
+            }
+        }
+
+        private void AddDependentExternalIdTypes(ClientPortalProgContext db, IEnumerable<TDadExternalId> externalIds)
+        {
+            var notStoredTypes = externalIds.GroupBy(x => x.Type?.Name)
+                .Select(x => x.First().Type)
+                .Where(x => x != null && (!string.IsNullOrEmpty(x.Name) && !typeStorage.IsEntityInStorage(x)))
+                .ToList();
+            AddDependentTypes(db, notStoredTypes);
+            AssignTypeIdToExternalIds(externalIds);
+        }
+
+        private void AddDependentTypes(ClientPortalProgContext db, IEnumerable<EntityType> types)
+        {
+            var newTypes = new List<EntityType>();
+            foreach (var type in types)
+            {
+                var typeInDB = db.Types.FirstOrDefault(x => type.Name == x.Name);
+                if (typeInDB == null)
+                {
+                    newTypes.Add(type);
+                }
+                else
+                {
+                    typeStorage.AddEntityIdToStorage(typeInDB);
+                }
+            }
+            db.Types.AddRange(newTypes);
+            db.SaveChanges();
+            newTypes.ForEach(typeStorage.AddEntityIdToStorage);
+        }
+
+        private void AssignTypeIdToExternalIds(IEnumerable<TDadExternalId> externalIds)
+        {
+            foreach (var id in externalIds)
+            {
+                if (typeStorage.IsEntityInStorage(id.Type))
+                {
+                    id.TypeId = typeStorage.GetEntityIdFromStorage(id.Type);
+                    id.Type = null;
+                }
+            }
+        }
+
+        private void TryToAddSummary(ClientPortalProgContext db, TDadSummary item, IEnumerable<int> tdAdIdsInDb, LoadingProgress progress)
+        {
+            if (item.AllZeros())
+            {
+                progress.AlreadyDeletedCount++;
+                return;
+            }
+            if (!tdAdIdsInDb.Contains(item.TDadId))
+            {
+                Logger.Warn(AccountId, "Skipping load of item. TDad with id {0} does not exist.", item.TDadId);
+                progress.SkippedCount++;
+                return;
+            }
+            db.TDadSummaries.Add(item);
+            UpsertSummaryMetrics(db, item);
+            progress.AddedCount++;
+        }
+
+        private void TryToUpdateSummary(ClientPortalProgContext db, TDadSummary item, TDadSummary target, LoadingProgress progress)
+        {
+            var entry = db.Entry(target);
+            if (entry.State != EntityState.Unchanged)
+            {
+                Logger.Warn(AccountId, "Encountered duplicate for {0:d} - TDad {1}", item.Date, item.TDadId);
+                progress.DuplicateCount++;
+                return;
+            }
+
+            if (item.AllZeros())
+            {
+                entry.State = EntityState.Deleted;
+                progress.DeletedCount++;
+                return;
+            }
+            entry.State = EntityState.Detached;
+            Mapper.Map(item, target);
+            entry.State = EntityState.Modified;
+            UpsertSummaryMetrics(db, item);
+            progress.UpdatedCount++;
+        }
+
+        private void UpsertSummaryMetrics(ClientPortalProgContext db, TDadSummary item)
+        {
+            if (item.Metrics == null || !item.Metrics.Any())
+            {
+                return;
+            }
+            item.Metrics.ForEach(x => x.EntityId = item.TDadId);
+            metricLoader.AddDependentMetricTypes(item.Metrics);
+            metricLoader.AssignMetricTypeIdToItems(item.Metrics);
+            metricLoader.UpsertSummaryMetrics<TDadSummaryMetric>(db, item.Metrics);
+        }
+
+        private List<TDad> GetTDadSets(ClientPortalProgContext db, TDad tdAd, int accountId)
+        {
+            IQueryable<TDad> tdAdsInDb;
+            if (!string.IsNullOrWhiteSpace(tdAd.ExternalId))
+            {
+                // See if a TDad with that ExternalId exists
+                tdAdsInDb = db.TDads.Where(a => a.AccountId == AccountId && a.ExternalId == tdAd.ExternalId);
+                // If not, check for a match by name where ExternalId == null
+                if (!tdAdsInDb.Any())
+                {
+                    tdAdsInDb = db.TDads.Where(x => x.AccountId == accountId && x.ExternalId == null && x.Name == tdAd.Name);
+                    if (tdAd.AdSetId.HasValue)
+                    {
+                        tdAdsInDb = tdAdsInDb.Where(x => x.AdSetId == tdAd.AdSetId);
+                    }
+                }
+            }
+            else
+            {
+                // Check by TDad name
+                tdAdsInDb = db.TDads.Where(x => x.AccountId == accountId && x.Name == tdAd.Name);
+                if (tdAd.AdSetId.HasValue)
+                {
+                    tdAdsInDb = tdAdsInDb.Where(x => x.AdSetId == tdAd.AdSetId);
+                }
+            }
+            //Note: If we're grouping by ad name, then the ads in the db and the ads to-be-loaded shouldn't have externalIds filled in.
+            return tdAdsInDb.ToList();
+        }
+
+        private TDad AddTDad(ClientPortalProgContext db, TDad tdAdProps, int accountId)
+        {
+            var tdAd = new TDad
+            {
+                AccountId = accountId,
+                AdSetId = tdAdProps.AdSetId,
+                ExternalId = tdAdProps.ExternalId,
+                Name = tdAdProps.Name,
+                ExternalIds = tdAdProps.ExternalIds
+            };
+            db.TDads.Add(tdAd);
+            db.SaveChanges();
+            return tdAd;
+        }
+
+        private int UpdateTDads(ClientPortalProgContext db, IEnumerable<TDad> tdAdInDbList, TDad tdAdProps)
+        {
+            var numChanges = 0;
+            foreach (var tdAd in tdAdInDbList)
+            {
+                if (!string.IsNullOrWhiteSpace(tdAdProps.ExternalId))
+                {
+                    tdAd.ExternalId = tdAdProps.ExternalId;
+                }
+                if (!string.IsNullOrWhiteSpace(tdAdProps.Name))
+                {
+                    tdAd.Name = tdAdProps.Name;
+                }
+                if (tdAdProps.AdSetId.HasValue)
+                {
+                    tdAd.AdSetId = tdAdProps.AdSetId;
+                }
+                numChanges -= UpdateTDadExternalIds(tdAd, tdAdProps);
+            }
+            numChanges += db.SaveChanges();
+            return numChanges;
+        }
+
+        private int UpdateTDadExternalIds(TDad tdAd, TDad tdAdProps)
+        {
+            var numChanges = 0;
+            if (tdAdProps.ExternalIds == null)
+            {
+                return numChanges;
+            }
+            foreach (var idProp in tdAdProps.ExternalIds)
+            {
+                var externalId = tdAd.ExternalIds.FirstOrDefault(x => x.TypeId == idProp.TypeId);
+                if (externalId != null)
+                {
+                    if (externalId.ExternalId != idProp.ExternalId)
+                    {
+                        externalId.ExternalId = idProp.ExternalId;
+                        numChanges++;
+                    }
+                }
+                else
+                {
+                    tdAd.ExternalIds.Add(idProp);
+                    numChanges++;
+                }
+            }
+
+            return numChanges;
+        }
     }
 }

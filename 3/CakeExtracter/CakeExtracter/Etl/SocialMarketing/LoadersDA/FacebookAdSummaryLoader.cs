@@ -32,8 +32,11 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             var sum = new TDadSummary
             {
                 Date = item.Date,
-                TDadName = item.AdName,
-                TDadEid = item.AdId,
+                TDad = new TDad
+                {
+                    Name = item.AdName,
+                    ExternalId = item.AdId
+                },
                 Impressions = item.Impressions,
                 AllClicks = item.AllClicks,
                 Clicks = item.LinkClicks,

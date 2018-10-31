@@ -288,7 +288,7 @@ namespace Amazon
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = CreateBaseAmazonApiReportParams(campaignType, date, includeCampaignName);
-            param.metrics += ",adGroupId,adGroupName,asin";
+            param.metrics += ",adGroupId,adGroupName,asin"; //,sku
             return GetReportInfo<AmazonAdDailySummary>(EntitesType.ProductAds, campaignType, param, profileId);
         }
 

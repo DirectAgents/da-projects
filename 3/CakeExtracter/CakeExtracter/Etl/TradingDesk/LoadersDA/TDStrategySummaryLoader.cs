@@ -7,6 +7,7 @@ using CakeExtracter.Etl.TradingDesk.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
@@ -104,8 +105,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public void AddUpdateDependentStrategies(IEnumerable<StrategySummary> items)
         {
-            var strategies = items.GroupBy(i => new { i.Strategy.Name, i.Strategy.ExternalId })
-                .Select(x => x.First().Strategy);
+            var strategies = items
+                .GroupBy(i => new { i.Strategy.Name, i.Strategy.ExternalId })
+                .Select(x => x.First().Strategy)
+                .ToList();
             AddUpdateDependentStrategies(strategies, AccountId);
         }
 
@@ -118,6 +121,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             using (var db = new ClientPortalProgContext())
             {
+                AddDependentStrategyTypes(db, strategies);
                 foreach (var strategyProps in strategies)
                 {
                     if (StrategyStorage.IsEntityInStorage(strategyProps))
@@ -147,6 +151,48 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         StrategyStorage.AddEntityIdToStorage(stratsInDbList.First());
                     }
                 }
+            }
+        }
+
+        private void AddDependentStrategyTypes(ClientPortalProgContext db, IEnumerable<Strategy> strategies)
+        {
+            var notStoredTypes = strategies.GroupBy(x => x.Type?.Name)
+                .Select(x => x.First().Type)
+                .Where(x => x != null && !string.IsNullOrEmpty(x.Name) && !typeStorage.IsEntityInStorage(x))
+                .ToList();
+            AddDependentTypes(db, notStoredTypes);
+            AssignTypeIdToStrategies(strategies);
+        }
+
+        private void AddDependentTypes(ClientPortalProgContext db, IEnumerable<EntityType> types)
+        {
+            var newTypes = new List<EntityType>();
+            foreach (var type in types)
+            {
+                var typeInDB = db.Types.FirstOrDefault(x => type.Name == x.Name);
+                if (typeInDB == null)
+                {
+                    newTypes.Add(type);
+                }
+                else
+                {
+                    typeStorage.AddEntityIdToStorage(typeInDB);
+                }
+            }
+            db.Types.AddRange(newTypes);
+            db.SaveChanges();
+            newTypes.ForEach(typeStorage.AddEntityIdToStorage);
+        }
+
+        private void AssignTypeIdToStrategies(IEnumerable<Strategy> strategies)
+        {
+            foreach (var strategy in strategies)
+            {
+                if (typeStorage.IsEntityInStorage(strategy.Type))
+                {
+                    strategy.TypeId = typeStorage.GetEntityIdFromStorage(strategy.Type);
+                }
+                strategy.Type = null;
             }
         }
 
@@ -193,7 +239,13 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         private void UpsertSummaryMetrics(ClientPortalProgContext db, StrategySummary item)
         {
+            if (item.Metrics == null || !item.Metrics.Any())
+            {
+                return;
+            }
             item.Metrics.ForEach(x => x.EntityId = item.StrategyId);
+            metricLoader.AddDependentMetricTypes(item.Metrics);
+            metricLoader.AssignMetricTypeIdToItems(item.Metrics);
             metricLoader.UpsertSummaryMetrics<StrategySummaryMetric>(db, item.Metrics);
         }
 
@@ -220,9 +272,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 AccountId = accountId,
                 ExternalId = strategyProps.ExternalId,
-                Name = strategyProps.Name
+                Name = strategyProps.Name,
+                TypeId = strategyProps.TypeId
             };
-            AssignStrategyType(db, strategy, strategyProps.Type);
             db.Strategies.Add(strategy);
             db.SaveChanges();
             return strategy;
@@ -240,33 +292,12 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 {
                     strategy.Name = strategyProps.Name;
                 }
-                AssignStrategyType(db, strategy, strategyProps.Type);
+                if (strategyProps.TypeId.HasValue)
+                {
+                    strategy.TypeId = strategyProps.TypeId;
+                }
             }
             return db.SaveChanges();
-        }
-
-        private void AssignStrategyType(ClientPortalProgContext db, Strategy strategy, EntityType type)
-        {
-            if (type?.Name == null)
-            {
-                return;
-            }
-
-            if (typeStorage.IsEntityInStorage(type))
-            {
-                strategy.TypeId = typeStorage.GetEntityIdFromStorage(type);
-                return;
-            }
-
-            var dbType = db.Types.FirstOrDefault(t => t.Name == type.Name);
-            if (dbType == null)
-            {
-                db.Types.Add(type);
-                db.SaveChanges();
-                dbType = type;
-            }
-            typeStorage.AddEntityIdToStorage(dbType);
-            strategy.TypeId = dbType.Id;
         }
     }
 }

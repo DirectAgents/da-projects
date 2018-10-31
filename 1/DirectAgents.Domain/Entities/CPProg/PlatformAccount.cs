@@ -242,6 +242,9 @@ namespace DirectAgents.Domain.Entities.CPProg
         public int? AdSetId { get; set; }
         public virtual AdSet AdSet { get; set; }
 
+        [ForeignKey("AdId")]
+        public virtual List<TDadExternalId> ExternalIds { get; set; }
+
         public string ExternalId { get; set; }
         public string Name { get; set; }
         public int Width { get; set; }
@@ -257,7 +260,8 @@ namespace DirectAgents.Domain.Entities.CPProg
         [NotMapped]
         const int URLMAX = 100;
         [NotMapped]
-        public bool IsUrlShortened { get { return Url == null ? false : Url.Length > URLMAX; } }
+        public bool IsUrlShortened => Url != null && Url.Length > URLMAX;
+
         [NotMapped]
         public string UrlShortened
         {

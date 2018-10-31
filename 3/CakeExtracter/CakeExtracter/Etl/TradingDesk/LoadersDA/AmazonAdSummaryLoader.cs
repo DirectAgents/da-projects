@@ -5,7 +5,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class AmazonAdSummaryLoader : Loader<TDadSummary>
     {
-        private TDadSummaryLoader tdAdSummaryLoader;
+        private readonly TDadSummaryLoader tdAdSummaryLoader;
 
         public AmazonAdSummaryLoader(int accountId)
         {
@@ -16,6 +16,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             Logger.Info(accountId, "Loading {0} Amazon ProductAd / Creative data: ", tDadItems.Count);
 
+            tdAdSummaryLoader.PrepareData(tDadItems);
+            tdAdSummaryLoader.AddUpdateDependentAdSets(tDadItems);
             tdAdSummaryLoader.AddUpdateDependentTDads(tDadItems);
             tdAdSummaryLoader.AssignTDadIdToItems(tDadItems);
             var count = tdAdSummaryLoader.UpsertDailySummaries(tDadItems);

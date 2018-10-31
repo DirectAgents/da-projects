@@ -10,85 +10,86 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     class SummaryMetricLoader : Loader<SummaryMetric>
     {
-        private readonly EntityIdStorage<MetricType> metricTypeStorage;
+        public static readonly EntityIdStorage<MetricType> MetricTypeStorage;
 
-        public SummaryMetricLoader()
+        static SummaryMetricLoader()
         {
-            metricTypeStorage = new EntityIdStorage<MetricType>(x => x.Id, x => $"{x.Name} {x.DaysInterval}");
+            MetricTypeStorage = new EntityIdStorage<MetricType>(x => x.Id, x => $"{x.Name} {x.DaysInterval}");
         }
 
         protected override int Load(List<SummaryMetric> items)
         {
-            throw new System.NotImplementedException();
+            AddDependentMetricTypes(items);
+            AssignMetricTypeIdToItems(items);
+            using (var db = new ClientPortalProgContext())
+            {
+                return UpsertSummaryMetrics<SummaryMetric>(db, items);
+            }
         }
 
-        public void UpsertSummaryMetrics<TSummaryMetric>(ClientPortalProgContext db, IEnumerable<SummaryMetric> items)
-            where TSummaryMetric : SummaryMetric, new()
+        public void AssignMetricTypeIdToItems(IEnumerable<SummaryMetric> items)
         {
-            if (items == null || !items.Any())
-            {
-                return;
-            }
-
-            LoadMetricTypes(db, items);
             foreach (var item in items)
             {
-                LoadMetric<TSummaryMetric>(db, item);
+                item.MetricTypeId = MetricTypeStorage.GetEntityIdFromStorage(item.MetricType);
+                item.MetricType = null;
             }
         }
 
-        private void LoadMetricTypes(ClientPortalProgContext db, IEnumerable<SummaryMetric> items)
+        public void AddDependentMetricTypes(IEnumerable<SummaryMetric> items)
         {
             var notStoredMetricTypes = items
-                .Select(x => x.MetricType)
-                .Where(x => !metricTypeStorage.IsEntityInStorage(x)).ToList();
-            var newMetricTypes = GetNonexistentMetricTypes(db, notStoredMetricTypes);
-            if (!newMetricTypes.Any())
+                .GroupBy(x => new { x.MetricType.Name, x.MetricType.DaysInterval })
+                .Select(x => x.First().MetricType)
+                .Where(x => !MetricTypeStorage.IsEntityInStorage(x))
+                .ToList();
+            if (notStoredMetricTypes.Any())
             {
-                return;
+                AddDependentMetricTypes(notStoredMetricTypes);
             }
-            db.MetricTypes.AddRange(newMetricTypes);
-            db.SaveChanges();
-            newMetricTypes.ForEach(metricTypeStorage.AddEntityIdToStorage);
         }
 
-        private List<MetricType> GetNonexistentMetricTypes(ClientPortalProgContext db, IEnumerable<MetricType> metricTypes)
+        public int UpsertSummaryMetrics<TSummaryMetric>(ClientPortalProgContext db, IEnumerable<SummaryMetric> items)
+            where TSummaryMetric : SummaryMetric, new()
         {
-            var newMetricTypes = new List<MetricType>();
-            foreach (var metricType in metricTypes)
+            foreach (var item in items)
             {
-                var metricTypeInDB = db.MetricTypes.FirstOrDefault(x =>
-                    metricType.Name == x.Name && metricType.DaysInterval == x.DaysInterval);
-                if (metricTypeInDB != null)
+                var target = db.Set<TSummaryMetric>().Find(item.Date, item.EntityId, item.MetricTypeId);
+                if (target == null)
                 {
-                    metricTypeStorage.AddEntityIdToStorage(metricTypeInDB);
+                    AddMetric<TSummaryMetric>(db, item);
                 }
                 else
                 {
-                    newMetricTypes.Add(metricType);
+                    UpdateMetric(db, item, target);
                 }
             }
 
-            return newMetricTypes;
+            return items.Count();
         }
 
-        private void LoadMetric<TSummaryMetric>(ClientPortalProgContext db, SummaryMetric item)
-            where TSummaryMetric : SummaryMetric, new()
+        private void AddDependentMetricTypes(IEnumerable<MetricType> items)
         {
-            PrepareMetric(item);
-            var target = db.Set<TSummaryMetric>().Find(item.Date, item.EntityId, item.MetricTypeId);
-            if (target == null)
+            using (var db = new ClientPortalProgContext())
             {
-                AddMetric<TSummaryMetric>(db, item);
-                return;
+                var newMetricTypes = new List<MetricType>();
+                foreach (var metricType in items)
+                {
+                    var metricTypeInDB = db.MetricTypes.FirstOrDefault(x =>
+                        metricType.Name == x.Name && metricType.DaysInterval == x.DaysInterval);
+                    if (metricTypeInDB == null)
+                    {
+                        newMetricTypes.Add(metricType);
+                    }
+                    else
+                    {
+                        MetricTypeStorage.AddEntityIdToStorage(metricTypeInDB);
+                    }
+                }
+                db.MetricTypes.AddRange(newMetricTypes);
+                db.SaveChanges();
+                newMetricTypes.ForEach(MetricTypeStorage.AddEntityIdToStorage);
             }
-            UpdateMetric(db, item, target);
-        }
-
-        private void PrepareMetric(SummaryMetric item)
-        {
-            item.MetricTypeId = metricTypeStorage.GetEntityIdFromStorage(item.MetricType);
-            item.MetricType = null;
         }
 
         private void AddMetric<TSummaryMetric>(ClientPortalProgContext db, SummaryMetric item)

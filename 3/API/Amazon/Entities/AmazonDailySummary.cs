@@ -4,7 +4,17 @@ namespace Amazon.Entities
 {
     public enum SummaryMetricType
     {
-        attributedConversions, attributedConversionsSameSKU, attributedSales, attributedSalesSameSKU, attributedUnitsOrdered
+        attributedConversions,
+        attributedConversionsSameSKU,
+        attributedSales,
+        attributedSalesSameSKU,
+        attributedUnitsOrdered
+    }
+
+    public enum ProductAdIdType
+    {
+        SKU,
+        ASIN
     }
 
     public class StatSummary
@@ -61,8 +71,12 @@ namespace Amazon.Entities
 
     public class AmazonAdDailySummary : StatSummary
     {
+        public string campaignName { get; set; }
         public string adId { get; set; }
+        public Int64 adGroupId { get; set; }
+        public string adGroupName { get; set; }
         public string asin { get; set; }
+        public string sku { get; set; }
     }
 
     public class AmazonKeywordDailySummary : AmazonDailySummary
