@@ -21,7 +21,7 @@ namespace DirectAgents.Web.Areas.Cake.Controllers
                 if (advId.HasValue)
                     ViewBag.Advertiser = firstOffer.Advertiser;
             }
-            return View(offers);
+            return View(offers.OrderBy(x => x.Advertiser.AdvertiserName).ThenBy(x => x.OfferId));
         }
     }
 }

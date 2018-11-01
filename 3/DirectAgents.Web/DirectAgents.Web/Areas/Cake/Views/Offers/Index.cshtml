@@ -2,8 +2,10 @@
 @{
     ViewBag.Title = "Cake Offers";
     var advertiser = (DirectAgents.Domain.Entities.Cake.Advertiser)ViewBag.Advertiser;
+    var today = DateTime.Today;
+    var monthStart = new DateTime(today.Year, today.Month, 1);
 }
-<h2>Cake Offers</h2>
+<h2>@ViewBag.Title</h2>
 
 @if (advertiser != null) {
     <text>Advertiser: </text>@advertiser.AdvertiserName<br />
@@ -18,18 +20,19 @@
         <th>OfferId</th>
         <th>Name</th>
         <th>#Camps</th>
-        <th>#Affs</th>
-        <th>#EventConvs</th>
+        <th>#Affs(MTD)</th>
+        <th>#EventConvs(MTD)</th>
     </tr>
 @foreach (var off in Model)
 {
     //int numAffs = off.EventConversions.Select(x => x.AffiliateId).Distinct().Count(); //similar performance?
-    int numAffs = off.EventConversions.GroupBy(x => x.AffiliateId).Count();
-    int numConvs = off.EventConversions.Count();
+    var convs = off.EventConversions.Where(x => x.ConvDate >= monthStart);
+    int numAffs = convs.GroupBy(x => x.AffiliateId).Count();
+    int numConvs = convs.Count();
     <tr>
 @if (advertiser == null) {
         <td>@off.AdvertiserId</td>
-        <td>@off.Advertiser.AdvertiserName</td>
+        <td>@(off.Advertiser != null ? off.Advertiser.AdvertiserName : "")</td>@* (because off.AdvertiserId is nullable) *@
 }
         <td>@off.OfferId</td>
         <td>@off.OfferName</td>
@@ -39,3 +42,4 @@
     </tr>
 }
 </table>
+<br />

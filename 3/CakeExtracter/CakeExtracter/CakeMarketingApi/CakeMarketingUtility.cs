@@ -120,14 +120,16 @@ namespace CakeExtracter.CakeMarketingApi
                 return new List<OfferSummary>();
         }
 
-        public static List<CampaignSummary> CampaignSummaries(DateRange dateRange, int offerId = 0)
+        public static List<CampaignSummary> CampaignSummaries(DateRange dateRange, int advertiserManagerId = 0, int offerId = 0, int campaignId = 0)
         {
             var client = new CampaignSummariesClient();
             var request = new CampaignSummariesRequest
             {
                 start_date = dateRange.FromDate.ToString("MM/dd/yyyy"),
                 end_date = dateRange.ToDate.ToString("MM/dd/yyyy"),
-                site_offer_id = offerId
+                brand_advertiser_manager_id = advertiserManagerId,
+                site_offer_id = offerId,
+                campaign_id = campaignId
             };
             var response = client.CampaignSummaries(request);
             if (response == null || response.Campaigns == null)
@@ -139,6 +141,28 @@ namespace CakeExtracter.CakeMarketingApi
                 return response.Campaigns;
             else
                 return new List<CampaignSummary>();
+        }
+
+        public static List<SubIdSummary> SubIdSummaries(DateRange dateRange, int affiliateId, int offerId = 0)
+        {
+            var client = new SubIdSummariesClient();
+            var request = new SubIdSummariesRequest
+            {
+                start_date = dateRange.FromDate.ToString("MM/dd/yyyy"),
+                end_date = dateRange.ToDate.ToString("MM/dd/yyyy"),
+                source_affiliate_id = affiliateId,
+                site_offer_id = offerId
+            };
+            var response = client.SubIdSummaries(request);
+            if (response == null || response.SubIds == null)
+            {
+                Logger.Info("Unable to retrieve subid summaries. Trying again...");
+                response = client.SubIdSummaries(request);
+            }
+            if (response != null)
+                return response.SubIds;
+            else
+                return new List<SubIdSummary>();
         }
 
         public static List<DailySummary> DailySummaries(DateRange dateRange, int advertiserId, int offerId, int creativeId, int affiliateId)

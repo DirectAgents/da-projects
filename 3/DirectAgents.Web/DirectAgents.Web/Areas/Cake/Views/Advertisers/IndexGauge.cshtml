@@ -1,0 +1,113 @@
+﻿@model IEnumerable<DirectAgents.Domain.DTO.CakeGauge>
+@{
+    ViewBag.Title = "Cake Advertisers";
+    var today = DateTime.Today;
+    var monthStart = new DateTime(today.Year, today.Month, 1);
+    var formatNum = Request.QueryString["commas"] != null ? "#,##0.###" : "0.###";
+    bool super = Request.QueryString["super"] == "1";
+}
+<h2>@ViewBag.Title</h2>
+
+<table>
+    <tr>
+        <th colspan="3"></th>
+        <th colspan="4">Convs(MTD) - CampSums</th>
+        <th colspan="2">Sync (CampSums)</th>
+        <th colspan="5">Convs(MTD) - AffSubSums</th>
+        <th colspan="3">EventConvs...</th>
+        <th colspan="2">Sync (EventConvs)</th>
+    </tr>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>#Offers</th>
+        <th style="text-align:center">#</th>
+        <th>Paid</th>
+        <th>Earliest</th>
+        <th>Latest</th>
+        <th>MTD</th>
+        <th>today</th>
+        <th style="text-align:center">#</th>
+        <th>Paid</th>
+        <th>Earliest</th>
+        <th>Latest</th>
+        <th>Sync- today</th>
+        <th style="text-align:center">#(MTD)</th>
+        <th>Earliest</th>
+        <th>Latest</th>
+        <th>MTD</th>
+        <th>today</th>
+    </tr>
+    @foreach (var gauge in Model)
+    {
+        var adv = gauge.Advertiser;
+        bool isTotal = adv.AdvertiserId == 0;
+        <tr @(isTotal ? "style=font-weight:bold" : "")>
+            <td>@adv.AdvertiserId</td>
+            <td>@adv.AdvertiserName</td>
+            <td style="text-align:center">@Html.ActionLink(gauge.NumOffers.ToString(), "Index", "Offers", new { advId = isTotal ? null : (int?)adv.AdvertiserId }, null)</td>
+            <td style="text-align:right">@gauge.CampSums.NumConvs.ToString(formatNum)</td>
+            <td style="text-align:right">@gauge.CampSums.NumConvsPaid.ToString(formatNum)</td>
+            <td>@Html.DisplayFor(x => gauge.CampSums.Earliest)</td>
+            <td>@Html.DisplayFor(x => gauge.CampSums.Latest)</td>
+            <td>
+                <div id="divCmds1_@(adv.AdvertiserId)" class="divCmds divCmds1">
+@if (!isTotal || super) {
+                    @Html.ActionLink("clear", "ClearCampSums", new { id = adv.AdvertiserId }, new { onclick = "DoClear(" + adv.AdvertiserId + ", 1)" })<text> |</text>
+                    @Html.ActionLink("load", "LoadCampSums", new { id = adv.AdvertiserId }, new { onclick = "DoLoad(" + adv.AdvertiserId + ", 1)" })
+}
+                </div>
+            </td>
+            <td>
+                <div id="divCmds2_@(adv.AdvertiserId)" class="divCmds divCmds2">
+                    @Html.ActionLink("clear", "ClearCampSums", new { id = adv.AdvertiserId, justToday = true }, new { onclick = "DoClear(" + adv.AdvertiserId + ", 2)" }) |
+                    @Html.ActionLink("load", "LoadCampSums", new { id = adv.AdvertiserId, justToday = true }, new { onclick = "DoLoad(" + adv.AdvertiserId + ", 2)" })
+                </div>
+            </td>
+            <td style="text-align:right">@gauge.AffSubSums.NumConvs.ToString(formatNum)</td>
+            <td style="text-align:right">@gauge.AffSubSums.NumConvsPaid.ToString(formatNum)</td>
+            <td>@Html.DisplayFor(x => gauge.AffSubSums.Earliest)</td>
+            <td>@Html.DisplayFor(x => gauge.AffSubSums.Latest)</td>
+            <td>
+                <div id="divCmds3_@(adv.AdvertiserId)" class="divCmds divCmds3">
+@if (!isTotal || super) {
+                    @Html.ActionLink("clear", "ClearAffSubSums", new { id = adv.AdvertiserId, justToday = true }, new { onclick = "DoClear(" + adv.AdvertiserId + ", 3)" })<text> |</text>
+                    @Html.ActionLink("load", "LoadAffSubSums", new { id = adv.AdvertiserId, justToday = true }, new { onclick = "DoLoad(" + adv.AdvertiserId + ", 3)" })
+}
+                </div>
+            </td>
+            <td style="text-align:right">@gauge.EventConvs.NumConvs.ToString(formatNum)</td>
+            <td>@Html.DisplayFor(x => gauge.EventConvs.Earliest)</td>
+            <td>@Html.DisplayFor(x => gauge.EventConvs.Latest)</td>
+            <td>
+                <div id="divCmds4_@(adv.AdvertiserId)" class="divCmds divCmds4">
+@if (!isTotal || super) {
+                    @Html.ActionLink("clear", "ClearConvs", new { id = adv.AdvertiserId }, new { onclick = "DoClear(" + adv.AdvertiserId + ", 4)" })<text> |</text>
+                    @Html.ActionLink("load", "LoadConvs", new { id = adv.AdvertiserId }, new { onclick="DoLoad(" + adv.AdvertiserId + ", 4)" })
+}
+                </div>
+            </td>
+            <td>
+                <div id="divCmds4_@(adv.AdvertiserId)" class="divCmds divCmds5">
+                    @Html.ActionLink("clear", "ClearConvs", new { id = adv.AdvertiserId, justToday = true }, new { onclick = "DoClear(" + adv.AdvertiserId + ", 5)" }) |
+                    @Html.ActionLink("load", "LoadConvs", new { id = adv.AdvertiserId, justToday = true }, new { onclick = "DoLoad(" + adv.AdvertiserId + ", 5)" })
+                </div>
+            </td>
+        </tr>
+    }
+</table>
+<br />
+
+<script>
+    function DoClear(id, cmdCol) {
+        DoCmd(id, cmdCol, "Clearing....");
+    }
+    function DoLoad(id, cmdCol) {
+        DoCmd(id, cmdCol, "Loading....");
+    }
+    function DoCmd(id, cmdCol, cmdText) {
+        $('.divCmds').html("clear | load");
+        $('.divCmds' + cmdCol).empty();
+        $('#divCmds' + cmdCol + '_' + id).html(cmdText).css('color', 'red');
+    }
+</script>

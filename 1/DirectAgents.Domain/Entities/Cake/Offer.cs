@@ -33,6 +33,7 @@ namespace DirectAgents.Domain.Entities.Cake
         public virtual ICollection<Camp> Camps { get; set; }
         public virtual ICollection<OfferContract> OfferContracts { get; set; }
         public virtual ICollection<EventConversion> EventConversions { get; set; }
+        public virtual ICollection<AffSubSummary> AffSubSummaries { get; set; }
 
         public virtual List<OfferBudget> OfferBudgets { get; set; }
 

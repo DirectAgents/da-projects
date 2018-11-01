@@ -8,7 +8,7 @@ using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.BingAds;
-using Microsoft.BingAds.V11.Reporting;
+using Microsoft.BingAds.V12.Reporting;
 
 namespace BingAds
 {
@@ -167,7 +167,7 @@ namespace BingAds
                 Format = ReportFormat.Csv,
                 ReportName = "Conversion Performance Report",
                 ReturnOnlyCompleteData = true,
-                Aggregation = NonHourlyReportAggregation.Daily,
+                Aggregation = ReportAggregation.Daily,
                 Scope = new AccountThroughAdGroupReportScope
                 {
                     AccountIds = new[] { accountId },
@@ -258,7 +258,7 @@ namespace BingAds
                 Format = ReportFormat.Csv,
                 ReportName = "Goals And Funnels Report",
                 ReturnOnlyCompleteData = true,
-                Aggregation = NonHourlyReportAggregation.Daily,
+                Aggregation = ReportAggregation.Daily,
                 Scope = new AccountThroughAdGroupReportScope
                 {
                     AccountIds = new[] { accountId },
@@ -370,11 +370,11 @@ namespace BingAds
                 LogInfo(string.Format("Couldn't get OAuth tokens. Error: {0}. Description: {1}", ex.Details.Error, ex.Details.Description));
             }
             // Catch Reporting service exceptions
-            catch (FaultException<Microsoft.BingAds.V11.Reporting.AdApiFaultDetail> ex)
+            catch (FaultException<Microsoft.BingAds.V12.Reporting.AdApiFaultDetail> ex)
             {
                 LogInfo(string.Join("; ", ex.Detail.Errors.Select(error => string.Format("{0}: {1}", error.Code, error.Message))));
             }
-            catch (FaultException<Microsoft.BingAds.V11.Reporting.ApiFaultDetail> ex)
+            catch (FaultException<Microsoft.BingAds.V12.Reporting.ApiFaultDetail> ex)
             {
                 LogInfo(string.Join("; ", ex.Detail.OperationErrors.Select(error => string.Format("{0}: {1}", error.Code, error.Message))));
                 LogInfo(string.Join("; ", ex.Detail.BatchErrors.Select(error => string.Format("{0}: {1}", error.Code, error.Message))));

@@ -2,10 +2,15 @@
 @{
     ViewBag.Title = "Cake Camps";
     var offer = (DirectAgents.Domain.Entities.Cake.Offer)ViewBag.Offer;
+    var today = DateTime.Today;
+    var monthStart = new DateTime(today.Year, today.Month, 1);
 }
-<h2>Cake Camps</h2>
+<h2>@ViewBag.Title</h2>
 
 @if (offer != null) {
+    if (offer.Advertiser != null) {
+        <text>Advertiser: </text>@offer.Advertiser.AdvertiserName<br />
+    }
     <text>Offer: </text>@offer.OfferName<br />
 }
 
@@ -19,10 +24,11 @@
         <th>Offer<br />Contract</th>
         <th>Payout</th>
         <th>Curr</th>
-        <th>#CampSums</th>
+        <th style="text-align:center">#CampSums<br />(MTD)</th>
     </tr>
 @foreach (var camp in Model)
 {
+    int numCampSums = camp.CampSums.Where(x => x.Date >= monthStart).Count();
     <tr>
         <td>@camp.CampaignId</td>
 @if (offer == null) {
@@ -32,7 +38,7 @@
         <td>@camp.OfferContractId</td>
         <td>@camp.PayoutAmount</td>
         <td>@camp.CurrencyAbbr</td>
-        <td style="text-align:center">@camp.CampSums.Count().ToString()</td>
+        <td style="text-align:center">@Html.ActionLink(numCampSums.ToString(), "Index", "CampSums", new { campId = camp.CampaignId }, null)</td>
     </tr>
 }
 </table>

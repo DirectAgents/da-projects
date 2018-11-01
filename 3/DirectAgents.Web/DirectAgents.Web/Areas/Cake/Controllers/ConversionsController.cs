@@ -12,9 +12,12 @@ namespace DirectAgents.Web.Areas.Cake.Controllers
             this.daRepo = mainRepository;
         }
 
-        public ActionResult Index(int? offId, int? affId)
+        public ActionResult Index(int? offId, int? affId, DateTime? start, DateTime? end)
         {
-            var eventConvs = daRepo.GetEventConversions(offerId: offId, affiliateId: affId);
+            var today = DateTime.Today;
+            start = start ?? new DateTime(today.Year, today.Month, 1);
+
+            var eventConvs = daRepo.GetEventConversions(offerId: offId, affiliateId: affId, startDate: start, endDate: end);
             if (eventConvs.Any())
             {
                 var firstConv = eventConvs.First();
@@ -26,9 +29,12 @@ namespace DirectAgents.Web.Areas.Cake.Controllers
             return View(eventConvs.OrderBy(x => x.Id));
         }
 
-        public ActionResult AffSum(int? offId)
+        public ActionResult AffSum(int? offId, DateTime? start, DateTime? end)
         {
-            var eventConvs = daRepo.GetEventConversions(offerId: offId);
+            var today = DateTime.Today;
+            start = start ?? new DateTime(today.Year, today.Month, 1);
+
+            var eventConvs = daRepo.GetEventConversions(offerId: offId, startDate: start, endDate: end);
             if (eventConvs.Any())
             {
                 var firstConv = eventConvs.First();

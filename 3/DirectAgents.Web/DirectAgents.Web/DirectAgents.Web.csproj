@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DirectAgents.Web</RootNamespace>
     <AssemblyName>DirectAgents.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
@@ -43,6 +43,14 @@
   <ItemGroup>
     <Reference Include="AutoMapper, Version=7.0.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.7.0.1\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="HttpAuthModule, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -113,8 +121,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Linq.Dynamic.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=0f07ec44de6ac832, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Linq.Dynamic.Core.1.0.8.2\lib\net45\System.Linq.Dynamic.Core.dll</HintPath>
+    <Reference Include="System.Linq.Dynamic.Core, Version=1.0.9.0, Culture=neutral, PublicKeyToken=0f07ec44de6ac832, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Linq.Dynamic.Core.1.0.9\lib\net46\System.Linq.Dynamic.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Net" />
@@ -132,7 +140,7 @@
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
@@ -211,7 +219,9 @@
     <Compile Include="Areas\Cake\CakeAreaRegistration.cs" />
     <Compile Include="Areas\Cake\Controllers\AdvertisersController.cs" />
     <Compile Include="Areas\Cake\Controllers\CampsController.cs" />
+    <Compile Include="Areas\Cake\Controllers\CampSumsController.cs" />
     <Compile Include="Areas\Cake\Controllers\ConversionsController.cs" />
+    <Compile Include="Areas\Cake\Controllers\HomeController.cs" />
     <Compile Include="Areas\Cake\Controllers\OffersController.cs" />
     <Compile Include="Areas\ClientAdmin\ClientAdminAreaRegistration.cs" />
     <Compile Include="Areas\ClientAdmin\Controllers\ClientReportsController.cs" />
@@ -1130,6 +1140,9 @@
     <Content Include="Areas\Cake\Views\Camps\Index.cshtml" />
     <Content Include="Areas\Cake\Views\Conversions\AffSum.cshtml" />
     <Content Include="Areas\Cake\Views\Conversions\Index.cshtml" />
+    <Content Include="Areas\Cake\Views\Advertisers\IndexGauge.cshtml" />
+    <Content Include="Areas\Cake\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Cake\Views\CampSums\Index.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
@@ -1149,6 +1162,7 @@
     <None Include="Properties\PublishProfiles\dagents__dev.pubxml" />
     <None Include="Properties\PublishProfiles\dagents__staging.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\DayOfWeek.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

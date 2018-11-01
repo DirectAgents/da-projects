@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DirectAgents.Domain</RootNamespace>
     <AssemblyName>DirectAgents.Domain</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -83,7 +83,6 @@
     <Compile Include="Abstract\IABRepository.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Abstract\IAdmin.cs" />
     <Compile Include="Abstract\ICampaignRepository.cs" />
     <Compile Include="Abstract\IClientRepository.cs" />
     <Compile Include="Abstract\ICPProgRepository.cs" />
@@ -100,10 +99,8 @@
     <Compile Include="Concrete\ABRepository.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Concrete\AdminImpl.cs" />
     <Compile Include="Concrete\CampaignRepository.cs" />
     <Compile Include="Concrete\ClientRepository.cs" />
-    <Compile Include="Concrete\CountryLookup.cs" />
     <Compile Include="Concrete\CPClientRepository.cs" />
     <Compile Include="Concrete\CPProgRepository.cs" />
     <Compile Include="Concrete\CPProgStatsRepository.cs" />
@@ -121,6 +118,7 @@
     <Compile Include="Contexts\HistoryContext.cs" />
     <Compile Include="Contexts\ClientPortalProgContext.cs" />
     <Compile Include="DTO\ABStat.cs" />
+    <Compile Include="DTO\CakeGauge.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
     <Compile Include="DTO\ProgClientStats.cs" />
     <Compile Include="DTO\ProgMediaStat.cs" />
@@ -155,6 +153,7 @@
     <Compile Include="Entities\AdRoll\Advertisable.cs" />
     <Compile Include="Entities\Cake\Advertiser.cs" />
     <Compile Include="Entities\Cake\Affiliate.cs" />
+    <Compile Include="Entities\Cake\AffSubSummary.cs" />
     <Compile Include="Entities\Cake\Camp.cs" />
     <Compile Include="Entities\Cake\CampSum.cs" />
     <Compile Include="Entities\Cake\Contact.cs" />
@@ -263,6 +262,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>WikiModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\MainHelper.cs" />
     <Compile Include="MigrationsAB\201612201825281_InitialCreate.cs" />
     <Compile Include="MigrationsAB\201612201825281_InitialCreate.Designer.cs">
       <DependentUpon>201612201825281_InitialCreate.cs</DependentUpon>
@@ -644,6 +644,10 @@
     <Compile Include="Migrations\201803281659222_Mig_EventConversion.Designer.cs">
       <DependentUpon>201803281659222_Mig_EventConversion.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810232032208_Mig_AffSubSummary.cs" />
+    <Compile Include="Migrations\201810232032208_Mig_AffSubSummary.Designer.cs">
+      <DependentUpon>201810232032208_Mig_AffSubSummary.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Seed\ABSeeder.cs" />
@@ -651,16 +655,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Seed\TDSeeder.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Cake.Data.Wsdl\Cake.Data.Wsdl.csproj">
-      <Project>{8656B9B9-82A6-400A-A7B7-44AF044321E3}</Project>
-      <Name>Cake.Data.Wsdl</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cake.Model\Cake.Model.csproj">
-      <Project>{B3B19DA1-2335-4597-8DBE-9C7A12B7E92E}</Project>
-      <Name>Cake.Model</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -987,6 +981,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201803281659222_Mig_EventConversion.resx">
       <DependentUpon>201803281659222_Mig_EventConversion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810232032208_Mig_AffSubSummary.resx">
+      <DependentUpon>201810232032208_Mig_AffSubSummary.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -21,7 +21,7 @@ namespace DirectAgents.Web.Areas.Cake.Controllers
                 if (offId.HasValue)
                     ViewBag.Offer = firstCamp.Offer;
             }
-            return View(camps.OrderBy(x => x.Affiliate.AffiliateName).ThenBy(x => x.CampaignId));
+            return View(camps.OrderBy(x => x.Affiliate.AffiliateName).ThenBy(x => x.PayoutAmount).ThenBy(x => x.OfferContractId));
         }
     }
 }

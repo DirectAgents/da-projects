@@ -46,7 +46,14 @@ namespace DirectAgents.Domain.Abstract
         StatsSummary GetStatsSummary(int? offerId, DateTime? startDate, DateTime? endDate);
 
         IQueryable<Camp> GetCamps(int? offerId = null, int? affiliateId = null);
-        IQueryable<CampSum> GetCampSums(int? advertiserId = null, int? offerId = null, DateTime? monthStart = null);
-        IQueryable<EventConversion> GetEventConversions(int? offerId = null, int? affiliateId = null);
+        IQueryable<CampSum> GetCampSums(int? advertiserId = null, int? offerId = null, int? campId = null, DateTime? startDate = null, DateTime? endDate = null);
+        void DeleteCampSums(IQueryable<CampSum> campSums);
+        IQueryable<AffSubSummary> GetAffSubSummaries(int? advertiserId = null, int? offerId = null, int? affiliateId = null, DateTime? startDate = null, DateTime? endDate = null);
+        void DeleteAffSubSummaries(IQueryable<AffSubSummary> affSubSums);
+        IQueryable<EventConversion> GetEventConversions(int? advertiserId = null, int? offerId = null, int? affiliateId = null, DateTime? startDate = null, DateTime? endDate = null);
+        void DeleteEventConversions(IQueryable<EventConversion> eventConvs);
+
+        CakeGauge GetGaugeForAllAdvertisers(DateTime? startDateForStats = null);
+        IQueryable<CakeGauge> GetGaugesByAdvertiser(bool includeThoseWithNoStats = false, DateTime? startDateForStats = null);
     }
 }

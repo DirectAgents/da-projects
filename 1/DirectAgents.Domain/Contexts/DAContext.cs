@@ -30,7 +30,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<OfferContract>().ToTable("OfferContract", cakeSchema);
             modelBuilder.Entity<Camp>().ToTable("Camp", cakeSchema);
             modelBuilder.Entity<OfferDailySummary>()
-                .HasKey(t => new { t.OfferId, t.Date }).ToTable("OfferDailySummary", cakeSchema);
+                .HasKey(x => new { x.OfferId, x.Date }).ToTable("OfferDailySummary", cakeSchema);
             modelBuilder.Entity<CampSum>()
                 .HasKey(x => new { x.CampId, x.Date }).ToTable("CampSum", cakeSchema);
             modelBuilder.Entity<CampSum>().HasRequired(x => x.CostCurr).WithMany().WillCascadeOnDelete(false);
@@ -40,6 +40,9 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<EventConversion>().ToTable("EventConversion", cakeSchema);
             modelBuilder.Entity<EventConversion>().HasRequired(x => x.ReceivedCurr).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<EventConversion>().HasRequired(x => x.PaidCurr).WithMany().WillCascadeOnDelete(false);
+            modelBuilder.Entity<AffSub>().ToTable("AffSub", cakeSchema);
+            modelBuilder.Entity<AffSubSummary>()
+                .HasKey(x => new { x.AffSubId, x.OfferId, x.Date }).ToTable("AffSubSummary", cakeSchema);
 
             modelBuilder.Entity<OfferContract>().Property(x => x.ReceivedAmount).HasPrecision(19, 4);
             modelBuilder.Entity<Camp>().Property(x => x.PayoutAmount).HasPrecision(19, 4);
@@ -52,16 +55,21 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<CampSum>().Property(x => x.CostPerUnit).HasPrecision(19, 4);
             modelBuilder.Entity<EventConversion>().Property(x => x.Received).HasPrecision(19, 4);
             modelBuilder.Entity<EventConversion>().Property(x => x.Paid).HasPrecision(19, 4);
+            modelBuilder.Entity<AffSubSummary>().Property(x => x.Conversions).HasPrecision(16, 6);
+            modelBuilder.Entity<AffSubSummary>().Property(x => x.Paid).HasPrecision(16, 6);
+            modelBuilder.Entity<AffSubSummary>().Property(x => x.Sellable).HasPrecision(16, 6);
+            modelBuilder.Entity<AffSubSummary>().Property(x => x.Revenue).HasPrecision(19, 4);
+            modelBuilder.Entity<AffSubSummary>().Property(x => x.Cost).HasPrecision(19, 4);
 
             // Screen
             modelBuilder.Entity<Salesperson>().ToTable("Salesperson", screenSchema);
             modelBuilder.Entity<SalespersonStat>()
-                .HasKey(t => new { t.Date, t.SalespersonId })
+                .HasKey(x => new { x.Date, x.SalespersonId })
                 .ToTable("SalespersonStat", screenSchema);
 
             // general
             modelBuilder.Entity<Variable>()
-                .Property(t => t.DecVal).HasPrecision(18, 6);
+                .Property(x => x.DecVal).HasPrecision(18, 6);
         }
 
         public DbSet<Advertiser> Advertisers { get; set; }
@@ -79,6 +87,8 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<Event> Events { get; set; }
         public DbSet<PriceFormat> PriceFormats { get; set; }
         public DbSet<EventConversion> EventConversions { get; set; }
+        public DbSet<AffSub> AffSubs { get; set; }
+        public DbSet<AffSubSummary> AffSubSummaries { get; set; }
 
         public DbSet<Salesperson> Salespeople { get; set; }
         public DbSet<SalespersonStat> SalespersonStats { get; set; }

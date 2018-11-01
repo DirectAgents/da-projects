@@ -17,7 +17,7 @@ namespace DirectAgents.Web.Areas.Cake
             context.MapRoute(
                 "Cake_default",
                 "Cake/{controller}/{action}/{id}",
-                new { action = "Index", id = UrlParameter.Optional }
+                new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

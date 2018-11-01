@@ -1,76 +1,129 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
+using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.CakeMarketing.DALoaders;
 using CakeExtracter.Etl.CakeMarketing.Extracters;
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.Cake;
 
 namespace CakeExtracter.Commands
 {
     [Export(typeof(ConsoleCommand))]
     public class DASynchCampSums : ConsoleCommand
     {
+        public static int RunStatic(string advertiserIds = null, string offerIds = null, DateTime? startDate = null, DateTime? endDate = null, int? daysAgoToStart = null)
+        {
+            AutoMapperBootstrapper.CheckRunSetup();
+            var cmd = new DASynchCampSums
+            {
+                AdvertiserIds = advertiserIds,
+                OfferIds = offerIds,
+                StartDate = startDate,
+                EndDate = endDate,
+                DaysAgoToStart = daysAgoToStart
+            };
+            return cmd.Run();
+        }
+
+        public string AdvertiserIds { get; set; }
         public string OfferIds { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public int? DaysAgoToStart { get; set; }
 
         public override void ResetProperties()
         {
+            AdvertiserIds = null;
             OfferIds = null;
             StartDate = null;
             EndDate = null;
+            DaysAgoToStart = null;
         }
 
+        //Note: If non-zero advIds and offIds are specified, will extract for advs and offs separately.
         public DASynchCampSums()
         {
-            IsCommand("daSynchCampSums", "synch monthly CampaignSummaries");
-            HasOption("o|offerIds=", "Offer Ids (default = all offers)", c => OfferIds = c);
-            HasOption("s|startDate=", "Start Date (default is 1st of month (via yesterday))", c => StartDate = DateTime.Parse(c));
-            HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
+            IsCommand("daSynchCampSums", "synch daily CampaignSummaries");
+            HasOption("a|advertiserIds=", "Advertiser Ids (default: all advertisers)", c => AdvertiserIds = c);
+            HasOption("o|offerIds=", "Offer Ids (default: all offers)", c => OfferIds = c);
+            HasOption("s|startDate=", "Start Date (default: 'daysAgo')", c => StartDate = DateTime.Parse(c));
+            HasOption("e|endDate=", "End Date (default: today)", c => EndDate = DateTime.Parse(c));
+            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default: 41; use -1 for first-of-month)", c => DaysAgoToStart = c);
         }
 
-        //TODO: an option to go back X days
-
-        private DateRange GetDateRange()
+        private DateRange GetDateRange() //TODO: unhardcode defaultDaysAgo
         {
-            var yesterday = DateTime.Today.AddDays(-1);
-            DateTime from = StartDate ?? new DateTime(yesterday.Year, yesterday.Month, 1);
-            DateTime to = EndDate ?? yesterday;
-            return new DateRange(from, to);
+            return GetDateRange(StartDate, EndDate, DaysAgoToStart, defaultDaysAgo: 41, useYesterday: false);
         }
+        // "useYesterday": when computing first-of-month and default end-date
+        public static DateRange GetDateRange(DateTime? startDate, DateTime? endDate, int? daysAgoToStart, int defaultDaysAgo = 0, bool useYesterday = false)
+        {
+            var today = DateTime.Today;
+            var upTo = useYesterday ? today.AddDays(-1) : today;
+            if (!startDate.HasValue && daysAgoToStart == -1) // use "first-of-month"
+                startDate = new DateTime(upTo.Year, upTo.Month, 1);
+            daysAgoToStart = daysAgoToStart ?? defaultDaysAgo;
+            return new DateRange(startDate ?? today.AddDays(-daysAgoToStart.Value), endDate ?? upTo);
+        }
+        //TODO: use the above in other ETL commands
 
+        //TODO: option to delete-all-for-daterange first
         public override int Execute(string[] remainingArguments)
         {
             var dateRange = GetDateRange();
-            //TODO: option to delete all first
+            Logger.Info("Cake CampSums ETL. DateRange {0}.", dateRange);
 
-            var offerIds = new List<int>();
-            if (this.OfferIds != null)
-            {
-                var offerIds_string = this.OfferIds.Split(new char[] { ',' });
-                int tempInt;
-                foreach (var offerId_string in offerIds_string)
-                {
-                    if (int.TryParse(offerId_string, out tempInt))
-                        offerIds.Add(tempInt);
-                }
-            }
-            if (offerIds.Count == 0)
-                offerIds.Add(0); // all offers
+            var advs = GetAdvertisers();
+            var offIds = ParseIds(this.OfferIds);
 
-            foreach (var offerId in offerIds)
-            {
-                var extracter = new CampaignSummaryExtracter(dateRange, offerId: offerId, groupByOffAff: false, getDailyStats: true);
-                var loader = new DACampSumLoader(keepAllNonZero: true);
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
-                //LoadMissingOffers(loader.OfferIdsSaved);
-                //LoadMissingCampaigns(loader.CampIdsSaved);
-            }
+            var extracter = new CampaignSummaryExtracter(dateRange, advertisers: advs, offerIds: offIds, groupByOffAff: false, getDailyStats: true);
+            var loader = new DACampSumLoader(keepAllNonZero: true);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
             return 0;
         }
+
+        private static List<int> ParseIds(string ids)
+        {
+            var idsList = new List<int>();
+            if (ids != null)
+            {
+                var ids_string = ids.Split(new char[] { ',' });
+                int tempInt;
+                foreach (var id_string in ids_string)
+                {
+                    if (int.TryParse(id_string, out tempInt))
+                        idsList.Add(tempInt);
+                }
+            }
+            if (idsList.Count == 0)
+                idsList.Add(0); // 0 means all items in Cake
+
+            return idsList;
+        }
+
+        private IEnumerable<Advertiser> GetAdvertisers()
+        {
+            var advIds = ParseIds(this.AdvertiserIds).ToArray();
+            bool wantAllAdvertisers = (advIds == null) || !advIds.Any() || advIds.Any(id => id == 0);
+            if (wantAllAdvertisers)
+                return null;
+
+            using (var db = new DAContext())
+            {
+                var advertisers = db.Advertisers.Where(x => advIds.Contains(x.AdvertiserId));
+                return advertisers.ToList();
+            }
+        }
+
+        //*Previously, called these two methods after joining the extracter and loader threads...
+        //LoadMissingOffers(loader.OfferIdsSaved);
+        //LoadMissingCampaigns(loader.CampIdsSaved);
 
         //private void LoadMissingOffers(IEnumerable<int> offerIdsToCheck)
         //{

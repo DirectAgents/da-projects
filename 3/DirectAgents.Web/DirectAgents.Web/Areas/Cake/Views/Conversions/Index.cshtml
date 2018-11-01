@@ -1,12 +1,15 @@
 ﻿@model IEnumerable<DirectAgents.Domain.Entities.Cake.EventConversion>
 @{
-    ViewBag.Title = "EventConversions";
+    ViewBag.Title = "Event-Conversions";
     var offer = (DirectAgents.Domain.Entities.Cake.Offer)ViewBag.Offer;
     var affiliate = (DirectAgents.Domain.Entities.Cake.Affiliate)ViewBag.Affiliate;
 }
-<h2>EventConversions</h2>
+<h2>@ViewBag.Title</h2>
 
 @if (offer != null) {
+    if (offer.Advertiser != null) {
+        <text>Advertiser: </text>@offer.Advertiser.AdvertiserName<br />
+    }
     <text>Offer: </text>@offer.OfferName<br />
 }
 @if (affiliate != null) {
@@ -41,10 +44,10 @@
             @Html.DisplayFor(x => conv.Id)
         </td>
         <td style="white-space:nowrap">
-            @Html.DisplayFor(x => conv.ConvDate)
+            @conv.ConvDate
         </td>
         <td style="white-space:nowrap">
-            @Html.DisplayFor(x => conv.ClickDate)
+            @conv.ClickDate
         </td>
         <td>
             @Html.DisplayFor(x => conv.Event.Name)
