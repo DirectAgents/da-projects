@@ -134,7 +134,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             AddUpdateDependentKeywords(keywords);
         }
 
-        private void AddUpdateDependentKeywords(List<Keyword> items)
+        public void AddUpdateDependentKeywords(List<Keyword> items)
         {
             using (var db = new ClientPortalProgContext())
             {

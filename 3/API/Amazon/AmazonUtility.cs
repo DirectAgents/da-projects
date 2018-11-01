@@ -297,11 +297,13 @@ namespace Amazon
             return GetReportInfo<AmazonKeywordDailySummary>(EntitesType.Keywords, campaignType, param, profileId);
         }
 
-        public List<AmazonSearchTermDailySummary> ReportSearchTerms(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
+        /// Only for Sponsored Product
+        public List<AmazonSearchTermDailySummary> ReportSearchTerms(DateTime date, string profileId, bool includeCampaignName)
         {
+            var campaignType = CampaignType.SponsoredProducts;
             var param = CreateBaseAmazonApiReportParams(campaignType, date, includeCampaignName);
             param.segment = "query";
-            param.metrics += ",keywordText,campaignId";
+            param.metrics += ",keywordText,campaignId,adGroupId,adGroupName";
             return GetReportInfo<AmazonSearchTermDailySummary>(EntitesType.Keywords, campaignType, param, profileId);
         }
 

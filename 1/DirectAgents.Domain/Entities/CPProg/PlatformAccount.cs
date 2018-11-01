@@ -309,7 +309,11 @@ namespace DirectAgents.Domain.Entities.CPProg
         public int Id { get; set; }
         public string Query { get; set; }
 
-        public int KeywordId { get; set; }
+        public int? KeywordId { get; set; }
         public virtual Keyword Keyword { get; set; }
+
+        public int AccountId { get; set; }
+        [ForeignKey("AccountId")]
+        public virtual ExtAccount ExtAccount { get; set; }
     }
 }

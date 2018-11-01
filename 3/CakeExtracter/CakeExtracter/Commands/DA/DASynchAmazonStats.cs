@@ -103,6 +103,8 @@ namespace CakeExtracter.Commands
                         DoETL_Creative(dateRange, account, amazonUtility);
                     if (statsType.Keyword)
                         DoETL_Keyword(dateRange, account, amazonUtility);
+                    if (statsType.SearchTerm)
+                        DoETL_SearchTerm(dateRange, account, amazonUtility);
                 }
                 catch (Exception ex)
                 {
@@ -184,6 +186,16 @@ namespace CakeExtracter.Commands
         {
             var extracter = new AmazonKeywordExtracter(amazonUtility, dateRange, account, campaignFilter: account.Filter);
             var loader = new AmazonKeywordSummaryLoader(account.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+
+        private void DoETL_SearchTerm(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
+        {
+            var extracter = new AmazonSearchTermExtracter(amazonUtility, dateRange, account, campaignFilter: account.Filter);
+            var loader = new AmazonSearchTermSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();

@@ -555,6 +555,10 @@
     <Compile Include="MigrationsTD\201811010816073_Mig_KeywordExternalId.Designer.cs">
       <DependentUpon>201811010816073_Mig_KeywordExternalId.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsTD\201811010956242_Mig_SearchTermAccountId.cs" />
+    <Compile Include="MigrationsTD\201811010956242_Mig_SearchTermAccountId.Designer.cs">
+      <DependentUpon>201811010956242_Mig_SearchTermAccountId.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.Designer.cs">
@@ -917,6 +921,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201811010816073_Mig_KeywordExternalId.resx">
       <DependentUpon>201811010816073_Mig_KeywordExternalId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201811010956242_Mig_SearchTermAccountId.resx">
+      <DependentUpon>201811010956242_Mig_SearchTermAccountId.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>
