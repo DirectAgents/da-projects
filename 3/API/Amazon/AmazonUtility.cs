@@ -261,12 +261,10 @@ namespace Amazon
             return GetEntities<AmazonCampaign>(EntitesType.Campaigns, campaignType, null, profileId);
         }
 
-        /// Only for Sponsored Product
-        public List<AmazonKeyword> GetKeywords(string profileId, IEnumerable<long> campaignIds)
+        /// Returns all keywords of different types
+        public List<AmazonKeyword> GetKeywords(CampaignType campaignType, string profileId)
         {
-            var parameters = new Dictionary<string, string>();
-            AddParameter(parameters, "campaignIdFilter", campaignIds);
-            return GetEntities<AmazonKeyword>(EntitesType.Keywords, CampaignType.SponsoredProducts, parameters, profileId);
+            return GetSnapshotInfo<AmazonKeyword>(EntitesType.Keywords, campaignType, profileId);
         }
 
         public List<AmazonDailySummary> ReportCampaigns(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
@@ -295,7 +293,7 @@ namespace Amazon
         public List<AmazonKeywordDailySummary> ReportKeywords(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
             var param = CreateBaseAmazonApiReportParams(campaignType, date, includeCampaignName);
-            param.metrics += ",keywordText,campaignId";
+            param.metrics += ",keywordText,campaignId,adGroupId,adGroupName";
             return GetReportInfo<AmazonKeywordDailySummary>(EntitesType.Keywords, campaignType, param, profileId);
         }
 
@@ -305,12 +303,6 @@ namespace Amazon
             param.segment = "query";
             param.metrics += ",keywordText,campaignId";
             return GetReportInfo<AmazonSearchTermDailySummary>(EntitesType.Keywords, campaignType, param, profileId);
-        }
-        
-        private void AddParameter<T>(Dictionary<string, string> parameters, string paramName, IEnumerable<T> values)
-        {
-            var paramValue = string.Join(",", values);
-            parameters.Add(paramName, paramValue);
         }
 
         private List<T> GetEntities<T>(EntitesType entitiesType, CampaignType campaignType = CampaignType.Empty,

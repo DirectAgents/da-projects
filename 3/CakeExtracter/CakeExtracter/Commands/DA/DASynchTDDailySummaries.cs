@@ -9,7 +9,6 @@ using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
-using CakeExtracter.Etl;
 
 namespace CakeExtracter.Commands
 {
@@ -167,11 +166,10 @@ namespace CakeExtracter.Commands
         public bool Creative { get; set; }
         public bool Site { get; set; }
         public bool Conv { get; set; }
+        public bool Keyword { get; set; }
+        public bool SearchTerm { get; set; }
 
-        public bool All
-        {
-            get { return Daily && Strategy && AdSet && Creative && Site && Conv; }
-        }
+        public bool All => Daily && Strategy && AdSet && Creative && Site && Conv && Keyword && SearchTerm;
 
         public void SetAllTrue()
         {
@@ -181,11 +179,13 @@ namespace CakeExtracter.Commands
             Creative = true;
             Site = true;
             Conv = true;
+            Keyword = true;
+            SearchTerm = true;
         }
 
         public StatsTypeAgg(string statsTypeString)
         {
-            string statsTypeUpper = (statsTypeString == null) ? "" : statsTypeString.ToUpper();
+            var statsTypeUpper = (statsTypeString == null) ? "" : statsTypeString.ToUpper();
             if (string.IsNullOrWhiteSpace(statsTypeUpper) || statsTypeUpper == "ALL")
                 SetAllTrue();
             else if (statsTypeUpper.StartsWith("DAILY"))
@@ -200,6 +200,10 @@ namespace CakeExtracter.Commands
                 Site = true;
             else if (statsTypeUpper.StartsWith("CONV"))
                 Conv = true;
+            else if (statsTypeUpper.StartsWith("KEYW"))
+                Keyword = true;
+            else if (statsTypeUpper.StartsWith("STERM"))
+                SearchTerm = true;
         }
     }
 }

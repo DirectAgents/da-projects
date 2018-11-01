@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Amazon;
 using CakeExtracter.Bootstrappers;
@@ -102,6 +101,8 @@ namespace CakeExtracter.Commands
                         DoETL_AdSet(dateRange, account, amazonUtility);
                     if (statsType.Creative)
                         DoETL_Creative(dateRange, account, amazonUtility);
+                    if (statsType.Keyword)
+                        DoETL_Keyword(dateRange, account, amazonUtility);
                 }
                 catch (Exception ex)
                 {
@@ -173,6 +174,16 @@ namespace CakeExtracter.Commands
             //var extracter = new AmazonAdExtrater(amazonUtility, dateRange, account, campaignFilter: account.Filter, campaignFilterOut: account.FilterOut);
             var extracter = new AmazonAdExtrater(amazonUtility, dateRange, account, campaignFilter: account.Filter);
             var loader = new AmazonAdSummaryLoader(account.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+
+        private void DoETL_Keyword(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
+        {
+            var extracter = new AmazonKeywordExtracter(amazonUtility, dateRange, account, campaignFilter: account.Filter);
+            var loader = new AmazonKeywordSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();

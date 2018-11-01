@@ -212,7 +212,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 var campaign = campaigns.First(x => x.campaignId == stat.Key);
                 var sum = new StrategySummary
                 {
-                    StrategyEid = campaign.campaignId.ToString(),
+                    StrategyEid = campaign.campaignId,
                     StrategyName = campaign.name,
                     StrategyType = campaign.targetingType
                 };
@@ -261,9 +261,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             {
                 var sum = new AdSetSummary
                 {
-                    AdSetEid = adGroupStat.adGroupId.ToString(),
+                    AdSetEid = adGroupStat.adGroupId,
                     AdSetName = adGroupStat.adGroupName,
-                    StrategyEid = adGroupStat.campaignId.ToString(),
+                    StrategyEid = adGroupStat.campaignId,
                     StrategyName = adGroupStat.campaignName
                 };
                 SetCPProgStats(sum, adGroupStat, date);
@@ -308,13 +308,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         private IEnumerable<TDadSummary> TransformSummaries(IEnumerable<AmazonAdDailySummary> adStats, DateTime date)
         {
+            adStats = adStats.Where(x => !x.AllZeros()).ToList();
             foreach (var adSum in adStats)
             {
                 var sum = new TDadSummary
                 {
                     TDadEid = adSum.adId,
                     TDadName = adSum.adGroupName,
-                    AdSetEid = adSum.adGroupId.ToString(),
+                    AdSetEid = adSum.adGroupId,
                     AdSetName = adSum.adGroupName
                 };
                 var externalIds = new List<TDadExternalId>();
@@ -343,4 +344,54 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     }
     #endregion
 
+    #region Keyword
+    public class AmazonKeywordExtracter : AmazonApiExtracter<KeywordSummary>
+    {
+        public AmazonKeywordExtracter(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
+            : base(amazonUtility, dateRange, account, campaignFilter: campaignFilter, campaignFilterOut: campaignFilterOut)
+        { }
+
+        protected override void Extract()
+        {
+            Logger.Info(accountId, "Extracting KeywordSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
+                this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
+            
+            foreach (var date in dateRange.Dates)
+            {
+                var sums = ExtractSummaries(date);
+                var items = TransformSummaries(sums, date);
+                Add(items);
+            }
+            End();
+        }
+
+        public IEnumerable<AmazonKeywordDailySummary> ExtractSummaries(DateTime date)
+        {
+            var spSums = _amazonUtility.ReportKeywords(CampaignType.SponsoredProducts, date, clientId, true);
+            var sbSums = _amazonUtility.ReportKeywords(CampaignType.SponsoredBrands, date, clientId, true);
+            var sums = spSums.Concat(sbSums);
+            var filteredSums = FilterByCampaigns(sums, x => x.campaignName);
+            return filteredSums.ToList();
+        }
+        
+        private IEnumerable<KeywordSummary> TransformSummaries(IEnumerable<AmazonKeywordDailySummary> keywordStats, DateTime date)
+        {
+            keywordStats = keywordStats.Where(x => !x.AllZeros()).ToList();
+            foreach (var keywordStat in keywordStats)
+            {
+                var sum = new KeywordSummary
+                {
+                    KeywordEid = keywordStat.keywordId,
+                    KeywordName = keywordStat.keywordText,
+                    AdSetEid = keywordStat.adGroupId,
+                    AdSetName = keywordStat.adGroupName,
+                    StrategyEid = keywordStat.campaignId,
+                    StrategyName = keywordStat.campaignName,
+                };
+                SetCPProgStats(sum, keywordStat, date);
+                yield return sum;
+            }
+        }
+    }
+    #endregion
 }

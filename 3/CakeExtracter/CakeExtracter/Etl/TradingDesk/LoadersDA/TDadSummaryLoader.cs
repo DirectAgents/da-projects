@@ -133,7 +133,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         continue; // already encountered this TDad
                     }
 
-                    var tdAdsInDbList = GetTDadSets(db, tdAd, AccountId);
+                    var tdAdsInDbList = GetTDads(db, tdAd, AccountId);
                     if (!tdAdsInDbList.Any())
                     {   // TDad doesn't exist in the db; so create it and put an entry in the lookup
                         var tdAdInDB = AddTDad(db, tdAd, AccountId);
@@ -265,7 +265,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             metricLoader.UpsertSummaryMetrics<TDadSummaryMetric>(db, item.Metrics);
         }
 
-        private List<TDad> GetTDadSets(ClientPortalProgContext db, TDad tdAd, int accountId)
+        private List<TDad> GetTDads(ClientPortalProgContext db, TDad tdAd, int accountId)
         {
             IQueryable<TDad> tdAdsInDb;
             if (!string.IsNullOrWhiteSpace(tdAd.ExternalId))

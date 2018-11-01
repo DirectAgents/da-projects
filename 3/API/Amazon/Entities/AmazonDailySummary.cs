@@ -56,38 +56,31 @@ namespace Amazon.Entities
 
     public class AmazonDailySummary : StatSummary
     {
-        public Int64 campaignId { get; set; }
+        public string campaignId { get; set; }
         public string campaignName { get; set; }
-        public DateTime date { get; set; }
     }
 
-    public class AmazonAdGroupSummary : StatSummary
+    public class AmazonAdGroupSummary : AmazonDailySummary
     {
-        public Int64 adGroupId { get; set; }
+        public string adGroupId { get; set; }
         public string adGroupName { get; set; }
-        public Int64 campaignId { get; set; }
-        public string campaignName { get; set; }
     }
 
-    public class AmazonAdDailySummary : StatSummary
+    public class AmazonAdDailySummary : AmazonAdGroupSummary
     {
-        public string campaignName { get; set; }
         public string adId { get; set; }
-        public Int64 adGroupId { get; set; }
-        public string adGroupName { get; set; }
         public string asin { get; set; }
         public string sku { get; set; }
     }
 
-    public class AmazonKeywordDailySummary : AmazonDailySummary
+    public class AmazonKeywordDailySummary : AmazonAdGroupSummary
     {
-        public string KeywordId { get; set; }
-        public string KeywordText { get; set; }
+        public string keywordId { get; set; }
+        public string keywordText { get; set; }
     }
 
-    public class AmazonSearchTermDailySummary : StatSummary
+    public class AmazonSearchTermDailySummary : AmazonKeywordDailySummary
     {
-        public string KeywordId { get; set; }
         public string query { get; set; }
         public DateTime date { get; set; }
     }

@@ -164,6 +164,19 @@ namespace DirectAgents.Domain.Entities.CPProg
     {
         public int KeywordId { get; set; }
         public virtual Keyword Keyword { get; set; }
+
+        [NotMapped]
+        public string KeywordName { get; set; }
+        [NotMapped]
+        public string KeywordEid { get; set; }
+        [NotMapped]
+        public string AdSetName { get; set; }
+        [NotMapped]
+        public string AdSetEid { get; set; }
+        [NotMapped]
+        public string StrategyName { get; set; }
+        [NotMapped]
+        public string StrategyEid { get; set; }
     }
 
     // DailySummary for a SearchTerm

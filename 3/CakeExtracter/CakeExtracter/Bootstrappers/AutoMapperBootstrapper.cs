@@ -63,6 +63,16 @@ namespace CakeExtracter.Bootstrappers
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SummaryMetric, DirectAgents.Domain.Entities.CPProg.TDadSummaryMetric>()
                     .ForMember(s => s.TDad, map => map.AllowNull());
 
+                cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.KeywordSummary, DirectAgents.Domain.Entities.CPProg.KeywordSummary>();
+                cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.KeywordSummary, DirectAgents.Domain.Entities.CPProg.Keyword>()
+                    .ForMember(d => d.Id, opt => opt.MapFrom(s => s.KeywordId))
+                    .ForMember(d => d.Name, opt => opt.MapFrom(s => s.KeywordName))
+                    .ForMember(d => d.ExternalId, opt => opt.MapFrom(s => s.KeywordEid))
+                    .ForMember(d => d.Strategy, opt => opt.MapFrom(s => new Strategy {Name = s.StrategyName, ExternalId = s.StrategyEid}))
+                    .ForMember(d => d.AdSet, opt => opt.MapFrom(s => new AdSet { Name = s.AdSetName, ExternalId = s.AdSetEid }));
+                cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SummaryMetric, DirectAgents.Domain.Entities.CPProg.KeywordSummaryMetric>()
+                    .ForMember(s => s.Keyword, map => map.AllowNull());
+
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SiteSummary, DirectAgents.Domain.Entities.CPProg.SiteSummary>()
                     .ForMember(s => s.SiteName, opt => opt.Ignore());
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.Conv, DirectAgents.Domain.Entities.CPProg.Conv>();
