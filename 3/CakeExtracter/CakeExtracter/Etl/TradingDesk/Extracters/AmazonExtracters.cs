@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Amazon;
 using Amazon.Entities;
+using Amazon.Enums;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
 using StatSummary = Amazon.Entities.StatSummary;
@@ -70,36 +71,36 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             {
                 rev.PostClickRev = amazonStats.Sum(x => x.attributedSales14d);
             }
-            stats.Metrics = GetMetrics(amazonStats, date);
+            stats.InitialMetrics = GetMetrics(amazonStats, date);
         }
 
         private static List<SummaryMetric> GetMetrics(IEnumerable<StatSummary> amazonStats, DateTime date)
         {
             var metrics = new List<SummaryMetric>();
-            AddMetric(metrics, SummaryMetricType.attributedConversions, 1, date, amazonStats.Sum(x => x.attributedConversions1d));
-            AddMetric(metrics, SummaryMetricType.attributedConversions, 7, date, amazonStats.Sum(x => x.attributedConversions7d));
-            AddMetric(metrics, SummaryMetricType.attributedConversions, 14, date, amazonStats.Sum(x => x.attributedConversions14d));
-            AddMetric(metrics, SummaryMetricType.attributedConversions, 30, date, amazonStats.Sum(x => x.attributedConversions30d));
-            AddMetric(metrics, SummaryMetricType.attributedConversionsSameSKU, 1, date, amazonStats.Sum(x => x.attributedConversions1dSameSKU));
-            AddMetric(metrics, SummaryMetricType.attributedConversionsSameSKU, 7, date, amazonStats.Sum(x => x.attributedConversions7dSameSKU));
-            AddMetric(metrics, SummaryMetricType.attributedConversionsSameSKU, 14, date, amazonStats.Sum(x => x.attributedConversions14dSameSKU));
-            AddMetric(metrics, SummaryMetricType.attributedConversionsSameSKU, 30, date, amazonStats.Sum(x => x.attributedConversions30dSameSKU));
-            AddMetric(metrics, SummaryMetricType.attributedSales, 1, date, amazonStats.Sum(x => x.attributedSales1d));
-            AddMetric(metrics, SummaryMetricType.attributedSales, 7, date, amazonStats.Sum(x => x.attributedSales7d));
-            AddMetric(metrics, SummaryMetricType.attributedSales, 14, date, amazonStats.Sum(x => x.attributedSales14d));
-            AddMetric(metrics, SummaryMetricType.attributedSales, 30, date, amazonStats.Sum(x => x.attributedSales30d));
-            AddMetric(metrics, SummaryMetricType.attributedSalesSameSKU, 1, date, amazonStats.Sum(x => x.attributedSales1dSameSKU));
-            AddMetric(metrics, SummaryMetricType.attributedSalesSameSKU, 7, date, amazonStats.Sum(x => x.attributedSales7dSameSKU));
-            AddMetric(metrics, SummaryMetricType.attributedSalesSameSKU, 14, date, amazonStats.Sum(x => x.attributedSales14dSameSKU));
-            AddMetric(metrics, SummaryMetricType.attributedSalesSameSKU, 30, date, amazonStats.Sum(x => x.attributedSales30dSameSKU));
-            AddMetric(metrics, SummaryMetricType.attributedUnitsOrdered, 1, date, amazonStats.Sum(x => x.attributedUnitsOrdered1d));
-            AddMetric(metrics, SummaryMetricType.attributedUnitsOrdered, 7, date, amazonStats.Sum(x => x.attributedUnitsOrdered7d));
-            AddMetric(metrics, SummaryMetricType.attributedUnitsOrdered, 14, date, amazonStats.Sum(x => x.attributedUnitsOrdered14d));
-            AddMetric(metrics, SummaryMetricType.attributedUnitsOrdered, 30, date, amazonStats.Sum(x => x.attributedUnitsOrdered30d));
+            AddMetric(metrics, AttributedMetricType.attributedConversions, AttributedMetricDaysInterval.Days1, date, amazonStats.Sum(x => x.attributedConversions1d));
+            AddMetric(metrics, AttributedMetricType.attributedConversions, AttributedMetricDaysInterval.Days7, date, amazonStats.Sum(x => x.attributedConversions7d));
+            AddMetric(metrics, AttributedMetricType.attributedConversions, AttributedMetricDaysInterval.Days14, date, amazonStats.Sum(x => x.attributedConversions14d));
+            AddMetric(metrics, AttributedMetricType.attributedConversions, AttributedMetricDaysInterval.Days30, date, amazonStats.Sum(x => x.attributedConversions30d));
+            AddMetric(metrics, AttributedMetricType.attributedConversionsSameSKU, AttributedMetricDaysInterval.Days1, date, amazonStats.Sum(x => x.attributedConversions1dSameSKU));
+            AddMetric(metrics, AttributedMetricType.attributedConversionsSameSKU, AttributedMetricDaysInterval.Days7, date, amazonStats.Sum(x => x.attributedConversions7dSameSKU));
+            AddMetric(metrics, AttributedMetricType.attributedConversionsSameSKU, AttributedMetricDaysInterval.Days14, date, amazonStats.Sum(x => x.attributedConversions14dSameSKU));
+            AddMetric(metrics, AttributedMetricType.attributedConversionsSameSKU, AttributedMetricDaysInterval.Days30, date, amazonStats.Sum(x => x.attributedConversions30dSameSKU));
+            AddMetric(metrics, AttributedMetricType.attributedSales, AttributedMetricDaysInterval.Days1, date, amazonStats.Sum(x => x.attributedSales1d));
+            AddMetric(metrics, AttributedMetricType.attributedSales, AttributedMetricDaysInterval.Days7, date, amazonStats.Sum(x => x.attributedSales7d));
+            AddMetric(metrics, AttributedMetricType.attributedSales, AttributedMetricDaysInterval.Days14, date, amazonStats.Sum(x => x.attributedSales14d));
+            AddMetric(metrics, AttributedMetricType.attributedSales, AttributedMetricDaysInterval.Days30, date, amazonStats.Sum(x => x.attributedSales30d));
+            AddMetric(metrics, AttributedMetricType.attributedSalesSameSKU, AttributedMetricDaysInterval.Days1, date, amazonStats.Sum(x => x.attributedSales1dSameSKU));
+            AddMetric(metrics, AttributedMetricType.attributedSalesSameSKU, AttributedMetricDaysInterval.Days7, date, amazonStats.Sum(x => x.attributedSales7dSameSKU));
+            AddMetric(metrics, AttributedMetricType.attributedSalesSameSKU, AttributedMetricDaysInterval.Days14, date, amazonStats.Sum(x => x.attributedSales14dSameSKU));
+            AddMetric(metrics, AttributedMetricType.attributedSalesSameSKU, AttributedMetricDaysInterval.Days30, date, amazonStats.Sum(x => x.attributedSales30dSameSKU));
+            AddMetric(metrics, AttributedMetricType.attributedUnitsOrdered, AttributedMetricDaysInterval.Days1, date, amazonStats.Sum(x => x.attributedUnitsOrdered1d));
+            AddMetric(metrics, AttributedMetricType.attributedUnitsOrdered, AttributedMetricDaysInterval.Days7, date, amazonStats.Sum(x => x.attributedUnitsOrdered7d));
+            AddMetric(metrics, AttributedMetricType.attributedUnitsOrdered, AttributedMetricDaysInterval.Days14, date, amazonStats.Sum(x => x.attributedUnitsOrdered14d));
+            AddMetric(metrics, AttributedMetricType.attributedUnitsOrdered, AttributedMetricDaysInterval.Days30, date, amazonStats.Sum(x => x.attributedUnitsOrdered30d));
             return metrics;
         }
 
-        private static void AddMetric(List<SummaryMetric> metrics, SummaryMetricType type, int daysInterval, DateTime date, decimal metricValue)
+        private static void AddMetric(List<SummaryMetric> metrics, AttributedMetricType type, AttributedMetricDaysInterval daysInterval, DateTime date, decimal metricValue)
         {
             if (metricValue == 0.0M)
             {
@@ -112,7 +113,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 MetricType = new MetricType
                 {
                     Name = type.ToString(),
-                    DaysInterval = daysInterval
+                    DaysInterval = (int)daysInterval
                 },
                 Value = metricValue
             };

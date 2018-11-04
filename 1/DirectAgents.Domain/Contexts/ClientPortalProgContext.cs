@@ -5,6 +5,7 @@ using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.DBM;
 using DirectAgents.Domain.Entities.CPProg;
+using System.Collections.Generic;
 
 namespace DirectAgents.Domain.Contexts
 {
@@ -121,11 +122,41 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<AdSetAction>().Property(x => x.PostViewVal).HasPrecision(18, 4);
             modelBuilder.Entity<TDadExternalId>().HasKey(x => new { x.AdId, x.TypeId });
             SetupSummaryMetricModel<DailySummaryMetric>(modelBuilder, "AccountId");
+            modelBuilder.Entity<DailySummary>()
+                .HasMany(x => x.Metrics)
+                .WithRequired()
+                .HasForeignKey(x => new { x.Date, x.EntityId })
+                .WillCascadeOnDelete(false);
             SetupSummaryMetricModel<StrategySummaryMetric>(modelBuilder, "StrategyId");
+            modelBuilder.Entity<StrategySummary>()
+                .HasMany(x => x.Metrics)
+                .WithRequired()
+                .HasForeignKey(x => new { x.Date, x.EntityId })
+                .WillCascadeOnDelete(false);
             SetupSummaryMetricModel<AdSetSummaryMetric>(modelBuilder, "AdSetId");
+            modelBuilder.Entity<AdSetSummary>()
+                .HasMany(x => x.Metrics)
+                .WithRequired()
+                .HasForeignKey(x => new { x.Date, x.EntityId })
+                .WillCascadeOnDelete(false);
             SetupSummaryMetricModel<TDadSummaryMetric>(modelBuilder, "TDadId");
+            modelBuilder.Entity<TDadSummary>()
+                .HasMany(x => x.Metrics)
+                .WithRequired()
+                .HasForeignKey(x => new { x.Date, x.EntityId })
+                .WillCascadeOnDelete(false);
             SetupSummaryMetricModel<KeywordSummaryMetric>(modelBuilder, "KeywordId");
+            modelBuilder.Entity<KeywordSummary>()
+                .HasMany(x => x.Metrics)
+                .WithRequired()
+                .HasForeignKey(x => new { x.Date, x.EntityId })
+                .WillCascadeOnDelete(false);
             SetupSummaryMetricModel<SearchTermSummaryMetric>(modelBuilder, "SearchTermId");
+            modelBuilder.Entity<SearchTermSummary>()
+                .HasMany(x => x.Metrics)
+                .WithRequired()
+                .HasForeignKey(x => new { x.Date, x.EntityId })
+                .WillCascadeOnDelete(false);
 
             // AdRoll
             modelBuilder.Entity<Advertisable>().ToTable("Advertisable", adrollSchema);

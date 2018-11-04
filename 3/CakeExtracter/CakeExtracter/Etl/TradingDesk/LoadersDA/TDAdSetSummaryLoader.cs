@@ -205,19 +205,39 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             Mapper.Map(item, target);
             entry.State = EntityState.Modified;
             UpsertSummaryMetrics(db, item);
+            RemoveOldSummaryMetrics(db, item, target);
             progress.UpdatedCount++;
         }
 
         private void UpsertSummaryMetrics(ClientPortalProgContext db, AdSetSummary item)
         {
-            if (item.Metrics == null || !item.Metrics.Any())
+            item.InitialMetrics = GetItemMetrics(item);
+            if (item.InitialMetrics == null || !item.InitialMetrics.Any())
             {
                 return;
             }
-            item.Metrics.ForEach(x => x.EntityId = item.AdSetId);
-            metricLoader.AddDependentMetricTypes(item.Metrics);
-            metricLoader.AssignMetricTypeIdToItems(item.Metrics);
-            metricLoader.UpsertSummaryMetrics<AdSetSummaryMetric>(db, item.Metrics);
+            item.InitialMetrics.ForEach(x => x.EntityId = item.AdSetId);
+            metricLoader.AddDependentMetricTypes(item.InitialMetrics);
+            metricLoader.AssignMetricTypeIdToItems(item.InitialMetrics);
+            metricLoader.UpsertSummaryMetrics<AdSetSummaryMetric>(db, item.InitialMetrics);
+        }
+
+        private IEnumerable<SummaryMetric> GetItemMetrics(AdSetSummary item)
+        {
+            var metrics = item.InitialMetrics == null
+                ? item.Metrics
+                : item.Metrics == null
+                    ? item.InitialMetrics
+                    : item.InitialMetrics.Concat(item.Metrics);
+            return metrics.ToList();
+        }
+
+        private void RemoveOldSummaryMetrics(ClientPortalProgContext db, AdSetSummary item, AdSetSummary target)
+        {
+            var deletedMetrics = item.InitialMetrics == null
+                ? target.Metrics
+                : target.Metrics.Where(x => !item.InitialMetrics.Any(m => m.MetricTypeId == x.MetricTypeId));
+            metricLoader.RemoveMetrics(db, deletedMetrics);
         }
 
         private List<AdSet> GetAdSets(ClientPortalProgContext db, AdSet adSet, int accountId)

@@ -23,7 +23,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             AssignMetricTypeIdToItems(items);
             using (var db = new ClientPortalProgContext())
             {
-                return UpsertSummaryMetrics<SummaryMetric>(db, items);
+                var numChanges = UpsertSummaryMetrics<SummaryMetric>(db, items);
+                db.SaveChanges();
+                return numChanges;
             }
         }
 
@@ -66,6 +68,12 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             }
 
             return items.Count();
+        }
+
+        public void RemoveMetrics<TSummaryMetric>(ClientPortalProgContext db, IEnumerable<TSummaryMetric> items)
+            where TSummaryMetric : SummaryMetric, new()
+        {
+            db.Set<TSummaryMetric>().RemoveRange(items);
         }
 
         private void AddDependentMetricTypes(IEnumerable<MetricType> items)

@@ -13,13 +13,14 @@ namespace DirectAgents.Domain.Entities.CPProg
         public int PostClickConv { get; set; }
         public int PostViewConv { get; set; }
         public decimal Cost { get; set; }
-        public virtual IEnumerable<SummaryMetric> Metrics { get; set; }
+        [NotMapped]
+        public IEnumerable<SummaryMetric> InitialMetrics { get; set; }
 
         //TotalConv
 
         public virtual bool AllZeros()
         {
-            return Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0 && (Metrics == null || !Metrics.Any());
+            return Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0 && (InitialMetrics == null || !InitialMetrics.Any());
         }
 
         public virtual void SetStats(StatsSummary stat)
@@ -87,6 +88,13 @@ namespace DirectAgents.Domain.Entities.CPProg
         public int AccountId { get; set; }
         [ForeignKey("AccountId")]
         public virtual ExtAccount ExtAccount { get; set; }
+        
+        public virtual List<DailySummaryMetric> Metrics { get; set; }
+
+        public override bool AllZeros()
+        {
+            return base.AllZeros() && (Metrics == null || !Metrics.Any());
+        }
     }
 
     // DailySummary for a Strategy
@@ -94,6 +102,13 @@ namespace DirectAgents.Domain.Entities.CPProg
     {
         public int StrategyId { get; set; }
         public virtual Strategy Strategy { get; set; }
+
+        public virtual List<StrategySummaryMetric> Metrics { get; set; }
+
+        public override bool AllZeros()
+        {
+            return base.AllZeros() && (Metrics == null || !Metrics.Any());
+        }
 
         [NotMapped]
         public string StrategyName { get; set; }
@@ -108,6 +123,13 @@ namespace DirectAgents.Domain.Entities.CPProg
     {
         public int AdSetId { get; set; }
         public virtual AdSet AdSet { get; set; }
+
+        public virtual new List<AdSetSummaryMetric> Metrics { get; set; }
+
+        public override bool AllZeros()
+        {
+            return base.AllZeros() && (Metrics == null || !Metrics.Any());
+        }
 
         [NotMapped]
         public string AdSetName { get; set; }
@@ -124,6 +146,13 @@ namespace DirectAgents.Domain.Entities.CPProg
     {
         public int TDadId { get; set; }
         public virtual TDad TDad { get; set; }
+
+        public virtual List<TDadSummaryMetric> Metrics { get; set; }
+
+        public override bool AllZeros()
+        {
+            return base.AllZeros() && (Metrics == null || !Metrics.Any());
+        }
 
         [NotMapped]
         public string TDadName { get; set; }
@@ -165,6 +194,13 @@ namespace DirectAgents.Domain.Entities.CPProg
         public int KeywordId { get; set; }
         public virtual Keyword Keyword { get; set; }
 
+        public virtual List<KeywordSummaryMetric> Metrics { get; set; }
+
+        public override bool AllZeros()
+        {
+            return base.AllZeros() && (Metrics == null || !Metrics.Any());
+        }
+
         [NotMapped]
         public string KeywordName { get; set; }
         [NotMapped]
@@ -184,6 +220,13 @@ namespace DirectAgents.Domain.Entities.CPProg
     {
         public int SearchTermId { get; set; }
         public virtual SearchTerm SearchTerm { get; set; }
+
+        public virtual List<SearchTermSummaryMetric> Metrics { get; set; }
+
+        public override bool AllZeros()
+        {
+            return base.AllZeros() && (Metrics == null || !Metrics.Any());
+        }
 
         [NotMapped]
         public string KeywordName { get; set; }

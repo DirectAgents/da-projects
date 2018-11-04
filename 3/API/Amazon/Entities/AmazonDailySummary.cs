@@ -2,21 +2,6 @@
 
 namespace Amazon.Entities
 {
-    public enum SummaryMetricType
-    {
-        attributedConversions,
-        attributedConversionsSameSKU,
-        attributedSales,
-        attributedSalesSameSKU,
-        attributedUnitsOrdered
-    }
-
-    public enum ProductAdIdType
-    {
-        SKU,
-        ASIN
-    }
-
     public class StatSummary
     {
         public decimal cost { get; set; }

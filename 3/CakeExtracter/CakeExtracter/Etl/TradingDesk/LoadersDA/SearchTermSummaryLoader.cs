@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using CakeExtracter.Etl.TradingDesk.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
-    class SearchTermSummaryLoader : Loader<SearchTermSummary>
+    internal class SearchTermSummaryLoader : Loader<SearchTermSummary>
     {
         public readonly int AccountId;
         public static EntityIdStorage<SearchTerm> SearchTermStorage;
@@ -141,7 +138,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public void AddUpdateDependentKeywords(List<SearchTermSummary> items)
         {
             var keywords = items
-                .GroupBy(x => new { x.SearchTerm.Keyword.AdSetId, x.SearchTerm.Keyword.StrategyId, x.SearchTerm.Keyword.Name, x.SearchTerm.Keyword.ExternalId})
+                .GroupBy(x => new { x.SearchTerm.Keyword.AdSetId, x.SearchTerm.Keyword.StrategyId, x.SearchTerm.Keyword.Name, x.SearchTerm.Keyword.ExternalId })
                 .Select(x => x.First().SearchTerm.Keyword)
                 .Where(x => x != null && (!string.IsNullOrWhiteSpace(x.Name) || !string.IsNullOrWhiteSpace(x.ExternalId)))
                 .ToList();
@@ -267,19 +264,39 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             Mapper.Map(item, target);
             entry.State = EntityState.Modified;
             UpsertSummaryMetrics(db, item);
+            RemoveOldSummaryMetrics(db, item, target);
             progress.UpdatedCount++;
         }
 
         private void UpsertSummaryMetrics(ClientPortalProgContext db, SearchTermSummary item)
         {
-            if (item.Metrics == null || !item.Metrics.Any())
+            item.InitialMetrics = GetItemMetrics(item);
+            if (item.InitialMetrics == null || !item.InitialMetrics.Any())
             {
                 return;
             }
-            item.Metrics.ForEach(x => x.EntityId = item.SearchTermId);
-            metricLoader.AddDependentMetricTypes(item.Metrics);
-            metricLoader.AssignMetricTypeIdToItems(item.Metrics);
-            metricLoader.UpsertSummaryMetrics<SearchTermSummaryMetric>(db, item.Metrics);
+            item.InitialMetrics.ForEach(x => x.EntityId = item.SearchTermId);
+            metricLoader.AddDependentMetricTypes(item.InitialMetrics);
+            metricLoader.AssignMetricTypeIdToItems(item.InitialMetrics);
+            metricLoader.UpsertSummaryMetrics<SearchTermSummaryMetric>(db, item.InitialMetrics);
+        }
+
+        private IEnumerable<SummaryMetric> GetItemMetrics(SearchTermSummary item)
+        {
+            var metrics = item.InitialMetrics == null
+                ? item.Metrics
+                : item.Metrics == null
+                    ? item.InitialMetrics
+                    : item.InitialMetrics.Concat(item.Metrics);
+            return metrics.ToList();
+        }
+
+        private void RemoveOldSummaryMetrics(ClientPortalProgContext db, SearchTermSummary item, SearchTermSummary target)
+        {
+            var deletedMetrics = item.InitialMetrics == null
+                ? target.Metrics
+                : target.Metrics.Where(x => !item.InitialMetrics.Any(m => m.MetricTypeId == x.MetricTypeId));
+            metricLoader.RemoveMetrics(db, deletedMetrics);
         }
 
         private List<SearchTerm> GetSearchTerms(ClientPortalProgContext db, SearchTerm term, int accountId)

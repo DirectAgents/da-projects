@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Contexts;
@@ -43,12 +44,26 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                         PostClickConv = g.Sum(x => x.PostClickConv),
                         PostClickRev = g.Sum(x => x.PostClickRev),
                         PostViewConv = g.Sum(x => x.PostViewConv),
-                        PostViewRev = g.Sum(x => x.PostViewRev)
+                        PostViewRev = g.Sum(x => x.PostViewRev),
+                        InitialMetrics = GetInitMetrics(g)
                     };
                     daySums.Add(daySum);
                 }
             }
             return daySums;
+        }
+
+        private IEnumerable<SummaryMetric> GetInitMetrics(IGrouping<DateTime, StrategySummary> stratGroup)
+        {
+            var grouppedMetrics = stratGroup.SelectMany(x => x.Metrics).GroupBy(x => x.MetricTypeId);
+            var metrics = grouppedMetrics.Select(x => new SummaryMetric
+            {
+                Date = stratGroup.Key,
+                MetricType = x.First().MetricType,
+                MetricTypeId = x.Key,
+                Value = x.Sum(s => s.Value)
+            });
+            return metrics.ToList();
         }
     }
 }
