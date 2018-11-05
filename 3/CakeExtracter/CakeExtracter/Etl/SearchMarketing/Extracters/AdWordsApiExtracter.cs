@@ -160,7 +160,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                         new Predicate {
                             field = "CampaignStatus",
                             @operator = PredicateOperator.IN,
-                            values = new string[] { "ENABLED","PAUSED" }
+                            values = new string[] { "ENABLED","PAUSED","REMOVED" }
                         },
                         new Predicate {
                             field = "AdvertisingChannelSubType",

@@ -25,11 +25,13 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             Logger.Info("Extracting SearchDailySummaries for {0} from {1} to {2}", accountId, startDate, endDate);
             if (includeNonShopping)
             {
+                Logger.Info("...for non-shopping campaigns");
                 var items = ExtractAndEnumerateRows(forShoppingCampaigns: false);
                 Add(items);
             }
             if (includeShopping)
             {
+                Logger.Info("...for shopping campaigns");
                 var items = ExtractAndEnumerateRows(forShoppingCampaigns: true);
                 Add(items);
             }
