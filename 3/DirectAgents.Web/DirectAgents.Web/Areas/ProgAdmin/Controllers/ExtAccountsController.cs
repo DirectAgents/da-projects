@@ -351,13 +351,31 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 
         public ActionResult AdSets(int? id, string sort)
         {
-            IOrderedQueryable<AdSet> orderedAdSets;
             var adsets = cpProgRepo.AdSets(acctId: id);
-            if (sort == "strat")
-                orderedAdSets = adsets.OrderBy(x => x.Strategy.Name).ThenBy(x => x.Name);
-            else
-                orderedAdSets = adsets.OrderBy(x => x.Name);
+            var orderedAdSets = sort == "strat"
+                ? adsets.OrderBy(x => x.Strategy.Name).ThenBy(x => x.Name)
+                : adsets.OrderBy(x => x.Name);
             return View(orderedAdSets);
+        }
+
+        public ActionResult Keywords(int? id, string sort)
+        {
+            var keywords = cpProgRepo.Keywords(acctId: id);
+            var orderedKeywords = sort == "strat"
+                ? keywords.OrderBy(x => x.Strategy.Name).ThenBy(x => x.Name)
+                : sort == "adset"
+                    ? keywords.OrderBy(x => x.AdSet.Name).ThenBy(x => x.AdSet.Id).ThenBy(x => x.Name)
+                    : keywords.OrderBy(x => x.Name);
+            return View(orderedKeywords);
+        }
+
+        public ActionResult SearchTerms(int? id, string sort)
+        {
+            var searchTerms = cpProgRepo.SearchTerms(acctId: id);
+            var orderedSearchTerms = sort == "keyw"
+                ? searchTerms.OrderBy(x => x.Keyword.Name).ThenBy(x => x.Query)
+                : searchTerms.OrderBy(x => x.Query);
+            return View(orderedSearchTerms);
         }
 
         // --- Stats Uploading ---

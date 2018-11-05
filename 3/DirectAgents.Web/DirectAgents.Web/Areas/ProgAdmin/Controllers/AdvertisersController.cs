@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web.Helpers;
 using System.Web.Mvc;
@@ -72,13 +73,13 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         public ActionResult CopyInfos(DateTime month, bool activeLastMonth = false, bool overwrite = false)
         {
             cpProgRepo.CopyBudgetInfosTo(month, activeLastMonth: activeLastMonth, overwrite: overwrite);
-            return RedirectToAction("IndexFees", new { month = month.ToShortDateString(), activeLastMonth = activeLastMonth });
+            return RedirectToAction("IndexFees", new { month = month.ToString("d", CultureInfo.InvariantCulture), activeLastMonth = activeLastMonth });
         }
 
         public ActionResult CreateBaseFees(DateTime month)
         {
             cpProgRepo.CreateBaseFees(month);
-            return RedirectToAction("Index", "ExtraItems", new { month = month.ToShortDateString() });
+            return RedirectToAction("Index", "ExtraItems", new { month = month.ToString("d", CultureInfo.InvariantCulture) });
         }
 
         public ActionResult CreateNew()

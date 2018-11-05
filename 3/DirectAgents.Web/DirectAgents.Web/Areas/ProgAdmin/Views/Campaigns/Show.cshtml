@@ -1,4 +1,5 @@
-﻿@model DirectAgents.Domain.Entities.CPProg.Campaign
+﻿@using System.Globalization
+@model DirectAgents.Domain.Entities.CPProg.Campaign
 @{
     var today = DateTime.Today;
     var startOfMonth = new DateTime(today.Year, today.Month, 1);
@@ -20,8 +21,8 @@
 @if (Model.Advertiser.StartDate.HasValue || Model.Advertiser.EndDate.HasValue)
 {
     <td>
-        Start: <b>@Model.Advertiser.StartDate.ToShortDateString()</b><br />
-        End: <b>@Model.Advertiser.EndDate.ToShortDateString()</b>
+        Start: <b>@(Model.Advertiser.StartDate.HasValue ? Model.Advertiser.StartDate.Value.ToString("d", CultureInfo.InvariantCulture) : "")</b><br />
+        End: <b>@(Model.Advertiser.EndDate.HasValue ? Model.Advertiser.EndDate.Value.ToString("d", CultureInfo.InvariantCulture) : "")</b>
     </td>
 }
 </tr>
@@ -49,8 +50,10 @@ External Accounts:
     <td>@Html.ActionLink("Upload", "UploadStats", "ExtAccounts", new { id = extAcct.Id }, null)</td>
     <td>
         @Html.ActionLink("Strategies", "Strategies", "ExtAccounts", new { id = extAcct.Id }, null) |
-        @Html.ActionLink("Creatives", "Index", "TDads", new { acctid = extAcct.Id }, null) |
-        @Html.ActionLink("AdSets", "AdSets", "ExtAccounts", new { id = extAcct.Id }, null)
+        @Html.ActionLink("Creatives", "Index", "TDads", new { id = extAcct.Id }, null) |
+        @Html.ActionLink("AdSets", "AdSets", "ExtAccounts", new { id = extAcct.Id }, null) |
+        @Html.ActionLink("Keywords", "Keywords", "ExtAccounts", new { id = extAcct.Id }, null) |
+        @Html.ActionLink("SearchTerms", "SearchTerms", "ExtAccounts", new { id = extAcct.Id }, null)
     </td>
 </tr>
 }
@@ -58,8 +61,8 @@ External Accounts:
 
 <br />
 Extra Items:
-@Html.ActionLink("This Month", "Index", "ExtraItems", new { campId = Model.Id, month = startOfMonth.ToShortDateString() }, null) |
-@Html.ActionLink("Last Month", "Index", "ExtraItems", new { campId = Model.Id, month = lastMonth.ToShortDateString() }, null) |
+@Html.ActionLink("This Month", "Index", "ExtraItems", new { campId = Model.Id, month = startOfMonth.ToString("d", CultureInfo.InvariantCulture) }, null) |
+@Html.ActionLink("Last Month", "Index", "ExtraItems", new { campId = Model.Id, month = lastMonth.ToString("d", CultureInfo.InvariantCulture) }, null) |
 @Html.ActionLink("All", "Index", "ExtraItems", new { campId = Model.Id }, null)
 <br /><br />
 Stats:

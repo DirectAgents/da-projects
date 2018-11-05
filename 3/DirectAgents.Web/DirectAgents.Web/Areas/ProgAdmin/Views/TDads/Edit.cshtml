@@ -12,6 +12,7 @@
         @Html.HiddenFor(m => m.AccountId)
         @Html.HiddenFor(m => m.Name)
         @Html.HiddenFor(m => m.ExternalId)
+        @Html.HiddenFor(m => m.AdSetId)
         <div style="float:left">
             Platform: @Model.ExtAccount.Platform.Name<br />
             External Account: @Model.ExtAccount.Name (ID: @Model.ExtAccount.Id)
@@ -30,6 +31,10 @@
                     <td>@Html.DisplayFor(m => m.Name)</td>
                 </tr>
                 <tr>
+                    <td>@Html.LabelFor(m => m.AdSetId)</td>
+                    <td>@Html.DisplayFor(m => m.AdSetId)</td>
+                </tr>
+                <tr>
                     <td>@Html.LabelFor(m => m.Width)</td>
                     <td>@Html.EditorFor(m => m.Width)</td>
                 </tr>
@@ -44,7 +49,7 @@
             </table>
             <br />
             <input type="submit" value="Save" />
-            &nbsp;@Html.ActionLink("cancel", "Index", new { acctId = acctId })
+            &nbsp;@Html.ActionLink("cancel", "Index", new { id = acctId })
         </div>
     }
 </fieldset>

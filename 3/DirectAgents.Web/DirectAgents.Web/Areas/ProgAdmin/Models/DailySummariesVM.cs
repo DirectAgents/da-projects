@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace DirectAgents.Web.Areas.ProgAdmin.Models
@@ -9,15 +10,12 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Models
         public ExtAccount ExtAccount { get; set; }
 
         public DateTime? Start { get; set; }
-        public string StartString {
-            get { return Start.HasValue ? Start.Value.ToShortDateString() : "(start)"; }
-        }
+        public string StartString => Start.HasValue ? Start.Value.ToString("d", CultureInfo.InvariantCulture) : "(start)";
         public DateTime? End { get; set; }
-        public string EndString {
-            get { return End.HasValue ? End.Value.ToShortDateString() : "(end)"; }
-        }
+        public string EndString => End.HasValue ? End.Value.ToString("d", CultureInfo.InvariantCulture) : "(end)";
         public bool CustomDates { get; set; }
 
         public IEnumerable<DailySummary> DailySummaries { get; set; }
+        public Dictionary<string, int> MetricNames { get; set; }
     }
 }

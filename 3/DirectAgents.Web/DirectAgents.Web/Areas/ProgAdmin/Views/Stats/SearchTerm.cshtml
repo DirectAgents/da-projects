@@ -5,13 +5,13 @@
     {
         <script>
     function ChangeMonth(month) {
-        var url = '@Html.Raw(Url.Action(null, new { platform = Model.PlatformCode, campId = Model.CampaignId, acctId = Model.AccountId, start = "startVal" }))';
+        var url = '@Html.Raw(Url.Action(null, new { platform = Model.PlatformCode, campId = Model.CampaignId, acctId = Model.AccountId, keywId = Model.KeywordId, month = "startVal" }))';
         location.href = url.replace('startVal', month);
     }
         </script>
     }
 }
-<h2>External Accounts - Raw Stats, by strategy</h2>
+<h2>External Accounts - Raw Stats, by Search Term</h2>
 @if (Model.CustomDates)
 {
     <div>Dates: @Model.StartString - @Model.EndString</div>
@@ -25,12 +25,16 @@ else
     </div>
 }
 
+@if (Model.KeywordId.HasValue)
+{
+    <text>KeywordId: @(Model.KeywordId.Value)</text>
+}
+
 <table>
     <tr>
-        <th>Stats By</th>
         <th>Ext Account</th>
         <th style="text-align:right">ID</th>
-        <th>Strategy</th>
+        <th>Query</th>
         <th>Impressions</th>
         <th>AllClicks</th>
         <th>Clicks</th>
@@ -39,10 +43,7 @@ else
         <th>CPC</th>
         <th>CPA</th>
         <th>PostClick Conv</th>
-        <th>PostClick Rev</th>
         <th>PostView Conv</th>
-        <th>PostView Rev</th>
-        @*    <th>Total Conv</th>*@
         <th>Cost</th>
         @foreach (var metric in Model.MetricNames)
         {
@@ -52,14 +53,9 @@ else
     @foreach (var stat in Model.Stats)
     {
         <tr>
-            <td>
-                @Html.ActionLink("adset", "AdSet", new { acctId = Model.AccountId, stratId = stat.Strategy.Id, start = Model.StartString, end = Model.EndString })
-                @Html.ActionLink("keyword", "Keyword", new { acctId = Model.AccountId, stratId = stat.Strategy.Id, start = Model.StartString, end = Model.EndString })
-                @Html.ActionLink("action", "Action", new { acctId = Model.AccountId, stratId = stat.Strategy.Id, start = Model.StartString, end = Model.EndString })
-            </td>
-            <td>(@stat.Strategy.ExtAccount.Platform.Name) @stat.Strategy.ExtAccount.Name</td>
-            <td style="text-align:right">@stat.Strategy.Id</td>
-            <td>@stat.Strategy.Name</td>
+            <td>(@stat.SearchTerm.ExtAccount.Platform.Name) @stat.SearchTerm.ExtAccount.Name</td>
+            <td style="text-align:right">@stat.SearchTerm.Id</td>
+            <td>@stat.SearchTerm.Query</td>
             <td style="text-align:right">@stat.Impressions</td>
             <td style="text-align:right">@stat.AllClicks</td>
             <td style="text-align:right">@stat.Clicks</td>
@@ -68,10 +64,7 @@ else
             <td style="text-align:center">@stat.CPC</td>
             <td style="text-align:center">@stat.CPA</td>
             <td style="text-align:right">@stat.PostClickConv</td>
-            <td style="text-align:right">@stat.PostClickRev</td>
             <td style="text-align:right">@stat.PostViewConv</td>
-            <td style="text-align:right">@stat.PostViewRev</td>
-            @*    <td style="text-align:right">@stat.TotalConv</td>*@
             <td style="text-align:right">@stat.Cost</td>
             @foreach (var metricName in Model.MetricNames)
             {
@@ -87,7 +80,6 @@ else
         <tr>
             <th></th>
             <th></th>
-            <th></th>
             <th>@tot.Name</th>
             <th style="text-align:right">@tot.Impressions</th>
             <th style="text-align:right">@tot.AllClicks</th>
@@ -97,10 +89,7 @@ else
             <th style="text-align:center">@tot.CPC</th>
             <th style="text-align:center">@tot.CPA</th>
             <th style="text-align:right">@tot.PostClickConv</th>
-            <th style="text-align:right">@tot.PostClickRev</th>
             <th style="text-align:right">@tot.PostViewConv</th>
-            <th style="text-align:right">@tot.PostViewRev</th>
-            @*    <th style="text-align:right">@tot.TotalConv</th>*@
             <th style="text-align:right">@tot.Cost</th>
             @foreach (var metricName in Model.MetricNames)
             {
@@ -112,3 +101,4 @@ else
     }
 </table>
 <br />
+

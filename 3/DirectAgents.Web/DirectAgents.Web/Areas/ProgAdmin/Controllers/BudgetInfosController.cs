@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
@@ -38,7 +39,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             if (ModelState.IsValid)
             {
                 if (cpProgRepo.SaveBudgetInfo(bi))
-                    return RedirectToAction("Edit", new { campId = bi.CampaignId, date = bi.Date.ToShortDateString() });
+                    return RedirectToAction("Edit", new { campId = bi.CampaignId, date = bi.Date.ToString("d", CultureInfo.InvariantCulture) });
                     //return RedirectToAction("Edit", "Campaigns", new { id = bi.CampaignId });
                 ModelState.AddModelError("", "BudgetInfo could not be saved.");
             }

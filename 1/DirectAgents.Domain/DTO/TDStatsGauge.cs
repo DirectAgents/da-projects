@@ -9,7 +9,7 @@ namespace DirectAgents.Domain.DTO
     {
         public TDStatsGauge()
         { }
-        public TDStatsGauge(IStatsRange dailyRange, IStatsRange stratRange, IStatsRange adsetRange, IStatsRange actionRange, IStatsRange creativeRange, IStatsRange siteRange, IStatsRange convRange)
+        public TDStatsGauge(IStatsRange dailyRange, IStatsRange stratRange, IStatsRange adsetRange, IStatsRange actionRange, IStatsRange creativeRange, IStatsRange keywRange, IStatsRange stermRange, IStatsRange siteRange, IStatsRange convRange)
         {
             if (dailyRange != null)
             {
@@ -46,6 +46,20 @@ namespace DirectAgents.Domain.DTO
                 if (creativeRange.Latest.HasValue)
                     this.Creative.Latest = creativeRange.Latest.Value;
             }
+            if (keywRange != null)
+            {
+                if (keywRange.Earliest.HasValue)
+                    this.Keyword.Earliest = keywRange.Earliest.Value;
+                if (keywRange.Latest.HasValue)
+                    this.Keyword.Latest = keywRange.Latest.Value;
+            }
+            if (stermRange != null)
+            {
+                if (stermRange.Earliest.HasValue)
+                    this.SearchTerm.Earliest = stermRange.Earliest.Value;
+                if (stermRange.Latest.HasValue)
+                    this.SearchTerm.Latest = stermRange.Latest.Value;
+            }
             if (siteRange != null)
             {
                 if (siteRange.Earliest.HasValue)
@@ -73,13 +87,15 @@ namespace DirectAgents.Domain.DTO
         public TDStatRange Strategy;
         public TDStatRange Creative;
         public TDStatRange AdSet;
+        public TDStatRange Keyword;
+        public TDStatRange SearchTerm;
         public TDStatRange Site;
         public TDStatRange Conv;
         public TDStatRange Action;
 
         public bool HasStats()
         {
-            return Daily.HasStats() || Strategy.HasStats() || AdSet.HasStats() || Action.HasStats() || Creative.HasStats() || Site.HasStats() || Conv.HasStats();
+            return Daily.HasStats() || Strategy.HasStats() || AdSet.HasStats() || Action.HasStats() || Creative.HasStats() || Keyword.HasStats() || SearchTerm.HasStats() || Site.HasStats() || Conv.HasStats();
         }
 
         //public void Reset()
@@ -109,6 +125,10 @@ namespace DirectAgents.Domain.DTO
             this.Creative.Latest = gauges.Max(x => x.Creative.Latest);
             this.AdSet.Earliest = gauges.Min(x => x.AdSet.Earliest);
             this.AdSet.Latest = gauges.Max(x => x.AdSet.Latest);
+            this.Keyword.Earliest = gauges.Min(x => x.Keyword.Earliest);
+            this.Keyword.Latest = gauges.Max(x => x.Keyword.Latest);
+            this.SearchTerm.Earliest = gauges.Min(x => x.SearchTerm.Earliest);
+            this.SearchTerm.Latest = gauges.Max(x => x.SearchTerm.Latest);
             this.Site.Earliest = gauges.Min(x => x.Site.Earliest);
             this.Site.Latest = gauges.Max(x => x.Site.Latest);
             this.Conv.Earliest = gauges.Min(x => x.Conv.Earliest);

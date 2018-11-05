@@ -1,4 +1,5 @@
-﻿@model DirectAgents.Domain.DTO.TDCampStats
+﻿@using System.Globalization
+@model DirectAgents.Domain.DTO.TDCampStats
 @{
     var m = Model; // stats
     var lastMonth = m.Month.AddMonths(-1);
@@ -93,4 +94,4 @@ Month: @m.Month.ToString("MMM yyyy")
 </table>
 
 <br />
-@Html.ActionLink("Previous Month", "MTD", "Stats", new { campId = Model.Campaign.Id, date = lastMonth.ToShortDateString() }, null)
+@Html.ActionLink("Previous Month", "MTD", "Stats", new { campId = Model.Campaign.Id, date = lastMonth.ToString("d", CultureInfo.InvariantCulture) }, null)

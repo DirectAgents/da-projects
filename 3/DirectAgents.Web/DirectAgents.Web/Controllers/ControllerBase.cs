@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
@@ -96,10 +97,10 @@ namespace DirectAgents.Web.Controllers
             int numMonths = (includeNextMonth ? 13 : 12);
             for (int i = 0; i < numMonths; i++)
             {
-                slItems.Add(new SelectListItem { Text = iMonth.ToString("MMM yyyy"), Value = iMonth.ToShortDateString() });
+                slItems.Add(new SelectListItem { Text = iMonth.ToString("MMM yyyy"), Value = iMonth.ToString("d", CultureInfo.InvariantCulture)});
                 iMonth = iMonth.AddMonths(-1);
             }
-            return new SelectList(slItems, "Value", "Text", selMonth.ToShortDateString());
+            return new SelectList(slItems, "Value", "Text", selMonth.ToString("d", CultureInfo.InvariantCulture));
         }
 
         // First check for a cookie. If none, set it to a default value. Either way, return the "current month".

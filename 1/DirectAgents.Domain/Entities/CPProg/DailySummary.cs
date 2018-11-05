@@ -124,7 +124,7 @@ namespace DirectAgents.Domain.Entities.CPProg
         public int AdSetId { get; set; }
         public virtual AdSet AdSet { get; set; }
 
-        public virtual new List<AdSetSummaryMetric> Metrics { get; set; }
+        public virtual List<AdSetSummaryMetric> Metrics { get; set; }
 
         public override bool AllZeros()
         {

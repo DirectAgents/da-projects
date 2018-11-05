@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 
 namespace DirectAgents.Web
@@ -51,7 +52,7 @@ namespace DirectAgents.Web
         public static string ToShortDateString(this DateTime? dateTime, string nullString = null)
         {
             if (dateTime.HasValue)
-                return dateTime.Value.ToShortDateString();
+                return dateTime.Value.ToString("d", CultureInfo.InvariantCulture);
             else
                 return nullString;
         }

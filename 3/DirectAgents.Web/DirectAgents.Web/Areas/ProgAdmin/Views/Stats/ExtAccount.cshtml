@@ -27,72 +27,91 @@ else
 }
 
 <table>
-<tr>
-    <th>breakdown...</th>
-    <th>Partner</th>
-    <th style="text-align:right">ID</th>
-    <th>Ext Account</th>
-    <th>Impressions</th>
-    <th>AllClicks</th>
-    <th>Clicks</th>
-    <th>CTR</th>
-    <th>CPM</th>
-    <th>CPC</th>
-    <th>CPA</th>
-    <th>PostClick Conv</th>
-    <th>PostClick Rev</th>
-    <th>PostView Conv</th>
-    <th>PostView Rev</th>
-@*    <th>Total Conv</th>*@
-    <th>Cost</th>
-</tr>
+    <tr>
+        <th>breakdown...</th>
+        <th>Partner</th>
+        <th style="text-align:right">ID</th>
+        <th>Ext Account</th>
+        <th>Impressions</th>
+        <th>AllClicks</th>
+        <th>Clicks</th>
+        <th>CTR</th>
+        <th>CPM</th>
+        <th>CPC</th>
+        <th>CPA</th>
+        <th>PostClick Conv</th>
+        <th>PostClick Rev</th>
+        <th>PostView Conv</th>
+        <th>PostView Rev</th>
+        @*    <th>Total Conv</th>*@
+        <th>Cost</th>        
+        @foreach (var metric in Model.MetricNames)
+        {
+            <th>@metric.Key</th>
+        }
+
+    </tr>
 @foreach (var stat in Model.Stats)
 {
-<tr>
-    <td>
-        by:@Html.ActionLink("strategy", "Strategy", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString })|@Html.ActionLink("adset", "AdSet", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString })|@Html.ActionLink("creative", "Creative", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString })|@Html.ActionLink("action", "Action", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString })
-        show:@Html.ActionLink("daily", "Index", "DailySummaries", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString }, null)|@Html.ActionLink("convs", "Conv", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString })|@Html.ActionLink("by-site", "Site", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString })
-    </td>
-    <td>@stat.ExtAccount.Platform.Name</td>
-    <td style="text-align:right">@stat.ExtAccount.Id</td>
-    <td>@stat.ExtAccount.Name</td>
-    <td style="text-align:right">@stat.Impressions</td>
-    <td style="text-align:right">@stat.AllClicks</td>
-    <td style="text-align:right">@stat.Clicks</td>
-    <td style="text-align:center">@stat.CTR</td>
-    <td style="text-align:center">@stat.CPM</td>
-    <td style="text-align:center">@stat.CPC</td>
-    <td style="text-align:center">@stat.CPA</td>
-    <td style="text-align:right">@stat.PostClickConv</td>
-    <td style="text-align:right">@stat.PostClickRev</td>
-    <td style="text-align:right">@stat.PostViewConv</td>
-    <td style="text-align:right">@stat.PostViewRev</td>
-@*    <td style="text-align:right">@stat.TotalConv</td>*@
-    <td style="text-align:right">@stat.Cost</td>
-</tr>
+    <tr>
+        <td>
+            by:@Html.ActionLink("strategy", "Strategy", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString })|@Html.ActionLink("adset", "AdSet", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString })|@Html.ActionLink("creative", "Creative", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString })|@Html.ActionLink("keyword", "Keyword", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString })|@Html.ActionLink("search term", "SearchTerm", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString })|@Html.ActionLink("action", "Action", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString })
+            <br/>
+            show:@Html.ActionLink("daily", "Index", "DailySummaries", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString }, null)|@Html.ActionLink("convs", "Conv", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString })|@Html.ActionLink("by-site", "Site", new { acctId = stat.ExtAccount.Id, start = Model.StartString, end = Model.EndString })
+        </td>
+        <td>@stat.ExtAccount.Platform.Name</td>
+        <td style="text-align:right">@stat.ExtAccount.Id</td>
+        <td>@stat.ExtAccount.Name</td>
+        <td style="text-align:right">@stat.Impressions</td>
+        <td style="text-align:right">@stat.AllClicks</td>
+        <td style="text-align:right">@stat.Clicks</td>
+        <td style="text-align:center">@stat.CTR</td>
+        <td style="text-align:center">@stat.CPM</td>
+        <td style="text-align:center">@stat.CPC</td>
+        <td style="text-align:center">@stat.CPA</td>
+        <td style="text-align:right">@stat.PostClickConv</td>
+        <td style="text-align:right">@stat.PostClickRev</td>
+        <td style="text-align:right">@stat.PostViewConv</td>
+        <td style="text-align:right">@stat.PostViewRev</td>
+        @*    <td style="text-align:right">@stat.TotalConv</td>*@
+        <td style="text-align:right">@stat.Cost</td>
+        @foreach (var metricName in Model.MetricNames)
+        {
+            var metric = stat.Metrics.FirstOrDefault(x => x.MetricType.Id == metricName.Value);
+            var metricValue = metric == null ? 0.0M : metric.Value;
+            <td>@(metricValue.ToString("F"))</td>
+        }
+
+    </tr>
 }
 @if (Model.StatsTotal != null)
 {
     var tot = Model.StatsTotal;
-<tr>
-    <th></th>
-    <th></th>
-    <th></th>
-    <th>@tot.Name</th>
-    <th style="text-align:right">@tot.Impressions</th>
-    <th style="text-align:right">@tot.AllClicks</th>
-    <th style="text-align:right">@tot.Clicks</th>
-    <th style="text-align:center">@tot.CTR</th>
-    <th style="text-align:center">@tot.CPM</th>
-    <th style="text-align:center">@tot.CPC</th>
-    <th style="text-align:center">@tot.CPA</th>
-    <th style="text-align:right">@tot.PostClickConv</th>
-    <th style="text-align:right">@tot.PostClickRev</th>
-    <th style="text-align:right">@tot.PostViewConv</th>
-    <th style="text-align:right">@tot.PostViewRev</th>
-@*    <th style="text-align:right">@tot.TotalConv</th>*@
-    <th style="text-align:right">@tot.Cost</th>
-</tr>
+    <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th>@tot.Name</th>
+        <th style="text-align:right">@tot.Impressions</th>
+        <th style="text-align:right">@tot.AllClicks</th>
+        <th style="text-align:right">@tot.Clicks</th>
+        <th style="text-align:center">@tot.CTR</th>
+        <th style="text-align:center">@tot.CPM</th>
+        <th style="text-align:center">@tot.CPC</th>
+        <th style="text-align:center">@tot.CPA</th>
+        <th style="text-align:right">@tot.PostClickConv</th>
+        <th style="text-align:right">@tot.PostClickRev</th>
+        <th style="text-align:right">@tot.PostViewConv</th>
+        <th style="text-align:right">@tot.PostViewRev</th>
+        @*    <th style="text-align:right">@tot.TotalConv</th>*@
+        <th style="text-align:right">@tot.Cost</th>
+        @foreach (var metricName in Model.MetricNames)
+        {
+            var metric = tot.Metrics.FirstOrDefault(x => x.MetricType.Id == metricName.Value);
+            var metricValue = metric == null ? 0.0M : metric.Value;
+            <th>@(metricValue.ToString("F"))</th>
+        }
+    </tr>
 }
 </table>
 <br />
