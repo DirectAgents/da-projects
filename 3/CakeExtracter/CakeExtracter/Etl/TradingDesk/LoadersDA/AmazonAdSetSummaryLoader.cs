@@ -14,7 +14,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         protected override int Load(List<AdSetSummary> items)
         {
-            Logger.Info(accountId, "Loading {0} Amazon AdSet and Summary data:", items.Count);
+            Logger.Info(accountId, "Loading {0} Amazon AdSet Daily Summaries..", items.Count);
 
             tdAdSetSummaryLoader.PrepareData(items);
             tdAdSetSummaryLoader.AddUpdateDependentStrategies(items);

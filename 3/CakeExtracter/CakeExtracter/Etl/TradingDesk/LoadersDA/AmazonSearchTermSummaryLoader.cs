@@ -14,7 +14,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         protected override int Load(List<SearchTermSummary> items)
         {
-            Logger.Info(accountId, "Loading {0} Amazon Search term data: ", items.Count);
+            Logger.Info(accountId, "Loading {0} Amazon Search Term Daily Summaries..", items.Count);
 
             searchTermSummaryLoader.PrepareData(items);
             searchTermSummaryLoader.AddUpdateDependentStrategies(items);

@@ -14,7 +14,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         protected override int Load(List<KeywordSummary> keywordItems)
         {
-            Logger.Info(accountId, "Loading {0} Amazon Keyword data: ", keywordItems.Count);
+            Logger.Info(accountId, "Loading {0} Amazon Keyword Daily Summaries..", keywordItems.Count);
 
             keywordSummaryLoader.PrepareData(keywordItems);
             keywordSummaryLoader.AddUpdateDependentStrategies(keywordItems);
