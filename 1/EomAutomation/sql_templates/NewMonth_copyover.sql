@@ -1,8 +1,17 @@
+USE [master];
+GO
+
+IF (DB_ID(N'{%OLD_DATABASE_NAME%}') IS NULL) 
+BEGIN
+    raiserror(N'Source database [{%OLD_DATABASE_NAME%}] does not exists. Script execution will be aborted', 20, -1) with log
+END
+GO
+
 -- *TODO: SET APPROPRIATE DATABASES!*
-USE {%NEW_DATABASE_NAME%}
+USE [{%NEW_DATABASE_NAME%}]
 
 --Copy from previous month; *SET DATABASES!*
-exec DAMain1.dbo.EOMcopy '{%OLD_DATABASE_NAME%}','{%NEW_DATABASE_NAME%}'
+exec [{%COMMON_DATABASE_NAME%}].dbo.EOMcopy '{%OLD_DATABASE_NAME%}','{%NEW_DATABASE_NAME%}'
 --(also clears affiliate dates and updates campaign statuses)
 
 
@@ -12,7 +21,7 @@ exec DAMain1.dbo.EOMcopy '{%OLD_DATABASE_NAME%}','{%NEW_DATABASE_NAME%}'
 --Initialize audit (changes current db)
 :r "{%AUDIT_PATH%}\autoaudit 2.00h.sql"
 
-USE {%NEW_DATABASE_NAME%}
+USE [{%NEW_DATABASE_NAME%}]
 
 --Add audits
 :r "{%AUDIT_PATH%}\AddAuditTables.sql"

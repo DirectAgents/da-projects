@@ -42,14 +42,12 @@ USE [master];
 
 GO
 
-IF (DB_ID(N'$(DatabaseName)') IS NOT NULL) 
+IF (DB_ID(N'$(DatabaseName)') IS NOT NULL)
 BEGIN
-    ALTER DATABASE [$(DatabaseName)]
-    SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-    DROP DATABASE [$(DatabaseName)];
+    raiserror(N'Target database [$(DatabaseName)] already exists. Script execution will be aborted', 20, -1) with log
 END
-
 GO
+
 PRINT N'Creating $(DatabaseName)...'
 GO
 CREATE DATABASE [$(DatabaseName)]
