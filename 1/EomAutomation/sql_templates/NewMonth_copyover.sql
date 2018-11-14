@@ -7,6 +7,12 @@ BEGIN
 END
 GO
 
+IF (DB_ID(N'{%NEW_DATABASE_NAME%}') IS NULL) 
+BEGIN
+    raiserror(N'Target database [{%NEW_DATABASE_NAME%}] does not exists. Script execution will be aborted', 20, -1) with log
+END
+GO
+
 -- *TODO: SET APPROPRIATE DATABASES!*
 USE [{%NEW_DATABASE_NAME%}]
 

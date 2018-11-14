@@ -137,19 +137,16 @@ Function AddPreparedScriptToResultFile($blockName) {
     Add-Content -Path $ResultFile -Value $content
 }
 Function PrepareSqlScript() {
-    if (!$CreateDatabase) {
-        return
+    if ($CreateDatabase) {
+        AddPreparedScriptToResultFile "CreateDb"
     }
-    AddPreparedScriptToResultFile "CreateDb"
-
-    if (!$CopyData) {
-        return
+    if ($CopyData) {
+        AddPreparedScriptToResultFile "CopyPrevMonth"
+        AddPreparedScriptToResultFile "AddRowToDADatabase"
+        AddPreparedScriptToResultFile "CommissionView"
+        AddPreparedScriptToResultFile "AccountView"
+        AddPreparedScriptToResultFile "AdvertiserPaymentStatus"
     }
-    AddPreparedScriptToResultFile "CopyPrevMonth"
-    AddPreparedScriptToResultFile "AddRowToDADatabase"
-    AddPreparedScriptToResultFile "CommissionView"
-    AddPreparedScriptToResultFile "AccountView"
-    AddPreparedScriptToResultFile "AdvertiserPaymentStatus"
 }
 
 Function Run() {
