@@ -200,7 +200,7 @@ namespace CakeExtracter.Commands
                 Site = true;
             else if (statsTypeUpper.StartsWith("CONV"))
                 Conv = true;
-            else if (statsTypeUpper.StartsWith("KEYW"))
+            else if (statsTypeUpper.StartsWith("KEY"))
                 Keyword = true;
             else if (statsTypeUpper.StartsWith("STERM"))
                 SearchTerm = true;
