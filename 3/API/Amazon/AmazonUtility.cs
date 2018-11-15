@@ -172,7 +172,7 @@ namespace Amazon
             restClient.AddHandler("application/x-www-form-urlencoded", new JsonDeserializer());
 
             var request = new RestRequest();
-            request.AddParameter("redirect_uri", "https://portal.directagents.com");
+            request.AddParameter("redirect_uri", ClientUrl);
             if (String.IsNullOrWhiteSpace(RefreshToken[WhichAlt]))
             {
                 request.AddParameter("grant_type", "authorization_code");

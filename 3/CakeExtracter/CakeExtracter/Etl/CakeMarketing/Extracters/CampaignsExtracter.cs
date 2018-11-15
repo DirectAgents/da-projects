@@ -10,6 +10,12 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
         private readonly int offerId;
         private readonly IEnumerable<int> campaignIds;
 
+        private List<int> campIds_unableToRetrieve = new List<int>();
+        public IEnumerable<int> CampIds_UnableToRetrieve
+        {
+            get { return campIds_unableToRetrieve.ToArray(); }
+        }
+
         public CampaignsExtracter(int offerId = 0, IEnumerable<int> campaignIds = null)
         {
             this.offerId = offerId;
@@ -30,9 +36,15 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
                 foreach (int campaignId in campaignIds)
                 {
                     var campaigns = CakeMarketingUtility.Campaigns(offerId: offerId, campaignId: campaignId);
-                    if (!campaigns.Any())
+                    if (campaigns.Any())
+                    {
+                        Add(campaigns);
+                    }
+                    else
+                    {
                         Logger.Info("Couldn't retrieve campaign {0} from Cake (offer {1})", campaignId, offerId);
-                    Add(campaigns);
+                        campIds_unableToRetrieve.Add(campaignId);
+                    }
                 }
             }
             End();

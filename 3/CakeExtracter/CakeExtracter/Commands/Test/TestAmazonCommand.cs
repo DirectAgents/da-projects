@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 using Amazon;
 using CakeExtracter.Common;
 using System.Configuration;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Commands.Test
 {
@@ -28,8 +29,14 @@ namespace CakeExtracter.Commands.Test
 
             //_amazonAuth = new AmazonAuth(clientId, clientSecret, accessCode);
 
-            
+            var tokens = Platform.GetPlatformTokens(Platform.Code_Amazon);
+            AmazonUtility.TokenSets = tokens;
+
             ListProfiles();
+
+            tokens = AmazonUtility.TokenSets;
+            Platform.SavePlatformTokens(Platform.Code_Amazon, tokens);
+
             Console.ReadKey();
             return 0;
         }

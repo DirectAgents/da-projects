@@ -88,7 +88,7 @@
                 </div>
             </td>
             <td>
-                <div id="divCmds4_@(adv.AdvertiserId)" class="divCmds divCmds5">
+                <div id="divCmds5_@(adv.AdvertiserId)" class="divCmds divCmds5">
                     @Html.ActionLink("clear", "ClearConvs", new { id = adv.AdvertiserId, justToday = true }, new { onclick = "DoClear(" + adv.AdvertiserId + ", 5)" }) |
                     @Html.ActionLink("load", "LoadConvs", new { id = adv.AdvertiserId, justToday = true }, new { onclick = "DoLoad(" + adv.AdvertiserId + ", 5)" })
                 </div>

@@ -47,6 +47,9 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
 
         protected override int Load(List<CampaignSummary> items)
         {
+            //TODO: make it so we don't have to query the db everytime through Load()
+            //      ...to get existingOfferIds, existingAffIds and existingCampIds
+
             Logger.Info("Loading {0} CampSums..", items.Count);
             AddMissingOffers(items);
             AddMissingAffiliates(items);
@@ -225,6 +228,14 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             }
             var neededCampIds = items.Where(KeepFunc).Select(cs => cs.Campaign.CampaignId).Distinct();
             var missingCampIds = neededCampIds.Where(id => !existingCampIds.Contains(id));
+
+            //if (missingCampIds.Any())
+            //{
+            //    var itemsInQuestion = items.Where(KeepFunc).Where(cs => missingCampIds.Contains(cs.Campaign.CampaignId)).ToArray();
+            //}
+
+            //??? What to do if we fail to extract one of the needed campaigns? Will get a foreign-key violation error during the upsert
+            //TODO: remember the campId and handle it when the related item gets processed.
 
             QuickETL_Campaigns(missingCampIds);
         }
