@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Advertiser>
+@using System.Globalization
 @using DirectAgents.Domain.Entities.CPProg;
 @{
     DateTime currMonth = ViewBag.CurrMonth;
@@ -28,7 +29,7 @@
 </tr>
 @foreach (var adv in Model)
 {
-    var endedString = (adv.EndDate.HasValue ? " [End: " + adv.EndDate.Value.ToShortDateString() + "]" : "");
+    var endedString = (adv.EndDate.HasValue ? " [End: " + adv.EndDate.Value.ToString("d", CultureInfo.InvariantCulture) + "]" : "");
     <tr><td colspan="5"><b>@adv.Name</b>@endedString</td></tr>
     foreach (var camp in adv.Campaigns.OrderBy(x => x.Name))
     {
@@ -65,9 +66,9 @@
 @if (super)
 {
     <br />
-    @Html.ActionLink("Copy Budgets,Percents&Exceptions from last month", "CopyInfos", new { month = currMonth.ToShortDateString(), activeLastMonth = activeLastMonth })
+    @Html.ActionLink("Copy Budgets,Percents&Exceptions from last month", "CopyInfos", new { month = currMonth.ToString("d", CultureInfo.InvariantCulture), activeLastMonth = activeLastMonth })
     <text> - for campaigns with activity</text>
     <br /><br />
-    @Html.ActionLink("Create BaseFee items for the month", "CreateBaseFees", new { month = currMonth.ToShortDateString() })
+    @Html.ActionLink("Create BaseFee items for the month", "CreateBaseFees", new { month = currMonth.ToString("d", CultureInfo.InvariantCulture) })
     <text> - for advertisers that haven't ended</text>
 }

@@ -114,7 +114,7 @@ namespace CakeExtracter.Commands
             var campaigns = criteoUtility.GetCampaigns();
             if (campaigns != null)
             {
-                var nameEids = campaigns.Select(x => new NameEid { Eid = x.campaignID.ToString() });
+                var nameEids = campaigns.Select(x => new Strategy { ExternalId = x.campaignID.ToString() });
                 loader.AddUpdateDependentStrategies(nameEids);
                 //Only using Eids in the lookup because that's what the loader will use later (the extracter doesn't get campaign names)
             }

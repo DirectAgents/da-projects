@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Globalization;
+using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Web.Areas.ProgAdmin.Models;
+using DirectAgents.Web.Helpers;
 
 namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 {
@@ -29,16 +32,18 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             if (!customDates)
                 SetChooseMonthViewData_NonCookie(start);
 
+            var stats = cpProgRepo.DailySummaries(start, end, acctId: acctId).OrderBy(x => x.Date).ToList();
             var model = new DailySummariesVM
             {
                 ExtAccount = extAcct,
                 Start = start,
                 End = end,
                 CustomDates = AreDatesCustom(start, end),
-                DailySummaries = cpProgRepo.DailySummaries(start, end, acctId: acctId)
+                DailySummaries = stats,
+                MetricNames = UIMetricHelper.GetMetricTypeDictionary(stats)
             };
-            Session["start"] = (start.HasValue ? start.Value.ToShortDateString() : "");
-            Session["end"] = (end.HasValue ? end.Value.ToShortDateString() : "");
+            Session["start"] = (start.HasValue ? start.Value.ToString("d", CultureInfo.InvariantCulture) : "");
+            Session["end"] = (end.HasValue ? end.Value.ToString("d", CultureInfo.InvariantCulture) : "");
             return View(model);
         }
 

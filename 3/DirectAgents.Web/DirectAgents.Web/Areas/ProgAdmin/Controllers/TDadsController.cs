@@ -12,13 +12,17 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             this.cpProgRepo = cpProgRepository;
         }
 
-        public ActionResult Index(int? acctId)
+        public ActionResult Index(int? id, string sort)
         {
-            var ads = cpProgRepo.TDads(acctId: acctId).OrderBy(a => a.Name).ThenBy(a => a.Id);
-            Session["acctId"] = acctId.ToString();
+            var ads = sort == "adset" 
+                ? cpProgRepo.TDads(acctId: id).OrderBy(a => a.AdSet.Name).ThenBy(a => a.AdSetId) 
+                : cpProgRepo.TDads(acctId: id).OrderBy(a => a.Name).ThenBy(a => a.Id);
+            Session["acctId"] = id.ToString();
 
             // Don't show images if not filtered (i.e. showing all creatives), unless requested explicitly
-            ViewBag.ShowImages = (acctId.HasValue || (Request["images"] != null && Request["images"].ToUpper() == "TRUE"));
+            ViewBag.ShowImages = (id.HasValue || (Request["images"] != null && Request["images"].ToUpper() == "TRUE"));
+            var extIds = ads.SelectMany(x => x.ExternalIds).Select(x => x.Type.Name).Distinct();
+            ViewBag.ExternalIdTypes = extIds.ToList();
             return View(ads);
         }
 
@@ -27,7 +31,9 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         {
             var ad = cpProgRepo.TDad(id);
             if (ad == null)
+            {
                 return HttpNotFound();
+            }
             return View(ad);
         }
         
@@ -37,7 +43,9 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             if (ModelState.IsValid)
             {
                 if (cpProgRepo.SaveTDad(ad))
-                    return RedirectToAction("Index", new { acctId = Session["acctId"] });
+                {
+                    return RedirectToAction("Index", new { id = Session["acctId"] });
+                }
                 ModelState.AddModelError("", "Creative could not be saved.");
             }
             cpProgRepo.FillExtended(ad);

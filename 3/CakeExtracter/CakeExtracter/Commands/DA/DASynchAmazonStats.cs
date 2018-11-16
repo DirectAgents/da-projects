@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Amazon;
 using CakeExtracter.Bootstrappers;
@@ -66,7 +65,6 @@ namespace CakeExtracter.Commands
             HasOption<bool>("z|fromDatabase=", "Retrieve from database instead of API (where implemented)", c => FromDatabase = c);
         }
 
-
         public override int Execute(string[] remainingArguments)
         {
             if (!DaysAgoToStart.HasValue)
@@ -103,6 +101,10 @@ namespace CakeExtracter.Commands
                         DoETL_AdSet(dateRange, account, amazonUtility);
                     if (statsType.Creative)
                         DoETL_Creative(dateRange, account, amazonUtility);
+                    if (statsType.Keyword)
+                        DoETL_Keyword(dateRange, account, amazonUtility);
+                    if (statsType.SearchTerm)
+                        DoETL_SearchTerm(dateRange, account, amazonUtility);
                 }
                 catch (Exception ex)
                 {
@@ -136,6 +138,7 @@ namespace CakeExtracter.Commands
             extracterThread.Join();
             loaderThread.Join();
         }
+
         private void DoETL_DailyFromStrategyInDatabase(DateRange dateRange, ExtAccount account)
         {
             var extracter = new DatabaseStrategyToDailySummaryExtracter(dateRange, account.Id);
@@ -156,6 +159,7 @@ namespace CakeExtracter.Commands
             extracterThread.Join();
             loaderThread.Join();
         }
+
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
             //var extracter = new AmazonAdSetExtracter(amazonUtility, dateRange, account, campaignFilter: account.Filter, campaignFilterOut: account.FilterOut);
@@ -166,11 +170,32 @@ namespace CakeExtracter.Commands
             extracterThread.Join();
             loaderThread.Join();
         }
+
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
             //var extracter = new AmazonAdExtrater(amazonUtility, dateRange, account, campaignFilter: account.Filter, campaignFilterOut: account.FilterOut);
             var extracter = new AmazonAdExtrater(amazonUtility, dateRange, account, campaignFilter: account.Filter);
             var loader = new AmazonAdSummaryLoader(account.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+
+        private void DoETL_Keyword(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
+        {
+            var extracter = new AmazonKeywordExtracter(amazonUtility, dateRange, account, campaignFilter: account.Filter);
+            var loader = new AmazonKeywordSummaryLoader(account.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+
+        private void DoETL_SearchTerm(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
+        {
+            var extracter = new AmazonSearchTermExtracter(amazonUtility, dateRange, account, campaignFilter: account.Filter);
+            var loader = new AmazonSearchTermSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();

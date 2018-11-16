@@ -1,4 +1,5 @@
-﻿@model DirectAgents.Web.Areas.ProgAdmin.Models.ExtraItemsVM
+﻿@using System.Globalization
+@model DirectAgents.Web.Areas.ProgAdmin.Models.ExtraItemsVM
 @{
     string campId = (string)Session["campId"];
 }
@@ -44,7 +45,7 @@
 {
 <tr>
     <td>@Html.ActionLink("Edit", "Edit", new { id = item.Id })</td>
-    <td>@item.Date.ToShortDateString()</td>
+    <td>@item.Date.ToString("d", CultureInfo.InvariantCulture)</td>
     <td>@item.Campaign.Name</td>
     <td>@item.Platform.Name</td>
     <td>@item.Description</td>
@@ -57,7 +58,7 @@
 <br />
 @if (!string.IsNullOrWhiteSpace(campId))
 {
-    @Html.ActionLink("New Extra Item", "CreateNew", new { campId = campId, date = (Model.Month.HasValue ? Model.Month.Value.ToShortDateString() : "") })
+    @Html.ActionLink("New Extra Item", "CreateNew", new { campId = campId, date = (Model.Month.HasValue ? Model.Month.Value.ToString("d", CultureInfo.InvariantCulture) : "") })
     <text>&nbsp;|&nbsp;</text>
     @Html.ActionLink("Back to Campaign", "Show", "Campaigns", new { id = campId }, null)
     <br />

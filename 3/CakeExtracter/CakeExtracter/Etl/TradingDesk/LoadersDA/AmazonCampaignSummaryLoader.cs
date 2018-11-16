@@ -203,6 +203,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             Logger.Info(accountId, "Loading {0} Amazon Campaign Daily Summaries..", items.Count);
 
+            tdStrategySummaryLoader.PrepareData(items);
             tdStrategySummaryLoader.AddUpdateDependentStrategies(items);
             tdStrategySummaryLoader.AssignStrategyIdToItems(items);
             var count = tdStrategySummaryLoader.UpsertDailySummaries(items);

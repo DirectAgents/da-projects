@@ -7,6 +7,8 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using Amazon.Entities;
+using Amazon.Enums;
+using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Deserializers;
@@ -15,9 +17,17 @@ namespace Amazon
 {
     public class AmazonUtility
     {
+        private const int LimitOfReturnedValues = 5000;
+        private const int WaitTimeSeconds = 5;
+        private const int WaitAttemptsNumber = 60; // 5 sec * 60 = 300 sec => 5 min
+
+        private const string TOKEN_DELIMITER = "|AMZNAMZN|";
+        private const int NumAlts = 10; // including the default (0)
+
         private static readonly object RequestLock = new object();
         private static readonly object FileLock = new object();
         private static readonly object AccessTokenLock = new object();
+
         // From Config File
         private readonly string _amazonClientId = ConfigurationManager.AppSettings["AmazonClientId"];
         private readonly string _amazonClientSecret = ConfigurationManager.AppSettings["AmazonClientSecret"];
@@ -29,11 +39,6 @@ namespace Amazon
         private readonly string _amazonClientUrl = ConfigurationManager.AppSettings["AmazonClientUrl"];
         //private readonly string _amazonAccessCode = ConfigurationManager.AppSettings["AmazonAccessCode"];
         private readonly string _amazonRefreshToken = ConfigurationManager.AppSettings["AmazonRefreshToken"];
-
-        private const string TOKEN_DELIMITER = "|AMZNAMZN|";
-        public const int NumAlts = 10; // including the default (0)
-        public const string CAMPAIGNTYPE_SPONSOREDPRODUCTS = "sponsoredProducts";
-        public const string CAMPAIGNTYPE_HSA = "headlineSearch";
 
         //private long CustomerID { get; set; }
         //private string DeveloperToken { get; set; }
@@ -47,7 +52,7 @@ namespace Amazon
         private static string[] RefreshToken = new string[NumAlts];
         private string[] AltAccountIDs = new string[NumAlts];
         public int WhichAlt { get; set; } // default: 0
-        
+
         private string ApiEndpointUrl { get; set; }
         private string AuthorizeUrl { get; set; }
         private string TokenUrl { get; set; }
@@ -77,86 +82,42 @@ namespace Amazon
                 Console.WriteLine(message);
             else
                 _LogError("[AmazonUtility] " + message);
-        } 
+        }
         #endregion
 
-        private static IEnumerable<string> CreateTokenSets()
-        {
-            for (int i = 0; i < NumAlts; i++)
-                yield return AccessToken[i] + TOKEN_DELIMITER + RefreshToken[i];
-        }
+        #region Tokens
         public static string[] TokenSets // each string in the array is a combination of Access + Refresh Token
         {
-            get { return CreateTokenSets().ToArray(); }
+            get
+            {
+                return CreateTokenSets().ToArray();
+            }
             set
             {
                 lock (AccessTokenLock)
                 {
-                    for (int i = 0; i < value.Length; i++)
-                    {
-                        var tokenSet = value[i].Split(new string[] {TOKEN_DELIMITER}, StringSplitOptions.None);
-                        AccessToken[i] = tokenSet[0];
-                        if (tokenSet.Length > 1)
-                            RefreshToken[i] = tokenSet[1];
-                    }
+                    SetTokens(value);
                 }
             }
         }
 
-        private void ResetCredentials()
+        private static IEnumerable<string> CreateTokenSets()
         {
-            //UserName = _amazonApiUsername;
-            //Password = _amazonApiPassword;
-            //ClientId = _amazonApiClientId;
-            //ClientSecret = _amazonClientSecret;
-            ApiEndpointUrl = _amazonApiEndpointUrl;
-            AuthorizeUrl = _amazonAuthorizeUrl;
-            TokenUrl = _amazonTokenUrl;
-            ClientUrl = _amazonClientUrl;
-            //ApplicationAccessCode = _amazonAccessCode;
-            //RefreshToken = _amazonRefreshToken;
-        }
-
-        #region Constructors
-        public AmazonUtility()
-        {
-            ResetCredentials();
-            //AmazonAuth = new AmazonAuth(_amazonApiClientId, _amazonClientSecret, _amazonAccessCode);
-            Setup();
-        }
-        public AmazonUtility(Action<string> logInfo, Action<string> logError)
-            : this()
-        {
-            _LogInfo = logInfo;
-            _LogError = logError;
-        }
-        private void Setup()
-        {
-            AuthCode[0] = ConfigurationManager.AppSettings["AmazonAuthCode"];
-            for (int i = 1; i < NumAlts; i++)
+            for (var i = 0; i < NumAlts; i++)
             {
-                AltAccountIDs[i] = PlaceLeadingAndTrailingCommas(ConfigurationManager.AppSettings["Amazon_Alt" + i]);
-                AuthCode[i] = ConfigurationManager.AppSettings["AmazonAuthCode_Alt" + i];
+                yield return AccessToken[i] + TOKEN_DELIMITER + RefreshToken[i];
             }
         }
-        private string PlaceLeadingAndTrailingCommas(string idString)
-        {
-            if (idString == null || idString.Length == 0)
-                return idString;
-            return (idString[0] == ',' ? "" : ",") + idString + (idString[idString.Length - 1] == ',' ? "" : ",");
-        }
-        #endregion
 
-        // for alternative credentials...
-        public void SetWhichAlt(string accountId)
+        private static void SetTokens(string[] tokens)
         {
-            WhichAlt = 0; //default
-            for (int i = 1; i < NumAlts; i++)
+            for (var i = 0; i < tokens.Length; i++)
             {
-                if (AltAccountIDs[i] != null && AltAccountIDs[i].Contains(',' + accountId + ','))
+                var tokenSet = tokens[i].Split(new[] { TOKEN_DELIMITER }, StringSplitOptions.None);
+                AccessToken[i] = tokenSet[0];
+                if (tokenSet.Length > 1)
                 {
-                    WhichAlt = i;
-                    break;
+                    RefreshToken[i] = tokenSet[1];
                 }
             }
         }
@@ -186,7 +147,7 @@ namespace Amazon
 
             var response = restClient.ExecuteAsPost<GetTokenResponse>(request, "POST");
 
-            if (response.Data == null || response.Data.access_token == null)
+            if (response.Data?.access_token == null)
                 LogError("Failed to get access token");
 
             if (response.Data != null && response.Data.refresh_token == null)
@@ -198,52 +159,378 @@ namespace Amazon
                 RefreshToken[WhichAlt] = response.Data.refresh_token; // update this in case it changed
             }
         }
+        #endregion
+
+        #region Constructors
+        public AmazonUtility()
+        {
+            ResetCredentials();
+            //AmazonAuth = new AmazonAuth(_amazonApiClientId, _amazonClientSecret, _amazonAccessCode);
+            Setup();
+        }
+
+        public AmazonUtility(Action<string> logInfo, Action<string> logError)
+            : this()
+        {
+            _LogInfo = logInfo;
+            _LogError = logError;
+        }
+
+        private void ResetCredentials()
+        {
+            //UserName = _amazonApiUsername;
+            //Password = _amazonApiPassword;
+            //ClientId = _amazonApiClientId;
+            //ClientSecret = _amazonClientSecret;
+            ApiEndpointUrl = _amazonApiEndpointUrl;
+            AuthorizeUrl = _amazonAuthorizeUrl;
+            TokenUrl = _amazonTokenUrl;
+            ClientUrl = _amazonClientUrl;
+            //ApplicationAccessCode = _amazonAccessCode;
+            //RefreshToken = _amazonRefreshToken;
+        }
+
+        private void Setup()
+        {
+            AuthCode[0] = ConfigurationManager.AppSettings["AmazonAuthCode"];
+            for (var i = 1; i < NumAlts; i++)
+            {
+                AltAccountIDs[i] = PlaceLeadingAndTrailingCommas(ConfigurationManager.AppSettings["Amazon_Alt" + i]);
+                AuthCode[i] = ConfigurationManager.AppSettings["AmazonAuthCode_Alt" + i];
+            }
+        }
+
+        private string PlaceLeadingAndTrailingCommas(string idString)
+        {
+            if (string.IsNullOrEmpty(idString))
+            {
+                return idString;
+            }
+
+            return (idString[0] == ',' ? "" : ",") + idString + (idString[idString.Length - 1] == ',' ? "" : ",");
+        }
+        #endregion
+
+        // for alternative credentials...
+        public void SetWhichAlt(string accountId)
+        {
+            WhichAlt = 0; //default
+            for (var i = 1; i < NumAlts; i++)
+            {
+                if (AltAccountIDs[i] != null && AltAccountIDs[i].Contains(',' + accountId + ','))
+                {
+                    WhichAlt = i;
+                    break;
+                }
+            }
+        }
+
+        public List<Profile> GetProfiles()
+        {
+            return GetEntities<Profile>(EntitesType.Profiles);
+        }
+
+        public List<AmazonCampaign> GetCampaigns(CampaignType campaignType, string profileId)
+        {
+            return GetEntities<AmazonCampaign>(EntitesType.Campaigns, campaignType, null, profileId);
+        }
+
+        // For Sponsored Brands only the following attributed metrics are available:
+        // attributedSales14d, attributedSales14dSameSKU, attributedConversions14d, attributedConversions14dSameSKU
+        public List<AmazonDailySummary> ReportCampaigns(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
+        {
+            var param = AmazonApiHelper.CreateReportParams(EntitesType.Campaigns, campaignType, date, includeCampaignName);
+            return GetReportInfo<AmazonDailySummary>(EntitesType.Campaigns, campaignType, param, profileId);
+        }
+
+        // For Sponsored Brands only the following attributed metrics are available:
+        // attributedSales14d, attributedSales14dSameSKU, attributedConversions14d, attributedConversions14dSameSKU
+        public List<AmazonAdGroupSummary> ReportAdGroups(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
+        {
+            var param = AmazonApiHelper.CreateReportParams(EntitesType.AdGroups, campaignType, date, includeCampaignName);
+            return GetReportInfo<AmazonAdGroupSummary>(EntitesType.AdGroups, campaignType, param, profileId);
+        }
+
+        // Only for Sponsored Product
+        // sku metric - is not available
+        public List<AmazonAdDailySummary> ReportProductAds(DateTime date, string profileId, bool includeCampaignName)
+        {
+            const CampaignType campaignType = CampaignType.SponsoredProducts;
+            var param = AmazonApiHelper.CreateReportParams(EntitesType.ProductAds, campaignType, date, includeCampaignName);
+            return GetReportInfo<AmazonAdDailySummary>(EntitesType.ProductAds, campaignType, param, profileId);
+        }
+
+        // For Sponsored Brands only the following attributed metrics are available:
+        // attributedSales14d, attributedSales14dSameSKU, attributedConversions14d, attributedConversions14dSameSKU
+        public List<AmazonKeywordDailySummary> ReportKeywords(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
+        {
+            var param = AmazonApiHelper.CreateReportParams(EntitesType.Keywords, campaignType, date, includeCampaignName);
+            return GetReportInfo<AmazonKeywordDailySummary>(EntitesType.Keywords, campaignType, param, profileId);
+        }
+
+        /// Only for Sponsored Product
+        public List<AmazonSearchTermDailySummary> ReportSearchTerms(DateTime date, string profileId, bool includeCampaignName)
+        {
+            var campaignType = CampaignType.SponsoredProducts;
+            var param = AmazonApiHelper.CreateReportParams(EntitesType.SearchTerm, campaignType, date, includeCampaignName);
+            return GetReportInfo<AmazonSearchTermDailySummary>(EntitesType.Keywords, campaignType, param, profileId);
+        }
+
+        private List<T> GetEntities<T>(EntitesType entitiesType, CampaignType campaignType = CampaignType.Empty,
+            Dictionary<string, string> parameters = null, string profileId = null)
+        {
+            try
+            {
+                parameters = parameters ?? new Dictionary<string, string>();
+                var data = GetEntityList<T>(entitiesType, campaignType, parameters, profileId);
+                return data;
+            }
+            catch (Exception x)
+            {
+                LogError(x.Message);
+            }
+            return null;
+        }
+
+        /// Use it instead of the GetEntities method when you need to extract a large number of objects (more than 15,000) and you know about it.
+        private List<TEntity> GetSnapshotInfo<TEntity>(EntitesType entitesType, CampaignType campaignType, string profileId)
+        {
+            var submitReportResponse = SubmitSnapshot(campaignType, entitesType, profileId);
+            if (submitReportResponse != null)
+            {
+                var json = DownloadPreparedData<ReportResponseDownloadInfo>("snapshots", submitReportResponse.snapshotId, profileId);
+                if (json != null)
+                {
+                    var stats = JsonConvert.DeserializeObject<List<TEntity>>(json);
+                    return stats;
+                }
+            }
+            return new List<TEntity>();
+        }
+
+        private List<TStat> GetReportInfo<TStat>(EntitesType reportType, CampaignType campaignType, AmazonApiReportParams parameters, string profileId)
+        {
+            var submitReportResponse = SubmitReport(parameters, campaignType, reportType, profileId);
+            if (submitReportResponse != null)
+            {
+                var json = DownloadPreparedData<ReportResponseDownloadInfo>("reports", submitReportResponse.reportId, profileId);
+                if (json != null)
+                {
+                    var stats = JsonConvert.DeserializeObject<List<TStat>>(json);
+                    return stats;
+                }
+            }
+            return new List<TStat>();
+        }
+
+        private SnapshotRequestResponse SubmitSnapshot(CampaignType campaignType, EntitesType recordType, string profileId)
+        {
+            try
+            {
+                var snapshotParams = new AmazonApiSnapshotParams { stateFilter = "enabled,paused,archived" };
+                return SubmitRequestForPreparedData<SnapshotRequestResponse>("snapshot", snapshotParams, campaignType, recordType, profileId);
+            }
+            catch (Exception x)
+            {
+                LogError(x.Message);
+            }
+            return null;
+        }
+
+        private ReportRequestResponse SubmitReport(AmazonApiReportParams reportParams, CampaignType campaignType, EntitesType recordType, string profileId)
+        {
+            try
+            {
+                return SubmitRequestForPreparedData<ReportRequestResponse>("report", reportParams, campaignType, recordType, profileId);
+            }
+            catch (Exception x)
+            {
+                LogError(x.Message);
+            }
+            return null;
+        }
+
+        private List<T> GetEntityList<T>(EntitesType entitiesType, CampaignType campaignType, Dictionary<string, string> parameters,
+            string profileId, bool retrieveAllData = true)
+        {
+            var resourcePath = AmazonApiHelper.GetEntityListRelativePath(entitiesType, campaignType);
+            var request = new RestRequest(resourcePath, Method.GET);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddHeader("Amazon-Advertising-API-Scope", profileId);
+            foreach (var param in parameters)
+            {
+                request.AddQueryParameter(param.Key, param.Value);
+            }
+            if (retrieveAllData && campaignType != CampaignType.Empty)
+            {
+                return RetrieveAllData<T>(request);
+            }
+            var response = ProcessRequest<List<T>>(request, postNotGet: false);
+            return response.Data;
+        }
+
+        private List<T> RetrieveAllData<T>(RestRequest getRequest)
+        {
+            var data = new List<T>();
+            var isCompleted = false;
+            for (var startIndex = 0; !isCompleted; startIndex += LimitOfReturnedValues)
+            {
+                getRequest.AddOrUpdateParameter("startIndex", startIndex);
+                var restResponse = ProcessRequest<List<T>>(getRequest, postNotGet: false);
+                data.AddRange(restResponse.Data);
+                isCompleted = restResponse.Data.Count < LimitOfReturnedValues;
+            }
+            return data;
+        }
+
+        private T SubmitRequestForPreparedData<T>(string dataType, object requestParams, CampaignType campaignType, EntitesType entitiesType, string profileId)
+            where T : PreparedDataRequestResponse, new()
+        {
+            var resourcePath = AmazonApiHelper.GetDataRequestRelativePath(entitiesType, campaignType, dataType);
+            var request = new RestRequest(resourcePath);
+            request.AddHeader("Amazon-Advertising-API-Scope", profileId);
+            request.AddJsonBody(requestParams);
+            var response = ProcessRequest<T>(request, postNotGet: true);
+            return response?.Content != null ? response.Data : null;
+        }
+
+        private string DownloadPreparedData<T>(string dataType, string dataId, string profileId)
+            where T : ResponseDownloadInfo, new()
+        {
+            var triesLeft = WaitAttemptsNumber;
+            while (triesLeft > 0)
+            {
+                var downloadInfo = RequestPreparedData<T>(dataType, dataId, profileId);
+                if (downloadInfo != null && !String.IsNullOrWhiteSpace(downloadInfo.location))
+                {
+                    var json = GetJsonStringFromDownloadFile(downloadInfo.location, profileId);
+                    return json;
+                }
+                triesLeft--;
+            }
+            return null;
+        }
+
+        private T RequestPreparedData<T>(string dataType, string dataId, string profileId)
+            where T : ResponseDownloadInfo, new()
+        {
+            try
+            {
+                var resourcePath = AmazonApiHelper.GetPreparedDataRelativePath(dataType, dataId);
+                var request = new RestRequest(resourcePath);
+                request.AddHeader("Amazon-Advertising-API-Scope", profileId);
+                var restResponse = ProcessRequest<T>(request, postNotGet: false);
+                if (restResponse.Data.status == "SUCCESS")
+                {
+                    return restResponse.Data;
+                }
+                if (restResponse.Content.Contains("IN_PROGRESS"))
+                {
+                    LogInfo($"Waiting {WaitTimeSeconds} seconds for {dataType} to finish generating.");
+                    var timeSpan = new TimeSpan(0, 0, WaitTimeSeconds);
+                    Thread.Sleep(timeSpan);
+                }
+            }
+            catch (Exception x)
+            {
+                LogError(x.Message);
+            }
+            return null;
+        }
+
+        private string GetJsonStringFromDownloadFile(string url, string profileId)
+        {
+            try
+            {
+                var responseStream = GetResponseStream(url, profileId);
+                var exePath = AppDomain.CurrentDomain.BaseDirectory;
+                var filePath = Path.Combine(exePath, "download.gzip");
+                lock (FileLock)
+                {
+                    using (Stream s = File.Create(filePath))
+                    {
+                        responseStream.CopyTo(s);
+                    }
+                    var fileToDecompress = new FileInfo(filePath);
+                    Decompress(fileToDecompress);
+                }
+
+                var jsonFile = Path.Combine(exePath, "download.json");
+                lock (FileLock)
+                {
+                    using (var r = new StreamReader(jsonFile))
+                    {
+                        var json = r.ReadToEnd();
+                        return json;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                LogError(e.Message);
+            }
+            return string.Empty;
+        }
+
+        private Stream GetResponseStream(string url, string profileId)
+        {
+            var request = (HttpWebRequest)WebRequest.Create(url);
+            request.Headers.Add("Authorization", "bearer " + AccessToken[WhichAlt]);
+            request.Headers.Add("Amazon-Advertising-API-Scope", profileId);
+            var response = (HttpWebResponse)request.GetResponse();
+            return response.GetResponseStream();
+        }
+
+        private void Decompress(FileInfo fileToDecompress)
+        {
+            var currentFileName = fileToDecompress.FullName;
+            var newFileName = currentFileName.Remove(currentFileName.Length - fileToDecompress.Extension.Length);
+            using (FileStream originalFileStream = fileToDecompress.OpenRead(), decompressedFileStream = File.Create(newFileName + ".json"))
+            {
+                using (var decompressionStream = new GZipStream(originalFileStream, CompressionMode.Decompress))
+                {
+                    decompressionStream.CopyTo(decompressedFileStream);
+                }
+            }
+        }
 
         private IRestResponse<T> ProcessRequest<T>(RestRequest restRequest, bool postNotGet = false)
             where T : new()
         {
             lock (RequestLock)
             {
-                var restClient = new RestClient
-                {
-                    BaseUrl = new Uri(_amazonApiEndpointUrl)
-                };
-                //restClient.AddHandler("application/json", new JsonDeserializer());
+                var restClient = new RestClient(_amazonApiEndpointUrl);
 
                 if (String.IsNullOrEmpty(AccessToken[WhichAlt]))
+                {
                     GetAccessToken();
-
-                restRequest.AddHeader("Authorization", "bearer " + AccessToken[WhichAlt]);
-                //restRequest.AddHeader("Content-Type", "application/json");
+                }
+                AddAuthorizationHeader(restRequest);
                 restRequest.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
+                restRequest.AddHeader("Amazon-Advertising-API-ClientId", _amazonClientId);
 
                 bool done = false;
                 int tries = 0;
                 IRestResponse<T> response = null;
                 while (!done)
                 {
-                    if (postNotGet)
-                        response = restClient.ExecuteAsPost<T>(restRequest, "POST");
-                    else
-                        response = restClient.ExecuteAsGet<T>(restRequest, "GET");
-
-                    //var jsonResponse = JsonConvert.DeserializeObject(response.Content);
+                    response = postNotGet
+                        ? restClient.ExecuteAsPost<T>(restRequest, "POST")
+                        : restClient.ExecuteAsGet<T>(restRequest, "GET");
                     tries++;
 
                     if (response.StatusCode == HttpStatusCode.Unauthorized && tries < 2)
                     {
                         // Get a new access token and use that.
                         GetAccessToken();
-
-                        var param = restRequest.Parameters.Find(p =>
-                            p.Type == ParameterType.HttpHeader && p.Name == "Authorization");
-                        param.Value = "bearer " + AccessToken[WhichAlt];
+                        AddAuthorizationHeader(restRequest);
                     }
                     else if (response.StatusDescription != null && response.StatusDescription.Contains("IN_PROGRESS") &&
                              tries < 5)
                     {
-                        LogInfo("API calls quota exceeded. Waiting 5 seconds.");
-                        Thread.Sleep(5000);
+                        LogInfo($"API calls quota exceeded. Waiting {WaitTimeSeconds} seconds.");
+                        var timeSpan = new TimeSpan(0, 0, WaitTimeSeconds);
+                        Thread.Sleep(timeSpan);
                     }
                     else
                         done = true; //TODO: distinguish between success and failure of ProcessRequest
@@ -256,213 +543,17 @@ namespace Amazon
             }
         }
 
-        public List<Profile> GetProfiles()
+        private void AddAuthorizationHeader(RestRequest request)
         {
-            try
+            const string headerName = "Authorization";
+            var headerValue = "bearer " + AccessToken[WhichAlt];
+            var param = request.Parameters.Find(p => p.Type == ParameterType.HttpHeader && p.Name == headerName);
+            if (param != null)
             {
-                List<Profile> profiles = new List<Profile>();
-                var client = new RestClient(_amazonApiEndpointUrl);
-                client.AddHandler("application/json", new JsonDeserializer());
-                var request = new RestRequest("v1/profiles", Method.GET);
-                var restResponse = ProcessRequest<List<Profile>>(request, postNotGet: false);
-                return restResponse.Data;
+                param.Value = headerValue;
+                return;
             }
-            catch (Exception x)
-            {
-                LogError(x.Message);
-            }
-            return null;
-        }
-
-        //Get campaigns by profile id
-        // for sponsored product campaigns only - as of v.20180312
-        public List<AmazonCampaign> GetCampaigns(string profileId)
-        {
-            try
-            {
-                var client = new RestClient(_amazonApiEndpointUrl); //"https://advertising-api.amazon.com"
-                client.AddHandler("application/json", new JsonDeserializer());
-                var request = new RestRequest("v1/campaigns", Method.GET);
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("Amazon-Advertising-API-Scope", profileId);
-                var restResponse = ProcessRequest<List<AmazonCampaign>>(request, postNotGet: false);
-                return restResponse.Data;
-            }
-            catch (Exception x)
-            {
-                LogError(x.Message);
-            }
-            return null;
-        }
-
-        public List<AmazonKeyword> GetKeywords(string profileId)
-        {
-            try
-            {
-                var client = new RestClient(_amazonApiEndpointUrl); //"https://advertising-api.amazon.com"
-                client.AddHandler("application/json", new JsonDeserializer());
-                var request = new RestRequest("v1/keywords", Method.GET);
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("Amazon-Advertising-API-Scope", profileId);
-                var restResponse = ProcessRequest<List<AmazonKeyword>>(request, postNotGet: false);
-                return restResponse.Data;
-            }
-            catch (Exception x)
-            {
-                LogError(x.Message);
-            }
-            return null;
-        }
-
-        public List<AmazonProductAd> GetProductAds(string profileId)
-        {
-            try
-            {
-                var client = new RestClient(_amazonApiEndpointUrl); //"https://advertising-api.amazon.com"
-                client.AddHandler("application/json", new JsonDeserializer());
-                var request = new RestRequest("v1/productAds", Method.GET);
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("Amazon-Advertising-API-Scope", profileId);
-                var restResponse = ProcessRequest<List<AmazonProductAd>>(request, postNotGet: false);
-                return restResponse.Data;
-            }
-            catch (Exception x)
-            {
-                LogError(x.Message);
-            }
-            return null;
-        }
-
-        public AmazonApiReportParams CreateAmazonApiReportParams(string campaignType, DateTime date, bool includeCampaignName = false)
-        {
-            var reportParams = new AmazonApiReportParams
-            {
-                campaignType = campaignType,
-                //segment = segment,
-                reportDate = date.ToString("yyyyMMdd"),
-                metrics = "cost,impressions,clicks,attributedConversions14d,attributedSales14d" + (includeCampaignName ? ",campaignName" : "")
-            };
-            return reportParams;
-        }
-        public ReportRequestResponse SubmitReport(AmazonApiReportParams reportParams, string recordType, string profileId)
-        {
-            var request = new RestRequest("v1/" + recordType + "/report");
-            request.AddHeader("Amazon-Advertising-API-Scope", profileId);
-            request.AddJsonBody(reportParams);
-
-            var restResponse = ProcessRequest<ReportRequestResponse>(request, postNotGet: true);
-            if (restResponse != null && restResponse.Content != null)
-            {
-
-                //ReportResponse reportResponse = restResponse.Data;
-                return restResponse.Data;
-            }
-            return null;
-        }
-
-        // returns json string (or null)
-        public string WaitForReportAndDownload(string reportId, string profileId)
-        {
-            int triesLeft = 60; // 5 minutes
-            while (triesLeft > 0)
-            {
-                var downloadInfo = RequestReport(reportId, profileId);
-                if (downloadInfo != null && !String.IsNullOrWhiteSpace(downloadInfo.location))
-                {
-                    var json = GetJsonStringFromDownloadFile(downloadInfo.location, profileId);
-                    return json;
-                }
-                triesLeft--;
-            }
-            return null;
-        }
-
-        public ReportResponseDownloadInfo RequestReport(string reportId, string profileId)
-        {
-            try
-            {
-                var request = new RestRequest("v1/reports/" + reportId);
-                request.AddHeader("Amazon-Advertising-API-Scope", profileId);
-
-                var restResponse = ProcessRequest<ReportResponseDownloadInfo>(request, postNotGet: false);
-                if (restResponse.Data.status == "SUCCESS")
-                    return restResponse.Data;
-                else if (restResponse.Content.Contains("IN_PROGRESS"))
-                {
-                    LogInfo("Waiting 5 seconds for report to finish generating.");
-                    Thread.Sleep(5000);
-                }
-                
-            }
-            catch (Exception x)
-            {
-                LogError(x.Message);
-            }
-            return null;
-        }
-
-        public string GetJsonStringFromDownloadFile(string url, string profileId)
-        {
-            try
-            {
-                var request = (HttpWebRequest)WebRequest.Create(url);
-                request.Headers.Add("Authorization", "bearer " + AccessToken[WhichAlt]);
-                request.Headers.Add("Amazon-Advertising-API-Scope", profileId);
-                var response = (HttpWebResponse)request.GetResponse();
-                var responseStream = response.GetResponseStream();
-
-                string exePath = AppDomain.CurrentDomain.BaseDirectory;
-                string filePath = Path.Combine(exePath, "download.gzip");
-                lock (FileLock)
-                {
-                    using (Stream s = File.Create(filePath))
-                    {
-                        responseStream.CopyTo(s);
-                    }
-                    FileInfo fileToDecompress = new FileInfo(filePath);
-                    Decompress(fileToDecompress);
-                }
-                
-                string jsonFile = Path.Combine(exePath, "download.json");
-                lock (FileLock)
-                {
-                    using (StreamReader r = new StreamReader(jsonFile))
-                    {
-                        string json = r.ReadToEnd();
-                        return json;
-                    }
-                }
-            }
-            catch (Exception x)
-            {
-                LogError(x.Message);
-            }
-            return string.Empty;           
-        }
-
-        public void Decompress(FileInfo fileToDecompress)
-        {
-            try
-            {
-                using (FileStream originalFileStream = fileToDecompress.OpenRead())
-                {
-                    string currentFileName = fileToDecompress.FullName;
-                    string newFileName = currentFileName.Remove(currentFileName.Length - fileToDecompress.Extension.Length);
-
-                    using (FileStream decompressedFileStream = File.Create(newFileName + ".json"))
-                    {
-                        using (GZipStream decompressionStream = new GZipStream(originalFileStream, CompressionMode.Decompress))
-                        {
-                            decompressionStream.CopyTo(decompressedFileStream);
-                            //Console.WriteLine("Decompressed: {0}", fileToDecompress.Name);
-                        }
-                    }
-                }
-            }
-            catch (Exception x)
-            {
-                LogError(x.Message);
-            }
+            request.AddHeader(headerName, headerValue);
         }
     }
 }

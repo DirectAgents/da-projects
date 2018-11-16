@@ -1,4 +1,5 @@
-﻿@model ClientPortal.Data.Contexts.SearchProfile
+﻿@using System.Globalization
+@model ClientPortal.Data.Contexts.SearchProfile
 @{
     var endDate = Model.GetLast_WeekEndDate();
     string filename = Model.SearchProfileName.Replace(" ", "") + "_" + DateTime.Today.ToString("yyyyMMdd") + ".xlsx";
@@ -21,7 +22,7 @@ Start Day of Week: @((DayOfWeek)Model.StartDayOfWeek)<br />
             <table>
                 <tr>
                     <td>@Html.Label("", "Stats End-Date:")</td>
-                    <td><input id="spreadsheet_enddate" type="text" name="enddate" value="@endDate.ToShortDateString()" onfocus="EnableSubmitGenSpreadsheet()" /></td>
+                    <td><input id="spreadsheet_enddate" type="text" name="enddate" value="@endDate.ToString("d", CultureInfo.InvariantCulture)" onfocus="EnableSubmitGenSpreadsheet()" /></td>
                 </tr>
                 <tr>
                     <td>@Html.Label("", "Weeks to include:")</td>

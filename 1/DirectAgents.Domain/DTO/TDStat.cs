@@ -1,8 +1,9 @@
-﻿using System;
+﻿using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.RevTrack;
+using DirectAgents.Domain.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using DirectAgents.Domain.Entities.CPProg;
-using DirectAgents.Domain.Entities.RevTrack;
 
 namespace DirectAgents.Domain.DTO
 {
@@ -37,7 +38,10 @@ namespace DirectAgents.Domain.DTO
         public double FractionReached()
         {
             if (Budget.ClientCost == 0)
+            {
                 return 0;
+            }
+
             return (double)(this.MediaSpend() / _budget.MediaSpend);
         }
 
@@ -119,9 +123,13 @@ namespace DirectAgents.Domain.DTO
         public void SetMediaSpend(decimal mediaSpend)
         {
             if (MFVals.CostGoesThruDA())
+            {
                 this.Cost = mediaSpend;
+            }
             else
+            {
                 this.Cost = mediaSpend * MFVals.MediaSpendToRevMultiplier * MFVals.RevToCostMultiplier;
+            }
         }
 
         public decimal TotalRevenue
@@ -144,9 +152,13 @@ namespace DirectAgents.Domain.DTO
             get
             {
                 if (!MFVals.CostGoesThruDA())
+                {
                     return 0;
+                }
                 else
+                {
                     return Cost;
+                }
             }
         }
 
@@ -179,6 +191,8 @@ namespace DirectAgents.Domain.DTO
         public Strategy Strategy { get; set; }
         public TDad TDad { get; set; }
         public AdSet AdSet { get; set; }
+        public Keyword Keyword { get; set; }
+        public SearchTerm SearchTerm { get; set; }
         public Site Site { get; set; }
         public ActionType ActionType { get; set; }
         public ProgVendor ProgVendor { get; set; }
@@ -191,6 +205,7 @@ namespace DirectAgents.Domain.DTO
         public int PostViewConv { get; set; }
         public decimal PostViewRev { get; set; }
         public decimal Cost { get; set; }
+        public IEnumerable<SummaryMetric> Metrics { get; set; }
         //public int Prospects { get; set; }
 
         public int TotalConv
@@ -204,7 +219,7 @@ namespace DirectAgents.Domain.DTO
 
         public virtual bool AllZeros()
         {
-            return (Impressions == 0 && AllClicks == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0);
+            return Impressions == 0 && AllClicks == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0 && (Metrics == null || !Metrics.Any());
         }
 
         public virtual void CopyFrom(TDRawStat stat)
@@ -226,24 +241,29 @@ namespace DirectAgents.Domain.DTO
         public TDRawStat(IEnumerable<StatsSummary> sSums)
         {
             SetStatsFrom(sSums);
+
         }
         private void SetStatsFrom(IEnumerable<StatsSummary> sSums, bool roundCost = false)
         {
-            if (sSums != null && sSums.Any())
+            if (sSums == null || !sSums.Any())
             {
-                this.Impressions = sSums.Sum(x => x.Impressions);
-                this.AllClicks = sSums.Sum(x => x.AllClicks);
-                this.Clicks = sSums.Sum(x => x.Clicks);
-                this.PostClickConv = sSums.Sum(x => x.PostClickConv);
-                this.PostViewConv = sSums.Sum(x => x.PostViewConv);
-                this.Cost = sSums.Sum(x => x.Cost);
-                if (roundCost)
-                    this.Cost = Math.Round(this.Cost, 2);
-                if (sSums.First() is DatedStatsSummaryWithRev) // We're assuming they're all the same type
-                {
-                    this.PostClickRev = sSums.Sum(x => ((DatedStatsSummaryWithRev)x).PostClickRev);
-                    this.PostViewRev = sSums.Sum(x => ((DatedStatsSummaryWithRev)x).PostViewRev);
-                }
+                return;
+            }
+            this.Impressions = sSums.Sum(x => x.Impressions);
+            this.AllClicks = sSums.Sum(x => x.AllClicks);
+            this.Clicks = sSums.Sum(x => x.Clicks);
+            this.PostClickConv = sSums.Sum(x => x.PostClickConv);
+            this.PostViewConv = sSums.Sum(x => x.PostViewConv);
+            this.Cost = sSums.Sum(x => x.Cost);
+            if (roundCost)
+            {
+                this.Cost = Math.Round(this.Cost, 2);
+            }
+            this.Metrics = MetricHelper.GetSumMetrics(sSums);
+            if (sSums.First() is DatedStatsSummaryWithRev) // We're assuming they're all the same type
+            {
+                this.PostClickRev = sSums.Sum(x => ((DatedStatsSummaryWithRev)x).PostClickRev);
+                this.PostViewRev = sSums.Sum(x => ((DatedStatsSummaryWithRev)x).PostViewRev);
             }
         }
 
@@ -272,7 +292,9 @@ namespace DirectAgents.Domain.DTO
             {
                 this.Cost = pSums.Sum(x => x.Cost);
                 if (roundCost)
+                {
                     this.Cost = Math.Round(this.Cost, 2);
+                }
             }
         }
 

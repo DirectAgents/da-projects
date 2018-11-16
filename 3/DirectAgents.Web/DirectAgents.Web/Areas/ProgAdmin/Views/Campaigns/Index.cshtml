@@ -1,4 +1,5 @@
-﻿@model IEnumerable<DirectAgents.Domain.Entities.CPProg.Campaign>
+﻿@using System.Globalization
+@model IEnumerable<DirectAgents.Domain.Entities.CPProg.Campaign>
 @{
     var today = DateTime.Today;
     var startOfMonth = new DateTime(today.Year, today.Month, 1);
@@ -45,8 +46,8 @@
             @Html.ActionLink("[Delete Campaign]", "Delete", new { id = camp.Id }, new { onclick = "if (!confirm('Are you sure?')) return false" })
         }
     </td>
-    <td>@(earliestBudgetInfo != null ? earliestBudgetInfo.Date.ToShortDateString() : "")</td>
-    <td>@(latestBudgetInfo != null ? latestBudgetInfo.Date.ToShortDateString() : "")</td>
+    <td>@(earliestBudgetInfo != null ? earliestBudgetInfo.Date.ToString("d", CultureInfo.InvariantCulture) : "")</td>
+    <td>@(latestBudgetInfo != null ? latestBudgetInfo.Date.ToString("d", CultureInfo.InvariantCulture) : "")</td>
 </tr>
 }
 </table>

@@ -1,6 +1,7 @@
 ﻿@model  IEnumerable<DirectAgents.Domain.Entities.CPProg.TDad>
 @{
     bool showImages = ViewBag.ShowImages;
+    var extIdTypes = ViewBag.ExternalIdTypes;
 }
 <h2>Creatives</h2>
 
@@ -8,23 +9,30 @@
     <tr>
         <th></th>
         <th>ID / ExtID</th>
-        <th>Name</th>
+        <th>@Html.ActionLink("Name", "Index")</th>
         <th>Width</th>
         <th>Height</th>
-    @if (showImages) {
-        <th></th>
-    }
+        @if (showImages)
+        {
+            <th></th>
+        }
         <th>URL</th>
+        @foreach(var idName in extIdTypes)
+        {
+            <th>@idName</th>
+        }
+        <th>@Html.ActionLink("AdSet", "Index", new { sort = "adset" })</th>
     </tr>
     @foreach (var ad in Model)
     {
-        <tr>
-            <td>@Html.ActionLink("Edit", "Edit", new { id = ad.Id })</td>
-            <td style="text-align:center">@ad.Id<br />@ad.ExternalId</td>
-            <td>@ad.Name</td>
-            <td>@ad.Width</td>
-            <td>@ad.Height</td>
-        @if (showImages) {
+    <tr>
+        <td>@Html.ActionLink("Edit", "Edit", new { id = ad.Id })</td>
+        <td style="text-align:center">@ad.Id<br />@ad.ExternalId</td>
+        <td>@ad.Name</td>
+        <td>@ad.Width</td>
+        <td>@ad.Height</td>
+        @if (showImages)
+        {
             <td>
                 @if (!string.IsNullOrWhiteSpace(ad.Url))
                 {
@@ -32,12 +40,18 @@
                 }
             </td>
         }
-            <td>
-                @if (!string.IsNullOrWhiteSpace(ad.Url))
-                {
-                    <a href="@ad.Url">@ad.UrlShortened</a>
-                }
-            </td>
-        </tr>
+        <td>
+            @if (!string.IsNullOrWhiteSpace(ad.Url))
+            {
+                <a href="@ad.Url">@ad.UrlShortened</a>
+            }
+        </td>
+        @foreach(var idName in extIdTypes)
+        {
+            var id = ad.ExternalIds.FirstOrDefault(x => x.Type.Name == idName);
+            <td>@(id == null ? "" : id.ExternalId)</td>
+        }
+        <td>@(ad.AdSet != null ? ad.AdSet.Name + " (" + ad.AdSetId + ")" : "")</td>
+    </tr>
     }
 </table>

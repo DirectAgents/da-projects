@@ -42,8 +42,11 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             var sum = new StrategySummary
             {
                 Date = item.Date,
-                StrategyName = item.CampaignName,
-                StrategyEid = item.CampaignId,
+                Strategy = new Strategy
+                {
+                    Name = item.CampaignName,
+                    ExternalId = item.CampaignId
+                },
                 Impressions = item.Impressions,
                 AllClicks = item.AllClicks,
                 Clicks = item.LinkClicks,

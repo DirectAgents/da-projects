@@ -264,7 +264,7 @@
     <Compile Include="Areas\SearchAdmin\Controllers\SearchProfilesController.cs" />
     <Compile Include="Areas\SearchAdmin\Controllers\StatsGaugesController.cs" />
     <Compile Include="Areas\SearchAdmin\SearchAdminAreaRegistration.cs" />
-    <Compile Include="Common.cs" />
+    <Compile Include="Helpers\Common.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\ScreensController.cs" />
@@ -273,6 +273,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\UIMetricHelper.cs" />
     <Compile Include="Models\BudgetsVM.cs" />
     <Compile Include="Models\OfferVM.cs" />
     <Compile Include="Models\SalespeopleStatsVM.cs" />
@@ -1143,6 +1144,10 @@
     <Content Include="Areas\Cake\Views\Advertisers\IndexGauge.cshtml" />
     <Content Include="Areas\Cake\Views\Home\Index.cshtml" />
     <Content Include="Areas\Cake\Views\CampSums\Index.cshtml" />
+    <Content Include="Areas\ProgAdmin\Views\ExtAccounts\Keywords.cshtml" />
+    <Content Include="Areas\ProgAdmin\Views\ExtAccounts\SearchTerms.cshtml" />
+    <Content Include="Areas\ProgAdmin\Views\Stats\Keyword.cshtml" />
+    <Content Include="Areas\ProgAdmin\Views\Stats\SearchTerm.cshtml" />
     <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />

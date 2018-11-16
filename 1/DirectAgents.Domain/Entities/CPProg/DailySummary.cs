@@ -13,13 +13,16 @@ namespace DirectAgents.Domain.Entities.CPProg
         public int PostClickConv { get; set; }
         public int PostViewConv { get; set; }
         public decimal Cost { get; set; }
+        [NotMapped]
+        public IEnumerable<SummaryMetric> InitialMetrics { get; set; }
 
         //TotalConv
 
         public virtual bool AllZeros()
         {
-            return (Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0);
+            return Impressions == 0 && Clicks == 0 && PostClickConv == 0 && PostViewConv == 0 && Cost == 0 && (InitialMetrics == null || !InitialMetrics.Any());
         }
+
         public virtual void SetStats(StatsSummary stat)
         {
             Impressions = stat.Impressions;
@@ -53,6 +56,7 @@ namespace DirectAgents.Domain.Entities.CPProg
     {
         public DateTime Date { get; set; }
     }
+
     public class DatedStatsSummaryWithRev : DatedStatsSummary
     {
         public decimal PostClickRev { get; set; }
@@ -84,6 +88,13 @@ namespace DirectAgents.Domain.Entities.CPProg
         public int AccountId { get; set; }
         [ForeignKey("AccountId")]
         public virtual ExtAccount ExtAccount { get; set; }
+        
+        public virtual List<DailySummaryMetric> Metrics { get; set; }
+
+        public override bool AllZeros()
+        {
+            return base.AllZeros() && (Metrics == null || !Metrics.Any());
+        }
     }
 
     // DailySummary for a Strategy
@@ -92,10 +103,19 @@ namespace DirectAgents.Domain.Entities.CPProg
         public int StrategyId { get; set; }
         public virtual Strategy Strategy { get; set; }
 
+        public virtual List<StrategySummaryMetric> Metrics { get; set; }
+
+        public override bool AllZeros()
+        {
+            return base.AllZeros() && (Metrics == null || !Metrics.Any());
+        }
+
         [NotMapped]
         public string StrategyName { get; set; }
         [NotMapped]
         public string StrategyEid { get; set; } // external id
+        [NotMapped]
+        public string StrategyType { get; set; }
     }
 
     // DailySummary for an AdSet
@@ -103,6 +123,13 @@ namespace DirectAgents.Domain.Entities.CPProg
     {
         public int AdSetId { get; set; }
         public virtual AdSet AdSet { get; set; }
+
+        public virtual List<AdSetSummaryMetric> Metrics { get; set; }
+
+        public override bool AllZeros()
+        {
+            return base.AllZeros() && (Metrics == null || !Metrics.Any());
+        }
 
         [NotMapped]
         public string AdSetName { get; set; }
@@ -120,10 +147,23 @@ namespace DirectAgents.Domain.Entities.CPProg
         public int TDadId { get; set; }
         public virtual TDad TDad { get; set; }
 
+        public virtual List<TDadSummaryMetric> Metrics { get; set; }
+
+        public override bool AllZeros()
+        {
+            return base.AllZeros() && (Metrics == null || !Metrics.Any());
+        }
+
         [NotMapped]
         public string TDadName { get; set; }
         [NotMapped]
         public string TDadEid { get; set; } // external id
+        [NotMapped]
+        public string AdSetName { get; set; }
+        [NotMapped]
+        public string AdSetEid { get; set; }
+        [NotMapped]
+        public IEnumerable<TDadExternalId> ExternalIds { get; set; }
         [NotMapped]
         public int Width { get; set; }
         //[NotMapped]
@@ -148,10 +188,119 @@ namespace DirectAgents.Domain.Entities.CPProg
         private string _sitename;
     }
 
+    // DailySummary for a Keyword
+    public class KeywordSummary : DatedStatsSummary
+    {
+        public int KeywordId { get; set; }
+        public virtual Keyword Keyword { get; set; }
+
+        public virtual List<KeywordSummaryMetric> Metrics { get; set; }
+
+        public override bool AllZeros()
+        {
+            return base.AllZeros() && (Metrics == null || !Metrics.Any());
+        }
+
+        [NotMapped]
+        public string KeywordName { get; set; }
+        [NotMapped]
+        public string KeywordEid { get; set; }
+        [NotMapped]
+        public string AdSetName { get; set; }
+        [NotMapped]
+        public string AdSetEid { get; set; }
+        [NotMapped]
+        public string StrategyName { get; set; }
+        [NotMapped]
+        public string StrategyEid { get; set; }
+    }
+
+    // DailySummary for a SearchTerm
+    public class SearchTermSummary : DatedStatsSummary
+    {
+        public int SearchTermId { get; set; }
+        public virtual SearchTerm SearchTerm { get; set; }
+
+        public virtual List<SearchTermSummaryMetric> Metrics { get; set; }
+
+        public override bool AllZeros()
+        {
+            return base.AllZeros() && (Metrics == null || !Metrics.Any());
+        }
+
+        [NotMapped]
+        public string KeywordName { get; set; }
+        [NotMapped]
+        public string KeywordEid { get; set; }
+        [NotMapped]
+        public string AdSetName { get; set; }
+        [NotMapped]
+        public string AdSetEid { get; set; }
+        [NotMapped]
+        public string StrategyName { get; set; }
+        [NotMapped]
+        public string StrategyEid { get; set; }
+        [NotMapped]
+        public string Query { get; set; }
+    }
+
     public class Site
     {
         public int Id { get; set; }
         public string Name { get; set; }
     }
 
+    public class MetricType
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int? DaysInterval { get; set; }
+    }
+
+    public class SummaryMetric
+    {
+        public int EntityId { get; set; }
+        public DateTime Date { get; set; }
+
+        public int MetricTypeId { get; set; }
+        public virtual MetricType MetricType { get; set; }
+
+        public decimal Value { get; set; }
+    }
+
+    public class DailySummaryMetric : SummaryMetric
+    {
+        [ForeignKey("EntityId")]
+        public virtual ExtAccount ExtAccount { get; set; }
+    }
+
+    public class TDadSummaryMetric : SummaryMetric
+    {
+        [ForeignKey("EntityId")]
+        public virtual TDad TDad { get; set; }
+    }
+
+    public class AdSetSummaryMetric : SummaryMetric
+    {
+        [ForeignKey("EntityId")]
+        public virtual AdSet AdSet { get; set; }
+    }
+
+    public class StrategySummaryMetric : SummaryMetric
+    {
+        [ForeignKey("EntityId")]
+        public virtual Strategy Strategy { get; set; }
+    }
+
+    public class KeywordSummaryMetric : SummaryMetric
+    {
+        [ForeignKey("EntityId")]
+        public virtual Keyword Keyword { get; set; }
+    }
+
+    public class SearchTermSummaryMetric : SummaryMetric
+    {
+        [ForeignKey("EntityId")]
+        public virtual SearchTerm SearchTerm { get; set; }
+    }
 }

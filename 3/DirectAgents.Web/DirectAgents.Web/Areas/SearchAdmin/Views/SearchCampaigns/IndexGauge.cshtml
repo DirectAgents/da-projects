@@ -1,4 +1,5 @@
-﻿@model IEnumerable<DirectAgents.Domain.Entities.CPSearch.SearchCampaign>
+﻿@using System.Globalization
+@model IEnumerable<DirectAgents.Domain.Entities.CPSearch.SearchCampaign>
 
 
 <h2>SearchCampaigns - StatsGauge</h2>
@@ -20,9 +21,9 @@
             <td style="text-align:right">@sc.SearchAccountId</td>
             <td style="text-align:right">@sc.SearchCampaignId</td>
             <td>@sc.SearchCampaignName</td>
-            <td style="text-align:center">@sc.MinDaySum.ToShortDateString() - @sc.MaxDaySum.ToShortDateString()</td>
-            <td style="text-align:center">@Html.ActionLink(sc.MinConvSum.ToShortDateString() + " - " + sc.MaxConvSum.ToShortDateString(), "IndexGauge", "SearchConvTypes", new { scId = sc.SearchCampaignId }, null)</td>
-            <td style="text-align:center">@sc.MinCallSum.ToShortDateString() - @sc.MaxCallSum.ToShortDateString()</td>
+            <td style="text-align:center">@sc.MinDaySum.ToString("d", CultureInfo.InvariantCulture) - @sc.MaxDaySum.ToString("d", CultureInfo.InvariantCulture)</td>
+            <td style="text-align:center">@Html.ActionLink(sc.MinConvSum.ToString("d", CultureInfo.InvariantCulture) + " - " + sc.MaxConvSum.ToString("d", CultureInfo.InvariantCulture), "IndexGauge", "SearchConvTypes", new { scId = sc.SearchCampaignId }, null)</td>
+            <td style="text-align:center">@sc.MinCallSum.ToString("d", CultureInfo.InvariantCulture) - @sc.MaxCallSum.ToString("d", CultureInfo.InvariantCulture)</td>
             <td>
                 @Html.ActionLink("Edit-", "Edit", new { id = sc.SearchCampaignId })
                 @sc.LCcmpid

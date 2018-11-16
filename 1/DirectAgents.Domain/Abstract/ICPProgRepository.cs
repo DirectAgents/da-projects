@@ -67,6 +67,8 @@ namespace DirectAgents.Domain.Abstract
         void FillExtended(ExtAccount extAcct);
         IQueryable<Strategy> Strategies(int? acctId);
         IQueryable<AdSet> AdSets(int? acctId);
+        IQueryable<Keyword> Keywords(int? acctId);
+        IQueryable<SearchTerm> SearchTerms(int? acctId);
         TDad TDad(int id);
         IQueryable<TDad> TDads(int? acctId);
         bool SaveTDad(TDad tDad);
@@ -107,8 +109,10 @@ namespace DirectAgents.Domain.Abstract
 
         IQueryable<DailySummary> DailySummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null);
         IQueryable<StrategySummary> StrategySummaries(DateTime? startDate, DateTime? endDate, int? stratId = null, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null);
-        IQueryable<TDadSummary> TDadSummaries(DateTime? startDate, DateTime? endDate, int? tdadId = null, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null);
+        IQueryable<TDadSummary> TDadSummaries(DateTime? startDate, DateTime? endDate, int? tdadId = null, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null, int? adSetId = null);
         IQueryable<AdSetSummary> AdSetSummaries(DateTime? startDate, DateTime? endDate, int? adsetId = null, int? stratId = null, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null);
+        IQueryable<KeywordSummary> KeywordSummaries(DateTime? startDate, DateTime? endDate, int? keywId = null, int? adsetId = null, int? stratId = null, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null);
+        IQueryable<SearchTermSummary> SearchTermSummaries(DateTime? startDate, DateTime? endDate, int? stermId = null, int? keywId = null, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null);
         IQueryable<SiteSummary> SiteSummaries(DateTime? startDate, DateTime? endDate, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null);
         IQueryable<Conv> Convs(DateTime? startDate, DateTime? endDate, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null);
         IQueryable<StrategyAction> StrategyActions(DateTime? startDate, DateTime? endDate, int? stratId = null, int? acctId = null, int? platformId = null, int? campId = null, int? advId = null);
@@ -122,8 +126,10 @@ namespace DirectAgents.Domain.Abstract
         //TDStat GetTDStat(DateTime? startDate, DateTime? endDate, Campaign campaign = null, MarginFeeVals marginFees = null);
         TDRawStat GetTDStatWithAccount(DateTime? startDate, DateTime? endDate, ExtAccount extAccount = null);
         IEnumerable<TDRawStat> GetStrategyStats(DateTime? startDate, DateTime? endDate, int? acctId = null);
-        IEnumerable<TDRawStat> GetTDadStats(DateTime? startDate, DateTime? endDate, int? acctId = null);
         IEnumerable<TDRawStat> GetAdSetStats(DateTime? startDate, DateTime? endDate, int? acctId = null, int? stratId = null);
+        IEnumerable<TDRawStat> GetTDadStats(DateTime? startDate, DateTime? endDate, int? acctId = null, int? adSetId = null);
+        IEnumerable<TDRawStat> GetKeywordStats(DateTime? startDate, DateTime? endDate, int? acctId = null, int? stratId = null, int? adSetId = null);
+        IEnumerable<TDRawStat> GetSearchTermStats(DateTime? startDate, DateTime? endDate, int? acctId = null, int? keywId = null);
         IEnumerable<TDRawStat> GetSiteStats(DateTime? startDate, DateTime? endDate, int? acctId = null, int? minImpressions = null);
         //IEnumerable<TDRawStat> GetStrategyActionStats(DateTime? startDate, DateTime? endDate, int? acctId = null, int? stratId = null);
         IEnumerable<TDRawStat> GetAdSetActionStats(DateTime? startDate, DateTime? endDate, int? acctId = null, int? stratId = null, int? adsetId = null);

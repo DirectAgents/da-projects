@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Amazon.Entities
+﻿namespace Amazon.Entities
 {
     public class AmazonCampaign
     {
-        public Int64 campaignId { get; set; }
+        public string campaignId { get; set; }
         public string name { get; set; }
         public string campaignType { get; set; }
         public string targetingType { get; set; }

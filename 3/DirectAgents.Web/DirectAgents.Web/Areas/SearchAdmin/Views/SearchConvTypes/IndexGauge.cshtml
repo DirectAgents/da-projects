@@ -1,4 +1,5 @@
-﻿@model IEnumerable<DirectAgents.Domain.Entities.CPSearch.SearchConvType>
+﻿@using System.Globalization
+@model IEnumerable<DirectAgents.Domain.Entities.CPSearch.SearchConvType>
 
 
 <h2>SearchConvTypes - StatsGauge</h2>
@@ -16,7 +17,7 @@
             <td style="text-align:right">@ct.SearchConvTypeId</td>
             <td>@ct.Name</td>
             <td>@ct.Alias</td>
-            <td style="text-align:center">@ct.MinConvSum.ToShortDateString() - @ct.MaxConvSum.ToShortDateString()</td>
+            <td style="text-align:center">@ct.MinConvSum.ToString("d", CultureInfo.InvariantCulture) - @ct.MaxConvSum.ToString("d", CultureInfo.InvariantCulture)</td>
         </tr>
     }
 </table>

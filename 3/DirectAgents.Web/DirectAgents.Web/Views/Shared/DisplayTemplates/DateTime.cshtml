@@ -1,6 +1,7 @@
-﻿@model System.DateTime?
+﻿@using System.Globalization
+@model System.DateTime?
 
 @if (Model.HasValue)
 {
-    <text>@Model.Value.ToShortDateString()</text>
+    <text>@Model.Value.ToString("d", CultureInfo.InvariantCulture)</text>
 }

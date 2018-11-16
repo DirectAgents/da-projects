@@ -1,0 +1,104 @@
+﻿@model DirectAgents.Web.Areas.ProgAdmin.Models.TDStatsVM
+
+@section scripts {
+    @if (!Model.CustomDates)
+    {
+        <script>
+    function ChangeMonth(month) {
+        var url = '@Html.Raw(Url.Action(null, new { platform = Model.PlatformCode, campId = Model.CampaignId, acctId = Model.AccountId, keywId = Model.KeywordId, month = "startVal" }))';
+        location.href = url.replace('startVal', month);
+    }
+        </script>
+    }
+}
+<h2>External Accounts - Raw Stats, by Search Term</h2>
+@if (Model.CustomDates)
+{
+    <div>Dates: @Model.StartString - @Model.EndString</div>
+}
+else
+{
+    <div style="margin-bottom:10px">
+        <form>
+            @Html.DropDownList("month", (SelectList)ViewBag.ChooseMonthSelectList, new { onchange = "ChangeMonth(this.value)" })
+        </form>
+    </div>
+}
+
+@if (Model.KeywordId.HasValue)
+{
+    <text>KeywordId: @(Model.KeywordId.Value)</text>
+}
+
+<table>
+    <tr>
+        <th>Ext Account</th>
+        <th style="text-align:right">ID</th>
+        <th>Query</th>
+        <th>Impressions</th>
+        <th>AllClicks</th>
+        <th>Clicks</th>
+        <th>CTR</th>
+        <th>CPM</th>
+        <th>CPC</th>
+        <th>CPA</th>
+        <th>PostClick Conv</th>
+        <th>PostView Conv</th>
+        <th>Cost</th>
+        @foreach (var metric in Model.MetricNames)
+        {
+            <th>@metric.Key</th>
+        }
+    </tr>
+    @foreach (var stat in Model.Stats)
+    {
+        <tr>
+            <td>(@stat.SearchTerm.ExtAccount.Platform.Name) @stat.SearchTerm.ExtAccount.Name</td>
+            <td style="text-align:right">@stat.SearchTerm.Id</td>
+            <td>@stat.SearchTerm.Query</td>
+            <td style="text-align:right">@stat.Impressions</td>
+            <td style="text-align:right">@stat.AllClicks</td>
+            <td style="text-align:right">@stat.Clicks</td>
+            <td style="text-align:center">@stat.CTR</td>
+            <td style="text-align:center">@stat.CPM</td>
+            <td style="text-align:center">@stat.CPC</td>
+            <td style="text-align:center">@stat.CPA</td>
+            <td style="text-align:right">@stat.PostClickConv</td>
+            <td style="text-align:right">@stat.PostViewConv</td>
+            <td style="text-align:right">@stat.Cost</td>
+            @foreach (var metricName in Model.MetricNames)
+            {
+                var metric = stat.Metrics.FirstOrDefault(x => x.MetricType.Id == metricName.Value);
+                var metricValue = metric == null ? 0.0M : metric.Value;
+                <td>@(metricValue.ToString("F"))</td>
+            }
+        </tr>
+    }
+    @if (Model.StatsTotal != null)
+    {
+        var tot = Model.StatsTotal;
+        <tr>
+            <th></th>
+            <th></th>
+            <th>@tot.Name</th>
+            <th style="text-align:right">@tot.Impressions</th>
+            <th style="text-align:right">@tot.AllClicks</th>
+            <th style="text-align:right">@tot.Clicks</th>
+            <th style="text-align:center">@tot.CTR</th>
+            <th style="text-align:center">@tot.CPM</th>
+            <th style="text-align:center">@tot.CPC</th>
+            <th style="text-align:center">@tot.CPA</th>
+            <th style="text-align:right">@tot.PostClickConv</th>
+            <th style="text-align:right">@tot.PostViewConv</th>
+            <th style="text-align:right">@tot.Cost</th>
+            @foreach (var metricName in Model.MetricNames)
+            {
+                var metric = tot.Metrics.FirstOrDefault(x => x.MetricType.Id == metricName.Value);
+                var metricValue = metric == null ? 0.0M : metric.Value;
+                <th>@(metricValue.ToString("F"))</th>
+            }
+        </tr>
+    }
+</table>
+<br />
+

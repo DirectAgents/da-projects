@@ -1,4 +1,5 @@
-﻿@model DirectAgents.Domain.Entities.AB.ABClient
+﻿@using System.Globalization
+@model DirectAgents.Domain.Entities.AB.ABClient
 
 <h2>Payments</h2>
 
@@ -16,7 +17,7 @@ Client: @Model.Name
 {
     <tr>
         <td>@Html.ActionLink("edit", "Edit", new { id = payment.Id })</td>
-        <td>@payment.Date.ToShortDateString()</td>
+        <td>@payment.Date.ToString("d", CultureInfo.InvariantCulture)</td>
         <td style="text-align:right">@payment.TotalValue()</td>
         <td style="text-align:right">?</td>
     </tr>

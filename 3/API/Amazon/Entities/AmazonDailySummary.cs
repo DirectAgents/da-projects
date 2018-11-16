@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Amazon.Entities
 {
@@ -11,54 +7,66 @@ namespace Amazon.Entities
         public decimal cost { get; set; }
         public int impressions { get; set; }
         public int clicks { get; set; }
+        public int attributedConversions1d { get; set; }
+        public int attributedConversions7d { get; set; }
         public int attributedConversions14d { get; set; }
+        public int attributedConversions30d { get; set; }
+        public int attributedConversions1dSameSKU { get; set; }
+        public int attributedConversions7dSameSKU { get; set; }
+        public int attributedConversions14dSameSKU { get; set; }
+        public int attributedConversions30dSameSKU { get; set; }
+        public decimal attributedSales1d { get; set; }
+        public decimal attributedSales7d { get; set; }
         public decimal attributedSales14d { get; set; }
+        public decimal attributedSales30d { get; set; }
+        public decimal attributedSales1dSameSKU { get; set; }
+        public decimal attributedSales7dSameSKU { get; set; }
+        public decimal attributedSales14dSameSKU { get; set; }
+        public decimal attributedSales30dSameSKU { get; set; }
+        public int attributedUnitsOrdered1d { get; set; }
+        public int attributedUnitsOrdered7d { get; set; }
+        public int attributedUnitsOrdered14d { get; set; }
+        public int attributedUnitsOrdered30d { get; set; }
 
         public virtual bool AllZeros()
         {
-            return (cost == 0 && impressions == 0 && clicks == 0 && attributedConversions14d == 0 && attributedSales14d == 0);
-        }
-
-        public void SetAllZeros()
-        {
-            cost = attributedSales14d = 0;
-            impressions = clicks = attributedConversions14d = 0;
-
-        }
-
-        public void SetStatTotals(IEnumerable<StatSummary> stats)
-        {
-            if (stats != null && stats.Any())
-            {
-                cost = stats.Sum(x => x.cost);
-                impressions = stats.Sum(x => x.impressions);
-                clicks = stats.Sum(x => x.clicks);
-                attributedConversions14d = stats.Sum(x => x.attributedConversions14d);
-                attributedSales14d = stats.Sum(x => x.attributedSales14d);
-            }
-            else
-            {
-                SetAllZeros();
-            }
+            return cost == 0 && impressions == 0 && clicks == 0 &&
+                   attributedSales1d == 0.0M && attributedSales7d == 0.0M && attributedSales14d == 0.0M && attributedSales30d == 0.0M &&
+                   attributedSales1dSameSKU == 0.0M && attributedSales7dSameSKU == 0.0M && attributedSales14dSameSKU == 0.0M && attributedSales30dSameSKU == 0.0M &&
+                   attributedConversions1d == 0 && attributedConversions7d == 0 && attributedConversions14d == 0 && attributedConversions30d == 0 &&
+                   attributedConversions1dSameSKU == 0 && attributedConversions7dSameSKU == 0 && attributedConversions14dSameSKU == 0 && attributedConversions30dSameSKU == 0 &&
+                   attributedUnitsOrdered1d == 0 && attributedUnitsOrdered7d == 0 && attributedUnitsOrdered14d == 0 && attributedUnitsOrdered30d == 0;
         }
     }
 
     public class AmazonDailySummary : StatSummary
     {
-        public Int64 campaignId { get; set; }
+        public string campaignId { get; set; }
         public string campaignName { get; set; }
-        public DateTime date { get; set; } 
     }
 
-    public class AmazonAdDailySummary : StatSummary
+    public class AmazonAdGroupSummary : AmazonDailySummary
+    {
+        public string adGroupId { get; set; }
+        public string adGroupName { get; set; }
+    }
+
+    public class AmazonAdDailySummary : AmazonAdGroupSummary
     {
         public string adId { get; set; }
-        public DateTime date { get; set; }
+        public string asin { get; set; }
+        public string sku { get; set; }
     }
 
-    public class AmazonKeywordDailySummary : StatSummary
+    public class AmazonKeywordDailySummary : AmazonAdGroupSummary
     {
-        public string KeywordId { get; set; }
+        public string keywordId { get; set; }
+        public string keywordText { get; set; }
+    }
+
+    public class AmazonSearchTermDailySummary : AmazonKeywordDailySummary
+    {
+        public string query { get; set; }
         public DateTime date { get; set; }
     }
 }

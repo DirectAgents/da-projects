@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Web.Helpers;
 
 namespace DirectAgents.Web.Areas.ProgAdmin.Models
 {
@@ -15,15 +17,19 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Models
         public int? AccountId { get; set; }
         public int? StratId { get; set; }
         public int? AdSetId { get; set; }
+        public int? KeywordId { get; set; }
+        public int? SearchTermId { get; set; }
 
-        public DateTime Start { set { StartString = value.ToShortDateString(); } }
+        public DateTime Start { set => StartString = value.ToString("d", CultureInfo.InvariantCulture); }
         public string StartString { get; set; }
-        public DateTime End { set { EndString = value.ToShortDateString(); } }
+        public DateTime End { set => EndString = value.ToString("d", CultureInfo.InvariantCulture); }
         public string EndString { get; set; }
 
         public bool CustomDates { get; set; }
 
         public IEnumerable<TDRawStat> Stats { get; set; }
+        public Dictionary<string, int> MetricNames { get; set; }
+
         public TDRawStat StatsTotal
         {
             get
@@ -39,6 +45,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Models
                     stat.PostViewConv = Stats.Sum(s => s.PostViewConv);
                     stat.PostViewRev = Stats.Sum(s => s.PostViewRev);
                     stat.Cost = Stats.Sum(s => s.Cost);
+                    stat.Metrics = UIMetricHelper.GetSumMetrics(Stats);
                 }
                 return stat;
             }
