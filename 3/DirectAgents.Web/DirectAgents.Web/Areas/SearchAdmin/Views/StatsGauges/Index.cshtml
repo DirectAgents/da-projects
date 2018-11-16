@@ -14,9 +14,9 @@
     {
         <tr>
             <td>@Html.ActionLink(sa.Channel, "IndexGauge", "SearchAccounts", new { channel = sa.Channel.ToLower() }, null)</td>
-            <td style="text-align:center">@sa.MinDaySum.ToString("d", CultureInfo.InvariantCulture) - @sa.MaxDaySum.ToString("d", CultureInfo.InvariantCulture)</td>
-            <td style="text-align:center">@sa.MinConvSum.ToString("d", CultureInfo.InvariantCulture) - @sa.MaxConvSum.ToString("d", CultureInfo.InvariantCulture)</td>
-            <td style="text-align:center">@sa.MinCallSum.ToString("d", CultureInfo.InvariantCulture) - @sa.MaxCallSum.ToString("d", CultureInfo.InvariantCulture)</td>
+            <td style="text-align:center">@sa.MinDaySum.ToShortDateString() - @sa.MaxDaySum.ToShortDateString()</td>
+            <td style="text-align:center">@sa.MinConvSum.ToShortDateString() - @sa.MaxConvSum.ToShortDateString()</td>
+            <td style="text-align:center">@sa.MinCallSum.ToShortDateString() - @sa.MaxCallSum.ToShortDateString()</td>
         </tr>
     }
 </table>

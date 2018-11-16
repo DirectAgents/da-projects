@@ -16,9 +16,9 @@
         <tr>
             <td style="text-align:right">@sp.SearchProfileId</td>
             <td>@Html.ActionLink(sp.SearchProfileName, "IndexGauge", "SearchAccounts", new { spId = sp.SearchProfileId }, null)</td>
-            <td style="text-align:center">@sp.MinDaySum.ToString("d", CultureInfo.InvariantCulture) - @sp.MaxDaySum.ToString("d", CultureInfo.InvariantCulture)</td>
-            <td style="text-align:center">@sp.MinConvSum.ToString("d", CultureInfo.InvariantCulture) - @sp.MaxConvSum.ToString("d", CultureInfo.InvariantCulture)</td>
-            <td style="text-align:center">@sp.MinCallSum.ToString("d", CultureInfo.InvariantCulture) - @sp.MaxCallSum.ToString("d", CultureInfo.InvariantCulture)</td>
+            <td style="text-align:center">@sp.MinDaySum.ToShortDateString() - @sp.MaxDaySum.ToShortDateString()</td>
+            <td style="text-align:center">@sp.MinConvSum.ToShortDateString() - @sp.MaxConvSum.ToShortDateString()</td>
+            <td style="text-align:center">@sp.MinCallSum.ToShortDateString() - @sp.MaxCallSum.ToShortDateString()</td>
         </tr>
     }
 </table>
