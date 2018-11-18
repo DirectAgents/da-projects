@@ -255,7 +255,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 : item.Metrics == null
                     ? item.InitialMetrics
                     : item.InitialMetrics.Concat(item.Metrics);
-            return metrics.ToList();
+            return metrics?.ToList();
         }
 
         private void RemoveOldSummaryMetrics(ClientPortalProgContext db, KeywordSummary item, KeywordSummary target)
