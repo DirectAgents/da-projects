@@ -16,8 +16,8 @@ GO
 :setvar EomToolSecurity "EomToolSecurity"
 :setvar DatabaseName "{%DATABASE_NAME%}"
 :setvar DefaultFilePrefix "{%DATABASE_NAME%}"
-:setvar DefaultDataPath "C:\Program Files\Microsoft SQL Server\MSSQL14.MSSQLSERVER\MSSQL\DATA\"
-:setvar DefaultLogPath "C:\Program Files\Microsoft SQL Server\MSSQL14.MSSQLSERVER\MSSQL\DATA\"
+:setvar DefaultDataPath "D:\Microsoft SQL Server\MSSQL11.SQLEXPRESS\MSSQL\DATA\"
+:setvar DefaultLogPath "D:\Microsoft SQL Server\MSSQL11.SQLEXPRESS\MSSQL\DATA\"
 
 GO
 :on error exit
