@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
-namespace CakeExtracter.Etl.TradingDesk.Helpers
+namespace CakeExtracter.Helpers
 {
     public class EntityIdStorage<T>
     {
-        private readonly Dictionary<string, int> ids = new Dictionary<string, int>();
+        private readonly ConcurrentDictionary<string, int> ids = new ConcurrentDictionary<string, int>();
 
         private readonly Func<T, int> getIdFunc;
         private readonly Func<T, string>[] getCompositeKeyFunctions;
@@ -39,14 +39,7 @@ namespace CakeExtracter.Etl.TradingDesk.Helpers
 
         private void AddEntityIdToStorage(int id, string key)
         {
-            if (ids.ContainsKey(key))
-            {
-                ids[key] = id;
-            }
-            else
-            {
-                ids.Add(key, id);
-            }
+            ids.AddOrUpdate(key, id, (updKey, updValue) => id);
         }
 
         private int GetEntityIdFromStorage(string key)

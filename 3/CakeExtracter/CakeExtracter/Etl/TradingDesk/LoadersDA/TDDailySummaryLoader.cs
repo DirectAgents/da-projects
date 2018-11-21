@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CakeExtracter.Etl.TradingDesk.Helpers;
+using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
@@ -37,29 +37,31 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public int UpsertDailySummaries(List<DailySummary> items)
         {
             var progress = new LoadingProgress();
-            using (var db = new ClientPortalProgContext())
-            {
-                foreach (var item in items)
+            SafeContextWrapper.SaveChangedContext<ClientPortalProgContext>(
+                SafeContextWrapper.DailySummaryLocker, db =>
                 {
-                    var target = db.Set<DailySummary>().Find(item.Date, item.AccountId);
-                    if (target == null)
+                    foreach (var item in items)
                     {
-                        TryToAddSummary(db, item, progress);
-                    }
-                    else
-                    {
-                        TryToUpdateSummary(db, item, target, progress);
-                    }
-                    progress.ItemCount++;
-                }
+                        var target = db.Set<DailySummary>().Find(item.Date, item.AccountId);
+                        if (target == null)
+                        {
+                            TryToAddSummary(db, item, progress);
+                        }
+                        else
+                        {
+                            TryToUpdateSummary(db, item, target, progress);
+                        }
 
-                Logger.Info(accountId, "Saving {0} DailySummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted)",
-                    progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount);
-                if (progress.DuplicateCount > 0)
-                {
-                    Logger.Warn(accountId, "Encountered {0} duplicates which were skipped", progress.DuplicateCount);
+                        progress.ItemCount++;
+                    }
                 }
-                var numChanges = db.SaveChanges();
+            );
+
+            Logger.Info(accountId, "Saving {0} DailySummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted)",
+                progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount);
+            if (progress.DuplicateCount > 0)
+            {
+                Logger.Warn(accountId, "Encountered {0} duplicates which were skipped", progress.DuplicateCount);
             }
             return progress.ItemCount;
         }

@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
+﻿using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
+using System.Collections.Generic;
+using System.Data.Entity;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
@@ -18,57 +19,60 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public int UpsertDailySummaryConVals(List<DailySummary> items)
         {
-            var addedCount = 0;
-            var updatedCount = 0;
-            var duplicateCount = 0;
-            var alreadyDeletedCount = 0;
-            var itemCount = 0;
-            using (var db = new ClientPortalProgContext())
-            {
-                foreach (var item in items)
+            var progress = new LoadingProgress();
+            SafeContextWrapper.SaveChangedContext<ClientPortalProgContext>(
+                SafeContextWrapper.DailySummaryLocker, db =>
                 {
-                    var target = db.Set<DailySummary>().Find(item.Date, accountId);
-                    if (target == null)
+                    foreach (var item in items)
                     {
-                        if (item.PostClickRev != 0 || item.PostViewRev != 0)
+                        var target = db.Set<DailySummary>().Find(item.Date, accountId);
+                        if (target == null)
                         {
-                            var ds = new DailySummary
+                            if (item.PostClickRev != 0 || item.PostViewRev != 0)
                             {
-                                Date = item.Date,
-                                AccountId = accountId,
-                                PostClickRev = item.PostClickRev,
-                                PostViewRev = item.PostViewRev
-                            };
-                            db.DailySummaries.Add(ds);
-                            addedCount++;
+                                var ds = new DailySummary
+                                {
+                                    Date = item.Date,
+                                    AccountId = accountId,
+                                    PostClickRev = item.PostClickRev,
+                                    PostViewRev = item.PostViewRev
+                                };
+                                db.DailySummaries.Add(ds);
+                                progress.AddedCount++;
+                            }
+                            else
+                            {
+                                progress.AlreadyDeletedCount++;
+                            }
                         }
-                        else
-                            alreadyDeletedCount++;
-                    }
-                    else // DailySummary already exists
-                    {
-                        var entry = db.Entry(target);
-                        if (entry.State == EntityState.Unchanged)
+                        else // DailySummary already exists
                         {
-                            target.PostClickRev = item.PostClickRev;
-                            target.PostViewRev = item.PostViewRev;
-                            updatedCount++;
+                            var entry = db.Entry(target);
+                            if (entry.State == EntityState.Unchanged)
+                            {
+                                target.PostClickRev = item.PostClickRev;
+                                target.PostViewRev = item.PostViewRev;
+                                progress.UpdatedCount++;
+                            }
+                            else
+                            {
+                                Logger.Warn(accountId, "Encountered duplicate for {0:d} - Acct {1}", item.Date, item.AccountId);
+                                progress.DuplicateCount++;
+                            }
                         }
-                        else
-                        {
-                            Logger.Warn(accountId, "Encountered duplicate for {0:d} - Acct {1}", item.Date, item.AccountId);
-                            duplicateCount++;
-                        }
+
+                        progress.ItemCount++;
                     }
-                    itemCount++;
                 }
-                Logger.Info(accountId, "Saving {0} DailySummary ConVals ({1} updates, {2} additions, {3} duplicates, {4} already-deleted)",
-                            itemCount, updatedCount, addedCount, duplicateCount, alreadyDeletedCount);
-                if (duplicateCount > 0)
-                    Logger.Warn(accountId, "Encountered {0} duplicates which were skipped", duplicateCount);
-                int numChanges = db.SaveChanges();
+            );
+
+            Logger.Info(accountId, "Saving {0} DailySummary ConVals ({1} updates, {2} additions, {3} duplicates, {4} already-deleted)",
+                progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.AlreadyDeletedCount);
+            if (progress.DuplicateCount > 0)
+            {
+                Logger.Warn(accountId, "Encountered {0} duplicates which were skipped", progress.DuplicateCount);
             }
-            return itemCount;
+            return progress.ItemCount;
         }
 
     }

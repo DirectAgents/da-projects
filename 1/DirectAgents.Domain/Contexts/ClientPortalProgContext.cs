@@ -5,7 +5,6 @@ using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.DBM;
 using DirectAgents.Domain.Entities.CPProg;
-using System.Collections.Generic;
 
 namespace DirectAgents.Domain.Contexts
 {
