@@ -88,6 +88,9 @@ namespace CakeExtracter.Commands
 
                 AddEnabledEtl(statsType.Daily, account, () => DoETL_Daily(dateRange, account, yamUtility));
                 AddEnabledEtl(statsType.Strategy, account, () => DoETL_Strategy(dateRange, account, yamUtility));
+                AddEnabledEtl(statsType.AdSet, account, () => DoETL_AdSet(dateRange, account, yamUtility));
+                AddEnabledEtl(statsType.Keyword, account, () => DoETL_Keyword(dateRange, account, yamUtility));
+                AddEnabledEtl(statsType.SearchTerm, account, () => DoETL_SearchTerm(dateRange, account, yamUtility));
                 //don't include when getting "all" statstypes
                 AddEnabledEtl(statsType.Creative && !statsType.All, account, () => DoETL_Creative(dateRange, account, yamUtility));
             }
@@ -143,6 +146,7 @@ namespace CakeExtracter.Commands
                 lThread.Join();
             }
         }
+
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
         {
             var extracter = new YAMStrategySummaryExtracter(yamUtility, dateRange, account);
@@ -163,10 +167,41 @@ namespace CakeExtracter.Commands
                 lThread.Join();
             }
         }
+
+        private void DoETL_AdSet(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
+        {
+            var extracter = new YAMAdSetSummaryExtracter(yamUtility, dateRange, account);
+            var loader = new TDAdSetSummaryLoader(account.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
         {
             var extracter = new YAMTDadSummaryExtracter(yamUtility, dateRange, account);
             var loader = new TDadSummaryLoader(account.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+
+        private void DoETL_Keyword(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
+        {
+            var extracter = new YAMKeywordSummaryExtracter(yamUtility, dateRange, account);
+            var loader = new KeywordSummaryLoader(account.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+
+        private void DoETL_SearchTerm(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
+        {
+            var extracter = new YAMSearchTermSummaryExtracter(yamUtility, dateRange, account);
+            var loader = new SearchTermSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();

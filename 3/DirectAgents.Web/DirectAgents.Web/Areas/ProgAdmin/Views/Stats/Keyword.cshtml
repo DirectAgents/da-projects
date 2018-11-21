@@ -49,7 +49,9 @@ else
         <th>CPC</th>
         <th>CPA</th>
         <th>PostClick Conv</th>
+        <th>PostClick Rev</th>
         <th>PostView Conv</th>
+        <th>PostView Rev</th>
         <th>Cost</th>
         @foreach (var metric in Model.MetricNames)
         {
@@ -73,7 +75,9 @@ else
             <td style="text-align:center">@stat.CPC</td>
             <td style="text-align:center">@stat.CPA</td>
             <td style="text-align:right">@stat.PostClickConv</td>
+            <td style="text-align:right">@stat.PostClickRev</td>
             <td style="text-align:right">@stat.PostViewConv</td>
+            <td style="text-align:right">@stat.PostViewRev</td>
             <td style="text-align:right">@stat.Cost</td>
             @foreach (var metricName in Model.MetricNames)
             {
@@ -98,8 +102,10 @@ else
             <th style="text-align:center">@tot.CPM</th>
             <th style="text-align:center">@tot.CPC</th>
             <th style="text-align:center">@tot.CPA</th>
-            <th style="text-align:right">@tot.PostClickConv</th>
-            <th style="text-align:right">@tot.PostViewConv</th>
+            <td style="text-align:right">@tot.PostClickConv</td>
+            <td style="text-align:right">@tot.PostClickRev</td>
+            <td style="text-align:right">@tot.PostViewConv</td>
+            <td style="text-align:right">@tot.PostViewRev</td>
             <th style="text-align:right">@tot.Cost</th>
             @foreach (var metricName in Model.MetricNames)
             {

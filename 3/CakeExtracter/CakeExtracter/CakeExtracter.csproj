@@ -425,13 +425,17 @@
     <Compile Include="Etl\TradingDesk\Extracters\DatabaseExtracters.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmCreativeCloudStorageExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DBMCreativeExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\TDAdSetSummaryExtracter.cs">
+    <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\KeywordSummaryExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\SearchTermSummaryExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\SummaryCsvExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDAdSetSummaryExtracter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Etl\TradingDesk\Extracters\TDadSummaryExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDadSummaryExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\YamConValCsvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\TDConvExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\TDSiteSummaryExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\TDStrategySummaryExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDSiteSummaryExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDStrategySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\YAMConValExtracters.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\YAMExtracters.cs" />
     <Compile Include="Etl\TradingDesk\Helpers\EntityIdStorage.cs" />
@@ -573,7 +577,7 @@
     <Compile Include="Etl\TradingDesk\Extracters\DbmCsvExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmDailyStatsExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmUserListStatExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\TDDailySummaryExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDDailySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollAdDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollCampaignSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollConvLoader.cs" />

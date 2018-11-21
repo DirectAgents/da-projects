@@ -33,6 +33,7 @@ namespace Yahoo
         public const int LINE = 6;
         public const int AD = 7;
         public const int CREATIVE = 8;
+        public const int PIXEL = 46;
         public const int PIXEL_PARAMETER = 103;
         //...
     }

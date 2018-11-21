@@ -76,7 +76,7 @@ namespace CakeExtracter.Bootstrappers
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SearchTermSummary, DirectAgents.Domain.Entities.CPProg.SearchTermSummary>();
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SearchTermSummary, DirectAgents.Domain.Entities.CPProg.SearchTerm>()
                     .ForMember(d => d.Id, opt => opt.MapFrom(s => s.SearchTermId))
-                    .ForMember(d => d.Query, opt => opt.MapFrom(s => s.Query));
+                    .ForMember(d => d.Name, opt => opt.MapFrom(s => s.SearchTermName));
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SearchTermSummary, DirectAgents.Domain.Entities.CPProg.Keyword>()
                     .ForMember(d => d.Name, opt => opt.MapFrom(s => s.KeywordName))
                     .ForMember(d => d.ExternalId, opt => opt.MapFrom(s => s.KeywordEid))
