@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using AutoMapper;
-using CakeExtracter.Etl.TradingDesk.Helpers;
+﻿using AutoMapper;
+using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
@@ -70,31 +70,35 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public int UpsertDailySummaries(List<AdSetSummary> items)
         {
             var progress = new LoadingProgress();
-            using (var db = new ClientPortalProgContext())
-            {
-                var itemAdSetIds = items.Select(i => i.AdSetId).Distinct().ToArray();
-                var adSetIdsInDb = db.AdSets.Select(s => s.Id).Where(i => itemAdSetIds.Contains(i)).ToArray();
 
-                foreach (var item in items)
+            SafeContextWrapper.SaveChangedContext<ClientPortalProgContext>(
+                SafeContextWrapper.AdSetSummaryLocker, db =>
                 {
-                    var target = db.Set<AdSetSummary>().Find(item.Date, item.AdSetId);
-                    if (target == null)
+                    var itemAdSetIds = items.Select(i => i.AdSetId).Distinct().ToArray();
+                    var adSetIdsInDb = db.AdSets.Select(s => s.Id).Where(i => itemAdSetIds.Contains(i)).ToArray();
+
+                    foreach (var item in items)
                     {
-                        TryToAddSummary(db, item, adSetIdsInDb, progress);
+                        var target = db.Set<AdSetSummary>().Find(item.Date, item.AdSetId);
+                        if (target == null)
+                        {
+                            TryToAddSummary(db, item, adSetIdsInDb, progress);
+                        }
+                        else // AdSetSummary already exists
+                        {
+                            TryToUpdateSummary(db, item, target, progress);
+                        }
+
+                        progress.ItemCount++;
                     }
-                    else // AdSetSummary already exists
-                    {
-                        TryToUpdateSummary(db, item, target, progress);
-                    }
-                    progress.ItemCount++;
                 }
-                Logger.Info(AccountId, "Saving {0} AdSetSummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
-                            progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount, progress.SkippedCount);
-                if (progress.DuplicateCount > 0)
-                {
-                    Logger.Warn(AccountId, "Encountered {0} duplicates which were skipped", progress.DuplicateCount);
-                }
-                var numChanges = db.SaveChanges();
+            );
+
+            Logger.Info(AccountId, "Saving {0} AdSetSummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
+                progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount, progress.SkippedCount);
+            if (progress.DuplicateCount > 0)
+            {
+                Logger.Warn(AccountId, "Encountered {0} duplicates which were skipped", progress.DuplicateCount);
             }
             return progress.ItemCount;
         }
@@ -130,27 +134,33 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         continue; // already encountered this adset
                     }
 
-                    var adSetsInDbList = GetAdSets(db, adSet, accountId);
-                    if (!adSetsInDbList.Any())
-                    {   // AdSet doesn't exist in the db; so create it and put an entry in the lookup
-                        var adSetInDB = AddAdSet(db, adSet, accountId);
-                        Logger.Info(accountId, "Saved new AdSet: {0} ({1}), ExternalId={2}", adSetInDB.Name, adSetInDB.Id, adSetInDB.ExternalId);
-                        AdSetStorage.AddEntityIdToStorage(adSetInDB);
-                    }
-                    else
-                    {   // Update & put existing AdSet in the lookup
-                        // There should only be one matching AdSet in the db, but just in case...
-                        var numUpdates = UpdateAdSets(db, adSetsInDbList, adSet);
-                        if (numUpdates > 0)
+                    SafeContextWrapper.Lock(SafeContextWrapper.AdSetLocker, () =>
+                    {
+                        var adSetsInDbList = GetAdSets(db, adSet, accountId);
+                        if (!adSetsInDbList.Any())
                         {
-                            Logger.Info(accountId, "Updated AdSet: {0}, Eid={1}", adSet.Name, adSet.ExternalId);
-                            if (numUpdates > 1)
-                            {
-                                Logger.Warn(accountId, "Multiple entities in db ({0})", numUpdates);
-                            }
+                            // AdSet doesn't exist in the db; so create it and put an entry in the lookup
+                            var adSetInDB = AddAdSet(db, adSet, accountId);
+                            Logger.Info(accountId, "Saved new AdSet: {0} ({1}), ExternalId={2}", adSetInDB.Name,
+                                adSetInDB.Id, adSetInDB.ExternalId);
+                            AdSetStorage.AddEntityIdToStorage(adSetInDB);
                         }
-                        AdSetStorage.AddEntityIdToStorage(adSetsInDbList.First());
-                    }
+                        else
+                        {
+                            // Update & put existing AdSet in the lookup
+                            // There should only be one matching AdSet in the db, but just in case...
+                            var numUpdates = UpdateAdSets(db, adSetsInDbList, adSet);
+                            if (numUpdates > 0)
+                            {
+                                Logger.Info(accountId, "Updated AdSet: {0}, Eid={1}", adSet.Name, adSet.ExternalId);
+                                if (numUpdates > 1)
+                                {
+                                    Logger.Warn(accountId, "Multiple entities in db ({0})", numUpdates);
+                                }
+                            }
+                            AdSetStorage.AddEntityIdToStorage(adSetsInDbList.First());
+                        }
+                    });
                 }
             }
         }

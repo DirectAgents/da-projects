@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using AutoMapper;
-using CakeExtracter.Etl.TradingDesk.Helpers;
+﻿using AutoMapper;
+using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
@@ -74,31 +72,35 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public int UpsertDailySummaries(List<StrategySummary> items)
         {
             var progress = new LoadingProgress();
-            using (var db = new ClientPortalProgContext())
-            {
-                var itemStrategyIds = items.Select(i => i.StrategyId).Distinct().ToArray();
-                var strategyIdsInDb = db.Strategies.Select(s => s.Id).Where(i => itemStrategyIds.Contains(i)).ToArray();
+            SafeContextWrapper.SaveChangedContext<ClientPortalProgContext>(
+                SafeContextWrapper.StrategySummaryLocker, db =>
+                {
+                    var itemStrategyIds = items.Select(i => i.StrategyId).Distinct().ToArray();
+                    var strategyIdsInDb = db.Strategies.Select(s => s.Id).Where(i => itemStrategyIds.Contains(i))
+                        .ToArray();
 
-                foreach (var item in items)
-                {
-                    var target = db.Set<StrategySummary>().Find(item.Date, item.StrategyId);
-                    if (target == null)
+                    foreach (var item in items)
                     {
-                        TryToAddSummary(db, item, strategyIdsInDb, progress);
+                        var target = db.Set<StrategySummary>().Find(item.Date, item.StrategyId);
+                        if (target == null)
+                        {
+                            TryToAddSummary(db, item, strategyIdsInDb, progress);
+                        }
+                        else // StrategySummary already exists
+                        {
+                            TryToUpdateSummary(db, item, target, progress);
+                        }
+
+                        progress.ItemCount++;
                     }
-                    else // StrategySummary already exists
-                    {
-                        TryToUpdateSummary(db, item, target, progress);
-                    }
-                    progress.ItemCount++;
                 }
-                Logger.Info(AccountId, "Saving {0} StrategySummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
-                    progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount, progress.SkippedCount);
-                if (progress.DuplicateCount > 0)
-                {
-                    Logger.Warn(AccountId, "Encountered {0} duplicates which were skipped", progress.DuplicateCount);
-                }
-                var numChanges = db.SaveChanges();
+            );
+
+            Logger.Info(AccountId, "Saving {0} StrategySummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
+                progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount, progress.SkippedCount);
+            if (progress.DuplicateCount > 0)
+            {
+                Logger.Warn(AccountId, "Encountered {0} duplicates which were skipped", progress.DuplicateCount);
             }
             return progress.ItemCount;
         }
@@ -129,27 +131,32 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         continue; // already encountered this strategy
                     }
 
-                    var stratsInDbList = GetStrategies(db, strategyProps, accountId);
-                    if (!stratsInDbList.Any())
+                    SafeContextWrapper.Lock(SafeContextWrapper.StrategyLocker, () =>
                     {
-                        var strategy = AddStrategy(db, strategyProps, accountId);   // Strategy doesn't exist in the db; so create it and put an entry in the lookup
-                        Logger.Info(accountId, "Saved new Strategy: {0} ({1}), ExternalId={2}", strategy.Name, strategy.Id, strategy.ExternalId);
-                        StrategyStorage.AddEntityIdToStorage(strategy);
-                    }
-                    else
-                    {   // Update & put existing Strategy in the lookup
-                        // There should only be one matching Strategy in the db, but just in case...
-                        var numUpdates = UpdateStrategies(db, stratsInDbList, strategyProps);
-                        if (numUpdates > 0)
+                        var stratsInDbList = GetStrategies(db, strategyProps, accountId);
+                        if (!stratsInDbList.Any())
                         {
-                            Logger.Info(accountId, "Updated Strategy: {0}, Eid={1}", strategyProps.Name, strategyProps.ExternalId);
-                            if (numUpdates > 1)
-                            {
-                                Logger.Warn(accountId, "Multiple entities in db ({0})", numUpdates);
-                            }
+                            var strategy = AddStrategy(db, strategyProps, accountId); // Strategy doesn't exist in the db; so create it and put an entry in the lookup
+                            Logger.Info(accountId, "Saved new Strategy: {0} ({1}), ExternalId={2}", strategy.Name, strategy.Id, strategy.ExternalId);
+                            StrategyStorage.AddEntityIdToStorage(strategy);
                         }
-                        StrategyStorage.AddEntityIdToStorage(stratsInDbList.First());
-                    }
+                        else
+                        {
+                            // Update & put existing Strategy in the lookup
+                            // There should only be one matching Strategy in the db, but just in case...
+                            var numUpdates = UpdateStrategies(db, stratsInDbList, strategyProps);
+                            if (numUpdates > 0)
+                            {
+                                Logger.Info(accountId, "Updated Strategy: {0}, Eid={1}", strategyProps.Name,                                     strategyProps.ExternalId);
+                                if (numUpdates > 1)
+                                {
+                                    Logger.Warn(accountId, "Multiple entities in db ({0})", numUpdates);
+                                }
+                            }
+
+                            StrategyStorage.AddEntityIdToStorage(stratsInDbList.First());
+                        }
+                    });
                 }
             }
         }
@@ -167,20 +174,24 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         private void AddDependentTypes(ClientPortalProgContext db, IEnumerable<EntityType> types)
         {
             var newTypes = new List<EntityType>();
-            foreach (var type in types)
-            {
-                var typeInDB = db.Types.FirstOrDefault(x => type.Name == x.Name);
-                if (typeInDB == null)
+            SafeContextWrapper.SaveChangedContext(
+                SafeContextWrapper.EntityTypeLocker, db, () =>
                 {
-                    newTypes.Add(type);
+                    foreach (var type in types)
+                    {
+                        var typeInDB = db.Types.FirstOrDefault(x => type.Name == x.Name);
+                        if (typeInDB == null)
+                        {
+                            newTypes.Add(type);
+                        }
+                        else
+                        {
+                            typeStorage.AddEntityIdToStorage(typeInDB);
+                        }
+                    }
+                    db.Types.AddRange(newTypes);
                 }
-                else
-                {
-                    typeStorage.AddEntityIdToStorage(typeInDB);
-                }
-            }
-            db.Types.AddRange(newTypes);
-            db.SaveChanges();
+            );
             newTypes.ForEach(typeStorage.AddEntityIdToStorage);
         }
 

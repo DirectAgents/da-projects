@@ -1,4 +1,4 @@
-﻿namespace CakeExtracter.Etl.TradingDesk.Helpers
+﻿namespace CakeExtracter.Helpers
 {
     class LoadingProgress
     {

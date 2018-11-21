@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using AutoMapper;
-using CakeExtracter.Etl.TradingDesk.Helpers;
+﻿using AutoMapper;
+using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
-    class KeywordSummaryLoader : Loader<KeywordSummary>
+    internal class KeywordSummaryLoader : Loader<KeywordSummary>
     {
         public readonly int AccountId;
         public static EntityIdStorage<Keyword> KeywordStorage;
@@ -74,31 +74,33 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public int UpsertDailySummaries(List<KeywordSummary> items)
         {
             var progress = new LoadingProgress();
-            using (var db = new ClientPortalProgContext())
-            {
-                var itemKeywordIds = items.Select(i => i.KeywordId).Distinct().ToArray();
-                var keywordIdsInDb = db.Keywords.Select(a => a.Id).Where(i => itemKeywordIds.Contains(i)).ToArray();
+            SafeContextWrapper.SaveChangedContext<ClientPortalProgContext>(
+                SafeContextWrapper.KeywordSummaryLocker, db =>
+                {
+                    var itemKeywordIds = items.Select(i => i.KeywordId).Distinct().ToArray();
+                    var keywordIdsInDb = db.Keywords.Select(a => a.Id).Where(i => itemKeywordIds.Contains(i)).ToArray();
 
-                foreach (var item in items)
-                {
-                    var target = db.Set<KeywordSummary>().Find(item.Date, item.KeywordId);
-                    if (target == null)
+                    foreach (var item in items)
                     {
-                        TryToAddSummary(db, item, keywordIdsInDb, progress);
+                        var target = db.Set<KeywordSummary>().Find(item.Date, item.KeywordId);
+                        if (target == null)
+                        {
+                            TryToAddSummary(db, item, keywordIdsInDb, progress);
+                        }
+                        else
+                        {
+                            TryToUpdateSummary(db, item, target, progress);
+                        }
+
+                        progress.ItemCount++;
                     }
-                    else
-                    {
-                        TryToUpdateSummary(db, item, target, progress);
-                    }
-                    progress.ItemCount++;
                 }
-                Logger.Info(AccountId, "Saving {0} KeywordSummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
-                            progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount, progress.SkippedCount);
-                if (progress.DuplicateCount > 0)
-                {
-                    Logger.Warn(AccountId, "Encountered {0} duplicates which were skipped", progress.DuplicateCount);
-                }
-                var numChanges = db.SaveChanges();
+            );
+            Logger.Info(AccountId, "Saving {0} KeywordSummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
+                        progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount, progress.SkippedCount);
+            if (progress.DuplicateCount > 0)
+            {
+                Logger.Warn(AccountId, "Encountered {0} duplicates which were skipped", progress.DuplicateCount);
             }
             return progress.ItemCount;
         }
@@ -145,26 +147,29 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         continue;
                     }
 
-                    var keywordsInDbList = GetKeywords(db, keyword, AccountId);
-                    if (!keywordsInDbList.Any())
+                    SafeContextWrapper.Lock(SafeContextWrapper.KeywordLocker, () =>
                     {
-                        var keywordInDb = AddKeyword(db, keyword, AccountId);
-                        Logger.Info(AccountId, "Saved new Keyword: {0} ({1}), ExternalId={2}", keywordInDb.Name, keywordInDb.Id, keywordInDb.ExternalId);
-                        KeywordStorage.AddEntityIdToStorage(keywordInDb);
-                    }
-                    else
-                    {
-                        var numUpdates = UpdateKeywords(db, keywordsInDbList, keyword);
-                        if (numUpdates > 0)
+                        var keywordsInDbList = GetKeywords(db, keyword, AccountId);
+                        if (!keywordsInDbList.Any())
                         {
-                            Logger.Info(AccountId, "Updated Keyword: {0}, Eid={1}", keyword.Name, keyword.ExternalId);
-                            if (numUpdates > 1)
-                            {
-                                Logger.Warn(AccountId, "Multiple entities in db ({0})", numUpdates);
-                            }
+                            var keywordInDb = AddKeyword(db, keyword, AccountId);
+                            Logger.Info(AccountId, "Saved new Keyword: {0} ({1}), ExternalId={2}", keywordInDb.Name, keywordInDb.Id, keywordInDb.ExternalId);
+                            KeywordStorage.AddEntityIdToStorage(keywordInDb);
                         }
-                        KeywordStorage.AddEntityIdToStorage(keywordsInDbList.First());
-                    }
+                        else
+                        {
+                            var numUpdates = UpdateKeywords(db, keywordsInDbList, keyword);
+                            if (numUpdates > 0)
+                            {
+                                Logger.Info(AccountId, "Updated Keyword: {0}, Eid={1}", keyword.Name, keyword.ExternalId);
+                                if (numUpdates > 1)
+                                {
+                                    Logger.Warn(AccountId, "Multiple entities in db ({0})", numUpdates);
+                                }
+                            }
+                            KeywordStorage.AddEntityIdToStorage(keywordsInDbList.First());
+                        }
+                    });
                 }
             }
         }

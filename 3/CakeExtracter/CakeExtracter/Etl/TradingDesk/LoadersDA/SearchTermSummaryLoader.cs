@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CakeExtracter.Etl.TradingDesk.Helpers;
+using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
@@ -84,31 +84,34 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public int UpsertDailySummaries(List<SearchTermSummary> items)
         {
             var progress = new LoadingProgress();
-            using (var db = new ClientPortalProgContext())
-            {
-                var itemSearchTermIds = items.Select(i => i.SearchTermId).Distinct().ToArray();
-                var termIdsInDb = db.SearchTerms.Select(a => a.Id).Where(i => itemSearchTermIds.Contains(i)).ToArray();
+            SafeContextWrapper.SaveChangedContext<ClientPortalProgContext>(
+                SafeContextWrapper.SearchTermSummaryLocker, db =>
+                {
+                    var itemSearchTermIds = items.Select(i => i.SearchTermId).Distinct().ToArray();
+                    var termIdsInDb = db.SearchTerms.Select(a => a.Id).Where(i => itemSearchTermIds.Contains(i))
+                        .ToArray();
 
-                foreach (var item in items)
-                {
-                    var target = db.Set<SearchTermSummary>().Find(item.Date, item.SearchTermId);
-                    if (target == null)
+                    foreach (var item in items)
                     {
-                        TryToAddSummary(db, item, termIdsInDb, progress);
+                        var target = db.Set<SearchTermSummary>().Find(item.Date, item.SearchTermId);
+                        if (target == null)
+                        {
+                            TryToAddSummary(db, item, termIdsInDb, progress);
+                        }
+                        else
+                        {
+                            TryToUpdateSummary(db, item, target, progress);
+                        }
+                        progress.ItemCount++;
                     }
-                    else
-                    {
-                        TryToUpdateSummary(db, item, target, progress);
-                    }
-                    progress.ItemCount++;
                 }
-                Logger.Info(AccountId, "Saving {0} SearchTermSummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
-                            progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount, progress.SkippedCount);
-                if (progress.DuplicateCount > 0)
-                {
-                    Logger.Warn(AccountId, "Encountered {0} duplicates which were skipped", progress.DuplicateCount);
-                }
-                var numChanges = db.SaveChanges();
+            );
+
+            Logger.Info(AccountId, "Saving {0} SearchTermSummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
+                        progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount, progress.SkippedCount);
+            if (progress.DuplicateCount > 0)
+            {
+                Logger.Warn(AccountId, "Encountered {0} duplicates which were skipped", progress.DuplicateCount);
             }
             return progress.ItemCount;
         }
@@ -166,26 +169,29 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         continue;
                     }
 
-                    var termsInDbList = GetSearchTerms(db, terms, AccountId);
-                    if (!termsInDbList.Any())
+                    SafeContextWrapper.Lock(SafeContextWrapper.SearchTermLocker, () =>
                     {
-                        var termsInDb = AddSearchTerm(db, terms, AccountId);
-                        Logger.Info(AccountId, "Saved new SearchTerm: {0} ({1}), KeywordId={2}", termsInDb.Query, termsInDb.Id, termsInDb.KeywordId);
-                        SearchTermStorage.AddEntityIdToStorage(termsInDb);
-                    }
-                    else
-                    {
-                        var numUpdates = UpdateSearchTerms(db, termsInDbList, terms);
-                        if (numUpdates > 0)
+                        var termsInDbList = GetSearchTerms(db, terms, AccountId);
+                        if (!termsInDbList.Any())
                         {
-                            Logger.Info(AccountId, "Updated SearchTerm: {0}, KeywordId={1}", terms.Query, terms.KeywordId);
-                            if (numUpdates > 1)
-                            {
-                                Logger.Warn(AccountId, "Multiple entities in db ({0})", numUpdates);
-                            }
+                            var termsInDb = AddSearchTerm(db, terms, AccountId);
+                            Logger.Info(AccountId, "Saved new SearchTerm: {0} ({1}), KeywordId={2}", termsInDb.Query, termsInDb.Id, termsInDb.KeywordId);
+                            SearchTermStorage.AddEntityIdToStorage(termsInDb);
                         }
-                        SearchTermStorage.AddEntityIdToStorage(termsInDbList.First());
-                    }
+                        else
+                        {
+                            var numUpdates = UpdateSearchTerms(db, termsInDbList, terms);
+                            if (numUpdates > 0)
+                            {
+                                Logger.Info(AccountId, "Updated SearchTerm: {0}, KeywordId={1}", terms.Query, terms.KeywordId);
+                                if (numUpdates > 1)
+                                {
+                                    Logger.Warn(AccountId, "Multiple entities in db ({0})", numUpdates);
+                                }
+                            }
+                            SearchTermStorage.AddEntityIdToStorage(termsInDbList.First());
+                        }
+                    });
                 }
             }
         }

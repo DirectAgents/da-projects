@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using AutoMapper;
-using CakeExtracter.Etl.TradingDesk.Helpers;
+﻿using AutoMapper;
+using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
-    class SummaryMetricLoader : Loader<SummaryMetric>
+    internal class SummaryMetricLoader : Loader<SummaryMetric>
     {
         public static readonly EntityIdStorage<MetricType> MetricTypeStorage;
 
@@ -21,12 +21,13 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             AddDependentMetricTypes(items);
             AssignMetricTypeIdToItems(items);
-            using (var db = new ClientPortalProgContext())
-            {
-                var numChanges = UpsertSummaryMetrics<SummaryMetric>(db, items);
-                db.SaveChanges();
-                return numChanges;
-            }
+            var numChanges = SafeContextWrapper.SaveChangedContext<ClientPortalProgContext>(
+                SafeContextWrapper.MetricTypeLocker, db =>
+                {
+                    UpsertSummaryMetrics<SummaryMetric>(db, items);
+                }
+            );
+            return numChanges;
         }
 
         public void AssignMetricTypeIdToItems(IEnumerable<SummaryMetric> items)
@@ -78,26 +79,27 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         private void AddDependentMetricTypes(IEnumerable<MetricType> items)
         {
-            using (var db = new ClientPortalProgContext())
-            {
-                var newMetricTypes = new List<MetricType>();
-                foreach (var metricType in items)
+            var newMetricTypes = new List<MetricType>();
+            SafeContextWrapper.SaveChangedContext<ClientPortalProgContext>(
+                SafeContextWrapper.MetricTypeLocker, db =>
                 {
-                    var metricTypeInDB = db.MetricTypes.FirstOrDefault(x =>
-                        metricType.Name == x.Name && metricType.DaysInterval == x.DaysInterval);
-                    if (metricTypeInDB == null)
+                    foreach (var metricType in items)
                     {
-                        newMetricTypes.Add(metricType);
+                        var metricTypeInDB = db.MetricTypes.FirstOrDefault(x =>
+                            metricType.Name == x.Name && metricType.DaysInterval == x.DaysInterval);
+                        if (metricTypeInDB == null)
+                        {
+                            newMetricTypes.Add(metricType);
+                        }
+                        else
+                        {
+                            MetricTypeStorage.AddEntityIdToStorage(metricTypeInDB);
+                        }
                     }
-                    else
-                    {
-                        MetricTypeStorage.AddEntityIdToStorage(metricTypeInDB);
-                    }
+                    db.MetricTypes.AddRange(newMetricTypes);
                 }
-                db.MetricTypes.AddRange(newMetricTypes);
-                db.SaveChanges();
-                newMetricTypes.ForEach(MetricTypeStorage.AddEntityIdToStorage);
-            }
+            );
+            newMetricTypes.ForEach(MetricTypeStorage.AddEntityIdToStorage);
         }
 
         private void AddMetric<TSummaryMetric>(ClientPortalProgContext db, SummaryMetric item)

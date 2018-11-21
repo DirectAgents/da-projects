@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using AutoMapper;
-using CakeExtracter.Etl.TradingDesk.Helpers;
+﻿using AutoMapper;
+using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
@@ -72,31 +72,35 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public int UpsertDailySummaries(List<TDadSummary> items)
         {
             var progress = new LoadingProgress();
-            using (var db = new ClientPortalProgContext())
-            {
-                var itemTDadIds = items.Select(i => i.TDadId).Distinct().ToArray();
-                var tdAdIdsInDb = db.TDads.Select(a => a.Id).Where(i => itemTDadIds.Contains(i)).ToArray();
 
-                foreach (var item in items)
+            SafeContextWrapper.SaveChangedContext<ClientPortalProgContext>(
+                SafeContextWrapper.AdSummaryLocker, db =>
                 {
-                    var target = db.Set<TDadSummary>().Find(item.Date, item.TDadId);
-                    if (target == null)
+                    var itemTDadIds = items.Select(i => i.TDadId).Distinct().ToArray();
+                    var tdAdIdsInDb = db.TDads.Select(a => a.Id).Where(i => itemTDadIds.Contains(i)).ToArray();
+
+                    foreach (var item in items)
                     {
-                        TryToAddSummary(db, item, tdAdIdsInDb, progress);
+                        var target = db.Set<TDadSummary>().Find(item.Date, item.TDadId);
+                        if (target == null)
+                        {
+                            TryToAddSummary(db, item, tdAdIdsInDb, progress);
+                        }
+                        else // TDadSummary already exists
+                        {
+                            TryToUpdateSummary(db, item, target, progress);
+                        }
+
+                        progress.ItemCount++;
                     }
-                    else // TDadSummary already exists
-                    {
-                        TryToUpdateSummary(db, item, target, progress);
-                    }
-                    progress.ItemCount++;
                 }
-                Logger.Info(AccountId, "Saving {0} TDadSummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
-                            progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount, progress.SkippedCount);
-                if (progress.DuplicateCount > 0)
-                {
-                    Logger.Warn(AccountId, "Encountered {0} duplicates which were skipped", progress.DuplicateCount);
-                }
-                var numChanges = db.SaveChanges();
+            );
+
+            Logger.Info(AccountId, "Saving {0} TDadSummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
+                progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount, progress.SkippedCount);
+            if (progress.DuplicateCount > 0)
+            {
+                Logger.Warn(AccountId, "Encountered {0} duplicates which were skipped", progress.DuplicateCount);
             }
             return progress.ItemCount;
         }
@@ -133,27 +137,32 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         continue; // already encountered this TDad
                     }
 
-                    var tdAdsInDbList = GetTDads(db, tdAd, AccountId);
-                    if (!tdAdsInDbList.Any())
-                    {   // TDad doesn't exist in the db; so create it and put an entry in the lookup
-                        var tdAdInDB = AddTDad(db, tdAd, AccountId);
-                        Logger.Info(AccountId, "Saved new TDad: {0} ({1}), ExternalId={2}", tdAdInDB.Name, tdAdInDB.Id, tdAdInDB.ExternalId);
-                        TDadStorage.AddEntityIdToStorage(tdAdInDB);
-                    }
-                    else
-                    {   // Update & put existing TDad in the lookup
-                        // There should only be one matching TDad in the db, but just in case...
-                        var numUpdates = UpdateTDads(db, tdAdsInDbList, tdAd);
-                        if (numUpdates > 0)
+                    SafeContextWrapper.Lock(SafeContextWrapper.AdLocker, () =>
+                    {
+                        var tdAdsInDbList = GetTDads(db, tdAd, AccountId);
+                        if (!tdAdsInDbList.Any())
                         {
-                            Logger.Info(AccountId, "Updated TDad: {0}, Eid={1}", tdAd.Name, tdAd.ExternalId);
-                            if (numUpdates > 1)
-                            {
-                                Logger.Warn(AccountId, "Multiple entities in db ({0})", numUpdates);
-                            }
+                            // TDad doesn't exist in the db; so create it and put an entry in the lookup
+                            var tdAdInDB = AddTDad(db, tdAd, AccountId);
+                            Logger.Info(AccountId, "Saved new TDad: {0} ({1}), ExternalId={2}", tdAdInDB.Name, tdAdInDB.Id, tdAdInDB.ExternalId);
+                            TDadStorage.AddEntityIdToStorage(tdAdInDB);
                         }
-                        TDadStorage.AddEntityIdToStorage(tdAdsInDbList.First());
-                    }
+                        else
+                        {
+                            // Update & put existing TDad in the lookup
+                            // There should only be one matching TDad in the db, but just in case...
+                            var numUpdates = UpdateTDads(db, tdAdsInDbList, tdAd);
+                            if (numUpdates > 0)
+                            {
+                                Logger.Info(AccountId, "Updated TDad: {0}, Eid={1}", tdAd.Name, tdAd.ExternalId);
+                                if (numUpdates > 1)
+                                {
+                                    Logger.Warn(AccountId, "Multiple entities in db ({0})", numUpdates);
+                                }
+                            }
+                            TDadStorage.AddEntityIdToStorage(tdAdsInDbList.First());
+                        }
+                    });
                 }
             }
         }
@@ -183,20 +192,25 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         private void AddDependentTypes(ClientPortalProgContext db, IEnumerable<EntityType> types)
         {
             var newTypes = new List<EntityType>();
-            foreach (var type in types)
-            {
-                var typeInDB = db.Types.FirstOrDefault(x => type.Name == x.Name);
-                if (typeInDB == null)
+            SafeContextWrapper.SaveChangedContext(
+                SafeContextWrapper.EntityTypeLocker, db, () =>
                 {
-                    newTypes.Add(type);
+                    foreach (var type in types)
+                    {
+                        var typeInDB = db.Types.FirstOrDefault(x => type.Name == x.Name);
+                        if (typeInDB == null)
+                        {
+                            newTypes.Add(type);
+                        }
+                        else
+                        {
+                            typeStorage.AddEntityIdToStorage(typeInDB);
+                        }
+                    }
+
+                    db.Types.AddRange(newTypes);
                 }
-                else
-                {
-                    typeStorage.AddEntityIdToStorage(typeInDB);
-                }
-            }
-            db.Types.AddRange(newTypes);
-            db.SaveChanges();
+            );
             newTypes.ForEach(typeStorage.AddEntityIdToStorage);
         }
 
