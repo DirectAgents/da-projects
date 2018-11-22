@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2048
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectAgents.Web", "DirectAgents.Web\DirectAgents.Web.csproj", "{6279416D-0396-434C-9D74-30C1B74FFF5B}"
 EndProject
@@ -41,6 +41,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EomTool.Domain", "..\..\1\EomTool\EomTool.Domain\EomTool.Domain.csproj", "{F41DA2E2-D584-479A-9F24-9B2D3D33F927}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon", "..\API\Amazon\Amazon.csproj", "{5C59F9FE-A478-4701-BB84-17E7D0E5E012}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazonAdvertisingNavigationTest", "..\LoginProcessTest\AmazonAdvertisingNavigationTest.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -116,6 +118,10 @@ Global
 		{5C59F9FE-A478-4701-BB84-17E7D0E5E012}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C59F9FE-A478-4701-BB84-17E7D0E5E012}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C59F9FE-A478-4701-BB84-17E7D0E5E012}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EDF4429-251A-416D-BB68-93F227191BCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EDF4429-251A-416D-BB68-93F227191BCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -129,5 +135,8 @@ Global
 		{63F5069C-4AA1-4FA1-ABA4-352FE8373E09} = {9CADCD2F-2E1D-4D0D-BA87-D9A94D3F8CB7}
 		{A73B51CC-60D1-4D14-B90C-1504CDE05303} = {9CADCD2F-2E1D-4D0D-BA87-D9A94D3F8CB7}
 		{5C59F9FE-A478-4701-BB84-17E7D0E5E012} = {9CADCD2F-2E1D-4D0D-BA87-D9A94D3F8CB7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6B7C6F6C-1C50-4207-B5CC-52B64CEFF119}
 	EndGlobalSection
 EndGlobal
