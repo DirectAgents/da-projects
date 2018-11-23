@@ -98,12 +98,36 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("30")]
-        public string WaitPageTimeoutInMinuts {
+        public int WaitPageTimeoutInMinuts {
             get {
-                return ((string)(this["WaitPageTimeoutInMinuts"]));
+                return ((int)(this["WaitPageTimeoutInMinuts"]));
             }
             set {
                 this["WaitPageTimeoutInMinuts"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2018-11-23")]
+        public global::System.DateTime StartExtractionDateTime {
+            get {
+                return ((global::System.DateTime)(this["StartExtractionDateTime"]));
+            }
+            set {
+                this["StartExtractionDateTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int ExtractionIntervalsInDays {
+            get {
+                return ((int)(this["ExtractionIntervalsInDays"]));
+            }
+            set {
+                this["ExtractionIntervalsInDays"] = value;
             }
         }
     }

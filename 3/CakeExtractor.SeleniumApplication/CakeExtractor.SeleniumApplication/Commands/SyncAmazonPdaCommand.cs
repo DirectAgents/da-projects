@@ -3,6 +3,8 @@ using CakeExtractor.SeleniumApplication.PageActions.AmazonPda;
 using ManyConsole;
 using OpenQA.Selenium;
 using System.Threading;
+using CakeExtracter.Etl.TradingDesk.Extracters;
+using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Jobs.ExtractAmazonPda;
 
@@ -39,7 +41,8 @@ namespace CakeExtractor.SeleniumApplication.Commands
         {
             pageActions.RefreshPage();
             pageActions.ExportCsv();
-            FileManager.ParsingCsvFiles(downloadDir, reportNameTemplate);
+            var csvPath = FileManager.CombinePath(downloadDir, reportNameTemplate);
+            DoEtl(csvPath);
             FileManager.CleanDirectory(downloadDir, reportNameTemplate);
         }
 
@@ -59,7 +62,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
             pass = Properties.Settings.Default.EMailPassword;
             reportNameTemplate = Properties.Settings.Default.FilesNameTemplate;
             downloadDir = FileManager.GetAssemblyRelativePath(Properties.Settings.Default.DownloadsDirectoryName);
-            waitPageTimeoutInMinuts = int.TryParse(Properties.Settings.Default.WaitPageTimeoutInMinuts, out var i) ? i : 30;
+            waitPageTimeoutInMinuts = Properties.Settings.Default.WaitPageTimeoutInMinuts;
         }
 
         private void OpenPage()
@@ -76,6 +79,16 @@ namespace CakeExtractor.SeleniumApplication.Commands
             {
                 Thread.Sleep(int.MaxValue);
             }
+        }
+
+        private void DoEtl(string csvPath)
+        {
+            var extracter = new AmazonCampaignCsvExtractor(csvPath);
+            var loader = new AmazonCampaignSummaryLoader(-1); //accountId ??
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
         }
     }
 }

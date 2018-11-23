@@ -1,6 +1,4 @@
-﻿using AmazonAdvertisingNavigationTest;
-using System;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 
 namespace CakeExtractor.SeleniumApplication.Helpers
@@ -11,7 +9,12 @@ namespace CakeExtractor.SeleniumApplication.Helpers
         {
             var assembly = Assembly.GetExecutingAssembly();
             var assemblyDir = Path.GetDirectoryName(assembly.Location);
-            return Path.Combine(assemblyDir, itemName);
+            return CombinePath(assemblyDir, itemName);
+        }
+
+        public static string CombinePath(string dirPath, string fileName)
+        {
+            return Path.Combine(dirPath, fileName);
         }
 
         public static void CreateDirectoryIfNotExist(string path)
@@ -29,23 +32,6 @@ namespace CakeExtractor.SeleniumApplication.Helpers
             foreach (var file in files)
             {
                 file.Delete();
-            }
-        }
-
-        public static void ParsingCsvFiles(string dirPath, string fileName)
-        {
-            try
-            {
-                var di = new DirectoryInfo(dirPath);
-                foreach (var file in di.GetFiles(fileName))
-                {
-                    var parsingFile = new ParsingCSV(Path.Combine(dirPath, file.Name));
-                    var campaignsInfo = parsingFile.Parse(','); // <-- INFORMATION            
-                }
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"The parsing of csv files failed: {e.Message}", e);
             }
         }
     }

@@ -191,12 +191,12 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         //    }
         //}
 
-        private TDStrategySummaryLoader tdStrategySummaryLoader;
+        private readonly TDStrategySummaryLoader tdStrategySummaryLoader;
 
         public AmazonCampaignSummaryLoader(int accountId)
             : base(accountId)
         {
-            this.tdStrategySummaryLoader = new TDStrategySummaryLoader(accountId);
+            tdStrategySummaryLoader = new TDStrategySummaryLoader(accountId);
         }
 
         protected override int Load(List<StrategySummary> items)

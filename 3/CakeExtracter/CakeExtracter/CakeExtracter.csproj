@@ -414,6 +414,7 @@
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSetSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookAdSummaryLoader.cs" />
     <Compile Include="Etl\SocialMarketing\LoadersDA\FacebookCampaignSummaryLoader.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\AmazonCsvExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtracters.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformExtracters.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonTransformers.cs" />

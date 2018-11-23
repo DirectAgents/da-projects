@@ -20,8 +20,14 @@
     <Setting Name="FilesNameTemplate" Type="System.String" Scope="User">
       <Value Profile="(Default)">CAMPAIGN_*.csv</Value>
     </Setting>
-    <Setting Name="WaitPageTimeoutInMinuts" Type="System.String" Scope="User">
+    <Setting Name="WaitPageTimeoutInMinuts" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="StartExtractionDateTime" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">2018-11-23</Value>
+    </Setting>
+    <Setting Name="ExtractionIntervalsInDays" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
     </Setting>
   </Settings>
 </SettingsFile>
