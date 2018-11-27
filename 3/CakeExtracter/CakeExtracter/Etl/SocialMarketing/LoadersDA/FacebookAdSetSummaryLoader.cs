@@ -11,9 +11,14 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 {
     public class FacebookAdSetSummaryLoader : Loader<FBSummary>
     {
+        public static EntityIdStorage<ActionType> ActionTypeStorage;
         private readonly bool LoadActions;
-        private TDAdSetSummaryLoader adsetSummaryLoader;
-        private Dictionary<string, int> actionTypeIdLookupByCode = new Dictionary<string, int>();
+        private readonly TDAdSetSummaryLoader adsetSummaryLoader;
+
+        static FacebookAdSetSummaryLoader()
+        {
+            ActionTypeStorage = new EntityIdStorage<ActionType>(x => x.Id, x => x.Code);
+        }
 
         public FacebookAdSetSummaryLoader(int accountId, bool loadActions = false)
             : base(accountId)
@@ -66,42 +71,52 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             return sum;
         }
 
-        private void AddUpdateDependentActionTypes(List<FBSummary> items)
-        {
-            AddUpdateDependentActionTypes(items, this.actionTypeIdLookupByCode, this.accountId);
-        }
-
-        public static void AddUpdateDependentActionTypes(List<FBSummary> items, Dictionary<string, int> actionTypeIdLookupByCode, int accountId)
+        public void AddUpdateDependentActionTypes(List<FBSummary> items, int accountId)
         {
             var actionTypeCodes = items.Where(i => i.Actions != null).SelectMany(i => i.Actions.Keys).Distinct();
 
-            SafeContextWrapper.SaveChangedContext<ClientPortalProgContext>(SafeContextWrapper.ActionTypeLocker, db =>
+            using (var db = new ClientPortalProgContext())
             {
-                foreach (var actionTypeCode in actionTypeCodes)
+                SafeContextWrapper.Lock(SafeContextWrapper.ActionTypeLocker, () =>
                 {
-                    if (actionTypeIdLookupByCode.ContainsKey(actionTypeCode))
+                    foreach (var actionTypeCode in actionTypeCodes)
                     {
-                        continue;
-                    }
-
-                    var actionTypesInDb = db.ActionTypes.Where(x => x.Code == actionTypeCode);
-                    if (!actionTypesInDb.Any())
-                    {
-                        var actionType = new ActionType
+                        if (ActionTypeStorage.IsEntityInStorage(actionTypeCode))
                         {
-                            Code = actionTypeCode
-                        };
-                        db.ActionTypes.Add(actionType);
-                        Logger.Info(accountId, "Saved new ActionType: {0}", actionTypeCode);
-                        actionTypeIdLookupByCode[actionTypeCode] = actionType.Id;
+                            continue;
+                        }
+
+                        var actionTypesInDb = db.ActionTypes.Where(x => x.Code == actionTypeCode).ToList();
+                        if (!actionTypesInDb.Any())
+                        {
+                            var actionType = AddActionType(db, actionTypeCode);
+                            Logger.Info(accountId, "Saved new ActionType: {0}", actionType.Code);
+                            ActionTypeStorage.AddEntityIdToStorage(actionType);
+                        }
+                        else
+                        {
+                            var actionType = actionTypesInDb.First();
+                            ActionTypeStorage.AddEntityIdToStorage(actionType);
+                        }
                     }
-                    else
-                    {
-                        var actionType = actionTypesInDb.First();
-                        actionTypeIdLookupByCode[actionTypeCode] = actionType.Id;
-                    }
-                }
-            });
+                });
+            }
+        }
+        
+        private void AddUpdateDependentActionTypes(List<FBSummary> items)
+        {
+            AddUpdateDependentActionTypes(items, accountId);
+        }
+
+        private ActionType AddActionType(ClientPortalProgContext db, string actionTypeCode)
+        {
+            var actionType = new ActionType
+            {
+                Code = actionTypeCode
+            };
+            db.ActionTypes.Add(actionType);
+            db.SaveChanges();
+            return actionType;
         }
 
         //Note: get the actions from the items(FBSummaries); get the adsetId from the adsetSummaries
@@ -126,7 +141,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                         var adsetId = asEnumerator.Current.AdSetId;
                         var fbActions = itemEnumerator.Current.Actions.Values;
 
-                        var actionTypeIds = fbActions.Select(x => actionTypeIdLookupByCode[x.ActionType]).ToArray();
+                        var actionTypeIds = fbActions.Select(x => ActionTypeStorage.GetEntityIdFromStorage(x.ActionType)).ToArray();
                         var existingActions = db.AdSetActions.Where(x => x.Date == date && x.AdSetId == adsetId);
 
                         //Delete actions that no longer have stats for the date/adset
@@ -139,7 +154,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                         //Add/update the rest
                         foreach (var fbAction in fbActions)
                         {
-                            int actionTypeId = actionTypeIdLookupByCode[fbAction.ActionType];
+                            var actionTypeId = ActionTypeStorage.GetEntityIdFromStorage(fbAction.ActionType);
                             var actionsOfType =
                                 existingActions.Where(x => x.ActionTypeId == actionTypeId); // should be one at most
                             if (!actionsOfType.Any())

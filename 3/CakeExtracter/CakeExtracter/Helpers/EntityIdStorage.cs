@@ -32,24 +32,24 @@ namespace CakeExtracter.Helpers
             return key == null ? 0 : ids[key];
         }
 
+        public int GetEntityIdFromStorage(string key)
+        {
+            return !ids.ContainsKey(key) ? 0 : ids[key];
+        }
+
         public bool IsEntityInStorage(T item)
         {
             return item != null && getCompositeKeyFunctions.Any(func => IsEntityInStorage(func(item)));
         }
 
+        public bool IsEntityInStorage(string key)
+        {
+            return key != null && ids.ContainsKey(key);
+        }
+
         private void AddEntityIdToStorage(int id, string key)
         {
             ids.AddOrUpdate(key, id, (updKey, updValue) => id);
-        }
-
-        private int GetEntityIdFromStorage(string key)
-        {
-            return !ids.ContainsKey(key) ? 0 : ids[key];
-        }
-
-        private bool IsEntityInStorage(string key)
-        {
-            return key != null && ids.ContainsKey(key);
         }
     }
 }

@@ -11,16 +11,23 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 {
     public class FacebookCampaignSummaryLoader : Loader<FBSummary>
     {
+        private static readonly EntityIdStorage<ActionType> actionTypeStorage;
         private readonly bool LoadActions;
-        private TDStrategySummaryLoader strategySummaryLoader;
-        private Dictionary<string, int> actionTypeIdLookupByCode = new Dictionary<string, int>();
+        private readonly FacebookAdSetSummaryLoader fbAdSetLoader;
+        private readonly TDStrategySummaryLoader strategySummaryLoader;
+
+        static FacebookCampaignSummaryLoader()
+        {
+            actionTypeStorage = FacebookAdSetSummaryLoader.ActionTypeStorage;
+        }
 
         public FacebookCampaignSummaryLoader(int accountId, bool loadActions = false)
             : base(accountId)
         {
-            this.BatchSize = FacebookUtility.RowsReturnedAtATime; //FB API only returns 25 rows at a time
-            this.strategySummaryLoader = new TDStrategySummaryLoader(accountId);
-            this.LoadActions = loadActions;
+            BatchSize = FacebookUtility.RowsReturnedAtATime; //FB API only returns 25 rows at a time
+            strategySummaryLoader = new TDStrategySummaryLoader(accountId);
+            fbAdSetLoader = new FacebookAdSetSummaryLoader(accountId);
+            LoadActions = loadActions;
         }
 
         protected override int Load(List<FBSummary> items)
@@ -62,7 +69,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
         private void AddUpdateDependentActionTypes(List<FBSummary> items)
         {
-            FacebookAdSetSummaryLoader.AddUpdateDependentActionTypes(items, this.actionTypeIdLookupByCode, this.accountId);
+            fbAdSetLoader.AddUpdateDependentActionTypes(items, accountId);
         }
 
         //Note: get the actions from the items(FBSummaries); get the strategyId from the strategySummaries
@@ -86,7 +93,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                         var strategyId = ssEnumerator.Current.StrategyId;
                         var fbActions = itemEnumerator.Current.Actions.Values;
 
-                        var actionTypeIds = fbActions.Select(x => actionTypeIdLookupByCode[x.ActionType]).ToArray();
+                        var actionTypeIds = fbActions.Select(x => actionTypeStorage.GetEntityIdFromStorage(x.ActionType)).ToArray();
                         var existingActions =
                             db.StrategyActions.Where(x => x.Date == date && x.StrategyId == strategyId);
 
@@ -100,7 +107,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                         //Add/update the rest
                         foreach (var fbAction in fbActions)
                         {
-                            int actionTypeId = actionTypeIdLookupByCode[fbAction.ActionType];
+                            int actionTypeId = actionTypeStorage.GetEntityIdFromStorage(fbAction.ActionType);
                             var actionsOfType =
                                 existingActions.Where(x => x.ActionTypeId == actionTypeId); // should be one at most
                             if (!actionsOfType.Any())
