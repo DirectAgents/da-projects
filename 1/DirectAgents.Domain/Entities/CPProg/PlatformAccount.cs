@@ -91,6 +91,12 @@ namespace DirectAgents.Domain.Entities.CPProg
         public string TDadName { get; set; }
         public string TDadEid { get; set; }
         public string SiteName { get; set; }
+        [NotMapped]
+        public string KeywordName { get; set; }
+        [NotMapped]
+        public string KeywordEid { get; set; }
+        [NotMapped]
+        public string SearchTermName { get; set; }
         public string Month { get; set; }
 
         public override void SetDefaults()
@@ -103,6 +109,9 @@ namespace DirectAgents.Domain.Entities.CPProg
             TDadName = "Creative";
             TDadEid = "";
             SiteName = "Website";
+            KeywordName = "";
+            KeywordEid = "";
+            SearchTermName = "";
             Month = "Month";
         }
 
@@ -307,7 +316,7 @@ namespace DirectAgents.Domain.Entities.CPProg
     public class SearchTerm
     {
         public int Id { get; set; }
-        public string Query { get; set; }
+        public string Name { get; set; }
 
         public int? KeywordId { get; set; }
         public virtual Keyword Keyword { get; set; }

@@ -431,7 +431,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             {
                 var sum = new SearchTermSummary
                 {
-                    Query = stat.query,
+                    SearchTermName = stat.query,
                     KeywordEid = stat.keywordId,
                     KeywordName = stat.keywordText,
                     AdSetEid = stat.adGroupId,

@@ -564,6 +564,10 @@
     <Compile Include="MigrationsTD\201811040835293_Mig_SummaryMetricsForeignKey.Designer.cs">
       <DependentUpon>201811040835293_Mig_SummaryMetricsForeignKey.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsTD\201811201539381_Mig_ExtendKeywordAndSearchTermSummaries.cs" />
+    <Compile Include="MigrationsTD\201811201539381_Mig_ExtendKeywordAndSearchTermSummaries.Designer.cs">
+      <DependentUpon>201811201539381_Mig_ExtendKeywordAndSearchTermSummaries.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.Designer.cs">
@@ -926,6 +930,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201811040835293_Mig_SummaryMetricsForeignKey.resx">
       <DependentUpon>201811040835293_Mig_SummaryMetricsForeignKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201811201539381_Mig_ExtendKeywordAndSearchTermSummaries.resx">
+      <DependentUpon>201811201539381_Mig_ExtendKeywordAndSearchTermSummaries.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

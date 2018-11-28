@@ -6,6 +6,7 @@ using System.Linq;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
+using CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;

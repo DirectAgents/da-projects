@@ -24,7 +24,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         static SearchTermSummaryLoader()
         {
-            SearchTermStorage = new EntityIdStorage<SearchTerm>(x => x.Id, x => $"{x.Query}{x.KeywordId}");
+            SearchTermStorage = new EntityIdStorage<SearchTerm>(x => x.Id, x => $"{x.Name}{x.KeywordId}");
         }
 
         public SearchTermSummaryLoader(int accountId = -1)
@@ -152,7 +152,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public void AddUpdateDependentSearchTerms(List<SearchTermSummary> items)
         {
             var searchTerms = items
-                .GroupBy(i => new { i.SearchTerm.KeywordId, i.SearchTerm.Query })
+                .GroupBy(i => new { i.SearchTerm.KeywordId, i.SearchTerm.Name })
                 .Select(x => x.First().SearchTerm)
                 .ToList();
             AddUpdateDependentSearchTerms(searchTerms);
@@ -310,15 +310,15 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             IQueryable<SearchTerm> termsInDb;
             if (term.KeywordId.HasValue)
             {
-                termsInDb = db.SearchTerms.Where(a => a.AccountId == AccountId && a.KeywordId == term.KeywordId && a.Query == term.Query);
+                termsInDb = db.SearchTerms.Where(a => a.AccountId == AccountId && a.KeywordId == term.KeywordId && a.Name == term.Name);
                 if (!termsInDb.Any())
                 {
-                    termsInDb = db.SearchTerms.Where(x => x.AccountId == accountId && x.KeywordId == null && x.Query == term.Query);
+                    termsInDb = db.SearchTerms.Where(x => x.AccountId == accountId && x.KeywordId == null && x.Name == term.Name);
                 }
             }
             else
             {
-                termsInDb = db.SearchTerms.Where(x => x.AccountId == accountId && x.Query == term.Query);
+                termsInDb = db.SearchTerms.Where(x => x.AccountId == accountId && x.Name == term.Name);
             }
             return termsInDb.ToList();
         }
@@ -329,7 +329,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 AccountId = accountId,
                 KeywordId = termProps.KeywordId,
-                Query = termProps.Query
+                Name = termProps.Name
             };
             db.SearchTerms.Add(term);
             db.SaveChanges();
@@ -344,9 +344,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 {
                     term.KeywordId = termProps.KeywordId;
                 }
-                if (!string.IsNullOrWhiteSpace(termProps.Query))
+                if (!string.IsNullOrWhiteSpace(termProps.Name))
                 {
-                    term.Query = termProps.Query;
+                    term.Name = termProps.Name;
                 }
             }
             return db.SaveChanges();

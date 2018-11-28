@@ -373,8 +373,8 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         {
             var searchTerms = cpProgRepo.SearchTerms(acctId: id);
             var orderedSearchTerms = sort == "keyw"
-                ? searchTerms.OrderBy(x => x.Keyword.Name).ThenBy(x => x.Query)
-                : searchTerms.OrderBy(x => x.Query);
+                ? searchTerms.OrderBy(x => x.Keyword.Name).ThenBy(x => x.Name)
+                : searchTerms.OrderBy(x => x.Name);
             return View(orderedSearchTerms);
         }
 

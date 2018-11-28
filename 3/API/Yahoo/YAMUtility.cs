@@ -304,7 +304,7 @@ namespace Yahoo
             return WaitForReportUrl(createReportResponse.customerReportId);
         }
 
-        public ReportPayload CreateReportRequestPayload(DateTime startDate, DateTime endDate, int? accountId = null, bool byAdvertiser = false, bool byCampaign = false, bool byLine = false, bool byAd = false, bool byCreative = false, bool byPixelParameter = false)
+        public ReportPayload CreateReportRequestPayload(DateTime startDate, DateTime endDate, int? accountId = null, bool byAdvertiser = false, bool byCampaign = false, bool byLine = false, bool byAd = false, bool byCreative = false, bool byPixel = false, bool byPixelParameter = false)
         {
             //This produced an InvalidTimeZoneException so we're just going with the system timezone, relying on it to be Eastern(daylight savings adjusted)
             //var offset = TimeZoneInfo.FindSystemTimeZoneById(@"Eastern Standard Time\Dynamic DST").BaseUtcOffset;
@@ -315,26 +315,8 @@ namespace Yahoo
             if (accountId.HasValue)
                 accountList.Add(accountId.Value);
 
-            var dimensionList = new List<int>();
-            if (byAdvertiser)
-                dimensionList.Add(Dimension.ADVERTISER);
-            if (byCampaign)
-                dimensionList.Add(Dimension.CAMPAIGN);
-            if (byLine)
-                dimensionList.Add(Dimension.LINE);
-            if (byAd)
-                dimensionList.Add(Dimension.AD);
-            if (byCreative)
-                dimensionList.Add(Dimension.CREATIVE);
-            if (byPixelParameter)
-                dimensionList.Add(Dimension.PIXEL_PARAMETER);
-
-            List<int> metricList;
-            if (!byPixelParameter)
-                metricList = new List<int>(new[] { Metric.IMPRESSIONS, Metric.CLICKS, Metric.ADVERTISER_SPENDING, Metric.CLICK_THROUGH_CONVERSIONS, Metric.VIEW_THROUGH_CONVERSIONS, Metric.ROAS_ACTION_VALUE });
-            else
-                metricList = new List<int>(new[] { Metric.CLICK_THROUGH_CONVERSIONS, Metric.VIEW_THROUGH_CONVERSIONS });
-            // used to obtain the *real* conversion values from the pixel parameter
+            var dimensionList = GetDimensions(byAdvertiser, byCampaign, byLine, byAd, byCreative, byPixel, byPixelParameter);
+            var metricList = GetMetrics(byPixelParameter);
 
             var reportOption = new ReportOption
             {
@@ -345,16 +327,54 @@ namespace Yahoo
                 metricTypeIds = metricList.ToArray()
             };
 
+            const string dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'sszzz";
             var adjustedEndDate = endDate.AddDays(1).AddSeconds(-1);
             var payload = new ReportPayload
             {
                 reportOption = reportOption,
                 intervalTypeId = IntervalTypeId.DAY,
                 dateTypeId = DateTypeId.CUSTOM_RANGE,
-                startDate = startDate.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz"),
-                endDate = adjustedEndDate.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz")
+                startDate = startDate.ToString(dateFormat),
+                endDate = adjustedEndDate.ToString(dateFormat)
             };
             return payload;
+        }
+
+        private List<int> GetDimensions(bool byAdvertiser, bool byCampaign, bool byLine, bool byAd, bool byCreative, bool byPixel, bool byPixelParameter)
+        {
+            var dimensionList = new List<int>();
+            AddDimension(dimensionList, byAdvertiser, Dimension.ADVERTISER);
+            AddDimension(dimensionList, byCampaign, Dimension.CAMPAIGN);
+            AddDimension(dimensionList, byLine, Dimension.LINE);
+            AddDimension(dimensionList, byAd, Dimension.AD);
+            AddDimension(dimensionList, byCreative, Dimension.CREATIVE);
+            AddDimension(dimensionList, byPixel, Dimension.PIXEL);
+            AddDimension(dimensionList, byPixelParameter, Dimension.PIXEL_PARAMETER);
+            return dimensionList;
+        }
+
+        private void AddDimension(List<int> dimensionList, bool condition, int dimensionCoded)
+        {
+            if (condition)
+            {
+                dimensionList.Add(dimensionCoded);
+            }
+        }
+
+        private List<int> GetMetrics(bool byPixelParameter)
+        {
+            var metricList = !byPixelParameter
+                ? new[]
+                {
+                    Metric.IMPRESSIONS, Metric.CLICKS, Metric.ADVERTISER_SPENDING, Metric.CLICK_THROUGH_CONVERSIONS,
+                    Metric.VIEW_THROUGH_CONVERSIONS, Metric.ROAS_ACTION_VALUE
+                }
+                : new[]
+                {
+                    // used to obtain the *real* conversion values from the pixel parameter
+                    Metric.CLICK_THROUGH_CONVERSIONS, Metric.VIEW_THROUGH_CONVERSIONS
+                };
+            return metricList.ToList();
         }
 
         private CreateReportResponse RequestReport(ReportPayload payload, bool logResponse = false)
