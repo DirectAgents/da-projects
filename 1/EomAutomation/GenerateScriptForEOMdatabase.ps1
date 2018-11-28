@@ -2,11 +2,24 @@ Param (
     [bool]$CreateDatabase = $true,
     [bool]$CopyData = $true,
     [string]$SqlScriptPath = ".\sql_templates",
+    [string]$ResultPath = ".\bin",
     [string]$AuditScriptPath = "G:\GitHub\da-projects2\1\SchemaChanges\AuditScripts", #Full path required
-    [string]$ResultFile = ".\bin\eom.create_db.result.sql",
+    [string]$ResultFile = "eom.create_db.result.sql",
     [string]$DataSource = "biz\sqlexpress",
     [string]$CommonDbName = "DAMain1"
 )
+
+$CreateDatabaseAnswer = Read-Host 'Do you want to run the part of the script that creates the database? (y/n)'
+$CopyDataAnswer = Read-Host 'Do you want to run the part of the script that copies the data? (y/n)'
+switch ($CreateDatabaseAnswer) {
+  'n' { $CreateDatabase = $false }
+  Default { $CreateDatabase = $true }
+}
+switch ($CopyDataAnswer) {
+  'n' { $CopyData = $false }
+  Default { $CopyData = $true }
+}
+
 
 $MonthShortNames = @(
     "Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -33,11 +46,28 @@ Function GetTimeName() {
 }
 
 Function GetViewAction() {
-    $month = (Get-Date).Month
-    if ($month -eq 1) {
+    if (IsCurrentMonthToBeginYear) {
         return "CREATE"
     }
     return "ALTER"
+}
+
+function IsCurrentMonthToBeginYear() {
+    $month = (Get-Date).Month
+    if ($month -eq 1) {
+        return $true
+    }
+    else {
+        return $false
+    }
+}
+
+Function GetViewName {
+    param (
+        [string] $viewName,
+        [string] $year = (Get-Date -Format "yy")
+      )
+    return $viewName+"Rollup"+$MonthShortNames[0]+$year+"To"+$MonthShortNames[11]+$year
 }
 
 Function GenerateSelectQueryForThisYearDbs($viewName, $month, $year) {
@@ -53,16 +83,24 @@ Function GenerateQueryForThisYearDbs($viewName) {
     $currentYear = (Get-Date).Year
     $queryAll = ""
     $query = ""
-    for ($i = $currentMonth; $i -ge 0; $i--) {
+    for ($month = $currentMonth; $month -ge 1; $month--) {
         $queryAll = "$queryAll$query"
-        $query = GenerateSelectQueryForThisYearDbs -viewName $viewName -month $i -year $currentYear
+        $query = GenerateSelectQueryForThisYearDbs -viewName $viewName -month $month -year $currentYear
     }
+    $queryAll = "$queryAll$query"
     return $queryAll.Remove($queryAll.LastIndexOf("UNION ALL"))
 }
 
-Function GetMainViewName($viewName) {
-    $currYear = Get-Date -Format "yy"
-    return $viewName+"Rollup"+$MonthShortNames[0]+$currYear+"To"+$MonthShortNames[11]+$currYear
+Function GenerateQueryForMultiYear($paramViewName) {
+    $currentYear = Get-Date -Format "yy"
+    $currentYearNum = [int]::Parse($currentYear)
+    for ($year = $currentYearNum; $year -ge 17; $year--) {          #warning: year
+        $viewName = GetViewName -viewName $paramViewName -year $year
+        $queryAll = "$queryAll$query"
+        $query = "SELECT * from [$CommonDbName].[dbo].[$viewName] UNION ALL`r`n"
+    }
+    $queryAll = "$queryAll$query"
+    return $queryAll.Remove($queryAll.LastIndexOf("`r`n"))
 }
 
 $SourceDbName = GetDbName -isPrev $true
@@ -98,7 +136,7 @@ $Placeholders = @{
         Placeholders = @{
             "COMMON_DATABASE_NAME" = $CommonDbName
             "ACTION" = GetViewAction
-            "VIEW_NAME" = GetMainViewName -viewName "CommissionView"
+            "VIEW_NAME" = GetViewName -viewName "CommissionView"
             "SELECT_QUERIES" = GenerateQueryForThisYearDbs -viewName "CommissionView"
         }
     };
@@ -107,7 +145,7 @@ $Placeholders = @{
         Placeholders = @{
             "COMMON_DATABASE_NAME" = $CommonDbName
             "ACTION" = GetViewAction
-            "VIEW_NAME" = GetMainViewName -viewName "AccountView2"
+            "VIEW_NAME" = GetViewName -viewName "AccountView2"
             "SELECT_QUERIES" = GenerateQueryForThisYearDbs -viewName "AccountingView2"
         }
     };
@@ -116,10 +154,24 @@ $Placeholders = @{
         Placeholders = @{
             "COMMON_DATABASE_NAME" = $CommonDbName
             "ACTION" = GetViewAction
-            "VIEW_NAME" = GetMainViewName -viewName "AdvertiserPaymentStatus"
+            "VIEW_NAME" = GetViewName -viewName "AdvertiserPaymentStatus"
             "SELECT_QUERIES" = GenerateQueryForThisYearDbs -viewName "AdvertiserPaymentStatus"
         }
-    }
+    };
+    AccountView2RollupMultiYear = @{
+        FileName = "UpdateViewRollupMultiYear.sql"
+        Placeholders = @{
+            "COMMON_DATABASE_NAME" = $CommonDbName
+            "SELECT_QUERIES" = GenerateQueryForMultiYear -paramViewName "AccountView2"
+        }
+    };
+    biz_AccountingDetailsWithPercentMargin = @{
+        FileName = 'biz_sqlexpress_AccountingDetailsWithPercentMargin.odc'
+        ResultFileName = "biz_sqlexpress $TargetDbName AccountingDetailsWithPercentMargin.odc"
+        Placeholders = @{
+            "NEW_DATABASE_NAME" = $TargetDbName
+        }
+    };
 }
 
 Function ReplacePlaceholders($fileName, $placeholders) {
@@ -134,7 +186,7 @@ Function ReplacePlaceholders($fileName, $placeholders) {
 Function AddPreparedScriptToResultFile($blockName) {
     $model = $Placeholders[$blockName]
     $content = ReplacePlaceholders -fileName $model["FileName"] -placeholders $model["Placeholders"]
-    Add-Content -Path $ResultFile -Value $content
+    Add-Content -Path "$ResultPath\$ResultFile" -Value $content
 }
 Function PrepareSqlScript() {
     if ($CreateDatabase) {
@@ -146,12 +198,23 @@ Function PrepareSqlScript() {
         AddPreparedScriptToResultFile "CommissionView"
         AddPreparedScriptToResultFile "AccountView"
         AddPreparedScriptToResultFile "AdvertiserPaymentStatus"
+        if (IsCurrentMonthToBeginYear) {
+            AddPreparedScriptToResultFile "AccountView2RollupMultiYear"
+        }
     }
 }
 
+function PrepareDataSourceFile() {
+    $model = $Placeholders["biz_AccountingDetailsWithPercentMargin"]
+    $resultFileName = $model["ResultFileName"]
+    $content = ReplacePlaceholders -fileName $model["FileName"] -placeholders $model["Placeholders"]
+    Add-Content -Path "$ResultPath\$resultFileName" -Value $content
+}
+
 Function Run() {
-    New-Item -Path $ResultFile -ItemType File -Force
+    New-Item -Path "$ResultPath\$ResultFile" -ItemType File -Force
     PrepareSqlScript
+    PrepareDataSourceFile
 }
 
 Run
