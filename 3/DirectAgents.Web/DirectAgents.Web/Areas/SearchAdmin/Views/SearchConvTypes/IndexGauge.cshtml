@@ -17,7 +17,7 @@
             <td style="text-align:right">@ct.SearchConvTypeId</td>
             <td>@ct.Name</td>
             <td>@ct.Alias</td>
-            <td style="text-align:center">@ct.MinConvSum.ToString("d", CultureInfo.InvariantCulture) - @ct.MaxConvSum.ToString("d", CultureInfo.InvariantCulture)</td>
+            <td style="text-align:center">@ct.MinConvSum.ToShortDateString() - @ct.MaxConvSum.ToShortDateString()</td>
         </tr>
     }
 </table>
