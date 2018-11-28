@@ -175,7 +175,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         if (!termsInDbList.Any())
                         {
                             var termsInDb = AddSearchTerm(db, terms, AccountId);
-                            Logger.Info(AccountId, "Saved new SearchTerm: {0} ({1}), KeywordId={2}", termsInDb.Query, termsInDb.Id, termsInDb.KeywordId);
+                            Logger.Info(AccountId, "Saved new SearchTerm: {0} ({1}), KeywordId={2}", termsInDb.Name, termsInDb.Id, termsInDb.KeywordId);
                             SearchTermStorage.AddEntityIdToStorage(termsInDb);
                         }
                         else
@@ -183,7 +183,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                             var numUpdates = UpdateSearchTerms(db, termsInDbList, terms);
                             if (numUpdates > 0)
                             {
-                                Logger.Info(AccountId, "Updated SearchTerm: {0}, KeywordId={1}", terms.Query, terms.KeywordId);
+                                Logger.Info(AccountId, "Updated SearchTerm: {0}, KeywordId={1}", terms.Name, terms.KeywordId);
                                 if (numUpdates > 1)
                                 {
                                     Logger.Warn(AccountId, "Multiple entities in db ({0})", numUpdates);
