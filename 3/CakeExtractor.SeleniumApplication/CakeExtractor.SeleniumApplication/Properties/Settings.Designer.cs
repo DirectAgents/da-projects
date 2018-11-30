@@ -85,7 +85,7 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("CAMPAIGN_*.csv")]
+        [global::System.Configuration.DefaultSettingValueAttribute("*.csv")]
         public string FilesNameTemplate {
             get {
                 return ((string)(this["FilesNameTemplate"]));
@@ -128,6 +128,18 @@ namespace CakeExtractor.SeleniumApplication.Properties {
             }
             set {
                 this["ExtractionIntervalsInDays"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Belkin")]
+        public string ProfileText {
+            get {
+                return ((string)(this["ProfileText"]));
+            }
+            set {
+                this["ProfileText"] = value;
             }
         }
     }

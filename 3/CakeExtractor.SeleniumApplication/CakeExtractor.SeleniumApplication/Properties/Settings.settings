@@ -18,7 +18,7 @@
       <Value Profile="(Default)">WebDriverDownloads</Value>
     </Setting>
     <Setting Name="FilesNameTemplate" Type="System.String" Scope="User">
-      <Value Profile="(Default)">CAMPAIGN_*.csv</Value>
+      <Value Profile="(Default)">*.csv</Value>
     </Setting>
     <Setting Name="WaitPageTimeoutInMinuts" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">30</Value>
@@ -28,6 +28,9 @@
     </Setting>
     <Setting Name="ExtractionIntervalsInDays" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="ProfileText" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Belkin</Value>
     </Setting>
   </Settings>
 </SettingsFile>

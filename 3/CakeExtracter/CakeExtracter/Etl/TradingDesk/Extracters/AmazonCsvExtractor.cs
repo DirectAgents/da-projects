@@ -27,19 +27,19 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                     line = textReader.ReadLine();
                     skipCount++;
                 }
-                var campaignList = new List<Dictionary<string, string>>();
+                var itemList = new List<Dictionary<string, string>>();
                 while (line != null)
                 {
                     var columns = line.Split(Delimiter);
-                    var campaignItem = new Dictionary<string, string>();
+                    var item = new Dictionary<string, string>();
                     for (var i = 0; i <= columns.Length - 1; i++)
                     {
-                        campaignItem.Add(headerLine[i], columns[i]);
+                        item.Add(headerLine[i], columns[i]);
                     }
-                    campaignList.Add(campaignItem);
+                    itemList.Add(item);
                     line = textReader.ReadLine();
                 }
-                return campaignList;
+                return itemList;
             }
         }
     }

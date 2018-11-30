@@ -9,7 +9,8 @@ namespace CakeExtractor.SeleniumApplication.Jobs.ExtractAmazonPda
         public async Task Execute(IJobExecutionContext context)
         {
             var command = context.Scheduler.Context.Get("SyncAmazonPdaCommand") as SyncAmazonPdaCommand;
-            await Task.Factory.StartNew(command.ExtractCampaigns);
+            //await Task.Factory.StartNew(command.ExtractCampaignsFromExportCsv);
+            await Task.Factory.StartNew(command.ExtractCampaignsInfo);
         }
     }
 }
