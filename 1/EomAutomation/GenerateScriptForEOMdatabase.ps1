@@ -1,29 +1,33 @@
 Param (
     [bool]$CreateDatabase = $true,
     [bool]$CopyData = $true,
-    [string]$SqlScriptPath = ".\sql_templates",
-    [string]$ResultPath = ".\bin",
-    [string]$AuditScriptPath = "G:\GitHub\da-projects2\1\SchemaChanges\AuditScripts", #Full path required
+    [string]$ResultPath = ".\results",
     [string]$ResultFile = "eom.create_db.result.sql",
-    [string]$DataSource = "biz\sqlexpress",
     [string]$CommonDbName = "DAMain1"
 )
 
 $CreateDatabaseAnswer = Read-Host 'Do you want to run the part of the script that creates the database? (y/n)'
 $CopyDataAnswer = Read-Host 'Do you want to run the part of the script that copies the data? (y/n)'
-switch ($CreateDatabaseAnswer) {
-  'n' { $CreateDatabase = $false }
-  Default { $CreateDatabase = $true }
+
+if ($CreateDatabaseAnswer -eq 'n') {
+  $CreateDatabase = $false
+} else {
+  $CreateDatabase = $true
 }
-switch ($CopyDataAnswer) {
-  'n' { $CopyData = $false }
-  Default { $CopyData = $true }
+if ($CopyDataAnswer -eq 'n') {
+  $CopyData = $false
+} else {
+  $CopyData = $true
 }
 
 
 $MonthShortNames = @(
     "Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"
 )
+
+$AuditScriptPath = "G:\GitHub\da-projects2\1\SchemaChanges\AuditScripts" # full path required
+$TemplatesPath = ".\templates" # directory where source templates are stored
+$StopYear = Get-Date -Year 2017 -Format "yy" # for generation of multi year view
 
 Function GetDbNameByDate($month, $year) {
     return "DADatabase$month$year"
@@ -94,7 +98,8 @@ Function GenerateQueryForThisYearDbs($viewName) {
 Function GenerateQueryForMultiYear($paramViewName) {
     $currentYear = Get-Date -Format "yy"
     $currentYearNum = [int]::Parse($currentYear)
-    for ($year = $currentYearNum; $year -ge 17; $year--) {          #warning: year
+    $stopYearNum = [int]::Parse($StopYear)
+    for ($year = $currentYearNum; $year -ge $stopYearNum; $year--) {
         $viewName = GetViewName -viewName $paramViewName -year $year
         $queryAll = "$queryAll$query"
         $query = "SELECT * from [$CommonDbName].[dbo].[$viewName] UNION ALL`r`n"
@@ -127,7 +132,7 @@ $Placeholders = @{
         Placeholders = @{
             "COMMON_DATABASE_NAME" = $CommonDbName
             "NAME" = GetTimeName
-            "CONNECTION_STRING" = "Data Source=$DataSource;Initial Catalog=$TargetDbName;Integrated Security=True"
+            "CONNECTION_STRING" = "Data Source=biz\sqlexpress;Initial Catalog=$TargetDbName;Integrated Security=True"
             "EFFECTIVE_DATE" = Get-Date -UFormat "%Y-%m-01"
         }
     };
@@ -175,7 +180,7 @@ $Placeholders = @{
 }
 
 Function ReplacePlaceholders($fileName, $placeholders) {
-    $filePath = "$SqlScriptPath\$($fileName)"
+    $filePath = "$TemplatesPath\$($fileName)"
     $content = Get-Content($filePath)
     foreach($placeholderKey in $placeholders.Keys){
         $content = $content.Replace("{%$($placeholderKey)%}", $placeholders[$placeholderKey])
