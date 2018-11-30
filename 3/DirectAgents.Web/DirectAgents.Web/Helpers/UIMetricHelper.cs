@@ -10,20 +10,32 @@ namespace DirectAgents.Web.Helpers
     {
         public static IEnumerable<SummaryMetric> GetSumMetrics(IEnumerable<TDRawStat> stats)
         {
-            var metrics = stats.Where(x => x?.Metrics != null).SelectMany(x => x.Metrics);
+            var metrics = GetStatsAllMetrics(stats);
             return MetricHelper.GetSumMetrics(metrics);
         }
 
         public static Dictionary<string, int> GetMetricTypeDictionary(IEnumerable<TDRawStat> stats)
         {
-            var metrics = stats.SelectMany(x => x.Metrics);
+            var metrics = GetStatsAllMetrics(stats);
             return GetMetricTypeDictionary(metrics);
         }
 
         public static Dictionary<string, int> GetMetricTypeDictionary(IEnumerable<DailySummary> stats)
         {
-            var metrics = stats.SelectMany(x => x.Metrics);
+            var metrics = GetSummariesAllMetrics(stats);
             return GetMetricTypeDictionary(metrics);
+        }
+
+        private static IEnumerable<SummaryMetric> GetStatsAllMetrics(IEnumerable<TDRawStat> stats)
+        {
+            var metrics = stats.Where(x => x?.Metrics != null).SelectMany(x => x.Metrics);
+            return metrics.ToList();
+        }
+
+        private static IEnumerable<SummaryMetric> GetSummariesAllMetrics(IEnumerable<DailySummary> stats)
+        {
+            var metrics = stats.Where(x => x?.Metrics != null).SelectMany(x => x.Metrics);
+            return metrics.ToList();
         }
 
         private static Dictionary<string, int> GetMetricTypeDictionary(IEnumerable<SummaryMetric> metrics)

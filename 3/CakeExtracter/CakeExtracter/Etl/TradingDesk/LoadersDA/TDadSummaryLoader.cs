@@ -129,7 +129,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             using (var db = new ClientPortalProgContext())
             {
-                AddDependentExternalIdTypes(db, items.SelectMany(x => x.ExternalIds));
+                var extIds = items.Where(x => x.ExternalIds != null).SelectMany(x => x.ExternalIds).ToList();
+                AddDependentExternalIdTypes(db, extIds);
                 foreach (var tdAd in items)
                 {
                     if (TDadStorage.IsEntityInStorage(tdAd))

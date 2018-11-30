@@ -128,7 +128,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             SetDateInterval(ref start, ref end);
 
             var stats = cpProgRepo.GetSearchTermStats(start, end, acctId: acctId, keywId: keywId)
-                .OrderBy(s => s.SearchTerm.Query).ThenBy(s => s.SearchTerm.Id);
+                .OrderBy(s => s.SearchTerm.Name).ThenBy(s => s.SearchTerm.Id);
 
             var model = CreateBaseTdStatVM(stats, acctId, start, end);
             model.KeywordId = keywId;

@@ -13,13 +13,12 @@ namespace Amazon.Entities
         public string CurrencyCode { get; set; }
         public string Timezone { get; set; }
         public AccountInfo AccountInfo { get; set; }
-
     }
     public class AccountInfo
     {
         public string MarketplaceStringId { get; set; }
-        public string BrandEntityId { get; set; }
-        public string BrandName { get; set; }
-
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Type { get; set; }
     }
 }

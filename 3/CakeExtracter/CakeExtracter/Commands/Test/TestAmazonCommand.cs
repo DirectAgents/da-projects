@@ -51,8 +51,9 @@ namespace CakeExtracter.Commands.Test
             //list profiles
             foreach (var profile in profiles)
             {
-                System.Console.WriteLine("Profile Name:{0}", profile.AccountInfo.BrandName);
                 System.Console.WriteLine("Profile ID:{0}", profile.ProfileId);
+                System.Console.WriteLine("Account ID:{0}", profile.AccountInfo.Id);
+                System.Console.WriteLine("Account Name:{0}", profile.AccountInfo.Name);
             }
         }
 

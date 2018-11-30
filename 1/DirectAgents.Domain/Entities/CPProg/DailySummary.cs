@@ -189,7 +189,7 @@ namespace DirectAgents.Domain.Entities.CPProg
     }
 
     // DailySummary for a Keyword
-    public class KeywordSummary : DatedStatsSummary
+    public class KeywordSummary : DatedStatsSummaryWithRev
     {
         public int KeywordId { get; set; }
         public virtual Keyword Keyword { get; set; }
@@ -216,7 +216,7 @@ namespace DirectAgents.Domain.Entities.CPProg
     }
 
     // DailySummary for a SearchTerm
-    public class SearchTermSummary : DatedStatsSummary
+    public class SearchTermSummary : DatedStatsSummaryWithRev
     {
         public int SearchTermId { get; set; }
         public virtual SearchTerm SearchTerm { get; set; }
@@ -241,7 +241,7 @@ namespace DirectAgents.Domain.Entities.CPProg
         [NotMapped]
         public string StrategyEid { get; set; }
         [NotMapped]
-        public string Query { get; set; }
+        public string SearchTermName { get; set; }
     }
 
     public class Site
