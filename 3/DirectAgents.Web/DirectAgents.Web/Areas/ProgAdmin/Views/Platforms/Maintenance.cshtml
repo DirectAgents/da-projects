@@ -1,5 +1,4 @@
-﻿@using System.Globalization
-@using DirectAgents.Domain.Entities.CPProg;
+﻿@using DirectAgents.Domain.Entities.CPProg;
 @model Platform
 @{
     bool super = Request.QueryString["super"] == "1";
@@ -23,14 +22,14 @@
     if (super)
     {
         <text>Sync Stats back to:</text>
-        @Html.ActionLink(firstOfMonth.ToString("d", CultureInfo.InvariantCulture), "SyncStats", new { id = Model.Id, start = firstOfMonth.ToString("d", CultureInfo.InvariantCulture) }, new { onclick = onclickJS })
+        @Html.ActionLink(firstOfMonth.ToShortDateString(), "SyncStats", new { id = Model.Id, start = firstOfMonth.ToShortDateString() }, new { onclick = onclickJS })
         <text>&nbsp;</text>
         if (oneWeekAgo != firstOfMonth)
         {
-            @Html.ActionLink(oneWeekAgo.ToString("d", CultureInfo.InvariantCulture), "SyncStats", new { id = Model.Id, start = oneWeekAgo.ToString("d", CultureInfo.InvariantCulture) }, new { onclick = onclickJS })
+            @Html.ActionLink(oneWeekAgo.ToShortDateString(), "SyncStats", new { id = Model.Id, start = oneWeekAgo.ToShortDateString() }, new { onclick = onclickJS })
             <text>&nbsp;</text>
         }
-        @Html.ActionLink(yesterday.ToString("d", CultureInfo.InvariantCulture), "SyncStats", new { id = Model.Id, start = yesterday.ToString("d", CultureInfo.InvariantCulture) }, new { onclick = onclickJS })
+        @Html.ActionLink(yesterday.ToShortDateString(), "SyncStats", new { id = Model.Id, start = yesterday.ToShortDateString() }, new { onclick = onclickJS })
     }
 }
 else if (Model.Code == Platform.Code_DBM)
@@ -67,7 +66,7 @@ External Accounts:
         </tr>
         <tr>
             <td>Go back to:</td>
-            <td>@Html.TextBox("start", firstOfMonth.ToString("d", CultureInfo.InvariantCulture))</td>
+            <td>@Html.TextBox("start", firstOfMonth.ToShortDateString())</td>
         </tr>
         </table>
         <div id="divCustomSyncButton">

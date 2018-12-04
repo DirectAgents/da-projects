@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
@@ -39,7 +38,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                 Items = items.OrderBy(i => i.Date).ThenBy(i => i.Campaign.Name).ThenBy(i => i.Platform.Name).ThenBy(i => i.Id)
             };
             Session["campId"] = campId.ToString();
-            Session["month"] = (month.HasValue ? month.Value.ToString("d", CultureInfo.InvariantCulture) : ""); //TODO: set to startDate?
+            Session["month"] = (month.HasValue ? month.Value.ToShortDateString() : ""); //TODO: set to startDate?
             return View(model);
         }
 

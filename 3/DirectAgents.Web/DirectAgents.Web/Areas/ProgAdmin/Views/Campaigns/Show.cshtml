@@ -1,5 +1,4 @@
-﻿@using System.Globalization
-@model DirectAgents.Domain.Entities.CPProg.Campaign
+﻿@model DirectAgents.Domain.Entities.CPProg.Campaign
 @{
     var today = DateTime.Today;
     var startOfMonth = new DateTime(today.Year, today.Month, 1);
@@ -21,8 +20,8 @@
 @if (Model.Advertiser.StartDate.HasValue || Model.Advertiser.EndDate.HasValue)
 {
     <td>
-        Start: <b>@(Model.Advertiser.StartDate.HasValue ? Model.Advertiser.StartDate.Value.ToString("d", CultureInfo.InvariantCulture) : "")</b><br />
-        End: <b>@(Model.Advertiser.EndDate.HasValue ? Model.Advertiser.EndDate.Value.ToString("d", CultureInfo.InvariantCulture) : "")</b>
+        Start: <b>@(Model.Advertiser.StartDate.HasValue ? Model.Advertiser.StartDate.Value.ToShortDateString() : "")</b><br />
+        End: <b>@(Model.Advertiser.EndDate.HasValue ? Model.Advertiser.EndDate.Value.ToShortDateString() : "")</b>
     </td>
 }
 </tr>
@@ -61,8 +60,8 @@ External Accounts:
 
 <br />
 Extra Items:
-@Html.ActionLink("This Month", "Index", "ExtraItems", new { campId = Model.Id, month = startOfMonth.ToString("d", CultureInfo.InvariantCulture) }, null) |
-@Html.ActionLink("Last Month", "Index", "ExtraItems", new { campId = Model.Id, month = lastMonth.ToString("d", CultureInfo.InvariantCulture) }, null) |
+@Html.ActionLink("This Month", "Index", "ExtraItems", new { campId = Model.Id, month = startOfMonth.ToShortDateString() }, null) |
+@Html.ActionLink("Last Month", "Index", "ExtraItems", new { campId = Model.Id, month = lastMonth.ToShortDateString() }, null) |
 @Html.ActionLink("All", "Index", "ExtraItems", new { campId = Model.Id }, null)
 <br /><br />
 Stats:

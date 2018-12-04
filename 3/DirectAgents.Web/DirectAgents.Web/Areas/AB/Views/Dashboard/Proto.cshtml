@@ -1,5 +1,4 @@
-﻿@using System.Globalization
-@model DirectAgents.Web.Areas.AB.Models.ProtoVM
+﻿@model DirectAgents.Web.Areas.AB.Models.ProtoVM
 
 <h2>Single Client Detail - Prototype</h2>
 
@@ -50,7 +49,7 @@ Payments Received
 @foreach (var payment in Model.ABClient.ProtoPayments.OrderBy(x => x.Date))
 {
     <tr>
-        <td>@payment.Date.ToString("d", CultureInfo.InvariantCulture)</td>
+        <td>@payment.Date.ToShortDateString()</td>
         <td style="text-align:right">@payment.TotalValue()</td>
     </tr>
 }

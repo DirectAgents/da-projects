@@ -1,5 +1,4 @@
 ﻿@model DirectAgents.Web.Areas.ProgAdmin.Models.StatsGaugeVM
-@using System.Globalization
 @using DirectAgents.Domain.Entities.CPProg
 @{
     string by = "Partner";
@@ -156,11 +155,11 @@ else if (super) //CampaignId specified
             </tr>
             <tr>
                 <td>@Html.Label("", "From:")</td>
-                <td><input type="text" id="sync_from" name="from" value="@default_from.ToString("d", CultureInfo.InvariantCulture)" /></td>
+                <td><input type="text" id="sync_from" name="from" value="@default_from.ToShortDateString()" /></td>
             </tr>
             <tr>
                 <td>@Html.Label("", "To:")</td>
-                <td><input type="text" id="sync_to" name="to" value="@default_to.ToString("d", CultureInfo.InvariantCulture)" /></td>
+                <td><input type="text" id="sync_to" name="to" value="@default_to.ToShortDateString()" /></td>
             </tr>
             <tr>
                 <td>@Html.Label("", "Clear Stats:")</td>

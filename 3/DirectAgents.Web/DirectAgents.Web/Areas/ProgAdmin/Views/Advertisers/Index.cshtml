@@ -1,5 +1,4 @@
-﻿@using System.Globalization
-@model IEnumerable<DirectAgents.Domain.Entities.CPProg.Advertiser>
+﻿@model IEnumerable<DirectAgents.Domain.Entities.CPProg.Advertiser>
 
 <h2>Advertisers</h2>
 
@@ -22,8 +21,8 @@
     <td>@adv.Name</td>
     <td>@adv.SalesRepName()</td>
     <td>@adv.AMName()</td>
-    <td>@(adv.StartDate.HasValue ? adv.StartDate.Value.ToString("d", CultureInfo.InvariantCulture) : "")</td>
-    <td>@(adv.EndDate.HasValue ? adv.EndDate.Value.ToString("d", CultureInfo.InvariantCulture) : "")</td>
+    <td>@(adv.StartDate.HasValue ? adv.StartDate.Value.ToShortDateString() : "")</td>
+    <td>@(adv.EndDate.HasValue ? adv.EndDate.Value.ToShortDateString() : "")</td>
     <td style="text-align:center">@Html.ActionLink("show(" + adv.Campaigns.Count + ")", "Index", "Campaigns", new { advid = adv.Id }, null)</td>
 </tr>
 }
