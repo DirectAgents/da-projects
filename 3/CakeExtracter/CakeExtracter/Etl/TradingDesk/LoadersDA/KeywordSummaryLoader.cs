@@ -74,28 +74,33 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public int UpsertDailySummaries(List<KeywordSummary> items)
         {
             var progress = new LoadingProgress();
-            SafeContextWrapper.SaveChangedContext<ClientPortalProgContext>(
-                SafeContextWrapper.KeywordSummaryLocker, db =>
+
+            using (var db = new ClientPortalProgContext())
+            {
+                var itemKeywordIds = items.Select(i => i.KeywordId).Distinct().ToArray();
+                var keywordIdsInDb = db.Keywords.Select(a => a.Id).Where(i => itemKeywordIds.Contains(i)).ToArray();
+
+                foreach (var item in items)
                 {
-                    var itemKeywordIds = items.Select(i => i.KeywordId).Distinct().ToArray();
-                    var keywordIdsInDb = db.Keywords.Select(a => a.Id).Where(i => itemKeywordIds.Contains(i)).ToArray();
-
-                    foreach (var item in items)
-                    {
-                        var target = db.Set<KeywordSummary>().Find(item.Date, item.KeywordId);
-                        if (target == null)
+                    SafeContextWrapper.SaveChangedContext(
+                        SafeContextWrapper.GetKeywordSummariesLocker(item.KeywordId, item.Date), db, () =>
                         {
-                            TryToAddSummary(db, item, keywordIdsInDb, progress);
-                        }
-                        else
-                        {
-                            TryToUpdateSummary(db, item, target, progress);
-                        }
+                            var target = db.Set<KeywordSummary>().Find(item.Date, item.KeywordId);
+                            if (target == null)
+                            {
+                                TryToAddSummary(db, item, keywordIdsInDb, progress);
+                            }
+                            else
+                            {
+                                TryToUpdateSummary(db, item, target, progress);
+                            }
 
-                        progress.ItemCount++;
-                    }
+                            progress.ItemCount++;
+                        }
+                    );
                 }
-            );
+            }
+
             Logger.Info(AccountId, "Saving {0} KeywordSummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
                         progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount, progress.SkippedCount);
             if (progress.DuplicateCount > 0)

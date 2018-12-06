@@ -37,25 +37,28 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public int UpsertDailySummaries(List<DailySummary> items)
         {
             var progress = new LoadingProgress();
-            SafeContextWrapper.SaveChangedContext<ClientPortalProgContext>(
-                SafeContextWrapper.DailySummaryLocker, db =>
+            using (var db = new ClientPortalProgContext())
+            {
+                foreach (var item in items)
                 {
-                    foreach (var item in items)
-                    {
-                        var target = db.Set<DailySummary>().Find(item.Date, item.AccountId);
-                        if (target == null)
+                    SafeContextWrapper.SaveChangedContext(
+                        SafeContextWrapper.GetDailySummariesLocker(accountId, item.Date), db, () =>
                         {
-                            TryToAddSummary(db, item, progress);
-                        }
-                        else
-                        {
-                            TryToUpdateSummary(db, item, target, progress);
-                        }
+                            var target = db.Set<DailySummary>().Find(item.Date, item.AccountId);
+                            if (target == null)
+                            {
+                                TryToAddSummary(db, item, progress);
+                            }
+                            else
+                            {
+                                TryToUpdateSummary(db, item, target, progress);
+                            }
 
-                        progress.ItemCount++;
-                    }
+                            progress.ItemCount++;
+                        }
+                    );
                 }
-            );
+            }
 
             Logger.Info(accountId, "Saving {0} DailySummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted)",
                 progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount);

@@ -140,41 +140,44 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                     var adsetId = asEnumerator.Current.AdSetId;
                     var fbActions = itemEnumerator.Current.Actions.Values;
 
-                    SafeContextWrapper.SaveChangedContext(SafeContextWrapper.GetAdSetActionLocker(adsetId), db, () =>
-                    {
-                        var existingActions = db.AdSetActions.Where(x => x.Date == date && x.AdSetId == adsetId);
-                        RemoveAdSetActions(db, progress, existingActions, fbActions);
-
-                        //Add/update the rest
-                        var addedAdSetActions = new List<AdSetAction>();
-                        foreach (var fbAction in fbActions)
+                    SafeContextWrapper.SaveChangedContext(
+                        SafeContextWrapper.GetAdSetActionLocker(adsetId, date), db, () =>
                         {
-                            var actionTypeId = ActionTypeStorage.GetEntityIdFromStorage(fbAction.ActionType);
-                            var actionsOfType = existingActions.Where(x => x.ActionTypeId == actionTypeId); // should be one at most
-                            if (!actionsOfType.Any())
+                            var existingActions = db.AdSetActions.Where(x => x.Date == date && x.AdSetId == adsetId);
+                            RemoveAdSetActions(db, progress, existingActions, fbActions);
+
+                            //Add/update the rest
+                            var addedAdSetActions = new List<AdSetAction>();
+                            foreach (var fbAction in fbActions)
                             {
-                                var adsetAction = new AdSetAction
+                                var actionTypeId = ActionTypeStorage.GetEntityIdFromStorage(fbAction.ActionType);
+                                var actionsOfType =
+                                    existingActions.Where(x => x.ActionTypeId == actionTypeId); // should be one at most
+                                if (!actionsOfType.Any())
                                 {
-                                    Date = date,
-                                    AdSetId = adsetId,
-                                    ActionTypeId = actionTypeId
-                                };
-                                SetAdSetActionMetrics(adsetAction, fbAction);
-                                addedAdSetActions.Add(adsetAction);
-                                progress.AddedCount++;
-                            }
-                            else
-                            {
-                                foreach (var adsetAction in actionsOfType) // should be just one, but just in case
-                                {
+                                    var adsetAction = new AdSetAction
+                                    {
+                                        Date = date,
+                                        AdSetId = adsetId,
+                                        ActionTypeId = actionTypeId
+                                    };
                                     SetAdSetActionMetrics(adsetAction, fbAction);
-                                    progress.UpdatedCount++;
+                                    addedAdSetActions.Add(adsetAction);
+                                    progress.AddedCount++;
+                                }
+                                else
+                                {
+                                    foreach (var adsetAction in actionsOfType) // should be just one, but just in case
+                                    {
+                                        SetAdSetActionMetrics(adsetAction, fbAction);
+                                        progress.UpdatedCount++;
+                                    }
                                 }
                             }
-                        }
 
-                        db.AdSetActions.AddRange(addedAdSetActions);
-                    });
+                            db.AdSetActions.AddRange(addedAdSetActions);
+                        }
+                    );
                 } // loop through items
             }
 

@@ -72,29 +72,31 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public int UpsertDailySummaries(List<TDadSummary> items)
         {
             var progress = new LoadingProgress();
+            using (var db = new ClientPortalProgContext())
+            {
+                var itemTDadIds = items.Select(i => i.TDadId).Distinct().ToArray();
+                var tdAdIdsInDb = db.TDads.Select(a => a.Id).Where(i => itemTDadIds.Contains(i)).ToArray();
 
-            SafeContextWrapper.SaveChangedContext<ClientPortalProgContext>(
-                SafeContextWrapper.AdSummaryLocker, db =>
+                foreach (var item in items)
                 {
-                    var itemTDadIds = items.Select(i => i.TDadId).Distinct().ToArray();
-                    var tdAdIdsInDb = db.TDads.Select(a => a.Id).Where(i => itemTDadIds.Contains(i)).ToArray();
-
-                    foreach (var item in items)
-                    {
-                        var target = db.Set<TDadSummary>().Find(item.Date, item.TDadId);
-                        if (target == null)
+                    SafeContextWrapper.SaveChangedContext(
+                        SafeContextWrapper.GetAdSummariesLocker(item.TDadId, item.Date), db, () =>
                         {
-                            TryToAddSummary(db, item, tdAdIdsInDb, progress);
-                        }
-                        else // TDadSummary already exists
-                        {
-                            TryToUpdateSummary(db, item, target, progress);
-                        }
+                            var target = db.Set<TDadSummary>().Find(item.Date, item.TDadId);
+                            if (target == null)
+                            {
+                                TryToAddSummary(db, item, tdAdIdsInDb, progress);
+                            }
+                            else // TDadSummary already exists
+                            {
+                                TryToUpdateSummary(db, item, target, progress);
+                            }
 
-                        progress.ItemCount++;
-                    }
+                            progress.ItemCount++;
+                        }
+                    );
                 }
-            );
+            }
 
             Logger.Info(AccountId, "Saving {0} TDadSummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
                 progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount, progress.SkippedCount);

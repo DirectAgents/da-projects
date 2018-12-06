@@ -71,28 +71,31 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             var progress = new LoadingProgress();
 
-            SafeContextWrapper.SaveChangedContext<ClientPortalProgContext>(
-                SafeContextWrapper.AdSetSummaryLocker, db =>
+            using (var db = new ClientPortalProgContext())
+            {
+                var itemAdSetIds = items.Select(i => i.AdSetId).Distinct().ToArray();
+                var adSetIdsInDb = db.AdSets.Select(s => s.Id).Where(i => itemAdSetIds.Contains(i)).ToArray();
+
+                foreach (var item in items)
                 {
-                    var itemAdSetIds = items.Select(i => i.AdSetId).Distinct().ToArray();
-                    var adSetIdsInDb = db.AdSets.Select(s => s.Id).Where(i => itemAdSetIds.Contains(i)).ToArray();
-
-                    foreach (var item in items)
-                    {
-                        var target = db.Set<AdSetSummary>().Find(item.Date, item.AdSetId);
-                        if (target == null)
+                    SafeContextWrapper.SaveChangedContext(
+                        SafeContextWrapper.GetAdSetSummariesLocker(item.AdSetId, item.Date), db, () =>
                         {
-                            TryToAddSummary(db, item, adSetIdsInDb, progress);
-                        }
-                        else // AdSetSummary already exists
-                        {
-                            TryToUpdateSummary(db, item, target, progress);
-                        }
+                            var target = db.Set<AdSetSummary>().Find(item.Date, item.AdSetId);
+                            if (target == null)
+                            {
+                                TryToAddSummary(db, item, adSetIdsInDb, progress);
+                            }
+                            else // AdSetSummary already exists
+                            {
+                                TryToUpdateSummary(db, item, target, progress);
+                            }
 
-                        progress.ItemCount++;
-                    }
+                            progress.ItemCount++;
+                        }
+                    );
                 }
-            );
+            }
 
             Logger.Info(AccountId, "Saving {0} AdSetSummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
                 progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount, progress.SkippedCount);

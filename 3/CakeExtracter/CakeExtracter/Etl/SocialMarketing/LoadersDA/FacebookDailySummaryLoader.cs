@@ -26,65 +26,68 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
         private int UpsertDailySummaries(List<FBSummary> items)
         {
             var progress = new LoadingProgress();
-            SafeContextWrapper.SaveChangedContext<ClientPortalProgContext>(
-                SafeContextWrapper.DailySummaryLocker, db =>
+            using (var db = new ClientPortalProgContext())
+            {
+                foreach (var item in items)
                 {
-                    foreach (var item in items)
-                    {
-                        var source = new DailySummary
+                    SafeContextWrapper.SaveChangedContext(
+                        SafeContextWrapper.GetDailySummariesLocker(accountId, item.Date), db, () =>
                         {
-                            AccountId = accountId,
-                            Date = item.Date,
-                            Impressions = item.Impressions,
-                            Clicks = item.LinkClicks,
-                            AllClicks = item.AllClicks,
-                            PostClickConv = item.Conversions_click,
-                            PostViewConv = item.Conversions_view,
-                            PostClickRev = item.ConVal_click,
-                            PostViewRev = item.ConVal_view,
-                            Cost = item.Spend
-                        };
-                        var target = db.Set<DailySummary>().Find(item.Date, accountId);
-                        if (target == null)
-                        {
-                            if (!item.AllZeros())
+                            var source = new DailySummary
                             {
-                                db.DailySummaries.Add(source);
-                                progress.AddedCount++;
-                            }
-                            else
-                            {
-                                progress.AlreadyDeletedCount++;
-                            }
-                        }
-                        else // DailySummary already exists
-                        {
-                            var entry = db.Entry(target);
-                            if (entry.State == EntityState.Unchanged)
+                                AccountId = accountId,
+                                Date = item.Date,
+                                Impressions = item.Impressions,
+                                Clicks = item.LinkClicks,
+                                AllClicks = item.AllClicks,
+                                PostClickConv = item.Conversions_click,
+                                PostViewConv = item.Conversions_view,
+                                PostClickRev = item.ConVal_click,
+                                PostViewRev = item.ConVal_view,
+                                Cost = item.Spend
+                            };
+                            var target = db.Set<DailySummary>().Find(item.Date, accountId);
+                            if (target == null)
                             {
                                 if (!item.AllZeros())
                                 {
-                                    entry.State = EntityState.Detached;
-                                    AutoMapper.Mapper.Map(source, target);
-                                    entry.State = EntityState.Modified;
-                                    progress.UpdatedCount++;
+                                    db.DailySummaries.Add(source);
+                                    progress.AddedCount++;
                                 }
                                 else
                                 {
-                                    entry.State = EntityState.Deleted;
+                                    progress.AlreadyDeletedCount++;
                                 }
                             }
-                            else
+                            else // DailySummary already exists
                             {
-                                Logger.Warn(accountId, "Encountered duplicate DailySummary for {0:d}", item.Date);
-                                progress.DuplicateCount++;
+                                var entry = db.Entry(target);
+                                if (entry.State == EntityState.Unchanged)
+                                {
+                                    if (!item.AllZeros())
+                                    {
+                                        entry.State = EntityState.Detached;
+                                        AutoMapper.Mapper.Map(source, target);
+                                        entry.State = EntityState.Modified;
+                                        progress.UpdatedCount++;
+                                    }
+                                    else
+                                    {
+                                        entry.State = EntityState.Deleted;
+                                    }
+                                }
+                                else
+                                {
+                                    Logger.Warn(accountId, "Encountered duplicate DailySummary for {0:d}", item.Date);
+                                    progress.DuplicateCount++;
+                                }
                             }
-                        }
 
-                        progress.ItemCount++;
-                    }
+                            progress.ItemCount++;
+                        }
+                    );
                 }
-            );
+            }
 
             Logger.Info(accountId, "Saving {0} DailySummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted)",
                 progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount);

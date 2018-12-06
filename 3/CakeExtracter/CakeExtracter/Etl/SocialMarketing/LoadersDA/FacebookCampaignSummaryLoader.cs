@@ -92,7 +92,8 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                     var strategyId = ssEnumerator.Current.StrategyId;
                     var fbActions = itemEnumerator.Current.Actions.Values;
                     
-                    SafeContextWrapper.SaveChangedContext(SafeContextWrapper.GetStrategyActionLocker(strategyId), db, () =>
+                    SafeContextWrapper.SaveChangedContext(
+                        SafeContextWrapper.GetStrategyActionLocker(strategyId, date), db, () =>
                         {
                             var existingActions = db.StrategyActions.Where(x => x.Date == date && x.StrategyId == strategyId);
                             RemoveStrategyActions(db, progress, existingActions, fbActions);
@@ -102,8 +103,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                             foreach (var fbAction in fbActions)
                             {
                                 int actionTypeId = actionTypeStorage.GetEntityIdFromStorage(fbAction.ActionType);
-                                var actionsOfType =
-                                    existingActions.Where(x => x.ActionTypeId == actionTypeId); // should be one at most
+                                var actionsOfType = existingActions.Where(x => x.ActionTypeId == actionTypeId); // should be one at most
                                 if (!actionsOfType.Any())
                                 {
                                     var stratAction = new StrategyAction
