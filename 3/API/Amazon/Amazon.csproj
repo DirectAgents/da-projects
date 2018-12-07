@@ -67,7 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AmazonAuth.cs" />
-    <Compile Include="AmazonApiHelper.cs" />
+    <Compile Include="Helpers\AmazonApiHelper.cs" />
     <Compile Include="AmazonUtility.cs" />
     <Compile Include="Entities\AmazonAdSet.cs" />
     <Compile Include="Entities\AmazonAdSetSummary.cs" />
@@ -84,6 +84,7 @@
     <Compile Include="Enums\ProductAdIdType.cs" />
     <Compile Include="Enums\AttributedMetricType.cs" />
     <Compile Include="HelperClasses.cs" />
+    <Compile Include="Helpers\FileManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

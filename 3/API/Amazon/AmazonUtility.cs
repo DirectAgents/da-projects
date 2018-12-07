@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using Amazon.Entities;
+﻿using Amazon.Entities;
 using Amazon.Enums;
+using Amazon.Helpers;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Deserializers;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Threading;
 
 namespace Amazon
 {
@@ -21,7 +21,7 @@ namespace Amazon
         private const int WaitTimeSeconds = 5;
         private const int WaitAttemptsNumber = 60; // 5 sec * 60 = 300 sec => 5 min
 
-        private const string TOKEN_DELIMITER = "|AMZNAMZN|";
+        private const string TokenDelimiter = "|AMZNAMZN|";
         private const int NumAlts = 10; // including the default (0)
 
         private static readonly object RequestLock = new object();
@@ -29,40 +29,24 @@ namespace Amazon
         private static readonly object AccessTokenLock = new object();
 
         // From Config File
-        private readonly string _amazonClientId = ConfigurationManager.AppSettings["AmazonClientId"];
-        private readonly string _amazonClientSecret = ConfigurationManager.AppSettings["AmazonClientSecret"];
-        //private readonly string _amazonApiUsername = ConfigurationManager.AppSettings["AmazonAPIUsername"];
-        //private readonly string _amazonApiPassword = ConfigurationManager.AppSettings["AmazonAPIPassword"];
-        private readonly string _amazonApiEndpointUrl = ConfigurationManager.AppSettings["AmazonAPIEndpointUrl"];
-        private readonly string _amazonAuthorizeUrl = ConfigurationManager.AppSettings["AmazonAuthorizeUrl"];
-        private readonly string _amazonTokenUrl = ConfigurationManager.AppSettings["AmazonTokenUrl"];
-        private readonly string _amazonClientUrl = ConfigurationManager.AppSettings["AmazonClientUrl"];
-        //private readonly string _amazonAccessCode = ConfigurationManager.AppSettings["AmazonAccessCode"];
-        private readonly string _amazonRefreshToken = ConfigurationManager.AppSettings["AmazonRefreshToken"];
+        private readonly string amazonClientId = ConfigurationManager.AppSettings["AmazonClientId"];
+        private readonly string amazonClientSecret = ConfigurationManager.AppSettings["AmazonClientSecret"];
+        private readonly string amazonApiEndpointUrl = ConfigurationManager.AppSettings["AmazonAPIEndpointUrl"];
+        private readonly string amazonAuthorizeUrl = ConfigurationManager.AppSettings["AmazonAuthorizeUrl"];
+        private readonly string amazonTokenUrl = ConfigurationManager.AppSettings["AmazonTokenUrl"];
+        private readonly string amazonClientUrl = ConfigurationManager.AppSettings["AmazonClientUrl"];
 
-        //private long CustomerID { get; set; }
-        //private string DeveloperToken { get; set; }
-        //private string UserName { get; set; }
-        //private string Password { get; set; }
-        //private string ClientId { get; set; }
-        //private string ClientSecret { get; set; }
+        private static readonly string[] AccessToken = new string[NumAlts];
+        private static readonly string[] RefreshToken = new string[NumAlts];
+        private readonly string[] authCode = new string[NumAlts];
+        private readonly string[] altAccountIDs = new string[NumAlts];
 
-        private string[] AuthCode = new string[NumAlts];
-        private static string[] AccessToken = new string[NumAlts];
-        private static string[] RefreshToken = new string[NumAlts];
-        private string[] AltAccountIDs = new string[NumAlts];
         public int WhichAlt { get; set; } // default: 0
 
         private string ApiEndpointUrl { get; set; }
         private string AuthorizeUrl { get; set; }
         private string TokenUrl { get; set; }
         private string ClientUrl { get; set; }
-        //private string ProfileId { get; set; }
-        //public static string AccessToken { get; set; }
-        //public static string RefreshToken { get; set; }
-        //public static string ApplicationAccessCode { get; set; }
-
-        //private AmazonAuth AmazonAuth = null;
 
         #region Logging
         private Action<string> _LogInfo;
@@ -88,10 +72,7 @@ namespace Amazon
         #region Tokens
         public static string[] TokenSets // each string in the array is a combination of Access + Refresh Token
         {
-            get
-            {
-                return CreateTokenSets().ToArray();
-            }
+            get => CreateTokenSets().ToArray();
             set
             {
                 lock (AccessTokenLock)
@@ -105,7 +86,7 @@ namespace Amazon
         {
             for (var i = 0; i < NumAlts; i++)
             {
-                yield return AccessToken[i] + TOKEN_DELIMITER + RefreshToken[i];
+                yield return AccessToken[i] + TokenDelimiter + RefreshToken[i];
             }
         }
 
@@ -113,7 +94,7 @@ namespace Amazon
         {
             for (var i = 0; i < tokens.Length; i++)
             {
-                var tokenSet = tokens[i].Split(new[] { TOKEN_DELIMITER }, StringSplitOptions.None);
+                var tokenSet = tokens[i].Split(new[] { TokenDelimiter }, StringSplitOptions.None);
                 AccessToken[i] = tokenSet[0];
                 if (tokenSet.Length > 1)
                 {
@@ -127,8 +108,8 @@ namespace Amazon
         {
             var restClient = new RestClient
             {
-                BaseUrl = new Uri(_amazonTokenUrl),
-                Authenticator = new HttpBasicAuthenticator(_amazonClientId, _amazonClientSecret)
+                BaseUrl = new Uri(amazonTokenUrl),
+                Authenticator = new HttpBasicAuthenticator(amazonClientId, amazonClientSecret)
             };
             restClient.AddHandler("application/x-www-form-urlencoded", new JsonDeserializer());
 
@@ -137,7 +118,7 @@ namespace Amazon
             if (String.IsNullOrWhiteSpace(RefreshToken[WhichAlt]))
             {
                 request.AddParameter("grant_type", "authorization_code");
-                request.AddParameter("code", AuthCode[WhichAlt]);
+                request.AddParameter("code", authCode[WhichAlt]);
             }
             else
             {
@@ -148,16 +129,22 @@ namespace Amazon
             var response = restClient.ExecuteAsPost<GetTokenResponse>(request, "POST");
 
             if (response.Data?.access_token == null)
+            {
                 LogError("Failed to get access token");
+            }
 
             if (response.Data != null && response.Data.refresh_token == null)
-                LogError("Failed to get refresh token");
-
-            if (response.Data != null)
             {
-                AccessToken[WhichAlt] = response.Data.access_token;
-                RefreshToken[WhichAlt] = response.Data.refresh_token; // update this in case it changed
+                LogError("Failed to get refresh token");
             }
+
+            if (response.Data == null)
+            {
+                return;
+            }
+
+            AccessToken[WhichAlt] = response.Data.access_token;
+            RefreshToken[WhichAlt] = response.Data.refresh_token; // update this in case it changed
         }
         #endregion
 
@@ -172,31 +159,25 @@ namespace Amazon
         public AmazonUtility(Action<string> logInfo, Action<string> logError)
             : this()
         {
-            _LogInfo = logInfo;
-            _LogError = logError;
+            this.logInfo = logInfo;
+            this.logError = logError;
         }
 
         private void ResetCredentials()
         {
-            //UserName = _amazonApiUsername;
-            //Password = _amazonApiPassword;
-            //ClientId = _amazonApiClientId;
-            //ClientSecret = _amazonClientSecret;
-            ApiEndpointUrl = _amazonApiEndpointUrl;
-            AuthorizeUrl = _amazonAuthorizeUrl;
-            TokenUrl = _amazonTokenUrl;
-            ClientUrl = _amazonClientUrl;
-            //ApplicationAccessCode = _amazonAccessCode;
-            //RefreshToken = _amazonRefreshToken;
+            ApiEndpointUrl = amazonApiEndpointUrl;
+            AuthorizeUrl = amazonAuthorizeUrl;
+            TokenUrl = amazonTokenUrl;
+            ClientUrl = amazonClientUrl;
         }
 
         private void Setup()
         {
-            AuthCode[0] = ConfigurationManager.AppSettings["AmazonAuthCode"];
+            authCode[0] = ConfigurationManager.AppSettings["AmazonAuthCode"];
             for (var i = 1; i < NumAlts; i++)
             {
-                AltAccountIDs[i] = PlaceLeadingAndTrailingCommas(ConfigurationManager.AppSettings["Amazon_Alt" + i]);
-                AuthCode[i] = ConfigurationManager.AppSettings["AmazonAuthCode_Alt" + i];
+                altAccountIDs[i] = PlaceLeadingAndTrailingCommas(ConfigurationManager.AppSettings["Amazon_Alt" + i]);
+                authCode[i] = ConfigurationManager.AppSettings["AmazonAuthCode_Alt" + i];
             }
         }
 
@@ -217,7 +198,7 @@ namespace Amazon
             WhichAlt = 0; //default
             for (var i = 1; i < NumAlts; i++)
             {
-                if (AltAccountIDs[i] != null && AltAccountIDs[i].Contains(',' + accountId + ','))
+                if (altAccountIDs[i] != null && altAccountIDs[i].Contains(',' + accountId + ','))
                 {
                     WhichAlt = i;
                     break;
@@ -271,7 +252,7 @@ namespace Amazon
         /// Only for Sponsored Product
         public List<AmazonSearchTermDailySummary> ReportSearchTerms(DateTime date, string profileId, bool includeCampaignName)
         {
-            var campaignType = CampaignType.SponsoredProducts;
+            const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportParams(EntitesType.SearchTerm, campaignType, date, includeCampaignName);
             return GetReportInfo<AmazonSearchTermDailySummary>(EntitesType.Keywords, campaignType, param, profileId);
         }
@@ -443,26 +424,10 @@ namespace Amazon
             try
             {
                 var responseStream = GetResponseStream(url, profileId);
-                var exePath = AppDomain.CurrentDomain.BaseDirectory;
-                var filePath = Path.Combine(exePath, "download.gzip");
                 lock (FileLock)
                 {
-                    using (Stream s = File.Create(filePath))
-                    {
-                        responseStream.CopyTo(s);
-                    }
-                    var fileToDecompress = new FileInfo(filePath);
-                    Decompress(fileToDecompress);
-                }
-
-                var jsonFile = Path.Combine(exePath, "download.json");
-                lock (FileLock)
-                {
-                    using (var r = new StreamReader(jsonFile))
-                    {
-                        var json = r.ReadToEnd();
-                        return json;
-                    }
+                    var json = FileManager.ReadJsonFromDecompressedStream(responseStream);
+                    return json;
                 }
             }
             catch (Exception e)
@@ -481,25 +446,12 @@ namespace Amazon
             return response.GetResponseStream();
         }
 
-        private void Decompress(FileInfo fileToDecompress)
-        {
-            var currentFileName = fileToDecompress.FullName;
-            var newFileName = currentFileName.Remove(currentFileName.Length - fileToDecompress.Extension.Length);
-            using (FileStream originalFileStream = fileToDecompress.OpenRead(), decompressedFileStream = File.Create(newFileName + ".json"))
-            {
-                using (var decompressionStream = new GZipStream(originalFileStream, CompressionMode.Decompress))
-                {
-                    decompressionStream.CopyTo(decompressedFileStream);
-                }
-            }
-        }
-
-        private IRestResponse<T> ProcessRequest<T>(RestRequest restRequest, bool postNotGet = false)
+        private IRestResponse<T> ProcessRequest<T>(IRestRequest restRequest, bool postNotGet = false)
             where T : new()
         {
             lock (RequestLock)
             {
-                var restClient = new RestClient(_amazonApiEndpointUrl);
+                var restClient = new RestClient(amazonApiEndpointUrl);
 
                 if (String.IsNullOrEmpty(AccessToken[WhichAlt]))
                 {
@@ -507,10 +459,10 @@ namespace Amazon
                 }
                 AddAuthorizationHeader(restRequest);
                 restRequest.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
-                restRequest.AddHeader("Amazon-Advertising-API-ClientId", _amazonClientId);
+                restRequest.AddHeader("Amazon-Advertising-API-ClientId", amazonClientId);
 
-                bool done = false;
-                int tries = 0;
+                var done = false;
+                var tries = 0;
                 IRestResponse<T> response = null;
                 while (!done)
                 {
@@ -533,17 +485,21 @@ namespace Amazon
                         Thread.Sleep(timeSpan);
                     }
                     else
+                    {
                         done = true; //TODO: distinguish between success and failure of ProcessRequest
+                    }
                 }
 
                 if (!String.IsNullOrWhiteSpace(response.ErrorMessage))
+                {
                     LogError(response.ErrorMessage);
+                }
 
                 return response;
             }
         }
 
-        private void AddAuthorizationHeader(RestRequest request)
+        private void AddAuthorizationHeader(IRestRequest request)
         {
             const string headerName = "Authorization";
             var headerValue = "bearer " + AccessToken[WhichAlt];
