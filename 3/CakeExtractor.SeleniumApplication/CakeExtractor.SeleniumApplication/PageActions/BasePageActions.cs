@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using CakeExtractor.SeleniumApplication.Helpers;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
@@ -87,12 +88,12 @@ namespace CakeExtractor.SeleniumApplication.PageActions
             Thread.Sleep(timeoutThread);
         }
 
-        public bool IsElementEnabled(By element)
+        public bool IsElementDisplayed(By element)
         {
-            return Driver.FindElement(element).Enabled;
+            return Driver.FindElement(element).Displayed;
         }
 
-        public bool IsElementDisplayed(By element)
+        public bool IsElementEnabledAndDisplayed(By element)
         {
             return Driver.FindElement(element).Displayed && Driver.FindElement(element).Enabled;
         }
@@ -154,7 +155,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Warning: {e.Message}");
+                FileManager.TmpConsoleLog($"Warning: {e.Message}");
                 return false;
             }
         }

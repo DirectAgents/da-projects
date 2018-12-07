@@ -19,25 +19,26 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
 
         public void NavigateToUrl(string url, By waitingElement)
         {
-            Console.WriteLine($"Go to URL [{url}]...");
+            FileManager.TmpConsoleLog($"Go to URL [{url}]...");
             NavigateToUrl(url, waitingElement, timeout);
-            Console.WriteLine("Ok");
+            FileManager.TmpConsoleLog("Ok");
         }
 
         public void LoginProcess(string email, string password)
         {
             try
             {
-                Console.WriteLine($"Login with e-mail [{email}]...");
+                FileManager.TmpConsoleLog($"Login with e-mail [{email}]...");
                 ClickElement(AmazonPdaPageObjects.LoginEmailInput);
                 SendKeys(AmazonPdaPageObjects.LoginEmailInput, email);
                 ClickElement(AmazonPdaPageObjects.LoginPassInput);
                 SendKeys(AmazonPdaPageObjects.LoginPassInput, password);
+                ClickElement(AmazonPdaPageObjects.RememberMeCheckBox);
                 ClickElement(AmazonPdaPageObjects.LoginButton);                
                 WaitElement(AmazonPdaPageObjects.CodeInput, timeout);
-                Console.WriteLine("Waiting the code...");
+                FileManager.TmpConsoleLog("Waiting the code...");
                 WaitElement(AmazonPdaPageObjects.AccountButton, timeout);
-                Console.WriteLine("Ok");
+                FileManager.TmpConsoleLog("Ok");
             }
             catch (Exception e)
             {
@@ -49,7 +50,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         {
             try
             {
-                Console.WriteLine("Setting the filter...");
+                FileManager.TmpConsoleLog("Setting the filter...");
                 ClickElement(AmazonPdaPageObjects.FilterByButton);
                 WaitElement(AmazonPdaPageObjects.FilterTypeButton, timeout);
                 ClickElement(AmazonPdaPageObjects.FilterTypeButton);
@@ -58,8 +59,9 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
                 WaitElement(AmazonPdaPageObjects.FilterPdaValues, timeout);
                 ClickElement(AmazonPdaPageObjects.FilterPdaValues);
                 ClickElement(AmazonPdaPageObjects.SaveSearchAndFilterButton);
-                Wait(timeoutThread);
-                Console.WriteLine("Ok");
+                //Wait(timeoutThread);
+                WaitElement(AmazonPdaPageObjects.CampaignsContainer, timeout);
+                FileManager.TmpConsoleLog("Ok");
             }
             catch (Exception e)
             {
@@ -95,7 +97,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             if (linkElement != null)
             {
                 url = linkElement.GetAttribute("href");
-                Console.WriteLine($"Campaign URL found [{url}]");
+                FileManager.TmpConsoleLog($"Campaign URL found [{url}]");
             }            
             return url;
         }
@@ -104,6 +106,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         {
             try
             {
+                WaitElement(tabElement, timeout);
                 ClickElement(tabElement);
                 WaitElement(tabContent, timeout);
             }
@@ -117,7 +120,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         {
             try
             {
-                Console.WriteLine("Retrieving campaign settings...");
+                FileManager.TmpConsoleLog("Retrieving campaign settings...");
                 Wait(timeoutThread);
                 var tableRows = GetTableRows(AmazonPdaPageObjects.CampaignSettingsTable);
                 foreach (var row in tableRows)
@@ -150,10 +153,10 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine($"Warning: {e.Message}");
+                        FileManager.TmpConsoleLog($"Warning: {e.Message}");
                     }
                 }
-                Console.WriteLine("Ok");
+                FileManager.TmpConsoleLog("Ok");
             }
             catch (Exception e)
             {
@@ -165,26 +168,31 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         {
             try
             {
-                Console.WriteLine("Retrieving campaign report...");
+                FileManager.TmpConsoleLog("Retrieving campaign report...");
+
                 Wait(timeoutThread);
+                //ClickElement(AmazonPdaPageObjects.StartDate);
+                //SendKeys(AmazonPdaPageObjects.StartDate, "12/07/2018");
+
                 ClickElement(AmazonPdaPageObjects.DownloadReportButton);
                 Wait(timeoutThread);
-                if (IsElementDisplayed(AmazonPdaPageObjects.AfterDownloadReportNoData))
-                { 
-                    Console.WriteLine("Warning: the report is not attached because the answer is 'No data'");
-                }
-                //if (!IsElementDisplayed(AmazonPdaPageObjects.AfterDownloadReportSuccess)) return;
+                //FileManager.CheckDirectoryLength(downloadPath);
 
+                if (IsElementEnabledAndDisplayed(AmazonPdaPageObjects.AfterDownloadReportNoData))
+                { 
+                    FileManager.TmpConsoleLog("Warning: the report is not attached because the answer is 'No data'");
+                }
+                
                 var files = FileManager.GetFilesFromPath(downloadPath, templateFileName, campaign.Name);
                 foreach (var file in files)
                 {
                     campaign.ReportPath = file;
-                    Console.WriteLine("Ok. Report is attached");
+                    FileManager.TmpConsoleLog("Ok. Report is attached");
                     break;
                 }
                 if (string.IsNullOrEmpty(campaign.ReportPath))
                 {
-                    Console.WriteLine("Warning: Report is not attached");
+                    FileManager.TmpConsoleLog("Warning: Report is not attached");
                 }
             }
             catch (Exception e)
@@ -195,10 +203,10 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
 
         public void NavigateNextCampaignPage()
         {
-            Console.WriteLine("Go to the next page...");
+            FileManager.TmpConsoleLog("Go to the next page...");
             ClickElement(AmazonPdaPageObjects.NavigateNextPageButton);
-            Wait(timeoutThread);
-            Console.WriteLine("Ok");
+            Wait(timeoutThread);            
+            FileManager.TmpConsoleLog("Ok");
         }
 
         public string GetProfileUrl(string profileName)
@@ -206,7 +214,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             string profileUrl = null;
             try
             {
-                Console.WriteLine($"Searching the URL of profile [{profileName}]...");
+                FileManager.TmpConsoleLog($"Searching the URL of profile [{profileName}]...");
                 ClickElement(AmazonPdaPageObjects.CurrentProfileButton);
                 WaitElement(AmazonPdaPageObjects.ProfilesMenu, timeout);
 
@@ -217,7 +225,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
                     var menuItem = GetChildElement(menuContainer, AmazonPdaPageObjects.ProfilesMenuItem);
                     if (menuItem.Text != profileName) continue;                    
                     profileUrl = menuItem.GetAttribute("href");
-                    Console.WriteLine($"Profile URL found [{profileUrl}]");
+                    FileManager.TmpConsoleLog($"Profile URL found [{profileUrl}]");
                     break;
                 }
                 return profileUrl;

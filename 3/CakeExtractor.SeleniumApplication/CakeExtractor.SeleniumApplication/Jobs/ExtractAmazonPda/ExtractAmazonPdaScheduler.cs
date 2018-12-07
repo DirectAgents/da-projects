@@ -26,7 +26,8 @@ namespace CakeExtractor.SeleniumApplication.Jobs.ExtractAmazonPda
                 .WithIdentity("Extract PDA Campaign stats", "Amazon")
                 .StartAt(startTime)
                 .WithSimpleSchedule(x => x
-                    .WithInterval(interval)
+                    .WithInterval(interval) 
+                    //.WithInterval(new TimeSpan(0,0,1,0))
                     .RepeatForever())
                 .Build();
             return trigger;

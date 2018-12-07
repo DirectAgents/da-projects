@@ -29,6 +29,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
         private string reportNameTemplate;
         private int waitPageTimeoutInMinuts;
         private string profileText;
+        private int _countExecute;
 
         public SyncAmazonPdaCommand()
         {
@@ -40,14 +41,16 @@ namespace CakeExtractor.SeleniumApplication.Commands
             try
             {
                 Initialize();
-                OpenPage();
+
+                LoginWithCookies();
+                
                 ExtractAmazonPdaScheduler.Start(this); 
                 
                 AlwaysSleep();
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error: {e.Message}{Environment.NewLine}{e.StackTrace}");
+                FileManager.TmpConsoleLog($"Error: {e.Message}{Environment.NewLine}{e.StackTrace}");
             }            
             return 0;
         }
@@ -63,7 +66,8 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
         public void ExtractCampaignsInfo()
         {
-            var extracter = new AmazonPDAExtractor(pageActions, downloadDir, reportNameTemplate);
+            _countExecute++;
+            var extracter = new AmazonPDAExtractor(pageActions, downloadDir, reportNameTemplate, campaignsUrl, profileText, _countExecute);
 
             var loader = new AmazonCampaignSummaryLoader(-1); //accountId ??
             var extracterThread = extracter.Start();
@@ -76,13 +80,13 @@ namespace CakeExtractor.SeleniumApplication.Commands
         {            
             try
             {
-                Console.WriteLine("Start initialize...");
+                FileManager.TmpConsoleLog($"[{DateTime.Now}] Start initialize...");
                 InitializeSettings();
                 try
                 {
-                    Console.WriteLine("Create driver...");
+                    FileManager.TmpConsoleLog("Create driver...");
                     driver = new ChromeWebDriver(downloadDir/*, waitPageTimeoutInMinuts*/);
-                    Console.WriteLine("Ok");
+                    FileManager.TmpConsoleLog("Ok");
                 }
                 catch (Exception e)
                 {
@@ -91,7 +95,9 @@ namespace CakeExtractor.SeleniumApplication.Commands
                 pageActions = new AmazonPdaPageActions(driver, waitPageTimeoutInMinuts);
                 FileManager.CreateDirectoryIfNotExist(downloadDir);
                 FileManager.CreateDirectoryIfNotExist("Cookies");
-                Console.WriteLine("Ok");
+                _countExecute = 0;
+
+                FileManager.TmpConsoleLog("Ok");
             }
             catch (Exception e)
             {
@@ -103,7 +109,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
         {
             try
             {
-                Console.WriteLine("Start initialize settings...");
+                FileManager.TmpConsoleLog("Start initialize settings...");
                 signInUrl = Properties.Settings.Default.SignInPageUrl;
                 campaignsUrl = Properties.Settings.Default.CampaignsPageUrl;
                 email = Properties.Settings.Default.EMail;
@@ -113,7 +119,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
                 cookiesDir = FileManager.GetAssemblyRelativePath("Cookies");
                 waitPageTimeoutInMinuts = Properties.Settings.Default.WaitPageTimeoutInMinuts;                
                 profileText = Properties.Settings.Default.ProfileText;
-                Console.WriteLine("Ok");
+                FileManager.TmpConsoleLog("Ok");
             }
             catch (Exception e)
             {
@@ -121,7 +127,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
             }
         }
 
-        private void OpenPage()
+        private void LoginWithCookies()
         {
             try
             {
@@ -142,21 +148,13 @@ namespace CakeExtractor.SeleniumApplication.Commands
                         pageActions.SetCookie(cookie);
                     }
                 }
-
-                pageActions.NavigateToUrl(campaignsUrl, AmazonPdaPageObjects.FilterByButton);
-                var profileUrl = pageActions.GetProfileUrl(profileText);
-                if (!string.IsNullOrEmpty(profileUrl))
-                {
-                    pageActions.NavigateToUrl(profileUrl, AmazonPdaPageObjects.FilterByButton);
-                }
-                pageActions.SetFiltersOnCampaigns();
             }
             catch (Exception e)
             {
-                throw new Exception($"Could not navigate to the page with campaigns information: {e.Message}", e);
-            }
+                throw new Exception($"Could not to login with cookies: {e.Message}", e);
+            }            
         }
-
+        
         private void AlwaysSleep()
         {
             while (true)

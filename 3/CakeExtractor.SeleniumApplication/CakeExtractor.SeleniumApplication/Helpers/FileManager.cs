@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using OpenQA.Selenium;
 
 namespace CakeExtractor.SeleniumApplication.Helpers
@@ -35,7 +36,7 @@ namespace CakeExtractor.SeleniumApplication.Helpers
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
-                    Console.WriteLine($"Create the directory [{path}]");
+                    FileManager.TmpConsoleLog($"Create the directory [{path}]");
                 }
             }
             catch (Exception e)
@@ -58,7 +59,7 @@ namespace CakeExtractor.SeleniumApplication.Helpers
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine($"Error: Could not delete the file [{file.Name}]: {e.Message}");
+                        FileManager.TmpConsoleLog($"Error: Could not delete the file [{file.Name}]: {e.Message}");
                     }
                 }
             }
@@ -136,8 +137,25 @@ namespace CakeExtractor.SeleniumApplication.Helpers
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Warning: {e.Message}");
+                FileManager.TmpConsoleLog($"Warning: {e.Message}");
                 return null;
+            }
+        }
+
+        public static void TmpConsoleLog(string text)
+        {
+            Console.WriteLine($"[{DateTime.Now}]: {text}");
+        }
+
+        public static void CheckDirectoryLength(string path)
+        {
+            var length = new FileInfo(path).Length;
+            for (var i = 0; i < 30; i++)
+            {
+                Thread.Sleep(1000);
+                var newLength = new FileInfo(path).Length;
+                if (newLength == length && length != 0) { break; }
+                length = newLength;
             }
         }
     }

@@ -16,11 +16,15 @@ namespace CakeExtractor.SeleniumApplication
         
         static void Main(string[] args)
         {
+            InitializeLogging();
+            ConsoleCommandDispatcher.DispatchCommand(Commands, args, Console.Out);
+        }
+
+        private static void InitializeLogging()
+        {
             var configurationSource = ConfigurationSourceFactory.Create();
             var logWriterFactory = new LogWriterFactory(configurationSource);
             Logger.SetLogWriter(logWriterFactory.Create());
-
-            ConsoleCommandDispatcher.DispatchCommand(Commands, args, Console.Out);
         }
     }
 }
