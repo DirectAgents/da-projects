@@ -304,7 +304,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 AccountId = accountId,
                 ExternalId = strategyProps.ExternalId,
                 Name = strategyProps.Name,
-                TypeId = strategyProps.TypeId
+                TypeId = strategyProps.TypeId,
+                CampaignType = strategyProps.CampaignType
             };
             db.Strategies.Add(strategy);
             db.SaveChanges();
@@ -327,6 +328,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 {
                     strategy.TypeId = strategyProps.TypeId;
                 }
+                strategy.CampaignType = strategyProps.CampaignType;
             }
             return db.SaveChanges();
         }

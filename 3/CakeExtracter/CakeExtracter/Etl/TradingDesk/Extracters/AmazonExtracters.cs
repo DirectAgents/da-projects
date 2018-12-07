@@ -36,16 +36,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             this.campaignFilterOut = campaignFilterOut;
         }
 
-        protected IEnumerable<TStat> FilterByCampaigns<TStat>(IEnumerable<TStat> reportEntities, Func<TStat, string> getFilterProp)
+        protected List<TStat> FilterByCampaigns<TStat>(IEnumerable<TStat> reportEntities, Func<TStat, string> getFilterProp)
         {
-            if (!String.IsNullOrEmpty(campaignFilter))
+            if (!string.IsNullOrEmpty(campaignFilter))
             {
                 reportEntities = reportEntities.Where(x => getFilterProp(x).Contains(campaignFilter));
             }
-            if (!String.IsNullOrEmpty(campaignFilterOut))
+            if (!string.IsNullOrEmpty(campaignFilterOut))
             {
                 reportEntities = reportEntities.Where(x => !getFilterProp(x).Contains(campaignFilterOut));
             }
+
             return reportEntities.ToList();
         }
 
@@ -186,38 +187,44 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         //TODO? Request the SP and HSA reports in parallel... ?Okay for two threads to call Add at the same time?
         //TODO? Do multiple dates in parallel
 
-        private IEnumerable<AmazonCampaign> LoadCampaignsFromAmazonApi()
+        private List<AmazonCampaign> LoadCampaignsFromAmazonApi()
         {
             var spCampaigns = _amazonUtility.GetCampaigns(CampaignType.SponsoredProducts, clientId);
             var sbCampaigns = _amazonUtility.GetCampaigns(CampaignType.SponsoredBrands, clientId);
             var campaigns = spCampaigns.Concat(sbCampaigns);
-            var filteredCampaigns = FilterByCampaigns(campaigns, x => x.name);
-            return filteredCampaigns.ToList();
+            var filteredCampaigns = FilterByCampaigns(campaigns, x => x.Name);
+
+            return filteredCampaigns;
         }
 
-        public IEnumerable<AmazonDailySummary> ExtractSummaries(DateTime date)
+        private IEnumerable<AmazonDailySummary> ExtractSummaries(DateTime date)
         {
             var spSums = _amazonUtility.ReportCampaigns(CampaignType.SponsoredProducts, date, clientId, false);
             var sbSums = _amazonUtility.ReportCampaigns(CampaignType.SponsoredBrands, date, clientId, false);
             var sums = spSums.Concat(sbSums);
+
             return sums.ToList();
         }
 
-        private IEnumerable<StrategySummary> TransformSummaries(IEnumerable<AmazonDailySummary> dailyStats, IEnumerable<AmazonCampaign> campaigns, DateTime date)
+        private IEnumerable<StrategySummary> TransformSummaries(IEnumerable<AmazonDailySummary> dailyStats, List<AmazonCampaign> campaigns, DateTime date)
         {
-            var campaignIds = campaigns.Select(x => x.campaignId);
+            var campaignIds = campaigns.Select(x => x.CampaignId);
             dailyStats = dailyStats.Where(x => campaignIds.Contains(x.campaignId) && !x.AllZeros());
             var groupedStats = dailyStats.GroupBy(x => x.campaignId);
             foreach (var stat in groupedStats)
             {
-                var campaign = campaigns.First(x => x.campaignId == stat.Key);
+                var campaign = campaigns.First(x => x.CampaignId == stat.Key);
                 var sum = new StrategySummary
                 {
-                    StrategyEid = campaign.campaignId,
-                    StrategyName = campaign.name,
-                    StrategyType = campaign.targetingType
+                    StrategyEid = campaign.CampaignId,
+                    StrategyName = campaign.Name,
+                    StrategyType = campaign.TargetingType,
+                    CampaignType = campaign.CampaignType?.ToLower() == CampaignType.SponsoredProducts.ToString().ToLower()
+                        ? CampaignType.SponsoredProducts.ToString()
+                        : CampaignType.SponsoredBrands.ToString()
                 };
-                SetCPProgStats(sum, stat, date); // most likely there's just one dailyStat in the group, but this covers everything...
+                SetCPProgStats(sum, stat, date);
+
                 yield return sum;
             }
         }

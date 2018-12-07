@@ -167,6 +167,8 @@
     <Compile Include="Entities\Cake\Role.cs" />
     <Compile Include="Entities\Cake\Vertical.cs" />
     <Compile Include="Entities\CPProg\Actions.cs" />
+    <Compile Include="Entities\CPProg\Strategy.cs" />
+    <Compile Include="Entities\CPProg\StrategySummary.cs" />
     <Compile Include="Entities\CPSearch\CallDailySummary.cs" />
     <Compile Include="Entities\CPSearch\ClientReport.cs" />
     <Compile Include="Entities\CPSearch\ISearchGauge.cs" />
@@ -568,6 +570,10 @@
     <Compile Include="MigrationsTD\201811201539381_Mig_ExtendKeywordAndSearchTermSummaries.Designer.cs">
       <DependentUpon>201811201539381_Mig_ExtendKeywordAndSearchTermSummaries.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsTD\201812071124455_Mig_AddCampaignType.cs" />
+    <Compile Include="MigrationsTD\201812071124455_Mig_AddCampaignType.Designer.cs">
+      <DependentUpon>201812071124455_Mig_AddCampaignType.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.Designer.cs">
@@ -933,6 +939,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201811201539381_Mig_ExtendKeywordAndSearchTermSummaries.resx">
       <DependentUpon>201811201539381_Mig_ExtendKeywordAndSearchTermSummaries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201812071124455_Mig_AddCampaignType.resx">
+      <DependentUpon>201812071124455_Mig_AddCampaignType.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>
