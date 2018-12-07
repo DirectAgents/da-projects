@@ -187,7 +187,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         //TODO? Request the SP and HSA reports in parallel... ?Okay for two threads to call Add at the same time?
         //TODO? Do multiple dates in parallel
 
-        private List<AmazonCampaign> LoadCampaignsFromAmazonApi()
+        public List<AmazonCampaign> LoadCampaignsFromAmazonApi()
         {
             var spCampaigns = _amazonUtility.GetCampaigns(CampaignType.SponsoredProducts, clientId);
             var sbCampaigns = _amazonUtility.GetCampaigns(CampaignType.SponsoredBrands, clientId);
