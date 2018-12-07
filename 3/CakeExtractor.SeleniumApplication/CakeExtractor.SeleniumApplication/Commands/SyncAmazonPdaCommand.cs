@@ -11,7 +11,7 @@ using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Jobs.ExtractAmazonPda;
-using CakeExtractor.SeleniumApplication.Models;
+using CakeExtractor.SeleniumApplication.SeleniumExtractors;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
@@ -25,6 +25,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
         private string email;
         private string pass;
         private string downloadDir;
+        private string cookiesDir;
         private string reportNameTemplate;
         private int waitPageTimeoutInMinuts;
         private string profileText;
@@ -40,7 +41,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
             {
                 Initialize();
                 OpenPage();
-                ExtractAmazonPdaScheduler.Start(this);
+                ExtractAmazonPdaScheduler.Start(this); 
                 
                 AlwaysSleep();
             }
@@ -62,92 +63,15 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
         public void ExtractCampaignsInfo()
         {
-            try
-            {
-                var campaignAllUrlList = new List<string>();
-                var campaignNotEmptyUrlList = new List<string>();
-                var count = 0;
-                
-                Console.WriteLine("Searching all available campaigns URLs...");
-                do
-                {
-                    Console.WriteLine($"Number of the page is {++count}");
-                    if (count != 1)
-                    {
-                        pageActions.NavigateNextCampaignPage();
-                    }
+            var extracter = new AmazonPDAExtractor(pageActions, downloadDir, reportNameTemplate);
 
-                    Console.WriteLine("Retrieving a list of campaign name web elements...");
-                    var campNameWebElementList = pageActions.GetCampaignsNameWebElementsList(
-                        AmazonPdaPageObjects.CampaignsContainer,
-                        AmazonPdaPageObjects.CampaignsNamesList);
-                    Console.WriteLine($"[{campNameWebElementList.Count}] web elements received");
-
-                    foreach (var campNameWebElem in campNameWebElementList)
-                    {
-                        campaignAllUrlList.Add(pageActions.GetCampaignUrl(campNameWebElem));
-                    }
-                } while (pageActions.IsElementEnabled(AmazonPdaPageObjects.NavigateNextPageButton));
-                
-                campaignNotEmptyUrlList = campaignAllUrlList.FindAll(url => !string.IsNullOrEmpty(url));
-                Console.WriteLine($"[{campaignAllUrlList.Count}] elements has been processed. [{campaignNotEmptyUrlList.Count}] campaign URLs received");
-
-                Console.WriteLine("Retrieving information about campaigns...");
-                var campaignsInfoList = new List<Campaign>();
-                count = 0;
-
-                foreach (var campaignUrl in campaignNotEmptyUrlList)
-                {   
-                    try
-                    {
-                        Console.WriteLine($"Retrieving information about campaign [{++count}]...");
-                        campaignsInfoList.Add(GetCampaignInfo(campaignUrl));
-                        Console.WriteLine("Ok");
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine($"Warning: {e.Message}");
-                    }
-                }
-                Console.WriteLine($"Total number of campaign is [{campaignsInfoList.Count}]");
-
-                // working with campaignsInfoList...
-                Console.WriteLine("Working with information about campaigns...");
-
-
-
-                //...after working with campaignsInfoList...
-                FileManager.CleanDirectory(downloadDir, reportNameTemplate);
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Could not extract campaigns information: {e.Message}", e);
-            }
+            var loader = new AmazonCampaignSummaryLoader(-1); //accountId ??
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
         }
-
-        private Campaign GetCampaignInfo(string campaignUrl)
-        {
-            var campaign = new Campaign();            
-            try
-            {                
-                pageActions.NavigateToUrl(campaignUrl, AmazonPdaPageObjects.CampaignTabContainer);
-                
-                pageActions.NavigateToTab(AmazonPdaPageObjects.CampaignSettingsTab,
-                    AmazonPdaPageObjects.CampaignSettingsContent);
-                pageActions.GetCampaignSettingsInfo(campaign);
-
-                pageActions.NavigateToTab(AmazonPdaPageObjects.CampaignReportsTab,
-                    AmazonPdaPageObjects.CampaignReportsContent);
-                pageActions.GetCampaignReportsInfo(campaign, downloadDir, reportNameTemplate);
-                
-                return campaign;
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Could not extract campaign information [name: {campaign.Name}]: {e.Message}", e);
-            }
-        }
-
+        
         private void Initialize()
         {            
             try
@@ -166,6 +90,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
                 }
                 pageActions = new AmazonPdaPageActions(driver, waitPageTimeoutInMinuts);
                 FileManager.CreateDirectoryIfNotExist(downloadDir);
+                FileManager.CreateDirectoryIfNotExist("Cookies");
                 Console.WriteLine("Ok");
             }
             catch (Exception e)
@@ -185,6 +110,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
                 pass = Properties.Settings.Default.EMailPassword;
                 reportNameTemplate = Properties.Settings.Default.FilesNameTemplate;
                 downloadDir = FileManager.GetAssemblyRelativePath(Properties.Settings.Default.DownloadsDirectoryName);
+                cookiesDir = FileManager.GetAssemblyRelativePath("Cookies");
                 waitPageTimeoutInMinuts = Properties.Settings.Default.WaitPageTimeoutInMinuts;                
                 profileText = Properties.Settings.Default.ProfileText;
                 Console.WriteLine("Ok");
@@ -199,8 +125,24 @@ namespace CakeExtractor.SeleniumApplication.Commands
         {
             try
             {
-                pageActions.NavigateToUrl(signInUrl, AmazonPdaPageObjects.ForgotPassLink);
-                pageActions.LoginProcess(email, pass);
+                var allCookies = FileManager.GetCookiesFromFiles(cookiesDir);
+                if (!allCookies.Any())
+                {
+                    pageActions.NavigateToUrl(signInUrl, AmazonPdaPageObjects.ForgotPassLink);
+                    pageActions.LoginProcess(email, pass);
+
+                    var cookies = pageActions.GetAllCookies();
+                    FileManager.SaveCookiesToFiles(cookies, cookiesDir);
+                }
+                else
+                {
+                    pageActions.NavigateToUrlWithoutWaiting(signInUrl);
+                    foreach (var cookie in allCookies)
+                    {
+                        pageActions.SetCookie(cookie);
+                    }
+                }
+
                 pageActions.NavigateToUrl(campaignsUrl, AmazonPdaPageObjects.FilterByButton);
                 var profileUrl = pageActions.GetProfileUrl(profileText);
                 if (!string.IsNullOrEmpty(profileUrl))
@@ -231,6 +173,6 @@ namespace CakeExtractor.SeleniumApplication.Commands
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
             loaderThread.Join();
-        }
+        }        
     }
 }

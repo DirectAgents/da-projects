@@ -6,7 +6,7 @@ using OpenQA.Selenium.Support.UI;
 
 namespace CakeExtractor.SeleniumApplication.PageActions
 {
-    internal class BasePageActions
+    public class BasePageActions
     {
         protected readonly IWebDriver Driver;
 
@@ -21,6 +21,18 @@ namespace CakeExtractor.SeleniumApplication.PageActions
             {
                 Driver.Navigate().GoToUrl(url);
                 WaitElement(waitingElement, timeout);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Could not navigate to URL [{url}]: {e.Message}", e);
+            }
+        }
+
+        public void NavigateToUrlWithoutWaiting(string url)
+        {
+            try
+            {
+                Driver.Navigate().GoToUrl(url);                
             }
             catch (Exception e)
             {
@@ -120,6 +132,30 @@ namespace CakeExtractor.SeleniumApplication.PageActions
             catch (Exception e)
             {
                 throw new Exception($"Could not get table rows [{tableElem}]: {e.Message}", e);
+            }
+        }
+
+        public IEnumerable<Cookie> GetAllCookies()
+        {
+            return Driver.Manage().Cookies.AllCookies;
+        }
+
+        public Cookie GetCookie(string cookieName)
+        {
+            return Driver.Manage().Cookies.GetCookieNamed(cookieName);
+        }
+
+        public bool SetCookie(Cookie cookie)
+        {
+            try
+            {
+                Driver.Manage().Cookies.AddCookie(cookie);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Warning: {e.Message}");
+                return false;
             }
         }
     }

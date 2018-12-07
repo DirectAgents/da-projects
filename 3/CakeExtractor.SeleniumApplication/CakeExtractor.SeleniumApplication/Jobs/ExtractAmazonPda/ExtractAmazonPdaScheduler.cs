@@ -20,7 +20,7 @@ namespace CakeExtractor.SeleniumApplication.Jobs.ExtractAmazonPda
 
         private static ITrigger CreateTrigger()
         {
-            var startTime = GetStartTime();
+            var startTime = GetStartTime();            
             var interval = GetInterval();
             var trigger = TriggerBuilder.Create()
                 .WithIdentity("Extract PDA Campaign stats", "Amazon")
@@ -34,8 +34,9 @@ namespace CakeExtractor.SeleniumApplication.Jobs.ExtractAmazonPda
 
         private static DateTimeOffset GetStartTime()
         {
-            var startTime = Properties.Settings.Default.StartExtractionDateTime;
-            return new DateTimeOffset(startTime);
+            var startTimeConfig = new DateTimeOffset(Properties.Settings.Default.StartExtractionDateTime);
+            
+            return startTimeConfig < DateTimeOffset.Now ? DateTimeOffset.Now : startTimeConfig;
         }
 
         private static TimeSpan GetInterval()

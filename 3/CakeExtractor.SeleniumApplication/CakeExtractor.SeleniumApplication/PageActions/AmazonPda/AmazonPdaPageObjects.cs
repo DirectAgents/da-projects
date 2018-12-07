@@ -14,10 +14,11 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         public static By CodeInput = By.Id("auth-mfa-otpcode");
 
         // Home screen objects
-        public static By AccountButton = By.CssSelector("button[data-id=user-account]"); 
+        public static By AccountButton = By.CssSelector("button[data-id=user-account]");
 
         // Campaigns page objects. Filter
-        public static By FilterByButton = By.XPath(".//button[contains(@type,'button')][contains(text(),'Filter by')]");
+        //public static By FilterByButton = By.XPath(".//button[contains(@type,'button')][contains(text(),'Filter by')]");
+        public static By FilterByButton = By.XPath(".//div[contains(@class,'page-container')]/div/div[contains(@data-e2e-id,'campaignsDashboard')]/div/div[1]/div[2]/label/button[contains(text(),'Filter by')]");
         public static By FilterTypeButton = By.XPath(".//button[contains(@value,'Type')][contains(text(),'Type')]");
         public static By FilterByValues = By.XPath(".//div[contains(@class,'sc-cHGsZl bJrez')]/label/button");
         public static By FilterPdaValues = By.XPath(".//div[contains(@class,'sc-kgoBCf fQYKbt')]/div/button[contains(@value,'PDA')]");        

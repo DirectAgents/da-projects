@@ -1,7 +1,7 @@
 ﻿
 namespace CakeExtractor.SeleniumApplication.Models
 {
-    public class Campaign
+    public class CampaignInfo
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -11,7 +11,7 @@ namespace CakeExtractor.SeleniumApplication.Models
         public string Targeting { get; set; }
         public string ReportPath { get; set; }
 
-        public Campaign() { }
+        public CampaignInfo() { }
         
         public override string ToString()
         {

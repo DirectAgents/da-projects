@@ -6,7 +6,7 @@ using CakeExtractor.SeleniumApplication.Models;
 
 namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
 {
-    internal class AmazonPdaPageActions : BasePageActions
+    public class AmazonPdaPageActions : BasePageActions
     {
         private readonly TimeSpan timeout;
         private readonly TimeSpan timeoutThread = TimeSpan.FromSeconds(3);
@@ -113,7 +113,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             }
         }
 
-        public void GetCampaignSettingsInfo(Campaign campaign)
+        public void GetCampaignSettingsInfo(CampaignInfo campaign)
         {
             try
             {
@@ -161,7 +161,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             }
         }
 
-        public void GetCampaignReportsInfo(Campaign campaign, string downloadPath, string templateFileName)
+        public void GetCampaignReportsInfo(CampaignInfo campaign, string downloadPath, string templateFileName)
         {
             try
             {
