@@ -60,26 +60,34 @@ namespace Amazon
 
         private void LogInfo(string message)
         {
+            var updatedMessage = GetMessageInCorrectFormat(message);
             if (logInfo == null)
             {
-                Console.WriteLine(message);
+                Console.WriteLine(updatedMessage);
             }
             else
             {
-                logInfo("[AmazonUtility] " + message);
+                logInfo(updatedMessage);
             }
         }
 
         private void LogError(string message)
         {
+            var updatedMessage = GetMessageInCorrectFormat(message);
             if (logError == null)
             {
-                Console.WriteLine(message);
+                Console.WriteLine(updatedMessage);
             }
             else
             {
-                logError("[AmazonUtility] " + message);
+                logError(updatedMessage);
             }
+        }
+
+        private string GetMessageInCorrectFormat(string message)
+        {
+            var updatedMessage = message.Replace('{', '\'').Replace('}', '\'');
+            return "[AmazonUtility] " + updatedMessage;
         }
 
         private void LogInfo(string info, int retryNumber)
@@ -131,8 +139,7 @@ namespace Amazon
 
         private void LogTimeOutGeneration(string message)
         {
-            var updatedMessage = message.Replace('{', '"').Replace('}', '"');
-            LogError($"Generation timed out: {updatedMessage}");
+            LogError($"Generation timed out: {message}");
         }
 
         private TimeSpan LogWaiting(string message, int retryNumber)

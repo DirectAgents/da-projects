@@ -32,7 +32,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public void AssignMetricTypeIdToItems(IEnumerable<SummaryMetric> items)
         {
-            foreach (var item in items)
+            var itemsWithUnassignedMetricTypes = items.Where(x => x.MetricTypeId == default(int)).ToList();
+            foreach (var item in itemsWithUnassignedMetricTypes)
             {
                 item.MetricTypeId = MetricTypeStorage.GetEntityIdFromStorage(item.MetricType);
                 item.MetricType = null;
@@ -42,6 +43,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public void AddDependentMetricTypes(IEnumerable<SummaryMetric> items)
         {
             var notStoredMetricTypes = items
+                .Where(x => x.MetricType != null)
                 .GroupBy(x => new { x.MetricType.Name, x.MetricType.DaysInterval })
                 .Select(x => x.First().MetricType)
                 .Where(x => !MetricTypeStorage.IsEntityInStorage(x))
