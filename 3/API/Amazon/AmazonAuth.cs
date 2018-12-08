@@ -9,6 +9,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Web;
+using Amazon.Entities.HelperEntities;
 using WatiN.Core;
 using WatiN.Core.Native;
 
@@ -161,18 +162,18 @@ namespace Amazon
                 }
                 var response = restClient.ExecuteAsPost<GetTokenResponse>(request, "POST");
 
-                if (response.Data == null || response.Data.access_token == null)
+                if (response.Data == null || response.Data.AccessToken == null)
                     System.Console.WriteLine("Failed to get access token");//LogError("Failed to get access token");
 
-                if (response.Data != null && response.Data.refresh_token == null)
+                if (response.Data != null && response.Data.RefreshToken == null)
                     System.Console.WriteLine("Failed to get refresh token");//LogError("Failed to get refresh token");
 
                 if (response.Data != null)
                 {
                     tokenResponse = new AccessRefreshTokens
                     {
-                        access_token = response.Data.access_token,
-                        refresh_token = response.Data.refresh_token         // update this in case it changed
+                        access_token = response.Data.AccessToken,
+                        refresh_token = response.Data.RefreshToken         // update this in case it changed
                     };
                 }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Amazon.Entities.HelperEntities;
 using Amazon.Enums;
 
 namespace Amazon.Helpers
@@ -17,14 +18,14 @@ namespace Amazon.Helpers
         private const string AsinMetric = "asin";
         private const string KeywordTextMetric = "keywordText";
 
-        private static Dictionary<CampaignType, string> campaignTypeNames = new Dictionary<CampaignType, string>
+        private static readonly Dictionary<CampaignType, string> CampaignTypeNames = new Dictionary<CampaignType, string>
         {
             {CampaignType.SponsoredProducts, "sp" },
             {CampaignType.SponsoredBrands, "hsa" },
             {CampaignType.Empty, string.Empty}
         };
 
-        private static Dictionary<EntitesType, string> entitiesTypeNames = new Dictionary<EntitesType, string>
+        private static readonly Dictionary<EntitesType, string> EntitiesTypeNames = new Dictionary<EntitesType, string>
         {
             {EntitesType.Campaigns, "campaigns" },
             {EntitesType.AdGroups, "adGroups" },
@@ -34,7 +35,7 @@ namespace Amazon.Helpers
             {EntitesType.Profiles, "profiles" }
         };
 
-        private static Dictionary<AttributedMetricType, Dictionary<AttributedMetricDaysInterval, string>> AttributedMetrics =
+        private static readonly Dictionary<AttributedMetricType, Dictionary<AttributedMetricDaysInterval, string>> AttributedMetrics =
             new Dictionary<AttributedMetricType, Dictionary<AttributedMetricDaysInterval, string>>
             {
                 {
@@ -116,10 +117,19 @@ namespace Amazon.Helpers
             return reportParams;
         }
 
+        public static AmazonApiSnapshotParams CreateSnapshotParams()
+        {
+            var snapshotParams = new AmazonApiSnapshotParams
+            {
+                stateFilter = "enabled,paused,archived"
+            };
+            return snapshotParams;
+        }
+
         private static string GetBaseEntitiesPath(EntitesType entitiesType, CampaignType campaignType)
         {
-            var campaignTypePath = campaignType == CampaignType.Empty ? "" : campaignTypeNames[campaignType] + "/";
-            var resourcePath = $"v2/{campaignTypePath}{entitiesTypeNames[entitiesType]}";
+            var campaignTypePath = campaignType == CampaignType.Empty ? "" : CampaignTypeNames[campaignType] + "/";
+            var resourcePath = $"v2/{campaignTypePath}{EntitiesTypeNames[entitiesType]}";
             return resourcePath;
         }
 
@@ -134,8 +144,8 @@ namespace Amazon.Helpers
             metrics.AddRange(dependentCampaignMetrics);
             var dependentEntityMetrics = GetDependentEntityReportMetrics(entitiesType);
             metrics.AddRange(dependentEntityMetrics);
-            var concatedMetrics = string.Join(",", metrics);
-            return concatedMetrics;
+            var joinedMetrics = string.Join(",", metrics);
+            return joinedMetrics;
         }
 
         private static IEnumerable<string> GetDependentCampaignReportMetrics(CampaignType campaignType)
@@ -163,6 +173,14 @@ namespace Amazon.Helpers
                 case EntitesType.Keywords:
                 case EntitesType.SearchTerm:
                     return new[] { CampaignIdMetric, AdGroupIdMetric, AdGroupNameMetric, KeywordTextMetric };
+                case EntitesType.Campaigns:
+                    break;
+                case EntitesType.Asins:
+                    break;
+                case EntitesType.Profiles:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(entitiesType), entitiesType, null);
             }
 
             return new string[0];

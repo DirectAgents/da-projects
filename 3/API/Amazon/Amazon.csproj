@@ -44,6 +44,9 @@
       <HintPath>..\..\DirectAgents.Web\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Polly, Version=6.0.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc, processorArchitecture=MSIL">
+      <HintPath>..\..\DirectAgents.Web\packages\Polly.6.1.2\lib\netstandard2.0\Polly.dll</HintPath>
+    </Reference>
     <Reference Include="RestSharp, Version=106.3.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\..\DirectAgents.Web\packages\RestSharp.106.3.1\lib\net452\RestSharp.dll</HintPath>
       <Private>True</Private>
@@ -67,23 +70,36 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AmazonAuth.cs" />
+    <Compile Include="Entities\AmazonProfile.cs" />
+    <Compile Include="Entities\HelperEntities\AmazonApiReportParams.cs" />
+    <Compile Include="Entities\HelperEntities\AmazonApiSnapshotParams.cs" />
+    <Compile Include="Entities\Summaries\AmazonSummary.cs" />
+    <Compile Include="Entities\HelperEntities\GetTokenResponse.cs" />
+    <Compile Include="Entities\HelperEntities\PreparedDataResponses\PreparedDataRequestResponse.cs" />
+    <Compile Include="Entities\HelperEntities\ReportData.cs" />
+    <Compile Include="Entities\HelperEntities\PreparedDataResponses\ReportRequestResponse.cs" />
+    <Compile Include="Entities\HelperEntities\DownloadInfoResponses\ReportResponseDownloadInfo.cs" />
+    <Compile Include="Entities\HelperEntities\DownloadInfoResponses\ResponseDownloadInfo.cs" />
+    <Compile Include="Entities\HelperEntities\PreparedDataResponses\SnapshotRequestResponse.cs" />
+    <Compile Include="Entities\HelperEntities\DownloadInfoResponses\SnapshotResponseDownloadInfo.cs" />
+    <Compile Include="Entities\Summaries\AmazonAdDailySummary.cs" />
+    <Compile Include="Entities\Summaries\AmazonAdGroupSummary.cs" />
+    <Compile Include="Entities\Summaries\AmazonKeywordDailySummary.cs" />
+    <Compile Include="Entities\Summaries\AmazonSearchTermDailySummary.cs" />
+    <Compile Include="Entities\Summaries\AmazonStatSummary.cs" />
     <Compile Include="Helpers\AmazonApiHelper.cs" />
     <Compile Include="AmazonUtility.cs" />
     <Compile Include="Entities\AmazonAdSet.cs" />
-    <Compile Include="Entities\AmazonAdSetSummary.cs" />
     <Compile Include="Entities\AmazonCampaign.cs" />
-    <Compile Include="Entities\AmazonClientProfile.cs" />
-    <Compile Include="Entities\AmazonDailySummary.cs" />
+    <Compile Include="Entities\AmazonAccountInfo.cs" />
+    <Compile Include="Entities\Summaries\AmazonDailySummary.cs" />
     <Compile Include="Entities\AmazonKeyword.cs" />
-    <Compile Include="Entities\AmazonKeywordMetric.cs" />
     <Compile Include="Entities\AmazonProductAds.cs" />
-    <Compile Include="Entities\AmazonAd.cs" />
     <Compile Include="Enums\CampaignType.cs" />
     <Compile Include="Enums\EntitesType.cs" />
     <Compile Include="Enums\AttributedMetricDaysInterval.cs" />
     <Compile Include="Enums\ProductAdIdType.cs" />
     <Compile Include="Enums\AttributedMetricType.cs" />
-    <Compile Include="HelperClasses.cs" />
     <Compile Include="Helpers\FileManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

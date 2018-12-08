@@ -1,25 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Amazon;
-using Amazon.Entities;
+﻿using Amazon;
+using Amazon.Entities.Summaries;
 using Amazon.Enums;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
-{ 
+{
     // AdSet(Ad group)
-    public class AmazonApiAdSetExtracter : BaseAmazonExtractor<AdSetSummary>
+    public class AmazonApiAdSetExtractor : BaseAmazonExtractor<AdSetSummary>
     {
-        public AmazonApiAdSetExtracter(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
-            : base(amazonUtility, dateRange, account, campaignFilter: campaignFilter, campaignFilterOut: campaignFilterOut)
+        public AmazonApiAdSetExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
+            : base(amazonUtility, dateRange, account, campaignFilter, campaignFilterOut)
         { }
 
         protected override void Extract()
         {
             Logger.Info(accountId, "Extracting AdSetSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
-                this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
+                clientId, dateRange.FromDate, dateRange.ToDate);
 
             foreach (var date in dateRange.Dates)
             {
@@ -35,25 +35,28 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             var spSums = _amazonUtility.ReportAdGroups(CampaignType.SponsoredProducts, date, clientId, true);
             var sbSums = _amazonUtility.ReportAdGroups(CampaignType.SponsoredBrands, date, clientId, true);
             var sums = spSums.Concat(sbSums);
-            var filteredSums = FilterByCampaigns(sums, x => x.campaignName);
+            var filteredSums = FilterByCampaigns(sums, x => x.CampaignName);
             return filteredSums.ToList();
         }
 
         private IEnumerable<AdSetSummary> TransformSummaries(IEnumerable<AmazonAdGroupSummary> adGroupStats, DateTime date)
         {
-            adGroupStats = adGroupStats.Where(x => !x.AllZeros()).ToList();
-            foreach (var adGroupStat in adGroupStats)
+            var notEmptyStats = adGroupStats.Where(x => !x.AllZeros()).ToList();
+            var summaries = notEmptyStats.Select(stat => CreateSummary(stat, date));
+            return summaries.ToList();
+        }
+
+        private AdSetSummary CreateSummary(AmazonAdGroupSummary adGroupStat, DateTime date)
+        {
+            var sum = new AdSetSummary
             {
-                var sum = new AdSetSummary
-                {
-                    AdSetEid = adGroupStat.adGroupId,
-                    AdSetName = adGroupStat.adGroupName,
-                    StrategyEid = adGroupStat.campaignId,
-                    StrategyName = adGroupStat.campaignName
-                };
-                SetCPProgStats(sum, adGroupStat, date);
-                yield return sum;
-            }
+                AdSetEid = adGroupStat.AdGroupId,
+                AdSetName = adGroupStat.AdGroupName,
+                StrategyEid = adGroupStat.CampaignId,
+                StrategyName = adGroupStat.CampaignName
+            };
+            SetCPProgStats(sum, adGroupStat, date);
+            return sum;
         }
     }
 }

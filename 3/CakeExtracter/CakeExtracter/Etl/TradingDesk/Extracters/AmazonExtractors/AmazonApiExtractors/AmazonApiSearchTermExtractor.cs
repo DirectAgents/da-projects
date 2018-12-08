@@ -1,23 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Amazon;
-using Amazon.Entities;
+﻿using Amazon;
+using Amazon.Entities.Summaries;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
 {
-    public class AmazonApiSearchTermExtracter : BaseAmazonExtractor<SearchTermSummary>
+    public class AmazonApiSearchTermExtractor : BaseAmazonExtractor<SearchTermSummary>
     {
-        public AmazonApiSearchTermExtracter(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
-            : base(amazonUtility, dateRange, account, campaignFilter: campaignFilter, campaignFilterOut: campaignFilterOut)
+        public AmazonApiSearchTermExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
+            : base(amazonUtility, dateRange, account, campaignFilter, campaignFilterOut)
         { }
 
         protected override void Extract()
         {
             Logger.Info(accountId, "Extracting SearchTermSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
-                this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
+                clientId, dateRange.FromDate, dateRange.ToDate);
 
             foreach (var date in dateRange.Dates)
             {
@@ -31,28 +31,31 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         public IEnumerable<AmazonSearchTermDailySummary> ExtractSummaries(DateTime date)
         {
             var sums = _amazonUtility.ReportSearchTerms(date, clientId, true);
-            var filteredSums = FilterByCampaigns(sums, x => x.campaignName);
+            var filteredSums = FilterByCampaigns(sums, x => x.CampaignName);
             return filteredSums.ToList();
         }
 
         private IEnumerable<SearchTermSummary> TransformSummaries(IEnumerable<AmazonSearchTermDailySummary> searchTermStats, DateTime date)
         {
-            searchTermStats = searchTermStats.Where(x => !x.AllZeros()).ToList();
-            foreach (var stat in searchTermStats)
+            var notEmptyStats = searchTermStats.Where(x => !x.AllZeros()).ToList();
+            var summaries = notEmptyStats.Select(stat => CreateSummary(stat, date));
+            return summaries.ToList();
+        }
+
+        private SearchTermSummary CreateSummary(AmazonSearchTermDailySummary stat, DateTime date)
+        {
+            var sum = new SearchTermSummary
             {
-                var sum = new SearchTermSummary
-                {
-                    SearchTermName = stat.query,
-                    KeywordEid = stat.keywordId,
-                    KeywordName = stat.keywordText,
-                    AdSetEid = stat.adGroupId,
-                    AdSetName = stat.adGroupName,
-                    StrategyEid = stat.campaignId,
-                    StrategyName = stat.campaignName,
-                };
-                SetCPProgStats(sum, stat, date);
-                yield return sum;
-            }
+                SearchTermName = stat.Query,
+                KeywordEid = stat.KeywordId,
+                KeywordName = stat.KeywordText,
+                AdSetEid = stat.AdGroupId,
+                AdSetName = stat.AdGroupName,
+                StrategyEid = stat.CampaignId,
+                StrategyName = stat.CampaignName,
+            };
+            SetCPProgStats(sum, stat, date);
+            return sum;
         }
     }
 }

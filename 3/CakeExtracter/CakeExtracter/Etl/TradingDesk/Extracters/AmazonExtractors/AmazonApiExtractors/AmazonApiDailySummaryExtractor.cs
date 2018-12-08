@@ -1,25 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Amazon;
-using Amazon.Entities;
+﻿using Amazon;
+using Amazon.Entities.Summaries;
 using Amazon.Enums;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
 {
     //The daily extracter will load data based on date range and sum up the total of all campaigns
-    public class AmazonApiDailySummaryExtracter : BaseAmazonExtractor<DailySummary>
+    public class AmazonApiDailySummaryExtractor : BaseAmazonExtractor<DailySummary>
     {
-        public AmazonApiDailySummaryExtracter(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
-            : base(amazonUtility, dateRange, account, campaignFilter: campaignFilter, campaignFilterOut: campaignFilterOut)
+        public AmazonApiDailySummaryExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
+            : base(amazonUtility, dateRange, account, campaignFilter, campaignFilterOut)
         { }
 
         protected override void Extract()
         {
-            Logger.Info(accountId, "Extracting DailySummaries from Amazon API for ({0}) from {1:d} to {2:d}",
-                this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
+            Logger.Info(accountId, "Extracting DailySummaries from Amazon API for ({0}) from {1:d} to {2:d}", clientId,
+                dateRange.FromDate, dateRange.ToDate);
 
             foreach (var date in dateRange.Dates)
             {
@@ -35,7 +35,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             var spSums = _amazonUtility.ReportCampaigns(CampaignType.SponsoredProducts, date, clientId, true);
             var sbSums = _amazonUtility.ReportCampaigns(CampaignType.SponsoredBrands, date, clientId, true);
             var sums = spSums.Concat(sbSums);
-            sums = FilterByCampaigns(sums, x => x.campaignName);
+            sums = FilterByCampaigns(sums, x => x.CampaignName);
             return sums.ToList();
         }
 

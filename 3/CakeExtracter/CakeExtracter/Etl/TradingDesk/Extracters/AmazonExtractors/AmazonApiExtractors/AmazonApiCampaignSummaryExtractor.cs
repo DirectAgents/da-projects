@@ -1,25 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Amazon;
+﻿using Amazon;
 using Amazon.Entities;
+using Amazon.Entities.Summaries;
 using Amazon.Enums;
 using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
 {
     //Campaign / Strategy
-    public class AmazonApiCampaignSummaryExtracter : BaseAmazonExtractor<StrategySummary>
+    public class AmazonApiCampaignSummaryExtractor : BaseAmazonExtractor<StrategySummary>
     {
-        public AmazonApiCampaignSummaryExtracter(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
-            : base(amazonUtility, dateRange, account, campaignFilter: campaignFilter, campaignFilterOut: campaignFilterOut)
+        public AmazonApiCampaignSummaryExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
+            : base(amazonUtility, dateRange, account, campaignFilter, campaignFilterOut)
         { }
 
         protected override void Extract()
         {
             Logger.Info(accountId, "Extracting StrategySummaries from Amazon API for ({0}) from {1:d} to {2:d}",
-                this.clientId, this.dateRange.FromDate, this.dateRange.ToDate);
+                clientId, dateRange.FromDate, dateRange.ToDate);
 
             var campaigns = LoadCampaignsFromAmazonApi();
             foreach (var date in dateRange.Dates)
@@ -39,7 +40,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             var spCampaigns = _amazonUtility.GetCampaigns(CampaignType.SponsoredProducts, clientId);
             var sbCampaigns = _amazonUtility.GetCampaigns(CampaignType.SponsoredBrands, clientId);
             var campaigns = spCampaigns.Concat(sbCampaigns);
-            var filteredCampaigns = FilterByCampaigns(campaigns, x => x.name);
+            var filteredCampaigns = FilterByCampaigns(campaigns, x => x.Name);
             return filteredCampaigns.ToList();
         }
 
@@ -53,21 +54,26 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
 
         private IEnumerable<StrategySummary> TransformSummaries(IEnumerable<AmazonDailySummary> dailyStats, IEnumerable<AmazonCampaign> campaigns, DateTime date)
         {
-            var campaignIds = campaigns.Select(x => x.campaignId);
-            dailyStats = dailyStats.Where(x => campaignIds.Contains(x.campaignId) && !x.AllZeros());
-            var groupedStats = dailyStats.GroupBy(x => x.campaignId);
-            foreach (var stat in groupedStats)
+            var campaignIds = campaigns.Select(x => x.CampaignId).ToList();
+            var notEmptyStats = dailyStats.Where(x => campaignIds.Contains(x.CampaignId) && !x.AllZeros());
+            var summaries = notEmptyStats.GroupBy(x => x.CampaignId).Select(stat =>
             {
-                var campaign = campaigns.First(x => x.campaignId == stat.Key);
-                var sum = new StrategySummary
-                {
-                    StrategyEid = campaign.campaignId,
-                    StrategyName = campaign.name,
-                    StrategyType = campaign.targetingType
-                };
-                SetCPProgStats(sum, stat, date); // most likely there's just one dailyStat in the group, but this covers everything...
-                yield return sum;
-            }
+                var campaign = campaigns.First(x => x.CampaignId == stat.Key);
+                return CreateSummary(stat, campaign, date);
+            });
+            return summaries.ToList();
+        }
+
+        private StrategySummary CreateSummary(IEnumerable<AmazonDailySummary> stat, AmazonCampaign campaign, DateTime date)
+        {
+            var sum = new StrategySummary
+            {
+                StrategyEid = campaign.CampaignId,
+                StrategyName = campaign.Name,
+                StrategyType = campaign.TargetingType
+            };
+            SetCPProgStats(sum, stat, date); // most likely there's just one dailyStat in the group, but this covers everything...
+            return sum;
         }
     }
 }
