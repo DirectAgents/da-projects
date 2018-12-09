@@ -13,7 +13,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
         public FacebookDailySummaryLoader(int accountId)
             : base(accountId)
         {
-            this.BatchSize = FacebookUtility.RowsReturnedAtATime; //FB API only returns 25 rows at a time
+            BatchSize = FacebookUtility.RowsReturnedAtATime; //FB API only returns 25 rows at a time
         }
 
         protected override int Load(List<FBSummary> items)
@@ -23,7 +23,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             return count;
         }
 
-        private int UpsertDailySummaries(List<FBSummary> items)
+        private int UpsertDailySummaries(IEnumerable<FBSummary> items)
         {
             var progress = new LoadingProgress();
             using (var db = new ClientPortalProgContext())

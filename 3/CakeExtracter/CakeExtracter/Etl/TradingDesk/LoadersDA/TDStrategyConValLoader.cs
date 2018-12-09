@@ -8,7 +8,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class TDStrategyConValLoader : Loader<StrategySummary>
     {
-        private TDStrategySummaryLoader strategySummaryLoader;
+        private readonly TDStrategySummaryLoader strategySummaryLoader;
 
         public TDStrategyConValLoader(int accountId) : base(accountId)
         {

@@ -24,7 +24,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         static SearchTermSummaryLoader()
         {
-            SearchTermStorage = new EntityIdStorage<SearchTerm>(x => x.Id, x => $"{x.Name}{x.KeywordId}");
+            SearchTermStorage = new EntityIdStorage<SearchTerm>(x => x.Id, x => $"{x.Name} {x.KeywordId}");
         }
 
         public SearchTermSummaryLoader(int accountId = -1)
@@ -73,11 +73,13 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             foreach (var item in items)
             {
-                if (SearchTermStorage.IsEntityInStorage(item.SearchTerm))
+                if (!SearchTermStorage.IsEntityInStorage(item.SearchTerm))
                 {
-                    item.SearchTermId = SearchTermStorage.GetEntityIdFromStorage(item.SearchTerm);
-                    item.SearchTerm = null;
+                    continue;
                 }
+
+                item.SearchTermId = SearchTermStorage.GetEntityIdFromStorage(item.SearchTerm);
+                item.SearchTerm = null;
             }
         }
 
@@ -163,7 +165,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             AddUpdateDependentSearchTerms(searchTerms);
         }
 
-        private void AddUpdateDependentSearchTerms(List<SearchTerm> items)
+        private void AddUpdateDependentSearchTerms(IEnumerable<SearchTerm> items)
         {
             using (var db = new ClientPortalProgContext())
             {
@@ -201,7 +203,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             }
         }
 
-        private void AssignStrategyIdToItems(List<SearchTermSummary> items)
+        private void AssignStrategyIdToItems(IEnumerable<SearchTermSummary> items)
         {
             foreach (var item in items)
             {
@@ -213,7 +215,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             }
         }
 
-        private void AssignAdSetIdToItems(List<SearchTermSummary> items)
+        private void AssignAdSetIdToItems(IEnumerable<SearchTermSummary> items)
         {
             foreach (var item in items)
             {
@@ -225,7 +227,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             }
         }
 
-        private void AssignKeywordIdToItems(List<SearchTermSummary> items)
+        private void AssignKeywordIdToItems(IEnumerable<SearchTermSummary> items)
         {
             foreach (var item in items)
             {
@@ -306,7 +308,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             var deletedMetrics = item.InitialMetrics == null
                 ? target.Metrics
-                : target.Metrics.Where(x => !item.InitialMetrics.Any(m => m.MetricTypeId == x.MetricTypeId));
+                : target.Metrics.Where(x => item.InitialMetrics.All(m => m.MetricTypeId != x.MetricTypeId));
             metricLoader.RemoveMetrics(db, deletedMetrics);
         }
 

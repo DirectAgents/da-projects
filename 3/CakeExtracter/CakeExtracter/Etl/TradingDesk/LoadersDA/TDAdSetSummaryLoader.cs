@@ -20,15 +20,15 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         static TDAdSetSummaryLoader()
         {
-            AdSetStorage = new EntityIdStorage<AdSet>(x => x.Id, x => $"{x.StrategyId}{x.Name}{x.ExternalId}", x => $"{x.Name}{x.ExternalId}");
+            AdSetStorage = new EntityIdStorage<AdSet>(x => x.Id, x => $"{x.StrategyId} {x.Name} {x.ExternalId}", x => $"{x.Name} {x.ExternalId}");
         }
 
         public TDAdSetSummaryLoader(int accountId = -1)
         {
-            this.AccountId = accountId;
-            this.strategyLoader = new TDStrategySummaryLoader(accountId);
-            this.strategyStorage = TDStrategySummaryLoader.StrategyStorage;
-            this.metricLoader = new SummaryMetricLoader();
+            AccountId = accountId;
+            strategyLoader = new TDStrategySummaryLoader(accountId);
+            strategyStorage = TDStrategySummaryLoader.StrategyStorage;
+            metricLoader = new SummaryMetricLoader();
         }
 
         protected override int Load(List<AdSetSummary> items)
@@ -58,11 +58,13 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             foreach (var item in items)
             {
-                if (AdSetStorage.IsEntityInStorage(item.AdSet))
+                if (!AdSetStorage.IsEntityInStorage(item.AdSet))
                 {
-                    item.AdSetId = AdSetStorage.GetEntityIdFromStorage(item.AdSet);
-                    item.AdSet = null;
+                    continue;
                 }
+
+                item.AdSetId = AdSetStorage.GetEntityIdFromStorage(item.AdSet);
+                item.AdSet = null;
                 // otherwise it will get skipped; no AdSet to use for the foreign key
             }
         }
@@ -168,7 +170,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             }
         }
 
-        private void AssignStrategyIdToItems(List<AdSetSummary> items)
+        private void AssignStrategyIdToItems(IEnumerable<AdSetSummary> items)
         {
             foreach (var item in items)
             {
@@ -249,7 +251,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             var deletedMetrics = item.InitialMetrics == null
                 ? target.Metrics
-                : target.Metrics.Where(x => !item.InitialMetrics.Any(m => m.MetricTypeId == x.MetricTypeId));
+                : target.Metrics.Where(x => item.InitialMetrics.All(m => m.MetricTypeId != x.MetricTypeId));
             metricLoader.RemoveMetrics(db, deletedMetrics);
         }
 

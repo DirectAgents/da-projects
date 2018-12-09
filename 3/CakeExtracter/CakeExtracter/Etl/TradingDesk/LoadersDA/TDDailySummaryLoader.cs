@@ -131,7 +131,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             var deletedMetrics = item.InitialMetrics == null
                 ? target.Metrics
-                : target.Metrics.Where(x => !item.InitialMetrics.Any(m => m.MetricTypeId == x.MetricTypeId));
+                : target.Metrics.Where(x => item.InitialMetrics.All(m => m.MetricTypeId != x.MetricTypeId));
             metricLoader.RemoveMetrics(db, deletedMetrics);
         }
     }

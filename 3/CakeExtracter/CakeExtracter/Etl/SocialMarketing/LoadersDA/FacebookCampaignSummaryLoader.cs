@@ -11,14 +11,14 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 {
     public class FacebookCampaignSummaryLoader : Loader<FBSummary>
     {
-        private static readonly EntityIdStorage<ActionType> actionTypeStorage;
-        private readonly bool LoadActions;
+        private static readonly EntityIdStorage<ActionType> ActionTypeStorage;
+        private readonly bool loadActions;
         private readonly FacebookAdSetSummaryLoader fbAdSetLoader;
         private readonly TDStrategySummaryLoader strategySummaryLoader;
 
         static FacebookCampaignSummaryLoader()
         {
-            actionTypeStorage = FacebookAdSetSummaryLoader.ActionTypeStorage;
+            ActionTypeStorage = FacebookAdSetSummaryLoader.ActionTypeStorage;
         }
 
         public FacebookCampaignSummaryLoader(int accountId, bool loadActions = false)
@@ -27,21 +27,23 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             BatchSize = FacebookUtility.RowsReturnedAtATime; //FB API only returns 25 rows at a time
             strategySummaryLoader = new TDStrategySummaryLoader(accountId);
             fbAdSetLoader = new FacebookAdSetSummaryLoader(accountId);
-            LoadActions = loadActions;
+            this.loadActions = loadActions;
         }
 
         protected override int Load(List<FBSummary> items)
         {
-            var dbItems = items.Select(i => CreateStrategySummary(i)).ToList();
+            var dbItems = items.Select(CreateStrategySummary).ToList();
             strategySummaryLoader.AddUpdateDependentStrategies(dbItems);
             strategySummaryLoader.AssignStrategyIdToItems(dbItems);
             var count = strategySummaryLoader.UpsertDailySummaries(dbItems);
 
-            if (LoadActions)
+            if (!loadActions)
             {
-                AddUpdateDependentActionTypes(items);
-                UpsertStrategyActions(items, dbItems);
+                return count;
             }
+
+            AddUpdateDependentActionTypes(items);
+            UpsertStrategyActions(items, dbItems);
             return count;
         }
 
@@ -91,7 +93,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                     var date = itemEnumerator.Current.Date;
                     var strategyId = ssEnumerator.Current.StrategyId;
                     var fbActions = itemEnumerator.Current.Actions.Values;
-                    
+
                     SafeContextWrapper.SaveChangedContext(
                         SafeContextWrapper.GetStrategyActionLocker(strategyId, date), db, () =>
                         {
@@ -102,25 +104,25 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                             var addedStrategyActions = new List<StrategyAction>();
                             foreach (var fbAction in fbActions)
                             {
-                                int actionTypeId = actionTypeStorage.GetEntityIdFromStorage(fbAction.ActionType);
+                                var actionTypeId = ActionTypeStorage.GetEntityIdFromStorage(fbAction.ActionType);
                                 var actionsOfType = existingActions.Where(x => x.ActionTypeId == actionTypeId); // should be one at most
                                 if (!actionsOfType.Any())
                                 {
-                                    var stratAction = new StrategyAction
+                                    var strategyAction = new StrategyAction
                                     {
                                         Date = date,
                                         StrategyId = strategyId,
                                         ActionTypeId = actionTypeId
                                     };
-                                    SetStrategyActionMetrics(stratAction, fbAction);
-                                    addedStrategyActions.Add(stratAction);
+                                    SetStrategyActionMetrics(strategyAction, fbAction);
+                                    addedStrategyActions.Add(strategyAction);
                                     progress.AddedCount++;
                                 }
                                 else
                                 {
-                                    foreach (var stratAction in actionsOfType) // should be just one, but just in case
+                                    foreach (var strategyAction in actionsOfType) // should be just one, but just in case
                                     {
-                                        SetStrategyActionMetrics(stratAction, fbAction);
+                                        SetStrategyActionMetrics(strategyAction, fbAction);
                                         progress.UpdatedCount++;
                                     }
                                 }
@@ -138,7 +140,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
         private void RemoveStrategyActions(ClientPortalProgContext db, LoadingProgress progress,
                 IEnumerable<StrategyAction> existingActions, IEnumerable<FBAction> fbActions)
         {
-            var actionTypeIds = fbActions.Select(x => actionTypeStorage.GetEntityIdFromStorage(x.ActionType))
+            var actionTypeIds = fbActions.Select(x => ActionTypeStorage.GetEntityIdFromStorage(x.ActionType))
                 .ToArray();
             //Delete actions that no longer have stats for the date/adset
             var actionsForRemoving = existingActions.Where(x => !actionTypeIds.Contains(x.ActionTypeId)).ToList();
@@ -146,10 +148,10 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             progress.DeletedCount += actionsForRemoving.Count;
         }
 
-        private void SetStrategyActionMetrics(StrategyAction stratAction, FBAction fbAction)
+        private void SetStrategyActionMetrics(StrategyAction strategyAction, FBAction fbAction)
         {
-            stratAction.PostClick = fbAction.Num_click ?? 0;
-            stratAction.PostView = fbAction.Num_view ?? 0;
+            strategyAction.PostClick = fbAction.Num_click ?? 0;
+            strategyAction.PostView = fbAction.Num_view ?? 0;
         }
     }
 }

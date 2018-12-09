@@ -21,16 +21,16 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         static TDadSummaryLoader()
         {
-            TDadStorage = new EntityIdStorage<TDad>(x => x.Id, x => $"{x.AdSetId}{x.Name}{x.ExternalId}", x => $"{x.Name}{x.ExternalId}");
+            TDadStorage = new EntityIdStorage<TDad>(x => x.Id, x => $"{x.AdSetId} {x.Name} {x.ExternalId}", x => $"{x.Name} {x.ExternalId}");
         }
 
         public TDadSummaryLoader(int accountId = -1)
         {
-            this.AccountId = accountId;
-            this.adSetLoader = new TDAdSetSummaryLoader(accountId);
-            this.adSetStorage = TDAdSetSummaryLoader.AdSetStorage;
-            this.typeStorage = new EntityIdStorage<EntityType>(x => x.Id, x => x.Name);
-            this.metricLoader = new SummaryMetricLoader();
+            AccountId = accountId;
+            adSetLoader = new TDAdSetSummaryLoader(accountId);
+            adSetStorage = TDAdSetSummaryLoader.AdSetStorage;
+            typeStorage = new EntityIdStorage<EntityType>(x => x.Id, x => x.Name);
+            metricLoader = new SummaryMetricLoader();
         }
 
         protected override int Load(List<TDadSummary> items)
@@ -60,11 +60,13 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             foreach (var item in items)
             {
-                if (TDadStorage.IsEntityInStorage(item.TDad))
+                if (!TDadStorage.IsEntityInStorage(item.TDad))
                 {
-                    item.TDadId = TDadStorage.GetEntityIdFromStorage(item.TDad);
-                    item.TDad = null;
+                    continue;
                 }
+
+                item.TDadId = TDadStorage.GetEntityIdFromStorage(item.TDad);
+                item.TDad = null;
                 // otherwise it will get skipped; no TDad to use for the foreign key
             }
         }
@@ -146,9 +148,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         if (!tdAdsInDbList.Any())
                         {
                             // TDad doesn't exist in the db; so create it and put an entry in the lookup
-                            var tdAdInDB = AddTDad(db, tdAd, AccountId);
-                            Logger.Info(AccountId, "Saved new TDad: {0} ({1}), ExternalId={2}", tdAdInDB.Name, tdAdInDB.Id, tdAdInDB.ExternalId);
-                            TDadStorage.AddEntityIdToStorage(tdAdInDB);
+                            var tdAdInDb = AddTDad(db, tdAd, AccountId);
+                            Logger.Info(AccountId, "Saved new TDad: {0} ({1}), ExternalId={2}", tdAdInDb.Name, tdAdInDb.Id, tdAdInDb.ExternalId);
+                            TDadStorage.AddEntityIdToStorage(tdAdInDb);
                         }
                         else
                         {
@@ -170,7 +172,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             }
         }
 
-        private void AssignAdSetIdToItems(List<TDadSummary> items)
+        private void AssignAdSetIdToItems(IEnumerable<TDadSummary> items)
         {
             foreach (var item in items)
             {
@@ -221,11 +223,13 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             foreach (var id in externalIds)
             {
-                if (typeStorage.IsEntityInStorage(id.Type))
+                if (!typeStorage.IsEntityInStorage(id.Type))
                 {
-                    id.TypeId = typeStorage.GetEntityIdFromStorage(id.Type);
-                    id.Type = null;
+                    continue;
                 }
+
+                id.TypeId = typeStorage.GetEntityIdFromStorage(id.Type);
+                id.Type = null;
             }
         }
 
@@ -298,7 +302,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             var deletedMetrics = item.InitialMetrics == null
                 ? target.Metrics
-                : target.Metrics.Where(x => !item.InitialMetrics.Any(m => m.MetricTypeId == x.MetricTypeId));
+                : target.Metrics.Where(x => item.InitialMetrics.All(m => m.MetricTypeId != x.MetricTypeId));
             metricLoader.RemoveMetrics(db, deletedMetrics);
         }
 

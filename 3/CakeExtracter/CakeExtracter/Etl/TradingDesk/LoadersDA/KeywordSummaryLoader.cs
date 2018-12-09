@@ -22,7 +22,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         static KeywordSummaryLoader()
         {
-            KeywordStorage = new EntityIdStorage<Keyword>(x => x.Id, x => $"{x.AdSetId}{x.StrategyId}{x.Name}{x.ExternalId}", x => $"{x.Name}{x.ExternalId}");
+            KeywordStorage = new EntityIdStorage<Keyword>(x => x.Id, x => $"{x.AdSetId} {x.StrategyId} {x.Name} {x.ExternalId}", x => $"{x.Name} {x.ExternalId}");
         }
 
         public KeywordSummaryLoader(int accountId = -1)
@@ -63,11 +63,12 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             foreach (var item in items)
             {
-                if (KeywordStorage.IsEntityInStorage(item.Keyword))
+                if (!KeywordStorage.IsEntityInStorage(item.Keyword))
                 {
-                    item.KeywordId = KeywordStorage.GetEntityIdFromStorage(item.Keyword);
-                    item.Keyword = null;
+                    continue;
                 }
+                item.KeywordId = KeywordStorage.GetEntityIdFromStorage(item.Keyword);
+                item.Keyword = null;
             }
         }
 
@@ -179,7 +180,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             }
         }
 
-        private void AssignStrategyIdToItems(List<KeywordSummary> items)
+        private void AssignStrategyIdToItems(IEnumerable<KeywordSummary> items)
         {
             foreach (var item in items)
             {
@@ -191,7 +192,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             }
         }
 
-        private void AssignAdSetIdToItems(List<KeywordSummary> items)
+        private void AssignAdSetIdToItems(IEnumerable<KeywordSummary> items)
         {
             foreach (var item in items)
             {
@@ -272,7 +273,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             var deletedMetrics = item.InitialMetrics == null
                 ? target.Metrics
-                : target.Metrics.Where(x => !item.InitialMetrics.Any(m => m.MetricTypeId == x.MetricTypeId));
+                : target.Metrics.Where(x => item.InitialMetrics.All(m => m.MetricTypeId != x.MetricTypeId));
             metricLoader.RemoveMetrics(db, deletedMetrics);
         }
 
