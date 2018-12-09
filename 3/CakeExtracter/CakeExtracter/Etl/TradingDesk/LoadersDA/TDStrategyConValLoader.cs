@@ -32,49 +32,46 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 foreach (var item in items)
                 {
-                    SafeContextWrapper.SaveChangedContext(
-                        SafeContextWrapper.GetStrategySummariesLocker(item.StrategyId, item.Date), db, () =>
+                    var target = db.Set<StrategySummary>().Find(item.Date, item.StrategyId);
+                    if (target == null)
+                    {
+                        if (item.PostClickRev != 0 || item.PostViewRev != 0)
                         {
-                            var target = db.Set<StrategySummary>().Find(item.Date, item.StrategyId);
-                            if (target == null)
+                            var ds = new StrategySummary
                             {
-                                if (item.PostClickRev != 0 || item.PostViewRev != 0)
-                                {
-                                    var ds = new StrategySummary
-                                    {
-                                        Date = item.Date,
-                                        StrategyId = item.StrategyId,
-                                        PostClickRev = item.PostClickRev,
-                                        PostViewRev = item.PostViewRev
-                                    };
-                                    db.StrategySummaries.Add(ds);
-                                    progress.AddedCount++;
-                                }
-                                else
-                                {
-                                    progress.AlreadyDeletedCount++;
-                                }
-                            }
-                            else // StrategySummary already exists
-                            {
-                                var entry = db.Entry(target);
-                                if (entry.State == EntityState.Unchanged)
-                                {
-                                    target.PostClickRev = item.PostClickRev;
-                                    target.PostViewRev = item.PostViewRev;
-                                    progress.UpdatedCount++;
-                                }
-                                else
-                                {
-                                    Logger.Warn(accountId, "Encountered duplicate for {0:d} - StrategyId {1}", item.Date, item.StrategyId);
-                                    progress.DuplicateCount++;
-                                }
-                            }
-
-                            progress.ItemCount++;
+                                Date = item.Date,
+                                StrategyId = item.StrategyId,
+                                PostClickRev = item.PostClickRev,
+                                PostViewRev = item.PostViewRev
+                            };
+                            db.StrategySummaries.Add(ds);
+                            progress.AddedCount++;
                         }
-                    );
+                        else
+                        {
+                            progress.AlreadyDeletedCount++;
+                        }
+                    }
+                    else // StrategySummary already exists
+                    {
+                        var entry = db.Entry(target);
+                        if (entry.State == EntityState.Unchanged)
+                        {
+                            target.PostClickRev = item.PostClickRev;
+                            target.PostViewRev = item.PostViewRev;
+                            progress.UpdatedCount++;
+                        }
+                        else
+                        {
+                            Logger.Warn(accountId, "Encountered duplicate for {0:d} - StrategyId {1}", item.Date, item.StrategyId);
+                            progress.DuplicateCount++;
+                        }
+                    }
+
+                    progress.ItemCount++;
                 }
+
+                db.SaveChanges();
             }
 
             Logger.Info(accountId, "Saving {0} StrategySummary ConVals ({1} updates, {2} additions, {3} duplicates, {4} already-deleted)",

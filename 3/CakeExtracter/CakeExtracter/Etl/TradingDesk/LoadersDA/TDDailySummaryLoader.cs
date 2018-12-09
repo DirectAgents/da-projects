@@ -41,23 +41,22 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 foreach (var item in items)
                 {
-                    SafeContextWrapper.SaveChangedContext(
-                        SafeContextWrapper.GetDailySummariesLocker(accountId, item.Date), db, () =>
+                    {
+                        var target = db.Set<DailySummary>().Find(item.Date, item.AccountId);
+                        if (target == null)
                         {
-                            var target = db.Set<DailySummary>().Find(item.Date, item.AccountId);
-                            if (target == null)
-                            {
-                                TryToAddSummary(db, item, progress);
-                            }
-                            else
-                            {
-                                TryToUpdateSummary(db, item, target, progress);
-                            }
-
-                            progress.ItemCount++;
+                            TryToAddSummary(db, item, progress);
                         }
-                    );
+                        else
+                        {
+                            TryToUpdateSummary(db, item, target, progress);
+                        }
+
+                        progress.ItemCount++;
+                    }
                 }
+
+                db.SaveChanges();
             }
 
             Logger.Info(accountId, "Saving {0} DailySummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted)",

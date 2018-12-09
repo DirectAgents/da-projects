@@ -84,24 +84,20 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
                 foreach (var item in items)
                 {
-                    SafeContextWrapper.SaveChangedContext(
-                        SafeContextWrapper.GetStrategySummariesLocker(item.StrategyId, item.Date), db, () =>
-                        {
-                            var target = db.Set<StrategySummary>().Find(item.Date, item.StrategyId);
-                            if (target == null)
-                            {
-                                TryToAddSummary(db, item, strategyIdsInDb, progress);
-                            }
-                            else // StrategySummary already exists
-                            {
-                                TryToUpdateSummary(db, item, target, progress);
-                            }
+                    var target = db.Set<StrategySummary>().Find(item.Date, item.StrategyId);
+                    if (target == null)
+                    {
+                        TryToAddSummary(db, item, strategyIdsInDb, progress);
+                    }
+                    else // StrategySummary already exists
+                    {
+                        TryToUpdateSummary(db, item, target, progress);
+                    }
 
-                            progress.ItemCount++;
-
-                        }
-                    );
+                    progress.ItemCount++;
                 }
+
+                db.SaveChanges();
             }
 
             Logger.Info(AccountId, "Saving {0} StrategySummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",

@@ -24,50 +24,49 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 foreach (var item in items)
                 {
-                    SafeContextWrapper.SaveChangedContext(
-                        SafeContextWrapper.GetDailySummariesLocker(accountId, item.Date), db, () =>
+                    {
+                        var target = db.Set<DailySummary>().Find(item.Date, accountId);
+                        if (target == null)
                         {
-                            var target = db.Set<DailySummary>().Find(item.Date, accountId);
-                            if (target == null)
+                            if (item.PostClickRev != 0 || item.PostViewRev != 0)
                             {
-                                if (item.PostClickRev != 0 || item.PostViewRev != 0)
+                                var ds = new DailySummary
                                 {
-                                    var ds = new DailySummary
-                                    {
-                                        Date = item.Date,
-                                        AccountId = accountId,
-                                        PostClickRev = item.PostClickRev,
-                                        PostViewRev = item.PostViewRev
-                                    };
-                                    db.DailySummaries.Add(ds);
-                                    progress.AddedCount++;
-                                }
-                                else
-                                {
-                                    progress.AlreadyDeletedCount++;
-                                }
+                                    Date = item.Date,
+                                    AccountId = accountId,
+                                    PostClickRev = item.PostClickRev,
+                                    PostViewRev = item.PostViewRev
+                                };
+                                db.DailySummaries.Add(ds);
+                                progress.AddedCount++;
                             }
-                            else // DailySummary already exists
+                            else
                             {
-                                var entry = db.Entry(target);
-                                if (entry.State == EntityState.Unchanged)
-                                {
-                                    target.PostClickRev = item.PostClickRev;
-                                    target.PostViewRev = item.PostViewRev;
-                                    progress.UpdatedCount++;
-                                }
-                                else
-                                {
-                                    Logger.Warn(accountId, "Encountered duplicate for {0:d} - Acct {1}", item.Date,
-                                        item.AccountId);
-                                    progress.DuplicateCount++;
-                                }
+                                progress.AlreadyDeletedCount++;
                             }
-
-                            progress.ItemCount++;
                         }
-                    );
+                        else // DailySummary already exists
+                        {
+                            var entry = db.Entry(target);
+                            if (entry.State == EntityState.Unchanged)
+                            {
+                                target.PostClickRev = item.PostClickRev;
+                                target.PostViewRev = item.PostViewRev;
+                                progress.UpdatedCount++;
+                            }
+                            else
+                            {
+                                Logger.Warn(accountId, "Encountered duplicate for {0:d} - Acct {1}", item.Date,
+                                    item.AccountId);
+                                progress.DuplicateCount++;
+                            }
+                        }
+
+                        progress.ItemCount++;
+                    }
                 }
+
+                db.SaveChanges();
             }
 
             Logger.Info(accountId, "Saving {0} DailySummary ConVals ({1} updates, {2} additions, {3} duplicates, {4} already-deleted)",

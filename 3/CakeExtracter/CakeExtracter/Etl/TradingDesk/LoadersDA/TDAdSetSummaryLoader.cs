@@ -80,23 +80,20 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
                 foreach (var item in items)
                 {
-                    SafeContextWrapper.SaveChangedContext(
-                        SafeContextWrapper.GetAdSetSummariesLocker(item.AdSetId, item.Date), db, () =>
-                        {
-                            var target = db.Set<AdSetSummary>().Find(item.Date, item.AdSetId);
-                            if (target == null)
-                            {
-                                TryToAddSummary(db, item, adSetIdsInDb, progress);
-                            }
-                            else // AdSetSummary already exists
-                            {
-                                TryToUpdateSummary(db, item, target, progress);
-                            }
+                    var target = db.Set<AdSetSummary>().Find(item.Date, item.AdSetId);
+                    if (target == null)
+                    {
+                        TryToAddSummary(db, item, adSetIdsInDb, progress);
+                    }
+                    else // AdSetSummary already exists
+                    {
+                        TryToUpdateSummary(db, item, target, progress);
+                    }
 
-                            progress.ItemCount++;
-                        }
-                    );
+                    progress.ItemCount++;
                 }
+
+                db.SaveChanges();
             }
 
             Logger.Info(AccountId, "Saving {0} AdSetSummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",

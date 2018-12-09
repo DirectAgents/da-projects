@@ -142,45 +142,42 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                     var adSetId = asEnumerator.Current.AdSetId;
                     var fbActions = itemEnumerator.Current.Actions.Values;
 
-                    SafeContextWrapper.SaveChangedContext(
-                        SafeContextWrapper.GetAdSetActionLocker(adSetId, date), db, () =>
+                    var existingActions = db.AdSetActions.Where(x => x.Date == date && x.AdSetId == adSetId);
+                    RemoveAdSetActions(db, progress, existingActions, fbActions);
+
+                    //Add/update the rest
+                    var addedAdSetActions = new List<AdSetAction>();
+                    foreach (var fbAction in fbActions)
+                    {
+                        var actionTypeId = ActionTypeStorage.GetEntityIdFromStorage(fbAction.ActionType);
+                        var actionsOfType =
+                            existingActions.Where(x => x.ActionTypeId == actionTypeId); // should be one at most
+                        if (!actionsOfType.Any())
                         {
-                            var existingActions = db.AdSetActions.Where(x => x.Date == date && x.AdSetId == adSetId);
-                            RemoveAdSetActions(db, progress, existingActions, fbActions);
-
-                            //Add/update the rest
-                            var addedAdSetActions = new List<AdSetAction>();
-                            foreach (var fbAction in fbActions)
+                            var adSetAction = new AdSetAction
                             {
-                                var actionTypeId = ActionTypeStorage.GetEntityIdFromStorage(fbAction.ActionType);
-                                var actionsOfType =
-                                    existingActions.Where(x => x.ActionTypeId == actionTypeId); // should be one at most
-                                if (!actionsOfType.Any())
-                                {
-                                    var adSetAction = new AdSetAction
-                                    {
-                                        Date = date,
-                                        AdSetId = adSetId,
-                                        ActionTypeId = actionTypeId
-                                    };
-                                    SetAdSetActionMetrics(adSetAction, fbAction);
-                                    addedAdSetActions.Add(adSetAction);
-                                    progress.AddedCount++;
-                                }
-                                else
-                                {
-                                    foreach (var adSetAction in actionsOfType) // should be just one, but just in case
-                                    {
-                                        SetAdSetActionMetrics(adSetAction, fbAction);
-                                        progress.UpdatedCount++;
-                                    }
-                                }
-                            }
-
-                            db.AdSetActions.AddRange(addedAdSetActions);
+                                Date = date,
+                                AdSetId = adSetId,
+                                ActionTypeId = actionTypeId
+                            };
+                            SetAdSetActionMetrics(adSetAction, fbAction);
+                            addedAdSetActions.Add(adSetAction);
+                            progress.AddedCount++;
                         }
-                    );
+                        else
+                        {
+                            foreach (var adSetAction in actionsOfType) // should be just one, but just in case
+                            {
+                                SetAdSetActionMetrics(adSetAction, fbAction);
+                                progress.UpdatedCount++;
+                            }
+                        }
+                    }
+
+                    db.AdSetActions.AddRange(addedAdSetActions);
                 } // loop through items
+
+                db.SaveChanges();
             }
 
             Logger.Info(accountId, "Saved AdSetActions ({0} updates, {1} additions, {2} deletions)", progress.UpdatedCount, progress.AddedCount, progress.DeletedCount);

@@ -94,44 +94,41 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                     var strategyId = ssEnumerator.Current.StrategyId;
                     var fbActions = itemEnumerator.Current.Actions.Values;
 
-                    SafeContextWrapper.SaveChangedContext(
-                        SafeContextWrapper.GetStrategyActionLocker(strategyId, date), db, () =>
+                    var existingActions = db.StrategyActions.Where(x => x.Date == date && x.StrategyId == strategyId);
+                    RemoveStrategyActions(db, progress, existingActions, fbActions);
+
+                    //Add/update the rest
+                    var addedStrategyActions = new List<StrategyAction>();
+                    foreach (var fbAction in fbActions)
+                    {
+                        var actionTypeId = ActionTypeStorage.GetEntityIdFromStorage(fbAction.ActionType);
+                        var actionsOfType = existingActions.Where(x => x.ActionTypeId == actionTypeId); // should be one at most
+                        if (!actionsOfType.Any())
                         {
-                            var existingActions = db.StrategyActions.Where(x => x.Date == date && x.StrategyId == strategyId);
-                            RemoveStrategyActions(db, progress, existingActions, fbActions);
-
-                            //Add/update the rest
-                            var addedStrategyActions = new List<StrategyAction>();
-                            foreach (var fbAction in fbActions)
+                            var strategyAction = new StrategyAction
                             {
-                                var actionTypeId = ActionTypeStorage.GetEntityIdFromStorage(fbAction.ActionType);
-                                var actionsOfType = existingActions.Where(x => x.ActionTypeId == actionTypeId); // should be one at most
-                                if (!actionsOfType.Any())
-                                {
-                                    var strategyAction = new StrategyAction
-                                    {
-                                        Date = date,
-                                        StrategyId = strategyId,
-                                        ActionTypeId = actionTypeId
-                                    };
-                                    SetStrategyActionMetrics(strategyAction, fbAction);
-                                    addedStrategyActions.Add(strategyAction);
-                                    progress.AddedCount++;
-                                }
-                                else
-                                {
-                                    foreach (var strategyAction in actionsOfType) // should be just one, but just in case
-                                    {
-                                        SetStrategyActionMetrics(strategyAction, fbAction);
-                                        progress.UpdatedCount++;
-                                    }
-                                }
-                            }
-
-                            db.StrategyActions.AddRange(addedStrategyActions);
+                                Date = date,
+                                StrategyId = strategyId,
+                                ActionTypeId = actionTypeId
+                            };
+                            SetStrategyActionMetrics(strategyAction, fbAction);
+                            addedStrategyActions.Add(strategyAction);
+                            progress.AddedCount++;
                         }
-                    );
+                        else
+                        {
+                            foreach (var strategyAction in actionsOfType) // should be just one, but just in case
+                            {
+                                SetStrategyActionMetrics(strategyAction, fbAction);
+                                progress.UpdatedCount++;
+                            }
+                        }
+                    }
+
+                    db.StrategyActions.AddRange(addedStrategyActions);
                 } // loop through items
+
+                db.SaveChanges();
             }
 
             Logger.Info(accountId, "Saved StrategyActions ({0} updates, {1} additions, {2} deletions)", progress.UpdatedCount, progress.AddedCount, progress.DeletedCount);
