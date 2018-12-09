@@ -47,7 +47,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             return count;
         }
 
-        public static StrategySummary CreateStrategySummary(FBSummary item)
+        public StrategySummary CreateStrategySummary(FBSummary item)
         {
             var sum = new StrategySummary
             {

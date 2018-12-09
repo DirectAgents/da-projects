@@ -24,7 +24,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         static SearchTermSummaryLoader()
         {
-            SearchTermStorage = new EntityIdStorage<SearchTerm>(x => x.Id, x => $"{x.Name} {x.KeywordId}");
+            SearchTermStorage = new EntityIdStorage<SearchTerm>(x => x.Id, x => $"{x.AccountId} {x.Name} {x.KeywordId}");
         }
 
         public SearchTermSummaryLoader(int accountId = -1)
@@ -125,47 +125,43 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public void AddUpdateDependentStrategies(List<SearchTermSummary> items)
         {
-            var strategies = items
-                .GroupBy(i => new { i.SearchTerm.Keyword.Strategy?.Name, i.SearchTerm.Keyword.Strategy?.ExternalId })
-                .Select(x => x.First().SearchTerm.Keyword.Strategy)
-                .Where(x => x != null && (!string.IsNullOrWhiteSpace(x.Name) || !string.IsNullOrWhiteSpace(x.ExternalId)))
-                .ToList();
+            var strategies = items.Select(x => x.SearchTerm.Keyword.Strategy).ToList();
             strategyLoader.AddUpdateDependentStrategies(strategies);
             AssignStrategyIdToItems(items);
         }
 
         public void AddUpdateDependentAdSets(List<SearchTermSummary> items)
         {
-            var adSets = items
-                .GroupBy(x => new { x.SearchTerm.Keyword.AdSet?.StrategyId, x.SearchTerm.Keyword.AdSet?.ExternalId, x.SearchTerm.Keyword.AdSet?.Name })
-                .Select(x => x.First().SearchTerm.Keyword.AdSet)
-                .Where(x => x != null && (!string.IsNullOrWhiteSpace(x.Name) || !string.IsNullOrWhiteSpace(x.ExternalId)))
-                .ToList();
-            adSetLoader.AddUpdateDependentAdSets(adSets, AccountId);
+            var adSets = items.Select(x => x.SearchTerm.Keyword.AdSet).ToList();
+            adSetLoader.AddUpdateDependentAdSets(adSets);
             AssignAdSetIdToItems(items);
         }
 
         public void AddUpdateDependentKeywords(List<SearchTermSummary> items)
         {
-            var keywords = items
-                .GroupBy(x => new { x.SearchTerm.Keyword.AdSetId, x.SearchTerm.Keyword.StrategyId, x.SearchTerm.Keyword.Name, x.SearchTerm.Keyword.ExternalId })
-                .Select(x => x.First().SearchTerm.Keyword)
-                .Where(x => x != null && (!string.IsNullOrWhiteSpace(x.Name) || !string.IsNullOrWhiteSpace(x.ExternalId)))
-                .ToList();
+            var keywords = items.Select(x => x.SearchTerm.Keyword).ToList();
             keywordLoader.AddUpdateDependentKeywords(keywords);
             AssignKeywordIdToItems(items);
         }
 
         public void AddUpdateDependentSearchTerms(List<SearchTermSummary> items)
         {
-            var searchTerms = items
-                .GroupBy(i => new { i.SearchTerm.KeywordId, i.SearchTerm.Name })
-                .Select(x => x.First().SearchTerm)
-                .ToList();
+            var searchTerms = items.Select(x => x.SearchTerm).ToList();
             AddUpdateDependentSearchTerms(searchTerms);
         }
 
-        private void AddUpdateDependentSearchTerms(IEnumerable<SearchTerm> items)
+        public void AddUpdateDependentSearchTerms(List<SearchTerm> items)
+        {
+            var notNullableItems = items.Where(x => x != null).ToList();
+            notNullableItems.ForEach(x => x.AccountId = AccountId);
+            var searchTerms = notNullableItems
+                .GroupBy(x => new { x.AccountId, x.KeywordId, x.Name })
+                .Select(x => x.First())
+                .ToList();
+            AddUpdateDependentSearchTermsInDb(searchTerms);
+        }
+
+        private void AddUpdateDependentSearchTermsInDb(IEnumerable<SearchTerm> items)
         {
             using (var db = new ClientPortalProgContext())
             {
@@ -178,10 +174,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
                     SafeContextWrapper.Lock(SafeContextWrapper.SearchTermLocker, () =>
                     {
-                        var termsInDbList = GetSearchTerms(db, terms, AccountId);
+                        var termsInDbList = GetSearchTerms(db, terms);
                         if (!termsInDbList.Any())
                         {
-                            var termsInDb = AddSearchTerm(db, terms, AccountId);
+                            var termsInDb = AddSearchTerm(db, terms);
                             Logger.Info(AccountId, "Saved new SearchTerm: {0} ({1}), KeywordId={2}", termsInDb.Name, termsInDb.Id, termsInDb.KeywordId);
                             SearchTermStorage.AddEntityIdToStorage(termsInDb);
                         }
@@ -312,29 +308,29 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             metricLoader.RemoveMetrics(db, deletedMetrics);
         }
 
-        private List<SearchTerm> GetSearchTerms(ClientPortalProgContext db, SearchTerm term, int accountId)
+        private List<SearchTerm> GetSearchTerms(ClientPortalProgContext db, SearchTerm term)
         {
             IQueryable<SearchTerm> termsInDb;
             if (term.KeywordId.HasValue)
             {
-                termsInDb = db.SearchTerms.Where(a => a.AccountId == AccountId && a.KeywordId == term.KeywordId && a.Name == term.Name);
+                termsInDb = db.SearchTerms.Where(a => a.AccountId == term.AccountId && a.KeywordId == term.KeywordId && a.Name == term.Name);
                 if (!termsInDb.Any())
                 {
-                    termsInDb = db.SearchTerms.Where(x => x.AccountId == accountId && x.KeywordId == null && x.Name == term.Name);
+                    termsInDb = db.SearchTerms.Where(x => x.AccountId == term.AccountId && x.KeywordId == null && x.Name == term.Name);
                 }
             }
             else
             {
-                termsInDb = db.SearchTerms.Where(x => x.AccountId == accountId && x.Name == term.Name);
+                termsInDb = db.SearchTerms.Where(x => x.AccountId == term.AccountId && x.Name == term.Name);
             }
             return termsInDb.ToList();
         }
 
-        private SearchTerm AddSearchTerm(ClientPortalProgContext db, SearchTerm termProps, int accountId)
+        private SearchTerm AddSearchTerm(ClientPortalProgContext db, SearchTerm termProps)
         {
             var term = new SearchTerm
             {
-                AccountId = accountId,
+                AccountId = termProps.AccountId,
                 KeywordId = termProps.KeywordId,
                 Name = termProps.Name
             };

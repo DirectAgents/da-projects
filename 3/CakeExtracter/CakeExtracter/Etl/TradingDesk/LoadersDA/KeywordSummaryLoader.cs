@@ -22,7 +22,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         static KeywordSummaryLoader()
         {
-            KeywordStorage = new EntityIdStorage<Keyword>(x => x.Id, x => $"{x.AdSetId} {x.StrategyId} {x.Name} {x.ExternalId}", x => $"{x.Name} {x.ExternalId}");
+            KeywordStorage = new EntityIdStorage<Keyword>(x => x.Id, x => $"{x.AccountId} {x.AdSetId} {x.StrategyId} {x.Name} {x.ExternalId}", x => $"{x.AccountId} {x.Name} {x.ExternalId}");
         }
 
         public KeywordSummaryLoader(int accountId = -1)
@@ -113,36 +113,37 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public void AddUpdateDependentStrategies(List<KeywordSummary> items)
         {
-            var strategies = items
-                .GroupBy(i => new { i.Keyword.Strategy?.Name, i.Keyword.Strategy?.ExternalId })
-                .Select(x => x.First().Keyword.Strategy)
-                .Where(x => x != null && (!string.IsNullOrWhiteSpace(x.Name) || !string.IsNullOrWhiteSpace(x.ExternalId)))
-                .ToList();
+            var strategies = items.Select(x => x.Keyword.Strategy).ToList();
             strategyLoader.AddUpdateDependentStrategies(strategies);
             AssignStrategyIdToItems(items);
         }
 
         public void AddUpdateDependentAdSets(List<KeywordSummary> items)
         {
-            var adSets = items
-                .GroupBy(x => new { x.Keyword.AdSet?.StrategyId, x.Keyword.AdSet?.ExternalId, x.Keyword.AdSet?.Name })
-                .Select(x => x.First().Keyword.AdSet)
-                .Where(x => x != null && (!string.IsNullOrWhiteSpace(x.Name) || !string.IsNullOrWhiteSpace(x.ExternalId)))
-                .ToList();
-            adSetLoader.AddUpdateDependentAdSets(adSets, AccountId);
+            var adSets = items.Select(x => x.Keyword.AdSet).ToList();
+            adSetLoader.AddUpdateDependentAdSets(adSets);
             AssignAdSetIdToItems(items);
         }
 
         public void AddUpdateDependentKeywords(List<KeywordSummary> items)
         {
-            var keywords = items
-                .GroupBy(i => new { i.Keyword.AdSetId, i.Keyword.StrategyId, i.Keyword.Name, i.Keyword.ExternalId })
-                .Select(x => x.First().Keyword)
-                .ToList();
+            var keywords = items.Select(x => x.Keyword).ToList();
             AddUpdateDependentKeywords(keywords);
         }
 
         public void AddUpdateDependentKeywords(List<Keyword> items)
+        {
+            var notNullableItems = items.Where(x => x != null).ToList();
+            notNullableItems.ForEach(x => x.AccountId = AccountId);
+            var keywords = notNullableItems
+                .Where(x => !string.IsNullOrWhiteSpace(x.Name) || !string.IsNullOrWhiteSpace(x.ExternalId))
+                .GroupBy(x => new { x.AccountId, x.AdSetId, x.StrategyId, x.Name, x.ExternalId })
+                .Select(x => x.First())
+                .ToList();
+            AddUpdateDependentKeywordsInDb(keywords);
+        }
+
+        private void AddUpdateDependentKeywordsInDb(List<Keyword> items)
         {
             using (var db = new ClientPortalProgContext())
             {
@@ -155,10 +156,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
                     SafeContextWrapper.Lock(SafeContextWrapper.KeywordLocker, () =>
                     {
-                        var keywordsInDbList = GetKeywords(db, keyword, AccountId);
+                        var keywordsInDbList = GetKeywords(db, keyword);
                         if (!keywordsInDbList.Any())
                         {
-                            var keywordInDb = AddKeyword(db, keyword, AccountId);
+                            var keywordInDb = AddKeyword(db, keyword);
                             Logger.Info(AccountId, "Saved new Keyword: {0} ({1}), ExternalId={2}", keywordInDb.Name, keywordInDb.Id, keywordInDb.ExternalId);
                             KeywordStorage.AddEntityIdToStorage(keywordInDb);
                         }
@@ -277,21 +278,21 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             metricLoader.RemoveMetrics(db, deletedMetrics);
         }
 
-        private List<Keyword> GetKeywords(ClientPortalProgContext db, Keyword keyword, int accountId)
+        private List<Keyword> GetKeywords(ClientPortalProgContext db, Keyword keyword)
         {
             IQueryable<Keyword> keywordsInDb;
             if (!string.IsNullOrWhiteSpace(keyword.ExternalId))
             {
-                keywordsInDb = db.Keywords.Where(a => a.AccountId == AccountId && a.ExternalId == keyword.ExternalId);
+                keywordsInDb = db.Keywords.Where(a => a.AccountId == keyword.AccountId && a.ExternalId == keyword.ExternalId);
                 if (!keywordsInDb.Any())
                 {
-                    keywordsInDb = db.Keywords.Where(x => x.AccountId == accountId && x.ExternalId == null && x.Name == keyword.Name);
+                    keywordsInDb = db.Keywords.Where(x => x.AccountId == keyword.AccountId && x.ExternalId == null && x.Name == keyword.Name);
                     keywordsInDb = FilterKeywordsByForeignKeys(keywordsInDb, keyword);
                 }
             }
             else
             {
-                keywordsInDb = db.Keywords.Where(x => x.AccountId == accountId && x.Name == keyword.Name);
+                keywordsInDb = db.Keywords.Where(x => x.AccountId == keyword.AccountId && x.Name == keyword.Name);
                 keywordsInDb = FilterKeywordsByForeignKeys(keywordsInDb, keyword);
             }
             return keywordsInDb.ToList();
@@ -311,11 +312,11 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             return keywords;
         }
 
-        private Keyword AddKeyword(ClientPortalProgContext db, Keyword keywordProps, int accountId)
+        private Keyword AddKeyword(ClientPortalProgContext db, Keyword keywordProps)
         {
             var keyword = new Keyword
             {
-                AccountId = accountId,
+                AccountId = keywordProps.AccountId,
                 AdSetId = keywordProps.AdSetId,
                 StrategyId = keywordProps.StrategyId,
                 ExternalId = keywordProps.ExternalId,

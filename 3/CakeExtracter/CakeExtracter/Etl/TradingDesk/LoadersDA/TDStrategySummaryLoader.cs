@@ -14,14 +14,14 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         // Note accountId is only used in AddUpdateDependentStrategies() (i.e. not by AdrollCampaignSummaryLoader)
         public readonly int AccountId;
         public static readonly EntityIdStorage<Strategy> StrategyStorage;
-        private static readonly EntityIdStorage<EntityType> typeStorage;
+        private static readonly EntityIdStorage<EntityType> TypeStorage;
         private readonly bool preLoadStrategies;
         private readonly SummaryMetricLoader metricLoader;
 
         static TDStrategySummaryLoader()
         {
-            StrategyStorage = new EntityIdStorage<Strategy>(x => x.Id, x => $"{x.Name} {x.ExternalId}");
-            typeStorage = new EntityIdStorage<EntityType>(x => x.Id, x => x.Name);
+            StrategyStorage = new EntityIdStorage<Strategy>(x => x.Id, x => $"{x.AccountId} {x.Name} {x.ExternalId}");
+            TypeStorage = new EntityIdStorage<EntityType>(x => x.Id, x => x.Name);
         }
 
         public TDStrategySummaryLoader(int accountId = -1, bool preLoadStrategies = false)
@@ -52,6 +52,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 {
                     x.Strategy = new Strategy();
                 }
+
+                x.Strategy.AccountId = AccountId;
                 Mapper.Map(x, x.Strategy);
             });
         }
@@ -113,19 +115,23 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public void AddUpdateDependentStrategies(IEnumerable<StrategySummary> items)
         {
-            var strategies = items
-                .GroupBy(i => new { i.Strategy.Name, i.Strategy.ExternalId })
-                .Select(x => x.First().Strategy)
-                .ToList();
-            AddUpdateDependentStrategies(strategies, AccountId);
+            var strategies = items.Select(x => x.Strategy).ToList();
+            AddUpdateDependentStrategies(strategies);
         }
 
         public void AddUpdateDependentStrategies(IEnumerable<Strategy> items)
         {
-            AddUpdateDependentStrategies(items, AccountId);
+            var notNullableItems = items.Where(x => x != null).ToList();
+            notNullableItems.ForEach(x => x.AccountId = AccountId);
+            var strategies = notNullableItems
+                .Where(x => !string.IsNullOrWhiteSpace(x.Name) || !string.IsNullOrWhiteSpace(x.ExternalId))
+                .GroupBy(x => new {x.AccountId, x.Name, x.ExternalId})
+                .Select(x => x.First())
+                .ToList();
+            AddUpdateDependentStrategiesInDb(strategies);
         }
 
-        public void AddUpdateDependentStrategies(IEnumerable<Strategy> strategies, int accountId)
+        private void AddUpdateDependentStrategiesInDb(IEnumerable<Strategy> strategies)
         {
             using (var db = new ClientPortalProgContext())
             {
@@ -139,10 +145,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
                     SafeContextWrapper.Lock(SafeContextWrapper.StrategyLocker, () =>
                     {
-                        var strategiesInDbList = GetStrategies(db, strategyProps, accountId);
+                        var strategiesInDbList = GetStrategies(db, strategyProps);
                         if (!strategiesInDbList.Any())
                         {
-                            var strategy = AddStrategy(db, strategyProps, accountId); // Strategy doesn't exist in the db; so create it and put an entry in the lookup
+                            var strategy = AddStrategy(db, strategyProps); // Strategy doesn't exist in the db; so create it and put an entry in the lookup
                             Logger.Info(accountId, "Saved new Strategy: {0} ({1}), ExternalId={2}", strategy.Name, strategy.Id, strategy.ExternalId);
                             StrategyStorage.AddEntityIdToStorage(strategy);
                         }
@@ -171,7 +177,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             var notStoredTypes = strategies.GroupBy(x => x.Type?.Name)
                 .Select(x => x.First().Type)
-                .Where(x => x != null && !string.IsNullOrEmpty(x.Name) && !typeStorage.IsEntityInStorage(x))
+                .Where(x => x != null && !string.IsNullOrEmpty(x.Name) && !TypeStorage.IsEntityInStorage(x))
                 .ToList();
             AddDependentTypes(db, notStoredTypes);
             AssignTypeIdToStrategies(strategies);
@@ -192,22 +198,22 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         }
                         else
                         {
-                            typeStorage.AddEntityIdToStorage(typeInDB);
+                            TypeStorage.AddEntityIdToStorage(typeInDB);
                         }
                     }
                     db.Types.AddRange(newTypes);
                 }
             );
-            newTypes.ForEach(typeStorage.AddEntityIdToStorage);
+            newTypes.ForEach(TypeStorage.AddEntityIdToStorage);
         }
 
         private void AssignTypeIdToStrategies(IEnumerable<Strategy> strategies)
         {
             foreach (var strategy in strategies)
             {
-                if (typeStorage.IsEntityInStorage(strategy.Type))
+                if (TypeStorage.IsEntityInStorage(strategy.Type))
                 {
-                    strategy.TypeId = typeStorage.GetEntityIdFromStorage(strategy.Type);
+                    strategy.TypeId = TypeStorage.GetEntityIdFromStorage(strategy.Type);
                 }
                 strategy.Type = null;
             }
@@ -286,28 +292,28 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             metricLoader.RemoveMetrics(db, deletedMetrics);
         }
 
-        private List<Strategy> GetStrategies(ClientPortalProgContext db, Strategy strategy, int accountId)
+        private List<Strategy> GetStrategies(ClientPortalProgContext db, Strategy strategy)
         {
             IEnumerable<Strategy> strategiesInDb;
             if (string.IsNullOrWhiteSpace(strategy.ExternalId))
             {
-                strategiesInDb = db.Strategies.Where(s => s.AccountId == accountId && s.Name == strategy.Name);
+                strategiesInDb = db.Strategies.Where(s => s.AccountId == strategy.AccountId && s.Name == strategy.Name);
                 return strategiesInDb.ToList();
             }
             // First see if a Strategy with that ExternalId exists
-            strategiesInDb = db.Strategies.Where(s => s.AccountId == accountId && s.ExternalId == strategy.ExternalId);
+            strategiesInDb = db.Strategies.Where(s => s.AccountId == strategy.AccountId && s.ExternalId == strategy.ExternalId);
             if (!strategiesInDb.Any()) // If not, check for a match by name where ExternalId == null
             {
-                strategiesInDb = db.Strategies.Where(s => s.AccountId == accountId && s.ExternalId == null && s.Name == strategy.Name);
+                strategiesInDb = db.Strategies.Where(s => s.AccountId == strategy.AccountId && s.ExternalId == null && s.Name == strategy.Name);
             }
             return strategiesInDb.ToList();
         }
 
-        private Strategy AddStrategy(ClientPortalProgContext db, Strategy strategyProps, int accountId)
+        private Strategy AddStrategy(ClientPortalProgContext db, Strategy strategyProps)
         {
             var strategy = new Strategy
             {
-                AccountId = accountId,
+                AccountId = strategyProps.AccountId,
                 ExternalId = strategyProps.ExternalId,
                 Name = strategyProps.Name,
                 TypeId = strategyProps.TypeId
