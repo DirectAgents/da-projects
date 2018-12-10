@@ -5,7 +5,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class AmazonAdSetSummaryLoader : Loader<AdSetSummary>
     {
-        private TDAdSetSummaryLoader tdAdSetSummaryLoader;
+        private readonly TDAdSetSummaryLoader tdAdSetSummaryLoader;
 
         public AmazonAdSetSummaryLoader(int accountId)
         {
