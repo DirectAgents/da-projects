@@ -116,6 +116,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             where TSummaryMetric : SummaryMetric, new()
         {
             var entry = db.Entry(target);
+            entry.State = EntityState.Detached;
             Mapper.Map(item, target);
             entry.State = EntityState.Modified;
         }
