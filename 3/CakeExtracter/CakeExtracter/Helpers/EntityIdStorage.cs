@@ -7,6 +7,8 @@ namespace CakeExtracter.Helpers
 {
     public class EntityIdStorage<T>
     {
+        public const int NotExistingId = -1;
+
         private readonly ConcurrentDictionary<string, int> ids = new ConcurrentDictionary<string, int>();
 
         private readonly Func<T, int> getIdFunc;
@@ -29,12 +31,12 @@ namespace CakeExtracter.Helpers
             var key = getCompositeKeyFunctions
                 .Select(f => f(item))
                 .FirstOrDefault(x => x != null && ids.ContainsKey(x));
-            return key == null ? 0 : ids[key];
+            return key == null ? NotExistingId : ids[key];
         }
 
         public int GetEntityIdFromStorage(string key)
         {
-            return !ids.ContainsKey(key) ? 0 : ids[key];
+            return !ids.ContainsKey(key) ? NotExistingId : ids[key];
         }
 
         public bool IsEntityInStorage(T item)

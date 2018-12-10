@@ -115,7 +115,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                 Code = actionTypeCode
             };
             db.ActionTypes.Add(actionType);
-            db.SaveChanges();
+            SafeContextWrapper.TrySaveChanges(db);
             return actionType;
         }
 

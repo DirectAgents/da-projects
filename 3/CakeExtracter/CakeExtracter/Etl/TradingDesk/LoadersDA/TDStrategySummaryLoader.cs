@@ -307,7 +307,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 TypeId = strategyProps.TypeId
             };
             db.Strategies.Add(strategy);
-            db.SaveChanges();
+            SafeContextWrapper.TrySaveChanges(db);
             return strategy;
         }
 
@@ -328,7 +328,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     strategy.TypeId = strategyProps.TypeId;
                 }
             }
-            return db.SaveChanges();
+            return SafeContextWrapper.TrySaveChanges(db);
         }
     }
 }
