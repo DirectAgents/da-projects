@@ -321,7 +321,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 Name = keywordProps.Name
             };
             db.Keywords.Add(keyword);
-            db.SaveChanges();
+            SafeContextWrapper.TrySaveChanges(db);
             return keyword;
         }
 
@@ -346,7 +346,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     keyword.StrategyId = keywordProps.StrategyId;
                 }
             }
-            return db.SaveChanges();
+            return SafeContextWrapper.TrySaveChanges(db);
         }
     }
 }

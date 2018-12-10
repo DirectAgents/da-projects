@@ -1,5 +1,4 @@
-﻿@using System.Globalization
-@model DirectAgents.Domain.Entities.AB.ABClient
+﻿@model DirectAgents.Domain.Entities.AB.ABClient
 
 <h2>View/Edit ClientX</h2>
 
@@ -25,8 +24,8 @@ IntCredit: @Model.IntCredit<br />
 @if (Model.ClientBudgets != null && Model.ClientBudgets.Any())
 {
     var cb = Model.ClientBudgets.OrderByDescending(x => x.Date).First();
-    <text>@cb.Date.ToString("d", CultureInfo.InvariantCulture) Budget: @cb.Value
-    &nbsp; &nbsp;@Html.ActionLink("testlink", "EditViaLink", "ClientBudgets", new { clientId = cb.ClientId, date = cb.Date.ToString("d", CultureInfo.InvariantCulture), value = cb.Value }, null)</text>
+    <text>@cb.Date.ToShortDateString() Budget: @cb.Value
+    &nbsp; &nbsp;@Html.ActionLink("testlink", "EditViaLink", "ClientBudgets", new { clientId = cb.ClientId, date = cb.Date.ToShortDateString(), value = cb.Value }, null)</text>
 } else {
     <text>[@Html.ActionLink("new budget", "NewBudget", new { id = Model.Id })]</text>
 }
@@ -38,9 +37,9 @@ IntCredit: @Model.IntCredit<br />
 @foreach (var payment in Model.ClientPayments.OrderBy(x => x.Date))
 {
     <tr>
-        <td>@payment.Date.ToString("d", CultureInfo.InvariantCulture)</td>
+        <td>@payment.Date.ToShortDateString()</td>
         <td>@payment.TotalValue()</td>
-        <td>@Html.ActionLink("testlink", "EditViaLink", "ClientPayments", new { id = payment.Id, date = payment.Date.ToString("d", CultureInfo.InvariantCulture), value = payment.TotalValue() }, null)</td>
+        <td>@Html.ActionLink("testlink", "EditViaLink", "ClientPayments", new { id = payment.Id, date = payment.Date.ToShortDateString(), value = payment.TotalValue() }, null)</td>
     </tr>
 }
 </table>

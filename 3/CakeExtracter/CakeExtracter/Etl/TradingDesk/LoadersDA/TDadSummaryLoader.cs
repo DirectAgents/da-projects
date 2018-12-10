@@ -348,7 +348,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 ExternalIds = tdAdProps.ExternalIds
             };
             db.TDads.Add(tdAd);
-            db.SaveChanges();
+            SafeContextWrapper.TrySaveChanges(db);
             return tdAd;
         }
 
@@ -371,7 +371,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 }
                 numChanges -= UpdateTDadExternalIds(tdAd, tdAdProps);
             }
-            numChanges += db.SaveChanges();
+            numChanges += SafeContextWrapper.TrySaveChanges(db);
             return numChanges;
         }
 

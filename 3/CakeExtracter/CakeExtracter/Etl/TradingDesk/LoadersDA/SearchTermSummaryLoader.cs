@@ -332,7 +332,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 Name = termProps.Name
             };
             db.SearchTerms.Add(term);
-            db.SaveChanges();
+            SafeContextWrapper.TrySaveChanges(db);
             return term;
         }
 
@@ -349,7 +349,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     term.Name = termProps.Name;
                 }
             }
-            return db.SaveChanges();
+            return SafeContextWrapper.TrySaveChanges(db);
         }
     }
 }

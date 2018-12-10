@@ -7,6 +7,7 @@ using Amazon;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
+using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
@@ -130,8 +131,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            //var extracter = new AmazonDailySummaryExtracter(amazonUtility, dateRange, account, campaignFilter: account.Filter, campaignFilterOut: account.FilterOut);
-            var extracter = new AmazonDailySummaryExtracter(amazonUtility, dateRange, account, campaignFilter: account.Filter);
+            var extracter = new AmazonApiDailySummaryExtractor(amazonUtility, dateRange, account, campaignFilter: account.Filter);
             var loader = new AmazonDailySummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -151,8 +151,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            //var extracter = new AmazonCampaignSummaryExtracter(amazonUtility, dateRange, account, campaignFilter: account.Filter, campaignFilterOut: account.FilterOut);
-            var extracter = new AmazonCampaignSummaryExtracter(amazonUtility, dateRange, account, campaignFilter: account.Filter);
+            var extracter = new AmazonApiCampaignSummaryExtractor(amazonUtility, dateRange, account, campaignFilter: account.Filter);
             var loader = new AmazonCampaignSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -162,8 +161,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            //var extracter = new AmazonAdSetExtracter(amazonUtility, dateRange, account, campaignFilter: account.Filter, campaignFilterOut: account.FilterOut);
-            var extracter = new AmazonAdSetExtracter(amazonUtility, dateRange, account, campaignFilter: account.Filter);
+            var extracter = new AmazonApiAdSetExtractor(amazonUtility, dateRange, account, campaignFilter: account.Filter);
             var loader = new AmazonAdSetSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -173,8 +171,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            //var extracter = new AmazonAdExtrater(amazonUtility, dateRange, account, campaignFilter: account.Filter, campaignFilterOut: account.FilterOut);
-            var extracter = new AmazonAdExtrater(amazonUtility, dateRange, account, campaignFilter: account.Filter);
+            var extracter = new AmazonApiAdExtrator(amazonUtility, dateRange, account, campaignFilter: account.Filter);
             var loader = new AmazonAdSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -184,7 +181,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Keyword(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            var extracter = new AmazonKeywordExtracter(amazonUtility, dateRange, account, campaignFilter: account.Filter);
+            var extracter = new AmazonApiKeywordExtractor(amazonUtility, dateRange, account, campaignFilter: account.Filter);
             var loader = new AmazonKeywordSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -194,7 +191,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_SearchTerm(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            var extracter = new AmazonSearchTermExtracter(amazonUtility, dateRange, account, campaignFilter: account.Filter);
+            var extracter = new AmazonApiSearchTermExtractor(amazonUtility, dateRange, account, campaignFilter: account.Filter);
             var loader = new AmazonSearchTermSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);

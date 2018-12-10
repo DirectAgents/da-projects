@@ -1,5 +1,8 @@
-﻿using System;
+using System;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Linq;
+using Polly;
 
 namespace CakeExtracter.Helpers
 {
@@ -22,8 +25,7 @@ namespace CakeExtracter.Helpers
                 using (var dbContext = new T())
                 {
                     changeContextAction(dbContext);
-                    var numChanges = dbContext.SaveChanges();
-                    return numChanges;
+                    return TrySaveChanges(dbContext, contextLocker, changeContextAction);
                 }
             }
         }
@@ -34,8 +36,10 @@ namespace CakeExtracter.Helpers
             lock (contextLocker)
             {
                 changeContextAction();
-                var numChanges = dbContext.SaveChanges();
-                return numChanges;
+                return TrySaveChanges(dbContext, contextLocker, db =>
+                {
+                    changeContextAction();
+                });
             }
         }
 

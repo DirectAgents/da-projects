@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Amazon;
+using Amazon.Entities.HelperEntities;
+using Amazon.Entities.Summaries;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters

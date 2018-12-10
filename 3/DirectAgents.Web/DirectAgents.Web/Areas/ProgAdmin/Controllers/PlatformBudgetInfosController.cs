@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Globalization;
-using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities.CPProg;
@@ -31,7 +29,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             pbi.MarginPct = (prevMonthPBI != null ? prevMonthPBI.MarginPct : defaultBudgetInfo.MarginPct);
 
             cpProgRepo.AddPlatformBudgetInfo(pbi);
-            return RedirectToAction("Edit", "BudgetInfos", new { campId = campId, date = date.ToString("d", CultureInfo.InvariantCulture) });
+            return RedirectToAction("Edit", "BudgetInfos", new { campId = campId, date = date.ToShortDateString() });
         }
 
         [HttpGet]
@@ -48,7 +46,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             if (ModelState.IsValid)
             {
                 if (cpProgRepo.SavePlatformBudgetInfo(pbi))
-                    return RedirectToAction("Edit", "BudgetInfos", new { campId = pbi.CampaignId, date = pbi.Date.ToString("d", CultureInfo.InvariantCulture) });
+                    return RedirectToAction("Edit", "BudgetInfos", new { campId = pbi.CampaignId, date = pbi.Date.ToShortDateString() });
                 ModelState.AddModelError("", "PlatformBudgetInfo could not be saved.");
             }
             cpProgRepo.FillExtended(pbi);
@@ -59,7 +57,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         {
             bool success = cpProgRepo.DeletePlatformBudgetInfo(campId, platId, date);
             if (success)
-                return RedirectToAction("Edit", "BudgetInfos", new { campId = campId, date = date.ToString("d", CultureInfo.InvariantCulture) });
+                return RedirectToAction("Edit", "BudgetInfos", new { campId = campId, date = date.ToShortDateString() });
             else
                 return HttpNotFound();
         }

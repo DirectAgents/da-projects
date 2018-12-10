@@ -1,5 +1,4 @@
-﻿@using System.Globalization
-@model DirectAgents.Domain.Entities.CPProg.PlatformBudgetInfo
+﻿@model DirectAgents.Domain.Entities.CPProg.PlatformBudgetInfo
 
 @* Note: duplicated in BudgetInfos.Edit *@
 @section scripts {
@@ -44,7 +43,7 @@
             </table>
             <br />
             <input type="submit" value="Save" onclick="SaveBudgetInfo()" />
-            &nbsp;@Html.ActionLink("cancel", "Edit", "BudgetInfos", new { campId = Model.CampaignId, date = Model.Date.ToString("d", CultureInfo.InvariantCulture) }, null)
+            &nbsp;@Html.ActionLink("cancel", "Edit", "BudgetInfos", new { campId = Model.CampaignId, date = Model.Date.ToShortDateString() }, null)
         </div>
     }
 </fieldset>

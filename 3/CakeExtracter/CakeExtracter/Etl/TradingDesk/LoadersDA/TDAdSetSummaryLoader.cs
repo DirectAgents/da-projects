@@ -301,7 +301,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 Name = adSetProps.Name
             };
             db.AdSets.Add(adSet);
-            db.SaveChanges();
+            SafeContextWrapper.TrySaveChanges(db);
             return adSet;
         }
 
@@ -322,7 +322,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     adSet.StrategyId = adSetProps.StrategyId;
                 }
             }
-            return db.SaveChanges();
+            return SafeContextWrapper.TrySaveChanges(db);
         }
     }
 }
