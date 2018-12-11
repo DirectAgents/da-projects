@@ -1,5 +1,4 @@
 ﻿using System;
-using CakeExtracter;
 using CakeExtractor.SeleniumApplication.Helpers;
 using OpenQA.Selenium;
 using CakeExtractor.SeleniumApplication.Models;
@@ -13,8 +12,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
 
         public AmazonPdaPageActions(IWebDriver driver, int timeoutMinuts) : base(driver)
         {
-            timeout = TimeSpan.FromMinutes(timeoutMinuts);            
-            //driver.Manage().Timeouts().ImplicitWait = timeout; // WARNING
+            timeout = TimeSpan.FromMinutes(timeoutMinuts);
         }
 
         public void NavigateToUrl(string url, By waitingElement)
@@ -35,14 +33,38 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
                 SendKeys(AmazonPdaPageObjects.LoginPassInput, password);
                 ClickElement(AmazonPdaPageObjects.RememberMeCheckBox);
                 ClickElement(AmazonPdaPageObjects.LoginButton);                
-                WaitElement(AmazonPdaPageObjects.CodeInput, timeout);
+                WaitElementClickable(AmazonPdaPageObjects.CodeInput, timeout);
                 FileManager.TmpConsoleLog("Waiting the code...");
-                WaitElement(AmazonPdaPageObjects.AccountButton, timeout);
+                WaitElementClickable(AmazonPdaPageObjects.AccountButton, timeout);
                 FileManager.TmpConsoleLog("Ok");
             }
             catch (Exception e)
             {
                 throw new Exception($"Login failed [{email}]: {e.Message}", e);
+            }
+        }
+
+        public void LoginByPassword(string password)
+        {
+            try
+            {
+                FileManager.TmpConsoleLog("Need to repeat the password...");
+                ClickElement(AmazonPdaPageObjects.LoginPassInput);
+                SendKeys(AmazonPdaPageObjects.LoginPassInput, password);
+                ClickElement(AmazonPdaPageObjects.RememberMeCheckBox);
+                ClickElement(AmazonPdaPageObjects.LoginButton);
+                if (IsElementPresent(AmazonPdaPageObjects.CodeInput))
+                {
+                    WaitElementClickable(AmazonPdaPageObjects.CodeInput, timeout);
+                    FileManager.TmpConsoleLog("Waiting the code...");
+                    WaitElementClickable(AmazonPdaPageObjects.AccountButton, timeout);
+                }
+                WaitElementClickable(AmazonPdaPageObjects.FilterByButton, timeout);
+                FileManager.TmpConsoleLog("Ok");
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Could not to repeat password: {e.Message}", e);
             }
         }
 
@@ -52,15 +74,15 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             {
                 FileManager.TmpConsoleLog("Setting the filter...");
                 ClickElement(AmazonPdaPageObjects.FilterByButton);
-                WaitElement(AmazonPdaPageObjects.FilterTypeButton, timeout);
+                WaitElementClickable(AmazonPdaPageObjects.FilterTypeButton, timeout);
                 ClickElement(AmazonPdaPageObjects.FilterTypeButton);
-                WaitElement(AmazonPdaPageObjects.FilterByValues, timeout);
+                WaitElementClickable(AmazonPdaPageObjects.FilterByValues, timeout);
                 ClickElement(AmazonPdaPageObjects.FilterByValues);
-                WaitElement(AmazonPdaPageObjects.FilterPdaValues, timeout);
+                WaitElementClickable(AmazonPdaPageObjects.FilterPdaValues, timeout);
                 ClickElement(AmazonPdaPageObjects.FilterPdaValues);
                 ClickElement(AmazonPdaPageObjects.SaveSearchAndFilterButton);
-                //Wait(timeoutThread);
-                WaitElement(AmazonPdaPageObjects.CampaignsContainer, timeout);
+
+                WaitLoading(AmazonPdaPageObjects.FilterLoader, timeout);
                 FileManager.TmpConsoleLog("Ok");
             }
             catch (Exception e)
@@ -73,7 +95,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         {
             try
             {
-                WaitElement(AmazonPdaPageObjects.ExportButton, timeout);
+                WaitElementClickable(AmazonPdaPageObjects.ExportButton, timeout);
                 ClickElement(AmazonPdaPageObjects.ExportButton);
                 Wait(timeoutThread);
             }
@@ -106,9 +128,9 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         {
             try
             {
-                WaitElement(tabElement, timeout);
+                WaitElementClickable(tabElement, timeout);
                 ClickElement(tabElement);
-                WaitElement(tabContent, timeout);
+                WaitElementClickable(tabContent, timeout);
             }
             catch (Exception e)
             {
@@ -121,7 +143,8 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             try
             {
                 FileManager.TmpConsoleLog("Retrieving campaign settings...");
-                Wait(timeoutThread);
+                WaitElementClickable(AmazonPdaPageObjects.CampaignSettingsTable, timeout);
+
                 var tableRows = GetTableRows(AmazonPdaPageObjects.CampaignSettingsTable);
                 foreach (var row in tableRows)
                 {
@@ -169,15 +192,11 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             try
             {
                 FileManager.TmpConsoleLog("Retrieving campaign report...");
-
-                Wait(timeoutThread);
-                //ClickElement(AmazonPdaPageObjects.StartDate);
-                //SendKeys(AmazonPdaPageObjects.StartDate, "12/07/2018");
-
+                
+                WaitElementClickable(AmazonPdaPageObjects.DownloadReportButton, timeout);
                 ClickElement(AmazonPdaPageObjects.DownloadReportButton);
-                Wait(timeoutThread);
-                //FileManager.CheckDirectoryLength(downloadPath);
-
+                WaitLoading(AmazonPdaPageObjects.DownloadingLoader, timeout);
+                
                 if (IsElementEnabledAndDisplayed(AmazonPdaPageObjects.AfterDownloadReportNoData))
                 { 
                     FileManager.TmpConsoleLog("Warning: the report is not attached because the answer is 'No data'");
@@ -205,7 +224,8 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         {
             FileManager.TmpConsoleLog("Go to the next page...");
             ClickElement(AmazonPdaPageObjects.NavigateNextPageButton);
-            Wait(timeoutThread);            
+            
+            WaitLoading(AmazonPdaPageObjects.FilterLoader, timeout);
             FileManager.TmpConsoleLog("Ok");
         }
 
@@ -216,7 +236,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             {
                 FileManager.TmpConsoleLog($"Searching the URL of profile [{profileName}]...");
                 ClickElement(AmazonPdaPageObjects.CurrentProfileButton);
-                WaitElement(AmazonPdaPageObjects.ProfilesMenu, timeout);
+                WaitElementClickable(AmazonPdaPageObjects.ProfilesMenu, timeout);
 
                 var menuContainers = GetChildrenElements(AmazonPdaPageObjects.ProfilesMenu,
                     AmazonPdaPageObjects.ProfilesMenuItemContainer);

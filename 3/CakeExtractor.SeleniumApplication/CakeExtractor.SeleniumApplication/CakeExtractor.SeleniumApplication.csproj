@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="Commands\SyncAmazonPdaCommand.cs" />
     <Compile Include="Drivers\ChromeWebDriver.cs" />
+    <Compile Include="Helpers\CookieManager.cs" />
     <Compile Include="SeleniumExtractors\AmazonPDAExtractor.cs" />
     <Compile Include="Jobs\ExtractAmazonPda\ExtractAmazonPdaJob.cs" />
     <Compile Include="Models\CampaignInfo.cs" />

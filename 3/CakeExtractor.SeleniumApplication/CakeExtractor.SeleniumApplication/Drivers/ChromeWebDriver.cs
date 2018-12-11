@@ -4,8 +4,7 @@ namespace CakeExtractor.SeleniumApplication.Drivers
 {
     internal class ChromeWebDriver : ChromeDriver
     {
-        public ChromeWebDriver(string downloadDir/*, int timeoutMinuts*/) : base(GetOptions(downloadDir))
-            //base(ChromeDriverService.CreateDefaultService(), GetOptions(downloadDir), TimeSpan.FromMinutes(timeoutMinuts))
+        public ChromeWebDriver(string downloadDir) : base(GetOptions(downloadDir))
         {
         }
 

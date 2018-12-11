@@ -11,22 +11,25 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors
 {
     public class AmazonPDAExtractor: Extracter<StrategySummary>
     {
-        private AmazonPdaPageActions _pageActions;
-        private string _downloadDir;
-        private string _reportNameTemplate;
-        private string _campaignsUrl;
-        private string _profileText;
-        private int _countExecute;
+        private readonly AmazonPdaPageActions pageActions;
+        private readonly string downloadDir;
+        private readonly string reportNameTemplate;
+        private readonly string campaignsUrl;
+        private readonly string profileText;
+        private readonly int countExecute;
+        private readonly string accountPassword;
 
-        public AmazonPDAExtractor(AmazonPdaPageActions pageActions, string downloadDir, 
-            string reportNameTemplate, string campaignsUrl, string profileText, int countExecute)
+        public AmazonPDAExtractor(AmazonPdaPageActions pageActions, string downloadDir,
+            string reportNameTemplate, string campaignsUrl, string profileText, 
+            int countExecute, string accountPassword)
         {
-            _pageActions = pageActions;
-            _downloadDir = downloadDir;
-            _reportNameTemplate = reportNameTemplate;
-            _campaignsUrl = campaignsUrl;
-            _profileText = profileText;
-            _countExecute = countExecute;
+            this.pageActions = pageActions;
+            this.downloadDir = downloadDir;
+            this.reportNameTemplate = reportNameTemplate;
+            this.campaignsUrl = campaignsUrl;
+            this.profileText = profileText;
+            this.countExecute = countExecute;
+            this.accountPassword = accountPassword;
         }
 
         protected override void Extract()
@@ -48,7 +51,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors
 
 
                 //...after working with campaignsInfoList...
-                FileManager.CleanDirectory(_downloadDir, _reportNameTemplate);
+                FileManager.CleanDirectory(downloadDir, reportNameTemplate);
             }
             catch (Exception e)
             {
@@ -60,18 +63,13 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors
         {
             try
             {
-                _pageActions.NavigateToUrl(_campaignsUrl, AmazonPdaPageObjects.FilterByButton);
+                pageActions.NavigateToUrl(campaignsUrl, AmazonPdaPageObjects.FilterByButton);
 
-                FileManager.TmpConsoleLog($"Number of executions: {_countExecute}");
-                if (_countExecute <= 1)
+                FileManager.TmpConsoleLog($"Number of executions: {countExecute}");
+                if (countExecute <= 1)
                 {
-                    var profileUrl = _pageActions.GetProfileUrl(_profileText);
-                    if (!string.IsNullOrEmpty(profileUrl))
-                    {
-                        _pageActions.NavigateToUrl(profileUrl, AmazonPdaPageObjects.FilterByButton);
-                    }
-
-                    _pageActions.SetFiltersOnCampaigns();
+                    NavigateToProfile();
+                    pageActions.SetFiltersOnCampaigns();
                 }
             }
             catch (Exception e)
@@ -80,20 +78,37 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors
             }
         }
 
+        private void NavigateToProfile()
+        {
+            var profileUrl = pageActions.GetProfileUrl(profileText);
+            if (string.IsNullOrEmpty(profileUrl))
+                return;
+            
+            pageActions.NavigateToUrl(profileUrl);
+            if (pageActions.IsElementPresent(AmazonPdaPageObjects.FilterByButton))
+                return;
+
+            if (pageActions.IsElementPresent(AmazonPdaPageObjects.LoginPassInput))
+            {
+                // need to repeat the password
+                pageActions.LoginByPassword(accountPassword);
+            }
+        }
+
         private CampaignInfo GetCampaignInfo(string campaignUrl)
         {
             var campaign = new CampaignInfo();
             try
             {
-                _pageActions.NavigateToUrl(campaignUrl, AmazonPdaPageObjects.CampaignTabContainer);
+                pageActions.NavigateToUrl(campaignUrl, AmazonPdaPageObjects.CampaignTabContainer);
 
-                _pageActions.NavigateToTab(AmazonPdaPageObjects.CampaignSettingsTab,
+                pageActions.NavigateToTab(AmazonPdaPageObjects.CampaignSettingsTab,
                     AmazonPdaPageObjects.CampaignSettingsContent);
-                _pageActions.GetCampaignSettingsInfo(campaign);
+                pageActions.GetCampaignSettingsInfo(campaign);
 
-                _pageActions.NavigateToTab(AmazonPdaPageObjects.CampaignReportsTab,
+                pageActions.NavigateToTab(AmazonPdaPageObjects.CampaignReportsTab,
                     AmazonPdaPageObjects.CampaignReportsContent);
-                _pageActions.GetCampaignReportsInfo(campaign, _downloadDir, _reportNameTemplate);
+                pageActions.GetCampaignReportsInfo(campaign, downloadDir, reportNameTemplate);
 
                 return campaign;
             }
@@ -112,20 +127,20 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors
                 FileManager.TmpConsoleLog($"Number of the page is {++count}");
                 if (count != 1)
                 {
-                    _pageActions.NavigateNextCampaignPage();
+                    pageActions.NavigateNextCampaignPage();
                 }
 
                 FileManager.TmpConsoleLog("Retrieving a list of campaign name web elements...");
-                var campNameWebElementList = _pageActions.GetCampaignsNameWebElementsList(
-                    AmazonPdaPageObjects.CampaignsContainer,
+                var campNameWebElementList = pageActions.GetCampaignsNameWebElementsList(
+                    AmazonPdaPageObjects.CampaignsNameContainer,
                     AmazonPdaPageObjects.CampaignsNamesList);
                 FileManager.TmpConsoleLog($"[{campNameWebElementList.Count}] web elements received");
 
                 foreach (var campNameWebElem in campNameWebElementList)
                 {
-                    campaignAllUrlList.Add(_pageActions.GetCampaignUrl(campNameWebElem));
+                    campaignAllUrlList.Add(pageActions.GetCampaignUrl(campNameWebElem));
                 }
-            } while (_pageActions.IsElementEnabledAndDisplayed(AmazonPdaPageObjects.NavigateNextPageButton));
+            } while (pageActions.IsElementEnabledAndDisplayed(AmazonPdaPageObjects.NavigateNextPageButton));
 
             FileManager.TmpConsoleLog($"[{campaignAllUrlList.Count}] elements has been processed");
 
@@ -142,7 +157,10 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors
                 try
                 {
                     FileManager.TmpConsoleLog($"Retrieving information about campaign [{++count}]...");
-                    campaignsInfoList.Add(GetCampaignInfo(campaignUrl));
+
+                    var campaignInfoItem = GetCampaignInfo(campaignUrl);
+                    campaignsInfoList.Add(campaignInfoItem);
+
                     FileManager.TmpConsoleLog("Ok");
                 }
                 catch (Exception e)

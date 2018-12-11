@@ -21,7 +21,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions
             try
             {
                 Driver.Navigate().GoToUrl(url);
-                WaitElement(waitingElement, timeout);
+                WaitElementClickable(waitingElement, timeout);
             }
             catch (Exception e)
             {
@@ -29,7 +29,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions
             }
         }
 
-        public void NavigateToUrlWithoutWaiting(string url)
+        public void NavigateToUrl(string url)
         {
             try
             {
@@ -70,7 +70,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions
             }
         }
 
-        protected void WaitElement(By element, TimeSpan waitCount)
+        protected void WaitElementClickable(By element, TimeSpan waitCount)
         {
             try
             {
@@ -83,16 +83,38 @@ namespace CakeExtractor.SeleniumApplication.PageActions
             }
         }
 
+        public bool IsElementPresent(By element)
+        {
+            try
+            {
+                Driver.FindElement(element);
+                return true;
+            }
+            catch (NoSuchElementException)
+            {
+                return false;
+            }
+        }
+
+        protected void WaitLoading(By loaderElement, TimeSpan waitCount)
+        {
+            try
+            {
+                var wait = new WebDriverWait(Driver, waitCount);
+                wait.Until(ExpectedConditions.ElementExists(loaderElement));
+                wait.Until(ExpectedConditions.InvisibilityOfElementLocated(loaderElement));
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Could not wait the loader [{loaderElement}]: {e.Message}", e);
+            }
+        }
+
         protected void Wait(TimeSpan timeoutThread)
         {
             Thread.Sleep(timeoutThread);
         }
-
-        public bool IsElementDisplayed(By element)
-        {
-            return Driver.FindElement(element).Displayed;
-        }
-
+        
         public bool IsElementEnabledAndDisplayed(By element)
         {
             return Driver.FindElement(element).Displayed && Driver.FindElement(element).Enabled;

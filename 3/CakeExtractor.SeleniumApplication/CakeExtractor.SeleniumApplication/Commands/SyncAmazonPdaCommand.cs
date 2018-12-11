@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using CakeExtractor.SeleniumApplication.Drivers;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonPda;
@@ -29,7 +28,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
         private string reportNameTemplate;
         private int waitPageTimeoutInMinuts;
         private string profileText;
-        private int _countExecute;
+        private int countExecute;
 
         public SyncAmazonPdaCommand()
         {
@@ -66,8 +65,9 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
         public void ExtractCampaignsInfo()
         {
-            _countExecute++;
-            var extracter = new AmazonPDAExtractor(pageActions, downloadDir, reportNameTemplate, campaignsUrl, profileText, _countExecute);
+            countExecute++;
+            var extracter = new AmazonPDAExtractor(pageActions, downloadDir, 
+                reportNameTemplate, campaignsUrl, profileText, countExecute, pass);
 
             var loader = new AmazonCampaignSummaryLoader(-1); //accountId ??
             var extracterThread = extracter.Start();
@@ -75,7 +75,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
             extracterThread.Join();
             loaderThread.Join();
         }
-        
+
         private void Initialize()
         {            
             try
@@ -85,7 +85,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
                 try
                 {
                     FileManager.TmpConsoleLog("Create driver...");
-                    driver = new ChromeWebDriver(downloadDir/*, waitPageTimeoutInMinuts*/);
+                    driver = new ChromeWebDriver(downloadDir);
                     FileManager.TmpConsoleLog("Ok");
                 }
                 catch (Exception e)
@@ -95,7 +95,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
                 pageActions = new AmazonPdaPageActions(driver, waitPageTimeoutInMinuts);
                 FileManager.CreateDirectoryIfNotExist(downloadDir);
                 FileManager.CreateDirectoryIfNotExist("Cookies");
-                _countExecute = 0;
+                countExecute = 0;
 
                 FileManager.TmpConsoleLog("Ok");
             }
@@ -131,18 +131,18 @@ namespace CakeExtractor.SeleniumApplication.Commands
         {
             try
             {
-                var allCookies = FileManager.GetCookiesFromFiles(cookiesDir);
+                var allCookies = CookieManager.GetCookiesFromFiles(cookiesDir);
                 if (!allCookies.Any())
                 {
                     pageActions.NavigateToUrl(signInUrl, AmazonPdaPageObjects.ForgotPassLink);
                     pageActions.LoginProcess(email, pass);
 
                     var cookies = pageActions.GetAllCookies();
-                    FileManager.SaveCookiesToFiles(cookies, cookiesDir);
+                    CookieManager.SaveCookiesToFiles(cookies, cookiesDir);
                 }
                 else
                 {
-                    pageActions.NavigateToUrlWithoutWaiting(signInUrl);
+                    pageActions.NavigateToUrl(signInUrl);
                     foreach (var cookie in allCookies)
                     {
                         pageActions.SetCookie(cookie);
