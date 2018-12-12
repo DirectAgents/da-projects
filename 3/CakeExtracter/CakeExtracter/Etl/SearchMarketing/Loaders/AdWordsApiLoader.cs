@@ -94,7 +94,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     {
                         sds.Device = "A"; // mark for "all" devices
                         sds.CassConvs = int.Parse(item["clickAssistedConv"]);
-                        sds.CassConVal = double.Parse(item["clickAssistedConvValue"]);
+                        sds.CassConVal = double.TryParse(item["clickAssistedConvValue"], out var cassConVal) ? cassConVal : 0.0;
                     }
                     else
                     {

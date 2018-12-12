@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.CPProg;
@@ -20,9 +19,9 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Models
         public int? KeywordId { get; set; }
         public int? SearchTermId { get; set; }
 
-        public DateTime Start { set => StartString = value.ToString("d", CultureInfo.InvariantCulture); }
+        public DateTime Start { set => StartString = value.ToShortDateString(); }
         public string StartString { get; set; }
-        public DateTime End { set => EndString = value.ToString("d", CultureInfo.InvariantCulture); }
+        public DateTime End { set => EndString = value.ToShortDateString(); }
         public string EndString { get; set; }
 
         public bool CustomDates { get; set; }

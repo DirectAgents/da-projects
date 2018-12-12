@@ -1,5 +1,4 @@
 ﻿@model DirectAgents.Web.Areas.ProgAdmin.Models.StatsGaugeVM
-@using System.Globalization
 @using DirectAgents.Domain.Entities.CPProg
 @{
     string by = "Partner";
@@ -101,10 +100,10 @@
                     <td style="text-align:right">@gauge.Action.LatestDisp</td>
                     <td style="text-align:right">@gauge.Creative.EarliestDisp</td>
                     <td style="text-align:right">@gauge.Creative.LatestDisp</td>
-                    <td style="text-align:right">@pGauge.Keyword.EarliestDisp</td>
-                    <td style="text-align:right">@pGauge.Keyword.LatestDisp</td>
-                    <td style="text-align:right">@pGauge.SearchTerm.EarliestDisp</td>
-                    <td style="text-align:right">@pGauge.SearchTerm.LatestDisp</td>
+                    <td style="text-align:right">@gauge.Keyword.EarliestDisp</td>
+                    <td style="text-align:right">@gauge.Keyword.LatestDisp</td>
+                    <td style="text-align:right">@gauge.SearchTerm.EarliestDisp</td>
+                    <td style="text-align:right">@gauge.SearchTerm.LatestDisp</td>
                     @if (Model.Extended)
                     {
                         <td style="text-align:right">@gauge.Site.EarliestDisp</td>
@@ -156,11 +155,11 @@ else if (super) //CampaignId specified
             </tr>
             <tr>
                 <td>@Html.Label("", "From:")</td>
-                <td><input type="text" id="sync_from" name="from" value="@default_from.ToString("d", CultureInfo.InvariantCulture)" /></td>
+                <td><input type="text" id="sync_from" name="from" value="@default_from.ToShortDateString()" /></td>
             </tr>
             <tr>
                 <td>@Html.Label("", "To:")</td>
-                <td><input type="text" id="sync_to" name="to" value="@default_to.ToString("d", CultureInfo.InvariantCulture)" /></td>
+                <td><input type="text" id="sync_to" name="to" value="@default_to.ToShortDateString()" /></td>
             </tr>
             <tr>
                 <td>@Html.Label("", "Clear Stats:")</td>

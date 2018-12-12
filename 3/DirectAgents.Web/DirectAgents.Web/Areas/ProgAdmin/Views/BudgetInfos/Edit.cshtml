@@ -1,5 +1,4 @@
-﻿@using System.Globalization
-@model DirectAgents.Domain.Entities.CPProg.BudgetInfo
+﻿@model DirectAgents.Domain.Entities.CPProg.BudgetInfo
 @{
     var month = Model.Date;
     var platformBudgetInfos = Model.Campaign.PlatformBudgetInfosFor(month).OrderBy(i => i.Platform.Name);
@@ -65,13 +64,13 @@
         @foreach (var pbi in platformBudgetInfos)
         {
             <tr>
-                <td>@Html.ActionLink("Edit", "Edit", "PlatformBudgetInfos", new { campId = pbi.CampaignId, platId = pbi.PlatformId, date = pbi.Date.ToString("d", CultureInfo.InvariantCulture) }, null)</td>
+                <td>@Html.ActionLink("Edit", "Edit", "PlatformBudgetInfos", new { campId = pbi.CampaignId, platId = pbi.PlatformId, date = pbi.Date.ToShortDateString() }, null)</td>
                 <td>@pbi.Platform.Name</td>
                 <td style="text-align:right">@pbi.MediaSpend.ToString("C")</td>
                 <td style="text-align:center">@pbi.MgmtFeePct.ToString("#0.##### \\%")</td>
                 <td style="text-align:center">@pbi.MarginPct.ToString("#0.##### \\%")</td>
                 <td>@Html.ActionLink("Delete", "Delete", "PlatformBudgetInfos",
-                                     new { campId = pbi.CampaignId, platId = pbi.PlatformId, date = pbi.Date.ToString("d", CultureInfo.InvariantCulture) },
+                                     new { campId = pbi.CampaignId, platId = pbi.PlatformId, date = pbi.Date.ToShortDateString() },
                                      new { onclick = "if (!confirm('Are you sure?')) return false" })</td>
             </tr>
         }
@@ -81,7 +80,7 @@
     if (platforms.Any())
     {
         <br />
-        using (Html.BeginForm("CreateNew", "PlatformBudgetInfos", new { campId = Model.CampaignId, date = Model.Date.ToString("d", CultureInfo.InvariantCulture) }))
+        using (Html.BeginForm("CreateNew", "PlatformBudgetInfos", new { campId = Model.CampaignId, date = Model.Date.ToShortDateString() }))
         {
             var platformSelectList = new SelectList(platforms, "Id", "Name");
             <text>Add Partner Exception:</text>

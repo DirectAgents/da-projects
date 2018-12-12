@@ -1,5 +1,4 @@
-﻿@using System.Globalization
-@model IEnumerable<DirectAgents.Domain.Entities.CPSearch.SearchAccount>
+﻿@model IEnumerable<DirectAgents.Domain.Entities.CPSearch.SearchAccount>
 @{
     string spId = Request.Params["spid"];
     bool oneProfile = !String.IsNullOrWhiteSpace(spId);
@@ -66,11 +65,11 @@ else if (oneProfile)
         </tr>
         <tr>
             <td>@Html.Label("", "From:")</td>
-            <td><input type="text" id="sync_from" name="from" value="@default_from.ToString("d", CultureInfo.InvariantCulture)" /></td>
+            <td><input type="text" id="sync_from" name="from" value="@default_from.ToShortDateString()" /></td>
         </tr>
         <tr>
             <td>@Html.Label("", "To:")</td>
-            <td><input type="text" id="sync_to" name="to" value="@default_to.ToString("d", CultureInfo.InvariantCulture)" /></td>
+            <td><input type="text" id="sync_to" name="to" value="@default_to.ToShortDateString()" /></td>
         </tr>
     </table>
     <text>(Not currently available for Criteo)</text>

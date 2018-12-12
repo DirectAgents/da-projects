@@ -101,10 +101,13 @@ namespace CakeExtracter.Bootstrappers
             {
                 Mapper.Configuration.AssertConfigurationIsValid();
             }
-            //catch (AutoMapperConfigurationException) // didn't get caught
-            catch (Exception)
+            catch (Exception ex)
             {
-                CreateMaps();
+                if (ex is InvalidOperationException) //mapper not initialized
+                {
+                    CreateMaps();
+                }
+                //Ignore other exceptions: e.g. "unmapped members were found"
             }
         }
     }

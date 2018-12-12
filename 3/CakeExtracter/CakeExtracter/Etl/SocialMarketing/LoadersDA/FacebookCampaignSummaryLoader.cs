@@ -11,14 +11,14 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 {
     public class FacebookCampaignSummaryLoader : Loader<FBSummary>
     {
-        private static readonly EntityIdStorage<ActionType> actionTypeStorage;
-        private readonly bool LoadActions;
+        private static readonly EntityIdStorage<ActionType> ActionTypeStorage;
+        private readonly bool loadActions;
         private readonly FacebookAdSetSummaryLoader fbAdSetLoader;
         private readonly TDStrategySummaryLoader strategySummaryLoader;
 
         static FacebookCampaignSummaryLoader()
         {
-            actionTypeStorage = FacebookAdSetSummaryLoader.ActionTypeStorage;
+            ActionTypeStorage = FacebookAdSetSummaryLoader.ActionTypeStorage;
         }
 
         public FacebookCampaignSummaryLoader(int accountId, bool loadActions = false)
@@ -27,25 +27,27 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             BatchSize = FacebookUtility.RowsReturnedAtATime; //FB API only returns 25 rows at a time
             strategySummaryLoader = new TDStrategySummaryLoader(accountId);
             fbAdSetLoader = new FacebookAdSetSummaryLoader(accountId);
-            LoadActions = loadActions;
+            this.loadActions = loadActions;
         }
 
         protected override int Load(List<FBSummary> items)
         {
-            var dbItems = items.Select(i => CreateStrategySummary(i)).ToList();
+            var dbItems = items.Select(CreateStrategySummary).ToList();
             strategySummaryLoader.AddUpdateDependentStrategies(dbItems);
             strategySummaryLoader.AssignStrategyIdToItems(dbItems);
             var count = strategySummaryLoader.UpsertDailySummaries(dbItems);
 
-            if (LoadActions)
+            if (!loadActions)
             {
-                AddUpdateDependentActionTypes(items);
-                UpsertStrategyActions(items, dbItems);
+                return count;
             }
+
+            AddUpdateDependentActionTypes(items);
+            UpsertStrategyActions(items, dbItems);
             return count;
         }
 
-        public static StrategySummary CreateStrategySummary(FBSummary item)
+        public StrategySummary CreateStrategySummary(FBSummary item)
         {
             var sum = new StrategySummary
             {
@@ -76,70 +78,77 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
         private void UpsertStrategyActions(List<FBSummary> items, List<StrategySummary> strategySummaries)
         {
             var progress = new LoadingProgress();
-            SafeContextWrapper.SaveChangedContext<ClientPortalProgContext>(
-                SafeContextWrapper.StrategyActionLocker, db =>
+            using (var db = new ClientPortalProgContext())
+            {
+                var itemEnumerator = items.GetEnumerator();
+                var ssEnumerator = strategySummaries.GetEnumerator();
+                while (itemEnumerator.MoveNext())
                 {
-                    var itemEnumerator = items.GetEnumerator();
-                    var ssEnumerator = strategySummaries.GetEnumerator();
-                    while (itemEnumerator.MoveNext())
+                    ssEnumerator.MoveNext();
+                    if (itemEnumerator.Current.Actions == null)
                     {
-                        ssEnumerator.MoveNext();
-                        if (itemEnumerator.Current.Actions == null)
+                        continue;
+                    }
+
+                    var date = itemEnumerator.Current.Date;
+                    var strategyId = ssEnumerator.Current.StrategyId;
+                    var fbActions = itemEnumerator.Current.Actions.Values;
+
+                    var existingActions = db.StrategyActions.Where(x => x.Date == date && x.StrategyId == strategyId);
+                    RemoveStrategyActions(db, progress, existingActions, fbActions);
+
+                    //Add/update the rest
+                    var addedStrategyActions = new List<StrategyAction>();
+                    foreach (var fbAction in fbActions)
+                    {
+                        var actionTypeId = ActionTypeStorage.GetEntityIdFromStorage(fbAction.ActionType);
+                        var actionsOfType = existingActions.Where(x => x.ActionTypeId == actionTypeId); // should be one at most
+                        if (!actionsOfType.Any())
                         {
-                            continue;
-                        }
-
-                        var date = itemEnumerator.Current.Date;
-                        var strategyId = ssEnumerator.Current.StrategyId;
-                        var fbActions = itemEnumerator.Current.Actions.Values;
-
-                        var actionTypeIds = fbActions.Select(x => actionTypeStorage.GetEntityIdFromStorage(x.ActionType)).ToArray();
-                        var existingActions =
-                            db.StrategyActions.Where(x => x.Date == date && x.StrategyId == strategyId);
-
-                        //Delete actions that no longer have stats for the date/strategy
-                        foreach (var stratAction in existingActions.Where(x => !actionTypeIds.Contains(x.ActionTypeId)))
-                        {
-                            db.StrategyActions.Remove(stratAction);
-                            progress.DeletedCount++;
-                        }
-
-                        //Add/update the rest
-                        foreach (var fbAction in fbActions)
-                        {
-                            int actionTypeId = actionTypeStorage.GetEntityIdFromStorage(fbAction.ActionType);
-                            var actionsOfType =
-                                existingActions.Where(x => x.ActionTypeId == actionTypeId); // should be one at most
-                            if (!actionsOfType.Any())
+                            var strategyAction = new StrategyAction
                             {
-                                // Create new
-                                var stratAction = new StrategyAction
-                                {
-                                    Date = date,
-                                    StrategyId = strategyId,
-                                    ActionTypeId = actionTypeId,
-                                    PostClick = fbAction.Num_click ?? 0,
-                                    PostView = fbAction.Num_view ?? 0
-                                };
-                                db.StrategyActions.Add(stratAction);
-                                progress.AddedCount++;
-                            }
-                            else
+                                Date = date,
+                                StrategyId = strategyId,
+                                ActionTypeId = actionTypeId
+                            };
+                            SetStrategyActionMetrics(strategyAction, fbAction);
+                            addedStrategyActions.Add(strategyAction);
+                            progress.AddedCount++;
+                        }
+                        else
+                        {
+                            foreach (var strategyAction in actionsOfType) // should be just one, but just in case
                             {
-                                foreach (var stratAction in actionsOfType) // should be just one, but just in case
-                                {
-                                    // Update
-                                    stratAction.PostClick = fbAction.Num_click ?? 0;
-                                    stratAction.PostView = fbAction.Num_view ?? 0;
-                                    progress.UpdatedCount++;
-                                }
+                                SetStrategyActionMetrics(strategyAction, fbAction);
+                                progress.UpdatedCount++;
                             }
                         }
-                    } // loop through items
-                }
-            );
+                    }
+
+                    db.StrategyActions.AddRange(addedStrategyActions);
+                } // loop through items
+
+                SafeContextWrapper.TrySaveChanges(db);
+            }
 
             Logger.Info(accountId, "Saved StrategyActions ({0} updates, {1} additions, {2} deletions)", progress.UpdatedCount, progress.AddedCount, progress.DeletedCount);
+        }
+
+        private void RemoveStrategyActions(ClientPortalProgContext db, LoadingProgress progress,
+                IEnumerable<StrategyAction> existingActions, IEnumerable<FBAction> fbActions)
+        {
+            var actionTypeIds = fbActions.Select(x => ActionTypeStorage.GetEntityIdFromStorage(x.ActionType))
+                .ToArray();
+            //Delete actions that no longer have stats for the date/adset
+            var actionsForRemoving = existingActions.Where(x => !actionTypeIds.Contains(x.ActionTypeId)).ToList();
+            db.StrategyActions.RemoveRange(actionsForRemoving);
+            progress.DeletedCount += actionsForRemoving.Count;
+        }
+
+        private void SetStrategyActionMetrics(StrategyAction strategyAction, FBAction fbAction)
+        {
+            strategyAction.PostClick = fbAction.Num_click ?? 0;
+            strategyAction.PostView = fbAction.Num_view ?? 0;
         }
     }
 }

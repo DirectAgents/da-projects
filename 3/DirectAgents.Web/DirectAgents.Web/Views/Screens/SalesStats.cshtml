@@ -1,5 +1,4 @@
-﻿@using System.Globalization
-@model IEnumerable<DirectAgents.Domain.Entities.Screen.SalespersonStat>
+﻿@model IEnumerable<DirectAgents.Domain.Entities.Screen.SalespersonStat>
 @{
     DateTime lastDate = new DateTime(2000, 1, 1);
 }
@@ -19,10 +18,10 @@
     <tr>
         <td>
         @if (stat.Date != lastDate) {
-            @Html.ActionLink("edit", "EditSalesStats", new { date = stat.Date.ToString("d", CultureInfo.InvariantCulture) })
+            @Html.ActionLink("edit", "EditSalesStats", new { date = stat.Date.ToShortDateString() })
         }
         </td>
-        <td style="text-align:center">@stat.Date.ToString("d", CultureInfo.InvariantCulture)</td>
+        <td style="text-align:center">@stat.Date.ToShortDateString()</td>
         <td>@stat.Salesperson.FullName</td>
         <td style="text-align:right">@stat.EmailTracked</td>
         <td style="text-align:right">@stat.EmailOpened</td>
@@ -31,7 +30,7 @@
         <td style="text-align:left">(@stat.EmailReplyRate.ToString("P0"))</td>
         <td>
         @if (stat.Date != lastDate) {
-            @Html.ActionLink("delete", "DeleteSalesStats", new { date = stat.Date.ToString("d", CultureInfo.InvariantCulture) }, new { onclick = "return confirm('Delete stats for " + stat.Date.ToString("d", CultureInfo.InvariantCulture) + "?')" })
+            @Html.ActionLink("delete", "DeleteSalesStats", new { date = stat.Date.ToShortDateString() }, new { onclick = "return confirm('Delete stats for " + stat.Date.ToShortDateString() + "?')" })
         }
         </td>
     </tr>

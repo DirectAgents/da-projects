@@ -31,9 +31,9 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Models
             var slItems = new List<SelectListItem>();
             var extAccounts = ExtAccounts(syncableOnly: syncableOnly);
             var extAcctGroups = extAccounts.GroupBy(x => x.Platform);
-            foreach (var platGroup in extAcctGroups)
+            foreach (var platGroup in extAcctGroups.OrderBy(x => x.Key.Name)) // alphabetically by platform name
             {
-                foreach (var extAcct in platGroup)
+                foreach (var extAcct in platGroup.OrderBy(x => x.Name)) // alphabetically by account name
                 {
                     slItems.Add(new SelectListItem { Text = extAcct.DisplayName1, Value = extAcct.Id.ToString() });
                 }

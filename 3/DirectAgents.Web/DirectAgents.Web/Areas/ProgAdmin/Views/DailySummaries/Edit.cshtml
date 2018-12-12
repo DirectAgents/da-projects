@@ -1,5 +1,4 @@
-﻿@using System.Globalization
-@model DirectAgents.Domain.Entities.CPProg.DailySummary
+﻿@model DirectAgents.Domain.Entities.CPProg.DailySummary
 @{
     // for filtering when returning back to Index
     string start = (string)Session["start"];
@@ -19,7 +18,7 @@
             <table>
                 <tr>
                     <td>@Html.LabelFor(m => m.Date)</td>
-                    <td>@Model.Date.ToString("d", CultureInfo.InvariantCulture)</td>
+                    <td>@Model.Date.ToShortDateString()</td>
                 </tr>
                 <tr>
                     <td>@Html.LabelFor(m => m.Cost)</td>

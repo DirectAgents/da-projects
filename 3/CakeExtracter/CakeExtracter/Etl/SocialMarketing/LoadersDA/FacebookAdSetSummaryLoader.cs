@@ -12,8 +12,8 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
     public class FacebookAdSetSummaryLoader : Loader<FBSummary>
     {
         public static EntityIdStorage<ActionType> ActionTypeStorage;
-        private readonly bool LoadActions;
-        private readonly TDAdSetSummaryLoader adsetSummaryLoader;
+        private readonly bool loadActions;
+        private readonly TDAdSetSummaryLoader adSetSummaryLoader;
 
         static FacebookAdSetSummaryLoader()
         {
@@ -23,24 +23,26 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
         public FacebookAdSetSummaryLoader(int accountId, bool loadActions = false)
             : base(accountId)
         {
-            this.BatchSize = FacebookUtility.RowsReturnedAtATime; //FB API only returns 25 rows at a time
-            this.adsetSummaryLoader = new TDAdSetSummaryLoader(accountId);
-            this.LoadActions = loadActions;
+            BatchSize = FacebookUtility.RowsReturnedAtATime; //FB API only returns 25 rows at a time
+            adSetSummaryLoader = new TDAdSetSummaryLoader(accountId);
+            this.loadActions = loadActions;
         }
 
         protected override int Load(List<FBSummary> items)
         {
-            var dbItems = items.Select(i => CreateAdSetSummary(i)).ToList();
-            adsetSummaryLoader.AddUpdateDependentStrategies(dbItems);
-            adsetSummaryLoader.AddUpdateDependentAdSets(dbItems);
-            adsetSummaryLoader.AssignAdSetIdToItems(dbItems);
-            var count = adsetSummaryLoader.UpsertDailySummaries(dbItems);
+            var dbItems = items.Select(CreateAdSetSummary).ToList();
+            adSetSummaryLoader.AddUpdateDependentStrategies(dbItems);
+            adSetSummaryLoader.AddUpdateDependentAdSets(dbItems);
+            adSetSummaryLoader.AssignAdSetIdToItems(dbItems);
+            var count = adSetSummaryLoader.UpsertDailySummaries(dbItems);
 
-            if (LoadActions)
+            if (!loadActions)
             {
-                AddUpdateDependentActionTypes(items);
-                UpsertAdSetActions(items, dbItems);
+                return count;
             }
+
+            AddUpdateDependentActionTypes(items);
+            UpsertAdSetActions(items, dbItems);
             return count;
         }
 
@@ -77,15 +79,15 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 
             using (var db = new ClientPortalProgContext())
             {
-                SafeContextWrapper.Lock(SafeContextWrapper.ActionTypeLocker, () =>
+                foreach (var actionTypeCode in actionTypeCodes)
                 {
-                    foreach (var actionTypeCode in actionTypeCodes)
+                    if (ActionTypeStorage.IsEntityInStorage(actionTypeCode))
                     {
-                        if (ActionTypeStorage.IsEntityInStorage(actionTypeCode))
-                        {
-                            continue;
-                        }
+                        continue;
+                    }
 
+                    SafeContextWrapper.Lock(SafeContextWrapper.ActionTypeLocker, () =>
+                    {
                         var actionTypesInDb = db.ActionTypes.Where(x => x.Code == actionTypeCode).ToList();
                         if (!actionTypesInDb.Any())
                         {
@@ -98,11 +100,11 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                             var actionType = actionTypesInDb.First();
                             ActionTypeStorage.AddEntityIdToStorage(actionType);
                         }
-                    }
-                });
+                    });
+                }
             }
         }
-        
+
         private void AddUpdateDependentActionTypes(List<FBSummary> items)
         {
             AddUpdateDependentActionTypes(items, accountId);
@@ -115,83 +117,89 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                 Code = actionTypeCode
             };
             db.ActionTypes.Add(actionType);
-            db.SaveChanges();
+            SafeContextWrapper.TrySaveChanges(db);
             return actionType;
         }
 
         //Note: get the actions from the items(FBSummaries); get the adsetId from the adsetSummaries
-        private void UpsertAdSetActions(List<FBSummary> items, List<AdSetSummary> adsetSummaries)
+        private void UpsertAdSetActions(List<FBSummary> items, List<AdSetSummary> adSetSummaries)
         {
             var progress = new LoadingProgress();
-            SafeContextWrapper.SaveChangedContext<ClientPortalProgContext>(
-                SafeContextWrapper.AdSetActionLocker, db =>
+            using (var db = new ClientPortalProgContext())
+            {
+                // The items and adsetSummaries have a 1-to-1 correspondence because of how the latter were instantiated above
+                var itemEnumerator = items.GetEnumerator();
+                var asEnumerator = adSetSummaries.GetEnumerator();
+                while (itemEnumerator.MoveNext())
                 {
-                    // The items and adsetSummaries have a 1-to-1 correspondence because of how the latter were instantiated above
-                    var itemEnumerator = items.GetEnumerator();
-                    var asEnumerator = adsetSummaries.GetEnumerator();
-                    while (itemEnumerator.MoveNext())
+                    asEnumerator.MoveNext();
+                    if (itemEnumerator.Current.Actions == null)
                     {
-                        asEnumerator.MoveNext();
-                        if (itemEnumerator.Current.Actions == null)
+                        continue;
+                    }
+
+                    var date = itemEnumerator.Current.Date;
+                    var adSetId = asEnumerator.Current.AdSetId;
+                    var fbActions = itemEnumerator.Current.Actions.Values;
+
+                    var existingActions = db.AdSetActions.Where(x => x.Date == date && x.AdSetId == adSetId);
+                    RemoveAdSetActions(db, progress, existingActions, fbActions);
+
+                    //Add/update the rest
+                    var addedAdSetActions = new List<AdSetAction>();
+                    foreach (var fbAction in fbActions)
+                    {
+                        var actionTypeId = ActionTypeStorage.GetEntityIdFromStorage(fbAction.ActionType);
+                        var actionsOfType =
+                            existingActions.Where(x => x.ActionTypeId == actionTypeId); // should be one at most
+                        if (!actionsOfType.Any())
                         {
-                            continue;
-                        }
-
-                        var date = itemEnumerator.Current.Date;
-                        var adsetId = asEnumerator.Current.AdSetId;
-                        var fbActions = itemEnumerator.Current.Actions.Values;
-
-                        var actionTypeIds = fbActions.Select(x => ActionTypeStorage.GetEntityIdFromStorage(x.ActionType)).ToArray();
-                        var existingActions = db.AdSetActions.Where(x => x.Date == date && x.AdSetId == adsetId);
-
-                        //Delete actions that no longer have stats for the date/adset
-                        foreach (var adsetAction in existingActions.Where(x => !actionTypeIds.Contains(x.ActionTypeId)))
-                        {
-                            db.AdSetActions.Remove(adsetAction);
-                            progress.DeletedCount++;
-                        }
-
-                        //Add/update the rest
-                        foreach (var fbAction in fbActions)
-                        {
-                            var actionTypeId = ActionTypeStorage.GetEntityIdFromStorage(fbAction.ActionType);
-                            var actionsOfType =
-                                existingActions.Where(x => x.ActionTypeId == actionTypeId); // should be one at most
-                            if (!actionsOfType.Any())
+                            var adSetAction = new AdSetAction
                             {
-                                // Create new
-                                var adsetAction = new AdSetAction
-                                {
-                                    Date = date,
-                                    AdSetId = adsetId,
-                                    ActionTypeId = actionTypeId,
-                                    PostClick = fbAction.Num_click ?? 0,
-                                    PostView = fbAction.Num_view ?? 0,
-                                    PostClickVal = fbAction.Val_click ?? 0,
-                                    PostViewVal = fbAction.Val_view ?? 0
-                                };
-                                db.AdSetActions.Add(adsetAction);
-                                progress.AddedCount++;
-                            }
-                            else
+                                Date = date,
+                                AdSetId = adSetId,
+                                ActionTypeId = actionTypeId
+                            };
+                            SetAdSetActionMetrics(adSetAction, fbAction);
+                            addedAdSetActions.Add(adSetAction);
+                            progress.AddedCount++;
+                        }
+                        else
+                        {
+                            foreach (var adSetAction in actionsOfType) // should be just one, but just in case
                             {
-                                foreach (var adsetAction in actionsOfType) // should be just one, but just in case
-                                {
-                                    // Update
-                                    adsetAction.PostClick = fbAction.Num_click ?? 0;
-                                    adsetAction.PostView = fbAction.Num_view ?? 0;
-                                    adsetAction.PostClickVal = fbAction.Val_click ?? 0;
-                                    adsetAction.PostViewVal = fbAction.Val_view ?? 0;
-                                    progress.UpdatedCount++;
-                                }
+                                SetAdSetActionMetrics(adSetAction, fbAction);
+                                progress.UpdatedCount++;
                             }
                         }
-                    } // loop through items
-                }
-            );
+                    }
+
+                    db.AdSetActions.AddRange(addedAdSetActions);
+                } // loop through items
+
+                SafeContextWrapper.TrySaveChanges(db);
+            }
 
             Logger.Info(accountId, "Saved AdSetActions ({0} updates, {1} additions, {2} deletions)", progress.UpdatedCount, progress.AddedCount, progress.DeletedCount);
         }
 
+        private void RemoveAdSetActions(ClientPortalProgContext db, LoadingProgress progress,
+            IEnumerable<AdSetAction> existingActions, IEnumerable<FBAction> fbActions)
+        {
+            var actionTypeIds = fbActions.Select(x => ActionTypeStorage.GetEntityIdFromStorage(x.ActionType))
+                .ToArray();
+            //Delete actions that no longer have stats for the date/adset
+            var actionsForRemoving = existingActions.Where(x => !actionTypeIds.Contains(x.ActionTypeId)).ToList();
+            db.AdSetActions.RemoveRange(actionsForRemoving);
+            progress.DeletedCount += actionsForRemoving.Count;
+        }
+
+        private void SetAdSetActionMetrics(ActionStatsWithVals adSetAction, FBAction fbAction)
+        {
+            adSetAction.PostClick = fbAction.Num_click ?? 0;
+            adSetAction.PostView = fbAction.Num_view ?? 0;
+            adSetAction.PostClickVal = fbAction.Val_click ?? 0;
+            adSetAction.PostViewVal = fbAction.Val_view ?? 0;
+        }
     }
 }

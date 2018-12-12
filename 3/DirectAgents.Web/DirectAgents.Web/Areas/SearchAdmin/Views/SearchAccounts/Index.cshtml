@@ -1,5 +1,4 @@
-﻿@using System.Globalization
-@model IEnumerable<DirectAgents.Domain.Entities.CPSearch.SearchAccount>
+﻿@model IEnumerable<DirectAgents.Domain.Entities.CPSearch.SearchAccount>
 @{
     string spId = Request.Params["spid"];
     bool oneProfile = !String.IsNullOrWhiteSpace(spId);
@@ -28,7 +27,7 @@
             <td>@sa.Channel</td>
             <td>@sa.AccountCode</td>
             <td>@sa.ExternalId</td>
-            <td style="text-align:center">@sa.MinSynchDate.ToString("d", CultureInfo.InvariantCulture)</td>
+            <td style="text-align:center">@sa.MinSynchDate.ToShortDateString()</td>
             <td>@sa.RevPerOrder</td>
         </tr>
     }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
@@ -42,8 +41,8 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
                 DailySummaries = stats,
                 MetricNames = UIMetricHelper.GetMetricTypeDictionary(stats)
             };
-            Session["start"] = (start.HasValue ? start.Value.ToString("d", CultureInfo.InvariantCulture) : "");
-            Session["end"] = (end.HasValue ? end.Value.ToString("d", CultureInfo.InvariantCulture) : "");
+            Session["start"] = (start.HasValue ? start.Value.ToShortDateString() : "");
+            Session["end"] = (end.HasValue ? end.Value.ToShortDateString() : "");
             return View(model);
         }
 

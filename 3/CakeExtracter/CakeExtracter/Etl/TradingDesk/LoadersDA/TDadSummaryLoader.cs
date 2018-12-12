@@ -21,16 +21,16 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         static TDadSummaryLoader()
         {
-            TDadStorage = new EntityIdStorage<TDad>(x => x.Id, x => $"{x.AdSetId}{x.Name}{x.ExternalId}", x => $"{x.Name}{x.ExternalId}");
+            TDadStorage = new EntityIdStorage<TDad>(x => x.Id, x => $"{x.AccountId} {x.AdSetId} {x.Name} {x.ExternalId}", x => $"{x.AccountId} {x.Name} {x.ExternalId}");
         }
 
         public TDadSummaryLoader(int accountId = -1)
         {
-            this.AccountId = accountId;
-            this.adSetLoader = new TDAdSetSummaryLoader(accountId);
-            this.adSetStorage = TDAdSetSummaryLoader.AdSetStorage;
-            this.typeStorage = new EntityIdStorage<EntityType>(x => x.Id, x => x.Name);
-            this.metricLoader = new SummaryMetricLoader();
+            AccountId = accountId;
+            adSetLoader = new TDAdSetSummaryLoader(accountId);
+            adSetStorage = TDAdSetSummaryLoader.AdSetStorage;
+            typeStorage = new EntityIdStorage<EntityType>(x => x.Id, x => x.Name);
+            metricLoader = new SummaryMetricLoader();
         }
 
         protected override int Load(List<TDadSummary> items)
@@ -60,11 +60,13 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             foreach (var item in items)
             {
-                if (TDadStorage.IsEntityInStorage(item.TDad))
+                if (!TDadStorage.IsEntityInStorage(item.TDad))
                 {
-                    item.TDadId = TDadStorage.GetEntityIdFromStorage(item.TDad);
-                    item.TDad = null;
+                    continue;
                 }
+
+                item.TDadId = TDadStorage.GetEntityIdFromStorage(item.TDad);
+                item.TDad = null;
                 // otherwise it will get skipped; no TDad to use for the foreign key
             }
         }
@@ -72,29 +74,28 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public int UpsertDailySummaries(List<TDadSummary> items)
         {
             var progress = new LoadingProgress();
+            using (var db = new ClientPortalProgContext())
+            {
+                var itemTDadIds = items.Select(i => i.TDadId).Distinct().ToArray();
+                var tdAdIdsInDb = db.TDads.Select(a => a.Id).Where(i => itemTDadIds.Contains(i)).ToArray();
 
-            SafeContextWrapper.SaveChangedContext<ClientPortalProgContext>(
-                SafeContextWrapper.AdSummaryLocker, db =>
+                foreach (var item in items)
                 {
-                    var itemTDadIds = items.Select(i => i.TDadId).Distinct().ToArray();
-                    var tdAdIdsInDb = db.TDads.Select(a => a.Id).Where(i => itemTDadIds.Contains(i)).ToArray();
-
-                    foreach (var item in items)
+                    var target = db.Set<TDadSummary>().Find(item.Date, item.TDadId);
+                    if (target == null)
                     {
-                        var target = db.Set<TDadSummary>().Find(item.Date, item.TDadId);
-                        if (target == null)
-                        {
-                            TryToAddSummary(db, item, tdAdIdsInDb, progress);
-                        }
-                        else // TDadSummary already exists
-                        {
-                            TryToUpdateSummary(db, item, target, progress);
-                        }
-
-                        progress.ItemCount++;
+                        TryToAddSummary(db, item, tdAdIdsInDb, progress);
                     }
+                    else // TDadSummary already exists
+                    {
+                        TryToUpdateSummary(db, item, target, progress);
+                    }
+
+                    progress.ItemCount++;
                 }
-            );
+
+                SafeContextWrapper.TrySaveChanges(db);
+            }
 
             Logger.Info(AccountId, "Saving {0} TDadSummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
                 progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount, progress.SkippedCount);
@@ -107,25 +108,29 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public void AddUpdateDependentAdSets(List<TDadSummary> items)
         {
-            var adSets = items
-                .GroupBy(x => new { x.TDad.AdSet?.StrategyId, x.TDad.AdSet?.ExternalId, x.TDad.AdSet?.Name })
-                .Select(x => x.First().TDad.AdSet)
-                .Where(x => x != null && (!string.IsNullOrWhiteSpace(x.Name) || !string.IsNullOrWhiteSpace(x.ExternalId)))
-                .ToList();
-            adSetLoader.AddUpdateDependentAdSets(adSets, AccountId);
+            var adSets = items.Select(x => x.TDad.AdSet).ToList();
+            adSetLoader.AddUpdateDependentAdSets(adSets);
             AssignAdSetIdToItems(items);
         }
 
         public void AddUpdateDependentTDads(List<TDadSummary> items)
         {
-            var tdAds = items
-                .GroupBy(i => new { i.TDad.AdSetId, i.TDad.Name, i.TDad.ExternalId })
-                .Select(x => x.First().TDad)
-                .ToList();
+            var tdAds = items.Select(x => x.TDad).ToList();
             AddUpdateDependentTDads(tdAds);
         }
 
-        private void AddUpdateDependentTDads(List<TDad> items)
+        public void AddUpdateDependentTDads(List<TDad> items)
+        {
+            var notNullableItems = items.Where(x => x != null).ToList();
+            notNullableItems.ForEach(x => x.AccountId = AccountId);
+            var tdAds = notNullableItems
+                .GroupBy(x => new { x.AccountId, x.AdSetId, x.Name, x.ExternalId })
+                .Select(x => x.First())
+                .ToList();
+            AddUpdateDependentTDadsInDb(tdAds);
+        }
+
+        private void AddUpdateDependentTDadsInDb(List<TDad> items)
         {
             using (var db = new ClientPortalProgContext())
             {
@@ -140,13 +145,13 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
                     SafeContextWrapper.Lock(SafeContextWrapper.AdLocker, () =>
                     {
-                        var tdAdsInDbList = GetTDads(db, tdAd, AccountId);
+                        var tdAdsInDbList = GetTDads(db, tdAd);
                         if (!tdAdsInDbList.Any())
                         {
                             // TDad doesn't exist in the db; so create it and put an entry in the lookup
-                            var tdAdInDB = AddTDad(db, tdAd, AccountId);
-                            Logger.Info(AccountId, "Saved new TDad: {0} ({1}), ExternalId={2}", tdAdInDB.Name, tdAdInDB.Id, tdAdInDB.ExternalId);
-                            TDadStorage.AddEntityIdToStorage(tdAdInDB);
+                            var tdAdInDb = AddTDad(db, tdAd);
+                            Logger.Info(AccountId, "Saved new TDad: {0} ({1}), ExternalId={2}", tdAdInDb.Name, tdAdInDb.Id, tdAdInDb.ExternalId);
+                            TDadStorage.AddEntityIdToStorage(tdAdInDb);
                         }
                         else
                         {
@@ -168,7 +173,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             }
         }
 
-        private void AssignAdSetIdToItems(List<TDadSummary> items)
+        private void AssignAdSetIdToItems(IEnumerable<TDadSummary> items)
         {
             foreach (var item in items)
             {
@@ -219,11 +224,13 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             foreach (var id in externalIds)
             {
-                if (typeStorage.IsEntityInStorage(id.Type))
+                if (!typeStorage.IsEntityInStorage(id.Type))
                 {
-                    id.TypeId = typeStorage.GetEntityIdFromStorage(id.Type);
-                    id.Type = null;
+                    continue;
                 }
+
+                id.TypeId = typeStorage.GetEntityIdFromStorage(id.Type);
+                id.Type = null;
             }
         }
 
@@ -296,21 +303,21 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             var deletedMetrics = item.InitialMetrics == null
                 ? target.Metrics
-                : target.Metrics.Where(x => !item.InitialMetrics.Any(m => m.MetricTypeId == x.MetricTypeId));
+                : target.Metrics.Where(x => item.InitialMetrics.All(m => m.MetricTypeId != x.MetricTypeId));
             metricLoader.RemoveMetrics(db, deletedMetrics);
         }
 
-        private List<TDad> GetTDads(ClientPortalProgContext db, TDad tdAd, int accountId)
+        private List<TDad> GetTDads(ClientPortalProgContext db, TDad tdAd)
         {
             IQueryable<TDad> tdAdsInDb;
             if (!string.IsNullOrWhiteSpace(tdAd.ExternalId))
             {
                 // See if a TDad with that ExternalId exists
-                tdAdsInDb = db.TDads.Where(a => a.AccountId == AccountId && a.ExternalId == tdAd.ExternalId);
+                tdAdsInDb = db.TDads.Where(a => a.AccountId == tdAd.AccountId && a.ExternalId == tdAd.ExternalId);
                 // If not, check for a match by name where ExternalId == null
                 if (!tdAdsInDb.Any())
                 {
-                    tdAdsInDb = db.TDads.Where(x => x.AccountId == accountId && x.ExternalId == null && x.Name == tdAd.Name);
+                    tdAdsInDb = db.TDads.Where(x => x.AccountId == tdAd.AccountId && x.ExternalId == null && x.Name == tdAd.Name);
                     if (tdAd.AdSetId.HasValue)
                     {
                         tdAdsInDb = tdAdsInDb.Where(x => x.AdSetId == tdAd.AdSetId);
@@ -320,7 +327,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             else
             {
                 // Check by TDad name
-                tdAdsInDb = db.TDads.Where(x => x.AccountId == accountId && x.Name == tdAd.Name);
+                tdAdsInDb = db.TDads.Where(x => x.AccountId == tdAd.AccountId && x.Name == tdAd.Name);
                 if (tdAd.AdSetId.HasValue)
                 {
                     tdAdsInDb = tdAdsInDb.Where(x => x.AdSetId == tdAd.AdSetId);
@@ -330,18 +337,18 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             return tdAdsInDb.ToList();
         }
 
-        private TDad AddTDad(ClientPortalProgContext db, TDad tdAdProps, int accountId)
+        private TDad AddTDad(ClientPortalProgContext db, TDad tdAdProps)
         {
             var tdAd = new TDad
             {
-                AccountId = accountId,
+                AccountId = tdAdProps.AccountId,
                 AdSetId = tdAdProps.AdSetId,
                 ExternalId = tdAdProps.ExternalId,
                 Name = tdAdProps.Name,
                 ExternalIds = tdAdProps.ExternalIds
             };
             db.TDads.Add(tdAd);
-            db.SaveChanges();
+            SafeContextWrapper.TrySaveChanges(db);
             return tdAd;
         }
 
@@ -364,7 +371,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 }
                 numChanges -= UpdateTDadExternalIds(tdAd, tdAdProps);
             }
-            numChanges += db.SaveChanges();
+            numChanges += SafeContextWrapper.TrySaveChanges(db);
             return numChanges;
         }
 

@@ -1,5 +1,4 @@
-﻿@using System.Globalization
-@model DirectAgents.Web.Areas.ProgAdmin.Models.DailySummariesVM
+﻿@model DirectAgents.Web.Areas.ProgAdmin.Models.DailySummariesVM
 @{
     bool super = Request.QueryString["super"] == "1";
 }
@@ -61,10 +60,10 @@ else
             <td>
                 @if (super)
                 {
-                    @Html.ActionLink("Edit", "Edit", new { acctid = ds.AccountId, date = ds.Date.ToString("d", CultureInfo.InvariantCulture) })
+                    @Html.ActionLink("Edit", "Edit", new { acctid = ds.AccountId, date = ds.Date.ToShortDateString() })
                 }
             </td>
-            <td>@ds.Date.ToString("d", CultureInfo.InvariantCulture)</td>
+            <td>@ds.Date.ToShortDateString()</td>
             <td style="text-align:right">@ds.Impressions</td>
             <td style="text-align:right">@ds.AllClicks</td>
             <td style="text-align:right">@ds.Clicks</td>
@@ -87,6 +86,6 @@ else
 {
     DateTime yesterday = DateTime.Today.AddDays(-1);
     DateTime date = Model.Start.HasValue ? Model.Start.Value : new DateTime(yesterday.Year, yesterday.Month, 1);
-    @Html.ActionLink("New", "Edit", new { date = date.ToString("d", CultureInfo.InvariantCulture), acctId = Model.ExtAccount.Id, create = true })
+    @Html.ActionLink("New", "Edit", new { date = date.ToShortDateString(), acctId = Model.ExtAccount.Id, create = true })
     <br />
 }

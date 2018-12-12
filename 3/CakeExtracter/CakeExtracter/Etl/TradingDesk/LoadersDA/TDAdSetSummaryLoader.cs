@@ -20,15 +20,15 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         static TDAdSetSummaryLoader()
         {
-            AdSetStorage = new EntityIdStorage<AdSet>(x => x.Id, x => $"{x.StrategyId}{x.Name}{x.ExternalId}", x => $"{x.Name}{x.ExternalId}");
+            AdSetStorage = new EntityIdStorage<AdSet>(x => x.Id, x => $"{x.AccountId} {x.StrategyId} {x.Name} {x.ExternalId}", x => $"{x.AccountId} {x.Name} {x.ExternalId}");
         }
 
         public TDAdSetSummaryLoader(int accountId = -1)
         {
-            this.AccountId = accountId;
-            this.strategyLoader = new TDStrategySummaryLoader(accountId);
-            this.strategyStorage = TDStrategySummaryLoader.StrategyStorage;
-            this.metricLoader = new SummaryMetricLoader();
+            AccountId = accountId;
+            strategyLoader = new TDStrategySummaryLoader(accountId);
+            strategyStorage = TDStrategySummaryLoader.StrategyStorage;
+            metricLoader = new SummaryMetricLoader();
         }
 
         protected override int Load(List<AdSetSummary> items)
@@ -58,11 +58,13 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             foreach (var item in items)
             {
-                if (AdSetStorage.IsEntityInStorage(item.AdSet))
+                if (!AdSetStorage.IsEntityInStorage(item.AdSet))
                 {
-                    item.AdSetId = AdSetStorage.GetEntityIdFromStorage(item.AdSet);
-                    item.AdSet = null;
+                    continue;
                 }
+
+                item.AdSetId = AdSetStorage.GetEntityIdFromStorage(item.AdSet);
+                item.AdSet = null;
                 // otherwise it will get skipped; no AdSet to use for the foreign key
             }
         }
@@ -71,28 +73,28 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             var progress = new LoadingProgress();
 
-            SafeContextWrapper.SaveChangedContext<ClientPortalProgContext>(
-                SafeContextWrapper.AdSetSummaryLocker, db =>
+            using (var db = new ClientPortalProgContext())
+            {
+                var itemAdSetIds = items.Select(i => i.AdSetId).Distinct().ToArray();
+                var adSetIdsInDb = db.AdSets.Select(s => s.Id).Where(i => itemAdSetIds.Contains(i)).ToArray();
+
+                foreach (var item in items)
                 {
-                    var itemAdSetIds = items.Select(i => i.AdSetId).Distinct().ToArray();
-                    var adSetIdsInDb = db.AdSets.Select(s => s.Id).Where(i => itemAdSetIds.Contains(i)).ToArray();
-
-                    foreach (var item in items)
+                    var target = db.Set<AdSetSummary>().Find(item.Date, item.AdSetId);
+                    if (target == null)
                     {
-                        var target = db.Set<AdSetSummary>().Find(item.Date, item.AdSetId);
-                        if (target == null)
-                        {
-                            TryToAddSummary(db, item, adSetIdsInDb, progress);
-                        }
-                        else // AdSetSummary already exists
-                        {
-                            TryToUpdateSummary(db, item, target, progress);
-                        }
-
-                        progress.ItemCount++;
+                        TryToAddSummary(db, item, adSetIdsInDb, progress);
                     }
+                    else // AdSetSummary already exists
+                    {
+                        TryToUpdateSummary(db, item, target, progress);
+                    }
+
+                    progress.ItemCount++;
                 }
-            );
+
+                SafeContextWrapper.TrySaveChanges(db);
+            }
 
             Logger.Info(AccountId, "Saving {0} AdSetSummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
                 progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.DeletedCount, progress.AlreadyDeletedCount, progress.SkippedCount);
@@ -105,25 +107,30 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         public void AddUpdateDependentStrategies(List<AdSetSummary> items)
         {
-            var strategies = items
-                .GroupBy(i => new { i.AdSet.Strategy?.Name, i.AdSet.Strategy?.ExternalId })
-                .Select(x => x.First().AdSet.Strategy)
-                .Where(x => x != null && (!string.IsNullOrWhiteSpace(x.Name) || !string.IsNullOrWhiteSpace(x.ExternalId)))
-                .ToList();
+            var strategies = items.Select(x => x.AdSet.Strategy).ToList();
             strategyLoader.AddUpdateDependentStrategies(strategies);
             AssignStrategyIdToItems(items);
         }
 
         public void AddUpdateDependentAdSets(IEnumerable<AdSetSummary> items)
         {
-            var adSets = items
-                .GroupBy(i => new { i.AdSet.StrategyId, i.AdSet.Name, i.AdSet.ExternalId })
-                .Select(x => x.First().AdSet)
-                .ToList();
-            AddUpdateDependentAdSets(adSets, AccountId);
+            var adSets = items.Select(x => x.AdSet).ToList();
+            AddUpdateDependentAdSets(adSets);
         }
 
-        public void AddUpdateDependentAdSets(IEnumerable<AdSet> items, int accountId)
+        public void AddUpdateDependentAdSets(IEnumerable<AdSet> items)
+        {
+            var notNullableItems = items.Where(x => x != null).ToList();
+            notNullableItems.ForEach(x => x.AccountId = AccountId);
+            var adSets = notNullableItems
+                .Where(x => !string.IsNullOrWhiteSpace(x.Name) || !string.IsNullOrWhiteSpace(x.ExternalId))
+                .GroupBy(x => new { x.AccountId, x.StrategyId, x.Name, x.ExternalId })
+                .Select(x => x.First())
+                .ToList();
+            AddUpdateDependentAdSetsInDb(adSets);
+        }
+
+        private void AddUpdateDependentAdSetsInDb(IEnumerable<AdSet> items)
         {
             using (var db = new ClientPortalProgContext())
             {
@@ -136,11 +143,11 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
                     SafeContextWrapper.Lock(SafeContextWrapper.AdSetLocker, () =>
                     {
-                        var adSetsInDbList = GetAdSets(db, adSet, accountId);
+                        var adSetsInDbList = GetAdSets(db, adSet);
                         if (!adSetsInDbList.Any())
                         {
                             // AdSet doesn't exist in the db; so create it and put an entry in the lookup
-                            var adSetInDB = AddAdSet(db, adSet, accountId);
+                            var adSetInDB = AddAdSet(db, adSet);
                             Logger.Info(accountId, "Saved new AdSet: {0} ({1}), ExternalId={2}", adSetInDB.Name,
                                 adSetInDB.Id, adSetInDB.ExternalId);
                             AdSetStorage.AddEntityIdToStorage(adSetInDB);
@@ -165,7 +172,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             }
         }
 
-        private void AssignStrategyIdToItems(List<AdSetSummary> items)
+        private void AssignStrategyIdToItems(IEnumerable<AdSetSummary> items)
         {
             foreach (var item in items)
             {
@@ -246,11 +253,11 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             var deletedMetrics = item.InitialMetrics == null
                 ? target.Metrics
-                : target.Metrics.Where(x => !item.InitialMetrics.Any(m => m.MetricTypeId == x.MetricTypeId));
+                : target.Metrics.Where(x => item.InitialMetrics.All(m => m.MetricTypeId != x.MetricTypeId));
             metricLoader.RemoveMetrics(db, deletedMetrics);
         }
 
-        private List<AdSet> GetAdSets(ClientPortalProgContext db, AdSet adSet, int accountId)
+        private List<AdSet> GetAdSets(ClientPortalProgContext db, AdSet adSet)
         {
             //TODO: Check this logic for finding an existing adset...
             //      The main concern is when uploading stats from a csv and AdSetEids aren't included
@@ -259,12 +266,12 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             if (!string.IsNullOrWhiteSpace(adSet.ExternalId))
             {
                 // First see if an AdSet with that ExternalId exists
-                adSetsInDb = db.AdSets.Where(x => x.AccountId == accountId && x.ExternalId == adSet.ExternalId);
+                adSetsInDb = db.AdSets.Where(x => x.AccountId == adSet.AccountId && x.ExternalId == adSet.ExternalId);
 
                 // If not, check for a match by name where ExternalId == null
                 if (!adSetsInDb.Any())
                 {
-                    adSetsInDb = db.AdSets.Where(x => x.AccountId == accountId && x.ExternalId == null && x.Name == adSet.Name);
+                    adSetsInDb = db.AdSets.Where(x => x.AccountId == adSet.AccountId && x.ExternalId == null && x.Name == adSet.Name);
                     if (adSet.StrategyId.HasValue)
                     {
                         adSetsInDb = adSetsInDb.Where(x => x.StrategyId == adSet.StrategyId);
@@ -274,7 +281,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             else
             {
                 // Check by adset name
-                adSetsInDb = db.AdSets.Where(x => x.AccountId == accountId && x.Name == adSet.Name);
+                adSetsInDb = db.AdSets.Where(x => x.AccountId == adSet.AccountId && x.Name == adSet.Name);
                 if (adSet.StrategyId.HasValue)
                 {
                     adSetsInDb = adSetsInDb.Where(x => x.StrategyId == adSet.StrategyId);
@@ -284,17 +291,17 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             return adSetsInDb.ToList();
         }
 
-        private AdSet AddAdSet(ClientPortalProgContext db, AdSet adSetProps, int accountId)
+        private AdSet AddAdSet(ClientPortalProgContext db, AdSet adSetProps)
         {
             var adSet = new AdSet
             {
-                AccountId = accountId,
+                AccountId = adSetProps.AccountId,
                 StrategyId = adSetProps.StrategyId,
                 ExternalId = adSetProps.ExternalId,
                 Name = adSetProps.Name
             };
             db.AdSets.Add(adSet);
-            db.SaveChanges();
+            SafeContextWrapper.TrySaveChanges(db);
             return adSet;
         }
 
@@ -315,7 +322,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     adSet.StrategyId = adSetProps.StrategyId;
                 }
             }
-            return db.SaveChanges();
+            return SafeContextWrapper.TrySaveChanges(db);
         }
     }
 }
