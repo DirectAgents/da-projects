@@ -83,7 +83,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                     progress.ItemCount++;
                 }
 
-                db.SaveChanges();
+                SafeContextWrapper.TrySaveChanges(db);
             }
 
             Logger.Info(accountId, "Saving {0} DailySummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted)",

@@ -93,7 +93,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     progress.ItemCount++;
                 }
 
-                db.SaveChanges();
+                SafeContextWrapper.TrySaveChanges(db);
             }
 
             Logger.Info(AccountId, "Saving {0} AdSetSummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",

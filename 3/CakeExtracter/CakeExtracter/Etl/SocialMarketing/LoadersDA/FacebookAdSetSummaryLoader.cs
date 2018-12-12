@@ -177,7 +177,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                     db.AdSetActions.AddRange(addedAdSetActions);
                 } // loop through items
 
-                db.SaveChanges();
+                SafeContextWrapper.TrySaveChanges(db);
             }
 
             Logger.Info(accountId, "Saved AdSetActions ({0} updates, {1} additions, {2} deletions)", progress.UpdatedCount, progress.AddedCount, progress.DeletedCount);
