@@ -171,8 +171,9 @@ namespace FacebookAPI
         }
         public IEnumerable<FBSummary> GetDailyAdSetStats(string accountId, DateTime start, DateTime end)
         {
-            return GetFBSummariesLoop(accountId, start, end, byCampaign: true, byAdSet: true);
+            return GetFBSummariesLoop(accountId, start, end, byCampaign: true, byAdSet: true, getArchived: true);
         }
+
         public IEnumerable<FBSummary> GetDailyAdStats(string accountId, DateTime start, DateTime end)
         {
             int daysPerCall = DaysPerCall_Override ?? DaysPerCall_Ad;
@@ -226,7 +227,7 @@ namespace FacebookAPI
             }
         }
 
-        public IEnumerable<FBSummary> GetFBSummariesLoop(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAdSet = false, bool byAd = false)
+        public IEnumerable<FBSummary> GetFBSummariesLoop(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAdSet = false, bool byAd = false, bool getArchived = false)
         {
             int daysPerCall = 365; // default
             if (DaysPerCall_Override.HasValue)
@@ -250,8 +251,15 @@ namespace FacebookAPI
 
                 var clientParms = GetClientAndParms(accountId, start, tempEnd, byCampaign: byCampaign, byAdSet: byAdSet, byAd: byAd);
                 GetRunId_withRetry(clientParms); // fire off the job
-
                 clientParmsList.Add(clientParms);
+
+                if (getArchived)
+                {
+                    var clientParmsArchived = GetClientAndParms(accountId, start, tempEnd, byCampaign: byCampaign, byAdSet: byAdSet, byAd: byAd, getArchived: true);
+                    GetRunId_withRetry(clientParmsArchived);
+                    clientParmsList.Add(clientParmsArchived);
+                }
+
                 start = start.AddDays(daysPerCall);
             }
             Thread.Sleep(InitialWaitMillisecs);
@@ -265,7 +273,8 @@ namespace FacebookAPI
                 }
             }
         }
-        private ClientAndParms GetClientAndParms(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAdSet = false, bool byAd = false)
+
+        private ClientAndParms GetClientAndParms(string accountId, DateTime start, DateTime end, bool byCampaign = false, bool byAdSet = false, bool byAd = false, bool getArchived = false)
         {
             var levelVal = "";
             var fieldsVal = "spend,impressions,inline_link_clicks,clicks,actions,action_values"; // unique_clicks,total_actions
@@ -294,6 +303,12 @@ namespace FacebookAPI
                 filterList.Add(new Filter { field = "publisher_platform", @operator = "IN", value = new[] { PlatformFilter } });
             if (!String.IsNullOrEmpty(CampaignFilterValue))
                 filterList.Add(new Filter { field = "campaign.name", @operator = CampaignFilterOperator, value = CampaignFilterValue });
+
+            if (getArchived)
+            {
+                filterList.Add(new Filter{ field = $"{levelVal}.effective_status", @operator = "IN", value = new[] { "ARCHIVED" } });
+            }
+
             // See https://developers.facebook.com/docs/marketing-api/ad-rules-getting-started/
 
             var parameters = new
