@@ -25,7 +25,7 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://advertising.amazon.com/sign-in/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://advertising.amazon.com/sign-in")]
         public string SignInPageUrl {
             get {
                 return ((string)(this["SignInPageUrl"]));
@@ -133,13 +133,46 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Belkin")]
-        public string ProfileText {
+        public int DaysAgo {
             get {
-                return ((string)(this["ProfileText"]));
+                return ((int)(this["DaysAgo"]));
             }
             set {
-                this["ProfileText"] = value;
+                this["DaysAgo"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime StartDate {
+            get {
+                return ((global::System.DateTime)(this["StartDate"]));
+            }
+            set {
+                this["StartDate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime EndDate {
+            get {
+                return ((global::System.DateTime)(this["EndDate"]));
+            }
+            set {
+                this["EndDate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Cookies")]
+        public string CookiesDirectory {
+            get {
+                return ((string)(this["CookiesDirectory"]));
+            }
+            set {
+                this["CookiesDirectory"] = value;
             }
         }
     }

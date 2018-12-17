@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CsvHelper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.2.16.3.0\lib\net45\CsvHelper.dll</HintPath>
+    </Reference>
     <Reference Include="ManyConsole, Version=1.0.0.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\ManyConsole.1.0.0.4\lib\ManyConsole.dll</HintPath>
     </Reference>
@@ -72,8 +75,13 @@
   <ItemGroup>
     <Compile Include="Commands\SyncAmazonPdaCommand.cs" />
     <Compile Include="Drivers\ChromeWebDriver.cs" />
+    <Compile Include="Enums\AmazonReportMetrics.cs" />
     <Compile Include="Helpers\CookieManager.cs" />
-    <Compile Include="SeleniumExtractors\AmazonPDAExtractor.cs" />
+    <Compile Include="Models\AmazonReportColumnMapping.cs" />
+    <Compile Include="Models\AmazonReportSummary.cs" />
+    <Compile Include="Models\AuthorizationModel.cs" />
+    <Compile Include="SeleniumExtractors\AmazonPdaExtractors\AmazonPdaCampaignExtractor.cs" />
+    <Compile Include="SeleniumExtractors\AmazonPdaExtractors\AmazonPdaExtractor.cs" />
     <Compile Include="Jobs\ExtractAmazonPda\ExtractAmazonPdaJob.cs" />
     <Compile Include="Models\CampaignInfo.cs" />
     <Compile Include="PageActions\BasePageActions.cs" />
@@ -88,6 +96,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Jobs\ExtractAmazonPda\ExtractAmazonPdaScheduler.cs" />
+    <Compile Include="SeleniumExtractors\AmazonReportCsvExtractors\AmazonReportCsvExtractor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -114,10 +123,4 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\Selenium.Chrome.WebDriver.2.43\build\Selenium.Chrome.WebDriver.targets" Condition="Exists('packages\Selenium.Chrome.WebDriver.2.43\build\Selenium.Chrome.WebDriver.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('packages\Selenium.Chrome.WebDriver.2.43\build\Selenium.Chrome.WebDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Selenium.Chrome.WebDriver.2.43\build\Selenium.Chrome.WebDriver.targets'))" />
-  </Target>
 </Project>

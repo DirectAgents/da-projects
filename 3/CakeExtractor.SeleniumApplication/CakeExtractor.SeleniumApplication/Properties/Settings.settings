@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="SignInPageUrl" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://advertising.amazon.com/sign-in/</Value>
+      <Value Profile="(Default)">https://advertising.amazon.com/sign-in</Value>
     </Setting>
     <Setting Name="CampaignsPageUrl" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://advertising.amazon.com/cm/campaigns</Value>
@@ -29,8 +29,17 @@
     <Setting Name="ExtractionIntervalsInDays" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="ProfileText" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Belkin</Value>
+    <Setting Name="DaysAgo" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="StartDate" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EndDate" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CookiesDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Cookies</Value>
     </Setting>
   </Settings>
 </SettingsFile>

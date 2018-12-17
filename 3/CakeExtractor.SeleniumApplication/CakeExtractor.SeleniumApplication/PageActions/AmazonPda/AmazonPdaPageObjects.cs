@@ -18,19 +18,20 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         public static By AccountButton = By.CssSelector("button[data-id=user-account]");
 
         // Campaigns page objects. Filter        
+        public static By FilterResetButton = By.XPath(".//button[contains(text(),'Reset filters')]");
         public static By FilterByButton = By.XPath(".//button[contains(text(),'Filter by')]");
         public static By FilterTypeButton = By.XPath(".//button[contains(@value,'Type')][contains(text(),'Type')]");
         public static By FilterByValues = By.XPath(".//div[contains(@class,'sc-cHGsZl bJrez')]/label/button");
         public static By FilterPdaValues = By.XPath(".//div[contains(@class,'sc-kgoBCf fQYKbt')]/div/button[contains(@value,'PDA')]");        
         public static By SaveSearchAndFilterButton = By.XPath(".//button[@id='saveButtonSearchAndFilter']");
-        public static By FilterLoader = By.XPath(".//div[contains(@class,'sc-gVyKpa')][contains(@class,'fVzdrT')]");
+        public static By FilterLoader = By.CssSelector("div[class*='sc-gVyKpa'] svg[data-icon='spinner']");
 
         // Campaigns page objects        
         public static By CampaignsNameContainer = By.XPath(".//div[@id='CAMPAIGNS']/div/div[2]/div[contains(@class,'BottomLeftGrid_ScrollWrapper')]/div/div");
         public static By CampaignsNamesList = By.CssSelector("div[data-udt-column-id=name-cell]");
         public static By CampaignName = By.XPath(".//div/div");
         public static By CampaignNameLink = By.TagName("a");
-        public static By NavigateNextPageButton = By.XPath(".//div[contains(@class,'sc-gtfDJT gMbShB')]/button[2]");
+        public static By NavigateNextPageButton = By.XPath(".//div[contains(@class,'sc-fOICqy lpgnIf')]/button[2]");
 
         // Campaigns page objects. Export
         public static By ExportButton = By.XPath(".//button[contains(@class,'sc-bdVaJa eepElq')][contains(text(),'Export')]");

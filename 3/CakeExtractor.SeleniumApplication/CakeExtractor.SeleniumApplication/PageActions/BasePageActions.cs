@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using CakeExtractor.SeleniumApplication.Helpers;
+using CakeExtracter;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
@@ -13,14 +13,15 @@ namespace CakeExtractor.SeleniumApplication.PageActions
 
         public BasePageActions(IWebDriver driver)
         {
-            this.Driver = driver;
+            Driver = driver;
         }
-        
+
         public void NavigateToUrl(string url, By waitingElement, TimeSpan timeout)
         {
             try
             {
-                Driver.Navigate().GoToUrl(url);
+                var navigation = Driver.Navigate();
+                navigation.GoToUrl(url);
                 WaitElementClickable(waitingElement, timeout);
             }
             catch (Exception e)
@@ -33,7 +34,8 @@ namespace CakeExtractor.SeleniumApplication.PageActions
         {
             try
             {
-                Driver.Navigate().GoToUrl(url);                
+                var navigation = Driver.Navigate();
+                navigation.GoToUrl(url);
             }
             catch (Exception e)
             {
@@ -41,86 +43,65 @@ namespace CakeExtractor.SeleniumApplication.PageActions
             }
         }
 
-        public void RefreshPage()
-        {
-            Driver.Navigate().Refresh();
-        }
-        
-        protected void ClickElement(By element)
+        public void SendKeys(By byElement, string keys)
         {
             try
             {
-                Driver.FindElement(element).Click();
+                var element = Driver.FindElement(byElement);
+                element.SendKeys(keys);
             }
             catch (Exception e)
             {
-                throw new Exception($"Could not click on the element [{element}]: {e.Message}", e);
-            }
-        }
-        
-        public void SendKeys(By element, string keys)
-        {
-            try
-            {
-                Driver.FindElement(element).SendKeys(keys);
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Could not send keys on the element [{element}]: {e.Message}", e);
+                throw new Exception($"Could not send keys on the element [{byElement}]: {e.Message}", e);
             }
         }
 
-        protected void WaitElementClickable(By element, TimeSpan waitCount)
+        public bool IsElementPresent(By byElement)
         {
             try
             {
-                var wait = new WebDriverWait(Driver, waitCount);
-                wait.Until(ExpectedConditions.ElementToBeClickable(element));
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Could not wait the element [{element}]: {e.Message}", e);
-            }
-        }
-
-        public bool IsElementPresent(By element)
-        {
-            try
-            {
-                Driver.FindElement(element);
+                Driver.FindElement(byElement);
                 return true;
             }
-            catch (NoSuchElementException)
+            catch (NoSuchElementException exc)
             {
                 return false;
             }
         }
 
-        protected void WaitLoading(By loaderElement, TimeSpan waitCount)
+        public bool IsElementVisible(By byElement)
         {
             try
             {
-                var wait = new WebDriverWait(Driver, waitCount);
-                wait.Until(ExpectedConditions.ElementExists(loaderElement));
-                wait.Until(ExpectedConditions.InvisibilityOfElementLocated(loaderElement));
+                var element = Driver.FindElement(byElement);
+                return element.Displayed;
             }
-            catch (Exception e)
+            catch (NoSuchElementException exc)
             {
-                throw new Exception($"Could not wait the loader [{loaderElement}]: {e.Message}", e);
+                return false;
             }
         }
 
-        protected void Wait(TimeSpan timeoutThread)
+        public bool IsElementEnabledAndDisplayed(By byElement)
         {
-            Thread.Sleep(timeoutThread);
-        }
-        
-        public bool IsElementEnabledAndDisplayed(By element)
-        {
-            return Driver.FindElement(element).Displayed && Driver.FindElement(element).Enabled;
+            try
+            {
+                var element = Driver.FindElement(byElement);
+                return element.Displayed && element.Enabled;
+            }
+            catch (NoSuchElementException exc)
+            {
+                return false;
+            }
         }
 
-        public System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> GetChildrenElements(By parentElem, By childElem)
+        public bool IsElementClickable(By byElement)
+        {
+            return IsElementEnabledAndDisplayed(byElement);
+        }
+
+        public System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> GetChildrenElements(By parentElem,
+            By childElem)
         {
             try
             {
@@ -129,7 +110,8 @@ namespace CakeExtractor.SeleniumApplication.PageActions
             }
             catch (Exception e)
             {
-                throw new Exception($"Could not get children elements [{childElem}] from parent [{parentElem}]: {e.Message}", e);
+                throw new Exception(
+                    $"Could not get children elements [{childElem}] from parent [{parentElem}]: {e.Message}", e);
             }
         }
 
@@ -150,7 +132,8 @@ namespace CakeExtractor.SeleniumApplication.PageActions
             try
             {
                 var tableElement = Driver.FindElement(tableElem);
-                return tableElement.FindElements(By.TagName("tr"));
+                var byElement = By.TagName("tr");
+                return tableElement.FindElements(byElement);
             }
             catch (Exception e)
             {
@@ -160,26 +143,69 @@ namespace CakeExtractor.SeleniumApplication.PageActions
 
         public IEnumerable<Cookie> GetAllCookies()
         {
-            return Driver.Manage().Cookies.AllCookies;
-        }
-
-        public Cookie GetCookie(string cookieName)
-        {
-            return Driver.Manage().Cookies.GetCookieNamed(cookieName);
+            var options = Driver.Manage();
+            return options.Cookies.AllCookies;
         }
 
         public bool SetCookie(Cookie cookie)
         {
             try
             {
-                Driver.Manage().Cookies.AddCookie(cookie);
+                var options = Driver.Manage();
+                options.Cookies.AddCookie(cookie);
                 return true;
             }
             catch (Exception e)
             {
-                FileManager.TmpConsoleLog($"Warning: {e.Message}");
+                Logger.Warn(e.Message);
                 return false;
             }
+        }
+
+        protected void ClickElement(By byElement)
+        {
+            try
+            {
+                var element = Driver.FindElement(byElement);
+                element.Click();
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Could not click on the element [{byElement}]: {e.Message}", e);
+            }
+        }
+
+        protected void WaitElementClickable(By element, TimeSpan waitCount)
+        {
+            try
+            {
+                var wait = new WebDriverWait(Driver, waitCount);
+                wait.Until(driver => IsElementClickable(element));
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Could not wait the element [{element}]: {e.Message}", e);
+            }
+        }
+
+        protected void WaitLoading(By loaderElement, TimeSpan waitCount)
+        {
+            try
+            {
+
+                var wait = new WebDriverWait(Driver, waitCount);
+                wait.Until(driver => IsElementPresent(loaderElement));
+                wait.Until(driver => !IsElementVisible(loaderElement));
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Could not wait the loader [{loaderElement}]: {e.Message}", e);
+            }
+        }
+
+        protected void Wait(TimeSpan timeoutThread)
+        {
+            Thread.Sleep(timeoutThread);
         }
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.Practices.EnterpriseLibrary.Logging;
 
 namespace CakeExtracter.Logging.Loggers
 {
-    class EnterpriseLibraryLogger : ILogger
+    public class EnterpriseLibraryLogger : ILogger
     {
         private void Write(LogEntry logEntry)
         {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CakeExtracter;
 using OpenQA.Selenium;
 
 namespace CakeExtractor.SeleniumApplication.Helpers
@@ -48,7 +49,7 @@ namespace CakeExtractor.SeleniumApplication.Helpers
             }
             catch (Exception e)
             {
-                FileManager.TmpConsoleLog($"Warning: {e.Message}");
+                Logger.Warn(e.Message);
                 return null;
             }
         }

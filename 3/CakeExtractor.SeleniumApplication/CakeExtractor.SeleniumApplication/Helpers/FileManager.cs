@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using CakeExtracter;
 
 namespace CakeExtractor.SeleniumApplication.Helpers
 {
@@ -27,11 +28,12 @@ namespace CakeExtractor.SeleniumApplication.Helpers
         {
             try
             {
-                if (!Directory.Exists(path))
+                if (Directory.Exists(path))
                 {
-                    Directory.CreateDirectory(path);
-                    FileManager.TmpConsoleLog($"Create the directory [{path}]");
+                    return;
                 }
+                Directory.CreateDirectory(path);
+                Logger.Info("Create the directory [{0}]", path);
             }
             catch (Exception e)
             {
@@ -53,7 +55,7 @@ namespace CakeExtractor.SeleniumApplication.Helpers
                     }
                     catch (Exception e)
                     {
-                        FileManager.TmpConsoleLog($"Error: Could not delete the file [{file.Name}]: {e.Message}");
+                        throw new Exception($"Error: Could not delete the file [{file.Name}]: {e.Message}", e);
                     }
                 }
             }
@@ -72,6 +74,7 @@ namespace CakeExtractor.SeleniumApplication.Helpers
                 var ext = Path.GetExtension(templateFileName);
                 var fileNameMask = Path.GetFileNameWithoutExtension(templateFileName);
                 var formatTemplate = fileName
+                    .Replace('|', '-')
                     .Replace('/', '-')
                     .Replace("\"", "")
                     .Replace(" ", "-")
@@ -88,14 +91,8 @@ namespace CakeExtractor.SeleniumApplication.Helpers
             catch (Exception e)
             {
                 throw new Exception(
-                    $"Could not get path of the file using template [{templateFileName}] in the directory [{dirPath}]: {e.Message}",
-                    e);
+                    $"Could not get path of the file using template [{templateFileName}] in the directory [{dirPath}]: {e.Message}", e);
             }
-        }
-        
-        public static void TmpConsoleLog(string text)
-        {
-            Console.WriteLine($"[{DateTime.Now}]: {text}");
-        }        
+        }       
     }
 }

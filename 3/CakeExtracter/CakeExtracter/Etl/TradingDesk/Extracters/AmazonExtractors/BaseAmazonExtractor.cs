@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Amazon;
-using Amazon.Entities;
 using Amazon.Entities.Summaries;
 using Amazon.Enums;
 using CakeExtracter.Common;
@@ -74,6 +73,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
             stats.InitialMetrics = GetMetrics(amazonStats, date);
         }
 
+        protected static void AddMetric(List<SummaryMetric> metrics, string metricName, DateTime date, decimal metricValue)
+        {
+            AddMetric(metrics, metricName, null, date, metricValue);
+        }
+
         private static List<SummaryMetric> GetMetrics(IEnumerable<AmazonStatSummary> amazonStats, DateTime date)
         {
             var metrics = new List<SummaryMetric>();
@@ -102,22 +106,33 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
 
         private static void AddMetric(List<SummaryMetric> metrics, AttributedMetricType type, AttributedMetricDaysInterval daysInterval, DateTime date, decimal metricValue)
         {
+            AddMetric(metrics, type.ToString(), (int)daysInterval, date, metricValue);
+        }
+
+        private static void AddMetric(List<SummaryMetric> metrics, string metricName, int? daysInterval, DateTime date, decimal metricValue)
+        {
             if (metricValue == 0.0M)
             {
                 return;
             }
 
+            var metric = GetMetric(metricName, daysInterval, date, metricValue);
+            metrics.Add(metric);
+        }
+
+        private static SummaryMetric GetMetric(string metricName, int? daysInterval, DateTime date, decimal metricValue)
+        {
             var metric = new SummaryMetric()
             {
                 Date = date,
                 MetricType = new MetricType
                 {
-                    Name = type.ToString(),
-                    DaysInterval = (int)daysInterval
+                    Name = metricName,
+                    DaysInterval = daysInterval
                 },
                 Value = metricValue
             };
-            metrics.Add(metric);
+            return metric;
         }
     }
 }

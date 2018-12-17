@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using CakeExtracter.Bootstrappers;
+using CakeExtracter.Logging.Loggers;
 using CakeExtractor.SeleniumApplication.Commands;
 using ManyConsole;
 using Microsoft.Practices.EnterpriseLibrary.Common.Configuration;
@@ -16,15 +18,22 @@ namespace CakeExtractor.SeleniumApplication
         
         static void Main(string[] args)
         {
+            InitializeEnterpriseLibrary();
             InitializeLogging();
+            AutoMapperBootstrapper.CheckRunSetup();
             ConsoleCommandDispatcher.DispatchCommand(Commands, args, Console.Out);
         }
 
-        private static void InitializeLogging()
+        private static void InitializeEnterpriseLibrary()
         {
             var configurationSource = ConfigurationSourceFactory.Create();
             var logWriterFactory = new LogWriterFactory(configurationSource);
             Logger.SetLogWriter(logWriterFactory.Create());
+        }
+
+        private static void InitializeLogging()
+        {
+            CakeExtracter.Logger.Instance = new EnterpriseLibraryLogger();   
         }
     }
 }

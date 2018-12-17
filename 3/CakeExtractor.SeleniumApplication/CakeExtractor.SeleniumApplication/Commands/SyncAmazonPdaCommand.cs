@@ -1,161 +1,64 @@
-﻿using System;
-using System.Linq;
-using CakeExtractor.SeleniumApplication.Drivers;
-using CakeExtractor.SeleniumApplication.PageActions.AmazonPda;
-using ManyConsole;
-using OpenQA.Selenium;
+﻿using CakeExtracter.Commands;
+using CakeExtracter.Common;
+using CakeExtracter.Etl.TradingDesk.LoadersDA;
+using CakeExtractor.SeleniumApplication.Jobs.ExtractAmazonPda;
+using DirectAgents.Domain.Concrete;
+using DirectAgents.Domain.Entities.CPProg;
+using System;
+using System.Collections.Generic;
 using System.Threading;
 using CakeExtracter;
-using CakeExtracter.Etl.TradingDesk.Extracters;
-using CakeExtracter.Etl.TradingDesk.LoadersDA;
-using CakeExtractor.SeleniumApplication.Helpers;
-using CakeExtractor.SeleniumApplication.Jobs.ExtractAmazonPda;
-using CakeExtractor.SeleniumApplication.SeleniumExtractors;
+using CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors;
+using ConsoleCommand = ManyConsole.ConsoleCommand;
+using Platform = DirectAgents.Domain.Entities.CPProg.Platform;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
     internal class SyncAmazonPdaCommand : ConsoleCommand
     {
-        private IWebDriver driver;
-        private AmazonPdaPageActions pageActions;
+        public int? AccountId { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public int? DaysAgoToStart { get; set; }
+        public string StatsType { get; set; }
+        public bool DisabledOnly { get; set; }
 
-        private string signInUrl;
-        private string campaignsUrl;
-        private string email;
-        private string pass;
-        private string downloadDir;
-        private string cookiesDir;
-        private string reportNameTemplate;
-        private int waitPageTimeoutInMinuts;
-        private string profileText;
-        private int countExecute;
+        private int executionNumber;
 
         public SyncAmazonPdaCommand()
         {
             IsCommand("SyncAmazonPdaCommand", "Synch Amazon PDA Stats");
+            HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
+            HasOption("s|startDate=", "Start Date (default is from config or 'daysAgo')", c => StartDate = DateTime.Parse(c));
+            HasOption("e|endDate=", "End Date (default is from config or yesterday)", c => EndDate = DateTime.Parse(c));
+            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default is from config or 41)", c => DaysAgoToStart = c);
+            HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
+            HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
         }
 
         public override int Run(string[] remainingArguments)
-        {            
-            try
-            {
-                Initialize();
-
-                LoginWithCookies();
-                
-                ExtractAmazonPdaScheduler.Start(this); 
-                
-                AlwaysSleep();
-            }
-            catch (Exception e)
-            {
-                FileManager.TmpConsoleLog($"Error: {e.Message}{Environment.NewLine}{e.StackTrace}");
-            }            
+        {
+            AmazonPdaExtractor.PrepareExtractor();
+            ExtractAmazonPdaScheduler.Start(this);
+            AlwaysSleep();
             return 0;
         }
 
-        public void ExtractCampaignsFromExportCsv() //not use
+        public void Execute()
         {
-            pageActions.RefreshPage();
-            pageActions.ExportCsv();
-            var csvPath = FileManager.CombinePath(downloadDir, reportNameTemplate);
-            DoEtl(csvPath);
-            FileManager.CleanDirectory(downloadDir, reportNameTemplate);
-        }
+            executionNumber++;
+            var statsType = new StatsTypeAgg(StatsType);
+            var dateRange = GetDateRange();
+            Logger.Info("Amazon ETL (PDA Campaigns), execution number - {0}. DateRange: {1}.", executionNumber, dateRange);
 
-        public void ExtractCampaignsInfo()
-        {
-            countExecute++;
-            var extracter = new AmazonPDAExtractor(pageActions, downloadDir, 
-                reportNameTemplate, campaignsUrl, profileText, countExecute, pass);
-
-            var loader = new AmazonCampaignSummaryLoader(-1); //accountId ??
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
-        }
-
-        private void Initialize()
-        {            
-            try
+            var accounts = GetAccounts();
+            foreach (var account in accounts)
             {
-                FileManager.TmpConsoleLog($"[{DateTime.Now}] Start initialize...");
-                InitializeSettings();
-                try
-                {
-                    FileManager.TmpConsoleLog("Create driver...");
-                    driver = new ChromeWebDriver(downloadDir);
-                    FileManager.TmpConsoleLog("Ok");
-                }
-                catch (Exception e)
-                {
-                    throw new Exception($"Failed to initialize chrome driver (parameters: [{waitPageTimeoutInMinuts}], [{downloadDir}]): {e.Message}", e);
-                }
-                pageActions = new AmazonPdaPageActions(driver, waitPageTimeoutInMinuts);
-                FileManager.CreateDirectoryIfNotExist(downloadDir);
-                FileManager.CreateDirectoryIfNotExist("Cookies");
-                countExecute = 0;
-
-                FileManager.TmpConsoleLog("Ok");
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Initialization error: {e.Message}", e);
+                DoEtls(account, dateRange, statsType);
             }
         }
 
-        private void InitializeSettings()
-        {
-            try
-            {
-                FileManager.TmpConsoleLog("Start initialize settings...");
-                signInUrl = Properties.Settings.Default.SignInPageUrl;
-                campaignsUrl = Properties.Settings.Default.CampaignsPageUrl;
-                email = Properties.Settings.Default.EMail;
-                pass = Properties.Settings.Default.EMailPassword;
-                reportNameTemplate = Properties.Settings.Default.FilesNameTemplate;
-                downloadDir = FileManager.GetAssemblyRelativePath(Properties.Settings.Default.DownloadsDirectoryName);
-                cookiesDir = FileManager.GetAssemblyRelativePath("Cookies");
-                waitPageTimeoutInMinuts = Properties.Settings.Default.WaitPageTimeoutInMinuts;                
-                profileText = Properties.Settings.Default.ProfileText;
-                FileManager.TmpConsoleLog("Ok");
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Failed to initialize settings: {e.Message}", e);
-            }
-        }
-
-        private void LoginWithCookies()
-        {
-            try
-            {
-                var allCookies = CookieManager.GetCookiesFromFiles(cookiesDir);
-                if (!allCookies.Any())
-                {
-                    pageActions.NavigateToUrl(signInUrl, AmazonPdaPageObjects.ForgotPassLink);
-                    pageActions.LoginProcess(email, pass);
-
-                    var cookies = pageActions.GetAllCookies();
-                    CookieManager.SaveCookiesToFiles(cookies, cookiesDir);
-                }
-                else
-                {
-                    pageActions.NavigateToUrl(signInUrl);
-                    foreach (var cookie in allCookies)
-                    {
-                        pageActions.SetCookie(cookie);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Could not to login with cookies: {e.Message}", e);
-            }            
-        }
-        
-        private void AlwaysSleep()
+        private static void AlwaysSleep()
         {
             while (true)
             {
@@ -163,14 +66,91 @@ namespace CakeExtractor.SeleniumApplication.Commands
             }
         }
 
-        private void DoEtl(string csvPath)
+        private static void DoEtls(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType)
         {
-            var extracter = new AmazonCampaignCsvExtractor(csvPath);
-            var loader = new AmazonCampaignSummaryLoader(-1); //accountId ??
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
+            Logger.Info(account.Id, "Commencing ETL for Amazon account ({0}) {1}", account.Id, account.Name);
+
+            try
+            {
+                if (statsType.Strategy)
+                {
+                    DoEtlStrategy(account, dateRange);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(account.Id, ex);
+            }
+
+            Logger.Info(account.Id, "Finished ETL for Amazon account ({0}) {1}", account.Id, account.Name);
+        }
+
+        private static void DoEtlStrategy(ExtAccount account, DateRange dateRange)
+        {
+            var extractor = new AmazonPdaCampaignExtractor(account, dateRange);
+            var loader = new AmazonCampaignSummaryLoader(account.Id);
+            var extractorThread = extractor.Start();
+            var loaderThread = loader.Start(extractor);
+            extractorThread.Join();
             loaderThread.Join();
-        }        
+        }
+
+        private DateRange GetDateRange()
+        {
+            var daysAgo = GetDaysAgo();
+            var startDate = GetStartDate(daysAgo);
+            var endDate = GetEndDate();
+            var dateRange = new DateRange(startDate, endDate);
+            return dateRange;
+        }
+
+        private int GetDaysAgo()
+        {
+            try
+            {
+                return DaysAgoToStart ?? Properties.Settings.Default.DaysAgo;
+            }
+            catch (Exception)
+            {
+                return 41;
+            }
+        }
+
+        private DateTime GetStartDate(int daysAgo)
+        {
+            if (StartDate.HasValue)
+            {
+                return StartDate.Value;
+            }
+
+            return Properties.Settings.Default.StartDate == default(DateTime)
+                ? DateTime.Today.AddDays(-daysAgo)
+                : Properties.Settings.Default.StartDate;
+        }
+
+        private DateTime GetEndDate()
+        {
+            if (EndDate.HasValue)
+            {
+                return EndDate.Value;
+            }
+
+            return Properties.Settings.Default.EndDate == default(DateTime)
+                ? DateTime.Today.AddDays(-1)
+                : Properties.Settings.Default.EndDate;
+        }
+
+        private IEnumerable<ExtAccount> GetAccounts()
+        {
+            var repository = new PlatformAccountRepository();
+            if (!AccountId.HasValue)
+            {
+                var accounts = repository.GetAccounts(Platform.Code_Amazon, DisabledOnly);
+                return accounts;
+            }
+
+            var account = repository.GetAccount(AccountId.Value);
+            return new[] { account };
+        }
     }
 }
