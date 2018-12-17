@@ -81,6 +81,7 @@
     <Compile Include="Models\AmazonReportSummary.cs" />
     <Compile Include="Models\AuthorizationModel.cs" />
     <Compile Include="SeleniumExtractors\AmazonPdaExtractors\AmazonPdaCampaignExtractor.cs" />
+    <Compile Include="SeleniumExtractors\AmazonPdaExtractors\AmazonPdaDailyExtractor.cs" />
     <Compile Include="SeleniumExtractors\AmazonPdaExtractors\AmazonPdaExtractor.cs" />
     <Compile Include="Jobs\ExtractAmazonPda\ExtractAmazonPdaJob.cs" />
     <Compile Include="Models\CampaignInfo.cs" />

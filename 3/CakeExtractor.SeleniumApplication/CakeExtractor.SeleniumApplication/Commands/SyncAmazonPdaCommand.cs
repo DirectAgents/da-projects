@@ -23,6 +23,8 @@ namespace CakeExtractor.SeleniumApplication.Commands
         public string StatsType { get; set; }
         public bool DisabledOnly { get; set; }
 
+        private const int DefaultDaysAgoValue = 41;
+
         private int executionNumber;
 
         public SyncAmazonPdaCommand()
@@ -31,7 +33,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
             HasOption("s|startDate=", "Start Date (default is from config or 'daysAgo')", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is from config or yesterday)", c => EndDate = DateTime.Parse(c));
-            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default is from config or 41)", c => DaysAgoToStart = c);
+            HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default is from config or {DefaultDaysAgoValue})", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
         }
@@ -72,6 +74,11 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
             try
             {
+                if (statsType.Daily)
+                {
+                    DoEtlDaily(account, dateRange);
+                }
+
                 if (statsType.Strategy)
                 {
                     DoEtlStrategy(account, dateRange);
@@ -83,6 +90,16 @@ namespace CakeExtractor.SeleniumApplication.Commands
             }
 
             Logger.Info(account.Id, "Finished ETL for Amazon account ({0}) {1}", account.Id, account.Name);
+        }
+
+        private static void DoEtlDaily(ExtAccount account, DateRange dateRange)
+        {
+            var extractor = new AmazonPdaDailyExtractor(account, dateRange);
+            var loader = new AmazonDailySummaryLoader(account.Id);
+            var extractorThread = extractor.Start();
+            var loaderThread = loader.Start(extractor);
+            extractorThread.Join();
+            loaderThread.Join();
         }
 
         private static void DoEtlStrategy(ExtAccount account, DateRange dateRange)
@@ -112,7 +129,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
             }
             catch (Exception)
             {
-                return 41;
+                return DefaultDaysAgoValue;
             }
         }
 

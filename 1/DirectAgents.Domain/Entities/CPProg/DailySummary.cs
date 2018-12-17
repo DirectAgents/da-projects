@@ -35,6 +35,7 @@ namespace DirectAgents.Domain.Entities.CPProg
         public void SetStats(IEnumerable<StatsSummary> stats)
         {
             SetBasicStats(stats);
+            SetMetricStats(stats);
         } // (to avoid naming conflict in derived class)
         protected void SetBasicStats(IEnumerable<StatsSummary> stats)
         {
@@ -44,6 +45,22 @@ namespace DirectAgents.Domain.Entities.CPProg
             PostClickConv = stats.Sum(x => x.PostClickConv);
             PostViewConv = stats.Sum(x => x.PostViewConv);
             Cost = stats.Sum(x => x.Cost);
+        }
+
+        protected void SetMetricStats(IEnumerable<StatsSummary> stats)
+        {
+            var allMetrics = stats.Where(x => x.InitialMetrics != null).SelectMany(x => x.InitialMetrics).ToList();
+            var groupedMetrics = allMetrics.GroupBy(x => new { x.MetricType.DaysInterval, x.MetricType.Name });
+            var sumMetrics = groupedMetrics.Select(x => new SummaryMetric
+            {
+                MetricType = new MetricType
+                {
+                    DaysInterval = x.Key.DaysInterval,
+                    Name = x.Key.Name
+                },
+                Value = x.Sum(metrics => metrics.Value)
+            });
+            InitialMetrics = sumMetrics.ToList();
         }
     }
 

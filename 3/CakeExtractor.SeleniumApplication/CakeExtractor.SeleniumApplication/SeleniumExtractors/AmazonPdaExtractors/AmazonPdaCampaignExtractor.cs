@@ -13,18 +13,18 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
 {
     class AmazonPdaCampaignExtractor : BaseAmazonExtractor<StrategySummary>
     {
-        private readonly AmazonPdaExtractor pdaExtractor;
+        public readonly AmazonPdaExtractor PdaExtractor;
 
         public AmazonPdaCampaignExtractor(ExtAccount account, DateRange dateRange) : base(null, dateRange, account)
         {
-            pdaExtractor = new AmazonPdaExtractor(account);
+            PdaExtractor = new AmazonPdaExtractor(account);
         }
 
         protected override void Extract()
         {
             Logger.Info(accountId, "Extracting CampaignSummaries (PDA) from Amazon Platform for ({0}) from {1:d} to {2:d}",
                 clientId, dateRange.FromDate, dateRange.ToDate);
-            pdaExtractor.Extract(ExtractCampaignSummaries);
+            PdaExtractor.Extract(ExtractCampaignSummaries);
         }
 
         public IEnumerable<StrategySummary> ExtractCampaignDailySummaries(string campaignUrl, int campaignNumber)
@@ -53,7 +53,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
 
         private IEnumerable<StrategySummary> RetrieveSummaries(string campaignUrl)
         {
-            var campaignInfo = pdaExtractor.ExtractCampaignInfo(campaignUrl, dateRange);
+            var campaignInfo = PdaExtractor.ExtractCampaignInfo(campaignUrl, dateRange);
             if (string.IsNullOrEmpty(campaignInfo.ReportPath))
             {
                 return new List<StrategySummary>();
