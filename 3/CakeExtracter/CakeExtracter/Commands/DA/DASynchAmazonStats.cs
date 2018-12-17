@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
 using System.Threading.Tasks;
 using Amazon;
 using CakeExtracter.Bootstrappers;
@@ -9,7 +8,7 @@ using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
-using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Commands
@@ -201,20 +200,15 @@ namespace CakeExtracter.Commands
 
         private IEnumerable<ExtAccount> GetAccounts()
         {
-            using (var db = new ClientPortalProgContext())
+            var repository = new PlatformAccountRepository();
+            if (!AccountId.HasValue)
             {
-                //var accounts = db.ExtAccounts.Include("Platform.PlatColMapping").Where(a => a.Platform.Code == Platform.Code_Amazon);
-                var accounts = db.ExtAccounts.Where(a => a.Platform.Code == Platform.Code_Amazon);
-                if (AccountId.HasValue)
-                    accounts = accounts.Where(a => a.Id == AccountId.Value);
-                else if (!DisabledOnly)
-                    accounts = accounts.Where(a => !a.Disabled);
-
-                if (DisabledOnly)
-                    accounts = accounts.Where(a => a.Disabled);
-
-                return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
+                var accounts = repository.GetAccounts(Platform.Code_Amazon, DisabledOnly);
+                return accounts;
             }
+
+            var account = repository.GetAccount(AccountId.Value);
+            return new[] { account };
         }
     }
 }

@@ -91,6 +91,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Abstract\IMainRepository.cs" />
+    <Compile Include="Abstract\IPlatformAccountRepository.cs" />
     <Compile Include="Abstract\IRevTrackRepository.cs" />
     <Compile Include="Abstract\ISecurityRepository.cs" />
     <Compile Include="Abstract\ISuperRepository.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Concrete\DepartmentRepository.cs" />
     <Compile Include="Concrete\Extensions.cs" />
     <Compile Include="Concrete\MainRepository.cs" />
+    <Compile Include="Concrete\PlatformAccountRepository.cs" />
     <Compile Include="Concrete\RevTrackRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Concrete\SuperRepository.cs" />
