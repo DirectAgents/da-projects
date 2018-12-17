@@ -27,21 +27,21 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
         /// <param name="clientId">The client identifier.</param>
         public BaseAmazonExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
         {
-            this._amazonUtility = amazonUtility;
+            _amazonUtility = amazonUtility;
             this.dateRange = dateRange;
-            this.accountId = account.Id;
-            this.clientId = account.ExternalId;
+            accountId = account.Id;
+            clientId = account.ExternalId;
             this.campaignFilter = campaignFilter;
             this.campaignFilterOut = campaignFilterOut;
         }
 
         protected IEnumerable<TStat> FilterByCampaigns<TStat>(IEnumerable<TStat> reportEntities, Func<TStat, string> getFilterProp)
         {
-            if (!String.IsNullOrEmpty(campaignFilter))
+            if (!string.IsNullOrEmpty(campaignFilter))
             {
                 reportEntities = reportEntities.Where(x => getFilterProp(x).Contains(campaignFilter));
             }
-            if (!String.IsNullOrEmpty(campaignFilterOut))
+            if (!string.IsNullOrEmpty(campaignFilterOut))
             {
                 reportEntities = reportEntities.Where(x => !getFilterProp(x).Contains(campaignFilterOut));
             }

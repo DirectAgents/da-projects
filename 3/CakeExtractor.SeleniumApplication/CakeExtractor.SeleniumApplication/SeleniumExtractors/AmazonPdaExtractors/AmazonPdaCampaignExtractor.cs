@@ -27,32 +27,39 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             pdaExtractor.Extract(ExtractCampaignSummaries);
         }
 
+        public IEnumerable<StrategySummary> ExtractCampaignDailySummaries(string campaignUrl, int campaignNumber)
+        {
+            try
+            {
+                Logger.Info(accountId, "Retrieving information about campaign [{0}]...", campaignNumber);
+                return RetrieveSummaries(campaignUrl);
+            }
+            catch (Exception exc)
+            {
+                Logger.Error(accountId, new Exception($"Processing of campaign info is failed: {exc.Message}", exc));
+            }
+            return new List<StrategySummary>();
+        }
+
         private void ExtractCampaignSummaries(List<string> campaignsUrls)
         {
             for (var i = 0; i < campaignsUrls.Count; i++)
             {
-                try
-                {
-                    RetrieveSummaries(campaignsUrls[i], i + 1);
-                }
-                catch (Exception exc)
-                {
-                    Logger.Error(accountId, new Exception($"Processing of campaign info is failed: {exc.Message}", exc));
-                }
+                var data = ExtractCampaignDailySummaries(campaignsUrls[i], i + 1);
+                Add(data);
             }
             End();
         }
 
-        private void RetrieveSummaries(string campaignUrl, int campaignNumber)
+        private IEnumerable<StrategySummary> RetrieveSummaries(string campaignUrl)
         {
-            Logger.Info(accountId, "Retrieving information about campaign [{0}]...", campaignNumber);
             var campaignInfo = pdaExtractor.ExtractCampaignInfo(campaignUrl, dateRange);
             if (string.IsNullOrEmpty(campaignInfo.ReportPath))
             {
-                return;
+                return new List<StrategySummary>();
             }
             var data = TransformCampaignInfo(campaignInfo);
-            Add(data);
+            return data;
         }
 
         private IEnumerable<StrategySummary> TransformCampaignInfo(CampaignInfo info)

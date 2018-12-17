@@ -120,17 +120,43 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
         {
             var campaign = new CampaignInfo();
             pageActions.NavigateToUrl(campaignUrl, AmazonPdaPageObjects.CampaignTabContainer);
+            GetCampaignSettingsInfo(campaign);
+            if (IsCampaignValid(campaign, dateRange))
+            {
+                GetCampaignReportInfo(campaign);
+            }
+            return campaign;
+        }
+
+        private void GetCampaignSettingsInfo(CampaignInfo campaign)
+        {
             pageActions.NavigateToTab(AmazonPdaPageObjects.CampaignSettingsTab, AmazonPdaPageObjects.CampaignSettingsContent);
             pageActions.GetCampaignSettingsInfo(campaign);
+        }
+
+        private bool IsCampaignValid(CampaignInfo campaign, DateRange dateRange)
+        {
             if (!IsValidReportDateRange(dateRange, campaign))
             {
                 Logger.Warn("The report is not attached because it is in the invalid date range. Campaign duration - {0}, date range - {1}.",
                     campaign.Duration, dateRange);
-                return campaign;
+                return false;
             }
+
+            if (!IsValidCampaignName(account.Filter, campaign))
+            {
+                Logger.Warn("The report is not attached because the campaign has an incorrect name. Campaign name - {0}, account filter - {1}.",
+                    campaign.Name, account.Filter);
+                return false;
+            }
+
+            return true;
+        }
+
+        private void GetCampaignReportInfo(CampaignInfo campaign)
+        {
             pageActions.NavigateToTab(AmazonPdaPageObjects.CampaignReportsTab, AmazonPdaPageObjects.CampaignReportsContent);
             pageActions.GetCampaignReportsInfo(campaign, downloadDir, reportNameTemplate);
-            return campaign;
         }
 
         private bool IsValidReportDateRange(DateRange dateRange, CampaignInfo campaignInfo)
@@ -145,6 +171,11 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
                 endDate = DateTime.MaxValue;
             }
             return startDate <= dateRange.ToDate && endDate >= dateRange.FromDate;
+        }
+
+        private bool IsValidCampaignName(string campaignFilter, CampaignInfo campaignInfo)
+        {
+            return string.IsNullOrEmpty(campaignFilter) || campaignInfo.Name.Contains(campaignFilter);
         }
 
         private void NavigateToPageCampaignInfo()
@@ -172,7 +203,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             var url = pageActions.GetProfileUrl(account.Name);
             pageActions.NavigateToUrl(url);
         }
-
 
         private List<string> GetCampaignPageUrls()
         {
