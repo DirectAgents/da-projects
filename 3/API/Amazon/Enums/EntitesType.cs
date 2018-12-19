@@ -5,9 +5,11 @@
         Campaigns,
         AdGroups,
         Keywords,
+        TargetKeywords,
         ProductAds,
         Asins,
         Profiles,
-        SearchTerm
+        SearchTerm,
+        TargetSearchTerm
     }
 }
