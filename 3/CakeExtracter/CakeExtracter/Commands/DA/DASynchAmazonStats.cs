@@ -103,9 +103,15 @@ namespace CakeExtracter.Commands
                     if (statsType.Creative)
                         DoETL_Creative(dateRange, account, amazonUtility);
                     if (statsType.Keyword)
+                    {
                         DoETL_Keyword(dateRange, account, amazonUtility);
+                        DoETL_TargetKeyword(dateRange, account, amazonUtility);
+                    }
                     if (statsType.SearchTerm)
+                    {
                         DoETL_SearchTerm(dateRange, account, amazonUtility);
+                        DoETL_TargetSearchTerm(dateRange, account, amazonUtility);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -181,7 +187,19 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Keyword(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            var extracter = new AmazonApiKeywordExtractor(amazonUtility, dateRange, account, campaignFilter: account.Filter);
+            var extracter = new AmazonApiKeywordExtractor(amazonUtility, dateRange, account, campaignFilter: account.Filter);            
+            var loader = new AmazonKeywordSummaryLoader(account.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+
+        private void DoETL_TargetKeyword(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
+        {
+            // keywords report request for auto-targeted campaigns:
+            // using request "/v2/sp/targets/report" (segment = null) with new metric "targetingText"
+            var extracter = new AmazonApiTargetKeywordExtractor(amazonUtility, dateRange, account, campaignFilter: account.Filter);
             var loader = new AmazonKeywordSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -192,6 +210,18 @@ namespace CakeExtracter.Commands
         private void DoETL_SearchTerm(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
             var extracter = new AmazonApiSearchTermExtractor(amazonUtility, dateRange, account, campaignFilter: account.Filter);
+            var loader = new AmazonSearchTermSummaryLoader(account.Id);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+        }
+
+        private void DoETL_TargetSearchTerm(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
+        {
+            // search terms report request for auto-targeted campaigns:
+            // using request "/v2/sp/targets/report" (segment = query) with new metric "targetingText"
+            var extracter = new AmazonApiTargetSearchTermExtractor(amazonUtility, dateRange, account, campaignFilter: account.Filter);
             var loader = new AmazonSearchTermSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -215,6 +245,6 @@ namespace CakeExtracter.Commands
 
                 return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
             }
-        }
+        }        
     }
 }
