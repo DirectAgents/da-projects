@@ -128,7 +128,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                     db.StrategyActions.AddRange(addedStrategyActions);
                 } // loop through items
 
-                db.SaveChanges();
+                SafeContextWrapper.TrySaveChanges(db);
             }
 
             Logger.Info(accountId, "Saved StrategyActions ({0} updates, {1} additions, {2} deletions)", progress.UpdatedCount, progress.AddedCount, progress.DeletedCount);

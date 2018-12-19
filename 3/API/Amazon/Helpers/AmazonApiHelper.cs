@@ -17,6 +17,7 @@ namespace Amazon.Helpers
         private const string AdGroupNameMetric = "adGroupName";
         private const string AsinMetric = "asin";
         private const string KeywordTextMetric = "keywordText";
+        private const string TargetTextMetric = "targetingText";
 
         private static readonly Dictionary<CampaignType, string> CampaignTypeNames = new Dictionary<CampaignType, string>
         {
@@ -30,9 +31,12 @@ namespace Amazon.Helpers
             {EntitesType.Campaigns, "campaigns" },
             {EntitesType.AdGroups, "adGroups" },
             {EntitesType.Keywords, "keywords" },
+            {EntitesType.SearchTerm, "keywords" },
             {EntitesType.ProductAds, "productAds" },
             {EntitesType.Asins, "asins" },
-            {EntitesType.Profiles, "profiles" }
+            {EntitesType.Profiles, "profiles" },
+            {EntitesType.TargetSearchTerm, "targets" },
+            {EntitesType.TargetKeywords, "targets" }
         };
 
         private static readonly Dictionary<AttributedMetricType, Dictionary<AttributedMetricDaysInterval, string>> AttributedMetrics =
@@ -110,7 +114,7 @@ namespace Amazon.Helpers
                 reportDate = date.ToString("yyyyMMdd"),
                 metrics = allMetrics
             };
-            if (entitiesType == EntitesType.SearchTerm)
+            if (entitiesType == EntitesType.SearchTerm || entitiesType == EntitesType.TargetSearchTerm)
             {
                 reportParams.segment = "query";
             }
@@ -173,6 +177,9 @@ namespace Amazon.Helpers
                 case EntitesType.Keywords:
                 case EntitesType.SearchTerm:
                     return new[] { CampaignIdMetric, AdGroupIdMetric, AdGroupNameMetric, KeywordTextMetric };
+                case EntitesType.TargetKeywords:
+                case EntitesType.TargetSearchTerm:
+                    return new[] { CampaignIdMetric, AdGroupIdMetric, AdGroupNameMetric, TargetTextMetric };
                 case EntitesType.Campaigns:
                     break;
                 case EntitesType.Asins:

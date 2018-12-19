@@ -97,7 +97,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
                 }
 
-                db.SaveChanges();
+                SafeContextWrapper.TrySaveChanges(db);
             }
 
             Logger.Info(AccountId, "Saving {0} KeywordSummaries ({1} updates, {2} additions, {3} duplicates, {4} deleted, {5} already-deleted, {6} skipped)",
