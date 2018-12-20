@@ -24,7 +24,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         public static By FilterByValues = By.XPath(".//div[contains(@class,'sc-cHGsZl bJrez')]/label/button");
         public static By FilterPdaValues = By.XPath(".//div[contains(@class,'sc-kgoBCf fQYKbt')]/div/button[contains(@value,'PDA')]");        
         public static By SaveSearchAndFilterButton = By.XPath(".//button[@id='saveButtonSearchAndFilter']");
-        public static By FilterLoader = By.CssSelector("div[class*='sc-gVyKpa'] svg[data-icon='spinner']");
+        public static By FilterLoader = By.CssSelector("svg[data-icon='spinner']");
 
         // Campaigns page objects        
         public static By CampaignsNameContainer = By.XPath(".//div[@id='CAMPAIGNS']/div/div[2]/div[contains(@class,'BottomLeftGrid_ScrollWrapper')]/div/div");
