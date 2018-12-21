@@ -122,16 +122,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
 
         private static SummaryMetric GetMetric(string metricName, int? daysInterval, DateTime date, decimal metricValue)
         {
-            var metric = new SummaryMetric()
-            {
-                Date = date,
-                MetricType = new MetricType
-                {
-                    Name = metricName,
-                    DaysInterval = daysInterval
-                },
-                Value = metricValue
-            };
+            var metricType = new MetricType(metricName, daysInterval);
+            var metric = new SummaryMetric(date, metricType, metricValue);
             return metric;
         }
     }

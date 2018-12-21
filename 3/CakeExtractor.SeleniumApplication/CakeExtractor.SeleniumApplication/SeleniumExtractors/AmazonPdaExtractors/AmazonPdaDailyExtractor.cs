@@ -53,11 +53,8 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
 
         private DailySummary CreateSummary(IEnumerable<StrategySummary> strategySummaries, DateTime date)
         {
-            var dailySummary = new DailySummary
-            {
-                Date = date
-            };
-            dailySummary.SetStats(strategySummaries);
+            var dailySummary = new DailySummary();
+            dailySummary.SetStats(date, strategySummaries);
             return dailySummary;
         }
     }
