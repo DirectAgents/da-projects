@@ -447,6 +447,8 @@
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\TDStrategySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\YAMConValExtracters.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\YAMExtracters.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\Adders\DailySummaryAdder.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\Adders\SummaryMetricAdder.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdRollAdLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollAttributionSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollSiteStatsLoader.cs" />
@@ -594,8 +596,11 @@
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonCampaignSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonKeywordSummaryLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonPdaDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonSearchTermSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\DbmConvLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\Interfaces\IDailySummaryLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\Interfaces\ISummaryMetricLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\KeywordSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\SearchTermSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\SummaryMetricLoader.cs" />

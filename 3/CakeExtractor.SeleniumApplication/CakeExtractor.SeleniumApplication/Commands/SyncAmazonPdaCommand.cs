@@ -1,6 +1,5 @@
 ﻿using CakeExtracter.Commands;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtractor.SeleniumApplication.Jobs.ExtractAmazonPda;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
@@ -8,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using CakeExtracter;
+using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors;
 using ConsoleCommand = ManyConsole.ConsoleCommand;
 using Platform = DirectAgents.Domain.Entities.CPProg.Platform;
@@ -95,7 +95,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
         private static void DoEtlDaily(ExtAccount account, DateRange dateRange)
         {
             var extractor = new AmazonPdaDailyExtractor(account, dateRange);
-            var loader = new AmazonDailySummaryLoader(account.Id);
+            var loader = new AmazonPdaDailySummaryLoader(account.Id);
             var extractorThread = extractor.Start();
             var loaderThread = loader.Start(extractor);
             extractorThread.Join();

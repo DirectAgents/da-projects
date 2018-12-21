@@ -6,12 +6,13 @@ using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using CakeExtracter.Etl.TradingDesk.LoadersDA.Interfaces;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
-    public class TDDailySummaryLoader : Loader<DailySummary>
+    public class TDDailySummaryLoader : Loader<DailySummary>, IDailySummaryLoader
     {
-        private readonly SummaryMetricLoader metricLoader;
+        private readonly ISummaryMetricLoader metricLoader;
 
         public TDDailySummaryLoader(int accountId = -1) : base(accountId)
         {
@@ -41,19 +42,17 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 foreach (var item in items)
                 {
+                    var target = db.Set<DailySummary>().Find(item.Date, item.AccountId);
+                    if (target == null)
                     {
-                        var target = db.Set<DailySummary>().Find(item.Date, item.AccountId);
-                        if (target == null)
-                        {
-                            TryToAddSummary(db, item, progress);
-                        }
-                        else
-                        {
-                            TryToUpdateSummary(db, item, target, progress);
-                        }
-
-                        progress.ItemCount++;
+                        TryToAddSummary(db, item, progress);
                     }
+                    else
+                    {
+                        TryToUpdateSummary(db, item, target, progress);
+                    }
+
+                    progress.ItemCount++;
                 }
 
                 SafeContextWrapper.TrySaveChanges(db);

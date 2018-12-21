@@ -5,10 +5,11 @@ using DirectAgents.Domain.Entities.CPProg;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using CakeExtracter.Etl.TradingDesk.LoadersDA.Interfaces;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
-    internal class SummaryMetricLoader : Loader<SummaryMetric>
+    internal class SummaryMetricLoader : Loader<SummaryMetric>, ISummaryMetricLoader
     {
         public static readonly EntityIdStorage<MetricType> MetricTypeStorage;
 
@@ -79,6 +80,23 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             db.Set<TSummaryMetric>().RemoveRange(items);
         }
 
+        public void AddMetric<TSummaryMetric>(ClientPortalProgContext db, SummaryMetric item)
+            where TSummaryMetric : SummaryMetric, new()
+        {
+            var target = new TSummaryMetric();
+            Mapper.Map(item, target);
+            db.Set<TSummaryMetric>().Add(target);
+        }
+
+        public void UpdateMetric<TSummaryMetric>(ClientPortalProgContext db, SummaryMetric item, TSummaryMetric target)
+            where TSummaryMetric : SummaryMetric, new()
+        {
+            var entry = db.Entry(target);
+            entry.State = EntityState.Detached;
+            Mapper.Map(item, target);
+            entry.State = EntityState.Modified;
+        }
+
         private void AddDependentMetricTypes(IEnumerable<MetricType> items)
         {
             var newMetricTypes = new List<MetricType>();
@@ -102,23 +120,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 }
             );
             newMetricTypes.ForEach(MetricTypeStorage.AddEntityIdToStorage);
-        }
-
-        private void AddMetric<TSummaryMetric>(ClientPortalProgContext db, SummaryMetric item)
-            where TSummaryMetric : SummaryMetric, new()
-        {
-            var target = new TSummaryMetric();
-            Mapper.Map(item, target);
-            db.Set<TSummaryMetric>().Add(target);
-        }
-
-        private void UpdateMetric<TSummaryMetric>(ClientPortalProgContext db, SummaryMetric item, TSummaryMetric target)
-            where TSummaryMetric : SummaryMetric, new()
-        {
-            var entry = db.Entry(target);
-            entry.State = EntityState.Detached;
-            Mapper.Map(item, target);
-            entry.State = EntityState.Modified;
         }
     }
 }
