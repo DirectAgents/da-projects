@@ -148,6 +148,7 @@
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\PublishProfiles\dagents.pubxml" />
+    <None Include="Properties\PublishProfiles\dagents_vm_prod.pubxml" />
     <None Include="Properties\webjob-publish-settings.json" />
   </ItemGroup>
   <ItemGroup>
