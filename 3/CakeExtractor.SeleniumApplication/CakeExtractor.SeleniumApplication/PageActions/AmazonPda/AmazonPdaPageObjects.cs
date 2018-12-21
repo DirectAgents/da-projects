@@ -31,7 +31,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         public static By CampaignsNamesList = By.CssSelector("div[data-udt-column-id=name-cell]");
         public static By CampaignName = By.XPath(".//div/div");
         public static By CampaignNameLink = By.TagName("a");
-        public static By NavigateNextPageButton = By.XPath(".//div[contains(@class,'sc-fOICqy lpgnIf')]/button[2]");
+        public static By NavigateNextPageButton = By.CssSelector(".sc-hzDEsm.kgEhww > button:nth-child(2)");
 
         // Campaigns page objects. Export
         public static By ExportButton = By.XPath(".//button[contains(@class,'sc-bdVaJa eepElq')][contains(text(),'Export')]");

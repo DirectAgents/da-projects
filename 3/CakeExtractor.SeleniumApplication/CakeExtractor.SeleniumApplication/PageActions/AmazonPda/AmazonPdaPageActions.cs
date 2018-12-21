@@ -201,18 +201,10 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
                 if (IsElementEnabledAndDisplayed(AmazonPdaPageObjects.AfterDownloadReportNoData))
                 {
                     Logger.Warn("The report is not attached because the answer is 'No data'");
+                    return;
                 }
-                
-                var files = FileManager.GetFilesFromPath(downloadPath, templateFileName, campaign.Name);
-                if (files.Any())
-                {
-                    campaign.ReportPath = files.First();
-                    Logger.Info("Report is attached: {0}", campaign.ReportPath);
-                }
-                else
-                {
-                    Logger.Warn("Report is not attached!");
-                }
+                Wait(timeoutThread);
+                AttachDownloadedReport(campaign, downloadPath, templateFileName);
             }
             catch (Exception e)
             {
@@ -225,6 +217,21 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             Logger.Info("Go to the next page...");
             ClickElement(AmazonPdaPageObjects.NavigateNextPageButton);
             WaitLoading(AmazonPdaPageObjects.FilterLoader, timeout);
+        }
+
+        private void AttachDownloadedReport(CampaignInfo campaign, string downloadPath, string templateFileName)
+        {
+            var files = FileManager.GetFilesFromPath(downloadPath, templateFileName, campaign.Name);
+            if (files.Any())
+            {
+                campaign.ReportPath = files.First();
+                Logger.Info("Report is attached: {0}", campaign.ReportPath);
+            }
+            else
+            {
+                var exc = new Exception("Report is not attached!");
+                Logger.Error(exc);
+            }
         }
 
         private void SelectFilters()
