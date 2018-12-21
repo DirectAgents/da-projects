@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DirectAgents.Domain.Entities.CPProg;
 
-namespace CakeExtracter.Etl.TradingDesk.LoadersDA
+namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
 {
     public class AmazonAdSetSummaryLoader : Loader<AdSetSummary>
     {

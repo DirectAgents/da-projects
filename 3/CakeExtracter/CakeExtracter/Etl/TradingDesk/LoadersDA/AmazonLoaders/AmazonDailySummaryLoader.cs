@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using CakeExtracter.Etl.TradingDesk.LoadersDA.Adders;
+using CakeExtracter.Etl.TradingDesk.LoadersDA.Interfaces;
 using DirectAgents.Domain.Entities.CPProg;
 
-namespace CakeExtracter.Etl.TradingDesk.LoadersDA
+namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
 {
     public class AmazonDailySummaryLoader : Loader<DailySummary>
     {

@@ -8,6 +8,7 @@ using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
+using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
 
