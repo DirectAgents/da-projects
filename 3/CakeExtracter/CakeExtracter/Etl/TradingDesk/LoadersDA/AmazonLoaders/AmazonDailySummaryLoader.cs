@@ -11,7 +11,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
 
         public AmazonDailySummaryLoader(int accountId) : base(accountId)
         {
-            tdDailySummaryLoader = new DailySummaryAdder(accountId);
+            tdDailySummaryLoader = new TDDailySummaryLoader(accountId);
         }
 
         protected override int Load(List<DailySummary> items)

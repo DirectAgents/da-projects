@@ -175,5 +175,17 @@ namespace CakeExtractor.SeleniumApplication.Properties {
                 this["CookiesDirectory"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FromDatabase {
+            get {
+                return ((bool)(this["FromDatabase"]));
+            }
+            set {
+                this["FromDatabase"] = value;
+            }
+        }
     }
 }
