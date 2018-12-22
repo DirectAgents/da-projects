@@ -1168,6 +1168,7 @@
     <None Include="Properties\PublishProfiles\dagents__staging.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\DayOfWeek.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
+    <None Include="Properties\PublishProfiles\dagents_vm_production.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

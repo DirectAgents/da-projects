@@ -20,10 +20,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public int UpsertDailySummaryConVals(List<DailySummary> items)
         {
             var progress = new LoadingProgress();
-            SafeContextWrapper.SaveChangedContext<ClientPortalProgContext>(
-                SafeContextWrapper.DailySummaryLocker, db =>
+            using (var db = new ClientPortalProgContext())
+            {
+                foreach (var item in items)
                 {
-                    foreach (var item in items)
                     {
                         var target = db.Set<DailySummary>().Find(item.Date, accountId);
                         if (target == null)
@@ -56,7 +56,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                             }
                             else
                             {
-                                Logger.Warn(accountId, "Encountered duplicate for {0:d} - Acct {1}", item.Date, item.AccountId);
+                                Logger.Warn(accountId, "Encountered duplicate for {0:d} - Acct {1}", item.Date,
+                                    item.AccountId);
                                 progress.DuplicateCount++;
                             }
                         }
@@ -64,7 +65,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         progress.ItemCount++;
                     }
                 }
-            );
+
+                db.SaveChanges();
+            }
 
             Logger.Info(accountId, "Saving {0} DailySummary ConVals ({1} updates, {2} additions, {3} duplicates, {4} already-deleted)",
                 progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DuplicateCount, progress.AlreadyDeletedCount);
