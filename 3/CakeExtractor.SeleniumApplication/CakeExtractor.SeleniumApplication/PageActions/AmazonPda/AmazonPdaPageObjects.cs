@@ -10,9 +10,10 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         public static By LoginButton = By.Id("signInSubmit");
         public static By ForgotPassLink = By.LinkText("Forgot your password?");
         public static By RememberMeCheckBox = By.XPath(".//input[@name='rememberMe']");
-
+        
         // Login step 2 screen objects
         public static By CodeInput = By.Id("auth-mfa-otpcode");
+        public static By IncorrectPasswordSpan = By.XPath(".//span[contains(text(),'Your password is incorrect')]");
 
         // Home screen objects
         public static By AccountButton = By.CssSelector("button[data-id=user-account]");
@@ -21,8 +22,8 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         public static By FilterResetButton = By.XPath(".//button[contains(text(),'Reset filters')]");
         public static By FilterByButton = By.XPath(".//button[contains(text(),'Filter by')]");
         public static By FilterTypeButton = By.XPath(".//button[contains(@value,'Type')][contains(text(),'Type')]");
-        public static By FilterByValues = By.XPath(".//div[contains(@class,'sc-cHGsZl bJrez')]/label/button");
-        public static By FilterPdaValues = By.XPath(".//div[contains(@class,'sc-kgoBCf fQYKbt')]/div/button[contains(@value,'PDA')]");        
+        public static By FilterByValues = By.CssSelector("div[data-e2e-id=campaignsDashboard] > div > div:nth-of-type(1) > div:nth-of-type(4) > div > div > div > div:nth-of-type(2) > label > button");
+        public static By FilterPdaValues = By.CssSelector("div#portal > div > div > div > button[value='PDA']");
         public static By SaveSearchAndFilterButton = By.XPath(".//button[@id='saveButtonSearchAndFilter']");
         public static By FilterLoader = By.CssSelector("svg[data-icon='spinner']");
 
@@ -31,7 +32,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         public static By CampaignsNamesList = By.CssSelector("div[data-udt-column-id=name-cell]");
         public static By CampaignName = By.XPath(".//div/div");
         public static By CampaignNameLink = By.TagName("a");
-        public static By NavigateNextPageButton = By.CssSelector(".sc-hzDEsm.kgEhww > button:nth-child(2)");
+        public static By NavigateNextPageButton = By.CssSelector("div[data-e2e-id=campaignsDashboard] > div > div:nth-of-type(5) > div:nth-of-type(3) > button:nth-child(2)");
 
         // Campaigns page objects. Export
         public static By ExportButton = By.XPath(".//button[contains(@class,'sc-bdVaJa eepElq')][contains(text(),'Export')]");

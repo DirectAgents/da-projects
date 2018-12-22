@@ -60,12 +60,11 @@ namespace CakeExtractor.SeleniumApplication.PageActions
         {
             try
             {
-                Driver.FindElement(byElement);
-                return true;
+                return Driver.FindElements(byElement).Count > 0;
             }
-            catch (NoSuchElementException exc)
+            catch (Exception e)
             {
-                return false;
+                throw new Exception($"Failed to check if element [{byElement}] is present: {e.Message}", e);
             }
         }
 

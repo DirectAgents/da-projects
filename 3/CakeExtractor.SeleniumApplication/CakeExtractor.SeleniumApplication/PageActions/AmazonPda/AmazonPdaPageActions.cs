@@ -258,7 +258,19 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             EnterPassword(password);
             ClickElement(AmazonPdaPageObjects.RememberMeCheckBox);
             ClickElement(AmazonPdaPageObjects.LoginButton);
+            IsPasswordCorrect();
             WaitSecurityCodeIfNecessary();
+        }
+
+        private void IsPasswordCorrect()
+        {
+            if (!IsElementPresent(AmazonPdaPageObjects.IncorrectPasswordSpan))
+            {
+                return;
+            }
+
+            var exc = new Exception("Password is incorrect");
+            Logger.Error(exc);
         }
 
         private void EnterEmail(string email)
