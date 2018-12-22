@@ -25,6 +25,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             Logger.Info(accountId, "Extracting CampaignSummaries (PDA) from Amazon Platform for ({0}) from {1:d} to {2:d}",
                 clientId, dateRange.FromDate, dateRange.ToDate);
             PdaExtractor.Extract(ExtractCampaignSummaries);
+            End();
         }
 
         public IEnumerable<StrategySummary> ExtractCampaignDailySummaries(string campaignUrl, int campaignNumber)
@@ -48,7 +49,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
                 var data = ExtractCampaignDailySummaries(campaignsUrls[i], i + 1);
                 Add(data);
             }
-            End();
         }
 
         private IEnumerable<StrategySummary> RetrieveSummaries(string campaignUrl)

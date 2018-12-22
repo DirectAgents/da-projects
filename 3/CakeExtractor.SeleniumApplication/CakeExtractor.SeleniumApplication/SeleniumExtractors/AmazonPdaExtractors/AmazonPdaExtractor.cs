@@ -108,7 +108,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             }
             catch (Exception e)
             {
-                throw new Exception($"Could not extract campaigns information: {e.Message}", e);
+                Logger.Error(account.Id, new Exception($"Could not extract campaigns information: {e.Message}", e));
             }
             finally
             {
@@ -192,8 +192,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             }
             catch (Exception e)
             {
-                var exc = new Exception($"Could not navigate to the page with campaigns information: {e.Message}", e);
-                Logger.Error(account.Id, exc);
+                throw new Exception($"Could not navigate to the page with campaigns information: {e.Message}", e);
             }
         }
 
@@ -201,6 +200,10 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
         {
             pageActions.NavigateToUrl(campaignsUrl, AmazonPdaPageObjects.FilterByButton);
             var url = pageActions.GetProfileUrl(account.Name);
+            if (string.IsNullOrEmpty(url))
+            {
+                throw new Exception($"The account {authorizationModel.Login} does not have the following profile - {account.Name}");
+            }
             pageActions.NavigateToUrl(url);
         }
 
