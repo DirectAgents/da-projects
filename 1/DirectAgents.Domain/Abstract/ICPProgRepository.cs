@@ -65,12 +65,12 @@ namespace DirectAgents.Domain.Abstract
         bool AddExtAccount(ExtAccount extAcct);
         bool SaveExtAccount(ExtAccount extAcct);
         void FillExtended(ExtAccount extAcct);
-        IQueryable<Strategy> Strategies(int? acctId);
-        IQueryable<AdSet> AdSets(int? acctId);
-        IQueryable<Keyword> Keywords(int? acctId);
-        IQueryable<SearchTerm> SearchTerms(int? acctId);
+        IQueryable<Strategy> Strategies(int? acctId, int? id);
+        IQueryable<AdSet> AdSets(int? acctId, int? id);
+        IQueryable<Keyword> Keywords(int? acctId, int? id);
+        IQueryable<SearchTerm> SearchTerms(int? acctId, int? id);
         TDad TDad(int id);
-        IQueryable<TDad> TDads(int? acctId);
+        IQueryable<TDad> TDads(int? acctId, int? id);
         bool SaveTDad(TDad tDad);
         void FillExtended(TDad tDad);
         IQueryable<ActionType> ActionTypes();

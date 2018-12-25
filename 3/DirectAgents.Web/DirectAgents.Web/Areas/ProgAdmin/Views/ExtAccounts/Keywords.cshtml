@@ -18,8 +18,8 @@
             <td>@keyword.Id</td>
             <td>@keyword.Name</td>
             <td>@keyword.ExternalId</td>
-            <td>@(keyword.Strategy != null ? keyword.Strategy.Name + " (" + keyword.StrategyId + ")" : "")</td>
-            <td>@(keyword.AdSet != null ? keyword.AdSet.Name + " (" + keyword.AdSetId + ")" : "")</td>
+            <td>@(keyword.Strategy != null ? keyword.Strategy.Name + " (" + Html.ActionLink(keyword.StrategyId.ToString(), "Strategies", new { strategyId = keyword.StrategyId }) + ")" : "")</td>
+            <td>@(keyword.AdSet != null ? keyword.AdSet.Name + " (" + Html.ActionLink(keyword.AdSetId.ToString(), "AdSets", new { adSetId = keyword.AdSetId }) + ")" : "")</td>
             <td>@(keyword.Strategy != null && keyword.Strategy.Type != null ? keyword.Strategy.Type.Name : "")</td>
         </tr>
     }

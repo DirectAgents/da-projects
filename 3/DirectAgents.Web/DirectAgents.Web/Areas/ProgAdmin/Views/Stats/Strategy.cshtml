@@ -58,7 +58,7 @@ else
                 @Html.ActionLink("action", "Action", new { acctId = Model.AccountId, stratId = stat.Strategy.Id, start = Model.StartString, end = Model.EndString })
             </td>
             <td>(@stat.Strategy.ExtAccount.Platform.Name) @stat.Strategy.ExtAccount.Name</td>
-            <td style="text-align:right">@stat.Strategy.Id</td>
+            <td style="text-align:right">@Html.ActionLink(stat.Strategy.Id.ToString(), "Strategies", "ExtAccounts", new { strategyId = stat.Strategy.Id }, null)</td>
             <td>@stat.Strategy.Name</td>
             <td style="text-align:right">@stat.Impressions</td>
             <td style="text-align:right">@stat.AllClicks</td>

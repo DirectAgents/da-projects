@@ -344,9 +344,9 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 
         // --- Strats, AdSets, etc
 
-        public ActionResult Strategies(int? id, OrderBy sort = OrderBy.StrategyName)
+        public ActionResult Strategies(int? id, int? strategyId, OrderBy sort = OrderBy.StrategyName)
         {
-            var strategies = cpProgRepo.Strategies(acctId: id);
+            var strategies = cpProgRepo.Strategies(acctId: id, id: strategyId);
             IOrderedQueryable<Strategy> orderedStrategies;
             switch (sort)
             {
@@ -362,9 +362,9 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             return View(strategyList);
         }
 
-        public ActionResult AdSets(int? id, OrderBy sort = OrderBy.AdSetName)
+        public ActionResult AdSets(int? id, int? adSetId, OrderBy sort = OrderBy.AdSetName)
         {
-            var adsets = cpProgRepo.AdSets(acctId: id);
+            var adsets = cpProgRepo.AdSets(acctId: id, id: adSetId);
             IOrderedQueryable<AdSet> orderedAdSets;
             switch (sort)
             {
@@ -383,9 +383,9 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             return View(adSetList);
         }
 
-        public ActionResult Keywords(int? id, OrderBy sort = OrderBy.KeywordName)
+        public ActionResult Keywords(int? id, int? keywordId, OrderBy sort = OrderBy.KeywordName)
         {
-            var keywords = cpProgRepo.Keywords(acctId: id);
+            var keywords = cpProgRepo.Keywords(acctId: id, id: keywordId);
             IOrderedQueryable<Keyword> orderedKeywords;
             switch (sort)
             {
@@ -407,9 +407,9 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             return View(keywordList);
         }
 
-        public ActionResult SearchTerms(int? id, OrderBy sort = OrderBy.SearchTermName)
+        public ActionResult SearchTerms(int? id, int? searchTermId, OrderBy sort = OrderBy.SearchTermName)
         {
-            var searchTerms = cpProgRepo.SearchTerms(acctId: id);
+            var searchTerms = cpProgRepo.SearchTerms(acctId: id, id: searchTermId);
             IOrderedQueryable<SearchTerm> orderedSearchTerms;
             switch (sort)
             {

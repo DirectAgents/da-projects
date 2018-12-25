@@ -6,6 +6,7 @@
         StrategyType,
         AdSetName,
         KeywordName,
-        SearchTermName
+        SearchTermName,
+        AdName
     }
 }

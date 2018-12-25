@@ -65,7 +65,7 @@ else
                 @Html.ActionLink("search term", "SearchTerm", new { acctId = Model.AccountId, keywId = stat.Keyword.Id, start = Model.StartString, end = Model.EndString })
             </td>
             <td>(@stat.Keyword.ExtAccount.Platform.Name) @stat.Keyword.ExtAccount.Name</td>
-            <td style="text-align:right">@stat.Keyword.Id</td>
+            <td style="text-align:right">@Html.ActionLink(stat.Keyword.Id.ToString(), "Keywords", "ExtAccounts", new { keywordId = stat.Keyword.Id }, null)</td>
             <td>@stat.Keyword.Name</td>
             <td style="text-align:right">@stat.Impressions</td>
             <td style="text-align:right">@stat.AllClicks</td>
