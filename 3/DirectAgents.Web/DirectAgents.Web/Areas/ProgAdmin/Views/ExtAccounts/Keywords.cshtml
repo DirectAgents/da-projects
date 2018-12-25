@@ -1,4 +1,5 @@
-﻿@model IEnumerable<DirectAgents.Domain.Entities.CPProg.Keyword>
+﻿@using DirectAgents.Web.Constants
+@model IEnumerable<DirectAgents.Domain.Entities.CPProg.Keyword>
 
 <h2>Keywords</h2>
 
@@ -7,8 +8,9 @@
         <th>Id</th>
         <th>@Html.ActionLink("Name", "Keywords")</th>
         <th>ExternalId</th>
-        <th>@Html.ActionLink("Strategy", "Keywords", new { sort = "strat" })</th>
-        <th>@Html.ActionLink("AdSet", "Keywords", new { sort = "adset" })</th>
+        <th>@Html.ActionLink("Strategy", "Keywords", new { sort = OrderBy.StrategyName })</th>
+        <th>@Html.ActionLink("AdSet", "Keywords", new { sort = OrderBy.AdSetName })</th>
+        <th>@Html.ActionLink("Strategy Type", "Keywords", new { sort = OrderBy.StrategyType })</th>
     </tr>
     @foreach (var keyword in Model)
     {
@@ -16,8 +18,9 @@
             <td>@keyword.Id</td>
             <td>@keyword.Name</td>
             <td>@keyword.ExternalId</td>
-            <td>@(keyword.Strategy != null ? keyword.Strategy.Name + " (" + keyword.StrategyId + ")" : "")</td>
-            <td>@(keyword.AdSet != null ? keyword.AdSet.Name + " (" + keyword.AdSetId + ")" : "")</td>
+            <td>@Html.ActionLink(keyword.Strategy != null ? keyword.Strategy.Name + " (" + keyword.StrategyId + ")" : " ", "Strategies", new { strategyId = keyword.StrategyId })</td>
+            <td>@Html.ActionLink(keyword.AdSet != null ? keyword.AdSet.Name + " (" + keyword.AdSetId + ")" : " ", "AdSets", new { adSetId = keyword.AdSetId })</td>
+            <td>@(keyword.Strategy != null && keyword.Strategy.Type != null ? keyword.Strategy.Type.Name : "")</td>
         </tr>
     }
 </table>

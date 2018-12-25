@@ -6,6 +6,9 @@ using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using CakeExtracter.Common;
+using CakeExtracter.SimpleRepositories;
+using CakeExtracter.SimpleRepositories.Interfaces;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
@@ -16,8 +19,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         private readonly TDAdSetSummaryLoader adSetLoader;
         private readonly EntityIdStorage<AdSet> adSetStorage;
-        private readonly EntityIdStorage<EntityType> typeStorage;
         private readonly SummaryMetricLoader metricLoader;
+        private readonly ISimpleRepository<EntityType> typeRepository;
 
         static TDadSummaryLoader()
         {
@@ -29,8 +32,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             AccountId = accountId;
             adSetLoader = new TDAdSetSummaryLoader(accountId);
             adSetStorage = TDAdSetSummaryLoader.AdSetStorage;
-            typeStorage = new EntityIdStorage<EntityType>(x => x.Id, x => x.Name);
             metricLoader = new SummaryMetricLoader();
+            typeRepository = new TypeRepository();
         }
 
         protected override int Load(List<TDadSummary> items)
@@ -187,50 +190,20 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         private void AddDependentExternalIdTypes(ClientPortalProgContext db, IEnumerable<TDadExternalId> externalIds)
         {
-            var notStoredTypes = externalIds.GroupBy(x => x.Type?.Name)
-                .Select(x => x.First().Type)
-                .Where(x => x != null && (!string.IsNullOrEmpty(x.Name) && !typeStorage.IsEntityInStorage(x)))
-                .ToList();
-            AddDependentTypes(db, notStoredTypes);
+            var notStoredTypes = externalIds.Select(x => x.Type).Where(x => x?.Name != null).DistinctBy(x => x.Name).ToList();
+            typeRepository.AddItems(db, notStoredTypes);
             AssignTypeIdToExternalIds(externalIds);
-        }
-
-        private void AddDependentTypes(ClientPortalProgContext db, IEnumerable<EntityType> types)
-        {
-            var newTypes = new List<EntityType>();
-            SafeContextWrapper.SaveChangedContext(
-                SafeContextWrapper.EntityTypeLocker, db, () =>
-                {
-                    foreach (var type in types)
-                    {
-                        var typeInDB = db.Types.FirstOrDefault(x => type.Name == x.Name);
-                        if (typeInDB == null)
-                        {
-                            newTypes.Add(type);
-                        }
-                        else
-                        {
-                            typeStorage.AddEntityIdToStorage(typeInDB);
-                        }
-                    }
-
-                    db.Types.AddRange(newTypes);
-                }
-            );
-            newTypes.ForEach(typeStorage.AddEntityIdToStorage);
         }
 
         private void AssignTypeIdToExternalIds(IEnumerable<TDadExternalId> externalIds)
         {
             foreach (var id in externalIds)
             {
-                if (!typeStorage.IsEntityInStorage(id.Type))
+                if (typeRepository.IdStorage.IsEntityInStorage(id.Type))
                 {
-                    continue;
+                    id.TypeId = typeRepository.IdStorage.GetEntityIdFromStorage(id.Type);
+                    id.Type = null;
                 }
-
-                id.TypeId = typeStorage.GetEntityIdFromStorage(id.Type);
-                id.Type = null;
             }
         }
 

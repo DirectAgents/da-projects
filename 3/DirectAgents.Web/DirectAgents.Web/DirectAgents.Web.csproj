@@ -264,6 +264,7 @@
     <Compile Include="Areas\SearchAdmin\Controllers\SearchProfilesController.cs" />
     <Compile Include="Areas\SearchAdmin\Controllers\StatsGaugesController.cs" />
     <Compile Include="Areas\SearchAdmin\SearchAdminAreaRegistration.cs" />
+    <Compile Include="Constants\OrderBy.cs" />
     <Compile Include="Helpers\Common.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />

@@ -56,7 +56,7 @@ else
     {
         <tr>
             <td>(@stat.SearchTerm.ExtAccount.Platform.Name) @stat.SearchTerm.ExtAccount.Name</td>
-            <td style="text-align:right">@stat.SearchTerm.Id</td>
+            <td style="text-align:right">@Html.ActionLink(stat.SearchTerm.Id.ToString(), "SearchTerms", "ExtAccounts", new { searchTermId = stat.SearchTerm.Id }, null)</td>
             <td>@stat.SearchTerm.Name</td>
             <td style="text-align:right">@stat.Impressions</td>
             <td style="text-align:right">@stat.AllClicks</td>

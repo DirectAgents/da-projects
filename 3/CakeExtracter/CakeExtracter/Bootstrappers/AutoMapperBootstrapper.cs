@@ -20,7 +20,6 @@ namespace CakeExtracter.Bootstrappers
             {
                 cfg.CreateMap<SearchDailySummary, SearchDailySummary>();
                 cfg.CreateMap<SearchDailySummary2, SearchDailySummary2>();
-                //cfg.CreateMap<OfferDailySummary, OfferDailySummary>();
                 cfg.CreateMap<GoogleAnalyticsSummary, GoogleAnalyticsSummary>();
                 cfg.CreateMap<CallDailySummary, CallDailySummary>();
                 cfg.CreateMap<SearchConvSummary, SearchConvSummary>();
@@ -40,6 +39,7 @@ namespace CakeExtracter.Bootstrappers
                     .ForMember(d => d.Id, opt => opt.MapFrom(s => s.StrategyId))
                     .ForMember(d => d.Name, opt => opt.MapFrom(s => s.StrategyName))
                     .ForMember(d => d.ExternalId, opt => opt.MapFrom(s => s.StrategyEid))
+                    .ForMember(d => d.TargetingType, opt => opt.MapFrom(s => new EntityType {Name = s.StrategyTargetingType}))
                     .ForMember(d => d.Type, opt => opt.MapFrom(s => new EntityType {Name = s.StrategyType}));
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SummaryMetric, DirectAgents.Domain.Entities.CPProg.StrategySummaryMetric>()
                     .ForMember(s => s.Strategy, map => map.AllowNull());
@@ -49,7 +49,13 @@ namespace CakeExtracter.Bootstrappers
                     .ForMember(d => d.Id, opt => opt.MapFrom(s => s.AdSetId))
                     .ForMember(d => d.Name, opt => opt.MapFrom(s => s.AdSetName))
                     .ForMember(d => d.ExternalId, opt => opt.MapFrom(s => s.AdSetEid))
-                    .ForMember(d => d.Strategy, opt => opt.MapFrom(s => new Strategy {Name = s.StrategyName, ExternalId = s.StrategyEid}));
+                    .ForMember(d => d.Strategy, opt => opt.MapFrom(s => new Strategy
+                        {
+                            Name = s.StrategyName,
+                            ExternalId = s.StrategyEid,
+                            Type = new EntityType {Name = s.StrategyType}
+                        })
+                    );
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SummaryMetric, DirectAgents.Domain.Entities.CPProg.AdSetSummaryMetric>()
                     .ForMember(s => s.AdSet, map => map.AllowNull());
 
@@ -68,8 +74,18 @@ namespace CakeExtracter.Bootstrappers
                     .ForMember(d => d.Id, opt => opt.MapFrom(s => s.KeywordId))
                     .ForMember(d => d.Name, opt => opt.MapFrom(s => s.KeywordName))
                     .ForMember(d => d.ExternalId, opt => opt.MapFrom(s => s.KeywordEid))
-                    .ForMember(d => d.Strategy, opt => opt.MapFrom(s => new Strategy {Name = s.StrategyName, ExternalId = s.StrategyEid}))
-                    .ForMember(d => d.AdSet, opt => opt.MapFrom(s => new AdSet { Name = s.AdSetName, ExternalId = s.AdSetEid }));
+                    .ForMember(d => d.Strategy, opt => opt.MapFrom(s => new Strategy
+                        {
+                            Name = s.StrategyName,
+                            ExternalId = s.StrategyEid,
+                            Type = new EntityType {Name = s.StrategyType}
+                        })
+                    )
+                    .ForMember(d => d.AdSet, opt => opt.MapFrom(s => new AdSet
+                    {
+                        Name = s.AdSetName,
+                        ExternalId = s.AdSetEid
+                    }));
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SummaryMetric, DirectAgents.Domain.Entities.CPProg.KeywordSummaryMetric>()
                     .ForMember(s => s.Keyword, map => map.AllowNull());
 
@@ -77,11 +93,22 @@ namespace CakeExtracter.Bootstrappers
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SearchTermSummary, DirectAgents.Domain.Entities.CPProg.SearchTerm>()
                     .ForMember(d => d.Id, opt => opt.MapFrom(s => s.SearchTermId))
                     .ForMember(d => d.Name, opt => opt.MapFrom(s => s.SearchTermName));
-                cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SearchTermSummary, DirectAgents.Domain.Entities.CPProg.Keyword>()
+                cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SearchTermSummary,
+                        DirectAgents.Domain.Entities.CPProg.Keyword>()
                     .ForMember(d => d.Name, opt => opt.MapFrom(s => s.KeywordName))
                     .ForMember(d => d.ExternalId, opt => opt.MapFrom(s => s.KeywordEid))
-                    .ForMember(d => d.Strategy, opt => opt.MapFrom(s => new Strategy { Name = s.StrategyName, ExternalId = s.StrategyEid }))
-                    .ForMember(d => d.AdSet, opt => opt.MapFrom(s => new AdSet { Name = s.AdSetName, ExternalId = s.AdSetEid }));
+                    .ForMember(d => d.Strategy, opt => opt.MapFrom(s => new Strategy
+                        {
+                            Name = s.StrategyName,
+                            ExternalId = s.StrategyEid,
+                            Type = new EntityType {Name = s.StrategyType}
+                        })
+                    )
+                    .ForMember(d => d.AdSet, opt => opt.MapFrom(s => new AdSet
+                    {
+                        Name = s.AdSetName,
+                        ExternalId = s.AdSetEid
+                    }));
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SummaryMetric, DirectAgents.Domain.Entities.CPProg.SearchTermSummaryMetric>()
                     .ForMember(s => s.SearchTerm, map => map.AllowNull());
 

@@ -636,9 +636,15 @@ namespace DirectAgents.Domain.Concrete
             }
         }
 
-        public IQueryable<Strategy> Strategies(int? acctId)
+        public IQueryable<Strategy> Strategies(int? acctId, int? id)
         {
-            var strategies = context.Strategies.AsQueryable();
+            var strategies = context.Strategies.Include(x => x.Type).AsQueryable();
+
+            if (id.HasValue)
+            {
+                strategies = strategies.Where(x => x.Id == id);
+            }
+
             if (acctId.HasValue)
             {
                 strategies = strategies.Where(s => s.AccountId == acctId.Value);
@@ -647,20 +653,32 @@ namespace DirectAgents.Domain.Concrete
             return strategies;
         }
 
-        public IQueryable<AdSet> AdSets(int? acctId)
+        public IQueryable<AdSet> AdSets(int? acctId, int? id)
         {
-            var adsets = context.AdSets.AsQueryable();
-            if (acctId.HasValue)
+            var adSets = context.AdSets.Include(x => x.Strategy.Type).AsQueryable();
+
+            if (id.HasValue)
             {
-                adsets = adsets.Where(x => x.AccountId == acctId.Value);
+                adSets = adSets.Where(x => x.Id == id);
             }
 
-            return adsets;
+            if (acctId.HasValue)
+            {
+                adSets = adSets.Where(x => x.AccountId == acctId.Value);
+            }
+
+            return adSets;
         }
 
-        public IQueryable<Keyword> Keywords(int? acctId)
+        public IQueryable<Keyword> Keywords(int? acctId, int? id)
         {
-            var keywords = context.Keywords.AsQueryable();
+            var keywords = context.Keywords.Include(x => x.Strategy.Type).AsQueryable();
+
+            if (id.HasValue)
+            {
+                keywords = keywords.Where(x => x.Id == id);
+            }
+
             if (acctId.HasValue)
             {
                 keywords = keywords.Where(x => x.AccountId == acctId.Value);
@@ -668,9 +686,15 @@ namespace DirectAgents.Domain.Concrete
             return keywords;
         }
 
-        public IQueryable<SearchTerm> SearchTerms(int? acctId)
+        public IQueryable<SearchTerm> SearchTerms(int? acctId, int? id)
         {
             var searchTerms = context.SearchTerms.AsQueryable();
+
+            if (id.HasValue)
+            {
+                searchTerms = searchTerms.Where(x => x.Id == id);
+            }
+
             if (acctId.HasValue)
             {
                 searchTerms = searchTerms.Where(x => x.AccountId == acctId.Value);
@@ -682,9 +706,15 @@ namespace DirectAgents.Domain.Concrete
         {
             return context.TDads.Find(id);
         }
-        public IQueryable<TDad> TDads(int? acctId)
+        public IQueryable<TDad> TDads(int? acctId, int? id)
         {
             var ads = context.TDads.AsQueryable();
+
+            if (id.HasValue)
+            {
+                ads = ads.Where(x => x.Id == id);
+            }
+
             if (acctId.HasValue)
             {
                 ads = ads.Where(a => a.AccountId == acctId.Value);

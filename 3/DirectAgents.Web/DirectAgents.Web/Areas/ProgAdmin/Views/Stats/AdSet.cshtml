@@ -62,7 +62,7 @@ else
                 @Html.ActionLink("action", "Action", new { acctId = Model.AccountId, adsetId = stat.AdSet.Id, start = Model.StartString, end = Model.EndString })
             </td>
             <td>(@stat.AdSet.ExtAccount.Platform.Name) @stat.AdSet.ExtAccount.Name</td>
-            <td style="text-align:right">@stat.AdSet.Id</td>
+            <td style="text-align:right">@Html.ActionLink(stat.AdSet.Id.ToString(), "AdSets", "ExtAccounts", new { adSetId = stat.AdSet.Id }, null)</td>
             <td>@stat.AdSet.Name</td>
             <td style="text-align:right">@stat.Impressions</td>
             <td style="text-align:right">@stat.AllClicks</td>

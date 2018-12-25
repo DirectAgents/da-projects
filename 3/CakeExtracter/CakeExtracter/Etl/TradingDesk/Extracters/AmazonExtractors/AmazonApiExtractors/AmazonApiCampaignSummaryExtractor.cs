@@ -48,7 +48,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             Add(items);
         }
 
-        private IEnumerable<AmazonCampaign> LoadCampaignsFromAmazonApi()
+        public IEnumerable<AmazonCampaign> LoadCampaignsFromAmazonApi()
         {
             var spCampaigns = _amazonUtility.GetCampaigns(CampaignType.SponsoredProducts, clientId);
             var sbCampaigns = _amazonUtility.GetCampaigns(CampaignType.SponsoredBrands, clientId);
@@ -83,7 +83,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             {
                 StrategyEid = campaign.CampaignId,
                 StrategyName = campaign.Name,
-                StrategyType = campaign.TargetingType
+                StrategyTargetingType = campaign.TargetingType,
+                StrategyType = stat.FirstOrDefault().CampaignType
             };
             SetCPProgStats(sum, stat, date); // most likely there's just one dailyStat in the group, but this covers everything...
             return sum;
