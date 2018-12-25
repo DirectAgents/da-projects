@@ -93,7 +93,7 @@ namespace CakeExtracter.Commands.Test
         {
             var amazonUtility = new AmazonUtility(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m));
             amazonUtility.SetWhichAlt(account.ExternalId);
-            var extractor = new AmazonApiCampaignSummaryExtractor(amazonUtility, new DateRange(), account);
+            var extractor = new AmazonApiCampaignSummaryExtractor(amazonUtility, new DateRange(), account, false);
             var campaigns = extractor.LoadCampaignsFromAmazonApi();
             return campaigns;
         }

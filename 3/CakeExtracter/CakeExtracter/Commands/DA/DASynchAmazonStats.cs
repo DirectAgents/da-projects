@@ -33,37 +33,37 @@ namespace CakeExtracter.Commands
         }
 
         public int? AccountId { get; set; }
-        //public int? CampaignId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public int? DaysAgoToStart { get; set; }
         public string StatsType { get; set; }
         public bool DisabledOnly { get; set; }
         public bool FromDatabase { get; set; }
+        public bool ClearBeforeLoad { get; set; }
 
         public override void ResetProperties()
         {
             AccountId = null;
-            //CampaignId = null;
             StartDate = null;
             EndDate = null;
             DaysAgoToStart = null;
             StatsType = null;
             DisabledOnly = false;
             FromDatabase = false;
+            ClearBeforeLoad = false;
         }
 
         public DASynchAmazonStats()
         {
             IsCommand("daSynchAmazonStats", "Synch Amazon Stats");
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
-            //HasOption<int>("c|campaignId=", "Campaign Id ", c => CampaignId = c);
             HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
             HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 41)", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
             HasOption<bool>("z|fromDatabase=", "Retrieve from database instead of API (where implemented)", c => FromDatabase = c);
+            HasOption<bool>("c|clearBeforeLoad=", "Remove data from the database on a specific date before loading new extracted data (default = false)", c => ClearBeforeLoad = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -149,7 +149,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            var extracter = new AmazonApiDailySummaryExtractor(amazonUtility, dateRange, account, campaignFilter: account.Filter);
+            var extracter = new AmazonApiDailySummaryExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
             var loader = new AmazonDailySummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -169,7 +169,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            var extracter = new AmazonApiCampaignSummaryExtractor(amazonUtility, dateRange, account, campaignFilter: account.Filter);
+            var extracter = new AmazonApiCampaignSummaryExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
             var loader = new AmazonCampaignSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -179,7 +179,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            var extracter = new AmazonApiAdSetExtractor(amazonUtility, dateRange, account, campaignFilter: account.Filter);
+            var extracter = new AmazonApiAdSetExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
             var loader = new AmazonAdSetSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -189,7 +189,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            var extracter = new AmazonApiAdExtrator(amazonUtility, dateRange, account, campaignFilter: account.Filter);
+            var extracter = new AmazonApiAdExtrator(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
             var loader = new AmazonAdSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -199,7 +199,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Keyword(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            var extracter = new AmazonApiKeywordExtractor(amazonUtility, dateRange, account, campaignFilter: account.Filter);
+            var extracter = new AmazonApiKeywordExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);            
             var loader = new AmazonKeywordSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -209,7 +209,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_SearchTerm(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            var extracter = new AmazonApiSearchTermExtractor(amazonUtility, dateRange, account, campaignFilter: account.Filter);
+            var extracter = new AmazonApiSearchTermExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
             var loader = new AmazonSearchTermSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);

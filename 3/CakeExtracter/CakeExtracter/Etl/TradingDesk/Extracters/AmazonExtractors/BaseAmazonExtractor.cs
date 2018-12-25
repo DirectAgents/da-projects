@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Amazon;
-using Amazon.Entities;
 using Amazon.Entities.Summaries;
 using Amazon.Enums;
 using CakeExtracter.Common;
@@ -19,6 +18,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
         protected readonly string clientId; // external id
         protected readonly string campaignFilter;
         protected readonly string campaignFilterOut;
+        protected readonly bool ClearBeforeLoad;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseAmazonExtractor{T}"/> class.
@@ -26,12 +26,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
         /// <param name="amazonUtility">The amazon utility.</param>
         /// <param name="date">The date.</param>
         /// <param name="clientId">The client identifier.</param>
-        public BaseAmazonExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
+        public BaseAmazonExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account,
+            bool clearBeforeLoad = false, string campaignFilter = null, string campaignFilterOut = null)
         {
             this._amazonUtility = amazonUtility;
             this.dateRange = dateRange;
             this.accountId = account.Id;
             this.clientId = account.ExternalId;
+            this.ClearBeforeLoad = clearBeforeLoad;
             this.campaignFilter = campaignFilter;
             this.campaignFilterOut = campaignFilterOut;
         }
