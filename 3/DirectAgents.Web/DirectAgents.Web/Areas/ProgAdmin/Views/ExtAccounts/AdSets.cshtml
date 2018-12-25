@@ -17,7 +17,7 @@
             <td>@adset.Id</td>
             <td>@adset.Name</td>
             <td>@adset.ExternalId</td>
-            <td>@(adset.Strategy != null ? adset.Strategy.Name + " (" + Html.ActionLink(adset.StrategyId.ToString(), "Strategies", new { strategyId = adset.StrategyId }) + ")" : "")</td>
+            <td>@Html.ActionLink(adset.Strategy != null ? adset.Strategy.Name + " (" + adset.StrategyId + ")" : " ", "Strategies", new { strategyId = adset.StrategyId })</td>
             <td>@(adset.Strategy != null && adset.Strategy.Type != null ? adset.Strategy.Type.Name : "")</td>
         </tr>
     }

@@ -52,7 +52,7 @@
             var id = ad.ExternalIds.FirstOrDefault(x => x.Type.Name == idName);
             <td>@(id == null ? "" : id.ExternalId)</td>
         }
-        <td>@(ad.AdSet != null ? ad.AdSet.Name + " (" + Html.ActionLink(ad.AdSetId.ToString(), "AdSets", "ExtAccounts", new { adSetId = ad.AdSetId }, null) + ")" : "")</td>
+        <td>@Html.ActionLink(ad.AdSet != null ? ad.AdSet.Name + " (" + ad.AdSetId + ")" : " ", "AdSets", "ExtAccounts", new { adSetId = ad.AdSetId }, null)</td>
     </tr>
     }
 </table>
