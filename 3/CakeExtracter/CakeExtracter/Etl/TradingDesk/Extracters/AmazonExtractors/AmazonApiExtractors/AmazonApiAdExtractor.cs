@@ -5,6 +5,8 @@ using Amazon;
 using Amazon.Entities.Summaries;
 using Amazon.Enums;
 using CakeExtracter.Common;
+using CakeExtracter.Helpers;
+using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
@@ -17,8 +19,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         // - for Sponsored Brands reports, recordType call only be campaigns, adGroups or keywords
         // - a productAdId metric is not available anyway
 
-        public AmazonApiAdExtrator(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
-            : base(amazonUtility, dateRange, account, campaignFilter, campaignFilterOut)
+        public AmazonApiAdExtrator(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, bool clearBeforeLoad, string campaignFilter = null, string campaignFilterOut = null)
+            : base(amazonUtility, dateRange, account, clearBeforeLoad, campaignFilter, campaignFilterOut)
         { }
 
         protected override void Extract()
@@ -26,13 +28,24 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             Logger.Info(accountId, "Extracting TDadSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 clientId, dateRange.FromDate, dateRange.ToDate);
 
+            var accountAdIds = GetAccountAdIds();
             foreach (var date in dateRange.Dates)
             {
-                var sums = ExtractSummaries(date);
-                var items = TransformSummaries(sums, date);
-                Add(items);
+                Extract(accountAdIds, date);
             }
             End();
+        }
+
+        private void Extract(IEnumerable<int> accountAdIds, DateTime date)
+        {
+            var sums = ExtractSummaries(date);
+            var items = TransformSummaries(sums, date);
+            if (ClearBeforeLoad)
+            {
+                RemoveOldData(date, accountAdIds);
+            }
+
+            Add(items);
         }
 
         private IEnumerable<AmazonAdDailySummary> ExtractSummaries(DateTime date)
@@ -79,6 +92,28 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
                 ExternalId = value
             };
             ids.Add(id);
+        }
+
+        private IEnumerable<int> GetAccountAdIds()
+        {
+            using (var db = new ClientPortalProgContext())
+            {
+                var ids = db.TDads.Where(x => x.AccountId == accountId).Select(x => x.Id);
+                return ids.ToList();
+            }
+        }
+
+        private void RemoveOldData(DateTime date, IEnumerable<int> accountAdIds)
+        {
+            using (var db = new ClientPortalProgContext())
+            {
+                var items = db.TDadSummaries.Where(x => x.Date == date && accountAdIds.Contains(x.TDadId)).ToList();
+                var metrics = db.TDadSummaryMetrics.Where(x => x.Date == date && accountAdIds.Contains(x.EntityId)).ToList();
+                db.TDadSummaryMetrics.RemoveRange(metrics);
+                db.TDadSummaries.RemoveRange(items);
+                var numChanges = SafeContextWrapper.TrySaveChanges(db);
+                Logger.Info(accountId, "{0} - AdSummaries for account ({1}) was cleaned. Count of deleted objects: {2}", date, accountId, numChanges);
+            }
         }
     }
 }

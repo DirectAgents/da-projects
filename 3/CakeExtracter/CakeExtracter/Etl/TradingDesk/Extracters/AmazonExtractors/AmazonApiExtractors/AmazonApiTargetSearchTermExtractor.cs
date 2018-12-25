@@ -11,7 +11,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
     public class AmazonApiTargetSearchTermExtractor : BaseAmazonExtractor<SearchTermSummary>
     {
         public AmazonApiTargetSearchTermExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
-            : base(amazonUtility, dateRange, account, campaignFilter, campaignFilterOut)
+            : base(amazonUtility, dateRange, account, false, campaignFilter, campaignFilterOut)
         { }
 
         protected override void Extract()

@@ -6,13 +6,15 @@ using DirectAgents.Domain.Entities.CPProg;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Helpers;
+using DirectAgents.Domain.Contexts;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
 {
     public class AmazonApiKeywordExtractor : BaseAmazonExtractor<KeywordSummary>
     {
-        public AmazonApiKeywordExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, string campaignFilter = null, string campaignFilterOut = null)
-            : base(amazonUtility, dateRange, account, campaignFilter, campaignFilterOut)
+        public AmazonApiKeywordExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, bool clearBeforeLoad, string campaignFilter = null, string campaignFilterOut = null)
+            : base(amazonUtility, dateRange, account, clearBeforeLoad, campaignFilter, campaignFilterOut)
         { }
 
         protected override void Extract()
@@ -20,13 +22,24 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             Logger.Info(accountId, "Extracting KeywordSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 clientId, dateRange.FromDate, dateRange.ToDate);
 
+            var accountKeywordIds = GetAccountKeywordIds();
             foreach (var date in dateRange.Dates)
             {
-                var sums = ExtractSummaries(date);
-                var items = TransformSummaries(sums, date);
-                Add(items);
+                Extract(accountKeywordIds, date);
             }
             End();
+        }
+
+        private void Extract(IEnumerable<int> accountKeywordIds, DateTime date)
+        {
+            var sums = ExtractSummaries(date);
+            var items = TransformSummaries(sums, date);
+            if (ClearBeforeLoad)
+            {
+                RemoveOldData(date, accountKeywordIds);
+            }
+
+            Add(items);
         }
 
         public IEnumerable<AmazonKeywordDailySummary> ExtractSummaries(DateTime date)
@@ -58,6 +71,28 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             };
             SetCPProgStats(sum, keywordStat, date);
             return sum;
+        }
+
+        private IEnumerable<int> GetAccountKeywordIds()
+        {
+            using (var db = new ClientPortalProgContext())
+            {
+                var ids = db.Keywords.Where(x => x.AccountId == accountId).Select(x => x.Id);
+                return ids.ToList();
+            }
+        }
+
+        private void RemoveOldData(DateTime date, IEnumerable<int> accountKeywordIds)
+        {
+            using (var db = new ClientPortalProgContext())
+            {
+                var items = db.KeywordSummaries.Where(x => x.Date == date && accountKeywordIds.Contains(x.KeywordId)).ToList();
+                var metrics = db.KeywordSummaryMetrics.Where(x => x.Date == date && accountKeywordIds.Contains(x.EntityId)).ToList();
+                db.KeywordSummaryMetrics.RemoveRange(metrics);
+                db.KeywordSummaries.RemoveRange(items);
+                var numChanges = SafeContextWrapper.TrySaveChanges(db);
+                Logger.Info(accountId, "{0} - KeywordSummaries for account ({1}) was cleaned. Count of deleted objects: {2}", date, accountId, numChanges);
+            }
         }
     }
 }
