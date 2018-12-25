@@ -638,7 +638,7 @@ namespace DirectAgents.Domain.Concrete
 
         public IQueryable<Strategy> Strategies(int? acctId)
         {
-            var strategies = context.Strategies.AsQueryable();
+            var strategies = context.Strategies.Include(x => x.Type).AsQueryable();
             if (acctId.HasValue)
             {
                 strategies = strategies.Where(s => s.AccountId == acctId.Value);
@@ -649,7 +649,7 @@ namespace DirectAgents.Domain.Concrete
 
         public IQueryable<AdSet> AdSets(int? acctId)
         {
-            var adsets = context.AdSets.AsQueryable();
+            var adsets = context.AdSets.Include(x => x.Strategy.Type).AsQueryable();
             if (acctId.HasValue)
             {
                 adsets = adsets.Where(x => x.AccountId == acctId.Value);
@@ -660,7 +660,7 @@ namespace DirectAgents.Domain.Concrete
 
         public IQueryable<Keyword> Keywords(int? acctId)
         {
-            var keywords = context.Keywords.AsQueryable();
+            var keywords = context.Keywords.Include(x => x.Strategy.Type).AsQueryable();
             if (acctId.HasValue)
             {
                 keywords = keywords.Where(x => x.AccountId == acctId.Value);

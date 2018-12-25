@@ -10,6 +10,7 @@ using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Web.Areas.ProgAdmin.Models;
+using DirectAgents.Web.Constants;
 
 
 namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
@@ -343,39 +344,85 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 
         // --- Strats, AdSets, etc
 
-        public ActionResult Strategies(int? id)
+        public ActionResult Strategies(int? id, OrderBy sort = OrderBy.StrategyName)
         {
-            var strategies = cpProgRepo.Strategies(acctId: id).OrderBy(s => s.Name);
-            return View(strategies);
+            var strategies = cpProgRepo.Strategies(acctId: id);
+            IOrderedQueryable<Strategy> orderedStrategies;
+            switch (sort)
+            {
+                case OrderBy.StrategyType:
+                    orderedStrategies = strategies.OrderBy(s => s.Type.Name).ThenBy(x => x.Name);
+                    break;
+                default:
+                    orderedStrategies = strategies.OrderBy(s => s.Name);
+                    break;
+            }
+
+            var strategyList = orderedStrategies.ThenBy(x => x.ExternalId).ToList();
+            return View(strategyList);
         }
 
-        public ActionResult AdSets(int? id, string sort)
+        public ActionResult AdSets(int? id, OrderBy sort = OrderBy.AdSetName)
         {
             var adsets = cpProgRepo.AdSets(acctId: id);
-            var orderedAdSets = sort == "strat"
-                ? adsets.OrderBy(x => x.Strategy.Name).ThenBy(x => x.Name)
-                : adsets.OrderBy(x => x.Name);
-            return View(orderedAdSets);
+            IOrderedQueryable<AdSet> orderedAdSets;
+            switch (sort)
+            {
+                case OrderBy.StrategyType:
+                    orderedAdSets = adsets.OrderBy(s => s.Strategy.Type.Name).ThenBy(x => x.Strategy.Name).ThenBy(x => x.Name);
+                    break;
+                case OrderBy.StrategyName:
+                    orderedAdSets = adsets.OrderBy(x => x.Strategy.Name).ThenBy(x => x.Name);
+                    break;
+                default:
+                    orderedAdSets = adsets.OrderBy(x => x.Name);
+                    break;
+            }
+
+            var adSetList = orderedAdSets.ThenBy(x => x.ExternalId).ToList();
+            return View(adSetList);
         }
 
-        public ActionResult Keywords(int? id, string sort)
+        public ActionResult Keywords(int? id, OrderBy sort = OrderBy.KeywordName)
         {
             var keywords = cpProgRepo.Keywords(acctId: id);
-            var orderedKeywords = sort == "strat"
-                ? keywords.OrderBy(x => x.Strategy.Name).ThenBy(x => x.Name)
-                : sort == "adset"
-                    ? keywords.OrderBy(x => x.AdSet.Name).ThenBy(x => x.AdSet.Id).ThenBy(x => x.Name)
-                    : keywords.OrderBy(x => x.Name);
-            return View(orderedKeywords);
+            IOrderedQueryable<Keyword> orderedKeywords;
+            switch (sort)
+            {
+                case OrderBy.StrategyType:
+                    orderedKeywords = keywords.OrderBy(s => s.Strategy.Type.Name).ThenBy(x => x.Strategy.Name).ThenBy(x => x.Name);
+                    break;
+                case OrderBy.StrategyName:
+                    orderedKeywords = keywords.OrderBy(x => x.Strategy.Name).ThenBy(x => x.Name);
+                    break;
+                case OrderBy.AdSetName:
+                    orderedKeywords = keywords.OrderBy(x => x.AdSet.Name).ThenBy(x => x.AdSet.Id).ThenBy(x => x.Name);
+                    break;
+                default:
+                    orderedKeywords = keywords.OrderBy(x => x.Name);
+                    break;
+            }
+
+            var keywordList = orderedKeywords.ThenBy(x => x.ExternalId).ToList();
+            return View(keywordList);
         }
 
-        public ActionResult SearchTerms(int? id, string sort)
+        public ActionResult SearchTerms(int? id, OrderBy sort = OrderBy.SearchTermName)
         {
             var searchTerms = cpProgRepo.SearchTerms(acctId: id);
-            var orderedSearchTerms = sort == "keyw"
-                ? searchTerms.OrderBy(x => x.Keyword.Name).ThenBy(x => x.Name)
-                : searchTerms.OrderBy(x => x.Name);
-            return View(orderedSearchTerms);
+            IOrderedQueryable<SearchTerm> orderedSearchTerms;
+            switch (sort)
+            {
+                case OrderBy.KeywordName:
+                    orderedSearchTerms = searchTerms.OrderBy(x => x.Keyword.Name).ThenBy(x => x.Name);
+                    break;
+                default:
+                    orderedSearchTerms = searchTerms.OrderBy(x => x.Name);
+                    break;
+            }
+
+            var termList = orderedSearchTerms.ToList();
+            return View(termList);
         }
 
         // --- Stats Uploading ---
