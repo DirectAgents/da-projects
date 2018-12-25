@@ -32,8 +32,8 @@ namespace Amazon.Helpers
         private static readonly Dictionary<CampaignType, string> CampaignTypeReadableNames =
             new Dictionary<CampaignType, string>
             {
-                {CampaignType.SponsoredProducts, "SP"},
-                {CampaignType.SponsoredBrands, "SB"},
+                {CampaignType.SponsoredProducts, CampaignType.SponsoredProducts.ToString()},
+                {CampaignType.SponsoredBrands, CampaignType.SponsoredBrands.ToString()},
             };
 
         private static readonly Dictionary<EntitesType, string> EntitiesTypeNames = new Dictionary<EntitesType, string>
