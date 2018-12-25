@@ -22,9 +22,9 @@ namespace DirectAgents.Domain.Entities.CPProg
         public string StrategyEid { get; set; } // external id
 
         [NotMapped]
-        public string StrategyType { get; set; }
+        public string StrategyTargetingType { get; set; }
 
         [NotMapped]
-        public string CampaignType { get; set; }
+        public string StrategyType { get; set; }
     }
 }

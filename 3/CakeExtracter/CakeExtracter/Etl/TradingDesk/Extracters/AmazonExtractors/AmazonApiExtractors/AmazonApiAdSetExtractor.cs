@@ -53,7 +53,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
                 AdSetEid = adGroupStat.AdGroupId,
                 AdSetName = adGroupStat.AdGroupName,
                 StrategyEid = adGroupStat.CampaignId,
-                StrategyName = adGroupStat.CampaignName
+                StrategyName = adGroupStat.CampaignName,
+                StrategyType = adGroupStat.CampaignType
             };
             SetCPProgStats(sum, adGroupStat, date);
             return sum;

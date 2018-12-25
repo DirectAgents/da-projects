@@ -116,10 +116,13 @@ namespace DirectAgents.Domain.Entities.CPProg
         public string AdSetName { get; set; }
         [NotMapped]
         public string AdSetEid { get; set; } // external id
+
         [NotMapped]
         public string StrategyName { get; set; }
         [NotMapped]
         public string StrategyEid { get; set; } // external id
+        [NotMapped]
+        public string StrategyType { get; set; }
     }
 
     // DailySummary for a "TD ad"
@@ -186,14 +189,18 @@ namespace DirectAgents.Domain.Entities.CPProg
         public string KeywordName { get; set; }
         [NotMapped]
         public string KeywordEid { get; set; }
+
         [NotMapped]
         public string AdSetName { get; set; }
         [NotMapped]
         public string AdSetEid { get; set; }
+
         [NotMapped]
         public string StrategyName { get; set; }
         [NotMapped]
         public string StrategyEid { get; set; }
+        [NotMapped]
+        public string StrategyType { get; set; }
     }
 
     // DailySummary for a SearchTerm
@@ -213,14 +220,19 @@ namespace DirectAgents.Domain.Entities.CPProg
         public string KeywordName { get; set; }
         [NotMapped]
         public string KeywordEid { get; set; }
+
         [NotMapped]
         public string AdSetName { get; set; }
         [NotMapped]
         public string AdSetEid { get; set; }
+
         [NotMapped]
         public string StrategyName { get; set; }
         [NotMapped]
         public string StrategyEid { get; set; }
+        [NotMapped]
+        public string StrategyType { get; set; }
+
         [NotMapped]
         public string SearchTermName { get; set; }
     }

@@ -70,7 +70,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             {
                 StrategyEid = campaign.CampaignId,
                 StrategyName = campaign.Name,
-                StrategyType = campaign.TargetingType
+                StrategyTargetingType = campaign.TargetingType,
+                StrategyType = stat.FirstOrDefault().CampaignType
             };
             SetCPProgStats(sum, stat, date); // most likely there's just one dailyStat in the group, but this covers everything...
             return sum;

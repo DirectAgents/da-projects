@@ -6,6 +6,9 @@ using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using CakeExtracter.Common;
+using CakeExtracter.SimpleRepositories;
+using CakeExtracter.SimpleRepositories.Interfaces;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
@@ -14,14 +17,13 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         // Note accountId is only used in AddUpdateDependentStrategies() (i.e. not by AdrollCampaignSummaryLoader)
         public readonly int AccountId;
         public static readonly EntityIdStorage<Strategy> StrategyStorage;
-        private static readonly EntityIdStorage<EntityType> TypeStorage;
         private readonly bool preLoadStrategies;
         private readonly SummaryMetricLoader metricLoader;
+        private readonly ISimpleRepository<EntityType> typeRepository;
 
         static TDStrategySummaryLoader()
         {
             StrategyStorage = new EntityIdStorage<Strategy>(x => x.Id, x => $"{x.AccountId} {x.Name} {x.ExternalId}");
-            TypeStorage = new EntityIdStorage<EntityType>(x => x.Id, x => x.Name);
         }
 
         public TDStrategySummaryLoader(int accountId = -1, bool preLoadStrategies = false)
@@ -29,6 +31,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             AccountId = accountId;
             this.preLoadStrategies = preLoadStrategies;
             metricLoader = new SummaryMetricLoader();
+            typeRepository = new TypeRepository();
         }
 
         protected override int Load(List<StrategySummary> items)
@@ -171,47 +174,28 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         private void AddDependentStrategyTypes(ClientPortalProgContext db, IEnumerable<Strategy> strategies)
         {
-            var notStoredTypes = strategies.GroupBy(x => x.Type?.Name)
-                .Select(x => x.First().Type)
-                .Where(x => x != null && !string.IsNullOrEmpty(x.Name) && !TypeStorage.IsEntityInStorage(x))
-                .ToList();
-            AddDependentTypes(db, notStoredTypes);
+            var targetingTypes = strategies.Select(x => x.TargetingType);
+            var types = strategies.Select(x => x.Type).Concat(targetingTypes);
+            var notStoredTypes = types.Where(x => x?.Name != null).DistinctBy(x => x.Name).ToList();
+            typeRepository.AddItems(db, notStoredTypes);
             AssignTypeIdToStrategies(strategies);
-        }
-
-        private void AddDependentTypes(ClientPortalProgContext db, IEnumerable<EntityType> types)
-        {
-            var newTypes = new List<EntityType>();
-            SafeContextWrapper.SaveChangedContext(
-                SafeContextWrapper.EntityTypeLocker, db, () =>
-                {
-                    foreach (var type in types)
-                    {
-                        var typeInDB = db.Types.FirstOrDefault(x => type.Name == x.Name);
-                        if (typeInDB == null)
-                        {
-                            newTypes.Add(type);
-                        }
-                        else
-                        {
-                            TypeStorage.AddEntityIdToStorage(typeInDB);
-                        }
-                    }
-                    db.Types.AddRange(newTypes);
-                }
-            );
-            newTypes.ForEach(TypeStorage.AddEntityIdToStorage);
         }
 
         private void AssignTypeIdToStrategies(IEnumerable<Strategy> strategies)
         {
             foreach (var strategy in strategies)
             {
-                if (TypeStorage.IsEntityInStorage(strategy.Type))
+                if (typeRepository.IdStorage.IsEntityInStorage(strategy.TargetingType))
                 {
-                    strategy.TypeId = TypeStorage.GetEntityIdFromStorage(strategy.Type);
+                    strategy.TargetingTypeId = typeRepository.IdStorage.GetEntityIdFromStorage(strategy.TargetingType);
+                    strategy.TargetingType = null;
                 }
-                strategy.Type = null;
+
+                if (typeRepository.IdStorage.IsEntityInStorage(strategy.Type))
+                {
+                    strategy.TypeId = typeRepository.IdStorage.GetEntityIdFromStorage(strategy.Type);
+                    strategy.Type = null;
+                }
             }
         }
 
@@ -312,8 +296,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 AccountId = strategyProps.AccountId,
                 ExternalId = strategyProps.ExternalId,
                 Name = strategyProps.Name,
-                TypeId = strategyProps.TypeId,
-                CampaignType = strategyProps.CampaignType
+                TargetingTypeId = strategyProps.TargetingTypeId,
+                Type = strategyProps.Type
             };
             db.Strategies.Add(strategy);
             SafeContextWrapper.TrySaveChanges(db);
@@ -332,11 +316,14 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 {
                     strategy.Name = strategyProps.Name;
                 }
+                if (strategyProps.TargetingTypeId.HasValue)
+                {
+                    strategy.TargetingTypeId = strategyProps.TargetingTypeId;
+                }
                 if (strategyProps.TypeId.HasValue)
                 {
                     strategy.TypeId = strategyProps.TypeId;
                 }
-                strategy.CampaignType = strategyProps.CampaignType;
             }
             return SafeContextWrapper.TrySaveChanges(db);
         }

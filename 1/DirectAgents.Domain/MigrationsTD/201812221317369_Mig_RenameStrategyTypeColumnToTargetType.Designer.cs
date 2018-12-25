@@ -7,13 +7,13 @@ namespace DirectAgents.Domain.MigrationsTD
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Mig_AddCampaignType : IMigrationMetadata
+    public sealed partial class Mig_RenameStrategyTypeColumnToTargetType : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Mig_AddCampaignType));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Mig_RenameStrategyTypeColumnToTargetType));
         
         string IMigrationMetadata.Id
         {
-            get { return "201812071124455_Mig_AddCampaignType"; }
+            get { return "201812221317369_Mig_RenameStrategyTypeColumnToTargetType"; }
         }
         
         string IMigrationMetadata.Source
