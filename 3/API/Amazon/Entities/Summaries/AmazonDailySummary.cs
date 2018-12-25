@@ -4,5 +4,6 @@
     {
         public string CampaignId { get; set; }
         public string CampaignName { get; set; }
+        public string CampaignType { get; set; }
     }
 }

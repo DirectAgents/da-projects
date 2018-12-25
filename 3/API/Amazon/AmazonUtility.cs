@@ -407,6 +407,7 @@ namespace Amazon
         }
 
         private List<TStat> GetReportInfo<TStat>(EntitesType reportType, CampaignType campaignType, AmazonApiReportParams parameters, string profileId)
+            where TStat: AmazonDailySummary
         {
             var submitReportResponse = SubmitReport(parameters, campaignType, reportType, profileId);
             if (submitReportResponse != null)
@@ -415,6 +416,7 @@ namespace Amazon
                 if (json != null)
                 {
                     var data = GetEntityList(() => JsonConvert.DeserializeObject<List<TStat>>(json));
+                    SetCampaignType(data, campaignType);
                     return data;
                 }
             }
@@ -426,6 +428,13 @@ namespace Amazon
         {
             var list = LogErrorIfException(getListFunc);
             return list ?? new List<T>();
+        }
+
+        private void SetCampaignType<TStat>(List<TStat> summaries, CampaignType campaignType)
+            where TStat : AmazonDailySummary
+        {
+            var campaignTypeName = AmazonApiHelper.GetCampaignTypeName(campaignType);
+            summaries.ForEach(x => x.CampaignType = campaignTypeName);
         }
 
         private SnapshotRequestResponse SubmitSnapshot(CampaignType campaignType, EntitesType recordType, string profileId)

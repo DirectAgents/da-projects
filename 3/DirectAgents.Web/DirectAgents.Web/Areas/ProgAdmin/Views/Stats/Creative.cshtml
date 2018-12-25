@@ -51,27 +51,27 @@ else
     </tr>
     @foreach (var stat in Model.Stats)
     {
-        <tr>
-            <td>(@stat.TDad.ExtAccount.Platform.Name) @stat.TDad.ExtAccount.Name</td>
-            <td style="text-align:right">@stat.TDad.Id</td>
-            <td><b>@stat.TDad.Name</b> (@stat.TDad.ExternalId)</td>
-            <td style="text-align:right">@stat.Impressions</td>
-            <td style="text-align:right">@stat.Clicks</td>
-            <td style="text-align:center">@stat.CTR</td>
-            <td style="text-align:center">@stat.CPM</td>
-            <td style="text-align:center">@stat.CPC</td>
-            <td style="text-align:center">@stat.CPA</td>
-            <td style="text-align:right">@stat.PostClickConv</td>
-            <td style="text-align:right">@stat.PostViewConv</td>
-            <td style="text-align:right">@stat.TotalConv</td>
-            <td style="text-align:right">@stat.Cost</td>
-            @foreach (var metricName in Model.MetricNames)
-            {
-                var metric = stat.Metrics.FirstOrDefault(x => x.MetricType.Id == metricName.Value);
-                var metricValue = metric == null ? 0.0M : metric.Value;
-                <td>@(metricValue.ToString("F"))</td>
-            }
-        </tr>
+    <tr>
+        <td>(@stat.TDad.ExtAccount.Platform.Name) @stat.TDad.ExtAccount.Name</td>
+        <td style="text-align:right">@Html.ActionLink(stat.TDad.Id.ToString(), "Index", "TDads", new { adId = stat.TDad.Id }, null)</td>
+        <td><b>@stat.TDad.Name</b> (@stat.TDad.ExternalId)</td>
+        <td style="text-align:right">@stat.Impressions</td>
+        <td style="text-align:right">@stat.Clicks</td>
+        <td style="text-align:center">@stat.CTR</td>
+        <td style="text-align:center">@stat.CPM</td>
+        <td style="text-align:center">@stat.CPC</td>
+        <td style="text-align:center">@stat.CPA</td>
+        <td style="text-align:right">@stat.PostClickConv</td>
+        <td style="text-align:right">@stat.PostViewConv</td>
+        <td style="text-align:right">@stat.TotalConv</td>
+        <td style="text-align:right">@stat.Cost</td>
+        @foreach (var metricName in Model.MetricNames)
+        {
+            var metric = stat.Metrics.FirstOrDefault(x => x.MetricType.Id == metricName.Value);
+            var metricValue = metric == null ? 0.0M : metric.Value;
+            <td>@(metricValue.ToString("F"))</td>
+        }
+    </tr>
     }
     @if (Model.StatsTotal != null)
     {

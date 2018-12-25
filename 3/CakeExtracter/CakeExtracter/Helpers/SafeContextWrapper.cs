@@ -6,7 +6,7 @@ using Polly;
 
 namespace CakeExtracter.Helpers
 {
-    internal static class SafeContextWrapper
+    public static class SafeContextWrapper
     {
         public static object ActionTypeLocker = new object();
         public static object MetricTypeLocker = new object();
