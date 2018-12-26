@@ -9,6 +9,7 @@ using System.Threading;
 using CakeExtracter;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
+using CakeExtractor.SeleniumApplication.Models;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors;
 using ConsoleCommand = ManyConsole.ConsoleCommand;
 using Platform = DirectAgents.Domain.Entities.CPProg.Platform;
@@ -28,6 +29,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
         private const int DefaultDaysAgoValue = 41;
 
         private int executionNumber;
+        private JobScheduleModel scheduling;
 
         public SyncAmazonPdaCommand()
         {
@@ -49,7 +51,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
         public override int Run(string[] remainingArguments)
         {
             AmazonPdaExtractor.PrepareExtractor();
-            ExtractAmazonPdaScheduler.Start(this);
+            InitializeScheduledJob();
             AlwaysSleep();
             return 0;
         }
@@ -69,6 +71,20 @@ namespace CakeExtractor.SeleniumApplication.Commands
             {
                 DoEtls(account, dateRange, statsType, fromDatabase);
             }
+
+            Logger.Info("Amazon ETL (PDA Campaigns) has been finished.");
+            LogScheduledJobStartTime();
+        }
+
+        private void InitializeScheduledJob()
+        {
+            scheduling = new JobScheduleModel
+            {
+                DaysInterval = Properties.Settings.Default.ExtractionIntervalsInDays,
+                StartExtractionTime = Properties.Settings.Default.StartExtractionDateTime
+            };
+            ExtractAmazonPdaScheduler.Start(this, scheduling);
+            LogScheduledJobStartTime();
         }
 
         private static void AlwaysSleep()
@@ -145,6 +161,17 @@ namespace CakeExtractor.SeleniumApplication.Commands
             var endDate = GetEndDate();
             var dateRange = new DateRange(startDate, endDate);
             return dateRange;
+        }
+
+        private void LogScheduledJobStartTime()
+        {
+            var nextTime = scheduling.StartExtractionTime;
+            while (nextTime < DateTime.Now)
+            {
+                nextTime = nextTime.AddDays(scheduling.DaysInterval);
+            }
+
+            Logger.Info("Waiting for the scheduled job to extract PDA statistics: next run time - {0} (UTC)...", nextTime.ToUniversalTime());
         }
 
         private int GetDaysAgo()
