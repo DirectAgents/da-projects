@@ -78,8 +78,10 @@ namespace CakeExtractor.SeleniumApplication.Helpers
                     .Replace('/', '-')
                     .Replace("\"", "")
                     .Replace(" ", "-")
-                    .Replace(".", "-");
-                var files = dir.GetFiles($"{formatTemplate}{fileNameMask}*{ext}");
+                    .Replace(".", "-")
+                    .Replace("(", "-")
+                    .Replace(")", "-");
+                var files = dir.GetFiles($"{formatTemplate}{fileNameMask}{ext}");
                 var result = new string[files.Length];
                 foreach (var file in files)
                 {

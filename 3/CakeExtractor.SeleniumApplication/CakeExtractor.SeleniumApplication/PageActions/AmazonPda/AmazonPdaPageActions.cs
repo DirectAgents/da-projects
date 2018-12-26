@@ -203,6 +203,11 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
                     Logger.Warn("The report is not attached because the answer is 'No data'");
                     return;
                 }
+                if (IsElementEnabledAndDisplayed(AmazonPdaPageObjects.AfterDownloadReportFailed))
+                {
+                    Logger.Warn("The report is not attached because the answer is 'Download failed'");
+                    return;
+                }
                 Wait(timeoutThread);
                 AttachDownloadedReport(campaign, downloadPath, templateFileName);
             }

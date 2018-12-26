@@ -47,6 +47,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         public static By StartDate = By.XPath(".//div[@id='reportDurationContainer']/div[1]/span[contains(@class,'fieldContainer')]/div[1]/div[contains(@class,'reportStartDateContainer')]/span/input");
         public static By DownloadReportButton = By.CssSelector("button[name=saveButton]");
         public static By AfterDownloadReportNoData = By.XPath(".//div[@id='reportDurationContainer']/div[contains(@class,'downloadNoData')]");
+        public static By AfterDownloadReportFailed = By.CssSelector("div#reportDurationContainer > div:nth-of-type(1) > span.controlsContainer > div:nth-of-type(2) > div > div.a-alert-content");
         public static By DownloadingLoader = By.XPath(".//div[contains(@class,'loading-small')][contains(@class,'submitting')]");
 
         // Campaign profiles menu
