@@ -1,4 +1,5 @@
-﻿@model  IEnumerable<DirectAgents.Domain.Entities.CPProg.TDad>
+﻿@using DirectAgents.Web.Constants
+@model  IEnumerable<DirectAgents.Domain.Entities.CPProg.TDad>
 @{
     bool showImages = ViewBag.ShowImages;
     var extIdTypes = ViewBag.ExternalIdTypes;
@@ -21,7 +22,7 @@
         {
             <th>@idName</th>
         }
-        <th>@Html.ActionLink("AdSet", "Index", new { sort = "adset" })</th>
+        <th>@Html.ActionLink("AdSet", "Index", new { sort = OrderBy.AdSetName })</th>
     </tr>
     @foreach (var ad in Model)
     {
@@ -51,7 +52,7 @@
             var id = ad.ExternalIds.FirstOrDefault(x => x.Type.Name == idName);
             <td>@(id == null ? "" : id.ExternalId)</td>
         }
-        <td>@(ad.AdSet != null ? ad.AdSet.Name + " (" + ad.AdSetId + ")" : "")</td>
+        <td>@Html.ActionLink(ad.AdSet != null ? ad.AdSet.Name + " (" + ad.AdSetId + ")" : " ", "AdSets", "ExtAccounts", new { adSetId = ad.AdSetId }, null)</td>
     </tr>
     }
 </table>

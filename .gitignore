@@ -3,6 +3,7 @@ bin
 obj
 debug
 Debug - EOM
+results
 *.csproj.user
 
 # Visual Studio 2015/2017 cache/options directory

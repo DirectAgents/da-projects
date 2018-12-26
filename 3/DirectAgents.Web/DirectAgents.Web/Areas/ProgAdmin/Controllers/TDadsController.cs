@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Web.Constants;
 
 namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 {
@@ -12,16 +13,26 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             this.cpProgRepo = cpProgRepository;
         }
 
-        public ActionResult Index(int? id, string sort)
+        public ActionResult Index(int? id, int? adId, OrderBy sort = OrderBy.AdName)
         {
-            var ads = sort == "adset" 
-                ? cpProgRepo.TDads(acctId: id).OrderBy(a => a.AdSet.Name).ThenBy(a => a.AdSetId) 
-                : cpProgRepo.TDads(acctId: id).OrderBy(a => a.Name).ThenBy(a => a.Id);
+            var ads = cpProgRepo.TDads(acctId: id, id: adId);
+            IOrderedQueryable<TDad> orderedAds;
+            switch (sort)
+            {
+                case OrderBy.AdSetName:
+                    orderedAds = ads.OrderBy(a => a.AdSet.Name).ThenBy(a => a.AdSetId).ThenBy(x => x.Name);
+                    break;
+                default:
+                    orderedAds = ads.OrderBy(x => x.Name);
+                    break;
+            }
+            var adList = orderedAds.ThenBy(x => x.Id).ToList();
+
             Session["acctId"] = id.ToString();
 
             // Don't show images if not filtered (i.e. showing all creatives), unless requested explicitly
             ViewBag.ShowImages = (id.HasValue || (Request["images"] != null && Request["images"].ToUpper() == "TRUE"));
-            var extIds = ads.SelectMany(x => x.ExternalIds).Select(x => x.Type.Name).Distinct();
+            var extIds = adList.SelectMany(x => x.ExternalIds).Select(x => x.Type.Name).Distinct();
             ViewBag.ExternalIdTypes = extIds.ToList();
             return View(ads);
         }

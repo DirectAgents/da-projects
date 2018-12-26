@@ -1,4 +1,5 @@
-﻿@model IEnumerable<DirectAgents.Domain.Entities.CPProg.SearchTerm>
+﻿@using DirectAgents.Web.Constants
+@model IEnumerable<DirectAgents.Domain.Entities.CPProg.SearchTerm>
 
 <h2>SearchTerms</h2>
 
@@ -6,14 +7,14 @@
     <tr>
         <th>Id</th>
         <th>@Html.ActionLink("Name", "SearchTerms")</th>
-        <th>@Html.ActionLink("Keyword", "SearchTerms", new { sort = "keyw" })</th>
+        <th>@Html.ActionLink("Keyword", "SearchTerms", new { sort = OrderBy.KeywordName })</th>
     </tr>
     @foreach (var term in Model)
     {
         <tr>
             <td>@term.Id</td>
             <td>@term.Name</td>
-            <td>@(term.Keyword != null ? term.Keyword.Name + " (" + term.KeywordId + ")" : "")</td>
+            <td>@Html.ActionLink(term.Keyword != null ? term.Keyword.Name + " (" + term.KeywordId + ")" : " ", "Keywords", new { keywordId = term.KeywordId })</td>
         </tr>
     }
 </table>

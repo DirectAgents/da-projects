@@ -22,6 +22,8 @@ namespace DirectAgents.Domain.Entities.CPProg
         [NotMapped]
         public string StrategyEid { get; set; } // external id
         [NotMapped]
+        public string StrategyTargetingType { get; set; }
+        [NotMapped]
         public string StrategyType { get; set; }
     }
 }

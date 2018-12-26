@@ -424,8 +424,6 @@
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiDailySummaryExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiKeywordExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiSearchTermExtractor.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiTargetKeywordExtractor.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiTargetSearchTermExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\BaseAmazonExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonTransformers.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdformTransformers.cs" />
@@ -668,6 +666,9 @@
       <DependentUpon>SearchReportRuntimeTextTemplate.tt</DependentUpon>
     </Compile>
     <Compile Include="Reports\SimpleReportManager.cs" />
+    <Compile Include="SimpleRepositories\Interfaces\ISimpleRepository.cs" />
+    <Compile Include="SimpleRepositories\StrategyRepository.cs" />
+    <Compile Include="SimpleRepositories\TypeRepository.cs" />
     <Compile Include="Syncher.cs" />
     <Compile Include="Data\UsersContext.cs" />
     <Compile Include="Common\RetryUtility.cs" />

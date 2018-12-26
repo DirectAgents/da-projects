@@ -1,21 +1,24 @@
-﻿@model IEnumerable<DirectAgents.Domain.Entities.CPProg.Strategy>
+﻿@using DirectAgents.Web.Constants
+@model IEnumerable<DirectAgents.Domain.Entities.CPProg.Strategy>
 
 <h2>Strategies</h2>
 
 <table>
     <tr>
         <th>Id</th>
-        <th>Name</th>
+        <th>@Html.ActionLink("Name", "Strategies")</th>
         <th>ExternalId</th>
-        <th>Type</th>
+        <th>@Html.ActionLink("Type", "Strategies", new { sort = OrderBy.StrategyType })</th>
+        <th>Targeting type</th>
     </tr>
-@foreach (var strat in Model)
-{
-    <tr>
-        <td>@strat.Id</td>
-        <td>@strat.Name</td>
-        <td>@strat.ExternalId</td>
-        <td>@(strat.Type != null ? strat.Type.Name : "")</td>
-    </tr>
-}
+    @foreach (var strat in Model)
+    {
+        <tr>
+            <td>@strat.Id</td>
+            <td>@strat.Name</td>
+            <td>@strat.ExternalId</td>
+            <td>@(strat.Type != null ? strat.Type.Name : "")</td>
+            <td>@(strat.TargetingType != null ? strat.TargetingType.Name : "")</td>
+        </tr>
+    }
 </table>

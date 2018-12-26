@@ -21,9 +21,12 @@ namespace DirectAgents.Domain.Entities.CPProg
         public string AdSetName { get; set; }
         [NotMapped]
         public string AdSetEid { get; set; } // external id
+
         [NotMapped]
         public string StrategyName { get; set; }
         [NotMapped]
         public string StrategyEid { get; set; } // external id
+        [NotMapped]
+        public string StrategyType { get; set; }
     }
 }
