@@ -78,7 +78,8 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             {
                 StrategyEid = campaign.Id,
                 StrategyName = campaign.Name,
-                StrategyTargetingType = campaign.Targeting
+                StrategyTargetingType = campaign.Targeting,
+                StrategyType = campaign.Type
             };
             SetStats(sum, stat, date);
             return sum;

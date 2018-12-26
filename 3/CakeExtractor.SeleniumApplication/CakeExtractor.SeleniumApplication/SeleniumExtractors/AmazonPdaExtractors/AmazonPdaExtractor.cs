@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Amazon.Enums;
+using Amazon.Helpers;
 using CakeExtracter;
 using CakeExtracter.Common;
 using CakeExtractor.SeleniumApplication.Drivers;
@@ -8,6 +10,7 @@ using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Models;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonPda;
 using DirectAgents.Domain.Entities.CPProg;
+using FileManager = CakeExtractor.SeleniumApplication.Helpers.FileManager;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors
 {
@@ -121,6 +124,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             var campaign = new CampaignInfo();
             pageActions.NavigateToUrl(campaignUrl, AmazonPdaPageObjects.CampaignTabContainer);
             GetCampaignSettingsInfo(campaign);
+            campaign.Type = AmazonApiHelper.GetCampaignTypeName(CampaignType.ProductDisplay);
             if (IsCampaignValid(campaign, dateRange))
             {
                 GetCampaignReportInfo(campaign);

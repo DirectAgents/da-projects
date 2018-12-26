@@ -34,6 +34,7 @@ namespace Amazon.Helpers
             {
                 {CampaignType.SponsoredProducts, CampaignType.SponsoredProducts.ToString()},
                 {CampaignType.SponsoredBrands, CampaignType.SponsoredBrands.ToString()},
+                {CampaignType.ProductDisplay, CampaignType.ProductDisplay.ToString()},
             };
 
         private static readonly Dictionary<EntitesType, string> EntitiesTypeNames = new Dictionary<EntitesType, string>
