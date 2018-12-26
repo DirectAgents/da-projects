@@ -293,13 +293,14 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             }
 
             WaitElementClickable(AmazonPdaPageObjects.CodeInput, timeout);
+            ClickElement(AmazonPdaPageObjects.DontAskCodeCheckBox);
             WaitSecurityCode();
         }
 
         private void WaitSecurityCode()
         {
             Logger.Info("Waiting the code...");
-            WaitElementClickable(AmazonPdaPageObjects.AccountButton, timeout);
+            WaitLoading(AmazonPdaPageObjects.CodeInput, timeout);
         }
     }
 }

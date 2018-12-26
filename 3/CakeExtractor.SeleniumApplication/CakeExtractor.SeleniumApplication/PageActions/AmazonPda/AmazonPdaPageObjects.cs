@@ -14,10 +14,8 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         // Login step 2 screen objects
         public static By CodeInput = By.Id("auth-mfa-otpcode");
         public static By IncorrectPasswordSpan = By.XPath(".//span[contains(text(),'Your password is incorrect')]");
-
-        // Home screen objects
-        public static By AccountButton = By.CssSelector("button[data-id=user-account]");
-
+        public static By DontAskCodeCheckBox = By.CssSelector("input#auth-mfa-remember-device");
+        
         // Campaigns page objects. Filter        
         public static By FilterResetButton = By.XPath(".//button[contains(text(),'Reset filters')]");
         public static By FilterByButton = By.XPath(".//button[contains(text(),'Filter by')]");
