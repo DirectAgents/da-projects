@@ -124,8 +124,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         {
             using (var db = new ClientPortalProgContext())
             {
-                var items = db.KeywordSummaries.Where(x => x.Date == date && accountKeywordIds.Contains(x.KeywordId)).ToList();
-                var metrics = db.KeywordSummaryMetrics.Where(x => x.Date == date && accountKeywordIds.Contains(x.EntityId)).ToList();
+                var items = db.KeywordSummaries.Where(x => x.Date == date && accountKeywordIds.Contains(x.KeywordId));
+                var metrics = db.KeywordSummaryMetrics.Where(x => x.Date == date && accountKeywordIds.Contains(x.EntityId));
                 db.KeywordSummaryMetrics.RemoveRange(metrics);
                 db.KeywordSummaries.RemoveRange(items);
                 var numChanges = SafeContextWrapper.TrySaveChanges(db);
