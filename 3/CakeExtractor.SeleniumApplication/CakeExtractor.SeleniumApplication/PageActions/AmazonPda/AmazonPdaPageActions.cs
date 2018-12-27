@@ -242,6 +242,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         private void SelectFilters()
         {
             Logger.Info("Setting the filter...");
+            WaitElementClickable(AmazonPdaPageObjects.FilterByButton, timeout);
             ClickElement(AmazonPdaPageObjects.FilterByButton);
             WaitElementClickable(AmazonPdaPageObjects.FilterTypeButton, timeout);
             ClickElement(AmazonPdaPageObjects.FilterTypeButton);
