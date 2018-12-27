@@ -56,6 +56,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             Logger.Info("Searching the URL of profile [{0}]...", profileName);
             try
             {
+                WaitElementClickable(AmazonPdaPageObjects.CurrentProfileButton, timeout);
                 ClickElement(AmazonPdaPageObjects.CurrentProfileButton);
                 WaitElementClickable(AmazonPdaPageObjects.ProfilesMenu, timeout);
                 var menuContainers = GetChildrenElements(AmazonPdaPageObjects.ProfilesMenu, AmazonPdaPageObjects.ProfilesMenuItemContainer);
@@ -300,6 +301,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
 
             WaitElementClickable(AmazonPdaPageObjects.CodeInput, timeout);
             ClickElement(AmazonPdaPageObjects.DontAskCodeCheckBox);
+            ClickElement(AmazonPdaPageObjects.CodeInput);
             WaitSecurityCode();
         }
 
