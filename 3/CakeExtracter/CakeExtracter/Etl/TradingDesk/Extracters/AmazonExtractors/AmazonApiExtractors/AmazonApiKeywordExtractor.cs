@@ -21,21 +21,20 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         {
             Logger.Info(accountId, "Extracting KeywordSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 clientId, dateRange.FromDate, dateRange.ToDate);
-
-            var accountKeywordIds = GetAccountKeywordIds();
+            
             foreach (var date in dateRange.Dates)
             {
-                Extract(accountKeywordIds, date);
+                Extract(date);
             }
             End();
         }
 
-        private void Extract(IEnumerable<int> accountKeywordIds, DateTime date)
+        private void Extract(DateTime date)
         {
             var items = GetKeywordSummariesFromApi(date);
             if (ClearBeforeLoad)
             {
-                RemoveOldData(date, accountKeywordIds);
+                RemoveOldData(date);
             }
 
             Add(items);
@@ -111,25 +110,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             return sum;
         }
 
-        private IEnumerable<int> GetAccountKeywordIds()
+        private void RemoveOldData(DateTime date)
         {
+            Logger.Info(accountId, "The cleaning of KeywordSummaries for account ({0}) has begun - {1}.", accountId, date);
             using (var db = new ClientPortalProgContext())
             {
-                var ids = db.Keywords.Where(x => x.AccountId == accountId).Select(x => x.Id);
-                return ids.ToList();
-            }
-        }
-
-        private void RemoveOldData(DateTime date, IEnumerable<int> accountKeywordIds)
-        {
-            using (var db = new ClientPortalProgContext())
-            {
-                var items = db.KeywordSummaries.Where(x => x.Date == date && accountKeywordIds.Contains(x.KeywordId));
-                var metrics = db.KeywordSummaryMetrics.Where(x => x.Date == date && accountKeywordIds.Contains(x.EntityId));
+                var items = db.KeywordSummaries.Where(x => x.Date == date && x.Keyword.AccountId == accountId);
+                var metrics = db.KeywordSummaryMetrics.Where(x => x.Date == date && x.Keyword.AccountId == accountId);
                 db.KeywordSummaryMetrics.RemoveRange(metrics);
                 db.KeywordSummaries.RemoveRange(items);
                 var numChanges = SafeContextWrapper.TrySaveChanges(db);
-                Logger.Info(accountId, "{0} - KeywordSummaries for account ({1}) was cleaned. Count of deleted objects: {2}", date, accountId, numChanges);
+                Logger.Info(accountId, "The cleaning of KeywordSummaries for account ({0}) is over - {1}. Count of deleted objects: {2}", accountId, date, numChanges);
             }
         }
     }

@@ -60,6 +60,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
 
         private void RemoveOldData(DateTime date)
         {
+            Logger.Info(accountId, "The cleaning of DailySummaries for account ({0}) has begun - {1}.", accountId, date);
             using (var db = new ClientPortalProgContext())
             {
                 var items = db.DailySummaries.Where(x => x.AccountId == accountId && x.Date == date).ToList();
@@ -67,7 +68,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
                 db.DailySummaryMetrics.RemoveRange(metrics);
                 db.DailySummaries.RemoveRange(items);
                 var numChanges = SafeContextWrapper.TrySaveChanges(db);
-                Logger.Info(accountId, "{0} - DailySummaries for account ({1}) was cleaned. Count of deleted objects: {2}", date, accountId, numChanges);
+                Logger.Info(accountId, "The cleaning of DailySummaries for account ({0}) is over - {1}. Count of deleted objects: {2}", accountId, date, numChanges);
             }
         }
     }

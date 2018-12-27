@@ -20,21 +20,20 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         {
             Logger.Info(accountId, "Extracting SearchTermSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 clientId, dateRange.FromDate, dateRange.ToDate);
-
-            var accountTermIds = GetAccountSearchTermIds();
+            
             foreach (var date in dateRange.Dates)
             {
-                Extract(accountTermIds, date);
+                Extract(date);
             }
             End();
         }
 
-        private void Extract(IEnumerable<int> accountTermIds, DateTime date)
+        private void Extract(DateTime date)
         {
             var items = GetSearchTermSummariesFromApi(date);
             if (ClearBeforeLoad)
             {
-                RemoveOldData(date, accountTermIds);
+                RemoveOldData(date);
             }
 
             Add(items);
@@ -110,25 +109,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             return sum;
         }
 
-        private IEnumerable<int> GetAccountSearchTermIds()
+        private void RemoveOldData(DateTime date)
         {
+            Logger.Info(accountId, "The cleaning of SearchTermSummaries for account ({0}) has begun - {1}.", accountId, date);
             using (var db = new ClientPortalProgContext())
             {
-                var ids = db.SearchTerms.Where(x => x.AccountId == accountId).Select(x => x.Id);
-                return ids.ToList();
-            }
-        }
-
-        private void RemoveOldData(DateTime date, IEnumerable<int> accountTermIds)
-        {
-            using (var db = new ClientPortalProgContext())
-            {
-                var items = db.SearchTermSummaries.Where(x => x.Date == date && accountTermIds.Contains(x.SearchTermId));
-                var metrics = db.SearchTermSummaryMetrics.Where(x => x.Date == date && accountTermIds.Contains(x.EntityId));
+                var items = db.SearchTermSummaries.Where(x => x.Date == date && x.SearchTerm.AccountId == accountId);
+                var metrics = db.SearchTermSummaryMetrics.Where(x => x.Date == date && x.SearchTerm.AccountId == accountId);
                 db.SearchTermSummaryMetrics.RemoveRange(metrics);
                 db.SearchTermSummaries.RemoveRange(items);
                 var numChanges = SafeContextWrapper.TrySaveChanges(db);
-                Logger.Info(accountId, "{0} - SearchTermSummaries for account ({1}) was cleaned. Count of deleted objects: {2}", date, accountId, numChanges);
+                Logger.Info(accountId, "The cleaning of SearchTermSummaries for account ({0}) is over - {1}. Count of deleted objects: {2}", accountId, date, numChanges);
             }
         }
     }

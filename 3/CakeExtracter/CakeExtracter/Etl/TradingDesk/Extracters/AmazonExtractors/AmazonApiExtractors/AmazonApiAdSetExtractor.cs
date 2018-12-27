@@ -22,22 +22,21 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         {
             Logger.Info(accountId, "Extracting AdSetSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 clientId, dateRange.FromDate, dateRange.ToDate);
-
-            var accountAdSetIds = GetAccountAdSetIds();
+            
             foreach (var date in dateRange.Dates)
             {
-                Extract(accountAdSetIds, date);
+                Extract(date);
             }
             End();
         }
 
-        private void Extract(IEnumerable<int> accountAdSetIds, DateTime date)
+        private void Extract(DateTime date)
         {
             var sums = ExtractSummaries(date);
             var items = TransformSummaries(sums, date);
             if (ClearBeforeLoad)
             {
-                RemoveOldData(date, accountAdSetIds);
+                RemoveOldData(date);
             }
 
             Add(items);
@@ -73,25 +72,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             return sum;
         }
 
-        private IEnumerable<int> GetAccountAdSetIds()
+        private void RemoveOldData(DateTime date)
         {
+            Logger.Info(accountId, "The cleaning of AdSetSummaries for account ({0}) has begun - {1}.", accountId, date);
             using (var db = new ClientPortalProgContext())
             {
-                var ids = db.AdSets.Where(x => x.AccountId == accountId).Select(x => x.Id);
-                return ids.ToList();
-            }
-        }
-
-        private void RemoveOldData(DateTime date, IEnumerable<int> accountAdSetIds)
-        {
-            using (var db = new ClientPortalProgContext())
-            {
-                var items = db.AdSetSummaries.Where(x => x.Date == date && accountAdSetIds.Contains(x.AdSetId));
-                var metrics = db.AdSetSummaryMetrics.Where(x => x.Date == date && accountAdSetIds.Contains(x.EntityId));
+                var items = db.AdSetSummaries.Where(x => x.Date == date && x.AdSet.AccountId == accountId);
+                var metrics = db.AdSetSummaryMetrics.Where(x => x.Date == date && x.AdSet.AccountId == accountId);
                 db.AdSetSummaryMetrics.RemoveRange(metrics);
                 db.AdSetSummaries.RemoveRange(items);
                 var numChanges = SafeContextWrapper.TrySaveChanges(db);
-                Logger.Info(accountId, "{0} - AdSetSummaries for account ({1}) was cleaned. Count of deleted objects: {2}", date, accountId, numChanges);
+                Logger.Info(accountId, "The cleaning of AdSetSummaries for account ({0}) is over - {1}. Count of deleted objects: {2}", accountId, date, numChanges);
             }
         }
     }
