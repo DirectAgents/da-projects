@@ -36,10 +36,10 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         public static By ExportButton = By.XPath(".//button[contains(@class,'sc-bdVaJa eepElq')][contains(text(),'Export')]");
 
         // Settings Tab
-        public static By CampaignTabContainer = By.XPath(".//div[@id='campaign_detail_tab_set_container']");
-        public static By CampaignSettingsTab = By.XPath(".//div[@id='campaign_detail_tab_set_container']/ul[@id='campaign_detail_tab_set']/li[@id='campaign_settings_tab_heading']/a");
-        public static By CampaignSettingsContent = By.XPath(".//div[@id='campaign_settings_tab_content']");
-        public static By CampaignSettingsTable = By.XPath(".//div[@id='campaign_settings_tab_content']/div/table");
+        public static By CampaignTabContainer = By.CssSelector("#campaign_detail_tab_set_container");
+        public static By CampaignSettingsTab = By.CssSelector("#campaign_settings_tab_heading > a"); //ul#campaign_detail_tab_set
+        public static By CampaignSettingsContent = By.CssSelector("#campaign_settings_tab_content");
+        public static By CampaignSettingsTable = By.CssSelector("#campaign_settings_tab_content > div > table");
 
         // Reports Tab
         public static By CampaignReportsTab = By.XPath(".//div[@id='campaign_detail_tab_set_container']/ul[@id='campaign_detail_tab_set']/li[@id='daily_report_tab_heading']/a");
@@ -51,9 +51,9 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         public static By DownloadingLoader = By.XPath(".//div[contains(@class,'loading-small')][contains(@class,'submitting')]");
 
         // Campaign profiles menu
-        public static By CurrentProfileButton = By.XPath(".//div[@id='brandDropDown']");
-        public static By ProfilesMenu = By.XPath(".//div[@id='dropDownBrandNameContainer']");
-        public static By ProfilesMenuItemContainer = By.XPath(".//div[contains(@class,'dropDownBrandName')]");
-        public static By ProfilesMenuItem = By.XPath(".//span/a");
+        public static By CurrentProfileButton = By.CssSelector("div#brandDropDown");
+        public static By ProfilesMenu = By.CssSelector("div#dropDownBrandNameContainer");
+        public static By ProfilesMenuItemContainer = By.CssSelector("div.dropDownBrandName");
+        public static By ProfilesMenuItem = By.CssSelector("span > a");
     }
 }

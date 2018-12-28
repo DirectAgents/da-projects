@@ -140,20 +140,22 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             {
                 GetCampaignReportInfo(campaign);
             }
+
             return campaign;
         }
 
         private AmazonConsoleManagerUtility GetAmazonConsoleManagerUtility()
         {
             var cookies = pageActions.GetAllCookies();
-            var cmApiUtility = new AmazonConsoleManagerUtility(cookies, 
+            var cmApiUtility = new AmazonConsoleManagerUtility(cookies,
                 x => Logger.Info(account.Id, x), x => Logger.Warn(account.Id, x));
             return cmApiUtility;
         }
 
         private void GetCampaignSettingsInfo(CampaignInfo campaign)
         {
-            pageActions.NavigateToTab(AmazonPdaPageObjects.CampaignSettingsTab, AmazonPdaPageObjects.CampaignSettingsContent);
+            pageActions.NavigateToTab(AmazonPdaPageObjects.CampaignSettingsTab,
+                AmazonPdaPageObjects.CampaignSettingsContent);
             pageActions.GetCampaignSettingsInfo(campaign);
             campaign.Type = AmazonApiHelper.GetCampaignTypeName(CampaignType.ProductDisplay);
         }
@@ -162,14 +164,16 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
         {
             if (!IsValidReportDateRange(dateRange, campaign))
             {
-                Logger.Warn("The report is not attached because it is in the invalid date range. Campaign duration - {0}, date range - {1}.",
+                Logger.Warn(
+                    "The report is not attached because it is in the invalid date range. Campaign duration - {0}, date range - {1}.",
                     campaign.Duration, dateRange);
                 return false;
             }
 
             if (!IsValidCampaignName(account.Filter, campaign))
             {
-                Logger.Warn("The report is not attached because the campaign has an incorrect name. Campaign name - {0}, account filter - {1}.",
+                Logger.Warn(
+                    "The report is not attached because the campaign has an incorrect name. Campaign name - {0}, account filter - {1}.",
                     campaign.Name, account.Filter);
                 return false;
             }
@@ -179,7 +183,8 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
 
         private void GetCampaignReportInfo(CampaignInfo campaign)
         {
-            pageActions.NavigateToTab(AmazonPdaPageObjects.CampaignReportsTab, AmazonPdaPageObjects.CampaignReportsContent);
+            pageActions.NavigateToTab(AmazonPdaPageObjects.CampaignReportsTab,
+                AmazonPdaPageObjects.CampaignReportsContent);
             pageActions.GetCampaignReportsInfo(campaign, downloadDir, reportNameTemplate);
         }
 
@@ -190,10 +195,12 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             {
                 startDate = DateTime.MinValue;
             }
+
             if (durationDates.Length == 1 || !DateTime.TryParse(durationDates[1], out var endDate))
             {
                 endDate = DateTime.MaxValue;
             }
+
             return startDate <= dateRange.ToDate && endDate >= dateRange.FromDate;
         }
 
@@ -207,11 +214,13 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             try
             {
                 NavigateToProfile();
-                if (!pageActions.IsElementPresent(AmazonPdaPageObjects.FilterByButton) && pageActions.IsElementPresent(AmazonPdaPageObjects.LoginPassInput))
+                if (!pageActions.IsElementPresent(AmazonPdaPageObjects.FilterByButton) &&
+                    pageActions.IsElementPresent(AmazonPdaPageObjects.LoginPassInput))
                 {
                     // need to repeat the password
                     pageActions.LoginByPassword(authorizationModel.Password);
                 }
+
                 pageActions.SetFiltersOnCampaigns();
             }
             catch (Exception e)
@@ -223,7 +232,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
         private void NavigateToProfile()
         {
             pageActions.NavigateToUrl(campaignsUrl, AmazonPdaPageObjects.FilterByButton);
-            var url = pageActions.GetProfileUrl(account.Name);
+            var url = pageActions.GetProfileUrl(account.Name.TrimEnd());
             if (string.IsNullOrEmpty(url))
             {
                 throw new Exception(
@@ -260,8 +269,10 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             {
                 Logger.Warn(account.Id, "Failed to get campaign URLs: {0}", exc.Message);
             }
+
             var realUrls = campaignAllUrlList.FindAll(url => !string.IsNullOrEmpty(url));
-            Logger.Info(account.Id, "[{0}] urls has been retrieved from {1} elements", realUrls.Count, campaignAllUrlList.Count);
+            Logger.Info(account.Id, "[{0}] urls has been retrieved from {1} elements", realUrls.Count,
+                campaignAllUrlList.Count);
             return realUrls;
         }
 
@@ -294,9 +305,8 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             Logger.Info(account.Id, "Retrieving a list of campaign name web elements...");
             var campNameWebElementList = pageActions.GetCampaignsNameWebElementsList(
                 AmazonPdaPageObjects.CampaignsNameContainer, AmazonPdaPageObjects.CampaignsNamesList);
-            var campaignUrls = campNameWebElementList.Select(pageActions.GetCampaignUrl);
-            Logger.Info(account.Id, "[{0}] web elements received", campNameWebElementList.Count);
-            return campaignUrls;
+            Logger.Info(account.Id, "[{0}] web elements received", campNameWebElementList?.Count ?? 0);
+            return campNameWebElementList?.Select(pageActions.GetCampaignUrl) ?? new List<string> {""};
         }
     }
 }

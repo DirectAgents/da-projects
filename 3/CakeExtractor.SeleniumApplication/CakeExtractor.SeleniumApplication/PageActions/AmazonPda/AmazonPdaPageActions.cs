@@ -110,7 +110,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
 
         public System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> GetCampaignsNameWebElementsList(By campaignsContainer, By campaignsNamesList)
         {
-            return GetChildrenElements(campaignsContainer, campaignsNamesList);
+            return IsElementPresent(campaignsContainer) ? GetChildrenElements(campaignsContainer, campaignsNamesList) : null;
         }
 
         public string GetCampaignUrl(IWebElement campaignsName)
