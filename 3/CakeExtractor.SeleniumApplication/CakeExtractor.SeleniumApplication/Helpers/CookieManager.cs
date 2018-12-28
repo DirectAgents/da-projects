@@ -3,36 +3,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CakeExtracter;
+using Newtonsoft.Json;
 using OpenQA.Selenium;
 
 namespace CakeExtractor.SeleniumApplication.Helpers
 {
     public class CookieManager
     {
-        private static readonly string cookieFileName = "Cookie ({0}).txt";
+        private const string cookieFileName = "Cookie_{0}.json";
+        private static int startNumberCookieFile = 1;
 
         public static void SaveCookiesToFiles(IEnumerable<Cookie> cookies, string directoryName)
         {
-            var i = 0;
             foreach (var cookie in cookies)
             {
-                SaveCookieToFile(cookie, FileManager.CombinePath(directoryName, string.Format(cookieFileName, i++)));
+                SaveCookieToFile(cookie, FileManager.CombinePath(directoryName, string.Format(cookieFileName, startNumberCookieFile++)));
             }
         }
-
-        private static void SaveCookieToFile(Cookie cookie, string pathToFile)
-        {
-            string[] lines =
-            {
-                cookie.Name,
-                cookie.Value,
-                cookie.Domain,
-                cookie.Path,
-                cookie.Expiry.ToString()
-            };
-            File.WriteAllText(pathToFile, string.Join(";", lines));
-        }
-
+        
         public static IEnumerable<Cookie> GetCookiesFromFiles(string directoryName)
         {
             var dir = new DirectoryInfo(directoryName);
@@ -40,18 +28,23 @@ namespace CakeExtractor.SeleniumApplication.Helpers
             return files.Select(file => GetCookieFromFile(file.FullName)).Where(cookie => cookie != null).ToList();
         }
 
-        public static Cookie GetCookieFromFile(string file)
+        private static Cookie GetCookieFromFile(string pathToFile)
         {
             try
             {
-                var strings = File.ReadAllText(file).Split(';');
-                return new Cookie(strings[0], strings[1], strings[2], strings[3], DateTime.Parse(strings[4]));
+                var strings = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(pathToFile));
+                return new Cookie(strings["Name"], strings["Value"], strings["Domain"], strings["Path"], DateTime.Parse(strings["Expiry"]));
             }
             catch (Exception e)
             {
                 Logger.Warn(e.Message);
                 return null;
             }
+        }
+
+        private static void SaveCookieToFile(Cookie cookie, string pathToFile)
+        {
+            File.WriteAllText(pathToFile, JsonConvert.SerializeObject(cookie));
         }
     }
 }
