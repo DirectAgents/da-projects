@@ -8,7 +8,7 @@ using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors
 {
-    class AmazonPdaDailyExtractor : BaseAmazonExtractor<DailySummary>
+    internal class AmazonPdaDailyExtractor : BaseAmazonExtractor<DailySummary>
     {
         private readonly AmazonPdaCampaignExtractor campaignExtractor;
 
@@ -34,10 +34,11 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
 
         private IEnumerable<StrategySummary> GetCampaignSummaries(List<string> campaignsUrls)
         {
+            var campaignsInfo = campaignExtractor.PdaExtractor.ExtractCampaignApiSummaries(dateRange);
             var campaignsSummaries = new List<StrategySummary>();
             for (var i = 0; i < campaignsUrls.Count; i++)
             {
-                var campaignSummaries = campaignExtractor.ExtractCampaignDailySummaries(campaignsUrls[i], i + 1);
+                var campaignSummaries = campaignExtractor.ExtractCampaignDailySummaries(campaignsInfo, campaignsUrls[i], i + 1);
                 campaignsSummaries.AddRange(campaignSummaries);
             }
 

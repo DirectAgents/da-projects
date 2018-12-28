@@ -1,6 +1,6 @@
 ﻿using System;
 using CakeExtractor.SeleniumApplication.Commands;
-using CakeExtractor.SeleniumApplication.Models;
+using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using Quartz;
 using Quartz.Impl;
 

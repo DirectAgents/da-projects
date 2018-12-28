@@ -1,7 +1,7 @@
 ﻿using System;
 using Amazon.Entities.Summaries;
 
-namespace CakeExtractor.SeleniumApplication.Models
+namespace CakeExtractor.SeleniumApplication.Models.ReportModels
 {
     public class AmazonReportSummary : AmazonStatSummary
     {

@@ -6,12 +6,14 @@ using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors;
 using CakeExtractor.SeleniumApplication.Enums;
 using CakeExtractor.SeleniumApplication.Models;
+using CakeExtractor.SeleniumApplication.Models.ConsoleManagerUtilityModels;
+using CakeExtractor.SeleniumApplication.Models.ReportModels;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonReportCsvExtractors;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors
 {
-    class AmazonPdaCampaignExtractor : BaseAmazonExtractor<StrategySummary>
+    internal class AmazonPdaCampaignExtractor : BaseAmazonExtractor<StrategySummary>
     {
         public readonly AmazonPdaExtractor PdaExtractor;
 
@@ -28,12 +30,12 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             End();
         }
 
-        public IEnumerable<StrategySummary> ExtractCampaignDailySummaries(string campaignUrl, int campaignNumber)
+        public IEnumerable<StrategySummary> ExtractCampaignDailySummaries(IEnumerable<AmazonCmApiCampaignSummary> campaignsInfo, string campaignUrl, int campaignNumber)
         {
             try
             {
                 Logger.Info(accountId, "Retrieving information about campaign [{0}]...", campaignNumber);
-                return RetrieveSummaries(campaignUrl);
+                return RetrieveSummaries(campaignsInfo, campaignUrl);
             }
             catch (Exception exc)
             {
@@ -44,35 +46,46 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
 
         private void ExtractCampaignSummaries(List<string> campaignsUrls)
         {
+            var campaignsSummaries = PdaExtractor.ExtractCampaignApiSummaries(dateRange);
             for (var i = 0; i < campaignsUrls.Count; i++)
             {
-                var data = ExtractCampaignDailySummaries(campaignsUrls[i], i + 1);
+                var data = ExtractCampaignDailySummaries(campaignsSummaries, campaignsUrls[i], i + 1);
                 Add(data);
             }
         }
 
-        private IEnumerable<StrategySummary> RetrieveSummaries(string campaignUrl)
+        private IEnumerable<StrategySummary> RetrieveSummaries(IEnumerable<AmazonCmApiCampaignSummary> campaignsSummaries, string campaignUrl)
         {
             var campaignInfo = PdaExtractor.ExtractCampaignInfo(campaignUrl, dateRange);
             if (string.IsNullOrEmpty(campaignInfo.ReportPath))
             {
                 return new List<StrategySummary>();
             }
-            var data = TransformCampaignInfo(campaignInfo);
+
+            var campaignSummaries = campaignsSummaries.Where(x => x.Id == campaignInfo.Id);
+            var data = TransformCampaignInfo(campaignInfo, campaignSummaries);
             return data;
         }
 
-        private IEnumerable<StrategySummary> TransformCampaignInfo(CampaignInfo info)
+        private IEnumerable<StrategySummary> TransformCampaignInfo(CampaignInfo info, IEnumerable<AmazonCmApiCampaignSummary> campaignSummaries)
         {
             var extractor = new AmazonReportCsvExtractor(info.ReportPath);
             var summaries = extractor.EnumerateRows();
             var summariesWithValidDate = summaries.Where(x => dateRange.Dates.Contains(x.Date) && !x.AllZeros());
             var groupedByDateSummaries = summariesWithValidDate.GroupBy(x => x.Date);
-            var data = groupedByDateSummaries.Select(x => CreateSummary(x, info, x.Key));
+            var data = groupedByDateSummaries.Select(x => CreateSummary(x, campaignSummaries, info, x.Key));
             return data.ToList();
         }
 
-        private StrategySummary CreateSummary(IEnumerable<AmazonReportSummary> stat, CampaignInfo campaign, DateTime date)
+        private StrategySummary CreateSummary(IEnumerable<AmazonReportSummary> stat, IEnumerable<AmazonCmApiCampaignSummary> campaignSummaries, CampaignInfo campaign, DateTime date)
+        {
+            var apiSummaryForDate = campaignSummaries.FirstOrDefault(x => x.Date == date);
+            var sum = CreateSummary(campaign, date);
+            SetStats(sum, stat, apiSummaryForDate, date);
+            return sum;
+        }
+
+        private StrategySummary CreateSummary(CampaignInfo campaign, DateTime date)
         {
             var sum = new StrategySummary
             {
@@ -81,26 +94,31 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
                 StrategyTargetingType = campaign.Targeting,
                 StrategyType = campaign.Type
             };
-            SetStats(sum, stat, date);
             return sum;
         }
 
-        private void SetStats(StrategySummary sum, IEnumerable<AmazonReportSummary> stat, DateTime date)
+        private void SetStats(StrategySummary sum, IEnumerable<AmazonReportSummary> stat, AmazonCmApiCampaignSummary campaignApiSummaries, DateTime date)
         {
             SetCPProgStats(sum, stat, date);
-            var reportMetrics = GetReportMetrics(stat, date);
+            var reportMetrics = GetReportMetrics(stat, campaignApiSummaries, date);
             sum.InitialMetrics = sum.InitialMetrics.Concat(reportMetrics).ToList();
         }
 
-        private IEnumerable<SummaryMetric> GetReportMetrics(IEnumerable<AmazonReportSummary> amazonStats, DateTime date)
+        private IEnumerable<SummaryMetric> GetReportMetrics(IEnumerable<AmazonReportSummary> amazonStats, AmazonCmApiCampaignSummary campaignApiSummaries, DateTime date)
         {
             var metrics = new List<SummaryMetric>();
             AddMetric(metrics, AmazonReportMetrics.DetailPageViews, date, amazonStats.Sum(x => x.DetailPageViews));
             AddMetric(metrics, AmazonReportMetrics.UnitsSold, date, amazonStats.Sum(x => x.UnitsSold));
+            AddMetric(metrics, AmazonCmApiMetrics.Orders, date, campaignApiSummaries.Orders);
             return metrics;
         }
 
         private void AddMetric(List<SummaryMetric> metrics, AmazonReportMetrics type, DateTime date, decimal metricValue)
+        {
+            AddMetric(metrics, type.ToString(), date, metricValue);
+        }
+
+        private void AddMetric(List<SummaryMetric> metrics, AmazonCmApiMetrics type, DateTime date, decimal metricValue)
         {
             AddMetric(metrics, type.ToString(), date, metricValue);
         }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using OpenQA.Selenium;
 
-namespace CakeExtractor.SeleniumApplication.Models
+namespace CakeExtractor.SeleniumApplication.Models.CommonHelperModels
 {
     internal class AuthorizationModel
     {

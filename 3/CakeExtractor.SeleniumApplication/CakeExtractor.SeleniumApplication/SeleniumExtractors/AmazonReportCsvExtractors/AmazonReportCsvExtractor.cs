@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters;
-using CakeExtractor.SeleniumApplication.Models;
+using CakeExtractor.SeleniumApplication.Models.ReportModels;
 using CsvHelper.Configuration;
 using DirectAgents.Domain.Entities.CPProg;
 

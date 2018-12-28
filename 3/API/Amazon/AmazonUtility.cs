@@ -455,7 +455,7 @@ namespace Amazon
         private List<T> GetEntityList<T>(EntitesType entitiesType, CampaignType campaignType, Dictionary<string, string> parameters, string profileId, bool retrieveAllData = true)
         {
             var resourcePath = AmazonApiHelper.GetEntityListRelativePath(entitiesType, campaignType);
-            var request = CreateRestRequest(resourcePath, Method.GET, profileId);
+            var request = CreateRestRequest(resourcePath, profileId);
             AddQueryParametersToRequest(request, parameters);
 
             if (retrieveAllData && campaignType != CampaignType.Empty)
@@ -486,7 +486,7 @@ namespace Amazon
             where T : PreparedDataRequestResponse, new()
         {
             var resourcePath = AmazonApiHelper.GetDataRequestRelativePath(entitiesType, campaignType, dataType);
-            var request = CreateRestRequest(resourcePath, Method.POST, profileId);
+            var request = CreateRestRequest(resourcePath, profileId);
             request.AddJsonBody(requestParams);
             var response = ProcessRequest<T>(request, true);
             return response?.Content != null ? response.Data : null;
@@ -524,7 +524,7 @@ namespace Amazon
             where T : ResponseDownloadInfo, new()
         {
             var resourcePath = AmazonApiHelper.GetPreparedDataRelativePath(dataType, dataId);
-            var request = CreateRestRequest(resourcePath, Method.POST, profileId);
+            var request = CreateRestRequest(resourcePath, profileId);
             var restResponse = ProcessRequest<T>(request);
             return restResponse;
         }
@@ -612,9 +612,9 @@ namespace Amazon
             return response.StatusDescription != null && response.StatusDescription.Contains("IN_PROGRESS");
         }
 
-        private IRestRequest CreateRestRequest(string resourceUri, Method method, string profileId)
+        private IRestRequest CreateRestRequest(string resourceUri, string profileId)
         {
-            var request = new RestRequest(resourceUri);//, method);
+            var request = new RestRequest(resourceUri);
             AddAuthorizationHeader(request);
             request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
             request.AddHeader("Amazon-Advertising-API-Scope", profileId);

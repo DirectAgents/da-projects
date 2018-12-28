@@ -1,8 +1,8 @@
 ﻿using DirectAgents.Domain.Entities.CPProg;
 
-namespace CakeExtractor.SeleniumApplication.Models
+namespace CakeExtractor.SeleniumApplication.Models.ReportModels
 {
-    class AmazonReportColumnMapping : ColumnMapping
+    internal class AmazonReportColumnMapping : ColumnMapping
     {
         public string DetailPageViews { get; set; }
         public string UnitsSold { get; set; }

@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace CakeExtractor.SeleniumApplication.Models
+namespace CakeExtractor.SeleniumApplication.Models.CommonHelperModels
 {
-    class JobScheduleModel
+    internal class JobScheduleModel
     {
         public DateTime StartExtractionTime { get; set; }
 

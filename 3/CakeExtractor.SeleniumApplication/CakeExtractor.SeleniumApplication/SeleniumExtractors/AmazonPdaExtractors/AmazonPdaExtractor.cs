@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using Amazon.Enums;
 using Amazon.Helpers;
 using CakeExtracter;
@@ -8,7 +9,10 @@ using CakeExtracter.Common;
 using CakeExtractor.SeleniumApplication.Drivers;
 using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Models;
+using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
+using CakeExtractor.SeleniumApplication.Models.ConsoleManagerUtilityModels;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonPda;
+using CakeExtractor.SeleniumApplication.Utilities;
 using DirectAgents.Domain.Entities.CPProg;
 using FileManager = CakeExtractor.SeleniumApplication.Helpers.FileManager;
 
@@ -23,6 +27,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
         private static string campaignsUrl;
 
         private readonly ExtAccount account;
+        private string accountEntityId;
 
         static AmazonPdaExtractor()
         {
@@ -119,12 +124,18 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             }
         }
 
+        public IEnumerable<AmazonCmApiCampaignSummary> ExtractCampaignApiSummaries(DateRange dateRange)
+        {
+            var cmApiUtility = GetAmazonConsoleManagerUtility();
+            var campaignsInfos = cmApiUtility.GetPdaCampaignsSummaries(accountEntityId, dateRange);
+            return campaignsInfos;
+        }
+
         public CampaignInfo ExtractCampaignInfo(string campaignUrl, DateRange dateRange)
         {
             var campaign = new CampaignInfo();
             pageActions.NavigateToUrl(campaignUrl, AmazonPdaPageObjects.CampaignTabContainer);
             GetCampaignSettingsInfo(campaign);
-            campaign.Type = AmazonApiHelper.GetCampaignTypeName(CampaignType.ProductDisplay);
             if (IsCampaignValid(campaign, dateRange))
             {
                 GetCampaignReportInfo(campaign);
@@ -132,10 +143,19 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             return campaign;
         }
 
+        private AmazonConsoleManagerUtility GetAmazonConsoleManagerUtility()
+        {
+            var cookies = pageActions.GetAllCookies();
+            var cmApiUtility = new AmazonConsoleManagerUtility(cookies, 
+                x => Logger.Info(account.Id, x), x => Logger.Warn(account.Id, x));
+            return cmApiUtility;
+        }
+
         private void GetCampaignSettingsInfo(CampaignInfo campaign)
         {
             pageActions.NavigateToTab(AmazonPdaPageObjects.CampaignSettingsTab, AmazonPdaPageObjects.CampaignSettingsContent);
             pageActions.GetCampaignSettingsInfo(campaign);
+            campaign.Type = AmazonApiHelper.GetCampaignTypeName(CampaignType.ProductDisplay);
         }
 
         private bool IsCampaignValid(CampaignInfo campaign, DateRange dateRange)
@@ -206,9 +226,19 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             var url = pageActions.GetProfileUrl(account.Name);
             if (string.IsNullOrEmpty(url))
             {
-                throw new Exception($"The account {authorizationModel.Login} does not have the following profile - {account.Name}");
+                throw new Exception(
+                    $"The account {authorizationModel.Login} does not have the following profile - {account.Name}");
             }
+
             pageActions.NavigateToUrl(url);
+            SetAccountEntityId(url);
+        }
+
+        private void SetAccountEntityId(string url)
+        {
+            var uri = new Uri(url);
+            var queryParams = HttpUtility.ParseQueryString(uri.Query);
+            accountEntityId = queryParams.Get(AmazonCmApiHelper.EntityIdArgName);
         }
 
         private List<string> GetCampaignPageUrls()
