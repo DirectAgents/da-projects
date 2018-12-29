@@ -5,11 +5,12 @@ using DirectAgents.Domain.Entities.CPProg;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
+using Z.EntityFramework.Plus;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
 {
+
     public class AmazonApiSearchTermExtractor : BaseAmazonExtractor<SearchTermSummary>
     {
         public AmazonApiSearchTermExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, bool clearBeforeLoad, string campaignFilter = null, string campaignFilterOut = null)
@@ -114,11 +115,15 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             Logger.Info(accountId, "The cleaning of SearchTermSummaries for account ({0}) has begun - {1}.", accountId, date);
             using (var db = new ClientPortalProgContext())
             {
-                var items = db.SearchTermSummaries.Where(x => x.Date == date && x.SearchTerm.AccountId == accountId);
-                var metrics = db.SearchTermSummaryMetrics.Where(x => x.Date == date && x.SearchTerm.AccountId == accountId);
-                db.SearchTermSummaryMetrics.RemoveRange(metrics);
-                db.SearchTermSummaries.RemoveRange(items);
-                var numChanges = SafeContextWrapper.TrySaveChanges(db);
+                var removedMetrics = db.SearchTermSummaryMetrics
+                    .Where(x => x.Date == date && x.SearchTerm.AccountId == accountId)
+                    .Delete();
+
+                var removedSummaries = db.SearchTermSummaries
+                    .Where(x => x.Date == date && x.SearchTerm.AccountId == accountId)
+                    .Delete();
+
+                int numChanges = removedMetrics + removedSummaries;
                 Logger.Info(accountId, "The cleaning of SearchTermSummaries for account ({0}) is over - {1}. Count of deleted objects: {2}", accountId, date, numChanges);
             }
         }

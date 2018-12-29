@@ -8,8 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Amazon.Helpers;
-using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
+using Z.EntityFramework.Plus;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
 {
@@ -101,11 +101,15 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             Logger.Info(accountId, "The cleaning of StrategySummaries for account ({0}) has begun - {1}.", accountId, date);
             using (var db = new ClientPortalProgContext())
             {
-                var items = db.StrategySummaries.Where(x => x.Date == date && x.Strategy.AccountId == accountId && campaignTypesFromApi.Contains(x.Strategy.Type.Name));
-                var metrics = db.StrategySummaryMetrics.Where(x => x.Date == date && x.Strategy.AccountId == accountId && campaignTypesFromApi.Contains(x.Strategy.Type.Name));
-                db.StrategySummaryMetrics.RemoveRange(metrics);
-                db.StrategySummaries.RemoveRange(items);
-                var numChanges = SafeContextWrapper.TrySaveChanges(db);
+                int removedMetrics = db.StrategySummaryMetrics
+                    .Where(x => x.Date == date && x.Strategy.AccountId == accountId && campaignTypesFromApi.Contains(x.Strategy.Type.Name))
+                    .Delete();
+
+                int removedSummaries = db.StrategySummaries
+                    .Where(x => x.Date == date && x.Strategy.AccountId == accountId && campaignTypesFromApi.Contains(x.Strategy.Type.Name))
+                    .Delete();
+
+                int numChanges = removedMetrics + removedSummaries;
                 Logger.Info(accountId, "The cleaning of StrategySummaries for account ({0}) is over - {1}. Count of deleted objects: {2}", accountId, date, numChanges);
             }
         }

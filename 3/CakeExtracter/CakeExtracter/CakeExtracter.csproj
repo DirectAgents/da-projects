@@ -82,10 +82,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\DirectAgents.Web\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.Extended, Version=6.0.0.0, Culture=neutral, PublicKeyToken=05b7e29bdd433584, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\DirectAgents.Web\packages\EntityFramework.Extended.6.1.0.133\lib\net45\EntityFramework.Extended.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\..\DirectAgents.Web\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
@@ -287,9 +283,11 @@
       <HintPath>..\..\DirectAgents.Web\packages\WatiN.2.1.0\lib\net40\WatiN.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Z.EntityFramework.Plus.EF6, Version=1.7.15.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\DirectAgents.Web\packages\Z.EntityFramework.Plus.EF6.1.7.15\lib\net45\Z.EntityFramework.Plus.EF6.dll</HintPath>
+    <Reference Include="Z.EntityFramework.Extensions, Version=3.16.17.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\..\DirectAgents.Web\packages\Z.EntityFramework.Extensions.3.16.17\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Z.EntityFramework.Plus.EF6, Version=1.8.21.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\..\DirectAgents.Web\packages\Z.EntityFramework.Plus.EF6.1.8.21\lib\net45\Z.EntityFramework.Plus.EF6.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

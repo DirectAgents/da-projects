@@ -5,12 +5,13 @@ using Amazon;
 using Amazon.Entities.Summaries;
 using Amazon.Enums;
 using CakeExtracter.Common;
-using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
+using Z.EntityFramework.Plus;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
 {
+
     // Ad (ProductAd)
     public class AmazonApiAdExtrator : BaseAmazonExtractor<TDadSummary>
     {
@@ -98,11 +99,15 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             Logger.Info(accountId, "The cleaning of AdSummaries for account ({0}) has begun - {1}.", accountId, date);
             using (var db = new ClientPortalProgContext())
             {
-                var items = db.TDadSummaries.Where(x => x.Date == date && x.TDad.AccountId == accountId);
-                var metrics = db.TDadSummaryMetrics.Where(x => x.Date == date && x.TDad.AccountId == accountId);
-                db.TDadSummaryMetrics.RemoveRange(metrics);
-                db.TDadSummaries.RemoveRange(items);
-                var numChanges = SafeContextWrapper.TrySaveChanges(db);
+                var removedMetrics = db.TDadSummaryMetrics
+                    .Where(x => x.Date == date && x.TDad.AccountId == accountId)
+                    .Delete();
+
+                var removedSummaries = db.TDadSummaries
+                    .Where(x => x.Date == date && x.TDad.AccountId == accountId)
+                    .Delete();
+
+                int numChanges = removedMetrics + removedSummaries;
                 Logger.Info(accountId, "The cleaning of AdSummaries for account ({0}) is over - {1}. Count of deleted objects: {2}", accountId, date, numChanges);
             }
         }
