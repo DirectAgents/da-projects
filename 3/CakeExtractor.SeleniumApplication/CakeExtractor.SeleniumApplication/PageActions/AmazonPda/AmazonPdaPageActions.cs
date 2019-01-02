@@ -82,7 +82,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         {
             try
             {
-                if (!IsElementVisible(AmazonPdaPageObjects.FilterResetButton))
+                if (!IsElementPresent(AmazonPdaPageObjects.FilterResetButton))
                 {
                     SelectFilters();
                 }
