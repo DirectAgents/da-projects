@@ -12,18 +12,31 @@ namespace Amazon.Helpers
 
         private const string BaseFileName = "download";
 
+        public static string ReadJsonFromDecompressedStream(string folder, string uniqueFileName, Stream sourceStream)
+        {
+            var compressedFilePath = GetBaseDirectoryFilePath(uniqueFileName, GzipExtension);
+            var decompressedFilePath = GetDirectoryFilePath(folder, uniqueFileName, JsonExtension);
+            var json = ReadJsonFromDecompressedStream(sourceStream, compressedFilePath, decompressedFilePath);
+            File.Delete(compressedFilePath);
+            return json;
+        }
+
         public static string ReadJsonFromDecompressedStream(Stream sourceStream)
         {
             var fileNameWithoutExtension = GetFileNameForCurrentProcess();
             var compressedFilePath = GetBaseDirectoryFilePath(fileNameWithoutExtension, GzipExtension);
             var decompressedFilePath = GetBaseDirectoryFilePath(fileNameWithoutExtension, JsonExtension);
+            var json = ReadJsonFromDecompressedStream(sourceStream, compressedFilePath, decompressedFilePath);
+            File.Delete(compressedFilePath);
+            File.Delete(decompressedFilePath);
+            return json;
+        }
 
+        private static string ReadJsonFromDecompressedStream(Stream sourceStream, string compressedFilePath, string decompressedFilePath)
+        {
             CopyStream(sourceStream, compressedFilePath);
             DecompressStream(compressedFilePath, decompressedFilePath);
             var json = File.ReadAllText(decompressedFilePath);
-
-            File.Delete(compressedFilePath);
-            File.Delete(decompressedFilePath);
             return json;
         }
 
@@ -60,10 +73,26 @@ namespace Amazon.Helpers
             return BaseFileName + uniquePart;
         }
 
+        private static string GetDirectoryFilePath(string directoryPath, string fileNameWithoutExtension, string extension)
+        {
+            var fileName = GetFileNameWithExtension(fileNameWithoutExtension, extension);
+            return GetDirectoryFilePath(directoryPath, fileName);
+        }
+
         private static string GetBaseDirectoryFilePath(string fileNameWithoutExtension, string extension)
         {
             var fileName = GetFileNameWithExtension(fileNameWithoutExtension, extension);
             return GetBaseDirectoryFilePath(fileName);
+        }
+
+        private static string GetDirectoryFilePath(string directoryPath, string fileName)
+        {
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+            var filePath = Path.Combine(directoryPath, fileName);
+            return filePath;
         }
 
         private static string GetBaseDirectoryFilePath(string fileName)
