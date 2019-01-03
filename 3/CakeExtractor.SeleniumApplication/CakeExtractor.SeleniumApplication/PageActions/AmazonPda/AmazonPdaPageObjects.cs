@@ -23,7 +23,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         public static By FilterByValues = By.CssSelector("div[data-e2e-id=campaignsDashboard] > div > div:nth-of-type(1) > div:nth-of-type(4) > div > div > div > div:nth-of-type(2) > label > button");
         public static By FilterPdaValues = By.CssSelector("div#portal > div > div > div > button[value='PDA']");
         public static By SaveSearchAndFilterButton = By.XPath(".//button[@id='saveButtonSearchAndFilter']");
-        public static By FilterLoader = By.CssSelector("svg[data-icon='spinner']");
+        public static By FilterLoader = By.CssSelector("svg[data-icon=spinner]");
 
         // Campaigns page objects        
         public static By CampaignsNameContainer = By.XPath(".//div[@id='CAMPAIGNS']/div/div[2]/div[contains(@class,'BottomLeftGrid_ScrollWrapper')]/div/div");
@@ -35,15 +35,14 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         // Campaigns page objects. Export
         public static By ExportButton = By.XPath(".//button[contains(@class,'sc-bdVaJa eepElq')][contains(text(),'Export')]");
 
-        // Settings Tab
+        // Tabs
         public static By CampaignTabContainer = By.CssSelector("#campaign_detail_tab_set_container");
-        public static By CampaignSettingsTab = By.CssSelector("#campaign_settings_tab_heading > a"); //ul#campaign_detail_tab_set
-        public static By CampaignSettingsContent = By.CssSelector("#campaign_settings_tab_content");
+        public static By CampaignTabSet = By.CssSelector("ul#campaign_detail_tab_set");
+        
+        public static By CampaignSettingsTab = By.CssSelector("#campaign_settings_tab_heading");
         public static By CampaignSettingsTable = By.CssSelector("#campaign_settings_tab_content > div > table");
-
-        // Reports Tab
-        public static By CampaignReportsTab = By.XPath(".//div[@id='campaign_detail_tab_set_container']/ul[@id='campaign_detail_tab_set']/li[@id='daily_report_tab_heading']/a");
-        public static By CampaignReportsContent = By.XPath(".//div[@id='daily_report_tab_content']");
+        public static By CampaignReportsTab = By.CssSelector("#daily_report_tab_heading");
+        
         public static By StartDate = By.XPath(".//div[@id='reportDurationContainer']/div[1]/span[contains(@class,'fieldContainer')]/div[1]/div[contains(@class,'reportStartDateContainer')]/span/input");
         public static By DownloadReportButton = By.CssSelector("button[name=saveButton]");
         public static By AfterDownloadReportNoData = By.XPath(".//div[@id='reportDurationContainer']/div[contains(@class,'downloadNoData')]");

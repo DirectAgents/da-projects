@@ -127,20 +127,18 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             return url;
         }
         
-        public void NavigateToTab(By tabElement, By tabContent)
+        public void ClickOnTab(By listElement, By itemElement)
         {
             try
             {
-                WaitElementClickable(tabElement, timeout);
-                ClickElement(tabElement);
-                WaitElementClickable(tabContent, timeout);
+                ClickOnTabItem(listElement, itemElement);
             }
             catch (Exception e)
             {
-                throw new Exception($"Could not navigate to tab [{tabElement}]: {e.Message}", e);
+                throw new Exception($"Could not click on tab [{itemElement}]: {e.Message}", e);
             }
         }
-
+        
         public void GetCampaignSettingsInfo(CampaignInfo campaign)
         {
             try
@@ -197,7 +195,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
                 
                 WaitElementClickable(AmazonPdaPageObjects.DownloadReportButton, timeout);
                 ClickElement(AmazonPdaPageObjects.DownloadReportButton);
-                WaitLoading(AmazonPdaPageObjects.DownloadingLoader, timeout);
+                WaitLoading(AmazonPdaPageObjects.DownloadingLoader, timeout, true);
                 
                 if (IsElementEnabledAndDisplayed(AmazonPdaPageObjects.AfterDownloadReportNoData))
                 {

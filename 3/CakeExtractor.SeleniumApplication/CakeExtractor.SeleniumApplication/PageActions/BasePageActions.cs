@@ -187,14 +187,21 @@ namespace CakeExtractor.SeleniumApplication.PageActions
             }
         }
 
-        protected void WaitLoading(By loaderElement, TimeSpan waitCount)
+        protected void WaitLoading(By loaderElement, TimeSpan waitCount, bool isElementExistInDOM = false)
         {
             try
             {
 
                 var wait = new WebDriverWait(Driver, waitCount);
                 wait.Until(driver => IsElementPresent(loaderElement));
-                wait.Until(driver => !IsElementVisible(loaderElement));
+                if (isElementExistInDOM)
+                {
+                    wait.Until(driver => !IsElementVisible(loaderElement));
+                }
+                else
+                {
+                    wait.Until(driver => !IsElementPresent(loaderElement));
+                }
             }
             catch (Exception e)
             {
@@ -205,6 +212,11 @@ namespace CakeExtractor.SeleniumApplication.PageActions
         protected void Wait(TimeSpan timeoutThread)
         {
             Thread.Sleep(timeoutThread);
+        }
+
+        protected void ClickOnTabItem(By listElement, By itemElement)
+        {
+            Driver.FindElement(listElement).FindElement(itemElement).Click();
         }
     }
 }

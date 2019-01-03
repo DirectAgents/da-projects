@@ -154,8 +154,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
 
         private void GetCampaignSettingsInfo(CampaignInfo campaign)
         {
-            pageActions.NavigateToTab(AmazonPdaPageObjects.CampaignSettingsTab,
-                AmazonPdaPageObjects.CampaignSettingsContent);
+            pageActions.ClickOnTab(AmazonPdaPageObjects.CampaignTabSet, AmazonPdaPageObjects.CampaignSettingsTab);
             pageActions.GetCampaignSettingsInfo(campaign);
             campaign.Type = AmazonApiHelper.GetCampaignTypeName(CampaignType.ProductDisplay);
         }
@@ -183,8 +182,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
 
         private void GetCampaignReportInfo(CampaignInfo campaign)
         {
-            pageActions.NavigateToTab(AmazonPdaPageObjects.CampaignReportsTab,
-                AmazonPdaPageObjects.CampaignReportsContent);
+            pageActions.ClickOnTab(AmazonPdaPageObjects.CampaignTabSet, AmazonPdaPageObjects.CampaignReportsTab);
             pageActions.GetCampaignReportsInfo(campaign, downloadDir, reportNameTemplate);
         }
 
