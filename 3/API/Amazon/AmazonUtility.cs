@@ -573,7 +573,10 @@ namespace Amazon
                     : FileManager.ReadJsonFromDecompressedStream(responseStream);
             }
 
-            LogInfo($"Report {reportName} has been saved.");
+            if (KeepReports)
+            {
+                LogInfo($"Report {reportName} has been saved.");
+            }
             return json;
         }
 
