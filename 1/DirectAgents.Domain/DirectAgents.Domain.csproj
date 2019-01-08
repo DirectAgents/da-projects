@@ -91,6 +91,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Abstract\IMainRepository.cs" />
+    <Compile Include="Abstract\IPlatformAccountRepository.cs" />
     <Compile Include="Abstract\IRevTrackRepository.cs" />
     <Compile Include="Abstract\ISecurityRepository.cs" />
     <Compile Include="Abstract\ISuperRepository.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Concrete\DepartmentRepository.cs" />
     <Compile Include="Concrete\Extensions.cs" />
     <Compile Include="Concrete\MainRepository.cs" />
+    <Compile Include="Concrete\PlatformAccountRepository.cs" />
     <Compile Include="Concrete\RevTrackRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Concrete\SuperRepository.cs" />
@@ -167,8 +169,26 @@
     <Compile Include="Entities\Cake\Role.cs" />
     <Compile Include="Entities\Cake\Vertical.cs" />
     <Compile Include="Entities\CPProg\Actions.cs" />
+    <Compile Include="Entities\CPProg\Summaries\AdSetSummary.cs" />
+    <Compile Include="Entities\CPProg\SummaryMetrics\AdSetSummaryMetric.cs" />
+    <Compile Include="Entities\CPProg\SummaryMetrics\DailySummaryMetric.cs" />
+    <Compile Include="Entities\CPProg\Summaries\DatedStatsSummary.cs" />
+    <Compile Include="Entities\CPProg\Summaries\DatedStatsSummaryWithRev.cs" />
+    <Compile Include="Entities\CPProg\Summaries\IDatedObject.cs" />
+    <Compile Include="Entities\CPProg\Summaries\KeywordSummary.cs" />
+    <Compile Include="Entities\CPProg\SummaryMetrics\KeywordSummaryMetric.cs" />
+    <Compile Include="Entities\CPProg\SummaryMetrics\MetricType.cs" />
+    <Compile Include="Entities\CPProg\Summaries\SearchTermSummary.cs" />
+    <Compile Include="Entities\CPProg\SummaryMetrics\SearchTermSummaryMetric.cs" />
+    <Compile Include="Entities\CPProg\Site.cs" />
+    <Compile Include="Entities\CPProg\Summaries\SiteSummary.cs" />
+    <Compile Include="Entities\CPProg\Summaries\StatsSummary.cs" />
+    <Compile Include="Entities\CPProg\Summaries\StrategySummary.cs" />
+    <Compile Include="Entities\CPProg\SummaryMetrics\StrategySummaryMetric.cs" />
+    <Compile Include="Entities\CPProg\SummaryMetrics\SummaryMetric.cs" />
+    <Compile Include="Entities\CPProg\Summaries\TDadSummary.cs" />
+    <Compile Include="Entities\CPProg\SummaryMetrics\TDadSummaryMetric.cs" />
     <Compile Include="Entities\CPProg\Strategy.cs" />
-    <Compile Include="Entities\CPProg\StrategySummary.cs" />
     <Compile Include="Entities\CPSearch\CallDailySummary.cs" />
     <Compile Include="Entities\CPSearch\ClientReport.cs" />
     <Compile Include="Entities\CPSearch\ISearchGauge.cs" />
@@ -217,7 +237,7 @@
     <Compile Include="Entities\CPProg\Advertiser.cs" />
     <Compile Include="Entities\CPProg\CampaignBudget.cs" />
     <Compile Include="Entities\CPProg\Conv.cs" />
-    <Compile Include="Entities\CPProg\DailySummary.cs" />
+    <Compile Include="Entities\CPProg\Summaries\DailySummary.cs" />
     <Compile Include="Entities\CPProg\ExtraItem.cs" />
     <Compile Include="Entities\CPProg\FunctionEntities.cs" />
     <Compile Include="Entities\CPProg\PlatformAccount.cs" />

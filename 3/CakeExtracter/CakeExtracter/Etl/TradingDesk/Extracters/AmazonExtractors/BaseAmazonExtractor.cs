@@ -29,7 +29,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
         public BaseAmazonExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account,
             bool clearBeforeLoad = false, string campaignFilter = null, string campaignFilterOut = null)
         {
-            this._amazonUtility = amazonUtility;
+            _amazonUtility = amazonUtility;
             this.dateRange = dateRange;
             this.accountId = account.Id;
             this.clientId = account.ExternalId;
@@ -40,11 +40,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
 
         protected IEnumerable<TStat> FilterByCampaigns<TStat>(IEnumerable<TStat> reportEntities, Func<TStat, string> getFilterProp)
         {
-            if (!String.IsNullOrEmpty(campaignFilter))
+            if (!string.IsNullOrEmpty(campaignFilter))
             {
                 reportEntities = reportEntities.Where(x => getFilterProp(x).Contains(campaignFilter));
             }
-            if (!String.IsNullOrEmpty(campaignFilterOut))
+            if (!string.IsNullOrEmpty(campaignFilterOut))
             {
                 reportEntities = reportEntities.Where(x => !getFilterProp(x).Contains(campaignFilterOut));
             }
@@ -76,6 +76,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
             stats.InitialMetrics = GetMetrics(amazonStats, date);
         }
 
+        protected static void AddMetric(List<SummaryMetric> metrics, string metricName, DateTime date, decimal metricValue)
+        {
+            AddMetric(metrics, metricName, null, date, metricValue);
+        }
+
         private static List<SummaryMetric> GetMetrics(IEnumerable<AmazonStatSummary> amazonStats, DateTime date)
         {
             var metrics = new List<SummaryMetric>();
@@ -104,22 +109,25 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
 
         private static void AddMetric(List<SummaryMetric> metrics, AttributedMetricType type, AttributedMetricDaysInterval daysInterval, DateTime date, decimal metricValue)
         {
+            AddMetric(metrics, type.ToString(), (int)daysInterval, date, metricValue);
+        }
+
+        private static void AddMetric(List<SummaryMetric> metrics, string metricName, int? daysInterval, DateTime date, decimal metricValue)
+        {
             if (metricValue == 0.0M)
             {
                 return;
             }
 
-            var metric = new SummaryMetric()
-            {
-                Date = date,
-                MetricType = new MetricType
-                {
-                    Name = type.ToString(),
-                    DaysInterval = (int)daysInterval
-                },
-                Value = metricValue
-            };
+            var metric = GetMetric(metricName, daysInterval, date, metricValue);
             metrics.Add(metric);
+        }
+
+        private static SummaryMetric GetMetric(string metricName, int? daysInterval, DateTime date, decimal metricValue)
+        {
+            var metricType = new MetricType(metricName, daysInterval);
+            var metric = new SummaryMetric(date, metricType, metricValue);
+            return metric;
         }
     }
 }

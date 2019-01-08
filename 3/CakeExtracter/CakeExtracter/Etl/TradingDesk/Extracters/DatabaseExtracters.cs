@@ -30,40 +30,27 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             List<DailySummary> daySums = new List<DailySummary>();
             using (var db = new ClientPortalProgContext())
             {
-                var stratSums = db.StrategySummaries.Where(x => x.Strategy.AccountId == accountId && x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate);
+                var stratSums = db.StrategySummaries
+                    .Where(x => x.Strategy.AccountId == accountId && dateRange.Dates.Contains(x.Date))
+                    .ToList();
                 var dayGroups = stratSums.GroupBy(x => x.Date);
-                foreach (var g in dayGroups)
+                foreach (var group in dayGroups)
                 {
-                    var daySum = new DailySummary
-                    {
-                        Date = g.Key,
-                        Cost = g.Sum(x => x.Cost),
-                        Impressions = g.Sum(x => x.Impressions),
-                        Clicks = g.Sum(x => x.Clicks),
-                        AllClicks = g.Sum(x => x.AllClicks),
-                        PostClickConv = g.Sum(x => x.PostClickConv),
-                        PostClickRev = g.Sum(x => x.PostClickRev),
-                        PostViewConv = g.Sum(x => x.PostViewConv),
-                        PostViewRev = g.Sum(x => x.PostViewRev),
-                        InitialMetrics = GetInitMetrics(g)
-                    };
+                    var daySum = new DailySummary();
+                    SetStatsFromDb(daySum, group.Key, group);
                     daySums.Add(daySum);
                 }
             }
             return daySums;
         }
 
-        private IEnumerable<SummaryMetric> GetInitMetrics(IGrouping<DateTime, StrategySummary> stratGroup)
+        public void SetStatsFromDb(DailySummary daySummary, DateTime date, IEnumerable<StrategySummary> summariesFromDb)
         {
-            var grouppedMetrics = stratGroup.SelectMany(x => x.Metrics).GroupBy(x => x.MetricTypeId);
-            var metrics = grouppedMetrics.Select(x => new SummaryMetric
+            foreach (var summary in summariesFromDb)
             {
-                Date = stratGroup.Key,
-                MetricType = x.First().MetricType,
-                MetricTypeId = x.Key,
-                Value = x.Sum(s => s.Value)
-            });
-            return metrics.ToList();
+                summary.InitialMetrics = summary.Metrics;
+            }
+            daySummary.SetStats(date, summariesFromDb);
         }
     }
 }

@@ -81,7 +81,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters
             csvReader.Configuration.SkipEmptyRecords = true; //ShouldSkipRecord is checked first. if false, will check if it's empty (all fields)
             csvReader.Configuration.ShouldSkipRecord = ShouldReaderSkipRecord;
             csvReader.Configuration.WillThrowOnMissingField = false;
-            csvReader.Configuration.CultureInfo = CultureInfo.InvariantCulture;
             csvReader.Configuration.IgnoreReadingExceptions = true; // This is at the row level
             csvReader.Configuration.ReadingExceptionCallback = (ex, row) =>
             {

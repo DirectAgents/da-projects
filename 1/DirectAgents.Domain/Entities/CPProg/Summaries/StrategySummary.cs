@@ -4,10 +4,12 @@ using System.Linq;
 
 namespace DirectAgents.Domain.Entities.CPProg
 {
+    /// DailySummary for a Strategy
     public class StrategySummary : DatedStatsSummaryWithRev
     {
         public int StrategyId { get; set; }
         public virtual Strategy Strategy { get; set; }
+
         public virtual List<StrategySummaryMetric> Metrics { get; set; }
 
         public override bool AllZeros()
@@ -17,13 +19,10 @@ namespace DirectAgents.Domain.Entities.CPProg
 
         [NotMapped]
         public string StrategyName { get; set; }
-
         [NotMapped]
         public string StrategyEid { get; set; } // external id
-
         [NotMapped]
         public string StrategyTargetingType { get; set; }
-
         [NotMapped]
         public string StrategyType { get; set; }
     }

@@ -4,6 +4,7 @@
     {
         SponsoredProducts,
         SponsoredBrands,
+        ProductDisplay,
         Empty
     }
 }
