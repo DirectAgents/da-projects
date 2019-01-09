@@ -318,28 +318,18 @@ namespace BingAds
 
                 if (reportRequestStatus != null)
                 {
-                    if (reportRequestStatus.Status == ReportRequestStatusType.Success)
+                    switch (reportRequestStatus.Status)
                     {
-                        string reportDownloadUrl = reportRequestStatus.ReportDownloadUrl;
-                        string zipfileLocation = _folder + "\\" + _filename;
-
-                        LogInfo(String.Format("Downloading from {0}.", reportDownloadUrl));
-                        DownloadFile(reportDownloadUrl, zipfileLocation);
-                        LogInfo(String.Format("The report was written to {0}.", zipfileLocation));
-                        
-                        ZipFile.ExtractToDirectory(zipfileLocation, _folder);
-
-                        if (reportRequest.Format == ReportFormat.Csv)
-                            filepath = _folder + "\\" + reportRequestId + ".csv";
-                        //TODO: handle other formats
-                    }
-                    else if (reportRequestStatus.Status == ReportRequestStatusType.Error)
-                    {
-                        LogInfo("The request failed. Try requesting the report later. If the request continues to fail, contact support.");
-                    }
-                    else  // Pending
-                    {
-                        LogInfo(String.Format("The request is taking longer than expected. Save the report ID ({0}) and try again later.", reportRequestId));
+                        case ReportRequestStatusType.Success:
+                            filepath = ExtractReportByLocalPath(reportRequestStatus.ReportDownloadUrl, reportRequest.Format, reportRequestId);
+                            break;
+                        case ReportRequestStatusType.Error:
+                            LogInfo("The request failed. Try requesting the report later. If the request continues to fail, contact support.");
+                            break;
+                        // Pending
+                        default:
+                            LogInfo($"The request is taking longer than expected. Save the report ID ({reportRequestId}) and try again later.");
+                            break;
                     }
                 }
             }
@@ -398,6 +388,26 @@ namespace BingAds
             };
 
             return (await _service.CallAsync((s, r) => s.PollGenerateReportAsync(r), request)).ReportRequestStatus;
+        }
+
+        private string ExtractReportByLocalPath(string reportDownloadUrl, ReportFormat? reportFormat, string reportRequestId)
+        {
+            if (string.IsNullOrEmpty(reportDownloadUrl))
+            {
+                LogInfo("Report URL is empty!");
+                return null;
+            }
+
+            var zipFileLocation = _folder + "\\" + _filename;
+            LogInfo($"Downloading from {reportDownloadUrl}.");
+            DownloadFile(reportDownloadUrl, zipFileLocation);
+            LogInfo($"The report was written to {zipFileLocation}.");
+            ZipFile.ExtractToDirectory(zipFileLocation, _folder);
+
+            //TODO: handle other formats
+            return reportFormat == ReportFormat.Csv
+                ? _folder + "\\" + reportRequestId + ".csv"
+                : null;
         }
 
         static void DownloadFile(string reportDownloadUrl, string downloadPath)
