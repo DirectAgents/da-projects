@@ -82,7 +82,8 @@ namespace CakeExtractor.SeleniumApplication.Commands
             scheduling = new JobScheduleModel
             {
                 DaysInterval = Properties.Settings.Default.ExtractionIntervalsInDays,
-                StartExtractionTime = Properties.Settings.Default.StartExtractionDateTime
+                //StartExtractionTime = Properties.Settings.Default.StartExtractionDateTime
+                StartExtractionTime = DateTime.Now
             };
             ExtractAmazonPdaScheduler.Start(this, scheduling);
             LogScheduledJobStartTime();

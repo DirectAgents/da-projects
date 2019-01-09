@@ -13,7 +13,8 @@ namespace CakeExtractor.SeleniumApplication
     {
         private static readonly IEnumerable<ConsoleCommand> Commands = new []
         {
-            new SyncAmazonPdaCommand()
+            //new SyncAmazonPdaCommand()
+            new SyncAmazonVcdCommand()
         };
         
         static void Main(string[] args)

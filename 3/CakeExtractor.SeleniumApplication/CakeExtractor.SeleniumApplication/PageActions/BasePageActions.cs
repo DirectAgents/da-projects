@@ -11,9 +11,18 @@ namespace CakeExtractor.SeleniumApplication.PageActions
     {
         protected readonly IWebDriver Driver;
 
-        public BasePageActions(IWebDriver driver)
+        protected readonly TimeSpan timeout;
+
+        public BasePageActions(IWebDriver driver, int timeoutMinutes)
         {
             Driver = driver;
+            timeout = TimeSpan.FromMinutes(timeoutMinutes);
+        }
+
+        public void NavigateToUrl(string url, By waitingElement)
+        {
+            Logger.Info("Go to URL [{0}]...", url);
+            NavigateToUrl(url, waitingElement, timeout);
         }
 
         public void NavigateToUrl(string url, By waitingElement, TimeSpan timeout)

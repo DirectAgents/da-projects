@@ -18,7 +18,7 @@ using FileManager = CakeExtractor.SeleniumApplication.Helpers.FileManager;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors
 {
-    public class AmazonPdaExtractor
+    internal class AmazonPdaExtractor
     {
         private static AmazonPdaPageActions pageActions;
         private static AuthorizationModel authorizationModel;
@@ -50,7 +50,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
                 LoginWithCookie(authorizationModel);
                 return;
             }
-
             LoginWithoutCookie(authorizationModel);
         }
 

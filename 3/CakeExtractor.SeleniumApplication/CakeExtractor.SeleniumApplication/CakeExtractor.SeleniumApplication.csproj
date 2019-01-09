@@ -85,6 +85,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\SyncAmazonVcdCommand.cs" />
     <Compile Include="Commands\SyncAmazonPdaCommand.cs" />
     <Compile Include="Drivers\ChromeWebDriver.cs" />
     <Compile Include="Enums\AmazonCmApiMetrics.cs" />
@@ -93,6 +94,8 @@
     <Compile Include="Helpers\CookieManager.cs" />
     <Compile Include="Helpers\RestRequestHelper.cs" />
     <Compile Include="Helpers\TimeHelper.cs" />
+    <Compile Include="Jobs\ExtractAmazonVcd\ExtractAmazonVcdJobScheduler.cs" />
+    <Compile Include="Jobs\ExtractAmazonVcd\ExtractAmazonVcdJob.cs" />
     <Compile Include="Models\ConsoleManagerUtilityModels\AmazonCmApiCampaignSummary.cs" />
     <Compile Include="Models\ConsoleManagerUtilityModels\AmazonCmApiParams.cs" />
     <Compile Include="Models\ConsoleManagerUtilityModels\Filter.cs" />
@@ -100,10 +103,15 @@
     <Compile Include="Models\ReportModels\AmazonReportSummary.cs" />
     <Compile Include="Models\CommonHelperModels\AuthorizationModel.cs" />
     <Compile Include="Models\CommonHelperModels\JobScheduleModel.cs" />
-    <Compile Include="Utilities\AmazonConsoleManagerUtility.cs" />
-    <Compile Include="SeleniumExtractors\AmazonPdaExtractors\AmazonPdaCampaignExtractor.cs" />
-    <Compile Include="SeleniumExtractors\AmazonPdaExtractors\AmazonPdaDailyExtractor.cs" />
-    <Compile Include="SeleniumExtractors\AmazonPdaExtractors\AmazonPdaExtractor.cs" />
+    <Compile Include="PageActions\AmazonLoginHelper.cs" />
+    <Compile Include="PageActions\AmazoneVcd\AmazonVcdPageActions.cs" />
+    <Compile Include="PageActions\BaseAmazonPageActions.cs" />
+    <Compile Include="SeleniumExtractors\VCD\AmazoneVcdExtractor.cs" />
+    <Compile Include="Settings\VcdSettings.cs" />
+    <Compile Include="Helpers\AmazonConsoleManagerUtility.cs" />
+    <Compile Include="SeleniumExtractors\PDA\AmazonPdaExtractors\AmazonPdaCampaignExtractor.cs" />
+    <Compile Include="SeleniumExtractors\PDA\AmazonPdaExtractors\AmazonPdaDailyExtractor.cs" />
+    <Compile Include="SeleniumExtractors\PDA\AmazonPdaExtractors\AmazonPdaExtractor.cs" />
     <Compile Include="Jobs\ExtractAmazonPda\ExtractAmazonPdaJob.cs" />
     <Compile Include="Models\CampaignInfo.cs" />
     <Compile Include="PageActions\BasePageActions.cs" />
@@ -118,10 +126,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Jobs\ExtractAmazonPda\ExtractAmazonPdaScheduler.cs" />
-    <Compile Include="SeleniumExtractors\AmazonReportCsvExtractors\AmazonReportCsvExtractor.cs" />
+    <Compile Include="SeleniumExtractors\PDA\AmazonReportCsvExtractors\AmazonReportCsvExtractor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

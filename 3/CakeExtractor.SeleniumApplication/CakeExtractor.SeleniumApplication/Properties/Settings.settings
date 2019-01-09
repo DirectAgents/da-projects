@@ -9,10 +9,10 @@
       <Value Profile="(Default)">https://advertising.amazon.com/cm/campaigns</Value>
     </Setting>
     <Setting Name="EMail" Type="System.String" Scope="User">
-      <Value Profile="(Default)">email</Value>
+      <Value Profile="(Default)">reportingdev@directagents.com</Value>
     </Setting>
     <Setting Name="EMailPassword" Type="System.String" Scope="User">
-      <Value Profile="(Default)">password</Value>
+      <Value Profile="(Default)">rep0rts</Value>
     </Setting>
     <Setting Name="DownloadsDirectoryName" Type="System.String" Scope="User">
       <Value Profile="(Default)">WebDriverDownloads</Value>
