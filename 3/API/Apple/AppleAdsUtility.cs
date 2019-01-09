@@ -30,7 +30,7 @@ namespace Apple
             if (_LogInfo == null)
                 Console.WriteLine(message);
             else
-                _LogInfo("[YAMUtility] " + message);
+                _LogInfo("[AppleAdsUtility] " + message);
         }
 
         private void LogError(string message)
@@ -38,7 +38,7 @@ namespace Apple
             if (_LogError == null)
                 Console.WriteLine(message);
             else
-                _LogError("[YAMUtility] " + message);
+                _LogError("[AppleAdsUtility] " + message);
         }
 
         // --- Constructors ---
