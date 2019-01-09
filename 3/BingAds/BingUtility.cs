@@ -134,11 +134,9 @@ namespace BingAds
         // (returns filepath of csv)
         public string GetReport_DailySummaries(long accountId, DateTime startDate, DateTime endDate, bool forShoppingCampaigns = false)
         {
-            ReportRequest reportRequest;
-            if (forShoppingCampaigns)
-                reportRequest = GetReportRequest_ProductDimension(accountId, startDate, endDate);
-            else
-                reportRequest = GetReportRequest_ConversionPerformance(accountId, startDate, endDate);
+            var reportRequest = forShoppingCampaigns
+                ? GetReportRequest_ProductDimension(accountId, startDate, endDate)
+                : GetReportRequest_CampaignPerformance(accountId, startDate, endDate);
 
             return SendReportRequest(accountId, reportRequest);
         }
@@ -160,79 +158,75 @@ namespace BingAds
             return task.Result;
         }
 
-        private ReportRequest GetReportRequest_ConversionPerformance(long accountId, DateTime startDate, DateTime endDate)
+        private static void InitCommonFieldsInReportRequest(ReportRequest reportRequest, string reportName)
         {
-            var reportRequest = new ConversionPerformanceReportRequest
+            reportRequest.Format = ReportFormat.Csv;
+            reportRequest.ReportName = reportName;
+            reportRequest.ReturnOnlyCompleteData = true;
+        }
+
+        private static ReportTime GetReportTime(DateTime startDate, DateTime endDate)
+        {
+            var time = new ReportTime
             {
-                Format = ReportFormat.Csv,
-                ReportName = "Conversion Performance Report",
-                ReturnOnlyCompleteData = true,
+                CustomDateRangeStart = ConvertToDate(startDate),
+                CustomDateRangeEnd = ConvertToDate(endDate)
+            };
+            return time;
+        }
+
+        private static Date ConvertToDate(DateTime dateTime)
+        {
+            var date = new Date
+            {
+                Year = dateTime.Year,
+                Month = dateTime.Month,
+                Day = dateTime.Day
+            };
+            return date;
+        }
+
+        private ReportRequest GetReportRequest_CampaignPerformance(long accountId, DateTime startDate, DateTime endDate)
+        {
+            var reportRequest = new CampaignPerformanceReportRequest
+            {
                 Aggregation = ReportAggregation.Daily,
-                Scope = new AccountThroughAdGroupReportScope
+                Time = GetReportTime(startDate, endDate),
+                Scope = new AccountThroughCampaignReportScope
                 {
                     AccountIds = new[] { accountId },
-                    AdGroups = null,
+                    //AdGroups = null,
                     Campaigns = null
                 },
-                Time = new ReportTime
-                {
-                    CustomDateRangeStart = new Date
-                    {
-                        Year = startDate.Year,
-                        Month = startDate.Month,
-                        Day = startDate.Day
-                    },
-                    CustomDateRangeEnd = new Date
-                    {
-                        Year = endDate.Year,
-                        Month = endDate.Month,
-                        Day = endDate.Day
-                    }
-                },
                 Columns = new[] {
-                    ConversionPerformanceReportColumn.TimePeriod,
-                    ConversionPerformanceReportColumn.Impressions,
-                    ConversionPerformanceReportColumn.Clicks,
-                    ConversionPerformanceReportColumn.Conversions,
-                    ConversionPerformanceReportColumn.Spend,
-                    ConversionPerformanceReportColumn.Revenue,
-                    ConversionPerformanceReportColumn.AccountId,
-                    ConversionPerformanceReportColumn.AccountName,
-                    ConversionPerformanceReportColumn.AccountNumber,
-                    ConversionPerformanceReportColumn.CampaignId,
-                    ConversionPerformanceReportColumn.CampaignName
+                    CampaignPerformanceReportColumn.TimePeriod,
+                    CampaignPerformanceReportColumn.Impressions,
+                    CampaignPerformanceReportColumn.Clicks,
+                    CampaignPerformanceReportColumn.Conversions,
+                    CampaignPerformanceReportColumn.Spend,
+                    CampaignPerformanceReportColumn.Revenue,
+                    CampaignPerformanceReportColumn.AccountId,
+                    CampaignPerformanceReportColumn.AccountName,
+                    CampaignPerformanceReportColumn.AccountNumber,
+                    CampaignPerformanceReportColumn.CampaignId,
+                    CampaignPerformanceReportColumn.CampaignName
                 }
             };
+            InitCommonFieldsInReportRequest(reportRequest, "Campaign Performance Report");
             return reportRequest;
         }
+
         private ReportRequest GetReportRequest_ProductDimension(long accountId, DateTime startDate, DateTime endDate)
         {
             var reportRequest = new ProductDimensionPerformanceReportRequest
             {
-                Format = ReportFormat.Csv,
-                ReportName = "Product Dimension Performance Report",
-                ReturnOnlyCompleteData = true,
                 Aggregation = ReportAggregation.Daily,
+                Time = GetReportTime(startDate, endDate),
                 Scope = new AccountThroughAdGroupReportScope
                 {
                     AccountIds = new[] { accountId },
                     AdGroups = null,
                     Campaigns = null
-                },
-                Time = new ReportTime
-                {
-                    CustomDateRangeStart = new Date
-                    {
-                        Year = startDate.Year,
-                        Month = startDate.Month,
-                        Day = startDate.Day
-                    },
-                    CustomDateRangeEnd = new Date
-                    {
-                        Year = endDate.Year,
-                        Month = endDate.Month,
-                        Day = endDate.Day
-                    }
                 },
                 Columns = new[] {
                     ProductDimensionPerformanceReportColumn.MerchantProductId,
@@ -249,36 +243,20 @@ namespace BingAds
                     ProductDimensionPerformanceReportColumn.CampaignName
                 }
             };
+            InitCommonFieldsInReportRequest(reportRequest, "Product Dimension Performance Report");
             return reportRequest;
         }
         private ReportRequest GetReportRequest_Goals(long accountId, DateTime startDate, DateTime endDate)
         {
             var reportRequest = new GoalsAndFunnelsReportRequest
             {
-                Format = ReportFormat.Csv,
-                ReportName = "Goals And Funnels Report",
-                ReturnOnlyCompleteData = true,
                 Aggregation = ReportAggregation.Daily,
+                Time = GetReportTime(startDate, endDate),
                 Scope = new AccountThroughAdGroupReportScope
                 {
                     AccountIds = new[] { accountId },
                     AdGroups = null,
                     Campaigns = null
-                },
-                Time = new ReportTime
-                {
-                    CustomDateRangeStart = new Date
-                    {
-                        Year = startDate.Year,
-                        Month = startDate.Month,
-                        Day = startDate.Day
-                    },
-                    CustomDateRangeEnd = new Date
-                    {
-                        Year = endDate.Year,
-                        Month = endDate.Month,
-                        Day = endDate.Day
-                    }
                 },
                 Columns = new[] {
                     GoalsAndFunnelsReportColumn.TimePeriod,
@@ -294,6 +272,7 @@ namespace BingAds
                     GoalsAndFunnelsReportColumn.CampaignName
                 }
             };
+            InitCommonFieldsInReportRequest(reportRequest, "Goals And Funnels Report");
             return reportRequest;
         }
 
