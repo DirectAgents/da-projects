@@ -10,7 +10,6 @@ using DirectAgents.Domain.Entities.CPProg;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CakeExtracter.Commands
@@ -24,7 +23,6 @@ namespace CakeExtracter.Commands
             var cmd = new DASynchAmazonStats
             {
                 AccountId = accountId,
-                //CampaignId = campaignId,
                 StartDate = startDate,
                 EndDate = endDate,
                 StatsType = statsType,
@@ -97,6 +95,7 @@ namespace CakeExtracter.Commands
                     {
                         DoETL_Daily(dateRange, account, amazonUtility);
                     }
+
                     if (statsType.Strategy)
                     {
                         DoETL_Strategy(dateRange, account, amazonUtility);
@@ -121,7 +120,8 @@ namespace CakeExtracter.Commands
                     {
                         DoETL_Keyword(dateRange, account, amazonUtility);
                     }
-                    if (statsType.SearchTerm)
+
+                    if (statsType.SearchTerm && !statsType.All)
                     {
                         DoETL_SearchTerm(dateRange, account, amazonUtility);
                     }
