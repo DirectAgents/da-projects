@@ -9,6 +9,7 @@ using RestSharp.Deserializers;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net;
 using Amazon.Entities.HelperEntities;
@@ -40,6 +41,7 @@ namespace Amazon
         private readonly string amazonAuthorizeUrl = ConfigurationManager.AppSettings["AmazonAuthorizeUrl"];
         private readonly string amazonTokenUrl = ConfigurationManager.AppSettings["AmazonTokenUrl"];
         private readonly string amazonClientUrl = ConfigurationManager.AppSettings["AmazonClientUrl"];
+        private readonly string amazonReportsFolder = GetReportFolderName(ConfigurationManager.AppSettings["AmazonReportsBaseFolder"]);
 
         private static readonly string[] AccessToken = new string[NumAlts];
         private static readonly string[] RefreshToken = new string[NumAlts];
@@ -47,6 +49,8 @@ namespace Amazon
         private readonly string[] altAccountIDs = new string[NumAlts];
 
         public int WhichAlt { get; set; } // default: 0
+        public bool KeepReports { get; set; }
+        public string ReportPrefix { get; set; }
 
         private string ApiEndpointUrl { get; set; }
         private string AuthorizeUrl { get; set; }
@@ -253,7 +257,6 @@ namespace Amazon
         public AmazonUtility()
         {
             ResetCredentials();
-            //AmazonAuth = new AmazonAuth(_amazonApiClientId, _amazonClientSecret, _amazonAccessCode);
             Setup();
         }
 
@@ -262,6 +265,12 @@ namespace Amazon
         {
             this.logInfo = logInfo;
             this.logError = logError;
+        }
+        
+        private static string GetReportFolderName(string baseFolderName)
+        {
+            var today = DateTime.Today.ToUniversalTime();
+            return $"{baseFolderName}_{today.Year}_{today.Month}_{today.Day}";
         }
 
         private void ResetCredentials()
@@ -395,7 +404,8 @@ namespace Amazon
             var submitReportResponse = SubmitSnapshot(campaignType, entitiesType, profileId);
             if (submitReportResponse != null)
             {
-                var json = DownloadPreparedData<ReportResponseDownloadInfo>("snapshots", submitReportResponse.SnapshotId, profileId);
+                var snapshotName = GetSnapshotName(entitiesType, campaignType);
+                var json = DownloadPreparedData<ReportResponseDownloadInfo>("snapshots", submitReportResponse.SnapshotId, profileId, snapshotName);
                 if (json != null)
                 {
                     var data = GetEntityList(() => JsonConvert.DeserializeObject<List<TEntity>>(json));
@@ -412,7 +422,8 @@ namespace Amazon
             var submitReportResponse = SubmitReport(parameters, campaignType, reportType, profileId);
             if (submitReportResponse != null)
             {
-                var json = DownloadPreparedData<ReportResponseDownloadInfo>("reports", submitReportResponse.ReportId, profileId);
+                var reportName = GetReportName(parameters.reportDate, reportType, campaignType);
+                var json = DownloadPreparedData<ReportResponseDownloadInfo>("reports", submitReportResponse.ReportId, profileId, reportName);
                 if (json != null)
                 {
                     var data = GetEntityList(() => JsonConvert.DeserializeObject<List<TStat>>(json));
@@ -422,6 +433,16 @@ namespace Amazon
             }
 
             return new List<TStat>();
+        }
+
+        private string GetReportName(string date, EntitesType entitiesType, CampaignType campaignType)
+        {
+            return $"AmazonReport_{ReportPrefix}_{date}_{entitiesType}_{campaignType}";
+        }
+
+        private string GetSnapshotName(EntitesType entitiesType, CampaignType campaignType)
+        {
+            return $"AmazonSnapshot_{ReportPrefix}_{entitiesType}_{campaignType}";
         }
 
         private List<T> GetEntityList<T>(Func<List<T>> getListFunc)
@@ -492,7 +513,7 @@ namespace Amazon
             return response?.Content != null ? response.Data : null;
         }
 
-        private string DownloadPreparedData<T>(string dataType, string dataId, string profileId)
+        private string DownloadPreparedData<T>(string dataType, string dataId, string profileId, string reportName)
             where T : ResponseDownloadInfo, new()
         {
             var response = RequestPreparedDataManyTimes<T>(dataType, dataId, profileId);
@@ -503,7 +524,7 @@ namespace Amazon
                 return null;
             }
             LogSuccessfulGeneration(downloadInfo);
-            var json = GetJsonStringFromDownloadFile(downloadInfo.Location, profileId);
+            var json = GetJsonStringFromDownloadFile(downloadInfo.Location, profileId, reportName);
             return json;
         }
 
@@ -529,7 +550,7 @@ namespace Amazon
             return restResponse;
         }
 
-        private string GetJsonStringFromDownloadFile(string url, string profileId)
+        private string GetJsonStringFromDownloadFile(string url, string profileId, string reportName)
         {
             var response = GetResponseManyTimes(url, profileId);
             var responseStream = response?.GetResponseStream();
@@ -538,13 +559,24 @@ namespace Amazon
                 return null;
             }
 
-            var json = LogErrorIfException(() =>
+            var json = LogErrorIfException(() => ReadJsonFromStream(responseStream, reportName));
+            return json;
+        }
+
+        private string ReadJsonFromStream(Stream responseStream, string reportName)
+        {
+            string json;
+            lock (FileLock)
             {
-                lock (FileLock)
-                {
-                    return FileManager.ReadJsonFromDecompressedStream(responseStream);
-                }
-            });
+                json = KeepReports
+                    ? FileManager.ReadJsonFromDecompressedStream(amazonReportsFolder, reportName, responseStream)
+                    : FileManager.ReadJsonFromDecompressedStream(responseStream);
+            }
+
+            if (KeepReports)
+            {
+                LogInfo($"Report {reportName} has been saved.");
+            }
             return json;
         }
 
