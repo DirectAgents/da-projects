@@ -22,6 +22,7 @@
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -1165,6 +1166,7 @@
     <Content Include="Views\Screens\SalesStats.cshtml" />
     <None Include="Properties\PublishProfiles\dagents - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\dagents - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\dagents_vm_staging.pubxml" />
     <None Include="Properties\PublishProfiles\dagents__dev.pubxml" />
     <None Include="Properties\PublishProfiles\dagents__staging.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\DayOfWeek.cshtml" />
