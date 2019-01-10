@@ -45,8 +45,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         {
             if (device == null)
                 return null;
-            else
-                return device.Substring(0, 1);
+            return string.IsNullOrEmpty(device) ? string.Empty : device.Substring(0, 1);
         }
         public static string ClickType_StringToLetter(string clickType)
         {
