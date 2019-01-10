@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using CakeExtracter.CakeMarketingApi.Entities;
+﻿using CakeExtracter.CakeMarketingApi.Entities;
+using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.Cake;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CakeExtracter.Etl.CakeMarketing.DALoaders
 {
@@ -26,22 +27,19 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
             return count;
         }
 
-        private int UpsertAffSubSums(List<SubIdSummary> items)
+        private int UpsertAffSubSums(IEnumerable<SubIdSummary> items)
         {
-            var loaded = 0;
-            var added = 0;
-            var updated = 0;
-            var deleted = 0;
-            var alreadyDeleted = 0;
+            var progress = new LoadingProgress();
             using (var db = new DAContext())
             {
-                bool toDelete;
                 foreach (var item in items)
                 {
-                    toDelete = !KeepFunc(item);
+                    var toDelete = !KeepFunc(item);
 
                     if (item.SubIdName == null)
+                    {
                         item.SubIdName = "";
+                    }
                     // ?what if there's one item with SubIdName=="" and one with SubIdName==null? TODO: handle this
 
                     var subIdLookup = affSubIdLookupByName[item.affiliateId];
@@ -53,11 +51,13 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                     if (toDelete)
                     {
                         if (target == null)
-                            alreadyDeleted++;
+                        {
+                            progress.AlreadyDeletedCount++;
+                        }
                         else
                         {
                             db.AffSubSummaries.Remove(target);
-                            deleted++;
+                            progress.DeletedCount++;
                         }
                     }
                     else //to add/update
@@ -72,24 +72,29 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                             };
                             item.CopyValuesTo(target);
                             db.AffSubSummaries.Add(target);
-                            added++;
+                            progress.AddedCount++;
                         }
                         else
-                        {   // update:
+                        {
+                            // update:
                             item.CopyValuesTo(target);
-                            updated++;
+                            progress.UpdatedCount++;
                         }
                     }
-                    loaded++;
+
+                    progress.ItemCount++;
                 }
-                Logger.Info("Processing {0} AffSubSummaries ({1} updates, {2} additions, {3} deletions, {4} already-deleted)", loaded, updated, added, deleted, alreadyDeleted);
-                db.SaveChanges();
+
+                Logger.Info("Processing {0} AffSubSummaries ({1} updates, {2} additions, {3} deletions, {4} already-deleted)",
+                    progress.ItemCount, progress.UpdatedCount, progress.AddedCount, progress.DeletedCount, progress.AlreadyDeletedCount);
+                SafeContextWrapper.TrySaveChanges(db);
             }
-            return loaded;
+
+            return progress.ItemCount;
         }
 
         // Also update the affSub lookup...
-        private void AddMissingAffSubs(List<SubIdSummary> items)
+        private void AddMissingAffSubs(IEnumerable<SubIdSummary> items)
         {
             using (var db = new DAContext())
             {
@@ -99,14 +104,14 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                     var affId = grp.Key;
                     if (!affSubIdLookupByName.ContainsKey(affId))
                     {
-                        var affSubs = db.AffSubs.Where(x => x.AffiliateId == affId);
-                        affSubIdLookupByName[affId] = affSubs.GroupBy(x => x.Name).ToDictionary(x => x.Key, x => x.First().Id);
+                        AddAffiliateSubsToLookup(db, affId);
                     }
                     var subIdLookup = affSubIdLookupByName[affId];
                     var namesInLookup = subIdLookup.Keys;
 
-                                                //change nulls to empty strings
-                    var affSubNamesToAdd = grp.Select(x => x.SubIdName == null ? "" : x.SubIdName).Distinct().Where(name => !namesInLookup.Contains(name));
+                    //change nulls to empty strings
+                    var affSubNamesToAdd = grp.Select(x => x.SubIdName ?? "").Distinct()
+                        .Where(name => !namesInLookup.Contains(name)).ToList();
                     foreach (var nameToAdd in affSubNamesToAdd)
                     {
                         var affSub = new AffSub
@@ -115,12 +120,18 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                             Name = nameToAdd
                         };
                         db.AffSubs.Add(affSub);
-                        db.SaveChanges(); // to get the id
+                        SafeContextWrapper.TrySaveChanges(db);
                         Logger.Info("Saved new AffSub for affiliate {0}: {1}", affId, nameToAdd);
                         subIdLookup[nameToAdd] = affSub.Id;
                     }
                 }
             }
+        }
+
+        private void AddAffiliateSubsToLookup(DAContext db, int affId)
+        {
+            var affSubs = db.AffSubs.Where(x => x.AffiliateId == affId).ToList();
+            affSubIdLookupByName[affId] = affSubs.GroupBy(x => x.Name).ToDictionary(x => x.Key, x => x.First().Id);
         }
     }
 }
