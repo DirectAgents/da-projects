@@ -103,10 +103,29 @@
     <Compile Include="Models\ReportModels\AmazonReportSummary.cs" />
     <Compile Include="Models\CommonHelperModels\AuthorizationModel.cs" />
     <Compile Include="Models\CommonHelperModels\JobScheduleModel.cs" />
+    <Compile Include="Properties\VcdSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>VcdSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="SeleniumExtractors\VCD\Models\Category.cs" />
+    <Compile Include="SeleniumExtractors\VCD\Models\Product.cs" />
+    <Compile Include="SeleniumExtractors\VCD\Models\ShippingItem.cs" />
+    <Compile Include="SeleniumExtractors\VCD\Models\Subcategory.cs" />
+    <Compile Include="SeleniumExtractors\VCD\Models\VcdReportData.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\Constants\RequestBodyConstants.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\Constants\RequestHeaderConstants.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\Constants\RequestQueryConstants.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\Models\DownloadReportRequestBody.cs" />
+    <Compile Include="PageActions\AmazoneVcd\AmazonVcdPageObjects.cs" />
     <Compile Include="PageActions\AmazonLoginHelper.cs" />
     <Compile Include="PageActions\AmazoneVcd\AmazonVcdPageActions.cs" />
     <Compile Include="PageActions\BaseAmazonPageActions.cs" />
     <Compile Include="SeleniumExtractors\VCD\AmazoneVcdExtractor.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\Models\ReportDownloadingRequestPageData.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\VcdDownloadCsvReportRequestGenerator.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\VcdReportDownloader.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportParsing\VcdReportParser.cs" />
     <Compile Include="Settings\VcdSettings.cs" />
     <Compile Include="Helpers\AmazonConsoleManagerUtility.cs" />
     <Compile Include="SeleniumExtractors\PDA\AmazonPdaExtractors\AmazonPdaCampaignExtractor.cs" />
@@ -136,6 +155,10 @@
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Properties\VcdSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>VcdSettings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

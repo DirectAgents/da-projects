@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CakeExtractor.SeleniumApplication.Properties" GeneratedClassName="VcdSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DaysToProcess" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="StartDate" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EndDate" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CookiesDirectoryPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">VcdCookies</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

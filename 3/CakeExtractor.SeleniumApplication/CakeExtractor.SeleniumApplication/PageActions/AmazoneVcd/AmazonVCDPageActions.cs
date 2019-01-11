@@ -10,8 +10,15 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazoneVcd
 
         public void ClickDownloadReportButton()
         {
-            WaitElementClickable(AmazonPdaPageObjects.FilterByButton, timeout);
-            ClickElement(AmazonPdaPageObjects.FilterByButton);
+            WaitElementClickable(AmazonVcdPageObjects.DownloadButton, timeout);
+            ClickElement(AmazonVcdPageObjects.DownloadButton);
+        }
+
+        public string GetAccessToken()
+        {
+            IJavaScriptExecutor js = Driver as IJavaScriptExecutor;
+            var token = js.ExecuteScript("return window.token") as string;
+            return token;
         }
     }
 }

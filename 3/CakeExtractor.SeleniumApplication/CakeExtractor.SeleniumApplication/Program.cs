@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Logging.Loggers;
 using CakeExtractor.SeleniumApplication.Commands;
+using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportParsing;
 using ManyConsole;
 using Microsoft.Practices.EnterpriseLibrary.Common.Configuration;
 using Microsoft.Practices.EnterpriseLibrary.Logging;
