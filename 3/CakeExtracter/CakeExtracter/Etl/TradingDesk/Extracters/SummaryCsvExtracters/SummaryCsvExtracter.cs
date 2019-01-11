@@ -128,7 +128,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters
             }
         }
 
-        private bool ShouldReaderSkipRecord(string[] fields)
+        protected virtual bool ShouldReaderSkipRecord(string[] fields)
         { 
             // assume column 0 is a required field (e.g. the date field)
             var firstColumn = fields[0];
