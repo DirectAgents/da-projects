@@ -58,5 +58,28 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters
             sum.SetStats(sums);
             return sum;
         }
+
+        protected override bool ShouldReaderSkipRecord(string[] fields)
+        {
+            var isSkipRecord = base.ShouldReaderSkipRecord(fields);
+            var isFirstColumnIsNotDateTime = ShouldReaderSkipRecordNotDateTime(fields[0]);
+
+            return isSkipRecord || isFirstColumnIsNotDateTime;
+        }
+
+        /// <summary>
+        /// Method skips those records for which the value of the first column isn't Date Time (except for the title)
+        /// </summary>
+        /// <param name="firstColumn">The first column of a row from a CSV report, the value of the first column must be of a type DateTime</param>
+        /// <returns>True - skip the record; False - not skip the record</returns>
+        private bool ShouldReaderSkipRecordNotDateTime(string firstColumn)
+        {
+            const string columnHeaderName = "Date";
+            if (string.Equals(firstColumn, columnHeaderName))
+            {
+                return false; // not skip because this column is a header
+            }            
+            return !DateTime.TryParse(firstColumn, out _);
+        }
     }
 }
