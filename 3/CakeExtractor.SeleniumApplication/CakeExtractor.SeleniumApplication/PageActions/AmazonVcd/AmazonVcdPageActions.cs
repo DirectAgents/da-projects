@@ -1,17 +1,11 @@
 ﻿using OpenQA.Selenium;
 
-namespace CakeExtractor.SeleniumApplication.PageActions.AmazoneVcd
+namespace CakeExtractor.SeleniumApplication.PageActions.AmazonVcd
 {
     internal class AmazonVcdPageActions : BaseAmazonPageActions
     {
         public AmazonVcdPageActions(IWebDriver driver, int timeoutMinutes) : base(driver, timeoutMinutes)
         {
-        }
-
-        public void ClickDownloadReportButton()
-        {
-            WaitElementClickable(AmazonVcdPageObjects.DownloadButton, timeout);
-            ClickElement(AmazonVcdPageObjects.DownloadButton);
         }
 
         public string GetAccessToken()

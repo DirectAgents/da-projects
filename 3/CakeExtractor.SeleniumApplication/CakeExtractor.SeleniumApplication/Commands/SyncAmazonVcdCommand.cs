@@ -2,6 +2,9 @@
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using ConsoleCommand = ManyConsole.ConsoleCommand;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD;
+using DirectAgents.Domain.Entities.CPProg;
+using CakeExtracter.Common;
+using CakeExtractor.SeleniumApplication.Loaders.VCD;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
@@ -40,8 +43,17 @@ namespace CakeExtractor.SeleniumApplication.Commands
         public override int Run(string[] remainingArguments)
         {
             var extractor = new AmazonVcdExtractor();
+            var loader = new AmazonVcdLoader();
             extractor.PrepareExtractor();
+            loader.PrepareLoader();
+            DoEtls(extractor, loader, null, new DateRange());
             return 1;
+        }
+
+        private static void DoEtls(AmazonVcdExtractor extractor, AmazonVcdLoader loader, ExtAccount account, DateRange dateRange)
+        {
+            var dailyVendorData = extractor.ExtractVendorCentralData();
+            loader.LoadDailyVendorCentralData(dailyVendorData, DateTime.Now);
         }
     }
 }

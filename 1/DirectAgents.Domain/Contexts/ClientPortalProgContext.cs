@@ -5,6 +5,8 @@ using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.DBM;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.Vendor;
+using DirectAgents.Domain.Entities.CPProg.Vendor.SummaryMetrics;
 
 namespace DirectAgents.Domain.Contexts
 {
@@ -67,6 +69,14 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<TDadSummaryMetric>().ToTable("AdSummaryMetric", tdSchema);
             modelBuilder.Entity<KeywordSummaryMetric>().ToTable("KeywordSummaryMetric", tdSchema);
             modelBuilder.Entity<SearchTermSummaryMetric>().ToTable("SearchTermSummaryMetric", tdSchema);
+
+            //TD Vendor
+            modelBuilder.Entity<VendorProduct>().ToTable("VProduct", tdSchema);
+            modelBuilder.Entity<VendorCategory>().ToTable("VCategory", tdSchema);
+            modelBuilder.Entity<VendorSubcategory>().ToTable("VSubcategory", tdSchema);
+            modelBuilder.Entity<VendorProductSummaryMetric>().ToTable("VProductSummaryMetric", tdSchema);
+            modelBuilder.Entity<VendorCategorySummaryMetric>().ToTable("VCategorySummaryMetric", tdSchema);
+            modelBuilder.Entity<VendorSubcategorySummaryMetric>().ToTable("VSubcategorySummaryMetric", tdSchema);
 
             modelBuilder.Entity<Campaign>().Property(c => c.BaseFee).HasPrecision(14, 2);
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
@@ -157,6 +167,11 @@ namespace DirectAgents.Domain.Contexts
                 .HasForeignKey(x => new { x.Date, x.EntityId })
                 .WillCascadeOnDelete(false);
 
+            //TD Vendor
+            SetupSummaryMetricModel<VendorProductSummaryMetric>(modelBuilder, "ProductId");
+            SetupSummaryMetricModel<VendorSubcategorySummaryMetric>(modelBuilder, "SubcategoryId");
+            SetupSummaryMetricModel<VendorCategorySummaryMetric>(modelBuilder, "CategoryId");
+
             // AdRoll
             modelBuilder.Entity<Advertisable>().ToTable("Advertisable", adrollSchema);
             modelBuilder.Entity<Ad>().ToTable("Ad", adrollSchema);
@@ -174,6 +189,9 @@ namespace DirectAgents.Domain.Contexts
                 .ToTable("CreativeDailySummary", dbmSchema);
             modelBuilder.Entity<CreativeDailySummary>()
                 .Property(cds => cds.Revenue).HasPrecision(18, 6);
+
+            //TD Vendor
+
         }
 
         public DbSet<Employee> Employees { get; set; }
@@ -217,6 +235,14 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<KeywordSummaryMetric> KeywordSummaryMetrics { get; set; }
         public DbSet<SearchTermSummaryMetric> SearchTermSummaryMetrics { get; set; }
 
+        //TD Vendor
+        public DbSet<VendorProduct> VendorProducts { get; set; }
+        public DbSet<VendorCategory> VendorCategories { get; set; }
+        public DbSet<VendorSubcategory> VendorSubcategory { get; set; }
+        public DbSet<VendorProductSummaryMetric> VendorProductSummaryMetrics { get; set; }
+        public DbSet<VendorCategorySummaryMetric> VendorCategorySummaryMetrics { get; set; }
+        public DbSet<VendorSubcategorySummaryMetric> VendorSubcategorySummaryMetrics { get; set; }
+
         // AdRoll
         public DbSet<Advertisable> Advertisables { get; set; }
         public DbSet<Ad> AdRollAds { get; set; }
@@ -227,7 +253,7 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<Creative> Creatives { get; set; }
         public DbSet<CreativeDailySummary> DBMCreativeDailySummaries { get; set; }
 
-        public void SetupSummaryMetricModel<TSummaryMetric>(DbModelBuilder modelBuilder, string entityColumnName)
+        private void SetupSummaryMetricModel<TSummaryMetric>(DbModelBuilder modelBuilder, string entityColumnName)
             where TSummaryMetric : SummaryMetric
         {
             modelBuilder.Entity<TSummaryMetric>().HasKey(s => new {s.Date, s.EntityId, s.MetricTypeId});

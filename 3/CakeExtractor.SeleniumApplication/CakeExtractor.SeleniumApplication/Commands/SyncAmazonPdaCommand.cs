@@ -99,7 +99,6 @@ namespace CakeExtractor.SeleniumApplication.Commands
         private static void DoEtls(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType, bool fromDatabase)
         {
             Logger.Info(account.Id, "Commencing ETL for Amazon account ({0}) {1}", account.Id, account.Name);
-
             try
             {
                 if (statsType.Daily && !fromDatabase)
