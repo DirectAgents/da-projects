@@ -9,7 +9,6 @@ using System.Threading;
 using CakeExtracter;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
-using CakeExtractor.SeleniumApplication.Models;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors;
 using ConsoleCommand = ManyConsole.ConsoleCommand;
