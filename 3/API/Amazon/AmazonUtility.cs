@@ -332,24 +332,24 @@ namespace Amazon
             return GetEntities<AmazonCampaign>(EntitesType.Campaigns, campaignType, null, profileId);
         }
 
-        // For Sponsored Brands only the following attributed metrics are available:
-        // attributedSales14d, attributedSales14dSameSKU, attributedConversions14d, attributedConversions14dSameSKU
+        /// For Sponsored Brands only the following attributed metrics are available:
+        /// attributedSales14d, attributedSales14dSameSKU, attributedConversions14d, attributedConversions14dSameSKU
         public List<AmazonDailySummary> ReportCampaigns(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
             var param = AmazonApiHelper.CreateReportParams(EntitesType.Campaigns, campaignType, date, includeCampaignName);
             return GetReportInfo<AmazonDailySummary>(EntitesType.Campaigns, campaignType, param, profileId);
         }
 
-        // For Sponsored Brands only the following attributed metrics are available:
-        // attributedSales14d, attributedSales14dSameSKU, attributedConversions14d, attributedConversions14dSameSKU
+        /// For Sponsored Brands only the following attributed metrics are available:
+        /// attributedSales14d, attributedSales14dSameSKU, attributedConversions14d, attributedConversions14dSameSKU
         public List<AmazonAdGroupSummary> ReportAdGroups(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
             var param = AmazonApiHelper.CreateReportParams(EntitesType.AdGroups, campaignType, date, includeCampaignName);
             return GetReportInfo<AmazonAdGroupSummary>(EntitesType.AdGroups, campaignType, param, profileId);
         }
 
-        // Only for Sponsored Product
-        // sku metric - is not available
+        /// Only for Sponsored Product
+        /// sku metric - is not available for vendor accounts
         public List<AmazonAdDailySummary> ReportProductAds(DateTime date, string profileId, bool includeCampaignName)
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
@@ -357,8 +357,8 @@ namespace Amazon
             return GetReportInfo<AmazonAdDailySummary>(EntitesType.ProductAds, campaignType, param, profileId);
         }
 
-        // For Sponsored Brands only the following attributed metrics are available:
-        // attributedSales14d, attributedSales14dSameSKU, attributedConversions14d, attributedConversions14dSameSKU
+        /// For Sponsored Brands only the following attributed metrics are available:
+        /// attributedSales14d, attributedSales14dSameSKU, attributedConversions14d, attributedConversions14dSameSKU
         public List<AmazonKeywordDailySummary> ReportKeywords(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
             var param = AmazonApiHelper.CreateReportParams(EntitesType.Keywords, campaignType, date, includeCampaignName);
@@ -374,7 +374,6 @@ namespace Amazon
         }
 
         /// Only for Sponsored Product
-        // using request "/v2/sp/targets/report" (segment = null) with new metric "targetingText"
         public List<AmazonTargetKeywordDailySummary> ReportTargetKeywords(DateTime date, string profileId, bool includeCampaignName)
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
@@ -383,12 +382,19 @@ namespace Amazon
         }
 
         /// Only for Sponsored Product
-        // using request "/v2/sp/targets/report" (segment = query) with new metric "targetingText"
         public List<AmazonTargetSearchTermDailySummary> ReportTargetSearchTerms(DateTime date, string profileId, bool includeCampaignName)
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportParams(EntitesType.TargetSearchTerm, campaignType, date, includeCampaignName);
             return GetReportInfo<AmazonTargetSearchTermDailySummary>(EntitesType.TargetSearchTerm, campaignType, param, profileId);
+        }
+
+        /// Only for Sponsored Product
+        public List<AmazonAsinSummaries> ReportAsins(DateTime date, string profileId)
+        {
+            const CampaignType campaignType = CampaignType.SponsoredProducts;
+            var param = AmazonApiHelper.CreateAsinReportParams(date);
+            return GetReportInfo<AmazonAsinSummaries>(EntitesType.Asins, campaignType, param, profileId);
         }
 
         private List<T> GetEntities<T>(EntitesType entitiesType, CampaignType campaignType = CampaignType.Empty, Dictionary<string, string> parameters = null, string profileId = null)
