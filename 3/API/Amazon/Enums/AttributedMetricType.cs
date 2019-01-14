@@ -1,11 +1,14 @@
 ﻿namespace Amazon.Enums
 {
+    //Do not rename class members because they are named in the database as well as here.
     public enum AttributedMetricType
     {
         attributedConversions,
         attributedConversionsSameSKU,
         attributedSales,
         attributedSalesSameSKU,
-        attributedUnitsOrdered
+        attributedSalesOtherSKU,
+        attributedUnitsOrdered,
+        attributedUnitsOrderedOtherSKU
     }
 }
