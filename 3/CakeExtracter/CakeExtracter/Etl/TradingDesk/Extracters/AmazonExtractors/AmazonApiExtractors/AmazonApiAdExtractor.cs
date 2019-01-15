@@ -106,20 +106,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             ids.Add(id);
         }
 
-        private void AddAsinMetrics(TDadSummary summary, IEnumerable<AmazonAsinSummaries> asinStats)
-        {
-            var sumMetrics = summary.InitialMetrics.ToList();
-            AddMetric(sumMetrics, AttributedMetricType.attributedSalesOtherSKU, AttributedMetricDaysInterval.Days1, summary.Date, asinStats.Sum(x => x.AttributedSales1DOtherSku));
-            AddMetric(sumMetrics, AttributedMetricType.attributedSalesOtherSKU, AttributedMetricDaysInterval.Days7, summary.Date, asinStats.Sum(x => x.AttributedSales7DOtherSku));
-            AddMetric(sumMetrics, AttributedMetricType.attributedSalesOtherSKU, AttributedMetricDaysInterval.Days14, summary.Date, asinStats.Sum(x => x.AttributedSales14DOtherSku));
-            AddMetric(sumMetrics, AttributedMetricType.attributedSalesOtherSKU, AttributedMetricDaysInterval.Days30, summary.Date, asinStats.Sum(x => x.AttributedSales30DOtherSku));
-            AddMetric(sumMetrics, AttributedMetricType.attributedUnitsOrderedOtherSKU, AttributedMetricDaysInterval.Days1, summary.Date, asinStats.Sum(x => x.AttributedSales1DOtherSku));
-            AddMetric(sumMetrics, AttributedMetricType.attributedUnitsOrderedOtherSKU, AttributedMetricDaysInterval.Days7, summary.Date, asinStats.Sum(x => x.AttributedSales7DOtherSku));
-            AddMetric(sumMetrics, AttributedMetricType.attributedUnitsOrderedOtherSKU, AttributedMetricDaysInterval.Days14, summary.Date, asinStats.Sum(x => x.AttributedSales14DOtherSku));
-            AddMetric(sumMetrics, AttributedMetricType.attributedUnitsOrderedOtherSKU, AttributedMetricDaysInterval.Days30, summary.Date, asinStats.Sum(x => x.AttributedSales30DOtherSku));
-            summary.InitialMetrics = sumMetrics;
-        }
-
         private void RemoveOldData(DateTime date)
         {
             Logger.Info(accountId, "The cleaning of AdSummaries for account ({0}) has begun - {1}.", accountId, date);
