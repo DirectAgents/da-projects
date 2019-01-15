@@ -2,11 +2,13 @@
 
 namespace CakeExtractor.SeleniumApplication.Models.Vcd
 {
+    //auto generated class from json value from amazon sales diagnostic page
     internal class DownloadReportRequestBody
     {
         public SalesDiagnosticDetail salesDiagnosticDetail { get; set; }
     }
 
+    //auto generated class from json value from amazon sales diagnostic page
     internal class SalesDiagnosticDetail
     {
         public string requestId { get; set; }
@@ -15,12 +17,14 @@ namespace CakeExtractor.SeleniumApplication.Models.Vcd
         public Dictionary<string, List<string>> visibleFilters;
     }
 
+    //auto generated class from json value from amazon sales diagnostic page
     internal class ReportParameter
     {
         public string parameterId { get; set; }
         public List<Value> values { get; set; }
     }
 
+    //auto generated class from json value from amazon sales diagnostic page
     internal class Value
     {
         public object val { get; set; }

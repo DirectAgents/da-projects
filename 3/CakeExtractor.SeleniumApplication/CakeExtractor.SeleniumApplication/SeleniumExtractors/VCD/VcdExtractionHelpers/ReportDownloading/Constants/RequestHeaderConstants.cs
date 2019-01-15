@@ -4,13 +4,17 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 {
     internal class RequestHeaderConstants
     {
+        public const string RequestIdHeaderName = "X-Amzn-RequestId";
+
+        public const string VendorGroupHeaderName = "X-Amzn-Vendor-Group";
+
         public static Dictionary<string, string> GetHeadersDictionary()
         {
             return new Dictionary<string, string>()
             {
-                { "X-Amzn-RequestId","39c40206-dc79-45cc-b0e5-c02847342e4e" }, // ToDo: Parametrise request id
+                { RequestIdHeaderName, "" },  // Should be filled dynamically with guid value
                 { "X-Amzn-Product","ara"},
-                { "X-Amzn-Vendor-Group","797780"}, // ToDO : parametrise amzn-vendor-group
+                { VendorGroupHeaderName, ""}, // Should be filled dynamically with value of current account
                 { "X-Amzn-McId","0"},
                 { "Content-Type","application/json"},
                 { "Host","ara.amazon.com"}

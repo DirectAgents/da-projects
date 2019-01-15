@@ -14,5 +14,12 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonVcd
             var token = js.ExecuteScript("return window.token") as string;
             return token;
         }
+
+        public string GetUserInfoJson()
+        {
+            IJavaScriptExecutor js = Driver as IJavaScriptExecutor;
+            var userInfoJson = js.ExecuteScript("return JSON.stringify(window.userInfo)") as string;
+            return userInfoJson;
+        }
     }
 }

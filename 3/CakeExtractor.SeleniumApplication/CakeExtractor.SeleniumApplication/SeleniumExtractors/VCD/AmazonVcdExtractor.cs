@@ -7,8 +7,10 @@ using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHelpers
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading.Models;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportParsing;
+using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.UserInfoExtracting;
 using CakeExtractor.SeleniumApplication.Settings;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
+using System;
 using System.Linq;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
@@ -28,15 +30,16 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
             NavigateToSalesDiagnosticPage();
         }
 
-        public VcdReportData ExtractVendorCentralData()
+        public VcdReportData ExtractVendorCentralData(DateTime reportDay)
         {
-            var pageRequestData = GetPageDataForRequests();
-            var reportTextContent = VcdReportDownloader.DownloadReportAsCSV(pageRequestData);
+            var pageRequestData = GetPageDataForReportRequest();
+            var vendorGroupId = GetVendorGroupId();
+            var reportTextContent = VcdReportDownloader.DownloadReportAsCSV(pageRequestData, reportDay, vendorGroupId);
             var reportParsedInfo = VcdReportCSVParser.GetReportData(reportTextContent);
             return reportParsedInfo;
         }
 
-        private ReportDownloadingRequestPageData GetPageDataForRequests()
+        private ReportDownloadingRequestPageData GetPageDataForReportRequest()
         {
             var token = pageActions.GetAccessToken();
             var cookies = pageActions.GetAllCookies().ToDictionary(x => x.Name, x => x.Value);
@@ -45,6 +48,12 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
                 Token = token,
                 Cookies = cookies
             };
+        }
+
+        private string GetVendorGroupId()
+        {
+            var userInfo = UserInfoExtracter.ExtractUserInfo(pageActions);
+            return userInfo.activeVendorGroupId.ToString();
         }
 
         private void NavigateToSalesDiagnosticPage()

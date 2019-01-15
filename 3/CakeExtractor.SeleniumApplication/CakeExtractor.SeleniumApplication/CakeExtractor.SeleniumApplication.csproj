@@ -128,6 +128,8 @@
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\VcdDownloadCsvReportRequestGenerator.cs" />
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\VcdReportDownloader.cs" />
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportParsing\VcdReportParser.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\UserInfoExtracting\Models\UserInfo.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\UserInfoExtracting\UserInfoExtracter.cs" />
     <Compile Include="Settings\VcdSettings.cs" />
     <Compile Include="Helpers\AmazonConsoleManagerUtility.cs" />
     <Compile Include="SeleniumExtractors\PDA\AmazonPdaExtractors\AmazonPdaCampaignExtractor.cs" />

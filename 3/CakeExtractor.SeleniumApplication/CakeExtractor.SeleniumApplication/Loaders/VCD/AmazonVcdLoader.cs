@@ -34,7 +34,5 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
                 });
             });
         }
-
-        private Void
     }
 }

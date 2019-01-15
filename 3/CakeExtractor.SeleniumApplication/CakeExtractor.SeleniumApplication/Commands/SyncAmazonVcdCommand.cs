@@ -5,6 +5,8 @@ using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD;
 using DirectAgents.Domain.Entities.CPProg;
 using CakeExtracter.Common;
 using CakeExtractor.SeleniumApplication.Loaders.VCD;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
@@ -13,12 +15,10 @@ namespace CakeExtractor.SeleniumApplication.Commands
         public int? AccountId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public int? DaysAgoToStart { get; set; }
         public string StatsType { get; set; }
         public bool DisabledOnly { get; set; }
         public bool FromDatabase { get; set; }
-
-        private const int DefaultDaysAgoValue = 41;
+        private int DaysAgoToStart = 30;
 
         private int executionNumber;
         private JobScheduleModel scheduling;
@@ -26,18 +26,12 @@ namespace CakeExtractor.SeleniumApplication.Commands
         public SyncAmazonVcdCommand()
         {
             IsCommand("SyncAmazonVcdCommand", "Synch Amazon Vendor Central Data Stats");
-            HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
-            HasOption("s|startDate=", "Start Date (default is from config or 'daysAgo')",
+            HasOption<int>("vcdA|vcdAccountId=", "Account Id (default = all)", c => AccountId = c);
+            HasOption("vcdS|vcdStartDate=", "Start Date (default is from config or 'daysAgo')",
                 c => StartDate = DateTime.Parse(c));
-            HasOption("e|endDate=", "End Date (default is from config or yesterday)", c => EndDate = DateTime.Parse(c));
-            HasOption<int>("d|daysAgo=",
-                $"Days Ago to start, if startDate not specified (default is from config or {DefaultDaysAgoValue})",
+            HasOption("vcdE|vcdEndDate=", "End Date (default is from config or yesterday)", c => EndDate = DateTime.Parse(c));
+            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate or end date not specified (default is 30})",
                 c => DaysAgoToStart = c);
-            HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
-            HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)",
-                c => DisabledOnly = c);
-            HasOption<bool>("z|fromDatabase=", "Retrieve from database instead of API (where implemented - Daily)",
-                c => FromDatabase = c);
         }
 
         public override int Run(string[] remainingArguments)
@@ -50,10 +44,38 @@ namespace CakeExtractor.SeleniumApplication.Commands
             return 1;
         }
 
-        private static void DoEtls(AmazonVcdExtractor extractor, AmazonVcdLoader loader, ExtAccount account, DateRange dateRange)
+        private void DoEtls(AmazonVcdExtractor extractor, AmazonVcdLoader loader, ExtAccount account, DateRange dateRange)
         {
-            var dailyVendorData = extractor.ExtractVendorCentralData();
-            loader.LoadDailyVendorCentralData(dailyVendorData, DateTime.Now);
+            var daysToProcess = GetDaysToProcess();
+            var dayToProcess = daysToProcess.First();
+            var dailyVendorData = extractor.ExtractVendorCentralData(dayToProcess);
+            loader.LoadDailyVendorCentralData(dailyVendorData, dayToProcess);
+        }
+
+        private List<DateTime> GetDaysToProcess()
+        {
+            var dateRangeToProcess = GetDateRangeToProcess();
+            return GetDaysBetweenToDates(dateRangeToProcess.FromDate, dateRangeToProcess.ToDate).ToList();
+        }
+
+        private IEnumerable<DateTime> GetDaysBetweenToDates(DateTime from, DateTime thru)
+        {
+            for (var day = from.Date; day.Date <= thru.Date; day = day.AddDays(1))
+                yield return day;
+        }
+
+        private DateRange GetDateRangeToProcess()
+        {
+            if (StartDate.HasValue && EndDate.HasValue)
+            {
+                return new DateRange(StartDate.Value, EndDate.Value);
+            }
+            else
+            {
+                var endDate = DateTime.Today.AddDays(-1);
+                var startDate = DateTime.Today.AddDays(-DaysAgoToStart);
+                return new DateRange(startDate, endDate);
+            }
         }
     }
 }

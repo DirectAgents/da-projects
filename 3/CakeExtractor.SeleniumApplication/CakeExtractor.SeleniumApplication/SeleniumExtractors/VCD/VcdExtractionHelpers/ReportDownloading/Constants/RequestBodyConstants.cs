@@ -5,6 +5,12 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 {
     internal class RequestBodyConstants
     {
+        public const string ReportDatesVisibleFilterName = "Viewing";
+
+        public const string StartDateReportParameter = "periodStartDay";
+
+        public const string EndDateReportParameter = "periodEndDay";
+
         public static Dictionary<string, List<string>> GetInitialVisibleFilters()
         {
             return new Dictionary<string, List<string>>()
@@ -17,7 +23,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                         { "Brand", new List<string>{ "All" }},
                         { "Search for ASINs or Keywords", new List<string>{ "All" }},
                         { "Reporting Range", new List<string>{ "Daily" }},
-                        { "Viewing", new List<string>{ "5/27/18 - 5/27/18"} }, // TODO: Parametrize this filter value
+                        { ReportDatesVisibleFilterName, new List<string>{ ""} }, // Should be filled dynamically with report day date
                         { "View by", new List<string>{ "ASIN"} },
                         { "Add", new List<string>{ "Subcategory", "Category" } }
                     };
@@ -47,15 +53,15 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                     parameterId = "aggregationFilter",
                     values = new List<Value>{ new Value { val= "ASINLevel" } }
                 },
-                  new ReportParameter
+                new ReportParameter
                 {
-                    parameterId = "periodStartDay",
-                    values = new List<Value>{ new Value { val= "20180527" } } // Parametrize this
+                    parameterId = StartDateReportParameter,
+                    values = new List<Value>{ new Value { val= "" } } // Should be filled dynamically with report day date
                 },
                 new ReportParameter
                 {
-                    parameterId = "periodEndDay",
-                    values = new List<Value>{ new Value { val= "20180527" } } // Parametrize this
+                    parameterId = EndDateReportParameter,
+                    values = new List<Value>{ new Value { val= "" } } /// Should be filled dynamically with report day date
                 },
                 new ReportParameter
                 {
