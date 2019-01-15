@@ -299,9 +299,9 @@ namespace BingAds
                 // If the call succeeds, stop polling. If the call or 
                 // download fails, the call throws a fault.
 
-                for (int i = 0; i < 6 * 10; i++) // 6 * # of minutes
+                for (var i = 0; i < 6 * 10; i++) // 6 * # of minutes
                 {
-                    LogInfo(String.Format("Will check if the report is ready in {0} seconds...", waitTime.Seconds));
+                    LogInfo($"Will check if the report is ready in {waitTime.Seconds} seconds...");
                     Thread.Sleep(waitTime);
 
                     // PollGenerateReport helper method calls the corresponding Bing Ads service operation 
@@ -324,11 +324,11 @@ namespace BingAds
                             filepath = ExtractReportByLocalPath(reportRequestStatus.ReportDownloadUrl, reportRequest.Format, reportRequestId);
                             break;
                         case ReportRequestStatusType.Error:
-                            LogInfo("The request failed. Try requesting the report later. If the request continues to fail, contact support.");
+                            LogError("The request failed. Try requesting the report later. If the request continues to fail, contact support.");
                             break;
                         // Pending
                         default:
-                            LogInfo($"The request is taking longer than expected. Save the report ID ({reportRequestId}) and try again later.");
+                            LogError($"The request is taking longer than expected. Save the report ID ({reportRequestId}) and try again later.");
                             break;
                     }
                 }
@@ -336,32 +336,32 @@ namespace BingAds
             // Catch authentication exceptions
             catch (OAuthTokenRequestException ex)
             {
-                LogInfo(string.Format("Couldn't get OAuth tokens. Error: {0}. Description: {1}", ex.Details.Error, ex.Details.Description));
+                LogError($"Couldn't get OAuth tokens. Error: {ex.Details.Error}. Description: {ex.Details.Description}");
             }
             // Catch Reporting service exceptions
             catch (FaultException<Microsoft.BingAds.V12.Reporting.AdApiFaultDetail> ex)
             {
-                LogInfo(string.Join("; ", ex.Detail.Errors.Select(error => string.Format("{0}: {1}", error.Code, error.Message))));
+                LogError(string.Join("; ", ex.Detail.Errors.Select(error => $"{error.Code}: {error.Message}")));
             }
             catch (FaultException<Microsoft.BingAds.V12.Reporting.ApiFaultDetail> ex)
             {
-                LogInfo(string.Join("; ", ex.Detail.OperationErrors.Select(error => string.Format("{0}: {1}", error.Code, error.Message))));
-                LogInfo(string.Join("; ", ex.Detail.BatchErrors.Select(error => string.Format("{0}: {1}", error.Code, error.Message))));
+                LogError(string.Join("; ", ex.Detail.OperationErrors.Select(error => $"{error.Code}: {error.Message}")));
+                LogError(string.Join("; ", ex.Detail.BatchErrors.Select(error => $"{error.Code}: {error.Message}")));
             }
             catch (WebException ex)
             {
-                LogInfo(ex.Message);
-
-                if (ex.Response != null)
-                    LogInfo("HTTP status code: " + ((HttpWebResponse)ex.Response).StatusCode);
+                var message = ex.Response != null
+                    ? ex.Message + "\nHTTP status code: " + ((HttpWebResponse) ex.Response).StatusCode
+                    : ex.Message;
+                LogError(message);
             }
             catch (IOException ex)
             {
-                LogInfo(ex.Message);
+                LogError(ex.Message);
             }
             catch (Exception ex)
             {
-                LogInfo(ex.Message);
+                LogError(ex.Message);
             }
             return filepath;
         }
