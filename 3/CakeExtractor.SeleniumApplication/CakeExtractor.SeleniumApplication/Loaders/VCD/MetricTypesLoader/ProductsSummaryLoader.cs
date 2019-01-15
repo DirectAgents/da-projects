@@ -1,0 +1,85 @@
+﻿using CakeExtractor.SeleniumApplication.Loaders.VCD.Constants;
+using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models;
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.Vendor;
+using DirectAgents.Domain.Entities.CPProg.Vendor.SummaryMetrics;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+
+namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
+{
+    internal class ProductsSummaryLoader : BaseVendorItemLoader<Product, VendorProduct, VendorProductSummaryMetric>
+    {
+        private List<VendorCategory> categories;
+
+        private List<VendorSubcategory> subcategories;
+
+        public ProductsSummaryLoader(List<VendorCategory> categories, List<VendorSubcategory> subcategories)
+        {
+            this.categories = categories;
+            this.subcategories = subcategories;
+        }
+
+        protected override DbSet<VendorProductSummaryMetric> GetSummaryMetricDbSet(ClientPortalProgContext dbContext)
+        {
+            return dbContext.VendorProductSummaryMetrics;
+        }
+
+        protected override List<VendorProductSummaryMetric> GetSummaryMetricEntities(Product reportEntity, VendorProduct dbEntity, DateTime date, Dictionary<string, MetricType> metricTypesDictionary)
+        {
+            return new List<VendorProductSummaryMetric>
+            {
+                new VendorProductSummaryMetric(dbEntity.Id, date,
+                    metricTypesDictionary[VendorCentralDataLoadingConstants.ShippedUnitsMetricName], reportEntity.ShippedUnits),
+                new VendorProductSummaryMetric(dbEntity.Id, date,
+                    metricTypesDictionary[VendorCentralDataLoadingConstants.OrderedUnitsMetricName], reportEntity.OrderedUnits),
+                new VendorProductSummaryMetric(dbEntity.Id, date,
+                    metricTypesDictionary[VendorCentralDataLoadingConstants.ShippedRevenueMetricName], reportEntity.ShippedRevenue)
+            };
+        }
+
+        protected override DbSet<VendorProduct> GetVendorDbSet(ClientPortalProgContext dbContext)
+        {
+            return dbContext.VendorProducts;
+        }
+
+        protected override VendorProduct MapReportEntityToDbEntity(Product reportEntity, ExtAccount extAccount)
+        {
+            var vendorProduct = new VendorProduct
+            {
+                AccountId = extAccount.Id,
+                Name = reportEntity.Name
+            };
+            SetCategoryIdIfExists(vendorProduct, reportEntity);
+            SetSubcategoryIdIfExists(vendorProduct, reportEntity);
+            return vendorProduct;
+        }
+
+        private void SetCategoryIdIfExists(VendorProduct product, Product reportEntity)
+        {
+            if (!string.IsNullOrEmpty(reportEntity.Category))
+            {
+                var categoryEntity = categories.FirstOrDefault(cat => cat.Name == reportEntity.Category);
+                if (categoryEntity != null)
+                {
+                    product.CategoryId = categoryEntity.Id;
+                }
+            }
+        }
+
+        private void SetSubcategoryIdIfExists(VendorProduct product, Product reportEntity)
+        {
+            if (!string.IsNullOrEmpty(reportEntity.Subcategory))
+            {
+                var subcategoryEntity = subcategories.FirstOrDefault(subCat => subCat.Name == reportEntity.Subcategory);
+                if (subcategoryEntity != null)
+                {
+                    product.SubcategoryId = subcategoryEntity.Id;
+                }
+            }
+        }
+    }
+}

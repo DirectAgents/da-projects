@@ -7,6 +7,7 @@ using CakeExtracter.Common;
 using CakeExtractor.SeleniumApplication.Loaders.VCD;
 using System.Collections.Generic;
 using System.Linq;
+using DirectAgents.Domain.Concrete;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
@@ -39,17 +40,20 @@ namespace CakeExtractor.SeleniumApplication.Commands
             var extractor = new AmazonVcdExtractor();
             var loader = new AmazonVcdLoader();
             extractor.PrepareExtractor();
-            loader.PrepareLoader();
-            DoEtls(extractor, loader, null, new DateRange());
+            var accounts = GetAccounts();
+            foreach (var account in accounts)
+            {
+                DoEtls(extractor, loader, account);
+            }
             return 1;
         }
 
-        private void DoEtls(AmazonVcdExtractor extractor, AmazonVcdLoader loader, ExtAccount account, DateRange dateRange)
+        private void DoEtls(AmazonVcdExtractor extractor, AmazonVcdLoader loader, ExtAccount account)
         {
             var daysToProcess = GetDaysToProcess();
             var dayToProcess = daysToProcess.First();
             var dailyVendorData = extractor.ExtractVendorCentralData(dayToProcess);
-            loader.LoadDailyVendorCentralData(dailyVendorData, dayToProcess);
+            loader.LoadDailyVendorCentralData(dailyVendorData, dayToProcess, account);
         }
 
         private List<DateTime> GetDaysToProcess()
@@ -76,6 +80,17 @@ namespace CakeExtractor.SeleniumApplication.Commands
                 var startDate = DateTime.Today.AddDays(-DaysAgoToStart);
                 return new DateRange(startDate, endDate);
             }
+        }
+
+        private IEnumerable<ExtAccount> GetAccounts()
+        {
+            var repository = new PlatformAccountRepository();
+            if (!AccountId.HasValue)
+            {
+                throw new Exception("Account should be specified");
+            }
+            var account = repository.GetAccount(AccountId.Value);
+            return new[] { account };
         }
     }
 }

@@ -15,7 +15,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.Constants
         public static  readonly List<string> VendorMetricTypeNames = new List<string>()
         {
             ShippedRevenueMetricName,
-            ShippedRevenueMetricName,
+            OrderedUnitsMetricName,
             ShippedUnitsMetricName
         };
     }

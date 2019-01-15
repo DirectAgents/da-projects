@@ -99,6 +99,10 @@
     <Compile Include="Jobs\ExtractAmazonVcd\ExtractAmazonVcdJob.cs" />
     <Compile Include="Loaders\VCD\AmazonVcdLoader.cs" />
     <Compile Include="Loaders\VCD\Constants\VendorCentralDataLoadingConstants.cs" />
+    <Compile Include="Loaders\VCD\MetricTypesLoader\BaseVendorItemLoader.cs" />
+    <Compile Include="Loaders\VCD\MetricTypesLoader\ProductsSummaryLoader.cs" />
+    <Compile Include="Loaders\VCD\MetricTypesLoader\SubcategoriesSummaryLoader.cs" />
+    <Compile Include="Loaders\VCD\MetricTypesLoader\CategoriesSummaryLoader.cs" />
     <Compile Include="Models\ConsoleManagerUtilityModels\AmazonCmApiCampaignSummary.cs" />
     <Compile Include="Models\ConsoleManagerUtilityModels\AmazonCmApiParams.cs" />
     <Compile Include="Models\ConsoleManagerUtilityModels\Filter.cs" />

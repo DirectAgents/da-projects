@@ -2,6 +2,12 @@
 {
     internal class ShippingItem
     {
+        public string Name
+        {
+            get;
+            set;
+        }
+
         public decimal ShippedRevenue
         {
             get;

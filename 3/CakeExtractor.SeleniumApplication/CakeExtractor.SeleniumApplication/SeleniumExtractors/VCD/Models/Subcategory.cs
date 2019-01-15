@@ -2,7 +2,7 @@
 {
     internal class Subcategory : ShippingItem
     {
-        public string Title
+        public string CategoryName
         {
             get;
             set;

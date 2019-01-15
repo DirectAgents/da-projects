@@ -29,7 +29,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
             return products.GroupBy(p => p.Category, (key, gr) =>
                 new Category
                 {
-                    Title = key,
+                    Name = key,
                     OrderedUnits = gr.Sum(p => p.OrderedUnits),
                     ShippedUnits = gr.Sum(p => p.ShippedUnits),
                     ShippedRevenue = gr.Sum(p => p.ShippedRevenue)
@@ -40,15 +40,20 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
         private static List<Subcategory> GetSubcategoriesFromProducts(List<Product> products)
         {
             return products.GroupBy(p => p.Subcategory, (key, gr) =>
-                new Subcategory
+            {
+                var firstProduct = gr.FirstOrDefault();
+                var categoryName = (firstProduct != null && string.IsNullOrEmpty(firstProduct.Category)) ?
+                    firstProduct.Category : null;
+                return new Subcategory
                 {
-                    Title = key,
+                    Name = key,
+                    CategoryName = categoryName,
                     OrderedUnits = gr.Sum(p => p.OrderedUnits),
                     ShippedUnits = gr.Sum(p => p.ShippedUnits),
                     ShippedRevenue = gr.Sum(p => p.ShippedRevenue)
-                }
-            ).ToList();
-}
+                };
+            }).ToList();
+        }
 
         private static List<Product> ParseProductsFromReport(string reportCsvText)
         {
@@ -68,7 +73,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
             public ProductRowMap()
             {
                 Map(m => m.Asin).Name("ASIN");
-                Map(m => m.Title).Name("Product Title");
+                Map(m => m.Name).Name("Product Title");
                 Map(m => m.Category).Name("Category");
                 Map(m => m.Subcategory).Name("Subcategory");
                 Map(m => m.ShippedRevenue).Name("Shipped Revenue").TypeConverter<ShippedRevenueConverter>();

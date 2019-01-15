@@ -238,7 +238,7 @@ namespace DirectAgents.Domain.Contexts
         //TD Vendor
         public DbSet<VendorProduct> VendorProducts { get; set; }
         public DbSet<VendorCategory> VendorCategories { get; set; }
-        public DbSet<VendorSubcategory> VendorSubcategory { get; set; }
+        public DbSet<VendorSubcategory> VendorSubcategories { get; set; }
         public DbSet<VendorProductSummaryMetric> VendorProductSummaryMetrics { get; set; }
         public DbSet<VendorCategorySummaryMetric> VendorCategorySummaryMetrics { get; set; }
         public DbSet<VendorSubcategorySummaryMetric> VendorSubcategorySummaryMetrics { get; set; }
