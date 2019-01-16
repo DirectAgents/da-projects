@@ -9,10 +9,12 @@ namespace DirectAgents.Domain.Entities.CPProg.Vendor.SummaryMetrics
         {
         }
 
-        public VendorProductSummaryMetric(int entityId, DateTime date, MetricType metricType, decimal metricValue)
-            : base(date, metricType, metricValue)
+        public VendorProductSummaryMetric(int entityId, DateTime date, int metricTypeId, decimal metricValue)
         {
             EntityId = entityId;
+            MetricTypeId = metricTypeId;
+            Date = date;
+            Value = metricValue;
         }
 
         [ForeignKey("EntityId")]

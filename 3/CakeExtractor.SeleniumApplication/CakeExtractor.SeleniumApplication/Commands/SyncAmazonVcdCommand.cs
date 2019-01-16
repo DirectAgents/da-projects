@@ -8,6 +8,7 @@ using CakeExtractor.SeleniumApplication.Loaders.VCD;
 using System.Collections.Generic;
 using System.Linq;
 using DirectAgents.Domain.Concrete;
+using CakeExtracter;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
@@ -16,9 +17,6 @@ namespace CakeExtractor.SeleniumApplication.Commands
         public int? AccountId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public string StatsType { get; set; }
-        public bool DisabledOnly { get; set; }
-        public bool FromDatabase { get; set; }
         private int DaysAgoToStart = 30;
 
         private int executionNumber;
@@ -51,9 +49,21 @@ namespace CakeExtractor.SeleniumApplication.Commands
         private void DoEtls(AmazonVcdExtractor extractor, AmazonVcdLoader loader, ExtAccount account)
         {
             var daysToProcess = GetDaysToProcess();
-            var dayToProcess = daysToProcess.First();
-            var dailyVendorData = extractor.ExtractVendorCentralData(dayToProcess);
-            loader.LoadDailyVendorCentralData(dailyVendorData, dayToProcess, account);
+            daysToProcess.ForEach(day =>
+            {
+                try
+                {
+                    Logger.Info("Amazon VCD, ETL for {0} started.", day);
+                    var dailyVendorData = extractor.ExtractDailyData(day);
+                    //loader.LoadDailyData(dailyVendorData, day, account);
+                    Logger.Info("Amazon VCD, ETL for {0} finished.", day);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Warn("Amazon VCD, ETL for {0} failed due to exception. Date skipped", day);
+                    throw ex; //temporary for development purposes. should be removed in future
+                }
+            });
         }
 
         private List<DateTime> GetDaysToProcess()

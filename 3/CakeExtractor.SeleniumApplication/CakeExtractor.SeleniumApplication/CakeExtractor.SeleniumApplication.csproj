@@ -94,6 +94,7 @@
     <Compile Include="Helpers\AmazonCmApiHelper.cs" />
     <Compile Include="Helpers\CookieManager.cs" />
     <Compile Include="Helpers\RestRequestHelper.cs" />
+    <Compile Include="Helpers\RetryHelper.cs" />
     <Compile Include="Helpers\TimeHelper.cs" />
     <Compile Include="Jobs\ExtractAmazonVcd\ExtractAmazonVcdJobScheduler.cs" />
     <Compile Include="Jobs\ExtractAmazonVcd\ExtractAmazonVcdJob.cs" />

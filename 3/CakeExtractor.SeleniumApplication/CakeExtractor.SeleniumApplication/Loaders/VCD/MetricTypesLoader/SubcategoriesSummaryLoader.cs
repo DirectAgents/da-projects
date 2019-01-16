@@ -15,7 +15,8 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
     {
         private List<VendorCategory> categories;
 
-        public SubcategoriesSummaryLoader(List<VendorCategory> categories)
+        public SubcategoriesSummaryLoader(List<VendorCategory> categories, Dictionary<string, int> metricTypes)
+            :base(metricTypes)
         {
             this.categories = categories;
         }
@@ -25,16 +26,16 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
             return dbContext.VendorSubcategorySummaryMetrics;
         }
 
-        protected override List<VendorSubcategorySummaryMetric> GetSummaryMetricEntities(Subcategory reportEntity, VendorSubcategory dbEntity, DateTime date, Dictionary<string, MetricType> metricTypesDictionary)
+        protected override List<VendorSubcategorySummaryMetric> GetSummaryMetricEntities(Subcategory reportEntity, VendorSubcategory dbEntity, DateTime date)
         {
             return new List<VendorSubcategorySummaryMetric>
             {
                 new VendorSubcategorySummaryMetric(dbEntity.Id, date,
-                    metricTypesDictionary[VendorCentralDataLoadingConstants.ShippedUnitsMetricName], reportEntity.ShippedUnits),
+                    metricTypes[VendorCentralDataLoadingConstants.ShippedUnitsMetricName], reportEntity.ShippedUnits),
                 new VendorSubcategorySummaryMetric(dbEntity.Id, date,
-                    metricTypesDictionary[VendorCentralDataLoadingConstants.OrderedUnitsMetricName], reportEntity.OrderedUnits),
+                    metricTypes[VendorCentralDataLoadingConstants.OrderedUnitsMetricName], reportEntity.OrderedUnits),
                 new VendorSubcategorySummaryMetric(dbEntity.Id, date,
-                    metricTypesDictionary[VendorCentralDataLoadingConstants.ShippedRevenueMetricName], reportEntity.ShippedRevenue)
+                    metricTypes[VendorCentralDataLoadingConstants.ShippedRevenueMetricName], reportEntity.ShippedRevenue)
             };
         }
 

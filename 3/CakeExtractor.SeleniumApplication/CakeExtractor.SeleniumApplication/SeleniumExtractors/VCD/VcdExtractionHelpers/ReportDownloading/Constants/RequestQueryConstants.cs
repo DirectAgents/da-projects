@@ -4,11 +4,24 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 {
     internal class RequestQueryConstants
     {
-        public static Dictionary<string, string> GetRequiestQueryparameters(string tokenValue)
+        private const string tokenQueryParameter = "token";
+
+        private const string vendorGroupIdParameter = "vgId";
+
+        private const string mcIdQueryParameter = "mcId";
+
+        private const string productQueryParameter = "product";
+
+        private const string vendorCentralDataProductName = "ara";
+
+        public static Dictionary<string, string> GetRequestQueryParameters(string tokenValue, string vendorGroupId, string mcId)
         {
             return new Dictionary<string, string>()
             {
-                {"token", tokenValue }
+                {tokenQueryParameter, tokenValue },
+                {vendorGroupIdParameter, vendorGroupId },
+                {mcIdQueryParameter, mcId },
+                {productQueryParameter, vendorCentralDataProductName }
             };
         }
     }

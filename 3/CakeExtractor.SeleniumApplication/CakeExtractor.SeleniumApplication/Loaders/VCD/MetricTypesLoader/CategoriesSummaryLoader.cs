@@ -12,21 +12,26 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
 {
     internal class CategoriesSummaryLoader : BaseVendorItemLoader<Category, VendorCategory, VendorCategorySummaryMetric>
     {
+        public CategoriesSummaryLoader(Dictionary<string, int> metricTypes)
+            :base(metricTypes)
+        {
+        }
+
         protected override DbSet<VendorCategorySummaryMetric> GetSummaryMetricDbSet(ClientPortalProgContext dbContext)
         {
             return dbContext.VendorCategorySummaryMetrics;
         }
 
-        protected override List<VendorCategorySummaryMetric> GetSummaryMetricEntities(Category reportEntity, VendorCategory dbEntity, DateTime date, Dictionary<string, MetricType> metricTypesDictionary)
+        protected override List<VendorCategorySummaryMetric> GetSummaryMetricEntities(Category reportEntity, VendorCategory dbEntity, DateTime date)
         {
             return new List<VendorCategorySummaryMetric>
             {
                 new VendorCategorySummaryMetric(dbEntity.Id, date,
-                    metricTypesDictionary[VendorCentralDataLoadingConstants.ShippedUnitsMetricName], reportEntity.ShippedUnits),
+                    metricTypes[VendorCentralDataLoadingConstants.ShippedUnitsMetricName], reportEntity.ShippedUnits),
                 new VendorCategorySummaryMetric(dbEntity.Id, date,
-                    metricTypesDictionary[VendorCentralDataLoadingConstants.OrderedUnitsMetricName], reportEntity.OrderedUnits),
+                    metricTypes[VendorCentralDataLoadingConstants.OrderedUnitsMetricName], reportEntity.OrderedUnits),
                 new VendorCategorySummaryMetric(dbEntity.Id, date,
-                    metricTypesDictionary[VendorCentralDataLoadingConstants.ShippedRevenueMetricName], reportEntity.ShippedRevenue)
+                    metricTypes[VendorCentralDataLoadingConstants.ShippedRevenueMetricName], reportEntity.ShippedRevenue)
             };
         }
 

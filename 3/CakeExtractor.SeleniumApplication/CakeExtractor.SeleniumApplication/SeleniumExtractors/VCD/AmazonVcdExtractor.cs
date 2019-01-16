@@ -1,17 +1,14 @@
-﻿using CakeExtractor.SeleniumApplication.Drivers;
+﻿using CakeExtracter;
+using CakeExtractor.SeleniumApplication.Drivers;
 using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using CakeExtractor.SeleniumApplication.PageActions;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHelpers;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models;
-using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading.Models;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportParsing;
-using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.UserInfoExtracting;
 using CakeExtractor.SeleniumApplication.Settings;
-using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using System;
-using System.Linq;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
 {
@@ -27,38 +24,48 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
             InitializePageManager(); // opens google chrome application
             CreateApplicationFolders();
             AmazonLoginHelper.LoginToAmazonPortal(authorizationModel, pageActions);
-            NavigateToSalesDiagnosticPage();
         }
 
-        public VcdReportData ExtractVendorCentralData(DateTime reportDay)
+        public VcdReportData ExtractDailyData(DateTime reportDay)
         {
-            var pageRequestData = GetPageDataForReportRequest();
-            var vendorGroupId = GetVendorGroupId();
-            var reportTextContent = VcdReportDownloader.DownloadReportAsCSV(pageRequestData, reportDay, vendorGroupId);
-            var reportParsedInfo = VcdReportCSVParser.GetReportData(reportTextContent);
-            return reportParsedInfo;
+            var reportTextContent = DownloadReport(reportDay);
+            var reportData = ParseReport(reportTextContent);
+            return reportData;
         }
 
-        private ReportDownloadingRequestPageData GetPageDataForReportRequest()
+        private string DownloadReport(DateTime reportDay)
         {
-            var token = pageActions.GetAccessToken();
-            var cookies = pageActions.GetAllCookies().ToDictionary(x => x.Name, x => x.Value);
-            return new ReportDownloadingRequestPageData
+            try
             {
-                Token = token,
-                Cookies = cookies
-            };
+                var reportDownloader = new VcdReportDownloader(pageActions);
+                var reportTextContent = 
+                    RetryHelper.Do(()=> { return reportDownloader.DownloadReportAsCsvText(reportDay); }, TimeSpan.FromSeconds(10), 5);
+                return reportTextContent;
+            }
+            catch (Exception ex)
+            {
+                Logger.Info("Report downloading failed");
+                Logger.Error(ex);
+                throw ex;
+            }
         }
 
-        private string GetVendorGroupId()
+        private VcdReportData ParseReport(string reportTextContent)
         {
-            var userInfo = UserInfoExtracter.ExtractUserInfo(pageActions);
-            return userInfo.activeVendorGroupId.ToString();
-        }
-
-        private void NavigateToSalesDiagnosticPage()
-        {
-            pageActions.NavigateToUrl("https://ara.amazon.com/dashboard/salesDiagnostic");
+            try
+            {
+                Logger.Info("Amazon VCD, Report parsing started.");
+                var parser = new VcdReportCSVParser();
+                var reportParsedInfo = parser.ParseReportData(reportTextContent);
+                Logger.Info("Amazon VCD, Report parsed successfully. Prod:{0}, Cat:{1}, Subcat:{2}",
+                    reportParsedInfo.Products.Count, reportParsedInfo.Categories.Count, reportParsedInfo.Subcategories.Count);
+                return reportParsedInfo;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                throw ex;
+            }
         }
 
         private void CreateApplicationFolders()

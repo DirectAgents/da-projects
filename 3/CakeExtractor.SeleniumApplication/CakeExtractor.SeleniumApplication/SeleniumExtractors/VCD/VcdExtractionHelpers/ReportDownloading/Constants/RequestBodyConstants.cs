@@ -11,6 +11,10 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 
         public const string EndDateReportParameter = "periodEndDay";
 
+        public const string ReportId = "salesDiagnosticDetail";
+
+        public const string RequestBodyFormat = "application/json";
+
         public static Dictionary<string, List<string>> GetInitialVisibleFilters()
         {
             return new Dictionary<string, List<string>>()
@@ -86,7 +90,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                 new ReportParameter
                 {
                     parameterId = "dataRefreshDate",
-                    values = new List<Value>{ new Value { val= "0000596235117" } }
+                    values = new List<Value>{ new Value { val= "0001703861052" } }
                 },
                 new ReportParameter
                 {

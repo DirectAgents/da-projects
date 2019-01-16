@@ -17,10 +17,16 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
 
         private List<VendorSubcategory> subcategories;
 
-        public ProductsSummaryLoader(List<VendorCategory> categories, List<VendorSubcategory> subcategories)
+        public ProductsSummaryLoader(List<VendorCategory> categories, List<VendorSubcategory> subcategories, Dictionary<string, int> metricTypes)
+            : base(metricTypes)
         {
             this.categories = categories;
             this.subcategories = subcategories;
+        }
+
+        protected override Func<VendorProduct, bool> GetEntityMappingPredicate(Product reportEntity, ExtAccount extAccount)
+        {
+            return db => db.Name == reportEntity.Name && db.AccountId == extAccount.Id && db.Asin == reportEntity.Asin;
         }
 
         protected override DbSet<VendorProductSummaryMetric> GetSummaryMetricDbSet(ClientPortalProgContext dbContext)
@@ -28,16 +34,16 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
             return dbContext.VendorProductSummaryMetrics;
         }
 
-        protected override List<VendorProductSummaryMetric> GetSummaryMetricEntities(Product reportEntity, VendorProduct dbEntity, DateTime date, Dictionary<string, MetricType> metricTypesDictionary)
+        protected override List<VendorProductSummaryMetric> GetSummaryMetricEntities(Product reportEntity, VendorProduct dbEntity, DateTime date)
         {
             return new List<VendorProductSummaryMetric>
             {
                 new VendorProductSummaryMetric(dbEntity.Id, date,
-                    metricTypesDictionary[VendorCentralDataLoadingConstants.ShippedUnitsMetricName], reportEntity.ShippedUnits),
+                    metricTypes[VendorCentralDataLoadingConstants.ShippedUnitsMetricName], reportEntity.ShippedUnits),
                 new VendorProductSummaryMetric(dbEntity.Id, date,
-                    metricTypesDictionary[VendorCentralDataLoadingConstants.OrderedUnitsMetricName], reportEntity.OrderedUnits),
+                    metricTypes[VendorCentralDataLoadingConstants.OrderedUnitsMetricName], reportEntity.OrderedUnits),
                 new VendorProductSummaryMetric(dbEntity.Id, date,
-                    metricTypesDictionary[VendorCentralDataLoadingConstants.ShippedRevenueMetricName], reportEntity.ShippedRevenue)
+                    metricTypes[VendorCentralDataLoadingConstants.ShippedRevenueMetricName], reportEntity.ShippedRevenue)
             };
         }
 
@@ -50,6 +56,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
         {
             var vendorProduct = new VendorProduct
             {
+                Asin = reportEntity.Asin,
                 AccountId = extAccount.Id,
                 Name = reportEntity.Name
             };

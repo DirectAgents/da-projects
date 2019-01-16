@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.UserInfoExtracting.Models;
+using System.Collections.Generic;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading.Models
 {
@@ -11,6 +12,12 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
         }
 
         public Dictionary<string, string> Cookies
+        {
+            get;
+            set;
+        }
+
+        public UserInfo UserInfo
         {
             get;
             set;

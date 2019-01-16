@@ -9,11 +9,18 @@ using System.Linq;
 
 namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
 {
-    internal abstract class BaseVendorItemLoader<TReportEntity, TDbEntity, TSummaryMetricEntity> 
+    internal abstract class BaseVendorItemLoader<TReportEntity, TDbEntity, TSummaryMetricEntity>
         where TReportEntity : ShippingItem
         where TDbEntity : BaseVendorEntity
         where TSummaryMetricEntity : SummaryMetric
     {
+        protected Dictionary<string, int> metricTypes;
+
+        public BaseVendorItemLoader(Dictionary<string, int> metricTypes)
+        {
+            this.metricTypes = metricTypes;
+        }
+
         public List<TDbEntity> EnsureVendorEntitiesInDataBase(List<TReportEntity> reportEntities, ExtAccount extAccount)
         {
             using (var dbContext = new ClientPortalProgContext())
@@ -21,10 +28,10 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
                 var itemsToBeAdded = new List<TDbEntity>();
                 var allItems = new List<TDbEntity>();
                 var dbSet = GetVendorDbSet(dbContext);
+                var allAccountdbEntities = dbSet.Where(db => db.AccountId == extAccount.Id).ToList();
                 reportEntities.ForEach(reportEntity =>
                 {
-                    var correspondingDbEntity = dbSet
-                       .FirstOrDefault(c => c.Name == reportEntity.Name && c.AccountId == extAccount.Id);
+                    var correspondingDbEntity = allAccountdbEntities.FirstOrDefault(GetEntityMappingPredicate(reportEntity, extAccount));
                     if (correspondingDbEntity == null)
                     {
                         correspondingDbEntity = MapReportEntityToDbEntity(reportEntity, extAccount);
@@ -38,37 +45,41 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
             }
         }
 
-        //!!!! Probably need add account id to summary metrics data
-        public void UpdateSummaryMetricData(List<TReportEntity> reportShippingEntities,
-            List<TDbEntity> dbVendorEntities, DateTime date, Dictionary<string, MetricType> metricTypesDictionary)
+        public void LoadNewAccountSummaryMetricsDataForDate(List<TReportEntity> reportShippingEntities,
+            List<TDbEntity> dbVendorEntities, DateTime date, ExtAccount account)
         {
-            CleanExistingSummaryMetricsDataForDate(date);
             using (var dbContext = new ClientPortalProgContext())
             {
                 var dbSet = GetSummaryMetricDbSet(dbContext);
                 var summaryMetricsToAdd = reportShippingEntities.SelectMany(reportEntity =>
                 {
-                    var dbEntity = dbVendorEntities.Find(dbe => dbe.Name == reportEntity.Name);
-                    return GetSummaryMetricEntities(reportEntity, dbEntity, date, metricTypesDictionary);
+                    var dbEntity = dbVendorEntities.FirstOrDefault(GetEntityMappingPredicate(reportEntity, account));
+                    return GetSummaryMetricEntities(reportEntity, dbEntity, date);
                 }).ToList();
                 dbSet.AddRange(summaryMetricsToAdd);
                 dbContext.SaveChanges();
             }
         }
 
-        //!!!!! Probably need remove Summarymetrics only for processing Account !!!
-        private void CleanExistingSummaryMetricsDataForDate(DateTime date)
+        public void CleanExistingAccountSummaryMetricsDataForDate(DateTime date, ExtAccount extAccount)
         {
             using (var dbContext = new ClientPortalProgContext())
             {
-                var dbSet = GetSummaryMetricDbSet(dbContext);
-                var itemsToBeRemoved = dbSet.Where(csm => csm.Date == date).ToList();
-                dbSet.RemoveRange(itemsToBeRemoved);
+                var entitiesDbSet = GetVendorDbSet(dbContext);
+                var accountRelatedEntityIds = entitiesDbSet.Where(ent => ent.AccountId == extAccount.Id).Select(e => e.Id).ToList();
+                var summaryMetricsDbSet = GetSummaryMetricDbSet(dbContext);
+                var itemsToBeRemoved = summaryMetricsDbSet.Where(csm => csm.Date == date && accountRelatedEntityIds.Contains(csm.EntityId)).ToList();
+                summaryMetricsDbSet.RemoveRange(itemsToBeRemoved);
                 dbContext.SaveChanges();
             }
         }
 
-        protected abstract List<TSummaryMetricEntity> GetSummaryMetricEntities(TReportEntity reportEntity, TDbEntity dbEntity, DateTime date, Dictionary<string, MetricType> metricTypesDictionary);
+        protected virtual Func<TDbEntity, bool> GetEntityMappingPredicate(TReportEntity reportEntity, ExtAccount extAccount)
+        {
+            return dbEntity => dbEntity.Name == reportEntity.Name && dbEntity.AccountId == extAccount.Id;
+        }
+
+        protected abstract List<TSummaryMetricEntity> GetSummaryMetricEntities(TReportEntity reportEntity, TDbEntity dbEntity, DateTime date);
 
         protected abstract TDbEntity MapReportEntityToDbEntity(TReportEntity reportEntity, ExtAccount extAccount);
 
