@@ -61,15 +61,19 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         private IEnumerable<TDadSummary> TransformSummaries(IEnumerable<AmazonAdDailySummary> adStats,
             IEnumerable<AmazonAsinSummaries> asinStats, DateTime date)
         {
-            var notEmptyStats = adStats.Where(x => !x.AllZeros()).ToList();
-            var summaries = notEmptyStats.Select(stat => CreateSummary(stat, asinStats, date));
-            return summaries.ToList();
+            var summaries = adStats.Select(stat => CreateSummary(stat, asinStats, date));
+            var notEmptySummaries = summaries.Where(x => x != null && !x.AllZeros()).ToList();
+            return notEmptySummaries;
         }
 
         private TDadSummary CreateSummary(AmazonAdDailySummary adStat, IEnumerable<AmazonAsinSummaries> asinStats, DateTime date)
         {
-            var sum = CreateSummary(adStat, date);
             var asinStatsForProduct = asinStats.Where(x => x.Asin == adStat.Asin && x.AdGroupId == adStat.AdGroupId).ToList();
+            if (!asinStatsForProduct.Any() && adStat.AllZeros())
+            {
+                return null;
+            }
+            var sum = CreateSummary(adStat, date);
             AddAsinMetrics(sum, asinStatsForProduct);
             return sum;
         }
