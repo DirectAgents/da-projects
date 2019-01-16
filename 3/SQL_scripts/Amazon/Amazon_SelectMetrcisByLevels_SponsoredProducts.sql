@@ -1,12 +1,34 @@
 /*
-This script helps to extract all statistics for Sponsored Products campaigns by levels: 
-campaigns, product ads, keywords
+This script helps to extract all statistics for Sponsored Products campaigns
+for the corresponding account Id and range of dates
+by levels: campaigns, product ads, keywords
+
+Before execution, please set the following values:
+- accId (ID of the target account in the database)
+- startDate (statistics start date for extraction)
+- endDate (statistics end date for extraction)
 
 NOTE: The Metric types IDs used in this script may vary depending on the target database.
 */
 
-DECLARE @CampaignTypeSp NVARCHAR(MAX) = 'SponsoredProducts';
-DECLARE @campaignType NVARCHAR(MAX) = @CampaignTypeSp;
+DECLARE @accId          INT           = 1433;                -- Account ID
+DECLARE @startDate      NVARCHAR(MAX) = '12/1/2018';         -- Metrics start date
+DECLARE @endDate        NVARCHAR(MAX) = '12/31/2018';        -- Metrics end date
+DECLARE @campaignType   NVARCHAR(MAX) = 'SponsoredProducts'; -- Campaign types
+
+/* Account IDs:
+1362  AvoDerm
+1433  Belkin
+1437  Carhartt Sportswear - Mens
+1438  Carhartt Women's Collection
+1434  Linksys Invoices
+1439  Living Fresh
+1423  Walker & Company
+1436  Walker & Company TEST
+1435  Wemo Invoice
+*/
+
+-----------------------------------------------------------------------------------------------------------------------------
 
 -- CAMPAIGNS --
 select
@@ -35,6 +57,8 @@ from (select
   inner join td.Strategy strategy on strategySummary.StrategyId = strategy.Id
   inner join td.Account account on strategy.AccountId = account.Id
 where strategy.TypeId = (select Id from td.Type where Name = @campaignType)
+  and account.Id = @accId
+  and strategySummary.Date between @startDate and @endDate
 order by strategySummary.Date desc;
 
 -- PRODUCT ADS (ASINS) --
@@ -71,7 +95,9 @@ from (select
   inner join td.Strategy strategy on adSet.StrategyId = strategy.Id
   inner join td.AdExternalId adExternalId on ad.Id = adExternalId.AdId
 where adExternalId.TypeId = 2
-  and strategy.TypeId = (select Id from td.Type where Name = @campaignType)  
+  and strategy.TypeId = (select Id from td.Type where Name = @campaignType)
+  and account.Id = @accId
+  and adSummary.Date between @startDate and @endDate
 order by adSummary.Date desc;
 
 -- KEYWORDS --
@@ -105,4 +131,6 @@ from (select
   inner join td.Strategy strategy on keyword.StrategyId = strategy.Id
   inner join td.Account account on strategy.AccountId = account.Id
 where strategy.TypeId = (select Id from td.Type where Name = @campaignType)
+  and account.Id = @accId
+  and keywordSummary.Date between @startDate and @endDate
 order by keywordSummary.Date desc;

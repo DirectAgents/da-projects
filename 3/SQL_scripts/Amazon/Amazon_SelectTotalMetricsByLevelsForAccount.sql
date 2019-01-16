@@ -1,5 +1,5 @@
 /*
-This script helps to extract account statistics (totals) for the corresponding date range by levels: 
+This script helps to extract account statistics (totals) for the corresponding date range by levels:
 campaigns, ad groups, product ads, keywords, search terms.
 
 Before execution, please set the following values:
@@ -16,26 +16,26 @@ DECLARE @CampaignTypeSb NVARCHAR(MAX) = 'SponsoredBrands';
 DECLARE @CampaignTypePd NVARCHAR(MAX) = 'ProductDisplay';
 
 /* Account IDs:
-1362	AvoDerm
-1433	Belkin
-1437	Carhartt Sportswear - Mens
-1438	Carhartt Women's Collection
-1434	Linksys Invoices
-1439	Living Fresh
-1423	Walker & Company
-1436	Walker & Company TEST
-1435	Wemo Invoice
+1362  AvoDerm
+1433  Belkin
+1437  Carhartt Sportswear - Mens
+1438  Carhartt Women's Collection
+1434  Linksys Invoices
+1439  Living Fresh
+1423  Walker & Company
+1436  Walker & Company TEST
+1435  Wemo Invoice
 */
 
-DECLARE @accId INT = 1437;																				-- Account ID
-DECLARE @startDate NVARCHAR(MAX) = '1/13/2019';															-- Metrics start date
-DECLARE @endDate NVARCHAR(MAX) = '1/13/2019';															-- Metrics end date
-DECLARE @campaignType NVARCHAR(MAX) = @CampaignTypeSp + @CampaignTypeSb + @CampaignTypePd;				-- Campaign type
+DECLARE @accId        INT           = 1437;                                                -- Account ID
+DECLARE @startDate    NVARCHAR(MAX) = '1/13/2019';                                         -- Metrics start date
+DECLARE @endDate      NVARCHAR(MAX) = '1/13/2019';                                         -- Metrics end date
+DECLARE @campaignType NVARCHAR(MAX) = @CampaignTypeSp + @CampaignTypeSb + @CampaignTypePd; -- Campaign type
 
 -----------------------------------------------------------------------------------------------------------------------------
 
 /* Metric types IDs (in DB - real name):
-1		attributedConversions1d	(Total Orders - 1 day) - for SP	
+1		attributedConversions1d	(Total Orders - 1 day) - for SP
 2		attributedConversions7d	(Total Orders - 7 days) - for SP
 3		attributedConversions14d (Total Orders - 14 days) - for SP and SB
 4		attributedConversions30d (Total Orders - 30 days) - for SP
