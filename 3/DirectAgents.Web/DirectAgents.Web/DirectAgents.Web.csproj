@@ -1150,8 +1150,6 @@
     <Content Include="Areas\ProgAdmin\Views\ExtAccounts\SearchTerms.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Stats\Keyword.cshtml" />
     <Content Include="Areas\ProgAdmin\Views\Stats\SearchTerm.cshtml" />
-    <None Include="Properties\PublishProfiles\biz-test.pubxml" />
-    <None Include="Properties\PublishProfiles\biz.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Percent.cshtml" />
     <Content Include="Views\Budgets\AccountManagers.cshtml" />
@@ -1164,10 +1162,7 @@
     <Content Include="Views\Screens\Variables.cshtml" />
     <Content Include="Views\Screens\EditSalesStats.cshtml" />
     <Content Include="Views\Screens\SalesStats.cshtml" />
-    <None Include="Properties\PublishProfiles\dagents - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\dagents - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\dagents__dev.pubxml" />
-    <None Include="Properties\PublishProfiles\dagents__staging.pubxml" />
+    <None Include="Properties\PublishProfiles\dagents_vm_staging.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\DayOfWeek.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
     <None Include="Properties\PublishProfiles\dagents_vm_production.pubxml" />
@@ -1186,16 +1181,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>64274</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:65368/</IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

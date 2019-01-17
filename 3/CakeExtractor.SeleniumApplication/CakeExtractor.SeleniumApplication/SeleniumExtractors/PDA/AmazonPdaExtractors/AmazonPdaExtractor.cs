@@ -7,6 +7,7 @@ using Amazon.Helpers;
 using CakeExtracter;
 using CakeExtracter.Common;
 using CakeExtractor.SeleniumApplication.Drivers;
+using CakeExtractor.SeleniumApplication.Exceptions;
 using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Models;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
@@ -112,6 +113,10 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
                 NavigateToPageCampaignInfo();
                 var campaignUrlList = GetCampaignPageUrls();
                 extractAction(campaignUrlList);
+            }
+            catch (AccountDoesNotHaveProfileException ex)
+            {
+                Logger.Warn(account.Id, $"The account {authorizationModel.Login} does not have the following profile: {ex.Message}", ex);
             }
             catch (Exception e)
             {
@@ -220,6 +225,10 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
 
                 pageActions.SetFiltersOnCampaigns();
             }
+            catch (AccountDoesNotHaveProfileException)
+            {
+                throw; // throw higher
+            }
             catch (Exception e)
             {
                 throw new Exception($"Could not navigate to the page with campaigns information: {e.Message}", e);
@@ -232,8 +241,8 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             var url = pageActions.GetProfileUrl(account.Name.TrimEnd());
             if (string.IsNullOrEmpty(url))
             {
-                throw new Exception(
-                    $"The account {authorizationModel.Login} does not have the following profile - {account.Name}");
+                // The current account does not have the following profile
+                throw new AccountDoesNotHaveProfileException(account.Name);
             }
 
             pageActions.NavigateToUrl(url);

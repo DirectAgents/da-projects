@@ -41,13 +41,12 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             else
                 return network.Substring(0, 1);
         }
+
         public static string Device_StringToLetter(string device)
         {
-            if (device == null)
-                return null;
-            else
-                return device.Substring(0, 1);
+            return string.IsNullOrEmpty(device) ? string.Empty : device.Substring(0, 1);
         }
+
         public static string ClickType_StringToLetter(string clickType)
         {
             var clickTypeAbbrev = clickType.Substring(0, 1);

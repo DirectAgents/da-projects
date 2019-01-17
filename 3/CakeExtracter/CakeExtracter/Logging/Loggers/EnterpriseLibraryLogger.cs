@@ -6,6 +6,13 @@ namespace CakeExtracter.Logging.Loggers
 {
     public class EnterpriseLibraryLogger : ILogger
     {
+        private string jobName = string.Empty;
+
+        public EnterpriseLibraryLogger(string jobName = "")
+        {
+            this.jobName = jobName;
+        }
+
         private void Write(LogEntry logEntry)
         {
             Microsoft.Practices.EnterpriseLibrary.Logging.Logger.Write(logEntry);
@@ -13,11 +20,13 @@ namespace CakeExtracter.Logging.Loggers
 
         private LogEntry LogEntry(TraceEventType severity, string format, params object[] args)
         {
-            return new LogEntry
+            var logEntry = new LogEntry
             {
                 Message = string.Format(format, args),
-                Severity = severity
+                Severity = severity,
             };
+            logEntry.ExtendedProperties["JobName"] = jobName;
+            return logEntry;
         }
 
         public void Info(string format, params object[] args)

@@ -93,6 +93,7 @@
     <Compile Include="Drivers\ChromeWebDriver.cs" />
     <Compile Include="Enums\AmazonCmApiMetrics.cs" />
     <Compile Include="Enums\AmazonReportMetrics.cs" />
+    <Compile Include="Exceptions\AccountDoesNotHaveProfileException.cs" />
     <Compile Include="Helpers\AmazonCmApiHelper.cs" />
     <Compile Include="Helpers\CookieManager.cs" />
     <Compile Include="Helpers\RestRequestHelper.cs" />

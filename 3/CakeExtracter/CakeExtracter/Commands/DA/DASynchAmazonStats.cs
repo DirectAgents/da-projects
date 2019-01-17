@@ -10,7 +10,6 @@ using DirectAgents.Domain.Entities.CPProg;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CakeExtracter.Commands
@@ -24,7 +23,6 @@ namespace CakeExtracter.Commands
             var cmd = new DASynchAmazonStats
             {
                 AccountId = accountId,
-                //CampaignId = campaignId,
                 StartDate = startDate,
                 EndDate = endDate,
                 StatsType = statsType,
@@ -41,6 +39,7 @@ namespace CakeExtracter.Commands
         public bool DisabledOnly { get; set; }
         public bool FromDatabase { get; set; }
         public bool ClearBeforeLoad { get; set; }
+        public bool KeepAmazonReports { get; set; }
 
         public override void ResetProperties()
         {
@@ -52,6 +51,7 @@ namespace CakeExtracter.Commands
             DisabledOnly = false;
             FromDatabase = false;
             ClearBeforeLoad = false;
+            KeepAmazonReports = false;
         }
 
         public DASynchAmazonStats()
@@ -65,6 +65,7 @@ namespace CakeExtracter.Commands
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
             HasOption<bool>("z|fromDatabase=", "Retrieve from database instead of API (where implemented)", c => FromDatabase = c);
             HasOption<bool>("c|clearBeforeLoad=", "Remove data from the database on a specific date before loading new extracted data (default = false)", c => ClearBeforeLoad = c);
+            HasOption<bool>("k|keepAmazonReports=", "Store received Amazon reports in a separate folder (default = false)", c => KeepAmazonReports = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -87,9 +88,7 @@ namespace CakeExtracter.Commands
             Parallel.ForEach(accounts, account =>
             {
                 Logger.Info(account.Id, "Commencing ETL for Amazon account ({0}) {1}", account.Id, account.Name);
-
-                var amazonUtility = new AmazonUtility(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m));
-                amazonUtility.SetWhichAlt(account.ExternalId);
+                var amazonUtility = CreateUtility(account);
 
                 try
                 {
@@ -97,6 +96,7 @@ namespace CakeExtracter.Commands
                     {
                         DoETL_Daily(dateRange, account, amazonUtility);
                     }
+
                     if (statsType.Strategy)
                     {
                         DoETL_Strategy(dateRange, account, amazonUtility);
@@ -121,7 +121,8 @@ namespace CakeExtracter.Commands
                     {
                         DoETL_Keyword(dateRange, account, amazonUtility);
                     }
-                    if (statsType.SearchTerm)
+
+                    if (statsType.SearchTerm && !statsType.All)
                     {
                         DoETL_SearchTerm(dateRange, account, amazonUtility);
                     }
@@ -146,6 +147,20 @@ namespace CakeExtracter.Commands
         private void SaveTokens(string[] tokens)
         {
             Platform.SavePlatformTokens(Platform.Code_Amazon, tokens);
+        }
+
+        private AmazonUtility CreateUtility(ExtAccount account)
+        {
+            var amazonUtility = new AmazonUtility(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m));
+            amazonUtility.SetWhichAlt(account.ExternalId);
+            if (!KeepAmazonReports)
+            {
+                return amazonUtility;
+            }
+
+            amazonUtility.KeepReports = KeepAmazonReports;
+            amazonUtility.ReportPrefix = account.Id.ToString();
+            return amazonUtility;
         }
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
@@ -200,7 +215,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Keyword(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            var extracter = new AmazonApiKeywordExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);            
+            var extracter = new AmazonApiKeywordExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
             var loader = new AmazonKeywordSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);

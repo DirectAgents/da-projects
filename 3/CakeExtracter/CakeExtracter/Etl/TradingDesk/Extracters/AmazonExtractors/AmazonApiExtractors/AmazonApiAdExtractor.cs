@@ -15,9 +15,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
     public class AmazonApiAdExtrator : BaseAmazonExtractor<TDadSummary>
     {
         //NOTE: We can only get ad stats for SponsoredProduct campaigns, for these reasons:
-        // - the get-ProductAds call only returns SP ads
-        // - for Sponsored Brands reports, recordType call only be campaigns, adGroups or keywords
-        // - a productAdId metric is not available anyway
 
         public AmazonApiAdExtrator(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, bool clearBeforeLoad, string campaignFilter = null, string campaignFilterOut = null)
             : base(amazonUtility, dateRange, account, clearBeforeLoad, campaignFilter, campaignFilterOut)
@@ -37,8 +34,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
 
         private void Extract(DateTime date)
         {
-            var sums = ExtractSummaries(date);
-            var items = TransformSummaries(sums, date);
+            var productAdSums = ExtractProductAdSummaries(date);
+            var asinSums = ExtractAsinSummaries(date);
+            var items = TransformSummaries(productAdSums, asinSums, date);
             if (ClearBeforeLoad)
             {
                 RemoveOldData(date);
@@ -47,18 +45,33 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             Add(items);
         }
 
-        private IEnumerable<AmazonAdDailySummary> ExtractSummaries(DateTime date)
+        private IEnumerable<AmazonAdDailySummary> ExtractProductAdSummaries(DateTime date)
         {
             var sums = _amazonUtility.ReportProductAds(date, clientId, true);
             var filteredSums = FilterByCampaigns(sums, x => x.CampaignName);
             return filteredSums.ToList();
         }
 
-        private IEnumerable<TDadSummary> TransformSummaries(IEnumerable<AmazonAdDailySummary> adStats, DateTime date)
+        private IEnumerable<AmazonAsinSummaries> ExtractAsinSummaries(DateTime date)
+        {
+            var sums = _amazonUtility.ReportAsins(date, clientId);
+            return sums.ToList();
+        }
+
+        private IEnumerable<TDadSummary> TransformSummaries(IEnumerable<AmazonAdDailySummary> adStats,
+            IEnumerable<AmazonAsinSummaries> asinStats, DateTime date)
         {
             var notEmptyStats = adStats.Where(x => !x.AllZeros()).ToList();
-            var summaries = notEmptyStats.Select(stat => CreateSummary(stat, date));
+            var summaries = notEmptyStats.Select(stat => CreateSummary(stat, asinStats, date));
             return summaries.ToList();
+        }
+
+        private TDadSummary CreateSummary(AmazonAdDailySummary adStat, IEnumerable<AmazonAsinSummaries> asinStats, DateTime date)
+        {
+            var sum = CreateSummary(adStat, date);
+            var asinStatsForProduct = asinStats.Where(x => x.Asin == adStat.Asin && x.AdGroupId == adStat.AdGroupId).ToList();
+            AddAsinMetrics(sum, asinStatsForProduct);
+            return sum;
         }
 
         private TDadSummary CreateSummary(AmazonAdDailySummary adSum, DateTime date)
@@ -91,6 +104,20 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
                 ExternalId = value
             };
             ids.Add(id);
+        }
+
+        private void AddAsinMetrics(TDadSummary summary, IEnumerable<AmazonAsinSummaries> asinStats)
+        {
+            var sumMetrics = summary.InitialMetrics.ToList();
+            AddMetric(sumMetrics, AttributedMetricType.attributedSalesOtherSKU, AttributedMetricDaysInterval.Days1, summary.Date, asinStats.Sum(x => x.AttributedSales1DOtherSku));
+            AddMetric(sumMetrics, AttributedMetricType.attributedSalesOtherSKU, AttributedMetricDaysInterval.Days7, summary.Date, asinStats.Sum(x => x.AttributedSales7DOtherSku));
+            AddMetric(sumMetrics, AttributedMetricType.attributedSalesOtherSKU, AttributedMetricDaysInterval.Days14, summary.Date, asinStats.Sum(x => x.AttributedSales14DOtherSku));
+            AddMetric(sumMetrics, AttributedMetricType.attributedSalesOtherSKU, AttributedMetricDaysInterval.Days30, summary.Date, asinStats.Sum(x => x.AttributedSales30DOtherSku));
+            AddMetric(sumMetrics, AttributedMetricType.attributedUnitsOrderedOtherSKU, AttributedMetricDaysInterval.Days1, summary.Date, asinStats.Sum(x => x.AttributedSales1DOtherSku));
+            AddMetric(sumMetrics, AttributedMetricType.attributedUnitsOrderedOtherSKU, AttributedMetricDaysInterval.Days7, summary.Date, asinStats.Sum(x => x.AttributedSales7DOtherSku));
+            AddMetric(sumMetrics, AttributedMetricType.attributedUnitsOrderedOtherSKU, AttributedMetricDaysInterval.Days14, summary.Date, asinStats.Sum(x => x.AttributedSales14DOtherSku));
+            AddMetric(sumMetrics, AttributedMetricType.attributedUnitsOrderedOtherSKU, AttributedMetricDaysInterval.Days30, summary.Date, asinStats.Sum(x => x.AttributedSales30DOtherSku));
+            summary.InitialMetrics = sumMetrics;
         }
 
         private void RemoveOldData(DateTime date)
