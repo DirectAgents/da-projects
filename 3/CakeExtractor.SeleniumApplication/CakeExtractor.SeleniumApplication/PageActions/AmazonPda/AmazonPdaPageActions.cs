@@ -15,8 +15,6 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         {
         }
 
-        
-
         public string GetProfileUrl(string profileName)
         {
             string profileUrl = null;

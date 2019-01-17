@@ -49,30 +49,6 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("reportingdev@directagents.com")]
-        public string EMail {
-            get {
-                return ((string)(this["EMail"]));
-            }
-            set {
-                this["EMail"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("rep0rts")]
-        public string EMailPassword {
-            get {
-                return ((string)(this["EMailPassword"]));
-            }
-            set {
-                this["EMailPassword"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("WebDriverDownloads")]
         public string DownloadsDirectoryName {
             get {
@@ -185,6 +161,30 @@ namespace CakeExtractor.SeleniumApplication.Properties {
             }
             set {
                 this["FromDatabase"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("reportingdev@directagents.com")]
+        public string EMail {
+            get {
+                return ((string)(this["EMail"]));
+            }
+            set {
+                this["EMail"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("rep0rts")]
+        public string EMailPassword {
+            get {
+                return ((string)(this["EMailPassword"]));
+            }
+            set {
+                this["EMailPassword"] = value;
             }
         }
     }

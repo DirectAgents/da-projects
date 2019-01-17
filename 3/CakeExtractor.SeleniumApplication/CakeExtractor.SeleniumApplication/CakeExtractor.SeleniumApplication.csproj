@@ -86,6 +86,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\BaseAmazoneSeleniumCommand.cs" />
     <Compile Include="Commands\SyncAmazonVcdCommand.cs" />
     <Compile Include="Commands\SyncAmazonPdaCommand.cs" />
     <Compile Include="Configuration\Models\AccountInfo.cs" />
@@ -99,8 +100,9 @@
     <Compile Include="Helpers\RestRequestHelper.cs" />
     <Compile Include="Helpers\RetryHelper.cs" />
     <Compile Include="Helpers\TimeHelper.cs" />
-    <Compile Include="Jobs\ExtractAmazonVcd\ExtractAmazonVcdJobScheduler.cs" />
-    <Compile Include="Jobs\ExtractAmazonVcd\ExtractAmazonVcdJob.cs" />
+    <Compile Include="Jobs\AmazonSeleniumCommandsJob.cs" />
+    <Compile Include="Jobs\AmazonSeleniumCommandsJobScheduler.cs" />
+    <Compile Include="Jobs\JobConstants.cs" />
     <Compile Include="Loaders\VCD\AmazonVcdLoader.cs" />
     <Compile Include="Loaders\VCD\Constants\VendorCentralDataLoadingConstants.cs" />
     <Compile Include="Loaders\VCD\MetricTypesLoader\BaseVendorItemLoader.cs" />
@@ -138,12 +140,10 @@
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportParsing\VcdReportParser.cs" />
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\UserInfoExtracting\Models\UserInfo.cs" />
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\UserInfoExtracting\UserInfoExtracter.cs" />
-    <Compile Include="Settings\VcdSettings.cs" />
     <Compile Include="Helpers\AmazonConsoleManagerUtility.cs" />
     <Compile Include="SeleniumExtractors\PDA\AmazonPdaExtractors\AmazonPdaCampaignExtractor.cs" />
     <Compile Include="SeleniumExtractors\PDA\AmazonPdaExtractors\AmazonPdaDailyExtractor.cs" />
     <Compile Include="SeleniumExtractors\PDA\AmazonPdaExtractors\AmazonPdaExtractor.cs" />
-    <Compile Include="Jobs\ExtractAmazonPda\ExtractAmazonPdaJob.cs" />
     <Compile Include="Models\CampaignInfo.cs" />
     <Compile Include="PageActions\BasePageActions.cs" />
     <Compile Include="Helpers\FileManager.cs" />
@@ -156,7 +156,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Jobs\ExtractAmazonPda\ExtractAmazonPdaScheduler.cs" />
     <Compile Include="SeleniumExtractors\PDA\AmazonReportCsvExtractors\AmazonReportCsvExtractor.cs" />
   </ItemGroup>
   <ItemGroup>

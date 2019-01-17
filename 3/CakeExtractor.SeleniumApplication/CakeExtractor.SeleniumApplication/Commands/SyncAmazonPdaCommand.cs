@@ -1,22 +1,19 @@
 ﻿using CakeExtracter.Commands;
 using CakeExtracter.Common;
-using CakeExtractor.SeleniumApplication.Jobs.ExtractAmazonPda;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using CakeExtracter;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors;
-using ConsoleCommand = ManyConsole.ConsoleCommand;
 using Platform = DirectAgents.Domain.Entities.CPProg.Platform;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
-    internal class SyncAmazonPdaCommand : ConsoleCommand
+    internal class SyncAmazonPdaCommand : BaseAmazoneSeleniumCommand
     {
         public int? AccountId { get; set; }
         public DateTime? StartDate { get; set; }
@@ -48,16 +45,14 @@ namespace CakeExtractor.SeleniumApplication.Commands
                 c => FromDatabase = c);
         }
 
-        public override int Run(string[] remainingArguments)
+        public override void PrepareCommandEnvironment()
         {
             AmazonPdaExtractor.PrepareExtractor();
-            InitializeScheduledJob();
-            AlwaysSleep();
-            return 0;
         }
 
-        public void Execute()
+        public override int Run(string[] remainingArguments)
         {
+            
             executionNumber++;
             var statsType = new StatsTypeAgg(StatsType);
             var dateRange = GetDateRange();
@@ -73,27 +68,8 @@ namespace CakeExtractor.SeleniumApplication.Commands
             }
 
             Logger.Info("Amazon ETL (PDA Campaigns) has been finished.");
-            LogScheduledJobStartTime();
-        }
-
-        private void InitializeScheduledJob()
-        {
-            scheduling = new JobScheduleModel
-            {
-                DaysInterval = Properties.Settings.Default.ExtractionIntervalsInDays,
-                //StartExtractionTime = Properties.Settings.Default.StartExtractionDateTime
-                StartExtractionTime = DateTime.Now
-            };
-            ExtractAmazonPdaScheduler.Start(this, scheduling);
-            LogScheduledJobStartTime();
-        }
-
-        private static void AlwaysSleep()
-        {
-            while (true)
-            {
-                Thread.Sleep(int.MaxValue);
-            }
+            //LogScheduledJobStartTime();
+            return 0;
         }
 
         private static void DoEtls(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType, bool fromDatabase)

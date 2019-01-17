@@ -17,8 +17,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
 {
     internal class VcdReportDownloader
     {
-        private const string salesDiagnosticPageUrl = "https://ara.amazon.com/analytics/dashboard/salesDiagnostic";
-
         private const string amazonBaseUrl = "https://ara.amazon.com";
 
         private const string amazonCsvDownloadReportUrl = "/analytics/download/csv/dashboard/salesDiagnostic";
@@ -36,7 +34,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
         public string DownloadReportAsCsvText(DateTime reportDay)
         {
             Logger.Info("Amazon VCD, Attemt to download report.");
-            NavigateToSalesDiagnosticPage();
+            pageActions.NavigateToSalesDiagnosticPage();
             var request = GetDownloadingRequest(reportDay);
             var response = RestRequestHelper.SendPostRequest<object>(amazonBaseUrl, request);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
@@ -73,10 +71,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
             };
         }
 
-        private void NavigateToSalesDiagnosticPage()
-        {
-            pageActions.NavigateToUrl(salesDiagnosticPageUrl);
-        }
+       
 
         private RestRequest GenerateDownloadingReportRequest(ReportDownloadingRequestPageData requestPageData, DateTime reportDay,
             string vendorGroupId, string mcId)

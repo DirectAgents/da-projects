@@ -25,7 +25,7 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public int DaysInterval {
             get {
                 return ((int)(this["DaysInterval"]));
@@ -54,18 +54,6 @@ namespace CakeExtractor.SeleniumApplication.Properties {
             }
             set {
                 this["EndDate"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("VcdCookies")]
-        public string CookiesDirectoryPath {
-            get {
-                return ((string)(this["CookiesDirectoryPath"]));
-            }
-            set {
-                this["CookiesDirectoryPath"] = value;
             }
         }
         
@@ -102,6 +90,18 @@ namespace CakeExtractor.SeleniumApplication.Properties {
             }
             set {
                 this["AmazonMcId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("E:\\\\vcdCookies")]
+        public string CookiesDirectory {
+            get {
+                return ((string)(this["CookiesDirectory"]));
+            }
+            set {
+                this["CookiesDirectory"] = value;
             }
         }
     }

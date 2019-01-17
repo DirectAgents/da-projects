@@ -1,5 +1,6 @@
 ﻿using CakeExtracter;
 using CakeExtractor.SeleniumApplication.Configuration.Models;
+using CakeExtractor.SeleniumApplication.Configuration.Vcd;
 using CakeExtractor.SeleniumApplication.Drivers;
 using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
@@ -8,7 +9,6 @@ using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHelpers;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportParsing;
-using CakeExtractor.SeleniumApplication.Settings;
 using System;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
@@ -19,12 +19,20 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
 
         private AmazonVcdPageActions pageActions;
 
+        VcdCommandConfigurationManager configurationManager;
+
+        public AmazonVcdExtractor(VcdCommandConfigurationManager configurationManager)
+        {
+            this.configurationManager = configurationManager;
+        }
+
         public void PrepareExtractor()
         {
             InitializeAuthorizationModel();
             InitializePageManager(); // opens google chrome application
             CreateApplicationFolders();
             AmazonLoginHelper.LoginToAmazonPortal(authorizationModel, pageActions);
+            pageActions.NavigateToSalesDiagnosticPage();
         }
 
         public VcdReportData ExtractDailyData(DateTime reportDay, AccountInfo accountInfo)
@@ -82,7 +90,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
                 Login = Properties.Settings.Default.EMail,
                 Password = Properties.Settings.Default.EMailPassword,
                 SignInUrl = Properties.Settings.Default.SignInPageUrl,
-                CookiesDir = VcdSettings.CookiesDirectory
+                CookiesDir = configurationManager.GetCookiesDirectoryPath()
             };
         }
 

@@ -4,6 +4,8 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonVcd
 {
     internal class AmazonVcdPageActions : BaseAmazonPageActions
     {
+        private const string salesDiagnosticPageUrl = "https://ara.amazon.com/analytics/dashboard/salesDiagnostic";
+
         public AmazonVcdPageActions(IWebDriver driver, int timeoutMinutes) : base(driver, timeoutMinutes)
         {
         }
@@ -20,6 +22,11 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonVcd
             IJavaScriptExecutor js = Driver as IJavaScriptExecutor;
             var userInfoJson = js.ExecuteScript("return JSON.stringify(window.userInfo)") as string;
             return userInfoJson;
+        }
+
+        public void NavigateToSalesDiagnosticPage()
+        {
+            NavigateToUrl(salesDiagnosticPageUrl);
         }
     }
 }

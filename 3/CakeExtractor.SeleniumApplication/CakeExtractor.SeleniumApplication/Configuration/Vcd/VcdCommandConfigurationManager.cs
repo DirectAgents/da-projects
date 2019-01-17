@@ -32,6 +32,11 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
             return VcdSettings.Default.AccountId;
         }
 
+        public string GetCookiesDirectoryPath()
+        {
+            return VcdSettings.Default.CookiesDirectory;
+        }
+
         public int GetVendorGroupId()
         {
             return VcdSettings.Default.AmazonVendorGroupId;

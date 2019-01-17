@@ -1,6 +1,5 @@
 ﻿using System;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
-using ConsoleCommand = ManyConsole.ConsoleCommand;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD;
 using CakeExtractor.SeleniumApplication.Loaders.VCD;
 using System.Collections.Generic;
@@ -11,11 +10,17 @@ using CakeExtractor.SeleniumApplication.Configuration.Models;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
-    internal class SyncAmazonVcdCommand : ConsoleCommand
+    internal class SyncAmazonVcdCommand : BaseAmazoneSeleniumCommand
     {
         public int? AccountId { get; set; }
+
         private int executionNumber;
+
         private JobScheduleModel scheduling;
+
+        private AmazonVcdExtractor extractor;
+
+        private AmazonVcdLoader loader;
 
         private VcdCommandConfigurationManager configurationManager;
 
@@ -23,13 +28,17 @@ namespace CakeExtractor.SeleniumApplication.Commands
         {
             IsCommand("SyncAmazonVcdCommand", "Synch Amazon Vendor Central Data Stats");
             configurationManager = new VcdCommandConfigurationManager();
+            extractor = new AmazonVcdExtractor(configurationManager);
+            loader = new AmazonVcdLoader();
+        }
+
+        public override void PrepareCommandEnvironment()
+        {
+            extractor.PrepareExtractor();
         }
 
         public override int Run(string[] remainingArguments)
         {
-            var extractor = new AmazonVcdExtractor();
-            var loader = new AmazonVcdLoader();
-            extractor.PrepareExtractor();
             var accountsData = GetAccountsDataToProcess();
             foreach (var accountData in accountsData)
             {
