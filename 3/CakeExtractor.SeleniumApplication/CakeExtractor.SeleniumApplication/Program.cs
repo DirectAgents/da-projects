@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Logging.Loggers;
@@ -22,10 +23,6 @@ namespace CakeExtractor.SeleniumApplication
         
         static void Main(string[] args)
         {
-            //var reportText = File.ReadAllText(@"E:\test.txt");
-            //var parser = new VcdReportCSVParser();
-            //var reportParsedInfo = parser.ParseReportData(reportText);
-            //return;
             InitializeEnterpriseLibrary();
             InitializeLogging();
             AutoMapperBootstrapper.CheckRunSetup();

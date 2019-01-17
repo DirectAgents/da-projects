@@ -144,7 +144,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                 {
                     return 0;
                 }
-                int count = int.Parse(text, CultureInfo.InvariantCulture);
+                int count = int.Parse(text, NumberStyles.AllowThousands | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture); ;
                 return count;
             }
         }

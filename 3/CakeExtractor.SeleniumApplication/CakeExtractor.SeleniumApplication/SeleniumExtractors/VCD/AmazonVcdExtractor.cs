@@ -1,4 +1,5 @@
 ﻿using CakeExtracter;
+using CakeExtractor.SeleniumApplication.Configuration.Models;
 using CakeExtractor.SeleniumApplication.Drivers;
 using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
@@ -26,18 +27,18 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
             AmazonLoginHelper.LoginToAmazonPortal(authorizationModel, pageActions);
         }
 
-        public VcdReportData ExtractDailyData(DateTime reportDay)
+        public VcdReportData ExtractDailyData(DateTime reportDay, AccountInfo accountInfo)
         {
-            var reportTextContent = DownloadReport(reportDay);
+            var reportTextContent = DownloadReport(reportDay, accountInfo);
             var reportData = ParseReport(reportTextContent);
             return reportData;
         }
 
-        private string DownloadReport(DateTime reportDay)
+        private string DownloadReport(DateTime reportDay, AccountInfo accountInfo)
         {
             try
             {
-                var reportDownloader = new VcdReportDownloader(pageActions);
+                var reportDownloader = new VcdReportDownloader(pageActions, accountInfo);
                 var reportTextContent = 
                     RetryHelper.Do(()=> { return reportDownloader.DownloadReportAsCsvText(reportDay); }, TimeSpan.FromSeconds(10), 5);
                 return reportTextContent;

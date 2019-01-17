@@ -2,35 +2,27 @@
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using ConsoleCommand = ManyConsole.ConsoleCommand;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD;
-using DirectAgents.Domain.Entities.CPProg;
-using CakeExtracter.Common;
 using CakeExtractor.SeleniumApplication.Loaders.VCD;
 using System.Collections.Generic;
-using System.Linq;
 using DirectAgents.Domain.Concrete;
 using CakeExtracter;
+using CakeExtractor.SeleniumApplication.Configuration.Vcd;
+using CakeExtractor.SeleniumApplication.Configuration.Models;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
     internal class SyncAmazonVcdCommand : ConsoleCommand
     {
         public int? AccountId { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-        private int DaysAgoToStart = 30;
-
         private int executionNumber;
         private JobScheduleModel scheduling;
+
+        private VcdCommandConfigurationManager configurationManager;
 
         public SyncAmazonVcdCommand()
         {
             IsCommand("SyncAmazonVcdCommand", "Synch Amazon Vendor Central Data Stats");
-            HasOption<int>("vcdA|vcdAccountId=", "Account Id (default = all)", c => AccountId = c);
-            HasOption("vcdS|vcdStartDate=", "Start Date (default is from config or 'daysAgo')",
-                c => StartDate = DateTime.Parse(c));
-            HasOption("vcdE|vcdEndDate=", "End Date (default is from config or yesterday)", c => EndDate = DateTime.Parse(c));
-            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate or end date not specified (default is 30})",
-                c => DaysAgoToStart = c);
+            configurationManager = new VcdCommandConfigurationManager();
         }
 
         public override int Run(string[] remainingArguments)
@@ -38,24 +30,26 @@ namespace CakeExtractor.SeleniumApplication.Commands
             var extractor = new AmazonVcdExtractor();
             var loader = new AmazonVcdLoader();
             extractor.PrepareExtractor();
-            var accounts = GetAccounts();
-            foreach (var account in accounts)
+            var accountsData = GetAccountsDataToProcess();
+            foreach (var accountData in accountsData)
             {
-                DoEtls(extractor, loader, account);
+                Logger.Info("Amazon VCD, ETL for {0} account started.", accountData.Account.Id);
+                DoEtlForAccount(extractor, loader, accountData);
+                Logger.Info("Amazon VCD, ETL for {0} account finished.", accountData.Account.Id);
             }
             return 1;
         }
 
-        private void DoEtls(AmazonVcdExtractor extractor, AmazonVcdLoader loader, ExtAccount account)
+        private void DoEtlForAccount(AmazonVcdExtractor extractor, AmazonVcdLoader loader, AccountInfo accountInfo)
         {
-            var daysToProcess = GetDaysToProcess();
+            var daysToProcess = configurationManager.GetDaysToProcess();
             daysToProcess.ForEach(day =>
             {
                 try
                 {
                     Logger.Info("Amazon VCD, ETL for {0} started.", day);
-                    var dailyVendorData = extractor.ExtractDailyData(day);
-                    //loader.LoadDailyData(dailyVendorData, day, account);
+                    var dailyVendorData = extractor.ExtractDailyData(day, accountInfo);
+                    loader.LoadDailyData(dailyVendorData, day, accountInfo.Account);
                     Logger.Info("Amazon VCD, ETL for {0} finished.", day);
                 }
                 catch (Exception ex)
@@ -66,41 +60,23 @@ namespace CakeExtractor.SeleniumApplication.Commands
             });
         }
 
-        private List<DateTime> GetDaysToProcess()
-        {
-            var dateRangeToProcess = GetDateRangeToProcess();
-            return GetDaysBetweenToDates(dateRangeToProcess.FromDate, dateRangeToProcess.ToDate).ToList();
-        }
-
-        private IEnumerable<DateTime> GetDaysBetweenToDates(DateTime from, DateTime thru)
-        {
-            for (var day = from.Date; day.Date <= thru.Date; day = day.AddDays(1))
-                yield return day;
-        }
-
-        private DateRange GetDateRangeToProcess()
-        {
-            if (StartDate.HasValue && EndDate.HasValue)
-            {
-                return new DateRange(StartDate.Value, EndDate.Value);
-            }
-            else
-            {
-                var endDate = DateTime.Today.AddDays(-1);
-                var startDate = DateTime.Today.AddDays(-DaysAgoToStart);
-                return new DateRange(startDate, endDate);
-            }
-        }
-
-        private IEnumerable<ExtAccount> GetAccounts()
+        // in current implementation multiple accounts processing is not supported
+        // account data for processing defined in config
+        // in future account for processing should be defined in database, vendorGroupId and mcId 
+        // can be fetched from page using selenium (See UserInfoExtracter.cs) or also can be stored in database
+        private List<AccountInfo> GetAccountsDataToProcess()
         {
             var repository = new PlatformAccountRepository();
-            if (!AccountId.HasValue)
+            var account = repository.GetAccount(configurationManager.GetAccountId());
+            return new List<AccountInfo>()
             {
-                throw new Exception("Account should be specified");
-            }
-            var account = repository.GetAccount(AccountId.Value);
-            return new[] { account };
+               new AccountInfo
+               {
+                   Account = account,
+                   McId = configurationManager.GetMcId(),
+                   VendorGroupId = configurationManager.GetVendorGroupId()
+               }
+            };
         }
     }
 }

@@ -26,12 +26,12 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("30")]
-        public int DaysToProcess {
+        public int DaysInterval {
             get {
-                return ((int)(this["DaysToProcess"]));
+                return ((int)(this["DaysInterval"]));
             }
             set {
-                this["DaysToProcess"] = value;
+                this["DaysInterval"] = value;
             }
         }
         
@@ -66,6 +66,42 @@ namespace CakeExtractor.SeleniumApplication.Properties {
             }
             set {
                 this["CookiesDirectoryPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1437")]
+        public int AccountId {
+            get {
+                return ((int)(this["AccountId"]));
+            }
+            set {
+                this["AccountId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("797780")]
+        public int AmazonVendorGroupId {
+            get {
+                return ((int)(this["AmazonVendorGroupId"]));
+            }
+            set {
+                this["AmazonVendorGroupId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int AmazonMcId {
+            get {
+                return ((int)(this["AmazonMcId"]));
+            }
+            set {
+                this["AmazonMcId"] = value;
             }
         }
     }

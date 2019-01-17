@@ -16,11 +16,5 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
             get;
             set;
         }
-
-        public UserInfo UserInfo
-        {
-            get;
-            set;
-        }
     }
 }

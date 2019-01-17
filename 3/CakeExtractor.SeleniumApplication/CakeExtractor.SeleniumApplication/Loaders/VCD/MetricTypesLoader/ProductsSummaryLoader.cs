@@ -1,5 +1,4 @@
-﻿using CakeExtractor.SeleniumApplication.Loaders.VCD.Constants;
-using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models;
+﻿using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Vendor;
@@ -32,19 +31,6 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
         protected override DbSet<VendorProductSummaryMetric> GetSummaryMetricDbSet(ClientPortalProgContext dbContext)
         {
             return dbContext.VendorProductSummaryMetrics;
-        }
-
-        protected override List<VendorProductSummaryMetric> GetSummaryMetricEntities(Product reportEntity, VendorProduct dbEntity, DateTime date)
-        {
-            return new List<VendorProductSummaryMetric>
-            {
-                new VendorProductSummaryMetric(dbEntity.Id, date,
-                    metricTypes[VendorCentralDataLoadingConstants.ShippedUnitsMetricName], reportEntity.ShippedUnits),
-                new VendorProductSummaryMetric(dbEntity.Id, date,
-                    metricTypes[VendorCentralDataLoadingConstants.OrderedUnitsMetricName], reportEntity.OrderedUnits),
-                new VendorProductSummaryMetric(dbEntity.Id, date,
-                    metricTypes[VendorCentralDataLoadingConstants.ShippedRevenueMetricName], reportEntity.ShippedRevenue)
-            };
         }
 
         protected override DbSet<VendorProduct> GetVendorDbSet(ClientPortalProgContext dbContext)

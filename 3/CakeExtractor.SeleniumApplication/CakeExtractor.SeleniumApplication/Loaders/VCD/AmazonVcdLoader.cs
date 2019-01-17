@@ -15,8 +15,6 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
     {
         private Dictionary<string, int> metricTypes;
 
-        private CategoriesSummaryLoader categorySummaryLoader;
-
         public AmazonVcdLoader()
         {
             metricTypes= new Dictionary<string, int>();
@@ -41,7 +39,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
         private List<VendorCategory> LoadCategoriesData(List<Category> categories, DateTime date, ExtAccount extAccount)
         {
             Logger.Info("Amazon VCD, Started categories data loading");
-            categorySummaryLoader = new CategoriesSummaryLoader(metricTypes);
+            var categorySummaryLoader = new CategoriesSummaryLoader(metricTypes);
             var dbCategories = categorySummaryLoader.EnsureVendorEntitiesInDataBase(categories, extAccount);
             categorySummaryLoader.CleanExistingAccountSummaryMetricsDataForDate(date, extAccount);
             categorySummaryLoader.LoadNewAccountSummaryMetricsDataForDate(categories, dbCategories, date, extAccount);

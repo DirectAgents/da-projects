@@ -1,10 +1,8 @@
-﻿using CakeExtractor.SeleniumApplication.Loaders.VCD.Constants;
-using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models;
+﻿using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Vendor;
 using DirectAgents.Domain.Entities.CPProg.Vendor.SummaryMetrics;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 
@@ -20,19 +18,6 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
         protected override DbSet<VendorCategorySummaryMetric> GetSummaryMetricDbSet(ClientPortalProgContext dbContext)
         {
             return dbContext.VendorCategorySummaryMetrics;
-        }
-
-        protected override List<VendorCategorySummaryMetric> GetSummaryMetricEntities(Category reportEntity, VendorCategory dbEntity, DateTime date)
-        {
-            return new List<VendorCategorySummaryMetric>
-            {
-                new VendorCategorySummaryMetric(dbEntity.Id, date,
-                    metricTypes[VendorCentralDataLoadingConstants.ShippedUnitsMetricName], reportEntity.ShippedUnits),
-                new VendorCategorySummaryMetric(dbEntity.Id, date,
-                    metricTypes[VendorCentralDataLoadingConstants.OrderedUnitsMetricName], reportEntity.OrderedUnits),
-                new VendorCategorySummaryMetric(dbEntity.Id, date,
-                    metricTypes[VendorCentralDataLoadingConstants.ShippedRevenueMetricName], reportEntity.ShippedRevenue)
-            };
         }
 
         protected override DbSet<VendorCategory> GetVendorDbSet(ClientPortalProgContext dbContext)

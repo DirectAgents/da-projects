@@ -1,4 +1,5 @@
-﻿using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models;
+﻿using CakeExtractor.SeleniumApplication.Loaders.VCD.Constants;
+using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Vendor;
@@ -12,7 +13,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
     internal abstract class BaseVendorItemLoader<TReportEntity, TDbEntity, TSummaryMetricEntity>
         where TReportEntity : ShippingItem
         where TDbEntity : BaseVendorEntity
-        where TSummaryMetricEntity : SummaryMetric
+        where TSummaryMetricEntity : SummaryMetric, new()
     {
         protected Dictionary<string, int> metricTypes;
 
@@ -79,12 +80,40 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
             return dbEntity => dbEntity.Name == reportEntity.Name && dbEntity.AccountId == extAccount.Id;
         }
 
-        protected abstract List<TSummaryMetricEntity> GetSummaryMetricEntities(TReportEntity reportEntity, TDbEntity dbEntity, DateTime date);
-
         protected abstract TDbEntity MapReportEntityToDbEntity(TReportEntity reportEntity, ExtAccount extAccount);
 
         protected abstract DbSet<TDbEntity> GetVendorDbSet(ClientPortalProgContext dbContext);
 
         protected abstract DbSet<TSummaryMetricEntity> GetSummaryMetricDbSet(ClientPortalProgContext dbContext);
+
+        private List<TSummaryMetricEntity> GetSummaryMetricEntities(TReportEntity reportEntity, TDbEntity dbEntity, DateTime date)
+        {
+            var metricEntities = new List<TSummaryMetricEntity>
+            {
+               InitMetricValue(dbEntity.Id, date, reportEntity.ShippedUnits,
+                    metricTypes[VendorCentralDataLoadingConstants.ShippedUnitsMetricName]),
+               InitMetricValue(dbEntity.Id, date, reportEntity.OrderedUnits,
+                    metricTypes[VendorCentralDataLoadingConstants.OrderedUnitsMetricName]),
+                InitMetricValue(dbEntity.Id, date, reportEntity.ShippedRevenue,
+                    metricTypes[VendorCentralDataLoadingConstants.ShippedRevenueMetricName])
+            };
+            metricEntities.RemoveAll(item => item == null);
+            return metricEntities;
+        }
+
+        private TSummaryMetricEntity InitMetricValue(int entityId, DateTime date, decimal value, int metricTypeId)
+        {
+            if (value != 0)
+            {
+                return new TSummaryMetricEntity
+                {
+                    EntityId = entityId,
+                    MetricTypeId = metricTypeId,
+                    Date = date,
+                    Value = value
+                };
+            }
+            return null;
+        }
     }
 }

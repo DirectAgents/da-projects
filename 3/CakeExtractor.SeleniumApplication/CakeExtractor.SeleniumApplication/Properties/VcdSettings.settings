@@ -2,7 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CakeExtractor.SeleniumApplication.Properties" GeneratedClassName="VcdSettings">
   <Profiles />
   <Settings>
-    <Setting Name="DaysToProcess" Type="System.Int32" Scope="User">
+    <Setting Name="DaysInterval" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">30</Value>
     </Setting>
     <Setting Name="StartDate" Type="System.DateTime" Scope="User">
@@ -13,6 +13,15 @@
     </Setting>
     <Setting Name="CookiesDirectoryPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">VcdCookies</Value>
+    </Setting>
+    <Setting Name="AccountId" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1437</Value>
+    </Setting>
+    <Setting Name="AmazonVendorGroupId" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">797780</Value>
+    </Setting>
+    <Setting Name="AmazonMcId" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>

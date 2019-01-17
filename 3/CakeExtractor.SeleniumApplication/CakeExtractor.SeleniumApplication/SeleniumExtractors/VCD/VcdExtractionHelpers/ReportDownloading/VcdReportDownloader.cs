@@ -1,4 +1,5 @@
 ﻿using CakeExtracter;
+using CakeExtractor.SeleniumApplication.Configuration.Models;
 using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Models.Vcd;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
@@ -24,9 +25,12 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
 
         private AmazonVcdPageActions pageActions;
 
-        public VcdReportDownloader(AmazonVcdPageActions pageActions)
+        private AccountInfo accountInfo;
+
+        public VcdReportDownloader(AmazonVcdPageActions pageActions, AccountInfo accountInfo)
         {
             this.pageActions = pageActions;
+            this.accountInfo = accountInfo;
         }
 
         public string DownloadReportAsCsvText(DateTime reportDay)
@@ -52,9 +56,8 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
         private RestRequest GetDownloadingRequest(DateTime reportDay)
         {
             var pageRequestData = GetPageDataForReportRequest();
-            var vendorGroupId = pageRequestData.UserInfo.activeVendorGroupId.ToString();
-            var mcId = pageRequestData.UserInfo.activeMcId.ToString();
-            var request = GenerateDownloadingReportRequest(pageRequestData, reportDay, vendorGroupId, mcId);
+            var request = GenerateDownloadingReportRequest(pageRequestData, reportDay, 
+                accountInfo.VendorGroupId.ToString(), accountInfo.McId.ToString());
             return request;
         }
 
@@ -66,8 +69,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
             return new ReportDownloadingRequestPageData
             {
                 Token = token,
-                Cookies = cookies,
-                UserInfo = userInfo
+                Cookies = cookies
             };
         }
 
