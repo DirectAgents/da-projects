@@ -8,6 +8,8 @@ using CakeExtracter.Mef;
 
 namespace CakeExtracter
 {
+    using CakeExtracter.Logging.Loggers;
+
     class Program
     {
         private readonly Composer<Program> composer;
@@ -18,12 +20,13 @@ namespace CakeExtracter
         [ImportMany]
         private IEnumerable<ConsoleCommand> Commands;
 
-        private Program()
+        private Program(string[] args)
         {
             composer = new Composer<Program>(this);
             composer.Compose();
 
-            bootstrappers.ToList().ForEach(c => c.Run()); 
+            bootstrappers.ToList().ForEach(c => c.Run());
+            Logger.Instance = new EnterpriseLibraryLogger(args[0]);
         }
 
         private int Run(string[] args)
@@ -35,7 +38,7 @@ namespace CakeExtracter
         [STAThread]
         public static int Main(string[] args)
         {
-            var program = new Program();
+            var program = new Program(args);
             var result = program.Run(args);
             return result;
         }

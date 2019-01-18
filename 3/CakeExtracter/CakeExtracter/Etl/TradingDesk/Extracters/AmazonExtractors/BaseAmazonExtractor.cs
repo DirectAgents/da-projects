@@ -81,6 +81,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
             AddMetric(metrics, metricName, null, date, metricValue);
         }
 
+        protected static void AddMetric(List<SummaryMetric> metrics, AttributedMetricType type, AttributedMetricDaysInterval daysInterval, DateTime date, decimal metricValue)
+        {
+            AddMetric(metrics, type.ToString(), (int)daysInterval, date, metricValue);
+        }
+
         private static List<SummaryMetric> GetMetrics(IEnumerable<AmazonStatSummary> amazonStats, DateTime date)
         {
             var metrics = new List<SummaryMetric>();
@@ -105,11 +110,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
             AddMetric(metrics, AttributedMetricType.attributedUnitsOrdered, AttributedMetricDaysInterval.Days14, date, amazonStats.Sum(x => x.AttributedUnitsOrdered14D));
             AddMetric(metrics, AttributedMetricType.attributedUnitsOrdered, AttributedMetricDaysInterval.Days30, date, amazonStats.Sum(x => x.AttributedUnitsOrdered30D));
             return metrics;
-        }
-
-        private static void AddMetric(List<SummaryMetric> metrics, AttributedMetricType type, AttributedMetricDaysInterval daysInterval, DateTime date, decimal metricValue)
-        {
-            AddMetric(metrics, type.ToString(), (int)daysInterval, date, metricValue);
         }
 
         private static void AddMetric(List<SummaryMetric> metrics, string metricName, int? daysInterval, DateTime date, decimal metricValue)

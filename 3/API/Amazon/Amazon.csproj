@@ -73,6 +73,7 @@
     <Compile Include="Entities\AmazonProfile.cs" />
     <Compile Include="Entities\HelperEntities\AmazonApiReportParams.cs" />
     <Compile Include="Entities\HelperEntities\AmazonApiSnapshotParams.cs" />
+    <Compile Include="Entities\Summaries\AmazonAsinSummaries.cs" />
     <Compile Include="Entities\Summaries\AmazonSummary.cs" />
     <Compile Include="Entities\HelperEntities\GetTokenResponse.cs" />
     <Compile Include="Entities\HelperEntities\PreparedDataResponses\PreparedDataRequestResponse.cs" />
