@@ -22,7 +22,22 @@ namespace CakeExtractor.SeleniumApplication.Properties {
                 return defaultInstance;
             }
         }
-        
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SyncAmazonPdaCommand|SyncAmazonVcdCommand")]
+        public string CommandsToScheduler
+        {
+            get
+            {
+                return ((string)(this["CommandsToScheduler"]));
+            }
+            set
+            {
+                this["CommandsToScheduler"] = value;
+            }
+        }
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("https://advertising.amazon.com/sign-in")]
@@ -93,6 +108,6 @@ namespace CakeExtractor.SeleniumApplication.Properties {
             set {
                 this["EMailPassword"] = value;
             }
-        }
+        }        
     }
 }
