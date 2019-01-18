@@ -1,7 +1,9 @@
 ﻿using CakeExtracter;
 using CakeExtractor.SeleniumApplication.Configuration.Models;
 using CakeExtractor.SeleniumApplication.Helpers;
+using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using CakeExtractor.SeleniumApplication.Models.Vcd;
+using CakeExtractor.SeleniumApplication.PageActions;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading.Constants;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading.Models;
@@ -23,18 +25,21 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
 
         private AmazonVcdPageActions pageActions;
 
+        private AuthorizationModel authorizationModel;
+
         private AccountInfo accountInfo;
 
-        public VcdReportDownloader(AmazonVcdPageActions pageActions, AccountInfo accountInfo)
+        public VcdReportDownloader(AmazonVcdPageActions pageActions, AuthorizationModel authorizationModel, AccountInfo accountInfo)
         {
             this.pageActions = pageActions;
             this.accountInfo = accountInfo;
+            this.authorizationModel = authorizationModel;
         }
 
         public string DownloadReportAsCsvText(DateTime reportDay)
         {
             Logger.Info("Amazon VCD, Attemt to download report.");
-            pageActions.NavigateToSalesDiagnosticPage();
+            pageActions.RefreshSalesDiagnosticPage(authorizationModel);
             var request = GetDownloadingRequest(reportDay);
             var response = RestRequestHelper.SendPostRequest<object>(amazonBaseUrl, request);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
@@ -44,7 +49,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
                   textReport.Length);
                 return textReport;
             }
-            else 
+            else
             {
                 Logger.Warn("Report downloading attempt failed,Status code {0}", response.StatusDescription);
                 throw new Exception(string.Format("Report was not downloaded successfully. Status code {0}", response.StatusDescription));
@@ -54,7 +59,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
         private RestRequest GetDownloadingRequest(DateTime reportDay)
         {
             var pageRequestData = GetPageDataForReportRequest();
-            var request = GenerateDownloadingReportRequest(pageRequestData, reportDay, 
+            var request = GenerateDownloadingReportRequest(pageRequestData, reportDay,
                 accountInfo.VendorGroupId.ToString(), accountInfo.McId.ToString());
             return request;
         }
@@ -70,8 +75,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
                 Cookies = cookies
             };
         }
-
-       
 
         private RestRequest GenerateDownloadingReportRequest(ReportDownloadingRequestPageData requestPageData, DateTime reportDay,
             string vendorGroupId, string mcId)

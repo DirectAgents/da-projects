@@ -220,7 +220,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
                     pageActions.IsElementPresent(AmazonPdaPageObjects.LoginPassInput))
                 {
                     // need to repeat the password
-                    pageActions.LoginByPassword(authorizationModel.Password);
+                    pageActions.LoginByPassword(authorizationModel.Password, AmazonPdaPageObjects.FilterByButton);
                 }
 
                 pageActions.SetFiltersOnCampaigns();

@@ -24,13 +24,16 @@ namespace CakeExtractor.SeleniumApplication.PageActions
             }
         }
 
-        public void LoginByPassword(string password)
+        public void LoginByPassword(string password, By waitElement)
         {
             Logger.Info("Need to repeat the password...");
             try
             {
                 LoginWithPassword(password);
-                WaitElementClickable(AmazonPdaPageObjects.FilterByButton, timeout);
+                if (waitElement != null)
+                {
+                    WaitElementClickable(AmazonPdaPageObjects.FilterByButton, timeout);
+                }
             }
             catch (Exception e)
             {
@@ -44,7 +47,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions
             LoginWithPassword(password);
         }
 
-        private void LoginWithPassword(string password)
+        public void LoginWithPassword(string password)
         {
             EnterPassword(password);
             ClickElement(AmazonPdaPageObjects.RememberMeCheckBox);

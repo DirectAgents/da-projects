@@ -3,13 +3,13 @@
   <Profiles />
   <Settings>
     <Setting Name="DaysInterval" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1</Value>
+      <Value Profile="(Default)">40</Value>
     </Setting>
     <Setting Name="StartDate" Type="System.DateTime" Scope="User">
-      <Value Profile="(Default)">2019-01-10</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="EndDate" Type="System.DateTime" Scope="User">
-      <Value Profile="(Default)">2019-01-10</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="AccountId" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1437</Value>

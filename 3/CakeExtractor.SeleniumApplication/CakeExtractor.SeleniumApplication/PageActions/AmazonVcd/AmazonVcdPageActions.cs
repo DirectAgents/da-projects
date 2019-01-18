@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
+using OpenQA.Selenium;
 
 namespace CakeExtractor.SeleniumApplication.PageActions.AmazonVcd
 {
@@ -27,6 +28,16 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonVcd
         public void NavigateToSalesDiagnosticPage()
         {
             NavigateToUrl(salesDiagnosticPageUrl);
+        }
+
+        public void RefreshSalesDiagnosticPage(AuthorizationModel authorizationModel)
+        {
+            NavigateToSalesDiagnosticPage();
+            if (AmazonVcdLoginHelper.NeedResetPassword(this))
+            {
+                AmazonVcdLoginHelper.ResetPassword(this, authorizationModel);
+                NavigateToSalesDiagnosticPage();
+            }
         }
     }
 }

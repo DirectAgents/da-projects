@@ -19,6 +19,10 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
 
         private AmazonVcdPageActions pageActions;
 
+        private const int ReportDownloadingDelayInSeconds = 30;
+
+        private const int ReportDownloadingAttemptCount = 5;
+
         VcdCommandConfigurationManager configurationManager;
 
         public AmazonVcdExtractor(VcdCommandConfigurationManager configurationManager)
@@ -46,9 +50,10 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
         {
             try
             {
-                var reportDownloader = new VcdReportDownloader(pageActions, accountInfo);
-                var reportTextContent = 
-                    RetryHelper.Do(()=> { return reportDownloader.DownloadReportAsCsvText(reportDay); }, TimeSpan.FromSeconds(10), 5);
+                var reportDownloader = new VcdReportDownloader(pageActions, authorizationModel, accountInfo);
+                var reportTextContent =
+                    RetryHelper.Do(() => { return reportDownloader.DownloadReportAsCsvText(reportDay); },
+                    TimeSpan.FromSeconds(ReportDownloadingDelayInSeconds), ReportDownloadingAttemptCount);
                 return reportTextContent;
             }
             catch (Exception ex)
