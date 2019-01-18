@@ -10,7 +10,7 @@ namespace CakeExtractor.SeleniumApplication.Jobs
 {
     internal class AmazonSeleniumCommandsJobScheduler
     {
-        public static async Task ConfigureJobSchedule(List<BaseAmazonSeleniumCommand> commands, string[] args)
+        public static async Task ConfigureJobSchedule(List<BaseAmazonSeleniumCommand> commands)
         {
             var scheduling = new JobScheduleModel
             {
@@ -20,7 +20,6 @@ namespace CakeExtractor.SeleniumApplication.Jobs
             };
             var scheduler = await StdSchedulerFactory.GetDefaultScheduler();
             scheduler.Context.Put(JobConstants.CommandsJobContextValue, commands);
-            scheduler.Context.Put("args", args);
             await scheduler.Start();
 
             var job = JobBuilder.Create<AmazonSeleniumCommandsJob>().Build();

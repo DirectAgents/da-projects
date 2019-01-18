@@ -116,6 +116,11 @@
     <Compile Include="Models\ReportModels\AmazonReportSummary.cs" />
     <Compile Include="Models\CommonHelperModels\AuthorizationModel.cs" />
     <Compile Include="Models\CommonHelperModels\JobScheduleModel.cs" />
+    <Compile Include="Properties\PdaSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>PdaSettings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Properties\VcdSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -163,6 +168,10 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\PdaSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>PdaSettings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

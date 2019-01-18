@@ -30,7 +30,6 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
         public SyncAmazonPdaCommand()
         {
-            //IsCommand("SyncAmazonPdaCommand", "Synch Amazon PDA Stats");
             //HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
             //HasOption("s|startDate=", "Start Date (default is from config or 'daysAgo')",
             //    c => StartDate = DateTime.Parse(c));

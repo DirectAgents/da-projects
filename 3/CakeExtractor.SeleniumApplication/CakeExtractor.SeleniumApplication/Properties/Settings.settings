@@ -39,10 +39,10 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="EMail" Type="System.String" Scope="User">
-      <Value Profile="(Default)">reportingdev@directagents.com</Value>
+      <Value Profile="(Default)">email</Value>
     </Setting>
     <Setting Name="EMailPassword" Type="System.String" Scope="User">
-      <Value Profile="(Default)">rep0rts</Value>
+      <Value Profile="(Default)">password</Value>
     </Setting>
   </Settings>
 </SettingsFile>

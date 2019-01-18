@@ -14,7 +14,7 @@ namespace CakeExtractor.SeleniumApplication
     {
         private static readonly List<BaseAmazonSeleniumCommand> Commands = new List<BaseAmazonSeleniumCommand>
         {
-            //new SyncAmazonVcdCommand(),
+            new SyncAmazonVcdCommand(),
             new SyncAmazonPdaCommand()
         };
 
@@ -23,17 +23,23 @@ namespace CakeExtractor.SeleniumApplication
             InitializeEnterpriseLibrary();
             InitializeLogging();
             AutoMapperBootstrapper.CheckRunSetup();
+            PrepareCommandsEnvironment();
             ScheduleJobs(args).Wait();
             AlwaysSleep();
         }
 
-        private static async Task ScheduleJobs(string[] args)
+        private static void PrepareCommandsEnvironment()
         {
-            Commands.ForEach(command => 
+            Commands.ForEach(command =>
             {
                 command.PrepareCommandEnvironment();
             });
-            await AmazonSeleniumCommandsJobScheduler.ConfigureJobSchedule(Commands, args);
+        }
+
+        private static async Task ScheduleJobs(string[] args)
+        {
+           
+            await AmazonSeleniumCommandsJobScheduler.ConfigureJobSchedule(Commands);
         }
 
         private static void AlwaysSleep()

@@ -12,7 +12,7 @@ namespace CakeExtractor.SeleniumApplication.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.8.0.0")]
     internal sealed partial class VcdSettings : global::System.Configuration.ApplicationSettingsBase {
         
         private static VcdSettings defaultInstance = ((VcdSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new VcdSettings())));
@@ -20,42 +20,6 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         public static VcdSettings Default {
             get {
                 return defaultInstance;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int DaysInterval {
-            get {
-                return ((int)(this["DaysInterval"]));
-            }
-            set {
-                this["DaysInterval"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2019-01-10")]
-        public global::System.DateTime StartDate {
-            get {
-                return ((global::System.DateTime)(this["StartDate"]));
-            }
-            set {
-                this["StartDate"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2019-01-10")]
-        public global::System.DateTime EndDate {
-            get {
-                return ((global::System.DateTime)(this["EndDate"]));
-            }
-            set {
-                this["EndDate"] = value;
             }
         }
         
@@ -104,6 +68,52 @@ namespace CakeExtractor.SeleniumApplication.Properties {
             }
             set {
                 this["CookiesDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int DaysInterval {
+            get {
+                return ((int)(this["DaysInterval"]));
+            }
+            set {
+                this["DaysInterval"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime StartDate {
+            get {
+                return ((global::System.DateTime)(this["StartDate"]));
+            }
+            set {
+                this["StartDate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime EndDate {
+            get {
+                return ((global::System.DateTime)(this["EndDate"]));
+            }
+            set {
+                this["EndDate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("VcdCookies")]
+        public string CookiesDirectoryPath {
+            get {
+                return ((string)(this["CookiesDirectoryPath"]));
+            }
+            set {
+                this["CookiesDirectoryPath"] = value;
             }
         }
     }
