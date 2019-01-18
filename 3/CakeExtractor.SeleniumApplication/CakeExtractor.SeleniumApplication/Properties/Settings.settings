@@ -5,15 +5,6 @@
     <Setting Name="SignInPageUrl" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://advertising.amazon.com/sign-in</Value>
     </Setting>
-    <Setting Name="CampaignsPageUrl" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://advertising.amazon.com/cm/campaigns</Value>
-    </Setting>
-    <Setting Name="DownloadsDirectoryName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">WebDriverDownloads</Value>
-    </Setting>
-    <Setting Name="FilesNameTemplate" Type="System.String" Scope="User">
-      <Value Profile="(Default)">*.csv</Value>
-    </Setting>
     <Setting Name="WaitPageTimeoutInMinuts" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">30</Value>
     </Setting>
@@ -22,21 +13,6 @@
     </Setting>
     <Setting Name="ExtractionIntervalsInDays" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
-    </Setting>
-    <Setting Name="DaysAgo" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="StartDate" Type="System.DateTime" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="EndDate" Type="System.DateTime" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="CookiesDirectory" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Cookies</Value>
-    </Setting>
-    <Setting Name="FromDatabase" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="EMail" Type="System.String" Scope="User">
       <Value Profile="(Default)">email</Value>

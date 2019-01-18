@@ -15,7 +15,7 @@ namespace CakeExtractor.SeleniumApplication
         private static readonly List<BaseAmazonSeleniumCommand> Commands = new List<BaseAmazonSeleniumCommand>
         {
             new SyncAmazonVcdCommand(),
-            //new SyncAmazonPdaCommand()
+            new SyncAmazonPdaCommand()
         };
 
         static void Main(string[] args)
@@ -38,7 +38,6 @@ namespace CakeExtractor.SeleniumApplication
 
         private static async Task ScheduleJobs(string[] args)
         {
-           
             await AmazonSeleniumCommandsJobScheduler.ConfigureJobSchedule(Commands);
         }
 

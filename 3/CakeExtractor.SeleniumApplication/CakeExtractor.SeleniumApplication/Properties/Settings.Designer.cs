@@ -37,42 +37,6 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://advertising.amazon.com/cm/campaigns")]
-        public string CampaignsPageUrl {
-            get {
-                return ((string)(this["CampaignsPageUrl"]));
-            }
-            set {
-                this["CampaignsPageUrl"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("WebDriverDownloads")]
-        public string DownloadsDirectoryName {
-            get {
-                return ((string)(this["DownloadsDirectoryName"]));
-            }
-            set {
-                this["DownloadsDirectoryName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("*.csv")]
-        public string FilesNameTemplate {
-            get {
-                return ((string)(this["FilesNameTemplate"]));
-            }
-            set {
-                this["FilesNameTemplate"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("30")]
         public int WaitPageTimeoutInMinuts {
             get {
@@ -104,63 +68,6 @@ namespace CakeExtractor.SeleniumApplication.Properties {
             }
             set {
                 this["ExtractionIntervalsInDays"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public int DaysAgo {
-            get {
-                return ((int)(this["DaysAgo"]));
-            }
-            set {
-                this["DaysAgo"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.DateTime StartDate {
-            get {
-                return ((global::System.DateTime)(this["StartDate"]));
-            }
-            set {
-                this["StartDate"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.DateTime EndDate {
-            get {
-                return ((global::System.DateTime)(this["EndDate"]));
-            }
-            set {
-                this["EndDate"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Cookies")]
-        public string CookiesDirectory {
-            get {
-                return ((string)(this["CookiesDirectory"]));
-            }
-            set {
-                this["CookiesDirectory"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool FromDatabase {
-            get {
-                return ((bool)(this["FromDatabase"]));
-            }
-            set {
-                this["FromDatabase"] = value;
             }
         }
         

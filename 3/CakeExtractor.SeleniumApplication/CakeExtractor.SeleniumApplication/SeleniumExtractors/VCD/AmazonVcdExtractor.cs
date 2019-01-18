@@ -19,7 +19,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
 
         private AmazonVcdPageActions pageActions;
 
-        VcdCommandConfigurationManager configurationManager;
+        readonly VcdCommandConfigurationManager configurationManager;
 
         public AmazonVcdExtractor(VcdCommandConfigurationManager configurationManager)
         {
@@ -84,7 +84,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
 
         private void InitializeAuthorizationModel() //ToDo: Findout way how to share settings
         {
-            var cookieDir = Properties.Settings.Default.CookiesDirectory;
             authorizationModel = new AuthorizationModel
             {
                 Login = Properties.Settings.Default.EMail,

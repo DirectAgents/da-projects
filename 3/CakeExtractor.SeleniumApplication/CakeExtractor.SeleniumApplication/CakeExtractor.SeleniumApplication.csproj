@@ -90,6 +90,7 @@
     <Compile Include="Commands\SyncAmazonVcdCommand.cs" />
     <Compile Include="Commands\SyncAmazonPdaCommand.cs" />
     <Compile Include="Configuration\Models\AccountInfo.cs" />
+    <Compile Include="Configuration\Pda\PdaCommandConfigurationManager.cs" />
     <Compile Include="Configuration\Vcd\VcdCommandConfigurationManager.cs" />
     <Compile Include="Drivers\ChromeWebDriver.cs" />
     <Compile Include="Enums\AmazonCmApiMetrics.cs" />
