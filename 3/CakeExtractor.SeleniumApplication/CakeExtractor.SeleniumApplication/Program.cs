@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Logging.Loggers;
 using CakeExtractor.SeleniumApplication.Commands;
 using CakeExtractor.SeleniumApplication.Jobs;
-using ManyConsole;
 using Microsoft.Practices.EnterpriseLibrary.Common.Configuration;
 using Microsoft.Practices.EnterpriseLibrary.Logging;
 
@@ -14,10 +12,10 @@ namespace CakeExtractor.SeleniumApplication
 {
     internal class Program
     {
-        private static readonly List<BaseAmazoneSeleniumCommand> Commands = new List<BaseAmazoneSeleniumCommand>
+        private static readonly List<BaseAmazonSeleniumCommand> Commands = new List<BaseAmazonSeleniumCommand>
         {
-            new SyncAmazonVcdCommand(),
-            //new SyncAmazonPdaCommand()
+            //new SyncAmazonVcdCommand(),
+            new SyncAmazonPdaCommand()
         };
 
         static void Main(string[] args)

@@ -200,7 +200,6 @@ namespace CakeExtractor.SeleniumApplication.PageActions
         {
             try
             {
-
                 var wait = new WebDriverWait(Driver, waitCount);
                 wait.Until(driver => IsElementPresent(loaderElement));
                 if (isElementExistInDOM)

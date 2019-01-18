@@ -13,7 +13,7 @@ using Platform = DirectAgents.Domain.Entities.CPProg.Platform;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
-    internal class SyncAmazonPdaCommand : BaseAmazoneSeleniumCommand
+    internal class SyncAmazonPdaCommand : BaseAmazonSeleniumCommand
     {
         public int? AccountId { get; set; }
         public DateTime? StartDate { get; set; }
@@ -30,19 +30,19 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
         public SyncAmazonPdaCommand()
         {
-            IsCommand("SyncAmazonPdaCommand", "Synch Amazon PDA Stats");
-            HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
-            HasOption("s|startDate=", "Start Date (default is from config or 'daysAgo')",
-                c => StartDate = DateTime.Parse(c));
-            HasOption("e|endDate=", "End Date (default is from config or yesterday)", c => EndDate = DateTime.Parse(c));
-            HasOption<int>("d|daysAgo=",
-                $"Days Ago to start, if startDate not specified (default is from config or {DefaultDaysAgoValue})",
-                c => DaysAgoToStart = c);
-            HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
-            HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)",
-                c => DisabledOnly = c);
-            HasOption<bool>("z|fromDatabase=", "Retrieve from database instead of API (where implemented - Daily)",
-                c => FromDatabase = c);
+            //IsCommand("SyncAmazonPdaCommand", "Synch Amazon PDA Stats");
+            //HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
+            //HasOption("s|startDate=", "Start Date (default is from config or 'daysAgo')",
+            //    c => StartDate = DateTime.Parse(c));
+            //HasOption("e|endDate=", "End Date (default is from config or yesterday)", c => EndDate = DateTime.Parse(c));
+            //HasOption<int>("d|daysAgo=",
+            //    $"Days Ago to start, if startDate not specified (default is from config or {DefaultDaysAgoValue})",
+            //    c => DaysAgoToStart = c);
+            //HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
+            //HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)",
+            //    c => DisabledOnly = c);
+            //HasOption<bool>("z|fromDatabase=", "Retrieve from database instead of API (where implemented - Daily)",
+            //    c => FromDatabase = c);
         }
 
         public override void PrepareCommandEnvironment()
@@ -50,7 +50,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
             AmazonPdaExtractor.PrepareExtractor();
         }
 
-        public override int Run(string[] remainingArguments)
+        public override void Run()
         {
             
             executionNumber++;
@@ -69,7 +69,6 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
             Logger.Info("Amazon ETL (PDA Campaigns) has been finished.");
             //LogScheduledJobStartTime();
-            return 0;
         }
 
         private static void DoEtls(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType, bool fromDatabase)

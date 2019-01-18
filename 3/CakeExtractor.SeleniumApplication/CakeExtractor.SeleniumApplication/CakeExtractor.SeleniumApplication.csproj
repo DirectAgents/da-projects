@@ -86,7 +86,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\BaseAmazoneSeleniumCommand.cs" />
+    <Compile Include="Commands\BaseAmazonSeleniumCommand.cs" />
     <Compile Include="Commands\SyncAmazonVcdCommand.cs" />
     <Compile Include="Commands\SyncAmazonPdaCommand.cs" />
     <Compile Include="Configuration\Models\AccountInfo.cs" />

@@ -1,5 +1,4 @@
 ﻿using System;
-using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD;
 using CakeExtractor.SeleniumApplication.Loaders.VCD;
 using System.Collections.Generic;
@@ -10,13 +9,11 @@ using CakeExtractor.SeleniumApplication.Configuration.Models;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
-    internal class SyncAmazonVcdCommand : BaseAmazoneSeleniumCommand
+    internal class SyncAmazonVcdCommand : BaseAmazonSeleniumCommand
     {
         public int? AccountId { get; set; }
 
         private int executionNumber;
-
-        private JobScheduleModel scheduling;
 
         private AmazonVcdExtractor extractor;
 
@@ -26,7 +23,6 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
         public SyncAmazonVcdCommand()
         {
-            IsCommand("SyncAmazonVcdCommand", "Synch Amazon Vendor Central Data Stats");
             configurationManager = new VcdCommandConfigurationManager();
             extractor = new AmazonVcdExtractor(configurationManager);
             loader = new AmazonVcdLoader();
@@ -37,7 +33,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
             extractor.PrepareExtractor();
         }
 
-        public override int Run(string[] remainingArguments)
+        public override void Run()
         {
             var accountsData = GetAccountsDataToProcess();
             foreach (var accountData in accountsData)
@@ -46,7 +42,6 @@ namespace CakeExtractor.SeleniumApplication.Commands
                 DoEtlForAccount(extractor, loader, accountData);
                 Logger.Info("Amazon VCD, ETL for {0} account finished.", accountData.Account.Id);
             }
-            return 1;
         }
 
         private void DoEtlForAccount(AmazonVcdExtractor extractor, AmazonVcdLoader loader, AccountInfo accountInfo)
