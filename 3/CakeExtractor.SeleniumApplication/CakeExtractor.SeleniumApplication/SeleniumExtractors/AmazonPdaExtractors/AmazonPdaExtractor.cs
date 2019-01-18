@@ -14,6 +14,7 @@ using CakeExtractor.SeleniumApplication.Models.ConsoleManagerUtilityModels;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonPda;
 using CakeExtractor.SeleniumApplication.Utilities;
 using DirectAgents.Domain.Entities.CPProg;
+using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using FileManager = CakeExtractor.SeleniumApplication.Helpers.FileManager;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors
@@ -26,8 +27,9 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
         private static string reportNameTemplate;
         private static string campaignsUrl;
 
+        private static Dictionary<string, string> availableProfileUrls;
+
         private readonly ExtAccount account;
-        private string accountEntityId;
 
         static AmazonPdaExtractor()
         {
@@ -39,19 +41,40 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             this.account = account;
         }
 
+        /// Login to the advertising portal and saving cookies
         public static void PrepareExtractor()
         {
             authorizationModel.Cookies = CookieManager.GetCookiesFromFiles(authorizationModel.CookiesDir);
             var cookiesExist = authorizationModel.Cookies.Any();
-            Logger.Info("Login into the portal{0} using cookies.", cookiesExist ? string.Empty : " without");
 
             if (cookiesExist)
             {
+                Logger.Info("Login into the portal using cookies.");
                 LoginWithCookie(authorizationModel);
                 return;
             }
 
+            Logger.Warn("Login into the portal without using cookies. Please enter an authorization code!");
             LoginWithoutCookie(authorizationModel);
+        }
+
+        public static void SetAvailableProfileUrls()
+        {
+            try
+            {
+                pageActions.NavigateToUrl(campaignsUrl, AmazonPdaPageObjects.FilterByButton);
+                if (!pageActions.IsElementPresent(AmazonPdaPageObjects.FilterByButton) &&
+                    pageActions.IsElementPresent(AmazonPdaPageObjects.LoginPassInput))
+                {
+                    // need to repeat the password
+                    pageActions.LoginByPassword(authorizationModel.Password);
+                }
+                SetAvailableProfiles();
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Could not to get profile URLs: {e.Message}", e);
+            }
         }
 
         private static void Initialize()
@@ -106,6 +129,13 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             }
         }
 
+        private static void SetAvailableProfiles()
+        {
+            availableProfileUrls = pageActions.GetAvailableProfileUrls();
+            Logger.Info("The following profiles were found for the current account:");
+            availableProfileUrls.ForEach(x => Logger.Info($"{x.Key} - {x.Value}"));
+        }
+
         public void Extract(Action<List<string>> extractAction)
         {
             try
@@ -124,11 +154,22 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             }
         }
 
-        public IEnumerable<AmazonCmApiCampaignSummary> ExtractCampaignApiSummaries(DateRange dateRange)
+        public IEnumerable<AmazonCmApiCampaignSummary> ExtractCampaignApiTruncatedSummaries(DateRange dateRange)
         {
             var cmApiUtility = GetAmazonConsoleManagerUtility();
+            var accountEntityId = GetCurrentProfileEntityId();
+            var campaignsInfos = cmApiUtility.GetPdaCampaignsTruncatedSummaries(accountEntityId, dateRange);
+            return campaignsInfos.ToList();
+        }
+
+        public IEnumerable<AmazonCmApiCampaignSummary> ExtractCampaignApiFullSummaries(DateRange dateRange)
+        {
+            var cmApiUtility = GetAmazonConsoleManagerUtility();
+            var accountEntityId = GetCurrentProfileEntityId();
             var campaignsInfos = cmApiUtility.GetPdaCampaignsSummaries(accountEntityId, dateRange);
-            return campaignsInfos;
+            var campaignType = AmazonApiHelper.GetCampaignTypeName(CampaignType.ProductDisplay);
+            campaignsInfos.ForEach(x => x.Type = campaignType);
+            return campaignsInfos.ToList();
         }
 
         public CampaignInfo ExtractCampaignInfo(string campaignUrl, DateRange dateRange)
@@ -211,14 +252,8 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
         {
             try
             {
-                NavigateToProfile();
-                if (!pageActions.IsElementPresent(AmazonPdaPageObjects.FilterByButton) &&
-                    pageActions.IsElementPresent(AmazonPdaPageObjects.LoginPassInput))
-                {
-                    // need to repeat the password
-                    pageActions.LoginByPassword(authorizationModel.Password);
-                }
-
+                var url = GetAvailableProfileUrl(account.Name);
+                pageActions.NavigateToUrl(url);
                 pageActions.SetFiltersOnCampaigns();
             }
             catch (Exception e)
@@ -227,25 +262,32 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             }
         }
 
-        private void NavigateToProfile()
+        private string GetCurrentProfileEntityId()
         {
-            pageActions.NavigateToUrl(campaignsUrl, AmazonPdaPageObjects.FilterByButton);
-            var url = pageActions.GetProfileUrl(account.Name.TrimEnd());
-            if (string.IsNullOrEmpty(url))
-            {
-                throw new Exception(
-                    $"The account {authorizationModel.Login} does not have the following profile - {account.Name}");
-            }
-
-            pageActions.NavigateToUrl(url);
-            SetAccountEntityId(url);
+            var profileUrl = GetAvailableProfileUrl(account.Name);
+            var accountEntityId = GetProfileEntityId(profileUrl);
+            return accountEntityId;
         }
 
-        private void SetAccountEntityId(string url)
+        private string GetAvailableProfileUrl(string profileName)
+        {
+            var name = profileName.Trim();
+            var availableProfileUrl = availableProfileUrls.FirstOrDefault(x =>
+                string.Equals(x.Key, name, StringComparison.OrdinalIgnoreCase));
+            var url = availableProfileUrl.Value;
+            if (string.IsNullOrEmpty(url))
+            {
+                throw new Exception($"The account {authorizationModel.Login} does not have the following profile - {profileName}");
+            }
+            return url;
+        }
+
+        private string GetProfileEntityId(string url)
         {
             var uri = new Uri(url);
             var queryParams = HttpUtility.ParseQueryString(uri.Query);
-            accountEntityId = queryParams.Get(AmazonCmApiHelper.EntityIdArgName);
+            var entityId = queryParams.Get(AmazonCmApiHelper.EntityIdArgName);
+            return entityId;
         }
 
         private List<string> GetCampaignPageUrls()

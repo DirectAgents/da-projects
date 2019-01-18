@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter;
 using CakeExtractor.SeleniumApplication.Helpers;
@@ -50,32 +51,14 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             }
         }
 
-        public string GetProfileUrl(string profileName)
+        public Dictionary<string, string> GetAvailableProfileUrls()
         {
-            string profileUrl = null;
-            Logger.Info("Searching the URL of profile [{0}]...", profileName);
-            try
-            {
-                WaitElementClickable(AmazonPdaPageObjects.CurrentProfileButton, timeout);
-                ClickElement(AmazonPdaPageObjects.CurrentProfileButton);
-                WaitElementClickable(AmazonPdaPageObjects.ProfilesMenu, timeout);
-                var menuContainers = GetChildrenElements(AmazonPdaPageObjects.ProfilesMenu, AmazonPdaPageObjects.ProfilesMenuItemContainer);
-                foreach (var menuContainer in menuContainers)
-                {
-                    var menuItem = GetChildElement(menuContainer, AmazonPdaPageObjects.ProfilesMenuItem);
-                    if (string.Equals(menuItem.Text, profileName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        profileUrl = menuItem.GetAttribute("href");
-                        Logger.Info("Profile URL found [{0}]", profileUrl);
-                        break;
-                    }
-                }
-                return profileUrl;
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Could not to get URL of the profile [{profileName}]: {e.Message}", e);
-            }
+            WaitElementClickable(AmazonPdaPageObjects.CurrentProfileButton, timeout);
+            ClickElement(AmazonPdaPageObjects.CurrentProfileButton);
+            WaitElementClickable(AmazonPdaPageObjects.ProfilesMenu, timeout);
+            var menuContainers = GetChildrenElements(AmazonPdaPageObjects.ProfilesMenu, AmazonPdaPageObjects.ProfilesMenuItemContainer);
+            var menuItems = menuContainers.Select(x => GetChildElement(x, AmazonPdaPageObjects.ProfilesMenuItem));
+            return menuItems.ToDictionary(x => x.Text.Trim(), x => x.GetAttribute(HrefAttribute));
         }
 
         public void SetFiltersOnCampaigns()
@@ -86,14 +69,15 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
                 {
                     SelectFilters();
                 }
+
                 WaitLoading(AmazonPdaPageObjects.FilterLoader, timeout);
             }
             catch (Exception e)
             {
                 throw new Exception($"Could not to set the filter: {e.Message}", e);
-            }            
+            }
         }
-        
+
         public void ExportCsv()
         {
             try
@@ -108,25 +92,29 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             }
         }
 
-        public System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> GetCampaignsNameWebElementsList(By campaignsContainer, By campaignsNamesList)
+        public System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> GetCampaignsNameWebElementsList(
+            By campaignsContainer, By campaignsNamesList)
         {
-            return IsElementPresent(campaignsContainer) ? GetChildrenElements(campaignsContainer, campaignsNamesList) : null;
+            return IsElementPresent(campaignsContainer)
+                ? GetChildrenElements(campaignsContainer, campaignsNamesList)
+                : null;
         }
 
         public string GetCampaignUrl(IWebElement campaignsName)
         {
             var url = "";
-            var campaignNameElement = GetChildElement(campaignsName, AmazonPdaPageObjects.CampaignName);            
+            var campaignNameElement = GetChildElement(campaignsName, AmazonPdaPageObjects.CampaignName);
             var linkElement = GetChildElement(campaignNameElement, AmazonPdaPageObjects.CampaignNameLink);
 
             if (linkElement != null)
             {
                 url = linkElement.GetAttribute("href");
                 Logger.Info($"Campaign URL found [{url}]");
-            }            
+            }
+
             return url;
         }
-        
+
         public void ClickOnTab(By listElement, By itemElement)
         {
             try
@@ -138,7 +126,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
                 throw new Exception($"Could not click on tab [{itemElement}]: {e.Message}", e);
             }
         }
-        
+
         public void GetCampaignSettingsInfo(CampaignInfo campaign)
         {
             try
@@ -183,7 +171,8 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             }
             catch (Exception e)
             {
-                throw new Exception($"Could not get the settings information about campaign [{campaign.Name}]: {e.Message}", e);
+                throw new Exception(
+                    $"Could not get the settings information about campaign [{campaign.Name}]: {e.Message}", e);
             }
         }
 
@@ -192,21 +181,23 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             try
             {
                 Logger.Info("Retrieving campaign report...");
-                
+
                 WaitElementClickable(AmazonPdaPageObjects.DownloadReportButton, timeout);
                 ClickElement(AmazonPdaPageObjects.DownloadReportButton);
                 WaitLoading(AmazonPdaPageObjects.DownloadingLoader, timeout, true);
-                
+
                 if (IsElementEnabledAndDisplayed(AmazonPdaPageObjects.AfterDownloadReportNoData))
                 {
                     Logger.Warn("The report is not attached because the answer is 'No data'");
                     return;
                 }
+
                 if (IsElementEnabledAndDisplayed(AmazonPdaPageObjects.AfterDownloadReportFailed))
                 {
                     Logger.Warn("The report is not attached because the answer is 'Download failed'");
                     return;
                 }
+
                 Wait(timeoutThread);
                 AttachDownloadedReport(campaign, downloadPath, templateFileName);
             }
@@ -251,7 +242,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             ClickElement(AmazonPdaPageObjects.FilterPdaValues);
             ClickElement(AmazonPdaPageObjects.SaveSearchAndFilterButton);
         }
-            
+
         private void LoginWithEmailAndPassword(string email, string password)
         {
             EnterEmail(email);

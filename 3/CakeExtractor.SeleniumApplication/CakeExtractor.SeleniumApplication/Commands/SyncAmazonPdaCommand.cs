@@ -9,7 +9,6 @@ using System.Threading;
 using CakeExtracter;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
-using CakeExtractor.SeleniumApplication.Models;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors;
 using ConsoleCommand = ManyConsole.ConsoleCommand;
@@ -26,6 +25,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
         public string StatsType { get; set; }
         public bool DisabledOnly { get; set; }
         public bool FromDatabase { get; set; }
+        public bool FromRequest { get; set; }
 
         private const int DefaultDaysAgoValue = 41;
 
@@ -36,17 +36,13 @@ namespace CakeExtractor.SeleniumApplication.Commands
         {
             IsCommand("SyncAmazonPdaCommand", "Synch Amazon PDA Stats");
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
-            HasOption("s|startDate=", "Start Date (default is from config or 'daysAgo')",
-                c => StartDate = DateTime.Parse(c));
+            HasOption("s|startDate=", "Start Date (default is from config or 'daysAgo')", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is from config or yesterday)", c => EndDate = DateTime.Parse(c));
-            HasOption<int>("d|daysAgo=",
-                $"Days Ago to start, if startDate not specified (default is from config or {DefaultDaysAgoValue})",
-                c => DaysAgoToStart = c);
+            HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default is from config or {DefaultDaysAgoValue})", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
-            HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)",
-                c => DisabledOnly = c);
-            HasOption<bool>("z|fromDatabase=", "Retrieve from database instead of API (where implemented - Daily)",
-                c => FromDatabase = c);
+            HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
+            HasOption<bool>("z|fromDatabase=", "Retrieve from database instead of using Selenium (default = false, where implemented - Daily)", c => FromDatabase = c);
+            HasOption<bool>("r|fromRequest=", "Retrieve data using http requests instead of parsing pages (default = false, where implemented - Strategy)", c => FromRequest = c);
         }
 
         public override int Run(string[] remainingArguments)
@@ -64,13 +60,13 @@ namespace CakeExtractor.SeleniumApplication.Commands
             var dateRange = GetDateRange();
             var fromDatabase = FromDatabase || Properties.Settings.Default.FromDatabase;
 
-            Logger.Info("Amazon ETL (PDA Campaigns), execution number - {0}. DateRange: {1}.", executionNumber,
-                dateRange);
+            Logger.Info("Amazon ETL (PDA Campaigns), execution number - {0}. DateRange: {1}.", executionNumber, dateRange);
 
+            AmazonPdaExtractor.SetAvailableProfileUrls();
             var accounts = GetAccounts();
             foreach (var account in accounts)
             {
-                DoEtls(account, dateRange, statsType, fromDatabase);
+                DoEtls(account, dateRange, statsType, fromDatabase, FromRequest);
             }
 
             Logger.Info("Amazon ETL (PDA Campaigns) has been finished.");
@@ -96,7 +92,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
             }
         }
 
-        private static void DoEtls(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType, bool fromDatabase)
+        private static void DoEtls(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType, bool fromDatabase, bool fromRequests)
         {
             Logger.Info(account.Id, "Commencing ETL for Amazon account ({0}) {1}", account.Id, account.Name);
 
@@ -109,7 +105,14 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
                 if (statsType.Strategy)
                 {
-                    DoEtlStrategy(account, dateRange);
+                    if (fromRequests)
+                    {
+                        DoEtlStrategyFromRequests(account, dateRange);
+                    }
+                    else
+                    {
+                        DoEtlStrategy(account, dateRange);
+                    }
                 }
 
                 if (statsType.Daily && fromDatabase)
@@ -148,6 +151,16 @@ namespace CakeExtractor.SeleniumApplication.Commands
         private static void DoEtlStrategy(ExtAccount account, DateRange dateRange)
         {
             var extractor = new AmazonPdaCampaignExtractor(account, dateRange);
+            var loader = new AmazonCampaignSummaryLoader(account.Id);
+            var extractorThread = extractor.Start();
+            var loaderThread = loader.Start(extractor);
+            extractorThread.Join();
+            loaderThread.Join();
+        }
+
+        private static void DoEtlStrategyFromRequests(ExtAccount account, DateRange dateRange)
+        {
+            var extractor = new AmazonPdaCampaignRequestExtractor(account, dateRange);
             var loader = new AmazonCampaignSummaryLoader(account.Id);
             var extractorThread = extractor.Start();
             var loaderThread = loader.Start(extractor);

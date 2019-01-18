@@ -9,6 +9,8 @@ namespace CakeExtractor.SeleniumApplication.PageActions
 {
     public class BasePageActions
     {
+        protected const string HrefAttribute = "href";
+
         protected readonly IWebDriver Driver;
 
         public BasePageActions(IWebDriver driver)

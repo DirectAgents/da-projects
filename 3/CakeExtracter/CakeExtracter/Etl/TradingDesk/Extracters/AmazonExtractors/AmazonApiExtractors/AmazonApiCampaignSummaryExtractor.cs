@@ -16,7 +16,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
     //Campaign / Strategy
     public class AmazonApiCampaignSummaryExtractor : BaseAmazonExtractor<StrategySummary>
     {
-        private string[] campaignTypesFromApi =
+        private readonly string[] campaignTypesFromApi =
         {
             AmazonApiHelper.GetCampaignTypeName(CampaignType.SponsoredProducts),
             AmazonApiHelper.GetCampaignTypeName(CampaignType.SponsoredBrands)
