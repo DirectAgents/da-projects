@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CakeExtracter.Bootstrappers;
@@ -12,11 +13,7 @@ namespace CakeExtractor.SeleniumApplication
 {
     internal class Program
     {
-        private static readonly List<BaseAmazonSeleniumCommand> Commands = new List<BaseAmazonSeleniumCommand>
-        {
-            new SyncAmazonVcdCommand(),
-            new SyncAmazonPdaCommand()
-        };
+        private static readonly List<BaseAmazonSeleniumCommand> Commands = GetCommandList();
 
         static void Main(string[] args)
         {
@@ -26,6 +23,25 @@ namespace CakeExtractor.SeleniumApplication
             PrepareCommandsEnvironment();
             ScheduleJobs(args).Wait();
             AlwaysSleep();
+        }
+
+        private static List<BaseAmazonSeleniumCommand> GetCommandList()
+        {
+            var commandList = new List<BaseAmazonSeleniumCommand>();
+
+            var arrayOfCommands = Properties.Settings.Default.CommandsToScheduler.Split('|');
+            foreach (var command in arrayOfCommands)
+            {
+                switch (command)
+                {
+                    case "SyncAmazonPdaCommand": commandList.Add(new SyncAmazonPdaCommand());
+                        break;
+                    case "SyncAmazonVcdCommand": commandList.Add(new SyncAmazonVcdCommand());
+                        break;
+                    default: throw new NotImplementedException();
+                }                    
+            }
+            return commandList;
         }
 
         private static void PrepareCommandsEnvironment()
