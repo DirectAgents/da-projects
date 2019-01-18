@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using CakeExtracter;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
+using CakeExtractor.SeleniumApplication.Configuration.Pda;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors;
 using Platform = DirectAgents.Domain.Entities.CPProg.Platform;
@@ -16,33 +17,16 @@ namespace CakeExtractor.SeleniumApplication.Commands
     internal class SyncAmazonPdaCommand : BaseAmazonSeleniumCommand
     {
         public int? AccountId { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-        public int? DaysAgoToStart { get; set; }
         public string StatsType { get; set; }
         public bool DisabledOnly { get; set; }
-        public bool FromDatabase { get; set; }
-
-        private const int DefaultDaysAgoValue = 41;
-
+        
         private int executionNumber;
         private JobScheduleModel scheduling;
+        private readonly PdaCommandConfigurationManager configurationManager;
 
         public SyncAmazonPdaCommand()
         {
-            //IsCommand("SyncAmazonPdaCommand", "Synch Amazon PDA Stats");
-            //HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
-            //HasOption("s|startDate=", "Start Date (default is from config or 'daysAgo')",
-            //    c => StartDate = DateTime.Parse(c));
-            //HasOption("e|endDate=", "End Date (default is from config or yesterday)", c => EndDate = DateTime.Parse(c));
-            //HasOption<int>("d|daysAgo=",
-            //    $"Days Ago to start, if startDate not specified (default is from config or {DefaultDaysAgoValue})",
-            //    c => DaysAgoToStart = c);
-            //HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
-            //HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)",
-            //    c => DisabledOnly = c);
-            //HasOption<bool>("z|fromDatabase=", "Retrieve from database instead of API (where implemented - Daily)",
-            //    c => FromDatabase = c);
+            configurationManager = new PdaCommandConfigurationManager();
         }
 
         public override void PrepareCommandEnvironment()
@@ -56,7 +40,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
             executionNumber++;
             var statsType = new StatsTypeAgg(StatsType);
             var dateRange = GetDateRange();
-            var fromDatabase = FromDatabase || Properties.Settings.Default.FromDatabase;
+            var fromDatabase = configurationManager.GetFromDatabase();
 
             Logger.Info("Amazon ETL (PDA Campaigns), execution number - {0}. DateRange: {1}.", executionNumber,
                 dateRange);
@@ -131,9 +115,9 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
         private DateRange GetDateRange()
         {
-            var daysAgo = GetDaysAgo();
-            var startDate = GetStartDate(daysAgo);
-            var endDate = GetEndDate();
+            var daysAgo = configurationManager.GetDaysAgo();
+            var startDate = configurationManager.GetStartDate(daysAgo);
+            var endDate = configurationManager.GetEndDate();
             var dateRange = new DateRange(startDate, endDate);
             return dateRange;
         }
@@ -148,43 +132,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
             Logger.Info("Waiting for the scheduled job to extract PDA statistics: next run time - {0} (UTC)...", nextTime.ToUniversalTime());
         }
-
-        private int GetDaysAgo()
-        {
-            try
-            {
-                return DaysAgoToStart ?? Properties.Settings.Default.DaysAgo;
-            }
-            catch (Exception)
-            {
-                return DefaultDaysAgoValue;
-            }
-        }
-
-        private DateTime GetStartDate(int daysAgo)
-        {
-            if (StartDate.HasValue)
-            {
-                return StartDate.Value;
-            }
-
-            return Properties.Settings.Default.StartDate == default(DateTime)
-                ? DateTime.Today.AddDays(-daysAgo)
-                : Properties.Settings.Default.StartDate;
-        }
-
-        private DateTime GetEndDate()
-        {
-            if (EndDate.HasValue)
-            {
-                return EndDate.Value;
-            }
-
-            return Properties.Settings.Default.EndDate == default(DateTime)
-                ? DateTime.Today.AddDays(-1)
-                : Properties.Settings.Default.EndDate;
-        }
-
+        
         private IEnumerable<ExtAccount> GetAccounts()
         {
             var repository = new PlatformAccountRepository();

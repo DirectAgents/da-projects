@@ -2,15 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CakeExtractor.SeleniumApplication.Properties" GeneratedClassName="VcdSettings">
   <Profiles />
   <Settings>
-    <Setting Name="DaysInterval" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">40</Value>
-    </Setting>
-    <Setting Name="StartDate" Type="System.DateTime" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="EndDate" Type="System.DateTime" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="AccountId" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1437</Value>
     </Setting>
@@ -21,7 +12,19 @@
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="CookiesDirectory" Type="System.String" Scope="User">
-      <Value Profile="(Default)">E:\\vcdCookies</Value>
+      <Value Profile="(Default)">VcdCookies</Value>
+    </Setting>
+    <Setting Name="DaysInterval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="StartDate" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EndDate" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CookiesDirectoryPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">VcdCookies</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -12,12 +12,12 @@ namespace CakeExtractor.SeleniumApplication.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
-    internal sealed partial class VcdSettings : global::System.Configuration.ApplicationSettingsBase {
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.8.0.0")]
+    internal sealed partial class PdaSettings : global::System.Configuration.ApplicationSettingsBase {
         
-        private static VcdSettings defaultInstance = ((VcdSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new VcdSettings())));
+        private static PdaSettings defaultInstance = ((PdaSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new PdaSettings())));
         
-        public static VcdSettings Default {
+        public static PdaSettings Default {
             get {
                 return defaultInstance;
             }
@@ -25,61 +25,49 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1437")]
-        public int AccountId {
+        [global::System.Configuration.DefaultSettingValueAttribute("https://advertising.amazon.com/cm/campaigns")]
+        public string CampaignsPageUrl {
             get {
-                return ((int)(this["AccountId"]));
+                return ((string)(this["CampaignsPageUrl"]));
             }
             set {
-                this["AccountId"] = value;
+                this["CampaignsPageUrl"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("797780")]
-        public int AmazonVendorGroupId {
+        [global::System.Configuration.DefaultSettingValueAttribute("WebDriverDownloads")]
+        public string DownloadsDirectoryName {
             get {
-                return ((int)(this["AmazonVendorGroupId"]));
+                return ((string)(this["DownloadsDirectoryName"]));
             }
             set {
-                this["AmazonVendorGroupId"] = value;
+                this["DownloadsDirectoryName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("*.csv")]
+        public string FilesNameTemplate {
+            get {
+                return ((string)(this["FilesNameTemplate"]));
+            }
+            set {
+                this["FilesNameTemplate"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int AmazonMcId {
+        public int DaysAgo {
             get {
-                return ((int)(this["AmazonMcId"]));
+                return ((int)(this["DaysAgo"]));
             }
             set {
-                this["AmazonMcId"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("VcdCookies")]
-        public string CookiesDirectory {
-            get {
-                return ((string)(this["CookiesDirectory"]));
-            }
-            set {
-                this["CookiesDirectory"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("30")]
-        public int DaysInterval {
-            get {
-                return ((int)(this["DaysInterval"]));
-            }
-            set {
-                this["DaysInterval"] = value;
+                this["DaysAgo"] = value;
             }
         }
         
@@ -107,13 +95,25 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("VcdCookies")]
-        public string CookiesDirectoryPath {
+        [global::System.Configuration.DefaultSettingValueAttribute("Cookies")]
+        public string CookiesDirectory {
             get {
-                return ((string)(this["CookiesDirectoryPath"]));
+                return ((string)(this["CookiesDirectory"]));
             }
             set {
-                this["CookiesDirectoryPath"] = value;
+                this["CookiesDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FromDatabase {
+            get {
+                return ((bool)(this["FromDatabase"]));
+            }
+            set {
+                this["FromDatabase"] = value;
             }
         }
     }

@@ -20,11 +20,10 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
         private AmazonVcdPageActions pageActions;
 
         private const int ReportDownloadingDelayInSeconds = 30;
+        
+        readonly VcdCommandConfigurationManager configurationManager;
 
         private const int ReportDownloadingAttemptCount = 5;
-
-        VcdCommandConfigurationManager configurationManager;
-
         public AmazonVcdExtractor(VcdCommandConfigurationManager configurationManager)
         {
             this.configurationManager = configurationManager;
@@ -89,7 +88,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
 
         private void InitializeAuthorizationModel() //ToDo: Findout way how to share settings
         {
-            var cookieDir = Properties.Settings.Default.CookiesDirectory;
             authorizationModel = new AuthorizationModel
             {
                 Login = Properties.Settings.Default.EMail,
