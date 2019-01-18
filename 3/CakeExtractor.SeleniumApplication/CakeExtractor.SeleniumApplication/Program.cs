@@ -19,7 +19,7 @@ namespace CakeExtractor.SeleniumApplication
         static void Main(string[] args)
         {
             InitializeEnterpriseLibrary();
-            InitializeLogging();
+            InitializeLogging(args[0]);
             AutoMapperBootstrapper.CheckRunSetup();
             ConsoleCommandDispatcher.DispatchCommand(Commands, args, Console.Out);
         }
@@ -31,9 +31,9 @@ namespace CakeExtractor.SeleniumApplication
             Logger.SetLogWriter(logWriterFactory.Create());
         }
 
-        private static void InitializeLogging()
+        private static void InitializeLogging(string jobName)
         {
-            CakeExtracter.Logger.Instance = new EnterpriseLibraryLogger();   
+            CakeExtracter.Logger.Instance = new EnterpriseLibraryLogger(jobName);   
         }
     }
 }
