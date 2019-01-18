@@ -11,18 +11,18 @@ using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors
 {
-    internal class AmazonPdaCampaignRequestExtractor : BaseAmazonExtractor<StrategySummary>
+    internal class AmazonPdaDailyRequestExtractor : BaseAmazonExtractor<DailySummary>
     {
         public readonly AmazonPdaExtractor PdaExtractor;
 
-        public AmazonPdaCampaignRequestExtractor(ExtAccount account, DateRange dateRange) : base(null, dateRange, account)
+        public AmazonPdaDailyRequestExtractor(ExtAccount account, DateRange dateRange) : base(null, dateRange, account)
         {
             PdaExtractor = new AmazonPdaExtractor(account);
         }
 
         protected override void Extract()
         {
-            Logger.Info(accountId, "Extracting CampaignSummaries (PDA) using HTTP requests from Amazon Platform for ({0}) from {1:d} to {2:d}",
+            Logger.Info(accountId, "Extracting DailySummaries (PDA) using HTTP requests from Amazon Platform for ({0}) from {1:d} to {2:d}",
                 clientId, dateRange.FromDate, dateRange.ToDate);
             try
             {
@@ -34,6 +34,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             {
                 Logger.Warn(accountId, ex.Message);
             }
+
             End();
         }
 
@@ -44,28 +45,21 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             return filteredSums;
         }
 
-        private IEnumerable<StrategySummary> TransformSummaries(IEnumerable<AmazonCmApiCampaignSummary> dailyStats)
+        private IEnumerable<DailySummary> TransformSummaries(IEnumerable<AmazonCmApiCampaignSummary> dailyStats)
         {
             var notEmptyStats = dailyStats.Where(x => !x.AllZeros());
-            var summaries = notEmptyStats.GroupBy(x => new {x.Id, x.Date}).Select(x => CreateSummary(x, x.Key.Date));
+            var summaries = notEmptyStats.GroupBy(x => x.Date).Select(x => CreateSummary(x, x.Key.Date));
             return summaries.ToList();
         }
 
-        private StrategySummary CreateSummary(IEnumerable<AmazonCmApiCampaignSummary> campaignSummaries, DateTime date)
+        private DailySummary CreateSummary(IEnumerable<AmazonCmApiCampaignSummary> campaignSummaries, DateTime date)
         {
-            var campaign = campaignSummaries.First();
-            var sum = new StrategySummary
-            {
-                StrategyEid = campaign.Id,
-                StrategyName = campaign.Name,
-                StrategyTargetingType = campaign.TargetingType,
-                StrategyType = campaign.Type
-            };
+            var sum = new DailySummary();
             SetStats(sum, campaignSummaries, date);
             return sum;
         }
 
-        private void SetStats(StrategySummary sum, IEnumerable<AmazonCmApiCampaignSummary> campaignSummaries, DateTime date)
+        private void SetStats(DailySummary sum, IEnumerable<AmazonCmApiCampaignSummary> campaignSummaries, DateTime date)
         {
             SetCPProgStats(sum, campaignSummaries, date);
             var reportMetrics = GetReportMetrics(campaignSummaries, date);

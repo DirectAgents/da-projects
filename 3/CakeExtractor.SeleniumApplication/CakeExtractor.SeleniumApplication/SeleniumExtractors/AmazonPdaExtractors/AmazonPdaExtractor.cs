@@ -147,7 +147,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             }
             catch (AccountDoesNotHaveProfileException ex)
             {
-                Logger.Warn(account.Id, $"The account {authorizationModel.Login} does not have the following profile: {ex.Message}", ex);
+                Logger.Warn(account.Id, ex.Message);
             }
             catch (Exception e)
             {
@@ -161,16 +161,16 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
 
         public IEnumerable<AmazonCmApiCampaignSummary> ExtractCampaignApiTruncatedSummaries(DateRange dateRange)
         {
-            var cmApiUtility = GetAmazonConsoleManagerUtility();
             var accountEntityId = GetCurrentProfileEntityId();
+            var cmApiUtility = GetAmazonConsoleManagerUtility();
             var campaignsInfos = cmApiUtility.GetPdaCampaignsTruncatedSummaries(accountEntityId, dateRange);
             return campaignsInfos.ToList();
         }
 
         public IEnumerable<AmazonCmApiCampaignSummary> ExtractCampaignApiFullSummaries(DateRange dateRange)
         {
-            var cmApiUtility = GetAmazonConsoleManagerUtility();
             var accountEntityId = GetCurrentProfileEntityId();
+            var cmApiUtility = GetAmazonConsoleManagerUtility();
             var campaignsInfos = cmApiUtility.GetPdaCampaignsSummaries(accountEntityId, dateRange);
             var campaignType = AmazonApiHelper.GetCampaignTypeName(CampaignType.ProductDisplay);
             campaignsInfos.ForEach(x => x.Type = campaignType);
@@ -263,7 +263,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             }
             catch (AccountDoesNotHaveProfileException)
             {
-                throw; // throw higher
+                throw;
             }
             catch (Exception e)
             {
@@ -287,7 +287,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             if (string.IsNullOrEmpty(url))
             {
                 // The current account does not have the following profile
-                throw new AccountDoesNotHaveProfileException(account.Name);
+                throw new AccountDoesNotHaveProfileException(authorizationModel.Login, account.Name);
             }
             return url;
         }
@@ -321,8 +321,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             }
 
             var realUrls = campaignAllUrlList.FindAll(url => !string.IsNullOrEmpty(url));
-            Logger.Info(account.Id, "[{0}] urls has been retrieved from {1} elements", realUrls.Count,
-                campaignAllUrlList.Count);
+            Logger.Info(account.Id, "[{0}] urls has been retrieved from {1} elements", realUrls.Count, campaignAllUrlList.Count);
             return realUrls;
         }
 

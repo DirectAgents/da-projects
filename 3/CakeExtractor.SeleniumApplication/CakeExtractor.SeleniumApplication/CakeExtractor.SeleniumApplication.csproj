@@ -102,6 +102,7 @@
     <Compile Include="Models\CommonHelperModels\AuthorizationModel.cs" />
     <Compile Include="Models\CommonHelperModels\JobScheduleModel.cs" />
     <Compile Include="SeleniumExtractors\AmazonPdaExtractors\AmazonPdaCampaignRequestExtractor.cs" />
+    <Compile Include="SeleniumExtractors\AmazonPdaExtractors\AmazonPdaDailyRequestExtractor.cs" />
     <Compile Include="Utilities\AmazonConsoleManagerUtility.cs" />
     <Compile Include="SeleniumExtractors\AmazonPdaExtractors\AmazonPdaCampaignExtractor.cs" />
     <Compile Include="SeleniumExtractors\AmazonPdaExtractors\AmazonPdaDailyExtractor.cs" />
