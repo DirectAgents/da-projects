@@ -52,6 +52,11 @@ namespace CakeExtractor.SeleniumApplication.PageActions
             }
         }
 
+        public string GetCurrentWindowUrl()
+        {
+            return Driver.Url;
+        }
+
         public void SendKeys(By byElement, string keys)
         {
             try

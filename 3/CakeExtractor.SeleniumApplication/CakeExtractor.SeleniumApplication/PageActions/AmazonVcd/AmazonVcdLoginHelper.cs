@@ -2,13 +2,30 @@
 using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonPda;
+using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
 using System.Linq;
 
 namespace CakeExtractor.SeleniumApplication.PageActions
 {
-    internal static class AmazonLoginHelper
+    internal static class AmazonVcdLoginHelper
     {
-        public static void LoginToAmazonPortal(AuthorizationModel authorizationModel, BaseAmazonPageActions pageManager)
+        public static void LoginToAmazonPortal(AuthorizationModel authorizationModel, AmazonVcdPageActions pageManager)
+        {
+            pageManager.NavigateToSalesDiagnosticPage();
+            if (IsLoginProcessNeeded(authorizationModel, pageManager));
+            {
+                Login(authorizationModel, pageManager);
+                pageManager.NavigateToSalesDiagnosticPage();
+            }
+        }
+
+        private static bool IsLoginProcessNeeded(AuthorizationModel authorizationModel, AmazonVcdPageActions pageManager)
+        {
+            var currentUrl = pageManager.GetCurrentWindowUrl();
+            return currentUrl.IndexOf(authorizationModel.SignInUrl) > 0;
+        }
+
+        private static void Login(AuthorizationModel authorizationModel, BaseAmazonPageActions pageManager)
         {
             authorizationModel.Cookies = CookieManager.GetCookiesFromFiles(authorizationModel.CookiesDir);
             var cookiesExist = authorizationModel.Cookies.Any();

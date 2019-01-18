@@ -31,7 +31,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
             InitializeAuthorizationModel();
             InitializePageManager(); // opens google chrome application
             CreateApplicationFolders();
-            AmazonLoginHelper.LoginToAmazonPortal(authorizationModel, pageActions);
+            AmazonVcdLoginHelper.LoginToAmazonPortal(authorizationModel, pageActions);
             pageActions.NavigateToSalesDiagnosticPage();
         }
 

@@ -135,7 +135,7 @@
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\Constants\RequestHeaderConstants.cs" />
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\Constants\RequestQueryConstants.cs" />
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\Models\DownloadReportRequestBody.cs" />
-    <Compile Include="PageActions\AmazonLoginHelper.cs" />
+    <Compile Include="PageActions\AmazonVcd\AmazonVcdLoginHelper.cs" />
     <Compile Include="PageActions\AmazonVcd\AmazonVcdPageActions.cs" />
     <Compile Include="PageActions\BaseAmazonPageActions.cs" />
     <Compile Include="SeleniumExtractors\VCD\AmazonVcdExtractor.cs" />
