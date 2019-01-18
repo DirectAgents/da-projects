@@ -55,7 +55,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
             var dbSubcategories = subcategorySummaryLoader.EnsureVendorEntitiesInDataBase(subcategories, extAccount);
             subcategorySummaryLoader.CleanExistingAccountSummaryMetricsDataForDate(date, extAccount);
             subcategorySummaryLoader.LoadNewAccountSummaryMetricsDataForDate(subcategories, dbSubcategories, date, extAccount);
-            Logger.Info("Amazon VCD, Finished loading subcategories data. Loaded metrics of {0} subCategoris", dbSubcategories.Count);
+            Logger.Info("Amazon VCD, Finished loading subcategories data. Loaded metrics of {0} subCategories", dbSubcategories.Count);
             return dbSubcategories;
         }
 

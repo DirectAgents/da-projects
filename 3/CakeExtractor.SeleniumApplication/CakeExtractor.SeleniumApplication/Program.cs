@@ -13,22 +13,20 @@ namespace CakeExtractor.SeleniumApplication
 {
     internal class Program
     {
-        private static readonly List<BaseAmazonSeleniumCommand> Commands = GetCommandList();
-
         static void Main(string[] args)
         {
             InitializeEnterpriseLibrary();
             InitializeLogging();
             AutoMapperBootstrapper.CheckRunSetup();
-            PrepareCommandsEnvironment();
-            ScheduleJobs(args).Wait();
+            var commands = GetExecutionCommands();
+            PrepareCommandsEnvironment(commands);
+            ScheduleJobs(commands).Wait();
             AlwaysSleep();
         }
 
-        private static List<BaseAmazonSeleniumCommand> GetCommandList()
+        private static List<BaseAmazonSeleniumCommand> GetExecutionCommands()
         {
             var commandList = new List<BaseAmazonSeleniumCommand>();
-
             var arrayOfCommands = Properties.Settings.Default.CommandsToScheduler.Split('|');
             foreach (var command in arrayOfCommands)
             {
@@ -44,17 +42,17 @@ namespace CakeExtractor.SeleniumApplication
             return commandList;
         }
 
-        private static void PrepareCommandsEnvironment()
+        private static void PrepareCommandsEnvironment(List<BaseAmazonSeleniumCommand> commands)
         {
-            Commands.ForEach(command =>
+            commands.ForEach(command =>
             {
                 command.PrepareCommandEnvironment();
             });
         }
 
-        private static async Task ScheduleJobs(string[] args)
+        private static async Task ScheduleJobs(List<BaseAmazonSeleniumCommand> commands)
         {
-            await AmazonSeleniumCommandsJobScheduler.ConfigureJobSchedule(Commands);
+            await AmazonSeleniumCommandsJobScheduler.ConfigureJobSchedule(commands);
         }
 
         private static void AlwaysSleep()
