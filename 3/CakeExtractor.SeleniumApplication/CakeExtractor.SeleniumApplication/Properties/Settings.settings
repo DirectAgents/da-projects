@@ -21,7 +21,7 @@
       <Value Profile="(Default)">password</Value>
     </Setting>
     <Setting Name="CommandsToScheduler" Type="System.String" Scope="User">
-      <Value Profile="(Default)">SyncAmazonPdaCommand|SyncAmazonVcdCommand</Value>
+      <Value Profile="(Default)">SyncAmazonVcdCommand</Value>
     </Setting>
   </Settings>
 </SettingsFile>

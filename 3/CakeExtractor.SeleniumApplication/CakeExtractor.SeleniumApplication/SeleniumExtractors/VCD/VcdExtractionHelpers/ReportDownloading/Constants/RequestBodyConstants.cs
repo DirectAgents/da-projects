@@ -5,35 +5,37 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 {
     internal class RequestBodyConstants
     {
-        public const string ReportDatesVisibleFilterName = "Viewing";
-
-        public const string StartDateReportParameter = "periodStartDay";
-
-        public const string EndDateReportParameter = "periodEndDay";
-
         public const string ReportId = "salesDiagnosticDetail";
 
         public const string RequestBodyFormat = "application/json";
 
-        public static Dictionary<string, List<string>> GetInitialVisibleFilters()
+        public const string ShippedRevenueReportLevel = "shippedRevenueLevel";
+
+        public const string ShippedCogsLevel = "shippedCOGSLevel";
+
+        public const string ShippedRevenueSalesView = "Shipped Revenue";
+
+        public const string ShippedCogsSalesView = "Shipped COGS";
+
+        public static Dictionary<string, List<string>> GetInitialVisibleFilters(string reportDates, string salesViewName)
         {
             return new Dictionary<string, List<string>>()
                     {
                         { "Program", new List<string>{ "Amazon Retail" } },
                         { "Distributor View", new List<string>{ "Manufacturing" } },
-                        { "Sales View", new List<string>{ "Shipped Revenue" } },
+                        { "Sales View", new List<string>{ salesViewName } },
                         { "Category", new List<string>{ "All" } },
                         { "Subcategory", new List<string>{ "All" }},
                         { "Brand", new List<string>{ "All" }},
                         { "Search for ASINs or Keywords", new List<string>{ "All" }},
                         { "Reporting Range", new List<string>{ "Daily" }},
-                        { ReportDatesVisibleFilterName, new List<string>{ ""} }, // Should be filled dynamically with report day date
+                        { "Viewing", new List<string>{ reportDates } },
                         { "View by", new List<string>{ "ASIN"} },
-                        { "Add", new List<string>{ "Subcategory", "Category" } }
+                        { "Add", new List<string>{ "Subcategory", "Category", "Parent ASIN", "EAN", "UPC", "Brand", "Apparel Size", "Apparel Size Width", "Binding", "Color", "Model / Style Number", "Release Date" } }
                     };
         }
 
-        public static List<ReportParameter> GetReportParameters()
+        public static List<ReportParameter> GetReportParameters(string startDate, string endDate, string reportLevel)
         {
             return new List<ReportParameter>
             {
@@ -45,7 +47,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                 new ReportParameter
                 {
                     parameterId = "viewFilter",
-                    values = new List<Value>{ new Value { val= "shippedRevenueLevel" } }
+                    values = new List<Value>{ new Value { val= reportLevel } }
                 },
                 new ReportParameter
                 {
@@ -59,13 +61,13 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                 },
                 new ReportParameter
                 {
-                    parameterId = StartDateReportParameter,
-                    values = new List<Value>{ new Value { val= "" } } // Should be filled dynamically with report day date
+                    parameterId = "periodStartDay",
+                    values = new List<Value>{ new Value { val= startDate } } // Should be filled dynamically with report day date
                 },
                 new ReportParameter
                 {
-                    parameterId = EndDateReportParameter,
-                    values = new List<Value>{ new Value { val= "" } } /// Should be filled dynamically with report day date
+                    parameterId = "periodEndDay",
+                    values = new List<Value>{ new Value { val= endDate } } /// Should be filled dynamically with report day date
                 },
                 new ReportParameter
                 {
@@ -90,7 +92,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                 new ReportParameter
                 {
                     parameterId = "dataRefreshDate",
-                    values = new List<Value>{ new Value { val= "0001703861052" } }
+                    values = new List<Value>{ new Value { val= "9999999999999" } } // value for retreiving the latest data
                 },
                 new ReportParameter
                 {
@@ -110,12 +112,12 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                 new ReportParameter
                 {
                     parameterId = "parentASINVisibility",
-                    values = new List<Value>{ new Value { val= false } }
+                    values = new List<Value>{ new Value { val= true } }
                 },
                 new ReportParameter
                 {
                     parameterId = "eanVisibility",
-                    values = new List<Value>{ new Value { val= false } }
+                    values = new List<Value>{ new Value { val= true } }
                 },
                 new ReportParameter
                 {
@@ -125,7 +127,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                 new ReportParameter
                 {
                     parameterId = "upcVisibility",
-                    values = new List<Value>{ new Value { val= false } }
+                    values = new List<Value>{ new Value { val= true } }
                 },
                 new ReportParameter
                 {
@@ -135,7 +137,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                 new ReportParameter
                 {
                     parameterId = "brandVisibility",
-                    values = new List<Value>{ new Value { val= false } }
+                    values = new List<Value>{ new Value { val= true } }
                 },
                 new ReportParameter
                 {
@@ -150,12 +152,12 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                 new ReportParameter
                 {
                     parameterId = "apparelSizeVisibility",
-                    values = new List<Value>{ new Value { val= false } }
+                    values = new List<Value>{ new Value { val= true } }
                 },
                 new ReportParameter
                 {
                     parameterId = "apparelSizeWidthVisibility",
-                    values = new List<Value>{ new Value { val= false } }
+                    values = new List<Value>{ new Value { val= true } }
                 },
                 new ReportParameter
                 {
@@ -165,7 +167,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                 new ReportParameter
                 {
                     parameterId =  "bindingVisibility",
-                    values = new List<Value>{ new Value { val= false } }
+                    values = new List<Value>{ new Value { val= true } }
                 },
                 new ReportParameter
                 {
@@ -175,7 +177,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                 new ReportParameter
                 {
                     parameterId = "colorVisibility",
-                    values = new List<Value>{ new Value { val= false } }
+                    values = new List<Value>{ new Value { val= true } }
                 },
                 new ReportParameter
                 {
@@ -195,7 +197,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                 new ReportParameter
                 {
                     parameterId = "modelStyleVisibility",
-                    values = new List<Value>{ new Value { val= false } }
+                    values = new List<Value>{ new Value { val= true } }
                 },
                 new ReportParameter
                 {
@@ -205,7 +207,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                 new ReportParameter
                 {
                     parameterId = "releaseDateVisibility",
-                    values = new List<Value>{ new Value { val= false } }
+                    values = new List<Value>{ new Value { val= true } }
                 },
             };
         }

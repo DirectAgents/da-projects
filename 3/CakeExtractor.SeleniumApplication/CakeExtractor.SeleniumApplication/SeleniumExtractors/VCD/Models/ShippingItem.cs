@@ -25,5 +25,23 @@
             get;
             set;
         }
+
+        public decimal ShippedCogs
+        {
+            get;
+            set;
+        }
+
+        public int CustomerReturns
+        {
+            get;
+            set;
+        }
+
+        public int FreeReplacements
+        {
+            get;
+            set;
+        }
     }
 }

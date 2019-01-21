@@ -132,6 +132,7 @@
     <Compile Include="SeleniumExtractors\VCD\Models\ShippingItem.cs" />
     <Compile Include="SeleniumExtractors\VCD\Models\Subcategory.cs" />
     <Compile Include="SeleniumExtractors\VCD\Models\VcdReportData.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDataComposer\VcdReportComposer.cs" />
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\Constants\RequestBodyConstants.cs" />
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\Constants\RequestHeaderConstants.cs" />
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\Constants\RequestQueryConstants.cs" />
@@ -143,6 +144,10 @@
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\Models\ReportDownloadingRequestPageData.cs" />
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\VcdDownloadCsvReportRequestGenerator.cs" />
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\VcdReportDownloader.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportParsing\ParsingConverters\DecimalAmountReportConverter.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedCogsProductsRowMap.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedRevenueProductsRowMap.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportParsing\ParsingConverters\IntNumberReportConverter.cs" />
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportParsing\VcdReportParser.cs" />
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\UserInfoExtracting\Models\UserInfo.cs" />
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\UserInfoExtracting\UserInfoExtracter.cs" />

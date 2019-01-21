@@ -97,7 +97,7 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SyncAmazonPdaCommand|SyncAmazonVcdCommand")]
+        [global::System.Configuration.DefaultSettingValueAttribute("SyncAmazonVcdCommand")]
         public string CommandsToScheduler {
             get {
                 return ((string)(this["CommandsToScheduler"]));

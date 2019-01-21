@@ -8,8 +8,10 @@ using CakeExtractor.SeleniumApplication.PageActions;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHelpers;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models;
+using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDataComposer;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportParsing;
 using System;
+using System.Collections.Generic;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
 {
@@ -19,63 +21,74 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
 
         private AmazonVcdPageActions pageActions;
 
+        private VcdReportDownloader reportDownloader;
+
+        private VcdReportCSVParser reportParser;
+
+        private VcdReportComposer reportComposer;
+
         private const int ReportDownloadingDelayInSeconds = 30;
         
         readonly VcdCommandConfigurationManager configurationManager;
 
         private const int ReportDownloadingAttemptCount = 5;
+
         public AmazonVcdExtractor(VcdCommandConfigurationManager configurationManager)
         {
             this.configurationManager = configurationManager;
+            InitializeAuthorizationModel();
+            InitializePageManager(); // opens google chrome application
+            reportDownloader = new VcdReportDownloader(pageActions, authorizationModel);
+            reportParser = new VcdReportCSVParser();
+            reportComposer = new VcdReportComposer();
         }
 
         public void PrepareExtractor()
         {
-            InitializeAuthorizationModel();
-            InitializePageManager(); // opens google chrome application
             CreateApplicationFolders();
             AmazonVcdLoginHelper.LoginToAmazonPortal(authorizationModel, pageActions);
-            pageActions.NavigateToSalesDiagnosticPage();
         }
 
         public VcdReportData ExtractDailyData(DateTime reportDay, AccountInfo accountInfo)
         {
-            var reportTextContent = DownloadReport(reportDay, accountInfo);
-            var reportData = ParseReport(reportTextContent);
-            return reportData;
+            var shippedRevenueReportData = GetShippedRevenueReportData(reportDay, accountInfo);
+            var shippedCogsReportData = GetShippingCogsReportData(reportDay, accountInfo);
+            var composedData = reportComposer.ComposeReportData(shippedRevenueReportData, shippedCogsReportData);
+            return composedData;
         }
 
-        private string DownloadReport(DateTime reportDay, AccountInfo accountInfo)
+        private List<Product> GetShippedRevenueReportData(DateTime reportDay, AccountInfo accountInfo)
+        {
+            Logger.Info("Amazon VCD, Downloading shipped revenue report.");
+            var reportTextContent = DownloadReport(reportDay, accountInfo,
+                ()=> { return reportDownloader.DownloadShippedRevenueCsvReport(reportDay, accountInfo); });
+            var reportProducts = reportParser.ParseShippedRevenueReportData(reportTextContent);
+            Logger.Info("Amazon VCD, Shipped revenue report downloaded. {0} products", reportProducts.Count);
+            return reportProducts;
+        }
+
+        private List<Product> GetShippingCogsReportData(DateTime reportDay, AccountInfo accountInfo)
+        {
+            Logger.Info("Amazon VCD, Downloading shipped cogs report.");
+            var reportTextContent = DownloadReport(reportDay, accountInfo,
+                () => { return reportDownloader.DownloadShippedCogsCsvReport(reportDay, accountInfo); });
+            var reportProducts = reportParser.ParseShippedCogsReportData(reportTextContent);
+            Logger.Info("Amazon VCD, Shipped cogs report downloaded. {0} products", reportProducts.Count);
+            return reportProducts;
+        }
+
+        private string DownloadReport(DateTime reportDay, AccountInfo accountInfo, Func<string> downloadingAction )
         {
             try
             {
-                var reportDownloader = new VcdReportDownloader(pageActions, authorizationModel, accountInfo);
                 var reportTextContent =
-                    RetryHelper.Do(() => { return reportDownloader.DownloadReportAsCsvText(reportDay); },
+                    RetryHelper.Do(downloadingAction,
                     TimeSpan.FromSeconds(ReportDownloadingDelayInSeconds), ReportDownloadingAttemptCount);
                 return reportTextContent;
             }
             catch (Exception ex)
             {
                 Logger.Info("Report downloading failed");
-                Logger.Error(ex);
-                throw ex;
-            }
-        }
-
-        private VcdReportData ParseReport(string reportTextContent)
-        {
-            try
-            {
-                Logger.Info("Amazon VCD, Report parsing started.");
-                var parser = new VcdReportCSVParser();
-                var reportParsedInfo = parser.ParseReportData(reportTextContent);
-                Logger.Info("Amazon VCD, Report parsed successfully. Prod:{0}, Cat:{1}, Subcat:{2}",
-                    reportParsedInfo.Products.Count, reportParsedInfo.Categories.Count, reportParsedInfo.Subcategories.Count);
-                return reportParsedInfo;
-            }
-            catch (Exception ex)
-            {
                 Logger.Error(ex);
                 throw ex;
             }

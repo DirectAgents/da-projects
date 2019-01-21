@@ -3,7 +3,6 @@ using CakeExtractor.SeleniumApplication.Configuration.Models;
 using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using CakeExtractor.SeleniumApplication.Models.Vcd;
-using CakeExtractor.SeleniumApplication.PageActions;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading.Constants;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading.Models;
@@ -27,20 +26,29 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
 
         private AuthorizationModel authorizationModel;
 
-        private AccountInfo accountInfo;
-
-        public VcdReportDownloader(AmazonVcdPageActions pageActions, AuthorizationModel authorizationModel, AccountInfo accountInfo)
+        public VcdReportDownloader(AmazonVcdPageActions pageActions, AuthorizationModel authorizationModel)
         {
             this.pageActions = pageActions;
-            this.accountInfo = accountInfo;
             this.authorizationModel = authorizationModel;
         }
 
-        public string DownloadReportAsCsvText(DateTime reportDay)
+        public string DownloadShippedRevenueCsvReport(DateTime reportDay, AccountInfo accountInfo)
         {
-            Logger.Info("Amazon VCD, Attemt to download report.");
+            Logger.Info("Amazon VCD, Attemt to download shipped revenue report.");
+            return DownloadReportAsCsvText(reportDay, RequestBodyConstants.ShippedRevenueReportLevel, 
+                RequestBodyConstants.ShippedRevenueSalesView, accountInfo);
+        }
+
+        public string DownloadShippedCogsCsvReport(DateTime reportDay, AccountInfo accountInfo)
+        {
+            Logger.Info("Amazon VCD, Attemt to download shipped cogs report.");
+            return DownloadReportAsCsvText(reportDay, RequestBodyConstants.ShippedCogsLevel, RequestBodyConstants.ShippedCogsSalesView, accountInfo);
+        }
+
+        private string DownloadReportAsCsvText(DateTime reportDay, string reportLevel, string salesViewName, AccountInfo accountInfo)
+        {
             pageActions.RefreshSalesDiagnosticPage(authorizationModel);
-            var request = GetDownloadingRequest(reportDay);
+            var request = GenerateDownloadingReportRequest(reportDay, reportLevel, salesViewName, accountInfo);
             var response = RestRequestHelper.SendPostRequest<object>(amazonBaseUrl, request);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
@@ -56,14 +64,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
             }
         }
 
-        private RestRequest GetDownloadingRequest(DateTime reportDay)
-        {
-            var pageRequestData = GetPageDataForReportRequest();
-            var request = GenerateDownloadingReportRequest(pageRequestData, reportDay,
-                accountInfo.VendorGroupId.ToString(), accountInfo.McId.ToString());
-            return request;
-        }
-
         private ReportDownloadingRequestPageData GetPageDataForReportRequest()
         {
             var token = pageActions.GetAccessToken();
@@ -76,15 +76,16 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
             };
         }
 
-        private RestRequest GenerateDownloadingReportRequest(ReportDownloadingRequestPageData requestPageData, DateTime reportDay,
-            string vendorGroupId, string mcId)
+        private RestRequest GenerateDownloadingReportRequest(DateTime reportDay, string reportLevel, string salesViewName, AccountInfo accountInfo)
         {
+            var pageRequestData = GetPageDataForReportRequest();
             var requestId = Guid.NewGuid().ToString();
-            var requestBodyObject = PrepareRequestBody(requestId, reportDay);
-            var requestHeaders = GetHeadersDictionary(requestId, vendorGroupId);
+            var requestBodyObject = PrepareRequestBody(requestId, reportDay, reportLevel, salesViewName);
+            var requestHeaders = GetHeadersDictionary(requestId, accountInfo.VendorGroupId.ToString());
             var requestBodyJson = JsonConvert.SerializeObject(requestBodyObject);
-            var requestQueryParams = RequestQueryConstants.GetRequestQueryParameters(requestPageData.Token, vendorGroupId, mcId);
-            var request = RestRequestHelper.CreateRestRequest(amazonCsvDownloadReportUrl, requestPageData.Cookies, requestQueryParams, null);
+            var requestQueryParams = RequestQueryConstants.GetRequestQueryParameters(pageRequestData.Token,
+                accountInfo.VendorGroupId.ToString(), accountInfo.McId.ToString());
+            var request = RestRequestHelper.CreateRestRequest(amazonCsvDownloadReportUrl, pageRequestData.Cookies, requestQueryParams, null);
             request.AddParameter(RequestBodyConstants.RequestBodyFormat, requestBodyJson, ParameterType.RequestBody);
             requestHeaders.ForEach(x => request.AddHeader(x.Key, x.Value));
             return request;
@@ -97,11 +98,10 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
             return requestHeaders;
         }
 
-        private DownloadReportRequestBody PrepareRequestBody(string requestId, DateTime reportDay)
+        private DownloadReportRequestBody PrepareRequestBody(string requestId, DateTime reportDay, string reportLevel, string salesViewName)
         {
-            var visibleFilters = RequestBodyConstants.GetInitialVisibleFilters();
-            visibleFilters[RequestBodyConstants.ReportDatesVisibleFilterName] = new List<string> { GetBodyVisibleFilterDateRange(reportDay) };
-            var reportParameters = getReportParameters(reportDay);
+            var visibleFilters = RequestBodyConstants.GetInitialVisibleFilters(GetBodyVisibleFilterDateRange(reportDay), salesViewName);
+            var reportParameters = GetReportParameters(reportDay, reportLevel);
             return new DownloadReportRequestBody()
             {
                 salesDiagnosticDetail = new SalesDiagnosticDetail
@@ -114,25 +114,10 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
             };
         }
 
-        private List<ReportParameter> getReportParameters(DateTime reportDay)
+        private List<ReportParameter> GetReportParameters(DateTime reportDay, string reportLevel)
         {
-            var reportParameters = RequestBodyConstants.GetReportParameters();
-            var startDateReportParametr = reportParameters.Find(rp => rp.parameterId == RequestBodyConstants.StartDateReportParameter);
-            startDateReportParametr.values = new List<Value>
-            {
-               new Value
-               {
-                   val = GetReportParameterFilterDate(reportDay)
-               }
-            };
-            var endDateReportParameter = reportParameters.Find(rp => rp.parameterId == RequestBodyConstants.EndDateReportParameter);
-            endDateReportParameter.values = new List<Value>
-            {
-               new Value
-               {
-                   val = GetReportParameterFilterDate(reportDay)
-               }
-            };
+            var reportParameters = RequestBodyConstants.GetReportParameters(GetReportParameterFilterDate(reportDay),
+                GetReportParameterFilterDate(reportDay), reportLevel);
             return reportParameters;
         }
 
