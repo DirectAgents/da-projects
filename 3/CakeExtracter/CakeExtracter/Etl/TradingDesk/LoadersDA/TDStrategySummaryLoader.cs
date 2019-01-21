@@ -17,7 +17,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         // Note accountId is only used in AddUpdateDependentStrategies() (i.e. not by AdrollCampaignSummaryLoader)
         public readonly int AccountId;
         public static readonly EntityIdStorage<Strategy> StrategyStorage;
-        private readonly bool preLoadStrategies;
         private readonly SummaryMetricLoader metricLoader;
         private readonly ISimpleRepository<EntityType> typeRepository;
         private readonly ISimpleRepository<Strategy> strategyRepository;
@@ -27,10 +26,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             StrategyStorage = new StrategyRepository().IdStorage;
         }
 
-        public TDStrategySummaryLoader(int accountId = -1, bool preLoadStrategies = false)
+        public TDStrategySummaryLoader(int accountId = -1)
         {
             AccountId = accountId;
-            this.preLoadStrategies = preLoadStrategies;
             metricLoader = new SummaryMetricLoader();
             typeRepository = new TypeRepository();
             strategyRepository = new StrategyRepository();
@@ -39,11 +37,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         protected override int Load(List<StrategySummary> items)
         {
             Logger.Info(AccountId, "Loading {0} DA-TD StrategySummaries..", items.Count);
-            if (!preLoadStrategies)
-            {
-                PrepareData(items);
-                AddUpdateDependentStrategies(items);
-            }
+            PrepareData(items);
+            AddUpdateDependentStrategies(items);
             AssignStrategyIdToItems(items);
             var count = UpsertDailySummaries(items);
             return count;
