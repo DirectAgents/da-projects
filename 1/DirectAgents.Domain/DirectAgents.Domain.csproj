@@ -190,10 +190,14 @@
     <Compile Include="Entities\CPProg\SummaryMetrics\TDadSummaryMetric.cs" />
     <Compile Include="Entities\CPProg\Strategy.cs" />
     <Compile Include="Entities\CPProg\Vendor\BaseVendorEntity.cs" />
+    <Compile Include="Entities\CPProg\Vendor\SummaryMetrics\VendorParentProductSummaryMetric.cs" />
+    <Compile Include="Entities\CPProg\Vendor\SummaryMetrics\VendorBrandSummaryMetric.cs" />
     <Compile Include="Entities\CPProg\Vendor\SummaryMetrics\VendorCategorySummaryMetric.cs" />
     <Compile Include="Entities\CPProg\Vendor\SummaryMetrics\VendorProductSummaryMetric.cs" />
     <Compile Include="Entities\CPProg\Vendor\SummaryMetrics\VendorSubcategorySummaryMetric.cs" />
+    <Compile Include="Entities\CPProg\Vendor\VendorBrand.cs" />
     <Compile Include="Entities\CPProg\Vendor\VendorCategory.cs" />
+    <Compile Include="Entities\CPProg\Vendor\VendorParentProduct.cs" />
     <Compile Include="Entities\CPProg\Vendor\VendorProduct.cs" />
     <Compile Include="Entities\CPProg\Vendor\VendorSubcategory.cs" />
     <Compile Include="Entities\CPSearch\CallDailySummary.cs" />
@@ -605,9 +609,9 @@
     <Compile Include="MigrationsTD\201812221348160_Mig_AddTypeColumnToStrategyTable.Designer.cs">
       <DependentUpon>201812221348160_Mig_AddTypeColumnToStrategyTable.cs</DependentUpon>
     </Compile>
-    <Compile Include="MigrationsTD\201901141354100_Mig_VendorDataTables.cs" />
-    <Compile Include="MigrationsTD\201901141354100_Mig_VendorDataTables.Designer.cs">
-      <DependentUpon>201901141354100_Mig_VendorDataTables.cs</DependentUpon>
+    <Compile Include="MigrationsTD\201901220934243_Mig_VendorDataTables_2.cs" />
+    <Compile Include="MigrationsTD\201901220934243_Mig_VendorDataTables_2.Designer.cs">
+      <DependentUpon>201901220934243_Mig_VendorDataTables_2.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
@@ -981,8 +985,8 @@
     <EmbeddedResource Include="MigrationsTD\201812221348160_Mig_AddTypeColumnToStrategyTable.resx">
       <DependentUpon>201812221348160_Mig_AddTypeColumnToStrategyTable.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsTD\201901141354100_Mig_VendorDataTables.resx">
-      <DependentUpon>201901141354100_Mig_VendorDataTables.cs</DependentUpon>
+    <EmbeddedResource Include="MigrationsTD\201901220934243_Mig_VendorDataTables_2.resx">
+      <DependentUpon>201901220934243_Mig_VendorDataTables_2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

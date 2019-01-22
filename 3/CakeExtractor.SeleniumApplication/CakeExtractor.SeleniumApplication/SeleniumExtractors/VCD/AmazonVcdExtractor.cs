@@ -1,7 +1,6 @@
 ﻿using CakeExtracter;
 using CakeExtractor.SeleniumApplication.Configuration.Models;
 using CakeExtractor.SeleniumApplication.Configuration.Vcd;
-using CakeExtractor.SeleniumApplication.Drivers;
 using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using CakeExtractor.SeleniumApplication.PageActions;
@@ -12,6 +11,7 @@ using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelp
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportParsing;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
 {
@@ -36,22 +36,23 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
         public AmazonVcdExtractor(VcdCommandConfigurationManager configurationManager)
         {
             this.configurationManager = configurationManager;
-            InitializeAuthorizationModel();
-            InitializePageManager(); // opens google chrome application
-            reportDownloader = new VcdReportDownloader(pageActions, authorizationModel);
-            reportParser = new VcdReportCSVParser();
-            reportComposer = new VcdReportComposer();
         }
 
         public void PrepareExtractor()
         {
+            InitializeAuthorizationModel();
             CreateApplicationFolders();
+            pageActions = new AmazonVcdPageActions();
+            reportDownloader = new VcdReportDownloader(pageActions, authorizationModel);
+            reportParser = new VcdReportCSVParser();
+            reportComposer = new VcdReportComposer();
             AmazonVcdLoginHelper.LoginToAmazonPortal(authorizationModel, pageActions);
         }
 
         public VcdReportData ExtractDailyData(DateTime reportDay, AccountInfo accountInfo)
         {
             var shippedRevenueReportData = GetShippedRevenueReportData(reportDay, accountInfo);
+            Thread.Sleep(TimeSpan.FromSeconds(ReportDownloadingDelayInSeconds)); // wait between report downloading requests to prevent "Too many requests response."
             var shippedCogsReportData = GetShippingCogsReportData(reportDay, accountInfo);
             var composedData = reportComposer.ComposeReportData(shippedRevenueReportData, shippedCogsReportData);
             return composedData;
@@ -99,7 +100,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
             FileManager.CreateDirectoryIfNotExist(authorizationModel.CookiesDir);
         }
 
-        private void InitializeAuthorizationModel() //ToDo: Findout way how to share settings
+        private void InitializeAuthorizationModel()
         {
             authorizationModel = new AuthorizationModel
             {
@@ -108,13 +109,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
                 SignInUrl = Properties.Settings.Default.SignInPageUrl,
                 CookiesDir = configurationManager.GetCookiesDirectoryPath()
             };
-        }
-
-        private void InitializePageManager()
-        {
-            var driver = new ChromeWebDriver(string.Empty);
-            var waitPageTimeoutInMinutes = Properties.Settings.Default.WaitPageTimeoutInMinuts; // TODO: Figure out best solution for common settings
-            pageActions = new AmazonVcdPageActions(driver, waitPageTimeoutInMinutes);
         }
     }
 }

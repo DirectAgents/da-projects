@@ -19,7 +19,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
         public int? AccountId { get; set; }
         public string StatsType { get; set; }
         public bool DisabledOnly { get; set; }
-        
+
         private int executionNumber;
         private JobScheduleModel scheduling;
         private readonly PdaCommandConfigurationManager configurationManager;
@@ -27,6 +27,14 @@ namespace CakeExtractor.SeleniumApplication.Commands
         public SyncAmazonPdaCommand()
         {
             configurationManager = new PdaCommandConfigurationManager();
+        }
+
+        public override string CommandName
+        {
+            get
+            {
+                return "SyncAmazonPdaCommand";
+            }
         }
 
         public override void PrepareCommandEnvironment()

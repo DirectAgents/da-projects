@@ -12,11 +12,13 @@ namespace CakeExtractor.SeleniumApplication.Jobs
     {
         public static async Task ConfigureJobSchedule(List<BaseAmazonSeleniumCommand> commands)
         {
+            var firstRunTime = Properties.Settings.Default.StartExtractionDateTime != DateTime.MinValue ?
+                Properties.Settings.Default.StartExtractionDateTime :
+                DateTime.Now;
             var scheduling = new JobScheduleModel
             {
                 DaysInterval = Properties.Settings.Default.ExtractionIntervalsInDays,
-                //StartExtractionTime = Properties.Settings.Default.StartExtractionDateTime
-                StartExtractionTime = DateTime.Now
+                StartExtractionTime = firstRunTime
             };
             var scheduler = await StdSchedulerFactory.GetDefaultScheduler();
             scheduler.Context.Put(JobConstants.CommandsJobContextValue, commands);
@@ -32,7 +34,7 @@ namespace CakeExtractor.SeleniumApplication.Jobs
             var startTime = GetStartTime(scheduling);
             var interval = GetInterval(scheduling);
             var trigger = TriggerBuilder.Create()
-                .WithIdentity("Extract PDA Campaign stats", "Amazon")
+                .WithIdentity("Selenium Jobs", "Amazon")
                 .StartAt(startTime)
                 .WithSimpleSchedule(x => x
                     .WithInterval(interval)

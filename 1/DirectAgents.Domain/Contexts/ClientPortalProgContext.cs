@@ -74,9 +74,13 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<VendorProduct>().ToTable("VProduct", tdSchema);
             modelBuilder.Entity<VendorCategory>().ToTable("VCategory", tdSchema);
             modelBuilder.Entity<VendorSubcategory>().ToTable("VSubcategory", tdSchema);
+            modelBuilder.Entity<VendorBrand>().ToTable("VBrand", tdSchema);
+            modelBuilder.Entity<VendorParentProduct>().ToTable("VParentProduct", tdSchema);
             modelBuilder.Entity<VendorProductSummaryMetric>().ToTable("VProductSummaryMetric", tdSchema);
             modelBuilder.Entity<VendorCategorySummaryMetric>().ToTable("VCategorySummaryMetric", tdSchema);
             modelBuilder.Entity<VendorSubcategorySummaryMetric>().ToTable("VSubcategorySummaryMetric", tdSchema);
+            modelBuilder.Entity<VendorBrandSummaryMetric>().ToTable("VBrandSummaryMetric", tdSchema);
+            modelBuilder.Entity<VendorParentProductSummaryMetric>().ToTable("VParentProductSummaryMetric", tdSchema);
 
             modelBuilder.Entity<Campaign>().Property(c => c.BaseFee).HasPrecision(14, 2);
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
@@ -171,6 +175,8 @@ namespace DirectAgents.Domain.Contexts
             SetupSummaryMetricModel<VendorProductSummaryMetric>(modelBuilder, "ProductId");
             SetupSummaryMetricModel<VendorSubcategorySummaryMetric>(modelBuilder, "SubcategoryId");
             SetupSummaryMetricModel<VendorCategorySummaryMetric>(modelBuilder, "CategoryId");
+            SetupSummaryMetricModel<VendorBrandSummaryMetric>(modelBuilder, "BrandId");
+            SetupSummaryMetricModel<VendorParentProductSummaryMetric>(modelBuilder, "ParentProductId");
 
             // AdRoll
             modelBuilder.Entity<Advertisable>().ToTable("Advertisable", adrollSchema);
@@ -239,9 +245,13 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<VendorProduct> VendorProducts { get; set; }
         public DbSet<VendorCategory> VendorCategories { get; set; }
         public DbSet<VendorSubcategory> VendorSubcategories { get; set; }
+        public DbSet<VendorBrand> VendorBrands { get; set; }
+        public DbSet<VendorParentProduct> VendorParentProducts { get; set; }
         public DbSet<VendorProductSummaryMetric> VendorProductSummaryMetrics { get; set; }
         public DbSet<VendorCategorySummaryMetric> VendorCategorySummaryMetrics { get; set; }
         public DbSet<VendorSubcategorySummaryMetric> VendorSubcategorySummaryMetrics { get; set; }
+        public DbSet<VendorBrandSummaryMetric> VendorBrandSummaryMetrics { get; set; }
+        public DbSet<VendorParentProductSummaryMetric> VendorParentProductSummaryMetrics { get; set; }
 
         // AdRoll
         public DbSet<Advertisable> Advertisables { get; set; }

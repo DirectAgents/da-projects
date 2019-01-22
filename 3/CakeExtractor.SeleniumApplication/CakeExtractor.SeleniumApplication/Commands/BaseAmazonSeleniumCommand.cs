@@ -5,5 +5,10 @@
         public abstract void PrepareCommandEnvironment();
 
         public abstract void Run();
+
+        public abstract string CommandName
+        {
+            get;
+        }
     }
 }

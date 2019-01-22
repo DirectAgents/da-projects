@@ -18,6 +18,10 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
         public AmazonVcdLoader()
         {
             metricTypes= new Dictionary<string, int>();
+        }
+
+        public void PrepareLoader()
+        {
             EnsureMetricTypes();
         }
 
@@ -25,9 +29,11 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
         {
             try
             {
-                var dbCategories = LoadCategoriesData(reportData.Categories, date, extAccount);
-                var dbSubcategories = LoadSubcategoriesData(reportData.Subcategories, date, extAccount, dbCategories);
-                var dbProducts = LoadProductsData(reportData.Products, date, extAccount, dbCategories, dbSubcategories);
+                var dbBrands = LoadBrandsData(reportData.Brands, date, extAccount);
+                var dbCategories = LoadCategoriesData(reportData.Categories, date, extAccount, dbBrands);
+                var dbSubcategories = LoadSubcategoriesData(reportData.Subcategories, date, extAccount, dbCategories, dbBrands);
+                var dbParentProducts = LoadParentProductsData(reportData.ParentProducts, date, extAccount, dbBrands, dbCategories, dbSubcategories);
+                var dbProducts = LoadProductsData(reportData.Products, date, extAccount,dbBrands, dbCategories, dbSubcategories, dbParentProducts);
             }
             catch (Exception ex)
             {
@@ -36,10 +42,20 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
             }
         }
 
-        private List<VendorCategory> LoadCategoriesData(List<Category> categories, DateTime date, ExtAccount extAccount)
+        private List<VendorBrand> LoadBrandsData(List<Brand> brands, DateTime date, ExtAccount extAccount)
         {
-            Logger.Info("Amazon VCD, Started categories data loading");
-            var categorySummaryLoader = new CategoriesSummaryLoader(metricTypes);
+            var brandsSummaryLoader = new BrandsSummaryLoader(metricTypes);
+            var dbBrands = brandsSummaryLoader.EnsureVendorEntitiesInDataBase(brands, extAccount);
+            brandsSummaryLoader.CleanExistingAccountSummaryMetricsDataForDate(date, extAccount);
+            brandsSummaryLoader.LoadNewAccountSummaryMetricsDataForDate(brands, dbBrands, date, extAccount);
+            Logger.Info("Amazon VCD, Finished loading brands data. Loaded metrics of {0} brands", dbBrands.Count);
+            return dbBrands;
+        }
+
+        private List<VendorCategory> LoadCategoriesData(List<Category> categories, DateTime date, ExtAccount extAccount,
+            List<VendorBrand> brands)
+        {
+            var categorySummaryLoader = new CategoriesSummaryLoader(metricTypes, brands);
             var dbCategories = categorySummaryLoader.EnsureVendorEntitiesInDataBase(categories, extAccount);
             categorySummaryLoader.CleanExistingAccountSummaryMetricsDataForDate(date, extAccount);
             categorySummaryLoader.LoadNewAccountSummaryMetricsDataForDate(categories, dbCategories, date, extAccount);
@@ -48,10 +64,9 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
         }
 
         private List<VendorSubcategory> LoadSubcategoriesData(List<Subcategory> subcategories, DateTime date, 
-            ExtAccount extAccount, List<VendorCategory> dbCategories)
+            ExtAccount extAccount, List<VendorCategory> dbCategories, List<VendorBrand> brands)
         {
-            Logger.Info("Amazon VCD, Started subcategories data loading");
-            var subcategorySummaryLoader = new SubcategoriesSummaryLoader(dbCategories, metricTypes);
+            var subcategorySummaryLoader = new SubcategoriesSummaryLoader(metricTypes, dbCategories, brands);
             var dbSubcategories = subcategorySummaryLoader.EnsureVendorEntitiesInDataBase(subcategories, extAccount);
             subcategorySummaryLoader.CleanExistingAccountSummaryMetricsDataForDate(date, extAccount);
             subcategorySummaryLoader.LoadNewAccountSummaryMetricsDataForDate(subcategories, dbSubcategories, date, extAccount);
@@ -59,11 +74,23 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
             return dbSubcategories;
         }
 
-        private List<VendorProduct> LoadProductsData(List<Product> products, DateTime date,
-            ExtAccount extAccount, List<VendorCategory> dbCategories, List<VendorSubcategory> dbSubcategories)
+        private List<VendorParentProduct> LoadParentProductsData(List<ParentProduct> parentProducts, DateTime date,
+            ExtAccount extAccount, List<VendorBrand> brands, List<VendorCategory> dbCategories, 
+            List<VendorSubcategory> dbSubcategories)
         {
-            Logger.Info("Amazon VCD, Started products data loading");
-            var productSummaryLoader = new ProductsSummaryLoader(dbCategories, dbSubcategories, metricTypes);
+            var parentProductSummaryLoader = new ParentProductSummaryLoader(dbCategories, dbSubcategories, brands, metricTypes);
+            var dbParentProducts = parentProductSummaryLoader.EnsureVendorEntitiesInDataBase(parentProducts, extAccount);
+            parentProductSummaryLoader.CleanExistingAccountSummaryMetricsDataForDate(date, extAccount);
+            parentProductSummaryLoader.LoadNewAccountSummaryMetricsDataForDate(parentProducts, dbParentProducts, date, extAccount);
+            Logger.Info("Amazon VCD, Finished loading parent products data. Loaded metrics of {0} parent products", dbParentProducts.Count);
+            return dbParentProducts;
+        }
+
+        private List<VendorProduct> LoadProductsData(List<Product> products, DateTime date,
+            ExtAccount extAccount,List<VendorBrand> dbBrands, List<VendorCategory> dbCategories, List<VendorSubcategory> dbSubcategories, 
+            List<VendorParentProduct> dbParentProducts)
+        {
+            var productSummaryLoader = new ProductsSummaryLoader(dbCategories, dbSubcategories,dbBrands, dbParentProducts, metricTypes);
             var dbProducts = productSummaryLoader.EnsureVendorEntitiesInDataBase(products, extAccount);
             productSummaryLoader.CleanExistingAccountSummaryMetricsDataForDate(date, extAccount);
             productSummaryLoader.LoadNewAccountSummaryMetricsDataForDate(products, dbProducts, date, extAccount);

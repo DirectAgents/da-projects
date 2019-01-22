@@ -18,10 +18,10 @@
       <Value Profile="(Default)">60</Value>
     </Setting>
     <Setting Name="StartDate" Type="System.DateTime" Scope="User">
-      <Value Profile="(Default)">2019-01-11</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="EndDate" Type="System.DateTime" Scope="User">
-      <Value Profile="(Default)">2019-01-11</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="CookiesDirectoryPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">VcdCookies</Value>

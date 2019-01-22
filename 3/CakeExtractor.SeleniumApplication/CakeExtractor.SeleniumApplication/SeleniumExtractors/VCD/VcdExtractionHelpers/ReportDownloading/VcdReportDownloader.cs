@@ -59,7 +59,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
             }
             else
             {
-                Logger.Warn("Report downloading attempt failed,Status code {0}", response.StatusDescription);
+                Logger.Warn("Report downloading attempt failed, Status code {0}", response.StatusDescription);
                 throw new Exception(string.Format("Report was not downloaded successfully. Status code {0}", response.StatusDescription));
             }
         }

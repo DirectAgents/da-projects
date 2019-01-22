@@ -2,6 +2,10 @@
 {
     internal class Category : ShippingItem
     {
-       
+        public string Brand
+        {
+            get;
+            set;
+        }
     }
 }

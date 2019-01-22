@@ -7,13 +7,13 @@ namespace DirectAgents.Domain.MigrationsTD
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Mig_VendorDataTables : IMigrationMetadata
+    public sealed partial class Mig_VendorDataTables_2 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Mig_VendorDataTables));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Mig_VendorDataTables_2));
         
         string IMigrationMetadata.Id
         {
-            get { return "201901141354100_Mig_VendorDataTables"; }
+            get { return "201901220934243_Mig_VendorDataTables_2"; }
         }
         
         string IMigrationMetadata.Source

@@ -11,26 +11,34 @@ namespace CakeExtractor.SeleniumApplication.Commands
 {
     internal class SyncAmazonVcdCommand : BaseAmazonSeleniumCommand
     {
-        public int? AccountId { get; set; }
-
-        private int executionNumber;
-
         private AmazonVcdExtractor extractor;
 
         private AmazonVcdLoader loader;
 
         private VcdCommandConfigurationManager configurationManager;
 
+        private PlatformAccountRepository accountsRepository;
+
         public SyncAmazonVcdCommand()
         {
             configurationManager = new VcdCommandConfigurationManager();
             extractor = new AmazonVcdExtractor(configurationManager);
             loader = new AmazonVcdLoader();
+            accountsRepository = new PlatformAccountRepository();
+        }
+
+        public override string CommandName
+        {
+            get
+            {
+                return "SyncAmazonVcdCommand";
+            }
         }
 
         public override void PrepareCommandEnvironment()
         {
             extractor.PrepareExtractor();
+            loader.PrepareLoader();
         }
 
         public override void Run()
@@ -70,8 +78,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
         // can be fetched from page using selenium (See UserInfoExtracter.cs) or also can be stored in database
         private List<AccountInfo> GetAccountsDataToProcess()
         {
-            var repository = new PlatformAccountRepository();
-            var account = repository.GetAccount(configurationManager.GetAccountId());
+            var account = accountsRepository.GetAccount(configurationManager.GetAccountId());
             return new List<AccountInfo>()
             {
                new AccountInfo

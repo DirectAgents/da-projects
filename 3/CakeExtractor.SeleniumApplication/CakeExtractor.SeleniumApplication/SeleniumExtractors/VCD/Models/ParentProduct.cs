@@ -1,8 +1,20 @@
 ﻿namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models
 {
-    internal class Subcategory : ShippingItem
+    internal class ParentProduct : ShippingItem
     {
+        public string Asin
+        {
+            get;
+            set;
+        }
+
         public string Category
+        {
+            get;
+            set;
+        }
+
+        public string Subcategory
         {
             get;
             set;

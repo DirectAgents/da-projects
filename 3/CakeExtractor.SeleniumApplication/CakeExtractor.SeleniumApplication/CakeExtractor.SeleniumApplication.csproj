@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\BaseAmazonSeleniumCommand.cs" />
+    <Compile Include="Commands\CommandsProvider.cs" />
     <Compile Include="Commands\SyncAmazonVcdCommand.cs" />
     <Compile Include="Commands\SyncAmazonPdaCommand.cs" />
     <Compile Include="Configuration\Models\AccountInfo.cs" />
@@ -107,6 +108,8 @@
     <Compile Include="Loaders\VCD\AmazonVcdLoader.cs" />
     <Compile Include="Loaders\VCD\Constants\VendorCentralDataLoadingConstants.cs" />
     <Compile Include="Loaders\VCD\MetricTypesLoader\BaseVendorItemLoader.cs" />
+    <Compile Include="Loaders\VCD\MetricTypesLoader\BrandsSummaryLoader.cs" />
+    <Compile Include="Loaders\VCD\MetricTypesLoader\ParentProductSummaryLoader.cs" />
     <Compile Include="Loaders\VCD\MetricTypesLoader\ProductsSummaryLoader.cs" />
     <Compile Include="Loaders\VCD\MetricTypesLoader\SubcategoriesSummaryLoader.cs" />
     <Compile Include="Loaders\VCD\MetricTypesLoader\CategoriesSummaryLoader.cs" />
@@ -127,7 +130,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>VcdSettings.settings</DependentUpon>
     </Compile>
+    <Compile Include="SeleniumExtractors\VCD\Models\Brand.cs" />
     <Compile Include="SeleniumExtractors\VCD\Models\Category.cs" />
+    <Compile Include="SeleniumExtractors\VCD\Models\ParentProduct.cs" />
     <Compile Include="SeleniumExtractors\VCD\Models\Product.cs" />
     <Compile Include="SeleniumExtractors\VCD\Models\ShippingItem.cs" />
     <Compile Include="SeleniumExtractors\VCD\Models\Subcategory.cs" />

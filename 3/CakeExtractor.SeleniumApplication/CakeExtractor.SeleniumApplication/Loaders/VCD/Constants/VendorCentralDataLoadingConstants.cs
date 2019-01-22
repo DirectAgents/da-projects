@@ -10,13 +10,22 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.Constants
 
         public const string OrderedUnitsMetricName = "vendorOrderedUnits";
 
+        public const string ShippedCogsMetricName = "vendorShippedCogs";
+
+        public const string FreeReplacementMetricName = "vendorFreeReplacement";
+
+        public const string CustomerReturnsMetricName = "vendorCustomerReturns";
+
         public const int VendorMetricsDaysInterval = 1;
 
         public static  readonly List<string> VendorMetricTypeNames = new List<string>()
         {
             ShippedRevenueMetricName,
             OrderedUnitsMetricName,
-            ShippedUnitsMetricName
+            ShippedUnitsMetricName,
+            ShippedCogsMetricName,
+            FreeReplacementMetricName,
+            CustomerReturnsMetricName
         };
     }
 }

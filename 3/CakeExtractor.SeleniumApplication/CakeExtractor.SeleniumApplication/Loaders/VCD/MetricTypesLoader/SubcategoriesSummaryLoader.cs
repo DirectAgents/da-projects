@@ -13,10 +13,14 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
     {
         private List<VendorCategory> categories;
 
-        public SubcategoriesSummaryLoader(List<VendorCategory> categories, Dictionary<string, int> metricTypes)
-            :base(metricTypes)
+        private List<VendorBrand> brands;
+
+        public SubcategoriesSummaryLoader(Dictionary<string, int> metricTypes, List<VendorCategory> categories,
+             List<VendorBrand> brands)
+            : base(metricTypes)
         {
             this.categories = categories;
+            this.brands = brands;
         }
 
         protected override DbSet<VendorSubcategorySummaryMetric> GetSummaryMetricDbSet(ClientPortalProgContext dbContext)
@@ -37,17 +41,30 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
                 Name = reportEntity.Name,
             };
             SetCategoryIdIfExists(vendorSubcategory, reportEntity);
+            SetBrandIdIfExists(vendorSubcategory, reportEntity);
             return vendorSubcategory;
         }
 
         private void SetCategoryIdIfExists(VendorSubcategory subcategory, Subcategory reportEntity)
         {
-            if (!string.IsNullOrEmpty(reportEntity.CategoryName))
+            if (!string.IsNullOrEmpty(reportEntity.Category))
             {
-                var categoryEntity = categories.FirstOrDefault(cat => cat.Name == reportEntity.CategoryName);
+                var categoryEntity = categories.FirstOrDefault(cat => cat.Name == reportEntity.Category);
                 if (categoryEntity != null)
                 {
                     subcategory.CategoryId = categoryEntity.Id;
+                }
+            }
+        }
+
+        private void SetBrandIdIfExists(VendorSubcategory subcategory, Subcategory reportEntity)
+        {
+            if (!string.IsNullOrEmpty(reportEntity.Brand))
+            {
+                var brandEntity = brands.FirstOrDefault(brand => brand.Name == reportEntity.Brand);
+                if (brandEntity != null)
+                {
+                    subcategory.BrandId = brandEntity.Id;
                 }
             }
         }

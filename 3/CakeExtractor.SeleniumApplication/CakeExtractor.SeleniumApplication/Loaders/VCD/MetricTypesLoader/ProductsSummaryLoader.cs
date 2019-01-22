@@ -16,11 +16,18 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
 
         private List<VendorSubcategory> subcategories;
 
-        public ProductsSummaryLoader(List<VendorCategory> categories, List<VendorSubcategory> subcategories, Dictionary<string, int> metricTypes)
+        private List<VendorBrand> brands;
+
+        private List<VendorParentProduct> parentProducts;
+
+        public ProductsSummaryLoader(List<VendorCategory> categories, List<VendorSubcategory> subcategories,
+           List<VendorBrand> brands, List<VendorParentProduct> parentProducts, Dictionary<string, int> metricTypes)
             : base(metricTypes)
         {
             this.categories = categories;
             this.subcategories = subcategories;
+            this.brands = brands;
+            this.parentProducts = parentProducts;
         }
 
         protected override Func<VendorProduct, bool> GetEntityMappingPredicate(Product reportEntity, ExtAccount extAccount)
@@ -44,10 +51,20 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
             {
                 Asin = reportEntity.Asin,
                 AccountId = extAccount.Id,
-                Name = reportEntity.Name
+                Name = reportEntity.Name,
+                ApparelSize = reportEntity.ApparelSize,
+                ApparelSizeWidth = reportEntity.ApparelSizeWidth,
+                Binding = reportEntity.Binding,
+                Color = reportEntity.Color,
+                Ean = reportEntity.Ean,
+                Upc = reportEntity.Upc,
+                ModelStyleNumber = reportEntity.ModelStyleNumber,
+                ReleaseDate = reportEntity.ReleaseDate
             };
             SetCategoryIdIfExists(vendorProduct, reportEntity);
             SetSubcategoryIdIfExists(vendorProduct, reportEntity);
+            SetBrandIdIfExists(vendorProduct, reportEntity);
+            SetParentProductIdIfExists(vendorProduct, reportEntity);
             return vendorProduct;
         }
 
@@ -71,6 +88,30 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
                 if (subcategoryEntity != null)
                 {
                     product.SubcategoryId = subcategoryEntity.Id;
+                }
+            }
+        }
+
+        private void SetBrandIdIfExists(VendorProduct product, Product reportEntity)
+        {
+            if (!string.IsNullOrEmpty(reportEntity.Brand))
+            {
+                var brandEntity = brands.FirstOrDefault(brand => brand.Name == reportEntity.Brand);
+                if (brandEntity != null)
+                {
+                    product.BrandId = brandEntity.Id;
+                }
+            }
+        }
+
+        private void SetParentProductIdIfExists(VendorProduct product, Product reportEntity)
+        {
+            if (!string.IsNullOrEmpty(reportEntity.ParentAsin))
+            {
+                var parentProductEntity = parentProducts.FirstOrDefault(pp => pp.Asin == reportEntity.ParentAsin);
+                if (parentProductEntity != null)
+                {
+                    product.ParentProductId = parentProductEntity.Id;
                 }
             }
         }

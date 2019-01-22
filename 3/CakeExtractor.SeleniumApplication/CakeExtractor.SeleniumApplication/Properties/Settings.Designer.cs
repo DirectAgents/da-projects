@@ -49,7 +49,6 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2018-11-23")]
         public global::System.DateTime StartExtractionDateTime {
             get {
                 return ((global::System.DateTime)(this["StartExtractionDateTime"]));
@@ -97,7 +96,7 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SyncAmazonVcdCommand")]
+        [global::System.Configuration.DefaultSettingValueAttribute("SyncAmazonPdaCommand|SyncAmazonVcdCommand")]
         public string CommandsToScheduler {
             get {
                 return ((string)(this["CommandsToScheduler"]));

@@ -85,7 +85,6 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2019-01-11")]
         public global::System.DateTime StartDate {
             get {
                 return ((global::System.DateTime)(this["StartDate"]));
@@ -97,7 +96,6 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2019-01-11")]
         public global::System.DateTime EndDate {
             get {
                 return ((global::System.DateTime)(this["EndDate"]));

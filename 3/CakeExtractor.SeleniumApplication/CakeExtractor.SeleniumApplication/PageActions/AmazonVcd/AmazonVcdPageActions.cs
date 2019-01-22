@@ -1,4 +1,5 @@
-﻿using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
+﻿using CakeExtractor.SeleniumApplication.Drivers;
+using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using OpenQA.Selenium;
 
 namespace CakeExtractor.SeleniumApplication.PageActions.AmazonVcd
@@ -7,7 +8,8 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonVcd
     {
         private const string salesDiagnosticPageUrl = "https://ara.amazon.com/analytics/dashboard/salesDiagnostic";
 
-        public AmazonVcdPageActions(IWebDriver driver, int timeoutMinutes) : base(driver, timeoutMinutes)
+        public AmazonVcdPageActions() 
+            : base(new ChromeWebDriver(string.Empty), Properties.Settings.Default.WaitPageTimeoutInMinuts)
         {
         }
 

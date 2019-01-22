@@ -51,6 +51,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
         {
             using (var dbContext = new ClientPortalProgContext())
             {
+                dbContext.Configuration.AutoDetectChangesEnabled = false; // performance purposes (ToDo: Replace with bulk insert)
                 var dbSet = GetSummaryMetricDbSet(dbContext);
                 var summaryMetricsToAdd = reportShippingEntities.SelectMany(reportEntity =>
                 {
@@ -59,6 +60,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
                 }).ToList();
                 dbSet.AddRange(summaryMetricsToAdd);
                 dbContext.SaveChanges();
+                dbContext.Configuration.AutoDetectChangesEnabled = true;
             }
         }
 
@@ -66,12 +68,14 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
         {
             using (var dbContext = new ClientPortalProgContext())
             {
+                dbContext.Configuration.AutoDetectChangesEnabled = false; // performance purposes (ToDo: Replace with bulk delete)
                 var entitiesDbSet = GetVendorDbSet(dbContext);
                 var accountRelatedEntityIds = entitiesDbSet.Where(ent => ent.AccountId == extAccount.Id).Select(e => e.Id).ToList();
                 var summaryMetricsDbSet = GetSummaryMetricDbSet(dbContext);
                 var itemsToBeRemoved = summaryMetricsDbSet.Where(csm => csm.Date == date && accountRelatedEntityIds.Contains(csm.EntityId)).ToList();
                 summaryMetricsDbSet.RemoveRange(itemsToBeRemoved);
                 dbContext.SaveChanges();
+                dbContext.Configuration.AutoDetectChangesEnabled = true;
             }
         }
 
@@ -94,8 +98,14 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
                     metricTypes[VendorCentralDataLoadingConstants.ShippedUnitsMetricName]),
                InitMetricValue(dbEntity.Id, date, reportEntity.OrderedUnits,
                     metricTypes[VendorCentralDataLoadingConstants.OrderedUnitsMetricName]),
-                InitMetricValue(dbEntity.Id, date, reportEntity.ShippedRevenue,
-                    metricTypes[VendorCentralDataLoadingConstants.ShippedRevenueMetricName])
+               InitMetricValue(dbEntity.Id, date, reportEntity.ShippedRevenue,
+                    metricTypes[VendorCentralDataLoadingConstants.ShippedRevenueMetricName]),
+               InitMetricValue(dbEntity.Id, date, reportEntity.CustomerReturns,
+                    metricTypes[VendorCentralDataLoadingConstants.CustomerReturnsMetricName]),
+               InitMetricValue(dbEntity.Id, date, reportEntity.FreeReplacements,
+                    metricTypes[VendorCentralDataLoadingConstants.FreeReplacementMetricName]),
+               InitMetricValue(dbEntity.Id, date, reportEntity.ShippedCogs,
+                    metricTypes[VendorCentralDataLoadingConstants.ShippedCogsMetricName])
             };
             metricEntities.RemoveAll(item => item == null);
             return metricEntities;

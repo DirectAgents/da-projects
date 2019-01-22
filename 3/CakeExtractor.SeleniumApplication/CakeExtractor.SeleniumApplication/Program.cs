@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CakeExtracter.Bootstrappers;
@@ -18,28 +17,10 @@ namespace CakeExtractor.SeleniumApplication
             InitializeEnterpriseLibrary();
             InitializeLogging();
             AutoMapperBootstrapper.CheckRunSetup();
-            var commands = GetExecutionCommands();
+            var commands = CommandsProvider.GetExecutionCommands();
             PrepareCommandsEnvironment(commands);
             ScheduleJobs(commands).Wait();
             AlwaysSleep();
-        }
-
-        private static List<BaseAmazonSeleniumCommand> GetExecutionCommands()
-        {
-            var commandList = new List<BaseAmazonSeleniumCommand>();
-            var arrayOfCommands = Properties.Settings.Default.CommandsToScheduler.Split('|');
-            foreach (var command in arrayOfCommands)
-            {
-                switch (command)
-                {
-                    case "SyncAmazonPdaCommand": commandList.Add(new SyncAmazonPdaCommand());
-                        break;
-                    case "SyncAmazonVcdCommand": commandList.Add(new SyncAmazonVcdCommand());
-                        break;
-                    default: throw new NotImplementedException();
-                }                    
-            }
-            return commandList;
         }
 
         private static void PrepareCommandsEnvironment(List<BaseAmazonSeleniumCommand> commands)

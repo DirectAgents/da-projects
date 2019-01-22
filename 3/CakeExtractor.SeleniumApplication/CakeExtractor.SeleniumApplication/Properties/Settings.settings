@@ -9,7 +9,7 @@
       <Value Profile="(Default)">30</Value>
     </Setting>
     <Setting Name="StartExtractionDateTime" Type="System.DateTime" Scope="User">
-      <Value Profile="(Default)">2018-11-23</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="ExtractionIntervalsInDays" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
@@ -21,7 +21,7 @@
       <Value Profile="(Default)">password</Value>
     </Setting>
     <Setting Name="CommandsToScheduler" Type="System.String" Scope="User">
-      <Value Profile="(Default)">SyncAmazonVcdCommand</Value>
+      <Value Profile="(Default)">SyncAmazonPdaCommand|SyncAmazonVcdCommand</Value>
     </Setting>
   </Settings>
 </SettingsFile>
