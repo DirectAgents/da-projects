@@ -89,11 +89,11 @@ namespace CakeExtracter.Commands
 
         public void DoETL_Strategy(int accountId, ColumnMapping colMapping, StreamReader streamReader)
         {
-            var extracter = new TDStrategySummaryExtracter(colMapping, streamReader: streamReader);
+            var extractor = new DbmStrategyCsvExtractor(colMapping, streamReader);
             var loader = new TDStrategySummaryLoader(accountId);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
+            var extractorThread = extractor.Start();
+            var loaderThread = loader.Start(extractor);
+            extractorThread.Join();
             loaderThread.Join();
         }
 
