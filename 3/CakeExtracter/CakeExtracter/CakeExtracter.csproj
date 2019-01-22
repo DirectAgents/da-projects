@@ -434,6 +434,7 @@
     <Compile Include="Etl\TradingDesk\Extracters\DatabaseExtracters.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmCreativeCloudStorageExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DBMCreativeExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\DbmStrategyCsvExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\KeywordSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\SearchTermSummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\SummaryCsvExtracter.cs" />
