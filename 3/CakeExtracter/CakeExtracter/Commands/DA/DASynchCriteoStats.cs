@@ -70,7 +70,10 @@ namespace CakeExtracter.Commands
             // (See SynchSearchDailySummariesCriteoCommand)
 
             if (!DaysAgoToStart.HasValue)
+            {
                 DaysAgoToStart = (TimeZoneOffset == 0 ? 41 : 6); // used if StartDate==null
+            }
+
             var today = DateTime.Today;
             var yesterday = today.AddDays(-1);
             var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
@@ -84,10 +87,16 @@ namespace CakeExtracter.Commands
                 criteoUtility.SetCredentials(account.ExternalId);
 
                 if (statsType.Strategy)
+                {
                     DoETL_Strategy(dateRange, account);
+                }
+
                 if (statsType.Daily)
+                {
                     DoETL_Daily(dateRange, account);
+                }
             }
+
             return 0;
         }
 
@@ -107,17 +116,8 @@ namespace CakeExtracter.Commands
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
         {
             //Logger.Info("Criteo ETL - hourly. DateRange {0}.", dateRange); // account...
-
             var extracter = new CriteoStrategySummaryExtracter(criteoUtility, account.ExternalId, dateRange, TimeZoneOffset);
-            var loader = new TDStrategySummaryLoader(account.Id, preLoadStrategies: true);
-
-            var campaigns = criteoUtility.GetCampaigns();
-            if (campaigns != null)
-            {
-                var nameEids = campaigns.Select(x => new Strategy { ExternalId = x.campaignID.ToString() });
-                loader.AddUpdateDependentStrategies(nameEids);
-                //Only using Eids in the lookup because that's what the loader will use later (the extracter doesn't get campaign names)
-            }
+            var loader = new TDStrategySummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
@@ -130,12 +130,21 @@ namespace CakeExtracter.Commands
             {
                 var accounts = db.ExtAccounts.Where(a => a.Platform.Code == Platform.Code_Criteo);
                 if (AccountId.HasValue)
+                {
                     accounts = accounts.Where(a => a.Id == AccountId.Value);
-                else if (!DisabledOnly)
-                    accounts = accounts.Where(a => !a.Disabled);
+                }
+                else
+                {
+                    if (!DisabledOnly)
+                    {
+                        accounts = accounts.Where(a => !a.Disabled);
+                    }
+                }
 
                 if (DisabledOnly)
+                {
                     accounts = accounts.Where(a => a.Disabled);
+                }
 
                 return accounts.ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
             }
