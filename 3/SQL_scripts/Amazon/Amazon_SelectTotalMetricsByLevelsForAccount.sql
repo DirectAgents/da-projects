@@ -55,17 +55,17 @@ DECLARE @campaignType NVARCHAR(MAX) = @CampaignTypeSp + @CampaignTypeSb + @Campa
 18		attributedUnitsOrdered7d (Total Units - 7 days) - for SP
 19		attributedUnitsOrdered14d (Total Units - 14 days) - for SP
 20		attributedUnitsOrdered30d (Total Units - 30 days) - for SP
-47		attributedUnitsOrdered1dOtherSKU (Number of other ASIN (SKU) - 1 day) - for SP, ASIN level
-48		attributedUnitsOrdered7dOtherSKU (Number of other ASIN (SKU) - 7 days) - for SP, ASIN level
-49		attributedUnitsOrdered14dOtherSKU (Number of other ASIN (SKU) - 14 days) - for SP, ASIN level
-50		attributedUnitsOrdered30dOtherSKU (Number of other ASIN (SKU) - 30 days) - for SP, ASIN level
-43		attributedSales1dOtherSKU (Total sales for another ASIN (SKU) - 1 day) - for SP, ASIN level
-44		attributedSales7dOtherSKU (Total sales for another ASIN (SKU) - 7 days) - for SP, ASIN level
-45		attributedSales14dOtherSKU (Total sales for another ASIN (SKU) - 14 days) - for SP, ASIN level
-46		attributedSales30dOtherSKU (Total sales for another ASIN (SKU) - 30 days) - for SP, ASIN level
 41		DetailPageViews (Detail Page Views) - for PD, more info (?)
 42		UnitsSold (Units Ordered - 14 days) - for PD, correspond to attributedUnitsOrdered14dOtherSKU from API (?)
 43		Orders (Total Orders - 14 days) - for PD, corresponds to attributedConversions14d
+44		attributedSales1dOtherSKU (Total sales for another ASIN (SKU) - 1 day) - for SP, ASIN level
+45		attributedSales7dOtherSKU (Total sales for another ASIN (SKU) - 7 days) - for SP, ASIN level
+46		attributedSales14dOtherSKU (Total sales for another ASIN (SKU) - 14 days) - for SP, ASIN level
+47		attributedSales30dOtherSKU (Total sales for another ASIN (SKU) - 30 days) - for SP, ASIN level
+48		attributedUnitsOrdered1dOtherSKU (Number of other ASIN (SKU) - 1 day) - for SP, ASIN level
+49		attributedUnitsOrdered7dOtherSKU (Number of other ASIN (SKU) - 7 days) - for SP, ASIN level
+50		attributedUnitsOrdered14dOtherSKU (Number of other ASIN (SKU) - 14 days) - for SP, ASIN level
+51		attributedUnitsOrdered30dOtherSKU (Number of other ASIN (SKU) - 30 days) - for SP, ASIN level
 */
 
 --Strategy
@@ -160,8 +160,8 @@ IF (@campaignType LIKE '%' + @CampaignTypeSp + '%')
 	  SUM([metrics].[19]) AS 'Total Units (14d)',
 	  SUM([metrics].[7]) AS 'Total Orders same SKU (14d)',
 	  SUM([metrics].[15]) AS 'Total Sales same SKU (14d)',
-	  SUM([metrics].[49]) AS 'Number of other SKU (14d)',
-	  SUM([metrics].[45]) AS 'Total sales other SKU (14d)'
+	  SUM([metrics].[50]) AS 'Number of other SKU (14d)',
+	  SUM([metrics].[46]) AS 'Total sales other SKU (14d)'
 	FROM
 	  [td].[AdSummary] AS [summaries]
 	  JOIN [td].[Ad] AS [items]
@@ -171,7 +171,7 @@ IF (@campaignType LIKE '%' + @CampaignTypeSp + '%')
 		FROM [td].[AdSummaryMetric] AS [ungrouppedMetrics]
 		PIVOT (
 		  AVG([ungrouppedMetrics].Value) FOR [ungrouppedMetrics].MetricTypeId in (
-			[3], [7], [11], [15], [19], [49], [45]
+			[3], [7], [11], [15], [19], [50], [46]
 			)
 		) [ungrouppedPivotMetrics]
 	  ) AS [metrics]
