@@ -6,7 +6,6 @@ using CakeExtractor.SeleniumApplication.Models.Vcd;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading.Constants;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading.Models;
-using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.UserInfoExtracting;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using Newtonsoft.Json;
 using RestSharp;
@@ -68,7 +67,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
         {
             var token = pageActions.GetAccessToken();
             var cookies = pageActions.GetAllCookies().ToDictionary(x => x.Name, x => x.Value);
-            var userInfo = UserInfoExtracter.ExtractUserInfo(pageActions);
             return new ReportDownloadingRequestPageData
             {
                 Token = token,

@@ -37,6 +37,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
             }
             catch (Exception ex)
             {
+                Logger.Warn("Error occured while loading data for {0} account on {1} date", extAccount.Id, date);
                 Logger.Error(ex);
                 throw ex;
             }

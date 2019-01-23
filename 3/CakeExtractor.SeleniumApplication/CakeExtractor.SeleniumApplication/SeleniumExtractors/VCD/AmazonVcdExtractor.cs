@@ -9,6 +9,8 @@ using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHelpers
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDataComposer;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportParsing;
+using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.UserInfoExtracting;
+using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.UserInfoExtracting.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -27,8 +29,10 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
 
         private VcdReportComposer reportComposer;
 
-        private const int ReportDownloadingDelayInSeconds = 30;
-        
+        private UserInfoExtracter userInfoExtractor;
+
+        private const int ReportDownloadingFailedDelayInSeconds = 30;
+
         readonly VcdCommandConfigurationManager configurationManager;
 
         private const int ReportDownloadingAttemptCount = 5;
@@ -46,16 +50,31 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
             reportDownloader = new VcdReportDownloader(pageActions, authorizationModel);
             reportParser = new VcdReportCSVParser();
             reportComposer = new VcdReportComposer();
+            userInfoExtractor = new UserInfoExtracter();
             AmazonVcdLoginHelper.LoginToAmazonPortal(authorizationModel, pageActions);
         }
 
         public VcdReportData ExtractDailyData(DateTime reportDay, AccountInfo accountInfo)
         {
-            var shippedRevenueReportData = GetShippedRevenueReportData(reportDay, accountInfo);
-            Thread.Sleep(TimeSpan.FromSeconds(ReportDownloadingDelayInSeconds)); // wait between report downloading requests to prevent "Too many requests response."
-            var shippedCogsReportData = GetShippingCogsReportData(reportDay, accountInfo);
-            var composedData = reportComposer.ComposeReportData(shippedRevenueReportData, shippedCogsReportData);
-            return composedData;
+            try
+            {
+                var shippedRevenueReportData = GetShippedRevenueReportData(reportDay, accountInfo);
+                Thread.Sleep(TimeSpan.FromSeconds(ReportDownloadingFailedDelayInSeconds)); // wait between report downloading requests to prevent "Too many requests response."
+                var shippedCogsReportData = GetShippingCogsReportData(reportDay, accountInfo);
+                var composedData = reportComposer.ComposeReportData(shippedRevenueReportData, shippedCogsReportData);
+                return composedData;
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn("Error occured while extracting data for {0} account on {1} date", accountInfo.Account.Id, reportDay);
+                Logger.Error(ex);
+                throw ex;
+            }
+        }
+
+        public UserInfo ExtractAccountsInfo()
+        {
+            return userInfoExtractor.ExtractUserInfo(pageActions);
         }
 
         private List<Product> GetShippedRevenueReportData(DateTime reportDay, AccountInfo accountInfo)
@@ -84,7 +103,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
             {
                 var reportTextContent =
                     RetryHelper.Do(downloadingAction,
-                    TimeSpan.FromSeconds(ReportDownloadingDelayInSeconds), ReportDownloadingAttemptCount);
+                    TimeSpan.FromSeconds(ReportDownloadingFailedDelayInSeconds), ReportDownloadingAttemptCount);
                 return reportTextContent;
             }
             catch (Exception ex)

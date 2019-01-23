@@ -12,24 +12,31 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
         public List<DateTime> GetDaysToProcess()
         {
             var startDate = VcdSettings.Default.StartDate;
-            var endDate= VcdSettings.Default.EndDate;
+            var endDate = VcdSettings.Default.EndDate;
             // If date not specified in config date value has DateTime.MinValue
             if (startDate != DateTime.MinValue && endDate != DateTime.MinValue)
             {
-                return GetDaysBetweenToDates(startDate, endDate).ToList();
+                return GetDaysBetweenTwoDates(startDate, endDate).ToList();
             }
             else
             {
                 var daysInterval = VcdSettings.Default.DaysInterval != 0 ? VcdSettings.Default.DaysInterval : defaultDaysIntervalToProcess;
                 var intervalEndDate = DateTime.Today.AddDays(-1);
                 var intervalStartDate = DateTime.Today.AddDays(-daysInterval);
-                return GetDaysBetweenToDates(intervalStartDate, intervalEndDate).ToList();
+                return GetDaysBetweenTwoDates(intervalStartDate, intervalEndDate).ToList();
             }
         }
 
         public int GetAccountId()
         {
-            return VcdSettings.Default.AccountId;
+            try
+            {
+                return VcdSettings.Default.AccountId;
+            }
+            catch
+            {
+                return 0;
+            }
         }
 
         public string GetCookiesDirectoryPath()
@@ -37,17 +44,7 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
             return VcdSettings.Default.CookiesDirectory;
         }
 
-        public int GetVendorGroupId()
-        {
-            return VcdSettings.Default.AmazonVendorGroupId;
-        }
-
-        public int GetMcId()
-        {
-            return VcdSettings.Default.AmazonMcId;
-        }
-
-        private IEnumerable<DateTime> GetDaysBetweenToDates(DateTime from, DateTime thru)
+        private IEnumerable<DateTime> GetDaysBetweenTwoDates(DateTime from, DateTime thru)
         {
             for (var day = from.Date; day.Date <= thru.Date; day = day.AddDays(1))
                 yield return day;

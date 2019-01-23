@@ -238,7 +238,7 @@ namespace CakeExtracter.Commands
             var repository = new PlatformAccountRepository();
             if (!AccountId.HasValue)
             {
-                var accounts = repository.GetAccounts(Platform.Code_Amazon, DisabledOnly);
+                var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_Amazon, DisabledOnly);
                 return accounts;
             }
 
