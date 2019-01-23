@@ -25,37 +25,13 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1437")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int AccountId {
             get {
                 return ((int)(this["AccountId"]));
             }
             set {
                 this["AccountId"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("797780")]
-        public int AmazonVendorGroupId {
-            get {
-                return ((int)(this["AmazonVendorGroupId"]));
-            }
-            set {
-                this["AmazonVendorGroupId"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int AmazonMcId {
-            get {
-                return ((int)(this["AmazonMcId"]));
-            }
-            set {
-                this["AmazonMcId"] = value;
             }
         }
         
@@ -73,7 +49,7 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        [global::System.Configuration.DefaultSettingValueAttribute("65")]
         public int DaysInterval {
             get {
                 return ((int)(this["DaysInterval"]));
@@ -102,18 +78,6 @@ namespace CakeExtractor.SeleniumApplication.Properties {
             }
             set {
                 this["EndDate"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("VcdCookies")]
-        public string CookiesDirectoryPath {
-            get {
-                return ((string)(this["CookiesDirectoryPath"]));
-            }
-            set {
-                this["CookiesDirectoryPath"] = value;
             }
         }
     }

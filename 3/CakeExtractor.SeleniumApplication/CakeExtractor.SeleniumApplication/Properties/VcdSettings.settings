@@ -3,28 +3,19 @@
   <Profiles />
   <Settings>
     <Setting Name="AccountId" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1437</Value>
-    </Setting>
-    <Setting Name="AmazonVendorGroupId" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">797780</Value>
-    </Setting>
-    <Setting Name="AmazonMcId" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="CookiesDirectory" Type="System.String" Scope="User">
       <Value Profile="(Default)">VcdCookies</Value>
     </Setting>
     <Setting Name="DaysInterval" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">60</Value>
+      <Value Profile="(Default)">65</Value>
     </Setting>
     <Setting Name="StartDate" Type="System.DateTime" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="EndDate" Type="System.DateTime" Scope="User">
       <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="CookiesDirectoryPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">VcdCookies</Value>
     </Setting>
   </Settings>
 </SettingsFile>

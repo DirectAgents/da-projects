@@ -1,4 +1,5 @@
-﻿using CakeExtractor.SeleniumApplication.Commands;
+﻿using CakeExtracter;
+using CakeExtractor.SeleniumApplication.Commands;
 using Quartz;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,7 +16,9 @@ namespace CakeExtractor.SeleniumApplication.Jobs
 
         private void RunCommand(BaseAmazonSeleniumCommand command)
         {
+            Logger.Info("Started execution of {0} command", command.CommandName);
             command.Run();
+            Logger.Info("Finished execution of {0} command", command.CommandName);
         }
     }
 }

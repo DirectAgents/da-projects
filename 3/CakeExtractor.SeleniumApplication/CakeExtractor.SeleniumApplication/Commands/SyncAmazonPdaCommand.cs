@@ -44,7 +44,6 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
         public override void Run()
         {
-            
             executionNumber++;
             var statsType = new StatsTypeAgg(StatsType);
             var dateRange = GetDateRange();

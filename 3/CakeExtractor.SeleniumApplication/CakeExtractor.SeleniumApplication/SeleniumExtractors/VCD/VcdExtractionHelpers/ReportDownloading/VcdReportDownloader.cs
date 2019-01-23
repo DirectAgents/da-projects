@@ -33,14 +33,14 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
 
         public string DownloadShippedRevenueCsvReport(DateTime reportDay, AccountInfo accountInfo)
         {
-            Logger.Info("Amazon VCD, Attemt to download shipped revenue report.");
+            Logger.Info("Amazon VCD, Attempt to download shipped revenue report.");
             return DownloadReportAsCsvText(reportDay, RequestBodyConstants.ShippedRevenueReportLevel, 
                 RequestBodyConstants.ShippedRevenueSalesView, accountInfo);
         }
 
         public string DownloadShippedCogsCsvReport(DateTime reportDay, AccountInfo accountInfo)
         {
-            Logger.Info("Amazon VCD, Attemt to download shipped cogs report.");
+            Logger.Info("Amazon VCD, Attempt to download shipped cogs report.");
             return DownloadReportAsCsvText(reportDay, RequestBodyConstants.ShippedCogsLevel, RequestBodyConstants.ShippedCogsSalesView, accountInfo);
         }
 
