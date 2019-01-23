@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.SearchMarketing.Extracters;
 using Criteo;
-using Criteo.CriteoAPI;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
@@ -13,26 +11,26 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     public abstract class CriteoApiExtracter<T> : Extracter<T>
         where T : DatedStatsSummary
     {
-        protected readonly string accountCode;
-        protected readonly DateRange dateRange;
-        protected readonly int timezoneOffset;
+        protected readonly string AccountCode;
+        protected readonly DateRange DateRange;
+        protected readonly int TimezoneOffset;
 
-        protected CriteoUtility _criteoUtility;
+        protected CriteoUtility CriteoUtility;
         //TODO: make it so that within the criteoUtility, it doesn't need to open and close the service for every call
 
-        public CriteoApiExtracter(CriteoUtility criteoUtility, string accountCode, DateRange dateRange, int timezoneOffset = 0)
+        protected CriteoApiExtracter(CriteoUtility criteoUtility, string accountCode, DateRange dateRange, int timezoneOffset = 0)
         {
-            this.accountCode = accountCode;
-            this.dateRange = dateRange;
-            this.timezoneOffset = timezoneOffset;
+            AccountCode = accountCode;
+            DateRange = dateRange;
+            TimezoneOffset = timezoneOffset;
             if (criteoUtility != null)
             {
-                this._criteoUtility = criteoUtility;
+                CriteoUtility = criteoUtility;
             }
             else
             {
-                _criteoUtility = new CriteoUtility(m => Logger.Info(m), m => Logger.Warn(m));
-                _criteoUtility.SetCredentials(accountCode);
+                CriteoUtility = new CriteoUtility(m => Logger.Info(m), m => Logger.Warn(m));
+                CriteoUtility.SetCredentials(accountCode);
             }
         }
 
@@ -44,7 +42,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 var sum = new StrategySummary
                 {
                     StrategyEid = row["campaignID"],
-                    Date = DateTime.Parse(row["dateTime"]).AddHours(timezoneOffset).Date,
+                    Date = DateTime.Parse(row["dateTime"]).AddHours(TimezoneOffset).Date,
                     Cost = decimal.Parse(row["cost"]),
                     Impressions = int.Parse(row["impressions"]),
                     Clicks = int.Parse(row["click"]),
@@ -54,11 +52,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 yield return sum;
             }
         }
-
-        //public campaign[] GetCampaigns()
-        //{
-        //    return _criteoUtility.GetCampaigns();
-        //}
     }
 
     public class CriteoStrategySummaryExtracter : CriteoApiExtracter<StrategySummary>
@@ -70,16 +63,20 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         protected override void Extract()
         {
             Logger.Info("Extracting StrategySummaries from Criteo API for {0} from {1:d} to {2:d}",
-                        this.accountCode, this.dateRange.FromDate, this.dateRange.ToDate);
-            if (this.timezoneOffset == 0)
+                AccountCode, DateRange.FromDate, DateRange.ToDate);
+            if (TimezoneOffset == 0)
+            {
                 Extract_Daily();
+            }
             else
+            {
                 Extract_Hourly();
+            }
         }
 
         private void Extract_Daily()
         {
-            var reportUrl = _criteoUtility.GetCampaignReport(dateRange.FromDate, dateRange.ToDate);
+            var reportUrl = CriteoUtility.GetCampaignReport(DateRange.FromDate, DateRange.ToDate);
             var reportRows = EnumerateXmlReportRows(reportUrl);
             Add(reportRows);
             End();
@@ -87,23 +84,24 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         private void Extract_Hourly()
         {
-            var adjustedBeginDate = this.dateRange.FromDate;
-            var adjustedEndDate = this.dateRange.ToDate;
-            if (this.timezoneOffset < 0)
+            var adjustedBeginDate = DateRange.FromDate;
+            var adjustedEndDate = DateRange.ToDate;
+            if (TimezoneOffset < 0)
                 adjustedEndDate = adjustedEndDate.AddDays(1);
-            else if (this.timezoneOffset > 0)
+            else if (TimezoneOffset > 0)
                 adjustedBeginDate = adjustedBeginDate.AddDays(-1);
 
-            var reportUrl = _criteoUtility.GetCampaignReport(adjustedBeginDate, adjustedEndDate, hourly: true);
+            var reportUrl = CriteoUtility.GetCampaignReport(adjustedBeginDate, adjustedEndDate, hourly: true);
 
             var dailySummaries = EnumerateRows_Hourly(reportUrl);
             Add(dailySummaries);
             End();
         }
+
         private IEnumerable<StrategySummary> EnumerateRows_Hourly(string reportUrl)
         {
             IEnumerable<StrategySummary> hourlySummaries = EnumerateXmlReportRows(reportUrl).ToList();
-            hourlySummaries = hourlySummaries.Where(s => s.Date >= this.dateRange.FromDate && s.Date <= this.dateRange.ToDate);
+            hourlySummaries = hourlySummaries.Where(s => s.Date >= DateRange.FromDate && s.Date <= DateRange.ToDate);
             var dailyGroups = hourlySummaries.GroupBy(s => new { s.StrategyEid, s.Date });
             foreach (var group in dailyGroups)
             {
@@ -115,6 +113,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 sum.SetStats(group);
                 yield return sum;
             }
+        }
+
+        private IEnumerable<Strategy> GetCampaigns()
+        {
+            var campaigns = CriteoUtility.GetCampaigns();
+            //Only using Eids in the lookup because that's what the loader will use later (the extracter doesn't get campaign names)
+            var strategies = campaigns.Select(x => new Strategy {ExternalId = x.campaignID.ToString()});
+            return strategies;
         }
     }
 }
