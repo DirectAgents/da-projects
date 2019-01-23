@@ -30,6 +30,7 @@ namespace DirectAgents.Domain.Entities.CPProg
         public const string Code_Instagram = "insta";
         public const string Code_Twitter = "tw";
         public const string Code_YAM = "yam";
+        public const string Code_AraAmazon = "araamzn";
 
         public static IEnumerable<string> Codes_Syncable()
         {
