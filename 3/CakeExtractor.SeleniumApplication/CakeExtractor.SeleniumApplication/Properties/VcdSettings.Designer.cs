@@ -49,18 +49,6 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("65")]
-        public int DaysInterval {
-            get {
-                return ((int)(this["DaysInterval"]));
-            }
-            set {
-                this["DaysInterval"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         public global::System.DateTime StartDate {
             get {
                 return ((global::System.DateTime)(this["StartDate"]));
@@ -78,6 +66,18 @@ namespace CakeExtractor.SeleniumApplication.Properties {
             }
             set {
                 this["EndDate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        public int DaysInterval {
+            get {
+                return ((int)(this["DaysInterval"]));
+            }
+            set {
+                this["DaysInterval"] = value;
             }
         }
     }
