@@ -39,6 +39,7 @@ namespace DirectAgents.Domain.Seed
             AddPlatformIfNotExist("tc", "TapCommerce");
             AddPlatformIfNotExist(Platform.Code_YAM, "YAM");
             AddPlatformIfNotExist("zem", "Zemanta");
+            AddPlatformIfNotExist(Platform.Code_AraAmazon, "AraAmazon");
         }
 
         public void SeedNetworks()

@@ -7,47 +7,12 @@ using CakeExtractor.SeleniumApplication.Models;
 
 namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
 {
-    public class AmazonPdaPageActions : BasePageActions
+    public class AmazonPdaPageActions : BaseAmazonPageActions
     {
-        private readonly TimeSpan timeout;
         private readonly TimeSpan timeoutThread = TimeSpan.FromSeconds(3);
 
-        public AmazonPdaPageActions(IWebDriver driver, int timeoutMinutes) : base(driver)
+        public AmazonPdaPageActions(IWebDriver driver, int timeoutMinutes) : base(driver,timeoutMinutes)
         {
-            timeout = TimeSpan.FromMinutes(timeoutMinutes);
-        }
-
-        public void NavigateToUrl(string url, By waitingElement)
-        {
-            Logger.Info("Go to URL [{0}]...", url);
-            NavigateToUrl(url, waitingElement, timeout);
-        }
-
-        public void LoginProcess(string email, string password)
-        {
-            Logger.Info("Login with e-mail [{0}]...", email);
-            try
-            {
-                LoginWithEmailAndPassword(email, password);
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Login failed [{email}]: {e.Message}", e);
-            }
-        }
-
-        public void LoginByPassword(string password)
-        {
-            Logger.Info("Need to repeat the password...");
-            try
-            {
-                LoginWithPassword(password);
-                WaitElementClickable(AmazonPdaPageObjects.FilterByButton, timeout);
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Could not to repeat password: {e.Message}", e);
-            }
         }
 
         public string GetProfileUrl(string profileName)
@@ -91,9 +56,9 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             catch (Exception e)
             {
                 throw new Exception($"Could not to set the filter: {e.Message}", e);
-            }            
+            }
         }
-        
+
         public void ExportCsv()
         {
             try
@@ -116,17 +81,17 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         public string GetCampaignUrl(IWebElement campaignsName)
         {
             var url = "";
-            var campaignNameElement = GetChildElement(campaignsName, AmazonPdaPageObjects.CampaignName);            
+            var campaignNameElement = GetChildElement(campaignsName, AmazonPdaPageObjects.CampaignName);
             var linkElement = GetChildElement(campaignNameElement, AmazonPdaPageObjects.CampaignNameLink);
 
             if (linkElement != null)
             {
                 url = linkElement.GetAttribute("href");
                 Logger.Info($"Campaign URL found [{url}]");
-            }            
+            }
             return url;
         }
-        
+
         public void ClickOnTab(By listElement, By itemElement)
         {
             try
@@ -138,7 +103,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
                 throw new Exception($"Could not click on tab [{itemElement}]: {e.Message}", e);
             }
         }
-        
+
         public void GetCampaignSettingsInfo(CampaignInfo campaign)
         {
             try
@@ -192,11 +157,11 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             try
             {
                 Logger.Info("Retrieving campaign report...");
-                
+
                 WaitElementClickable(AmazonPdaPageObjects.DownloadReportButton, timeout);
                 ClickElement(AmazonPdaPageObjects.DownloadReportButton);
                 WaitLoading(AmazonPdaPageObjects.DownloadingLoader, timeout, true);
-                
+
                 if (IsElementEnabledAndDisplayed(AmazonPdaPageObjects.AfterDownloadReportNoData))
                 {
                     Logger.Warn("The report is not attached because the answer is 'No data'");
@@ -250,63 +215,6 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             WaitElementClickable(AmazonPdaPageObjects.FilterPdaValues, timeout);
             ClickElement(AmazonPdaPageObjects.FilterPdaValues);
             ClickElement(AmazonPdaPageObjects.SaveSearchAndFilterButton);
-        }
-            
-        private void LoginWithEmailAndPassword(string email, string password)
-        {
-            EnterEmail(email);
-            LoginWithPassword(password);
-        }
-
-        private void LoginWithPassword(string password)
-        {
-            EnterPassword(password);
-            ClickElement(AmazonPdaPageObjects.RememberMeCheckBox);
-            ClickElement(AmazonPdaPageObjects.LoginButton);
-            IsPasswordCorrect();
-            WaitSecurityCodeIfNecessary();
-        }
-
-        private void IsPasswordCorrect()
-        {
-            if (!IsElementPresent(AmazonPdaPageObjects.IncorrectPasswordSpan))
-            {
-                return;
-            }
-
-            var exc = new Exception("Password is incorrect");
-            Logger.Error(exc);
-        }
-
-        private void EnterEmail(string email)
-        {
-            ClickElement(AmazonPdaPageObjects.LoginEmailInput);
-            SendKeys(AmazonPdaPageObjects.LoginEmailInput, email);
-        }
-
-        private void EnterPassword(string password)
-        {
-            ClickElement(AmazonPdaPageObjects.LoginPassInput);
-            SendKeys(AmazonPdaPageObjects.LoginPassInput, password);
-        }
-
-        private void WaitSecurityCodeIfNecessary()
-        {
-            if (!IsElementPresent(AmazonPdaPageObjects.CodeInput))
-            {
-                return;
-            }
-
-            WaitElementClickable(AmazonPdaPageObjects.CodeInput, timeout);
-            ClickElement(AmazonPdaPageObjects.DontAskCodeCheckBox);
-            ClickElement(AmazonPdaPageObjects.CodeInput);
-            WaitSecurityCode();
-        }
-
-        private void WaitSecurityCode()
-        {
-            Logger.Info("Waiting the code...");
-            WaitLoading(AmazonPdaPageObjects.CodeInput, timeout);
         }
     }
 }

@@ -1,33 +1,43 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using CakeExtractor.SeleniumApplication.Commands;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using Quartz;
 using Quartz.Impl;
 
-namespace CakeExtractor.SeleniumApplication.Jobs.ExtractAmazonPda
+namespace CakeExtractor.SeleniumApplication.Jobs
 {
-    internal class ExtractAmazonPdaScheduler
+    internal class AmazonSeleniumCommandsJobScheduler
     {
-        public static async void Start(SyncAmazonPdaCommand command, JobScheduleModel scheduling)
+        public static async Task ConfigureJobSchedule(List<BaseAmazonSeleniumCommand> commands)
         {
+            var firstRunTime = Properties.Settings.Default.StartExtractionDateTime != DateTime.MinValue ?
+                Properties.Settings.Default.StartExtractionDateTime :
+                DateTime.Now;
+            var scheduling = new JobScheduleModel
+            {
+                DaysInterval = Properties.Settings.Default.ExtractionIntervalsInDays,
+                StartExtractionTime = firstRunTime
+            };
             var scheduler = await StdSchedulerFactory.GetDefaultScheduler();
-            scheduler.Context.Put("SyncAmazonPdaCommand", command);
+            scheduler.Context.Put(JobConstants.CommandsJobContextValue, commands);
             await scheduler.Start();
 
-            var job = JobBuilder.Create<ExtractAmazonPdaJob>().Build();
+            var job = JobBuilder.Create<AmazonSeleniumCommandsJob>().Build();
             var trigger = CreateTrigger(scheduling);
             await scheduler.ScheduleJob(job, trigger);
         }
 
         private static ITrigger CreateTrigger(JobScheduleModel scheduling)
         {
-            var startTime = GetStartTime(scheduling);            
+            var startTime = GetStartTime(scheduling);
             var interval = GetInterval(scheduling);
             var trigger = TriggerBuilder.Create()
-                .WithIdentity("Extract PDA Campaign stats", "Amazon")
+                .WithIdentity("Selenium Jobs", "Amazon")
                 .StartAt(startTime)
                 .WithSimpleSchedule(x => x
-                    .WithInterval(interval) 
+                    .WithInterval(interval)
                     .RepeatForever())
                 .Build();
             return trigger;

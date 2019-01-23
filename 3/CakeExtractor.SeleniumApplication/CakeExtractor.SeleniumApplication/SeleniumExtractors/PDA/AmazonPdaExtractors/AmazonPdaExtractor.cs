@@ -6,6 +6,7 @@ using Amazon.Enums;
 using Amazon.Helpers;
 using CakeExtracter;
 using CakeExtracter.Common;
+using CakeExtractor.SeleniumApplication.Configuration.Pda;
 using CakeExtractor.SeleniumApplication.Drivers;
 using CakeExtractor.SeleniumApplication.Exceptions;
 using CakeExtractor.SeleniumApplication.Helpers;
@@ -19,17 +20,18 @@ using FileManager = CakeExtractor.SeleniumApplication.Helpers.FileManager;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors
 {
-    public class AmazonPdaExtractor
+    internal class AmazonPdaExtractor
     {
         private static AmazonPdaPageActions pageActions;
         private static AuthorizationModel authorizationModel;
         private static string downloadDir;
         private static string reportNameTemplate;
         private static string campaignsUrl;
+        private static PdaCommandConfigurationManager configurationManager;
 
         private readonly ExtAccount account;
         private string accountEntityId;
-
+        
         static AmazonPdaExtractor()
         {
             Initialize();
@@ -51,12 +53,12 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
                 LoginWithCookie(authorizationModel);
                 return;
             }
-
             LoginWithoutCookie(authorizationModel);
         }
 
         private static void Initialize()
         {
+            SetConfigurationManager();
             InitializeSettings();
             InitializeAuthorizationModel();
             InitializePageActions();
@@ -64,16 +66,21 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             FileManager.CreateDirectoryIfNotExist(authorizationModel.CookiesDir);
         }
 
+        private static void SetConfigurationManager()
+        {
+            configurationManager = new PdaCommandConfigurationManager();
+        }
+
         private static void InitializeSettings()
         {
-            campaignsUrl = Properties.Settings.Default.CampaignsPageUrl;
-            reportNameTemplate = Properties.Settings.Default.FilesNameTemplate;
-            downloadDir = FileManager.GetAssemblyRelativePath(Properties.Settings.Default.DownloadsDirectoryName);
+            campaignsUrl = configurationManager.GetCampaignsPageUrl();
+            reportNameTemplate = configurationManager.GetFilesNameTemplate();
+            downloadDir = FileManager.GetAssemblyRelativePath(configurationManager.GetDownloadsDirectoryName());
         }
 
         private static void InitializeAuthorizationModel()
         {
-            var cookieDir = Properties.Settings.Default.CookiesDirectory;
+            var cookieDir = configurationManager.GetCookiesDirectory();
             authorizationModel = new AuthorizationModel
             {
                 Login = Properties.Settings.Default.EMail,
@@ -221,7 +228,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
                     pageActions.IsElementPresent(AmazonPdaPageObjects.LoginPassInput))
                 {
                     // need to repeat the password
-                    pageActions.LoginByPassword(authorizationModel.Password);
+                    pageActions.LoginByPassword(authorizationModel.Password, AmazonPdaPageObjects.FilterByButton);
                 }
 
                 pageActions.SetFiltersOnCampaigns();

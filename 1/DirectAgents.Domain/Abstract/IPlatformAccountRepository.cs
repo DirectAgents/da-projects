@@ -6,7 +6,9 @@ namespace DirectAgents.Domain.Abstract
     public interface IPlatformAccountRepository
     {
         ExtAccount GetAccount(int accountId);
-        IEnumerable<ExtAccount> GetNotDisabledAccounts(string platformCode);
-        IEnumerable<ExtAccount> GetAccounts(string platformCode, bool disabledOnly);
+
+        IEnumerable<ExtAccount> GetAccountsWithFilledExternalIdByPlatformCode(string platformCode, bool disabledOnly = false);
+
+        IEnumerable<ExtAccount> GetAccountsByPlatformCode(string platformCode, bool disabledOnly = false);
     }
 }

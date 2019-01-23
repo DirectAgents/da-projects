@@ -1,0 +1,215 @@
+﻿using CakeExtractor.SeleniumApplication.Models.Vcd;
+using System.Collections.Generic;
+
+namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading.Constants
+{
+    internal class RequestBodyConstants
+    {
+        public const string ReportId = "salesDiagnosticDetail";
+
+        public const string RequestBodyFormat = "application/json";
+
+        public const string ShippedRevenueReportLevel = "shippedRevenueLevel";
+
+        public const string ShippedCogsLevel = "shippedCOGSLevel";
+
+        public const string ShippedRevenueSalesView = "Shipped Revenue";
+
+        public const string ShippedCogsSalesView = "Shipped COGS";
+
+        public static Dictionary<string, List<string>> GetInitialVisibleFilters(string reportDates, string salesViewName)
+        {
+            return new Dictionary<string, List<string>>()
+                    {
+                        { "Program", new List<string>{ "Amazon Retail" } },
+                        { "Distributor View", new List<string>{ "Manufacturing" } },
+                        { "Sales View", new List<string>{ salesViewName } },
+                        { "Category", new List<string>{ "All" } },
+                        { "Subcategory", new List<string>{ "All" }},
+                        { "Brand", new List<string>{ "All" }},
+                        { "Search for ASINs or Keywords", new List<string>{ "All" }},
+                        { "Reporting Range", new List<string>{ "Daily" }},
+                        { "Viewing", new List<string>{ reportDates } },
+                        { "View by", new List<string>{ "ASIN"} },
+                        { "Add", new List<string>{ "Subcategory", "Category", "Parent ASIN", "EAN", "UPC", "Brand", "Apparel Size", "Apparel Size Width", "Binding", "Color", "Model / Style Number", "Release Date" } }
+                    };
+        }
+
+        public static List<ReportParameter> GetReportParameters(string startDate, string endDate, string reportLevel)
+        {
+            return new List<ReportParameter>
+            {
+                new ReportParameter
+                {
+                    parameterId = "distributorView",
+                    values = new List<Value>{ new Value { val= "manufacturer" } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "viewFilter",
+                    values = new List<Value>{ new Value { val= reportLevel } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "asin",
+                    values = new List<Value>{ new Value { val= "ALL" } }
+                },
+                 new ReportParameter
+                {
+                    parameterId = "aggregationFilter",
+                    values = new List<Value>{ new Value { val= "ASINLevel" } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "periodStartDay",
+                    values = new List<Value>{ new Value { val= startDate } } // Should be filled dynamically with report day date
+                },
+                new ReportParameter
+                {
+                    parameterId = "periodEndDay",
+                    values = new List<Value>{ new Value { val= endDate } } /// Should be filled dynamically with report day date
+                },
+                new ReportParameter
+                {
+                    parameterId = "isPeriodToDate",
+                    values = new List<Value>{ new Value { val= false } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "isCustomDateRange",
+                    values = new List<Value>{ new Value { val= "false" } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "hideLastYear",
+                    values = new List<Value>{ new Value { val= false } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "period",
+                    values = new List<Value>{ new Value { val= "DAILY" } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "dataRefreshDate",
+                    values = new List<Value>{ new Value { val= "9999999999999" } } // value for retreiving the latest data
+                },
+                new ReportParameter
+                {
+                    parameterId = "categoryId",
+                    values = new List<Value>{ new Value { val= "ALL" } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "subcategoryId",
+                    values = new List<Value>{ new Value { val= "ALL" } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "brandId",
+                    values = new List<Value>{ new Value { val= "ALL" } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "parentASINVisibility",
+                    values = new List<Value>{ new Value { val= true } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "eanVisibility",
+                    values = new List<Value>{ new Value { val= true } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "isbn13Visibility",
+                    values = new List<Value>{ new Value { val= false } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "upcVisibility",
+                    values = new List<Value>{ new Value { val= true } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "janVisibility",
+                    values = new List<Value>{ new Value { val= false } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "brandVisibility",
+                    values = new List<Value>{ new Value { val= true } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "brandCodeVisibility",
+                    values = new List<Value>{ new Value { val= false } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "catVisibility",
+                    values = new List<Value>{ new Value { val= true } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "apparelSizeVisibility",
+                    values = new List<Value>{ new Value { val= true } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "apparelSizeWidthVisibility",
+                    values = new List<Value>{ new Value { val= true } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "authorVisibility",
+                    values = new List<Value>{ new Value { val= false } }
+                },
+                new ReportParameter
+                {
+                    parameterId =  "bindingVisibility",
+                    values = new List<Value>{ new Value { val= true } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "catalogNumberVisibility",
+                    values = new List<Value>{ new Value { val= false } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "colorVisibility",
+                    values = new List<Value>{ new Value { val= true } }
+                },
+                new ReportParameter
+                {
+                    parameterId =  "colorCountVisibility",
+                    values = new List<Value>{ new Value { val= false } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "manufactureOnDemandVisibility",
+                    values = new List<Value>{ new Value { val= false } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "listPriceVisibility",
+                    values = new List<Value>{ new Value { val= false } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "modelStyleVisibility",
+                    values = new List<Value>{ new Value { val= true } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "productGroupVisibility",
+                    values = new List<Value>{ new Value { val= false } }
+                },
+                new ReportParameter
+                {
+                    parameterId = "releaseDateVisibility",
+                    values = new List<Value>{ new Value { val= true } }
+                },
+            };
+        }
+    }
+}

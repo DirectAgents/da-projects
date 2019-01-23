@@ -38,6 +38,7 @@
     <Reference Include="CsvHelper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\..\DirectAgents.Web\packages\CsvHelper.2.16.3.0\lib\net45\CsvHelper.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <Reference Include="ManyConsole, Version=1.0.0.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\DirectAgents.Web\packages\ManyConsole.1.0.0.4\lib\ManyConsole.dll</HintPath>
     </Reference>
@@ -85,7 +86,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\BaseAmazonSeleniumCommand.cs" />
+    <Compile Include="Commands\CommandsProvider.cs" />
+    <Compile Include="Commands\SyncAmazonVcdCommand.cs" />
     <Compile Include="Commands\SyncAmazonPdaCommand.cs" />
+    <Compile Include="Configuration\Models\AccountInfo.cs" />
+    <Compile Include="Configuration\Pda\PdaCommandConfigurationManager.cs" />
+    <Compile Include="Configuration\Pda\VcdAccountsDataProvider.cs" />
+    <Compile Include="Configuration\Vcd\VcdCommandConfigurationManager.cs" />
     <Compile Include="Drivers\ChromeWebDriver.cs" />
     <Compile Include="Enums\AmazonCmApiMetrics.cs" />
     <Compile Include="Enums\AmazonReportMetrics.cs" />
@@ -93,7 +101,19 @@
     <Compile Include="Helpers\AmazonCmApiHelper.cs" />
     <Compile Include="Helpers\CookieManager.cs" />
     <Compile Include="Helpers\RestRequestHelper.cs" />
+    <Compile Include="Helpers\RetryHelper.cs" />
     <Compile Include="Helpers\TimeHelper.cs" />
+    <Compile Include="Jobs\AmazonSeleniumCommandsJob.cs" />
+    <Compile Include="Jobs\AmazonSeleniumCommandsJobScheduler.cs" />
+    <Compile Include="Jobs\JobConstants.cs" />
+    <Compile Include="Loaders\VCD\AmazonVcdLoader.cs" />
+    <Compile Include="Loaders\VCD\Constants\VendorCentralDataLoadingConstants.cs" />
+    <Compile Include="Loaders\VCD\MetricTypesLoader\BaseVendorItemLoader.cs" />
+    <Compile Include="Loaders\VCD\MetricTypesLoader\BrandsSummaryLoader.cs" />
+    <Compile Include="Loaders\VCD\MetricTypesLoader\ParentProductSummaryLoader.cs" />
+    <Compile Include="Loaders\VCD\MetricTypesLoader\ProductsSummaryLoader.cs" />
+    <Compile Include="Loaders\VCD\MetricTypesLoader\SubcategoriesSummaryLoader.cs" />
+    <Compile Include="Loaders\VCD\MetricTypesLoader\CategoriesSummaryLoader.cs" />
     <Compile Include="Models\ConsoleManagerUtilityModels\AmazonCmApiCampaignSummary.cs" />
     <Compile Include="Models\ConsoleManagerUtilityModels\AmazonCmApiParams.cs" />
     <Compile Include="Models\ConsoleManagerUtilityModels\Filter.cs" />
@@ -101,11 +121,46 @@
     <Compile Include="Models\ReportModels\AmazonReportSummary.cs" />
     <Compile Include="Models\CommonHelperModels\AuthorizationModel.cs" />
     <Compile Include="Models\CommonHelperModels\JobScheduleModel.cs" />
-    <Compile Include="Utilities\AmazonConsoleManagerUtility.cs" />
-    <Compile Include="SeleniumExtractors\AmazonPdaExtractors\AmazonPdaCampaignExtractor.cs" />
-    <Compile Include="SeleniumExtractors\AmazonPdaExtractors\AmazonPdaDailyExtractor.cs" />
-    <Compile Include="SeleniumExtractors\AmazonPdaExtractors\AmazonPdaExtractor.cs" />
-    <Compile Include="Jobs\ExtractAmazonPda\ExtractAmazonPdaJob.cs" />
+    <Compile Include="Properties\PdaSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>PdaSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\VcdSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>VcdSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="SeleniumExtractors\VCD\Models\Brand.cs" />
+    <Compile Include="SeleniumExtractors\VCD\Models\Category.cs" />
+    <Compile Include="SeleniumExtractors\VCD\Models\ParentProduct.cs" />
+    <Compile Include="SeleniumExtractors\VCD\Models\Product.cs" />
+    <Compile Include="SeleniumExtractors\VCD\Models\ShippingItem.cs" />
+    <Compile Include="SeleniumExtractors\VCD\Models\Subcategory.cs" />
+    <Compile Include="SeleniumExtractors\VCD\Models\VcdReportData.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDataComposer\VcdReportComposer.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\Constants\RequestBodyConstants.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\Constants\RequestHeaderConstants.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\Constants\RequestQueryConstants.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\Models\DownloadReportRequestBody.cs" />
+    <Compile Include="PageActions\AmazonVcd\AmazonVcdLoginHelper.cs" />
+    <Compile Include="PageActions\AmazonVcd\AmazonVcdPageActions.cs" />
+    <Compile Include="PageActions\BaseAmazonPageActions.cs" />
+    <Compile Include="SeleniumExtractors\VCD\AmazonVcdExtractor.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\Models\ReportDownloadingRequestPageData.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\VcdDownloadCsvReportRequestGenerator.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\VcdReportDownloader.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportParsing\ParsingConverters\DecimalAmountReportConverter.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedCogsProductsRowMap.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedRevenueProductsRowMap.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportParsing\ParsingConverters\IntNumberReportConverter.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportParsing\VcdReportParser.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\UserInfoExtracting\Models\UserInfo.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\UserInfoExtracting\UserInfoExtracter.cs" />
+    <Compile Include="Helpers\AmazonConsoleManagerUtility.cs" />
+    <Compile Include="SeleniumExtractors\PDA\AmazonPdaExtractors\AmazonPdaCampaignExtractor.cs" />
+    <Compile Include="SeleniumExtractors\PDA\AmazonPdaExtractors\AmazonPdaDailyExtractor.cs" />
+    <Compile Include="SeleniumExtractors\PDA\AmazonPdaExtractors\AmazonPdaExtractor.cs" />
     <Compile Include="Models\CampaignInfo.cs" />
     <Compile Include="PageActions\BasePageActions.cs" />
     <Compile Include="Helpers\FileManager.cs" />
@@ -118,15 +173,24 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Jobs\ExtractAmazonPda\ExtractAmazonPdaScheduler.cs" />
-    <Compile Include="SeleniumExtractors\AmazonReportCsvExtractors\AmazonReportCsvExtractor.cs" />
+    <Compile Include="SeleniumExtractors\PDA\AmazonReportCsvExtractors\AmazonReportCsvExtractor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
+    <None Include="Properties\PdaSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>PdaSettings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Properties\VcdSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>VcdSettings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
