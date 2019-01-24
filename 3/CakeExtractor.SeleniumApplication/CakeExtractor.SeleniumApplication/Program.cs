@@ -53,7 +53,7 @@ namespace CakeExtractor.SeleniumApplication
 
         private static void InitializeLogging()
         {
-            CakeExtracter.Logger.Instance = new EnterpriseLibraryLogger();
+            CakeExtracter.Logger.Instance = new EnterpriseLibraryLogger("Selenium Jobs");
         }
     }
 }
