@@ -2,12 +2,18 @@
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 
 namespace DirectAgents.Domain.Concrete
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// The class represents methods for retrieving accounts from a database that is available from the ClientPortalProgContext
+    /// </summary>
     public class PlatformAccountRepository : IPlatformAccountRepository
     {
+        /// <inheritdoc />
         public ExtAccount GetAccount(int accountId)
         {
             using (var db = new ClientPortalProgContext())
@@ -16,19 +22,45 @@ namespace DirectAgents.Domain.Concrete
             }
         }
 
+        /// <inheritdoc />
+        public ExtAccount GetAccountWithColumnMapping(int accountId)
+        {
+            using (var db = new ClientPortalProgContext())
+            {
+                return db.ExtAccounts.Include(x => x.Platform.PlatColMapping).FirstOrDefault(x => x.Id == accountId);
+            }
+        }
+
+        /// <inheritdoc />
         public IEnumerable<ExtAccount> GetAccountsWithFilledExternalIdByPlatformCode(string platformCode, bool disabledOnly)
         {
-            var accounts = GetAccountsByPlatformCode(platformCode, disabledOnly);
-            var accountsWithExternalId = accounts.Where(x => x.ExternalId != null && x.ExternalId != string.Empty);
+            return GetAccountsWithFilledExternalIdByPlatformCode(platformCode, disabledOnly, false);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<ExtAccount> GetAccountsWithFilledExternalIdByPlatformCode(string platformCode, bool disabledOnly, bool includeColumnMapping)
+        {
+            var accounts = GetAccountsByPlatformCode(platformCode, disabledOnly, includeColumnMapping);
+            var accountsWithExternalId = accounts.Where(x => !string.IsNullOrEmpty(x.ExternalId));
             return accountsWithExternalId.ToList();
         }
 
-        public IEnumerable<ExtAccount> GetAccountsByPlatformCode(string platformCode, bool disabledOnly = false)
+        /// <inheritdoc />
+        public IEnumerable<ExtAccount> GetAccountsByPlatformCode(string platformCode)
+        {
+            return GetAccountsByPlatformCode(platformCode, false, false);
+        }
+
+        private IEnumerable<ExtAccount> GetAccountsByPlatformCode(string platformCode, bool disabledOnly, bool includeColumnMapping)
         {
             using (var db = new ClientPortalProgContext())
             {
                 var accounts = db.ExtAccounts.Where(x => x.Platform.Code == platformCode);
                 var accountsWithStatus = accounts.Where(x => x.Disabled == disabledOnly);
+                if (includeColumnMapping)
+                {
+                    accountsWithStatus = accountsWithStatus.Include(x => x.Platform.PlatColMapping);
+                }
                 return accountsWithStatus.ToList();
             }
         }
