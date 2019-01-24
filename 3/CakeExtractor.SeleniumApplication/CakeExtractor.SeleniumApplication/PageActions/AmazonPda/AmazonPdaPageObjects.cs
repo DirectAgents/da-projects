@@ -20,7 +20,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         public static By FilterResetButton = By.XPath(".//button[contains(text(),'Reset filters')]");
         public static By FilterByButton = By.XPath(".//button[contains(text(),'Filter by')]");
         public static By FilterTypeButton = By.XPath(".//button[contains(@value,'Type')][contains(text(),'Type')]");
-        public static By FilterByValues = By.CssSelector("div[data-e2e-id=campaignsDashboard] > div > div:nth-of-type(1) > div:nth-of-type(4) > div > div > div > div:nth-of-type(2) > label > button");
+        public static By FilterByValues = By.CssSelector("button[data-e2e-id=rowFilterOperationDropdownButton]");
         public static By FilterPdaValues = By.CssSelector("div#portal > div > div > div > button[value='PDA']");
         public static By SaveSearchAndFilterButton = By.XPath(".//button[@id='saveButtonSearchAndFilter']");
         public static By FilterLoader = By.CssSelector("svg[data-icon=spinner]");
