@@ -15,10 +15,6 @@ namespace CakeExtractor.SeleniumApplication.Commands
 {
     internal class SyncAmazonPdaCommand : BaseAmazonSeleniumCommand
     {
-        public int? AccountId { get; set; }
-        public string StatsType { get; set; }
-        public bool DisabledOnly { get; set; }
-
         private readonly PdaCommandConfigurationManager configurationManager;
 
         public SyncAmazonPdaCommand()
@@ -41,13 +37,14 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
         public override void Run()
         {
-            var statsType = new StatsTypeAgg(StatsType);
+            var statsType = new StatsTypeAgg(configurationManager.GetStatsTypeString());
             var dateRange = GetDateRange();
             var fromDatabase = configurationManager.GetFromDatabase();
 
+
             Logger.Info("Amazon ETL (PDA Campaigns). DateRange: {0}.", dateRange);
 
-            var accounts = GetAccounts();
+            var accounts = GetAccounts(configurationManager.GetAccountId(), configurationManager.GetDisabledOnlyFlag());
             foreach (var account in accounts)
             {
                 DoEtls(account, dateRange, statsType, fromDatabase);
@@ -123,15 +120,15 @@ namespace CakeExtractor.SeleniumApplication.Commands
             return dateRange;
         }
 
-        private IEnumerable<ExtAccount> GetAccounts()
+        private IEnumerable<ExtAccount> GetAccounts(int? accountId, bool disabledOnly)
         {
             var repository = new PlatformAccountRepository();
-            if (!AccountId.HasValue)
+            if (!accountId.HasValue)
             {
-                var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_Amazon, DisabledOnly);
+                var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_Amazon, disabledOnly);
                 return accounts;
             }
-            var account = repository.GetAccount(AccountId.Value);
+            var account = repository.GetAccount(accountId.Value);
             return new[] { account };
         }
     }

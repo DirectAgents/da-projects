@@ -12,7 +12,7 @@ namespace CakeExtractor.SeleniumApplication.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.8.0.0")]
     internal sealed partial class PdaSettings : global::System.Configuration.ApplicationSettingsBase {
         
         private static PdaSettings defaultInstance = ((PdaSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new PdaSettings())));
@@ -114,6 +114,42 @@ namespace CakeExtractor.SeleniumApplication.Properties {
             }
             set {
                 this["FromDatabase"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int AccountId {
+            get {
+                return ((int)(this["AccountId"]));
+            }
+            set {
+                this["AccountId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string StatsType {
+            get {
+                return ((string)(this["StatsType"]));
+            }
+            set {
+                this["StatsType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DisabledOnly {
+            get {
+                return ((bool)(this["DisabledOnly"]));
+            }
+            set {
+                this["DisabledOnly"] = value;
             }
         }
     }
