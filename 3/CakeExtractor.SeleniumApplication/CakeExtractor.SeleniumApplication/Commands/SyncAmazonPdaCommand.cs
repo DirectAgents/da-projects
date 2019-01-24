@@ -8,7 +8,6 @@ using CakeExtracter;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
 using CakeExtractor.SeleniumApplication.Configuration.Pda;
-using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors;
 using Platform = DirectAgents.Domain.Entities.CPProg.Platform;
 
@@ -20,8 +19,6 @@ namespace CakeExtractor.SeleniumApplication.Commands
         public string StatsType { get; set; }
         public bool DisabledOnly { get; set; }
 
-        private int executionNumber;
-        private JobScheduleModel scheduling;
         private readonly PdaCommandConfigurationManager configurationManager;
 
         public SyncAmazonPdaCommand()
@@ -44,13 +41,11 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
         public override void Run()
         {
-            executionNumber++;
             var statsType = new StatsTypeAgg(StatsType);
             var dateRange = GetDateRange();
             var fromDatabase = configurationManager.GetFromDatabase();
 
-            Logger.Info("Amazon ETL (PDA Campaigns), execution number - {0}. DateRange: {1}.", executionNumber,
-                dateRange);
+            Logger.Info("Amazon ETL (PDA Campaigns). DateRange: {0}.", dateRange);
 
             var accounts = GetAccounts();
             foreach (var account in accounts)
@@ -59,7 +54,6 @@ namespace CakeExtractor.SeleniumApplication.Commands
             }
 
             Logger.Info("Amazon ETL (PDA Campaigns) has been finished.");
-            //LogScheduledJobStartTime();
         }
 
         private static void DoEtls(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType, bool fromDatabase)
@@ -129,17 +123,6 @@ namespace CakeExtractor.SeleniumApplication.Commands
             return dateRange;
         }
 
-        private void LogScheduledJobStartTime()
-        {
-            var nextTime = scheduling.StartExtractionTime;
-            while (nextTime < DateTime.Now)
-            {
-                nextTime = nextTime.AddDays(scheduling.DaysInterval);
-            }
-
-            Logger.Info("Waiting for the scheduled job to extract PDA statistics: next run time - {0} (UTC)...", nextTime.ToUniversalTime());
-        }
-        
         private IEnumerable<ExtAccount> GetAccounts()
         {
             var repository = new PlatformAccountRepository();
@@ -148,9 +131,8 @@ namespace CakeExtractor.SeleniumApplication.Commands
                 var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_Amazon, DisabledOnly);
                 return accounts;
             }
-
             var account = repository.GetAccount(AccountId.Value);
-            return new[] {account};
+            return new[] { account };
         }
     }
 }
