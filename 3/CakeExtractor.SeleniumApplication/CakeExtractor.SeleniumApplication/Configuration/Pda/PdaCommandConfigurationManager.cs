@@ -50,5 +50,20 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Pda
         {
             return PdaSettings.Default.FromDatabase;
         }
+
+        public string GetStatsTypeString()
+        {
+            return PdaSettings.Default.StatsType;
+        }
+
+        public int? GetAccountId()
+        {
+            return PdaSettings.Default.AccountId == 0 ? new int?() : PdaSettings.Default.AccountId;
+        }
+
+        public bool GetDisabledOnlyFlag()
+        {
+            return PdaSettings.Default.DisabledOnly;
+        }
     }
 }
