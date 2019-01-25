@@ -47,8 +47,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
         {
             var brandsSummaryLoader = new BrandsSummaryLoader(metricTypes);
             var dbBrands = brandsSummaryLoader.EnsureVendorEntitiesInDataBase(brands, extAccount);
-            brandsSummaryLoader.CleanExistingAccountSummaryMetricsDataForDate(date, extAccount);
-            brandsSummaryLoader.LoadNewAccountSummaryMetricsDataForDate(brands, dbBrands, date, extAccount);
+            brandsSummaryLoader.UpdateAccountSummaryMetricsDataForDate(brands, dbBrands, date, extAccount);
             Logger.Info("Amazon VCD, Finished loading brands data. Loaded metrics of {0} brands", dbBrands.Count);
             return dbBrands;
         }
@@ -58,8 +57,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
         {
             var categorySummaryLoader = new CategoriesSummaryLoader(metricTypes, brands);
             var dbCategories = categorySummaryLoader.EnsureVendorEntitiesInDataBase(categories, extAccount);
-            categorySummaryLoader.CleanExistingAccountSummaryMetricsDataForDate(date, extAccount);
-            categorySummaryLoader.LoadNewAccountSummaryMetricsDataForDate(categories, dbCategories, date, extAccount);
+            categorySummaryLoader.UpdateAccountSummaryMetricsDataForDate(categories, dbCategories, date, extAccount);
             Logger.Info("Amazon VCD, Finished loading categories data. Loaded metrics of {0} categories", dbCategories.Count);
             return dbCategories;
         }
@@ -69,8 +67,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
         {
             var subcategorySummaryLoader = new SubcategoriesSummaryLoader(metricTypes, dbCategories, brands);
             var dbSubcategories = subcategorySummaryLoader.EnsureVendorEntitiesInDataBase(subcategories, extAccount);
-            subcategorySummaryLoader.CleanExistingAccountSummaryMetricsDataForDate(date, extAccount);
-            subcategorySummaryLoader.LoadNewAccountSummaryMetricsDataForDate(subcategories, dbSubcategories, date, extAccount);
+            subcategorySummaryLoader.UpdateAccountSummaryMetricsDataForDate(subcategories, dbSubcategories, date, extAccount);
             Logger.Info("Amazon VCD, Finished loading subcategories data. Loaded metrics of {0} subCategories", dbSubcategories.Count);
             return dbSubcategories;
         }
@@ -81,8 +78,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
         {
             var parentProductSummaryLoader = new ParentProductSummaryLoader(dbCategories, dbSubcategories, brands, metricTypes);
             var dbParentProducts = parentProductSummaryLoader.EnsureVendorEntitiesInDataBase(parentProducts, extAccount);
-            parentProductSummaryLoader.CleanExistingAccountSummaryMetricsDataForDate(date, extAccount);
-            parentProductSummaryLoader.LoadNewAccountSummaryMetricsDataForDate(parentProducts, dbParentProducts, date, extAccount);
+            parentProductSummaryLoader.UpdateAccountSummaryMetricsDataForDate(parentProducts, dbParentProducts, date, extAccount);
             Logger.Info("Amazon VCD, Finished loading parent products data. Loaded metrics of {0} parent products", dbParentProducts.Count);
             return dbParentProducts;
         }
@@ -93,8 +89,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
         {
             var productSummaryLoader = new ProductsSummaryLoader(dbCategories, dbSubcategories,dbBrands, dbParentProducts, metricTypes);
             var dbProducts = productSummaryLoader.EnsureVendorEntitiesInDataBase(products, extAccount);
-            productSummaryLoader.CleanExistingAccountSummaryMetricsDataForDate(date, extAccount);
-            productSummaryLoader.LoadNewAccountSummaryMetricsDataForDate(products, dbProducts, date, extAccount);
+            productSummaryLoader.UpdateAccountSummaryMetricsDataForDate(products, dbProducts, date, extAccount);
             Logger.Info("Amazon VCD, Finished loading products data. Loaded metrics of {0} products", dbProducts.Count);
             return dbProducts;
         }
