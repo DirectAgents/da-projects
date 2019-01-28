@@ -6,6 +6,7 @@ using DirectAgents.Domain.Entities.CPProg;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Exceptions;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 
@@ -25,8 +26,16 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
 
             foreach (var date in dateRange.Dates)
             {
-                Extract(date);
+                try
+                {
+                    Extract(date);
+                }
+                catch (ReportGenerationTimedOutException e)
+                {
+                    Logger.Error(accountId, e);
+                }
             }
+
             End();
         }
 

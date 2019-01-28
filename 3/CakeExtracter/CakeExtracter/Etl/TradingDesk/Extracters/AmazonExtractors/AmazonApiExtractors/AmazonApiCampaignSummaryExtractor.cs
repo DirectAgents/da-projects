@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Amazon.Helpers;
+using CakeExtracter.Exceptions;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 
@@ -34,7 +35,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             var campaigns = LoadCampaignsFromAmazonApi();
             foreach (var date in dateRange.Dates)
             {
-                Extract(campaigns, date);
+                try
+                {
+                    Extract(campaigns, date);
+                }
+                catch (ReportGenerationTimedOutException e)
+                {
+                    Logger.Error(accountId, e);
+                }
             }
             End();
         }

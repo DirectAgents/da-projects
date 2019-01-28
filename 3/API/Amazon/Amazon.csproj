@@ -90,6 +90,7 @@
     <Compile Include="Entities\Summaries\AmazonStatSummary.cs" />
     <Compile Include="Entities\Summaries\AmazonTargetKeywordDailySummary.cs" />
     <Compile Include="Entities\Summaries\AmazonTargetSearchTermDailySummary.cs" />
+    <Compile Include="Exceptions\ReportGenerationTimedOutException.cs" />
     <Compile Include="Helpers\AmazonApiHelper.cs" />
     <Compile Include="AmazonUtility.cs" />
     <Compile Include="Entities\AmazonAdSet.cs" />
