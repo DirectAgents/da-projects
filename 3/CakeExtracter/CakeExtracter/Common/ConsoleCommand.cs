@@ -61,7 +61,5 @@ namespace CakeExtracter.Common
             }
             return false;
         }
-
-
     }
 }
