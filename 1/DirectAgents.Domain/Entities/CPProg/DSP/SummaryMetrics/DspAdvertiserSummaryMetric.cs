@@ -1,0 +1,20 @@
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DirectAgents.Domain.Entities.CPProg.DSP.SummaryMetrics
+{
+    public class DspAdvertiserSummaryMetric : DspSummaryMetric
+    {
+        public DspAdvertiserSummaryMetric() : base()
+        {
+        }
+
+        public DspAdvertiserSummaryMetric(int entityId, DateTime date, int metricTypeId, decimal metricValue)
+            : base(entityId, date, metricTypeId, metricValue)
+        {
+        }
+
+        [ForeignKey("EntityId")]
+        public virtual DspAdvertiser Advertiser { get; set; }
+    }
+}

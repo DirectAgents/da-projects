@@ -20,7 +20,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
             decimal d = decimal.Parse(text, CultureInfo.InvariantCulture);
             return d;
         }
-
     }
 }
 
