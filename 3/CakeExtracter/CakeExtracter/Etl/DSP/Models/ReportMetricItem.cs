@@ -1,6 +1,6 @@
 ﻿namespace CakeExtracter.Etl.DSP.Models
 {
-    internal class MetricItemReport
+    internal class ReportMetricItem
     {
         public string Name { get; set; }
 

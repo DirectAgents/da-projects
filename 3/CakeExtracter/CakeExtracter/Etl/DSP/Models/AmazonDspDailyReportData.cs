@@ -7,12 +7,12 @@ namespace CakeExtracter.Etl.DSP.Models
     {
         public DateTime Date { get; set; }
 
-        public List<AdvertiserReport> Advertisers { get; set; }
+        public List<ReportAdvertiser> Advertisers { get; set; }
 
         public List<OrderReport> Orders { get; set; }
 
-        public List<LineItemReport> LineItems { get; set; }
+        public List<ReportLineItem> LineItems { get; set; }
 
-        public List<CreativeReport> Creatives { get; set; }
+        public List<ReportCreative> Creatives { get; set; }
     }
 }
