@@ -15,7 +15,7 @@ namespace CakeExtracter.Etl.DSP.Extractors.Parser.ParsingConverters
             }
             catch (Exception e)
             {
-                throw new Exception($"Could not convert to decimal: {e.Message}", e);
+                throw new Exception($"Could not convert string value [{text}] to decimal: {e.Message}", e);
             }
         }
     }

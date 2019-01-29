@@ -21,8 +21,9 @@ namespace CakeExtracter.Etl.DSP.Extractors.Parser.ParsingConverters
             Map(m => m.ClickThroughs).Name("Clickthroughs").TypeConverter<DecimalReportConverter>();
             Map(m => m.DPV).Name("DPV").TypeConverter<DecimalReportConverter>();
             Map(m => m.ATC).Name("ATC").TypeConverter<DecimalReportConverter>();
-            Map(m => m.PurchasesViews).Name("Purchase - Views").TypeConverter<DecimalReportConverter>();
-            Map(m => m.PurchasesClicks).Name("Purchase - Clicks").TypeConverter<DecimalReportConverter>();
+            Map(m => m.Purchase).Name("Purchase").TypeConverter<DecimalReportConverter>();
+            Map(m => m.PurchaseViews).Name("Purchase - Views").TypeConverter<DecimalReportConverter>();
+            Map(m => m.PurchaseClicks).Name("Purchase - Clicks").TypeConverter<DecimalReportConverter>();
             Map(m => m.TotalPixelEvents).Name("Total Pixel Events").TypeConverter<DecimalReportConverter>();
             Map(m => m.TotalPixelEventsViews).Name("Total Pixel Events - Views").TypeConverter<DecimalReportConverter>();
             Map(m => m.TotalPixelEventsClicks).Name("Total Pixel Events - Clicks").TypeConverter<DecimalReportConverter>();

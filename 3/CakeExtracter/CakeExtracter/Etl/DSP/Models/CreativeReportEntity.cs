@@ -38,10 +38,10 @@ namespace CakeExtracter.Etl.DSP.Models
 
         public decimal ATC { get; set; }
 
-        public decimal Purchases { get; set; }
+        public decimal Purchase { get; set; }
 
-        public decimal PurchasesViews { get; set; }
+        public decimal PurchaseViews { get; set; }
 
-        public decimal PurchasesClicks { get; set; }        
+        public decimal PurchaseClicks { get; set; }        
     }
 }
