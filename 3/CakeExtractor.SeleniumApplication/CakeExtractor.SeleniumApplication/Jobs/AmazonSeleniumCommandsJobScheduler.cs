@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CakeExtracter;
 using CakeExtractor.SeleniumApplication.Commands;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using Quartz;
@@ -20,6 +21,7 @@ namespace CakeExtractor.SeleniumApplication.Jobs
                 DaysInterval = Properties.Settings.Default.ExtractionIntervalsInDays,
                 StartExtractionTime = firstRunTime
             };
+            Logger.Info("Next run time {0}", firstRunTime);
             var scheduler = await StdSchedulerFactory.GetDefaultScheduler();
             scheduler.Context.Put(JobConstants.CommandsJobContextValue, commands);
             await scheduler.Start();
