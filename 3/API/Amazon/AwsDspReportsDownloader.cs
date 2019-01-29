@@ -41,7 +41,7 @@ namespace Amazon
         {
             try
             {
-                IList<S3Object> allObjects = this.GetObjects();
+                IList<S3Object> allObjects = GetAllObjects();
                 var reportsObjects = allObjects.Where(report => report.Key.Contains(reportName));
                 var latestReport = reportsObjects.OrderByDescending(r => r.LastModified).FirstOrDefault();
                 return latestReport != null ? GetObjectContent(latestReport) : string.Empty;
@@ -75,7 +75,7 @@ namespace Amazon
         /// Gets a list of S3 Objects from the configured bucket.
         /// </summary>
         /// <returns>A list of S3 objects.</returns>
-        private IList<S3Object> GetObjects()
+        private IList<S3Object> GetAllObjects()
         {
             var getObjectsRequest = new ListObjectsV2Request
             {

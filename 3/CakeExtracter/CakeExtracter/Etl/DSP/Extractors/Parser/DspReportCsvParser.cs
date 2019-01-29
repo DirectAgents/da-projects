@@ -1,12 +1,11 @@
-﻿using CakeExtracter.Common;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using CakeExtracter.Etl.DSP.Extractors.Parser.ParsingConverters;
 using CakeExtracter.Etl.DSP.Models;
 using CsvHelper;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
-namespace CakeExtracter.Etl.DSP.Extractors
+namespace CakeExtracter.Etl.DSP.Extractors.Parser
 {
     internal class DspReportCsvParser
     {
@@ -22,10 +21,10 @@ namespace CakeExtracter.Etl.DSP.Extractors
             {
                 var csvHelper = new CsvReader(sr);
                 csvHelper.Configuration.SkipEmptyRecords = true;
-                csvHelper.Configuration.RegisterClassMap<CreativeReportentityRowMap>();
+                csvHelper.Configuration.RegisterClassMap<CreativeReportEntityRowMap>();
                 var products = csvHelper.GetRecords<CreativeReportEntity>().ToList();
                 return products;
             }
-        }
+        }        
     }
 }

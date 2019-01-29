@@ -1,16 +1,15 @@
 ﻿using Amazon;
 using CakeExtracter.Etl.DSP.Configuration;
+using CakeExtracter.Etl.DSP.Extractors.Parser;
 using CakeExtracter.Etl.DSP.Models;
 
 namespace CakeExtracter.Etl.DSP.Extractors
 {
     internal class AmazonDspExtractor
     {
-        private AmazonDspConfigurationProvider configurationProvider;
-
-        private AwsDspReportsDownloader reportsDownloader;
-
-        private DspReportCsvParser reportsParser;
+        private readonly AmazonDspConfigurationProvider configurationProvider;
+        private readonly AwsDspReportsDownloader reportsDownloader;
+        private readonly DspReportCsvParser reportsParser;
 
         public AmazonDspExtractor(AmazonDspConfigurationProvider configurationProvider)
         {

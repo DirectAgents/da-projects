@@ -8,9 +8,8 @@ namespace CakeExtracter.Commands.DA
     [Export(typeof(ConsoleCommand))]
     public class DASyncAmazonDspStats : ConsoleCommand
     {
-        private AmazonDspExtractor extractor;
-
-        private AmazonDspConfigurationProvider configurationProvider;
+        private readonly AmazonDspExtractor extractor;
+        private readonly AmazonDspConfigurationProvider configurationProvider;
 
         public DASyncAmazonDspStats()
         {
