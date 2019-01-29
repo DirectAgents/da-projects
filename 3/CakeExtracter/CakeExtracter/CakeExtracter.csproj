@@ -414,8 +414,13 @@
     <Compile Include="Etl\DSP\Extractors\Parser\DspReportCsvParser.cs" />
     <Compile Include="Etl\DSP\Extractors\Parser\ParsingConverters\CreativeReportentityRowMap.cs" />
     <Compile Include="Etl\DSP\Extractors\Parser\ParsingConverters\DecimalReportConverter.cs" />
-    <Compile Include="Etl\DSP\Models\AmazonDspReportData.cs" />
+    <Compile Include="Etl\DSP\Models\AdvertiserReport.cs" />
+    <Compile Include="Etl\DSP\Models\AmazonDspDailyReportData.cs" />
+    <Compile Include="Etl\DSP\Models\CreativeReport.cs" />
     <Compile Include="Etl\DSP\Models\CreativeReportEntity.cs" />
+    <Compile Include="Etl\DSP\Models\LineItemReport.cs" />
+    <Compile Include="Etl\DSP\Models\MetricItemReport.cs" />
+    <Compile Include="Etl\DSP\Models\OrderReport.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\AppleApiExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\DbExtracters.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AdWordsConvSummaryLoader.cs" />

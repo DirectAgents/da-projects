@@ -19,14 +19,14 @@ namespace CakeExtracter.Etl.DSP.Extractors
             reportsParser = new DspReportCsvParser();
         }
 
-        public AmazonDspReportData ExtractDailyData()
+        public AmazonDspDailyReportData ExtractDailyData()
         {
             var reportName = configurationProvider.GetDspReportName();
             var reportTextContent = reportsDownloader.GetLatestDspReportContent(reportName);
             if (!string.IsNullOrEmpty(reportTextContent))
             {
                 var reportCreativeEntries = reportsParser.GetReportCreatives(reportTextContent);
-                return new AmazonDspReportData();
+                return new AmazonDspDailyReportData();
             }
             return null;
         }
