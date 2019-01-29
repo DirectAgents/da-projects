@@ -3,11 +3,11 @@ using CsvHelper.Configuration;
 
 namespace CakeExtracter.Etl.DSP.Extractors.Parser.ParsingConverters
 {
-    internal sealed class CreativeReportentityRowMap : CsvClassMap<CreativeReportEntity>
+    internal sealed class CreativeReportEntityRowMap : CsvClassMap<CreativeReportEntity>
     {
-        public CreativeReportentityRowMap()
+        public CreativeReportEntityRowMap()
         {
-            Map(m => m.Date).Name("Date");
+            Map(m => m.Date);
             Map(m => m.AdvertiserId).Name("Advertiser ID");
             Map(m => m.AdvertiserName).Name("Advertiser");
             Map(m => m.OrderId).Name("Order ID");
@@ -16,16 +16,16 @@ namespace CakeExtracter.Etl.DSP.Extractors.Parser.ParsingConverters
             Map(m => m.LineItemName).Name("Line Item");
             Map(m => m.CreativeId).Name("Creative ID");
             Map(m => m.CreativeName).Name("Creative");
-            Map(m => m.TotalCost).Name("Total Cost");
-            Map(m => m.Impressions).Name("Impressions");
-            Map(m => m.ClickThroughs).Name("Clickthroughs");
-            Map(m => m.TotalPixelEvents).Name("Total Pixel Events");
-            Map(m => m.TotalPixelEventsViews).Name("Total Pixel Events - Views");
-            Map(m => m.TotalPixelEventsClicks).Name("Total Pixel Events - Clicks");
-            Map(m => m.DPV).Name("DPV");
-            Map(m => m.ATC).Name("ATC");
-            Map(m => m.PurchasesViews).Name("Purchase - Views");
-            Map(m => m.PurchasesClicks).Name("Purchase - Clicks");
+            Map(m => m.TotalCost).Name("Total Cost").TypeConverter<DecimalReportConverter>();
+            Map(m => m.Impressions).TypeConverter<DecimalReportConverter>();
+            Map(m => m.ClickThroughs).Name("Clickthroughs").TypeConverter<DecimalReportConverter>();
+            Map(m => m.DPV).Name("DPV").TypeConverter<DecimalReportConverter>();
+            Map(m => m.ATC).Name("ATC").TypeConverter<DecimalReportConverter>();
+            Map(m => m.PurchasesViews).Name("Purchase - Views").TypeConverter<DecimalReportConverter>();
+            Map(m => m.PurchasesClicks).Name("Purchase - Clicks").TypeConverter<DecimalReportConverter>();
+            Map(m => m.TotalPixelEvents).Name("Total Pixel Events").TypeConverter<DecimalReportConverter>();
+            Map(m => m.TotalPixelEventsViews).Name("Total Pixel Events - Views").TypeConverter<DecimalReportConverter>();
+            Map(m => m.TotalPixelEventsClicks).Name("Total Pixel Events - Clicks").TypeConverter<DecimalReportConverter>();
         }
     }
 }
