@@ -16,6 +16,7 @@ using Amazon.Entities.HelperEntities;
 using Amazon.Entities.HelperEntities.DownloadInfoResponses;
 using Amazon.Entities.HelperEntities.PreparedDataResponses;
 using Amazon.Entities.Summaries;
+using CakeExtracter.Exceptions;
 
 namespace Amazon
 {
@@ -139,11 +140,6 @@ namespace Amazon
         private void LogSuccessfulGeneration(ResponseDownloadInfo downloadInfo)
         {
             LogInfo($"Successful generation: {downloadInfo.Location}");
-        }
-
-        private void LogTimeOutGeneration(string message)
-        {
-            LogError($"Generation timed out: {message}");
         }
 
         private TimeSpan LogWaiting(string message, int retryNumber)
@@ -526,8 +522,8 @@ namespace Amazon
             var downloadInfo = response?.Data;
             if (downloadInfo == null || string.IsNullOrWhiteSpace(downloadInfo.Location))
             {
-                LogTimeOutGeneration(response.Content);
-                return null;
+                var exceptionMessage = GetMessageInCorrectFormat(response.Content);
+                throw new ReportGenerationTimedOutException(exceptionMessage);
             }
             LogSuccessfulGeneration(downloadInfo);
             var json = GetJsonStringFromDownloadFile(downloadInfo.Location, profileId, reportName);
