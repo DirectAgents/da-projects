@@ -1,9 +1,9 @@
-﻿using CakeExtracter.Etl.DSP.Models;
+﻿using CakeExtracter.Etl.DSP.Extractors.Parser.Models;
 using CsvHelper.Configuration;
 
 namespace CakeExtracter.Etl.DSP.Extractors.Parser.ParsingConverters
 {
-    internal sealed class CreativeReportEntityRowMap : CsvClassMap<CreativeReportEntity>
+    internal sealed class CreativeReportEntityRowMap : CsvClassMap<CreativeReportRow>
     {
         public CreativeReportEntityRowMap()
         {

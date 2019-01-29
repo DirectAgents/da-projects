@@ -412,6 +412,7 @@
     <Compile Include="Etl\DSP\Configuration\AmazonDspConfigurationProvider.cs" />
     <Compile Include="Etl\DSP\Extractors\AmazonDspExtractor.cs" />
     <Compile Include="Etl\DSP\Extractors\Parser\DspReportCsvParser.cs" />
+    <Compile Include="Etl\DSP\Extractors\Parser\Models\CreativeReportRow.cs" />
     <Compile Include="Etl\DSP\Extractors\Parser\ParsingConverters\CreativeReportentityRowMap.cs" />
     <Compile Include="Etl\DSP\Extractors\Parser\ParsingConverters\DecimalReportConverter.cs" />
     <Compile Include="Etl\DSP\Models\ReportAdvertiser.cs" />

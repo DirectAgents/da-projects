@@ -9,7 +9,7 @@ namespace CakeExtracter.Etl.DSP.Models
 
         public List<ReportAdvertiser> Advertisers { get; set; }
 
-        public List<OrderReport> Orders { get; set; }
+        public List<ReportOrder> Orders { get; set; }
 
         public List<ReportLineItem> LineItems { get; set; }
 
