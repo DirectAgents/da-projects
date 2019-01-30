@@ -8,7 +8,6 @@ using CakeExtracter;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
 using CakeExtractor.SeleniumApplication.Configuration.Pda;
-using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors;
 using Platform = DirectAgents.Domain.Entities.CPProg.Platform;
 
@@ -16,12 +15,6 @@ namespace CakeExtractor.SeleniumApplication.Commands
 {
     internal class SyncAmazonPdaCommand : BaseAmazonSeleniumCommand
     {
-        public int? AccountId { get; set; }
-        public string StatsType { get; set; }
-        public bool DisabledOnly { get; set; }
-
-        private int executionNumber;
-        private JobScheduleModel scheduling;
         private readonly PdaCommandConfigurationManager configurationManager;
 
         public SyncAmazonPdaCommand()
@@ -44,22 +37,20 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
         public override void Run()
         {
-            executionNumber++;
-            var statsType = new StatsTypeAgg(StatsType);
+            var statsType = new StatsTypeAgg(configurationManager.GetStatsTypeString());
             var dateRange = GetDateRange();
             var fromDatabase = configurationManager.GetFromDatabase();
 
-            Logger.Info("Amazon ETL (PDA Campaigns), execution number - {0}. DateRange: {1}.", executionNumber,
-                dateRange);
 
-            var accounts = GetAccounts();
+            Logger.Info("Amazon ETL (PDA Campaigns). DateRange: {0}.", dateRange);
+
+            var accounts = GetAccounts(configurationManager.GetAccountId(), configurationManager.GetDisabledOnlyFlag());
             foreach (var account in accounts)
             {
                 DoEtls(account, dateRange, statsType, fromDatabase);
             }
 
             Logger.Info("Amazon ETL (PDA Campaigns) has been finished.");
-            //LogScheduledJobStartTime();
         }
 
         private static void DoEtls(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType, bool fromDatabase)
@@ -129,28 +120,16 @@ namespace CakeExtractor.SeleniumApplication.Commands
             return dateRange;
         }
 
-        private void LogScheduledJobStartTime()
-        {
-            var nextTime = scheduling.StartExtractionTime;
-            while (nextTime < DateTime.Now)
-            {
-                nextTime = nextTime.AddDays(scheduling.DaysInterval);
-            }
-
-            Logger.Info("Waiting for the scheduled job to extract PDA statistics: next run time - {0} (UTC)...", nextTime.ToUniversalTime());
-        }
-        
-        private IEnumerable<ExtAccount> GetAccounts()
+        private IEnumerable<ExtAccount> GetAccounts(int? accountId, bool disabledOnly)
         {
             var repository = new PlatformAccountRepository();
-            if (!AccountId.HasValue)
+            if (!accountId.HasValue)
             {
-                var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_Amazon, DisabledOnly);
+                var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_Amazon, disabledOnly);
                 return accounts;
             }
-
-            var account = repository.GetAccount(AccountId.Value);
-            return new[] {account};
+            var account = repository.GetAccount(accountId.Value);
+            return new[] { account };
         }
     }
 }

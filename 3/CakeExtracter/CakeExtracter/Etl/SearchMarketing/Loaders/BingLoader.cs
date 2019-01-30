@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using CakeExtracter.Helpers;
 using ClientPortal.Data.Contexts;
 
 namespace CakeExtracter.Etl.SearchMarketing.Loaders
@@ -36,9 +37,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
         private int UpsertSearchDailySummaries(List<Dictionary<string, string>> items)
         {
-            var addedCount = 0;
-            var updatedCount = 0;
-            var itemCount = 0;
+            var progress = new LoadingProgress();
             using (var db = new ClientPortalContext())
             {
                 var passedInAccount = db.SearchAccounts.Find(this.searchAccountId);
@@ -86,7 +85,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     if (target == null)
                     {
                         db.SearchDailySummaries.Add(source);
-                        addedCount++;
+                        progress.AddedCount++;
                     }
                     else
                     {
@@ -94,14 +93,17 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         entry.State = EntityState.Detached;
                         AutoMapper.Mapper.Map(source, target);
                         entry.State = EntityState.Modified;
-                        updatedCount++;
+                        progress.UpdatedCount++;
                     }
-                    itemCount++;
+
+                    progress.ItemCount++;
                 }
-                Logger.Info("Saving {0} SearchDailySummaries ({1} updates, {2} additions)", itemCount, updatedCount, addedCount);
-                db.SaveChanges();
+
+                SafeContextWrapper.TrySaveChanges(db);
             }
-            return itemCount;
+
+            Logger.Info("Saving {0} SearchDailySummaries ({1} updates, {2} additions)", progress.ItemCount, progress.UpdatedCount, progress.AddedCount);
+            return progress.ItemCount;
         }
 
         public static void AddUpdateDependentSearchAccounts(List<Dictionary<string, string>> items, int searchAccountId)
@@ -111,7 +113,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                 var searchAccount = db.SearchAccounts.Find(searchAccountId);
 
                 var accountTuples = items.Select(i => Tuple.Create(i["AccountName"], i["AccountId"])).Distinct();
-                bool multipleAccounts = accountTuples.Count() > 1;
+                var multipleAccounts = accountTuples.Count() > 1;
 
                 foreach (var tuple in accountTuples)
                 {
@@ -155,6 +157,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     }
                     db.SaveChanges();
                 }
+
+                SafeContextWrapper.TrySaveChanges(db);
             }
         }
 
@@ -199,6 +203,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         db.SaveChanges();
                     }
                 }
+
+                SafeContextWrapper.TrySaveChanges(db);
             }
         }
     }

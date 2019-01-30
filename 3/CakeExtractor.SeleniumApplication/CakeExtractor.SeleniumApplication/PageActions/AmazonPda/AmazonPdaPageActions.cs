@@ -50,8 +50,8 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
                 if (!IsElementPresent(AmazonPdaPageObjects.FilterResetButton))
                 {
                     SelectFilters();
+                    WaitLoading(AmazonPdaPageObjects.FilterLoader, timeout);
                 }
-                WaitLoading(AmazonPdaPageObjects.FilterLoader, timeout);
             }
             catch (Exception e)
             {

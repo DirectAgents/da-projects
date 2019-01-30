@@ -44,6 +44,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
 
         public static void PrepareExtractor()
         {
+            Logger.Info("PDA: Try to login to amazon advertising portal.");
             authorizationModel.Cookies = CookieManager.GetCookiesFromFiles(authorizationModel.CookiesDir);
             var cookiesExist = authorizationModel.Cookies.Any();
             Logger.Info("Login into the portal{0} using cookies.", cookiesExist ? string.Empty : " without");

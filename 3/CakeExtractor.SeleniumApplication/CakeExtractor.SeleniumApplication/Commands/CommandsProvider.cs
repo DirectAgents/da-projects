@@ -5,10 +5,14 @@ namespace CakeExtractor.SeleniumApplication.Commands
 {
     internal class CommandsProvider
     {
-        public static List<BaseAmazonSeleniumCommand> GetExecutionCommands()
+        public static List<BaseAmazonSeleniumCommand> GetExecutionCommands(string comamndsConfig)
         {
             var allCommands = GetAllCommands();
-            var commandNamesToExecute = Properties.Settings.Default.CommandsToScheduler.Split('|');
+            if (string.IsNullOrEmpty(comamndsConfig))
+            {
+                return allCommands;
+            }
+            var commandNamesToExecute = comamndsConfig.Split('|');
             var commandsToExecute = allCommands.Where(command => commandNamesToExecute.Any(name => command.CommandName == name)).ToList();
             return commandsToExecute;
         }

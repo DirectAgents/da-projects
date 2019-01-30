@@ -4,7 +4,6 @@ using CakeExtractor.SeleniumApplication.Loaders.VCD;
 using CakeExtracter;
 using CakeExtractor.SeleniumApplication.Configuration.Vcd;
 using CakeExtractor.SeleniumApplication.Configuration.Models;
-using CakeExtractor.SeleniumApplication.Configuration.Pda;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {

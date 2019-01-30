@@ -1,6 +1,5 @@
 ﻿using CakeExtracter;
 using CakeExtractor.SeleniumApplication.Configuration.Models;
-using CakeExtractor.SeleniumApplication.Configuration.Vcd;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
@@ -8,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CakeExtractor.SeleniumApplication.Configuration.Pda
+namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
 {
     internal class VcdAccountsDataProvider
     {

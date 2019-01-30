@@ -51,6 +51,11 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                 },
                 new ReportParameter
                 {
+                    parameterId = "productView",
+                    values = new List<Value>{ new Value { val= "allAsinsNonDefault" } }
+                },
+                new ReportParameter
+                {
                     parameterId = "asin",
                     values = new List<Value>{ new Value { val= "ALL" } }
                 },

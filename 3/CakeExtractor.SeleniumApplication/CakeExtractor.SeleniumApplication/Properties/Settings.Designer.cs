@@ -93,17 +93,5 @@ namespace CakeExtractor.SeleniumApplication.Properties {
                 this["EMailPassword"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SyncAmazonPdaCommand|SyncAmazonVcdCommand")]
-        public string CommandsToScheduler {
-            get {
-                return ((string)(this["CommandsToScheduler"]));
-            }
-            set {
-                this["CommandsToScheduler"] = value;
-            }
-        }
     }
 }

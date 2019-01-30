@@ -6,6 +6,7 @@ using DirectAgents.Domain.Entities.CPProg.Vendor.SummaryMetrics;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.SqlTypes;
 using System.Linq;
 
 namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
@@ -59,7 +60,8 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
                 Ean = reportEntity.Ean,
                 Upc = reportEntity.Upc,
                 ModelStyleNumber = reportEntity.ModelStyleNumber,
-                ReleaseDate = reportEntity.ReleaseDate
+                ReleaseDate = reportEntity.ReleaseDate < SqlDateTime.MinValue.Value ?
+                    SqlDateTime.MinValue.Value : reportEntity.ReleaseDate
             };
             SetCategoryIdIfExists(vendorProduct, reportEntity);
             SetSubcategoryIdIfExists(vendorProduct, reportEntity);

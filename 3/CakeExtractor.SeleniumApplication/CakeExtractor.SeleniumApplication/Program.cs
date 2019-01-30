@@ -17,7 +17,8 @@ namespace CakeExtractor.SeleniumApplication
             InitializeEnterpriseLibrary();
             InitializeLogging();
             AutoMapperBootstrapper.CheckRunSetup();
-            var commands = CommandsProvider.GetExecutionCommands();
+            var comamndsConfig = args.Length > 0 ? args[0] : null;
+            var commands = CommandsProvider.GetExecutionCommands(comamndsConfig);
             PrepareCommandsEnvironment(commands);
             ScheduleJobs(commands).Wait();
             AlwaysSleep();
@@ -53,7 +54,7 @@ namespace CakeExtractor.SeleniumApplication
 
         private static void InitializeLogging()
         {
-            CakeExtracter.Logger.Instance = new EnterpriseLibraryLogger();
+            CakeExtracter.Logger.Instance = new EnterpriseLibraryLogger("Selenium Jobs");
         }
     }
 }
