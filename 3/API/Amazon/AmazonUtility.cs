@@ -12,6 +12,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Web.Configuration;
 using Amazon.Entities.HelperEntities;
 using Amazon.Entities.HelperEntities.DownloadInfoResponses;
 using Amazon.Entities.HelperEntities.PreparedDataResponses;
@@ -23,10 +24,6 @@ namespace Amazon
     public class AmazonUtility
     {
         private const int LimitOfReturnedValues = 5000;
-        private const int WaitTimeSeconds = 5;
-        private const int WaitAttemptsNumber = 60; // 5 sec * 60 = 300 sec => 5 min
-        private const int UnauthorizedAttemptsNumber = 1;
-        private const int FailedRequestAttemptsNumber = 5;
 
         private const string TokenDelimiter = "|AMZNAMZN|";
         private const int NumAlts = 10; // including the default (0)
@@ -36,6 +33,12 @@ namespace Amazon
         private static readonly object AccessTokenLock = new object();
 
         // From Config File
+        // wait time = WaitTimeSeconds * WaitAttemptsNumber (15 min - async report generation time, service guarantees)
+        private readonly int waitTimeSeconds = int.Parse(ConfigurationManager.AppSettings["AmazonWaitTimeSeconds"]);
+        private readonly int waitAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonWaitAttemptsNumber"]);
+        private readonly int unauthorizedAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonUnauthorizedAttemptsNumber"]);
+        private readonly int failedRequestAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonFailedRequestAttemptsNumber"]);
+
         private readonly string amazonClientId = ConfigurationManager.AppSettings["AmazonClientId"];
         private readonly string amazonClientSecret = ConfigurationManager.AppSettings["AmazonClientSecret"];
         private readonly string amazonApiEndpointUrl = ConfigurationManager.AppSettings["AmazonAPIEndpointUrl"];
@@ -124,12 +127,12 @@ namespace Amazon
 
         private TimeSpan LogPreparedDataWaiting(string dataType, int retryNumber)
         {
-            return LogWaiting($"Waiting {WaitTimeSeconds} seconds for {dataType} to finish generating.", retryNumber);
+            return LogWaiting($"Waiting {waitTimeSeconds} seconds for {dataType} to finish generating.", retryNumber);
         }
 
         private TimeSpan LogApiCallWaiting(int retryNumber)
         {
-            return LogWaiting($"API calls quota exceeded. Waiting {WaitTimeSeconds} seconds.", retryNumber);
+            return LogWaiting($"API calls quota exceeded. Waiting {waitTimeSeconds} seconds.", retryNumber);
         }
 
         private void LogFailedRequest(string url, int retryNumber, Exception exception)
@@ -145,7 +148,7 @@ namespace Amazon
         private TimeSpan LogWaiting(string message, int retryNumber)
         {
             LogInfo(message, retryNumber);
-            return new TimeSpan(0, 0, WaitTimeSeconds);
+            return new TimeSpan(0, 0, waitTimeSeconds);
         }
 
         private string GetAttemptMessage(string info, int retryNumber, string baseMessage = null)
@@ -463,15 +466,13 @@ namespace Amazon
         private SnapshotRequestResponse SubmitSnapshot(CampaignType campaignType, EntitesType recordType, string profileId)
         {
             var snapshotParams = AmazonApiHelper.CreateSnapshotParams();
-            var snapshotResponse = LogErrorIfException(() =>
-                SubmitRequestForPreparedData<SnapshotRequestResponse>("snapshot", snapshotParams, campaignType, recordType, profileId));
+            var snapshotResponse = SubmitRequestForPreparedData<SnapshotRequestResponse>("snapshot", snapshotParams, campaignType, recordType, profileId);
             return snapshotResponse;
         }
 
         private ReportRequestResponse SubmitReport(AmazonApiReportParams reportParams, CampaignType campaignType, EntitesType recordType, string profileId)
         {
-            var reportResponse = LogErrorIfException(() =>
-                SubmitRequestForPreparedData<ReportRequestResponse>("report", reportParams, campaignType, recordType, profileId));
+            var reportResponse = SubmitRequestForPreparedData<ReportRequestResponse>("report", reportParams, campaignType, recordType, profileId);
             return reportResponse;
         }
 
@@ -508,11 +509,24 @@ namespace Amazon
         private T SubmitRequestForPreparedData<T>(string dataType, object requestParams, CampaignType campaignType, EntitesType entitiesType, string profileId)
             where T : PreparedDataRequestResponse, new()
         {
+            var response = LogErrorIfException(() =>
+                SubmitRequestForPreparedDataWithRetry<T>(dataType, requestParams, campaignType, entitiesType, profileId));
+            if (response?.Content == null || !response.IsSuccessful)
+            {
+                ThrowGenerationTimedOutException(response);
+            }
+
+            return response?.Data;
+        }
+
+        private IRestResponse<T> SubmitRequestForPreparedDataWithRetry<T>(string dataType, object requestParams, CampaignType campaignType, EntitesType entitiesType, string profileId)
+            where T : PreparedDataRequestResponse, new()
+        {
             var resourcePath = AmazonApiHelper.GetDataRequestRelativePath(entitiesType, campaignType, dataType);
             var request = CreateRestRequest(resourcePath, profileId);
             request.AddJsonBody(requestParams);
             var response = ProcessRequest<T>(request, true);
-            return response?.Content != null ? response.Data : null;
+            return response;
         }
 
         private string DownloadPreparedData<T>(string dataType, string dataId, string profileId, string reportName)
@@ -522,8 +536,7 @@ namespace Amazon
             var downloadInfo = response?.Data;
             if (downloadInfo == null || string.IsNullOrWhiteSpace(downloadInfo.Location))
             {
-                var exceptionMessage = GetMessageInCorrectFormat(response.Content);
-                throw new ReportGenerationTimedOutException(exceptionMessage);
+                ThrowGenerationTimedOutException(response);
             }
             LogSuccessfulGeneration(downloadInfo);
             var json = GetJsonStringFromDownloadFile(downloadInfo.Location, profileId, reportName);
@@ -537,7 +550,7 @@ namespace Amazon
                 Policy
                     .Handle<Exception>()
                     .OrResult<IRestResponse<T>>(resp => resp.Data.Status != "SUCCESS")
-                    .WaitAndRetry(WaitAttemptsNumber, retryNumber => LogPreparedDataWaiting(dataType, retryNumber))
+                    .WaitAndRetry(waitAttemptsNumber, retryNumber => LogPreparedDataWaiting(dataType, retryNumber))
                     .Execute(() => RequestPreparedData<T>(dataType, dataId, profileId))
             );
             return response;
@@ -587,7 +600,7 @@ namespace Amazon
             var response = LogErrorIfException(() =>
                 Policy
                     .Handle<Exception>()
-                    .Retry(FailedRequestAttemptsNumber, (exception, retryCount, context) => LogFailedRequest(url, retryCount, exception))
+                    .Retry(failedRequestAttemptsNumber, (exception, retryCount, context) => LogFailedRequest(url, retryCount, exception))
                     .Execute(() => GetHttpResponse(url, profileId))
             );
             return response;
@@ -626,7 +639,7 @@ namespace Amazon
 
             var response = Policy
                 .HandleResult<IRestResponse<T>>(resp => resp.StatusCode == HttpStatusCode.Unauthorized)
-                .Retry(UnauthorizedAttemptsNumber,
+                .Retry(unauthorizedAttemptsNumber,
                     (exception, retryCount, context) => UpdateAccessTokenForRequest(restRequest))
                 .Execute(() => GetRestResponse<T>(restClient, restRequest, isPostMethod));
 
@@ -634,7 +647,7 @@ namespace Amazon
             {
                 response = Policy
                     .HandleResult<IRestResponse<T>>(IsRequestProcessed)
-                    .WaitAndRetry(WaitAttemptsNumber, LogApiCallWaiting)
+                    .WaitAndRetry(waitAttemptsNumber, LogApiCallWaiting)
                     .Execute(() => GetRestResponse<T>(restClient, restRequest, isPostMethod));
             }
 
@@ -712,6 +725,12 @@ namespace Amazon
             {
                 request.AddQueryParameter(param.Key, param.Value);
             }
+        }
+
+        private void ThrowGenerationTimedOutException(IRestResponse response)
+        {
+            var exceptionMessage = GetMessageInCorrectFormat(response.Content);
+            throw new ReportGenerationTimedOutException(exceptionMessage);
         }
     }
 }
