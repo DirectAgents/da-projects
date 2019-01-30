@@ -36,6 +36,7 @@ namespace DirectAgents.Domain.Concrete
             {
                 SetGauges(searchProfiles);
             }
+
             return searchProfiles;
         }
 
@@ -67,20 +68,11 @@ namespace DirectAgents.Domain.Concrete
 
         public IEnumerable<SearchAccount> StatsGaugesByChannel()
         {
-            var searchAccounts = new List<SearchAccount>();
-            var allSDS = DailySummaries().Where(x => x.SearchCampaign.SearchAccountId.HasValue);
-            var allSCS = ConvSummaries().Where(x => x.SearchCampaign.SearchAccountId.HasValue);
-            var allCDS = CallSummaries().Where(x => x.SearchCampaign.SearchAccountId.HasValue);
-            var channels = context.SearchAccounts.Select(sa => sa.Channel).Distinct().OrderBy(ch => ch);
-            foreach (var channel in channels)
-            {
-                var searchAccount = new SearchAccount { Channel = channel };
-                var sds = allSDS.Where(x => x.SearchCampaign.SearchAccount.Channel == channel);
-                var scs = allSCS.Where(x => x.SearchCampaign.SearchAccount.Channel == channel);
-                var cds = allCDS.Where(x => x.SearchCampaign.SearchAccount.Channel == channel);
-                SetGauges(searchAccount, sds, scs, cds);
-                searchAccounts.Add(searchAccount);
-            }
+            var channels = context.SearchAccounts.Select(sa => sa.Channel).Distinct().OrderBy(ch => ch).ToList();
+            var allSds = DailySummaries().Where(x => x.SearchCampaign.SearchAccountId.HasValue);
+            var allScs = ConvSummaries().Where(x => x.SearchCampaign.SearchAccountId.HasValue);
+            var allCds = CallSummaries().Where(x => x.SearchCampaign.SearchAccountId.HasValue);
+            var searchAccounts = channels.Select(x => CreateAccountWithStatsGauge(x, allSds, allScs, allCds)).ToList();
             return searchAccounts;
         }
 
@@ -92,7 +84,7 @@ namespace DirectAgents.Domain.Concrete
             {
                 searchAccounts = searchAccounts.Where(x => x.SearchProfileId == spId.Value);
             }
-
+        
             if (!string.IsNullOrWhiteSpace(channel))
             {
                 searchAccounts = searchAccounts.Where(x => x.Channel == channel);
@@ -100,10 +92,9 @@ namespace DirectAgents.Domain.Concrete
 
             if (includeGauges)
             {
-                searchAccounts = SetGauges(searchAccounts).AsQueryable();
+                SetGauges(searchAccounts);
             }
 
-            //? Do a searchAccounts.ToList() so that in SetGauges() it's not doing multiple active record sets
             return searchAccounts;
         }
 
@@ -132,17 +123,18 @@ namespace DirectAgents.Domain.Concrete
             return true;
         }
 
-        public IQueryable<SearchCampaign> SearchCampaigns(int? spId = null, int? searchAccountId = null, string channel = null, bool includeGauges = false)
+        public IQueryable<SearchCampaign> SearchCampaigns(int? spId = null, int? searchAccountId = null,
+            string channel = null, bool includeGauges = false)
         {
             var sc = context.SearchCampaigns.AsQueryable();
-            if (spId.HasValue)
-            {
-                sc = sc.Where(x => x.SearchAccount.SearchProfileId == spId.Value);
-            }
-
             if (searchAccountId.HasValue)
             {
                 sc = sc.Where(x => x.SearchAccountId == searchAccountId.Value);
+            }
+
+            if (spId.HasValue)
+            {
+                sc = sc.Where(x => x.SearchAccount.SearchProfileId == spId.Value);
             }
 
             if (!string.IsNullOrWhiteSpace(channel))
@@ -152,8 +144,9 @@ namespace DirectAgents.Domain.Concrete
 
             if (includeGauges)
             {
-                sc = SetGauges(sc).AsQueryable();
+                SetGauges(sc);
             }
+
             return sc;
         }
 
@@ -166,27 +159,19 @@ namespace DirectAgents.Domain.Concrete
             int? searchCampaignId = null)
         {
             var sds = context.SearchDailySummaries.AsQueryable();
-            if (spId.HasValue)
+            if (searchCampaignId.HasValue)
             {
-                var campIds = context.SearchProfiles.Where(x => x.SearchProfileId == spId.Value)
-                    .SelectMany(x => x.SearchAccounts)
-                    .SelectMany(x => x.SearchCampaigns).Select(x => x.SearchCampaignId).ToArray();
-                sds = sds.Where(x => campIds.Contains(x.SearchCampaignId));
-
-                // not sure if this would work or produce efficient sql (2 foreign keys are nullable):
-                //sds = sds.Where(x => x.SearchCampaign.SearchAccount.SearchProfileId == spId.Value);
+                sds = sds.Where(x => x.SearchCampaignId == searchCampaignId.Value);
             }
 
             if (searchAccountId.HasValue)
             {
-                var campIds = context.SearchAccounts.Where(x => x.SearchAccountId == searchAccountId.Value)
-                    .SelectMany(x => x.SearchCampaigns).Select(x => x.SearchCampaignId).ToArray();
-                sds = sds.Where(x => campIds.Contains(x.SearchCampaignId));
+                sds = sds.Where(x => x.SearchCampaign.SearchAccountId == searchAccountId.Value);
             }
 
-            if (searchCampaignId.HasValue)
+            if (spId.HasValue)
             {
-                sds = sds.Where(x => x.SearchCampaignId == searchCampaignId.Value);
+                sds = sds.Where(x => x.SearchCampaign.SearchAccount.SearchProfileId == spId.Value);
             }
 
             return sds;
@@ -196,21 +181,6 @@ namespace DirectAgents.Domain.Concrete
             int? searchCampaignId = null, int? searchConvTypeId = null)
         {
             var scs = context.SearchConvSummaries.AsQueryable();
-            if (spId.HasValue)
-            {
-                var campIds = context.SearchProfiles.Where(x => x.SearchProfileId == spId.Value)
-                    .SelectMany(x => x.SearchAccounts)
-                    .SelectMany(x => x.SearchCampaigns).Select(x => x.SearchCampaignId).ToArray();
-                scs = scs.Where(x => campIds.Contains(x.SearchCampaignId));
-            }
-
-            if (searchAccountId.HasValue)
-            {
-                var campIds = context.SearchAccounts.Where(x => x.SearchAccountId == searchAccountId.Value)
-                    .SelectMany(x => x.SearchCampaigns).Select(x => x.SearchCampaignId).ToArray();
-                scs = scs.Where(x => campIds.Contains(x.SearchCampaignId));
-            }
-
             if (searchCampaignId.HasValue)
             {
                 scs = scs.Where(x => x.SearchCampaignId == searchCampaignId.Value);
@@ -221,6 +191,16 @@ namespace DirectAgents.Domain.Concrete
                 scs = scs.Where(x => x.SearchConvTypeId == searchConvTypeId.Value);
             }
 
+            if (searchAccountId.HasValue)
+            {
+                scs = scs.Where(x => x.SearchCampaign.SearchAccountId == searchAccountId.Value);
+            }
+
+            if (spId.HasValue)
+            {
+                scs = scs.Where(x => x.SearchCampaign.SearchAccount.SearchProfileId == spId.Value);
+            }
+
             return scs;
         }
 
@@ -228,24 +208,19 @@ namespace DirectAgents.Domain.Concrete
             int? searchCampaignId = null)
         {
             var cds = context.CallDailySummaries.AsQueryable();
-            if (spId.HasValue)
+            if (searchCampaignId.HasValue)
             {
-                var campIds = context.SearchProfiles.Where(x => x.SearchProfileId == spId.Value)
-                    .SelectMany(x => x.SearchAccounts)
-                    .SelectMany(x => x.SearchCampaigns).Select(x => x.SearchCampaignId).ToArray();
-                cds = cds.Where(x => campIds.Contains(x.SearchCampaignId));
+                cds = cds.Where(x => x.SearchCampaignId == searchCampaignId.Value);
             }
 
             if (searchAccountId.HasValue)
             {
-                var campIds = context.SearchAccounts.Where(x => x.SearchAccountId == searchAccountId.Value)
-                    .SelectMany(x => x.SearchCampaigns).Select(x => x.SearchCampaignId).ToArray();
-                cds = cds.Where(x => campIds.Contains(x.SearchCampaignId));
+                cds = cds.Where(x => x.SearchCampaign.SearchAccountId == searchAccountId.Value);
             }
 
-            if (searchCampaignId.HasValue)
+            if (spId.HasValue)
             {
-                cds = cds.Where(x => x.SearchCampaignId == searchCampaignId.Value);
+                cds = cds.Where(x => x.SearchCampaign.SearchAccount.SearchProfileId == spId.Value);
             }
 
             return cds;
@@ -259,10 +234,10 @@ namespace DirectAgents.Domain.Concrete
             var convTypes = context.SearchConvTypes.Where(x => convTypeIds.Contains(x.SearchConvTypeId));
             if (includeGauges)
             {
-                convTypes = SetGauges(convTypes, convSums).AsQueryable();
+                SetGauges(convTypes, convSums);
             }
 
-            return convTypes.AsEnumerable();
+            return convTypes;
         }
 
         public SearchConvType GetConvType(int id)
@@ -270,8 +245,19 @@ namespace DirectAgents.Domain.Concrete
             var searchConvType = context.SearchConvTypes.Find(id);
             return searchConvType;
         }
-        
-        private IEnumerable<SearchConvType> SetGauges(IEnumerable<SearchConvType> searchConvTypes, IQueryable<SearchConvSummary> convSums)
+
+        private SearchAccount CreateAccountWithStatsGauge(string channel, IQueryable<SearchDailySummary> allSds,
+            IQueryable<SearchConvSummary> allScs, IQueryable<CallDailySummary> allCds)
+        {
+            var searchAccount = new SearchAccount { Channel = channel };
+            var sds = allSds.Where(x => x.SearchCampaign.SearchAccount.Channel == channel);
+            var scs = allScs.Where(x => x.SearchCampaign.SearchAccount.Channel == channel);
+            var cds = allCds.Where(x => x.SearchCampaign.SearchAccount.Channel == channel);
+            SetGauges(searchAccount, sds, scs, cds);
+            return searchAccount;
+        }
+
+        private void SetGauges(IEnumerable<SearchConvType> searchConvTypes, IQueryable<SearchConvSummary> convSums)
         {
             foreach (var ct in searchConvTypes)
             {
@@ -280,10 +266,9 @@ namespace DirectAgents.Domain.Concrete
                 ct.MinConvSum = any ? scs.Min(x => x.Date) : (DateTime?)null;
                 ct.MaxConvSum = any ? scs.Max(x => x.Date) : (DateTime?)null;
             }
-            return searchConvTypes;
         }
 
-        private IEnumerable<SearchAccount> SetGauges(IEnumerable<SearchAccount> searchAccounts)
+        private void SetGauges(IEnumerable<SearchAccount> searchAccounts)
         {
             foreach (var sa in searchAccounts)
             {
@@ -292,10 +277,9 @@ namespace DirectAgents.Domain.Concrete
                 var cds = CallSummaries(searchAccountId: sa.SearchAccountId);
                 SetGauges(sa, sds, scs, cds);
             }
-            return searchAccounts;
         }
 
-        private IEnumerable<SearchProfile> SetGauges(IEnumerable<SearchProfile> searchProfiles)
+        private void SetGauges(IEnumerable<SearchProfile> searchProfiles)
         {
             foreach (var sp in searchProfiles)
             {
@@ -303,49 +287,40 @@ namespace DirectAgents.Domain.Concrete
                 var scs = ConvSummaries(spId: sp.SearchProfileId);
                 var cds = CallSummaries(spId: sp.SearchProfileId);
                 SetGauges(sp, sds, scs, cds);
-                //?? need the method to return something? (if not, modify below)
-                //? Do a searchAccounts.ToList() so that in SetGauges() it's not doing multiple active record sets
             }
-            return searchProfiles;
         }
 
-        private void SetGauges(ISearchGauge searchGauge, IQueryable<SearchDailySummary> sds, IQueryable<SearchConvSummary> scs, IQueryable<CallDailySummary> cds)
+        private void SetGauges(IEnumerable<SearchCampaign> searchCampaigns)
+        {
+            foreach (var sc in searchCampaigns)
+            {
+                var sds = DailySummaries(searchCampaignId: sc.SearchCampaignId);
+                var scs = ConvSummaries(searchCampaignId: sc.SearchCampaignId);
+                var cds = CallSummaries(searchCampaignId: sc.SearchCampaignId);
+                SetGauges(sc, sds, scs, cds);
+            }
+        }
+
+        private void SetGauges(ISearchGauge searchGauge, IQueryable<SearchDailySummary> sds,
+            IQueryable<SearchConvSummary> scs, IQueryable<CallDailySummary> cds)
         {
             if (sds != null && sds.Any())
             {
                 searchGauge.MinDaySum = sds.Min(x => x.Date);
                 searchGauge.MaxDaySum = sds.Max(x => x.Date);
             }
+
             if (scs != null && scs.Any())
             {
                 searchGauge.MinConvSum = scs.Min(x => x.Date);
                 searchGauge.MaxConvSum = scs.Max(x => x.Date);
             }
+
             if (cds != null && cds.Any())
             {
                 searchGauge.MinCallSum = cds.Min(x => x.Date);
                 searchGauge.MaxCallSum = cds.Max(x => x.Date);
             }
-        }
-
-        private IEnumerable<SearchCampaign> SetGauges(IEnumerable<SearchCampaign> searchCampaigns)
-        {
-            foreach (var sc in searchCampaigns)
-            {
-                var sds = DailySummaries(searchCampaignId: sc.SearchCampaignId);
-                var any = sds.Any();
-                sc.MinDaySum = any ? sds.Min(x => x.Date) : (DateTime?)null;
-                sc.MaxDaySum = any ? sds.Max(x => x.Date) : (DateTime?)null;
-                var scs = ConvSummaries(searchCampaignId: sc.SearchCampaignId);
-                any = scs.Any();
-                sc.MinConvSum = any ? scs.Min(x => x.Date) : (DateTime?)null;
-                sc.MaxConvSum = any ? scs.Max(x => x.Date) : (DateTime?)null;
-                var cds = CallSummaries(searchCampaignId: sc.SearchCampaignId);
-                any = cds.Any();
-                sc.MinCallSum = any ? cds.Min(x => x.Date) : (DateTime?)null;
-                sc.MaxCallSum = any ? cds.Max(x => x.Date) : (DateTime?)null;
-            }
-            return searchCampaigns;
         }
 
         // ---

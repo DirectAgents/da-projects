@@ -91,14 +91,9 @@ namespace DirectAgents.Web.Areas.SearchAdmin.Controllers
         //[HttpPost]
         public JsonResult ConvTypesData(int id)
         {
-            var searchConvTypes = cpSearchRepo.GetConvTypes(id).OrderBy(ct => ct.Alias);
-
-            var kg = new KG<SearchConvType>();
-            kg.data = searchConvTypes;
-            kg.total = searchConvTypes.Count();
-
+            var searchConvTypes = cpSearchRepo.GetConvTypes(id).OrderBy(ct => ct.Alias).ToList();
+            var kg = new KG<SearchConvType> {data = searchConvTypes, total = searchConvTypes.Count};
             var json = Json(kg, JsonRequestBehavior.AllowGet);
-            //var json = Json(kg);
             return json;
         }
         [HttpPost]
