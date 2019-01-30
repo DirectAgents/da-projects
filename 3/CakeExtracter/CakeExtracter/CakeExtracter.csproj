@@ -419,6 +419,7 @@
     <Compile Include="Etl\DSP\Extractors\Parser\ParsingConverters\DecimalReportConverter.cs" />
     <Compile Include="Etl\DSP\Loaders\AmazonDspDataLoader.cs" />
     <Compile Include="Etl\DSP\Loaders\Constants\DspMetricConstants.cs" />
+    <Compile Include="Etl\DSP\Loaders\ReportEntriesDataLoaders\AdvertiserDspItemLoader.cs" />
     <Compile Include="Etl\DSP\Loaders\ReportEntriesDataLoaders\BaseDspItemLoader.cs" />
     <Compile Include="Etl\DSP\Models\AmazonDspAccauntDailyReportData.cs" />
     <Compile Include="Etl\DSP\Models\ReportEntities\ReportAdvertiser.cs" />

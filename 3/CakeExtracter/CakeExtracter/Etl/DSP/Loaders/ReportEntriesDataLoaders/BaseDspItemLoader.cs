@@ -47,15 +47,15 @@ namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
             }
         }
 
-        public void UpdateAccountSummaryMetricsDataForDate(List<TReportEntity> reportShippingEntities,
-            List<TDbEntity> dbVendorEntities, DateTime date, ExtAccount account)
+        public void UpdateAccountSummaryMetricsDataForDate(List<TReportEntity> reportEntities,
+            List<TDbEntity> dbEntities, DateTime date, ExtAccount account)
         {
             using (var dbContext = new ClientPortalProgContext())
             {
-                var accountRelatedEntityIds = dbVendorEntities.Select(e => e.Id).ToList();
+                var accountRelatedEntityIds = dbEntities.Select(e => e.Id).ToList();
                 var dbSet = GetSummaryMetricDbSet(dbContext);
                 var existingAccountDailySummaries = dbSet.Where(csm => csm.Date == date && accountRelatedEntityIds.Contains(csm.EntityId)).ToList();
-                var actualAccountDailySummaries = GetActualDailySummariesFromReportEntities(reportShippingEntities, dbVendorEntities, account, date);
+                var actualAccountDailySummaries = GetActualDailySummariesFromReportEntities(reportEntities, dbEntities, account, date);
                 MergeDailySummariesAndUpdateInDataBase(dbSet, dbContext, existingAccountDailySummaries, actualAccountDailySummaries);
             }
         }
@@ -98,10 +98,9 @@ namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
             var dailySummariesToBeRemoved = existingAccountDailySummaries.Except(dailySummariesToLeaveUntouched).ToList();
             dbSet.RemoveRange(dailySummariesToBeRemoved);
             dbContext.SaveChanges();
-            Logger.Info("Amazon VCD, Deleted {0}", dailySummariesToBeRemoved.Count);
             dbSet.AddRange(dailySummariesToInsert);
             dbContext.SaveChanges();
-            Logger.Info("Amazon VCD, Inserted {0}", dailySummariesToInsert.Count);
+            Logger.Info("Amazon VCD, Deleted {0}; Inserted {0}", dailySummariesToBeRemoved.Count, dailySummariesToInsert.Count);
         }
 
         private List<TSummaryMetricEntity> GetActualDailySummariesFromReportEntities(List<TReportEntity> reportShippingEntities, List<TDbEntity> dbVendorEntities, ExtAccount account, DateTime date)

@@ -18,15 +18,23 @@ namespace CakeExtracter.Etl.DSP.Loaders
             EnsureMetricTypes();
         }
 
-        public void LoadData(List<AmazonDspDailyReportData> dailyReportEntries)
+        public void LoadData(List<AmazonDspAccauntReportData> accountsReportData)
         {
             try
             {
-                
+                accountsReportData.ForEach(rd => 
+                {
+                    LoadAccountData(rd);
+                });
             }
             catch (Exception ex)
             {
             }
+        }
+
+        private void LoadAccountData(AmazonDspAccauntReportData accountReportData)
+        {
+
         }
 
         private void EnsureMetricTypes()
