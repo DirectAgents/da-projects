@@ -27,7 +27,5 @@ namespace CakeExtracter.Etl.DSP.Models
         public decimal PurchaseViews { get; set; }
 
         public decimal PurchaseClicks { get; set; }
-
-        public ExtAccount relatedAccount { get; set; }
     }
 }

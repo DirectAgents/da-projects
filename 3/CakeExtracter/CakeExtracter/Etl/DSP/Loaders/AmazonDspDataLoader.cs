@@ -14,6 +14,7 @@ namespace CakeExtracter.Etl.DSP.Loaders
 
         public AmazonDspDataLoader()
         {
+            metricTypes = new Dictionary<string, int>();
             EnsureMetricTypes();
         }
 

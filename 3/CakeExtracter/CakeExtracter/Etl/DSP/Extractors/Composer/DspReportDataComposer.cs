@@ -2,17 +2,27 @@
 using System.Linq;
 using CakeExtracter.Etl.DSP.Extractors.Parser.Models;
 using CakeExtracter.Etl.DSP.Models;
+using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.DSP.Extractors.Composer
 {
     internal class DspReportDataComposer
     {
-        public List<AmazonDspDailyReportData> ComposeReportData(List<CreativeReportRow> reportEntries)
+        public List<AmazonDspAccauntReportData> ComposeReportData(List<CreativeReportRow> reportEntries, List<ExtAccount> accounts)
         {
-            return GetReportData(reportEntries);
+            var accountsData = reportEntries.GroupBy(re => re.AdvertiserName, (key, gr) =>
+             {
+                 var relatedAccount = accounts.FirstOrDefault(ac => ac.Name == key);
+                 return relatedAccount != null ? new AmazonDspAccauntReportData
+                 {
+                     Account = relatedAccount,
+                     DailyDataCollection = GetAccountReportData(gr)
+                 } : null;
+             });
+            return accountsData.Where(data => data != null).ToList(); ;
         }
 
-        private List<AmazonDspDailyReportData> GetReportData(IEnumerable<CreativeReportRow> reportEntries)
+        private List<AmazonDspDailyReportData> GetAccountReportData(IEnumerable<CreativeReportRow> reportEntries)
         {
             return reportEntries.GroupBy(row => row.Date, (key, gr) => new AmazonDspDailyReportData
             {
