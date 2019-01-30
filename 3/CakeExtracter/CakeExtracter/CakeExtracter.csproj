@@ -423,7 +423,7 @@
     <Compile Include="Etl\DSP\Models\AmazonDspDailyReportData.cs" />
     <Compile Include="Etl\DSP\Models\ReportCreative.cs" />
     <Compile Include="Etl\DSP\Models\ReportLineItem.cs" />
-    <Compile Include="Etl\DSP\Models\ReportMetricItem.cs" />
+    <Compile Include="Etl\DSP\Models\DspReportMetricItem.cs" />
     <Compile Include="Etl\DSP\Models\ReportOrder.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\AppleApiExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\DbExtracters.cs" />

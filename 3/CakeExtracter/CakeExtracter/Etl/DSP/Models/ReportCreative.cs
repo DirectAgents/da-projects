@@ -1,6 +1,6 @@
 ﻿namespace CakeExtracter.Etl.DSP.Models
 {
-    internal class ReportCreative : ReportMetricItem
+    internal class ReportCreative : DspReportMetricItem
     {
         public string Advertiser { get; set; }
         public string Order { get; set; }

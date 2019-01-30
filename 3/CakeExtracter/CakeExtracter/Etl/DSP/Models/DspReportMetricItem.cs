@@ -1,6 +1,8 @@
-﻿namespace CakeExtracter.Etl.DSP.Models
+﻿using DirectAgents.Domain.Entities.CPProg;
+
+namespace CakeExtracter.Etl.DSP.Models
 {
-    internal class ReportMetricItem
+    internal class DspReportMetricItem
     {
         public string Name { get; set; }
 
@@ -25,5 +27,7 @@
         public decimal PurchaseViews { get; set; }
 
         public decimal PurchaseClicks { get; set; }
+
+        public ExtAccount relatedAccount { get; set; }
     }
 }
