@@ -1,12 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace DirectAgents.Domain.Entities.CPProg.DSP
+﻿namespace DirectAgents.Domain.Entities.CPProg.DSP
 {
-    public class DspOrder : DspBaseItem
+    public class DspOrder : DspDbEntity
     {
-        public int? AdvertiserId { get; set; }
+        public string AdvertiserReportId { get; set; }
 
-        [ForeignKey("AdvertiserId")]
-        public virtual DspAdvertiser Advertiser { get; set; }
+        public string AdvertiserName { get; set; }
     }
 }

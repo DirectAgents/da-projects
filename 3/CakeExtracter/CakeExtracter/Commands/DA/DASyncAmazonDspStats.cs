@@ -33,6 +33,7 @@ namespace CakeExtracter.Commands.DA
         {
             var accounts = accountsProvider.GetAccountsToProcess(0);
             var dailyReportData = extractor.ExtractDailyData(accounts);
+            loader.LoadData(dailyReportData);
         }
 
         public override void ResetProperties()

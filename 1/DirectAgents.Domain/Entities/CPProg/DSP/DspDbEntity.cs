@@ -2,11 +2,11 @@
 
 namespace DirectAgents.Domain.Entities.CPProg.DSP
 {
-    public class DspBaseItem
+    public class DspDbEntity
     {
         public int Id { get; set; }
 
-        public string ExternalId { get; set; }
+        public string ReportId { get; set; }
 
         public string Name { get; set; }
 

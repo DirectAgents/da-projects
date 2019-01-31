@@ -3,21 +3,19 @@ using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.DSP;
 using DirectAgents.Domain.Entities.CPProg.DSP.SummaryMetrics;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 
 namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
 {
-    internal class AdvertiserDspItemLoader : BaseDspItemLoader<ReportAdvertiser, DspAdvertiser, DspAdvertiserSummaryMetric>
+    internal class AdvertisersDataLoader : BaseDspItemLoader<ReportAdvertiser, DspAdvertiser, DspAdvertiserDailyMetricValues>
     {
-        public AdvertiserDspItemLoader(Dictionary<string, int> metricTypes) : base(metricTypes)
+        public AdvertisersDataLoader()
         {
         }
 
-        protected override DbSet<DspAdvertiserSummaryMetric> GetSummaryMetricDbSet(ClientPortalProgContext dbContext)
+        protected override DbSet<DspAdvertiserDailyMetricValues> GetMetricValuesDbSet(ClientPortalProgContext dbContext)
         {
-            return dbContext.DspAdvertisersSummaryMetrics;
+            return dbContext.DspAdvertisersMetricValues;
         }
 
         protected override DbSet<DspAdvertiser> GetVendorDbSet(ClientPortalProgContext dbContext)
@@ -31,8 +29,8 @@ namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
             {
                 AccountId = extAccount.Id,
                 Name = reportEntity.Name,
-                ExternalId = reportEntity.
-            }
+                ReportId = reportEntity.ReportId,
+            };
         }
     }
 }

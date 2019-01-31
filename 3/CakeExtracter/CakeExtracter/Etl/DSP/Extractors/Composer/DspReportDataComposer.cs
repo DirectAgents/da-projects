@@ -38,10 +38,15 @@ namespace CakeExtracter.Etl.DSP.Extractors.Composer
         {
             return creatives.Select(row => new ReportCreative
             {
-                Advertiser = row.AdvertiserName,
-                Order = row.OrderName,
-                LineItem = row.LineItemName,
                 Name = row.CreativeName,
+                ReportId = row.CreativeId,
+                Advertiser = row.AdvertiserName,
+                AdvertiserReportId = row.AdvertiserId,
+                Order = row.OrderName,
+                OrderReportId = row.OrderId,
+                LineItem = row.LineItemName,
+                LineItemReportId = row.LineItemId,
+                //Metrics
                 TotalCost = row.TotalCost,
                 Impressions = row.Impressions,
                 ClickThroughs = row.ClickThroughs,
@@ -61,18 +66,16 @@ namespace CakeExtracter.Etl.DSP.Extractors.Composer
         {
             return creatives.GroupBy(creative => creative.LineItemName, (key, gr) =>
                 {
-                    var firstCreative = gr.FirstOrDefault();
-                    var advertiserName = firstCreative != null && !string.IsNullOrEmpty(firstCreative.AdvertiserName)
-                        ? firstCreative.AdvertiserName
-                        : null;
-                    var orderName = firstCreative != null && !string.IsNullOrEmpty(firstCreative.OrderName)
-                        ? firstCreative.OrderName
-                        : null;
+                    var firstCreative = gr.First();
                     return new ReportLineItem
                     {
-                        Advertiser = advertiserName,
-                        Order = orderName,
                         Name = key,
+                        ReportId = firstCreative.LineItemId,
+                        Advertiser = firstCreative.AdvertiserName,
+                        AdvertiserReportId = firstCreative.AdvertiserId,
+                        Order = firstCreative.OrderName,
+                        OrderReportId = gr.First().OrderId,
+                        //Metrics
                         TotalCost = gr.Sum(creative => creative.TotalCost),
                         Impressions = gr.Sum(creative => creative.Impressions),
                         ClickThroughs = gr.Sum(creative => creative.ClickThroughs),
@@ -93,14 +96,14 @@ namespace CakeExtracter.Etl.DSP.Extractors.Composer
         {
             return creatives.GroupBy(creative => creative.OrderName, (key, gr) =>
                 {
-                    var firstCreative = gr.FirstOrDefault();
-                    var advertiserName = firstCreative != null && !string.IsNullOrEmpty(firstCreative.AdvertiserName)
-                        ? firstCreative.AdvertiserName
-                        : null;
+                    var firstCreative = gr.First();
                     return new ReportOrder
                     {
-                        Advertiser = advertiserName,
                         Name = key,
+                        ReportId = firstCreative.OrderId,
+                        Advertiser = firstCreative.AdvertiserName,
+                        AdvertiserReportId = firstCreative.AdvertiserId,
+                        //Metrics
                         TotalCost = gr.Sum(creative => creative.TotalCost),
                         Impressions = gr.Sum(creative => creative.Impressions),
                         ClickThroughs = gr.Sum(creative => creative.ClickThroughs),
@@ -119,10 +122,13 @@ namespace CakeExtracter.Etl.DSP.Extractors.Composer
 
         private List<ReportAdvertiser> GetAdvertisersFromCreatives(IEnumerable<CreativeReportRow> creatives)
         {
-            return creatives.GroupBy(creative => creative.AdvertiserName, (key, gr) =>
-                new ReportAdvertiser
+            return creatives.GroupBy(creative => creative.AdvertiserName, (key, gr) => {
+                var firstCreative = gr.First();
+                return new ReportAdvertiser
                 {
                     Name = key,
+                    ReportId = firstCreative.AdvertiserId,
+                    //Metrics
                     TotalCost = gr.Sum(creative => creative.TotalCost),
                     Impressions = gr.Sum(creative => creative.Impressions),
                     ClickThroughs = gr.Sum(creative => creative.ClickThroughs),
@@ -134,8 +140,8 @@ namespace CakeExtracter.Etl.DSP.Extractors.Composer
                     Purchase = gr.Sum(creative => creative.Purchase),
                     PurchaseViews = gr.Sum(creative => creative.PurchaseViews),
                     PurchaseClicks = gr.Sum(creative => creative.PurchaseClicks)
-                }
-            ).ToList();
+                };
+            }).ToList();
         }
     }
 }

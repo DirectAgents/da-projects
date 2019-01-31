@@ -1,5 +1,4 @@
-﻿using CakeExtracter.Etl.DSP.Loaders.Constants;
-using CakeExtracter.Etl.DSP.Models;
+﻿using CakeExtracter.Etl.DSP.Models;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.DSP;
@@ -11,16 +10,16 @@ using System.Linq;
 
 namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
 {
-    internal abstract class BaseDspItemLoader<TReportEntity, TDbEntity, TSummaryMetricEntity>
-        where TReportEntity : DspReportMetricItem
-        where TDbEntity : DspBaseItem
-        where TSummaryMetricEntity : DspSummaryMetric, new()
+    internal abstract class BaseDspItemLoader<TReportEntity, TDbEntity, TMetricValues>
+        where TReportEntity : DspReportEntity
+        where TDbEntity : DspDbEntity
+        where TMetricValues : DspMetricValues, new()
     {
-        protected Dictionary<string, int> metricTypes;
+        DspItemMetricManager metricManager;
 
-        public BaseDspItemLoader(Dictionary<string, int> metricTypes)
+        public BaseDspItemLoader()
         {
-            this.metricTypes = metricTypes;
+            metricManager = new DspItemMetricManager();
         }
 
         public List<TDbEntity> EnsureDspEntitiesInDataBase(List<TReportEntity> reportEntities, ExtAccount extAccount)
@@ -31,7 +30,8 @@ namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
                 var allItems = new List<TDbEntity>();
                 var dbSet = GetVendorDbSet(dbContext);
                 var allAccountdbEntities = dbSet.Where(db => db.AccountId == extAccount.Id).ToList();
-                reportEntities.ForEach(reportEntity =>
+                var uniqueReportEntries = GetUniqueReportEntities(reportEntities);
+                uniqueReportEntries.ForEach(reportEntity =>
                 {
                     var correspondingDbEntity = allAccountdbEntities.FirstOrDefault(GetEntityMappingPredicate(reportEntity, extAccount));
                     if (correspondingDbEntity == null)
@@ -53,7 +53,7 @@ namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
             using (var dbContext = new ClientPortalProgContext())
             {
                 var accountRelatedEntityIds = dbEntities.Select(e => e.Id).ToList();
-                var dbSet = GetSummaryMetricDbSet(dbContext);
+                var dbSet = GetMetricValuesDbSet(dbContext);
                 var existingAccountDailySummaries = dbSet.Where(csm => csm.Date == date && accountRelatedEntityIds.Contains(csm.EntityId)).ToList();
                 var actualAccountDailySummaries = GetActualDailySummariesFromReportEntities(reportEntities, dbEntities, account, date);
                 MergeDailySummariesAndUpdateInDataBase(dbSet, dbContext, existingAccountDailySummaries, actualAccountDailySummaries);
@@ -62,26 +62,26 @@ namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
 
         protected virtual Func<TDbEntity, bool> GetEntityMappingPredicate(TReportEntity reportEntity, ExtAccount extAccount)
         {
-            return dbEntity => dbEntity.Name == reportEntity.Name && dbEntity.AccountId == extAccount.Id;
+            return dbEntity => dbEntity.ReportId == reportEntity.ReportId && dbEntity.AccountId == extAccount.Id;
         }
 
         protected abstract TDbEntity MapReportEntityToDbEntity(TReportEntity reportEntity, ExtAccount extAccount);
 
         protected abstract DbSet<TDbEntity> GetVendorDbSet(ClientPortalProgContext dbContext);
 
-        protected abstract DbSet<TSummaryMetricEntity> GetSummaryMetricDbSet(ClientPortalProgContext dbContext);
+        protected abstract DbSet<TMetricValues> GetMetricValuesDbSet(ClientPortalProgContext dbContext);
 
-        private void MergeDailySummariesAndUpdateInDataBase(DbSet<TSummaryMetricEntity> dbSet, ClientPortalProgContext dbContext,
-            List<TSummaryMetricEntity> existingAccountDailySummaries, List<TSummaryMetricEntity> actualAccountDailySummaries)
+        private void MergeDailySummariesAndUpdateInDataBase(DbSet<TMetricValues> dbSet, ClientPortalProgContext dbContext,
+            List<TMetricValues> existingAccountDailySummaries, List<TMetricValues> actualAccountDailySummaries)
         {
-            var dailySummariesToInsert = new List<TSummaryMetricEntity>();
-            var dailySummariesToLeaveUntouched = new List<TSummaryMetricEntity>();
+            var dailySummariesToInsert = new List<TMetricValues>();
+            var dailySummariesToLeaveUntouched = new List<TMetricValues>();
             actualAccountDailySummaries.ForEach(actualMetric =>
             {
-                var alreadyExistingMetricValue = existingAccountDailySummaries.FirstOrDefault(mS => mS.EntityId == actualMetric.EntityId && mS.MetricTypeId == actualMetric.MetricTypeId);
+                var alreadyExistingMetricValue = existingAccountDailySummaries.FirstOrDefault(mS => mS.EntityId == actualMetric.EntityId);
                 if (alreadyExistingMetricValue != null)
                 {
-                    if (alreadyExistingMetricValue.Value == actualMetric.Value)
+                    if (metricManager.AreMetricValuesEquivalent(alreadyExistingMetricValue, actualMetric))
                     {
                         dailySummariesToLeaveUntouched.Add(alreadyExistingMetricValue);
                     }
@@ -96,6 +96,12 @@ namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
                 }
             });
             var dailySummariesToBeRemoved = existingAccountDailySummaries.Except(dailySummariesToLeaveUntouched).ToList();
+            ProcessDataBaseMetricValuesUpdate(dbSet, dbContext, dailySummariesToBeRemoved, dailySummariesToInsert);
+        }
+
+        private void ProcessDataBaseMetricValuesUpdate(DbSet<TMetricValues> dbSet, ClientPortalProgContext dbContext,
+           List<TMetricValues> dailySummariesToBeRemoved, List<TMetricValues> dailySummariesToInsert)
+        {
             dbSet.RemoveRange(dailySummariesToBeRemoved);
             dbContext.SaveChanges();
             dbSet.AddRange(dailySummariesToInsert);
@@ -103,60 +109,19 @@ namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
             Logger.Info("Amazon VCD, Deleted {0}; Inserted {0}", dailySummariesToBeRemoved.Count, dailySummariesToInsert.Count);
         }
 
-        private List<TSummaryMetricEntity> GetActualDailySummariesFromReportEntities(List<TReportEntity> reportShippingEntities, List<TDbEntity> dbVendorEntities, ExtAccount account, DateTime date)
+        private List<TMetricValues> GetActualDailySummariesFromReportEntities(List<TReportEntity> reportShippingEntities, List<TDbEntity> dbVendorEntities, ExtAccount account, DateTime date)
         {
-            var actualAccountDailySummaries = reportShippingEntities.SelectMany(reportEntity =>
+            var actualAccountDailySummaries = reportShippingEntities.Select(reportEntity =>
             {
                 var dbEntity = dbVendorEntities.FirstOrDefault(GetEntityMappingPredicate(reportEntity, account));
-                return GetSummaryMetricEntities(reportEntity, dbEntity, date);
-            }).ToList();
+                return metricManager.GetMetricValuesEntities<TMetricValues>(reportEntity, dbEntity.Id, date);
+            }).Where(mv => mv != null).ToList();
             return actualAccountDailySummaries;
         }
 
-        private List<TSummaryMetricEntity> GetSummaryMetricEntities(TReportEntity reportEntity, TDbEntity dbEntity, DateTime date)
+        private List<TReportEntity> GetUniqueReportEntities(List<TReportEntity> allReportEntities)
         {
-            var metricEntities = new List<TSummaryMetricEntity>
-            {
-               InitMetricValue(dbEntity.Id, date, reportEntity.TotalCost,
-                    metricTypes[DspMetricConstants.TotalCostMetricName]),
-               InitMetricValue(dbEntity.Id, date, reportEntity.Impressions,
-                    metricTypes[DspMetricConstants.ImpressionsMetricName]),
-               InitMetricValue(dbEntity.Id, date, reportEntity.ClickThroughs,
-                    metricTypes[DspMetricConstants.ClickThroughsMetricName]),
-               InitMetricValue(dbEntity.Id, date, reportEntity.TotalPixelEvents,
-                    metricTypes[DspMetricConstants.TotalPixelEventsMetricName]),
-               InitMetricValue(dbEntity.Id, date, reportEntity.TotalPixelEventsViews,
-                    metricTypes[DspMetricConstants.TotalPixelEventsViewsMetricName]),
-               InitMetricValue(dbEntity.Id, date, reportEntity.TotalPixelEventsClicks,
-                    metricTypes[DspMetricConstants.TotalPixelEventsClicksMetricName]),
-               InitMetricValue(dbEntity.Id, date, reportEntity.DPV,
-                    metricTypes[DspMetricConstants.DPVMetricName]),
-               InitMetricValue(dbEntity.Id, date, reportEntity.ATC,
-                    metricTypes[DspMetricConstants.ATCMetricName]),
-               InitMetricValue(dbEntity.Id, date, reportEntity.Purchase,
-                    metricTypes[DspMetricConstants.PurchaseMetricName]),
-               InitMetricValue(dbEntity.Id, date, reportEntity.PurchaseViews,
-                    metricTypes[DspMetricConstants.PurchaseViewsMetricName]),
-               InitMetricValue(dbEntity.Id, date, reportEntity.PurchaseClicks,
-                    metricTypes[DspMetricConstants.PurchaseClicksMetricName]),
-            };
-            metricEntities.RemoveAll(item => item == null);
-            return metricEntities;
-        }
-
-        private TSummaryMetricEntity InitMetricValue(int entityId, DateTime date, decimal value, int metricTypeId)
-        {
-            if (value != 0)
-            {
-                return new TSummaryMetricEntity
-                {
-                    EntityId = entityId,
-                    MetricTypeId = metricTypeId,
-                    Date = date,
-                    Value = value
-                };
-            }
-            return null;
+            return allReportEntities.GroupBy(rep => rep.Name, (key, gr) => gr.First()).ToList();
         }
     }
 }

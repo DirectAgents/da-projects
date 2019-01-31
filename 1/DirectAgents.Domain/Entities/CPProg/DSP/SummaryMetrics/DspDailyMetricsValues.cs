@@ -1,11 +1,7 @@
-﻿using DirectAgents.Domain.Entities.CPProg;
-
-namespace CakeExtracter.Etl.DSP.Models
+﻿namespace DirectAgents.Domain.Entities.CPProg.DSP.SummaryMetrics
 {
-    internal class DspReportMetricItem
+    public class DspMetricValues : BaseDailyMetricValues
     {
-        public string Name { get; set; }
-
         public decimal TotalCost { get; set; }
 
         public decimal Impressions { get; set; }

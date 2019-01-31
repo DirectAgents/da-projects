@@ -7,13 +7,13 @@ namespace DirectAgents.Domain.MigrationsTD
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Mig_DspDataTables : IMigrationMetadata
+    public sealed partial class Mig_DspDataTables2 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Mig_DspDataTables));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Mig_DspDataTables2));
         
         string IMigrationMetadata.Id
         {
-            get { return "201901291053188_Mig_DspDataTables"; }
+            get { return "201901311354011_Mig_DspDataTables2"; }
         }
         
         string IMigrationMetadata.Source

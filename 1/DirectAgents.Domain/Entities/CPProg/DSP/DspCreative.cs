@@ -1,12 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace DirectAgents.Domain.Entities.CPProg.DSP
+﻿namespace DirectAgents.Domain.Entities.CPProg.DSP
 {
-    public class DspCreative : DspBaseItem
+    public class DspCreative : DspDbEntity
     {
-        public int? LineItemId { get; set; }
+        public string AdvertiserReportId { get; set; }
 
-        [ForeignKey("LineItemId")]
-        public virtual DspLineItem LineItem { get; set; }
+        public string AdvertiserName { get; set; }
+
+        public string OrderReportId { get; set; }
+
+        public string OrderName { get; set; }
+
+        public string LineItemReportId { get; set; }
+
+        public string LineItemName { get; set; }
     }
 }

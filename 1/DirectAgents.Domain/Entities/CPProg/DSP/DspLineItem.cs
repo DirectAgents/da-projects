@@ -1,12 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace DirectAgents.Domain.Entities.CPProg.DSP
+﻿namespace DirectAgents.Domain.Entities.CPProg.DSP
 {
-    public class DspLineItem : DspBaseItem
+    public class DspLineItem : DspDbEntity
     {
-        public int? OrderId { get; set; }
+        public string AdvertiserReportId { get; set; }
 
-        [ForeignKey("OrderId")]
-        public virtual DspOrder Order { get; set; }
+        public string AdvertiserName { get; set; }
+
+        public string OrderReportId { get; set; }
+
+        public string OrderName { get; set; }
     }
 }
