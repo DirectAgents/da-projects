@@ -27,7 +27,12 @@ namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
 
         protected override DspAdvertiser MapReportEntityToDbEntity(ReportAdvertiser reportEntity, ExtAccount extAccount)
         {
-            throw new NotImplementedException();
+            return new DspAdvertiser
+            {
+                AccountId = extAccount.Id,
+                Name = reportEntity.Name,
+                ExternalId = reportEntity.
+            }
         }
     }
 }
