@@ -12,7 +12,6 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Web.Configuration;
 using Amazon.Entities.HelperEntities;
 using Amazon.Entities.HelperEntities.DownloadInfoResponses;
 using Amazon.Entities.HelperEntities.PreparedDataResponses;
@@ -33,7 +32,7 @@ namespace Amazon
         private static readonly object AccessTokenLock = new object();
 
         // From Config File
-        // wait time = WaitTimeSeconds * WaitAttemptsNumber (15 min - async report generation time, service guarantees)
+        // Wait time is increased after every third attempt by the value of waitTimeSeconds. (15 min - async report generation time, service guarantees)
         private readonly int waitTimeSeconds = int.Parse(ConfigurationManager.AppSettings["AmazonWaitTimeSeconds"]);
         private readonly int waitAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonWaitAttemptsNumber"]);
         private readonly int unauthorizedAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonUnauthorizedAttemptsNumber"]);
@@ -79,9 +78,13 @@ namespace Amazon
             }
         }
 
-        private void LogError(string message)
+        private void LogError(string message, bool realException = true)
         {
             var updatedMessage = GetMessageInCorrectFormat(message);
+            if (realException)
+            {
+                throw new Exception(updatedMessage);
+            }
             if (logError == null)
             {
                 Console.WriteLine(updatedMessage);
@@ -107,7 +110,7 @@ namespace Amazon
         private void LogError(string info, int retryNumber, Exception exception)
         {
             var message = GetAttemptMessage(info, retryNumber, exception.Message);
-            LogError(message);
+            LogError(message, false);
         }
 
         private T LogErrorIfException<T>(Func<T> getSomethingFunc)
@@ -125,16 +128,6 @@ namespace Amazon
             return null;
         }
 
-        private TimeSpan LogPreparedDataWaiting(string dataType, int retryNumber)
-        {
-            return LogWaiting($"Waiting {waitTimeSeconds} seconds for {dataType} to finish generating.", retryNumber);
-        }
-
-        private TimeSpan LogApiCallWaiting(int retryNumber)
-        {
-            return LogWaiting($"API calls quota exceeded. Waiting {waitTimeSeconds} seconds.", retryNumber);
-        }
-
         private void LogFailedRequest(string url, int retryNumber, Exception exception)
         {
             LogError($"URL response ({url}) failed", retryNumber, exception);
@@ -145,10 +138,12 @@ namespace Amazon
             LogInfo($"Successful generation: {downloadInfo.Location}");
         }
 
-        private TimeSpan LogWaiting(string message, int retryNumber)
+        private void LogWaiting<T>(string formattedMessageWithoutTime, TimeSpan timeSpan, int retryNumber, DelegateResult<IRestResponse<T>> response)
         {
+            var waitSeconds = timeSpan.TotalSeconds;
+            var waitDetails = response.Exception == null ? response.Result.Content : response.Exception.Message;
+            var message = $"{string.Format(formattedMessageWithoutTime, waitSeconds)}: {waitDetails}";
             LogInfo(message, retryNumber);
-            return new TimeSpan(0, 0, waitTimeSeconds);
         }
 
         private string GetAttemptMessage(string info, int retryNumber, string baseMessage = null)
@@ -466,14 +461,24 @@ namespace Amazon
         private SnapshotRequestResponse SubmitSnapshot(CampaignType campaignType, EntitesType recordType, string profileId)
         {
             var snapshotParams = AmazonApiHelper.CreateSnapshotParams();
-            var snapshotResponse = SubmitRequestForPreparedData<SnapshotRequestResponse>("snapshot", snapshotParams, campaignType, recordType, profileId);
-            return snapshotResponse;
+            var snapshotResponse = SubmitRequestForPreparedDataManyTimes<SnapshotRequestResponse>("snapshot", snapshotParams, campaignType, recordType, profileId);
+            var snapshotInfo = snapshotResponse?.Data;
+            if (string.IsNullOrWhiteSpace(snapshotInfo?.SnapshotId))
+            {
+                ThrowGenerationTimedOutException(snapshotResponse);
+            }
+            return snapshotInfo;
         }
 
         private ReportRequestResponse SubmitReport(AmazonApiReportParams reportParams, CampaignType campaignType, EntitesType recordType, string profileId)
         {
-            var reportResponse = SubmitRequestForPreparedData<ReportRequestResponse>("report", reportParams, campaignType, recordType, profileId);
-            return reportResponse;
+            var reportResponse = SubmitRequestForPreparedDataManyTimes<ReportRequestResponse>("report", reportParams, campaignType, recordType, profileId);
+            var reportInfo = reportResponse?.Data;
+            if (string.IsNullOrWhiteSpace(reportInfo?.ReportId))
+            {
+                ThrowGenerationTimedOutException(reportResponse);
+            }
+            return reportInfo;
         }
 
         private List<T> GetEntityList<T>(EntitesType entitiesType, CampaignType campaignType, Dictionary<string, string> parameters, string profileId, bool retrieveAllData = true)
@@ -506,20 +511,21 @@ namespace Amazon
             return data;
         }
 
-        private T SubmitRequestForPreparedData<T>(string dataType, object requestParams, CampaignType campaignType, EntitesType entitiesType, string profileId)
+        private IRestResponse<T> SubmitRequestForPreparedDataManyTimes<T>(string dataType, object requestParams, CampaignType campaignType, EntitesType entitiesType, string profileId)
             where T : PreparedDataRequestResponse, new()
         {
             var response = LogErrorIfException(() =>
-                SubmitRequestForPreparedDataWithRetry<T>(dataType, requestParams, campaignType, entitiesType, profileId));
-            if (response?.Content == null || !response.IsSuccessful)
-            {
-                ThrowGenerationTimedOutException(response);
-            }
-
-            return response?.Data;
+                Policy
+                    .Handle<Exception>()
+                    .OrResult<IRestResponse<T>>(resp => resp?.Content == null || !resp.IsSuccessful)
+                    .WaitAndRetry(waitAttemptsNumber, GetTimeSpanForWaiting, (exception, timeSpan, retryCount, context) =>
+                        LogWaiting($"Waiting {{0}} seconds to get a {dataType} ID.", timeSpan, retryCount, exception))
+                    .Execute(() => SubmitRequestForPreparedData<T>(dataType, requestParams, campaignType, entitiesType, profileId))
+            );
+            return response;
         }
 
-        private IRestResponse<T> SubmitRequestForPreparedDataWithRetry<T>(string dataType, object requestParams, CampaignType campaignType, EntitesType entitiesType, string profileId)
+        private IRestResponse<T> SubmitRequestForPreparedData<T>(string dataType, object requestParams, CampaignType campaignType, EntitesType entitiesType, string profileId)
             where T : PreparedDataRequestResponse, new()
         {
             var resourcePath = AmazonApiHelper.GetDataRequestRelativePath(entitiesType, campaignType, dataType);
@@ -534,7 +540,7 @@ namespace Amazon
         {
             var response = RequestPreparedDataManyTimes<T>(dataType, dataId, profileId);
             var downloadInfo = response?.Data;
-            if (downloadInfo == null || string.IsNullOrWhiteSpace(downloadInfo.Location))
+            if (string.IsNullOrWhiteSpace(downloadInfo?.Location))
             {
                 ThrowGenerationTimedOutException(response);
             }
@@ -550,7 +556,8 @@ namespace Amazon
                 Policy
                     .Handle<Exception>()
                     .OrResult<IRestResponse<T>>(resp => resp.Data.Status != "SUCCESS")
-                    .WaitAndRetry(waitAttemptsNumber, retryNumber => LogPreparedDataWaiting(dataType, retryNumber))
+                    .WaitAndRetry(waitAttemptsNumber, GetTimeSpanForWaiting, (exception, timeSpan, retryCount, context) => 
+                        LogWaiting($"Waiting {{0}} seconds for {dataType} to finish generating.", timeSpan, retryCount, exception))
                     .Execute(() => RequestPreparedData<T>(dataType, dataId, profileId))
             );
             return response;
@@ -624,7 +631,7 @@ namespace Amazon
             var message = string.IsNullOrWhiteSpace(response.ErrorMessage)
                 ? response.Content
                 : response.ErrorMessage;
-            LogError(message);
+            LogError(message, false);
 
             return response;
         }
@@ -639,15 +646,15 @@ namespace Amazon
 
             var response = Policy
                 .HandleResult<IRestResponse<T>>(resp => resp.StatusCode == HttpStatusCode.Unauthorized)
-                .Retry(unauthorizedAttemptsNumber,
-                    (exception, retryCount, context) => UpdateAccessTokenForRequest(restRequest))
+                .Retry(unauthorizedAttemptsNumber, (exception, retryCount, context) => UpdateAccessTokenForRequest(restRequest))
                 .Execute(() => GetRestResponse<T>(restClient, restRequest, isPostMethod));
 
             if (IsRequestProcessed(response))
             {
                 response = Policy
                     .HandleResult<IRestResponse<T>>(IsRequestProcessed)
-                    .WaitAndRetry(waitAttemptsNumber, LogApiCallWaiting)
+                    .WaitAndRetry(waitAttemptsNumber, GetTimeSpanForWaiting, (exception, timeSpan, retryCount, context) =>
+                        LogWaiting("API calls quota exceeded. Waiting {0} seconds.", timeSpan, retryCount, exception))
                     .Execute(() => GetRestResponse<T>(restClient, restRequest, isPostMethod));
             }
 
@@ -731,6 +738,18 @@ namespace Amazon
         {
             var exceptionMessage = GetMessageInCorrectFormat(response.Content);
             throw new ReportGenerationTimedOutException(exceptionMessage);
+        }
+
+        /// <summary>
+        /// The method returns the time interval for the delay after some attempt of the http request failed.
+        /// The return value is exponentially dependent on the retryNumber parameter. It is increased after every third attempt by the value of waitTimeSeconds.
+        /// </summary>
+        /// <param name="retryNumber">Current attempt number</param>
+        /// <returns>Time span for waiting</returns>
+        private TimeSpan GetTimeSpanForWaiting(int retryNumber)
+        {
+            var waitTime = waitTimeSeconds * ((retryNumber - 1) / 3 + 1);
+            return TimeSpan.FromSeconds(waitTime);
         }
     }
 }
