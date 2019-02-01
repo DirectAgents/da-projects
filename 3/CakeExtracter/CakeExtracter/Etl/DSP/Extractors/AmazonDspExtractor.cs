@@ -12,14 +12,14 @@ namespace CakeExtracter.Etl.DSP.Extractors
     internal class AmazonDspExtractor
     {
         private readonly AmazonDspConfigurationProvider configurationProvider;
-        private readonly AwsDspReportsDownloader reportsDownloader;
+        private readonly AwsFilesDownloader awsFilesDownloader;
         private readonly DspReportCsvParser reportsParser;
         private readonly DspReportDataComposer reportComposer;
 
         public AmazonDspExtractor(AmazonDspConfigurationProvider configurationProvider)
         {
             this.configurationProvider = configurationProvider;
-            reportsDownloader = new AwsDspReportsDownloader(configurationProvider.GetAwsAccessToken(),
+            awsFilesDownloader = new AwsFilesDownloader(configurationProvider.GetAwsAccessToken(),
                 configurationProvider.GetAwsSecretValue(), m => Logger.Info(m), (ex) => Logger.Error(ex));
             reportsParser = new DspReportCsvParser();
             reportComposer = new DspReportDataComposer();
@@ -28,11 +28,13 @@ namespace CakeExtracter.Etl.DSP.Extractors
         public List<AmazonDspAccauntReportData> ExtractDailyData(List<ExtAccount> accounts)
         {
             var reportName = configurationProvider.GetDspReportName();
-            var reportTextContent = reportsDownloader.GetLatestDspReportContent(reportName);
+            var reportTextContent = awsFilesDownloader.GetLatestFileContentByFilePrefix(reportName);
             if (!string.IsNullOrEmpty(reportTextContent))
             {
+                Logger.Info("DSP. All Data Report downloaded. Size {0}", reportTextContent.Length);
                 var reportCreativeEntries = reportsParser.GetReportCreatives(reportTextContent);
                 var accountsReportData = reportComposer.ComposeReportData(reportCreativeEntries, accounts);
+                Logger.Info("DSP. Report Data Composed.  Advertisers number: {0}", accountsReportData.Count);
                 return accountsReportData;
             }
             else

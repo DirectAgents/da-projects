@@ -76,7 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AmazonAuth.cs" />
-    <Compile Include="AwsDspReportsDownloader.cs" />
+    <Compile Include="AwsFilesDownloader.cs" />
     <Compile Include="Entities\AmazonProfile.cs" />
     <Compile Include="Entities\HelperEntities\AmazonApiReportParams.cs" />
     <Compile Include="Entities\HelperEntities\AmazonApiSnapshotParams.cs" />

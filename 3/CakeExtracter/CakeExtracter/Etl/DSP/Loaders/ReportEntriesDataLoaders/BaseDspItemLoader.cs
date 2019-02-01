@@ -65,6 +65,11 @@ namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
             return dbEntity => dbEntity.ReportId == reportEntity.ReportId && dbEntity.AccountId == extAccount.Id;
         }
 
+        protected virtual List<TReportEntity> GetUniqueReportEntities(List<TReportEntity> allReportEntities)
+        {
+            return allReportEntities.GroupBy(rep => rep.ReportId, (key, gr) => gr.First()).ToList();
+        }
+
         protected abstract TDbEntity MapReportEntityToDbEntity(TReportEntity reportEntity, ExtAccount extAccount);
 
         protected abstract DbSet<TDbEntity> GetVendorDbSet(ClientPortalProgContext dbContext);
@@ -106,7 +111,6 @@ namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
             dbContext.SaveChanges();
             dbSet.AddRange(dailySummariesToInsert);
             dbContext.SaveChanges();
-            Logger.Info("Amazon VCD, Deleted {0}; Inserted {0}", dailySummariesToBeRemoved.Count, dailySummariesToInsert.Count);
         }
 
         private List<TMetricValues> GetActualDailySummariesFromReportEntities(List<TReportEntity> reportShippingEntities, List<TDbEntity> dbVendorEntities, ExtAccount account, DateTime date)
@@ -117,11 +121,6 @@ namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
                 return metricManager.GetMetricValuesEntities<TMetricValues>(reportEntity, dbEntity.Id, date);
             }).Where(mv => mv != null).ToList();
             return actualAccountDailySummaries;
-        }
-
-        private List<TReportEntity> GetUniqueReportEntities(List<TReportEntity> allReportEntities)
-        {
-            return allReportEntities.GroupBy(rep => rep.Name, (key, gr) => gr.First()).ToList();
         }
     }
 }

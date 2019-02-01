@@ -1,4 +1,7 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 using CakeExtracter.Etl.DSP.Models;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
@@ -17,6 +20,17 @@ namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
         protected override DbSet<DspCreative> GetVendorDbSet(ClientPortalProgContext dbContext)
         {
             return dbContext.DspCreatives;
+        }
+
+        protected override List<ReportCreative> GetUniqueReportEntities(List<ReportCreative> allReportEntities)
+        {
+          return allReportEntities.GroupBy(item => new { item.ReportId, item.LineItemReportId })
+                .Select(gr => gr.First()).ToList();
+        }
+
+        protected override Func<DspCreative, bool> GetEntityMappingPredicate(ReportCreative reportEntity, ExtAccount extAccount)
+        {
+            return (creative => creative.ReportId == reportEntity.ReportId && creative.LineItemReportId == reportEntity.LineItemReportId);
         }
 
         protected override DspCreative MapReportEntityToDbEntity(ReportCreative reportEntity, ExtAccount extAccount)

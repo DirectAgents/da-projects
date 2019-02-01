@@ -2,6 +2,10 @@
 using CakeExtracter.Etl.DSP.Configuration;
 using CakeExtracter.Etl.DSP.Extractors;
 using CakeExtracter.Etl.DSP.Loaders;
+using CakeExtracter.Etl.DSP.Models;
+using DirectAgents.Domain.Entities.CPProg;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 
 namespace CakeExtracter.Commands.DA
@@ -14,13 +18,21 @@ namespace CakeExtracter.Commands.DA
         private readonly AmazonDspDataLoader loader;
         private readonly AmazonDspAccountsProvider accountsProvider;
 
+        private int? AccountId { get; set; }
+
         public DASyncAmazonDspStats()
         {
             IsCommand("daSyncAmazonDspStats", "Synch Amazon DSP Stats");
+            HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
             configurationProvider = new AmazonDspConfigurationProvider();
             extractor = new AmazonDspExtractor(configurationProvider);
             loader = new AmazonDspDataLoader();
             accountsProvider = new AmazonDspAccountsProvider();
+        }
+
+        public override void ResetProperties()
+        {
+            AccountId = null;
         }
 
         public override int Execute(string[] remainingArguments)
@@ -31,14 +43,30 @@ namespace CakeExtracter.Commands.DA
 
         private void ProcessDailyEtl()
         {
-            var accounts = accountsProvider.GetAccountsToProcess(0);
-            var dailyReportData = extractor.ExtractDailyData(accounts);
-            loader.LoadData(dailyReportData);
+            var accounts = accountsProvider.GetAccountsToProcess(AccountId);
+            var reportData = ProcessDailyDataExtraction(accounts);
+            if (reportData != null)
+            {
+                loader.LoadData(reportData);
+            }
+            else
+            {
+                Logger.Warn("DSP - Data loading canceled because report data extraction failed");
+            }
         }
 
-        public override void ResetProperties()
+        private List<AmazonDspAccauntReportData> ProcessDailyDataExtraction(List<ExtAccount> accounts)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                var dailyReportData = extractor.ExtractDailyData(accounts);
+                return dailyReportData;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return null;
+            }
         }
     }
 }

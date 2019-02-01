@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Amazon
 {
-    public class AwsDspReportsDownloader
+    public class AwsFilesDownloader
     {
         private readonly string amazoneReportBucketName = "amazonselfservicedsp";
 
@@ -23,7 +23,7 @@ namespace Amazon
 
         private readonly Action<Exception> logError;
 
-        public AwsDspReportsDownloader(string accessKey, string secretKey, Action<string> logInfo, Action<Exception> logError)
+        public AwsFilesDownloader(string accessKey, string secretKey, Action<string> logInfo, Action<Exception> logError)
         {
             awsAccessKey = accessKey;
             awsSecretKey = secretKey;
@@ -37,14 +37,22 @@ namespace Amazon
         /// </summary>
         /// <param name="date">Date to pull the reports.</param>
         /// <returns>The list of CSV contents from reports.</returns>
-        public string GetLatestDspReportContent(string reportName)
+        public string GetLatestFileContentByFilePrefix(string filePrefix)
         {
             try
             {
                 IList<S3Object> allObjects = GetAllObjects();
-                var reportsObjects = allObjects.Where(report => report.Key.Contains(reportName));
+                var reportsObjects = allObjects.Where(report => report.Key.Contains(filePrefix));
                 var latestReport = reportsObjects.OrderByDescending(r => r.LastModified).FirstOrDefault();
-                return latestReport != null ? GetObjectContent(latestReport) : string.Empty;
+                if (latestReport == null)
+                {
+                    logInfo("No files with prefix was foud");
+                    return string.Empty;
+                }
+                else
+                {
+                    return GetObjectContent(latestReport);
+                }
             }
             catch (AmazonS3Exception amazonS3Exception)
             {

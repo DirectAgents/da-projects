@@ -15,11 +15,11 @@ namespace CakeExtracter.Etl.DSP.Configuration
             accountsRepository = new PlatformAccountRepository();
         }
 
-        public List<ExtAccount> GetAccountsToProcess(int accountIdFromConfig)
+        public List<ExtAccount> GetAccountsToProcess(int? accountIdFromConfig)
         {
-            if (accountIdFromConfig != 0)
+            if (accountIdFromConfig.HasValue)
             {
-                var account = accountsRepository.GetAccount(accountIdFromConfig);
+                var account = accountsRepository.GetAccount(accountIdFromConfig.Value);
                 if (account != null)
                 {
                     return new List<ExtAccount> { account };
