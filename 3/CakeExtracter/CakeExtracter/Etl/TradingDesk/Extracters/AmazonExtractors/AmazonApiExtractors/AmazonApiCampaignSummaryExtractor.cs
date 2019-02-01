@@ -26,41 +26,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             : base(amazonUtility, dateRange, account, clearBeforeLoad, campaignFilter, campaignFilterOut)
         { }
 
-        protected override void Extract()
-        {
-            Logger.Info(accountId, "Extracting StrategySummaries from Amazon API for ({0}) from {1:d} to {2:d}",
-                clientId, dateRange.FromDate, dateRange.ToDate);
-            
-            var campaigns = LoadCampaignsFromAmazonApi();
-            foreach (var date in dateRange.Dates)
-            {
-                try
-                {
-                    Extract(campaigns, date);
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(accountId, e);
-                }
-            }
-            End();
-        }
-
-        //TODO? Request the SP and HSA reports in parallel... ?Okay for two threads to call Add at the same time?
-        //TODO? Do multiple dates in parallel
-
-        private void Extract(IEnumerable<AmazonCampaign> campaigns, DateTime date)
-        {
-            var sums = ExtractSummaries(date);
-            var items = TransformSummaries(sums, campaigns, date);
-            if (ClearBeforeLoad)
-            {
-                RemoveOldData(date);
-            }
-
-            Add(items);
-        }
-
         public IEnumerable<AmazonCampaign> LoadCampaignsFromAmazonApi()
         {
             var spCampaigns = _amazonUtility.GetCampaigns(CampaignType.SponsoredProducts, clientId);
@@ -76,6 +41,64 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             var sbSums = _amazonUtility.ReportCampaigns(CampaignType.SponsoredBrands, date, clientId, false);
             var sums = spSums.Concat(sbSums);
             return sums.ToList();
+        }
+
+        protected override void Extract()
+        {
+            Logger.Info(accountId, "Extracting StrategySummaries from Amazon API for ({0}) from {1:d} to {2:d}",
+                clientId, dateRange.FromDate, dateRange.ToDate);
+
+            var campaigns = LoadCampaigns();
+            if (campaigns != null)
+            {
+                Extract(campaigns);
+            }
+
+            End();
+        }
+
+        private IEnumerable<AmazonCampaign> LoadCampaigns()
+        {
+            try
+            {
+                var campaigns = LoadCampaignsFromAmazonApi();
+                return campaigns;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(accountId, e);
+                return null;
+            }
+        }
+
+        private void Extract(IEnumerable<AmazonCampaign> campaigns)
+        {
+            foreach (var date in dateRange.Dates)
+            {
+                try
+                {
+                    Extract(campaigns, date);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(accountId, e);
+                }
+            }
+        }
+
+        //TODO? Request the SP and HSA reports in parallel... ?Okay for two threads to call Add at the same time?
+        //TODO? Do multiple dates in parallel
+
+        private void Extract(IEnumerable<AmazonCampaign> campaigns, DateTime date)
+        {
+            var sums = ExtractSummaries(date);
+            var items = TransformSummaries(sums, campaigns, date);
+            if (ClearBeforeLoad)
+            {
+                RemoveOldData(date);
+            }
+
+            Add(items);
         }
 
         private IEnumerable<StrategySummary> TransformSummaries(IEnumerable<AmazonDailySummary> dailyStats, IEnumerable<AmazonCampaign> campaigns, DateTime date)

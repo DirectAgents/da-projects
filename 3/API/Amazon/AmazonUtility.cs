@@ -78,14 +78,9 @@ namespace Amazon
             }
         }
 
-        private void LogError(string message, bool realException = true)
+        private void LogError(string message)
         {
             var updatedMessage = GetMessageInCorrectFormat(message);
-            if (realException)
-            {
-                throw new Exception(updatedMessage);
-            }
-
             if (logError == null)
             {
                 Console.WriteLine(updatedMessage);
@@ -102,7 +97,7 @@ namespace Amazon
             LogInfo(message);
         }
 
-        private T LogErrorIfException<T>(Func<T> getSomethingFunc, bool realException = false)
+        private T LogErrorIfException<T>(Func<T> getSomethingFunc)
             where T : class
         {
             try
@@ -111,7 +106,7 @@ namespace Amazon
             }
             catch (Exception x)
             {
-                LogError(x.Message, realException);
+                LogError(x.Message);
             }
 
             return null;
@@ -630,8 +625,7 @@ namespace Amazon
             var message = string.IsNullOrWhiteSpace(response.ErrorMessage)
                 ? response.Content
                 : response.ErrorMessage;
-            LogError(message, false);
-
+            LogError(message);
             return response;
         }
 
@@ -694,7 +688,7 @@ namespace Amazon
             }
             catch (Exception e)
             {
-                LogError(e.Message, false);
+                LogError(e.Message);
                 throw;
             }
         }
