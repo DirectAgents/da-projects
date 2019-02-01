@@ -16,7 +16,7 @@ using Amazon.Entities.HelperEntities;
 using Amazon.Entities.HelperEntities.DownloadInfoResponses;
 using Amazon.Entities.HelperEntities.PreparedDataResponses;
 using Amazon.Entities.Summaries;
-using CakeExtracter.Exceptions;
+using Amazon.Exceptions;
 
 namespace Amazon
 {
@@ -85,6 +85,7 @@ namespace Amazon
             {
                 throw new Exception(updatedMessage);
             }
+
             if (logError == null)
             {
                 Console.WriteLine(updatedMessage);
@@ -95,25 +96,13 @@ namespace Amazon
             }
         }
 
-        private string GetMessageInCorrectFormat(string message)
-        {
-            var updatedMessage = message.Replace('{', '\'').Replace('}', '\'');
-            return "[AmazonUtility] " + updatedMessage;
-        }
-
         private void LogInfo(string info, int retryNumber)
         {
             var message = GetAttemptMessage(info, retryNumber);
             LogInfo(message);
         }
 
-        private void LogError(string info, int retryNumber, Exception exception)
-        {
-            var message = GetAttemptMessage(info, retryNumber, exception.Message);
-            LogError(message, false);
-        }
-
-        private T LogErrorIfException<T>(Func<T> getSomethingFunc)
+        private T LogErrorIfException<T>(Func<T> getSomethingFunc, bool realException = false)
             where T : class
         {
             try
@@ -122,26 +111,21 @@ namespace Amazon
             }
             catch (Exception x)
             {
-                LogError(x.Message);
+                LogError(x.Message, realException);
             }
 
             return null;
         }
 
-        private void LogFailedRequest(string url, int retryNumber, Exception exception)
-        {
-            LogError($"URL response ({url}) failed", retryNumber, exception);
-        }
-
-        private void LogSuccessfulGeneration(ResponseDownloadInfo downloadInfo)
-        {
-            LogInfo($"Successful generation: {downloadInfo.Location}");
-        }
-
         private void LogWaiting<T>(string formattedMessageWithoutTime, TimeSpan timeSpan, int retryNumber, DelegateResult<IRestResponse<T>> response)
         {
-            var waitSeconds = timeSpan.TotalSeconds;
             var waitDetails = response.Exception == null ? response.Result.Content : response.Exception.Message;
+            LogWaiting(formattedMessageWithoutTime, timeSpan, retryNumber, waitDetails);
+        }
+
+        private void LogWaiting(string formattedMessageWithoutTime, TimeSpan timeSpan, int retryNumber, string waitDetails)
+        {
+            var waitSeconds = timeSpan.TotalSeconds;
             var message = $"{string.Format(formattedMessageWithoutTime, waitSeconds)}: {waitDetails}";
             LogInfo(message, retryNumber);
         }
@@ -150,6 +134,12 @@ namespace Amazon
         {
             var details = baseMessage == null ? string.Empty : $": {baseMessage}";
             return $"{info} (attempt - {retryNumber}){details}";
+        }
+
+        private string GetMessageInCorrectFormat(string message)
+        {
+            var updatedMessage = message.Replace('{', '\'').Replace('}', '\'');
+            return "[AmazonUtility] " + updatedMessage;
         }
 
         #endregion
@@ -391,48 +381,53 @@ namespace Amazon
             return GetReportInfo<AmazonAsinSummaries>(EntitesType.Asins, campaignType, param, profileId);
         }
 
-        private List<T> GetEntities<T>(EntitesType entitiesType, CampaignType campaignType = CampaignType.Empty, Dictionary<string, string> parameters = null, string profileId = null)
+        private List<T> GetEntities<T>(EntitesType entitiesType, CampaignType campaignType = CampaignType.Empty,
+            Dictionary<string, string> parameters = null, string profileId = null)
         {
-            parameters = parameters ?? new Dictionary<string, string>();
-            var data = GetEntityList(() => GetEntityList<T>(entitiesType, campaignType, parameters, profileId));
-            return data;
+            try
+            {
+                parameters = parameters ?? new Dictionary<string, string>();
+                var data = GetEntityList<T>(entitiesType, campaignType, parameters, profileId);
+                return data;
+            }
+            catch (Exception e)
+            {
+                throw new ExtractDataException(e, "load items", entitiesType, campaignType, profileId);
+            }
         }
 
         /// Use it instead of the GetEntities method when you need to extract a large number of objects (more than 15,000) and you know about it.
-        private List<TEntity> GetSnapshotInfo<TEntity>(EntitesType entitiesType, CampaignType campaignType, string profileId)
+        private List<TEntity> GetSnapshotInfo<TEntity>(EntitesType entitiesType, CampaignType campaignType,
+            string profileId)
         {
-            var submitReportResponse = SubmitSnapshot(campaignType, entitiesType, profileId);
-            if (submitReportResponse != null)
+            var snapshotName = GetSnapshotName(entitiesType, campaignType);
+            try
             {
-                var snapshotName = GetSnapshotName(entitiesType, campaignType);
-                var json = DownloadPreparedData<ReportResponseDownloadInfo>("snapshots", submitReportResponse.SnapshotId, profileId, snapshotName);
-                if (json != null)
-                {
-                    var data = GetEntityList(() => JsonConvert.DeserializeObject<List<TEntity>>(json));
-                    return data;
-                }
+                var submitReportResponse = SubmitSnapshot(campaignType, entitiesType, profileId);
+                var data = DownloadPreparedData<ReportResponseDownloadInfo, TEntity>("snapshots", submitReportResponse.SnapshotId, profileId, snapshotName);
+                return data;
             }
-
-            return new List<TEntity>();
+            catch (Exception e)
+            {
+                throw new ExtractDataException(e, snapshotName, entitiesType, campaignType, profileId);
+            }
         }
 
         private List<TStat> GetReportInfo<TStat>(EntitesType reportType, CampaignType campaignType, AmazonApiReportParams parameters, string profileId)
-            where TStat: AmazonDailySummary
+            where TStat : AmazonDailySummary
         {
-            var submitReportResponse = SubmitReport(parameters, campaignType, reportType, profileId);
-            if (submitReportResponse != null)
+            var reportName = GetReportName(parameters.reportDate, reportType, campaignType);
+            try
             {
-                var reportName = GetReportName(parameters.reportDate, reportType, campaignType);
-                var json = DownloadPreparedData<ReportResponseDownloadInfo>("reports", submitReportResponse.ReportId, profileId, reportName);
-                if (json != null)
-                {
-                    var data = GetEntityList(() => JsonConvert.DeserializeObject<List<TStat>>(json));
-                    SetCampaignType(data, campaignType);
-                    return data;
-                }
+                var submitReportResponse = SubmitReport(parameters, campaignType, reportType, profileId);
+                var data = DownloadPreparedData<ReportResponseDownloadInfo, TStat>("reports", submitReportResponse.ReportId, profileId, reportName);
+                SetCampaignType(data, campaignType);
+                return data;
             }
-
-            return new List<TStat>();
+            catch (Exception e)
+            {
+                throw new ExtractDataException(e, reportName, reportType, campaignType, profileId);
+            }
         }
 
         private string GetReportName(string date, EntitesType entitiesType, CampaignType campaignType)
@@ -443,12 +438,6 @@ namespace Amazon
         private string GetSnapshotName(EntitesType entitiesType, CampaignType campaignType)
         {
             return $"AmazonSnapshot_{ReportPrefix}_{entitiesType}_{campaignType}";
-        }
-
-        private List<T> GetEntityList<T>(Func<List<T>> getListFunc)
-        {
-            var list = LogErrorIfException(getListFunc);
-            return list ?? new List<T>();
         }
 
         private void SetCampaignType<TStat>(List<TStat> summaries, CampaignType campaignType)
@@ -535,7 +524,17 @@ namespace Amazon
             return response;
         }
 
-        private string DownloadPreparedData<T>(string dataType, string dataId, string profileId, string reportName)
+        private List<TEntity> DownloadPreparedData<T, TEntity>(string dataType, string dataId, string profileId, string reportName)
+            where T : ResponseDownloadInfo, new()
+        {
+            var url = GetPreparedDataUrl<T>(dataType, dataId, profileId);
+            var responseStream = GetResponseStream(url, profileId);
+            var json = ReadJsonFromStream(responseStream, reportName);
+            var data = JsonConvert.DeserializeObject<List<TEntity>>(json);
+            return data;
+        }
+
+        private string GetPreparedDataUrl<T>(string dataType, string dataId, string profileId)
             where T : ResponseDownloadInfo, new()
         {
             var response = RequestPreparedDataManyTimes<T>(dataType, dataId, profileId);
@@ -544,9 +543,9 @@ namespace Amazon
             {
                 ThrowGenerationTimedOutException(response);
             }
-            LogSuccessfulGeneration(downloadInfo);
-            var json = GetJsonStringFromDownloadFile(downloadInfo.Location, profileId, reportName);
-            return json;
+
+            LogInfo($"Successful generation: {downloadInfo.Location}");
+            return downloadInfo.Location;
         }
 
         private IRestResponse<T> RequestPreparedDataManyTimes<T>(string dataType, string dataId, string profileId)
@@ -572,17 +571,16 @@ namespace Amazon
             return restResponse;
         }
 
-        private string GetJsonStringFromDownloadFile(string url, string profileId, string reportName)
+        private Stream GetResponseStream(string url, string profileId)
         {
             var response = GetResponseManyTimes(url, profileId);
             var responseStream = response?.GetResponseStream();
             if (responseStream == null)
             {
-                return null;
+                ThrowGenerationTimedOutException(response);
             }
 
-            var json = LogErrorIfException(() => ReadJsonFromStream(responseStream, reportName));
-            return json;
+            return responseStream;
         }
 
         private string ReadJsonFromStream(Stream responseStream, string reportName)
@@ -607,7 +605,8 @@ namespace Amazon
             var response = LogErrorIfException(() =>
                 Policy
                     .Handle<Exception>()
-                    .Retry(failedRequestAttemptsNumber, (exception, retryCount, context) => LogFailedRequest(url, retryCount, exception))
+                    .WaitAndRetry(failedRequestAttemptsNumber, GetTimeSpanForWaiting, (exception, timeSpan, retryCount, context) =>
+                        LogWaiting($"Waiting {{0}} seconds because URL ({url}) response failed.", timeSpan, retryCount, exception.Message))
                     .Execute(() => GetHttpResponse(url, profileId))
             );
             return response;
@@ -645,25 +644,12 @@ namespace Amazon
             }
 
             var response = Policy
-                .HandleResult<IRestResponse<T>>(resp => resp.StatusCode == HttpStatusCode.Unauthorized)
+                .Handle<Exception>()
+                .OrResult<IRestResponse<T>>(resp => resp.StatusCode == HttpStatusCode.Unauthorized)
                 .Retry(unauthorizedAttemptsNumber, (exception, retryCount, context) => UpdateAccessTokenForRequest(restRequest))
                 .Execute(() => GetRestResponse<T>(restClient, restRequest, isPostMethod));
 
-            if (IsRequestProcessed(response))
-            {
-                response = Policy
-                    .HandleResult<IRestResponse<T>>(IsRequestProcessed)
-                    .WaitAndRetry(waitAttemptsNumber, GetTimeSpanForWaiting, (exception, timeSpan, retryCount, context) =>
-                        LogWaiting("API calls quota exceeded. Waiting {0} seconds.", timeSpan, retryCount, exception))
-                    .Execute(() => GetRestResponse<T>(restClient, restRequest, isPostMethod));
-            }
-
             return response;
-        }
-
-        private bool IsRequestProcessed(IRestResponse response)
-        {
-            return response.StatusDescription != null && response.StatusDescription.Contains("IN_PROGRESS");
         }
 
         private IRestRequest CreateRestRequest(string resourceUri, string profileId)
@@ -737,6 +723,12 @@ namespace Amazon
         private void ThrowGenerationTimedOutException(IRestResponse response)
         {
             var exceptionMessage = GetMessageInCorrectFormat(response.Content);
+            throw new ReportGenerationTimedOutException(exceptionMessage);
+        }
+
+        private void ThrowGenerationTimedOutException(HttpWebResponse response)
+        {
+            var exceptionMessage = GetMessageInCorrectFormat(response.ToString());
             throw new ReportGenerationTimedOutException(exceptionMessage);
         }
 
