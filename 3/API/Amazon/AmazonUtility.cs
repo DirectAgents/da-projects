@@ -687,8 +687,16 @@ namespace Amazon
 
         private HttpWebResponse GetHttpResponse(WebRequest request)
         {
-            var response = (HttpWebResponse)request.GetResponse();
-            return response;
+            try
+            {
+                var response = (HttpWebResponse) request.GetResponse();
+                return response;
+            }
+            catch (Exception e)
+            {
+                LogError(e.Message, false);
+                throw;
+            }
         }
 
         private void UpdateAccessTokenForRequest(IRestRequest request)
