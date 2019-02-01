@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CakeExtracter.Exceptions
+namespace Amazon.Exceptions
 {
     public class ReportGenerationTimedOutException : Exception
     {

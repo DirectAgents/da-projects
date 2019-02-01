@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Amazon.Helpers;
-using CakeExtracter.Exceptions;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 
@@ -17,7 +16,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
     //Campaign / Strategy
     public class AmazonApiCampaignSummaryExtractor : BaseAmazonExtractor<StrategySummary>
     {
-        private string[] campaignTypesFromApi =
+        private readonly string[] campaignTypesFromApi =
         {
             AmazonApiHelper.GetCampaignTypeName(CampaignType.SponsoredProducts),
             AmazonApiHelper.GetCampaignTypeName(CampaignType.SponsoredBrands)
@@ -26,41 +25,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         public AmazonApiCampaignSummaryExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, bool clearBeforeLoad, string campaignFilter = null, string campaignFilterOut = null)
             : base(amazonUtility, dateRange, account, clearBeforeLoad, campaignFilter, campaignFilterOut)
         { }
-
-        protected override void Extract()
-        {
-            Logger.Info(accountId, "Extracting StrategySummaries from Amazon API for ({0}) from {1:d} to {2:d}",
-                clientId, dateRange.FromDate, dateRange.ToDate);
-            
-            var campaigns = LoadCampaignsFromAmazonApi();
-            foreach (var date in dateRange.Dates)
-            {
-                try
-                {
-                    Extract(campaigns, date);
-                }
-                catch (ReportGenerationTimedOutException e)
-                {
-                    Logger.Error(accountId, e);
-                }
-            }
-            End();
-        }
-
-        //TODO? Request the SP and HSA reports in parallel... ?Okay for two threads to call Add at the same time?
-        //TODO? Do multiple dates in parallel
-
-        private void Extract(IEnumerable<AmazonCampaign> campaigns, DateTime date)
-        {
-            var sums = ExtractSummaries(date);
-            var items = TransformSummaries(sums, campaigns, date);
-            if (ClearBeforeLoad)
-            {
-                RemoveOldData(date);
-            }
-
-            Add(items);
-        }
 
         public IEnumerable<AmazonCampaign> LoadCampaignsFromAmazonApi()
         {
@@ -77,6 +41,64 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             var sbSums = _amazonUtility.ReportCampaigns(CampaignType.SponsoredBrands, date, clientId, false);
             var sums = spSums.Concat(sbSums);
             return sums.ToList();
+        }
+
+        protected override void Extract()
+        {
+            Logger.Info(accountId, "Extracting StrategySummaries from Amazon API for ({0}) from {1:d} to {2:d}",
+                clientId, dateRange.FromDate, dateRange.ToDate);
+
+            var campaigns = LoadCampaigns();
+            if (campaigns != null)
+            {
+                Extract(campaigns);
+            }
+
+            End();
+        }
+
+        private IEnumerable<AmazonCampaign> LoadCampaigns()
+        {
+            try
+            {
+                var campaigns = LoadCampaignsFromAmazonApi();
+                return campaigns;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(accountId, e);
+                return null;
+            }
+        }
+
+        private void Extract(IEnumerable<AmazonCampaign> campaigns)
+        {
+            foreach (var date in dateRange.Dates)
+            {
+                try
+                {
+                    Extract(campaigns, date);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(accountId, e);
+                }
+            }
+        }
+
+        //TODO? Request the SP and HSA reports in parallel... ?Okay for two threads to call Add at the same time?
+        //TODO? Do multiple dates in parallel
+
+        private void Extract(IEnumerable<AmazonCampaign> campaigns, DateTime date)
+        {
+            var sums = ExtractSummaries(date);
+            var items = TransformSummaries(sums, campaigns, date);
+            if (ClearBeforeLoad)
+            {
+                RemoveOldData(date);
+            }
+
+            Add(items);
         }
 
         private IEnumerable<StrategySummary> TransformSummaries(IEnumerable<AmazonDailySummary> dailyStats, IEnumerable<AmazonCampaign> campaigns, DateTime date)
