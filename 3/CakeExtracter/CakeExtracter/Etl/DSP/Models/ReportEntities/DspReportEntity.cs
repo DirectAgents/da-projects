@@ -1,5 +1,6 @@
 ﻿namespace CakeExtracter.Etl.DSP.Models
 {
+    /// <summary>Dsp report entity. Base entity for report dimensions.</summary>
     internal class DspReportEntity
     {
         public string ReportId { get; set; }

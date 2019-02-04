@@ -10,6 +10,7 @@ using System.ComponentModel.Composition;
 
 namespace CakeExtracter.Commands.DA
 {
+    /// <summary>DSP stat syncer job command.</summary>
     [Export(typeof(ConsoleCommand))]
     public class DASyncAmazonDspStats : ConsoleCommand
     {
@@ -20,6 +21,8 @@ namespace CakeExtracter.Commands.DA
 
         private int? AccountId { get; set; }
 
+        /// <summary>Initializes a new instance of the <see cref="DASyncAmazonDspStats"/> class.
+        /// Initialises cmd params values.</summary>
         public DASyncAmazonDspStats()
         {
             IsCommand("daSyncAmazonDspStats", "Synch Amazon DSP Stats");
@@ -30,15 +33,27 @@ namespace CakeExtracter.Commands.DA
             accountsProvider = new AmazonDspAccountsProvider();
         }
 
+        /// <summary>Resets command properties.</summary>
         public override void ResetProperties()
         {
             AccountId = null;
         }
 
+        /// <summary>Executes the command logic.</summary>
+        /// <param name="remainingArguments">The remaining arguments.</param>
+        /// <returns>Execution status.</returns>
         public override int Execute(string[] remainingArguments)
         {
-            ProcessDailyEtl();
-            return 1;
+            try
+            {
+                ProcessDailyEtl();
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return 0;
+            }
         }
 
         private void ProcessDailyEtl()

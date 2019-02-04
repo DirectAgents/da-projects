@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace CakeExtracter.Etl.DSP.Models
 {
+    /// <summary>Summary entity for account daily data.</summary>
     internal class AmazonDspDailyReportData
     {
         public DateTime Date { get; set; }

@@ -4,8 +4,15 @@ using System;
 
 namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
 {
+    /// <summary>Processes metrics related operations.</summary>
     internal class DspItemMetricManager
     {
+        /// <summary>Gets the metric values entity from report entity.</summary>
+        /// <typeparam name="TMetricValues">The type of the metric values.</typeparam>
+        /// <param name="reportEntity">The report entity.</param>
+        /// <param name="dbEntityId">The database entity identifier.</param>
+        /// <param name="date">The metrics date.</param>
+        /// <returns></returns>
         public TMetricValues GetMetricValuesEntities<TMetricValues>(DspReportEntity reportEntity, int dbEntityId, DateTime date)
             where TMetricValues : DspMetricValues, new()
         {
@@ -26,6 +33,11 @@ namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
             return AreAllMetricValuesNullable(metricValues) ? null : metricValues;
         }
 
+        /// <summary>  Checkes whether the metric values are equivalent.</summary>
+        /// <typeparam name="TMetricValues">The type of the metric values.</typeparam>
+        /// <param name="existing">The existing metric values.</param>
+        /// <param name="actual">The actual metric values.</param>
+        /// <returns>Indicator whether metric values equivalent.</returns>
         public bool AreMetricValuesEquivalent<TMetricValues>(TMetricValues existing, TMetricValues actual)
             where TMetricValues : DspMetricValues
         {
@@ -42,6 +54,10 @@ namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
                 existing.PurchaseClicks == actual.PurchaseClicks;
         }
 
+        /// <summary>  Checkes whether all metric values are nullable.</summary>
+        /// <typeparam name="TMetricValues">The type of the metric values.</typeparam>
+        /// <param name="metricValues">The metric values.</param>
+        /// <returns>Indicator whether all metric values are nullable.</returns>
         public bool AreAllMetricValuesNullable<TMetricValues>(TMetricValues metricValues)
             where TMetricValues : DspMetricValues
         {

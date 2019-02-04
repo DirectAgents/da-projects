@@ -1,5 +1,6 @@
 ﻿namespace CakeExtracter.Etl.DSP.Models
 {
+    /// <summary>Dsp report entity for line items data.</summary>
     internal class ReportLineItem : DspReportEntity
     {
         public string AdvertiserReportId { get; set; }

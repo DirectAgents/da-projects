@@ -1,5 +1,6 @@
 ﻿namespace DirectAgents.Domain.Entities.CPProg.DSP
 {
+    /// <summary>Database dsp creative entity</summary>
     public class DspCreative : DspDbEntity
     {
         public string AdvertiserReportId { get; set; }

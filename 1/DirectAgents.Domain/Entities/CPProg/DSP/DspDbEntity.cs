@@ -2,6 +2,7 @@
 
 namespace DirectAgents.Domain.Entities.CPProg.DSP
 {
+    /// <summary>Base DSP database entity.</summary>
     public class DspDbEntity
     {
         public int Id { get; set; }

@@ -1,5 +1,6 @@
 ﻿namespace DirectAgents.Domain.Entities.CPProg.DSP
 {
+    /// <summary>Database dsp lineitem entity.</summary>
     public class DspLineItem : DspDbEntity
     {
         public string AdvertiserReportId { get; set; }

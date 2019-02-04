@@ -1,5 +1,6 @@
 ﻿namespace DirectAgents.Domain.Entities.CPProg.DSP.SummaryMetrics
 {
+    /// <summary>Base dsp metric values entity.</summary>
     public class DspMetricValues : BaseDailyMetricValues
     {
         public decimal TotalCost { get; set; }

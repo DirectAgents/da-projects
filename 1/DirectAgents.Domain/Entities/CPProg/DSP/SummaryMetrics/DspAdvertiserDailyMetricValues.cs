@@ -2,6 +2,7 @@
 
 namespace DirectAgents.Domain.Entities.CPProg.DSP.SummaryMetrics
 {
+    /// <summary>Dsp advertiser metric values.</summary>
     public class DspAdvertiserDailyMetricValues : DspMetricValues
     {
         [ForeignKey("EntityId")]

@@ -7,12 +7,17 @@ using System.Linq;
 
 namespace CakeExtracter.Etl.DSP.Loaders
 {
+    /// <summary>Dsp data loader.</summary>
     internal class AmazonDspDataLoader
     {
+        /// <summary>Initializes a new instance of the <see cref="AmazonDspDataLoader"/> class.</summary>
         public AmazonDspDataLoader()
         {
         }
 
+        /// <summary>Loads the dsp data.</summary>
+        /// <param name="accountsReportData">The accounts report data.
+        /// (included data for all advertisers for all dates)</param>
         public void LoadData(List<AmazonDspAccauntReportData> accountsReportData)
         {
             try
@@ -50,7 +55,7 @@ namespace CakeExtracter.Etl.DSP.Loaders
             {
                 advertisersDataLoader.UpdateAccountSummaryMetricsDataForDate(dailyData.Advertisers, dbAdvertisers, dailyData.Date, account);
             });
-            Logger.Info("Amazon VCD, Finished loading advertisers data. Loaded metrics of {0} advertisers", dbAdvertisers.Count);
+            Logger.Info("DSP, Finished loading advertisers data. Loaded metrics of {0} advertisers", dbAdvertisers.Count);
         }
 
         private void LoadOrdersData(ExtAccount account, List<AmazonDspDailyReportData> accountDailyData)
@@ -62,7 +67,7 @@ namespace CakeExtracter.Etl.DSP.Loaders
             {
                 ordersDataLoader.UpdateAccountSummaryMetricsDataForDate(dailyData.Orders, dbOrders, dailyData.Date, account);
             });
-            Logger.Info("Amazon VCD, Finished loading orders data. Loaded metrics of {0} orders", dbOrders.Count);
+            Logger.Info("DSP, Finished loading orders data. Loaded metrics of {0} orders", dbOrders.Count);
         }
 
         private void LoadLineItemsData(ExtAccount account, List<AmazonDspDailyReportData> accountDailyData)
@@ -74,7 +79,7 @@ namespace CakeExtracter.Etl.DSP.Loaders
             {
                 lineitemsDataLoader.UpdateAccountSummaryMetricsDataForDate(dailyData.LineItems, dbLineItems, dailyData.Date, account);
             });
-            Logger.Info("Amazon VCD, Finished loading lineitems data. Loaded metrics of {0} lineitems", dbLineItems.Count);
+            Logger.Info("DSP, Finished loading lineitems data. Loaded metrics of {0} lineitems", dbLineItems.Count);
         }
 
         private void LoadCreativesData(ExtAccount account, List<AmazonDspDailyReportData> accountDailyData)
@@ -86,7 +91,7 @@ namespace CakeExtracter.Etl.DSP.Loaders
             {
                 creativesDataLoader.UpdateAccountSummaryMetricsDataForDate(dailyData.Creatives, dbCreatives, dailyData.Date, account);
             });
-            Logger.Info("Amazon VCD, Finished loading lineitems data. Loaded metrics of {0} lineitems", dbCreatives.Count);
+            Logger.Info("DSP, Finished loading lineitems data. Loaded metrics of {0} lineitems", dbCreatives.Count);
         }
     }
 }

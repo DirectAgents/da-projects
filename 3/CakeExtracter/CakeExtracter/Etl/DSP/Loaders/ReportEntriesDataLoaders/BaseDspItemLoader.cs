@@ -10,6 +10,10 @@ using System.Linq;
 
 namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
 {
+    /// <summary>Base class for loading dsp report info into database</summary>
+    /// <typeparam name="TReportEntity">The type of the report entity.</typeparam>
+    /// <typeparam name="TDbEntity">The type of the database entity.</typeparam>
+    /// <typeparam name="TMetricValues">The type of the metric values entity.</typeparam>
     internal abstract class BaseDspItemLoader<TReportEntity, TDbEntity, TMetricValues>
         where TReportEntity : DspReportEntity
         where TDbEntity : DspDbEntity
@@ -17,18 +21,23 @@ namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
     {
         DspItemMetricManager metricManager;
 
+        /// <summary>Initializes a new instance of the <see cref="BaseDspItemLoader{TReportEntity, TDbEntity, TMetricValues}"/> class.</summary>
         public BaseDspItemLoader()
         {
             metricManager = new DspItemMetricManager();
         }
 
+        /// <summary>Ensures the DSP entities in data base.</summary>
+        /// <param name="reportEntities">The report entities to propcess.</param>
+        /// <param name="extAccount">The ext account entity.</param>
+        /// <returns>List of ensured dsp entities from database</returns>
         public List<TDbEntity> EnsureDspEntitiesInDataBase(List<TReportEntity> reportEntities, ExtAccount extAccount)
         {
             using (var dbContext = new ClientPortalProgContext())
             {
                 var itemsToBeAdded = new List<TDbEntity>();
                 var allItems = new List<TDbEntity>();
-                var dbSet = GetVendorDbSet(dbContext);
+                var dbSet = GetDspEntityDbSet(dbContext);
                 var allAccountdbEntities = dbSet.Where(db => db.AccountId == extAccount.Id).ToList();
                 var uniqueReportEntries = GetUniqueReportEntities(reportEntities);
                 uniqueReportEntries.ForEach(reportEntity =>
@@ -47,6 +56,11 @@ namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
             }
         }
 
+        /// <summary>Updates the account summary metrics data for passed date.</summary>
+        /// <param name="reportEntities">The report entities.</param>
+        /// <param name="dbEntities">The database entities.</param>
+        /// <param name="date">The date.</param>
+        /// <param name="account">The account.</param>
         public void UpdateAccountSummaryMetricsDataForDate(List<TReportEntity> reportEntities,
             List<TDbEntity> dbEntities, DateTime date, ExtAccount account)
         {
@@ -60,20 +74,37 @@ namespace CakeExtracter.Etl.DSP.Loaders.ReportEntriesDataLoaders
             }
         }
 
+        /// <summary>Gets the entity mapping predicate.</summary>
+        /// <param name="reportEntity">The report entity.</param>
+        /// <param name="extAccount">The ext account.</param>
+        /// <returns>Predicate function for finding corresponding db entity by report entity</returns>
         protected virtual Func<TDbEntity, bool> GetEntityMappingPredicate(TReportEntity reportEntity, ExtAccount extAccount)
         {
             return dbEntity => dbEntity.ReportId == reportEntity.ReportId && dbEntity.AccountId == extAccount.Id;
         }
 
+        /// <summary>Gets the unique report entities. Removes duplicated report entites.</summary>
+        /// <param name="allReportEntities">All report entities.</param>
+        /// <returns>Unique report entites</returns>
         protected virtual List<TReportEntity> GetUniqueReportEntities(List<TReportEntity> allReportEntities)
         {
             return allReportEntities.GroupBy(rep => rep.ReportId, (key, gr) => gr.First()).ToList();
         }
 
+        /// <summary>Maps the report entity to database entity.</summary>
+        /// <param name="reportEntity">The report entity.</param>
+        /// <param name="extAccount">The ext account.</param>
+        /// <returns>Initialised db entity based on report entity.</returns>
         protected abstract TDbEntity MapReportEntityToDbEntity(TReportEntity reportEntity, ExtAccount extAccount);
 
-        protected abstract DbSet<TDbEntity> GetVendorDbSet(ClientPortalProgContext dbContext);
+        /// <summary>Gets the DSP entity database set.</summary>
+        /// <param name="dbContext">The database context.</param>
+        /// <returns>Dsp entities dbset</returns>
+        protected abstract DbSet<TDbEntity> GetDspEntityDbSet(ClientPortalProgContext dbContext);
 
+        /// <summary>Gets the metric values database set.</summary>
+        /// <param name="dbContext">The database context.</param>
+        /// <returns>Dsp entites metric values dpbset</returns>
         protected abstract DbSet<TMetricValues> GetMetricValuesDbSet(ClientPortalProgContext dbContext);
 
         private void MergeDailySummariesAndUpdateInDataBase(DbSet<TMetricValues> dbSet, ClientPortalProgContext dbContext,

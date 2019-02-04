@@ -6,8 +6,13 @@ using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.DSP.Extractors.Composer
 {
+    /// <summary>DSP report data composer.</summary>
     internal class DspReportDataComposer
     {
+        /// <summary>Composes the report data. Group by accounts and report dimensions.</summary>
+        /// <param name="reportEntries">The report entries.</param>
+        /// <param name="accounts">The accounts.</param>
+        /// <returns></returns>
         public List<AmazonDspAccauntReportData> ComposeReportData(List<CreativeReportRow> reportEntries, List<ExtAccount> accounts)
         {
             var accountsData = reportEntries.GroupBy(re => re.AdvertiserName, (key, gr) =>

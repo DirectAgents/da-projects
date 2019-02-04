@@ -2,6 +2,7 @@
 
 namespace CakeExtracter.Etl.DSP.Extractors.Parser.Models
 {
+    /// <summary>Row entity of dsp report.</summary>
     internal class CreativeReportRow
     {
         public DateTime Date { get; set; }

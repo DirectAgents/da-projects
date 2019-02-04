@@ -9,6 +9,7 @@ using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.DSP.Extractors
 {
+    /// <summary>Dsp data extractor. Downloads and extracts dsp report data.</summary>
     internal class AmazonDspExtractor
     {
         private readonly AmazonDspConfigurationProvider configurationProvider;
@@ -16,6 +17,8 @@ namespace CakeExtracter.Etl.DSP.Extractors
         private readonly DspReportCsvParser reportsParser;
         private readonly DspReportDataComposer reportComposer;
 
+        /// <summary>Initializes a new instance of the <see cref="AmazonDspExtractor"/> class.</summary>
+        /// <param name="configurationProvider">The configuration provider.</param>
         public AmazonDspExtractor(AmazonDspConfigurationProvider configurationProvider)
         {
             this.configurationProvider = configurationProvider;
@@ -25,6 +28,10 @@ namespace CakeExtracter.Etl.DSP.Extractors
             reportComposer = new DspReportDataComposer();
         }
 
+        /// <summary>Extracts the daily data.</summary>
+        /// <param name="accounts">The accounts.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception">Can't compose report data. DSP report content is null or empty</exception>
         public List<AmazonDspAccauntReportData> ExtractDailyData(List<ExtAccount> accounts)
         {
             var reportName = configurationProvider.GetDspReportName();

@@ -3,8 +3,10 @@ using CsvHelper.Configuration;
 
 namespace CakeExtracter.Etl.DSP.Extractors.Parser.ParsingConverters
 {
+    /// <summary>DSP report csv convertion rules.</summary>
     internal sealed class CreativeReportEntityRowMap : CsvClassMap<CreativeReportRow>
     {
+        /// <summary>Initializes a new instance of the <see cref="CreativeReportEntityRowMap"/> class.</summary>
         public CreativeReportEntityRowMap()
         {
             Map(m => m.Date);
