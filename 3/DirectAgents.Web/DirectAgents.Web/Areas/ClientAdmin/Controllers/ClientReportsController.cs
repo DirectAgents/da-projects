@@ -73,8 +73,8 @@ namespace DirectAgents.Web.Areas.ClientAdmin.Controllers
         }
         private void SetupForEdit()
         {
-            ViewBag.SearchProfiles = cpSearchRepo.SearchProfiles().OrderBy(x => x.SearchProfileName);
-            ViewBag.ProgCampaigns = cpProgRepo.Campaigns().OrderBy(x => x.Advertiser.Name).ThenBy(x => x.Name);
+            ViewBag.SearchProfiles = cpSearchRepo.SearchProfiles().OrderBy(x => x.SearchProfileName).ToList();
+            ViewBag.ProgCampaigns = cpProgRepo.Campaigns().OrderBy(x => x.Advertiser.Name).ThenBy(x => x.Name).ToList();
         }
 
     }
