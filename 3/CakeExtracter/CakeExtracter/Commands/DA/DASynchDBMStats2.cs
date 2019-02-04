@@ -112,9 +112,9 @@ namespace CakeExtracter.Commands
             loaderThread.Join();
         }
 
-        private static void DoETL_Strategy(int accountId, ColumnMapping colMapping, StreamReader streamReader)
+        private static void DoETL_Strategy(int accountId, ColumnMapping colMapping, StreamReader streamReader, DateRange dateRange)
         {
-            var extractor = new DbmStrategyCsvExtractor(colMapping, streamReader);
+            var extractor = new DbmStrategyCsvExtractor(dateRange, colMapping, streamReader);
             var loader = new TDStrategySummaryLoader(accountId);
             var extractorThread = extractor.Start();
             var loaderThread = loader.Start(extractor);
@@ -132,7 +132,7 @@ namespace CakeExtracter.Commands
 
             var colMapping = GetInitializedAccountColMapping(account);
             var streamReader = TDDailySummaryExtracter.CreateStreamReaderFromUrl(reportUrl);
-            DoETL_Strategy(account.Id, colMapping, streamReader);
+            DoETL_Strategy(account.Id, colMapping, streamReader, dateRange);
 
             Logger.Info("Creating daily stats from strategy stats.");
             DoETL_DailyFromStrategyInDatabase(account.Id, dateRange);

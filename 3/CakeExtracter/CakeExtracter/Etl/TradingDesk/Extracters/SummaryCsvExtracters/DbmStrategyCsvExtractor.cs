@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using CakeExtracter.Common;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters
@@ -8,8 +11,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters
     {
         private const string FirstColumnHeaderName = "Date";
 
-        public DbmStrategyCsvExtractor(ColumnMapping columnMapping, StreamReader streamReader = null, string csvFilePath = null) : base(columnMapping, streamReader, csvFilePath)
+        private readonly DateRange dateRange;
+
+        public DbmStrategyCsvExtractor(DateRange dateRange, ColumnMapping columnMapping,
+            StreamReader streamReader = null, string csvFilePath = null) 
+            : base(columnMapping, streamReader, csvFilePath)
         {
+            this.dateRange = dateRange;
         }
 
         protected override bool ShouldReaderSkipRecord(string[] fields)
@@ -18,6 +26,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters
             var isFirstColumnIsNotDateTime = ShouldReaderSkipRecordNotDateTime(fields[0]);
 
             return isSkipRecord || isFirstColumnIsNotDateTime;
+        }
+
+        protected override IEnumerable<StrategySummary> GroupAndEnumerate(List<StrategySummary> csvRows)
+        {
+            var validRows = csvRows.Where(x => dateRange.IsInRange(x.Date)).ToList();
+            return base.GroupAndEnumerate(validRows);
         }
 
         /// <summary>
