@@ -17,20 +17,13 @@ namespace CakeExtractor.SeleniumApplication.Commands
     internal class SyncAmazonPdaCommand : BaseAmazonSeleniumCommand
     {
         private readonly PdaCommandConfigurationManager configurationManager;
-        public bool FromRequest { get; set; }
-
+        
         public SyncAmazonPdaCommand()
         {
             configurationManager = new PdaCommandConfigurationManager();
         }
 
-        public override string CommandName
-        {
-            get
-            {
-                return "SyncAmazonPdaCommand";
-            }
-        }
+        public override string CommandName => "SyncAmazonPdaCommand";
 
         public override void PrepareCommandEnvironment()
         {
@@ -41,8 +34,8 @@ namespace CakeExtractor.SeleniumApplication.Commands
         {
             var statsType = new StatsTypeAgg(configurationManager.GetStatsTypeString());
             var dateRange = GetDateRange();
-            var fromDatabase = configurationManager.GetFromDatabase();
-
+            var fromDatabase = configurationManager.GetFromDatabaseFlag();
+            var fromRequest = configurationManager.GetFromRequestFlag();
 
             AmazonPdaExtractor.SetAvailableProfileUrls();
             Logger.Info("Amazon ETL (PDA Campaigns). DateRange: {0}.", dateRange);
@@ -50,7 +43,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
             var accounts = GetAccounts(configurationManager.GetAccountId(), configurationManager.GetDisabledOnlyFlag());
             foreach (var account in accounts)
             {
-                DoEtls(account, dateRange, statsType, fromDatabase, FromRequest);
+                DoEtls(account, dateRange, statsType, fromDatabase, fromRequest);
             }
 
             Logger.Info("Amazon ETL (PDA Campaigns) has been finished.");

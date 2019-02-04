@@ -38,7 +38,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
             this.campaignFilterOut = campaignFilterOut;
         }
 
-        protected List<TStat> FilterByCampaigns<TStat>(IEnumerable<TStat> reportEntities, Func<TStat, string> getFilterProp)
+        protected IEnumerable<TStat> FilterByCampaigns<TStat>(IEnumerable<TStat> reportEntities, Func<TStat, string> getFilterProp)
         {
             if (!string.IsNullOrEmpty(campaignFilter))
             {
