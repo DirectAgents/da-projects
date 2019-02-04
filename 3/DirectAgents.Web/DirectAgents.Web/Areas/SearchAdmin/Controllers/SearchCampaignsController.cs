@@ -14,14 +14,17 @@ namespace DirectAgents.Web.Areas.SearchAdmin.Controllers
 
         public ActionResult Index(int? spId, int? saId)
         {
-            var searchCamps = cpSearchRepo.SearchCampaigns(spId: spId, searchAccountId: saId);
-            return View(searchCamps.OrderBy(x => x.SearchAccountId).ThenBy(x => x.SearchCampaignName));
+            var searchCamps = cpSearchRepo.SearchCampaigns(spId: spId, searchAccountId: saId)
+                .OrderBy(x => x.SearchAccountId).ThenBy(x => x.SearchCampaignName).ToList();
+            return View(searchCamps);
         }
 
         public ActionResult IndexGauge(int? spId, int? saId, string channel)
         {
-            var searchCamps = cpSearchRepo.SearchCampaigns(spId: spId, searchAccountId: saId, channel: channel, includeGauges: true);
-            return View(searchCamps.OrderBy(x => x.SearchAccountId).ThenBy(x => x.SearchCampaignName));
+            var searchCamps = cpSearchRepo
+                .SearchCampaigns(spId: spId, searchAccountId: saId, channel: channel, includeGauges: true)
+                .OrderBy(x => x.SearchAccountId).ThenBy(x => x.SearchCampaignName).ToList();
+            return View(searchCamps);
         }
 
         [HttpGet]

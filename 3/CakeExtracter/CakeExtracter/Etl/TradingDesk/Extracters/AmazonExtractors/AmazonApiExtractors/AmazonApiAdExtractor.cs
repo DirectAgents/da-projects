@@ -5,7 +5,6 @@ using Amazon;
 using Amazon.Entities.Summaries;
 using Amazon.Enums;
 using CakeExtracter.Common;
-using CakeExtracter.Exceptions;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
@@ -32,7 +31,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
                 {
                     Extract(date);
                 }
-                catch (ReportGenerationTimedOutException e)
+                catch (Exception e)
                 {
                     Logger.Error(accountId, e);
                 }
