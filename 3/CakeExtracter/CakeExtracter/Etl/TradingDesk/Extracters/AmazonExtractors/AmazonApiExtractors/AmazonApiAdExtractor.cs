@@ -24,11 +24,19 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         {
             Logger.Info(accountId, "Extracting TDadSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 clientId, dateRange.FromDate, dateRange.ToDate);
-            
+
             foreach (var date in dateRange.Dates)
             {
-                Extract(date);
+                try
+                {
+                    Extract(date);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(accountId, e);
+                }
             }
+
             End();
         }
 
@@ -61,15 +69,19 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         private IEnumerable<TDadSummary> TransformSummaries(IEnumerable<AmazonAdDailySummary> adStats,
             IEnumerable<AmazonAsinSummaries> asinStats, DateTime date)
         {
-            var notEmptyStats = adStats.Where(x => !x.AllZeros()).ToList();
-            var summaries = notEmptyStats.Select(stat => CreateSummary(stat, asinStats, date));
-            return summaries.ToList();
+            var summaries = adStats.Select(stat => CreateSummary(stat, asinStats, date));
+            var notEmptySummaries = summaries.Where(x => x != null && !x.AllZeros()).ToList();
+            return notEmptySummaries;
         }
 
         private TDadSummary CreateSummary(AmazonAdDailySummary adStat, IEnumerable<AmazonAsinSummaries> asinStats, DateTime date)
         {
-            var sum = CreateSummary(adStat, date);
             var asinStatsForProduct = asinStats.Where(x => x.Asin == adStat.Asin && x.AdGroupId == adStat.AdGroupId).ToList();
+            if (!asinStatsForProduct.Any() && adStat.AllZeros())
+            {
+                return null;
+            }
+            var sum = CreateSummary(adStat, date);
             AddAsinMetrics(sum, asinStatsForProduct);
             return sum;
         }
@@ -104,20 +116,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
                 ExternalId = value
             };
             ids.Add(id);
-        }
-
-        private void AddAsinMetrics(TDadSummary summary, IEnumerable<AmazonAsinSummaries> asinStats)
-        {
-            var sumMetrics = summary.InitialMetrics.ToList();
-            AddMetric(sumMetrics, AttributedMetricType.attributedSalesOtherSKU, AttributedMetricDaysInterval.Days1, summary.Date, asinStats.Sum(x => x.AttributedSales1DOtherSku));
-            AddMetric(sumMetrics, AttributedMetricType.attributedSalesOtherSKU, AttributedMetricDaysInterval.Days7, summary.Date, asinStats.Sum(x => x.AttributedSales7DOtherSku));
-            AddMetric(sumMetrics, AttributedMetricType.attributedSalesOtherSKU, AttributedMetricDaysInterval.Days14, summary.Date, asinStats.Sum(x => x.AttributedSales14DOtherSku));
-            AddMetric(sumMetrics, AttributedMetricType.attributedSalesOtherSKU, AttributedMetricDaysInterval.Days30, summary.Date, asinStats.Sum(x => x.AttributedSales30DOtherSku));
-            AddMetric(sumMetrics, AttributedMetricType.attributedUnitsOrderedOtherSKU, AttributedMetricDaysInterval.Days1, summary.Date, asinStats.Sum(x => x.AttributedSales1DOtherSku));
-            AddMetric(sumMetrics, AttributedMetricType.attributedUnitsOrderedOtherSKU, AttributedMetricDaysInterval.Days7, summary.Date, asinStats.Sum(x => x.AttributedSales7DOtherSku));
-            AddMetric(sumMetrics, AttributedMetricType.attributedUnitsOrderedOtherSKU, AttributedMetricDaysInterval.Days14, summary.Date, asinStats.Sum(x => x.AttributedSales14DOtherSku));
-            AddMetric(sumMetrics, AttributedMetricType.attributedUnitsOrderedOtherSKU, AttributedMetricDaysInterval.Days30, summary.Date, asinStats.Sum(x => x.AttributedSales30DOtherSku));
-            summary.InitialMetrics = sumMetrics;
         }
 
         private void RemoveOldData(DateTime date)

@@ -2,7 +2,6 @@
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 
 namespace DirectAgents.Domain.Concrete
@@ -17,30 +16,21 @@ namespace DirectAgents.Domain.Concrete
             }
         }
 
-        public IEnumerable<ExtAccount> GetNotDisabledAccounts(string platformCode)
+        public IEnumerable<ExtAccount> GetAccountsWithFilledExternalIdByPlatformCode(string platformCode, bool disabledOnly)
         {
-            using (var db = new ClientPortalProgContext())
-            {
-                var accounts = GetAccounts(db, platformCode, false);
-                return accounts.ToList();
-            }
-        }
-
-        public IEnumerable<ExtAccount> GetAccounts(string platformCode, bool disabledOnly)
-        {
-            using (var db = new ClientPortalProgContext())
-            {
-                var accounts = GetAccounts(db, platformCode, disabledOnly);
-                return accounts.ToList();
-            }
-        }
-
-        private IQueryable<ExtAccount> GetAccounts(ClientPortalProgContext db, string platformCode, bool disabledOnly)
-        {
-            var accounts = db.ExtAccounts.Where(x => x.Platform.Code == platformCode);
+            var accounts = GetAccountsByPlatformCode(platformCode, disabledOnly);
             var accountsWithExternalId = accounts.Where(x => x.ExternalId != null && x.ExternalId != string.Empty);
-            var accountsWithStatus = accountsWithExternalId.Where(x => x.Disabled == disabledOnly);
-            return accountsWithStatus;
+            return accountsWithExternalId.ToList();
+        }
+
+        public IEnumerable<ExtAccount> GetAccountsByPlatformCode(string platformCode, bool disabledOnly = false)
+        {
+            using (var db = new ClientPortalProgContext())
+            {
+                var accounts = db.ExtAccounts.Where(x => x.Platform.Code == platformCode);
+                var accountsWithStatus = accounts.Where(x => x.Disabled == disabledOnly);
+                return accountsWithStatus.ToList();
+            }
         }
     }
 }

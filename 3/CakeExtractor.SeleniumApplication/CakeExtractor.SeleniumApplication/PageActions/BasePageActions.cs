@@ -13,9 +13,18 @@ namespace CakeExtractor.SeleniumApplication.PageActions
 
         protected readonly IWebDriver Driver;
 
-        public BasePageActions(IWebDriver driver)
+        protected readonly TimeSpan timeout;
+
+        public BasePageActions(IWebDriver driver, int timeoutMinutes)
         {
             Driver = driver;
+            timeout = TimeSpan.FromMinutes(timeoutMinutes);
+        }
+
+        public void NavigateToUrl(string url, By waitingElement)
+        {
+            Logger.Info("Go to URL [{0}]...", url);
+            NavigateToUrl(url, waitingElement, timeout);
         }
 
         public void NavigateToUrl(string url, By waitingElement, TimeSpan timeout)
@@ -43,6 +52,11 @@ namespace CakeExtractor.SeleniumApplication.PageActions
             {
                 throw new Exception($"Could not navigate to URL [{url}]: {e.Message}", e);
             }
+        }
+
+        public string GetCurrentWindowUrl()
+        {
+            return Driver.Url;
         }
 
         public void SendKeys(By byElement, string keys)
@@ -193,7 +207,6 @@ namespace CakeExtractor.SeleniumApplication.PageActions
         {
             try
             {
-
                 var wait = new WebDriverWait(Driver, waitCount);
                 wait.Until(driver => IsElementPresent(loaderElement));
                 if (isElementExistInDOM)
@@ -218,6 +231,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions
 
         protected void ClickOnTabItem(By listElement, By itemElement)
         {
+            WaitElementClickable(itemElement, timeout);
             Driver.FindElement(listElement).FindElement(itemElement).Click();
         }
     }

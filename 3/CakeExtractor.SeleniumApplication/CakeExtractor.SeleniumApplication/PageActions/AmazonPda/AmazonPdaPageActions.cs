@@ -8,47 +8,12 @@ using CakeExtractor.SeleniumApplication.Models;
 
 namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
 {
-    public class AmazonPdaPageActions : BasePageActions
+    public class AmazonPdaPageActions : BaseAmazonPageActions
     {
-        private readonly TimeSpan timeout;
         private readonly TimeSpan timeoutThread = TimeSpan.FromSeconds(3);
 
-        public AmazonPdaPageActions(IWebDriver driver, int timeoutMinutes) : base(driver)
+        public AmazonPdaPageActions(IWebDriver driver, int timeoutMinutes) : base(driver,timeoutMinutes)
         {
-            timeout = TimeSpan.FromMinutes(timeoutMinutes);
-        }
-
-        public void NavigateToUrl(string url, By waitingElement)
-        {
-            Logger.Info("Go to URL [{0}]...", url);
-            NavigateToUrl(url, waitingElement, timeout);
-        }
-
-        public void LoginProcess(string email, string password)
-        {
-            Logger.Info("Login with e-mail [{0}]...", email);
-            try
-            {
-                LoginWithEmailAndPassword(email, password);
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Login failed [{email}]: {e.Message}", e);
-            }
-        }
-
-        public void LoginByPassword(string password)
-        {
-            Logger.Info("Need to repeat the password...");
-            try
-            {
-                LoginWithPassword(password);
-                WaitElementClickable(AmazonPdaPageObjects.FilterByButton, timeout);
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Could not to repeat password: {e.Message}", e);
-            }
         }
 
         public Dictionary<string, string> GetAvailableProfileUrls()
@@ -68,9 +33,9 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
                 if (!IsElementPresent(AmazonPdaPageObjects.FilterResetButton))
                 {
                     SelectFilters();
-                }
 
-                WaitLoading(AmazonPdaPageObjects.FilterLoader, timeout);
+                    WaitLoading(AmazonPdaPageObjects.FilterLoader, timeout);
+                }
             }
             catch (Exception e)
             {
@@ -241,63 +206,6 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
             WaitElementClickable(AmazonPdaPageObjects.FilterPdaValues, timeout);
             ClickElement(AmazonPdaPageObjects.FilterPdaValues);
             ClickElement(AmazonPdaPageObjects.SaveSearchAndFilterButton);
-        }
-
-        private void LoginWithEmailAndPassword(string email, string password)
-        {
-            EnterEmail(email);
-            LoginWithPassword(password);
-        }
-
-        private void LoginWithPassword(string password)
-        {
-            EnterPassword(password);
-            ClickElement(AmazonPdaPageObjects.RememberMeCheckBox);
-            ClickElement(AmazonPdaPageObjects.LoginButton);
-            IsPasswordCorrect();
-            WaitSecurityCodeIfNecessary();
-        }
-
-        private void IsPasswordCorrect()
-        {
-            if (!IsElementPresent(AmazonPdaPageObjects.IncorrectPasswordSpan))
-            {
-                return;
-            }
-
-            var exc = new Exception("Password is incorrect");
-            Logger.Error(exc);
-        }
-
-        private void EnterEmail(string email)
-        {
-            ClickElement(AmazonPdaPageObjects.LoginEmailInput);
-            SendKeys(AmazonPdaPageObjects.LoginEmailInput, email);
-        }
-
-        private void EnterPassword(string password)
-        {
-            ClickElement(AmazonPdaPageObjects.LoginPassInput);
-            SendKeys(AmazonPdaPageObjects.LoginPassInput, password);
-        }
-
-        private void WaitSecurityCodeIfNecessary()
-        {
-            if (!IsElementPresent(AmazonPdaPageObjects.CodeInput))
-            {
-                return;
-            }
-
-            WaitElementClickable(AmazonPdaPageObjects.CodeInput, timeout);
-            ClickElement(AmazonPdaPageObjects.DontAskCodeCheckBox);
-            ClickElement(AmazonPdaPageObjects.CodeInput);
-            WaitSecurityCode();
-        }
-
-        private void WaitSecurityCode()
-        {
-            Logger.Info("Waiting the code...");
-            WaitLoading(AmazonPdaPageObjects.CodeInput, timeout);
         }
     }
 }

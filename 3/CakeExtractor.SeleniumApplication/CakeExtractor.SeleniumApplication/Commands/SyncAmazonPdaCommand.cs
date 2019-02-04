@@ -1,102 +1,64 @@
 ﻿using CakeExtracter.Commands;
 using CakeExtracter.Common;
-using CakeExtractor.SeleniumApplication.Jobs.ExtractAmazonPda;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using CakeExtracter;
 using CakeExtracter.Etl;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
-using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
+using CakeExtractor.SeleniumApplication.Configuration.Pda;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors;
-using ConsoleCommand = ManyConsole.ConsoleCommand;
 using Platform = DirectAgents.Domain.Entities.CPProg.Platform;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
-    internal class SyncAmazonPdaCommand : ConsoleCommand
+    internal class SyncAmazonPdaCommand : BaseAmazonSeleniumCommand
     {
-        public int? AccountId { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-        public int? DaysAgoToStart { get; set; }
-        public string StatsType { get; set; }
-        public bool DisabledOnly { get; set; }
-        public bool FromDatabase { get; set; }
+        private readonly PdaCommandConfigurationManager configurationManager;
         public bool FromRequest { get; set; }
-
-        private const int DefaultDaysAgoValue = 41;
-
-        private int executionNumber;
-        private JobScheduleModel scheduling;
 
         public SyncAmazonPdaCommand()
         {
-            IsCommand("SyncAmazonPdaCommand", "Synch Amazon PDA Stats");
-            HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
-            HasOption("s|startDate=", "Start Date (default is from config or 'daysAgo')", c => StartDate = DateTime.Parse(c));
-            HasOption("e|endDate=", "End Date (default is from config or yesterday)", c => EndDate = DateTime.Parse(c));
-            HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default is from config or {DefaultDaysAgoValue})", c => DaysAgoToStart = c);
-            HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
-            HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
-            HasOption<bool>("z|fromDatabase=", "Retrieve from database instead of using Selenium (default = false, where implemented - Daily)", c => FromDatabase = c);
-            HasOption<bool>("r|fromRequest=", "Retrieve data using http requests instead of parsing pages (default = false, where implemented - Strategy)", c => FromRequest = c);
+            configurationManager = new PdaCommandConfigurationManager();
         }
 
-        public override int Run(string[] remainingArguments)
+        public override string CommandName
+        {
+            get
+            {
+                return "SyncAmazonPdaCommand";
+            }
+        }
+
+        public override void PrepareCommandEnvironment()
         {
             AmazonPdaExtractor.PrepareExtractor();
-            InitializeScheduledJob();
-            AlwaysSleep();
-            return 0;
         }
 
-        public void Execute()
+        public override void Run()
         {
-            executionNumber++;
-            var statsType = new StatsTypeAgg(StatsType);
+            var statsType = new StatsTypeAgg(configurationManager.GetStatsTypeString());
             var dateRange = GetDateRange();
-            var fromDatabase = FromDatabase || Properties.Settings.Default.FromDatabase;
+            var fromDatabase = configurationManager.GetFromDatabase();
 
-            Logger.Info("Amazon ETL (PDA Campaigns), execution number - {0}. DateRange: {1}.", executionNumber, dateRange);
 
             AmazonPdaExtractor.SetAvailableProfileUrls();
-            var accounts = GetAccounts();
+            Logger.Info("Amazon ETL (PDA Campaigns). DateRange: {0}.", dateRange);
+
+            var accounts = GetAccounts(configurationManager.GetAccountId(), configurationManager.GetDisabledOnlyFlag());
             foreach (var account in accounts)
             {
                 DoEtls(account, dateRange, statsType, fromDatabase, FromRequest);
             }
 
             Logger.Info("Amazon ETL (PDA Campaigns) has been finished.");
-            LogScheduledJobStartTime();
-        }
-
-        private void InitializeScheduledJob()
-        {
-            scheduling = new JobScheduleModel
-            {
-                DaysInterval = Properties.Settings.Default.ExtractionIntervalsInDays,
-                StartExtractionTime = Properties.Settings.Default.StartExtractionDateTime
-            };
-            ExtractAmazonPdaScheduler.Start(this, scheduling);
-            LogScheduledJobStartTime();
-        }
-
-        private static void AlwaysSleep()
-        {
-            while (true)
-            {
-                Thread.Sleep(int.MaxValue);
-            }
         }
 
         private static void DoEtls(ExtAccount account, DateRange dateRange, StatsTypeAgg statsType, bool fromDatabase, bool fromRequests)
         {
             Logger.Info(account.Id, "Commencing ETL for Amazon account ({0}) {1}", account.Id, account.Name);
-
             try
             {
                 if (statsType.Daily && !fromDatabase)
@@ -181,71 +143,23 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
         private DateRange GetDateRange()
         {
-            var daysAgo = GetDaysAgo();
-            var startDate = GetStartDate(daysAgo);
-            var endDate = GetEndDate();
+            var daysAgo = configurationManager.GetDaysAgo();
+            var startDate = configurationManager.GetStartDate(daysAgo);
+            var endDate = configurationManager.GetEndDate();
             var dateRange = new DateRange(startDate, endDate);
             return dateRange;
         }
 
-        private void LogScheduledJobStartTime()
-        {
-            var nextTime = scheduling.StartExtractionTime;
-            while (nextTime < DateTime.Now)
-            {
-                nextTime = nextTime.AddDays(scheduling.DaysInterval);
-            }
-
-            Logger.Info("Waiting for the scheduled job to extract PDA statistics: next run time - {0} (UTC)...", nextTime.ToUniversalTime());
-        }
-
-        private int GetDaysAgo()
-        {
-            try
-            {
-                return DaysAgoToStart ?? Properties.Settings.Default.DaysAgo;
-            }
-            catch (Exception)
-            {
-                return DefaultDaysAgoValue;
-            }
-        }
-
-        private DateTime GetStartDate(int daysAgo)
-        {
-            if (StartDate.HasValue)
-            {
-                return StartDate.Value;
-            }
-
-            return Properties.Settings.Default.StartDate == default(DateTime)
-                ? DateTime.Today.AddDays(-daysAgo)
-                : Properties.Settings.Default.StartDate;
-        }
-
-        private DateTime GetEndDate()
-        {
-            if (EndDate.HasValue)
-            {
-                return EndDate.Value;
-            }
-
-            return Properties.Settings.Default.EndDate == default(DateTime)
-                ? DateTime.Today.AddDays(-1)
-                : Properties.Settings.Default.EndDate;
-        }
-
-        private IEnumerable<ExtAccount> GetAccounts()
+        private IEnumerable<ExtAccount> GetAccounts(int? accountId, bool disabledOnly)
         {
             var repository = new PlatformAccountRepository();
-            if (!AccountId.HasValue)
+            if (!accountId.HasValue)
             {
-                var accounts = repository.GetAccounts(Platform.Code_Amazon, DisabledOnly);
+                var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_Amazon, disabledOnly);
                 return accounts;
             }
-
-            var account = repository.GetAccount(AccountId.Value);
-            return new[] {account};
+            var account = repository.GetAccount(accountId.Value);
+            return new[] { account };
         }
     }
 }

@@ -26,7 +26,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
         /// <param name="amazonUtility">The amazon utility.</param>
         /// <param name="date">The date.</param>
         /// <param name="clientId">The client identifier.</param>
-        public BaseAmazonExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account,
+        protected BaseAmazonExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account,
             bool clearBeforeLoad = false, string campaignFilter = null, string campaignFilterOut = null)
         {
             _amazonUtility = amazonUtility;
@@ -76,6 +76,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
             stats.InitialMetrics = GetMetrics(amazonStats, date);
         }
 
+        protected static void AddAsinMetrics(T stats, IEnumerable<AmazonAsinSummaries> asinStats)
+        {
+            var metrics = stats.InitialMetrics.ToList();
+            var asinMetrics = GetAsinMetrics(asinStats, stats.Date);
+            metrics.AddRange(asinMetrics);
+            stats.InitialMetrics = metrics;
+        }
+
         protected static void AddMetric(List<SummaryMetric> metrics, string metricName, DateTime date, decimal metricValue)
         {
             AddMetric(metrics, metricName, null, date, metricValue);
@@ -86,7 +94,21 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
             AddMetric(metrics, type.ToString(), (int)daysInterval, date, metricValue);
         }
 
-        private static List<SummaryMetric> GetMetrics(IEnumerable<AmazonStatSummary> amazonStats, DateTime date)
+        private static IEnumerable<SummaryMetric> GetAsinMetrics(IEnumerable<AmazonAsinSummaries> asinStats, DateTime date)
+        {
+            var metrics = new List<SummaryMetric>();
+            AddMetric(metrics, AttributedMetricType.attributedSalesOtherSKU, AttributedMetricDaysInterval.Days1, date, asinStats.Sum(x => x.AttributedSales1DOtherSku));
+            AddMetric(metrics, AttributedMetricType.attributedSalesOtherSKU, AttributedMetricDaysInterval.Days7, date, asinStats.Sum(x => x.AttributedSales7DOtherSku));
+            AddMetric(metrics, AttributedMetricType.attributedSalesOtherSKU, AttributedMetricDaysInterval.Days14, date, asinStats.Sum(x => x.AttributedSales14DOtherSku));
+            AddMetric(metrics, AttributedMetricType.attributedSalesOtherSKU, AttributedMetricDaysInterval.Days30, date, asinStats.Sum(x => x.AttributedSales30DOtherSku));
+            AddMetric(metrics, AttributedMetricType.attributedUnitsOrderedOtherSKU, AttributedMetricDaysInterval.Days1, date, asinStats.Sum(x => x.AttributedUnitsOrdered1DOtherSku));
+            AddMetric(metrics, AttributedMetricType.attributedUnitsOrderedOtherSKU, AttributedMetricDaysInterval.Days7, date, asinStats.Sum(x => x.AttributedUnitsOrdered7DOtherSku));
+            AddMetric(metrics, AttributedMetricType.attributedUnitsOrderedOtherSKU, AttributedMetricDaysInterval.Days14, date, asinStats.Sum(x => x.AttributedUnitsOrdered14DOtherSku));
+            AddMetric(metrics, AttributedMetricType.attributedUnitsOrderedOtherSKU, AttributedMetricDaysInterval.Days30, date, asinStats.Sum(x => x.AttributedUnitsOrdered30DOtherSku));
+            return metrics;
+        }
+
+        private static IEnumerable<SummaryMetric> GetMetrics(IEnumerable<AmazonStatSummary> amazonStats, DateTime date)
         {
             var metrics = new List<SummaryMetric>();
             AddMetric(metrics, AttributedMetricType.attributedConversions, AttributedMetricDaysInterval.Days1, date, amazonStats.Sum(x => x.AttributedConversions1D));

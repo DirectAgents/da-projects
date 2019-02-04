@@ -134,11 +134,9 @@ namespace BingAds
         // (returns filepath of csv)
         public string GetReport_DailySummaries(long accountId, DateTime startDate, DateTime endDate, bool forShoppingCampaigns = false)
         {
-            ReportRequest reportRequest;
-            if (forShoppingCampaigns)
-                reportRequest = GetReportRequest_ProductDimension(accountId, startDate, endDate);
-            else
-                reportRequest = GetReportRequest_ConversionPerformance(accountId, startDate, endDate);
+            var reportRequest = forShoppingCampaigns
+                ? GetReportRequest_ProductDimension(accountId, startDate, endDate)
+                : GetReportRequest_CampaignPerformance(accountId, startDate, endDate);
 
             return SendReportRequest(accountId, reportRequest);
         }
@@ -160,79 +158,75 @@ namespace BingAds
             return task.Result;
         }
 
-        private ReportRequest GetReportRequest_ConversionPerformance(long accountId, DateTime startDate, DateTime endDate)
+        private static void InitCommonFieldsInReportRequest(ReportRequest reportRequest, string reportName)
         {
-            var reportRequest = new ConversionPerformanceReportRequest
+            reportRequest.Format = ReportFormat.Csv;
+            reportRequest.ReportName = reportName;
+            reportRequest.ReturnOnlyCompleteData = true;
+        }
+
+        private static ReportTime GetReportTime(DateTime startDate, DateTime endDate)
+        {
+            var time = new ReportTime
             {
-                Format = ReportFormat.Csv,
-                ReportName = "Conversion Performance Report",
-                ReturnOnlyCompleteData = true,
+                CustomDateRangeStart = ConvertToDate(startDate),
+                CustomDateRangeEnd = ConvertToDate(endDate)
+            };
+            return time;
+        }
+
+        private static Date ConvertToDate(DateTime dateTime)
+        {
+            var date = new Date
+            {
+                Year = dateTime.Year,
+                Month = dateTime.Month,
+                Day = dateTime.Day
+            };
+            return date;
+        }
+
+        private ReportRequest GetReportRequest_CampaignPerformance(long accountId, DateTime startDate, DateTime endDate)
+        {
+            var reportRequest = new CampaignPerformanceReportRequest
+            {
                 Aggregation = ReportAggregation.Daily,
-                Scope = new AccountThroughAdGroupReportScope
+                Time = GetReportTime(startDate, endDate),
+                Scope = new AccountThroughCampaignReportScope
                 {
                     AccountIds = new[] { accountId },
-                    AdGroups = null,
+                    //AdGroups = null,
                     Campaigns = null
                 },
-                Time = new ReportTime
-                {
-                    CustomDateRangeStart = new Date
-                    {
-                        Year = startDate.Year,
-                        Month = startDate.Month,
-                        Day = startDate.Day
-                    },
-                    CustomDateRangeEnd = new Date
-                    {
-                        Year = endDate.Year,
-                        Month = endDate.Month,
-                        Day = endDate.Day
-                    }
-                },
                 Columns = new[] {
-                    ConversionPerformanceReportColumn.TimePeriod,
-                    ConversionPerformanceReportColumn.Impressions,
-                    ConversionPerformanceReportColumn.Clicks,
-                    ConversionPerformanceReportColumn.Conversions,
-                    ConversionPerformanceReportColumn.Spend,
-                    ConversionPerformanceReportColumn.Revenue,
-                    ConversionPerformanceReportColumn.AccountId,
-                    ConversionPerformanceReportColumn.AccountName,
-                    ConversionPerformanceReportColumn.AccountNumber,
-                    ConversionPerformanceReportColumn.CampaignId,
-                    ConversionPerformanceReportColumn.CampaignName
+                    CampaignPerformanceReportColumn.TimePeriod,
+                    CampaignPerformanceReportColumn.Impressions,
+                    CampaignPerformanceReportColumn.Clicks,
+                    CampaignPerformanceReportColumn.Conversions,
+                    CampaignPerformanceReportColumn.Spend,
+                    CampaignPerformanceReportColumn.Revenue,
+                    CampaignPerformanceReportColumn.AccountId,
+                    CampaignPerformanceReportColumn.AccountName,
+                    CampaignPerformanceReportColumn.AccountNumber,
+                    CampaignPerformanceReportColumn.CampaignId,
+                    CampaignPerformanceReportColumn.CampaignName
                 }
             };
+            InitCommonFieldsInReportRequest(reportRequest, "Campaign Performance Report");
             return reportRequest;
         }
+
         private ReportRequest GetReportRequest_ProductDimension(long accountId, DateTime startDate, DateTime endDate)
         {
             var reportRequest = new ProductDimensionPerformanceReportRequest
             {
-                Format = ReportFormat.Csv,
-                ReportName = "Product Dimension Performance Report",
-                ReturnOnlyCompleteData = true,
                 Aggregation = ReportAggregation.Daily,
+                Time = GetReportTime(startDate, endDate),
                 Scope = new AccountThroughAdGroupReportScope
                 {
                     AccountIds = new[] { accountId },
                     AdGroups = null,
                     Campaigns = null
-                },
-                Time = new ReportTime
-                {
-                    CustomDateRangeStart = new Date
-                    {
-                        Year = startDate.Year,
-                        Month = startDate.Month,
-                        Day = startDate.Day
-                    },
-                    CustomDateRangeEnd = new Date
-                    {
-                        Year = endDate.Year,
-                        Month = endDate.Month,
-                        Day = endDate.Day
-                    }
                 },
                 Columns = new[] {
                     ProductDimensionPerformanceReportColumn.MerchantProductId,
@@ -249,36 +243,20 @@ namespace BingAds
                     ProductDimensionPerformanceReportColumn.CampaignName
                 }
             };
+            InitCommonFieldsInReportRequest(reportRequest, "Product Dimension Performance Report");
             return reportRequest;
         }
         private ReportRequest GetReportRequest_Goals(long accountId, DateTime startDate, DateTime endDate)
         {
             var reportRequest = new GoalsAndFunnelsReportRequest
             {
-                Format = ReportFormat.Csv,
-                ReportName = "Goals And Funnels Report",
-                ReturnOnlyCompleteData = true,
                 Aggregation = ReportAggregation.Daily,
+                Time = GetReportTime(startDate, endDate),
                 Scope = new AccountThroughAdGroupReportScope
                 {
                     AccountIds = new[] { accountId },
                     AdGroups = null,
                     Campaigns = null
-                },
-                Time = new ReportTime
-                {
-                    CustomDateRangeStart = new Date
-                    {
-                        Year = startDate.Year,
-                        Month = startDate.Month,
-                        Day = startDate.Day
-                    },
-                    CustomDateRangeEnd = new Date
-                    {
-                        Year = endDate.Year,
-                        Month = endDate.Month,
-                        Day = endDate.Day
-                    }
                 },
                 Columns = new[] {
                     GoalsAndFunnelsReportColumn.TimePeriod,
@@ -294,6 +272,7 @@ namespace BingAds
                     GoalsAndFunnelsReportColumn.CampaignName
                 }
             };
+            InitCommonFieldsInReportRequest(reportRequest, "Goals And Funnels Report");
             return reportRequest;
         }
 
@@ -320,9 +299,9 @@ namespace BingAds
                 // If the call succeeds, stop polling. If the call or 
                 // download fails, the call throws a fault.
 
-                for (int i = 0; i < 6 * 10; i++) // 6 * # of minutes
+                for (var i = 0; i < 6 * 10; i++) // 6 * # of minutes
                 {
-                    LogInfo(String.Format("Will check if the report is ready in {0} seconds...", waitTime.Seconds));
+                    LogInfo($"Will check if the report is ready in {waitTime.Seconds} seconds...");
                     Thread.Sleep(waitTime);
 
                     // PollGenerateReport helper method calls the corresponding Bing Ads service operation 
@@ -339,60 +318,50 @@ namespace BingAds
 
                 if (reportRequestStatus != null)
                 {
-                    if (reportRequestStatus.Status == ReportRequestStatusType.Success)
+                    switch (reportRequestStatus.Status)
                     {
-                        string reportDownloadUrl = reportRequestStatus.ReportDownloadUrl;
-                        string zipfileLocation = _folder + "\\" + _filename;
-
-                        LogInfo(String.Format("Downloading from {0}.", reportDownloadUrl));
-                        DownloadFile(reportDownloadUrl, zipfileLocation);
-                        LogInfo(String.Format("The report was written to {0}.", zipfileLocation));
-                        
-                        ZipFile.ExtractToDirectory(zipfileLocation, _folder);
-
-                        if (reportRequest.Format == ReportFormat.Csv)
-                            filepath = _folder + "\\" + reportRequestId + ".csv";
-                        //TODO: handle other formats
-                    }
-                    else if (reportRequestStatus.Status == ReportRequestStatusType.Error)
-                    {
-                        LogInfo("The request failed. Try requesting the report later. If the request continues to fail, contact support.");
-                    }
-                    else  // Pending
-                    {
-                        LogInfo(String.Format("The request is taking longer than expected. Save the report ID ({0}) and try again later.", reportRequestId));
+                        case ReportRequestStatusType.Success:
+                            filepath = ExtractReportByLocalPath(reportRequestStatus.ReportDownloadUrl, reportRequest.Format, reportRequestId);
+                            break;
+                        case ReportRequestStatusType.Error:
+                            LogError("The request failed. Try requesting the report later. If the request continues to fail, contact support.");
+                            break;
+                        // Pending
+                        default:
+                            LogError($"The request is taking longer than expected. Save the report ID ({reportRequestId}) and try again later.");
+                            break;
                     }
                 }
             }
             // Catch authentication exceptions
             catch (OAuthTokenRequestException ex)
             {
-                LogInfo(string.Format("Couldn't get OAuth tokens. Error: {0}. Description: {1}", ex.Details.Error, ex.Details.Description));
+                LogError($"Couldn't get OAuth tokens. Error: {ex.Details.Error}. Description: {ex.Details.Description}");
             }
             // Catch Reporting service exceptions
             catch (FaultException<Microsoft.BingAds.V12.Reporting.AdApiFaultDetail> ex)
             {
-                LogInfo(string.Join("; ", ex.Detail.Errors.Select(error => string.Format("{0}: {1}", error.Code, error.Message))));
+                LogError(string.Join("; ", ex.Detail.Errors.Select(error => $"{error.Code}: {error.Message}")));
             }
             catch (FaultException<Microsoft.BingAds.V12.Reporting.ApiFaultDetail> ex)
             {
-                LogInfo(string.Join("; ", ex.Detail.OperationErrors.Select(error => string.Format("{0}: {1}", error.Code, error.Message))));
-                LogInfo(string.Join("; ", ex.Detail.BatchErrors.Select(error => string.Format("{0}: {1}", error.Code, error.Message))));
+                LogError(string.Join("; ", ex.Detail.OperationErrors.Select(error => $"{error.Code}: {error.Message}")));
+                LogError(string.Join("; ", ex.Detail.BatchErrors.Select(error => $"{error.Code}: {error.Message}")));
             }
             catch (WebException ex)
             {
-                LogInfo(ex.Message);
-
-                if (ex.Response != null)
-                    LogInfo("HTTP status code: " + ((HttpWebResponse)ex.Response).StatusCode);
+                var message = ex.Response != null
+                    ? ex.Message + "\nHTTP status code: " + ((HttpWebResponse) ex.Response).StatusCode
+                    : ex.Message;
+                LogError(message);
             }
             catch (IOException ex)
             {
-                LogInfo(ex.Message);
+                LogError(ex.Message);
             }
             catch (Exception ex)
             {
-                LogInfo(ex.Message);
+                LogError(ex.Message);
             }
             return filepath;
         }
@@ -419,6 +388,26 @@ namespace BingAds
             };
 
             return (await _service.CallAsync((s, r) => s.PollGenerateReportAsync(r), request)).ReportRequestStatus;
+        }
+
+        private string ExtractReportByLocalPath(string reportDownloadUrl, ReportFormat? reportFormat, string reportRequestId)
+        {
+            if (string.IsNullOrEmpty(reportDownloadUrl))
+            {
+                LogInfo("Report URL is empty!");
+                return null;
+            }
+
+            var zipFileLocation = _folder + "\\" + _filename;
+            LogInfo($"Downloading from {reportDownloadUrl}.");
+            DownloadFile(reportDownloadUrl, zipFileLocation);
+            LogInfo($"The report was written to {zipFileLocation}.");
+            ZipFile.ExtractToDirectory(zipFileLocation, _folder);
+
+            //TODO: handle other formats
+            return reportFormat == ReportFormat.Csv
+                ? _folder + "\\" + reportRequestId + ".csv"
+                : null;
         }
 
         static void DownloadFile(string reportDownloadUrl, string downloadPath)

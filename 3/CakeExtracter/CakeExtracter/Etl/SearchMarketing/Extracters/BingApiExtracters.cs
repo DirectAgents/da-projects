@@ -45,11 +45,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             if (filepath == null)
                 yield break;
 
-            IEnumerable<BingRow> bingRows;
-            if (forShoppingCampaigns)
-                bingRows = GroupAndEnumerateBingRows(filepath, throwOnMissingField: false);
-            else
-                bingRows = BingExtracterBase.EnumerateRowsGeneric<BingRow>(filepath, throwOnMissingField: true);
+            var bingRows = forShoppingCampaigns
+                ? GroupAndEnumerateBingRows(filepath, throwOnMissingField: false)
+                : EnumerateRowsGeneric<BingRow>(filepath, throwOnMissingField: true);
 
             foreach (var row in EnumerateRowsAsDictionaries(bingRows))
                 yield return row;

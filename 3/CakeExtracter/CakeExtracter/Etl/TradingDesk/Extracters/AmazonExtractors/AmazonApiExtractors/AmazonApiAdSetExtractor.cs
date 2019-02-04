@@ -22,11 +22,19 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         {
             Logger.Info(accountId, "Extracting AdSetSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 clientId, dateRange.FromDate, dateRange.ToDate);
-            
+
             foreach (var date in dateRange.Dates)
             {
-                Extract(date);
+                try
+                {
+                    Extract(date);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(accountId, e);
+                }
             }
+
             End();
         }
 
