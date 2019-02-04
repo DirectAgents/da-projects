@@ -37,9 +37,9 @@ namespace CakeExtractor.SeleniumApplication.Commands
             var fromDatabase = configurationManager.GetFromDatabaseFlag();
             var fromRequest = configurationManager.GetFromRequestFlag();
 
-            AmazonPdaExtractor.SetAvailableProfileUrls();
             Logger.Info("Amazon ETL (PDA Campaigns). DateRange: {0}.", dateRange);
-
+            AmazonPdaExtractor.SetAvailableProfileUrls();
+            
             var accounts = GetAccounts(configurationManager.GetAccountId(), configurationManager.GetDisabledOnlyFlag());
             foreach (var account in accounts)
             {

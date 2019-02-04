@@ -70,7 +70,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
                     pageActions.IsElementPresent(AmazonPdaPageObjects.LoginPassInput))
                 {
                     // need to repeat the password
-                    pageActions.LoginByPassword(authorizationModel.Password);
+                    pageActions.LoginByPassword(authorizationModel.Password, AmazonPdaPageObjects.FilterByButton);
                 }
                 SetAvailableProfiles();
             }
@@ -267,13 +267,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             {
                 var url = GetAvailableProfileUrl(account.Name);
                 pageActions.NavigateToUrl(url);
-                NavigateToProfile();
-                if (!pageActions.IsElementPresent(AmazonPdaPageObjects.FilterByButton) &&
-                    pageActions.IsElementPresent(AmazonPdaPageObjects.LoginPassInput))
-                {
-                    // need to repeat the password
-                    pageActions.LoginByPassword(authorizationModel.Password, AmazonPdaPageObjects.FilterByButton);
-                }
                 pageActions.SetFiltersOnCampaigns();
             }
             catch (AccountDoesNotHaveProfileException)
