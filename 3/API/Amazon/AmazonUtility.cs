@@ -12,6 +12,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization;
 using Amazon.Entities.HelperEntities;
 using Amazon.Entities.HelperEntities.DownloadInfoResponses;
 using Amazon.Entities.HelperEntities.PreparedDataResponses;
@@ -22,8 +23,8 @@ namespace Amazon
 {
     public class AmazonUtility
     {
+        private const string LoggerPrefix = "[AmazonUtility]";
         private const int LimitOfReturnedValues = 5000;
-
         private const string TokenDelimiter = "|AMZNAMZN|";
         private const int NumAlts = 10; // including the default (0)
 
@@ -37,6 +38,7 @@ namespace Amazon
         private readonly int waitAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonWaitAttemptsNumber"]);
         private readonly int unauthorizedAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonUnauthorizedAttemptsNumber"]);
         private readonly int failedRequestAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonFailedRequestAttemptsNumber"]);
+        private readonly int reportGenerationAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonReportGenerationAttemptsNumber"]);
 
         private readonly string amazonClientId = ConfigurationManager.AppSettings["AmazonClientId"];
         private readonly string amazonClientSecret = ConfigurationManager.AppSettings["AmazonClientSecret"];
@@ -64,6 +66,18 @@ namespace Amazon
 
         private readonly Action<string> logInfo;
         private readonly Action<string> logError;
+
+        private static string GetAttemptMessage(string info, int retryNumber, string baseMessage = null)
+        {
+            var details = baseMessage == null ? string.Empty : $": {baseMessage}";
+            return $"{info} (attempt - {retryNumber}){details}";
+        }
+
+        private static string GetMessageInCorrectFormat(string message)
+        {
+            var updatedMessage = message.Replace('{', '\'').Replace('}', '\'');
+            return $"{LoggerPrefix} {updatedMessage}";
+        }
 
         private void LogInfo(string message)
         {
@@ -97,6 +111,13 @@ namespace Amazon
             LogInfo(message);
         }
 
+        private void LogGenerationError(string dataName, Exception exception, int retryNumber)
+        {
+            var info = $"Try recreating a new '{dataName}': {exception.Message}";
+            var message = GetAttemptMessage(info, retryNumber);
+            LogError(message);
+        }
+
         private T LogErrorIfException<T>(Func<T> getSomethingFunc)
             where T : class
         {
@@ -123,18 +144,6 @@ namespace Amazon
             var waitSeconds = timeSpan.TotalSeconds;
             var message = $"{string.Format(formattedMessageWithoutTime, waitSeconds)}: {waitDetails}";
             LogInfo(message, retryNumber);
-        }
-
-        private string GetAttemptMessage(string info, int retryNumber, string baseMessage = null)
-        {
-            var details = baseMessage == null ? string.Empty : $": {baseMessage}";
-            return $"{info} (attempt - {retryNumber}){details}";
-        }
-
-        private string GetMessageInCorrectFormat(string message)
-        {
-            var updatedMessage = message.Replace('{', '\'').Replace('}', '\'');
-            return "[AmazonUtility] " + updatedMessage;
         }
 
         #endregion
@@ -316,7 +325,7 @@ namespace Amazon
         public List<AmazonDailySummary> ReportCampaigns(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
             var param = AmazonApiHelper.CreateReportParams(EntitesType.Campaigns, campaignType, date, includeCampaignName);
-            return GetReportInfo<AmazonDailySummary>(EntitesType.Campaigns, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonDailySummary>(EntitesType.Campaigns, campaignType, param, profileId);
         }
 
         /// For Sponsored Brands only the following attributed metrics are available:
@@ -324,7 +333,7 @@ namespace Amazon
         public List<AmazonAdGroupSummary> ReportAdGroups(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
             var param = AmazonApiHelper.CreateReportParams(EntitesType.AdGroups, campaignType, date, includeCampaignName);
-            return GetReportInfo<AmazonAdGroupSummary>(EntitesType.AdGroups, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonAdGroupSummary>(EntitesType.AdGroups, campaignType, param, profileId);
         }
 
         /// Only for Sponsored Product
@@ -333,7 +342,7 @@ namespace Amazon
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportParams(EntitesType.ProductAds, campaignType, date, includeCampaignName);
-            return GetReportInfo<AmazonAdDailySummary>(EntitesType.ProductAds, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonAdDailySummary>(EntitesType.ProductAds, campaignType, param, profileId);
         }
 
         /// For Sponsored Brands only the following attributed metrics are available:
@@ -341,7 +350,7 @@ namespace Amazon
         public List<AmazonKeywordDailySummary> ReportKeywords(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
             var param = AmazonApiHelper.CreateReportParams(EntitesType.Keywords, campaignType, date, includeCampaignName);
-            return GetReportInfo<AmazonKeywordDailySummary>(EntitesType.Keywords, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonKeywordDailySummary>(EntitesType.Keywords, campaignType, param, profileId);
         }
 
         /// Only for Sponsored Product
@@ -349,7 +358,7 @@ namespace Amazon
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportParams(EntitesType.SearchTerm, campaignType, date, includeCampaignName);
-            return GetReportInfo<AmazonSearchTermDailySummary>(EntitesType.SearchTerm, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonSearchTermDailySummary>(EntitesType.SearchTerm, campaignType, param, profileId);
         }
 
         /// Only for Sponsored Product
@@ -357,7 +366,7 @@ namespace Amazon
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportParams(EntitesType.TargetKeywords, campaignType, date, includeCampaignName);
-            return GetReportInfo<AmazonTargetKeywordDailySummary>(EntitesType.TargetKeywords, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonTargetKeywordDailySummary>(EntitesType.TargetKeywords, campaignType, param, profileId);
         }
 
         /// Only for Sponsored Product
@@ -365,7 +374,7 @@ namespace Amazon
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportParams(EntitesType.TargetSearchTerm, campaignType, date, includeCampaignName);
-            return GetReportInfo<AmazonTargetSearchTermDailySummary>(EntitesType.TargetSearchTerm, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonTargetSearchTermDailySummary>(EntitesType.TargetSearchTerm, campaignType, param, profileId);
         }
 
         /// Only for Sponsored Product
@@ -373,7 +382,7 @@ namespace Amazon
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateAsinReportParams(date);
-            return GetReportInfo<AmazonAsinSummaries>(EntitesType.Asins, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonAsinSummaries>(EntitesType.Asins, campaignType, param, profileId);
         }
 
         private List<T> GetEntities<T>(EntitesType entitiesType, CampaignType campaignType = CampaignType.Empty,
@@ -392,15 +401,15 @@ namespace Amazon
         }
 
         /// Use it instead of the GetEntities method when you need to extract a large number of objects (more than 15,000) and you know about it.
-        private List<TEntity> GetSnapshotInfo<TEntity>(EntitesType entitiesType, CampaignType campaignType,
-            string profileId)
+        private List<TEntity> GetSnapshotInfoManyTimes<TEntity>(EntitesType entitiesType, CampaignType campaignType, string profileId)
         {
             var snapshotName = GetSnapshotName(entitiesType, campaignType);
             try
             {
-                var submitReportResponse = SubmitSnapshot(campaignType, entitiesType, profileId);
-                var data = DownloadPreparedData<ReportResponseDownloadInfo, TEntity>("snapshots", submitReportResponse.SnapshotId, profileId, snapshotName);
-                return data;
+                return Policy
+                    .Handle<ReportGenerationTimedOutException>()
+                    .Retry(reportGenerationAttemptsNumber, (exception, retryCount, context) => LogGenerationError(snapshotName, exception, retryCount))
+                    .Execute(() => GetSnapshotInfo<TEntity>(entitiesType, campaignType, profileId, snapshotName));
             }
             catch (Exception e)
             {
@@ -408,16 +417,16 @@ namespace Amazon
             }
         }
 
-        private List<TStat> GetReportInfo<TStat>(EntitesType reportType, CampaignType campaignType, AmazonApiReportParams parameters, string profileId)
+        private List<TStat> GetReportInfoManyTimes<TStat>(EntitesType reportType, CampaignType campaignType, AmazonApiReportParams parameters, string profileId)
             where TStat : AmazonDailySummary
         {
             var reportName = GetReportName(parameters.reportDate, reportType, campaignType);
             try
             {
-                var submitReportResponse = SubmitReport(parameters, campaignType, reportType, profileId);
-                var data = DownloadPreparedData<ReportResponseDownloadInfo, TStat>("reports", submitReportResponse.ReportId, profileId, reportName);
-                SetCampaignType(data, campaignType);
-                return data;
+                return Policy
+                    .Handle<ReportGenerationTimedOutException>()
+                    .Retry(reportGenerationAttemptsNumber, (exception, retryCount, context) => LogGenerationError(reportName, exception, retryCount))
+                    .Execute(() => GetReportInfo<TStat>(reportType, campaignType, parameters, profileId, reportName));
             }
             catch (Exception e)
             {
@@ -433,6 +442,24 @@ namespace Amazon
         private string GetSnapshotName(EntitesType entitiesType, CampaignType campaignType)
         {
             return $"AmazonSnapshot_{ReportPrefix}_{entitiesType}_{campaignType}";
+        }
+
+        private List<TEntity> GetSnapshotInfo<TEntity>(EntitesType entitiesType, CampaignType campaignType,
+            string profileId, string snapshotName)
+        {
+            var submitReportResponse = SubmitSnapshot(campaignType, entitiesType, profileId);
+            var data = DownloadPreparedData<ReportResponseDownloadInfo, TEntity>("snapshots", submitReportResponse.SnapshotId, profileId, snapshotName);
+            return data;
+        }
+
+        private List<TStat> GetReportInfo<TStat>(EntitesType reportType, CampaignType campaignType, AmazonApiReportParams parameters,
+            string profileId, string reportName)
+            where TStat : AmazonDailySummary
+        {
+            var submitReportResponse = SubmitReport(parameters, campaignType, reportType, profileId);
+            var data = DownloadPreparedData<ReportResponseDownloadInfo, TStat>("reports", submitReportResponse.ReportId, profileId, reportName);
+            SetCampaignType(data, campaignType);
+            return data;
         }
 
         private void SetCampaignType<TStat>(List<TStat> summaries, CampaignType campaignType)
@@ -724,13 +751,17 @@ namespace Amazon
 
         private void ThrowGenerationTimedOutException(IRestResponse response)
         {
-            var exceptionMessage = GetMessageInCorrectFormat(response.Content);
-            throw new ReportGenerationTimedOutException(exceptionMessage);
+            ThrowGenerationTimedOutException(response.Content);
         }
 
-        private void ThrowGenerationTimedOutException(HttpWebResponse response)
+        private void ThrowGenerationTimedOutException(ISerializable response)
         {
-            var exceptionMessage = GetMessageInCorrectFormat(response.ToString());
+            ThrowGenerationTimedOutException(response.ToString());
+        }
+
+        private void ThrowGenerationTimedOutException(string message)
+        {
+            var exceptionMessage = GetMessageInCorrectFormat(message);
             throw new ReportGenerationTimedOutException(exceptionMessage);
         }
 
