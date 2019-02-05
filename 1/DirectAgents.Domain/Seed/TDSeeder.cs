@@ -40,6 +40,7 @@ namespace DirectAgents.Domain.Seed
             AddPlatformIfNotExist(Platform.Code_YAM, "YAM");
             AddPlatformIfNotExist("zem", "Zemanta");
             AddPlatformIfNotExist(Platform.Code_AraAmazon, "AraAmazon");
+            AddPlatformIfNotExist(Platform.Code_DspAmazon, "DspAmazon");
         }
 
         public void SeedNetworks()

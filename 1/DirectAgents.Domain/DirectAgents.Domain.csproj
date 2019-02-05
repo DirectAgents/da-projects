@@ -169,6 +169,17 @@
     <Compile Include="Entities\Cake\Role.cs" />
     <Compile Include="Entities\Cake\Vertical.cs" />
     <Compile Include="Entities\CPProg\Actions.cs" />
+    <Compile Include="Entities\CPProg\DSP\DspAdvertiser.cs" />
+    <Compile Include="Entities\CPProg\DSP\DspDbEntity.cs" />
+    <Compile Include="Entities\CPProg\DSP\DspCreative.cs" />
+    <Compile Include="Entities\CPProg\DSP\DspLineItem.cs" />
+    <Compile Include="Entities\CPProg\DSP\DspOrder.cs" />
+    <Compile Include="Entities\CPProg\DSP\SummaryMetrics\DspAdvertiserDailyMetricValues.cs" />
+    <Compile Include="Entities\CPProg\DSP\SummaryMetrics\DspLineDailyMetricValues.cs" />
+    <Compile Include="Entities\CPProg\DSP\SummaryMetrics\DspDailyMetricsValues.cs" />
+    <Compile Include="Entities\CPProg\DSP\SummaryMetrics\DspOrderMetricValues.cs" />
+    <Compile Include="Entities\CPProg\DSP\SummaryMetrics\DspCreativeDailyMetricValues.cs" />
+    <Compile Include="Entities\CPProg\Base\BaseDailyMetricValues.cs" />
     <Compile Include="Entities\CPProg\Summaries\AdSetSummary.cs" />
     <Compile Include="Entities\CPProg\SummaryMetrics\AdSetSummaryMetric.cs" />
     <Compile Include="Entities\CPProg\SummaryMetrics\DailySummaryMetric.cs" />
@@ -613,6 +624,10 @@
     <Compile Include="MigrationsTD\201901220934243_Mig_VendorDataTables_2.Designer.cs">
       <DependentUpon>201901220934243_Mig_VendorDataTables_2.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsTD\201901311354011_Mig_DspDataTables2.cs" />
+    <Compile Include="MigrationsTD\201901311354011_Mig_DspDataTables2.Designer.cs">
+      <DependentUpon>201901311354011_Mig_DspDataTables2.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.Designer.cs">
@@ -988,6 +1003,9 @@
     <EmbeddedResource Include="MigrationsTD\201901220934243_Mig_VendorDataTables_2.resx">
       <DependentUpon>201901220934243_Mig_VendorDataTables_2.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201901311354011_Mig_DspDataTables2.resx">
+      <DependentUpon>201901311354011_Mig_DspDataTables2.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
@@ -1055,6 +1073,7 @@
       <DependentUpon>201810232032208_Mig_AffSubSummary.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

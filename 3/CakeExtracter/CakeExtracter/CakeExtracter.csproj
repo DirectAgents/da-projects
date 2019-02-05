@@ -362,6 +362,7 @@
     <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
     <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
     <Compile Include="Commands\DA\DAMonthlyMaintenance.cs" />
+    <Compile Include="Commands\DA\DASyncAmazonDspStats.cs" />
     <Compile Include="Commands\DA\DASynchAdformStats.cs" />
     <Compile Include="Commands\DA\DASynchAffSubSums.cs" />
     <Compile Include="Commands\DA\DASynchAmazonStats.cs" />
@@ -392,6 +393,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Common\Compare.cs" />
+    <Compile Include="Common\TextUtils.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DAAffiliatesLoader.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DAAffSubSummaryLoader.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DACampLoader.cs">
@@ -407,6 +409,28 @@
     </Compile>
     <Compile Include="Etl\CakeMarketing\Extracters\SubIdSummariesExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\CPCLoader.cs" />
+    <Compile Include="Etl\DSP\Configuration\AmazonDspConfigurationProvider.cs" />
+    <Compile Include="Etl\DSP\Configuration\AmazonDspAccountsProvider.cs" />
+    <Compile Include="Etl\DSP\Extractors\AmazonDspExtractor.cs" />
+    <Compile Include="Etl\DSP\Extractors\Composer\DspReportDataComposer.cs" />
+    <Compile Include="Etl\DSP\Extractors\Parser\DspReportCsvParser.cs" />
+    <Compile Include="Etl\DSP\Extractors\Parser\Models\CreativeReportRow.cs" />
+    <Compile Include="Etl\DSP\Extractors\Parser\ParsingConverters\ReportCreativeRowMap.cs" />
+    <Compile Include="Etl\DSP\Extractors\Parser\ParsingConverters\DecimalReportConverter.cs" />
+    <Compile Include="Etl\DSP\Loaders\AmazonDspDataLoader.cs" />
+    <Compile Include="Etl\DSP\Loaders\ReportEntriesDataLoaders\AdvertisersDataLoader.cs" />
+    <Compile Include="Etl\DSP\Loaders\ReportEntriesDataLoaders\BaseDspItemLoader.cs" />
+    <Compile Include="Etl\DSP\Loaders\ReportEntriesDataLoaders\CreativesDataLoader.cs" />
+    <Compile Include="Etl\DSP\Loaders\ReportEntriesDataLoaders\DspItemMetricManager.cs" />
+    <Compile Include="Etl\DSP\Loaders\ReportEntriesDataLoaders\LineItemsDataLoader.cs" />
+    <Compile Include="Etl\DSP\Loaders\ReportEntriesDataLoaders\OrdersDataLoader.cs" />
+    <Compile Include="Etl\DSP\Models\AmazonDspAccauntDailyReportData.cs" />
+    <Compile Include="Etl\DSP\Models\ReportEntities\ReportAdvertiser.cs" />
+    <Compile Include="Etl\DSP\Models\AmazonDspDailyReportData.cs" />
+    <Compile Include="Etl\DSP\Models\ReportEntities\ReportCreative.cs" />
+    <Compile Include="Etl\DSP\Models\ReportEntities\ReportLineItem.cs" />
+    <Compile Include="Etl\DSP\Models\ReportEntities\DspReportEntity.cs" />
+    <Compile Include="Etl\DSP\Models\ReportEntities\ReportOrder.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\AppleApiExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\DbExtracters.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AdWordsConvSummaryLoader.cs" />
