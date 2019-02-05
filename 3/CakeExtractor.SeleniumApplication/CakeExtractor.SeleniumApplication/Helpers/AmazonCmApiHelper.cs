@@ -24,6 +24,9 @@ namespace CakeExtractor.SeleniumApplication.Helpers
         private const string CpcField = "CPC";
         private const string AcosField = "ACOS";
 
+        private const string CurrencyValue = "millicents";
+        private const decimal CurrencyCoefficient = 100000; //We need data that is received in millicents, recalculated into USD
+
         private static readonly Filter CampaignStateFilter = new Filter
         {
             field = "CAMPAIGN_STATE",
@@ -42,7 +45,7 @@ namespace CakeExtractor.SeleniumApplication.Helpers
 
         private static readonly string[] CampaignFieldsForRequest =
         {
-            OrdersField
+            CampaignNameField, ImpressionsField, ClicksField, SpendField, SalesField, OrdersField
         };
 
         private static readonly Filter[] CampaignPdaFilters =
@@ -59,15 +62,16 @@ namespace CakeExtractor.SeleniumApplication.Helpers
             return parameters;
         }
 
-        public static AmazonCmApiParams GetBasePdaCampaignsApiParams()
+        public static AmazonCmApiParams GetBasePdaCampaignsApiParams(bool getFullMetrics)
         {
+            var fields = getFullMetrics ? CampaignFieldsForRequest : new[] {OrdersField};
             var parameters = new AmazonCmApiParams
             {
                 period = "CUSTOM",
                 interval = "SUMMARY",
                 programType = "SP",
                 queries = new string[0],
-                fields = CampaignFieldsForRequest,
+                fields = fields,
                 filters = CampaignPdaFilters,
             };
             return parameters;
@@ -97,7 +101,15 @@ namespace CakeExtractor.SeleniumApplication.Helpers
             var campaignInfo = new AmazonCmApiCampaignSummary
             {
                 Id = data["id"],
-                Orders = data["orders"]
+                Name = data["name"],
+                TargetingType = data["targetingType"],
+                UnitsSold = (int) data["unitsSold"],
+                DetailPageViews = (int) data["detailPageViews"],
+                Impressions = (int) data["impressions"],
+                Clicks = (int) data["clicks"],
+                Cost = data["spend"][CurrencyValue] / CurrencyCoefficient,
+                Orders = (int) data["orders"],
+                AttributedSales14D = data["sales"][CurrencyValue] / CurrencyCoefficient
             };
             return campaignInfo;
         }

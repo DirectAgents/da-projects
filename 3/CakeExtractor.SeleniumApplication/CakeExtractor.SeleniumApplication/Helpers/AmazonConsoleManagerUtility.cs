@@ -24,11 +24,42 @@ namespace CakeExtractor.SeleniumApplication.Utilities
             this.logError = logError;
         }
 
+        public IEnumerable<AmazonCmApiCampaignSummary> GetPdaCampaignsTruncatedSummaries(string accountEntityId, DateRange dateRange)
+        {
+            var queryParams = AmazonCmApiHelper.GetCampaignsApiQueryParams(accountEntityId);
+            var parameters = AmazonCmApiHelper.GetBasePdaCampaignsApiParams(false);
+            var resultData = GetCampaignsSummaries(dateRange, queryParams, parameters);
+            return resultData;
+        }
+
         public IEnumerable<AmazonCmApiCampaignSummary> GetPdaCampaignsSummaries(string accountEntityId, DateRange dateRange)
         {
-            var resultData = new List<AmazonCmApiCampaignSummary>();
             var queryParams = AmazonCmApiHelper.GetCampaignsApiQueryParams(accountEntityId);
-            var parameters = AmazonCmApiHelper.GetBasePdaCampaignsApiParams();
+            var parameters = AmazonCmApiHelper.GetBasePdaCampaignsApiParams(true);
+            var resultData = GetCampaignsSummaries(dateRange, queryParams, parameters);
+            return resultData;
+        }
+
+        private static void Log(string message, Action<string> logAction)
+        {
+            var updatedMessage = $"[AmazonConsoleManagerUtility]: {message}";
+            logAction(updatedMessage);
+        }
+
+        private void LogError(string message)
+        {
+            Log(message, logError);
+        }
+
+        private void LogInfo(string message)
+        {
+            Log(message, logInfo);
+        }
+
+        private IEnumerable<AmazonCmApiCampaignSummary> GetCampaignsSummaries(DateRange dateRange,
+            Dictionary<string, string> queryParams, AmazonCmApiParams parameters)
+        {
+            var resultData = new List<AmazonCmApiCampaignSummary>();
             foreach (var date in dateRange.Dates)
             {
                 var data = GetCampaignsSummaries(date, queryParams, parameters);
@@ -87,22 +118,6 @@ namespace CakeExtractor.SeleniumApplication.Utilities
                 var convertedData = AmazonCmApiHelper.ConvertDynamicCampaignInfoToModel(campaignData);
                 resultData.Add(convertedData);
             }
-        }
-
-        private void LogError(string message)
-        {
-            logError(message);
-        }
-
-        private void LogInfo(string message)
-        {
-            logInfo(message);
-        }
-
-        private void Log(string message, Action<string> logAction)
-        {
-            var updatedMessage = $"[AmazonConsoleManagerUtility]: {message}";
-            logAction(updatedMessage);
         }
     }
 }

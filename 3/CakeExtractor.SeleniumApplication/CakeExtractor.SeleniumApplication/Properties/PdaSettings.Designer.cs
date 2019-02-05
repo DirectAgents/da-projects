@@ -152,5 +152,17 @@ namespace CakeExtractor.SeleniumApplication.Properties {
                 this["DisabledOnly"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool FromRequest {
+            get {
+                return ((bool)(this["FromRequest"]));
+            }
+            set {
+                this["FromRequest"] = value;
+            }
+        }
     }
 }

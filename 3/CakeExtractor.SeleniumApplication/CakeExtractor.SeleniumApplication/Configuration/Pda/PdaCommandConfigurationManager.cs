@@ -46,7 +46,7 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Pda
             return PdaSettings.Default.CookiesDirectory;
         }
 
-        public bool GetFromDatabase()
+        public bool GetFromDatabaseFlag()
         {
             return PdaSettings.Default.FromDatabase;
         }
@@ -64,6 +64,11 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Pda
         public bool GetDisabledOnlyFlag()
         {
             return PdaSettings.Default.DisabledOnly;
+        }
+
+        public bool GetFromRequestFlag()
+        {
+            return PdaSettings.Default.FromRequest;
         }
     }
 }
