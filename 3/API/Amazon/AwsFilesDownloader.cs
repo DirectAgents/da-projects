@@ -42,7 +42,7 @@ namespace Amazon
             try
             {
                 IList<S3Object> allObjects = GetAllObjects();
-                var reportsObjects = allObjects.Where(report => report.Key.Contains(filePrefix));
+                var reportsObjects = allObjects.Where(report => report.Key.StartsWith(filePrefix));
                 var latestReport = reportsObjects.OrderByDescending(r => r.LastModified).FirstOrDefault();
                 if (latestReport == null)
                 {
