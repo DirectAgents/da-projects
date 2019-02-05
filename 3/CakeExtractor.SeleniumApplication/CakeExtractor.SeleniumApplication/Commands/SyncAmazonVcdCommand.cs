@@ -57,10 +57,10 @@ namespace CakeExtractor.SeleniumApplication.Commands
             {
                 try
                 {
-                    Logger.Info("Amazon VCD, ETL for {0} started.", day);
+                    Logger.Info("Amazon VCD, ETL for {0} started. Account {1} - {2}", day, accountInfo.Account.Name, accountInfo.Account.Id);
                     var dailyVendorData = extractor.ExtractDailyData(day, accountInfo);
                     loader.LoadDailyData(dailyVendorData, day, accountInfo.Account);
-                    Logger.Info("Amazon VCD, ETL for {0} finished.", day);
+                    Logger.Info("Amazon VCD, ETL for {0} finished.  Account {1} - {2}", day, accountInfo.Account.Name, accountInfo.Account.Id);
                 }
                 catch (Exception ex)
                 {
