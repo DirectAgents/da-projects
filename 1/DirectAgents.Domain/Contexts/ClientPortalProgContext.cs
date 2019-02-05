@@ -7,6 +7,8 @@ using DirectAgents.Domain.Entities.DBM;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Vendor;
 using DirectAgents.Domain.Entities.CPProg.Vendor.SummaryMetrics;
+using DirectAgents.Domain.Entities.CPProg.DSP;
+using DirectAgents.Domain.Entities.CPProg.DSP.SummaryMetrics;
 
 namespace DirectAgents.Domain.Contexts
 {
@@ -82,6 +84,16 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<VendorBrandSummaryMetric>().ToTable("VBrandSummaryMetric", tdSchema);
             modelBuilder.Entity<VendorParentProductSummaryMetric>().ToTable("VParentProductSummaryMetric", tdSchema);
 
+            //TD DSP
+            modelBuilder.Entity<DspAdvertiser>().ToTable("DspAdvertiser", tdSchema);
+            modelBuilder.Entity<DspOrder>().ToTable("DspOrder", tdSchema);
+            modelBuilder.Entity<DspLineItem>().ToTable("DspLineItem", tdSchema);
+            modelBuilder.Entity<DspCreative>().ToTable("DspCreative", tdSchema);
+            modelBuilder.Entity<DspAdvertiserDailyMetricValues>().ToTable("DspAdvertiserDailyMetricValues", tdSchema);
+            modelBuilder.Entity<DspOrderMetricValues>().ToTable("DspOrderMetricValues", tdSchema);
+            modelBuilder.Entity<DspLineDailyMetricValues>().ToTable("DspLineDailyMetricValues", tdSchema);
+            modelBuilder.Entity<DspCreativeDailyMetricValues>().ToTable("DspCreativeDailyMetricValues", tdSchema);
+            
             modelBuilder.Entity<Campaign>().Property(c => c.BaseFee).HasPrecision(14, 2);
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MgmtFeePct).HasPrecision(10, 5).HasColumnName("MgmtFeePct");
@@ -178,6 +190,12 @@ namespace DirectAgents.Domain.Contexts
             SetupSummaryMetricModel<VendorBrandSummaryMetric>(modelBuilder, "BrandId");
             SetupSummaryMetricModel<VendorParentProductSummaryMetric>(modelBuilder, "ParentProductId");
 
+            //TD DSP
+            SetupDailyMetricModelValues<DspAdvertiserDailyMetricValues>(modelBuilder, "AdvertiserId");
+            SetupDailyMetricModelValues<DspOrderMetricValues>(modelBuilder, "OrderId");
+            SetupDailyMetricModelValues<DspLineDailyMetricValues>(modelBuilder, "LineItemId");
+            SetupDailyMetricModelValues<DspCreativeDailyMetricValues>(modelBuilder, "CreativeId");
+            
             // AdRoll
             modelBuilder.Entity<Advertisable>().ToTable("Advertisable", adrollSchema);
             modelBuilder.Entity<Ad>().ToTable("Ad", adrollSchema);
@@ -195,9 +213,6 @@ namespace DirectAgents.Domain.Contexts
                 .ToTable("CreativeDailySummary", dbmSchema);
             modelBuilder.Entity<CreativeDailySummary>()
                 .Property(cds => cds.Revenue).HasPrecision(18, 6);
-
-            //TD Vendor
-
         }
 
         public DbSet<Employee> Employees { get; set; }
@@ -253,6 +268,16 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<VendorBrandSummaryMetric> VendorBrandSummaryMetrics { get; set; }
         public DbSet<VendorParentProductSummaryMetric> VendorParentProductSummaryMetrics { get; set; }
 
+        //TD DSP
+        public DbSet<DspAdvertiser> DspAdvertisers { get; set; }
+        public DbSet<DspOrder> DspOrders { get; set; }
+        public DbSet<DspLineItem> DspLineItems { get; set; }
+        public DbSet<DspCreative> DspCreatives { get; set; }
+        public DbSet<DspAdvertiserDailyMetricValues> DspAdvertisersMetricValues { get; set; }
+        public DbSet<DspOrderMetricValues> DspOrdersMetricValues { get; set; }
+        public DbSet<DspLineDailyMetricValues> DspLineItemsMetricValues { get; set; }
+        public DbSet<DspCreativeDailyMetricValues> DspCreativesMetricValues { get; set; }
+
         // AdRoll
         public DbSet<Advertisable> Advertisables { get; set; }
         public DbSet<Ad> AdRollAds { get; set; }
@@ -262,6 +287,24 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<InsertionOrder> InsertionOrders { get; set; }
         public DbSet<Creative> Creatives { get; set; }
         public DbSet<CreativeDailySummary> DBMCreativeDailySummaries { get; set; }
+
+        private void SetupDailyMetricModelValues<TDailyMetricValues>(DbModelBuilder modelBuilder, string entityColumnName)
+             where TDailyMetricValues : DspMetricValues
+        {
+            modelBuilder.Entity<TDailyMetricValues>().HasKey(s => new { s.Date, s.EntityId });
+            modelBuilder.Entity<TDailyMetricValues>().Property(x => x.EntityId).HasColumnName(entityColumnName);
+            modelBuilder.Entity<TDailyMetricValues>().Property(t => t.TotalCost).HasPrecision(18, 6);
+            modelBuilder.Entity<TDailyMetricValues>().Property(t => t.Impressions).HasPrecision(18, 6);
+            modelBuilder.Entity<TDailyMetricValues>().Property(t => t.ClickThroughs).HasPrecision(18, 6);
+            modelBuilder.Entity<TDailyMetricValues>().Property(t => t.TotalPixelEvents).HasPrecision(18, 6);
+            modelBuilder.Entity<TDailyMetricValues>().Property(t => t.TotalPixelEventsViews).HasPrecision(18, 6);
+            modelBuilder.Entity<TDailyMetricValues>().Property(t => t.TotalPixelEventsClicks).HasPrecision(18, 6);
+            modelBuilder.Entity<TDailyMetricValues>().Property(t => t.DPV).HasPrecision(18, 6);
+            modelBuilder.Entity<TDailyMetricValues>().Property(t => t.ATC).HasPrecision(18, 6);
+            modelBuilder.Entity<TDailyMetricValues>().Property(t => t.Purchase).HasPrecision(18, 6);
+            modelBuilder.Entity<TDailyMetricValues>().Property(t => t.PurchaseViews).HasPrecision(18, 6);
+            modelBuilder.Entity<TDailyMetricValues>().Property(t => t.PurchaseClicks).HasPrecision(18, 6);
+        }
 
         private void SetupSummaryMetricModel<TSummaryMetric>(DbModelBuilder modelBuilder, string entityColumnName)
             where TSummaryMetric : SummaryMetric
