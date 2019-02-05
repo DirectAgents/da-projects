@@ -28,6 +28,10 @@ namespace Amazon
         private const string TokenDelimiter = "|AMZNAMZN|";
         private const int NumAlts = 10; // including the default (0)
 
+        private const string AuthorizationHeader = "Authorization";
+        private const string AmazonHeaderProfile = "Amazon-Advertising-API-Scope";
+        private const string AmazonHeaderClient = "Amazon-Advertising-API-ClientId";
+
         private static readonly object RequestLock = new object();
         private static readonly object FileLock = new object();
         private static readonly object AccessTokenLock = new object();
@@ -116,21 +120,6 @@ namespace Amazon
             var info = $"Try recreating a new '{dataName}': {exception.Message}";
             var message = GetAttemptMessage(info, retryNumber);
             LogError(message);
-        }
-
-        private T LogErrorIfException<T>(Func<T> getSomethingFunc)
-            where T : class
-        {
-            try
-            {
-                return getSomethingFunc();
-            }
-            catch (Exception x)
-            {
-                LogError(x.Message);
-            }
-
-            return null;
         }
 
         private void LogWaiting<T>(string formattedMessageWithoutTime, TimeSpan timeSpan, int retryNumber, DelegateResult<IRestResponse<T>> response)
@@ -407,7 +396,7 @@ namespace Amazon
             try
             {
                 return Policy
-                    .Handle<ReportGenerationTimedOutException>()
+                    .Handle<Exception>()
                     .Retry(reportGenerationAttemptsNumber, (exception, retryCount, context) => LogGenerationError(snapshotName, exception, retryCount))
                     .Execute(() => GetSnapshotInfo<TEntity>(entitiesType, campaignType, profileId, snapshotName));
             }
@@ -424,7 +413,7 @@ namespace Amazon
             try
             {
                 return Policy
-                    .Handle<ReportGenerationTimedOutException>()
+                    .Handle<Exception>()
                     .Retry(reportGenerationAttemptsNumber, (exception, retryCount, context) => LogGenerationError(reportName, exception, retryCount))
                     .Execute(() => GetReportInfo<TStat>(reportType, campaignType, parameters, profileId, reportName));
             }
@@ -525,14 +514,13 @@ namespace Amazon
         private IRestResponse<T> SubmitRequestForPreparedDataManyTimes<T>(string dataType, object requestParams, CampaignType campaignType, EntitesType entitiesType, string profileId)
             where T : PreparedDataRequestResponse, new()
         {
-            var response = LogErrorIfException(() =>
-                Policy
-                    .Handle<Exception>()
-                    .OrResult<IRestResponse<T>>(resp => resp?.Content == null || !resp.IsSuccessful)
-                    .WaitAndRetry(waitAttemptsNumber, GetTimeSpanForWaiting, (exception, timeSpan, retryCount, context) =>
-                        LogWaiting($"Waiting {{0}} seconds to get a {dataType} ID.", timeSpan, retryCount, exception))
-                    .Execute(() => SubmitRequestForPreparedData<T>(dataType, requestParams, campaignType, entitiesType, profileId))
-            );
+            var response = Policy
+                .Handle<Exception>()
+                .OrResult<IRestResponse<T>>(resp => resp?.Content == null || !resp.IsSuccessful)
+                .WaitAndRetry(waitAttemptsNumber, GetTimeSpanForWaiting, (exception, timeSpan, retryCount, context) =>
+                    LogWaiting($"Waiting {{0}} seconds to get a {dataType} ID.", timeSpan, retryCount, exception))
+                .Execute(() =>
+                    SubmitRequestForPreparedData<T>(dataType, requestParams, campaignType, entitiesType, profileId));
             return response;
         }
 
@@ -573,14 +561,12 @@ namespace Amazon
         private IRestResponse<T> RequestPreparedDataManyTimes<T>(string dataType, string dataId, string profileId)
             where T : ResponseDownloadInfo, new()
         {
-            var response = LogErrorIfException(() =>
-                Policy
-                    .Handle<Exception>()
-                    .OrResult<IRestResponse<T>>(resp => resp.Data.Status != "SUCCESS")
-                    .WaitAndRetry(waitAttemptsNumber, GetTimeSpanForWaiting, (exception, timeSpan, retryCount, context) => 
-                        LogWaiting($"Waiting {{0}} seconds for {dataType} to finish generating.", timeSpan, retryCount, exception))
-                    .Execute(() => RequestPreparedData<T>(dataType, dataId, profileId))
-            );
+            var response = Policy
+                .Handle<Exception>()
+                .OrResult<IRestResponse<T>>(resp => resp.Data.Status != "SUCCESS")
+                .WaitAndRetry(waitAttemptsNumber, GetTimeSpanForWaiting, (exception, timeSpan, retryCount, context) =>
+                    LogWaiting($"Waiting {{0}} seconds for {dataType} to finish generating.", timeSpan, retryCount, exception))
+                .Execute(() => RequestPreparedData<T>(dataType, dataId, profileId));
             return response;
         }
 
@@ -624,13 +610,11 @@ namespace Amazon
 
         private HttpWebResponse GetResponseManyTimes(string url, string profileId)
         {
-            var response = LogErrorIfException(() =>
-                Policy
-                    .Handle<Exception>()
-                    .WaitAndRetry(failedRequestAttemptsNumber, GetTimeSpanForWaiting, (exception, timeSpan, retryCount, context) =>
-                        LogWaiting($"Waiting {{0}} seconds because URL ({url}) response failed.", timeSpan, retryCount, exception.Message))
-                    .Execute(() => GetHttpResponse(url, profileId))
-            );
+            var response = Policy
+                .Handle<Exception>()
+                .WaitAndRetry(failedRequestAttemptsNumber, GetTimeSpanForWaiting, (exception, timeSpan, retryCount, context) => 
+                    LogWaiting($"Waiting {{0}} seconds because URL ({url}) response failed.", timeSpan, retryCount, exception.Message))
+                .Execute(() => GetHttpResponse(url, profileId));
             return response;
         }
 
@@ -667,7 +651,7 @@ namespace Amazon
             var response = Policy
                 .Handle<Exception>()
                 .OrResult<IRestResponse<T>>(resp => resp.StatusCode == HttpStatusCode.Unauthorized)
-                .Retry(unauthorizedAttemptsNumber, (exception, retryCount, context) => UpdateAccessTokenForRequest(restRequest))
+                .Retry(unauthorizedAttemptsNumber, (exception, retryCount, context) => UpdateAccessTokenForRestRequest(restRequest))
                 .Execute(() => GetRestResponse<T>(restClient, restRequest, isPostMethod));
 
             return response;
@@ -678,8 +662,8 @@ namespace Amazon
             var request = new RestRequest(resourceUri);
             AddAuthorizationHeader(request);
             request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
-            request.AddHeader("Amazon-Advertising-API-Scope", profileId);
-            request.AddHeader("Amazon-Advertising-API-ClientId", amazonClientId);
+            request.AddHeader(AmazonHeaderProfile, profileId);
+            request.AddHeader(AmazonHeaderClient, amazonClientId);
             return request;
         }
 
@@ -695,15 +679,20 @@ namespace Amazon
         private HttpWebRequest CreateHttpRequest(string url, string profileId)
         {
             var request = (HttpWebRequest)WebRequest.Create(url);
-            request.Headers.Add("Authorization", "bearer " + AccessToken[WhichAlt]);
-            request.Headers.Add("Amazon-Advertising-API-Scope", profileId);
+            request.Headers.Add(HttpRequestHeader.Authorization, GetAuthorizationHeaderValue());
+            request.Headers.Add(AmazonHeaderProfile, profileId);
             return request;
         }
 
         private HttpWebResponse GetHttpResponse(string url, string profileId)
         {
             var request = CreateHttpRequest(url, profileId);
-            return GetHttpResponse(request);
+            var response = Policy
+                .Handle<Exception>()
+                .OrResult<HttpWebResponse>(resp => resp.StatusCode == HttpStatusCode.Unauthorized)
+                .Retry(unauthorizedAttemptsNumber, (exception, retryCount, context) => UpdateAccessTokenForRequest(request))
+                .Execute(() => GetHttpResponse(request));
+            return response;
         }
 
         private HttpWebResponse GetHttpResponse(WebRequest request)
@@ -720,25 +709,35 @@ namespace Amazon
             }
         }
 
-        private void UpdateAccessTokenForRequest(IRestRequest request)
+        private void UpdateAccessTokenForRestRequest(IRestRequest request)
         {
             // Get a new access token and use that.
             GetAccessToken();
             AddAuthorizationHeader(request);
         }
 
+        private void UpdateAccessTokenForRequest(WebRequest request)
+        {
+            GetAccessToken();
+            request.Headers[HttpRequestHeader.Authorization] = GetAuthorizationHeaderValue();
+        }
+
         private void AddAuthorizationHeader(IRestRequest request)
         {
-            const string headerName = "Authorization";
-            var headerValue = "bearer " + AccessToken[WhichAlt];
-            var param = request.Parameters.Find(p => p.Type == ParameterType.HttpHeader && p.Name == headerName);
+            var headerValue = GetAuthorizationHeaderValue();
+            var param = request.Parameters.Find(p => p.Type == ParameterType.HttpHeader && p.Name == AuthorizationHeader);
             if (param != null)
             {
                 param.Value = headerValue;
                 return;
             }
 
-            request.AddHeader(headerName, headerValue);
+            request.AddHeader(AuthorizationHeader, headerValue);
+        }
+
+        private string GetAuthorizationHeaderValue()
+        {
+            return $"bearer {AccessToken[WhichAlt]}";
         }
 
         private void AddQueryParametersToRequest(IRestRequest request, Dictionary<string, string> parameters)
