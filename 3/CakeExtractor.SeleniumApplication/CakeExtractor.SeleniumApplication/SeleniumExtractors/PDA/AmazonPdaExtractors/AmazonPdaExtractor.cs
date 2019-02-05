@@ -47,7 +47,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
         /// Login to the advertising portal and saving cookies
         public static void PrepareExtractor()
         {
-            Logger.Info("PDA: Try to login to amazon advertising portal.");
             authorizationModel.Cookies = CookieManager.GetCookiesFromFiles(authorizationModel.CookiesDir);
             var cookiesExist = authorizationModel.Cookies.Any();
 
