@@ -119,10 +119,9 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
             var dailySummariesToBeRemoved = existingAccountDailySummaries.Except(dailySummariesToLeaveUntouched).ToList();
             dbSet.RemoveRange(dailySummariesToBeRemoved);
             dbContext.SaveChanges();
-            Logger.Info("Amazon VCD, Deleted {0}", dailySummariesToBeRemoved.Count);
             dbSet.AddRange(dailySummariesToInsert);
             dbContext.SaveChanges();
-            Logger.Info("Amazon VCD, Inserted {0}", dailySummariesToInsert.Count);
+            Logger.Info("Amazon VCD, Inserted {0}, Deleted {1}", dailySummariesToInsert.Count, dailySummariesToBeRemoved.Count);
         }
 
         private List<TSummaryMetricEntity> GetActualDailySummariesFromReportEntities(List<TReportEntity> reportShippingEntities, List<TDbEntity> dbVendorEntities, ExtAccount account, DateTime date)
