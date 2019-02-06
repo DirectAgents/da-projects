@@ -8,6 +8,7 @@ using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
+using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using Yahoo;
@@ -17,6 +18,8 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchYAMStats : ConsoleCommand
     {
+        private const int DefaultDaysAgo = 41;
+
         public static int RunStatic(int? accountId = null, DateTime? startDate = null, DateTime? endDate = null, string statsType = null)
         {
             AutoMapperBootstrapper.CheckRunSetup();
@@ -56,7 +59,7 @@ namespace CakeExtracter.Commands
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
             HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
-            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 41)", c => DaysAgoToStart = c);
+            HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
         }
@@ -65,14 +68,10 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            if (!DaysAgoToStart.HasValue)
-                DaysAgoToStart = 41; // used if StartDate==null
-            var today = DateTime.Today;
-            var yesterday = today.AddDays(-1);
-            var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
+            var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("YAM ETL. DateRange {0}.", dateRange);
 
-            var statsType = new StatsTypeAgg(this.StatsType);
+            var statsType = new StatsTypeAgg(StatsType);
             var ppIds = ConfigurationManager.AppSettings["YAMids_UsePixelParm"];
             extIds_UsePixelParm = ppIds != null ? ppIds.Split(',') : new string[] { };
 
@@ -129,83 +128,65 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
         {
-            var extracter = new YAMDailySummaryExtracter(yamUtility, dateRange, account);
+            var extractor = new YAMDailySummaryExtracter(yamUtility, dateRange, account);
             var loader = new TDDailySummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
 
-            if (extIds_UsePixelParm.Contains(account.ExternalId))
-            {   // Get ConVals using the pixel parameter...
-                var e = new YAMDailyConValExtracter(yamUtility, dateRange, account);
-                var l = new TDDailyConValLoader(account.Id);
-                var eThread = e.Start();
-                var lThread = l.Start(e);
-                eThread.Join();
-                lThread.Join();
-            }
+            if (!extIds_UsePixelParm.Contains(account.ExternalId))
+            {
+                return;
+            } 
+            
+            // Get ConVals using the pixel parameter...
+            var e = new YAMDailyConValExtracter(yamUtility, dateRange, account);
+            var l = new TDDailyConValLoader(account.Id);
+            CommandHelper.DoEtl(e, l);
         }
 
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
         {
-            var extracter = new YAMStrategySummaryExtracter(yamUtility, dateRange, account);
+            var extractor = new YAMStrategySummaryExtracter(yamUtility, dateRange, account);
             var loader = new TDStrategySummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
 
-            if (extIds_UsePixelParm.Contains(account.ExternalId))
-            {   // Get ConVals using the pixel parameter...
-                string[] stratNames = GetExistingStrategyNames(dateRange, account.Id);
-                var e = new YAMStrategyConValExtracter(yamUtility, dateRange, account, existingStrategyNames: stratNames);
-                var l = new TDStrategyConValLoader(account.Id);
-                var eThread = e.Start();
-                var lThread = l.Start(e);
-                eThread.Join();
-                lThread.Join();
-            }
+            if (!extIds_UsePixelParm.Contains(account.ExternalId))
+            {
+                return;
+            } 
+            
+            // Get ConVals using the pixel parameter...
+            var stratNames = GetExistingStrategyNames(dateRange, account.Id);
+            var e = new YAMStrategyConValExtracter(yamUtility, dateRange, account, existingStrategyNames: stratNames);
+            var l = new TDStrategyConValLoader(account.Id);
+            CommandHelper.DoEtl(e, l);
         }
 
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
         {
-            var extracter = new YAMAdSetSummaryExtracter(yamUtility, dateRange, account);
+            var extractor = new YAMAdSetSummaryExtracter(yamUtility, dateRange, account);
             var loader = new TDAdSetSummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
         }
 
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
         {
-            var extracter = new YAMTDadSummaryExtracter(yamUtility, dateRange, account);
+            var extractor = new YAMTDadSummaryExtracter(yamUtility, dateRange, account);
             var loader = new TDadSummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
         }
 
         private void DoETL_Keyword(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
         {
-            var extracter = new YAMKeywordSummaryExtracter(yamUtility, dateRange, account);
+            var extractor = new YAMKeywordSummaryExtracter(yamUtility, dateRange, account);
             var loader = new KeywordSummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
         }
 
         private void DoETL_SearchTerm(DateRange dateRange, ExtAccount account, YAMUtility yamUtility)
         {
-            var extracter = new YAMSearchTermSummaryExtracter(yamUtility, dateRange, account);
+            var extractor = new YAMSearchTermSummaryExtracter(yamUtility, dateRange, account);
             var loader = new SearchTermSummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
         }
 
         //Get the names of strategies that have stats for the specified dateRange and account (and whose stats' ConVals are not zero)

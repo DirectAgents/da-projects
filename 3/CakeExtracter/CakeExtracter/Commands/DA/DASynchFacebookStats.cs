@@ -9,6 +9,7 @@ using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.SocialMarketing.Extracters;
 using CakeExtracter.Etl.SocialMarketing.LoadersDA;
+using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using FacebookAPI;
@@ -18,6 +19,8 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchFacebookStats : ConsoleCommand
     {
+        private const int DefaultDaysAgo = 41;
+
         public static int RunStatic(int? campaignId = null, int? accountId = null, DateTime? startDate = null, DateTime? endDate = null, string statsType = null)
         {
             AutoMapperBootstrapper.CheckRunSetup();
@@ -66,7 +69,7 @@ namespace CakeExtracter.Commands
             HasOption<int>("c|campaignId=", "Campaign Id (optional)", c => CampaignId = c);
             HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
-            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 41)", c => DaysAgoToStart = c);
+            HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
             HasOption<int>("m|minAccountId=", "Include this and all higher accountIds (optional)", c => MinAccountId = c);
@@ -75,18 +78,9 @@ namespace CakeExtracter.Commands
             HasOption<int>("v|viewWindow=", "View attribution window (can set to 7 or 1, otherwise will be default or from config)", c => ViewWindow = c);
         }
 
-        private DateRange GetDateRange()
-        {
-            if (!DaysAgoToStart.HasValue)
-                DaysAgoToStart = 41; // used if StartDate==null
-            var today = DateTime.Today;
-            var yesterday = today.AddDays(-1);
-            return new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
-        }
-
         public override int Execute(string[] remainingArguments)
         {
-            var dateRange = GetDateRange();
+            var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Facebook ETL. DateRange {0}.", dateRange);
 
             var statsType = new StatsTypeAgg(this.StatsType);
@@ -197,40 +191,28 @@ namespace CakeExtracter.Commands
 
         private int DoETL_Daily(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
-            var extracter = new FacebookDailySummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
+            var extractor = new FacebookDailySummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
             var loader = new FacebookDailySummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
-            return extracter.Added;
+            CommandHelper.DoEtl(extractor, loader);
+            return extractor.Added;
         }
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
-            var extracter = new FacebookCampaignSummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
+            var extractor = new FacebookCampaignSummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
             var loader = new FacebookCampaignSummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
         }
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
-            var extracter = new FacebookAdSetSummaryExtracter(dateRange, account, fbUtility, includeAllActions: true);
+            var extractor = new FacebookAdSetSummaryExtracter(dateRange, account, fbUtility, includeAllActions: true);
             var loader = new FacebookAdSetSummaryLoader(account.Id, loadActions: true);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
         }
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
-            var extracter = new FacebookAdSummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
+            var extractor = new FacebookAdSummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
             var loader = new FacebookAdSummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
         }
 
         private IEnumerable<ExtAccount> GetAccounts()

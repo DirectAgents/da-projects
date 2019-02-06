@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Configuration;
 using System.Linq;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
+using CakeExtracter.Helpers;
 using Criteo;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
@@ -104,24 +104,18 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new DatabaseStrategyToDailySummaryExtracter(dateRange, account.Id);
+            var extractor = new DatabaseStrategyToDailySummaryExtracter(dateRange, account.Id);
             var loader = new TDDailySummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
         }
 
         // Limited to a 7-day window and can go back to about 2 weeks from yesterday
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
         {
             //Logger.Info("Criteo ETL - hourly. DateRange {0}.", dateRange); // account...
-            var extracter = new CriteoStrategySummaryExtracter(criteoUtility, account.ExternalId, dateRange, TimeZoneOffset);
+            var extractor = new CriteoStrategySummaryExtracter(criteoUtility, account.ExternalId, dateRange, TimeZoneOffset);
             var loader = new TDStrategySummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
         }
 
         private IEnumerable<ExtAccount> GetAccounts()

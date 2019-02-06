@@ -6,6 +6,7 @@ using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.SearchMarketing.Extracters;
 using CakeExtracter.Etl.SearchMarketing.Loaders;
+using CakeExtracter.Helpers;
 using ClientPortal.Data.Contexts;
 
 namespace CakeExtracter.Commands
@@ -13,6 +14,8 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchSearchDailySummariesAdWordsCommand : ConsoleCommand
     {
+        private const int DefaultDaysAgo = 41;
+
         public static int RunStatic(int? searchProfileId = null, string clientId = null, DateTime? start = null, DateTime? end = null, int? daysAgoToStart = null, bool getClickAssistConvStats = false, bool getConversionTypeStats = false, bool getAllStats = false)
         {
             AutoMapperBootstrapper.CheckRunSetup();
@@ -71,7 +74,7 @@ namespace CakeExtracter.Commands
             HasOption<string>("v|clientId=", "Client Id", c => ClientId = c);
             HasOption<DateTime>("s|startDate=", "Start Date (optional)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
-            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 41)", c => DaysAgoToStart = c);
+            HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
             HasOption<bool>("b|includeClickType=", "Include ClickType (default is false)", c => IncludeClickType = c);
             HasOption<int>("m|minSearchAccountId=", "Include this and all higher searchAccountIds (optional)", c => MinSearchAccountId = c);
 
@@ -82,11 +85,7 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            if (!DaysAgoToStart.HasValue)
-                DaysAgoToStart = 41; // used if StartDate==null
-            var today = DateTime.Today;
-            var yesterday = today.AddDays(-1);
-            var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
+            var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("AdWords ETL. DateRange {0}.", dateRange);
 
             var searchAccounts = GetSearchAccounts();
@@ -100,31 +99,22 @@ namespace CakeExtracter.Commands
                 bool getAll = (GetAllStats == "true" || GetAllStats == "yes" || GetAllStats == "both");
                 if (GetStandardStats || getAll)
                 {
-                    var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType);
+                    var extractor = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType);
                     var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, IncludeClickType);
-                    var extracterThread = extracter.Start();
-                    var loaderThread = loader.Start(extracter);
-                    extracterThread.Join();
-                    loaderThread.Join();
+                    CommandHelper.DoEtl(extractor, loader);
                 }
                 if (GetClickAssistConvStats || getAll)
                 {
-                    var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType, clickAssistConvStats: true);
+                    var extractor = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType, clickAssistConvStats: true);
                     var loader = new AdWordsApiLoader(searchAccount.SearchAccountId, IncludeClickType, clickAssistConvStats: true);
-                    var extracterThread = extracter.Start();
-                    var loaderThread = loader.Start(extracter);
-                    extracterThread.Join();
-                    loaderThread.Join();
+                    CommandHelper.DoEtl(extractor, loader);
                 }
                 if (GetConversionTypeStats || getAll)
                 {
                     // Note: IncludeClickType==true is not implemented
-                    var extracter = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType, conversionTypeStats: true);
+                    var extractor = new AdWordsApiExtracter(searchAccount.AccountCode, revisedDateRange, IncludeClickType, conversionTypeStats: true);
                     var loader = new AdWordsConvSummaryLoader(searchAccount.SearchAccountId);
-                    var extracterThread = extracter.Start();
-                    var loaderThread = loader.Start(extracter);
-                    extracterThread.Join();
-                    loaderThread.Join();
+                    CommandHelper.DoEtl(extractor, loader);
                 }
             }
             return 0;
@@ -134,6 +124,7 @@ namespace CakeExtracter.Commands
         {
             return GetSearchAccounts("Google", this.SearchProfileId, this.ClientId, minAccountId: this.MinSearchAccountId);
         }
+
         public static IEnumerable<SearchAccount> GetSearchAccounts(string channelName, int? searchProfileId, string accountCode, int? minAccountId = null)
         {
             var searchAccounts = new List<SearchAccount>();
