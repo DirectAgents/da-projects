@@ -26,6 +26,11 @@ namespace BingAds
         private readonly string _folder = ConfigurationManager.AppSettings["BingReportFolder"];
         private readonly string _filename = ConfigurationManager.AppSettings["BingReportFilename"];
 
+        private readonly int[] criticalErrorCodes =
+        {
+            2004 // ReportingServiceNoCompleteDataAvaliable
+        };
+
         private long CustomerID { get; set; }
         private string DeveloperToken { get; set; }
         private string UserName { get; set; }
@@ -339,14 +344,22 @@ namespace BingAds
                 LogError($"Couldn't get OAuth tokens. Error: {ex.Details.Error}. Description: {ex.Details.Description}");
             }
             // Catch Reporting service exceptions
-            catch (FaultException<Microsoft.BingAds.V12.Reporting.AdApiFaultDetail> ex)
+            catch (FaultException<AdApiFaultDetail> ex)
             {
                 LogError(string.Join("; ", ex.Detail.Errors.Select(error => $"{error.Code}: {error.Message}")));
             }
-            catch (FaultException<Microsoft.BingAds.V12.Reporting.ApiFaultDetail> ex)
+            catch (FaultException<ApiFaultDetail> ex)
             {
-                LogError(string.Join("; ", ex.Detail.OperationErrors.Select(error => $"{error.Code}: {error.Message}")));
-                LogError(string.Join("; ", ex.Detail.BatchErrors.Select(error => $"{error.Code}: {error.Message}")));
+                var operationErrorsMessage = string.Join("; ", ex.Detail.OperationErrors.Select(error => $"{error.Code}: {error.Message}"));
+                var batchErrorsMessage = string.Join("; ", ex.Detail.BatchErrors.Select(error => $"{error.Code}: {error.Message}"));
+
+                if (ex.Detail.OperationErrors.Any(error => criticalErrorCodes.Contains(error.Code)))
+                {
+                    throw new Exception($"{operationErrorsMessage}\t{batchErrorsMessage}");
+                }
+
+                LogError(operationErrorsMessage);
+                LogError(batchErrorsMessage);
             }
             catch (WebException ex)
             {
@@ -363,6 +376,7 @@ namespace BingAds
             {
                 LogError(ex.Message);
             }
+
             return filepath;
         }
 

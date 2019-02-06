@@ -8,6 +8,7 @@ using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
+using CakeExtracter.Helpers;
 using DBM;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
@@ -79,29 +80,23 @@ namespace CakeExtracter.Commands
 
         private void DoETL_DailyFromStrategyInDatabase(int accountId, DateRange dateRange)
         {
-            var extracter = new DatabaseStrategyToDailySummaryExtracter(dateRange, accountId);
+            var extractor = new DatabaseStrategyToDailySummaryExtracter(dateRange, accountId);
             var loader = new TDDailySummaryLoader(accountId);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
         }
 
         public void DoETL_Strategy(int accountId, ColumnMapping colMapping, StreamReader streamReader)
         {
             var extractor = new DbmStrategyCsvExtractor(colMapping, streamReader);
             var loader = new TDStrategySummaryLoader(accountId);
-            var extractorThread = extractor.Start();
-            var loaderThread = loader.Start(extractor);
-            extractorThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
         }
 
         // --- setup ---
 
         private void SetupDBMUtility()
         {
-            this.dbmUtility = new DBMUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            dbmUtility = new DBMUtility(m => Logger.Info(m), m => Logger.Warn(m));
             GetTokens();
             dbmUtility.SetupService();
         }

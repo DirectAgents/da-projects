@@ -5,6 +5,7 @@ using System.Linq;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.SearchMarketing.Extracters;
 using CakeExtracter.Etl.SearchMarketing.Loaders;
+using CakeExtracter.Helpers;
 using ClientPortal.Data.Contexts;
 
 namespace CakeExtracter.Commands
@@ -54,15 +55,10 @@ namespace CakeExtracter.Commands
 
                 foreach (var searchAccount in GetSearchAccounts())
                 {
-                    var extracter = new CriteoApiExtracter(searchAccount.AccountCode, dateRange);
+                    var extractor = new CriteoApiExtracter(searchAccount.AccountCode, dateRange);
                     var loader = new CriteoDailySummaryLoader(searchAccount.SearchAccountId);
-
-                    loader.AddUpdateSearchCampaigns(extracter.GetCampaigns());
-
-                    var extracterThread = extracter.Start();
-                    var loaderThread = loader.Start(extracter);
-                    extracterThread.Join();
-                    loaderThread.Join();
+                    loader.AddUpdateSearchCampaigns(extractor.GetCampaigns());
+                    CommandHelper.DoEtl(extractor, loader);
                 }
             }
             return 0;
@@ -78,15 +74,10 @@ namespace CakeExtracter.Commands
 
             foreach (var searchAccount in GetSearchAccounts())
             {
-                var extracter = new CriteoApiExtracter2(searchAccount.AccountCode, dateRange, TimeZoneOffset);
+                var extractor = new CriteoApiExtracter2(searchAccount.AccountCode, dateRange, TimeZoneOffset);
                 var loader = new CriteoDailySummaryLoader2(searchAccount.SearchAccountId);
-
-                loader.AddUpdateSearchCampaigns(extracter.GetCampaigns());
-
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
+                loader.AddUpdateSearchCampaigns(extractor.GetCampaigns());
+                CommandHelper.DoEtl(extractor, loader);
             }
         }
 

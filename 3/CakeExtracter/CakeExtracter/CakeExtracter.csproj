@@ -432,6 +432,9 @@
     <Compile Include="Etl\DSP\Models\ReportEntities\DspReportEntity.cs" />
     <Compile Include="Etl\DSP\Models\ReportEntities\ReportOrder.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\AppleApiExtracter.cs" />
+    <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingConvSummaryExtracter.cs" />
+    <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingDailyNonShoppingSummaryExtractor.cs" />
+    <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingDailyShoppingSummaryExtractor.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\DbExtracters.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AdWordsConvSummaryLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AppleApiLoader.cs" />
@@ -592,7 +595,7 @@
     <Compile Include="Etl\SearchMarketing\Extracters\AdWordsApiExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\AnalyticsApiExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingCsvReportExtracter.cs" />
-    <Compile Include="Etl\SearchMarketing\Extracters\BingApiExtracters.cs" />
+    <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingExtractorBase.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\CriteoApiExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\CriteoApiExtracter2.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\LocalConnexApiExtracter.cs" />
@@ -659,6 +662,7 @@
     <Compile Include="Etl\Loader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\DailySummariesLoader.cs" />
     <Compile Include="Etl\LoaderTask.cs" />
+    <Compile Include="Helpers\CommandHelper.cs" />
     <Compile Include="Helpers\EntityIdStorage.cs" />
     <Compile Include="Helpers\LoadingProgress.cs" />
     <Compile Include="Helpers\SafeContextWrapper.cs" />
