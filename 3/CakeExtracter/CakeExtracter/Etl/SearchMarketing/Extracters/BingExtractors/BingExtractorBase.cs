@@ -3,97 +3,25 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using BingAds;
 using CsvHelper;
 using CsvHelper.TypeConversion;
 
-namespace CakeExtracter.Etl.SearchMarketing.Extracters
+namespace CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors
 {
-    public class BingDailySummaryExtracter : BingExtracterBase
+    public abstract class BingExtractorBase : Extracter<Dictionary<string, string>>
     {
-        private readonly bool includeShopping; // (shopping campaigns)
-        private readonly bool includeNonShopping;
+        protected readonly long AccountId;
+        protected readonly DateTime StartDate;
+        protected readonly DateTime EndDate;
+        protected readonly BingUtility BingUtility;
 
-        public BingDailySummaryExtracter(long accountId, DateTime startDate, DateTime endDate, bool includeShopping = true, bool includeNonShopping = true)
-            : base(accountId, startDate, endDate)
+        protected BingExtractorBase(BingUtility bingUtility, long accountId, DateTime startDate, DateTime endDate)
         {
-            this.includeShopping = includeShopping;
-            this.includeNonShopping = includeNonShopping;
-        }
-
-        protected override void Extract()
-        {
-            Logger.Info("Extracting SearchDailySummaries for {0} from {1} to {2}", accountId, startDate, endDate);
-            if (includeNonShopping)
-            {
-                Logger.Info("...for non-shopping campaigns");
-                var items = ExtractAndEnumerateRows(forShoppingCampaigns: false);
-                Add(items);
-            }
-            if (includeShopping)
-            {
-                Logger.Info("...for shopping campaigns");
-                var items = ExtractAndEnumerateRows(forShoppingCampaigns: true);
-                Add(items);
-            }
-            End();
-        }
-
-        private IEnumerable<Dictionary<string, string>> ExtractAndEnumerateRows(bool forShoppingCampaigns = false)
-        {
-            var bingUtility = new BingAds.BingUtility(m => Logger.Info(m), m => Logger.Warn(m));
-            var filepath = bingUtility.GetReport_DailySummaries(accountId, startDate, endDate, forShoppingCampaigns: forShoppingCampaigns);
-            if (filepath == null)
-                yield break;
-
-            var bingRows = forShoppingCampaigns
-                ? GroupAndEnumerateBingRows(filepath, throwOnMissingField: false)
-                : EnumerateRowsGeneric<BingRow>(filepath, throwOnMissingField: true);
-
-            foreach (var row in EnumerateRowsAsDictionaries(bingRows))
-                yield return row;
-        }
-    }
-
-    public class BingConvSummaryExtracter : BingExtracterBase
-    {
-        public BingConvSummaryExtracter(long accountId, DateTime startDate, DateTime endDate)
-            : base(accountId, startDate, endDate) { }
-
-        protected override void Extract()
-        {
-            Logger.Info("Extracting SearchConvSummaries for {0} from {1} to {2}", accountId, startDate, endDate);
-            var items = ExtractAndEnumerateRows();
-            Add(items);
-            End();
-        }
-
-        private IEnumerable<Dictionary<string, string>> ExtractAndEnumerateRows()
-        {
-            var bingUtility = new BingAds.BingUtility(m => Logger.Info(m), m => Logger.Warn(m));
-            var filepath = bingUtility.GetReport_DailySummariesByGoal(accountId, startDate, endDate);
-            if (filepath == null)
-                yield break;
-
-            var bingRowsWithGoal = EnumerateRowsGeneric<BingRowWithGoal>(filepath, throwOnMissingField: false);
-
-            foreach (var row in EnumerateRowsAsDictionaries(bingRowsWithGoal))
-                yield return row;
-        }
-    }
-
-    // --- Base class ---
-
-    public abstract class BingExtracterBase : Extracter<Dictionary<string, string>>
-    {
-        protected readonly long accountId;
-        protected readonly DateTime startDate;
-        protected readonly DateTime endDate;
-
-        public BingExtracterBase(long accountId, DateTime startDate, DateTime endDate)
-        {
-            this.accountId = accountId;
-            this.startDate = startDate;
-            this.endDate = endDate;
+            AccountId = accountId;
+            StartDate = startDate;
+            EndDate = endDate;
+            BingUtility = bingUtility;
         }
 
         protected IEnumerable<Dictionary<string, string>> EnumerateRowsAsDictionaries<T>(IEnumerable<T> rows)
@@ -108,7 +36,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 foreach (var propertyInfo in properties)
                 {
                     if (propertyInfo.Name == "AccountId" && String.IsNullOrWhiteSpace((string)propertyInfo.GetValue(row)))
-                        dict["AccountId"] = this.accountId.ToString();
+                        dict["AccountId"] = this.AccountId.ToString();
                     else if (propertyInfo.PropertyType == typeof(int))
                         dict[propertyInfo.Name] = ((int)propertyInfo.GetValue(row)).ToString();
                     else if (propertyInfo.PropertyType == typeof(decimal))
@@ -121,8 +49,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 yield return dict;
             }
         }
-
-        // ?Should this be in BingDailySummaryExtracter?
+        
         protected IEnumerable<BingRow> GroupAndEnumerateBingRows(string filepath, bool throwOnMissingField)
         {
             var groups = EnumerateRowsGeneric<BingRow>(filepath, throwOnMissingField)
@@ -146,16 +73,19 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 yield return bingRow;
             }
         }
+
         protected static IEnumerable<T> EnumerateRowsGeneric<T>(string filepath, bool throwOnMissingField)
         {
             TypeConverterOptionsFactory.GetOptions(typeof(decimal)).NumberStyle = NumberStyles.AllowThousands | NumberStyles.AllowDecimalPoint;
 
-            using (StreamReader reader = File.OpenText(filepath))
+            using (var reader = File.OpenText(filepath))
             {
-                for (int i = 0; i < 9; i++)
+                for (var i = 0; i < 9; i++)
+                {
                     reader.ReadLine();
+                }
 
-                using (CsvReader csv = new CsvReader(reader))
+                using (var csv = new CsvReader(reader))
                 {
                     csv.Configuration.SkipEmptyRecords = true;
                     csv.Configuration.WillThrowOnMissingField = throwOnMissingField;
