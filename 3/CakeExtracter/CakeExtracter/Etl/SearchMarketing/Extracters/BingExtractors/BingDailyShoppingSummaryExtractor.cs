@@ -15,12 +15,10 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors
         protected override void Extract()
         {
             Logger.Info("Extracting SearchDailySummaries (shopping campaigns) for {0} from {1} to {2}", AccountId, StartDate, EndDate);
-            var items = ExtractAndEnumerateRows();
-            Add(items);
-            End();
+            ExtractData();
         }
 
-        private IEnumerable<Dictionary<string, string>> ExtractAndEnumerateRows()
+        protected override IEnumerable<Dictionary<string, string>> ExtractAndEnumerateRows()
         {
             var filepath = BingUtility.GetReport_DailySummaries(AccountId, StartDate, EndDate, true);
             if (filepath == null)

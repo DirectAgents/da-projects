@@ -37,7 +37,10 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
         private int UpsertSearchDailySummaries(List<Dictionary<string, string>> items)
         {
+            const string network = ".";
+            const string device = ".";
             var progress = new LoadingProgress();
+
             using (var db = new ClientPortalContext())
             {
                 var passedInAccount = db.SearchAccounts.Find(this.searchAccountId);
@@ -55,18 +58,14 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                             searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.AccountCode == accountCode && sa.Channel == BingChannel);
                     }
 
-                    var pk1 = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId;
-                    var pk2 = DateTime.Parse(item["TimePeriod"]);
-                    var pk3 = ".";
-                    var pk4 = ".";
-                    //var pk5 = ".";
+                    var searchCampaignId = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId;
+                    var time = DateTime.Parse(item["TimePeriod"]);
                     var source = new SearchDailySummary
                     {
-                        SearchCampaignId = pk1,
-                        Date = pk2,
-                        Network = pk3,
-                        Device = pk4,
-                        //ClickType = pk5,
+                        SearchCampaignId = searchCampaignId,
+                        Date = time,
+                        Network = network,
+                        Device = device,
                         Revenue = decimal.Parse(item["Revenue"]),
                         Cost = decimal.Parse(item["Spend"]),
                         Orders = int.Parse(item["Conversions"]),
@@ -81,7 +80,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     else if (searchAccount.RevPerOrder.HasValue)
                         source.Revenue = source.Orders * searchAccount.RevPerOrder.Value;
 
-                    var target = db.Set<SearchDailySummary>().Find(pk1, pk2, pk3, pk4); //, pk5);
+                    var target = db.Set<SearchDailySummary>().Find(searchCampaignId, time, network, device);
                     if (target == null)
                     {
                         db.SearchDailySummaries.Add(source);
@@ -90,10 +89,18 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     else
                     {
                         var entry = db.Entry(target);
-                        entry.State = EntityState.Detached;
-                        AutoMapper.Mapper.Map(source, target);
-                        entry.State = EntityState.Modified;
-                        progress.UpdatedCount++;
+                        if (entry.State != EntityState.Unchanged)
+                        {
+                            Logger.Warn(accountId, "Encountered duplicate for {0:d} - Strategy {1}", time, searchCampaignId);
+                            progress.DuplicateCount++;
+                        }
+                        else
+                        {
+                            entry.State = EntityState.Detached;
+                            AutoMapper.Mapper.Map(source, target);
+                            entry.State = EntityState.Modified;
+                            progress.UpdatedCount++;
+                        }
                     }
 
                     progress.ItemCount++;
@@ -102,7 +109,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                 SafeContextWrapper.TrySaveChanges(db);
             }
 
-            Logger.Info("Saving {0} SearchDailySummaries ({1} updates, {2} additions)", progress.ItemCount, progress.UpdatedCount, progress.AddedCount);
+            Logger.Info($"Saving {progress.ItemCount} SearchDailySummaries ({progress.UpdatedCount} updates, {progress.AddedCount} additions, {progress.DuplicateCount} duplicates)");
             return progress.ItemCount;
         }
 

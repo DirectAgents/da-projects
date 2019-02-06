@@ -24,6 +24,24 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors
             BingUtility = bingUtility;
         }
 
+        protected abstract IEnumerable<Dictionary<string, string>> ExtractAndEnumerateRows();
+
+        protected void ExtractData()
+        {
+            try
+            {
+                var items = ExtractAndEnumerateRows();
+                Add(items);
+            }
+            catch (Exception exception)
+            {
+                var realException = exception.InnerException ?? exception;
+                Logger.Error(realException);
+            }
+
+            End();
+        }
+
         protected IEnumerable<Dictionary<string, string>> EnumerateRowsAsDictionaries<T>(IEnumerable<T> rows)
         {
             foreach (var row in rows)
