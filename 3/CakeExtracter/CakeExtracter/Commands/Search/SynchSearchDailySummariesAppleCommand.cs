@@ -6,6 +6,7 @@ using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.SearchMarketing.Extracters;
 using CakeExtracter.Etl.SearchMarketing.Loaders;
+using CakeExtracter.Helpers;
 using ClientPortal.Data.Contexts;
 
 namespace CakeExtracter.Commands
@@ -13,6 +14,8 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchSearchDailySummariesAppleCommand : ConsoleCommand
     {
+        private const int DefaultDaysAgo = 41;
+
         public static int RunStatic(int? searchProfileId = null, string clientId = null, DateTime? start = null, DateTime? end = null, int? daysAgoToStart = null)
         {
             AutoMapperBootstrapper.CheckRunSetup();
@@ -49,18 +52,14 @@ namespace CakeExtracter.Commands
             HasOption<string>("v|clientId=", "Client Id", c => ClientId = c);
             HasOption<DateTime>("s|startDate=", "Start Date (optional)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
-            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 41)", c => DaysAgoToStart = c);
+            HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
         }
 
         public override int Execute(string[] remainingArguments)
         {
             try
             {
-                if (!DaysAgoToStart.HasValue)
-                    DaysAgoToStart = 41; // used if StartDate==null
-                var today = DateTime.Today;
-                var yesterday = today.AddDays(-1);
-                var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
+                var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
                 Logger.Info("Apple ETL. DateRange {0}.", dateRange);
 
                 var appleAdsUtility = new AppleAdsUtility(m => Logger.Info(m), m => Logger.Warn(m));
@@ -74,12 +73,9 @@ namespace CakeExtracter.Commands
                         startDate = searchAccount.MinSynchDate.Value;
                     var revisedDateRange = new DateRange(startDate, dateRange.ToDate);
 
-                    var extracter = new AppleApiExtracter(appleAdsUtility, revisedDateRange, searchAccount.AccountCode, searchAccount.ExternalId);
+                    var extractor = new AppleApiExtracter(appleAdsUtility, revisedDateRange, searchAccount.AccountCode, searchAccount.ExternalId);
                     var loader = new AppleApiLoader(searchAccount.SearchAccountId);
-                    var extracterThread = extracter.Start();
-                    var loaderThread = loader.Start(extracter);
-                    extracterThread.Join();
-                    loaderThread.Join();
+                    CommandHelper.DoEtl(extractor, loader);
                 }
             }
             catch (Exception ex)

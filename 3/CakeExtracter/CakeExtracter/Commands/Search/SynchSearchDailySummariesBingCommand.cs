@@ -2,18 +2,50 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using BingAds;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.SearchMarketing.Extracters;
+using CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors;
 using CakeExtracter.Etl.SearchMarketing.Loaders;
+using CakeExtracter.Helpers;
 using ClientPortal.Data.Contexts;
 
-namespace CakeExtracter.Commands
+namespace CakeExtracter.Commands.Search
 {
     [Export(typeof(ConsoleCommand))]
     public class SynchSearchDailySummariesBingCommand : ConsoleCommand
     {
-        public static int RunStatic(int? searchProfileId = null, int? accountId = null, DateTime? start = null, DateTime? end = null, int? daysAgoToStart = null, bool getConversionTypeStats = false)
+        private const int DefaultDaysAgo = 41;
+        
+        private bool? includeShopping;
+        private bool? includeNonShopping;
+
+        public int? SearchProfileId { get; set; }
+        public int AccountId { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public int? DaysAgoToStart { get; set; }
+        public bool GetConversionTypeStats { get; set; }
+
+        public bool IncludeShopping => !includeShopping.HasValue || includeShopping.Value;    // default: true
+        public bool IncludeNonShopping => (!includeNonShopping.HasValue || includeNonShopping.Value);    // default: true
+
+        public SynchSearchDailySummariesBingCommand()
+        {
+            IsCommand("synchSearchDailySummariesBing", "synch SearchDailySummaries for Bing API Report");
+            HasOption<int>("p|searchProfileId=", "SearchProfile Id (default = all)", c => SearchProfileId = c);
+            HasOption<int>("v|accountId=", "Account Id", c => AccountId = c);
+            HasOption<DateTime>("s|startDate=", "Start Date (optional)", c => StartDate = c);
+            HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
+            HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
+            HasOption<bool>("r|includeRegular=", "Include Regular(NonShopping) campaigns (default is true)", c => includeNonShopping = c);
+            HasOption<bool>("h|includeShopping=", "Include Shopping campaigns (default is true)", c => includeShopping = c);
+            HasOption<bool>("n|getConversionTypeStats=", "Get conversion-type stats (default is false)", c => GetConversionTypeStats = c);
+            //TODO? change to default:true ?
+        }
+
+        public static int RunStatic(int? searchProfileId = null, int? accountId = null, DateTime? start = null,
+            DateTime? end = null, int? daysAgoToStart = null, bool getConversionTypeStats = false)
         {
             AutoMapperBootstrapper.CheckRunSetup();
             var cmd = new SynchSearchDailySummariesBingCommand
@@ -28,25 +60,6 @@ namespace CakeExtracter.Commands
             return cmd.Run();
         }
 
-        public int? SearchProfileId { get; set; }
-        public int AccountId { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-        public int? DaysAgoToStart { get; set; }
-
-        private bool? _includeShopping;
-        private bool? _includeNonShopping;
-        public bool IncludeShopping
-        {
-            get { return (!_includeShopping.HasValue || _includeShopping.Value); }
-        }   // default: true
-        public bool IncludeNonShopping
-        {
-            get { return (!_includeNonShopping.HasValue || _includeNonShopping.Value); }
-        }   // default: true
-
-        public bool GetConversionTypeStats { get; set; }
-
         public override void ResetProperties()
         {
             SearchProfileId = null;
@@ -54,69 +67,34 @@ namespace CakeExtracter.Commands
             StartDate = null;
             EndDate = null;
             DaysAgoToStart = null;
-            _includeShopping = null;
-            _includeNonShopping = null;
+            includeShopping = null;
+            includeNonShopping = null;
             GetConversionTypeStats = false;
-        }
-
-        public SynchSearchDailySummariesBingCommand()
-        {
-            IsCommand("synchSearchDailySummariesBing", "synch SearchDailySummaries for Bing API Report");
-            HasOption<int>("p|searchProfileId=", "SearchProfile Id (default = all)", c => SearchProfileId = c);
-            HasOption<int>("v|accountId=", "Account Id", c => AccountId = c);
-            HasOption<DateTime>("s|startDate=", "Start Date (optional)", c => StartDate = c);
-            HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
-            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 41)", c => DaysAgoToStart = c);
-            HasOption<bool>("r|includeRegular=", "Include Regular(NonShopping) campaigns (default is true)", c => _includeNonShopping = c);
-            HasOption<bool>("h|includeShopping=", "Include Shopping campaigns (default is true)", c => _includeShopping = c);
-            HasOption<bool>("n|getConversionTypeStats=", "Get conversion-type stats (default is false)", c => GetConversionTypeStats = c);
-            //TODO? change to default:true ?
         }
 
         public override int Execute(string[] remainingArguments)
         {
             //GlobalProxySelection.Select = new WebProxy("127.0.0.1", 8888);
-            if (!DaysAgoToStart.HasValue)
-                DaysAgoToStart = 41; // used if StartDate==null
-            var today = DateTime.Today;
-            var yesterday = today.AddDays(-1);
-            var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
+            var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Bing ETL. DateRange {0}.", dateRange);
 
             foreach (var searchAccount in GetSearchAccounts())
             {
-                DateTime startDate = dateRange.FromDate;
-                DateTime endDate = dateRange.ToDate;
+                var startDate = dateRange.FromDate;
+                var endDate = dateRange.ToDate;
                 if (searchAccount.MinSynchDate.HasValue && (startDate < searchAccount.MinSynchDate.Value))
-                    startDate = searchAccount.MinSynchDate.Value;
-
-                int accountId;
-                if (int.TryParse(searchAccount.AccountCode, out accountId))
                 {
-                    if (IncludeShopping || IncludeNonShopping)
-                    {
-                        var extracter = new BingDailySummaryExtracter(accountId, startDate, endDate, includeShopping: IncludeShopping, includeNonShopping: IncludeNonShopping);
-                        var loader = new BingLoader(searchAccount.SearchAccountId);
-                        var extracterThread = extracter.Start();
-                        var loaderThread = loader.Start(extracter);
-                        extracterThread.Join();
-                        loaderThread.Join();
-                    }
-                    if (GetConversionTypeStats)
-                    {
-                        //TODO: handle dates with no stats... keep track of all dates within the range and for those missing when done, delete the SCS's
-                        //      (could do in extracter or loader or have loader return dates loaded, or missing dates, or have a method to call to delete SCS's
-                        //       that didn't have any items)
-                        var extracter = new BingConvSummaryExtracter(accountId, startDate, endDate);
-                        var loader = new BingConvSummaryLoader(searchAccount.SearchAccountId);
-                        var extracterThread = extracter.Start();
-                        var loaderThread = loader.Start(extracter);
-                        extracterThread.Join();
-                        loaderThread.Join();
-                    }
+                    startDate = searchAccount.MinSynchDate.Value;
+                }
+
+                if (int.TryParse(searchAccount.AccountCode, out var accountId))
+                {
+                    DoEtls(searchAccount, accountId, startDate, endDate);
                 }
                 else
+                {
                     Logger.Info("AccountCode should be an int. Skipping: {0}", searchAccount.AccountCode);
+                }
             }
             return 0;
         }
@@ -174,5 +152,45 @@ namespace CakeExtracter.Commands
             return searchAccounts;
         }
 
+        private static void DoEtlDailyShopping(BingUtility bingUtility, SearchAccount searchAccount, int accountId, DateTime startDate, DateTime endDate)
+        {
+            var extractor = new BingDailyShoppingSummaryExtractor(bingUtility, accountId, startDate, endDate);
+            var loader = new BingLoader(searchAccount.SearchAccountId);
+            CommandHelper.DoEtl(extractor, loader);
+        }
+
+        private static void DoEtlDailyNonShopping(BingUtility bingUtility, SearchAccount searchAccount, int accountId, DateTime startDate, DateTime endDate)
+        {
+            var extractor = new BingDailyNonShoppingSummaryExtractor(bingUtility, accountId, startDate, endDate);
+            var loader = new BingLoader(searchAccount.SearchAccountId);
+            CommandHelper.DoEtl(extractor, loader);
+        }
+
+        private static void DoEtlConv(BingUtility bingUtility, SearchAccount searchAccount, int accountId, DateTime startDate, DateTime endDate)
+        {
+            //TODO: handle dates with no stats... keep track of all dates within the range and for those missing when done, delete the SCS's
+            //      (could do in extracter or loader or have loader return dates loaded, or missing dates, or have a method to call to delete SCS's
+            //       that didn't have any items)
+            var extractor = new BingConvSummaryExtractor(bingUtility, accountId, startDate, endDate);
+            var loader = new BingConvSummaryLoader(searchAccount.SearchAccountId);
+            CommandHelper.DoEtl(extractor, loader);
+        }
+
+        private void DoEtls(SearchAccount searchAccount, int accountId, DateTime startDate, DateTime endDate)
+        {
+            var bingUtility = new BingUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            if (IncludeShopping)
+            {
+                DoEtlDailyShopping(bingUtility, searchAccount, accountId, startDate, endDate);
+            }
+            if (IncludeNonShopping)
+            {
+                DoEtlDailyNonShopping(bingUtility, searchAccount, accountId, startDate, endDate);
+            }
+            if (GetConversionTypeStats)
+            {
+                DoEtlConv(bingUtility, searchAccount, accountId, startDate, endDate);
+            }
+        }
     }
 }
