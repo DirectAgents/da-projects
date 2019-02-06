@@ -122,7 +122,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters
                 }
                 catch (CsvHelperException ex)
                 {
-                    Logger.Error(ex);
+                    Logger.Warn(ex.Message);
+                    throw ex;
                 }
                 return GroupAndEnumerate(csvRows);
             }
