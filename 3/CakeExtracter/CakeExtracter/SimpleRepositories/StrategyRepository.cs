@@ -15,7 +15,10 @@ namespace CakeExtracter.SimpleRepositories
 
         static StrategyRepository()
         {
-            StrategyStorage = new EntityIdStorage<Strategy>(x => x.Id, x => $"{x.AccountId} {x.Name} {x.ExternalId}", x => $"{x.AccountId} {x.ExternalId}");
+            StrategyStorage = new EntityIdStorage<Strategy>(x => x.Id,
+                x => (x.ExternalId == null && x.Name == null) ? null : $"{x.AccountId} {x.Name} {x.ExternalId}",
+                x => (x.ExternalId == null) ? null : $"{x.AccountId} {x.ExternalId}",
+                x => (x.Name == null) ? null : $"{x.AccountId} {x.Name}");
         }
 
         public EntityIdStorage<Strategy> IdStorage => StrategyStorage;
