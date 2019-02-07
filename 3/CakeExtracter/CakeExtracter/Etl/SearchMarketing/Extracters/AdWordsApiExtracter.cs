@@ -4,14 +4,14 @@ using System.Configuration;
 using System.Xml;
 using Google.Api.Ads.AdWords.Lib;
 using Google.Api.Ads.AdWords.Util.Reports;
-using Google.Api.Ads.AdWords.v201802;
+using Google.Api.Ads.AdWords.v201809;
 using Google.Api.Ads.Common.Util.Reports;
 
 namespace CakeExtracter.Etl.SearchMarketing.Extracters
 {
     public class AdWordsApiExtracter : Extracter<Dictionary<string, string>>
     {
-        const string VERSION = "v201802";
+        const string VERSION = "v201809";
         private readonly string reportFilePath = ConfigurationManager.AppSettings["AdWordsReportFilePath"];
 
         private readonly string clientCustomerId;
@@ -61,7 +61,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             }
             catch (Exception ex)
             {
-                Logger.Info("Extraction error: {0}", ex.Message);
+                Logger.Warn("Extraction error: {0}", ex.Message);
             }
             End();
         }
@@ -189,7 +189,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to download AdWords report.", ex);
+                throw new Exception($"Failed to download AdWords report: {ex}");
             }
         }
 

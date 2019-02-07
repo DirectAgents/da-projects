@@ -36,28 +36,35 @@ namespace CakeExtracter.Etl
 
         private void DoLoad()
         {
-            LoadedCount = 0;
-            ExtractedCount = 0;
-
-            foreach (var list in extracter.EnumerateAll().InBatches(BatchSize))
+            try
             {
-                int loadCount = Load(list);
+                LoadedCount = 0;
+                ExtractedCount = 0;
 
-                Interlocked.Add(ref LoadedCount, loadCount);
-                ExtractedCount = extracter.Added;
+                foreach (var list in extracter.EnumerateAll().InBatches(BatchSize))
+                {
+                    var loadCount = Load(list);
 
-                Logger.Info(accountId, "Extracted: {0} Loaded: {1} Queue: {2} Done: {3}", ExtractedCount, LoadedCount,
-                            extracter.Count, extracter.Done);
+                    Interlocked.Add(ref LoadedCount, loadCount);
+                    ExtractedCount = extracter.Added;
+
+                    Logger.Info(accountId, "Extracted: {0} Loaded: {1} Queue: {2} Done: {3}", ExtractedCount,
+                        LoadedCount,extracter.Count, extracter.Done);
+                }
+
+                if (LoadedCount != ExtractedCount)
+                {
+                    var ex = new Exception($"Unmatched counts: loaded {LoadedCount}, extracted {ExtractedCount}");
+                    Logger.Error(accountId, ex);
+                    throw ex;
+                }
+
+                AfterLoad();
             }
-
-            if (LoadedCount != ExtractedCount)
+            catch (Exception e)
             {
-                var ex = new Exception(string.Format("Unmatched counts: loaded {0}, extracted {1}", LoadedCount, ExtractedCount));
-                Logger.Error(accountId, ex);
-                throw ex;
+                Logger.Error(new Exception($"Exception in loader: {e}", e));
             }
-
-            AfterLoad();
         }
 
         protected abstract int Load(List<T> items);
