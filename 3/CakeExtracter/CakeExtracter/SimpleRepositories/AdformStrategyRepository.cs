@@ -9,15 +9,21 @@ using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.SimpleRepositories
 {
-    class StrategyRepository : ISimpleRepository<Strategy>
+    /// <summary>
+    /// Adform Strategy Repository for Adform ETL:
+    /// uses instead of the simple Strategy Repository,
+    /// because it needs other keys when working with Entity Storage
+    /// </summary>
+    class AdformStrategyRepository : ISimpleRepository<Strategy>
     {
         private static readonly EntityIdStorage<Strategy> StrategyStorage;
 
-        static StrategyRepository()
+        static AdformStrategyRepository()
         {
-            StrategyStorage = new EntityIdStorage<Strategy>(x => x.Id, 
-                x => $"{x.AccountId} {x.Name} {x.ExternalId}", 
-                x => $"{x.AccountId} {x.ExternalId}");
+            StrategyStorage = new EntityIdStorage<Strategy>(x => x.Id,
+                x => (x.ExternalId == null && x.Name == null) ? null : $"{x.AccountId} {x.Name} {x.ExternalId}",
+                x => (x.ExternalId == null) ? null : $"{x.AccountId} {x.ExternalId}",
+                x => (x.Name == null) ? null : $"{x.AccountId} {x.Name}");
         }
 
         public EntityIdStorage<Strategy> IdStorage => StrategyStorage;
