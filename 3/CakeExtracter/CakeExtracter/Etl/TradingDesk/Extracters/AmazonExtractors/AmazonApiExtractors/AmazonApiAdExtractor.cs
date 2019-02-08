@@ -49,7 +49,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             {
                 RemoveOldData(date);
             }
-
             Add(items);
         }
 

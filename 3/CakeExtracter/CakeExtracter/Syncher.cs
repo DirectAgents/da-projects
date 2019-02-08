@@ -6,7 +6,6 @@ using CakeExtracter.Commands;
 using CakeExtracter.Data;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Web.Models.Cake;
-using EntityFramework.Extensions;
 
 namespace CakeExtracter
 {
@@ -112,11 +111,11 @@ namespace CakeExtracter
                 if (conversionsOnly.HasValue)
                     metricCounts = metricCounts.Where(mc => mc.conversions_only == conversionsOnly.Value);
 
-                int numDeleted = metricCounts.Delete();
+                //int numDeleted = metricCounts.Delete();
 
                 db.SaveChanges();
 
-                Console.WriteLine("deleted {0} MetricCounts", numDeleted);
+                Console.WriteLine("deleted {0} MetricCounts", 0);
             }
         }
 
