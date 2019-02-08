@@ -94,7 +94,7 @@ namespace CakeExtracter.Commands
                 {
                     if (statsType.Daily && !FromDatabase)
                     {
-                        DoETL_Daily(dateRange, account, amazonUtility);
+                        //DoETL_Daily(dateRange, account, amazonUtility);
                     }
 
                     if (statsType.Strategy)
@@ -104,27 +104,27 @@ namespace CakeExtracter.Commands
 
                     if (statsType.Daily && FromDatabase)
                     {
-                        DoETL_DailyFromStrategyInDatabase(dateRange, account); // need to update strat stats first
+                        //DoETL_DailyFromStrategyInDatabase(dateRange, account); // need to update strat stats first
                     }
 
                     if (statsType.AdSet)
                     {
-                        DoETL_AdSet(dateRange, account, amazonUtility);
+                        //DoETL_AdSet(dateRange, account, amazonUtility);
                     }
 
                     if (statsType.Creative)
                     {
-                        DoETL_Creative(dateRange, account, amazonUtility);
+                        //DoETL_Creative(dateRange, account, amazonUtility);
                     }
 
                     if (statsType.Keyword)
                     {
-                        DoETL_Keyword(dateRange, account, amazonUtility);
+                        //DoETL_Keyword(dateRange, account, amazonUtility);
                     }
 
                     if (statsType.SearchTerm && !statsType.All)
                     {
-                        DoETL_SearchTerm(dateRange, account, amazonUtility);
+                    //    DoETL_SearchTerm(dateRange, account, amazonUtility);
                     }
                 }
                 catch (Exception ex)
@@ -206,7 +206,7 @@ namespace CakeExtracter.Commands
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
             var extracter = new AmazonApiAdExtrator(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
-            var loader = new AmazonAdSummaryLoader(account.Id);
+            var loader = new AmazonAdInfoLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
