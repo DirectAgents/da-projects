@@ -21,13 +21,14 @@ namespace DirectAgents.Web.Areas.Cake.Controllers
             return View(advs.OrderBy(x => x.AdvertiserName));
         }
 
-        public ActionResult IndexGauge() //(bool all = false)
+        public ActionResult IndexGauge(DateTime? start, DateTime? end)
         {
             var today = DateTime.Today;
-            var monthStart = new DateTime(today.Year, today.Month, 1);
-            var advGaugesQuery = daRepo.GetGaugesByAdvertiser(startDateForStats: monthStart);
+            start = start ?? new DateTime(today.Year, today.Month, 1);
+
+            var advGaugesQuery = daRepo.GetGaugesByAdvertiser(startDateForStats: start);
             var advGauges = advGaugesQuery.OrderBy(x => x.Advertiser.AdvertiserName).ToList();
-            advGauges.Add(daRepo.GetGaugeForAllAdvertisers(startDateForStats: monthStart));
+            advGauges.Add(daRepo.GetGaugeForAllAdvertisers(startDateForStats: start));
             return View(advGauges);
         }
 

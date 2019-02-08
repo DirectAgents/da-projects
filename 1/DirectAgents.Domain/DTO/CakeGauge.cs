@@ -35,8 +35,32 @@ namespace DirectAgents.Domain.DTO
     {
         public Advertiser Advertiser { get; set; }
 
-        public IQueryable<CampSum> CampSums { get; set; }
-        public IQueryable<AffSubSummary> AffSubSums { get; set; }
-        public IQueryable<EventConversion> EventConvs { get; set; }
+        public DateTime? StartDateForStats { get; set; }
+        public DateTime? EndDateForStats { get; set; }
+
+        public IQueryable<CampSum> CampSumsAll { get; set; }
+        public IQueryable<CampSum> CampSumsForStats {
+            get
+            {
+                if (CampSumsAll == null)
+                    return null;
+                var campSums = CampSumsAll;
+                if (StartDateForStats.HasValue)
+                    campSums = campSums.Where(x => x.Date >= StartDateForStats.Value);
+                if (EndDateForStats.HasValue)
+                    campSums = campSums.Where(x => x.Date <= EndDateForStats.Value);
+                return campSums;
+            }
+        }
+        //TODO: use a cache, in case this is called more than once
+
+        public IQueryable<AffSubSummary> AffSubSumsAll { get; set; }
+        public IQueryable<AffSubSummary> AffSubSumsForStats { get; }
+        //TODO: implement!
+
+        public IQueryable<EventConversion> EventConvsAll { get; set; }
+        public IQueryable<EventConversion> EventConvsForStats { get; }
+        //TODO: implement!
+
     }
 }

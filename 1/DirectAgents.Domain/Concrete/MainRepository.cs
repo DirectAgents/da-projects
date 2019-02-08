@@ -407,15 +407,15 @@ namespace DirectAgents.Domain.Concrete
 
         // --- Stats Gauges ---
 
-        public CakeGauge GetGaugeForAllAdvertisers(DateTime? startDateForStats = null)
+        public CakeGauge GetGaugeForAllAdvertisers(DateTime? startDateForStats = null, DateTime? endDateForStats = null)
         {
             var allOffers = GetOffers();
             var allCampSums = GetCampSums();
-            var campSumsForStats = startDateForStats.HasValue ? allCampSums.Where(cs => cs.Date >= startDateForStats.Value) : allCampSums;
+            var campSumsForStats = GetCampSums(startDate: startDateForStats, endDate: endDateForStats);
             var allAffSubSums = GetAffSubSummaries();
-            var affSubSumsForStats = startDateForStats.HasValue ? allAffSubSums.Where(afss => afss.Date >= startDateForStats.Value) : allAffSubSums;
+            var affSubSumsForStats = GetAffSubSummaries(startDate: startDateForStats, endDate: endDateForStats);
             var allConvs = GetEventConversions();
-            var convsForStats = startDateForStats.HasValue ? allConvs.Where(ec => ec.ConvDate >= startDateForStats.Value) : allConvs;
+            var convsForStats = GetEventConversions(startDate: startDateForStats, endDate: endDateForStats);
             var gauge = new CakeGauge
             {
                 Advertiser = new Advertiser { AdvertiserId = 0, AdvertiserName = "All Advertisers" },
@@ -442,73 +442,49 @@ namespace DirectAgents.Domain.Concrete
             return gauge;
         }
 
-        public IQueryable<CakeGauge> GetGaugesByAdvertiser(bool includeThoseWithNoStats = false, DateTime? startDateForStats = null)
+        public IQueryable<CakeGauge> GetGaugesByAdvertiser(bool includeThoseWithNoStats = false, DateTime? startDateForStats = null, DateTime? endDateForStats = null)
         {
             var advs = GetAdvertisers();
             var ews = advs.Select(adv => new EntityWithStats
             {
+                StartDateForStats = startDateForStats,
+                EndDateForStats = endDateForStats,
                 Advertiser = adv,
-                CampSums = adv.Offers.AsQueryable().SelectMany(o => o.Camps).SelectMany(c => c.CampSums),
-                AffSubSums = adv.Offers.AsQueryable().SelectMany(o => o.AffSubSummaries),
-                EventConvs = adv.Offers.AsQueryable().SelectMany(o => o.EventConversions)
+                CampSumsAll = adv.Offers.AsQueryable().SelectMany(o => o.Camps).SelectMany(c => c.CampSums),
+                AffSubSumsAll = adv.Offers.AsQueryable().SelectMany(o => o.AffSubSummaries),
+                EventConvsAll = adv.Offers.AsQueryable().SelectMany(o => o.EventConversions)
             });
             if (!includeThoseWithNoStats)
-                ews = ews.Where(x => x.CampSums.Any() || x.AffSubSums.Any() || x.EventConvs.Any());
+                ews = ews.Where(x => x.CampSumsAll.Any() || x.AffSubSumsAll.Any() || x.EventConvsAll.Any());
 
             IQueryable<CakeGauge> gauges;
-            if (startDateForStats.HasValue) // often startDate is the first of the month...
+            gauges = ews.Select(x => new CakeGauge()
             {
-                gauges = ews.Select(x => new CakeGauge()
-                {
-                    Advertiser = x.Advertiser,
-                    NumOffers = x.Advertiser.Offers.Count(),
-                    CampSums = new CakeGauge.Range() {
-                        Earliest = x.CampSums.Min(cs => (DateTime?)cs.Date),
-                        Latest = x.CampSums.Max(cs => (DateTime?)cs.Date),
-                        NumConvs = x.CampSums.Where(cs => cs.Date >= startDateForStats.Value).Sum(cs => (decimal?)cs.Conversions) ?? 0,
-                        NumConvsPaid = x.CampSums.Where(cs => cs.Date >= startDateForStats.Value).Sum(cs => (decimal?)cs.Paid) ?? 0
-                    },
-                    AffSubSums = new CakeGauge.Range() {
-                        Earliest = x.AffSubSums.Min(afss => (DateTime?)afss.Date),
-                        Latest = x.AffSubSums.Max(afss => (DateTime?)afss.Date),
-                        NumConvs = x.AffSubSums.Where(afss => afss.Date >= startDateForStats.Value).Sum(afss => (decimal?)afss.Conversions) ?? 0,
-                        NumConvsPaid = x.AffSubSums.Where(afss => afss.Date >= startDateForStats.Value).Sum(afss => (decimal?)afss.Paid) ?? 0
-                    },
-                    EventConvs = new CakeGauge.Range() {
-                        Earliest = x.EventConvs.Min(ec => (DateTime?)ec.ConvDate),
-                        Latest = x.EventConvs.Max(ec => (DateTime?)ec.ConvDate),
-                        NumConvs = x.EventConvs.Where(ec => ec.ConvDate >= startDateForStats.Value).Count(),
-                        NumConvsPaid = 0
-                    },
-                });
-            }
-            else // compute NumConvs, etc, for everything in the db...
-            {
-                gauges = ews.Select(x => new CakeGauge()
-                {
-                    Advertiser = x.Advertiser,
-                    CampSums = new CakeGauge.Range() {
-                        Earliest = x.CampSums.Min(cs => (DateTime?)cs.Date),
-                        Latest = x.CampSums.Max(cs => (DateTime?)cs.Date),
-                        NumConvs = x.CampSums.Sum(cs => (decimal?)cs.Conversions) ?? 0,
-                        NumConvsPaid = x.CampSums.Sum(cs => (decimal?)cs.Paid) ?? 0
-                    },
-                    AffSubSums = new CakeGauge.Range()
-                    {
-                        Earliest = x.AffSubSums.Min(afss => (DateTime?)afss.Date),
-                        Latest = x.AffSubSums.Max(afss => (DateTime?)afss.Date),
-                        NumConvs = x.AffSubSums.Sum(afss => (decimal?)afss.Conversions) ?? 0,
-                        NumConvsPaid = x.AffSubSums.Sum(afss => (decimal?)afss.Paid) ?? 0
-                    },
-                    EventConvs = new CakeGauge.Range()
-                    {
-                        Earliest = x.EventConvs.Min(ec => (DateTime?)ec.ConvDate),
-                        Latest = x.EventConvs.Max(ec => (DateTime?)ec.ConvDate),
-                        NumConvs = x.EventConvs.Count(),
-                        NumConvsPaid = 0
-                    }
-                });
-            }
+                Advertiser = x.Advertiser,
+                NumOffers = x.Advertiser.Offers.Count(),
+                CampSums = new CakeGauge.Range() {
+                    Earliest = x.CampSumsAll.Min(cs => (DateTime?)cs.Date),
+                    Latest = x.CampSumsAll.Max(cs => (DateTime?)cs.Date),
+                    NumConvs = x.CampSumsForStats.Sum(cs => (decimal?)cs.Conversions) ?? 0,
+                    NumConvsPaid = x.CampSumsForStats.Sum(cs => (decimal?)cs.Paid) ?? 0
+                    //TODO: project... x.CampSumsForStats.Select(x => new {convs = cs.Conversions, paid = cs.Paid})
+                    // (so it's one db query instead of two) ??
+                },
+                AffSubSums = new CakeGauge.Range() {
+                    Earliest = x.AffSubSumsAll.Min(afss => (DateTime?)afss.Date),
+                    Latest = x.AffSubSumsAll.Max(afss => (DateTime?)afss.Date),
+                    //TODO: use AffSubSumsForStats
+                    NumConvs = x.AffSubSumsAll.Where(afss => afss.Date >= startDateForStats.Value).Sum(afss => (decimal?)afss.Conversions) ?? 0,
+                    NumConvsPaid = x.AffSubSumsAll.Where(afss => afss.Date >= startDateForStats.Value).Sum(afss => (decimal?)afss.Paid) ?? 0
+                },
+                EventConvs = new CakeGauge.Range() {
+                    Earliest = x.EventConvsAll.Min(ec => (DateTime?)ec.ConvDate),
+                    Latest = x.EventConvsAll.Max(ec => (DateTime?)ec.ConvDate),
+                    //TODO: use EventConvsForStats
+                    NumConvs = x.EventConvsAll.Where(ec => ec.ConvDate >= startDateForStats.Value).Count(),
+                    NumConvsPaid = 0
+                },
+            });
             return gauges;
         }
 
