@@ -6,7 +6,7 @@ using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
 {
-    public class AmazonCampaignSummaryLoader : Loader<StrategySummary>
+    public class AmazonCampaignSummaryLoader : BaseAmazonLevelLoader<StrategySummary>
     {
         private readonly TDStrategySummaryLoader summaryItemsLoader;
 

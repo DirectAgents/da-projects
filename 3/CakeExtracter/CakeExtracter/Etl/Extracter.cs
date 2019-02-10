@@ -8,8 +8,15 @@ namespace CakeExtracter.Etl
     public abstract class Extracter<T> : IDisposable
     {
         private int added;
-        private readonly BlockingCollection<T> items = new BlockingCollection<T>(5000);
+        private readonly BlockingCollection<T> items;
         private readonly object locker = new object();
+
+        private const int defaultCollectionBoundedCapacity = 5000;
+
+        protected Extracter(int collectionBoundedCapacity = defaultCollectionBoundedCapacity)
+        {
+            items = new BlockingCollection<T>(collectionBoundedCapacity);
+        }
 
         public Thread Start()
         {

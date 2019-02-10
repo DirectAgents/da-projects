@@ -125,8 +125,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             {
                 var items = db.KeywordSummaries.Where(x => x.Date == date && x.Keyword.AccountId == accountId);
                 var metrics = db.KeywordSummaryMetrics.Where(x => x.Date == date && x.Keyword.AccountId == accountId);
-                db.KeywordSummaryMetrics.RemoveRange(metrics);
-                db.KeywordSummaries.RemoveRange(items);
+                db.BulkDelete(metrics);
+                db.BulkDelete(items);
                 var numChanges = SafeContextWrapper.TrySaveChanges(db);
                 Logger.Info(accountId, "The cleaning of KeywordSummaries for account ({0}) is over - {1}. Count of deleted objects: {2}", accountId, date, numChanges);
             }

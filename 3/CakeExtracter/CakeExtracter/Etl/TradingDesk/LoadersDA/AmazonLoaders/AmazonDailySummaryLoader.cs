@@ -6,13 +6,14 @@ using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
 {
-    public class AmazonDailySummaryLoader : Loader<DailySummary>
+    public class AmazonDailySummaryLoader : BaseAmazonLevelLoader<DailySummary>
     {
         private readonly TDDailySummaryLoader summaryItemsLoader;
 
         private readonly AmazonSummaryMetricLoader<DailySummaryMetric> summaryMetricsItemsLoader;
 
-        public AmazonDailySummaryLoader(int accountId) : base(accountId)
+        public AmazonDailySummaryLoader(int accountId) 
+            : base(accountId)
         {
             summaryItemsLoader = new TDDailySummaryLoader(accountId);
             summaryMetricsItemsLoader = new AmazonSummaryMetricLoader<DailySummaryMetric>();

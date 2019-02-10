@@ -87,8 +87,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             {
                 var items = db.AdSetSummaries.Where(x => x.Date == date && x.AdSet.AccountId == accountId);
                 var metrics = db.AdSetSummaryMetrics.Where(x => x.Date == date && x.AdSet.AccountId == accountId);
-                db.AdSetSummaryMetrics.RemoveRange(metrics);
-                db.AdSetSummaries.RemoveRange(items);
+                db.BulkDelete(metrics);
+                db.BulkDelete(items);
                 var numChanges = SafeContextWrapper.TrySaveChanges(db);
                 Logger.Info(accountId, "The cleaning of AdSetSummaries for account ({0}) is over - {1}. Count of deleted objects: {2}", accountId, date, numChanges);
             }

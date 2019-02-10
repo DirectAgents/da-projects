@@ -133,8 +133,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             {
                 var items = db.StrategySummaries.Where(x => x.Date == date && x.Strategy.AccountId == accountId && campaignTypesFromApi.Contains(x.Strategy.Type.Name));
                 var metrics = db.StrategySummaryMetrics.Where(x => x.Date == date && x.Strategy.AccountId == accountId && campaignTypesFromApi.Contains(x.Strategy.Type.Name));
-                db.StrategySummaryMetrics.RemoveRange(metrics);
-                db.StrategySummaries.RemoveRange(items);
+                db.BulkDelete(metrics);
+                db.BulkDelete(items);
                 var numChanges = SafeContextWrapper.TrySaveChanges(db);
                 Logger.Info(accountId, "The cleaning of StrategySummaries for account ({0}) is over - {1}. Count of deleted objects: {2}", accountId, date, numChanges);
             }

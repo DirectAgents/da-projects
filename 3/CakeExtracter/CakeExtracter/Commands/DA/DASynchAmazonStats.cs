@@ -87,6 +87,10 @@ namespace CakeExtracter.Commands
 
             Parallel.ForEach(accounts, account =>
             {
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+                // the code that you want to measure comes here
+                watch.Stop();
+                long elapsedMs = watch.Elapsed.Seconds;
                 Logger.Info(account.Id, "Commencing ETL for Amazon account ({0}) {1}", account.Id, account.Name);
                 var amazonUtility = CreateUtility(account);
 
@@ -206,7 +210,7 @@ namespace CakeExtracter.Commands
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
             var extracter = new AmazonApiAdExtrator(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
-            var loader = new AmazonAdInfoLoader(account.Id);
+            var loader = new AmazonAdSummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();

@@ -73,8 +73,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             {
                 var items = db.DailySummaries.Where(x => x.AccountId == accountId && x.Date == date).ToList();
                 var metrics = db.DailySummaryMetrics.Where(x => x.EntityId == accountId && x.Date == date).ToList();
-                db.DailySummaryMetrics.RemoveRange(metrics);
-                db.DailySummaries.RemoveRange(items);
+                db.BulkDelete(metrics);
+                db.BulkDelete(items);
                 var numChanges = SafeContextWrapper.TrySaveChanges(db);
                 Logger.Info(accountId, "The cleaning of DailySummaries for account ({0}) is over - {1}. Count of deleted objects: {2}", accountId, date, numChanges);
             }

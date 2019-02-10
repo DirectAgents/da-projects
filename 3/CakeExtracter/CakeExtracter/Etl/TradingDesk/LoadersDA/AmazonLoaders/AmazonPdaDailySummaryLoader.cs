@@ -5,11 +5,12 @@ using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
 {
-    public class AmazonPdaDailySummaryLoader : Loader<DailySummary>
+    public class AmazonPdaDailySummaryLoader : BaseAmazonLevelLoader<DailySummary>
     {
         private readonly IDailySummaryLoader tdDailySummaryLoader;
 
-        public AmazonPdaDailySummaryLoader(int accountId) : base(accountId)
+        public AmazonPdaDailySummaryLoader(int accountId) 
+            : base(accountId)
         {
             tdDailySummaryLoader = new DailySummaryAdder(accountId);
         }

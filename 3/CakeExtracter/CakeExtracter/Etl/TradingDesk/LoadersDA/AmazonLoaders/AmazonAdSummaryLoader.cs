@@ -8,13 +8,14 @@ using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
 {
     //Assumed that clean before update done!!!!
-    internal class AmazonAdInfoLoader : Loader<TDadSummary>
+    internal class AmazonAdSummaryLoader : BaseAmazonLevelLoader<TDadSummary>
     {
         private readonly TDadSummaryLoader summaryItemsLoader;
 
         private readonly AmazonSummaryMetricLoader<TDadSummaryMetric> summaryMetricsItemsLoader;
 
-        public AmazonAdInfoLoader(int accountId)
+        public AmazonAdSummaryLoader(int accountId)
+            : base(accountId)
         {
             summaryItemsLoader = new TDadSummaryLoader(accountId);
             summaryMetricsItemsLoader = new AmazonSummaryMetricLoader<TDadSummaryMetric>();
