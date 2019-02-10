@@ -5,6 +5,7 @@ using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
+using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
 using System;
@@ -169,16 +170,19 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             var extracter = new AmazonApiDailySummaryExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
             var loader = new AmazonDailySummaryLoader(account.Id);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
             loaderThread.Join();
+            watch.Stop();
         }
 
         private void DoETL_DailyFromStrategyInDatabase(DateRange dateRange, ExtAccount account)
         {
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             var extracter = new DatabaseStrategyToDailySummaryExtracter(dateRange, account.Id);
             var loader = new TDDailySummaryLoader(account.Id);
             var extracterThread = extracter.Start();

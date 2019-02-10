@@ -36,7 +36,12 @@ namespace CakeExtracter.Logging.TimeWatchers.Amazon
             Logger.Info(accountId, "Time tracking data for {0} account.");
             accountTrackingData.levelsDictionary.ForEach(kvPair =>
             {
-                Logger.Info("T");
+                Logger.Info(accountId, "Level: {0}", kvPair.Key);
+                var levelOperationDictionary = kvPair.Value.operationsTimeInfo;
+                levelOperationDictionary.ForEach(operKVPair =>
+                {
+                    Logger.Info(accountId, "Operation: {0} - Time {1}", operKVPair.Key, operKVPair.Value);
+                });
             });
         }
 
