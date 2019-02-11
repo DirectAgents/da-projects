@@ -127,7 +127,7 @@ namespace CakeExtracter.Commands
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
         {
             var extractor = new AdformStrategySummaryExtracter(adformUtility, dateRange, account);
-            var loader = new TDStrategySummaryLoader(account.Id);
+            var loader = new AdformCampaignSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account)

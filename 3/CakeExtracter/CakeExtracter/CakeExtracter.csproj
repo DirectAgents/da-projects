@@ -513,6 +513,7 @@
     <Compile Include="Etl\TradingDesk\Extracters\YAMExtracters.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\Adders\DailySummaryAdder.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\Adders\SummaryMetricAdder.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\AdformCampaignSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdRollAdLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollAttributionSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AdrollSiteStatsLoader.cs" />
@@ -731,6 +732,7 @@
       <DependentUpon>SearchReportRuntimeTextTemplate.tt</DependentUpon>
     </Compile>
     <Compile Include="Reports\SimpleReportManager.cs" />
+    <Compile Include="SimpleRepositories\AdformStrategyRepository.cs" />
     <Compile Include="SimpleRepositories\Interfaces\ISimpleRepository.cs" />
     <Compile Include="SimpleRepositories\StrategyRepository.cs" />
     <Compile Include="SimpleRepositories\TypeRepository.cs" />
