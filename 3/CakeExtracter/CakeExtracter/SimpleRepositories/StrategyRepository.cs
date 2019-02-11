@@ -11,7 +11,7 @@ namespace CakeExtracter.SimpleRepositories
 {
     class StrategyRepository : ISimpleRepository<Strategy>
     {
-        private static readonly EntityIdStorage<Strategy> StrategyStorage;
+        protected static EntityIdStorage<Strategy> StrategyStorage;
 
         static StrategyRepository()
         {

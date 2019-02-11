@@ -21,6 +21,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public AdformCampaignSummaryLoader(int accountId = -1)
             : base(accountId, new AdformStrategyRepository())
         {
+
         }
     }
 }
