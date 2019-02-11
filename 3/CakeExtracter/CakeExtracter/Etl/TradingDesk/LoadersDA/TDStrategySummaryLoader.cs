@@ -26,12 +26,12 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             StrategyStorage = new StrategyRepository().IdStorage;
         }
 
-        public TDStrategySummaryLoader(int accountId = -1)
+        public TDStrategySummaryLoader(int accountId = -1, ISimpleRepository<Strategy> strategyRepository = null)
         {
             AccountId = accountId;
             metricLoader = new SummaryMetricLoader();
             typeRepository = new TypeRepository();
-            strategyRepository = new StrategyRepository();
+            this.strategyRepository = strategyRepository ?? new StrategyRepository();
         }
 
         protected override int Load(List<StrategySummary> items)
