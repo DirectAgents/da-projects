@@ -1,6 +1,4 @@
-﻿using CakeExtracter.Helpers;
-using DirectAgents.Domain.Entities.CPProg;
-using CakeExtracter.SimpleRepositories;
+﻿using CakeExtracter.SimpleRepositories;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
@@ -11,13 +9,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
     /// </summary>
     class AdformCampaignSummaryLoader : TDStrategySummaryLoader
     {
-        public static readonly EntityIdStorage<Strategy> StrategyStorage;
-        
-        static AdformCampaignSummaryLoader()
-        {
-            StrategyStorage = new AdformStrategyRepository().IdStorage;
-        }
-
         public AdformCampaignSummaryLoader(int accountId = -1)
             : base(accountId, new AdformStrategyRepository())
         {
