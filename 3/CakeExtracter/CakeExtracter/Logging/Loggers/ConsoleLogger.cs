@@ -1,4 +1,5 @@
 ﻿using System;
+using CakeExtracter.Helpers;
 
 namespace CakeExtracter.Logging.Loggers
 {
@@ -16,7 +17,7 @@ namespace CakeExtracter.Logging.Loggers
 
         public void Error(Exception exception)
         {
-            Console.WriteLine("Exception: " + exception.Message);
+            Console.WriteLine(GetErrorExceptionMessage(exception));
         }
 
         public void Trace(string format, params object[] args)
@@ -36,12 +37,18 @@ namespace CakeExtracter.Logging.Loggers
 
         public void Error(int accountId, Exception exception)
         {
-            Console.WriteLine("Exception: " + exception.Message);
+            Console.WriteLine(GetErrorExceptionMessage(exception));
         }
 
         public void Trace(int accountId, string format, params object[] args)
         {
             Console.WriteLine("Trace: " + format, args);
+        }
+
+        private string GetErrorExceptionMessage(Exception exception)
+        {
+            var innerExceptionMessages = exception.GetAllMessages();
+            return $"Exception: {exception.Message}{innerExceptionMessages}";
         }
     }
 }
