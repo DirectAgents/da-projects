@@ -330,21 +330,27 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             var numChanges = 0;
             foreach (var tdAd in tdAdInDbList)
             {
-                if (!string.IsNullOrWhiteSpace(tdAdProps.ExternalId))
+                if (!string.IsNullOrWhiteSpace(tdAdProps.ExternalId) && tdAd.ExternalId != tdAdProps.ExternalId)
                 {
                     tdAd.ExternalId = tdAdProps.ExternalId;
+                    numChanges++;
                 }
-                if (!string.IsNullOrWhiteSpace(tdAdProps.Name))
+                if (!string.IsNullOrWhiteSpace(tdAdProps.Name) && tdAd.Name != tdAdProps.Name)
                 {
                     tdAd.Name = tdAdProps.Name;
+                    numChanges++;
                 }
-                if (tdAdProps.AdSetId.HasValue)
+                if (tdAdProps.AdSetId.HasValue && tdAd.AdSetId != tdAdProps.AdSetId)
                 {
                     tdAd.AdSetId = tdAdProps.AdSetId;
+                    numChanges++;
                 }
-                numChanges -= UpdateTDadExternalIds(tdAd, tdAdProps);
+                numChanges += UpdateTDadExternalIds(tdAd, tdAdProps);
             }
-            numChanges += SafeContextWrapper.TrySaveChanges(db);
+            if (numChanges > 0)
+            {
+                SafeContextWrapper.TrySaveChanges(db);
+            }
             return numChanges;
         }
 
@@ -372,7 +378,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                     numChanges++;
                 }
             }
-
             return numChanges;
         }
     }

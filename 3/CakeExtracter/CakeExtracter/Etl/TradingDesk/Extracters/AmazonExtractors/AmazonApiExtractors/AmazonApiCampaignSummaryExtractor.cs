@@ -8,8 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Amazon.Helpers;
-using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
+using CakeExtracter.Logging.TimeWatchers.Amazon;
+using CakeExtracter.Logging.TimeWatchers;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
 {
@@ -91,13 +92,15 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
 
         private void Extract(IEnumerable<AmazonCampaign> campaigns, DateTime date)
         {
-            var sums = ExtractSummaries(date);
-            var items = TransformSummaries(sums, campaigns, date);
+            IEnumerable<StrategySummary> items = null;
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => {
+                var sums = ExtractSummaries(date);
+                items = TransformSummaries(sums, campaigns, date);
+            }, accountId, AmazonJobLevels.strategy, AmazonJobOperations.reportExtracting);
             if (ClearBeforeLoad)
             {
                 RemoveOldData(date);
             }
-
             Add(items);
         }
 
@@ -129,15 +132,16 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         private void RemoveOldData(DateTime date)
         {
             Logger.Info(accountId, "The cleaning of StrategySummaries for account ({0}) has begun - {1}.", accountId, date);
-            using (var db = new ClientPortalProgContext())
-            {
-                var items = db.StrategySummaries.Where(x => x.Date == date && x.Strategy.AccountId == accountId && campaignTypesFromApi.Contains(x.Strategy.Type.Name));
-                var metrics = db.StrategySummaryMetrics.Where(x => x.Date == date && x.Strategy.AccountId == accountId && campaignTypesFromApi.Contains(x.Strategy.Type.Name));
-                db.BulkDelete(metrics);
-                db.BulkDelete(items);
-                var numChanges = SafeContextWrapper.TrySaveChanges(db);
-                Logger.Info(accountId, "The cleaning of StrategySummaries for account ({0}) is over - {1}. Count of deleted objects: {2}", accountId, date, numChanges);
-            }
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => {
+                using (var db = new ClientPortalProgContext())
+                {
+                    var items = db.StrategySummaries.Where(x => x.Date == date && x.Strategy.AccountId == accountId && campaignTypesFromApi.Contains(x.Strategy.Type.Name));
+                    var metrics = db.StrategySummaryMetrics.Where(x => x.Date == date && x.Strategy.AccountId == accountId && campaignTypesFromApi.Contains(x.Strategy.Type.Name));
+                    db.BulkDelete(metrics);
+                    db.BulkDelete(items);
+                }
+            }, accountId, AmazonJobLevels.strategy, AmazonJobOperations.cleanExistingData);
+            Logger.Info(accountId, "The cleaning of StrategySummaries for account ({0}) is over - {1}.", accountId, date);
         }
     }
 }

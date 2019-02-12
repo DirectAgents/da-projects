@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
+using CakeExtracter.Logging.TimeWatchers;
+using CakeExtracter.Logging.TimeWatchers.Amazon;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
 {
@@ -40,13 +42,15 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
 
         private void Extract(DateTime date)
         {
-            var sums = ExtractSummaries(date);
-            var dailySum = TransformSummaries(sums, date);
+            DailySummary dailySum = null;
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => {
+                var sums = ExtractSummaries(date);
+                dailySum = TransformSummaries(sums, date);
+            }, accountId, AmazonJobLevels.account, AmazonJobOperations.reportExtracting);
             if (ClearBeforeLoad)
             {
                 RemoveOldData(date);
             }
-
             Add(dailySum);
         }
 
@@ -69,15 +73,16 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         private void RemoveOldData(DateTime date)
         {
             Logger.Info(accountId, "The cleaning of DailySummaries for account ({0}) has begun - {1}.", accountId, date);
-            using (var db = new ClientPortalProgContext())
-            {
-                var items = db.DailySummaries.Where(x => x.AccountId == accountId && x.Date == date).ToList();
-                var metrics = db.DailySummaryMetrics.Where(x => x.EntityId == accountId && x.Date == date).ToList();
-                db.BulkDelete(metrics);
-                db.BulkDelete(items);
-                var numChanges = SafeContextWrapper.TrySaveChanges(db);
-                Logger.Info(accountId, "The cleaning of DailySummaries for account ({0}) is over - {1}. Count of deleted objects: {2}", accountId, date, numChanges);
-            }
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => {
+                using (var db = new ClientPortalProgContext())
+                {
+                    var items = db.DailySummaries.Where(x => x.AccountId == accountId && x.Date == date).ToList();
+                    var metrics = db.DailySummaryMetrics.Where(x => x.EntityId == accountId && x.Date == date).ToList();
+                    db.BulkDelete(metrics);
+                    db.BulkDelete(items);
+                }
+            }, accountId, AmazonJobLevels.account, AmazonJobOperations.cleanExistingData);
+            Logger.Info(accountId, "The cleaning of DailySummaries for account ({0}) is over - {1}. ", accountId, date);
         }
     }
 }

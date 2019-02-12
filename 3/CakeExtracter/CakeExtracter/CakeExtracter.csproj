@@ -444,6 +444,7 @@
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiAdExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiAdSetExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiCampaignSummaryExtractor.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonDailyStrategyFromDataBaseSummaryExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiDailySummaryExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiKeywordExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiSearchTermExtractor.cs" />
@@ -454,7 +455,7 @@
     <Compile Include="Etl\TradingDesk\Extracters\AdrollSiteStatsCsvExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\CPCExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\CriteoExtracters.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\DatabaseExtracters.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\DatabaseStrategyToDailySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmCreativeCloudStorageExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DBMCreativeExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\DbmStrategyCsvExtractor.cs" />
@@ -671,8 +672,9 @@
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\Loggers\NullLogger.cs" />
+    <Compile Include="Logging\TimeWatchers\Amazon\AmazonJobOperations.cs" />
+    <Compile Include="Logging\TimeWatchers\Amazon\AmazonJobLevels.cs" />
     <Compile Include="Logging\TimeWatchers\Amazon\AmazonTimeTracker.cs" />
-    <Compile Include="Logging\TimeWatchers\Amazon\AmazonWatcherConstants.cs" />
     <Compile Include="Logging\TimeWatchers\Amazon\Models\AmazonAccountTrackingData.cs" />
     <Compile Include="Logging\TimeWatchers\Amazon\Models\AmazonLevelTrackingData.cs" />
     <Compile Include="Mef\Composer.cs" />

@@ -15,7 +15,8 @@ namespace CakeExtracter.Logging.TimeWatchers.Amazon.Models
         public void RecordOperationTime(string operationName, TimeSpan timeSpan)
         {
             var currentTimeSpan = GetOperationTimeSpan(operationName);
-            currentTimeSpan.Add(timeSpan);
+            currentTimeSpan = currentTimeSpan.Add(timeSpan);
+            operationsTimeInfo[operationName] = currentTimeSpan;
         }
 
         private TimeSpan GetOperationTimeSpan(string operationName)

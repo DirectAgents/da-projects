@@ -1,43 +1,25 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using DirectAgents.Domain.Contexts;
+using CakeExtracter.Helpers;
+using CakeExtracter.Logging.TimeWatchers;
 using DirectAgents.Domain.Entities.CPProg;
-using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
 {
-    public class AmazonKeywordSummaryLoader : BaseAmazonLevelLoader<KeywordSummary>
+    public class AmazonKeywordSummaryLoader : BaseAmazonLevelLoader<KeywordSummary, KeywordSummaryMetric>
     {
         private readonly KeywordSummaryLoader summaryLoader;
 
-        private readonly AmazonSummaryMetricLoader<KeywordSummaryMetric> summaryMetricsLoader;
-
-        public AmazonKeywordSummaryLoader(int accountId) 
+        public AmazonKeywordSummaryLoader(int accountId)
             : base(accountId)
         {
             summaryLoader = new KeywordSummaryLoader(accountId);
-            summaryMetricsLoader = new AmazonSummaryMetricLoader<KeywordSummaryMetric>();
         }
 
-        protected override int Load(List<KeywordSummary> summaryItems)
-        {
-            Logger.Info(accountId, "Loading {0} Amazon Keyword Daily Summaries..", summaryItems.Count);
-            EnsureRelatedItems(summaryItems);
-            UpsertKeywordSummaryItems(summaryItems);
-            var summaryMetricItems = GetSummaryMetricsToInsert(summaryItems);
-            summaryMetricsLoader.UpsertSummaryMetrics(summaryMetricItems);
-            return summaryItems.Count;
-        }
+        protected override string LevelName => AmazonJobLevels.keyword;
 
-        private void UpsertKeywordSummaryItems(List<KeywordSummary> summaryItems)
-        {
-            using (var db = new ClientPortalProgContext())
-            {
-                db.BulkInsert(summaryItems);
-            }
-        }
+        protected override object LockerObject => SafeContextWrapper.KeywordLocker;
 
-        private void EnsureRelatedItems(List<KeywordSummary> keywordItems)
+        protected override void EnsureRelatedItems(List<KeywordSummary> keywordItems)
         {
             summaryLoader.PrepareData(keywordItems);
             summaryLoader.AddUpdateDependentStrategies(keywordItems);
@@ -46,26 +28,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
             summaryLoader.AssignKeywordIdToItems(keywordItems);
         }
 
-        private List<SummaryMetric> GetSummaryMetricsToInsert(List<KeywordSummary> summaries)
+        protected override void SetSummaryMetricEntityId(KeywordSummary summary, SummaryMetric summaryMetric)
         {
-            var summaryMetricsToInsert = new List<SummaryMetric>();
-            summaries.ForEach(summary =>
-            {
-                var metrics = summary.InitialMetrics == null
-                ? summary.Metrics
-                : summary.Metrics == null
-                    ? summary.InitialMetrics
-                    : summary.InitialMetrics.Concat(summary.Metrics);
-                metrics.ForEach(metric =>
-                {
-                    metric.EntityId = summary.KeywordId;
-                });
-                if (metrics != null)
-                {
-                    summaryMetricsToInsert.AddRange(metrics);
-                }
-            });
-            return summaryMetricsToInsert;
+            summaryMetric.EntityId = summary.KeywordId;
         }
     }
 }

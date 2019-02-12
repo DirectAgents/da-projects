@@ -6,6 +6,8 @@ using Amazon.Entities.Summaries;
 using Amazon.Enums;
 using CakeExtracter.Common;
 using CakeExtracter.Helpers;
+using CakeExtracter.Logging.TimeWatchers;
+using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 
@@ -42,9 +44,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
 
         private void Extract(DateTime date)
         {
-            var productAdSums = ExtractProductAdSummaries(date);
-            var asinSums = ExtractAsinSummaries(date);
-            var items = TransformSummaries(productAdSums, asinSums, date);
+            IEnumerable<TDadSummary> items = null;
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => {
+                var productAdSums = ExtractProductAdSummaries(date);
+                var asinSums = ExtractAsinSummaries(date);
+                items = TransformSummaries(productAdSums, asinSums, date);
+            }, accountId, AmazonJobLevels.creative, AmazonJobOperations.reportExtracting);
             if (ClearBeforeLoad)
             {
                 RemoveOldData(date);
@@ -120,15 +125,16 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         private void RemoveOldData(DateTime date)
         {
             Logger.Info(accountId, "The cleaning of AdSummaries for account ({0}) has begun - {1}.", accountId, date);
-            using (var db = new ClientPortalProgContext())
-            {
-                var items = db.TDadSummaries.Where(x => x.Date == date && x.TDad.AccountId == accountId);
-                var metrics = db.TDadSummaryMetrics.Where(x => x.Date == date && x.TDad.AccountId == accountId);
-                db.BulkDelete(metrics);
-                db.BulkDelete(items);
-                var numChanges = SafeContextWrapper.TrySaveChanges(db);
-                Logger.Info(accountId, "The cleaning of AdSummaries for account ({0}) is over - {1}. Count of deleted objects: {2}", accountId, date, numChanges);
-            }
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => {
+                using (var db = new ClientPortalProgContext())
+                {
+                    var items = db.TDadSummaries.Where(x => x.Date == date && x.TDad.AccountId == accountId);
+                    var metrics = db.TDadSummaryMetrics.Where(x => x.Date == date && x.TDad.AccountId == accountId);
+                    db.BulkDelete(metrics);
+                    db.BulkDelete(items);
+                }
+            }, accountId, AmazonJobLevels.creative, AmazonJobOperations.cleanExistingData);
+            Logger.Info(accountId, "The cleaning of AdSummaries for account ({0}) is over - {1}.", accountId, date);
         }
     }
 }

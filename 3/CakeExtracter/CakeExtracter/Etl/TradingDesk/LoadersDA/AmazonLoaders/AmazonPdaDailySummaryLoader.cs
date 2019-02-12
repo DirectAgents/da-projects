@@ -5,7 +5,7 @@ using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
 {
-    public class AmazonPdaDailySummaryLoader : BaseAmazonLevelLoader<DailySummary>
+    public class AmazonPdaDailySummaryLoader : Loader<DailySummary>
     {
         private readonly IDailySummaryLoader tdDailySummaryLoader;
 

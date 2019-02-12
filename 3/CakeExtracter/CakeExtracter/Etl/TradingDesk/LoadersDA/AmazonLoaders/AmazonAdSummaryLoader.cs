@@ -1,37 +1,26 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
-using DirectAgents.Domain.Contexts;
+using CakeExtracter.Helpers;
+using CakeExtracter.Logging.TimeWatchers;
 using DirectAgents.Domain.Entities.CPProg;
-using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
 {
     //Assumed that clean before update done!!!!
-    internal class AmazonAdSummaryLoader : BaseAmazonLevelLoader<TDadSummary>
+    internal class AmazonAdSummaryLoader : BaseAmazonLevelLoader<TDadSummary, TDadSummaryMetric>
     {
         private readonly TDadSummaryLoader summaryItemsLoader;
-
-        private readonly AmazonSummaryMetricLoader<TDadSummaryMetric> summaryMetricsItemsLoader;
 
         public AmazonAdSummaryLoader(int accountId)
             : base(accountId)
         {
             summaryItemsLoader = new TDadSummaryLoader(accountId);
-            summaryMetricsItemsLoader = new AmazonSummaryMetricLoader<TDadSummaryMetric>();
         }
 
-        protected override int Load(List<TDadSummary> summaryItems)
-        {
-            Logger.Info(accountId, "Loading {0} Amazon ProductAd / Creative Daily Summaries..", summaryItems.Count);
-            EnsureRelatedItems(summaryItems);
-            UpsertAdSummaryItems(summaryItems);
-            var summaryMetricItems = GetSummaryMetricsToInsert(summaryItems);
-            summaryMetricsItemsLoader.UpsertSummaryMetrics(summaryMetricItems);
-            return summaryItems.Count;
-        }
+        protected override string LevelName => AmazonJobLevels.creative;
 
-        private void EnsureRelatedItems(List<TDadSummary> tDadSummaryItems)
+        protected override object LockerObject => SafeContextWrapper.AdLocker;
+
+        protected override void EnsureRelatedItems(List<TDadSummary> tDadSummaryItems)
         {
             summaryItemsLoader.PrepareData(tDadSummaryItems);
             summaryItemsLoader.AddUpdateDependentAdSets(tDadSummaryItems);
@@ -39,34 +28,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
             summaryItemsLoader.AssignTDadIdToItems(tDadSummaryItems);
         }
 
-        private void UpsertAdSummaryItems(List<TDadSummary> summaryItems)
+        protected override void SetSummaryMetricEntityId(TDadSummary summary, SummaryMetric summaryMetric)
         {
-            using (var db = new ClientPortalProgContext())
-            {
-                db.BulkInsert(summaryItems);
-            }
-        }
-
-        private List<SummaryMetric> GetSummaryMetricsToInsert(List<TDadSummary> adSummaries)
-        {
-            var summaryMetricsToInsert = new List<SummaryMetric>();
-            adSummaries.ForEach(adSummary =>
-            {
-                var metrics = adSummary.InitialMetrics == null
-                ? adSummary.Metrics
-                : adSummary.Metrics == null
-                    ? adSummary.InitialMetrics
-                    : adSummary.InitialMetrics.Concat(adSummary.Metrics);
-                metrics.ForEach(metric=> 
-                {
-                    metric.EntityId = adSummary.TDadId;
-                });
-                if (metrics != null)
-                {
-                    summaryMetricsToInsert.AddRange(metrics);
-                }
-            });
-            return summaryMetricsToInsert;
+            summaryMetric.EntityId = summary.TDadId;
         }
     }
 }

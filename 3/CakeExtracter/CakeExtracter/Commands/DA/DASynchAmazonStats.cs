@@ -1,10 +1,9 @@
 ﻿using Amazon;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors;
-using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
+using CakeExtracter.Logging.TimeWatchers;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
@@ -101,32 +100,26 @@ namespace CakeExtracter.Commands
                     {
                         DoETL_Daily(dateRange, account, amazonUtility);
                     }
-
                     if (statsType.Strategy)
                     {
                         DoETL_Strategy(dateRange, account, amazonUtility);
                     }
-
                     if (statsType.Daily && FromDatabase)
                     {
                         DoETL_DailyFromStrategyInDatabase(dateRange, account); // need to update strat stats first
                     }
-
                     if (statsType.AdSet)
                     {
                         DoETL_AdSet(dateRange, account, amazonUtility);
                     }
-
                     if (statsType.Creative)
                     {
                         DoETL_Creative(dateRange, account, amazonUtility);
                     }
-
                     if (statsType.Keyword)
                     {
                         DoETL_Keyword(dateRange, account, amazonUtility);
                     }
-
                     if (statsType.SearchTerm && !statsType.All)
                     {
                         DoETL_SearchTerm(dateRange, account, amazonUtility);
@@ -136,6 +129,7 @@ namespace CakeExtracter.Commands
                 {
                     Logger.Error(account.Id, ex);
                 }
+                AmazonTimeTracker.Instance.LogTrackingData(account.Id);
                 Logger.Info(account.Id, "Finished ETL for Amazon account ({0}) {1}", account.Id, account.Name);
             });
 
@@ -170,75 +164,93 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-            var extracter = new AmazonApiDailySummaryExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
-            var loader = new AmazonDailySummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
-            watch.Stop();
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
+            {
+                var extracter = new AmazonApiDailySummaryExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
+                var loader = new AmazonDailySummaryLoader(account.Id);
+                var extracterThread = extracter.Start();
+                var loaderThread = loader.Start(extracter);
+                extracterThread.Join();
+                loaderThread.Join();
+            }, account.Id, AmazonJobLevels.account, AmazonJobOperations.total);
         }
 
         private void DoETL_DailyFromStrategyInDatabase(DateRange dateRange, ExtAccount account)
         {
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-            var extracter = new DatabaseStrategyToDailySummaryExtracter(dateRange, account.Id);
-            var loader = new TDDailySummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
+            {
+                var extracter = new AmazonDailyStrategyFromDataBaseSummaryExtractor(dateRange, account.Id);
+                var loader = new AmazonDailySummaryLoader(account.Id);
+                var extracterThread = extracter.Start();
+                var loaderThread = loader.Start(extracter);
+                extracterThread.Join();
+                loaderThread.Join();
+            }, account.Id, AmazonJobLevels.account, AmazonJobOperations.total);
         }
 
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            var extracter = new AmazonApiCampaignSummaryExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
-            var loader = new AmazonCampaignSummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
+            {
+                var extracter = new AmazonApiCampaignSummaryExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
+                var loader = new AmazonCampaignSummaryLoader(account.Id);
+                var extracterThread = extracter.Start();
+                var loaderThread = loader.Start(extracter);
+                extracterThread.Join();
+                loaderThread.Join();
+            }, account.Id, AmazonJobLevels.strategy, AmazonJobOperations.total);
         }
 
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            var extracter = new AmazonApiAdSetExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
-            var loader = new AmazonAdSetSummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
+            {
+                var extracter = new AmazonApiAdSetExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
+                var loader = new AmazonAdSetSummaryLoader(account.Id);
+                var extracterThread = extracter.Start();
+                var loaderThread = loader.Start(extracter);
+                extracterThread.Join();
+                loaderThread.Join();
+            }, account.Id, AmazonJobLevels.adSet, AmazonJobOperations.total);
         }
 
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            var extracter = new AmazonApiAdExtrator(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
-            var loader = new AmazonAdSummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
+            {
+                var extracter = new AmazonApiAdExtrator(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
+                var loader = new AmazonAdSummaryLoader(account.Id);
+                var extracterThread = extracter.Start();
+                var loaderThread = loader.Start(extracter);
+                extracterThread.Join();
+                loaderThread.Join();
+            }, account.Id, AmazonJobLevels.creative, AmazonJobOperations.total);
         }
 
         private void DoETL_Keyword(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            var extracter = new AmazonApiKeywordExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
-            var loader = new AmazonKeywordSummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
+            {
+                var extracter = new AmazonApiKeywordExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
+                var loader = new AmazonKeywordSummaryLoader(account.Id);
+                var extracterThread = extracter.Start();
+                var loaderThread = loader.Start(extracter);
+                extracterThread.Join();
+                loaderThread.Join();
+            }, account.Id, AmazonJobLevels.keyword, AmazonJobOperations.total);
         }
 
         private void DoETL_SearchTerm(DateRange dateRange, ExtAccount account, AmazonUtility amazonUtility)
         {
-            var extracter = new AmazonApiSearchTermExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
-            var loader = new AmazonSearchTermSummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
+            {
+                var extracter = new AmazonApiSearchTermExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
+                var loader = new AmazonSearchTermSummaryLoader(account.Id);
+                var extracterThread = extracter.Start();
+                var loaderThread = loader.Start(extracter);
+                extracterThread.Join();
+                loaderThread.Join();
+            }, account.Id, AmazonJobLevels.searchTerm, AmazonJobOperations.total);
         }
 
         private IEnumerable<ExtAccount> GetAccounts()

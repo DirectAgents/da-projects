@@ -3,7 +3,7 @@ using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
 {
-    class AmazonSearchTermSummaryLoader : BaseAmazonLevelLoader<SearchTermSummary>
+    class AmazonSearchTermSummaryLoader : Loader<SearchTermSummary>
     {
         private readonly SearchTermSummaryLoader searchTermSummaryLoader;
 

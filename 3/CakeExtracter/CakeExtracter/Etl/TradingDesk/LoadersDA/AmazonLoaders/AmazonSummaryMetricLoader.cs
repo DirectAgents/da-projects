@@ -17,6 +17,10 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
             MetricTypeStorage = new EntityIdStorage<MetricType>(x => x.Id, x => $"{x.Name} {x.DaysInterval}");
         }
 
+        public AmazonSummaryMetricLoader()
+        {
+        }
+
         public void UpsertSummaryMetrics(List<SummaryMetric> summaryMetrics)
         {
             AddDependentMetricTypes(summaryMetrics);
@@ -38,7 +42,6 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
             }
         }
 
-        // TODO - Rid of this shit!!!
         private IEnumerable<TSummaryMetric> CastSummaryMetricsToChildClass(IEnumerable<SummaryMetric> sourceSummaryMetrics)
         {
             return sourceSummaryMetrics.Select(sm =>

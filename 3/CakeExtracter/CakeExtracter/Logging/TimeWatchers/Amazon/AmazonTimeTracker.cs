@@ -24,6 +24,14 @@ namespace CakeExtracter.Logging.TimeWatchers.Amazon
             Instance = new AmazonTimeTracker();
         }
 
+        public void ExecuteWithTimeTracking(Action watchableAction, int accountId, string levelName, string operationName)
+        {
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            watchableAction();
+            watch.Stop();
+            RecordLevelOperationTime(accountId, levelName, operationName, watch.Elapsed);
+        }
+
         public void RecordLevelOperationTime(int accountId, string levelName, string operationName, TimeSpan time)
         {
             var accountTrackingData = GetAccountTrackingData(accountId);
@@ -33,7 +41,7 @@ namespace CakeExtracter.Logging.TimeWatchers.Amazon
         public void LogTrackingData(int accountId)
         {
             var accountTrackingData = GetAccountTrackingData(accountId);
-            Logger.Info(accountId, "Time tracking data for {0} account.");
+            Logger.Info(accountId, "Time tracking data for {0} account.", accountId);
             accountTrackingData.levelsDictionary.ForEach(kvPair =>
             {
                 Logger.Info(accountId, "Level: {0}", kvPair.Key);

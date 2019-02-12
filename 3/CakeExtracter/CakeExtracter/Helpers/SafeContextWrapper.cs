@@ -16,6 +16,7 @@ namespace CakeExtracter.Helpers
         public static object AdLocker = new object();
         public static object KeywordLocker = new object();
         public static object SearchTermLocker = new object();
+        public static object DailyLocker = new object();
 
         private const int RetryCount = 5;
         private const int WaitSeconds = 3;
