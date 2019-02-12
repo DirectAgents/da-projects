@@ -3,6 +3,7 @@ using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
+using CakeExtracter.Helpers;
 using CakeExtracter.Logging.TimeWatchers;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Concrete;
@@ -156,7 +157,6 @@ namespace CakeExtracter.Commands
             {
                 return amazonUtility;
             }
-
             amazonUtility.KeepReports = KeepAmazonReports;
             amazonUtility.ReportPrefix = account.Id.ToString();
             return amazonUtility;
@@ -166,12 +166,9 @@ namespace CakeExtracter.Commands
         {
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
             {
-                var extracter = new AmazonApiDailySummaryExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
+                var extractor = new AmazonApiDailySummaryExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
                 var loader = new AmazonDailySummaryLoader(account.Id);
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
+                CommandHelper.DoEtl(extractor, loader);
             }, account.Id, AmazonJobLevels.account, AmazonJobOperations.total);
         }
 
@@ -179,12 +176,9 @@ namespace CakeExtracter.Commands
         {
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
             {
-                var extracter = new AmazonDailyStrategyFromDataBaseSummaryExtractor(dateRange, account.Id);
+                var extractor = new AmazonDailyStrategyFromDataBaseSummaryExtractor(dateRange, account.Id);
                 var loader = new AmazonDailySummaryLoader(account.Id);
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
+                CommandHelper.DoEtl(extractor, loader);
             }, account.Id, AmazonJobLevels.account, AmazonJobOperations.total);
         }
 
@@ -192,12 +186,9 @@ namespace CakeExtracter.Commands
         {
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
             {
-                var extracter = new AmazonApiCampaignSummaryExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
+                var extractor = new AmazonApiCampaignSummaryExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
                 var loader = new AmazonCampaignSummaryLoader(account.Id);
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
+                CommandHelper.DoEtl(extractor, loader);
             }, account.Id, AmazonJobLevels.strategy, AmazonJobOperations.total);
         }
 
@@ -205,12 +196,9 @@ namespace CakeExtracter.Commands
         {
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
             {
-                var extracter = new AmazonApiAdSetExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
+                var extractor = new AmazonApiAdSetExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
                 var loader = new AmazonAdSetSummaryLoader(account.Id);
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
+                CommandHelper.DoEtl(extractor, loader);
             }, account.Id, AmazonJobLevels.adSet, AmazonJobOperations.total);
         }
 
@@ -218,12 +206,9 @@ namespace CakeExtracter.Commands
         {
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
             {
-                var extracter = new AmazonApiAdExtrator(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
+                var extractor = new AmazonApiAdExtrator(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
                 var loader = new AmazonAdSummaryLoader(account.Id);
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
+                CommandHelper.DoEtl(extractor, loader);
             }, account.Id, AmazonJobLevels.creative, AmazonJobOperations.total);
         }
 
@@ -231,12 +216,9 @@ namespace CakeExtracter.Commands
         {
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
             {
-                var extracter = new AmazonApiKeywordExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
+                var extractor = new AmazonApiKeywordExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
                 var loader = new AmazonKeywordSummaryLoader(account.Id);
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
+                CommandHelper.DoEtl(extractor, loader);
             }, account.Id, AmazonJobLevels.keyword, AmazonJobOperations.total);
         }
 
@@ -244,12 +226,9 @@ namespace CakeExtracter.Commands
         {
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
             {
-                var extracter = new AmazonApiSearchTermExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
+                var extractor = new AmazonApiSearchTermExtractor(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
                 var loader = new AmazonSearchTermSummaryLoader(account.Id);
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
+                CommandHelper.DoEtl(extractor, loader);
             }, account.Id, AmazonJobLevels.searchTerm, AmazonJobOperations.total);
         }
 
@@ -261,7 +240,6 @@ namespace CakeExtracter.Commands
                 var accounts = repository.GetAccountsWithFilledExternalIdByPlatformCode(Platform.Code_Amazon, DisabledOnly);
                 return accounts;
             }
-
             var account = repository.GetAccount(AccountId.Value);
             return new[] { account };
         }

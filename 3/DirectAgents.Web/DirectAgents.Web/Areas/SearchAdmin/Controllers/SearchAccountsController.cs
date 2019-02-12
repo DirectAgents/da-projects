@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using CakeExtracter.Commands;
+using CakeExtracter.Commands.Search;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities.CPSearch;
 

@@ -20,7 +20,7 @@ namespace CakeExtracter.Etl
 
         public Thread Start()
         {
-            var thread = new Thread(Extract);
+            var thread = new Thread(ExtractWithCatch);
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
             return thread;
@@ -63,6 +63,18 @@ namespace CakeExtracter.Etl
         protected void Add(T item)
         {
             Add(new List<T> { item });
+        }
+
+        private void ExtractWithCatch()
+        {
+            try
+            {
+                Extract();
+            }
+            catch (Exception e)
+            {
+                Logger.Error(new Exception($"Exception in extractor: {e}", e));
+            }
         }
 
         /// <summary>

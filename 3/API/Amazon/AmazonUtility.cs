@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
+using Amazon.Constants;
 using Amazon.Entities.HelperEntities;
 using Amazon.Entities.HelperEntities.DownloadInfoResponses;
 using Amazon.Entities.HelperEntities.PreparedDataResponses;
@@ -563,11 +564,19 @@ namespace Amazon
         {
             var response = Policy
                 .Handle<Exception>()
-                .OrResult<IRestResponse<T>>(resp => resp.Data.Status != "SUCCESS")
+                .OrResult<IRestResponse<T>>(resp =>
+                    !IsResponseWithStatus(resp, ReportGenerationStatus.Success) &&
+                    !IsResponseWithStatus(resp, ReportGenerationStatus.Failure))
                 .WaitAndRetry(waitAttemptsNumber, GetTimeSpanForWaiting, (exception, timeSpan, retryCount, context) =>
                     LogWaiting($"Waiting {{0}} seconds for {dataType} to finish generating.", timeSpan, retryCount, exception))
                 .Execute(() => RequestPreparedData<T>(dataType, dataId, profileId));
             return response;
+        }
+
+        private bool IsResponseWithStatus<T>(IRestResponse<T> response, string status)
+            where T : ResponseDownloadInfo
+        {
+            return string.Equals(response.Data.Status, status, StringComparison.InvariantCultureIgnoreCase);
         }
 
         private IRestResponse<T> RequestPreparedData<T>(string dataType, string dataId, string profileId)

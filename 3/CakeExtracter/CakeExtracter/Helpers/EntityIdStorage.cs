@@ -51,7 +51,10 @@ namespace CakeExtracter.Helpers
 
         private void AddEntityIdToStorage(int id, string key)
         {
-            ids.AddOrUpdate(key, id, (updKey, updValue) => id);
+            if (!string.IsNullOrEmpty(key))
+            {
+                ids.AddOrUpdate(key, id, (updKey, updValue) => id);
+            }
         }
     }
 }

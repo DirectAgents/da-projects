@@ -7,6 +7,7 @@ using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
+using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 
@@ -15,6 +16,8 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchAdformStats : ConsoleCommand
     {
+        private const int DefaultDaysAgo = 41;
+
         public static int RunStatic(int? accountId = null, DateTime? startDate = null, DateTime? endDate = null, string statsType = null)
         {
             AutoMapperBootstrapper.CheckRunSetup();
@@ -53,7 +56,7 @@ namespace CakeExtracter.Commands
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
             HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
-            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 41)", c => DaysAgoToStart = c);
+            HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
         }
@@ -63,12 +66,7 @@ namespace CakeExtracter.Commands
         public override int Execute(string[] remainingArguments)
         {
             Logger.LogToOneFile = true;
-
-            if (!DaysAgoToStart.HasValue)
-                DaysAgoToStart = 41; // used if StartDate==null
-            var today = DateTime.Today;
-            var yesterday = today.AddDays(-1);
-            var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
+            var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Adform ETL. DateRange {0}.", dateRange);
 
             var statsType = new StatsTypeAgg(this.StatsType);
@@ -122,39 +120,27 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AdformDailySummaryExtracter(adformUtility, dateRange, account);
+            var extractor = new AdformDailySummaryExtracter(adformUtility, dateRange, account);
             var loader = new TDDailySummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
         }
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AdformStrategySummaryExtracter(adformUtility, dateRange, account);
-            var loader = new TDStrategySummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            var extractor = new AdformStrategySummaryExtracter(adformUtility, dateRange, account);
+            var loader = new AdformCampaignSummaryLoader(account.Id);
+            CommandHelper.DoEtl(extractor, loader);
         }
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AdformAdSetSummaryExtracter(adformUtility, dateRange, account);
+            var extractor = new AdformAdSetSummaryExtracter(adformUtility, dateRange, account);
             var loader = new TDAdSetSummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
         }
         private void DoETL_Creative(DateRange dateRange, ExtAccount account)
         {
-            var extracter = new AdformTDadSummaryExtracter(adformUtility, dateRange, account);
+            var extractor = new AdformTDadSummaryExtracter(adformUtility, dateRange, account);
             var loader = new TDadSummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
         }
 
         private IEnumerable<ExtAccount> GetAccounts()

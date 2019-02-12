@@ -11,11 +11,13 @@ namespace CakeExtracter.SimpleRepositories
 {
     class StrategyRepository : ISimpleRepository<Strategy>
     {
-        private static readonly EntityIdStorage<Strategy> StrategyStorage;
+        protected static EntityIdStorage<Strategy> StrategyStorage;
 
         static StrategyRepository()
         {
-            StrategyStorage = new EntityIdStorage<Strategy>(x => x.Id, x => $"{x.AccountId} {x.Name} {x.ExternalId}", x => $"{x.AccountId} {x.ExternalId}");
+            StrategyStorage = new EntityIdStorage<Strategy>(x => x.Id, 
+                x => $"{x.AccountId} {x.Name} {x.ExternalId}", 
+                x => $"{x.AccountId} {x.ExternalId}");
         }
 
         public EntityIdStorage<Strategy> IdStorage => StrategyStorage;
