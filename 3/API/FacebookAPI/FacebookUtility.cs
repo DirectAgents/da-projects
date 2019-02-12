@@ -108,10 +108,10 @@ namespace FacebookAPI
             //var oauthUrl = string.Format("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={0}&client_secret={1}", AppId, AppSecret);
             //AccessToken = client.DownloadString(oauthUrl).Split('=')[1];
         }
+
         private FacebookClient CreateFBClient()
         {
-            var fbClient = new FacebookClient(AccessToken);
-            fbClient.Version = "v" + ApiVersion;
+            var fbClient = new FacebookClient(AccessToken) {Version = "v" + ApiVersion};
             return fbClient;
         }
 
