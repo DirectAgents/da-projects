@@ -17,7 +17,7 @@ namespace CakeExtracter.Logging.Loggers
 
         public void Error(Exception exception)
         {
-            Console.WriteLine(GetErrorExceptionMessage(exception));
+            Console.WriteLine($"Exception: {exception.GetAllExceptionMessages()}");
         }
 
         public void Trace(string format, params object[] args)
@@ -37,18 +37,12 @@ namespace CakeExtracter.Logging.Loggers
 
         public void Error(int accountId, Exception exception)
         {
-            Console.WriteLine(GetErrorExceptionMessage(exception));
+            Console.WriteLine($"Exception: {exception.GetAllExceptionMessages()}");
         }
 
         public void Trace(int accountId, string format, params object[] args)
         {
             Console.WriteLine("Trace: " + format, args);
-        }
-
-        private string GetErrorExceptionMessage(Exception exception)
-        {
-            var innerExceptionMessages = exception.GetAllMessages();
-            return $"Exception: {exception.Message}{innerExceptionMessages}";
         }
     }
 }

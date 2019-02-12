@@ -11,7 +11,7 @@ namespace CakeExtracter.Helpers
         /// </summary>
         /// <param name="exception">Original exception</param>
         /// <returns></returns>
-        public static string GetAllMessages(this Exception exception)
+        public static string GetAllExceptionMessages(this Exception exception)
         {
             var messages = exception.FromHierarchy(ex => ex.InnerException)
                 .Select(ex => ex.Message);

@@ -42,8 +42,7 @@ namespace CakeExtracter.Logging.Loggers
 
         public void Error(Exception exception)
         {
-            var innerExceptionMessages = exception.GetAllMessages();
-            Write(LogEntry(TraceEventType.Error, "{0}{1}", exception.Message, innerExceptionMessages));
+            Write(LogEntry(TraceEventType.Error, "{0}", exception.GetAllExceptionMessages()));
         }
 
         public void Trace(string format, params object[] args)
@@ -67,8 +66,7 @@ namespace CakeExtracter.Logging.Loggers
 
         public void Error(int accountId, Exception exception)
         {
-            var innerExceptionMessages = exception.GetAllMessages();
-            var entry = LogEntry(TraceEventType.Error, "{0}{1}", exception.Message, innerExceptionMessages);
+            var entry = LogEntry(TraceEventType.Error, "{0}", exception.GetAllExceptionMessages());
             entry.ExtendedProperties.Add("AccountId", accountId);
             Write(entry);
         }
