@@ -18,6 +18,8 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchAmazonStats : ConsoleCommand
     {
+        private const int DefaultDaysAgo = 41;
+
         public static int RunStatic(int? accountId = null, DateTime? startDate = null, DateTime? endDate = null, string statsType = null, bool fromDatabase = false)
         {
             AutoMapperBootstrapper.CheckRunSetup();
@@ -61,7 +63,7 @@ namespace CakeExtracter.Commands
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
             HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
-            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 41)", c => DaysAgoToStart = c);
+            HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
             HasOption<bool>("z|fromDatabase=", "Retrieve from database instead of API (where implemented)", c => FromDatabase = c);
@@ -71,30 +73,15 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            if (!DaysAgoToStart.HasValue)
-            {
-                DaysAgoToStart = 41; // used if StartDate==null
-            }
-
-            var today = DateTime.Today;
-            var yesterday = today.AddDays(-1);
-            var dateRange = new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
+            var statsType = new StatsTypeAgg(StatsType);
+            var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Amazon ETL. DateRange {0}.", dateRange);
-
-            var statsType = new StatsTypeAgg(this.StatsType);
-
             var accounts = GetAccounts();
             AmazonUtility.TokenSets = GetTokens();
-
             Parallel.ForEach(accounts, account =>
             {
-                var watch = System.Diagnostics.Stopwatch.StartNew();
-                // the code that you want to measure comes here
-                watch.Stop();
-                long elapsedMs = watch.Elapsed.Seconds;
                 Logger.Info(account.Id, "Commencing ETL for Amazon account ({0}) {1}", account.Id, account.Name);
                 var amazonUtility = CreateUtility(account);
-
                 try
                 {
                     if (statsType.Daily && !FromDatabase)
@@ -133,7 +120,6 @@ namespace CakeExtracter.Commands
                 AmazonTimeTracker.Instance.LogTrackingData(account.Id);
                 Logger.Info(account.Id, "Finished ETL for Amazon account ({0}) {1}", account.Id, account.Name);
             });
-
             SaveTokens(AmazonUtility.TokenSets);
             return 0;
         }
