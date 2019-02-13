@@ -5,7 +5,6 @@ using Amazon;
 using Amazon.Entities.Summaries;
 using Amazon.Enums;
 using CakeExtracter.Common;
-using CakeExtracter.Helpers;
 using CakeExtracter.Logging.TimeWatchers;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Contexts;

@@ -5,7 +5,10 @@ using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
 {
-    //Assumed that clean before update done!!!!
+    /// <summary>
+    /// Summary loader for amazon AD level.
+    /// </summary>
+    /// <seealso cref="CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.BaseAmazonLevelLoader{DirectAgents.Domain.Entities.CPProg.TDadSummary, DirectAgents.Domain.Entities.CPProg.TDadSummaryMetric}" />
     internal class AmazonAdSummaryLoader : BaseAmazonLevelLoader<TDadSummary, TDadSummaryMetric>
     {
         private readonly TDadSummaryLoader summaryItemsLoader;

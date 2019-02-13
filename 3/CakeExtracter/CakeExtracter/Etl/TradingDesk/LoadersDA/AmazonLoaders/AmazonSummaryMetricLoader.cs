@@ -7,20 +7,37 @@ using System.Linq;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
 {
+    /// <summary>
+    /// Amazon job summary metrics loader
+    /// </summary>
+    /// <typeparam name="TSummaryMetric">The type of the summary metric.</typeparam>
     internal class AmazonSummaryMetricLoader<TSummaryMetric>
         where TSummaryMetric : SummaryMetric, new()
     {
+        /// <summary>
+        /// The metric type storage
+        /// </summary>
         public static readonly EntityIdStorage<MetricType> MetricTypeStorage;
 
+        /// <summary>
+        /// Initializes the <see cref="AmazonSummaryMetricLoader{TSummaryMetric}"/> class.
+        /// </summary>
         static AmazonSummaryMetricLoader()
         {
             MetricTypeStorage = new EntityIdStorage<MetricType>(x => x.Id, x => $"{x.Name} {x.DaysInterval}");
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AmazonSummaryMetricLoader{TSummaryMetric}"/> class.
+        /// </summary>
         public AmazonSummaryMetricLoader()
         {
         }
 
+        /// <summary>
+        /// Upserts the summary metrics.
+        /// </summary>
+        /// <param name="summaryMetrics">The summary metrics.</param>
         public void UpsertSummaryMetrics(List<SummaryMetric> summaryMetrics)
         {
             AddDependentMetricTypes(summaryMetrics);
