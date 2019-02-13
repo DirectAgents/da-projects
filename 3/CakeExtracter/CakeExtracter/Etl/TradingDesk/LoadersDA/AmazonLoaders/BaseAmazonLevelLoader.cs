@@ -48,7 +48,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
         /// Initializes a new instance of the <see cref="BaseAmazonLevelLoader{TSummaryLevelEntity, TSummaryMetricLevelEntity}"/> class.
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
-/        protected BaseAmazonLevelLoader(int accountId)
+        protected BaseAmazonLevelLoader(int accountId)
             : base(accountId, loadingBatchesSize)
         {
             summaryMetricsItemsLoader = new AmazonSummaryMetricLoader<TSummaryMetricLevelEntity>();

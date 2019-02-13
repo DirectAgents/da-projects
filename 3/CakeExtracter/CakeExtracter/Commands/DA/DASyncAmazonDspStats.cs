@@ -44,29 +44,28 @@ namespace CakeExtracter.Commands.DA
         /// <returns>Execution status.</returns>
         public override int Execute(string[] remainingArguments)
         {
-            try
-            {
-                ProcessDailyEtl();
-                return 1;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-                return 0;
-            }
+            ProcessDailyEtl();
+            return 0;
         }
 
         private void ProcessDailyEtl()
         {
-            var accounts = accountsProvider.GetAccountsToProcess(AccountId);
-            var reportData = ProcessDailyDataExtraction(accounts);
-            if (reportData != null)
+            try
             {
-                loader.LoadData(reportData);
+                var accounts = accountsProvider.GetAccountsToProcess(AccountId);
+                var reportData = ProcessDailyDataExtraction(accounts);
+                if (reportData != null)
+                {
+                    loader.LoadData(reportData);
+                }
+                else
+                {
+                    Logger.Warn("DSP - Data loading canceled because report data extraction failed");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Logger.Warn("DSP - Data loading canceled because report data extraction failed");
+                Logger.Error(ex);
             }
         }
 
