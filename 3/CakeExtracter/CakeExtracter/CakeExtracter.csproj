@@ -744,7 +744,6 @@
     <Compile Include="SimpleRepositories\Interfaces\ISimpleRepository.cs" />
     <Compile Include="SimpleRepositories\StrategyRepository.cs" />
     <Compile Include="SimpleRepositories\TypeRepository.cs" />
-    <Compile Include="Syncher.cs" />
     <Compile Include="Data\UsersContext.cs" />
     <Compile Include="Common\RetryUtility.cs" />
   </ItemGroup>
