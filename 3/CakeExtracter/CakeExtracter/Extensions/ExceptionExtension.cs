@@ -13,17 +13,13 @@ namespace CakeExtracter.Extensions
         /// <returns></returns>
         public static string GetAllExceptionMessages(this Exception exception)
         {
-            var messages = exception.FromHierarchy(ex => ex.InnerException)
-                .Select(ex => ex.Message);
+            var messages = GetInnerExceptionsList(exception).Select(ex => ex.Message);
             return string.Join(Environment.NewLine, messages);
         }
         
-        private static IEnumerable<TSource> FromHierarchy<TSource>(
-            this TSource source,
-            Func<TSource, TSource> nextItem)
-            where TSource : class
+        private static IEnumerable<Exception> GetInnerExceptionsList(Exception source)
         {
-            return FromHierarchy(source, nextItem, s => s != null);
+            return FromHierarchy(source, ex => ex.InnerException, s => s != null);
         }
 
         private static IEnumerable<TSource> FromHierarchy<TSource>(
