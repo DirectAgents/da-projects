@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using CakeExtracter.Extensions;
 using Microsoft.Practices.EnterpriseLibrary.Logging;
 
 namespace CakeExtracter.Logging.Loggers
@@ -41,7 +42,7 @@ namespace CakeExtracter.Logging.Loggers
 
         public void Error(Exception exception)
         {
-            Write(LogEntry(TraceEventType.Error, "{0}", exception.Message));
+            Write(LogEntry(TraceEventType.Error, "{0}", exception.GetAllExceptionMessages()));
         }
 
         public void Trace(string format, params object[] args)
@@ -65,7 +66,7 @@ namespace CakeExtracter.Logging.Loggers
 
         public void Error(int accountId, Exception exception)
         {
-            var entry = LogEntry(TraceEventType.Error, "{0}", exception.Message);
+            var entry = LogEntry(TraceEventType.Error, "{0}", exception.GetAllExceptionMessages());
             entry.ExtendedProperties.Add("AccountId", accountId);
             Write(entry);
         }

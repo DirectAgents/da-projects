@@ -701,6 +701,7 @@
     <Compile Include="Etl\LoaderTask.cs" />
     <Compile Include="Helpers\CommandHelper.cs" />
     <Compile Include="Helpers\EntityIdStorage.cs" />
+    <Compile Include="Extensions\ExceptionExtension.cs" />
     <Compile Include="Helpers\LoadingProgress.cs" />
     <Compile Include="Helpers\SafeContextWrapper.cs" />
     <Compile Include="ICakeMarketing.cs" />
