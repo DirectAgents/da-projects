@@ -1,5 +1,8 @@
 ﻿namespace CakeExtracter.Logging.TimeWatchers
 {
+    /// <summary>
+    /// Amazon Job Operation constants
+    /// </summary>
     public class AmazonJobOperations
     {
         public const string reportExtracting = "Report Extraction";

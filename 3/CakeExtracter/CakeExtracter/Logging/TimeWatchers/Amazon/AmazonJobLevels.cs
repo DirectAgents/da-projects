@@ -1,5 +1,8 @@
 ﻿namespace CakeExtracter.Logging.TimeWatchers
 {
+    /// <summary>
+    /// Amazon job levels constants
+    /// </summary>
     public class AmazonJobLevels
     {
         public const string account = "Amazon Account";
