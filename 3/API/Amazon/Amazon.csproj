@@ -97,6 +97,7 @@
     <Compile Include="Entities\Summaries\AmazonStatSummary.cs" />
     <Compile Include="Entities\Summaries\AmazonTargetKeywordDailySummary.cs" />
     <Compile Include="Entities\Summaries\AmazonTargetSearchTermDailySummary.cs" />
+    <Compile Include="Constants\ReportGenerationStatus.cs" />
     <Compile Include="Exceptions\ExtractDataException.cs" />
     <Compile Include="Exceptions\ReportGenerationTimedOutException.cs" />
     <Compile Include="Helpers\AmazonApiHelper.cs" />
@@ -121,6 +122,7 @@
   <ItemGroup>
     <Analyzer Include="..\..\DirectAgents.Web\packages\AWSSDK.S3.3.3.31.14\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

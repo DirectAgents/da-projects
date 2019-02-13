@@ -91,7 +91,7 @@ namespace CakeExtracter.Etl.DSP.Loaders
             {
                 creativesDataLoader.UpdateAccountSummaryMetricsDataForDate(dailyData.Creatives, dbCreatives, dailyData.Date, account);
             });
-            Logger.Info("DSP, Finished loading lineitems data. Loaded metrics of {0} lineitems", dbCreatives.Count);
+            Logger.Info("DSP, Finished loading creatives data. Loaded metrics of {0} creatives", dbCreatives.Count);
         }
     }
 }

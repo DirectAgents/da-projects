@@ -9,7 +9,8 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
     {
         private readonly IDailySummaryLoader tdDailySummaryLoader;
 
-        public AmazonPdaDailySummaryLoader(int accountId) : base(accountId)
+        public AmazonPdaDailySummaryLoader(int accountId) 
+            : base(accountId)
         {
             tdDailySummaryLoader = new DailySummaryAdder(accountId);
         }

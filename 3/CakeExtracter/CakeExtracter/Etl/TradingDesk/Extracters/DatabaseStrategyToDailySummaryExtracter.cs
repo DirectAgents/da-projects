@@ -17,6 +17,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             this.dateRange = dateRange;
             this.accountId = accountId;
         }
+
         protected override void Extract()
         {
             Logger.Info("Extracting DailySummaries from Db for ({0}) from {1:d} to {2:d}",
@@ -25,6 +26,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             Add(items);
             End();
         }
+
         public IEnumerable<DailySummary> EnumerateRows()
         {
             List<DailySummary> daySums = new List<DailySummary>();

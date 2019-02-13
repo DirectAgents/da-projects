@@ -82,10 +82,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\DirectAgents.Web\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.Extended, Version=6.0.0.0, Culture=neutral, PublicKeyToken=05b7e29bdd433584, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\DirectAgents.Web\packages\EntityFramework.Extended.6.1.0.133\lib\net45\EntityFramework.Extended.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\..\DirectAgents.Web\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
@@ -323,6 +319,9 @@
       <HintPath>..\..\DirectAgents.Web\packages\WatiN.2.1.0\lib\net40\WatiN.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Z.EntityFramework.Extensions, Version=3.16.23.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\..\DirectAgents.Web\packages\Z.EntityFramework.Extensions.3.16.23\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="Z.EntityFramework.Plus.EF6, Version=1.7.15.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\DirectAgents.Web\packages\Z.EntityFramework.Plus.EF6.1.7.15\lib\net45\Z.EntityFramework.Plus.EF6.dll</HintPath>
@@ -484,6 +483,7 @@
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiAdExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiAdSetExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiCampaignSummaryExtractor.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonDailyStrategyFromDataBaseSummaryExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiDailySummaryExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiKeywordExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiSearchTermExtractor.cs" />
@@ -494,7 +494,7 @@
     <Compile Include="Etl\TradingDesk\Extracters\AdrollSiteStatsCsvExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\CPCExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\CriteoExtracters.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\DatabaseExtracters.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\DatabaseStrategyToDailySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmCreativeCloudStorageExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DBMCreativeExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\DbmStrategyCsvExtractor.cs" />
@@ -663,6 +663,8 @@
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonKeywordSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonPdaDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonSearchTermSummaryLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonSummaryMetricLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\BaseAmazonLevelLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\DbmConvLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\Interfaces\IDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\Interfaces\ISummaryMetricLoader.cs" />
@@ -712,6 +714,11 @@
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\Loggers\NullLogger.cs" />
+    <Compile Include="Logging\TimeWatchers\Amazon\AmazonJobOperations.cs" />
+    <Compile Include="Logging\TimeWatchers\Amazon\AmazonJobLevels.cs" />
+    <Compile Include="Logging\TimeWatchers\Amazon\AmazonTimeTracker.cs" />
+    <Compile Include="Logging\TimeWatchers\Amazon\Models\AmazonAccountTrackingData.cs" />
+    <Compile Include="Logging\TimeWatchers\Amazon\Models\AmazonLevelTrackingData.cs" />
     <Compile Include="Mef\Composer.cs" />
     <Compile Include="MetricNames.cs" />
     <Compile Include="Logging\EnterpriseLibrary\ConsoleCustomTraceListener.cs" />
@@ -737,7 +744,6 @@
     <Compile Include="SimpleRepositories\Interfaces\ISimpleRepository.cs" />
     <Compile Include="SimpleRepositories\StrategyRepository.cs" />
     <Compile Include="SimpleRepositories\TypeRepository.cs" />
-    <Compile Include="Syncher.cs" />
     <Compile Include="Data\UsersContext.cs" />
     <Compile Include="Common\RetryUtility.cs" />
   </ItemGroup>

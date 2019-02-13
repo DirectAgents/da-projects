@@ -9,22 +9,27 @@ namespace CakeExtracter.Etl
     {
         private Extracter<T> extracter;
 
-        protected Loader()
-        {
-            BatchSize = 100;
-        }
-
-        protected Loader(int accountId)
-            : this()
-        {
-            this.accountId = accountId;
-        }
-
         public int BatchSize { get; set; }
         public int LoadedCount;
         public int ExtractedCount;
 
         protected readonly int accountId;
+
+        private const int defaultBatchSize = 100;
+
+        protected Loader()
+        {
+            BatchSize = defaultBatchSize;
+        }
+
+        protected Loader(int accountId, int batchSize = defaultBatchSize)
+            : this()
+        {
+            this.accountId = accountId;
+            this.BatchSize = batchSize;
+        }
+
+       
 
         public Thread Start(Extracter<T> source)
         {

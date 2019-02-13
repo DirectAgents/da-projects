@@ -1,27 +1,39 @@
 ﻿using System.Collections.Generic;
+using CakeExtracter.Helpers;
+using CakeExtracter.Logging.TimeWatchers;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
 {
-    public class AmazonAdSummaryLoader : Loader<TDadSummary>
+    /// <summary>
+    /// Summary loader for amazon AD level.
+    /// </summary>
+    /// <seealso cref="CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.BaseAmazonLevelLoader{DirectAgents.Domain.Entities.CPProg.TDadSummary, DirectAgents.Domain.Entities.CPProg.TDadSummaryMetric}" />
+    internal class AmazonAdSummaryLoader : BaseAmazonLevelLoader<TDadSummary, TDadSummaryMetric>
     {
-        private readonly TDadSummaryLoader tdAdSummaryLoader;
+        private readonly TDadSummaryLoader summaryItemsLoader;
 
         public AmazonAdSummaryLoader(int accountId)
+            : base(accountId)
         {
-            this.tdAdSummaryLoader = new TDadSummaryLoader(accountId);
+            summaryItemsLoader = new TDadSummaryLoader(accountId);
         }
 
-        protected override int Load(List<TDadSummary> tDadItems)
-        {
-            Logger.Info(accountId, "Loading {0} Amazon ProductAd / Creative Daily Summaries..", tDadItems.Count);
+        protected override string LevelName => AmazonJobLevels.creative;
 
-            tdAdSummaryLoader.PrepareData(tDadItems);
-            tdAdSummaryLoader.AddUpdateDependentAdSets(tDadItems);
-            tdAdSummaryLoader.AddUpdateDependentTDads(tDadItems);
-            tdAdSummaryLoader.AssignTDadIdToItems(tDadItems);
-            var count = tdAdSummaryLoader.UpsertDailySummaries(tDadItems);
-            return count;
+        protected override object LockerObject => SafeContextWrapper.AdLocker;
+
+        protected override void EnsureRelatedItems(List<TDadSummary> tDadSummaryItems)
+        {
+            summaryItemsLoader.PrepareData(tDadSummaryItems);
+            summaryItemsLoader.AddUpdateDependentAdSets(tDadSummaryItems);
+            summaryItemsLoader.AddUpdateDependentTDads(tDadSummaryItems);
+            summaryItemsLoader.AssignTDadIdToItems(tDadSummaryItems);
+        }
+
+        protected override void SetSummaryMetricEntityId(TDadSummary summary, SummaryMetric summaryMetric)
+        {
+            summaryMetric.EntityId = summary.TDadId;
         }
     }
 }
