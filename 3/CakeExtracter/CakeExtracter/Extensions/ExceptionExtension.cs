@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CakeExtracter.Helpers
+namespace CakeExtracter.Extensions
 {
-    public static class ExceptionHelper
+    public static class ExceptionExtension
     {
         /// <summary>
         /// The method returns all messages of inner exceptions from the original exception
@@ -17,6 +17,14 @@ namespace CakeExtracter.Helpers
                 .Select(ex => ex.Message);
             return string.Join(Environment.NewLine, messages);
         }
+        
+        private static IEnumerable<TSource> FromHierarchy<TSource>(
+            this TSource source,
+            Func<TSource, TSource> nextItem)
+            where TSource : class
+        {
+            return FromHierarchy(source, nextItem, s => s != null);
+        }
 
         private static IEnumerable<TSource> FromHierarchy<TSource>(
             this TSource source,
@@ -27,14 +35,6 @@ namespace CakeExtracter.Helpers
             {
                 yield return current;
             }
-        }
-
-        private static IEnumerable<TSource> FromHierarchy<TSource>(
-            this TSource source,
-            Func<TSource, TSource> nextItem)
-            where TSource : class
-        {
-            return FromHierarchy(source, nextItem, s => s != null);
         }
     }
 }

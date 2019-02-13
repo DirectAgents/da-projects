@@ -1,5 +1,5 @@
 ﻿using System;
-using CakeExtracter.Helpers;
+using CakeExtracter.Extensions;
 
 namespace CakeExtracter.Logging.Loggers
 {

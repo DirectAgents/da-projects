@@ -150,7 +150,7 @@ namespace CakeExtracter.Helpers
 
         private static void ProcessSaveException(Exception exception)
         {
-            LogException(exception);
+            Logger.Error(exception);
             switch (exception)
             {
                 case DbUpdateException updateException:
@@ -158,17 +158,7 @@ namespace CakeExtracter.Helpers
                     break;
             }
         }
-
-        private static void LogException(Exception exception)
-        {
-            var excForLog = exception;
-            while (excForLog.InnerException != null)
-            {
-                excForLog = excForLog.InnerException;
-            }
-            Logger.Error(excForLog);
-        }
-
+        
         private static void ProcessDbUpdateException(DbUpdateException exception)
         {
             var notSavedEntriesInfo = exception.Entries.Select(GetEntryInfo);

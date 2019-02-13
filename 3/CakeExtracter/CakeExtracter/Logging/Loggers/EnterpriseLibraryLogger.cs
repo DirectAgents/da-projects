@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using CakeExtracter.Helpers;
+using CakeExtracter.Extensions;
 using Microsoft.Practices.EnterpriseLibrary.Logging;
 
 namespace CakeExtracter.Logging.Loggers
