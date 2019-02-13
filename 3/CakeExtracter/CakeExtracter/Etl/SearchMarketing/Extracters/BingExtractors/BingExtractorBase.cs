@@ -35,8 +35,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters.BingExtractors
             }
             catch (Exception exception)
             {
-                var realException = exception.InnerException ?? exception;
-                Logger.Error(realException);
+                Logger.Error(exception);
             }
 
             End();
