@@ -1,5 +1,7 @@
-﻿using CakeExtractor.SeleniumApplication.Models.Vcd;
+﻿using System;
+using CakeExtractor.SeleniumApplication.Models.Vcd;
 using System.Collections.Generic;
+using CakeExtractor.SeleniumApplication.Helpers;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading.Constants
 {
@@ -97,7 +99,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                 new ReportParameter
                 {
                     parameterId = "dataRefreshDate",
-                    values = new List<Value>{ new Value { val= "9999999999999" } } // value for retreiving the latest data
+                    values = new List<Value>{ new Value { val = TimeHelper.ConvertToUnixTimestamp(DateTime.Now).ToString() } } // value for retreiving the latest data
                 },
                 new ReportParameter
                 {
