@@ -33,11 +33,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => {
                 using (var db = new ClientPortalProgContext())
                 {
-                    var items = db.DailySummaries.Where(x => x.AccountId == accountId &&  
-                        (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)).ToList();
-                    var metrics = db.DailySummaryMetrics.Where(x => x.EntityId == accountId && (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)).ToList();
-                    db.BulkDelete(metrics);
-                    db.BulkDelete(items);
+                    db.DailySummaryMetrics.Where(x => x.EntityId == accountId && (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)).DeleteFromQuery();
+                    db.DailySummaries.Where(x => x.AccountId == accountId &&  
+                        (x.Date >= dateRange.FromDate && x.Date <= dateRange.ToDate)).DeleteFromQuery();
                 }
             }, accountId, AmazonJobLevels.account, AmazonJobOperations.cleanExistingData);
             Logger.Info(accountId, "The cleaning of DailySummaries for account ({0}) is over - {1}. ", accountId, dateRange);
