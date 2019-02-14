@@ -92,10 +92,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             {
                 using (var db = new ClientPortalProgContext())
                 {
-                    var items = db.AdSetSummaries.Where(x => x.Date == date && x.AdSet.AccountId == accountId);
-                    var metrics = db.AdSetSummaryMetrics.Where(x => x.Date == date && x.AdSet.AccountId == accountId);
-                    db.BulkDelete(metrics);
-                    db.BulkDelete(items);
+                    db.AdSetSummaryMetrics.Where(x => x.Date == date && x.AdSet.AccountId == accountId).DeleteFromQuery();
+                    db.AdSetSummaries.Where(x => x.Date == date && x.AdSet.AccountId == accountId).DeleteFromQuery();
                 }
             }, accountId, AmazonJobLevels.adSet, AmazonJobOperations.cleanExistingData);
             Logger.Info(accountId, "The cleaning of AdSetSummaries for account ({0}) is over - {1}.", accountId, date);

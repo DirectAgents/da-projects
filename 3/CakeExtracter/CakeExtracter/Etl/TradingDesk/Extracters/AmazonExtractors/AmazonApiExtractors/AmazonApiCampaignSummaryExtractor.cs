@@ -93,7 +93,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         private void Extract(IEnumerable<AmazonCampaign> campaigns, DateTime date)
         {
             IEnumerable<StrategySummary> items = null;
-            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => {
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
+            {
                 var sums = ExtractSummaries(date);
                 items = TransformSummaries(sums, campaigns, date);
             }, accountId, AmazonJobLevels.strategy, AmazonJobOperations.reportExtracting);
@@ -132,13 +133,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         private void RemoveOldData(DateTime date)
         {
             Logger.Info(accountId, "The cleaning of StrategySummaries for account ({0}) has begun - {1}.", accountId, date);
-            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => {
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
+            {
                 using (var db = new ClientPortalProgContext())
                 {
-                    var items = db.StrategySummaries.Where(x => x.Date == date && x.Strategy.AccountId == accountId && campaignTypesFromApi.Contains(x.Strategy.Type.Name));
-                    var metrics = db.StrategySummaryMetrics.Where(x => x.Date == date && x.Strategy.AccountId == accountId && campaignTypesFromApi.Contains(x.Strategy.Type.Name));
-                    db.BulkDelete(metrics);
-                    db.BulkDelete(items);
+                    db.StrategySummaryMetrics.Where(x => x.Date == date && x.Strategy.AccountId == accountId && campaignTypesFromApi.Contains(x.Strategy.Type.Name)).DeleteFromQuery();
+                    db.StrategySummaries.Where(x => x.Date == date && x.Strategy.AccountId == accountId && campaignTypesFromApi.Contains(x.Strategy.Type.Name)).DeleteFromQuery();
                 }
             }, accountId, AmazonJobLevels.strategy, AmazonJobOperations.cleanExistingData);
             Logger.Info(accountId, "The cleaning of StrategySummaries for account ({0}) is over - {1}.", accountId, date);
