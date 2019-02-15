@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Adform;
+using Adform.Entities.ReportEntities;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters
@@ -158,37 +159,37 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
     public class AdformTransformer
     {
-        private List<List<object>> rows;
-        private Dictionary<string, int> columnLookup;
-        private bool includeBasicStats;
-        private bool includeConvStats;
-        private bool includeAdInteractionType;
-        private bool includeCampaign;
-        private bool includeLineItem;
-        private bool includeBanner;
+        private readonly List<List<object>> rows;
+        private readonly Dictionary<string, int> columnLookup;
+        private readonly bool includeBasicStats;
+        private readonly bool includeConvStats;
+        private readonly bool includeAdInteractionType;
+        private readonly bool includeCampaign;
+        private readonly bool includeOrder;
+        private readonly bool includeLineItem;
+        private readonly bool includeBanner;
 
-        public AdformTransformer(ReportData reportData, bool basicStatsOnly = false, bool convStatsOnly = false, bool byCampaign = false, bool byLineItem = false, bool byBanner = false)
+        public AdformTransformer(ReportData reportData, bool basicStatsOnly = false, bool convStatsOnly = false, bool byCampaign = false, bool byLineItem = false, bool byBanner = false, bool byOrder = false)
         {
-            this.rows = reportData.rows;
-            this.columnLookup = reportData.CreateColumnLookup();
-
-            this.includeBasicStats = this.includeConvStats = this.includeAdInteractionType = true;
-            if (basicStatsOnly)
-                this.includeConvStats = this.includeAdInteractionType = false;
-            if (convStatsOnly)
-                this.includeBasicStats = false;
-
-            this.includeCampaign = byCampaign;
-            this.includeLineItem = byLineItem;
-            this.includeBanner = byBanner;
+            rows = reportData.rows;
+            columnLookup = reportData.CreateColumnLookup();
+            includeBasicStats = !convStatsOnly;
+            includeConvStats = includeAdInteractionType = !basicStatsOnly;
+            includeCampaign = byCampaign;
+            includeOrder = byOrder;
+            includeLineItem = byLineItem;
+            includeBanner = byBanner;
         }
+
         public IEnumerable<AdformSummary> EnumerateAdformSummaries()
         {
             foreach (var row in rows)
             {
                 var summary = RowToAdformSummary(row);
                 if (summary != null)
+                {
                     yield return summary;
+                }
             }
         }
 
@@ -206,6 +207,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 return null;
             }
         }
+
         private void AssignSummaryProperties(AdformSummary summary, List<object> row)
         {
             summary.Date = DateTime.Parse(row[columnLookup["date"]].ToString());
@@ -228,6 +230,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             }
             if (includeCampaign)
                 summary.Campaign = Convert.ToString(row[columnLookup["campaign"]]);
+            if (includeOrder)
+                summary.Order = Convert.ToString(row[columnLookup["order"]]);
             if (includeLineItem)
                 summary.LineItem = Convert.ToString(row[columnLookup["lineItem"]]);
             if (includeBanner)
