@@ -48,14 +48,15 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
         }
 
         public void UpdateAccountSummaryMetricsDataForDate(List<TReportEntity> reportShippingEntities,
-            List<TDbEntity> dbVendorEntities, DateTime date, ExtAccount account)
+            List<TDbEntity> reportVendorEntities, DateTime date, ExtAccount account)
         {
             using (var dbContext = new ClientPortalProgContext())
             {
-                var accountRelatedEntityIds = dbVendorEntities.Select(e => e.Id).ToList();
+                var vendorEntitiesDbSet = GetVendorDbSet(dbContext);
+                var accountRelatedEntityIds = vendorEntitiesDbSet.Where(e => e.AccountId == account.Id).Select(e => e.Id).ToList();
                 var dbSet = GetSummaryMetricDbSet(dbContext);
                 var existingAccountDailySummaries = dbSet.Where(csm => csm.Date == date && accountRelatedEntityIds.Contains(csm.EntityId)).ToList();
-                var actualAccountDailySummaries = GetActualDailySummariesFromReportEntities(reportShippingEntities, dbVendorEntities, account, date);
+                var actualAccountDailySummaries = GetActualDailySummariesFromReportEntities(reportShippingEntities, reportVendorEntities, account, date);
                 MergeDailySummariesAndUpdateInDataBase(dbSet, dbContext, existingAccountDailySummaries, actualAccountDailySummaries);
             }
         }
