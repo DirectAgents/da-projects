@@ -10,7 +10,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
         {
             shippedRevenueProducts = ProcessDuplicatedProducts(shippedRevenueProducts);
             shippedCogsProducts = ProcessDuplicatedProducts(shippedCogsProducts);
-            var mergedProducts = MergeShippedRevenueAndShippedCogsProductsdata(shippedRevenueProducts, shippedCogsProducts);
+            var mergedProducts = MergeShippedRevenueAndShippedCogsProductsData(shippedRevenueProducts, shippedCogsProducts);
             return new VcdReportData
             {
                 Products = mergedProducts,
@@ -21,7 +21,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
             };
         }
 
-        private List<Product> MergeShippedRevenueAndShippedCogsProductsdata(List<Product> shippedRevenueProducts,
+        private List<Product> MergeShippedRevenueAndShippedCogsProductsData(List<Product> shippedRevenueProducts,
             List<Product> shippedCogsProducts)
         {
             var resultList = new List<Product>();
