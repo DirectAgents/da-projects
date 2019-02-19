@@ -82,17 +82,17 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
             var pageRequestData = GetPageDataForReportRequest();
             var requestId = Guid.NewGuid().ToString();
             var requestBodyObject = PrepareRequestBody(requestId, reportDay, reportLevel, salesViewName);
-            var requestHeaders = GetHeadersDictionary(requestId, accountInfo.VendorGroupId.ToString());
+            var requestHeaders = GetHeadersDictionary(requestId);
             var requestBodyJson = JsonConvert.SerializeObject(requestBodyObject);
             var requestQueryParams = RequestQueryConstants.GetRequestQueryParameters(pageRequestData.Token,
                 accountInfo.VendorGroupId.ToString(), accountInfo.McId.ToString());
-            var request = RestRequestHelper.CreateRestRequest(amazonCsvDownloadReportUrl, pageRequestData.Cookies, requestQueryParams, null);
+            var request = RestRequestHelper.CreateRestRequest(amazonCsvDownloadReportUrl, pageRequestData.Cookies, requestQueryParams);
             request.AddParameter(RequestBodyConstants.RequestBodyFormat, requestBodyJson, ParameterType.RequestBody);
             requestHeaders.ForEach(x => request.AddHeader(x.Key, x.Value));
             return request;
         }
 
-        private Dictionary<string, string> GetHeadersDictionary(string requestId, string vendorGroupId)
+        private Dictionary<string, string> GetHeadersDictionary(string requestId)
         {
             var requestHeaders = RequestHeaderConstants.GetHeadersDictionary();
             requestHeaders[RequestHeaderConstants.RequestIdHeaderName] = requestId;
@@ -103,7 +103,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
         {
             var visibleFilters = RequestBodyConstants.GetInitialVisibleFilters(GetBodyVisibleFilterDateRange(reportDay), salesViewName);
             var reportParameters = GetReportParameters(reportDay, reportLevel);
-            return new DownloadReportRequestBody()
+            return new DownloadReportRequestBody
             {
                 salesDiagnosticDetail = new SalesDiagnosticDetail
                 {

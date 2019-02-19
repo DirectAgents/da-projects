@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models
 {
