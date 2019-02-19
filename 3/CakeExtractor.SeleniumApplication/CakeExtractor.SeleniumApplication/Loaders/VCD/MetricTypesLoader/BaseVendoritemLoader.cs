@@ -86,7 +86,9 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
                InitMetricValue(dbEntity.Id, date, reportEntity.FreeReplacements,
                     metricTypes[VendorCentralDataLoadingConstants.FreeReplacementMetricName]),
                InitMetricValue(dbEntity.Id, date, reportEntity.ShippedCogs,
-                    metricTypes[VendorCentralDataLoadingConstants.ShippedCogsMetricName])
+                    metricTypes[VendorCentralDataLoadingConstants.ShippedCogsMetricName]),
+                InitMetricValue(dbEntity.Id, date, reportEntity.OrderedRevenue,
+                    metricTypes[VendorCentralDataLoadingConstants.OrderedRevenueMetricName])
             };
             metricEntities.RemoveAll(item => item == null);
             return metricEntities;

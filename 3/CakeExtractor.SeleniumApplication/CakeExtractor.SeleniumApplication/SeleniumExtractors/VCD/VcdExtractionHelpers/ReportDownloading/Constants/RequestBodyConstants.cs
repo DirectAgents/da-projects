@@ -15,9 +15,13 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 
         public const string ShippedCogsLevel = "shippedCOGSLevel";
 
+        public const string OrderedRevenueLevel = "orderedRevenueLevel";
+
         public const string ShippedRevenueSalesView = "Shipped Revenue";
 
         public const string ShippedCogsSalesView = "Shipped COGS";
+
+        public const string OrderedRevenueView = "Ordered Revenue";
 
         public static Dictionary<string, List<string>> GetInitialVisibleFilters(string reportDates, string salesViewName)
         {
@@ -54,7 +58,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                 new ReportParameter
                 {
                     parameterId = "productView",
-                    values = new List<Value>{ new Value { val= "allAsinsNonDefault" } }
+                    values = new List<Value>{ new Value { val = reportLevel == OrderedRevenueLevel ? "allAsins" : "allAsinsNonDefault" } }
                 },
                 new ReportParameter
                 {
@@ -69,12 +73,12 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                 new ReportParameter
                 {
                     parameterId = "periodStartDay",
-                    values = new List<Value>{ new Value { val= startDate } } // Should be filled dynamically with report day date
+                    values = new List<Value>{ new Value { val = startDate } } // Should be filled dynamically with report day date
                 },
                 new ReportParameter
                 {
                     parameterId = "periodEndDay",
-                    values = new List<Value>{ new Value { val= endDate } } /// Should be filled dynamically with report day date
+                    values = new List<Value>{ new Value { val = endDate } } // Should be filled dynamically with report day date
                 },
                 new ReportParameter
                 {
@@ -99,7 +103,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                 new ReportParameter
                 {
                     parameterId = "dataRefreshDate",
-                    values = new List<Value>{ new Value { val = TimeHelper.ConvertToUnixTimestamp(DateTime.Now).ToString() } } // value for retreiving the latest data
+                    values = new List<Value>{ new Value { val = TimeHelper.ConvertToUnixTimestamp(DateTime.Now).ToString() } } // value for retrieving the latest data
                 },
                 new ReportParameter
                 {

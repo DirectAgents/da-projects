@@ -152,7 +152,9 @@
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\Models\ReportDownloadingRequestPageData.cs" />
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\VcdDownloadCsvReportRequestGenerator.cs" />
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportDownloading\VcdReportDownloader.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportParsing\ParsingConverters\BaseProductRowMap.cs" />
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportParsing\ParsingConverters\DecimalAmountReportConverter.cs" />
+    <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportParsing\ParsingConverters\OrderedRevenueProductsRowMap.cs" />
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedCogsProductsRowMap.cs" />
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportParsing\ParsingConverters\ShippedRevenueProductsRowMap.cs" />
     <Compile Include="SeleniumExtractors\VCD\VcdExtractionHelpers\ReportParsing\ParsingConverters\IntNumberReportConverter.cs" />

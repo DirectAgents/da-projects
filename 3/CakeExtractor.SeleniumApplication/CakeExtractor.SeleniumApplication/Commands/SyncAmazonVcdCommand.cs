@@ -25,13 +25,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
             accountsDataProvider = new VcdAccountsDataProvider();
         }
 
-        public override string CommandName
-        {
-            get
-            {
-                return "SyncAmazonVcdCommand";
-            }
-        }
+        public override string CommandName => "SyncAmazonVcdCommand";
 
         public override void PrepareCommandEnvironment()
         {
