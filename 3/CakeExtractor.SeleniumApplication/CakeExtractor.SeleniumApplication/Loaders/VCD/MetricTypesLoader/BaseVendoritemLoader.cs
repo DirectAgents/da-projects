@@ -30,7 +30,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
                 var itemsToBeAdded = new List<TDbEntity>();
                 var allItems = new List<TDbEntity>();
 
-                var allVendorEntitiesDbSet = GetVendorDbSet(dbContext);
+                var allVendorEntitiesDbSet = dbContext.Set<TDbEntity>();
                 var accountRelatedVendorEntities = GetAccountRelatedVendorEntities(allVendorEntitiesDbSet, account.Id);
                 reportEntities.ForEach(reportEntity =>
                 {
@@ -53,12 +53,16 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
         {
             using (var dbContext = new ClientPortalProgContext())
             {
-                var allVendorEntitiesDbSet = GetVendorDbSet(dbContext);
-                var accountRelatedVendorEntityIds = GetAccountRelatedVendorEntities(allVendorEntitiesDbSet, account.Id).Select(e => e.Id);
-                var dbSet = GetSummaryMetricDbSet(dbContext);
-                var existingAccountDailySummaries = dbSet.Where(csm => csm.Date == date && accountRelatedVendorEntityIds.Contains(csm.EntityId)).ToList();
-                var actualAccountDailySummaries = GetActualDailySummariesFromReportEntities(reportShippingEntities, reportVendorEntities, account, date);
-                MergeDailySummariesAndUpdateInDataBase(dbSet, dbContext, existingAccountDailySummaries, actualAccountDailySummaries);
+                var allVendorEntitiesDbSet = dbContext.Set<TDbEntity>();
+                var accountRelatedVendorEntityIds = GetAccountRelatedVendorEntities(allVendorEntitiesDbSet, account.Id)
+                    .Select(e => e.Id);
+                var allVendorSummariesDbSet = dbContext.Set<TSummaryMetricEntity>();
+                var existingAccountDailySummaries = allVendorSummariesDbSet
+                    .Where(csm => csm.Date == date && accountRelatedVendorEntityIds.Contains(csm.EntityId)).ToList();
+                var actualAccountDailySummaries =
+                    GetActualDailySummariesFromReportEntities(reportShippingEntities, reportVendorEntities, account, date);
+                MergeDailySummariesAndUpdateInDataBase(allVendorSummariesDbSet, dbContext,
+                    existingAccountDailySummaries, actualAccountDailySummaries);
             }
         }
 
@@ -68,10 +72,6 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
         }
 
         protected abstract TDbEntity MapReportEntityToDbEntity(TReportEntity reportEntity, ExtAccount extAccount);
-
-        protected abstract DbSet<TDbEntity> GetVendorDbSet(ClientPortalProgContext dbContext);
-
-        protected abstract DbSet<TSummaryMetricEntity> GetSummaryMetricDbSet(ClientPortalProgContext dbContext);
 
         private List<TSummaryMetricEntity> GetSummaryMetricEntities(TReportEntity reportEntity, TDbEntity dbEntity, DateTime date)
         {
@@ -94,7 +94,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
             return metricEntities;
         }
 
-        private void MergeDailySummariesAndUpdateInDataBase(DbSet<TSummaryMetricEntity> dbSet, ClientPortalProgContext dbContext,
+        private void MergeDailySummariesAndUpdateInDataBase(DbSet<TSummaryMetricEntity> allVendorSummariesDbSet, DbContext dbContext,
             List<TSummaryMetricEntity> existingAccountDailySummaries, List<TSummaryMetricEntity> actualAccountDailySummaries)
         {
             var dailySummariesToInsert = new List<TSummaryMetricEntity>();
@@ -119,9 +119,9 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
                 }
             });
             var dailySummariesToBeRemoved = existingAccountDailySummaries.Except(dailySummariesToLeaveUntouched).ToList();
-            dbSet.RemoveRange(dailySummariesToBeRemoved);
+            allVendorSummariesDbSet.RemoveRange(dailySummariesToBeRemoved);
             dbContext.SaveChanges();
-            dbSet.AddRange(dailySummariesToInsert);
+            allVendorSummariesDbSet.AddRange(dailySummariesToInsert);
             dbContext.SaveChanges();
             Logger.Info("Amazon VCD, Inserted {0}, Deleted {1}", dailySummariesToInsert.Count, dailySummariesToBeRemoved.Count);
         }
