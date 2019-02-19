@@ -11,9 +11,8 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
 {
     internal class VcdAccountsDataProvider
     {
-        private VcdCommandConfigurationManager vcdConfigurationManager;
-
-        private PlatformAccountRepository accountsRepository;
+        private readonly VcdCommandConfigurationManager vcdConfigurationManager;
+        private readonly PlatformAccountRepository accountsRepository;
 
         public VcdAccountsDataProvider()
         {
@@ -24,11 +23,11 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
         public List<AccountInfo> GetAccountsDataToProcess(AmazonVcdExtractor extractor)
         {
             var dbAccounts = GetDbAccountsToProcess();
-            var pageAcountsInfo = extractor.ExtractAccountsInfo();
+            var pageAccountsInfo = extractor.ExtractAccountsInfo();
             var accountsInfo = new List<AccountInfo>();
             dbAccounts.ForEach(dbAccount =>
             {
-                var pageAccountData = pageAcountsInfo.subAccounts.FirstOrDefault(pa => pa.name == dbAccount.Name);
+                var pageAccountData = pageAccountsInfo.subAccounts.FirstOrDefault(pa => pa.name == dbAccount.Name);
                 if (pageAccountData != null)
                 {
                     accountsInfo.Add(new AccountInfo
@@ -40,31 +39,28 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
                 }
                 else
                 {
-                    Logger.Warn("{0} account was not found on page", dbAccount.Name);
+                    Logger.Warn($"{dbAccount.Name} account was not found on page");
                 }
             });
+
             Logger.Info("{0} accounts will be processed", string.Join(",", accountsInfo.Select(a => a.Account.Name)));
             return accountsInfo;
         }
 
         private List<ExtAccount> GetDbAccountsToProcess()
         {
-            if (vcdConfigurationManager.GetAccountId() != 0)
-            {
-                var account = accountsRepository.GetAccount(vcdConfigurationManager.GetAccountId());
-                if (account != null)
-                {
-                    return new List<ExtAccount> { account };
-                }
-                else
-                {
-                    throw new Exception(string.Format("Account with id {0} was not found", vcdConfigurationManager.GetAccountId()));
-                }
-            }
-            else
+            if (vcdConfigurationManager.GetAccountId() == 0)
             {
                 return accountsRepository.GetAccountsByPlatformCode(Platform.Code_AraAmazon).ToList();
             }
+
+            var account = accountsRepository.GetAccount(vcdConfigurationManager.GetAccountId());
+            if (account != null)
+            {
+                return new List<ExtAccount> { account };
+            }
+
+            throw new Exception($"Account with id {vcdConfigurationManager.GetAccountId()} was not found");
         }
     }
 }

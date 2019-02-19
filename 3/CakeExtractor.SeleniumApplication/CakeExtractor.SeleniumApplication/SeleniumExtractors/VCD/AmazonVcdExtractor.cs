@@ -13,29 +13,27 @@ using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelp
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using CakeExtracter.Common;
+using CakeExtracter.Etl;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
 {
-    internal class AmazonVcdExtractor
+    internal class AmazonVcdExtractor : Extracter<VcdReportData>
     {
-        private AuthorizationModel authorizationModel;
-
-        private AmazonVcdPageActions pageActions;
-
-        private VcdReportDownloader reportDownloader;
-
-        private VcdReportCSVParser reportParser;
-
-        private VcdReportComposer reportComposer;
-
-        private UserInfoExtracter userInfoExtractor;
-
         private const int ReportDownloadingFailedDelayInSeconds = 30;
+        private const int ReportDownloadingAttemptCount = 5;
 
+        private AuthorizationModel authorizationModel;
+        private AmazonVcdPageActions pageActions;
+        private VcdReportDownloader reportDownloader;
+        private VcdReportCSVParser reportParser;
+        private VcdReportComposer reportComposer;
+        private UserInfoExtracter userInfoExtractor;
         readonly VcdCommandConfigurationManager configurationManager;
 
-        private const int ReportDownloadingAttemptCount = 5;
+        public DateRange DateRange { get; set; }
+        public AccountInfo AccountInfo { get; set; }
 
         public AmazonVcdExtractor(VcdCommandConfigurationManager configurationManager)
         {
@@ -54,29 +52,43 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
             AmazonVcdLoginHelper.LoginToAmazonPortal(authorizationModel, pageActions);
         }
 
-        public VcdReportData ExtractDailyData(DateTime reportDay, AccountInfo accountInfo)
-        {
-            try
-            {
-                var shippedRevenueReportData = GetShippedRevenueReportData(reportDay, accountInfo);
-                WaitBetweenReportRequests();
-                var shippedCogsReportData = GetShippingCogsReportData(reportDay, accountInfo);
-                WaitBetweenReportRequests();
-                var orderedRevenueReportData = GetOrderedRevenueReportData(reportDay, accountInfo);
-                var composedData = reportComposer.ComposeReportData(shippedRevenueReportData, shippedCogsReportData, orderedRevenueReportData);
-                return composedData;
-            }
-            catch (Exception ex)
-            {
-                Logger.Warn("Error occured while extracting data for {0} account on {1} date", accountInfo.Account.Id, reportDay);
-                Logger.Error(ex);
-                throw ex;
-            }
-        }
-
         public UserInfo ExtractAccountsInfo()
         {
             return userInfoExtractor.ExtractUserInfo(pageActions);
+        }
+
+        protected override void Extract()
+        {
+            var accId = AccountInfo.Account.Id;
+            var accName = AccountInfo.Account.Name;
+            foreach (var date in DateRange.Dates)
+            {
+                try
+                {
+                    Logger.Info($"Amazon VCD, ETL for {date} started. Account {accName} - {accId}");
+                    var data = ExtractDailyData(date, AccountInfo);
+                    Add(data);
+                }
+                catch (Exception e)
+                {
+                    var exception = new Exception($"Error occured while extracting data for {accName} ({accId}) account on {date} date.", e);
+                    Logger.Error(exception);
+                }
+            }
+
+            End();
+        }
+
+        private VcdReportData ExtractDailyData(DateTime reportDay, AccountInfo accountInfo)
+        {
+            var shippedRevenueReportData = GetShippedRevenueReportData(reportDay, accountInfo);
+            WaitBetweenReportRequests();
+            var shippedCogsReportData = GetShippingCogsReportData(reportDay, accountInfo);
+            WaitBetweenReportRequests();
+            var orderedRevenueReportData = GetOrderedRevenueReportData(reportDay, accountInfo);
+            var composedData = reportComposer.ComposeReportData(shippedRevenueReportData, shippedCogsReportData, orderedRevenueReportData);
+            composedData.Date = reportDay;
+            return composedData;
         }
 
         private static List<Product> GetReportData(string reportName, Func<string> downloadReportFunc, Func<string, List<Product>> parseReportFunc)
