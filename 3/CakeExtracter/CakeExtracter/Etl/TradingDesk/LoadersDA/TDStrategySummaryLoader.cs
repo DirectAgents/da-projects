@@ -171,14 +171,15 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 if (typeRepository.IdStorage.IsEntityInStorage(strategy.TargetingType))
                 {
                     strategy.TargetingTypeId = typeRepository.IdStorage.GetEntityIdFromStorage(strategy.TargetingType);
-                    strategy.TargetingType = null;
                 }
 
                 if (typeRepository.IdStorage.IsEntityInStorage(strategy.Type))
                 {
                     strategy.TypeId = typeRepository.IdStorage.GetEntityIdFromStorage(strategy.Type);
-                    strategy.Type = null;
                 }
+
+                strategy.Type = null;
+                strategy.TargetingType = null;
             }
         }
 
