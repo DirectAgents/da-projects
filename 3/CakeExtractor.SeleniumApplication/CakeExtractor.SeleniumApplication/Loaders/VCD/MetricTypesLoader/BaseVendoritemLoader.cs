@@ -18,30 +18,31 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
     {
         protected Dictionary<string, int> metricTypes;
 
-        public BaseVendorItemLoader(Dictionary<string, int> metricTypes)
+        protected BaseVendorItemLoader(Dictionary<string, int> metricTypes)
         {
             this.metricTypes = metricTypes;
         }
 
-        public List<TDbEntity> EnsureVendorEntitiesInDataBase(List<TReportEntity> reportEntities, ExtAccount extAccount)
+        public List<TDbEntity> EnsureVendorEntitiesInDataBase(List<TReportEntity> reportEntities, ExtAccount account)
         {
             using (var dbContext = new ClientPortalProgContext())
             {
                 var itemsToBeAdded = new List<TDbEntity>();
                 var allItems = new List<TDbEntity>();
-                var dbSet = GetVendorDbSet(dbContext);
-                var allAccountdbEntities = dbSet.Where(db => db.AccountId == extAccount.Id).ToList();
+
+                var allVendorEntitiesDbSet = GetVendorDbSet(dbContext);
+                var accountRelatedVendorEntities = GetAccountRelatedVendorEntities(allVendorEntitiesDbSet, account.Id);
                 reportEntities.ForEach(reportEntity =>
                 {
-                    var correspondingDbEntity = allAccountdbEntities.FirstOrDefault(GetEntityMappingPredicate(reportEntity, extAccount));
+                    var correspondingDbEntity = accountRelatedVendorEntities.FirstOrDefault(GetEntityMappingPredicate(reportEntity, account));
                     if (correspondingDbEntity == null)
                     {
-                        correspondingDbEntity = MapReportEntityToDbEntity(reportEntity, extAccount);
+                        correspondingDbEntity = MapReportEntityToDbEntity(reportEntity, account);
                         itemsToBeAdded.Add(correspondingDbEntity);
                     }
                     allItems.Add(correspondingDbEntity);
                 });
-                dbSet.AddRange(itemsToBeAdded);
+                allVendorEntitiesDbSet.AddRange(itemsToBeAdded);
                 dbContext.SaveChanges();
                 return allItems;
             }
@@ -52,10 +53,10 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
         {
             using (var dbContext = new ClientPortalProgContext())
             {
-                var vendorEntitiesDbSet = GetVendorDbSet(dbContext);
-                var accountRelatedEntityIds = vendorEntitiesDbSet.Where(e => e.AccountId == account.Id).Select(e => e.Id).ToList();
+                var allVendorEntitiesDbSet = GetVendorDbSet(dbContext);
+                var accountRelatedVendorEntityIds = GetAccountRelatedVendorEntities(allVendorEntitiesDbSet, account.Id).Select(e => e.Id);
                 var dbSet = GetSummaryMetricDbSet(dbContext);
-                var existingAccountDailySummaries = dbSet.Where(csm => csm.Date == date && accountRelatedEntityIds.Contains(csm.EntityId)).ToList();
+                var existingAccountDailySummaries = dbSet.Where(csm => csm.Date == date && accountRelatedVendorEntityIds.Contains(csm.EntityId)).ToList();
                 var actualAccountDailySummaries = GetActualDailySummariesFromReportEntities(reportShippingEntities, reportVendorEntities, account, date);
                 MergeDailySummariesAndUpdateInDataBase(dbSet, dbContext, existingAccountDailySummaries, actualAccountDailySummaries);
             }
@@ -148,6 +149,12 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
                 };
             }
             return null;
+        }
+
+        private static List<TDbEntity> GetAccountRelatedVendorEntities(IEnumerable<TDbEntity> allVendorEntitiesDbSet,
+            int accountId)
+        {
+            return allVendorEntitiesDbSet.Where(e => e.AccountId == accountId).ToList();
         }
     }
 }
