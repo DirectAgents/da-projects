@@ -23,6 +23,12 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
             return products;
         }
 
+        public List<Product> ParseOrderedRevenueReportData(string reportCsvText)
+        {
+            var products = ParseProductsFromReport<OrderedRevenueProductsRowMap>(reportCsvText);
+            return products;
+        }
+
         private List<Product> ParseProductsFromReport<T>(string reportCsvText) where T: CsvClassMap<Product>
         {
             reportCsvText = TextUtils.RemoveFirstLine(reportCsvText);

@@ -1,4 +1,7 @@
-﻿using CakeExtracter;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using CakeExtracter;
 using CakeExtractor.SeleniumApplication.Configuration.Models;
 using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
@@ -9,11 +12,8 @@ using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelp
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using Newtonsoft.Json;
 using RestSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHelpers
+namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading
 {
     internal class VcdReportDownloader
     {
@@ -44,23 +44,25 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
             return DownloadReportAsCsvText(reportDay, RequestBodyConstants.ShippedCogsLevel, RequestBodyConstants.ShippedCogsSalesView, accountInfo);
         }
 
+        public string DownloadOrderedRevenueCsvReport(DateTime reportDay, AccountInfo accountInfo)
+        {
+            Logger.Info("Amazon VCD, Attempt to download ordered revenue report.");
+            return DownloadReportAsCsvText(reportDay, RequestBodyConstants.OrderedRevenueLevel, RequestBodyConstants.OrderedRevenueView, accountInfo);
+        }
+
         private string DownloadReportAsCsvText(DateTime reportDay, string reportLevel, string salesViewName, AccountInfo accountInfo)
         {
-            pageActions.RefreshSalesDiagnosticPage(authorizationModel);
             var request = GenerateDownloadingReportRequest(reportDay, reportLevel, salesViewName, accountInfo);
             var response = RestRequestHelper.SendPostRequest<object>(amazonBaseUrl, request);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                string textReport = System.Text.Encoding.UTF8.GetString(response.RawBytes, 0, response.RawBytes.Length);
-                Logger.Info("Amazon VCD, Report downloading finished successfully. Size:{0} characters.",
-                  textReport.Length);
+                var textReport = System.Text.Encoding.UTF8.GetString(response.RawBytes, 0, response.RawBytes.Length);
+                Logger.Info($"Amazon VCD, Report downloading finished successfully. Size: {textReport.Length} characters.");
                 return textReport;
             }
-            else
-            {
-                Logger.Warn("Report downloading attempt failed, Status code {0}", response.StatusDescription);
-                throw new Exception(string.Format("Report was not downloaded successfully. Status code {0}", response.StatusDescription));
-            }
+
+            Logger.Warn("Report downloading attempt failed, Status code {0}", response.StatusDescription);
+            throw new Exception($"Report was not downloaded successfully. Status code {response.StatusDescription}");
         }
 
         private ReportDownloadingRequestPageData GetPageDataForReportRequest()
@@ -79,17 +81,17 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
             var pageRequestData = GetPageDataForReportRequest();
             var requestId = Guid.NewGuid().ToString();
             var requestBodyObject = PrepareRequestBody(requestId, reportDay, reportLevel, salesViewName);
-            var requestHeaders = GetHeadersDictionary(requestId, accountInfo.VendorGroupId.ToString());
+            var requestHeaders = GetHeadersDictionary(requestId);
             var requestBodyJson = JsonConvert.SerializeObject(requestBodyObject);
             var requestQueryParams = RequestQueryConstants.GetRequestQueryParameters(pageRequestData.Token,
                 accountInfo.VendorGroupId.ToString(), accountInfo.McId.ToString());
-            var request = RestRequestHelper.CreateRestRequest(amazonCsvDownloadReportUrl, pageRequestData.Cookies, requestQueryParams, null);
+            var request = RestRequestHelper.CreateRestRequest(amazonCsvDownloadReportUrl, pageRequestData.Cookies, requestQueryParams);
             request.AddParameter(RequestBodyConstants.RequestBodyFormat, requestBodyJson, ParameterType.RequestBody);
             requestHeaders.ForEach(x => request.AddHeader(x.Key, x.Value));
             return request;
         }
 
-        private Dictionary<string, string> GetHeadersDictionary(string requestId, string vendorGroupId)
+        private Dictionary<string, string> GetHeadersDictionary(string requestId)
         {
             var requestHeaders = RequestHeaderConstants.GetHeadersDictionary();
             requestHeaders[RequestHeaderConstants.RequestIdHeaderName] = requestId;
@@ -100,7 +102,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHel
         {
             var visibleFilters = RequestBodyConstants.GetInitialVisibleFilters(GetBodyVisibleFilterDateRange(reportDay), salesViewName);
             var reportParameters = GetReportParameters(reportDay, reportLevel);
-            return new DownloadReportRequestBody()
+            return new DownloadReportRequestBody
             {
                 salesDiagnosticDetail = new SalesDiagnosticDetail
                 {

@@ -5,17 +5,16 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 {
     internal sealed class IntNumberReportConverter : StringConverter
     {
-        public IntNumberReportConverter()
-        {
-        }
+        private const string EmptyValue = "—";
 
         public override object ConvertFromString(TypeConverterOptions options, string text)
         {
-            if (text == "—")
+            if (text == EmptyValue)
             {
                 return 0;
             }
-            int count = int.Parse(text, NumberStyles.AllowThousands | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture); ;
+
+            var count = int.Parse(text, NumberStyles.AllowThousands | NumberStyles.AllowLeadingSign);
             return count;
         }
     }

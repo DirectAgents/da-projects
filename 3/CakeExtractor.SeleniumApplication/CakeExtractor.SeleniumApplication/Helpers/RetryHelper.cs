@@ -20,7 +20,7 @@ namespace CakeExtractor.SeleniumApplication.Helpers
         public static T Do<T>(Func<T> action, TimeSpan retryInterval, int maxAttemptCount = defaultAttemptCount)
         {
             var exceptions = new List<Exception>();
-            for (int attempted = 0; attempted < maxAttemptCount; attempted++)
+            for (var attempted = 0; attempted < maxAttemptCount; attempted++)
             {
                 try
                 {

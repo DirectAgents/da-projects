@@ -1,9 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models
 {
     internal class VcdReportData
     {
+        public DateTime Date
+        {
+            get;
+            set;
+        }
+
         public List<Brand> Brands
         {
             get;

@@ -5,19 +5,18 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 {
     internal sealed class DecimalAmountReportConverter : StringConverter
     {
-        public DecimalAmountReportConverter()
-        {
-        }
+        private const string EmptyValue = "—";
 
         public override object ConvertFromString(TypeConverterOptions options, string text)
         {
-            if (text == "—")
+            if (text == EmptyValue)
             {
                 return (decimal)0;
             }
-            if (!string.IsNullOrEmpty(text) && text[0] == '$')
-                text = text.Remove(0, 1);
-            decimal d = decimal.Parse(text, CultureInfo.InvariantCulture);
+
+            var d = decimal.Parse(text,
+                NumberStyles.AllowCurrencySymbol | NumberStyles.AllowDecimalPoint | 
+                NumberStyles.AllowLeadingSign | NumberStyles.AllowThousands);
             return d;
         }
     }

@@ -1,4 +1,7 @@
-﻿namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models
 {
     internal class ShippingItem
     {
@@ -42,6 +45,24 @@
         {
             get;
             set;
+        }
+
+        public decimal OrderedRevenue
+        {
+            get;
+            set;
+        }
+
+        public void SetMetrics<T>(IEnumerable<T> items)
+            where T : ShippingItem
+        {
+            OrderedUnits = items.Sum(p => p.OrderedUnits);
+            ShippedUnits = items.Sum(p => p.ShippedUnits);
+            ShippedRevenue = items.Sum(p => p.ShippedRevenue);
+            CustomerReturns = items.Sum(p => p.CustomerReturns);
+            FreeReplacements = items.Sum(p => p.FreeReplacements);
+            ShippedCogs = items.Sum(p => p.ShippedCogs);
+            OrderedRevenue = items.Sum(p => p.OrderedRevenue);
         }
     }
 }

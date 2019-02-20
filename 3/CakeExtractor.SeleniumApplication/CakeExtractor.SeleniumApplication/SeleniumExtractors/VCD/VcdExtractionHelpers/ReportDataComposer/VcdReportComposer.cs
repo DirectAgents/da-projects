@@ -6,11 +6,12 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 {
     internal class VcdReportComposer
     {
-        public VcdReportData ComposeReportData(List<Product> shippedRevenueProducts, List<Product> shippedCogsProducts)
+        public VcdReportData ComposeReportData(List<Product> shippedRevenueProducts, List<Product> shippedCogsProducts, List<Product> orderedRevenueProducts)
         {
             shippedRevenueProducts = ProcessDuplicatedProducts(shippedRevenueProducts);
             shippedCogsProducts = ProcessDuplicatedProducts(shippedCogsProducts);
-            var mergedProducts = MergeShippedRevenueAndShippedCogsProductsData(shippedRevenueProducts, shippedCogsProducts);
+            orderedRevenueProducts = ProcessDuplicatedProducts(orderedRevenueProducts);
+            var mergedProducts = MergeShippedRevenueAndShippedCogsProductsData(shippedRevenueProducts, shippedCogsProducts, orderedRevenueProducts);
             return new VcdReportData
             {
                 Products = mergedProducts,
@@ -19,24 +20,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                 Brands = GetBrandsFromProducts(mergedProducts),
                 ParentProducts = GetParentProductsFromProducts(mergedProducts)
             };
-        }
-
-        private List<Product> MergeShippedRevenueAndShippedCogsProductsData(List<Product> shippedRevenueProducts,
-            List<Product> shippedCogsProducts)
-        {
-            var resultList = new List<Product>();
-            shippedRevenueProducts.ForEach(shippedRevProduct =>
-            {
-                var correspondingShippedCogProduct = shippedCogsProducts.FirstOrDefault(p => p.Asin == shippedRevProduct.Asin);
-                if (correspondingShippedCogProduct != null)
-                {
-                    shippedRevProduct.ShippedCogs = correspondingShippedCogProduct.ShippedCogs;
-                    shippedRevProduct.CustomerReturns = correspondingShippedCogProduct.CustomerReturns;
-                    shippedRevProduct.FreeReplacements = correspondingShippedCogProduct.FreeReplacements;
-                }
-                resultList.Add(shippedRevProduct);
-            });
-            return resultList;
         }
 
         // Replace all duplicated products with one product for each duplication group. 
@@ -48,123 +31,155 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
             {
                 var productsWithDuplicatedAsin = products.Where(p => p.Asin == asin);
                 products = products.Except(productsWithDuplicatedAsin).ToList();
-                var summarizedProduct = new Product
-                {
-                    //properties
-                    Asin = asin,
-                    Name = productsWithDuplicatedAsin.First().Name,
-                    ParentAsin = productsWithDuplicatedAsin.First().ParentAsin,
-                    Category = productsWithDuplicatedAsin.First().Category,
-                    Subcategory = productsWithDuplicatedAsin.First().Subcategory,
-                    Ean = productsWithDuplicatedAsin.First().Ean,
-                    Upc = productsWithDuplicatedAsin.First().Upc,
-                    Brand = productsWithDuplicatedAsin.First().Brand,
-                    ApparelSize = productsWithDuplicatedAsin.First().ApparelSize,
-                    ApparelSizeWidth = productsWithDuplicatedAsin.First().ApparelSizeWidth,
-                    Binding = productsWithDuplicatedAsin.First().Binding,
-                    Color = productsWithDuplicatedAsin.First().Color,
-                    ModelStyleNumber = productsWithDuplicatedAsin.First().ModelStyleNumber,
-                    ReleaseDate = productsWithDuplicatedAsin.First().ReleaseDate,
-                    //metrics
-                    OrderedUnits = productsWithDuplicatedAsin.Sum(p => p.OrderedUnits),
-                    ShippedUnits = productsWithDuplicatedAsin.Sum(p => p.ShippedUnits),
-                    ShippedRevenue = productsWithDuplicatedAsin.Sum(p => p.ShippedRevenue),
-                    FreeReplacements = productsWithDuplicatedAsin.Sum(p => p.FreeReplacements),
-                    ShippedCogs = productsWithDuplicatedAsin.Sum(p => p.ShippedCogs),
-                    CustomerReturns = productsWithDuplicatedAsin.Sum(p => p.CustomerReturns),
-                };
+                var summarizedProduct = GetProduct(asin, productsWithDuplicatedAsin);
                 products.Add(summarizedProduct);
             });
             return products;
         }
 
-        private List<Brand> GetBrandsFromProducts(List<Product> products)
+        private List<Product> MergeShippedRevenueAndShippedCogsProductsData(List<Product> shippedRevenueProducts,
+            List<Product> shippedCogsProducts, List<Product> orderedRevenueProducts)
         {
-            return products.GroupBy(p => p.Brand, (key, gr) =>
-                new Brand
-                {
-                    Name = key,
-                    OrderedUnits = gr.Sum(p => p.OrderedUnits),
-                    ShippedUnits = gr.Sum(p => p.ShippedUnits),
-                    ShippedRevenue = gr.Sum(p => p.ShippedRevenue),
-                    CustomerReturns = gr.Sum(p => p.CustomerReturns),
-                    FreeReplacements = gr.Sum(p => p.FreeReplacements),
-                    ShippedCogs = gr.Sum(p => p.ShippedCogs),
-                }
-            ).ToList();
+            shippedRevenueProducts.ForEach(shippedRevProduct =>
+            {
+                AddShippedCogMetrics(shippedRevProduct, shippedCogsProducts);
+                AddOrderedRevenueMetrics(shippedRevProduct, orderedRevenueProducts);
+            });
+            return shippedRevenueProducts.ToList();
         }
 
-        private List<ParentProduct> GetParentProductsFromProducts(List<Product> products)
+        private void AddShippedCogMetrics(Product product, IEnumerable<Product> shippedCogsProducts)
         {
-            return products.GroupBy(p => p.ParentAsin, (key, gr) =>
+            var correspondingShippedCogProduct = shippedCogsProducts.FirstOrDefault(p => p.Asin == product.Asin);
+            if (correspondingShippedCogProduct == null)
             {
+                return;
+            }
 
-                var firstProduct = gr.FirstOrDefault();
-                var categoryName = (firstProduct != null && !string.IsNullOrEmpty(firstProduct.Category)) ?
-                    firstProduct.Category : null;
-                var subcategoryName = (firstProduct != null && !string.IsNullOrEmpty(firstProduct.Subcategory)) ?
-                    firstProduct.Subcategory : null;
-                var brandName = (firstProduct != null && !string.IsNullOrEmpty(firstProduct.Brand)) ?
-                   firstProduct.Brand : null;
-                return new ParentProduct
-                {
-                    Asin = key,
-                    Category =categoryName,
-                    Subcategory = subcategoryName,
-                    Brand = brandName,
-                    OrderedUnits = gr.Sum(p => p.OrderedUnits),
-                    ShippedUnits = gr.Sum(p => p.ShippedUnits),
-                    ShippedRevenue = gr.Sum(p => p.ShippedRevenue),
-                    CustomerReturns = gr.Sum(p => p.CustomerReturns),
-                    FreeReplacements = gr.Sum(p => p.FreeReplacements),
-                    ShippedCogs = gr.Sum(p => p.ShippedCogs),
-                };
-            }).ToList();
+            product.ShippedCogs = correspondingShippedCogProduct.ShippedCogs;
+            product.CustomerReturns = correspondingShippedCogProduct.CustomerReturns;
+            product.FreeReplacements = correspondingShippedCogProduct.FreeReplacements;
         }
 
-        private List<Category> GetCategoriesFromProducts(List<Product> products)
+        private void AddOrderedRevenueMetrics(Product product, IEnumerable<Product> orderedRevenueProducts)
         {
-            return products.GroupBy(p => p.Category, (key, gr) =>
+            var correspondingOrderedRevenueProduct = orderedRevenueProducts.FirstOrDefault(x => x.Asin == product.Asin);
+            if (correspondingOrderedRevenueProduct != null)
             {
-                var firstProduct = gr.FirstOrDefault();
-                var brandName = (firstProduct != null && !string.IsNullOrEmpty(firstProduct.Brand)) ?
-                    firstProduct.Brand : null;
-                return new Category
-                {
-                    Name = key,
-                    Brand = brandName,
-                    OrderedUnits = gr.Sum(p => p.OrderedUnits),
-                    ShippedUnits = gr.Sum(p => p.ShippedUnits),
-                    ShippedRevenue = gr.Sum(p => p.ShippedRevenue),
-                    CustomerReturns = gr.Sum(p => p.CustomerReturns),
-                    FreeReplacements = gr.Sum(p => p.FreeReplacements),
-                    ShippedCogs = gr.Sum(p => p.ShippedCogs),
-                };
-            }).ToList();
+                product.OrderedRevenue = correspondingOrderedRevenueProduct.OrderedRevenue;
+            }
         }
 
-        private List<Subcategory> GetSubcategoriesFromProducts(List<Product> products)
+        private List<Brand> GetBrandsFromProducts(IEnumerable<Product> products)
         {
-            return products.GroupBy(p => p.Subcategory, (key, gr) =>
+            return products.GroupBy(p => p.Brand, GetBrand).ToList();
+        }
+
+        private List<ParentProduct> GetParentProductsFromProducts(IEnumerable<Product> products)
+        {
+            return products.GroupBy(p => p.ParentAsin, GetParentProduct).ToList();
+        }
+
+        private List<Category> GetCategoriesFromProducts(IEnumerable<Product> products)
+        {
+            return products.GroupBy(p => p.Category, GetCategory).ToList();
+        }
+
+        private List<Subcategory> GetSubcategoriesFromProducts(IEnumerable<Product> products)
+        {
+            return products.GroupBy(p => p.Subcategory, GetSubcategory).ToList();
+        }
+
+        private Brand GetBrand(string name, IEnumerable<Product> products)
+        {
+            var item = new Brand
             {
-                var firstProduct = gr.FirstOrDefault();
-                var categoryName = (firstProduct != null && !string.IsNullOrEmpty(firstProduct.Category)) ?
-                    firstProduct.Category : null;
-                var brandName = (firstProduct != null && !string.IsNullOrEmpty(firstProduct.Brand)) ?
-                    firstProduct.Brand : null;
-                return new Subcategory
-                {
-                    Name = key,
-                    Category= categoryName,
-                    Brand = brandName,
-                    OrderedUnits = gr.Sum(p => p.OrderedUnits),
-                    ShippedUnits = gr.Sum(p => p.ShippedUnits),
-                    ShippedRevenue = gr.Sum(p => p.ShippedRevenue),
-                    CustomerReturns = gr.Sum(p => p.CustomerReturns),
-                    FreeReplacements = gr.Sum(p => p.FreeReplacements),
-                    ShippedCogs = gr.Sum(p => p.ShippedCogs),
-                };
-            }).ToList();
+                Name = name
+            };
+            item.SetMetrics(products);
+            return item;
+        }
+
+        private Category GetCategory(string name, IEnumerable<Product> products)
+        {
+            var firstProduct = products.FirstOrDefault();
+            var item = new Category
+            {
+                Name = name,
+                Brand = GetBrandName(firstProduct)
+            };
+            item.SetMetrics(products);
+            return item;
+        }
+
+        private Subcategory GetSubcategory(string name, IEnumerable<Product> products)
+        {
+            var firstProduct = products.FirstOrDefault();
+            var item = new Subcategory
+            {
+                Name = name,
+                Category = GetCategoryName(firstProduct),
+                Brand = GetBrandName(firstProduct)
+            };
+            item.SetMetrics(products);
+            return item;
+        }
+
+        private ParentProduct GetParentProduct(string asin, IEnumerable<Product> products)
+        {
+            var firstProduct = products.FirstOrDefault();
+            var item = new ParentProduct
+            {
+                Asin = asin,
+                Category = GetCategoryName(firstProduct),
+                Subcategory = GetSubcategoryName(firstProduct),
+                Brand = GetBrandName(firstProduct)
+            };
+            item.SetMetrics(products);
+            return item;
+        }
+
+        private Product GetProduct(string asin, IEnumerable<Product> products)
+        {
+            var firstProduct = products.FirstOrDefault();
+            var item = new Product
+            {
+                Asin = asin,
+                Name = firstProduct.Name,
+                ParentAsin = firstProduct.ParentAsin,
+                Category = firstProduct.Category,
+                Subcategory = firstProduct.Subcategory,
+                Ean = firstProduct.Ean,
+                Brand = firstProduct.Brand,
+                ApparelSize = firstProduct.ApparelSize,
+                ApparelSizeWidth = firstProduct.ApparelSizeWidth,
+                Binding = firstProduct.Binding,
+                Color = firstProduct.Color,
+                ModelStyleNumber = firstProduct.ModelStyleNumber,
+                ReleaseDate = firstProduct.ReleaseDate
+            };
+            item.SetMetrics(products);
+            return item;
+        }
+
+        private string GetBrandName(Product product)
+        {
+            return product == null ? null : GetName(product.Brand);
+        }
+
+        private string GetCategoryName(Product product)
+        {
+            return product == null ? null : GetName(product.Category);
+        }
+
+        private string GetSubcategoryName(Product product)
+        {
+            return product == null ? null : GetName(product.Subcategory);
+        }
+
+        private string GetName(string sourceName)
+        {
+            return !string.IsNullOrEmpty(sourceName) ? sourceName : null;
         }
     }
 }
