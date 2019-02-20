@@ -71,10 +71,10 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("30")]
-        public int DaysInterval {
+        [global::System.Configuration.DefaultSettingValueAttribute("5, 60")]
+        public string DaysInterval {
             get {
-                return ((int)(this["DaysInterval"]));
+                return ((string)(this["DaysInterval"]));
             }
             set {
                 this["DaysInterval"] = value;
@@ -83,7 +83,7 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("55")]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
         public int RefreshPageMinutesInterval {
             get {
                 return ((int)(this["RefreshPageMinutesInterval"]));
