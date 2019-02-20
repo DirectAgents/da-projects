@@ -45,7 +45,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
             InitializeAuthorizationModel();
             CreateApplicationFolders();
             pageActions = new AmazonVcdPageActions();
-            reportDownloader = new VcdReportDownloader(pageActions, authorizationModel);
+            reportDownloader = new VcdReportDownloader(pageActions, authorizationModel, configurationManager.GetRefreshPageTimeInterval());
             reportParser = new VcdReportCSVParser();
             reportComposer = new VcdReportComposer();
             userInfoExtractor = new UserInfoExtracter();
@@ -61,13 +61,10 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
         {
             var accId = AccountInfo.Account.Id;
             var accName = AccountInfo.Account.Name;
-            pageActions.RefreshSalesDiagnosticPage(authorizationModel);
-
             foreach (var date in DateRange.Dates)
             {
                 Extract(date, accId, accName);
             }
-
             End();
         }
 

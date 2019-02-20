@@ -17,18 +17,20 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 {
     internal class VcdReportDownloader
     {
-        private const string amazonBaseUrl = "https://ara.amazon.com";
+        private const string AmazonBaseUrl = "https://ara.amazon.com";
+        private const string AmazonCsvDownloadReportUrl = "/analytics/download/csv/dashboard/salesDiagnostic";
 
-        private const string amazonCsvDownloadReportUrl = "/analytics/download/csv/dashboard/salesDiagnostic";
+        private readonly AmazonVcdPageActions pageActions;
+        private readonly AuthorizationModel authorizationModel;
+        private readonly int refreshPageMinutesInterval;
 
-        private AmazonVcdPageActions pageActions;
+        private DateTime lastRefreshTime;
 
-        private AuthorizationModel authorizationModel;
-
-        public VcdReportDownloader(AmazonVcdPageActions pageActions, AuthorizationModel authorizationModel)
+        public VcdReportDownloader(AmazonVcdPageActions pageActions, AuthorizationModel authorizationModel, int refreshPageMinutesInterval)
         {
             this.pageActions = pageActions;
             this.authorizationModel = authorizationModel;
+            this.refreshPageMinutesInterval = refreshPageMinutesInterval;
         }
 
         public string DownloadShippedRevenueCsvReport(DateTime reportDay, AccountInfo accountInfo)
@@ -52,8 +54,9 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 
         private string DownloadReportAsCsvText(DateTime reportDay, string reportLevel, string salesViewName, AccountInfo accountInfo)
         {
+            TryToRefreshPage();
             var request = GenerateDownloadingReportRequest(reportDay, reportLevel, salesViewName, accountInfo);
-            var response = RestRequestHelper.SendPostRequest<object>(amazonBaseUrl, request);
+            var response = RestRequestHelper.SendPostRequest<object>(AmazonBaseUrl, request);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var textReport = System.Text.Encoding.UTF8.GetString(response.RawBytes, 0, response.RawBytes.Length);
@@ -63,6 +66,19 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 
             Logger.Warn("Report downloading attempt failed, Status code {0}", response.StatusDescription);
             throw new Exception($"Report was not downloaded successfully. Status code {response.StatusDescription}");
+        }
+
+        private void TryToRefreshPage()
+        {
+            var now = DateTime.Now;
+            if (lastRefreshTime.AddMinutes(refreshPageMinutesInterval) > now)
+            {
+                return;
+            }
+
+            pageActions.RefreshSalesDiagnosticPage(authorizationModel);
+            Logger.Info($"Amazon VCD, The portal page has been refreshed. Last refresh time: {lastRefreshTime}, current refresh time: {now}");
+            lastRefreshTime = now;
         }
 
         private ReportDownloadingRequestPageData GetPageDataForReportRequest()
@@ -85,7 +101,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
             var requestBodyJson = JsonConvert.SerializeObject(requestBodyObject);
             var requestQueryParams = RequestQueryConstants.GetRequestQueryParameters(pageRequestData.Token,
                 accountInfo.VendorGroupId.ToString(), accountInfo.McId.ToString());
-            var request = RestRequestHelper.CreateRestRequest(amazonCsvDownloadReportUrl, pageRequestData.Cookies, requestQueryParams);
+            var request = RestRequestHelper.CreateRestRequest(AmazonCsvDownloadReportUrl, pageRequestData.Cookies, requestQueryParams);
             request.AddParameter(RequestBodyConstants.RequestBodyFormat, requestBodyJson, ParameterType.RequestBody);
             requestHeaders.ForEach(x => request.AddHeader(x.Key, x.Value));
             return request;

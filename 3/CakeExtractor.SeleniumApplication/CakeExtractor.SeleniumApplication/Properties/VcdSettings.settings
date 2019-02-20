@@ -17,5 +17,8 @@
     <Setting Name="DaysInterval" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">30</Value>
     </Setting>
+    <Setting Name="RefreshPageMinutesInterval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">55</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
