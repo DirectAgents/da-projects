@@ -71,13 +71,49 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5, 60")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2, 60")]
         public string DaysInterval {
             get {
                 return ((string)(this["DaysInterval"]));
             }
             set {
                 this["DaysInterval"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int ReportDownloadingFailedDelayInSeconds {
+            get {
+                return ((int)(this["ReportDownloadingFailedDelayInSeconds"]));
+            }
+            set {
+                this["ReportDownloadingFailedDelayInSeconds"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int ReportDownloadingMinFailedDelayInSeconds {
+            get {
+                return ((int)(this["ReportDownloadingMinFailedDelayInSeconds"]));
+            }
+            set {
+                this["ReportDownloadingMinFailedDelayInSeconds"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public int ReportDownloadingAttemptCount {
+            get {
+                return ((int)(this["ReportDownloadingAttemptCount"]));
+            }
+            set {
+                this["ReportDownloadingAttemptCount"] = value;
             }
         }
     }

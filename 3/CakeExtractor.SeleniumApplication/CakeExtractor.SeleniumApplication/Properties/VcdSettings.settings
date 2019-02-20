@@ -15,7 +15,16 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="DaysInterval" Type="System.String" Scope="User">
-      <Value Profile="(Default)">5, 60</Value>
+      <Value Profile="(Default)">2, 60</Value>
+    </Setting>
+    <Setting Name="ReportDownloadingFailedDelayInSeconds" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="ReportDownloadingMinFailedDelayInSeconds" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="ReportDownloadingAttemptCount" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">15</Value>
     </Setting>
   </Settings>
 </SettingsFile>

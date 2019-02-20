@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using CakeExtracter;
 using CakeExtractor.SeleniumApplication.Configuration.Models;
 using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using CakeExtractor.SeleniumApplication.Models.Vcd;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
+using CakeExtractor.SeleniumApplication.Properties;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading.Constants;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading.Models;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using Newtonsoft.Json;
+using Polly;
 using RestSharp;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading
@@ -20,6 +23,12 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
     {
         private const string AmazonBaseUrl = "https://ara.amazon.com";
         private const string AmazonCsvDownloadReportUrl = "/analytics/download/csv/dashboard/salesDiagnostic";
+
+        private static int delayEqualizer;
+
+        private readonly int reportDownloadingFailedDelayInSeconds = VcdSettings.Default.ReportDownloadingFailedDelayInSeconds;
+        private readonly int reportDownloadingMinFailedDelayInSeconds = VcdSettings.Default.ReportDownloadingMinFailedDelayInSeconds;
+        private readonly int reportDownloadingAttemptCount = VcdSettings.Default.ReportDownloadingAttemptCount;
 
         private readonly AmazonVcdPageActions pageActions;
         private readonly AuthorizationModel authorizationModel;
@@ -51,17 +60,63 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 
         private string DownloadReportAsCsvText(DateTime reportDay, string reportLevel, string salesViewName, AccountInfo accountInfo)
         {
+            WaitBeforeReportGenerating(reportDay, reportLevel, accountInfo);
+            var response = Policy
+                .Handle<Exception>()
+                .OrResult<IRestResponse>(resp => !resp.IsSuccessful)
+                .WaitAndRetry(reportDownloadingAttemptCount, retryCount => GetTimeSpanForWaiting(),
+                    (exception, timeSpan, retryCount, context) =>
+                    {
+                        ProcessFailedResponse(exception.Result);
+                        LogWaiting(timeSpan, retryCount, reportDay, reportLevel, accountInfo);
+                    })
+                .Execute(() => DownloadReport(reportDay, reportLevel, salesViewName, accountInfo));
+            return ProcessResponse(response);
+        }
+
+        private IRestResponse DownloadReport(DateTime reportDay, string reportLevel, string salesViewName, AccountInfo accountInfo)
+        {
             var request = GenerateDownloadingReportRequest(reportDay, reportLevel, salesViewName, accountInfo);
             var response = RestRequestHelper.SendPostRequest<object>(AmazonBaseUrl, request);
+            EqualizeDelay(response.IsSuccessful);
+            return response;
+        }
+
+        private void WaitBeforeReportGenerating(DateTime reportDay, string reportLevel, AccountInfo accountInfo)
+        {
+            var timeSpan = GetTimeSpanForWaiting();
+            LogWaiting(timeSpan, null, reportDay, reportLevel, accountInfo);
+            Thread.Sleep(timeSpan);
+        }
+
+        private void LogWaiting(TimeSpan timeSpan, int? retryCount, DateTime reportDay, string reportLevel,
+            AccountInfo accountInfo)
+        {
+            var message = $"Waiting {timeSpan} for ({reportDay}, {reportLevel}, {accountInfo.Account.Name}) before report generating";
+            if (retryCount.HasValue)
+            {
+                message += $" (attempt - {retryCount})";
+            }
+
+            Logger.Info(message);
+        }
+
+        private string ProcessResponse(IRestResponse response)
+        {
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                var textReport = System.Text.Encoding.UTF8.GetString(response.RawBytes, 0, response.RawBytes.Length);
-                Logger.Info($"Amazon VCD, Report downloading finished successfully. Size: {textReport.Length} characters.");
-                return textReport;
+                return ProcessSuccessfulResponse(response);
             }
 
             ProcessFailedResponse(response);
             throw new Exception($"Report was not downloaded successfully. Status code {response.StatusDescription}");
+        }
+
+        private string ProcessSuccessfulResponse(IRestResponse response)
+        {
+            var textReport = System.Text.Encoding.UTF8.GetString(response.RawBytes, 0, response.RawBytes.Length);
+            Logger.Info($"Amazon VCD, Report downloading finished successfully. Size: {textReport.Length} characters.");
+            return textReport;
         }
 
         private void ProcessFailedResponse(IRestResponse response)
@@ -142,6 +197,23 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
         {
             const string parameterDatePattern = "yyyy''MM''dd";
             return reportDate.ToString(parameterDatePattern);
+        }
+
+        private void EqualizeDelay(bool isSuccessful)
+        {
+            delayEqualizer = isSuccessful 
+                ? delayEqualizer == 0 
+                    ? 0 
+                    : delayEqualizer - 1 
+                : delayEqualizer + 1;
+        }
+
+        private TimeSpan GetTimeSpanForWaiting()
+        {
+            var waitTime = delayEqualizer == 0
+                ? reportDownloadingMinFailedDelayInSeconds
+                : reportDownloadingFailedDelayInSeconds * delayEqualizer;
+            return TimeSpan.FromSeconds(waitTime);
         }
     }
 }
