@@ -52,7 +52,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 
         private string DownloadReportAsCsvText(DateTime reportDay, string reportLevel, string salesViewName, AccountInfo accountInfo)
         {
-            pageActions.RefreshSalesDiagnosticPage(authorizationModel);
             var request = GenerateDownloadingReportRequest(reportDay, reportLevel, salesViewName, accountInfo);
             var response = RestRequestHelper.SendPostRequest<object>(amazonBaseUrl, request);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)

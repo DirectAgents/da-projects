@@ -61,22 +61,29 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
         {
             var accId = AccountInfo.Account.Id;
             var accName = AccountInfo.Account.Name;
+            pageActions.RefreshSalesDiagnosticPage(authorizationModel);
+
             foreach (var date in DateRange.Dates)
             {
-                try
-                {
-                    Logger.Info($"Amazon VCD, ETL for {date} started. Account {accName} - {accId}");
-                    var data = ExtractDailyData(date, AccountInfo);
-                    Add(data);
-                }
-                catch (Exception e)
-                {
-                    var exception = new Exception($"Error occured while extracting data for {accName} ({accId}) account on {date} date.", e);
-                    Logger.Error(exception);
-                }
+                Extract(date, accId, accName);
             }
 
             End();
+        }
+
+        private void Extract(DateTime date, int accId, string accName)
+        {
+            try
+            {
+                Logger.Info($"Amazon VCD, ETL for {date} started. Account {accName} - {accId}");
+                var data = ExtractDailyData(date, AccountInfo);
+                Add(data);
+            }
+            catch (Exception e)
+            {
+                var exception = new Exception($"Error occured while extracting data for {accName} ({accId}) account on {date} date.", e);
+                Logger.Error(exception);
+            }
         }
 
         private VcdReportData ExtractDailyData(DateTime reportDay, AccountInfo accountInfo)
