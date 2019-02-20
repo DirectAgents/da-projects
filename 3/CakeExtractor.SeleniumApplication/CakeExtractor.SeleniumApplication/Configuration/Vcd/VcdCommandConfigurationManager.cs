@@ -43,17 +43,5 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
         {
             return VcdSettings.Default.CookiesDirectory;
         }
-
-        public int GetRefreshPageTimeInterval()
-        {
-            try
-            {
-                return VcdSettings.Default.RefreshPageMinutesInterval;
-            }
-            catch
-            {
-                return 30;
-            }
-        }
     }
 }

@@ -45,7 +45,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
             InitializeAuthorizationModel();
             CreateApplicationFolders();
             pageActions = new AmazonVcdPageActions();
-            reportDownloader = new VcdReportDownloader(pageActions, authorizationModel, configurationManager.GetRefreshPageTimeInterval());
+            reportDownloader = new VcdReportDownloader(pageActions, authorizationModel);
             reportParser = new VcdReportCSVParser();
             reportComposer = new VcdReportComposer();
             userInfoExtractor = new UserInfoExtracter();

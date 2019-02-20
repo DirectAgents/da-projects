@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using CakeExtracter;
 using CakeExtractor.SeleniumApplication.Configuration.Models;
 using CakeExtractor.SeleniumApplication.Helpers;
@@ -22,15 +23,11 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 
         private readonly AmazonVcdPageActions pageActions;
         private readonly AuthorizationModel authorizationModel;
-        private readonly int refreshPageMinutesInterval;
 
-        private DateTime lastRefreshTime;
-
-        public VcdReportDownloader(AmazonVcdPageActions pageActions, AuthorizationModel authorizationModel, int refreshPageMinutesInterval)
+        public VcdReportDownloader(AmazonVcdPageActions pageActions, AuthorizationModel authorizationModel)
         {
             this.pageActions = pageActions;
             this.authorizationModel = authorizationModel;
-            this.refreshPageMinutesInterval = refreshPageMinutesInterval;
         }
 
         public string DownloadShippedRevenueCsvReport(DateTime reportDay, AccountInfo accountInfo)
@@ -54,31 +51,29 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 
         private string DownloadReportAsCsvText(DateTime reportDay, string reportLevel, string salesViewName, AccountInfo accountInfo)
         {
-            TryToRefreshPage();
             var request = GenerateDownloadingReportRequest(reportDay, reportLevel, salesViewName, accountInfo);
             var response = RestRequestHelper.SendPostRequest<object>(AmazonBaseUrl, request);
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
                 var textReport = System.Text.Encoding.UTF8.GetString(response.RawBytes, 0, response.RawBytes.Length);
                 Logger.Info($"Amazon VCD, Report downloading finished successfully. Size: {textReport.Length} characters.");
                 return textReport;
             }
 
-            Logger.Warn("Report downloading attempt failed, Status code {0}", response.StatusDescription);
+            ProcessFailedResponse(response);
             throw new Exception($"Report was not downloaded successfully. Status code {response.StatusDescription}");
         }
 
-        private void TryToRefreshPage()
+        private void ProcessFailedResponse(IRestResponse response)
         {
-            var now = DateTime.Now;
-            if (lastRefreshTime.AddMinutes(refreshPageMinutesInterval) > now)
+            Logger.Warn($"Report downloading attempt failed, Status code: {response.StatusDescription}");
+            if (response.StatusCode != HttpStatusCode.Unauthorized)
             {
                 return;
             }
 
             pageActions.RefreshSalesDiagnosticPage(authorizationModel);
-            Logger.Info($"Amazon VCD, The portal page has been refreshed. Last refresh time: {lastRefreshTime}, current refresh time: {now}");
-            lastRefreshTime = now;
+            Logger.Info("Amazon VCD, The portal page has been refreshed.");
         }
 
         private ReportDownloadingRequestPageData GetPageDataForReportRequest()
