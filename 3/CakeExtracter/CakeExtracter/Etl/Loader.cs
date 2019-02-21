@@ -7,33 +7,31 @@ namespace CakeExtracter.Etl
 {
     public abstract class Loader<T>
     {
-        private Extracter<T> extracter;
+        private const int DefaultBatchSize = 100;
+
+        protected readonly int accountId;
 
         public int BatchSize { get; set; }
         public int LoadedCount;
         public int ExtractedCount;
 
-        protected readonly int accountId;
-
-        private const int defaultBatchSize = 100;
+        private Extracter<T> extractor;
 
         protected Loader()
         {
-            BatchSize = defaultBatchSize;
+            BatchSize = DefaultBatchSize;
         }
 
-        protected Loader(int accountId, int batchSize = defaultBatchSize)
+        protected Loader(int accountId, int batchSize = DefaultBatchSize)
             : this()
         {
             this.accountId = accountId;
-            this.BatchSize = batchSize;
+            BatchSize = batchSize;
         }
 
-       
-
-        public Thread Start(Extracter<T> source)
+       public Thread Start(Extracter<T> source)
         {
-            extracter = source;
+            extractor = source;
             var thread = new Thread(DoLoad);
             thread.Start();
             return thread;
@@ -46,15 +44,15 @@ namespace CakeExtracter.Etl
                 LoadedCount = 0;
                 ExtractedCount = 0;
 
-                foreach (var list in extracter.EnumerateAll().InBatches(BatchSize))
+                foreach (var list in extractor.EnumerateAll().InBatches(BatchSize))
                 {
                     var loadCount = Load(list);
 
                     Interlocked.Add(ref LoadedCount, loadCount);
-                    ExtractedCount = extracter.Added;
+                    ExtractedCount = extractor.Added;
 
                     Logger.Info(accountId, "Extracted: {0} Loaded: {1} Queue: {2} Done: {3}", ExtractedCount,
-                        LoadedCount,extracter.Count, extracter.Done);
+                        LoadedCount,extractor.Count, extractor.Done);
                 }
 
                 if (LoadedCount != ExtractedCount)
@@ -77,10 +75,5 @@ namespace CakeExtracter.Etl
         protected virtual void AfterLoad()
         {
         }
-
-        //public virtual string Status()
-        //{
-        //    return string.Format("Loaded {0} items", LoadedCount);
-        //}
     }
 }
