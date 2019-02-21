@@ -95,7 +95,7 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
         public int ReportDownloadingMinFailedDelayInSeconds {
             get {
                 return ((int)(this["ReportDownloadingMinFailedDelayInSeconds"]));
@@ -107,13 +107,25 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
         public int ReportDownloadingAttemptCount {
             get {
                 return ((int)(this["ReportDownloadingAttemptCount"]));
             }
             set {
                 this["ReportDownloadingAttemptCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int ReportDownloadingMaxFailedDelayInSeconds {
+            get {
+                return ((int)(this["ReportDownloadingMaxFailedDelayInSeconds"]));
+            }
+            set {
+                this["ReportDownloadingMaxFailedDelayInSeconds"] = value;
             }
         }
     }

@@ -28,6 +28,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 
         private readonly int reportDownloadingFailedDelayInSeconds = VcdSettings.Default.ReportDownloadingFailedDelayInSeconds;
         private readonly int reportDownloadingMinFailedDelayInSeconds = VcdSettings.Default.ReportDownloadingMinFailedDelayInSeconds;
+        private readonly int reportDownloadingMaxFailedDelayInSeconds = VcdSettings.Default.ReportDownloadingMaxFailedDelayInSeconds;
         private readonly int reportDownloadingAttemptCount = VcdSettings.Default.ReportDownloadingAttemptCount;
 
         private readonly AmazonVcdPageActions pageActions;
@@ -60,17 +61,24 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 
         private string DownloadReportAsCsvText(DateTime reportDay, string reportLevel, string salesViewName, AccountInfo accountInfo)
         {
+            var failed = false;
             WaitBeforeReportGenerating(reportDay, reportLevel, accountInfo);
             var response = Policy
                 .Handle<Exception>()
-                .OrResult<IRestResponse>(resp => !resp.IsSuccessful)
+                .OrResult<IRestResponse>(resp => !IsSuccessfulResponse(resp))
                 .WaitAndRetry(reportDownloadingAttemptCount, retryCount => GetTimeSpanForWaiting(),
                     (exception, timeSpan, retryCount, context) =>
                     {
+                        failed = true;
                         ProcessFailedResponse(exception.Result);
                         LogWaiting(timeSpan, retryCount, reportDay, reportLevel, accountInfo);
                     })
-                .Execute(() => DownloadReport(reportDay, reportLevel, salesViewName, accountInfo));
+                .Execute(() =>
+                {
+                    var resp = DownloadReport(reportDay, reportLevel, salesViewName, accountInfo);
+                    EqualizeDelay(IsSuccessfulResponse(resp), failed);
+                    return resp;
+                });
             return ProcessResponse(response);
         }
 
@@ -78,7 +86,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
         {
             var request = GenerateDownloadingReportRequest(reportDay, reportLevel, salesViewName, accountInfo);
             var response = RestRequestHelper.SendPostRequest<object>(AmazonBaseUrl, request);
-            EqualizeDelay(response.IsSuccessful);
             return response;
         }
 
@@ -95,7 +102,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
             var message = $"Waiting {timeSpan} for ({reportDay}, {reportLevel}, {accountInfo.Account.Name}) before report generating";
             if (retryCount.HasValue)
             {
-                message += $" (attempt - {retryCount})";
+                message += $" (number of retrying - {retryCount})";
             }
 
             Logger.Info(message);
@@ -103,7 +110,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 
         private string ProcessResponse(IRestResponse response)
         {
-            if (response.StatusCode == HttpStatusCode.OK)
+            if (IsSuccessfulResponse(response))
             {
                 return ProcessSuccessfulResponse(response);
             }
@@ -121,14 +128,19 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 
         private void ProcessFailedResponse(IRestResponse response)
         {
-            Logger.Warn($"Report downloading attempt failed, Status code: {response.StatusDescription}");
-            if (response.StatusCode != HttpStatusCode.Unauthorized)
+            Logger.Warn($"Report downloading attempt failed, Status code: {response.StatusDescription}, content: {response.Content}");
+            if (response.StatusCode == (HttpStatusCode)429)
             {
                 return;
             }
 
             pageActions.RefreshSalesDiagnosticPage(authorizationModel);
             Logger.Info("Amazon VCD, The portal page has been refreshed.");
+        }
+
+        private bool IsSuccessfulResponse(IRestResponse response)
+        {
+            return response.StatusCode == HttpStatusCode.OK;
         }
 
         private ReportDownloadingRequestPageData GetPageDataForReportRequest()
@@ -199,20 +211,21 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
             return reportDate.ToString(parameterDatePattern);
         }
 
-        private void EqualizeDelay(bool isSuccessful)
+        private void EqualizeDelay(bool isSuccessful, bool wasFailed)
         {
-            delayEqualizer = isSuccessful 
-                ? delayEqualizer == 0 
-                    ? 0 
-                    : delayEqualizer - 1 
+            delayEqualizer = isSuccessful
+                ? wasFailed
+                    ? delayEqualizer
+                    : delayEqualizer == 0
+                        ? 0
+                        : delayEqualizer - 1
                 : delayEqualizer + 1;
         }
 
         private TimeSpan GetTimeSpanForWaiting()
         {
-            var waitTime = delayEqualizer == 0
-                ? reportDownloadingMinFailedDelayInSeconds
-                : reportDownloadingFailedDelayInSeconds * delayEqualizer;
+            var waitTime = Math.Min(reportDownloadingMaxFailedDelayInSeconds,
+                reportDownloadingMinFailedDelayInSeconds + reportDownloadingFailedDelayInSeconds * delayEqualizer);
             return TimeSpan.FromSeconds(waitTime);
         }
     }
