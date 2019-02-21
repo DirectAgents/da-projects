@@ -54,6 +54,11 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
             return userInfoExtractor.ExtractUserInfo(pageActions);
         }
 
+        public void OpenAccountPage()
+        {
+            pageActions.SelectAccountOnPage(AccountInfo.Account.Name);
+        }
+
         protected override void Extract()
         {
             var accId = AccountInfo.Account.Id;

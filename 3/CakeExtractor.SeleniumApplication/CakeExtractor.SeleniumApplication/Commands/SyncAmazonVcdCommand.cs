@@ -51,11 +51,17 @@ namespace CakeExtractor.SeleniumApplication.Commands
         private void DoEtlForAccount(AccountInfo accountInfo)
         {
             Logger.Info($"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) started.");
-            extractor.Initialize();
-            extractor.AccountInfo = accountInfo;
+            PrepareExtractorForAccount(accountInfo);
             var loader = new AmazonVcdLoader(accountInfo.Account);
             CommandHelper.DoEtl(extractor, loader);
             Logger.Info($"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) finished.");
+        }
+
+        private void PrepareExtractorForAccount(AccountInfo accountInfo)
+        {
+            extractor.Initialize();
+            extractor.AccountInfo = accountInfo;
+            extractor.OpenAccountPage();
         }
     }
 }

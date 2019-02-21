@@ -124,6 +124,7 @@
     <Compile Include="Models\ReportModels\AmazonReportSummary.cs" />
     <Compile Include="Models\CommonHelperModels\AuthorizationModel.cs" />
     <Compile Include="Models\CommonHelperModels\JobScheduleModel.cs" />
+    <Compile Include="PageActions\AmazonVcd\AmazonVcdPageObjects.cs" />
     <Compile Include="SeleniumExtractors\AmazonPdaExtractors\AmazonPdaCampaignRequestExtractor.cs" />
     <Compile Include="SeleniumExtractors\AmazonPdaExtractors\AmazonPdaDailyRequestExtractor.cs" />
     <Compile Include="Properties\PdaSettings.Designer.cs">

@@ -1,4 +1,7 @@
-﻿using CakeExtractor.SeleniumApplication.Drivers;
+﻿using System;
+using System.Linq;
+using CakeExtracter;
+using CakeExtractor.SeleniumApplication.Drivers;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using OpenQA.Selenium;
 
@@ -6,7 +9,8 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonVcd
 {
     internal class AmazonVcdPageActions : BaseAmazonPageActions
     {
-        private const string salesDiagnosticPageUrl = "https://ara.amazon.com/analytics/dashboard/salesDiagnostic";
+        private const string SalesDiagnosticPageUrl = "https://ara.amazon.com/analytics/dashboard/salesDiagnostic";
+        private const string TypeOfAccounts = "premium";
 
         public AmazonVcdPageActions() 
             : base(new ChromeWebDriver(string.Empty), Properties.Settings.Default.WaitPageTimeoutInMinuts)
@@ -29,16 +33,34 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonVcd
 
         public void NavigateToSalesDiagnosticPage()
         {
-            NavigateToUrl(salesDiagnosticPageUrl);
+            NavigateToUrl(SalesDiagnosticPageUrl);
         }
 
         public void RefreshSalesDiagnosticPage(AuthorizationModel authorizationModel)
         {
             NavigateToSalesDiagnosticPage();
-            if (AmazonVcdLoginHelper.NeedResetPassword(this))
+            if (!AmazonVcdLoginHelper.NeedResetPassword(this))
             {
-                AmazonVcdLoginHelper.ResetPassword(this, authorizationModel);
-                NavigateToSalesDiagnosticPage();
+                return;
+            }
+
+            AmazonVcdLoginHelper.ResetPassword(this, authorizationModel);
+            NavigateToSalesDiagnosticPage();
+        }
+
+        public void SelectAccountOnPage(string accountName)
+        {
+            try
+            {
+                ClickElement(AmazonVcdPageObjects.AccountsDropdownButton);
+                var accountItems = Driver.FindElements(AmazonVcdPageObjects.AccountsDropdownItem);
+                var accountItem = accountItems.FirstOrDefault(x => x.Text == TypeOfAccounts + accountName);
+                accountItem.Click();
+                WaitElementClickable(AmazonVcdPageObjects.AccountsDropdownButton, timeout);
+            }
+            catch (Exception e)
+            {
+                Logger.Warn($"Could not open a page for {accountName} account: {e.Message}");
             }
         }
     }
