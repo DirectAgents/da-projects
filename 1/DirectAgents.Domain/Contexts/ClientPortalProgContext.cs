@@ -22,7 +22,7 @@ namespace DirectAgents.Domain.Contexts
         {
             var adapter = (IObjectContextAdapter)this;
             var objectContext = adapter.ObjectContext;
-            objectContext.CommandTimeout = 3 * 60; // value in seconds
+            objectContext.CommandTimeout = 5 * 60; // value in seconds
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
