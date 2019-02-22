@@ -44,7 +44,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon", "..\API\Amazon\Ama
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeExtractor.SeleniumApplication", "..\CakeExtractor.SeleniumApplication\CakeExtractor.SeleniumApplication\CakeExtractor.SeleniumApplication.csproj", "{CC1C4E5C-F431-4F95-9F20-B57E7DA1343B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeExtractor.SqlScriptsRunner", "CakeExtractor.SqlScriptRunner\CakeExtractor.SqlScriptsRunner.csproj", "{6B2AF18D-6435-4B42-A13B-A2092D861369}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeExtractor.SqlScriptsExecutor", "CakeExtractor.SqlScriptRunner\CakeExtractor.SqlScriptsExecutor.csproj", "{6B2AF18D-6435-4B42-A13B-A2092D861369}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,68 +1,63 @@
-﻿using System;
+﻿using CakeExtracter.Logging.Loggers;
+using System;
 using System.Configuration;
-using System.Data.SqlClient;
-using System.IO;
-using System.Text.RegularExpressions;
+using System.Linq;
+using Microsoft.Practices.EnterpriseLibrary.Common.Configuration;
+using Microsoft.Practices.EnterpriseLibrary.Logging;
 
-namespace CakeExtractor.SqlScriptsRunner
+namespace CakeExtractor.SqlScriptsExecutor
 {
     class Program
     {
-        private const string ConnectionStringConfigurationName = "DataBaseConnectionString";
-
         static void Main(string[] args)
         {
-            var connectionString = GetDataBaseConnectionString();
-            Console.WriteLine(connectionString);
+            InitializeLogging();
+            ProcessScriptExecution(args);
         }
 
-
-        private bool runSqlScriptFile(string fileName, string connectionString)
+        private static void ProcessScriptExecution(string[] args)
         {
             try
             {
-                string script = File.ReadAllText(fileName);
-                
-                // split script on GO command
-                System.Collections.Generic.IEnumerable<string> commandStrings = Regex.Split(script, @"^\s*GO\s*$",
-                                         RegexOptions.Multiline | RegexOptions.IgnoreCase);
-
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                if (args.Length > 0)
                 {
-                    connection.Open();
-                    foreach (string commandString in commandStrings)
-                    {
-                        if (commandString.Trim() != "")
-                        {
-                            using (var command = new SqlCommand(commandString, connection))
-                            {
-                                try
-                                {
-                                    command.ExecuteNonQuery();
-                                }
-                                catch (SqlException ex)
-                                {
-                                    string spError = commandString.Length > 100 ? commandString.Substring(0, 100) + " ...\n..." : commandString;
-                                    Console.WriteLine(string.Format("Please check the SqlServer script.\nFile: {0} \nLine: {1} \nError: {2} \nSQL Command: \n{3}", pathStoreProceduresFile, ex.LineNumber, ex.Message, spError), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                    connection.Close();
+                    var scriptFileContentProvider = new ScriptFileContentProvider();
+                    var scriptsExecutor = new SqlScriptsExecutor(GetDbConnectionString());
+                    var scriptRelativePath = args[0];
+                    var scriptParams = args.ToArray().Skip(1).ToArray();
+                    var scriptContent = scriptFileContentProvider.GetSqlScriptFileContent(scriptRelativePath, scriptParams);
+                    scriptsExecutor.RunSqlCommands(scriptContent);
                 }
-                return true;
+                else
+                {
+                   throw new Exception("First cmd line argument with execution script relative file path should be provided");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return false;
+                CakeExtracter.Logger.Error(ex);
             }
         }
 
-        private static string GetDataBaseConnectionString()
+        private static string GetDbConnectionString()
         {
-            return ConfigurationManager.ConnectionStrings[ConnectionStringConfigurationName].ConnectionString;
+            const string ConnectionStringConfigurationName = "DataBaseConnectionString";
+            if (!string.IsNullOrEmpty(ConfigurationManager.ConnectionStrings[ConnectionStringConfigurationName].ConnectionString))
+            {
+                return ConfigurationManager.ConnectionStrings[ConnectionStringConfigurationName].ConnectionString;
+            }
+            else
+            {
+                throw new Exception("Db connection string should specified in app config. See key DataBaseConnectionString");
+            }
+        }
+
+        private static void InitializeLogging()
+        {
+            var configurationSource = ConfigurationSourceFactory.Create();
+            var logWriterFactory = new LogWriterFactory(configurationSource);
+            Logger.SetLogWriter(logWriterFactory.Create());
+            CakeExtracter.Logger.Instance = new EnterpriseLibraryLogger("SqlCommandsRunner");
         }
     }
 }
