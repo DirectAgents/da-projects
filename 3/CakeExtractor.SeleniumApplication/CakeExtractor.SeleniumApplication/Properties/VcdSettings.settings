@@ -14,11 +14,20 @@
     <Setting Name="EndDate" Type="System.DateTime" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="DaysInterval" Type="System.Int32" Scope="User">
+    <Setting Name="DaysInterval" Type="System.String" Scope="User">
+      <Value Profile="(Default)">2, 60</Value>
+    </Setting>
+    <Setting Name="ReportDownloadingStartedDelayInSeconds" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="MinDelayBetweenReportDownloadingInSeconds" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">30</Value>
     </Setting>
-    <Setting Name="RefreshPageMinutesInterval" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">55</Value>
+    <Setting Name="ReportDownloadingAttemptCount" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="MaxDelayBetweenReportDownloadingInSeconds" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -71,10 +71,10 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("30")]
-        public int DaysInterval {
+        [global::System.Configuration.DefaultSettingValueAttribute("2, 60")]
+        public string DaysInterval {
             get {
-                return ((int)(this["DaysInterval"]));
+                return ((string)(this["DaysInterval"]));
             }
             set {
                 this["DaysInterval"] = value;
@@ -83,13 +83,49 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("55")]
-        public int RefreshPageMinutesInterval {
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int ReportDownloadingStartedDelayInSeconds {
             get {
-                return ((int)(this["RefreshPageMinutesInterval"]));
+                return ((int)(this["ReportDownloadingStartedDelayInSeconds"]));
             }
             set {
-                this["RefreshPageMinutesInterval"] = value;
+                this["ReportDownloadingStartedDelayInSeconds"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int MinDelayBetweenReportDownloadingInSeconds {
+            get {
+                return ((int)(this["MinDelayBetweenReportDownloadingInSeconds"]));
+            }
+            set {
+                this["MinDelayBetweenReportDownloadingInSeconds"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int ReportDownloadingAttemptCount {
+            get {
+                return ((int)(this["ReportDownloadingAttemptCount"]));
+            }
+            set {
+                this["ReportDownloadingAttemptCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int MaxDelayBetweenReportDownloadingInSeconds {
+            get {
+                return ((int)(this["MaxDelayBetweenReportDownloadingInSeconds"]));
+            }
+            set {
+                this["MaxDelayBetweenReportDownloadingInSeconds"] = value;
             }
         }
     }

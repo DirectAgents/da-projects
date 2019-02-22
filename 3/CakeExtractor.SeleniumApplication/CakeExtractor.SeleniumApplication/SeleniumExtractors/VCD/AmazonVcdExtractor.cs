@@ -21,9 +21,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
 {
     internal class AmazonVcdExtractor : Extracter<VcdReportData>
     {
-        private const int ReportDownloadingFailedDelayInSeconds = 30;
-        private const int ReportDownloadingAttemptCount = 5;
-
         private AuthorizationModel authorizationModel;
         private AmazonVcdPageActions pageActions;
         private VcdReportDownloader reportDownloader;
@@ -45,7 +42,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
             InitializeAuthorizationModel();
             CreateApplicationFolders();
             pageActions = new AmazonVcdPageActions();
-            reportDownloader = new VcdReportDownloader(pageActions, authorizationModel, configurationManager.GetRefreshPageTimeInterval());
+            reportDownloader = new VcdReportDownloader(pageActions, authorizationModel);
             reportParser = new VcdReportCSVParser();
             reportComposer = new VcdReportComposer();
             userInfoExtractor = new UserInfoExtracter();
@@ -55,6 +52,11 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
         public UserInfo ExtractAccountsInfo()
         {
             return userInfoExtractor.ExtractUserInfo(pageActions);
+        }
+
+        public void OpenAccountPage()
+        {
+            pageActions.SelectAccountOnPage(AccountInfo.Account.Name);
         }
 
         protected override void Extract()
@@ -86,9 +88,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
         private VcdReportData ExtractDailyData(DateTime reportDay, AccountInfo accountInfo)
         {
             var shippedRevenueReportData = GetShippedRevenueReportData(reportDay, accountInfo);
-            WaitBetweenReportRequests();
             var shippedCogsReportData = GetShippingCogsReportData(reportDay, accountInfo);
-            WaitBetweenReportRequests();
             var orderedRevenueReportData = GetOrderedRevenueReportData(reportDay, accountInfo);
             var composedData = reportComposer.ComposeReportData(shippedRevenueReportData, shippedCogsReportData, orderedRevenueReportData);
             composedData.Date = reportDay;
@@ -108,8 +108,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
         {
             try
             {
-                var reportTextContent = RetryHelper.Do(downloadingAction,
-                    TimeSpan.FromSeconds(ReportDownloadingFailedDelayInSeconds), ReportDownloadingAttemptCount);
+                var reportTextContent = downloadingAction();
                 return reportTextContent;
             }
             catch (Exception ex)
@@ -118,15 +117,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
                 Logger.Error(ex);
                 throw ex;
             }
-        }
-
-        /// <summary>
-        /// Wait between report downloading requests to prevent "Too many requests response."
-        /// </summary>
-        private static void WaitBetweenReportRequests()
-        {
-            var timeout = TimeSpan.FromSeconds(ReportDownloadingFailedDelayInSeconds);
-            Thread.Sleep(timeout); 
         }
 
         private List<Product> GetShippedRevenueReportData(DateTime reportDay, AccountInfo accountInfo)

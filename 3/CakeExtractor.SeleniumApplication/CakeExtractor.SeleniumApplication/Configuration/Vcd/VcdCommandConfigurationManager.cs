@@ -1,4 +1,6 @@
-﻿using CakeExtractor.SeleniumApplication.Properties;
+﻿using System;
+using System.Collections.Generic;
+using CakeExtractor.SeleniumApplication.Properties;
 using CakeExtracter.Common;
 using CakeExtracter.Helpers;
 
@@ -8,11 +10,20 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
     {
         private const int DefaultDaysIntervalToProcess = 30;
 
-        public DateRange GetDaysToProcess()
+        public IEnumerable<DateRange> GetDaysToProcess()
         {
-            var startDate = VcdSettings.Default.StartDate;
-            var endDate = VcdSettings.Default.EndDate;
-            return CommandHelper.GetDateRange(startDate, endDate, VcdSettings.Default.DaysInterval, DefaultDaysIntervalToProcess);
+            var daysInterval = ConfigurationHelper.ExtractNumbersFromConfigValue(VcdSettings.Default.DaysInterval);
+            var dateRanges = new List<DateRange>
+            {
+                CommandHelper.GetDateRange(VcdSettings.Default.EndDate, VcdSettings.Default.StartDate, daysInterval[0], DefaultDaysIntervalToProcess)
+            };
+            for (var i = 1; i < daysInterval.Count; i++)
+            {
+                var dateRange = CommandHelper.GetDateRange(default(DateTime), default(DateTime), daysInterval[i], 0);
+                dateRanges.Add(dateRange);
+            }
+
+            return dateRanges;
         }
 
         public int GetAccountId()
@@ -30,18 +41,6 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
         public string GetCookiesDirectoryPath()
         {
             return VcdSettings.Default.CookiesDirectory;
-        }
-
-        public int GetRefreshPageTimeInterval()
-        {
-            try
-            {
-                return VcdSettings.Default.RefreshPageMinutesInterval;
-            }
-            catch
-            {
-                return 30;
-            }
         }
     }
 }

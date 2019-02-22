@@ -1,9 +1,12 @@
-﻿using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD;
+﻿using System.Collections.Generic;
+using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD;
 using CakeExtractor.SeleniumApplication.Loaders.VCD;
 using CakeExtracter;
+using CakeExtracter.Common;
 using CakeExtracter.Helpers;
 using CakeExtractor.SeleniumApplication.Configuration.Vcd;
 using CakeExtractor.SeleniumApplication.Configuration.Models;
+using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
@@ -30,28 +33,35 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
         public override void Run()
         {
-            SetDateRange();
+            var dateRanges = configurationManager.GetDaysToProcess();
             var accountsData = accountsDataProvider.GetAccountsDataToProcess(extractor);
+            dateRanges.ForEach(d => RunForDateRange(d, accountsData));
+        }
+
+        private void RunForDateRange(DateRange dateRange, List<AccountInfo> accountsData)
+        {
+            extractor.DateRange = dateRange;
+            Logger.Info($"\nAmazon VCD ETL. DateRange {dateRange}.");
             foreach (var accountData in accountsData)
             {
-                DoEtlForAccount(extractor, accountData);
+                DoEtlForAccount(accountData);
             }
         }
 
-        private void SetDateRange()
-        {
-            var dateRange = configurationManager.GetDaysToProcess();
-            extractor.DateRange = dateRange;
-            Logger.Info($"Amazon VCD ETL. DateRange {dateRange}.");
-        }
-
-        private void DoEtlForAccount(AmazonVcdExtractor extractor, AccountInfo accountInfo)
+        private void DoEtlForAccount(AccountInfo accountInfo)
         {
             Logger.Info($"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) started.");
-            extractor.AccountInfo = accountInfo;
+            PrepareExtractorForAccount(accountInfo);
             var loader = new AmazonVcdLoader(accountInfo.Account);
             CommandHelper.DoEtl(extractor, loader);
             Logger.Info($"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) finished.");
+        }
+
+        private void PrepareExtractorForAccount(AccountInfo accountInfo)
+        {
+            extractor.Initialize();
+            extractor.AccountInfo = accountInfo;
+            extractor.OpenAccountPage();
         }
     }
 }
