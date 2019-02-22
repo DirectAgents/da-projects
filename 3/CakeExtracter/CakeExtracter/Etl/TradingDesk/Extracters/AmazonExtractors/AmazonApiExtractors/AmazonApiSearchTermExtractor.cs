@@ -127,11 +127,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             Logger.Info(accountId, "The cleaning of SearchTermSummaries for account ({0}) has begun - {1}.", accountId, date);
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
             {
-                using (var db = new ClientPortalProgContext())
+                SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
                 {
                     db.SearchTermSummaryMetrics.Where(x => x.Date == date && x.SearchTerm.AccountId == accountId).DeleteFromQuery();
                     db.SearchTermSummaries.Where(x => x.Date == date && x.SearchTerm.AccountId == accountId).DeleteFromQuery();
-                }
+                }, "DeleteFromQuery");
             }, accountId, AmazonJobLevels.searchTerm, AmazonJobOperations.cleanExistingData);
             Logger.Info(accountId, "The cleaning of SearchTermSummaries for account ({0}) is over - {1}.", accountId, date);
         }

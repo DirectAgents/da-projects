@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Amazon.Helpers;
+using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
 using CakeExtracter.Logging.TimeWatchers;
@@ -135,11 +136,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             Logger.Info(accountId, "The cleaning of StrategySummaries for account ({0}) has begun - {1}.", accountId, date);
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
             {
-                using (var db = new ClientPortalProgContext())
+                SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
                 {
                     db.StrategySummaryMetrics.Where(x => x.Date == date && x.Strategy.AccountId == accountId && campaignTypesFromApi.Contains(x.Strategy.Type.Name)).DeleteFromQuery();
                     db.StrategySummaries.Where(x => x.Date == date && x.Strategy.AccountId == accountId && campaignTypesFromApi.Contains(x.Strategy.Type.Name)).DeleteFromQuery();
-                }
+                }, "DeleteFromQuery");
             }, accountId, AmazonJobLevels.strategy, AmazonJobOperations.cleanExistingData);
             Logger.Info(accountId, "The cleaning of StrategySummaries for account ({0}) is over - {1}.", accountId, date);
         }

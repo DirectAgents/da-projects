@@ -108,13 +108,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
         {
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
             {
-                SafeContextWrapper.Lock(LockerObject, () =>
-                {
-                    using (var db = new ClientPortalProgContext())
-                    {
-                        db.BulkInsert(items);
-                    }
-                });
+                SafeContextWrapper.TryBulkInsert<ClientPortalProgContext, TSummaryLevelEntity>(LockerObject, items);
             }, accountId, LevelName, AmazonJobOperations.loadSummaryItemsData);
         }
 

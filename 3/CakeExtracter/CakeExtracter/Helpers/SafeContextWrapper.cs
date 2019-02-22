@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace CakeExtracter.Helpers
         public static object SearchTermLocker = new object();
         public static object DailyLocker = new object();
 
-        private const int RetryCount = 5;
+        private const int RetryCount = 3;
         private const int WaitSeconds = 3;
 
         public static int SaveChangedContext<T>(object contextLocker, Action<T> changeContextAction)
@@ -67,7 +68,7 @@ namespace CakeExtracter.Helpers
             {
                 if (exception is DbUpdateException)
                 {
-                    LogEndOfRetrying(exception);
+                    LogEndOfRetrying(exception, "SaveChanges");
                     return numChanges;
                 }
                 numChanges = TrySaveChanges(contextLocker, changeContextAction);
@@ -85,10 +86,51 @@ namespace CakeExtracter.Helpers
             }
             catch (Exception exception)
             {
-                LogEndOfRetrying(exception);
+                LogEndOfRetrying(exception, "SaveChanges");
             }
 
             return 0;
+        }
+
+        public static void TryBulkInsert<T, TItem>(object contextLocker, List<TItem> items)
+            where T : DbContext, new()
+            where TItem: class
+        {
+            try
+            {
+                TryToMakeTransactionManyTimes(false, contextLocker, (T db) => db.BulkInsert(items));
+            }
+            catch (Exception exception)
+            {
+                LogEndOfRetrying(exception, "BulkInsert");
+            }
+        }
+
+        public static void TryBulkInsert<T, TItem>(List<TItem> items)
+            where T : DbContext, new()
+            where TItem : class
+        {
+            try
+            {
+                TryToMakeTransactionManyTimes(false, (T db) => db.BulkInsert(items));
+            }
+            catch (Exception exception)
+            {
+                LogEndOfRetrying(exception, "BulkInsert");
+            }
+        }
+
+        public static void TryMakeTransaction<T>(Action<T> transactionAction, string level)
+            where T : DbContext, new()
+        {
+            try
+            {
+                TryToMakeTransactionManyTimes(false, transactionAction);
+            }
+            catch (Exception exception)
+            {
+                LogEndOfRetrying(exception, level);
+            }
         }
 
         private static int TrySaveChanges<T>(object contextLocker, Action<T> changeContextAction)
@@ -98,11 +140,15 @@ namespace CakeExtracter.Helpers
             try
             {
                 Logger.Warn("Trying to save changes using reopened database context.");
-                numChanges = SaveChanges(contextLocker, changeContextAction);
+                TryToMakeTransactionManyTimes(false, contextLocker, (T dbContext) =>
+                {
+                    changeContextAction(dbContext);
+                    numChanges = dbContext.SaveChanges();
+                });
             }
             catch (Exception exc)
             {
-                LogEndOfRetrying(exc);
+                LogEndOfRetrying(exc, "SaveChanges");
             }
 
             return numChanges;
@@ -111,47 +157,58 @@ namespace CakeExtracter.Helpers
         private static int SaveChanges<T>(T dbContext)
             where T : DbContext
         {
-            var numChanges = Policy
-                .Handle<Exception>()
-                .WaitAndRetry(RetryCount,
-                    retryNumber => new TimeSpan(0, 0, WaitSeconds),
-                    (exc, time, context) => ProcessSaveException(exc))
-                .Execute(dbContext.SaveChanges);
+            var numChanges = 0;
+            TryToMakeActionManyTimes(true, () => numChanges = dbContext.SaveChanges());
             return numChanges;
         }
-
-        private static int SaveChanges<T>(object contextLocker, Action<T> changeContextAction)
+        
+        private static void TryToMakeTransactionManyTimes<T>(bool needToWait, object contextLocker, Action<T> transactionAction)
             where T : DbContext, new()
         {
-            var numChanges = Policy
-                .Handle<Exception>()
-                .Retry(RetryCount, (exc, retryCount) => ProcessSaveException(exc))
-                .Execute(() => SaveChangedContextWithoutRetrying(contextLocker, changeContextAction));
-            return numChanges;
-        }
-
-        private static int SaveChangedContextWithoutRetrying<T>(object contextLocker, Action<T> changeContextAction)
-            where T : DbContext, new()
-        {
-            lock (contextLocker)
+            TryToMakeActionManyTimes(needToWait, () =>
             {
-                using (var dbContext = new T())
+                lock (contextLocker)
                 {
-                    changeContextAction(dbContext);
-                    return dbContext.SaveChanges();
+                    using (var db = new T())
+                    {
+                        transactionAction(db);
+                    }
                 }
-            }
+            });
         }
 
-        private static void LogEndOfRetrying(Exception exception)
+        private static void TryToMakeTransactionManyTimes<T>(bool needToWait, Action<T> transactionAction)
+            where T : DbContext, new()
         {
-            ProcessSaveException(exception);
-            Logger.Warn("Saving of changes is failed.");
+            TryToMakeActionManyTimes(needToWait, () =>
+            {
+                using (var db = new T())
+                {
+                    transactionAction(db);
+                }
+            });
         }
 
-        private static void ProcessSaveException(Exception exception)
+        private static void TryToMakeActionManyTimes(bool needToWait, Action transactionAction)
         {
-            Logger.Error(exception);
+            var policyBuilder = Policy.Handle<Exception>();
+            var retryPolicy = needToWait
+                ? policyBuilder.WaitAndRetry(RetryCount, retryNumber => new TimeSpan(0, 0, WaitSeconds),
+                    (exc, time, context) => ProcessTransactionException(exc))
+                : policyBuilder.Retry(RetryCount, (exc, retryCount) => ProcessTransactionException(exc));
+            retryPolicy.Execute(transactionAction);
+        }
+
+        private static void LogEndOfRetrying(Exception exception, string level)
+        {
+            ProcessTransactionException(exception);
+            var highException = new Exception($"End of retrying, transaction is failed. Level - {level}", exception);
+            Logger.Error(highException);
+        }
+
+        private static void ProcessTransactionException(Exception exception)
+        {
+            Logger.Warn(exception.Message);
             switch (exception)
             {
                 case DbUpdateException updateException:
