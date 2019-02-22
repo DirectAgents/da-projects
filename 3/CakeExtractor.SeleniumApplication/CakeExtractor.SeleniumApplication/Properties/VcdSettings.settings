@@ -17,16 +17,16 @@
     <Setting Name="DaysInterval" Type="System.String" Scope="User">
       <Value Profile="(Default)">2, 60</Value>
     </Setting>
-    <Setting Name="ReportDownloadingFailedDelayInSeconds" Type="System.Int32" Scope="User">
+    <Setting Name="ReportDownloadingStartedDelayInSeconds" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
-    <Setting Name="ReportDownloadingMinFailedDelayInSeconds" Type="System.Int32" Scope="User">
+    <Setting Name="MinDelayBetweenReportDownloadingInSeconds" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">30</Value>
     </Setting>
     <Setting Name="ReportDownloadingAttemptCount" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
-    <Setting Name="ReportDownloadingMaxFailedDelayInSeconds" Type="System.Int32" Scope="User">
+    <Setting Name="MaxDelayBetweenReportDownloadingInSeconds" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">100</Value>
     </Setting>
   </Settings>

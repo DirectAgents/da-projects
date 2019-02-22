@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using CakeExtractor.SeleniumApplication.Properties;
 using CakeExtracter.Common;
 using CakeExtracter.Helpers;
-using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
 namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
 {

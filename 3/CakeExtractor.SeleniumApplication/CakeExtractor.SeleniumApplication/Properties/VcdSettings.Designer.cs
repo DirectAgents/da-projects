@@ -84,24 +84,24 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public int ReportDownloadingFailedDelayInSeconds {
+        public int ReportDownloadingStartedDelayInSeconds {
             get {
-                return ((int)(this["ReportDownloadingFailedDelayInSeconds"]));
+                return ((int)(this["ReportDownloadingStartedDelayInSeconds"]));
             }
             set {
-                this["ReportDownloadingFailedDelayInSeconds"] = value;
+                this["ReportDownloadingStartedDelayInSeconds"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("30")]
-        public int ReportDownloadingMinFailedDelayInSeconds {
+        public int MinDelayBetweenReportDownloadingInSeconds {
             get {
-                return ((int)(this["ReportDownloadingMinFailedDelayInSeconds"]));
+                return ((int)(this["MinDelayBetweenReportDownloadingInSeconds"]));
             }
             set {
-                this["ReportDownloadingMinFailedDelayInSeconds"] = value;
+                this["MinDelayBetweenReportDownloadingInSeconds"] = value;
             }
         }
         
@@ -120,12 +120,12 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("100")]
-        public int ReportDownloadingMaxFailedDelayInSeconds {
+        public int MaxDelayBetweenReportDownloadingInSeconds {
             get {
-                return ((int)(this["ReportDownloadingMaxFailedDelayInSeconds"]));
+                return ((int)(this["MaxDelayBetweenReportDownloadingInSeconds"]));
             }
             set {
-                this["ReportDownloadingMaxFailedDelayInSeconds"] = value;
+                this["MaxDelayBetweenReportDownloadingInSeconds"] = value;
             }
         }
     }

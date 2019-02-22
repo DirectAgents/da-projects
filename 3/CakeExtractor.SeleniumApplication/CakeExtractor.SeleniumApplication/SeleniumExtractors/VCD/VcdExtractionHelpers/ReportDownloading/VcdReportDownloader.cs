@@ -26,9 +26,9 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 
         private static int delayEqualizer;
 
-        private readonly int reportDownloadingFailedDelayInSeconds = VcdSettings.Default.ReportDownloadingFailedDelayInSeconds;
-        private readonly int reportDownloadingMinFailedDelayInSeconds = VcdSettings.Default.ReportDownloadingMinFailedDelayInSeconds;
-        private readonly int reportDownloadingMaxFailedDelayInSeconds = VcdSettings.Default.ReportDownloadingMaxFailedDelayInSeconds;
+        private readonly int reportDownloadingStartedDelayInSeconds = VcdSettings.Default.ReportDownloadingStartedDelayInSeconds;
+        private readonly int minDelayBetweenReportDownloadingInSeconds = VcdSettings.Default.MinDelayBetweenReportDownloadingInSeconds;
+        private readonly int maxDelayBetweenReportDownloadingInSeconds = VcdSettings.Default.MaxDelayBetweenReportDownloadingInSeconds;
         private readonly int reportDownloadingAttemptCount = VcdSettings.Default.ReportDownloadingAttemptCount;
 
         private readonly AmazonVcdPageActions pageActions;
@@ -224,8 +224,8 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 
         private TimeSpan GetTimeSpanForWaiting()
         {
-            var waitTime = Math.Min(reportDownloadingMaxFailedDelayInSeconds,
-                reportDownloadingMinFailedDelayInSeconds + reportDownloadingFailedDelayInSeconds * delayEqualizer);
+            var waitTime = Math.Min(maxDelayBetweenReportDownloadingInSeconds,
+                minDelayBetweenReportDownloadingInSeconds + reportDownloadingStartedDelayInSeconds * delayEqualizer);
             return TimeSpan.FromSeconds(waitTime);
         }
     }
