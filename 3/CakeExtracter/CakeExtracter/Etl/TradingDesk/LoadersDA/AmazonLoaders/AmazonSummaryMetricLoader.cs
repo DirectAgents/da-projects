@@ -43,10 +43,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
             AddDependentMetricTypes(summaryMetrics);
             AssignMetricTypeIdToItems(summaryMetrics);
             var summaryMetricsItemsToInsert = CastSummaryMetricsToChildClass(summaryMetrics);
-            using (var dbContext = new ClientPortalProgContext())
-            {
-                dbContext.BulkInsert<TSummaryMetric>(summaryMetricsItemsToInsert);
-            }
+            SafeContextWrapper.TryBulkInsert<ClientPortalProgContext, TSummaryMetric>(summaryMetricsItemsToInsert);
         }
 
         private void AssignMetricTypeIdToItems(IEnumerable<SummaryMetric> items)
@@ -59,14 +56,14 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
             }
         }
 
-        private IEnumerable<TSummaryMetric> CastSummaryMetricsToChildClass(IEnumerable<SummaryMetric> sourceSummaryMetrics)
+        private List<TSummaryMetric> CastSummaryMetricsToChildClass(IEnumerable<SummaryMetric> sourceSummaryMetrics)
         {
             return sourceSummaryMetrics.Select(sm =>
             {
                 var target = new TSummaryMetric();
                 Mapper.Map(sm, target);
                 return target;
-            });
+            }).ToList();
         }
 
         private void AddDependentMetricTypes(IEnumerable<SummaryMetric> items)
