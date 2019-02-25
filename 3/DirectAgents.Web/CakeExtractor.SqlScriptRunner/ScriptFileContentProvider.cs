@@ -8,7 +8,7 @@ namespace CakeExtractor.SqlScriptsExecutor
 {
     public class ScriptFileContentProvider
     {
-        private const string DefaultSqlFolderPath = ".SQL/";
+        private const string DefaultSqlFolderPath = "./SQL/";
 
         public string GetSqlScriptFileContent(string scriptRelativePath, string[] scriptParamsArray)
         {
@@ -23,7 +23,7 @@ namespace CakeExtractor.SqlScriptsExecutor
         {
             try
             {
-                return string.IsNullOrEmpty(ConfigurationManager.AppSettings[DefaultSqlFolderPath])
+                return !string.IsNullOrEmpty(ConfigurationManager.AppSettings[DefaultSqlFolderPath])
                 ? ConfigurationManager.AppSettings[DefaultSqlFolderPath]
                 : DefaultSqlFolderPath;
             }
