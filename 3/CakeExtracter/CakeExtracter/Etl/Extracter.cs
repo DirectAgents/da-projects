@@ -7,15 +7,18 @@ namespace CakeExtracter.Etl
 {
     public abstract class Extracter<T> : IDisposable
     {
-        private int added;
-        private readonly BlockingCollection<T> items;
         private readonly object locker = new object();
+        private readonly int collectionBoundedCapacity;
 
-        private const int defaultCollectionBoundedCapacity = 5000;
+        private BlockingCollection<T> items;
+        private int added;
 
-        protected Extracter(int collectionBoundedCapacity = defaultCollectionBoundedCapacity)
+        private const int DefaultCollectionBoundedCapacity = 5000;
+
+        protected Extracter(int collectionBoundedCapacity = DefaultCollectionBoundedCapacity)
         {
-            items = new BlockingCollection<T>(collectionBoundedCapacity);
+            this.collectionBoundedCapacity = collectionBoundedCapacity;
+            Initialize();
         }
 
         public Thread Start()
@@ -26,29 +29,38 @@ namespace CakeExtracter.Etl
             return thread;
         }
 
+        public void Initialize()
+        {
+            items = new BlockingCollection<T>(collectionBoundedCapacity);
+            lock (locker)
+            {
+                added = 0;
+            }
+        }
+
         public void End()
         {
             items.CompleteAdding();
         }
 
-        public bool Done
-        {
-            get { return items.IsAddingCompleted; }
-        }
+        public bool Done => items.IsAddingCompleted;
 
         public IEnumerable<T> EnumerateAll()
         {
             return items.GetConsumingEnumerable();
         }
 
-        public int Count
-        {
-            get { return items.Count; }
-        }
+        public int Count => items.Count;
 
         public int Added
         {
-            get { lock (locker) return added; }
+            get
+            {
+                lock (locker)
+                {
+                    return added;
+                }
+            }
         }
 
         protected void Add(IEnumerable<T> extracted)
@@ -56,7 +68,10 @@ namespace CakeExtracter.Etl
             foreach (var item in extracted)
             {
                 items.Add(item);
-                lock (locker) added++;
+                lock (locker)
+                {
+                    added++;
+                }
             }
         }
 
@@ -108,19 +123,22 @@ namespace CakeExtracter.Etl
         // can be disposed. 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (disposed)
             {
-                // If disposing equals false, the method has been called by the 
-                // runtime from inside the finalizer and you should not reference 
-                // other objects. Only unmanaged resources can be disposed. 
-                if (disposing)
-                {
-                    // Dispose managed resource
-                    items.Dispose();
-                }
-                // Dispose unmanaged resource
-                disposed = true;
+                return;
             }
+
+            // If disposing equals false, the method has been called by the 
+            // runtime from inside the finalizer and you should not reference 
+            // other objects. Only unmanaged resources can be disposed. 
+            if (disposing)
+            {
+                // Dispose managed resource
+                items.Dispose();
+            }
+
+            // Dispose unmanaged resource
+            disposed = true;
         }
 
         // http://msdn.microsoft.com/en-us/library/system.idisposable.aspx

@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Threading;
 using CakeExtracter;
 using CakeExtractor.SeleniumApplication.Configuration.Models;
 using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using CakeExtractor.SeleniumApplication.Models.Vcd;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
+using CakeExtractor.SeleniumApplication.Properties;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading.Constants;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading.Models;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using Newtonsoft.Json;
+using Polly;
 using RestSharp;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading
@@ -20,17 +24,20 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
         private const string AmazonBaseUrl = "https://ara.amazon.com";
         private const string AmazonCsvDownloadReportUrl = "/analytics/download/csv/dashboard/salesDiagnostic";
 
+        private static int delayEqualizer;
+
+        private readonly int reportDownloadingStartedDelayInSeconds = VcdSettings.Default.ReportDownloadingStartedDelayInSeconds;
+        private readonly int minDelayBetweenReportDownloadingInSeconds = VcdSettings.Default.MinDelayBetweenReportDownloadingInSeconds;
+        private readonly int maxDelayBetweenReportDownloadingInSeconds = VcdSettings.Default.MaxDelayBetweenReportDownloadingInSeconds;
+        private readonly int reportDownloadingAttemptCount = VcdSettings.Default.ReportDownloadingAttemptCount;
+
         private readonly AmazonVcdPageActions pageActions;
         private readonly AuthorizationModel authorizationModel;
-        private readonly int refreshPageMinutesInterval;
 
-        private DateTime lastRefreshTime;
-
-        public VcdReportDownloader(AmazonVcdPageActions pageActions, AuthorizationModel authorizationModel, int refreshPageMinutesInterval)
+        public VcdReportDownloader(AmazonVcdPageActions pageActions, AuthorizationModel authorizationModel)
         {
             this.pageActions = pageActions;
             this.authorizationModel = authorizationModel;
-            this.refreshPageMinutesInterval = refreshPageMinutesInterval;
         }
 
         public string DownloadShippedRevenueCsvReport(DateTime reportDay, AccountInfo accountInfo)
@@ -54,31 +61,86 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 
         private string DownloadReportAsCsvText(DateTime reportDay, string reportLevel, string salesViewName, AccountInfo accountInfo)
         {
-            TryToRefreshPage();
+            var failed = false;
+            WaitBeforeReportGenerating(reportDay, reportLevel, accountInfo);
+            var response = Policy
+                .Handle<Exception>()
+                .OrResult<IRestResponse>(resp => !IsSuccessfulResponse(resp))
+                .WaitAndRetry(reportDownloadingAttemptCount, retryCount => GetTimeSpanForWaiting(),
+                    (exception, timeSpan, retryCount, context) =>
+                    {
+                        failed = true;
+                        ProcessFailedResponse(exception.Result);
+                        LogWaiting(timeSpan, retryCount, reportDay, reportLevel, accountInfo);
+                    })
+                .Execute(() =>
+                {
+                    var resp = DownloadReport(reportDay, reportLevel, salesViewName, accountInfo);
+                    EqualizeDelay(IsSuccessfulResponse(resp), failed);
+                    return resp;
+                });
+            return ProcessResponse(response);
+        }
+
+        private IRestResponse DownloadReport(DateTime reportDay, string reportLevel, string salesViewName, AccountInfo accountInfo)
+        {
             var request = GenerateDownloadingReportRequest(reportDay, reportLevel, salesViewName, accountInfo);
             var response = RestRequestHelper.SendPostRequest<object>(AmazonBaseUrl, request);
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            return response;
+        }
+
+        private void WaitBeforeReportGenerating(DateTime reportDay, string reportLevel, AccountInfo accountInfo)
+        {
+            var timeSpan = GetTimeSpanForWaiting();
+            LogWaiting(timeSpan, null, reportDay, reportLevel, accountInfo);
+            Thread.Sleep(timeSpan);
+        }
+
+        private void LogWaiting(TimeSpan timeSpan, int? retryCount, DateTime reportDay, string reportLevel,
+            AccountInfo accountInfo)
+        {
+            var message = $"Waiting {timeSpan} for ({reportDay}, {reportLevel}, {accountInfo.Account.Name}) before report generating";
+            if (retryCount.HasValue)
             {
-                var textReport = System.Text.Encoding.UTF8.GetString(response.RawBytes, 0, response.RawBytes.Length);
-                Logger.Info($"Amazon VCD, Report downloading finished successfully. Size: {textReport.Length} characters.");
-                return textReport;
+                message += $" (number of retrying - {retryCount})";
             }
 
-            Logger.Warn("Report downloading attempt failed, Status code {0}", response.StatusDescription);
+            Logger.Info(message);
+        }
+
+        private string ProcessResponse(IRestResponse response)
+        {
+            if (IsSuccessfulResponse(response))
+            {
+                return ProcessSuccessfulResponse(response);
+            }
+
+            ProcessFailedResponse(response);
             throw new Exception($"Report was not downloaded successfully. Status code {response.StatusDescription}");
         }
 
-        private void TryToRefreshPage()
+        private string ProcessSuccessfulResponse(IRestResponse response)
         {
-            var now = DateTime.Now;
-            if (lastRefreshTime.AddMinutes(refreshPageMinutesInterval) > now)
+            var textReport = System.Text.Encoding.UTF8.GetString(response.RawBytes, 0, response.RawBytes.Length);
+            Logger.Info($"Amazon VCD, Report downloading finished successfully. Size: {textReport.Length} characters.");
+            return textReport;
+        }
+
+        private void ProcessFailedResponse(IRestResponse response)
+        {
+            Logger.Warn($"Report downloading attempt failed, Status code: {response.StatusDescription}, content: {response.Content}");
+            if (response.StatusCode == (HttpStatusCode)429)
             {
                 return;
             }
 
             pageActions.RefreshSalesDiagnosticPage(authorizationModel);
-            Logger.Info($"Amazon VCD, The portal page has been refreshed. Last refresh time: {lastRefreshTime}, current refresh time: {now}");
-            lastRefreshTime = now;
+            Logger.Info("Amazon VCD, The portal page has been refreshed.");
+        }
+
+        private bool IsSuccessfulResponse(IRestResponse response)
+        {
+            return response.StatusCode == HttpStatusCode.OK;
         }
 
         private ReportDownloadingRequestPageData GetPageDataForReportRequest()
@@ -147,6 +209,24 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
         {
             const string parameterDatePattern = "yyyy''MM''dd";
             return reportDate.ToString(parameterDatePattern);
+        }
+
+        private void EqualizeDelay(bool isSuccessful, bool wasFailed)
+        {
+            delayEqualizer = isSuccessful
+                ? wasFailed
+                    ? delayEqualizer
+                    : delayEqualizer == 0
+                        ? 0
+                        : delayEqualizer - 1
+                : delayEqualizer + 1;
+        }
+
+        private TimeSpan GetTimeSpanForWaiting()
+        {
+            var waitTime = Math.Min(maxDelayBetweenReportDownloadingInSeconds,
+                minDelayBetweenReportDownloadingInSeconds + reportDownloadingStartedDelayInSeconds * delayEqualizer);
+            return TimeSpan.FromSeconds(waitTime);
         }
     }
 }

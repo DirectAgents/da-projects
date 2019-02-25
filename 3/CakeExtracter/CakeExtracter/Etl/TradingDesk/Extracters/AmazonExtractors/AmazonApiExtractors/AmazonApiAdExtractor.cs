@@ -5,6 +5,7 @@ using Amazon;
 using Amazon.Entities.Summaries;
 using Amazon.Enums;
 using CakeExtracter.Common;
+using CakeExtracter.Helpers;
 using CakeExtracter.Logging.TimeWatchers;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Contexts;
@@ -124,13 +125,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         private void RemoveOldData(DateTime date)
         {
             Logger.Info(accountId, "The cleaning of AdSummaries for account ({0}) has begun - {1}.", accountId, date);
-            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => {
-                using (var db = new ClientPortalProgContext())
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => 
+            {
+                SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
                 {
                     db.TDadSummaryMetrics.Where(x => x.Date == date && x.TDad.AccountId == accountId).DeleteFromQuery();
                     db.TDadSummaries.Where(x => x.Date == date && x.TDad.AccountId == accountId).DeleteFromQuery();
-                    
-                }
+                }, "DeleteFromQuery");
             }, accountId, AmazonJobLevels.creative, AmazonJobOperations.cleanExistingData);
             Logger.Info(accountId, "The cleaning of AdSummaries for account ({0}) is over - {1}.", accountId, date);
         }

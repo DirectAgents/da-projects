@@ -90,11 +90,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             Logger.Info(accountId, "The cleaning of AdSetSummaries for account ({0}) has begun - {1}.", accountId, date);
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
             {
-                using (var db = new ClientPortalProgContext())
+                SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
                 {
                     db.AdSetSummaryMetrics.Where(x => x.Date == date && x.AdSet.AccountId == accountId).DeleteFromQuery();
                     db.AdSetSummaries.Where(x => x.Date == date && x.AdSet.AccountId == accountId).DeleteFromQuery();
-                }
+                }, "DeleteFromQuery");
             }, accountId, AmazonJobLevels.adSet, AmazonJobOperations.cleanExistingData);
             Logger.Info(accountId, "The cleaning of AdSetSummaries for account ({0}) is over - {1}.", accountId, date);
         }

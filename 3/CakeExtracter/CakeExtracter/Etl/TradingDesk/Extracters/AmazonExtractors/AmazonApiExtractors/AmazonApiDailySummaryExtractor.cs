@@ -73,12 +73,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         private void RemoveOldData(DateTime date)
         {
             Logger.Info(accountId, "The cleaning of DailySummaries for account ({0}) has begun - {1}.", accountId, date);
-            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => {
-                using (var db = new ClientPortalProgContext())
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => 
+            {
+                SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
                 {
                     db.DailySummaryMetrics.Where(x => x.EntityId == accountId && x.Date == date).DeleteFromQuery();
                     db.DailySummaries.Where(x => x.AccountId == accountId && x.Date == date).DeleteFromQuery();
-                }
+                }, "DeleteFromQuery");
             }, accountId, AmazonJobLevels.account, AmazonJobOperations.cleanExistingData);
             Logger.Info(accountId, "The cleaning of DailySummaries for account ({0}) is over - {1}. ", accountId, date);
         }
