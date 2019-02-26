@@ -1,6 +1,5 @@
-﻿DELETE FROM td.VcdAnalytic
-
-
+﻿--DELETE FROM td.VcdAnalytic
+TRUNCATE TABLE td.VcdAnalytic 
 
 INSERT INTO td.VcdAnalytic (Date, BrandName, CategoryName, SubcategoryName,ReleaseDate, 
 							Asin, ParentProductAsin, Name,AccountId, Ean, Upc, ApparelSize, ApparelSizeWidth,

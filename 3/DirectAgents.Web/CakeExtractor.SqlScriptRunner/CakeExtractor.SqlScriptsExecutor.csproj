@@ -50,9 +50,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ScriptFileContentProvider.cs" />
-    <Compile Include="SqlScriptsExecutor.cs" />
-    <Content Include="SQL\Test.sql">
+    <Compile Include="ConfigsProvider.cs" />
+    <Content Include="SQL\AMS\CreateAsinAnalyticTable.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\AMS\SyncAsinAnalyticTable.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\VCD\SelectData.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\VCD\SyncVcdAnalyticTable.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL\VCD\CreateVcdAnalyticTable.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Compile Include="Program.cs" />
@@ -67,6 +78,11 @@
       <Project>{3b6c5433-5392-4165-a7e4-4aa431a75bb3}</Project>
       <Name>CakeExtracter</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CakeExtractor.SqlScriptsExecution.Core\CakeExtractor.SqlScriptsExecution.Core.csproj">
+      <Project>{32405edf-7257-4a90-89fa-148eac75e183}</Project>
+      <Name>CakeExtractor.SqlScriptsExecution.Core</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,24 +1,27 @@
-﻿using System;
+﻿using CakeExtracter;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace CakeExtractor.SqlScriptsExecutor
+namespace CakeExtractor.SqlScriptsExecution.Core
 {
-    public class SqlScriptsExecutor
+    public class SqlCommandsInvoker
     {
         private string sqlConnectionString;
 
-        public SqlScriptsExecutor(string sqlConnectionString)
+        public SqlCommandsInvoker(string sqlConnectionString)
         {
             this.sqlConnectionString = sqlConnectionString;
         }
 
         public bool RunSqlCommands(string commandsText)
         {
+            Logger.Info("Started sql command execution");
             try
             {
+                var watch = System.Diagnostics.Stopwatch.StartNew();
                 using (SqlConnection connection = new SqlConnection(sqlConnectionString))
                 {
                     connection.Open();
@@ -30,38 +33,32 @@ namespace CakeExtractor.SqlScriptsExecutor
                             using (var command = new SqlCommand(commandString, connection))
                             {
                                 command.CommandTimeout = GetCommandTimeOutInSeconds();
-                                try
-                                {
-                                    command.ExecuteNonQuery();
-                                }
-                                catch (SqlException ex)
-                                {
-                                    Console.WriteLine(string.Format("Please check the SqlServer script. Error: {0}", ex.Message));
-                                    return false;
-                                }
+                                command.ExecuteNonQuery();
                             }
                         }
                     }
                     connection.Close();
                 }
+                watch.Stop();
+                Logger.Info($"Finished Sql command execution. Execution time: {watch.Elapsed}");
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Error(ex);
                 return false;
             }
         }
 
         private List<string> SplitScriptOnCommands(string sourceScriptContent)
         {
-           return  Regex.Split(sourceScriptContent, @"^\s*GO\s*$",
-                                     RegexOptions.Multiline | RegexOptions.IgnoreCase).ToList();
+            return Regex.Split(sourceScriptContent, @"^\s*GO\s*$",
+                                      RegexOptions.Multiline | RegexOptions.IgnoreCase).ToList();
         }
 
         private int GetCommandTimeOutInSeconds()
         {
-            return 120 * 60;
+            return 120 * 60; //120 min timeout
         }
     }
 }
