@@ -1,53 +1,51 @@
-﻿using CakeExtracter;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace CakeExtractor.SqlScriptsExecution.Core
 {
+    /// <summary>
+    /// Sql commands invoker. 
+    /// </summary>
     public class SqlCommandsInvoker
     {
         private string sqlConnectionString;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SqlCommandsInvoker"/> class.
+        /// </summary>
+        /// <param name="sqlConnectionString">The SQL connection string.</param>
         public SqlCommandsInvoker(string sqlConnectionString)
         {
             this.sqlConnectionString = sqlConnectionString;
         }
 
+        /// <summary>
+        /// Runs the SQL commands.
+        /// </summary>
+        /// <param name="commandsText">The commands text.</param>
+        /// <returns>Flag whether sql commands were executed successfully.</returns>
         public bool RunSqlCommands(string commandsText)
         {
-            Logger.Info("Started sql command execution");
-            try
+            using (SqlConnection connection = new SqlConnection(sqlConnectionString))
             {
-                var watch = System.Diagnostics.Stopwatch.StartNew();
-                using (SqlConnection connection = new SqlConnection(sqlConnectionString))
+                connection.Open();
+                var sqlCommands = SplitScriptOnCommands(commandsText);
+                foreach (string commandString in sqlCommands)
                 {
-                    connection.Open();
-                    var sqlCommands = SplitScriptOnCommands(commandsText);
-                    foreach (string commandString in sqlCommands)
+                    if (commandString.Trim() != "")
                     {
-                        if (commandString.Trim() != "")
+                        using (var command = new SqlCommand(commandString, connection))
                         {
-                            using (var command = new SqlCommand(commandString, connection))
-                            {
-                                command.CommandTimeout = GetCommandTimeOutInSeconds();
-                                command.ExecuteNonQuery();
-                            }
+                            command.CommandTimeout = GetCommandTimeOutInSeconds();
+                            command.ExecuteNonQuery();
                         }
                     }
-                    connection.Close();
                 }
-                watch.Stop();
-                Logger.Info($"Finished Sql command execution. Execution time: {watch.Elapsed}");
-                return true;
+                connection.Close();
             }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-                return false;
-            }
+            return true;
         }
 
         private List<string> SplitScriptOnCommands(string sourceScriptContent)

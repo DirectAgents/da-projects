@@ -3,6 +3,7 @@ using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
+using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.AnalyticTablesSync;
 using CakeExtracter.Helpers;
 using CakeExtracter.Logging.TimeWatchers;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
@@ -103,6 +104,7 @@ namespace CakeExtracter.Commands
                     if (statsType.Creative)
                     {
                         DoETL_Creative(dateRange, account, amazonUtility);
+
                     }
                     if (statsType.Keyword)
                     {
@@ -195,6 +197,7 @@ namespace CakeExtracter.Commands
                 var extractor = new AmazonApiAdExtrator(amazonUtility, dateRange, account, ClearBeforeLoad, campaignFilter: account.Filter);
                 var loader = new AmazonAdSummaryLoader(account.Id);
                 CommandHelper.DoEtl(extractor, loader);
+                SynchAsinAnalyticTables(account.Id);
             }, account.Id, AmazonJobLevels.creative, AmazonJobOperations.total);
         }
 
@@ -228,6 +231,22 @@ namespace CakeExtracter.Commands
             }
             var account = repository.GetAccount(AccountId.Value);
             return new[] { account };
+        }
+
+        private void SynchAsinAnalyticTables(int accountId)
+        {
+            try
+            {
+                AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
+                {
+                    var amazonAmsSyncher = new AmazonAmsAnalyticSyncher();
+                    amazonAmsSyncher.SyncAsinLevelForAccount(accountId);
+                }, accountId, AmazonJobLevels.creative, AmazonJobOperations.syncToAnalyticTables);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(new Exception("Error occured while synching asin analytic table", ex));
+            }
         }
     }
 }

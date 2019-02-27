@@ -12,6 +12,8 @@ namespace CakeExtractor.SqlScriptsExecutor
     /// </summary>
     class Program
     {
+        private static SqlExecutionConfigsProvider configsProvider = new SqlExecutionConfigsProvider();
+
         /// <summary>
         /// Defines the entry point of the application.
         /// </summary>
@@ -33,14 +35,8 @@ namespace CakeExtractor.SqlScriptsExecutor
             {
                 if (args.Length > 0)
                 {
-                    var configsProvider = new ConfigsProvider();
-                    var scriptFileContentProvider = new ScriptFileContentProvider();
-                    var scriptsExecutor = new SqlCommandsInvoker(configsProvider.GetDbConnectionString());
-                    var scriptRelativePath = args[0];
-                    var scriptParams = args.ToArray().Skip(1).ToArray();
-                    var scriptFullPath = $"{configsProvider.GetSqlScriptsFolderPath()}{scriptRelativePath}";
-                    var scriptContent = scriptFileContentProvider.GetSqlScriptFileContent(scriptFullPath, scriptParams);
-                    scriptsExecutor.RunSqlCommands(scriptContent);
+                    var scriptContent = GetScriptContent(args);
+                    ExecuteSqlScript(scriptContent);
                 }
                 else
                 {
@@ -51,6 +47,29 @@ namespace CakeExtractor.SqlScriptsExecutor
             {
                 CakeExtracter.Logger.Error(ex);
             }
+        }
+
+        private static string GetScriptContent(string[] args)
+        {
+            var scriptFileContentProvider = new ScriptFileContentProvider();
+            var scriptRelativePath = args[0];
+            var scriptParams = args.ToArray().Skip(1).ToArray();
+            var scriptFullPath = $"{configsProvider.GetSqlScriptsFolderPath()}{scriptRelativePath}";
+            CakeExtracter.Logger.Info($"Script path - {scriptFullPath}");
+            var scriptContent = scriptFileContentProvider.GetSqlScriptFileContent(scriptFullPath, scriptParams);
+            CakeExtracter.Logger.Info("Script was loaded. Arguments were replaced");
+            return scriptContent;
+        }
+
+        private static void ExecuteSqlScript(string scriptContent)
+        {
+            const string connectionName = "DataBaseConnectionString";
+            var scriptsExecutor = new SqlCommandsInvoker(configsProvider.GetDbConnectionString(connectionName));
+            CakeExtracter.Logger.Info("Started sql commands execution");
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            scriptsExecutor.RunSqlCommands(scriptContent);
+            watch.Stop();
+            CakeExtracter.Logger.Info($"Finished Sql commands execution. Execution time: {watch.Elapsed}");
         }
 
         /// <summary>

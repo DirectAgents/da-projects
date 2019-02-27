@@ -1,6 +1,7 @@
 ﻿DECLARE @campaignType   NVARCHAR(MAX) = 'SponsoredProducts'; -- Campaign types
+DECLARE @accId INT = @@param_0;                -- Account ID
 
-TRUNCATE TABLE td.AmazonAsinAnalytic
+DELETE FROM td.AmazonAsinAnalytic WHERE AccountId= @accId; 
 
 
 INSERT INTO td.AmazonAsinAnalytic (Date, ASIN, AccountId, Brand, Campaign, AdGroup,
@@ -92,4 +93,5 @@ from (select
   inner join td.AdExternalId adExternalId on ad.Id = adExternalId.AdId
 where adExternalId.TypeId = 2
   and strategy.TypeId = (select Id from td.Type where Name = @campaignType)
+  and account.Id = @accId
 order by adSummary.Date desc;

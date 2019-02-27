@@ -153,7 +153,7 @@ Global
 		{32405EDF-7257-4A90-89FA-148EAC75E183} = {98947E7D-8262-43B6-B746-B074C30DA582}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {6B7C6F6C-1C50-4207-B5CC-52B64CEFF119}
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45
+		SolutionGuid = {6B7C6F6C-1C50-4207-B5CC-52B64CEFF119}
 	EndGlobalSection
 EndGlobal

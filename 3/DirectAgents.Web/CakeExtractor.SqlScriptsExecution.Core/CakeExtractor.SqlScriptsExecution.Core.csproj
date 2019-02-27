@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -41,15 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SqlExecutionConfigsProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScriptFileContentProvider.cs" />
     <Compile Include="SqlCommandsInvoker.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\CakeExtracter\CakeExtracter\CakeExtracter.csproj">
-      <Project>{3b6c5433-5392-4165-a7e4-4aa431a75bb3}</Project>
-      <Name>CakeExtracter</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

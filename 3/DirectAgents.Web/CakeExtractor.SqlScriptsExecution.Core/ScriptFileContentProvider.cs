@@ -1,28 +1,39 @@
-﻿using CakeExtracter;
-using System;
+﻿using System;
 using System.IO;
 
 namespace CakeExtractor.SqlScriptsExecution.Core
 {
+    /// <summary>
+    /// Extract sql script content. Replace params values in sql script.
+    /// </summary>
     public class ScriptFileContentProvider
     {
-        public string GetSqlScriptFileContent(string scriptFullPath, string[] scriptParamsArray)
+        /// <summary>
+        /// Gets the content of the SQL script file.
+        /// </summary>
+        /// <param name="scriptPath">The script path.</param>
+        /// <param name="scriptParamsArray">The script parameters array.</param>
+        /// <returns>Sql script text file content.</returns>
+        public string GetSqlScriptFileContent(string scriptPath, string[] scriptParamsArray)
         {
-            var scriptFileContent = File.ReadAllText(scriptFullPath);
-            Logger.Info($"Script full path: {scriptFullPath} was loaded");
+            var scriptFileContent = File.ReadAllText(scriptPath);
             if (scriptParamsArray.Length > 0)
             {
-                Logger.Info($"Started injecting params values to script content. Params count - {scriptParamsArray.Length}.");
                 scriptFileContent = ReplaceTokensWithParamsValues(scriptFileContent, scriptParamsArray);
-                Logger.Info("Params injected");
             }
             return scriptFileContent;
         }
 
+        /// <summary>
+        /// Replaces the tokens with parameters values.
+        /// </summary>
+        /// <param name="sqlContent">Content of the SQL.</param>
+        /// <param name="scriptParamsArray">The script parameters array.</param>
+        /// <returns>Script file content with params tokens replaced with params values.</returns>
         private string ReplaceTokensWithParamsValues(string sqlContent, string[] scriptParamsArray)
         {
             const string parameterTokenPrefix = "@@param_";
-            for (int i = 0; i < scriptParamsArray.Length - 1; i++)
+            for (int i = 0; i <= scriptParamsArray.Length - 1; i++)
             {
                 sqlContent = string.Join(scriptParamsArray[i], 
                     sqlContent.Split(new[] { $"{parameterTokenPrefix}{i}" }, StringSplitOptions.None));
