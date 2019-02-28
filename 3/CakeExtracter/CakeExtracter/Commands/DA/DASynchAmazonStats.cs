@@ -104,7 +104,6 @@ namespace CakeExtracter.Commands
                     if (statsType.Creative)
                     {
                         DoETL_Creative(dateRange, account, amazonUtility);
-
                     }
                     if (statsType.Keyword)
                     {

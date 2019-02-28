@@ -64,14 +64,6 @@ select
   summaryMetrics.[50]     as "14 days total units other SKU",
   summaryMetrics.[51]     as "30 days total units other SKU"
 
-
-  --summaryMetrics.[11]         as "14 days total sales",
-  --summaryMetrics.[15]         as "14 days total sales same SKU",
-  --summaryMetrics.[46]         as "14 days total sales other SKU",
-  --summaryMetrics.[3]          as "14 days total orders",
-  --summaryMetrics.[7]          as "14 days total orders same SKU",
-  --summaryMetrics.[19]         as "14 days total units",
-  --summaryMetrics.[50]         as "14 days total units other SKU"
 from (select
         adSummaryMetric.Date,
         adSummaryMetric.TDadId,
