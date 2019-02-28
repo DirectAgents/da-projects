@@ -3,44 +3,29 @@ using System.Collections.Generic;
 using CakeExtractor.SeleniumApplication.Properties;
 using CakeExtracter.Common;
 using CakeExtracter.Helpers;
+using System.Linq;
 
 namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
 {
+    /// <summary>
+    /// Vcd configuration manager. Prepare config values for using in application.
+    /// </summary>
     internal class VcdCommandConfigurationManager
     {
-        private const int DefaultDaysIntervalToProcess = 30;
-
-        public IEnumerable<DateRange> GetDaysToProcess()
+        /// <summary>
+        /// Gets the date ranges to process. 
+        /// If start date and end date specified only one date range with these start date and end date should be returned.
+        /// </summary>
+        /// <returns>
+        /// List of date ranges where vcd job should be executed.
+        /// </returns>
+        public IEnumerable<DateRange> GetDateRangesToProcess()
         {
-            var daysInterval = ConfigurationHelper.ExtractNumbersFromConfigValue(VcdSettings.Default.DaysInterval);
-            var dateRanges = new List<DateRange>
-            {
-                CommandHelper.GetDateRange(VcdSettings.Default.EndDate, VcdSettings.Default.StartDate, daysInterval[0], DefaultDaysIntervalToProcess)
-            };
-            for (var i = 1; i < daysInterval.Count; i++)
-            {
-                var dateRange = CommandHelper.GetDateRange(default(DateTime), default(DateTime), daysInterval[i], 0);
-                dateRanges.Add(dateRange);
-            }
-
-            return dateRanges;
-        }
-
-        public int GetAccountId()
-        {
-            try
-            {
-                return VcdSettings.Default.AccountId;
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-
-        public string GetCookiesDirectoryPath()
-        {
-            return VcdSettings.Default.CookiesDirectory;
+            var executionProfileConfig = VcdExecutionProfileManger.Current.ProfileConfiguration;
+            return (executionProfileConfig.StartDate.HasValue && executionProfileConfig.EndDate.HasValue ?
+                new List<DateRange> { new DateRange(executionProfileConfig.StartDate.Value, executionProfileConfig.EndDate.Value)} :
+                executionProfileConfig.DayIntervalsToProcess.Select(interval => CommandHelper.GetDateRange(default(DateTime), default(DateTime), interval, 0)));
         }
     }
 }
+

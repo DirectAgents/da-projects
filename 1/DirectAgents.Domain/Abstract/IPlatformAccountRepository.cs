@@ -7,6 +7,8 @@ namespace DirectAgents.Domain.Abstract
     {
         ExtAccount GetAccount(int accountId);
 
+        IEnumerable<ExtAccount> GetAccountsWithIds(List<int> accountIds);
+
         IEnumerable<ExtAccount> GetAccountsWithFilledExternalIdByPlatformCode(string platformCode, bool disabledOnly = false);
 
         IEnumerable<ExtAccount> GetAccountsByPlatformCode(string platformCode, bool disabledOnly = false);

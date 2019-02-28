@@ -3,6 +3,7 @@ using System.Linq;
 using CakeExtracter;
 using CakeExtractor.SeleniumApplication.Drivers;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
+using DirectAgents.Domain.Entities.CPProg;
 using OpenQA.Selenium;
 
 namespace CakeExtractor.SeleniumApplication.PageActions.AmazonVcd
@@ -12,7 +13,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonVcd
         private const string SalesDiagnosticPageUrl = "https://ara.amazon.com/analytics/dashboard/salesDiagnostic";
         private const string TypeOfAccounts = "premium";
 
-        public AmazonVcdPageActions() 
+        public AmazonVcdPageActions()
             : base(new ChromeWebDriver(string.Empty), Properties.Settings.Default.WaitPageTimeoutInMinuts)
         {
         }
@@ -48,19 +49,19 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonVcd
             NavigateToSalesDiagnosticPage();
         }
 
-        public void SelectAccountOnPage(string accountName)
+        public void SelectAccountOnPage(ExtAccount account)
         {
             try
             {
                 ClickElement(AmazonVcdPageObjects.AccountsDropdownButton);
                 var accountItems = Driver.FindElements(AmazonVcdPageObjects.AccountsDropdownItem);
-                var accountItem = accountItems.FirstOrDefault(x => x.Text == TypeOfAccounts + accountName);
+                var accountItem = accountItems.FirstOrDefault(x => x.Text == TypeOfAccounts + account.Name);
                 accountItem.Click();
                 WaitElementClickable(AmazonVcdPageObjects.AccountsDropdownButton, timeout);
             }
             catch (Exception e)
             {
-                Logger.Warn($"Could not open a page for {accountName} account: {e.Message}");
+                Logger.Warn(account.Id, $"Could not open a page for {account.Name} account: {e.Message}");
             }
         }
     }

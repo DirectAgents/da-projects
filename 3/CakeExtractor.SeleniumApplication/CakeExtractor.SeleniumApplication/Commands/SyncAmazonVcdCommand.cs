@@ -25,15 +25,16 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
         public override string CommandName => "SyncAmazonVcdCommand";
 
-        public override void PrepareCommandEnvironment()
+        public override void PrepareCommandEnvironment(int executionProfileNumber)
         {
+            VcdExecutionProfileManger.Current.SetExecutionProfileNumber(executionProfileNumber);
             extractor.PrepareExtractor();
             AmazonVcdLoader.PrepareLoader();
         }
 
         public override void Run()
         {
-            var dateRanges = configurationManager.GetDaysToProcess();
+            var dateRanges = configurationManager.GetDateRangesToProcess();
             var accountsData = accountsDataProvider.GetAccountsDataToProcess(extractor);
             dateRanges.ForEach(d => RunForDateRange(d, accountsData));
         }
@@ -50,11 +51,11 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
         private void DoEtlForAccount(AccountInfo accountInfo)
         {
-            Logger.Info($"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) started.");
+            Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) started.");
             PrepareExtractorForAccount(accountInfo);
             var loader = new AmazonVcdLoader(accountInfo.Account);
             CommandHelper.DoEtl(extractor, loader);
-            Logger.Info($"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) finished.");
+            Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) finished.");
         }
 
         private void PrepareExtractorForAccount(AccountInfo accountInfo)

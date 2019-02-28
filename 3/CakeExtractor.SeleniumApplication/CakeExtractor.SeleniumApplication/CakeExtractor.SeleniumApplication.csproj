@@ -94,8 +94,10 @@
     <Compile Include="Commands\CommandsProvider.cs" />
     <Compile Include="Commands\SyncAmazonVcdCommand.cs" />
     <Compile Include="Commands\SyncAmazonPdaCommand.cs" />
-    <Compile Include="Configuration\Models\AccountInfo.cs" />
+    <Compile Include="Configuration\Vcd\Models\AccountInfo.cs" />
+    <Compile Include="Configuration\Vcd\Models\VcdExecutionProfileConfiguration.cs" />
     <Compile Include="Configuration\Pda\PdaCommandConfigurationManager.cs" />
+    <Compile Include="Configuration\Vcd\VcdExecutionProfileManger.cs" />
     <Compile Include="Configuration\Vcd\VcdAccountsDataProvider.cs" />
     <Compile Include="Configuration\Vcd\VcdCommandConfigurationManager.cs" />
     <Compile Include="Drivers\ChromeWebDriver.cs" />
@@ -131,11 +133,6 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>PdaSettings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\VcdSettings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>VcdSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="SeleniumExtractors\VCD\Models\Brand.cs" />
     <Compile Include="SeleniumExtractors\VCD\Models\Category.cs" />
@@ -196,9 +193,11 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Properties\VcdSettings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>VcdSettings.Designer.cs</LastGenOutput>
+    <None Include="VcdExecutionProfiles\Profile_2.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="VcdExecutionProfiles\Profile_1.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>

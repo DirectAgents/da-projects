@@ -3,7 +3,6 @@ using CakeExtractor.SeleniumApplication.Configuration.Models;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -49,18 +48,9 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
 
         private List<ExtAccount> GetDbAccountsToProcess()
         {
-            if (vcdConfigurationManager.GetAccountId() == 0)
-            {
-                return accountsRepository.GetAccountsByPlatformCode(Platform.Code_AraAmazon).ToList();
-            }
-
-            var account = accountsRepository.GetAccount(vcdConfigurationManager.GetAccountId());
-            if (account != null)
-            {
-                return new List<ExtAccount> { account };
-            }
-
-            throw new Exception($"Account with id {vcdConfigurationManager.GetAccountId()} was not found");
+            return (VcdExecutionProfileManger.Current.ProfileConfiguration.AccountIds.Count == 0) ?
+                accountsRepository.GetAccountsByPlatformCode(Platform.Code_AraAmazon).ToList() :
+                accountsRepository.GetAccountsWithIds(VcdExecutionProfileManger.Current.ProfileConfiguration.AccountIds).ToList();
         }
     }
 }
