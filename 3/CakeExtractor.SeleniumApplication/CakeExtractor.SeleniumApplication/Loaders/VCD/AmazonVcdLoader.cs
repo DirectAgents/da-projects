@@ -22,7 +22,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
 
         static AmazonVcdLoader()
         {
-            MetricTypes= new Dictionary<string, int>();
+            MetricTypes = new Dictionary<string, int>();
         }
 
         public static void PrepareLoader()
@@ -79,7 +79,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
             var brandsSummaryLoader = new BrandsSummaryLoader(MetricTypes);
             var dbBrands = brandsSummaryLoader.EnsureVendorEntitiesInDataBase(brands, extAccount);
             brandsSummaryLoader.UpdateAccountSummaryMetricsDataForDate(brands, dbBrands, date, extAccount);
-            Logger.Info("Amazon VCD, Finished loading brands data. Loaded metrics of {0} brands", dbBrands.Count);
+            Logger.Info(extAccount.Id, "Amazon VCD, Finished loading brands data. Loaded metrics of {0} brands", dbBrands.Count);
             return dbBrands;
         }
 
@@ -89,39 +89,39 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
             var categorySummaryLoader = new CategoriesSummaryLoader(MetricTypes, brands);
             var dbCategories = categorySummaryLoader.EnsureVendorEntitiesInDataBase(categories, extAccount);
             categorySummaryLoader.UpdateAccountSummaryMetricsDataForDate(categories, dbCategories, date, extAccount);
-            Logger.Info("Amazon VCD, Finished loading categories data. Loaded metrics of {0} categories", dbCategories.Count);
+            Logger.Info(extAccount.Id, "Amazon VCD, Finished loading categories data. Loaded metrics of {0} categories", dbCategories.Count);
             return dbCategories;
         }
 
-        private List<VendorSubcategory> LoadSubcategoriesData(List<Subcategory> subcategories, DateTime date, 
+        private List<VendorSubcategory> LoadSubcategoriesData(List<Subcategory> subcategories, DateTime date,
             ExtAccount extAccount, List<VendorCategory> dbCategories, List<VendorBrand> brands)
         {
             var subcategorySummaryLoader = new SubcategoriesSummaryLoader(MetricTypes, dbCategories, brands);
             var dbSubcategories = subcategorySummaryLoader.EnsureVendorEntitiesInDataBase(subcategories, extAccount);
             subcategorySummaryLoader.UpdateAccountSummaryMetricsDataForDate(subcategories, dbSubcategories, date, extAccount);
-            Logger.Info("Amazon VCD, Finished loading subcategories data. Loaded metrics of {0} subCategories", dbSubcategories.Count);
+            Logger.Info(extAccount.Id, "Amazon VCD, Finished loading subcategories data. Loaded metrics of {0} subCategories", dbSubcategories.Count);
             return dbSubcategories;
         }
 
         private List<VendorParentProduct> LoadParentProductsData(List<ParentProduct> parentProducts, DateTime date,
-            ExtAccount extAccount, List<VendorBrand> brands, List<VendorCategory> dbCategories, 
+            ExtAccount extAccount, List<VendorBrand> brands, List<VendorCategory> dbCategories,
             List<VendorSubcategory> dbSubcategories)
         {
             var parentProductSummaryLoader = new ParentProductSummaryLoader(dbCategories, dbSubcategories, brands, MetricTypes);
             var dbParentProducts = parentProductSummaryLoader.EnsureVendorEntitiesInDataBase(parentProducts, extAccount);
             parentProductSummaryLoader.UpdateAccountSummaryMetricsDataForDate(parentProducts, dbParentProducts, date, extAccount);
-            Logger.Info("Amazon VCD, Finished loading parent products data. Loaded metrics of {0} parent products", dbParentProducts.Count);
+            Logger.Info(extAccount.Id, "Amazon VCD, Finished loading parent products data. Loaded metrics of {0} parent products", dbParentProducts.Count);
             return dbParentProducts;
         }
 
         private List<VendorProduct> LoadProductsData(List<Product> products, DateTime date,
-            ExtAccount extAccount,List<VendorBrand> dbBrands, List<VendorCategory> dbCategories, List<VendorSubcategory> dbSubcategories, 
+            ExtAccount extAccount, List<VendorBrand> dbBrands, List<VendorCategory> dbCategories, List<VendorSubcategory> dbSubcategories,
             List<VendorParentProduct> dbParentProducts)
         {
-            var productSummaryLoader = new ProductsSummaryLoader(dbCategories, dbSubcategories,dbBrands, dbParentProducts, MetricTypes);
+            var productSummaryLoader = new ProductsSummaryLoader(dbCategories, dbSubcategories, dbBrands, dbParentProducts, MetricTypes);
             var dbProducts = productSummaryLoader.EnsureVendorEntitiesInDataBase(products, extAccount);
             productSummaryLoader.UpdateAccountSummaryMetricsDataForDate(products, dbProducts, date, extAccount);
-            Logger.Info("Amazon VCD, Finished loading products data. Loaded metrics of {0} products", dbProducts.Count);
+            Logger.Info(extAccount.Id, "Amazon VCD, Finished loading products data. Loaded metrics of {0} products", dbProducts.Count);
             return dbProducts;
         }
     }

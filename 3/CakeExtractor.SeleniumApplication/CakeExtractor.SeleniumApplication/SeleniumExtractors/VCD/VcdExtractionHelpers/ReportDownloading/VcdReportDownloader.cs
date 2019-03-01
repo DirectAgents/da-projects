@@ -5,11 +5,11 @@ using System.Net;
 using System.Threading;
 using CakeExtracter;
 using CakeExtractor.SeleniumApplication.Configuration.Models;
+using CakeExtractor.SeleniumApplication.Configuration.Vcd;
 using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using CakeExtractor.SeleniumApplication.Models.Vcd;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
-using CakeExtractor.SeleniumApplication.Properties;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading.Constants;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading.Models;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
@@ -26,10 +26,10 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 
         private static int delayEqualizer;
 
-        private readonly int reportDownloadingStartedDelayInSeconds = VcdSettings.Default.ReportDownloadingStartedDelayInSeconds;
-        private readonly int minDelayBetweenReportDownloadingInSeconds = VcdSettings.Default.MinDelayBetweenReportDownloadingInSeconds;
-        private readonly int maxDelayBetweenReportDownloadingInSeconds = VcdSettings.Default.MaxDelayBetweenReportDownloadingInSeconds;
-        private readonly int reportDownloadingAttemptCount = VcdSettings.Default.ReportDownloadingAttemptCount;
+        private readonly int reportDownloadingStartedDelayInSeconds = VcdExecutionProfileManger.Current.ProfileConfiguration.ReportDownloadingStartedDelayInSeconds;
+        private readonly int minDelayBetweenReportDownloadingInSeconds = VcdExecutionProfileManger.Current.ProfileConfiguration.MinDelayBetweenReportDownloadingInSeconds;
+        private readonly int maxDelayBetweenReportDownloadingInSeconds = VcdExecutionProfileManger.Current.ProfileConfiguration.MaxDelayBetweenReportDownloadingInSeconds;
+        private readonly int reportDownloadingAttemptCount = VcdExecutionProfileManger.Current.ProfileConfiguration.ReportDownloadingAttemptCount;
 
         private readonly AmazonVcdPageActions pageActions;
         private readonly AuthorizationModel authorizationModel;
@@ -42,20 +42,20 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
 
         public string DownloadShippedRevenueCsvReport(DateTime reportDay, AccountInfo accountInfo)
         {
-            Logger.Info("Amazon VCD, Attempt to download shipped revenue report.");
-            return DownloadReportAsCsvText(reportDay, RequestBodyConstants.ShippedRevenueReportLevel, 
+            Logger.Info(accountInfo.Account.Id, "Amazon VCD, Attempt to download shipped revenue report.");
+            return DownloadReportAsCsvText(reportDay, RequestBodyConstants.ShippedRevenueReportLevel,
                 RequestBodyConstants.ShippedRevenueSalesView, accountInfo);
         }
 
         public string DownloadShippedCogsCsvReport(DateTime reportDay, AccountInfo accountInfo)
         {
-            Logger.Info("Amazon VCD, Attempt to download shipped cogs report.");
+            Logger.Info(accountInfo.Account.Id, "Amazon VCD, Attempt to download shipped cogs report.");
             return DownloadReportAsCsvText(reportDay, RequestBodyConstants.ShippedCogsLevel, RequestBodyConstants.ShippedCogsSalesView, accountInfo);
         }
 
         public string DownloadOrderedRevenueCsvReport(DateTime reportDay, AccountInfo accountInfo)
         {
-            Logger.Info("Amazon VCD, Attempt to download ordered revenue report.");
+            Logger.Info(accountInfo.Account.Id, "Amazon VCD, Attempt to download ordered revenue report.");
             return DownloadReportAsCsvText(reportDay, RequestBodyConstants.OrderedRevenueLevel, RequestBodyConstants.OrderedRevenueView, accountInfo);
         }
 
@@ -70,7 +70,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                     (exception, timeSpan, retryCount, context) =>
                     {
                         failed = true;
-                        ProcessFailedResponse(exception.Result);
+                        ProcessFailedResponse(exception.Result, accountInfo);
                         LogWaiting(timeSpan, retryCount, reportDay, reportLevel, accountInfo);
                     })
                 .Execute(() =>
@@ -79,7 +79,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
                     EqualizeDelay(IsSuccessfulResponse(resp), failed);
                     return resp;
                 });
-            return ProcessResponse(response);
+            return ProcessResponse(response, accountInfo);
         }
 
         private IRestResponse DownloadReport(DateTime reportDay, string reportLevel, string salesViewName, AccountInfo accountInfo)
@@ -104,38 +104,35 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtraction
             {
                 message += $" (number of retrying - {retryCount})";
             }
-
-            Logger.Info(message);
+            Logger.Info(accountInfo.Account.Id, message);
         }
 
-        private string ProcessResponse(IRestResponse response)
+        private string ProcessResponse(IRestResponse response, AccountInfo accountInfo)
         {
             if (IsSuccessfulResponse(response))
             {
-                return ProcessSuccessfulResponse(response);
+                return ProcessSuccessfulResponse(response, accountInfo);
             }
-
-            ProcessFailedResponse(response);
+            ProcessFailedResponse(response, accountInfo);
             throw new Exception($"Report was not downloaded successfully. Status code {response.StatusDescription}");
         }
 
-        private string ProcessSuccessfulResponse(IRestResponse response)
+        private string ProcessSuccessfulResponse(IRestResponse response, AccountInfo accountInfo)
         {
             var textReport = System.Text.Encoding.UTF8.GetString(response.RawBytes, 0, response.RawBytes.Length);
-            Logger.Info($"Amazon VCD, Report downloading finished successfully. Size: {textReport.Length} characters.");
+            Logger.Info(accountInfo.Account.Id, $"Amazon VCD, Report downloading finished successfully. Size: {textReport.Length} characters.");
             return textReport;
         }
 
-        private void ProcessFailedResponse(IRestResponse response)
+        private void ProcessFailedResponse(IRestResponse response, AccountInfo accountInfo)
         {
-            Logger.Warn($"Report downloading attempt failed, Status code: {response.StatusDescription}, content: {response.Content}");
+            Logger.Warn(accountInfo.Account.Id, $"Report downloading attempt failed, Status code: {response.StatusDescription}, content: {response.Content}");
             if (response.StatusCode == (HttpStatusCode)429)
             {
                 return;
             }
-
             pageActions.RefreshSalesDiagnosticPage(authorizationModel);
-            Logger.Info("Amazon VCD, The portal page has been refreshed.");
+            Logger.Info(accountInfo.Account.Id, "Amazon VCD, The portal page has been refreshed.");
         }
 
         private bool IsSuccessfulResponse(IRestResponse response)

@@ -12,7 +12,6 @@ using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelp
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.UserInfoExtracting.Models;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using CakeExtracter.Common;
 using CakeExtracter.Etl;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading;
@@ -56,7 +55,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
 
         public void OpenAccountPage()
         {
-            pageActions.SelectAccountOnPage(AccountInfo.Account.Name);
+            pageActions.SelectAccountOnPage(AccountInfo.Account);
         }
 
         protected override void Extract()
@@ -74,14 +73,14 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
         {
             try
             {
-                Logger.Info($"Amazon VCD, ETL for {date} started. Account {accName} - {accId}");
+                Logger.Info(accId, $"Amazon VCD, ETL for {date} started. Account {accName} - {accId}");
                 var data = ExtractDailyData(date, AccountInfo);
                 Add(data);
             }
             catch (Exception e)
             {
                 var exception = new Exception($"Error occured while extracting data for {accName} ({accId}) account on {date} date.", e);
-                Logger.Error(exception);
+                Logger.Error(accId, exception);
             }
         }
 
@@ -149,10 +148,10 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
         {
             authorizationModel = new AuthorizationModel
             {
-                Login = Properties.Settings.Default.EMail,
-                Password = Properties.Settings.Default.EMailPassword,
-                SignInUrl = Properties.Settings.Default.SignInPageUrl,
-                CookiesDir = configurationManager.GetCookiesDirectoryPath()
+                Login = VcdExecutionProfileManger.Current.ProfileConfiguration.LoginEmail,
+                Password = VcdExecutionProfileManger.Current.ProfileConfiguration.LoginPassword,
+                SignInUrl = VcdExecutionProfileManger.Current.ProfileConfiguration.SignInUrl,
+                CookiesDir = VcdExecutionProfileManger.Current.ProfileConfiguration.CookiesDirectory
             };
         }
     }

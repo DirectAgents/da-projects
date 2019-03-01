@@ -1,4 +1,5 @@
-﻿CREATE TABLE [td].[VcdAnalytic](
+﻿
+CREATE TABLE [td].[VcdAnalytic](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Date] [datetime] NOT NULL,
 	[Asin] [nvarchar](20) NULL,
@@ -24,4 +25,3 @@
 	[CustomerReturns] [decimal](18, 6)  NULL,
 	[OrderedRevenue] [decimal](18, 6)  NULL
 	)
-GO

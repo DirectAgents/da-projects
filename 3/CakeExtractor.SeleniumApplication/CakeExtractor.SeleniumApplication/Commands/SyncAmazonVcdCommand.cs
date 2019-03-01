@@ -7,6 +7,8 @@ using CakeExtracter.Helpers;
 using CakeExtractor.SeleniumApplication.Configuration.Vcd;
 using CakeExtractor.SeleniumApplication.Configuration.Models;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
+using CakeExtractor.SeleniumApplication.Synchers;
+using System;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
@@ -25,15 +27,16 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
         public override string CommandName => "SyncAmazonVcdCommand";
 
-        public override void PrepareCommandEnvironment()
+        public override void PrepareCommandEnvironment(int executionProfileNumber)
         {
+            VcdExecutionProfileManger.Current.SetExecutionProfileNumber(executionProfileNumber);
             extractor.PrepareExtractor();
             AmazonVcdLoader.PrepareLoader();
         }
 
         public override void Run()
         {
-            var dateRanges = configurationManager.GetDaysToProcess();
+            var dateRanges = configurationManager.GetDateRangesToProcess();
             var accountsData = accountsDataProvider.GetAccountsDataToProcess(extractor);
             dateRanges.ForEach(d => RunForDateRange(d, accountsData));
         }
@@ -45,16 +48,17 @@ namespace CakeExtractor.SeleniumApplication.Commands
             foreach (var accountData in accountsData)
             {
                 DoEtlForAccount(accountData);
+                SyncAccountDataToAnalyticTable(accountData.Account.Id);
             }
         }
 
         private void DoEtlForAccount(AccountInfo accountInfo)
         {
-            Logger.Info($"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) started.");
+            Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) started.");
             PrepareExtractorForAccount(accountInfo);
             var loader = new AmazonVcdLoader(accountInfo.Account);
             CommandHelper.DoEtl(extractor, loader);
-            Logger.Info($"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) finished.");
+            Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) finished.");
         }
 
         private void PrepareExtractorForAccount(AccountInfo accountInfo)
@@ -62,6 +66,19 @@ namespace CakeExtractor.SeleniumApplication.Commands
             extractor.Initialize();
             extractor.AccountInfo = accountInfo;
             extractor.OpenAccountPage();
+        }
+
+        private void SyncAccountDataToAnalyticTable(int accountId)
+        {
+            try
+            {
+                var vcdTablesSyncher = new VcdAnalyticTablesSyncher();
+                vcdTablesSyncher.SyncData(accountId);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(accountId, new Exception("Error occured while sync vcd data to analytic table", ex));
+            }
         }
     }
 }

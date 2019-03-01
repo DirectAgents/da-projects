@@ -1,12 +1,13 @@
-﻿using CakeExtracter.Common;
+﻿using CakeExtracter;
+using CakeExtracter.Common;
 using System.Configuration;
 
-namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.AnalyticTablesSync
+namespace CakeExtractor.SeleniumApplication.Synchers
 {
     /// <summary>
-    /// Syncher from amazon ams normal tables to analytic tables.
+    /// Syncher of normal and analytical tables for vcd data.
     /// </summary>
-    public class AmazonAmsAnalyticSyncher
+    public class VcdAnalyticTablesSyncher
     {
         private SqlScriptsExecutor sqlScriptExecutor;
 
@@ -15,22 +16,22 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.AnalyticTablesSy
         /// <summary>
         /// Initializes a new instance of the <see cref="AmazonAmsAnalyticSyncher"/> class.
         /// </summary>
-        public AmazonAmsAnalyticSyncher()
+        public VcdAnalyticTablesSyncher()
         {
             sqlScriptExecutor = new SqlScriptsExecutor(AmazonAmsDbConnectionStringConfigName);
         }
 
         /// <summary>
-        /// Synchronizes normal tables data to analytical tables data for the asin level for account.
+        /// Synchronizes normal tables data to analytical tables data for the vcd data.
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
-        public void SyncAsinLevelForAccount(int accountId)
+        public void SyncData(int accountId)
         {
-            Logger.Info("Started syncing asin analytic table with normal tables", accountId);
-            const string syncScriptPathConfigName = "AmazonAmsAsinSyncScriptPath";
+            Logger.Info("Started sync vcd analytic table with normal tales", accountId);
+            const string syncScriptPathConfigName = "VcdSyncScriptPath";
             var scriptPath = ConfigurationManager.AppSettings[syncScriptPathConfigName];
             sqlScriptExecutor.ExecuteScriptWithParams(scriptPath, new string[] { accountId.ToString() });
-            Logger.Info("Finished syncing asin analytic table with normal tables", accountId);
+            Logger.Info("Finished sync vcd analytic table with normal tales", accountId);
         }
     }
 }

@@ -428,6 +428,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Common\Compare.cs" />
+    <Compile Include="Common\SqlScriptsExecutor.cs" />
     <Compile Include="Common\TextUtils.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DAAffiliatesLoader.cs" />
     <Compile Include="Etl\CakeMarketing\DALoaders\DAAffSubSummaryLoader.cs" />

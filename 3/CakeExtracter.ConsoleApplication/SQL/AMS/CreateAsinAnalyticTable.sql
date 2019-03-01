@@ -49,3 +49,4 @@
 	[AttributedUnitsOrderedOtherSKU14] [decimal](18, 6)  NULL,
 	[AttributedUnitsOrderedOtherSKU30] [decimal](18, 6)  NULL
 	)
+

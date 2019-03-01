@@ -16,6 +16,14 @@ namespace DirectAgents.Domain.Concrete
             }
         }
 
+        public IEnumerable<ExtAccount> GetAccountsWithIds(List<int> accountIds)
+        {
+            using (var db = new ClientPortalProgContext())
+            {
+                return db.ExtAccounts.Where(account => accountIds.Contains(account.Id)).ToList();
+            }
+        }
+
         public IEnumerable<ExtAccount> GetAccountsWithFilledExternalIdByPlatformCode(string platformCode, bool disabledOnly)
         {
             var accounts = GetAccountsByPlatformCode(platformCode, disabledOnly);

@@ -25,7 +25,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
         public override string CommandName => "SyncAmazonPdaCommand";
 
-        public override void PrepareCommandEnvironment()
+        public override void PrepareCommandEnvironment(int executionProfileNumber)
         {
             AmazonPdaExtractor.PrepareExtractor();
         }

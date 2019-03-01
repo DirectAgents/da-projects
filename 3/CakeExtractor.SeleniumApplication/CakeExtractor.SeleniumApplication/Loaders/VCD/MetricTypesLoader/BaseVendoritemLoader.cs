@@ -64,7 +64,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
                     GetActualDailySummariesFromReportEntities(reportShippingEntities, accountRelatedVendorEntities,
                         account, date);
                 MergeDailySummariesAndUpdateInDataBase(allVendorSummariesDbSet, dbContext,
-                    existingAccountDailySummaries, actualAccountDailySummaries);
+                    existingAccountDailySummaries, actualAccountDailySummaries, account);
             }
         }
 
@@ -103,7 +103,8 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
         private void MergeDailySummariesAndUpdateInDataBase(DbSet<TSummaryMetricEntity> allVendorSummariesDbSet,
             DbContext dbContext,
             List<TSummaryMetricEntity> existingAccountDailySummaries,
-            List<TSummaryMetricEntity> actualAccountDailySummaries)
+            List<TSummaryMetricEntity> actualAccountDailySummaries,
+            ExtAccount account)
         {
             var dailySummariesToInsert = new List<TSummaryMetricEntity>();
             var dailySummariesToLeaveUntouched = new List<TSummaryMetricEntity>();
@@ -133,7 +134,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
             dbContext.SaveChanges();
             allVendorSummariesDbSet.AddRange(dailySummariesToInsert);
             dbContext.SaveChanges();
-            Logger.Info("Amazon VCD, Inserted {0}, Deleted {1}", dailySummariesToInsert.Count,
+            Logger.Info(account.Id, "Amazon VCD, Inserted {0}, Deleted {1}", dailySummariesToInsert.Count,
                 dailySummariesToBeRemoved.Count);
         }
 
@@ -161,7 +162,6 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
                     Value = value
                 };
             }
-
             return null;
         }
     }

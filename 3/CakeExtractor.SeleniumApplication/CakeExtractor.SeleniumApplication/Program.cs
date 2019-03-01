@@ -17,24 +17,39 @@ namespace CakeExtractor.SeleniumApplication
             InitializeEnterpriseLibrary();
             InitializeLogging(args[0]);
             AutoMapperBootstrapper.CheckRunSetup();
-            var comamndsConfig = args.Length > 0 ? args[0] : null;
-            var commands = CommandsProvider.GetExecutionCommands(comamndsConfig);
-            PrepareCommandsEnvironment(commands);
-            ScheduleJobs(commands).Wait();
+            var command = GetCommandFromCmdLineParams(args);
+            var executionProfileNumber = GetExecutionProfileNumberFromCmdLineParams(args);
+            command.PrepareCommandEnvironment(executionProfileNumber);
+            ScheduleJobsForCommand(command).Wait();
             AlwaysSleep();
         }
 
-        private static void PrepareCommandsEnvironment(List<BaseAmazonSeleniumCommand> commands)
+        private static BaseAmazonSeleniumCommand GetCommandFromCmdLineParams(string[] args)
         {
-            commands.ForEach(command =>
-            {
-                command.PrepareCommandEnvironment();
-            });
+            var comamndsConfig = args.Length > 0 ? args[0] : null;
+            var command = CommandsProvider.GetExecutionCommand(comamndsConfig);
+            return command;
         }
 
-        private static async Task ScheduleJobs(List<BaseAmazonSeleniumCommand> commands)
+        private static int GetExecutionProfileNumberFromCmdLineParams(string[] args)
         {
-            await AmazonSeleniumCommandsJobScheduler.ConfigureJobSchedule(commands);
+            const int defaultExecutionProfileNumber = 1;
+            var executionProfileNumberConfigValue = args.Length >= 2 ? args[1] : null;
+            try
+            {
+                var configProfileNumber = int.Parse(executionProfileNumberConfigValue);
+                return configProfileNumber;
+            }
+            catch
+            {
+                CakeExtracter.Logger.Warn($"Execution profile number not specified of specified incorrectly. {defaultExecutionProfileNumber} will be used as profile number");
+                return defaultExecutionProfileNumber;
+            }
+        }
+
+        private static async Task ScheduleJobsForCommand(BaseAmazonSeleniumCommand command)
+        {
+            await AmazonSeleniumCommandsJobScheduler.ConfigureJobSchedule(new List<BaseAmazonSeleniumCommand> { command });
         }
 
         private static void AlwaysSleep()
