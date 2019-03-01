@@ -16,5 +16,7 @@
         public const string loadSummaryMetricItemsData = "Load Summary Metric Items Data";
 
         public const string total = "Total";
+
+        public const string syncToAnalyticTables = "Sync To Analytic Tables";
     }
 }

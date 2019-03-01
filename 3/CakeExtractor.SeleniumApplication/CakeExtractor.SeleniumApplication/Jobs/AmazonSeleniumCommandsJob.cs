@@ -31,7 +31,6 @@ namespace CakeExtractor.SeleniumApplication.Jobs
                 Logger.Error(ex);
                 Logger.Warn("Error occured while execution {0} command. Command Skipped", command.CommandName);
             }
-            
         }
     }
 }

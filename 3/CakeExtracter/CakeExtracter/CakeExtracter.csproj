@@ -668,6 +668,7 @@
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonPdaDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonSearchTermSummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonSummaryMetricLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AnalyticTablesSync\AmazonAmsAnalyticSyncher.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\BaseAmazonLevelLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\DbmConvLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\Interfaces\IDailySummaryLoader.cs" />
@@ -846,6 +847,10 @@
     <ProjectReference Include="..\..\DAGenerators\DAGenerators.csproj">
       <Project>{70f3e367-5f86-4718-9a27-6edc9fef9ec9}</Project>
       <Name>DAGenerators</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DirectAgents.Web\CakeExtractor.SqlScriptsExecution.Core\CakeExtractor.SqlScriptsExecution.Core.csproj">
+      <Project>{32405edf-7257-4a90-89fa-148eac75e183}</Project>
+      <Name>CakeExtractor.SqlScriptsExecution.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
