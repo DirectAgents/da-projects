@@ -23,7 +23,7 @@ namespace CakeExtracter.Logging.Loggers
         {
             var logEntry = new LogEntry
             {
-                Message = string.Format(format, args),
+                Message = GetLogMessage(format, args),
                 Severity = severity,
             };
             logEntry.ExtendedProperties["JobName"] = jobName;
@@ -76,6 +76,18 @@ namespace CakeExtracter.Logging.Loggers
             var entry = LogEntry(TraceEventType.Verbose, format, args);
             entry.ExtendedProperties.Add("AccountId", accountId);
             Write(entry);
+        }
+
+        private string GetLogMessage(string format, params object[] args)
+        {
+            try
+            {
+                return string.Format(format, args);
+            }
+            catch
+            {
+                return format;
+            }
         }
     }
 }
