@@ -1,5 +1,6 @@
-﻿--DELETE FROM td.VcdAnalytic
-TRUNCATE TABLE td.VcdAnalytic 
+﻿DECLARE @accId INT = @@param_0;                -- Account ID
+
+DELETE FROM td.VcdAnalytic  WHERE AccountId= @accId;
 
 INSERT INTO td.VcdAnalytic (Date, BrandName, CategoryName, SubcategoryName,ReleaseDate, 
 							Asin, ParentProductAsin, Name,AccountId, Ean, Upc, ApparelSize, ApparelSizeWidth,
@@ -51,6 +52,6 @@ join td.VCategory category		 on subcategory.CategoryId = category.Id
                              
 join td.VParentProduct parent    on product.ParentProductId = parent.Id
 join td.VBrand brand             on product.BrandId = brand.Id 
-                             
+                             and brand.AccountId = @accId
 
 order by summaryMetrics.Date desc;

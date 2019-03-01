@@ -7,6 +7,8 @@ using CakeExtracter.Helpers;
 using CakeExtractor.SeleniumApplication.Configuration.Vcd;
 using CakeExtractor.SeleniumApplication.Configuration.Models;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
+using CakeExtractor.SeleniumApplication.Synchers;
+using System;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
@@ -46,6 +48,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
             foreach (var accountData in accountsData)
             {
                 DoEtlForAccount(accountData);
+                SyncAccountDataToAnalyticTable(accountData.Account.Id);
             }
         }
 
@@ -65,8 +68,17 @@ namespace CakeExtractor.SeleniumApplication.Commands
             extractor.OpenAccountPage();
         }
 
-        private void SyncAccpuntDataToAnalyticTable(int accountId)
+        private void SyncAccountDataToAnalyticTable(int accountId)
         {
+            try
+            {
+                var vcdTablesSyncher = new VcdAnalyticTablesSyncher();
+                vcdTablesSyncher.SyncData(accountId);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(accountId, new Exception("Error occured while sync vcd data to analytic table", ex));
+            }
         }
     }
 }
