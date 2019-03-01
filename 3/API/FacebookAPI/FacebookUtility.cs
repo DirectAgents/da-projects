@@ -12,7 +12,7 @@ namespace FacebookAPI
 {
     public class FacebookUtility
     {
-        public const int RowsReturnedAtATime = 25;
+        public const int RowsReturnedAtATime = 100;
         public const string Pattern_ParenNums = @"^\((\d+)\)\s*";
         public const int InitialWaitMillisecs = 1500;
         public const int MaxRetries = 20; //??reduce??
