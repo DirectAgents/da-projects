@@ -6,6 +6,7 @@ using Adform;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
+using CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
@@ -69,10 +70,11 @@ namespace CakeExtracter.Commands
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Adform ETL. DateRange {0}.", dateRange);
 
-            var statsType = new StatsTypeAgg(this.StatsType);
+            var statsType = new StatsTypeAgg(StatsType);
             SetupAdformUtility();
-
             var accounts = GetAccounts();
+            var accountIdsForOrders = ConfigurationHelper.ExtractEnumerableFromConfig("Adform_OrderInsteadOfCampaign");
+
             foreach (var account in accounts)
             {
                 Logger.Info("Commencing ETL for Adform account ({0}) {1}", account.Id, account.Name);
@@ -82,7 +84,7 @@ namespace CakeExtracter.Commands
                     if (statsType.Daily)
                         DoETL_Daily(dateRange, account);
                     if (statsType.Strategy)
-                        DoETL_Strategy(dateRange, account);
+                        DoETL_Strategy(dateRange, account, accountIdsForOrders.Contains(account.ExternalId));
                     if (statsType.AdSet)
                         DoETL_AdSet(dateRange, account);
 
@@ -100,18 +102,20 @@ namespace CakeExtracter.Commands
 
         private void SetupAdformUtility()
         {
-            this.adformUtility = new AdformUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            adformUtility = new AdformUtility(m => Logger.Info(m), m => Logger.Warn(m));
             GetTokens();
         }
+
         private void GetTokens()
         {
             // Get tokens, if any, from the database
-            string[] tokens = Platform.GetPlatformTokens(Platform.Code_Adform);
-            for (int i = 0; i < tokens.Length && i < AdformUtility.NumAlts; i++)
+            var tokens = Platform.GetPlatformTokens(Platform.Code_Adform);
+            for (var i = 0; i < tokens.Length && i < AdformUtility.NumAlts; i++)
             {
                 adformUtility.AccessTokens[i] = tokens[i];
             }
         }
+
         private void SaveTokens()
         {
             Platform.SavePlatformTokens(Platform.Code_Adform, adformUtility.AccessTokens);
@@ -120,25 +124,28 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account)
         {
-            var extractor = new AdformDailySummaryExtracter(adformUtility, dateRange, account);
+            var extractor = new AdformDailySummaryExtractor(adformUtility, dateRange, account);
             var loader = new TDDailySummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
-        private void DoETL_Strategy(DateRange dateRange, ExtAccount account)
+
+        private void DoETL_Strategy(DateRange dateRange, ExtAccount account, bool byOrder)
         {
-            var extractor = new AdformStrategySummaryExtracter(adformUtility, dateRange, account);
+            var extractor = new AdformStrategySummaryExtractor(adformUtility, dateRange, account, byOrder);
             var loader = new AdformCampaignSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
+
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account)
         {
-            var extractor = new AdformAdSetSummaryExtracter(adformUtility, dateRange, account);
+            var extractor = new AdformAdSetSummaryExtractor(adformUtility, dateRange, account);
             var loader = new TDAdSetSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
+
         private void DoETL_Creative(DateRange dateRange, ExtAccount account)
         {
-            var extractor = new AdformTDadSummaryExtracter(adformUtility, dateRange, account);
+            var extractor = new AdformTDadSummaryExtractor(adformUtility, dateRange, account);
             var loader = new TDadSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
