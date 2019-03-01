@@ -12,7 +12,6 @@ using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelp
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.UserInfoExtracting.Models;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using CakeExtracter.Common;
 using CakeExtracter.Etl;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading;

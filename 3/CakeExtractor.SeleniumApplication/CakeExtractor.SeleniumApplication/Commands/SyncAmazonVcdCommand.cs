@@ -64,5 +64,9 @@ namespace CakeExtractor.SeleniumApplication.Commands
             extractor.AccountInfo = accountInfo;
             extractor.OpenAccountPage();
         }
+
+        private void SyncAccpuntDataToAnalyticTable(int accountId)
+        {
+        }
     }
 }
