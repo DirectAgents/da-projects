@@ -3,6 +3,9 @@ using System;
 
 namespace CakeExtracter.Common
 {
+    /// <summary>
+    /// Service for sql script execution.
+    /// </summary>
     public class SqlScriptsExecutor
     {
         private SqlExecutionConfigsProvider configsProvider;
@@ -11,6 +14,10 @@ namespace CakeExtracter.Common
 
         private SqlCommandsInvoker sqlCommandsInvoker;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SqlScriptsExecutor"/> class.
+        /// </summary>
+        /// <param name="connectionDbConnectionStringName">Name of the connection database connection string.</param>
         public SqlScriptsExecutor(string connectionDbConnectionStringName)
         {
             configsProvider = new SqlExecutionConfigsProvider();
@@ -19,6 +26,11 @@ namespace CakeExtracter.Common
             sqlCommandsInvoker = new SqlCommandsInvoker(dbConnectionString);
         }
 
+        /// <summary>
+        /// Executes the script with replaced parameters.
+        /// </summary>
+        /// <param name="scriptPath">The script path.</param>
+        /// <param name="scriptParams">The script parameters.</param>
         public void ExecuteScriptWithParams(string scriptPath, string[] scriptParams)
         {
             var scriptContent = scriptFileContentProvider.GetSqlScriptFileContent(scriptPath, scriptParams);
