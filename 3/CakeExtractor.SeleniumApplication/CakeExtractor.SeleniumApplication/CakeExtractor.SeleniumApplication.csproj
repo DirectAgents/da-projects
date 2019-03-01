@@ -220,6 +220,9 @@
     <Content Include="SQL\VCD\CreateVcdAnalyticTable.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQL\VCD\SyncVcdAnalyticTableAllAccounts.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQL\VCD\SyncVcdAnalyticTable.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
