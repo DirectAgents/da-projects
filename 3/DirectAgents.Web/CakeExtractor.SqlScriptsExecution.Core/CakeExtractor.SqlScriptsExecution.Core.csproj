@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A73B51CC-60D1-4D14-B90C-1504CDE05303}</ProjectGuid>
+    <ProjectGuid>{32405EDF-7257-4A90-89FA-148EAC75E183}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Adform</RootNamespace>
-    <AssemblyName>Adform</AssemblyName>
+    <RootNamespace>CakeExtractor.SqlScriptsExecution.Core</RootNamespace>
+    <AssemblyName>CakeExtractor.SqlScriptsExecution.Core</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,44 +31,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RestSharp, Version=106.3.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
-      <HintPath>..\..\DirectAgents.Web\packages\RestSharp.106.3.1\lib\net452\RestSharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdformUtility.cs" />
-    <Compile Include="Entities\ReportSettings.cs" />
-    <Compile Include="Entities\RequestEntities\CreateJobResponse.cs" />
-    <Compile Include="Entities\ReportEntities\Dates.cs" />
-    <Compile Include="Entities\RequestEntities\GetTokenResponse.cs" />
-    <Compile Include="Entities\RequestEntities\Paging.cs" />
-    <Compile Include="Entities\ReportEntities\ReportData.cs" />
-    <Compile Include="Entities\ReportEntities\ReportParams.cs" />
-    <Compile Include="Entities\ReportEntities\ReportResponse.cs" />
-    <Compile Include="Enums\Dimension.cs" />
-    <Compile Include="Entities\AdformSummary.cs" />
-    <Compile Include="Helpers\AdformApiHelper.cs" />
+    <Compile Include="SqlExecutionConfigsProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <Compile Include="ScriptFileContentProvider.cs" />
+    <Compile Include="SqlCommandsInvoker.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
