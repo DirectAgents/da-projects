@@ -23,7 +23,7 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
         {
             var executionProfileConfig = VcdExecutionProfileManger.Current.ProfileConfiguration;
             return (executionProfileConfig.StartDate.HasValue && executionProfileConfig.EndDate.HasValue ?
-                new List<DateRange> { new DateRange(executionProfileConfig.StartDate.Value, executionProfileConfig.EndDate.Value)} :
+                new List<DateRange> { new DateRange(executionProfileConfig.StartDate.Value, executionProfileConfig.EndDate.Value) } :
                 executionProfileConfig.DayIntervalsToProcess.Select(interval => CommandHelper.GetDateRange(default(DateTime), default(DateTime), interval, 0)));
         }
     }

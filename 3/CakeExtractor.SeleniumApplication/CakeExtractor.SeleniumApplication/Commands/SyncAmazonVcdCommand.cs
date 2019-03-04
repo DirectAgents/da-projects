@@ -9,20 +9,21 @@ using CakeExtractor.SeleniumApplication.Configuration.Models;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using CakeExtractor.SeleniumApplication.Synchers;
 using System;
+using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
+using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
     internal class SyncAmazonVcdCommand : BaseAmazonSeleniumCommand
     {
-        private readonly AmazonVcdExtractor extractor;
-        private readonly VcdCommandConfigurationManager configurationManager;
-        private readonly VcdAccountsDataProvider accountsDataProvider;
+        private AmazonVcdExtractor extractor;
+        private VcdCommandConfigurationManager configurationManager;
+        private VcdAccountsDataProvider accountsDataProvider;
+        private AmazonVcdPageActions pageActions;
+        private AuthorizationModel authorizationModel;
 
         public SyncAmazonVcdCommand()
         {
-            configurationManager = new VcdCommandConfigurationManager();
-            extractor = new AmazonVcdExtractor(configurationManager);
-            accountsDataProvider = new VcdAccountsDataProvider();
         }
 
         public override string CommandName => "SyncAmazonVcdCommand";
@@ -30,12 +31,18 @@ namespace CakeExtractor.SeleniumApplication.Commands
         public override void PrepareCommandEnvironment(int executionProfileNumber)
         {
             VcdExecutionProfileManger.Current.SetExecutionProfileNumber(executionProfileNumber);
+            InitializeAuthorizationModel();
+            configurationManager = new VcdCommandConfigurationManager();
+            pageActions = new AmazonVcdPageActions();
+            extractor = new AmazonVcdExtractor(configurationManager, pageActions, authorizationModel);
+            accountsDataProvider = new VcdAccountsDataProvider();
             extractor.PrepareExtractor();
             AmazonVcdLoader.PrepareLoader();
         }
 
         public override void Run()
         {
+            pageActions.RefreshSalesDiagnosticPage(authorizationModel);
             var dateRanges = configurationManager.GetDateRangesToProcess();
             var accountsData = accountsDataProvider.GetAccountsDataToProcess(extractor);
             dateRanges.ForEach(d => RunForDateRange(d, accountsData));
@@ -79,6 +86,17 @@ namespace CakeExtractor.SeleniumApplication.Commands
             {
                 Logger.Error(accountId, new Exception("Error occured while sync vcd data to analytic table", ex));
             }
+        }
+
+        private void InitializeAuthorizationModel()
+        {
+            authorizationModel = new AuthorizationModel
+            {
+                Login = VcdExecutionProfileManger.Current.ProfileConfiguration.LoginEmail,
+                Password = VcdExecutionProfileManger.Current.ProfileConfiguration.LoginPassword,
+                SignInUrl = VcdExecutionProfileManger.Current.ProfileConfiguration.SignInUrl,
+                CookiesDir = VcdExecutionProfileManger.Current.ProfileConfiguration.CookiesDirectory
+            };
         }
     }
 }

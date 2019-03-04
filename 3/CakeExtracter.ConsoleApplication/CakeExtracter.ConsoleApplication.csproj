@@ -178,6 +178,9 @@
     <Content Include="SQL\AMS\CreateAsinAnalyticTable.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQL\AMS\SelectAnalyticalTableAsin.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQL\AMS\SyncAsinAnalyticTableAllAccounts.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
