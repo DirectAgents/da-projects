@@ -94,15 +94,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
             return composedData;
         }
 
-        private static List<Product> GetReportData(string reportName, Func<string> downloadReportFunc, Func<string, List<Product>> parseReportFunc)
-        {
-            Logger.Info($"Amazon VCD, Downloading {reportName} report.");
-            var reportTextContent = DownloadReport(downloadReportFunc);
-            var reportProducts = parseReportFunc(reportTextContent);
-            Logger.Info($"Amazon VCD, {reportName} report downloaded. {reportProducts.Count} products");
-            return reportProducts;
-        }
-
         private static string DownloadReport(Func<string> downloadingAction)
         {
             try
@@ -120,21 +111,21 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
 
         private List<Product> GetShippedRevenueReportData(DateTime reportDay, AccountInfo accountInfo)
         {
-            return GetReportData("Shipped Revenue",
+            return GetReportData("Shipped Revenue", accountInfo, reportDay,
                 () => reportDownloader.DownloadShippedRevenueCsvReport(reportDay, accountInfo),
                 reportParser.ParseShippedRevenueReportData);
         }
 
         private List<Product> GetShippingCogsReportData(DateTime reportDay, AccountInfo accountInfo)
         {
-            return GetReportData("Shipped COGS",
+            return GetReportData("Shipped COGS", accountInfo, reportDay,
                 () => reportDownloader.DownloadShippedCogsCsvReport(reportDay, accountInfo),
                 reportParser.ParseShippedCogsReportData);
         }
 
         private List<Product> GetOrderedRevenueReportData(DateTime reportDay, AccountInfo accountInfo)
         {
-            return GetReportData("Ordered Revenue",
+            return GetReportData("Ordered Revenue", accountInfo, reportDay,
                 () => reportDownloader.DownloadOrderedRevenueCsvReport(reportDay, accountInfo),
                 reportParser.ParseOrderedRevenueReportData);
         }
@@ -142,6 +133,16 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
         private void CreateApplicationFolders()
         {
             FileManager.CreateDirectoryIfNotExist(authorizationModel.CookiesDir);
+        }
+
+        private static List<Product> GetReportData(string reportName, AccountInfo accountInfo, DateTime reportDay,
+            Func<string> downloadReportFunc, Func<string, AccountInfo, DateTime, List<Product>> parseReportFunc)
+        {
+            Logger.Info($"Amazon VCD, Downloading {reportName} report.");
+            var reportTextContent = DownloadReport(downloadReportFunc);
+            var reportProducts = parseReportFunc(reportTextContent, accountInfo, reportDay);
+            Logger.Info($"Amazon VCD, {reportName} report downloaded. {reportProducts.Count} products");
+            return reportProducts;
         }
     }
 }

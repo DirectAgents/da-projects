@@ -32,6 +32,12 @@ namespace Amazon.Helpers
             return json;
         }
 
+        public static void SaveToFileInExecutionFolder(string fileName, string fileContent)
+        {
+            var path = GetBaseDirectoryFilePath(fileName);
+            File.WriteAllText(path, fileContent);
+        }
+
         private static string ReadJsonFromDecompressedStream(Stream sourceStream, string compressedFilePath, string decompressedFilePath)
         {
             CopyStream(sourceStream, compressedFilePath);
