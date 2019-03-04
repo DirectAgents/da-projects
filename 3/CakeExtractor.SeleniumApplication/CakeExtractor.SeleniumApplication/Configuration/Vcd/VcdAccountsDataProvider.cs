@@ -9,17 +9,28 @@ using System.Linq;
 
 namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
 {
+    /// <summary>
+    /// Provider of accounts information for vcd job.
+    /// </summary>
     internal class VcdAccountsDataProvider
     {
         private readonly VcdCommandConfigurationManager vcdConfigurationManager;
         private readonly PlatformAccountRepository accountsRepository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VcdAccountsDataProvider"/> class.
+        /// </summary>
         public VcdAccountsDataProvider()
         {
             vcdConfigurationManager = new VcdCommandConfigurationManager();
             accountsRepository = new PlatformAccountRepository();
         }
 
+        /// <summary>
+        /// Gets the accounts data to process. Combined data from database and sales diagnostic page.
+        /// </summary>
+        /// <param name="extractor">The extractor.</param>
+        /// <returns>Account info collection.</returns>
         public List<AccountInfo> GetAccountsDataToProcess(AmazonVcdExtractor extractor)
         {
             try
