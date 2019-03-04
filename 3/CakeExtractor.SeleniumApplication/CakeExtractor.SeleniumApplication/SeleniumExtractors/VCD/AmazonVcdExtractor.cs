@@ -31,16 +31,16 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
         public DateRange DateRange { get; set; }
         public AccountInfo AccountInfo { get; set; }
 
-        public AmazonVcdExtractor(VcdCommandConfigurationManager configurationManager)
+        public AmazonVcdExtractor(VcdCommandConfigurationManager configurationManager, AmazonVcdPageActions pageActions, AuthorizationModel authorizationModel)
         {
             this.configurationManager = configurationManager;
+            this.pageActions = pageActions;
+            this.authorizationModel = authorizationModel;
         }
 
         public void PrepareExtractor()
         {
-            InitializeAuthorizationModel();
             CreateApplicationFolders();
-            pageActions = new AmazonVcdPageActions();
             reportDownloader = new VcdReportDownloader(pageActions, authorizationModel);
             reportParser = new VcdReportCSVParser();
             reportComposer = new VcdReportComposer();
@@ -142,17 +142,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
         private void CreateApplicationFolders()
         {
             FileManager.CreateDirectoryIfNotExist(authorizationModel.CookiesDir);
-        }
-
-        private void InitializeAuthorizationModel()
-        {
-            authorizationModel = new AuthorizationModel
-            {
-                Login = VcdExecutionProfileManger.Current.ProfileConfiguration.LoginEmail,
-                Password = VcdExecutionProfileManger.Current.ProfileConfiguration.LoginPassword,
-                SignInUrl = VcdExecutionProfileManger.Current.ProfileConfiguration.SignInUrl,
-                CookiesDir = VcdExecutionProfileManger.Current.ProfileConfiguration.CookiesDirectory
-            };
         }
     }
 }

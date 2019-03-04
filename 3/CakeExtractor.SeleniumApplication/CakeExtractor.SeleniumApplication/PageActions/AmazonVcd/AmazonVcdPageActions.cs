@@ -39,12 +39,12 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonVcd
 
         public void RefreshSalesDiagnosticPage(AuthorizationModel authorizationModel)
         {
+            Logger.Info("Sales diagnostic page refreshing");
             NavigateToSalesDiagnosticPage();
             if (!AmazonVcdLoginHelper.NeedResetPassword(this))
             {
                 return;
             }
-
             AmazonVcdLoginHelper.ResetPassword(this, authorizationModel);
             NavigateToSalesDiagnosticPage();
         }

@@ -3,6 +3,7 @@ using CakeExtractor.SeleniumApplication.Configuration.Models;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,29 +22,37 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
 
         public List<AccountInfo> GetAccountsDataToProcess(AmazonVcdExtractor extractor)
         {
-            var dbAccounts = GetDbAccountsToProcess();
-            var pageAccountsInfo = extractor.ExtractAccountsInfo();
-            var accountsInfo = new List<AccountInfo>();
-            dbAccounts.ForEach(dbAccount =>
+            try
             {
-                var pageAccountData = pageAccountsInfo.subAccounts.FirstOrDefault(pa => pa.name == dbAccount.Name);
-                if (pageAccountData != null)
+                var dbAccounts = GetDbAccountsToProcess();
+                var pageAccountsInfo = extractor.ExtractAccountsInfo();
+                var accountsInfo = new List<AccountInfo>();
+                dbAccounts.ForEach(dbAccount =>
                 {
-                    accountsInfo.Add(new AccountInfo
+                    var pageAccountData = pageAccountsInfo.subAccounts.FirstOrDefault(pa => pa.name == dbAccount.Name);
+                    if (pageAccountData != null)
                     {
-                        Account = dbAccount,
-                        McId = pageAccountData.mcId,
-                        VendorGroupId = pageAccountData.vendorGroupId
-                    });
-                }
-                else
-                {
-                    Logger.Warn($"{dbAccount.Name} account was not found on page");
-                }
-            });
+                        accountsInfo.Add(new AccountInfo
+                        {
+                            Account = dbAccount,
+                            McId = pageAccountData.mcId,
+                            VendorGroupId = pageAccountData.vendorGroupId
+                        });
+                    }
+                    else
+                    {
+                        Logger.Warn($"{dbAccount.Name} account was not found on page");
+                    }
+                });
 
-            Logger.Info("{0} accounts will be processed", string.Join(",", accountsInfo.Select(a => a.Account.Name)));
-            return accountsInfo;
+                Logger.Info("{0} accounts will be processed", string.Join(",", accountsInfo.Select(a => a.Account.Name)));
+                return accountsInfo;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(new Exception("Error occured while fetching accounts information." ,ex));
+                throw ex;
+            }
         }
 
         private List<ExtAccount> GetDbAccountsToProcess()
