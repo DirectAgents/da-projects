@@ -6,28 +6,27 @@ using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using CakeExtracter.Common;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class TDAdSetSummaryLoader : Loader<AdSetSummary>
     {
-        public readonly int AccountId;
-        public static EntityIdStorage<AdSet> AdSetStorage;
+        public static EntityIdStorage<AdSet> DefaultAdSetStorage = StorageCollection.AdSetWithEidStorage;
 
-        private readonly TDStrategySummaryLoader strategyLoader;
+        public readonly int AccountId;
+
+        private readonly EntityIdStorage<AdSet> adSetStorage;
         private readonly EntityIdStorage<Strategy> strategyStorage;
+        private readonly TDStrategySummaryLoader strategyLoader;
         private readonly SummaryMetricLoader metricLoader;
 
-        static TDAdSetSummaryLoader()
+        public TDAdSetSummaryLoader(int accountId = -1, EntityIdStorage<AdSet> adSetStorage = null, EntityIdStorage<Strategy> strategyStorage = null)
         {
-            AdSetStorage = new EntityIdStorage<AdSet>(x => x.Id, x => $"{x.AccountId} {x.StrategyId} {x.Name} {x.ExternalId}", x => $"{x.AccountId} {x.Name} {x.ExternalId}");
-        }
-
-        public TDAdSetSummaryLoader(int accountId = -1)
-        {
+            this.strategyStorage = strategyStorage ?? TDStrategySummaryLoader.DefaultStrategyStorage;
+            this.adSetStorage = adSetStorage ?? DefaultAdSetStorage;
             AccountId = accountId;
-            strategyLoader = new TDStrategySummaryLoader(accountId);
-            strategyStorage = TDStrategySummaryLoader.StrategyStorage;
+            strategyLoader = new TDStrategySummaryLoader(accountId, this.strategyStorage);
             metricLoader = new SummaryMetricLoader();
         }
 
@@ -58,12 +57,12 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             foreach (var item in items)
             {
-                if (!AdSetStorage.IsEntityInStorage(item.AdSet))
+                if (!adSetStorage.IsEntityInStorage(item.AdSet))
                 {
                     continue;
                 }
 
-                item.AdSetId = AdSetStorage.GetEntityIdFromStorage(item.AdSet);
+                item.AdSetId = adSetStorage.GetEntityIdFromStorage(item.AdSet);
                 item.AdSet = null;
                 // otherwise it will get skipped; no AdSet to use for the foreign key
             }
@@ -136,7 +135,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 foreach (var adSet in items)
                 {
-                    if (AdSetStorage.IsEntityInStorage(adSet))
+                    if (adSetStorage.IsEntityInStorage(adSet))
                     {
                         continue; // already encountered this adset
                     }
@@ -150,7 +149,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                             var adSetInDB = AddAdSet(db, adSet);
                             Logger.Info(accountId, "Saved new AdSet: {0} ({1}), ExternalId={2}", adSetInDB.Name,
                                 adSetInDB.Id, adSetInDB.ExternalId);
-                            AdSetStorage.AddEntityIdToStorage(adSetInDB);
+                            adSetStorage.AddEntityIdToStorage(adSetInDB);
                         }
                         else
                         {
@@ -165,7 +164,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                                     Logger.Warn(accountId, "Multiple entities in db ({0})", numUpdates);
                                 }
                             }
-                            AdSetStorage.AddEntityIdToStorage(adSetsInDbList.First());
+                            adSetStorage.AddEntityIdToStorage(adSetsInDbList.First());
                         }
                     });
                 }

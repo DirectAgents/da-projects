@@ -5,6 +5,7 @@ using DirectAgents.Domain.Entities.CPProg;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.Interfaces;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
@@ -15,7 +16,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         static SummaryMetricLoader()
         {
-            MetricTypeStorage = new EntityIdStorage<MetricType>(x => x.Id, x => $"{x.Name} {x.DaysInterval}");
+            MetricTypeStorage = StorageCollection.MetricTypeStorage;
         }
 
         protected override int Load(List<SummaryMetric> items)

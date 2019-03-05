@@ -10,14 +10,12 @@ namespace CakeExtracter.SimpleRepositories
 {
     public class TypeRepository : ISimpleRepository<EntityType>
     {
-        private static readonly EntityIdStorage<EntityType> TypeStorage;
-
-        static TypeRepository()
+        public TypeRepository(EntityIdStorage<EntityType> storage)
         {
-            TypeStorage = new EntityIdStorage<EntityType>(x => x.Id, x => x.Name);
+            IdStorage = storage;
         }
 
-        public EntityIdStorage<EntityType> IdStorage => TypeStorage;
+        public EntityIdStorage<EntityType> IdStorage { get; }
 
         public List<EntityType> GetItems<TContext>(TContext db, EntityType itemToCompare) where TContext : DbContext, new()
         {
@@ -34,7 +32,7 @@ namespace CakeExtracter.SimpleRepositories
                 return null;
             }
 
-            TypeStorage.AddEntityIdToStorage(sourceItem);
+            IdStorage.AddEntityIdToStorage(sourceItem);
             return sourceItem;
         }
 
@@ -44,7 +42,7 @@ namespace CakeExtracter.SimpleRepositories
             var numChanges = SafeContextWrapper.TrySaveChanges(db);
             if (numChanges > 0)
             {
-                TypeStorage.AddEntityIdToStorage(targetItemInDb);
+                IdStorage.AddEntityIdToStorage(targetItemInDb);
             }
 
             return numChanges;
@@ -75,12 +73,12 @@ namespace CakeExtracter.SimpleRepositories
                 }
             );
 
-            newTypes.ForEach(TypeStorage.AddEntityIdToStorage);
+            newTypes.ForEach(IdStorage.AddEntityIdToStorage);
         }
 
         private void AddNewDbTypeToList(DbContext db, EntityType sourceType, List<EntityType> newTypes)
         {
-            if (TypeStorage.IsEntityInStorage(sourceType))
+            if (IdStorage.IsEntityInStorage(sourceType))
             {
                 return;
             }
@@ -92,7 +90,7 @@ namespace CakeExtracter.SimpleRepositories
             }
             else
             {
-                TypeStorage.AddEntityIdToStorage(typeInDb);
+                IdStorage.AddEntityIdToStorage(typeInDb);
             }
         }
     }

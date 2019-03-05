@@ -11,16 +11,12 @@ namespace CakeExtracter.SimpleRepositories
 {
     class StrategyRepository : ISimpleRepository<Strategy>
     {
-        protected static EntityIdStorage<Strategy> StrategyStorage;
-
-        static StrategyRepository()
+        public StrategyRepository(EntityIdStorage<Strategy> storage)
         {
-            StrategyStorage = new EntityIdStorage<Strategy>(x => x.Id, 
-                x => $"{x.AccountId} {x.Name} {x.ExternalId}", 
-                x => $"{x.AccountId} {x.ExternalId}");
+            IdStorage = storage;
         }
 
-        public EntityIdStorage<Strategy> IdStorage => StrategyStorage;
+        public EntityIdStorage<Strategy> IdStorage { get; }
 
         public List<Strategy> GetItems<TContext>(TContext db, Strategy itemToCompare) where TContext : DbContext, new()
         {
@@ -47,7 +43,7 @@ namespace CakeExtracter.SimpleRepositories
                 return null;
             }
 
-            StrategyStorage.AddEntityIdToStorage(sourceItem);
+            IdStorage.AddEntityIdToStorage(sourceItem);
             return sourceItem;
         }
 
@@ -56,7 +52,7 @@ namespace CakeExtracter.SimpleRepositories
         {
             UpdateStrategy(sourceItem, targetItemInDb);
             var numChanges = SafeContextWrapper.TrySaveChanges(db);
-            StrategyStorage.AddEntityIdToStorage(targetItemInDb);
+            IdStorage.AddEntityIdToStorage(targetItemInDb);
             return numChanges;
         }
 
