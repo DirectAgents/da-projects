@@ -25,7 +25,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
                     return commandToExecute;
                 }
             }
-            throw new Exception("Command Name should be defined");
+            throw new Exception("No command was found with name defined in cmd args.");
         }
 
         private static List<BaseSeleniumCommand> GetAllCommands()
@@ -33,7 +33,8 @@ namespace CakeExtractor.SeleniumApplication.Commands
             return new List<BaseSeleniumCommand>
             {
                 new SyncAmazonPdaCommand(),
-                new SyncAmazonVcdCommand()
+                new SyncAmazonVcdCommand(),
+                new SyncKochavaDataCommand()
             };
         }
     }

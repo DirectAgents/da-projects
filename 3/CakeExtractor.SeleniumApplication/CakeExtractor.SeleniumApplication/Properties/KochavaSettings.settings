@@ -1,12 +1,18 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CakeExtractor.SeleniumApplication.Properties" GeneratedClassName="CochavaSettings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CakeExtractor.SeleniumApplication.Properties" GeneratedClassName="KochavaSettings">
   <Profiles />
   <Settings>
     <Setting Name="UserLoginName" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">directagents.brendan</Value>
     </Setting>
     <Setting Name="UserPassword" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SignInUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://go.kochava.com/session</Value>
+    </Setting>
+    <Setting Name="CookiesDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">KochavaCookies</Value>
     </Setting>
   </Settings>
 </SettingsFile>

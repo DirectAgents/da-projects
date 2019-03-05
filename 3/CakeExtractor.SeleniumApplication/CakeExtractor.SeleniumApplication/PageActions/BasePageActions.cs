@@ -177,7 +177,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions
             }
         }
 
-        protected void ClickElement(By byElement)
+        public void ClickElement(By byElement)
         {
             try
             {
@@ -190,7 +190,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions
             }
         }
 
-        protected void WaitElementClickable(By element, TimeSpan waitCount)
+        public void WaitElementClickable(By element, TimeSpan waitCount)
         {
             try
             {

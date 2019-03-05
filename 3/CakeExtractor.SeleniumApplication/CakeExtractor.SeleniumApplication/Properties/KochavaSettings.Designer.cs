@@ -25,7 +25,7 @@ namespace CakeExtractor.SeleniumApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("directagents.brendan")]
         public string UserLoginName {
             get {
                 return ((string)(this["UserLoginName"]));
@@ -44,6 +44,30 @@ namespace CakeExtractor.SeleniumApplication.Properties {
             }
             set {
                 this["UserPassword"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://go.kochava.com/session")]
+        public string SignInUrl {
+            get {
+                return ((string)(this["SignInUrl"]));
+            }
+            set {
+                this["SignInUrl"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("KochavaCookies")]
+        public string CookiesDirectory {
+            get {
+                return ((string)(this["CookiesDirectory"]));
+            }
+            set {
+                this["CookiesDirectory"] = value;
             }
         }
     }

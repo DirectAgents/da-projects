@@ -128,6 +128,9 @@
     <Compile Include="Models\CommonHelperModels\AuthorizationModel.cs" />
     <Compile Include="Models\CommonHelperModels\JobScheduleModel.cs" />
     <Compile Include="PageActions\AmazonVcd\AmazonVcdPageObjects.cs" />
+    <Compile Include="PageActions\Kochava\KochavaLoginHelper.cs" />
+    <Compile Include="PageActions\Kochava\KochavaPageActions.cs" />
+    <Compile Include="PageActions\Kochava\KochavaPageObjects.cs" />
     <Compile Include="Properties\KochavaSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -140,6 +143,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>PdaSettings.settings</DependentUpon>
     </Compile>
+    <Compile Include="SeleniumExtractors\Kochava\KochavaExtractor.cs" />
     <Compile Include="SeleniumExtractors\VCD\Models\Brand.cs" />
     <Compile Include="SeleniumExtractors\VCD\Models\Category.cs" />
     <Compile Include="SeleniumExtractors\VCD\Models\ParentProduct.cs" />

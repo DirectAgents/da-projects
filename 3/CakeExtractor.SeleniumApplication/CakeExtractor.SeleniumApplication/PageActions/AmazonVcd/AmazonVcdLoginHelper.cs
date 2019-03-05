@@ -3,7 +3,6 @@ using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonPda;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace CakeExtractor.SeleniumApplication.PageActions
@@ -19,6 +18,11 @@ namespace CakeExtractor.SeleniumApplication.PageActions
             {
                 Login(authorizationModel, pageManager);
             }
+        }
+
+        public static void ResetPassword(BaseAmazonPageActions pageActions, AuthorizationModel authModel)
+        {
+            pageActions.LoginWithPassword(authModel.Password);
         }
 
         private static bool IsLoginProcessNeeded(AuthorizationModel authorizationModel, AmazonVcdPageActions pageManager)
@@ -55,11 +59,6 @@ namespace CakeExtractor.SeleniumApplication.PageActions
         {
             var currentUrl = pageActions.GetCurrentWindowUrl();
             return currentUrl.Contains(signInPageUrl) && pageActions.IsElementPresent(AmazonPdaPageObjects.LoginPassInput);
-        }
-
-        public static void ResetPassword(BaseAmazonPageActions pageActions, AuthorizationModel authModel)
-        {
-            pageActions.LoginWithPassword(authModel.Password);
         }
 
         private static void LoginWithCookie(AuthorizationModel authModel, BaseAmazonPageActions pageManager)
