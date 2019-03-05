@@ -5,7 +5,6 @@ using System.Linq;
 using Adform;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtracter.Helpers;
@@ -74,11 +73,12 @@ namespace CakeExtracter.Commands
             SetupAdformUtility();
             var accounts = GetAccounts();
             var accountIdsForOrders = ConfigurationHelper.ExtractEnumerableFromConfig("Adform_OrderInsteadOfCampaign");
+            var trackingIdsOfAccounts = ConfigurationHelper.ExtractDictionaryFromConfigValue("Adform_AccountsWithSpecificTracking", "Adform_AccountsTrackingIds");
 
             foreach (var account in accounts)
             {
                 Logger.Info("Commencing ETL for Adform account ({0}) {1}", account.Id, account.Name);
-                adformUtility.SetWhichAlt(account.ExternalId);
+                SetupAdformUtilityForAccount(account, trackingIdsOfAccounts);
                 try
                 {
                     if (statsType.Daily)
@@ -104,6 +104,13 @@ namespace CakeExtracter.Commands
         {
             adformUtility = new AdformUtility(m => Logger.Info(m), m => Logger.Warn(m));
             GetTokens();
+        }
+
+        private void SetupAdformUtilityForAccount(ExtAccount account, Dictionary<string, string> trackingIdsOfAccounts)
+        {
+            var eid = account.ExternalId;
+            adformUtility.SetWhichAlt(eid);
+            adformUtility.TrackingId = trackingIdsOfAccounts.ContainsKey(eid) ? trackingIdsOfAccounts[eid] : null;
         }
 
         private void GetTokens()

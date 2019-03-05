@@ -50,6 +50,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                 BasicMetrics = true,
                 ConvMetrics = true,
                 RtbOnly = true,
+                TrackingId = AfUtility.TrackingId,
                 Dimensions = new List<Dimension> { Dimension.AdInteractionType}
             };
         }

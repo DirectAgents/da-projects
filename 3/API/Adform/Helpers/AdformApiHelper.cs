@@ -33,6 +33,11 @@ namespace Adform.Helpers
         {
             dynamic filter = new ExpandoObject();
             filter.client = new[] {settings.ClientId};
+            if (settings.TrackingId != null)
+            {
+                filter.tracking = settings.TrackingId;
+            }
+
             filter.date = new Dates
             {
                 from = settings.StartDate.ToString(DateFormat),

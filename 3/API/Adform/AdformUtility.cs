@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Dynamic;
 using System.Net;
 using System.Threading;
 using Adform.Entities;
@@ -33,6 +32,7 @@ namespace Adform
         private string[] ClientSecrets = new string[NumAlts];
         public string[] AccessTokens = new string[NumAlts];
         public int WhichAlt { get; set; } // default: 0
+        public string TrackingId { get; set; }
 
         // --- Logging ---
         private Action<string> _LogInfo;
