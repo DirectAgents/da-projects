@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using CakeExtracter.Helpers;
 using ClientPortal.Data.Contexts;
 
 namespace CakeExtracter.Etl.SearchMarketing.Loaders
@@ -36,9 +37,10 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
         private int UpsertSearchDailySummaries(List<Dictionary<string, string>> items)
         {
-            var addedCount = 0;
-            var updatedCount = 0;
-            var itemCount = 0;
+            const string network = ".";
+            const string device = ".";
+            var progress = new LoadingProgress();
+
             using (var db = new ClientPortalContext())
             {
                 var passedInAccount = db.SearchAccounts.Find(this.searchAccountId);
@@ -56,18 +58,14 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                             searchAccount = searchAccount.SearchProfile.SearchAccounts.Single(sa => sa.AccountCode == accountCode && sa.Channel == BingChannel);
                     }
 
-                    var pk1 = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId;
-                    var pk2 = DateTime.Parse(item["TimePeriod"]);
-                    var pk3 = ".";
-                    var pk4 = ".";
-                    //var pk5 = ".";
+                    var searchCampaignId = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId;
+                    var time = DateTime.Parse(item["TimePeriod"]);
                     var source = new SearchDailySummary
                     {
-                        SearchCampaignId = pk1,
-                        Date = pk2,
-                        Network = pk3,
-                        Device = pk4,
-                        //ClickType = pk5,
+                        SearchCampaignId = searchCampaignId,
+                        Date = time,
+                        Network = network,
+                        Device = device,
                         Revenue = decimal.Parse(item["Revenue"]),
                         Cost = decimal.Parse(item["Spend"]),
                         Orders = int.Parse(item["Conversions"]),
@@ -82,26 +80,37 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     else if (searchAccount.RevPerOrder.HasValue)
                         source.Revenue = source.Orders * searchAccount.RevPerOrder.Value;
 
-                    var target = db.Set<SearchDailySummary>().Find(pk1, pk2, pk3, pk4); //, pk5);
+                    var target = db.Set<SearchDailySummary>().Find(searchCampaignId, time, network, device);
                     if (target == null)
                     {
                         db.SearchDailySummaries.Add(source);
-                        addedCount++;
+                        progress.AddedCount++;
                     }
                     else
                     {
                         var entry = db.Entry(target);
-                        entry.State = EntityState.Detached;
-                        AutoMapper.Mapper.Map(source, target);
-                        entry.State = EntityState.Modified;
-                        updatedCount++;
+                        if (entry.State != EntityState.Unchanged)
+                        {
+                            Logger.Warn(accountId, "Encountered duplicate for {0:d} - Strategy {1}", time, searchCampaignId);
+                            progress.DuplicateCount++;
+                        }
+                        else
+                        {
+                            entry.State = EntityState.Detached;
+                            AutoMapper.Mapper.Map(source, target);
+                            entry.State = EntityState.Modified;
+                            progress.UpdatedCount++;
+                        }
                     }
-                    itemCount++;
+
+                    progress.ItemCount++;
                 }
-                Logger.Info("Saving {0} SearchDailySummaries ({1} updates, {2} additions)", itemCount, updatedCount, addedCount);
-                db.SaveChanges();
+
+                SafeContextWrapper.TrySaveChanges(db);
             }
-            return itemCount;
+
+            Logger.Info($"Saving {progress.ItemCount} SearchDailySummaries ({progress.UpdatedCount} updates, {progress.AddedCount} additions, {progress.DuplicateCount} duplicates)");
+            return progress.ItemCount;
         }
 
         public static void AddUpdateDependentSearchAccounts(List<Dictionary<string, string>> items, int searchAccountId)
@@ -111,7 +120,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                 var searchAccount = db.SearchAccounts.Find(searchAccountId);
 
                 var accountTuples = items.Select(i => Tuple.Create(i["AccountName"], i["AccountId"])).Distinct();
-                bool multipleAccounts = accountTuples.Count() > 1;
+                var multipleAccounts = accountTuples.Count() > 1;
 
                 foreach (var tuple in accountTuples)
                 {
@@ -155,6 +164,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     }
                     db.SaveChanges();
                 }
+
+                SafeContextWrapper.TrySaveChanges(db);
             }
         }
 
@@ -199,6 +210,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         db.SaveChanges();
                     }
                 }
+
+                SafeContextWrapper.TrySaveChanges(db);
             }
         }
     }

@@ -1,53 +1,31 @@
-﻿using CakeExtractor.SeleniumApplication.Properties;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using CakeExtractor.SeleniumApplication.Properties;
+using CakeExtracter.Common;
+using CakeExtracter.Helpers;
 using System.Linq;
 
 namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
 {
+    /// <summary>
+    /// Vcd configuration manager. Prepare config values for using in application.
+    /// </summary>
     internal class VcdCommandConfigurationManager
     {
-        private const int defaultDaysIntervalToProcess = 30;
-
-        public List<DateTime> GetDaysToProcess()
+        /// <summary>
+        /// Gets the date ranges to process. 
+        /// If start date and end date specified only one date range with these start date and end date should be returned.
+        /// </summary>
+        /// <returns>
+        /// List of date ranges where vcd job should be executed.
+        /// </returns>
+        public IEnumerable<DateRange> GetDateRangesToProcess()
         {
-            var startDate = VcdSettings.Default.StartDate;
-            var endDate = VcdSettings.Default.EndDate;
-            // If date not specified in config date value has DateTime.MinValue
-            if (startDate != DateTime.MinValue && endDate != DateTime.MinValue)
-            {
-                return GetDaysBetweenTwoDates(startDate, endDate).ToList();
-            }
-            else
-            {
-                var daysInterval = VcdSettings.Default.DaysInterval != 0 ? VcdSettings.Default.DaysInterval : defaultDaysIntervalToProcess;
-                var intervalEndDate = DateTime.Today.AddDays(-1);
-                var intervalStartDate = DateTime.Today.AddDays(-daysInterval);
-                return GetDaysBetweenTwoDates(intervalStartDate, intervalEndDate).ToList();
-            }
-        }
-
-        public int GetAccountId()
-        {
-            try
-            {
-                return VcdSettings.Default.AccountId;
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-
-        public string GetCookiesDirectoryPath()
-        {
-            return VcdSettings.Default.CookiesDirectory;
-        }
-
-        private IEnumerable<DateTime> GetDaysBetweenTwoDates(DateTime from, DateTime thru)
-        {
-            for (var day = from.Date; day.Date <= thru.Date; day = day.AddDays(1))
-                yield return day;
+            var executionProfileConfig = VcdExecutionProfileManger.Current.ProfileConfiguration;
+            return (executionProfileConfig.StartDate.HasValue && executionProfileConfig.EndDate.HasValue ?
+                new List<DateRange> { new DateRange(executionProfileConfig.StartDate.Value, executionProfileConfig.EndDate.Value) } :
+                executionProfileConfig.DayIntervalsToProcess.Select(interval => CommandHelper.GetDateRange(default(DateTime), default(DateTime), interval, 0)));
         }
     }
 }
+

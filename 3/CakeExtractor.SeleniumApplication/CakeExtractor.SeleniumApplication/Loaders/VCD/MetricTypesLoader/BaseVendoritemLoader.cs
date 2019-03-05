@@ -1,4 +1,5 @@
-﻿using CakeExtractor.SeleniumApplication.Loaders.VCD.Constants;
+﻿using CakeExtracter;
+using CakeExtractor.SeleniumApplication.Loaders.VCD.Constants;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
@@ -17,98 +18,136 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
     {
         protected Dictionary<string, int> metricTypes;
 
-        public BaseVendorItemLoader(Dictionary<string, int> metricTypes)
+        protected BaseVendorItemLoader(Dictionary<string, int> metricTypes)
         {
             this.metricTypes = metricTypes;
         }
 
-        public List<TDbEntity> EnsureVendorEntitiesInDataBase(List<TReportEntity> reportEntities, ExtAccount extAccount)
+        public List<TDbEntity> EnsureVendorEntitiesInDataBase(List<TReportEntity> reportEntities, ExtAccount account)
         {
+            var itemsToBeAdded = new List<TDbEntity>();
+            var allItemsFromReport = new List<TDbEntity>();
             using (var dbContext = new ClientPortalProgContext())
             {
-                var itemsToBeAdded = new List<TDbEntity>();
-                var allItems = new List<TDbEntity>();
-                var dbSet = GetVendorDbSet(dbContext);
-                var allAccountdbEntities = dbSet.Where(db => db.AccountId == extAccount.Id).ToList();
+                var accountRelatedVendorEntities =
+                    dbContext.Set<TDbEntity>().Where(e => e.AccountId == account.Id).ToList();
                 reportEntities.ForEach(reportEntity =>
                 {
-                    var correspondingDbEntity = allAccountdbEntities.FirstOrDefault(GetEntityMappingPredicate(reportEntity, extAccount));
+                    var correspondingDbEntity =
+                        accountRelatedVendorEntities.FirstOrDefault(GetEntityMappingPredicate(reportEntity, account));
                     if (correspondingDbEntity == null)
                     {
-                        correspondingDbEntity = MapReportEntityToDbEntity(reportEntity, extAccount);
+                        correspondingDbEntity = MapReportEntityToDbEntity(reportEntity, account);
                         itemsToBeAdded.Add(correspondingDbEntity);
                     }
-                    allItems.Add(correspondingDbEntity);
+
+                    allItemsFromReport.Add(correspondingDbEntity);
                 });
-                dbSet.AddRange(itemsToBeAdded);
+                dbContext.Set<TDbEntity>().AddRange(itemsToBeAdded);
                 dbContext.SaveChanges();
+
+                var allItems = accountRelatedVendorEntities.Concat(itemsToBeAdded).ToList();
                 return allItems;
             }
         }
 
-        public void LoadNewAccountSummaryMetricsDataForDate(List<TReportEntity> reportShippingEntities,
-            List<TDbEntity> dbVendorEntities, DateTime date, ExtAccount account)
+        public void UpdateAccountSummaryMetricsDataForDate(List<TReportEntity> reportShippingEntities,
+            List<TDbEntity> accountRelatedVendorEntities, DateTime date, ExtAccount account)
         {
             using (var dbContext = new ClientPortalProgContext())
             {
-                dbContext.Configuration.AutoDetectChangesEnabled = false; // performance purposes (ToDo: Replace with bulk insert)
-                var dbSet = GetSummaryMetricDbSet(dbContext);
-                var summaryMetricsToAdd = reportShippingEntities.SelectMany(reportEntity =>
-                {
-                    var dbEntity = dbVendorEntities.FirstOrDefault(GetEntityMappingPredicate(reportEntity, account));
-                    return GetSummaryMetricEntities(reportEntity, dbEntity, date);
-                }).ToList();
-                dbSet.AddRange(summaryMetricsToAdd);
-                dbContext.SaveChanges();
-                dbContext.Configuration.AutoDetectChangesEnabled = true;
+                var accountRelatedVendorEntityIds = accountRelatedVendorEntities.Select(e => e.Id).ToList();
+                var allVendorSummariesDbSet = dbContext.Set<TSummaryMetricEntity>();
+                var existingAccountDailySummaries = allVendorSummariesDbSet
+                    .Where(csm => csm.Date == date && accountRelatedVendorEntityIds.Contains(csm.EntityId)).ToList();
+                var actualAccountDailySummaries =
+                    GetActualDailySummariesFromReportEntities(reportShippingEntities, accountRelatedVendorEntities,
+                        account, date);
+                MergeDailySummariesAndUpdateInDataBase(allVendorSummariesDbSet, dbContext,
+                    existingAccountDailySummaries, actualAccountDailySummaries, account);
             }
         }
 
-        public void CleanExistingAccountSummaryMetricsDataForDate(DateTime date, ExtAccount extAccount)
-        {
-            using (var dbContext = new ClientPortalProgContext())
-            {
-                dbContext.Configuration.AutoDetectChangesEnabled = false; // performance purposes (ToDo: Replace with bulk delete)
-                var entitiesDbSet = GetVendorDbSet(dbContext);
-                var accountRelatedEntityIds = entitiesDbSet.Where(ent => ent.AccountId == extAccount.Id).Select(e => e.Id).ToList();
-                var summaryMetricsDbSet = GetSummaryMetricDbSet(dbContext);
-                var itemsToBeRemoved = summaryMetricsDbSet.Where(csm => csm.Date == date && accountRelatedEntityIds.Contains(csm.EntityId)).ToList();
-                summaryMetricsDbSet.RemoveRange(itemsToBeRemoved);
-                dbContext.SaveChanges();
-                dbContext.Configuration.AutoDetectChangesEnabled = true;
-            }
-        }
-
-        protected virtual Func<TDbEntity, bool> GetEntityMappingPredicate(TReportEntity reportEntity, ExtAccount extAccount)
+        protected virtual Func<TDbEntity, bool> GetEntityMappingPredicate(TReportEntity reportEntity,
+            ExtAccount extAccount)
         {
             return dbEntity => dbEntity.Name == reportEntity.Name && dbEntity.AccountId == extAccount.Id;
         }
 
         protected abstract TDbEntity MapReportEntityToDbEntity(TReportEntity reportEntity, ExtAccount extAccount);
 
-        protected abstract DbSet<TDbEntity> GetVendorDbSet(ClientPortalProgContext dbContext);
-
-        protected abstract DbSet<TSummaryMetricEntity> GetSummaryMetricDbSet(ClientPortalProgContext dbContext);
-
-        private List<TSummaryMetricEntity> GetSummaryMetricEntities(TReportEntity reportEntity, TDbEntity dbEntity, DateTime date)
+        private List<TSummaryMetricEntity> GetSummaryMetricEntities(TReportEntity reportEntity, TDbEntity dbEntity,
+            DateTime date)
         {
             var metricEntities = new List<TSummaryMetricEntity>
             {
-               InitMetricValue(dbEntity.Id, date, reportEntity.ShippedUnits,
+                InitMetricValue(dbEntity.Id, date, reportEntity.ShippedUnits,
                     metricTypes[VendorCentralDataLoadingConstants.ShippedUnitsMetricName]),
-               InitMetricValue(dbEntity.Id, date, reportEntity.OrderedUnits,
+                InitMetricValue(dbEntity.Id, date, reportEntity.OrderedUnits,
                     metricTypes[VendorCentralDataLoadingConstants.OrderedUnitsMetricName]),
-               InitMetricValue(dbEntity.Id, date, reportEntity.ShippedRevenue,
+                InitMetricValue(dbEntity.Id, date, reportEntity.ShippedRevenue,
                     metricTypes[VendorCentralDataLoadingConstants.ShippedRevenueMetricName]),
-               InitMetricValue(dbEntity.Id, date, reportEntity.CustomerReturns,
+                InitMetricValue(dbEntity.Id, date, reportEntity.CustomerReturns,
                     metricTypes[VendorCentralDataLoadingConstants.CustomerReturnsMetricName]),
-               InitMetricValue(dbEntity.Id, date, reportEntity.FreeReplacements,
+                InitMetricValue(dbEntity.Id, date, reportEntity.FreeReplacements,
                     metricTypes[VendorCentralDataLoadingConstants.FreeReplacementMetricName]),
-               InitMetricValue(dbEntity.Id, date, reportEntity.ShippedCogs,
-                    metricTypes[VendorCentralDataLoadingConstants.ShippedCogsMetricName])
+                InitMetricValue(dbEntity.Id, date, reportEntity.ShippedCogs,
+                    metricTypes[VendorCentralDataLoadingConstants.ShippedCogsMetricName]),
+                InitMetricValue(dbEntity.Id, date, reportEntity.OrderedRevenue,
+                    metricTypes[VendorCentralDataLoadingConstants.OrderedRevenueMetricName])
             };
             metricEntities.RemoveAll(item => item == null);
             return metricEntities;
+        }
+
+        private void MergeDailySummariesAndUpdateInDataBase(DbSet<TSummaryMetricEntity> allVendorSummariesDbSet,
+            DbContext dbContext,
+            List<TSummaryMetricEntity> existingAccountDailySummaries,
+            List<TSummaryMetricEntity> actualAccountDailySummaries,
+            ExtAccount account)
+        {
+            var dailySummariesToInsert = new List<TSummaryMetricEntity>();
+            var dailySummariesToLeaveUntouched = new List<TSummaryMetricEntity>();
+            actualAccountDailySummaries.ForEach(actualMetric =>
+            {
+                var alreadyExistingMetricValue = existingAccountDailySummaries.FirstOrDefault(mS =>
+                    mS.EntityId == actualMetric.EntityId && mS.MetricTypeId == actualMetric.MetricTypeId);
+                if (alreadyExistingMetricValue != null)
+                {
+                    if (alreadyExistingMetricValue.Value == actualMetric.Value)
+                    {
+                        dailySummariesToLeaveUntouched.Add(alreadyExistingMetricValue);
+                    }
+                    else
+                    {
+                        dailySummariesToInsert.Add(actualMetric);
+                    }
+                }
+                else
+                {
+                    dailySummariesToInsert.Add(actualMetric);
+                }
+            });
+            var dailySummariesToBeRemoved =
+                existingAccountDailySummaries.Except(dailySummariesToLeaveUntouched).ToList();
+            allVendorSummariesDbSet.RemoveRange(dailySummariesToBeRemoved);
+            dbContext.SaveChanges();
+            allVendorSummariesDbSet.AddRange(dailySummariesToInsert);
+            dbContext.SaveChanges();
+            Logger.Info(account.Id, "Amazon VCD, Inserted {0}, Deleted {1}", dailySummariesToInsert.Count,
+                dailySummariesToBeRemoved.Count);
+        }
+
+        private List<TSummaryMetricEntity> GetActualDailySummariesFromReportEntities(
+            List<TReportEntity> reportShippingEntities, List<TDbEntity> dbVendorEntities, ExtAccount account,
+            DateTime date)
+        {
+            var actualAccountDailySummaries = reportShippingEntities.SelectMany(reportEntity =>
+            {
+                var dbEntity = dbVendorEntities.FirstOrDefault(GetEntityMappingPredicate(reportEntity, account));
+                return GetSummaryMetricEntities(reportEntity, dbEntity, date);
+            }).ToList();
+            return actualAccountDailySummaries;
         }
 
         private TSummaryMetricEntity InitMetricValue(int entityId, DateTime date, decimal value, int metricTypeId)

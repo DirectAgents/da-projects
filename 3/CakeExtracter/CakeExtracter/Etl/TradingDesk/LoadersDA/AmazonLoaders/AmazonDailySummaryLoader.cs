@@ -1,25 +1,61 @@
 ﻿using System.Collections.Generic;
-using CakeExtracter.Etl.TradingDesk.LoadersDA.Adders;
-using CakeExtracter.Etl.TradingDesk.LoadersDA.Interfaces;
+using CakeExtracter.Helpers;
+using CakeExtracter.Logging.TimeWatchers;
 using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
 {
-    public class AmazonDailySummaryLoader : Loader<DailySummary>
+    /// <summary>
+    /// Summary loader for amazon Account level.
+    /// </summary>
+    /// <seealso cref="CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.BaseAmazonLevelLoader{DirectAgents.Domain.Entities.CPProg.DailySummary, DirectAgents.Domain.Entities.CPProg.DailySummaryMetric}" />
+    public class AmazonDailySummaryLoader : BaseAmazonLevelLoader<DailySummary,DailySummaryMetric>
     {
-        private readonly IDailySummaryLoader tdDailySummaryLoader;
+        private readonly TDDailySummaryLoader summaryItemsLoader;
 
-        public AmazonDailySummaryLoader(int accountId) : base(accountId)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AmazonDailySummaryLoader"/> class.
+        /// </summary>
+        /// <param name="accountId">The account identifier.</param>
+        public AmazonDailySummaryLoader(int accountId) 
+            : base(accountId)
         {
-            tdDailySummaryLoader = new TDDailySummaryLoader(accountId);
+            summaryItemsLoader = new TDDailySummaryLoader(accountId);
         }
 
-        protected override int Load(List<DailySummary> items)
+        /// <summary>
+        /// Gets the name of amazon job information level.
+        /// </summary>
+        /// <value>
+        /// The name of the level.
+        /// </value>
+        protected override string LevelName => AmazonJobLevels.account;
+
+        /// <summary>
+        /// Gets the locker object for multithreading operations.
+        /// </summary>
+        /// <value>
+        /// The locker object.
+        /// </value>
+        protected override object LockerObject => SafeContextWrapper.DailyLocker;
+
+        /// <summary>
+        /// Ensures the related items.
+        /// </summary>
+        /// <param name="summaryItems">The summary items.</param>
+        protected override void EnsureRelatedItems(List<DailySummary> summaryItems)
         {
-            Logger.Info(accountId, "Loading {0} AmazonDailySummaries..", items.Count);
-            tdDailySummaryLoader.AssignIdsToItems(items);
-            var count = tdDailySummaryLoader.UpsertDailySummaries(items);
-            return count;
+            summaryItemsLoader.AssignIdsToItems(summaryItems);
+        }
+
+        /// <summary>
+        /// Sets the summary metric entity identifier.
+        /// </summary>
+        /// <param name="summary">The summary.</param>
+        /// <param name="summaryMetric">The summary metric.</param>
+        protected override void SetSummaryMetricEntityId(DailySummary summary, SummaryMetric summaryMetric)
+        {
+            summaryMetric.EntityId = summary.AccountId;
         }
     }
 }

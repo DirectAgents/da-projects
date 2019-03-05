@@ -28,7 +28,7 @@
 
         public virtual bool AllZeros()
         {
-            return Cost == 0 && Impressions == 0 && Clicks == 0 &&
+            return Cost == 0.0M && Impressions == 0 && Clicks == 0 &&
                    AttributedSales1D == 0.0M && AttributedSales7D == 0.0M && AttributedSales14D == 0.0M && AttributedSales30D == 0.0M &&
                    AttributedSales1DSameSku == 0.0M && AttributedSales7DSameSku == 0.0M && AttributedSales14DSameSku == 0.0M && AttributedSales30DSameSku == 0.0M &&
                    AttributedConversions1D == 0 && AttributedConversions7D == 0 && AttributedConversions14D == 0 && AttributedConversions30D == 0 &&

@@ -26,12 +26,12 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             StrategyStorage = new StrategyRepository().IdStorage;
         }
 
-        public TDStrategySummaryLoader(int accountId = -1)
+        public TDStrategySummaryLoader(int accountId = -1, ISimpleRepository<Strategy> strategyRepository = null)
         {
             AccountId = accountId;
             metricLoader = new SummaryMetricLoader();
             typeRepository = new TypeRepository();
-            strategyRepository = new StrategyRepository();
+            this.strategyRepository = strategyRepository ?? new StrategyRepository();
         }
 
         protected override int Load(List<StrategySummary> items)
@@ -171,14 +171,15 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 if (typeRepository.IdStorage.IsEntityInStorage(strategy.TargetingType))
                 {
                     strategy.TargetingTypeId = typeRepository.IdStorage.GetEntityIdFromStorage(strategy.TargetingType);
-                    strategy.TargetingType = null;
                 }
 
                 if (typeRepository.IdStorage.IsEntityInStorage(strategy.Type))
                 {
                     strategy.TypeId = typeRepository.IdStorage.GetEntityIdFromStorage(strategy.Type);
-                    strategy.Type = null;
                 }
+
+                strategy.Type = null;
+                strategy.TargetingType = null;
             }
         }
 

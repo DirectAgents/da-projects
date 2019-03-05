@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
+using CakeExtracter.Logging.TimeWatchers.Amazon;
+using CakeExtracter.Logging.TimeWatchers;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
 {
@@ -22,23 +24,34 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         {
             Logger.Info(accountId, "Extracting AdSetSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 clientId, dateRange.FromDate, dateRange.ToDate);
-            
+
             foreach (var date in dateRange.Dates)
             {
-                Extract(date);
+                try
+                {
+                    Extract(date);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(accountId, e);
+                }
             }
+
             End();
         }
 
         private void Extract(DateTime date)
         {
-            var sums = ExtractSummaries(date);
-            var items = TransformSummaries(sums, date);
+            IEnumerable<AdSetSummary> items = null;
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
+            {
+                var sums = ExtractSummaries(date);
+                items = TransformSummaries(sums, date);
+            }, accountId, AmazonJobLevels.adSet, AmazonJobOperations.reportExtracting);
             if (ClearBeforeLoad)
             {
                 RemoveOldData(date);
             }
-
             Add(items);
         }
 
@@ -75,15 +88,15 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         private void RemoveOldData(DateTime date)
         {
             Logger.Info(accountId, "The cleaning of AdSetSummaries for account ({0}) has begun - {1}.", accountId, date);
-            using (var db = new ClientPortalProgContext())
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
             {
-                var items = db.AdSetSummaries.Where(x => x.Date == date && x.AdSet.AccountId == accountId);
-                var metrics = db.AdSetSummaryMetrics.Where(x => x.Date == date && x.AdSet.AccountId == accountId);
-                db.AdSetSummaryMetrics.RemoveRange(metrics);
-                db.AdSetSummaries.RemoveRange(items);
-                var numChanges = SafeContextWrapper.TrySaveChanges(db);
-                Logger.Info(accountId, "The cleaning of AdSetSummaries for account ({0}) is over - {1}. Count of deleted objects: {2}", accountId, date, numChanges);
-            }
+                SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+                {
+                    db.AdSetSummaryMetrics.Where(x => x.Date == date && x.AdSet.AccountId == accountId).DeleteFromQuery();
+                    db.AdSetSummaries.Where(x => x.Date == date && x.AdSet.AccountId == accountId).DeleteFromQuery();
+                }, "DeleteFromQuery");
+            }, accountId, AmazonJobLevels.adSet, AmazonJobOperations.cleanExistingData);
+            Logger.Info(accountId, "The cleaning of AdSetSummaries for account ({0}) is over - {1}.", accountId, date);
         }
     }
 }

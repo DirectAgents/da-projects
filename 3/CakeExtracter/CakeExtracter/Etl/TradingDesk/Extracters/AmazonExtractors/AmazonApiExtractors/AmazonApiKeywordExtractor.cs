@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
+using CakeExtracter.Logging.TimeWatchers.Amazon;
+using CakeExtracter.Logging.TimeWatchers;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
 {
@@ -21,22 +23,32 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         {
             Logger.Info(accountId, "Extracting KeywordSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 clientId, dateRange.FromDate, dateRange.ToDate);
-            
+
             foreach (var date in dateRange.Dates)
             {
-                Extract(date);
+                try
+                {
+                    Extract(date);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(accountId, e);
+                }
             }
+
             End();
         }
 
         private void Extract(DateTime date)
         {
-            var items = GetKeywordSummariesFromApi(date);
+            IEnumerable<KeywordSummary> items = null;
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => {
+                items = GetKeywordSummariesFromApi(date);
+            }, accountId, AmazonJobLevels.keyword, AmazonJobOperations.reportExtracting);
             if (ClearBeforeLoad)
             {
                 RemoveOldData(date);
             }
-
             Add(items);
         }
 
@@ -113,15 +125,15 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         private void RemoveOldData(DateTime date)
         {
             Logger.Info(accountId, "The cleaning of KeywordSummaries for account ({0}) has begun - {1}.", accountId, date);
-            using (var db = new ClientPortalProgContext())
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
             {
-                var items = db.KeywordSummaries.Where(x => x.Date == date && x.Keyword.AccountId == accountId);
-                var metrics = db.KeywordSummaryMetrics.Where(x => x.Date == date && x.Keyword.AccountId == accountId);
-                db.KeywordSummaryMetrics.RemoveRange(metrics);
-                db.KeywordSummaries.RemoveRange(items);
-                var numChanges = SafeContextWrapper.TrySaveChanges(db);
-                Logger.Info(accountId, "The cleaning of KeywordSummaries for account ({0}) is over - {1}. Count of deleted objects: {2}", accountId, date, numChanges);
-            }
+                SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+                {
+                    db.KeywordSummaryMetrics.Where(x => x.Date == date && x.Keyword.AccountId == accountId).DeleteFromQuery();
+                    db.KeywordSummaries.Where(x => x.Date == date && x.Keyword.AccountId == accountId).DeleteFromQuery();
+                }, "DeleteFromQuery");
+            }, accountId, AmazonJobLevels.keyword, AmazonJobOperations.cleanExistingData);
+            Logger.Info(accountId, "The cleaning of KeywordSummaries for account ({0}) is over - {1}.", accountId, date);
         }
     }
 }

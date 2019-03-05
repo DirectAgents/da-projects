@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
+using CakeExtracter.Logging.TimeWatchers;
+using CakeExtracter.Logging.TimeWatchers.Amazon;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
 {
@@ -20,22 +22,33 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         {
             Logger.Info(accountId, "Extracting SearchTermSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 clientId, dateRange.FromDate, dateRange.ToDate);
-            
+
             foreach (var date in dateRange.Dates)
             {
-                Extract(date);
+                try
+                {
+                    Extract(date);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(accountId, e);
+                }
             }
+
             End();
         }
 
         private void Extract(DateTime date)
         {
-            var items = GetSearchTermSummariesFromApi(date);
+            IEnumerable<SearchTermSummary> items = null;
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
+            {
+                items = GetSearchTermSummariesFromApi(date);
+            }, accountId, AmazonJobLevels.searchTerm, AmazonJobOperations.reportExtracting);
             if (ClearBeforeLoad)
             {
                 RemoveOldData(date);
             }
-
             Add(items);
         }
 
@@ -112,15 +125,15 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         private void RemoveOldData(DateTime date)
         {
             Logger.Info(accountId, "The cleaning of SearchTermSummaries for account ({0}) has begun - {1}.", accountId, date);
-            using (var db = new ClientPortalProgContext())
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
             {
-                var items = db.SearchTermSummaries.Where(x => x.Date == date && x.SearchTerm.AccountId == accountId);
-                var metrics = db.SearchTermSummaryMetrics.Where(x => x.Date == date && x.SearchTerm.AccountId == accountId);
-                db.SearchTermSummaryMetrics.RemoveRange(metrics);
-                db.SearchTermSummaries.RemoveRange(items);
-                var numChanges = SafeContextWrapper.TrySaveChanges(db);
-                Logger.Info(accountId, "The cleaning of SearchTermSummaries for account ({0}) is over - {1}. Count of deleted objects: {2}", accountId, date, numChanges);
-            }
+                SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+                {
+                    db.SearchTermSummaryMetrics.Where(x => x.Date == date && x.SearchTerm.AccountId == accountId).DeleteFromQuery();
+                    db.SearchTermSummaries.Where(x => x.Date == date && x.SearchTerm.AccountId == accountId).DeleteFromQuery();
+                }, "DeleteFromQuery");
+            }, accountId, AmazonJobLevels.searchTerm, AmazonJobOperations.cleanExistingData);
+            Logger.Info(accountId, "The cleaning of SearchTermSummaries for account ({0}) is over - {1}.", accountId, date);
         }
     }
 }

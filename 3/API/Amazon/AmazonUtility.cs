@@ -12,29 +12,39 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization;
+using Amazon.Constants;
 using Amazon.Entities.HelperEntities;
 using Amazon.Entities.HelperEntities.DownloadInfoResponses;
 using Amazon.Entities.HelperEntities.PreparedDataResponses;
 using Amazon.Entities.Summaries;
+using Amazon.Exceptions;
 
 namespace Amazon
 {
     public class AmazonUtility
     {
+        private const string LoggerPrefix = "[AmazonUtility]";
         private const int LimitOfReturnedValues = 5000;
-        private const int WaitTimeSeconds = 5;
-        private const int WaitAttemptsNumber = 60; // 5 sec * 60 = 300 sec => 5 min
-        private const int UnauthorizedAttemptsNumber = 1;
-        private const int FailedRequestAttemptsNumber = 5;
-
         private const string TokenDelimiter = "|AMZNAMZN|";
         private const int NumAlts = 10; // including the default (0)
+
+        private const string AuthorizationHeader = "Authorization";
+        private const string AmazonHeaderProfile = "Amazon-Advertising-API-Scope";
+        private const string AmazonHeaderClient = "Amazon-Advertising-API-ClientId";
 
         private static readonly object RequestLock = new object();
         private static readonly object FileLock = new object();
         private static readonly object AccessTokenLock = new object();
 
         // From Config File
+        // Wait time is increased after every third attempt by the value of waitTimeSeconds. (15 min - async report generation time, service guarantees)
+        private readonly int waitTimeSeconds = int.Parse(ConfigurationManager.AppSettings["AmazonWaitTimeSeconds"]);
+        private readonly int waitAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonWaitAttemptsNumber"]);
+        private readonly int unauthorizedAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonUnauthorizedAttemptsNumber"]);
+        private readonly int failedRequestAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonFailedRequestAttemptsNumber"]);
+        private readonly int reportGenerationAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["AmazonReportGenerationAttemptsNumber"]);
+
         private readonly string amazonClientId = ConfigurationManager.AppSettings["AmazonClientId"];
         private readonly string amazonClientSecret = ConfigurationManager.AppSettings["AmazonClientSecret"];
         private readonly string amazonApiEndpointUrl = ConfigurationManager.AppSettings["AmazonAPIEndpointUrl"];
@@ -62,6 +72,18 @@ namespace Amazon
         private readonly Action<string> logInfo;
         private readonly Action<string> logError;
 
+        private static string GetAttemptMessage(string info, int retryNumber, string baseMessage = null)
+        {
+            var details = baseMessage == null ? string.Empty : $": {baseMessage}";
+            return $"{info} (attempt - {retryNumber}){details}";
+        }
+
+        private static string GetMessageInCorrectFormat(string message)
+        {
+            var updatedMessage = message.Replace('{', '\'').Replace('}', '\'');
+            return $"{LoggerPrefix} {updatedMessage}";
+        }
+
         private void LogInfo(string message)
         {
             var updatedMessage = GetMessageInCorrectFormat(message);
@@ -88,74 +110,30 @@ namespace Amazon
             }
         }
 
-        private string GetMessageInCorrectFormat(string message)
-        {
-            var updatedMessage = message.Replace('{', '\'').Replace('}', '\'');
-            return "[AmazonUtility] " + updatedMessage;
-        }
-
         private void LogInfo(string info, int retryNumber)
         {
             var message = GetAttemptMessage(info, retryNumber);
             LogInfo(message);
         }
 
-        private void LogError(string info, int retryNumber, Exception exception)
+        private void LogGenerationError(string dataName, Exception exception, int retryNumber)
         {
-            var message = GetAttemptMessage(info, retryNumber, exception.Message);
+            var info = $"Try recreating a new '{dataName}': {exception.Message}";
+            var message = GetAttemptMessage(info, retryNumber);
             LogError(message);
         }
 
-        private T LogErrorIfException<T>(Func<T> getSomethingFunc)
-            where T : class
+        private void LogWaiting<T>(string formattedMessageWithoutTime, TimeSpan timeSpan, int retryNumber, DelegateResult<IRestResponse<T>> response)
         {
-            try
-            {
-                return getSomethingFunc();
-            }
-            catch (Exception x)
-            {
-                LogError(x.Message);
-            }
-
-            return null;
+            var waitDetails = response.Exception == null ? response.Result.Content : response.Exception.Message;
+            LogWaiting(formattedMessageWithoutTime, timeSpan, retryNumber, waitDetails);
         }
 
-        private TimeSpan LogPreparedDataWaiting(string dataType, int retryNumber)
+        private void LogWaiting(string formattedMessageWithoutTime, TimeSpan timeSpan, int retryNumber, string waitDetails)
         {
-            return LogWaiting($"Waiting {WaitTimeSeconds} seconds for {dataType} to finish generating.", retryNumber);
-        }
-
-        private TimeSpan LogApiCallWaiting(int retryNumber)
-        {
-            return LogWaiting($"API calls quota exceeded. Waiting {WaitTimeSeconds} seconds.", retryNumber);
-        }
-
-        private void LogFailedRequest(string url, int retryNumber, Exception exception)
-        {
-            LogError($"URL response ({url}) failed", retryNumber, exception);
-        }
-
-        private void LogSuccessfulGeneration(ResponseDownloadInfo downloadInfo)
-        {
-            LogInfo($"Successful generation: {downloadInfo.Location}");
-        }
-
-        private void LogTimeOutGeneration(string message)
-        {
-            LogError($"Generation timed out: {message}");
-        }
-
-        private TimeSpan LogWaiting(string message, int retryNumber)
-        {
+            var waitSeconds = timeSpan.TotalSeconds;
+            var message = $"{string.Format(formattedMessageWithoutTime, waitSeconds)}: {waitDetails}";
             LogInfo(message, retryNumber);
-            return new TimeSpan(0, 0, WaitTimeSeconds);
-        }
-
-        private string GetAttemptMessage(string info, int retryNumber, string baseMessage = null)
-        {
-            var details = baseMessage == null ? string.Empty : $": {baseMessage}";
-            return $"{info} (attempt - {retryNumber}){details}";
         }
 
         #endregion
@@ -337,7 +315,7 @@ namespace Amazon
         public List<AmazonDailySummary> ReportCampaigns(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
             var param = AmazonApiHelper.CreateReportParams(EntitesType.Campaigns, campaignType, date, includeCampaignName);
-            return GetReportInfo<AmazonDailySummary>(EntitesType.Campaigns, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonDailySummary>(EntitesType.Campaigns, campaignType, param, profileId);
         }
 
         /// For Sponsored Brands only the following attributed metrics are available:
@@ -345,7 +323,7 @@ namespace Amazon
         public List<AmazonAdGroupSummary> ReportAdGroups(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
             var param = AmazonApiHelper.CreateReportParams(EntitesType.AdGroups, campaignType, date, includeCampaignName);
-            return GetReportInfo<AmazonAdGroupSummary>(EntitesType.AdGroups, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonAdGroupSummary>(EntitesType.AdGroups, campaignType, param, profileId);
         }
 
         /// Only for Sponsored Product
@@ -354,7 +332,7 @@ namespace Amazon
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportParams(EntitesType.ProductAds, campaignType, date, includeCampaignName);
-            return GetReportInfo<AmazonAdDailySummary>(EntitesType.ProductAds, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonAdDailySummary>(EntitesType.ProductAds, campaignType, param, profileId);
         }
 
         /// For Sponsored Brands only the following attributed metrics are available:
@@ -362,7 +340,7 @@ namespace Amazon
         public List<AmazonKeywordDailySummary> ReportKeywords(CampaignType campaignType, DateTime date, string profileId, bool includeCampaignName)
         {
             var param = AmazonApiHelper.CreateReportParams(EntitesType.Keywords, campaignType, date, includeCampaignName);
-            return GetReportInfo<AmazonKeywordDailySummary>(EntitesType.Keywords, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonKeywordDailySummary>(EntitesType.Keywords, campaignType, param, profileId);
         }
 
         /// Only for Sponsored Product
@@ -370,7 +348,7 @@ namespace Amazon
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportParams(EntitesType.SearchTerm, campaignType, date, includeCampaignName);
-            return GetReportInfo<AmazonSearchTermDailySummary>(EntitesType.SearchTerm, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonSearchTermDailySummary>(EntitesType.SearchTerm, campaignType, param, profileId);
         }
 
         /// Only for Sponsored Product
@@ -378,7 +356,7 @@ namespace Amazon
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportParams(EntitesType.TargetKeywords, campaignType, date, includeCampaignName);
-            return GetReportInfo<AmazonTargetKeywordDailySummary>(EntitesType.TargetKeywords, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonTargetKeywordDailySummary>(EntitesType.TargetKeywords, campaignType, param, profileId);
         }
 
         /// Only for Sponsored Product
@@ -386,7 +364,7 @@ namespace Amazon
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateReportParams(EntitesType.TargetSearchTerm, campaignType, date, includeCampaignName);
-            return GetReportInfo<AmazonTargetSearchTermDailySummary>(EntitesType.TargetSearchTerm, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonTargetSearchTermDailySummary>(EntitesType.TargetSearchTerm, campaignType, param, profileId);
         }
 
         /// Only for Sponsored Product
@@ -394,51 +372,56 @@ namespace Amazon
         {
             const CampaignType campaignType = CampaignType.SponsoredProducts;
             var param = AmazonApiHelper.CreateAsinReportParams(date);
-            return GetReportInfo<AmazonAsinSummaries>(EntitesType.Asins, campaignType, param, profileId);
+            return GetReportInfoManyTimes<AmazonAsinSummaries>(EntitesType.Asins, campaignType, param, profileId);
         }
 
-        private List<T> GetEntities<T>(EntitesType entitiesType, CampaignType campaignType = CampaignType.Empty, Dictionary<string, string> parameters = null, string profileId = null)
+        private List<T> GetEntities<T>(EntitesType entitiesType, CampaignType campaignType = CampaignType.Empty,
+            Dictionary<string, string> parameters = null, string profileId = null)
         {
-            parameters = parameters ?? new Dictionary<string, string>();
-            var data = GetEntityList(() => GetEntityList<T>(entitiesType, campaignType, parameters, profileId));
-            return data;
+            try
+            {
+                parameters = parameters ?? new Dictionary<string, string>();
+                var data = GetEntityList<T>(entitiesType, campaignType, parameters, profileId);
+                return data;
+            }
+            catch (Exception e)
+            {
+                throw new ExtractDataException(e, "load items", entitiesType, campaignType, profileId);
+            }
         }
 
         /// Use it instead of the GetEntities method when you need to extract a large number of objects (more than 15,000) and you know about it.
-        private List<TEntity> GetSnapshotInfo<TEntity>(EntitesType entitiesType, CampaignType campaignType, string profileId)
+        private List<TEntity> GetSnapshotInfoManyTimes<TEntity>(EntitesType entitiesType, CampaignType campaignType, string profileId)
         {
-            var submitReportResponse = SubmitSnapshot(campaignType, entitiesType, profileId);
-            if (submitReportResponse != null)
+            var snapshotName = GetSnapshotName(entitiesType, campaignType);
+            try
             {
-                var snapshotName = GetSnapshotName(entitiesType, campaignType);
-                var json = DownloadPreparedData<ReportResponseDownloadInfo>("snapshots", submitReportResponse.SnapshotId, profileId, snapshotName);
-                if (json != null)
-                {
-                    var data = GetEntityList(() => JsonConvert.DeserializeObject<List<TEntity>>(json));
-                    return data;
-                }
+                return Policy
+                    .Handle<Exception>()
+                    .Retry(reportGenerationAttemptsNumber, (exception, retryCount, context) => LogGenerationError(snapshotName, exception, retryCount))
+                    .Execute(() => GetSnapshotInfo<TEntity>(entitiesType, campaignType, profileId, snapshotName));
             }
-
-            return new List<TEntity>();
+            catch (Exception e)
+            {
+                throw new ExtractDataException(e, snapshotName, entitiesType, campaignType, profileId);
+            }
         }
 
-        private List<TStat> GetReportInfo<TStat>(EntitesType reportType, CampaignType campaignType, AmazonApiReportParams parameters, string profileId)
-            where TStat: AmazonDailySummary
+        private List<TStat> GetReportInfoManyTimes<TStat>(EntitesType reportType, CampaignType campaignType, AmazonApiReportParams parameters, string profileId)
+            where TStat : AmazonDailySummary
         {
-            var submitReportResponse = SubmitReport(parameters, campaignType, reportType, profileId);
-            if (submitReportResponse != null)
+            var reportName = GetReportName(parameters.reportDate, reportType, campaignType);
+            try
             {
-                var reportName = GetReportName(parameters.reportDate, reportType, campaignType);
-                var json = DownloadPreparedData<ReportResponseDownloadInfo>("reports", submitReportResponse.ReportId, profileId, reportName);
-                if (json != null)
-                {
-                    var data = GetEntityList(() => JsonConvert.DeserializeObject<List<TStat>>(json));
-                    SetCampaignType(data, campaignType);
-                    return data;
-                }
+                return Policy
+                    .Handle<Exception>()
+                    .Retry(reportGenerationAttemptsNumber, (exception, retryCount, context) => LogGenerationError(reportName, exception, retryCount))
+                    .Execute(() => GetReportInfo<TStat>(reportType, campaignType, parameters, profileId, reportName));
             }
-
-            return new List<TStat>();
+            catch (Exception e)
+            {
+                throw new ExtractDataException(e, reportName, reportType, campaignType, profileId);
+            }
         }
 
         private string GetReportName(string date, EntitesType entitiesType, CampaignType campaignType)
@@ -451,10 +434,22 @@ namespace Amazon
             return $"AmazonSnapshot_{ReportPrefix}_{entitiesType}_{campaignType}";
         }
 
-        private List<T> GetEntityList<T>(Func<List<T>> getListFunc)
+        private List<TEntity> GetSnapshotInfo<TEntity>(EntitesType entitiesType, CampaignType campaignType,
+            string profileId, string snapshotName)
         {
-            var list = LogErrorIfException(getListFunc);
-            return list ?? new List<T>();
+            var submitReportResponse = SubmitSnapshot(campaignType, entitiesType, profileId);
+            var data = DownloadPreparedData<ReportResponseDownloadInfo, TEntity>("snapshots", submitReportResponse.SnapshotId, profileId, snapshotName);
+            return data;
+        }
+
+        private List<TStat> GetReportInfo<TStat>(EntitesType reportType, CampaignType campaignType, AmazonApiReportParams parameters,
+            string profileId, string reportName)
+            where TStat : AmazonDailySummary
+        {
+            var submitReportResponse = SubmitReport(parameters, campaignType, reportType, profileId);
+            var data = DownloadPreparedData<ReportResponseDownloadInfo, TStat>("reports", submitReportResponse.ReportId, profileId, reportName);
+            SetCampaignType(data, campaignType);
+            return data;
         }
 
         private void SetCampaignType<TStat>(List<TStat> summaries, CampaignType campaignType)
@@ -467,16 +462,24 @@ namespace Amazon
         private SnapshotRequestResponse SubmitSnapshot(CampaignType campaignType, EntitesType recordType, string profileId)
         {
             var snapshotParams = AmazonApiHelper.CreateSnapshotParams();
-            var snapshotResponse = LogErrorIfException(() =>
-                SubmitRequestForPreparedData<SnapshotRequestResponse>("snapshot", snapshotParams, campaignType, recordType, profileId));
-            return snapshotResponse;
+            var snapshotResponse = SubmitRequestForPreparedDataManyTimes<SnapshotRequestResponse>("snapshot", snapshotParams, campaignType, recordType, profileId);
+            var snapshotInfo = snapshotResponse?.Data;
+            if (string.IsNullOrWhiteSpace(snapshotInfo?.SnapshotId))
+            {
+                ThrowGenerationTimedOutException(snapshotResponse);
+            }
+            return snapshotInfo;
         }
 
         private ReportRequestResponse SubmitReport(AmazonApiReportParams reportParams, CampaignType campaignType, EntitesType recordType, string profileId)
         {
-            var reportResponse = LogErrorIfException(() =>
-                SubmitRequestForPreparedData<ReportRequestResponse>("report", reportParams, campaignType, recordType, profileId));
-            return reportResponse;
+            var reportResponse = SubmitRequestForPreparedDataManyTimes<ReportRequestResponse>("report", reportParams, campaignType, recordType, profileId);
+            var reportInfo = reportResponse?.Data;
+            if (string.IsNullOrWhiteSpace(reportInfo?.ReportId))
+            {
+                ThrowGenerationTimedOutException(reportResponse);
+            }
+            return reportInfo;
         }
 
         private List<T> GetEntityList<T>(EntitesType entitiesType, CampaignType campaignType, Dictionary<string, string> parameters, string profileId, bool retrieveAllData = true)
@@ -509,42 +512,71 @@ namespace Amazon
             return data;
         }
 
-        private T SubmitRequestForPreparedData<T>(string dataType, object requestParams, CampaignType campaignType, EntitesType entitiesType, string profileId)
+        private IRestResponse<T> SubmitRequestForPreparedDataManyTimes<T>(string dataType, object requestParams, CampaignType campaignType, EntitesType entitiesType, string profileId)
+            where T : PreparedDataRequestResponse, new()
+        {
+            var response = Policy
+                .Handle<Exception>()
+                .OrResult<IRestResponse<T>>(resp => resp?.Content == null || !resp.IsSuccessful)
+                .WaitAndRetry(waitAttemptsNumber, GetTimeSpanForWaiting, (exception, timeSpan, retryCount, context) =>
+                    LogWaiting($"Waiting {{0}} seconds to get a {dataType} ID.", timeSpan, retryCount, exception))
+                .Execute(() =>
+                    SubmitRequestForPreparedData<T>(dataType, requestParams, campaignType, entitiesType, profileId));
+            return response;
+        }
+
+        private IRestResponse<T> SubmitRequestForPreparedData<T>(string dataType, object requestParams, CampaignType campaignType, EntitesType entitiesType, string profileId)
             where T : PreparedDataRequestResponse, new()
         {
             var resourcePath = AmazonApiHelper.GetDataRequestRelativePath(entitiesType, campaignType, dataType);
             var request = CreateRestRequest(resourcePath, profileId);
             request.AddJsonBody(requestParams);
             var response = ProcessRequest<T>(request, true);
-            return response?.Content != null ? response.Data : null;
+            return response;
         }
 
-        private string DownloadPreparedData<T>(string dataType, string dataId, string profileId, string reportName)
+        private List<TEntity> DownloadPreparedData<T, TEntity>(string dataType, string dataId, string profileId, string reportName)
+            where T : ResponseDownloadInfo, new()
+        {
+            var url = GetPreparedDataUrl<T>(dataType, dataId, profileId);
+            var responseStream = GetResponseStream(url, profileId);
+            var json = ReadJsonFromStream(responseStream, reportName);
+            var data = JsonConvert.DeserializeObject<List<TEntity>>(json);
+            return data;
+        }
+
+        private string GetPreparedDataUrl<T>(string dataType, string dataId, string profileId)
             where T : ResponseDownloadInfo, new()
         {
             var response = RequestPreparedDataManyTimes<T>(dataType, dataId, profileId);
             var downloadInfo = response?.Data;
-            if (downloadInfo == null || string.IsNullOrWhiteSpace(downloadInfo.Location))
+            if (string.IsNullOrWhiteSpace(downloadInfo?.Location))
             {
-                LogTimeOutGeneration(response.Content);
-                return null;
+                ThrowGenerationTimedOutException(response);
             }
-            LogSuccessfulGeneration(downloadInfo);
-            var json = GetJsonStringFromDownloadFile(downloadInfo.Location, profileId, reportName);
-            return json;
+
+            LogInfo($"Successful generation: {downloadInfo.Location}");
+            return downloadInfo.Location;
         }
 
         private IRestResponse<T> RequestPreparedDataManyTimes<T>(string dataType, string dataId, string profileId)
             where T : ResponseDownloadInfo, new()
         {
-            var response = LogErrorIfException(() =>
-                Policy
-                    .Handle<Exception>()
-                    .OrResult<IRestResponse<T>>(resp => resp.Data.Status != "SUCCESS")
-                    .WaitAndRetry(WaitAttemptsNumber, retryNumber => LogPreparedDataWaiting(dataType, retryNumber))
-                    .Execute(() => RequestPreparedData<T>(dataType, dataId, profileId))
-            );
+            var response = Policy
+                .Handle<Exception>()
+                .OrResult<IRestResponse<T>>(resp =>
+                    !IsResponseWithStatus(resp, ReportGenerationStatus.Success) &&
+                    !IsResponseWithStatus(resp, ReportGenerationStatus.Failure))
+                .WaitAndRetry(waitAttemptsNumber, GetTimeSpanForWaiting, (exception, timeSpan, retryCount, context) =>
+                    LogWaiting($"Waiting {{0}} seconds for {dataType} to finish generating.", timeSpan, retryCount, exception))
+                .Execute(() => RequestPreparedData<T>(dataType, dataId, profileId));
             return response;
+        }
+
+        private bool IsResponseWithStatus<T>(IRestResponse<T> response, string status)
+            where T : ResponseDownloadInfo
+        {
+            return string.Equals(response.Data.Status, status, StringComparison.InvariantCultureIgnoreCase);
         }
 
         private IRestResponse<T> RequestPreparedData<T>(string dataType, string dataId, string profileId)
@@ -556,17 +588,16 @@ namespace Amazon
             return restResponse;
         }
 
-        private string GetJsonStringFromDownloadFile(string url, string profileId, string reportName)
+        private Stream GetResponseStream(string url, string profileId)
         {
             var response = GetResponseManyTimes(url, profileId);
             var responseStream = response?.GetResponseStream();
             if (responseStream == null)
             {
-                return null;
+                ThrowGenerationTimedOutException(response);
             }
 
-            var json = LogErrorIfException(() => ReadJsonFromStream(responseStream, reportName));
-            return json;
+            return responseStream;
         }
 
         private string ReadJsonFromStream(Stream responseStream, string reportName)
@@ -588,12 +619,11 @@ namespace Amazon
 
         private HttpWebResponse GetResponseManyTimes(string url, string profileId)
         {
-            var response = LogErrorIfException(() =>
-                Policy
-                    .Handle<Exception>()
-                    .Retry(FailedRequestAttemptsNumber, (exception, retryCount, context) => LogFailedRequest(url, retryCount, exception))
-                    .Execute(() => GetHttpResponse(url, profileId))
-            );
+            var response = Policy
+                .Handle<Exception>()
+                .WaitAndRetry(failedRequestAttemptsNumber, GetTimeSpanForWaiting, (exception, timeSpan, retryCount, context) => 
+                    LogWaiting($"Waiting {{0}} seconds because URL ({url}) response failed.", timeSpan, retryCount, exception.Message))
+                .Execute(() => GetHttpResponse(url, profileId));
             return response;
         }
 
@@ -616,7 +646,6 @@ namespace Amazon
                 ? response.Content
                 : response.ErrorMessage;
             LogError(message);
-
             return response;
         }
 
@@ -629,25 +658,12 @@ namespace Amazon
             }
 
             var response = Policy
-                .HandleResult<IRestResponse<T>>(resp => resp.StatusCode == HttpStatusCode.Unauthorized)
-                .Retry(UnauthorizedAttemptsNumber,
-                    (exception, retryCount, context) => UpdateAccessTokenForRequest(restRequest))
+                .Handle<Exception>()
+                .OrResult<IRestResponse<T>>(resp => resp.StatusCode == HttpStatusCode.Unauthorized)
+                .Retry(unauthorizedAttemptsNumber, (exception, retryCount, context) => UpdateAccessTokenForRestRequest(restRequest))
                 .Execute(() => GetRestResponse<T>(restClient, restRequest, isPostMethod));
 
-            if (IsRequestProcessed(response))
-            {
-                response = Policy
-                    .HandleResult<IRestResponse<T>>(IsRequestProcessed)
-                    .WaitAndRetry(WaitAttemptsNumber, LogApiCallWaiting)
-                    .Execute(() => GetRestResponse<T>(restClient, restRequest, isPostMethod));
-            }
-
             return response;
-        }
-
-        private bool IsRequestProcessed(IRestResponse response)
-        {
-            return response.StatusDescription != null && response.StatusDescription.Contains("IN_PROGRESS");
         }
 
         private IRestRequest CreateRestRequest(string resourceUri, string profileId)
@@ -655,8 +671,8 @@ namespace Amazon
             var request = new RestRequest(resourceUri);
             AddAuthorizationHeader(request);
             request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
-            request.AddHeader("Amazon-Advertising-API-Scope", profileId);
-            request.AddHeader("Amazon-Advertising-API-ClientId", amazonClientId);
+            request.AddHeader(AmazonHeaderProfile, profileId);
+            request.AddHeader(AmazonHeaderClient, amazonClientId);
             return request;
         }
 
@@ -672,42 +688,65 @@ namespace Amazon
         private HttpWebRequest CreateHttpRequest(string url, string profileId)
         {
             var request = (HttpWebRequest)WebRequest.Create(url);
-            request.Headers.Add("Authorization", "bearer " + AccessToken[WhichAlt]);
-            request.Headers.Add("Amazon-Advertising-API-Scope", profileId);
+            request.Headers.Add(HttpRequestHeader.Authorization, GetAuthorizationHeaderValue());
+            request.Headers.Add(AmazonHeaderProfile, profileId);
             return request;
         }
 
         private HttpWebResponse GetHttpResponse(string url, string profileId)
         {
             var request = CreateHttpRequest(url, profileId);
-            return GetHttpResponse(request);
+            var response = Policy
+                .Handle<Exception>()
+                .OrResult<HttpWebResponse>(resp => resp.StatusCode == HttpStatusCode.Unauthorized)
+                .Retry(unauthorizedAttemptsNumber, (exception, retryCount, context) => UpdateAccessTokenForRequest(request))
+                .Execute(() => GetHttpResponse(request));
+            return response;
         }
 
         private HttpWebResponse GetHttpResponse(WebRequest request)
         {
-            var response = (HttpWebResponse)request.GetResponse();
-            return response;
+            try
+            {
+                var response = (HttpWebResponse) request.GetResponse();
+                return response;
+            }
+            catch (Exception e)
+            {
+                LogError(e.Message);
+                throw;
+            }
         }
 
-        private void UpdateAccessTokenForRequest(IRestRequest request)
+        private void UpdateAccessTokenForRestRequest(IRestRequest request)
         {
             // Get a new access token and use that.
             GetAccessToken();
             AddAuthorizationHeader(request);
         }
 
+        private void UpdateAccessTokenForRequest(WebRequest request)
+        {
+            GetAccessToken();
+            request.Headers[HttpRequestHeader.Authorization] = GetAuthorizationHeaderValue();
+        }
+
         private void AddAuthorizationHeader(IRestRequest request)
         {
-            const string headerName = "Authorization";
-            var headerValue = "bearer " + AccessToken[WhichAlt];
-            var param = request.Parameters.Find(p => p.Type == ParameterType.HttpHeader && p.Name == headerName);
+            var headerValue = GetAuthorizationHeaderValue();
+            var param = request.Parameters.Find(p => p.Type == ParameterType.HttpHeader && p.Name == AuthorizationHeader);
             if (param != null)
             {
                 param.Value = headerValue;
                 return;
             }
 
-            request.AddHeader(headerName, headerValue);
+            request.AddHeader(AuthorizationHeader, headerValue);
+        }
+
+        private string GetAuthorizationHeaderValue()
+        {
+            return $"bearer {AccessToken[WhichAlt]}";
         }
 
         private void AddQueryParametersToRequest(IRestRequest request, Dictionary<string, string> parameters)
@@ -716,6 +755,34 @@ namespace Amazon
             {
                 request.AddQueryParameter(param.Key, param.Value);
             }
+        }
+
+        private void ThrowGenerationTimedOutException(IRestResponse response)
+        {
+            ThrowGenerationTimedOutException(response.Content);
+        }
+
+        private void ThrowGenerationTimedOutException(ISerializable response)
+        {
+            ThrowGenerationTimedOutException(response.ToString());
+        }
+
+        private void ThrowGenerationTimedOutException(string message)
+        {
+            var exceptionMessage = GetMessageInCorrectFormat(message);
+            throw new ReportGenerationTimedOutException(exceptionMessage);
+        }
+
+        /// <summary>
+        /// The method returns the time interval for the delay after some attempt of the http request failed.
+        /// The return value is exponentially dependent on the retryNumber parameter. It is increased after every third attempt by the value of waitTimeSeconds.
+        /// </summary>
+        /// <param name="retryNumber">Current attempt number</param>
+        /// <returns>Time span for waiting</returns>
+        private TimeSpan GetTimeSpanForWaiting(int retryNumber)
+        {
+            var waitTime = waitTimeSeconds * ((retryNumber - 1) / 3 + 1);
+            return TimeSpan.FromSeconds(waitTime);
         }
     }
 }

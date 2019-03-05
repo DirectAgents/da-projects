@@ -1,6 +1,8 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters;
+using CsvHelper;
 using DirectAgents.Domain.Entities.CPProg;
 using Yahoo;
 
@@ -13,6 +15,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
         protected readonly ColumnMapping columnMapping;
         protected readonly int yamAdvertiserId;
 
+        private const string ErrorMessageIfReportIsEmpty = "No header record was found.";
+
         public YAMApiExtracter(YAMUtility yamUtility, DateRange dateRange, ExtAccount account)
         {
             this._yamUtility = yamUtility;
@@ -23,6 +27,27 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             { //These override the colMappings b/c the API has different col headers than the UI-generated reports
                 SetupColumnMapping();
             }
+        }
+
+        protected void ExtractData(SummaryCsvExtracter<T> extractor)
+        {
+            try
+            {
+                var items = extractor.EnumerateRows();
+                Add(items);
+            }
+            catch (Exception exception)
+            {
+                if (exception is CsvHelperException && exception.Message == ErrorMessageIfReportIsEmpty)
+                {
+                    Logger.Warn($"There are no statistics in the report: {exception.Message}");
+                }
+                else
+                {
+                    Logger.Error(exception);
+                }
+            }
+
         }
 
         private void SetupColumnMapping()
@@ -63,10 +88,10 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
                 var streamReader = TDDailySummaryExtracter.CreateStreamReaderFromUrl(reportUrl);
-                var tdExtracter = new TDDailySummaryExtracter(this.columnMapping, streamReader: streamReader);
-                var items = tdExtracter.EnumerateRows();
-                Add(items);
+                var tdExtractor = new TDDailySummaryExtracter(columnMapping, streamReader);
+                ExtractData(tdExtractor);
             }
+
             End();
         }
     }
@@ -86,9 +111,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
                 var streamReader = TDDailySummaryExtracter.CreateStreamReaderFromUrl(reportUrl);
-                var tdExtracter = new TDStrategySummaryExtracter(this.columnMapping, streamReader: streamReader);
-                var items = tdExtracter.EnumerateRows();
-                Add(items);
+                var tdExtractor = new TDStrategySummaryExtracter(columnMapping, streamReader);
+                ExtractData(tdExtractor);
             }
             End();
         }
@@ -109,9 +133,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
                 var streamReader = TDDailySummaryExtracter.CreateStreamReaderFromUrl(reportUrl);
-                var tdExtracter = new TDAdSetSummaryExtracter(this.columnMapping, streamReader: streamReader);
-                var items = tdExtracter.EnumerateRows();
-                Add(items);
+                var tdExtractor = new TDAdSetSummaryExtracter(columnMapping, streamReader);
+                ExtractData(tdExtractor);
             }
             End();
         }
@@ -132,9 +155,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
                 var streamReader = TDDailySummaryExtracter.CreateStreamReaderFromUrl(reportUrl);
-                var tdExtracter = new TDadSummaryExtracter(this.columnMapping, streamReader: streamReader);
-                var items = tdExtracter.EnumerateRows();
-                Add(items);
+                var tdExtractor = new TDadSummaryExtracter(columnMapping, streamReader);
+                ExtractData(tdExtractor);
             }
             End();
         }
@@ -155,9 +177,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
                 var streamReader = TDDailySummaryExtracter.CreateStreamReaderFromUrl(reportUrl);
-                var tdExtracter = new KeywordSummaryExtracter(this.columnMapping, streamReader: streamReader);
-                var items = tdExtracter.EnumerateRows();
-                Add(items);
+                var tdExtractor = new KeywordSummaryExtracter(columnMapping, streamReader);
+                ExtractData(tdExtractor);
             }
             End();
         }
@@ -178,9 +199,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
                 var streamReader = TDDailySummaryExtracter.CreateStreamReaderFromUrl(reportUrl);
-                var tdExtracter = new SearchTermSummaryExtracter(this.columnMapping, streamReader: streamReader);
-                var items = tdExtracter.EnumerateRows();
-                Add(items);
+                var tdExtractor = new SearchTermSummaryExtracter(columnMapping, streamReader);
+                ExtractData(tdExtractor);
             }
             End();
         }

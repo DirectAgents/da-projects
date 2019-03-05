@@ -8,6 +8,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
         private readonly SearchTermSummaryLoader searchTermSummaryLoader;
 
         public AmazonSearchTermSummaryLoader(int accountId)
+            : base(accountId)
         {
             searchTermSummaryLoader = new SearchTermSummaryLoader(accountId);
         }

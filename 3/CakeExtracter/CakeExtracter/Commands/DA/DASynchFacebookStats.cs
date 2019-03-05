@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Configuration;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -9,15 +8,54 @@ using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.SocialMarketing.Extracters;
 using CakeExtracter.Etl.SocialMarketing.LoadersDA;
+using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using FacebookAPI;
+using FacebookAPI.Enums;
 
 namespace CakeExtracter.Commands
 {
     [Export(typeof(ConsoleCommand))]
     public class DASynchFacebookStats : ConsoleCommand
     {
+        private const int DefaultDaysAgo = 41;
+
+        private readonly Dictionary<string, PlatformFilter> networkFilters = new Dictionary<string, PlatformFilter>
+        {
+            {"FACEBOOK", PlatformFilter.Facebook},
+            {"INSTAGRAM", PlatformFilter.Instagram},
+            {"AUDIENCE", PlatformFilter.Audience},
+            {"MESSENGER", PlatformFilter.Messenger}
+        };
+
+        private readonly Dictionary<string, ConversionActionType> configNamesForAccountsOfActionType = new Dictionary<string, ConversionActionType>
+        {
+            {"FB_ConversionsAsMobileAppInstalls", ConversionActionType.MobileAppInstall},
+            {"FB_ConversionsAsPurchases", ConversionActionType.Purchase},
+            {"FB_ConversionsAsRegistrations", ConversionActionType.Registration},
+            {"FB_ConversionsAsVideoPlays", ConversionActionType.VideoPlay}
+        };
+
+        private readonly Dictionary<Attribution, Dictionary<string, AttributionWindow>> configNamesForAccountsOfWindow =
+            new Dictionary<Attribution, Dictionary<string, AttributionWindow>>
+        {
+            {
+                Attribution.Click, new Dictionary<string, AttributionWindow>
+                {
+                    {"FB_7d_click", AttributionWindow.Days7},
+                    {"FB_28d_click", AttributionWindow.Days28}
+                }
+            },
+            {
+                Attribution.View, new Dictionary<string, AttributionWindow>
+                {
+                    {"FB_7d_view", AttributionWindow.Days7},
+                    {"FB_28d_view", AttributionWindow.Days28}
+                }
+            }
+        };
+
         public static int RunStatic(int? campaignId = null, int? accountId = null, DateTime? startDate = null, DateTime? endDate = null, string statsType = null)
         {
             AutoMapperBootstrapper.CheckRunSetup();
@@ -66,60 +104,25 @@ namespace CakeExtracter.Commands
             HasOption<int>("c|campaignId=", "Campaign Id (optional)", c => CampaignId = c);
             HasOption("s|startDate=", "Start Date (default is 'daysAgo')", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
-            HasOption<int>("d|daysAgo=", "Days Ago to start, if startDate not specified (default = 41)", c => DaysAgoToStart = c);
+            HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
             HasOption<string>("t|statsType=", "Stats Type (default: all)", c => StatsType = c);
             HasOption<bool>("x|disabledOnly=", "Include only disabled accounts (default = false)", c => DisabledOnly = c);
             HasOption<int>("m|minAccountId=", "Include this and all higher accountIds (optional)", c => MinAccountId = c);
             HasOption<int>("p|daysPerCall=", "Days Per API call (default: varies per stats type)", c => DaysPerCall = c);
             HasOption<int>("u|clickWindow=", "Click attribution window (can set to 7 or 28, otherwise will be default or from config)", c => ClickWindow = c);
-            HasOption<int>("v|viewWindow=", "View attribution window (can set to 7 or 1, otherwise will be default or from config)", c => ViewWindow = c);
-        }
-
-        private DateRange GetDateRange()
-        {
-            if (!DaysAgoToStart.HasValue)
-                DaysAgoToStart = 41; // used if StartDate==null
-            var today = DateTime.Today;
-            var yesterday = today.AddDays(-1);
-            return new DateRange(StartDate ?? today.AddDays(-DaysAgoToStart.Value), EndDate ?? yesterday);
+            HasOption<int>("v|viewWindow=", "View attribution window (can set to 7 or 1 or 28, otherwise will be default or from config)", c => ViewWindow = c);
         }
 
         public override int Execute(string[] remainingArguments)
         {
-            var dateRange = GetDateRange();
+            var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Facebook ETL. DateRange {0}.", dateRange);
 
-            var statsType = new StatsTypeAgg(this.StatsType);
-
-            var string_ConvAsMobAppInst = ConfigurationManager.AppSettings["FB_ConversionsAsMobileAppInstalls"] ?? "";
-            var Accts_ConvAsMobAppInst = string_ConvAsMobAppInst.Split(new char[] { ',' });
-            var string_ConvAsPurch = ConfigurationManager.AppSettings["FB_ConversionsAsPurchases"] ?? "";
-            var Accts_ConvAsPurch = string_ConvAsPurch.Split(new char[] { ',' });
-            var string_ConvAsReg = ConfigurationManager.AppSettings["FB_ConversionsAsRegistrations"] ?? "";
-            var Accts_ConvAsReg = string_ConvAsReg.Split(new char[] { ',' });
-            var string_ConvAsVideoPlay = ConfigurationManager.AppSettings["FB_ConversionsAsVideoPlays"] ?? "";
-            var Accts_ConvAsVideoPlay = string_ConvAsVideoPlay.Split(new char[] { ',' });
-
-            var string_7d_click = ConfigurationManager.AppSettings["FB_7d_click"] ?? "";
-            var Accts_7d_click = string_7d_click.Split(new char[] { ',' });
-            var string_7d_view = ConfigurationManager.AppSettings["FB_7d_view"] ?? "";
-            var Accts_7d_view = string_7d_view.Split(new char[] { ',' });
-
-            var Accts_DailyOnly = new string[] { };
-            if (!AccountId.HasValue || statsType.All)
-            {
-                var string_DailyOnly = ConfigurationManager.AppSettings["FB_DailyStatsOnly"] ?? "";
-                Accts_DailyOnly = string_DailyOnly.Split(new char[] { ',' });
-            }   // Used when synching all accounts AND/OR all stats types...
-            // So if an account is marked as "daily only", you can only load other stats by specifying the accountId and statsType
-            // TODO? remove this since we now handle exceptions in the extracter?
+            var statsType = new StatsTypeAgg(StatsType);
 
             var accounts = GetAccounts();
             Parallel.ForEach(accounts, (account) =>
             {
-                var fbUtility = new FacebookUtility(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m));
-                fbUtility.DaysPerCall_Override = DaysPerCall;
-
                 var acctDateRange = new DateRange(dateRange.FromDate, dateRange.ToDate);
                 if (account.Campaign != null) // check/adjust daterange - if acct assigned to a campaign/advertiser
                 {
@@ -136,47 +139,19 @@ namespace CakeExtracter.Commands
                 if (acctDateRange.ToDate < acctDateRange.FromDate)
                     return;
 
-                fbUtility.SetAll();
-                if (account.Network != null)
-                {
-                    string network = Regex.Replace(account.Network.Name, @"\s+", "").ToUpper();
-                    if (network.StartsWith("FACEBOOK"))
-                        fbUtility.SetFacebook();
-                    else if (network.StartsWith("INSTAGRAM"))
-                        fbUtility.SetInstagram();
-                    else if (network.StartsWith("AUDIENCE"))
-                        fbUtility.SetAudienceNetwork();
-                    else if (network.StartsWith("MESSENGER"))
-                        fbUtility.SetMessenger();
-                }
-                fbUtility.SetCampaignFilter(account.Filter);
-
-                // Conversion Type to use
-                if (Accts_ConvAsMobAppInst.Contains(account.ExternalId))
-                    fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_MobileAppInstall;
-                else if (Accts_ConvAsPurch.Contains(account.ExternalId))
-                    fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_Purchase;
-                else if (Accts_ConvAsReg.Contains(account.ExternalId))
-                    fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_Registration;
-                else if (Accts_ConvAsVideoPlay.Contains(account.ExternalId))
-                    fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_VideoPlay;
-                else
-                    fbUtility.Conversion_ActionType = FacebookUtility.Conversion_ActionType_Default;
-
-                // Attribution windows
-                if (ClickWindow == 7 || (Accts_7d_click.Contains(account.ExternalId) && ClickWindow != 28))
-                    fbUtility.Set_7d_click_attribution();
-                else
-                    fbUtility.Set_28d_click_attribution(); //default
-                if (ViewWindow == 7 || (Accts_7d_view.Contains(account.ExternalId) && ViewWindow != 1))
-                    fbUtility.Set_7d_view_attribution();
-                else
-                    fbUtility.Set_1d_view_attribution(); //default
+                var fbUtility = CreateUtility(account);
 
                 int? numDailyItems = null;
                 if (statsType.Daily)
                     numDailyItems = DoETL_Daily(acctDateRange, account, fbUtility);
 
+                var Accts_DailyOnly = !AccountId.HasValue || statsType.All
+                    ? ConfigurationHelper.ExtractEnumerableFromConfig("FB_DailyStatsOnly").ToArray()
+                    : new string[] { };
+
+                // Used when synching all accounts AND/OR all stats types...
+                // So if an account is marked as "daily only", you can only load other stats by specifying the accountId and statsType
+                // TODO? remove this since we now handle exceptions in the extracter?
                 if (Accts_DailyOnly.Contains(account.ExternalId))
                     return;
 
@@ -197,40 +172,28 @@ namespace CakeExtracter.Commands
 
         private int DoETL_Daily(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
-            var extracter = new FacebookDailySummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
+            var extractor = new FacebookDailySummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
             var loader = new FacebookDailySummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
-            return extracter.Added;
+            CommandHelper.DoEtl(extractor, loader);
+            return extractor.Added;
         }
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
-            var extracter = new FacebookCampaignSummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
+            var extractor = new FacebookCampaignSummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
             var loader = new FacebookCampaignSummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
         }
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
-            var extracter = new FacebookAdSetSummaryExtracter(dateRange, account, fbUtility, includeAllActions: true);
+            var extractor = new FacebookAdSetSummaryExtracter(dateRange, account, fbUtility, includeAllActions: true);
             var loader = new FacebookAdSetSummaryLoader(account.Id, loadActions: true);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
         }
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
-            var extracter = new FacebookAdSummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
+            var extractor = new FacebookAdSummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
             var loader = new FacebookAdSummaryLoader(account.Id);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
         }
 
         private IEnumerable<ExtAccount> GetAccounts()
@@ -255,6 +218,98 @@ namespace CakeExtracter.Commands
 
                 return accounts.OrderBy(a => a.Id).ToList().Where(a => !string.IsNullOrWhiteSpace(a.ExternalId));
             }
+        }
+
+        private FacebookUtility CreateUtility(ExtAccount account)
+        {
+            var accountId = account.ExternalId;
+            var fbUtility = new FacebookUtility(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m))
+            {
+                DaysPerCall_Override = DaysPerCall
+            };
+            SetUtilityFilters(fbUtility, account);
+            SetUtilityConversionType(fbUtility, accountId);
+            SetUtilityAttributionWindows(fbUtility, accountId);
+            return fbUtility;
+        }
+
+        private void SetUtilityFilters(FacebookUtility fbUtility, ExtAccount account)
+        {
+            if (account.Network != null)
+            {
+                SetUtilityPlatformFilters(fbUtility, account.Network.Name);
+            }
+
+            fbUtility.SetCampaignFilter(account.Filter);
+        }
+
+        private void SetUtilityPlatformFilters(FacebookUtility fbUtility, string networkName)
+        {
+            var network = Regex.Replace(networkName, @"\s+", "").ToUpper();
+            foreach (var filter in networkFilters)
+            {
+                if (network.StartsWith(filter.Key))
+                {
+                    fbUtility.SetPlatformFilter(filter.Value);
+                }
+            }
+        }
+
+        private void SetUtilityConversionType(FacebookUtility fbUtility, string accountId)
+        {
+            foreach (var configName in configNamesForAccountsOfActionType)
+            {
+                var accounts = ConfigurationHelper.ExtractEnumerableFromConfig(configName.Key);
+                if (accounts.Contains(accountId))
+                {
+                    fbUtility.SetConversionActionType(configName.Value);
+                }
+            }
+        }
+
+        private void SetUtilityAttributionWindows(FacebookUtility fbUtility, string accountId)
+        {
+            SetUtilityClickAttributionWindows(fbUtility, accountId);
+            SetUtilityViewAttributionWindows(fbUtility, accountId);
+        }
+
+        private void SetUtilityClickAttributionWindows(FacebookUtility fbUtility, string accountId)
+        {
+            var window = GetWindow(accountId, Attribution.Click, ClickWindow);
+            if (window != 0)
+            {
+                fbUtility.SetClickAttributionWindow(window);
+            }
+        }
+
+        private void SetUtilityViewAttributionWindows(FacebookUtility fbUtility, string accountId)
+        {
+            var window = GetWindow(accountId, Attribution.View, ViewWindow);
+            if (window != 0)
+            {
+                fbUtility.SetViewAttributionWindow(window);
+            }
+        }
+
+        private AttributionWindow GetWindow(string accountId, Attribution attribution, int? sourceWindow)
+        {
+            AttributionWindow window = 0;
+            try
+            {
+                window = (AttributionWindow)Enum.ToObject(typeof(AttributionWindow), sourceWindow);
+            }
+            catch (Exception)
+            {
+                foreach (var configName in configNamesForAccountsOfWindow[attribution])
+                {
+                    var accounts = ConfigurationHelper.ExtractEnumerableFromConfig(configName.Key);
+                    if (accounts.Contains(accountId))
+                    {
+                        window = configName.Value;
+                    }
+                }
+            }
+            return window;
         }
     }
 }

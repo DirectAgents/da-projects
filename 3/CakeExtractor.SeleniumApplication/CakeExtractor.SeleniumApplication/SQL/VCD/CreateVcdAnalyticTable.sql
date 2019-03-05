@@ -1,0 +1,27 @@
+﻿
+CREATE TABLE [td].[VcdAnalytic](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Date] [datetime] NOT NULL,
+	[Asin] [nvarchar](20) NULL,
+	[CategoryName] [nvarchar](500) NULL,
+	[SubcategoryName] [nvarchar](500) NULL,
+	[ParentProductAsin] [nvarchar](20) NULL,
+	[BrandName] [nvarchar](50) NULL,
+	[Ean] [nvarchar](20) NULL,
+	[Upc] [nvarchar](20) NULL,
+	[ApparelSize] [nvarchar](200) NULL,
+	[ApparelSizeWidth] [nvarchar](200) NULL,
+	[Binding] [nvarchar](200) NULL,
+	[Color] [nvarchar](200) NULL,
+	[ModelStyleNumber] [nvarchar](200) NULL,
+	[ReleaseDate] [datetime] NOT NULL,
+	[Name] [nvarchar](500) NULL,
+	[AccountId] [int] NULL,
+	[ShippedRevenue] [decimal](18, 6)  NULL,
+	[ShippedUnits] [decimal](18, 6)  NULL,
+	[OrderedUnits] [decimal](18, 6)  NULL,
+	[ShippedCOGS] [decimal](18, 6)  NULL,
+	[FreeReplacements] [decimal](18, 6)  NULL,
+	[CustomerReturns] [decimal](18, 6)  NULL,
+	[OrderedRevenue] [decimal](18, 6)  NULL
+	)

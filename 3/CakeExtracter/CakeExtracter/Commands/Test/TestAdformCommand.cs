@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using Adform;
+using Adform.Entities;
+using Adform.Enums;
 using CakeExtracter.Common;
 using RestSharp;
 using RestSharp.Authenticators;
@@ -36,11 +39,14 @@ namespace CakeExtracter.Commands.Test
         public void Test2()
         {
             var adformUtility = new AdformUtility();
-            //adformUtility.TestReport();
-            var start = new DateTime(2017, 4, 20);
-            var end = new DateTime(2017, 4, 20);
-            int clientId = 54314; // G&T
-            var parms = adformUtility.CreateReportParams(start, end, clientId, byMedia: true, RTBonly: false);
+            var settings = new ReportSettings
+            {
+                StartDate = new DateTime(2017, 4, 20),
+                EndDate = new DateTime(2017, 4, 20),
+                ClientId = 54314, // G&T
+                Dimensions = new List<Dimension> {Dimension.Media}
+            };
+            var parms = adformUtility.CreateReportParams(settings);
             var reportData = adformUtility.GetReportData(parms);
 
             foreach (var row in reportData.rows)

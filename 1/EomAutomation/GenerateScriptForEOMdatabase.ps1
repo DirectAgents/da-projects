@@ -25,7 +25,7 @@ $MonthShortNames = @(
     "Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"
 )
 
-$AuditScriptPath = "G:\GitHub\da-projects2\1\SchemaChanges\AuditScripts" # full path required
+$AuditScriptPath = "C:\GitHub\da-projects\1\SchemaChanges\AuditScripts" # full path required
 $TemplatesPath = ".\templates" # directory where source templates are stored
 $StopYear = Get-Date -Year 2017 -Format "yy" # for generation of multi year view
 

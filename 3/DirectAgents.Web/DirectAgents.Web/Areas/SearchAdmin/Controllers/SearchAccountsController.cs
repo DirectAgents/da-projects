@@ -2,12 +2,13 @@
 using System.Linq;
 using System.Web.Mvc;
 using CakeExtracter.Commands;
+using CakeExtracter.Commands.Search;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities.CPSearch;
 
 namespace DirectAgents.Web.Areas.SearchAdmin.Controllers
 {
-    public class SearchAccountsController : DirectAgents.Web.Controllers.ControllerBase
+    public class SearchAccountsController : Web.Controllers.ControllerBase
     {
         public SearchAccountsController(ICPSearchRepository cpSearchRepository)
         {
@@ -16,14 +17,16 @@ namespace DirectAgents.Web.Areas.SearchAdmin.Controllers
 
         public ActionResult Index(int? spId, string channel)
         {
-            var searchAccounts = cpSearchRepo.SearchAccounts(spId: spId, channel: channel);
-            return View(searchAccounts.OrderBy(x => x.SearchProfileId));
+            var searchAccounts = cpSearchRepo.SearchAccounts(spId: spId, channel: channel)
+                .OrderBy(x => x.SearchProfileId).ToList();
+            return View(searchAccounts);
         }
 
         public ActionResult IndexGauge(int? spId, string channel)
         {
-            var searchAccounts = cpSearchRepo.SearchAccounts(spId: spId, channel: channel, includeGauges: true);
-            return View(searchAccounts.OrderBy(x => x.SearchProfileId));
+            var searchAccounts = cpSearchRepo.SearchAccounts(spId: spId, channel: channel, includeGauges: true)
+                .OrderBy(x => x.SearchProfileId).ToList();
+            return View(searchAccounts);
         }
 
         public ActionResult Create(int spId, string channel)

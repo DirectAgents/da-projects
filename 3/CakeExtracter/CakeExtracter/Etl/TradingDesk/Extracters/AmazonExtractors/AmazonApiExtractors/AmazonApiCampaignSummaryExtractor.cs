@@ -10,13 +10,15 @@ using System.Linq;
 using Amazon.Helpers;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
+using CakeExtracter.Logging.TimeWatchers.Amazon;
+using CakeExtracter.Logging.TimeWatchers;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
 {
     //Campaign / Strategy
     public class AmazonApiCampaignSummaryExtractor : BaseAmazonExtractor<StrategySummary>
     {
-        private string[] campaignTypesFromApi =
+        private readonly string[] campaignTypesFromApi =
         {
             AmazonApiHelper.GetCampaignTypeName(CampaignType.SponsoredProducts),
             AmazonApiHelper.GetCampaignTypeName(CampaignType.SponsoredBrands)
@@ -25,34 +27,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         public AmazonApiCampaignSummaryExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, bool clearBeforeLoad, string campaignFilter = null, string campaignFilterOut = null)
             : base(amazonUtility, dateRange, account, clearBeforeLoad, campaignFilter, campaignFilterOut)
         { }
-
-        protected override void Extract()
-        {
-            Logger.Info(accountId, "Extracting StrategySummaries from Amazon API for ({0}) from {1:d} to {2:d}",
-                clientId, dateRange.FromDate, dateRange.ToDate);
-            
-            var campaigns = LoadCampaignsFromAmazonApi();
-            foreach (var date in dateRange.Dates)
-            {
-                Extract(campaigns, date);
-            }
-            End();
-        }
-
-        //TODO? Request the SP and HSA reports in parallel... ?Okay for two threads to call Add at the same time?
-        //TODO? Do multiple dates in parallel
-
-        private void Extract(IEnumerable<AmazonCampaign> campaigns, DateTime date)
-        {
-            var sums = ExtractSummaries(date);
-            var items = TransformSummaries(sums, campaigns, date);
-            if (ClearBeforeLoad)
-            {
-                RemoveOldData(date);
-            }
-
-            Add(items);
-        }
 
         public IEnumerable<AmazonCampaign> LoadCampaignsFromAmazonApi()
         {
@@ -69,6 +43,67 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
             var sbSums = _amazonUtility.ReportCampaigns(CampaignType.SponsoredBrands, date, clientId, false);
             var sums = spSums.Concat(sbSums);
             return sums.ToList();
+        }
+
+        protected override void Extract()
+        {
+            Logger.Info(accountId, "Extracting StrategySummaries from Amazon API for ({0}) from {1:d} to {2:d}",
+                clientId, dateRange.FromDate, dateRange.ToDate);
+
+            var campaigns = LoadCampaigns();
+            if (campaigns != null)
+            {
+                Extract(campaigns);
+            }
+
+            End();
+        }
+
+        private IEnumerable<AmazonCampaign> LoadCampaigns()
+        {
+            try
+            {
+                var campaigns = LoadCampaignsFromAmazonApi();
+                return campaigns;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(accountId, e);
+                return null;
+            }
+        }
+
+        private void Extract(IEnumerable<AmazonCampaign> campaigns)
+        {
+            foreach (var date in dateRange.Dates)
+            {
+                try
+                {
+                    Extract(campaigns, date);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(accountId, e);
+                }
+            }
+        }
+
+        //TODO? Request the SP and HSA reports in parallel... ?Okay for two threads to call Add at the same time?
+        //TODO? Do multiple dates in parallel
+
+        private void Extract(IEnumerable<AmazonCampaign> campaigns, DateTime date)
+        {
+            IEnumerable<StrategySummary> items = null;
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
+            {
+                var sums = ExtractSummaries(date);
+                items = TransformSummaries(sums, campaigns, date);
+            }, accountId, AmazonJobLevels.strategy, AmazonJobOperations.reportExtracting);
+            if (ClearBeforeLoad)
+            {
+                RemoveOldData(date);
+            }
+            Add(items);
         }
 
         private IEnumerable<StrategySummary> TransformSummaries(IEnumerable<AmazonDailySummary> dailyStats, IEnumerable<AmazonCampaign> campaigns, DateTime date)
@@ -99,15 +134,15 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         private void RemoveOldData(DateTime date)
         {
             Logger.Info(accountId, "The cleaning of StrategySummaries for account ({0}) has begun - {1}.", accountId, date);
-            using (var db = new ClientPortalProgContext())
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
             {
-                var items = db.StrategySummaries.Where(x => x.Date == date && x.Strategy.AccountId == accountId && campaignTypesFromApi.Contains(x.Strategy.Type.Name));
-                var metrics = db.StrategySummaryMetrics.Where(x => x.Date == date && x.Strategy.AccountId == accountId && campaignTypesFromApi.Contains(x.Strategy.Type.Name));
-                db.StrategySummaryMetrics.RemoveRange(metrics);
-                db.StrategySummaries.RemoveRange(items);
-                var numChanges = SafeContextWrapper.TrySaveChanges(db);
-                Logger.Info(accountId, "The cleaning of StrategySummaries for account ({0}) is over - {1}. Count of deleted objects: {2}", accountId, date, numChanges);
-            }
+                SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+                {
+                    db.StrategySummaryMetrics.Where(x => x.Date == date && x.Strategy.AccountId == accountId && campaignTypesFromApi.Contains(x.Strategy.Type.Name)).DeleteFromQuery();
+                    db.StrategySummaries.Where(x => x.Date == date && x.Strategy.AccountId == accountId && campaignTypesFromApi.Contains(x.Strategy.Type.Name)).DeleteFromQuery();
+                }, "DeleteFromQuery");
+            }, accountId, AmazonJobLevels.strategy, AmazonJobOperations.cleanExistingData);
+            Logger.Info(accountId, "The cleaning of StrategySummaries for account ({0}) is over - {1}.", accountId, date);
         }
     }
 }

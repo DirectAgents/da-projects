@@ -6,60 +6,93 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using Facebook;
 using FacebookAPI.Entities;
+using FacebookAPI.Enums;
 
 namespace FacebookAPI
 {
     public class FacebookUtility
     {
-        private static readonly object RequestLock = new object();
-
-        public const int RowsReturnedAtATime = 25;
+        public const int RowsReturnedAtATime = 100;
         public const string Pattern_ParenNums = @"^\((\d+)\)\s*";
         public const int InitialWaitMillisecs = 1500;
         public const int MaxRetries = 20; //??reduce??
         public const int SecondsToWaitIfLimitReached = 61;
+
+        private static readonly Dictionary<PlatformFilter, string> PlatformFilterNames = new Dictionary<PlatformFilter, string>
+        {
+            {PlatformFilter.Facebook, "facebook"},
+            {PlatformFilter.Instagram, "instagram"},
+            {PlatformFilter.Audience, "audience_network"},
+            {PlatformFilter.Messenger, "messenger"},
+            {PlatformFilter.All, null}
+        };
+
+        //TODO: type MobileAppPurchase - app_custom_event.fb_mobile_purchase (for FUNimation)
+        private static readonly Dictionary<ConversionActionType, string> ActionTypeNames = new Dictionary<ConversionActionType, string>
+        {
+            {ConversionActionType.MobileAppInstall, "mobile_app_install"},
+            {ConversionActionType.Purchase, "offsite_conversion.fb_pixel_purchase"},
+            {ConversionActionType.Registration, "offsite_conversion.fb_pixel_complete_registration"},
+            {ConversionActionType.VideoPlay, "video_play"},
+            {ConversionActionType.Default, "offsite_conversion"}
+        };
+
+        private static readonly Dictionary<Attribution, string> AttributionPostfixNames = new Dictionary<Attribution, string>
+        {
+            {Attribution.Click, "click"},
+            {Attribution.View, "view"}
+        };
 
         public int? DaysPerCall_Override = null;
         public int DaysPerCall_Campaign = 15;
         public int DaysPerCall_AdSet = 7;
         public int DaysPerCall_Ad = 3;
 
-        //TODO: type MobileAppPurchase - app_custom_event.fb_mobile_purchase (for FUNimation)
-        public const string Conversion_ActionType_Default = "offsite_conversion";
-        public const string Conversion_ActionType_MobileAppInstall = "mobile_app_install";
-        public const string Conversion_ActionType_Purchase = "offsite_conversion.fb_pixel_purchase";
-        public const string Conversion_ActionType_Registration = "offsite_conversion.fb_pixel_complete_registration";
-        public const string Conversion_ActionType_VideoPlay = "video_play";
-        public string Conversion_ActionType = Conversion_ActionType_Default;
-
-        public string Click_Attribution = "28d_click"; //default
-        public string View_Attribution = "1d_view";    //default
-
-        public void Set_7d_click_attribution() { Click_Attribution = "7d_click"; }
-        public void Set_28d_click_attribution() { Click_Attribution = "28d_click"; }
-        public void Set_7d_view_attribution() { View_Attribution = "7d_view"; }
-        public void Set_1d_view_attribution() { View_Attribution = "1d_view"; }
-
         public bool IncludeAllActions = false;
 
-        private string PlatformFilter = null;
-        public void SetFacebook() { PlatformFilter = "facebook"; }
-        public void SetInstagram() { PlatformFilter = "instagram"; }
-        public void SetAudienceNetwork() { PlatformFilter = "audience_network"; }
-        public void SetMessenger() { PlatformFilter = "messenger"; }
-        public void SetAll() { PlatformFilter = null; }
+        private string campaignFilterOperator;
+        private string campaignFilterValue;
+        private string conversionActionType = ActionTypeNames[ConversionActionType.Default];
+        private string platformFilter = PlatformFilterNames[PlatformFilter.All];
+        private string clickAttribution = GetAttributionName(Attribution.Click, AttributionWindow.Days28);
+        private string viewAttribution = GetAttributionName(Attribution.View, AttributionWindow.Day1);
 
-        private string CampaignFilterOperator = null;
-        private string CampaignFilterValue = null;
+        public void SetConversionActionType(ConversionActionType actionType)
+        {
+            conversionActionType = ActionTypeNames[actionType];
+        }
+
+        public void SetPlatformFilter(PlatformFilter filter)
+        {
+            platformFilter = PlatformFilterNames[filter];
+        }
+
         public void SetCampaignFilter(string filter)
         {
-            if (String.IsNullOrEmpty(filter))
-                CampaignFilterValue = null;
+            if (string.IsNullOrEmpty(filter))
+            {
+                campaignFilterValue = null;
+            }
             else
             {
-                CampaignFilterValue = filter;
-                CampaignFilterOperator = "CONTAIN"; // for now; later, could implement NOT_CONTAIN, etc
+                campaignFilterValue = filter;
+                campaignFilterOperator = "CONTAIN"; // for now; later, could implement NOT_CONTAIN, etc
             }
+        }
+
+        public void SetClickAttributionWindow(AttributionWindow window)
+        {
+            clickAttribution = GetAttributionName(Attribution.Click, window);
+        }
+
+        public void SetViewAttributionWindow(AttributionWindow window)
+        {
+            viewAttribution = GetAttributionName(Attribution.View, window);
+        }
+
+        private static string GetAttributionName(Attribution attribution, AttributionWindow window)
+        {
+            return $"{(int) window}d_{AttributionPostfixNames[attribution]}";
         }
 
         //public string AppId { get; set; }
@@ -108,10 +141,10 @@ namespace FacebookAPI
             //var oauthUrl = string.Format("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={0}&client_secret={1}", AppId, AppSecret);
             //AccessToken = client.DownloadString(oauthUrl).Split('=')[1];
         }
+
         private FacebookClient CreateFBClient()
         {
-            var fbClient = new FacebookClient(AccessToken);
-            fbClient.Version = "v" + ApiVersion;
+            var fbClient = new FacebookClient(AccessToken) {Version = "v" + ApiVersion};
             return fbClient;
         }
 
@@ -299,10 +332,10 @@ namespace FacebookAPI
             }
 
             var filterList = new List<Filter>();
-            if (!String.IsNullOrWhiteSpace(PlatformFilter))
-                filterList.Add(new Filter { field = "publisher_platform", @operator = "IN", value = new[] { PlatformFilter } });
-            if (!String.IsNullOrEmpty(CampaignFilterValue))
-                filterList.Add(new Filter { field = "campaign.name", @operator = CampaignFilterOperator, value = CampaignFilterValue });
+            if (!String.IsNullOrWhiteSpace(platformFilter))
+                filterList.Add(new Filter { field = "publisher_platform", @operator = "IN", value = new[] { platformFilter } });
+            if (!String.IsNullOrEmpty(campaignFilterValue))
+                filterList.Add(new Filter { field = "campaign.name", @operator = campaignFilterOperator, value = campaignFilterValue });
 
             if (getArchived)
             {
@@ -319,7 +352,7 @@ namespace FacebookAPI
                 level = levelVal,
                 fields = fieldsVal,
                 action_breakdowns = "action_type", //,action_reaction
-                action_attribution_windows = Click_Attribution + "," + View_Attribution, // e.g. "28d_click,1d_view",
+                action_attribution_windows = clickAttribution + "," + viewAttribution, // e.g. "28d_click,1d_view",
                 time_range = new { since = DateString(start), until = DateString(end) },
                 time_increment = 1,
                 //after = afterVal
@@ -496,7 +529,7 @@ namespace FacebookAPI
                         {
                             foreach (var stat in actionStats)
                             {
-                                if (!IncludeAllActions && stat.action_type != Conversion_ActionType)
+                                if (!IncludeAllActions && stat.action_type != conversionActionType)
                                     continue;
 
                                 var action = new FBAction { ActionType = stat.action_type };
@@ -504,7 +537,7 @@ namespace FacebookAPI
                                 if (IncludeAllActions)
                                     fbSum.Actions[action.ActionType] = action;
 
-                                if (stat.action_type == Conversion_ActionType)
+                                if (stat.action_type == conversionActionType)
                                 {
                                     fbSum.SetNumConvsFromAction(action); // for backward compatibility
                                     if (!IncludeAllActions)
@@ -523,7 +556,7 @@ namespace FacebookAPI
                                     FBAction action = fbSum.Actions[stat.action_type];
                                     SetVal_ClickView(action, stat);
 
-                                    if (stat.action_type == Conversion_ActionType)
+                                    if (stat.action_type == conversionActionType)
                                         fbSum.SetConValsFromAction(action); // for backward compatibility
                                 }
                             }
@@ -531,7 +564,7 @@ namespace FacebookAPI
                             {
                                 foreach (var stat in actionVals)
                                 {
-                                    if (stat.action_type == Conversion_ActionType)
+                                    if (stat.action_type == conversionActionType)
                                     {
                                         var action = new FBAction(); // temp holding object
                                         SetVal_ClickView(action, stat);
@@ -552,17 +585,17 @@ namespace FacebookAPI
 
         private void SetNum_ClickView(FBAction action, dynamic stat)
         {
-            if (((IDictionary<String, object>)stat).ContainsKey(Click_Attribution))
-                action.Num_click = int.Parse(stat[Click_Attribution]);
-            if (((IDictionary<String, object>)stat).ContainsKey(View_Attribution))
-                action.Num_view = int.Parse(stat[View_Attribution]);
+            if (((IDictionary<String, object>)stat).ContainsKey(clickAttribution))
+                action.Num_click = int.Parse(stat[clickAttribution]);
+            if (((IDictionary<String, object>)stat).ContainsKey(viewAttribution))
+                action.Num_view = int.Parse(stat[viewAttribution]);
         }
         private void SetVal_ClickView(FBAction action, dynamic stat)
         {
-            if (((IDictionary<String, object>)stat).ContainsKey(Click_Attribution))
-                action.Val_click = decimal.Parse(stat[Click_Attribution]);
-            if (((IDictionary<String, object>)stat).ContainsKey(View_Attribution))
-                action.Val_view = decimal.Parse(stat[View_Attribution]);
+            if (((IDictionary<String, object>)stat).ContainsKey(clickAttribution))
+                action.Val_click = decimal.Parse(stat[clickAttribution]);
+            if (((IDictionary<String, object>)stat).ContainsKey(viewAttribution))
+                action.Val_view = decimal.Parse(stat[viewAttribution]);
         }
 
         //public IEnumerable<FBAdPreview> GetAdPreviews(string accountId, IEnumerable<string> fbAdIds)

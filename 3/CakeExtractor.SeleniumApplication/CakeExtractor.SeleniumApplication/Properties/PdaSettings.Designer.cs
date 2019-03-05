@@ -116,5 +116,53 @@ namespace CakeExtractor.SeleniumApplication.Properties {
                 this["FromDatabase"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int AccountId {
+            get {
+                return ((int)(this["AccountId"]));
+            }
+            set {
+                this["AccountId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string StatsType {
+            get {
+                return ((string)(this["StatsType"]));
+            }
+            set {
+                this["StatsType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DisabledOnly {
+            get {
+                return ((bool)(this["DisabledOnly"]));
+            }
+            set {
+                this["DisabledOnly"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool FromRequest {
+            get {
+                return ((bool)(this["FromRequest"]));
+            }
+            set {
+                this["FromRequest"] = value;
+            }
+        }
     }
 }

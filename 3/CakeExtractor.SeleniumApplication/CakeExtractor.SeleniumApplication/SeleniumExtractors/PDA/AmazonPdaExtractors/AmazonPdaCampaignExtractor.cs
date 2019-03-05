@@ -46,7 +46,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
 
         private void ExtractCampaignSummaries(List<string> campaignsUrls)
         {
-            var campaignsSummaries = PdaExtractor.ExtractCampaignApiSummaries(dateRange);
+            var campaignsSummaries = PdaExtractor.ExtractCampaignApiTruncatedSummaries(dateRange);
             for (var i = 0; i < campaignsUrls.Count; i++)
             {
                 var data = ExtractCampaignDailySummaries(campaignsSummaries, campaignsUrls[i], i + 1);

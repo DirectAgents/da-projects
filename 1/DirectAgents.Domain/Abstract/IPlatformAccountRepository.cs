@@ -22,6 +22,8 @@ namespace DirectAgents.Domain.Abstract
         /// <returns>Account with filled basic properties and ColMapping property</returns>
         ExtAccount GetAccountWithColumnMapping(int accountId);
 
+        IEnumerable<ExtAccount> GetAccountsWithIds(List<int> accountIds);
+
         /// <summary>
         /// The method returns platform accounts with non-empty external IDs
         /// </summary>

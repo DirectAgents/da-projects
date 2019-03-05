@@ -7,7 +7,7 @@
     using System.Data.Entity.Spatial;
 
     [Table("SearchCampaign")]
-    public partial class SearchCampaign
+    public partial class SearchCampaign : ISearchGauge
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public SearchCampaign()

@@ -1,13 +1,9 @@
-﻿using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models;
-using CsvHelper.Configuration;
-
-namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportParsing.ParsingConverters
+﻿namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportParsing.ParsingConverters
 {
-    internal sealed class ShippedRevenueProductRowMap : CsvClassMap<Product>
+    internal sealed class ShippedRevenueProductRowMap : BaseProductRowMap
     {
         public ShippedRevenueProductRowMap()
         {
-            Map(m => m.Asin).Name("ASIN");
             Map(m => m.ParentAsin).Name("Parent ASIN");
             Map(m => m.Ean).Name("EAN");
             Map(m => m.Upc).Name("UPC");

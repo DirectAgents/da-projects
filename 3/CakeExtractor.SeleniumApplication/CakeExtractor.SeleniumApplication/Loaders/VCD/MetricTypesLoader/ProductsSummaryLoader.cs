@@ -1,24 +1,20 @@
 ﻿using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models;
-using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Vendor;
 using DirectAgents.Domain.Entities.CPProg.Vendor.SummaryMetrics;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using System.Data.SqlTypes;
 using System.Linq;
 
 namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
 {
     internal class ProductsSummaryLoader : BaseVendorItemLoader<Product, VendorProduct, VendorProductSummaryMetric>
     {
-        private List<VendorCategory> categories;
-
-        private List<VendorSubcategory> subcategories;
-
-        private List<VendorBrand> brands;
-
-        private List<VendorParentProduct> parentProducts;
+        private readonly List<VendorCategory> categories;
+        private readonly List<VendorSubcategory> subcategories;
+        private readonly List<VendorBrand> brands;
+        private readonly List<VendorParentProduct> parentProducts;
 
         public ProductsSummaryLoader(List<VendorCategory> categories, List<VendorSubcategory> subcategories,
            List<VendorBrand> brands, List<VendorParentProduct> parentProducts, Dictionary<string, int> metricTypes)
@@ -34,17 +30,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
         {
             return db => db.Name == reportEntity.Name && db.AccountId == extAccount.Id && db.Asin == reportEntity.Asin;
         }
-
-        protected override DbSet<VendorProductSummaryMetric> GetSummaryMetricDbSet(ClientPortalProgContext dbContext)
-        {
-            return dbContext.VendorProductSummaryMetrics;
-        }
-
-        protected override DbSet<VendorProduct> GetVendorDbSet(ClientPortalProgContext dbContext)
-        {
-            return dbContext.VendorProducts;
-        }
-
+        
         protected override VendorProduct MapReportEntityToDbEntity(Product reportEntity, ExtAccount extAccount)
         {
             var vendorProduct = new VendorProduct
@@ -59,7 +45,8 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
                 Ean = reportEntity.Ean,
                 Upc = reportEntity.Upc,
                 ModelStyleNumber = reportEntity.ModelStyleNumber,
-                ReleaseDate = reportEntity.ReleaseDate
+                ReleaseDate = reportEntity.ReleaseDate < SqlDateTime.MinValue.Value ?
+                    SqlDateTime.MinValue.Value : reportEntity.ReleaseDate
             };
             SetCategoryIdIfExists(vendorProduct, reportEntity);
             SetSubcategoryIdIfExists(vendorProduct, reportEntity);
@@ -70,49 +57,49 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
 
         private void SetCategoryIdIfExists(VendorProduct product, Product reportEntity)
         {
-            if (!string.IsNullOrEmpty(reportEntity.Category))
+            if (string.IsNullOrEmpty(reportEntity.Category))
+                return;
+
+            var categoryEntity = categories.FirstOrDefault(cat => cat.Name == reportEntity.Category);
+            if (categoryEntity != null)
             {
-                var categoryEntity = categories.FirstOrDefault(cat => cat.Name == reportEntity.Category);
-                if (categoryEntity != null)
-                {
-                    product.CategoryId = categoryEntity.Id;
-                }
+                product.CategoryId = categoryEntity.Id;
             }
         }
 
         private void SetSubcategoryIdIfExists(VendorProduct product, Product reportEntity)
         {
-            if (!string.IsNullOrEmpty(reportEntity.Subcategory))
+            if (string.IsNullOrEmpty(reportEntity.Subcategory))
+                return;
+
+            var subcategoryEntity = subcategories.FirstOrDefault(subCat => subCat.Name == reportEntity.Subcategory);
+            if (subcategoryEntity != null)
             {
-                var subcategoryEntity = subcategories.FirstOrDefault(subCat => subCat.Name == reportEntity.Subcategory);
-                if (subcategoryEntity != null)
-                {
-                    product.SubcategoryId = subcategoryEntity.Id;
-                }
+                product.SubcategoryId = subcategoryEntity.Id;
             }
         }
 
         private void SetBrandIdIfExists(VendorProduct product, Product reportEntity)
         {
-            if (!string.IsNullOrEmpty(reportEntity.Brand))
+            if (string.IsNullOrEmpty(reportEntity.Brand))
+                return;
+
+            var brandEntity = brands.FirstOrDefault(brand => brand.Name == reportEntity.Brand);
+            if (brandEntity != null)
             {
-                var brandEntity = brands.FirstOrDefault(brand => brand.Name == reportEntity.Brand);
-                if (brandEntity != null)
-                {
-                    product.BrandId = brandEntity.Id;
-                }
+                product.BrandId = brandEntity.Id;
             }
         }
 
         private void SetParentProductIdIfExists(VendorProduct product, Product reportEntity)
         {
-            if (!string.IsNullOrEmpty(reportEntity.ParentAsin))
+            if (string.IsNullOrEmpty(reportEntity.ParentAsin))
+                return;
+
+            var parentProductEntity = parentProducts.FirstOrDefault(pp => pp.Asin == reportEntity.ParentAsin);
+            if (parentProductEntity != null)
             {
-                var parentProductEntity = parentProducts.FirstOrDefault(pp => pp.Asin == reportEntity.ParentAsin);
-                if (parentProductEntity != null)
-                {
-                    product.ParentProductId = parentProductEntity.Id;
-                }
+                product.ParentProductId = parentProductEntity.Id;
             }
         }
     }

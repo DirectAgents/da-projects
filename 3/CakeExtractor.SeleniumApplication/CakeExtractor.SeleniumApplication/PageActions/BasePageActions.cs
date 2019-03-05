@@ -9,6 +9,8 @@ namespace CakeExtractor.SeleniumApplication.PageActions
 {
     public class BasePageActions
     {
+        protected const string HrefAttribute = "href";
+
         protected readonly IWebDriver Driver;
 
         protected readonly TimeSpan timeout;
@@ -229,6 +231,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions
 
         protected void ClickOnTabItem(By listElement, By itemElement)
         {
+            WaitElementClickable(itemElement, timeout);
             Driver.FindElement(listElement).FindElement(itemElement).Click();
         }
     }

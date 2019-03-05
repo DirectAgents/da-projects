@@ -11,7 +11,7 @@ namespace CakeExtractor.SeleniumApplication.Models.ReportModels
 
         public override bool AllZeros()
         {
-            return base.AllZeros() && DetailPageViews != 0 && UnitsSold != 0;
+            return base.AllZeros() && DetailPageViews == 0 && UnitsSold == 0;
         }
     }
 }

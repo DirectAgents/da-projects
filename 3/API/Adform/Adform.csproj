@@ -47,7 +47,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdformUtility.cs" />
-    <Compile Include="HelperClasses.cs" />
+    <Compile Include="Entities\ReportSettings.cs" />
+    <Compile Include="Entities\RequestEntities\CreateJobResponse.cs" />
+    <Compile Include="Entities\ReportEntities\Dates.cs" />
+    <Compile Include="Entities\RequestEntities\GetTokenResponse.cs" />
+    <Compile Include="Entities\RequestEntities\Paging.cs" />
+    <Compile Include="Entities\ReportEntities\ReportData.cs" />
+    <Compile Include="Entities\ReportEntities\ReportParams.cs" />
+    <Compile Include="Entities\ReportEntities\ReportResponse.cs" />
+    <Compile Include="Enums\Dimension.cs" />
+    <Compile Include="Entities\AdformSummary.cs" />
+    <Compile Include="Helpers\AdformApiHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

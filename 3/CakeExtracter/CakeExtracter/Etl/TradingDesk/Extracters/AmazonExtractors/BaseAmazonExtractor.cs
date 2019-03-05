@@ -12,6 +12,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
     public abstract class BaseAmazonExtractor<T> : Extracter<T>
         where T : DatedStatsSummary
     {
+        private const int collectionBoundedCapacity = 20000;
+
         protected readonly AmazonUtility _amazonUtility;
         protected readonly DateRange dateRange;
         protected readonly int accountId;   // in our db
@@ -28,6 +30,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors
         /// <param name="clientId">The client identifier.</param>
         protected BaseAmazonExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account,
             bool clearBeforeLoad = false, string campaignFilter = null, string campaignFilterOut = null)
+            : base(collectionBoundedCapacity)
         {
             _amazonUtility = amazonUtility;
             this.dateRange = dateRange;

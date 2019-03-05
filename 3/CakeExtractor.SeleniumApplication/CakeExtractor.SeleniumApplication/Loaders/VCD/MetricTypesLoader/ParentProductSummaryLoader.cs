@@ -1,22 +1,18 @@
 ﻿using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models;
-using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Vendor;
 using DirectAgents.Domain.Entities.CPProg.Vendor.SummaryMetrics;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 
 namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
 {
     internal class ParentProductSummaryLoader : BaseVendorItemLoader<ParentProduct, VendorParentProduct, VendorParentProductSummaryMetric>
     {
-        private List<VendorCategory> categories;
-
-        private List<VendorSubcategory> subcategories;
-
-        private List<VendorBrand> brands;
+        private readonly List<VendorCategory> categories;
+        private readonly List<VendorSubcategory> subcategories;
+        private readonly List<VendorBrand> brands;
 
         public ParentProductSummaryLoader(List<VendorCategory> categories, List<VendorSubcategory> subcategories,
            List<VendorBrand> brands,Dictionary<string, int> metricTypes)
@@ -31,17 +27,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
         {
             return db => db.AccountId == extAccount.Id && db.Asin == reportEntity.Asin;
         }
-
-        protected override DbSet<VendorParentProductSummaryMetric> GetSummaryMetricDbSet(ClientPortalProgContext dbContext)
-        {
-            return dbContext.VendorParentProductSummaryMetrics;
-        }
-
-        protected override DbSet<VendorParentProduct> GetVendorDbSet(ClientPortalProgContext dbContext)
-        {
-            return dbContext.VendorParentProducts;
-        }
-
+        
         protected override VendorParentProduct MapReportEntityToDbEntity(ParentProduct reportEntity, ExtAccount extAccount)
         {
             var vendorParentProduct = new VendorParentProduct
@@ -57,37 +43,37 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
 
         private void SetCategoryIdIfExists(VendorParentProduct product, ParentProduct reportEntity)
         {
-            if (!string.IsNullOrEmpty(reportEntity.Category))
+            if (string.IsNullOrEmpty(reportEntity.Category))
+                return;
+
+            var categoryEntity = categories.FirstOrDefault(cat => cat.Name == reportEntity.Category);
+            if (categoryEntity != null)
             {
-                var categoryEntity = categories.FirstOrDefault(cat => cat.Name == reportEntity.Category);
-                if (categoryEntity != null)
-                {
-                    product.CategoryId = categoryEntity.Id;
-                }
+                product.CategoryId = categoryEntity.Id;
             }
         }
 
         private void SetSubcategoryIdIfExists(VendorParentProduct product, ParentProduct reportEntity)
         {
-            if (!string.IsNullOrEmpty(reportEntity.Subcategory))
+            if (string.IsNullOrEmpty(reportEntity.Subcategory))
+                return;
+
+            var subcategoryEntity = subcategories.FirstOrDefault(subCat => subCat.Name == reportEntity.Subcategory);
+            if (subcategoryEntity != null)
             {
-                var subcategoryEntity = subcategories.FirstOrDefault(subCat => subCat.Name == reportEntity.Subcategory);
-                if (subcategoryEntity != null)
-                {
-                    product.SubcategoryId = subcategoryEntity.Id;
-                }
+                product.SubcategoryId = subcategoryEntity.Id;
             }
         }
 
         private void SetBrandIdIfExists(VendorParentProduct product, ParentProduct reportEntity)
         {
-            if (!string.IsNullOrEmpty(reportEntity.Brand))
+            if (string.IsNullOrEmpty(reportEntity.Brand))
+                return;
+
+            var brandEntity = brands.FirstOrDefault(brand => brand.Name == reportEntity.Brand);
+            if (brandEntity != null)
             {
-                var brandEntity = brands.FirstOrDefault(brand => brand.Name == reportEntity.Brand);
-                if (brandEntity != null)
-                {
-                    product.BrandId = brandEntity.Id;
-                }
+                product.BrandId = brandEntity.Id;
             }
         }
     }

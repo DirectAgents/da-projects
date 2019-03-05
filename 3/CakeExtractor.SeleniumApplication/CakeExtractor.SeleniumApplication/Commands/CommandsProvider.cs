@@ -1,16 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
+    /// <summary>
+    /// provides command to execute based on cmd line config value.
+    /// </summary>
     internal class CommandsProvider
     {
-        public static List<BaseAmazonSeleniumCommand> GetExecutionCommands()
+        /// <summary>
+        /// Gets the execution command based on config value.
+        /// </summary>
+        /// <param name="commandsConfig">The commands configuration.</param>
+        /// <returns>Commands objects to execute.</returns>
+        /// <exception cref="Exception">At least one command should be defined</exception>
+        public static BaseAmazonSeleniumCommand GetExecutionCommand(string commandName)
         {
-            var allCommands = GetAllCommands();
-            var commandNamesToExecute = Properties.Settings.Default.CommandsToScheduler.Split('|');
-            var commandsToExecute = allCommands.Where(command => commandNamesToExecute.Any(name => command.CommandName == name)).ToList();
-            return commandsToExecute;
+            if (!string.IsNullOrEmpty(commandName))
+            {
+                var commandToExecute = GetAllCommands().FirstOrDefault(command =>  command.CommandName == commandName);
+                if (commandToExecute != null)
+                {
+                    return commandToExecute;
+                }
+            }
+            throw new Exception("Command Name should be defined");
         }
 
         private static List<BaseAmazonSeleniumCommand> GetAllCommands()

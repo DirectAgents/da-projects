@@ -5,7 +5,6 @@ using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using CakeExtractor.SeleniumApplication.PageActions;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
-using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.ExtractionHelpers;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDataComposer;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportParsing;
@@ -13,40 +12,35 @@ using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelp
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.UserInfoExtracting.Models;
 using System;
 using System.Collections.Generic;
-using System.Threading;
+using CakeExtracter.Common;
+using CakeExtracter.Etl;
+using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
 {
-    internal class AmazonVcdExtractor
+    internal class AmazonVcdExtractor : Extracter<VcdReportData>
     {
         private AuthorizationModel authorizationModel;
-
         private AmazonVcdPageActions pageActions;
-
         private VcdReportDownloader reportDownloader;
-
         private VcdReportCSVParser reportParser;
-
         private VcdReportComposer reportComposer;
-
         private UserInfoExtracter userInfoExtractor;
-
-        private const int ReportDownloadingFailedDelayInSeconds = 30;
-
         readonly VcdCommandConfigurationManager configurationManager;
 
-        private const int ReportDownloadingAttemptCount = 5;
+        public DateRange DateRange { get; set; }
+        public AccountInfo AccountInfo { get; set; }
 
-        public AmazonVcdExtractor(VcdCommandConfigurationManager configurationManager)
+        public AmazonVcdExtractor(VcdCommandConfigurationManager configurationManager, AmazonVcdPageActions pageActions, AuthorizationModel authorizationModel)
         {
             this.configurationManager = configurationManager;
+            this.pageActions = pageActions;
+            this.authorizationModel = authorizationModel;
         }
 
         public void PrepareExtractor()
         {
-            InitializeAuthorizationModel();
             CreateApplicationFolders();
-            pageActions = new AmazonVcdPageActions();
             reportDownloader = new VcdReportDownloader(pageActions, authorizationModel);
             reportParser = new VcdReportCSVParser();
             reportComposer = new VcdReportComposer();
@@ -54,56 +48,57 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
             AmazonVcdLoginHelper.LoginToAmazonPortal(authorizationModel, pageActions);
         }
 
-        public VcdReportData ExtractDailyData(DateTime reportDay, AccountInfo accountInfo)
-        {
-            try
-            {
-                var shippedRevenueReportData = GetShippedRevenueReportData(reportDay, accountInfo);
-                Thread.Sleep(TimeSpan.FromSeconds(ReportDownloadingFailedDelayInSeconds)); // wait between report downloading requests to prevent "Too many requests response."
-                var shippedCogsReportData = GetShippingCogsReportData(reportDay, accountInfo);
-                var composedData = reportComposer.ComposeReportData(shippedRevenueReportData, shippedCogsReportData);
-                return composedData;
-            }
-            catch (Exception ex)
-            {
-                Logger.Warn("Error occured while extracting data for {0} account on {1} date", accountInfo.Account.Id, reportDay);
-                Logger.Error(ex);
-                throw ex;
-            }
-        }
-
         public UserInfo ExtractAccountsInfo()
         {
             return userInfoExtractor.ExtractUserInfo(pageActions);
         }
 
-        private List<Product> GetShippedRevenueReportData(DateTime reportDay, AccountInfo accountInfo)
+        public void OpenAccountPage()
         {
-            Logger.Info("Amazon VCD, Downloading shipped revenue report.");
-            var reportTextContent = DownloadReport(reportDay, accountInfo,
-                ()=> { return reportDownloader.DownloadShippedRevenueCsvReport(reportDay, accountInfo); });
-            var reportProducts = reportParser.ParseShippedRevenueReportData(reportTextContent);
-            Logger.Info("Amazon VCD, Shipped revenue report downloaded. {0} products", reportProducts.Count);
-            return reportProducts;
+            pageActions.SelectAccountOnPage(AccountInfo.Account);
         }
 
-        private List<Product> GetShippingCogsReportData(DateTime reportDay, AccountInfo accountInfo)
+        protected override void Extract()
         {
-            Logger.Info("Amazon VCD, Downloading shipped cogs report.");
-            var reportTextContent = DownloadReport(reportDay, accountInfo,
-                () => { return reportDownloader.DownloadShippedCogsCsvReport(reportDay, accountInfo); });
-            var reportProducts = reportParser.ParseShippedCogsReportData(reportTextContent);
-            Logger.Info("Amazon VCD, Shipped cogs report downloaded. {0} products", reportProducts.Count);
-            return reportProducts;
+            var accId = AccountInfo.Account.Id;
+            var accName = AccountInfo.Account.Name;
+            foreach (var date in DateRange.Dates)
+            {
+                Extract(date, accId, accName);
+            }
+            End();
         }
 
-        private string DownloadReport(DateTime reportDay, AccountInfo accountInfo, Func<string> downloadingAction )
+        private void Extract(DateTime date, int accId, string accName)
         {
             try
             {
-                var reportTextContent =
-                    RetryHelper.Do(downloadingAction,
-                    TimeSpan.FromSeconds(ReportDownloadingFailedDelayInSeconds), ReportDownloadingAttemptCount);
+                Logger.Info(accId, $"Amazon VCD, ETL for {date} started. Account {accName} - {accId}");
+                var data = ExtractDailyData(date, AccountInfo);
+                Add(data);
+            }
+            catch (Exception e)
+            {
+                var exception = new Exception($"Error occured while extracting data for {accName} ({accId}) account on {date} date.", e);
+                Logger.Error(accId, exception);
+            }
+        }
+
+        private VcdReportData ExtractDailyData(DateTime reportDay, AccountInfo accountInfo)
+        {
+            var shippedRevenueReportData = GetShippedRevenueReportData(reportDay, accountInfo);
+            var shippedCogsReportData = GetShippingCogsReportData(reportDay, accountInfo);
+            var orderedRevenueReportData = GetOrderedRevenueReportData(reportDay, accountInfo);
+            var composedData = reportComposer.ComposeReportData(shippedRevenueReportData, shippedCogsReportData, orderedRevenueReportData);
+            composedData.Date = reportDay;
+            return composedData;
+        }
+
+        private static string DownloadReport(Func<string> downloadingAction)
+        {
+            try
+            {
+                var reportTextContent = downloadingAction();
                 return reportTextContent;
             }
             catch (Exception ex)
@@ -114,20 +109,40 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
             }
         }
 
+        private List<Product> GetShippedRevenueReportData(DateTime reportDay, AccountInfo accountInfo)
+        {
+            return GetReportData("Shipped Revenue", accountInfo, reportDay,
+                () => reportDownloader.DownloadShippedRevenueCsvReport(reportDay, accountInfo),
+                reportParser.ParseShippedRevenueReportData);
+        }
+
+        private List<Product> GetShippingCogsReportData(DateTime reportDay, AccountInfo accountInfo)
+        {
+            return GetReportData("Shipped COGS", accountInfo, reportDay,
+                () => reportDownloader.DownloadShippedCogsCsvReport(reportDay, accountInfo),
+                reportParser.ParseShippedCogsReportData);
+        }
+
+        private List<Product> GetOrderedRevenueReportData(DateTime reportDay, AccountInfo accountInfo)
+        {
+            return GetReportData("Ordered Revenue", accountInfo, reportDay,
+                () => reportDownloader.DownloadOrderedRevenueCsvReport(reportDay, accountInfo),
+                reportParser.ParseOrderedRevenueReportData);
+        }
+
         private void CreateApplicationFolders()
         {
             FileManager.CreateDirectoryIfNotExist(authorizationModel.CookiesDir);
         }
 
-        private void InitializeAuthorizationModel()
+        private static List<Product> GetReportData(string reportName, AccountInfo accountInfo, DateTime reportDay,
+            Func<string> downloadReportFunc, Func<string, AccountInfo, DateTime, List<Product>> parseReportFunc)
         {
-            authorizationModel = new AuthorizationModel
-            {
-                Login = Properties.Settings.Default.EMail,
-                Password = Properties.Settings.Default.EMailPassword,
-                SignInUrl = Properties.Settings.Default.SignInPageUrl,
-                CookiesDir = configurationManager.GetCookiesDirectoryPath()
-            };
+            Logger.Info($"Amazon VCD, Downloading {reportName} report.");
+            var reportTextContent = DownloadReport(downloadReportFunc);
+            var reportProducts = parseReportFunc(reportTextContent, accountInfo, reportDay);
+            Logger.Info($"Amazon VCD, {reportName} report downloaded. {reportProducts.Count} products");
+            return reportProducts;
         }
     }
 }

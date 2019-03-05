@@ -8,6 +8,7 @@ using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
+using CakeExtracter.Helpers;
 using DBM;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
@@ -106,20 +107,14 @@ namespace CakeExtracter.Commands
         {
             var extractor = new DatabaseStrategyToDailySummaryExtracter(dateRange, accountId);
             var loader = new TDDailySummaryLoader(accountId);
-            var extractorThread = extractor.Start();
-            var loaderThread = loader.Start(extractor);
-            extractorThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
         }
 
         private static void DoETL_Strategy(int accountId, ColumnMapping colMapping, StreamReader streamReader, DateRange dateRange)
         {
             var extractor = new DbmStrategyCsvExtractor(dateRange, colMapping, streamReader);
             var loader = new TDStrategySummaryLoader(accountId);
-            var extractorThread = extractor.Start();
-            var loaderThread = loader.Start(extractor);
-            extractorThread.Join();
-            loaderThread.Join();
+            CommandHelper.DoEtl(extractor, loader);
         }
 
         private void DoEtLs(ExtAccount account, DateRange dateRange)

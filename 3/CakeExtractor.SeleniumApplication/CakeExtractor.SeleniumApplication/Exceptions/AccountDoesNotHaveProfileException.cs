@@ -4,16 +4,10 @@ namespace CakeExtractor.SeleniumApplication.Exceptions
 {
     public class AccountDoesNotHaveProfileException : Exception
     {
-        public AccountDoesNotHaveProfileException()
+        public AccountDoesNotHaveProfileException(string accountName, string profileName) : base(
+            $"The account {accountName} does not have the following profile: {profileName}")
         {
-        }
 
-        public AccountDoesNotHaveProfileException(string message) : base(message)
-        {
-        }
-
-        public AccountDoesNotHaveProfileException(string message, Exception innerException) : base(message, innerException)
-        {
         }
     }
 }
