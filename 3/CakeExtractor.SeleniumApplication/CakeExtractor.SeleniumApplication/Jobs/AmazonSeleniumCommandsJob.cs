@@ -12,13 +12,13 @@ namespace CakeExtractor.SeleniumApplication.Jobs
         public async Task Execute(IJobExecutionContext context)
         {
             Logger.Info("Started execution of selenium jobs.");
-            var commands = context.Scheduler.Context.Get(JobConstants.CommandsJobContextValue) as List<BaseAmazonSeleniumCommand>;
+            var commands = context.Scheduler.Context.Get(JobConstants.CommandsJobContextValue) as List<BaseSeleniumCommand>;
             commands.ForEach(RunCommand);
             Logger.Info("Selenium Jobs finished.");
             Logger.Info("Waiting for the scheduled selenium jobs: next run time - {0} (UTC)...", context.NextFireTimeUtc);
         }
 
-        private void RunCommand(BaseAmazonSeleniumCommand command)
+        private void RunCommand(BaseSeleniumCommand command)
         {
             try
             {

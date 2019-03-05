@@ -14,7 +14,7 @@ using Platform = DirectAgents.Domain.Entities.CPProg.Platform;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
-    internal class SyncAmazonPdaCommand : BaseAmazonSeleniumCommand
+    internal class SyncAmazonPdaCommand : BaseSeleniumCommand
     {
         private readonly PdaCommandConfigurationManager configurationManager;
         
@@ -45,7 +45,6 @@ namespace CakeExtractor.SeleniumApplication.Commands
             {
                 DoEtls(account, dateRange, statsType, fromDatabase, fromRequest);
             }
-
             Logger.Info("Amazon ETL (PDA Campaigns) has been finished.");
         }
 

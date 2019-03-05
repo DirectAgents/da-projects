@@ -11,7 +11,7 @@ namespace CakeExtractor.SeleniumApplication.Jobs
 {
     internal class AmazonSeleniumCommandsJobScheduler
     {
-        public static async Task ConfigureJobSchedule(List<BaseAmazonSeleniumCommand> commands)
+        public static async Task ConfigureJobSchedule(List<BaseSeleniumCommand> commands)
         {
             var firstRunTime = Properties.Settings.Default.StartExtractionDateTime != DateTime.MinValue ?
                 Properties.Settings.Default.StartExtractionDateTime :

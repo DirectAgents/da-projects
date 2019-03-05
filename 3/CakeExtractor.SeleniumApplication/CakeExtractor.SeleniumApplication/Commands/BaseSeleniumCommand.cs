@@ -3,7 +3,7 @@
     /// <summary>
     /// Base entity for selenium command. Contain base interface for commands interaction.
     /// </summary>
-    public abstract class BaseAmazonSeleniumCommand
+    public abstract class BaseSeleniumCommand
     {
         /// <summary>
         /// Do comamnds environment preparation steps.

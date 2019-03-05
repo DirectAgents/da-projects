@@ -14,7 +14,7 @@ using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
-    internal class SyncAmazonVcdCommand : BaseAmazonSeleniumCommand
+    internal class SyncAmazonVcdCommand : BaseSeleniumCommand
     {
         private AmazonVcdExtractor extractor;
         private VcdCommandConfigurationManager configurationManager;

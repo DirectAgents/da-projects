@@ -90,10 +90,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\BaseAmazonSeleniumCommand.cs" />
+    <Compile Include="Commands\BaseSeleniumCommand.cs" />
     <Compile Include="Commands\CommandsProvider.cs" />
     <Compile Include="Commands\SyncAmazonVcdCommand.cs" />
     <Compile Include="Commands\SyncAmazonPdaCommand.cs" />
+    <Compile Include="Commands\SyncKochavaDataCommand.cs" />
     <Compile Include="Configuration\Vcd\Models\AccountInfo.cs" />
     <Compile Include="Configuration\Vcd\Models\VcdExecutionProfileConfiguration.cs" />
     <Compile Include="Configuration\Pda\PdaCommandConfigurationManager.cs" />
@@ -127,6 +128,11 @@
     <Compile Include="Models\CommonHelperModels\AuthorizationModel.cs" />
     <Compile Include="Models\CommonHelperModels\JobScheduleModel.cs" />
     <Compile Include="PageActions\AmazonVcd\AmazonVcdPageObjects.cs" />
+    <Compile Include="Properties\KochavaSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>KochavaSettings.settings</DependentUpon>
+    </Compile>
     <Compile Include="SeleniumExtractors\AmazonPdaExtractors\AmazonPdaCampaignRequestExtractor.cs" />
     <Compile Include="SeleniumExtractors\AmazonPdaExtractors\AmazonPdaDailyRequestExtractor.cs" />
     <Compile Include="Properties\PdaSettings.Designer.cs">
@@ -186,6 +192,10 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\KochavaSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>KochavaSettings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Properties\PdaSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>PdaSettings.Designer.cs</LastGenOutput>
@@ -215,7 +225,9 @@
       <Name>CakeExtracter</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Loaders\Kochava\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="SQL\VCD\CreateVcdAnalyticTable.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -15,7 +15,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
         /// <param name="commandsConfig">The commands configuration.</param>
         /// <returns>Commands objects to execute.</returns>
         /// <exception cref="Exception">At least one command should be defined</exception>
-        public static BaseAmazonSeleniumCommand GetExecutionCommand(string commandName)
+        public static BaseSeleniumCommand GetExecutionCommand(string commandName)
         {
             if (!string.IsNullOrEmpty(commandName))
             {
@@ -28,9 +28,9 @@ namespace CakeExtractor.SeleniumApplication.Commands
             throw new Exception("Command Name should be defined");
         }
 
-        private static List<BaseAmazonSeleniumCommand> GetAllCommands()
+        private static List<BaseSeleniumCommand> GetAllCommands()
         {
-            return new List<BaseAmazonSeleniumCommand>
+            return new List<BaseSeleniumCommand>
             {
                 new SyncAmazonPdaCommand(),
                 new SyncAmazonVcdCommand()

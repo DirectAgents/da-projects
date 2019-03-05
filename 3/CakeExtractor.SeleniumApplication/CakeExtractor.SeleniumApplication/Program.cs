@@ -24,7 +24,7 @@ namespace CakeExtractor.SeleniumApplication
             AlwaysSleep();
         }
 
-        private static BaseAmazonSeleniumCommand GetCommandFromCmdLineParams(string[] args)
+        private static BaseSeleniumCommand GetCommandFromCmdLineParams(string[] args)
         {
             var comamndsConfig = args.Length > 0 ? args[0] : null;
             var command = CommandsProvider.GetExecutionCommand(comamndsConfig);
@@ -47,9 +47,9 @@ namespace CakeExtractor.SeleniumApplication
             }
         }
 
-        private static async Task ScheduleJobsForCommand(BaseAmazonSeleniumCommand command)
+        private static async Task ScheduleJobsForCommand(BaseSeleniumCommand command)
         {
-            await AmazonSeleniumCommandsJobScheduler.ConfigureJobSchedule(new List<BaseAmazonSeleniumCommand> { command });
+            await AmazonSeleniumCommandsJobScheduler.ConfigureJobSchedule(new List<BaseSeleniumCommand> { command });
         }
 
         private static void AlwaysSleep()
