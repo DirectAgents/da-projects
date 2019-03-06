@@ -2165,7 +2165,7 @@ PRINT N'Creating [dbo].[AccountingDetails]...';
 GO
 CREATE VIEW [dbo].[AccountingDetails]
 AS
-SELECT     COALESCE (dbo.Publisher.name, dbo.Affiliate.name) AS Publisher, dbo.Affiliate.name AS Affiliate, dbo.Advertiser.name AS Advertiser, dbo.Campaign.pid, 
+SELECT     COALESCE (dbo.Publisher.name, dbo.Affiliate.name) AS Publisher, dbo.Affiliate.name AS Affiliate, dbo.NetTermType.name AS [Aff NetTerms], dbo.Advertiser.name AS Advertiser, dbo.Campaign.pid, 
                       dbo.Campaign.campaign_name AS Campaign, dbo.Currency.name AS [Rev Curr], Currency_1.name AS [Cost Curr], Currency_2.name AS [Pay Curr], 
                       dbo.Item.revenue_per_unit AS [Rev/Unit], dbo.Item.cost_per_unit AS [Cost/Unit], SUM(dbo.Item.num_units) AS Units, dbo.UnitType.name AS [Unit Type], 
                       SUM(dbo.Item.total_revenue) AS Revenue, SUM(dbo.Item.total_cost) AS Cost, dbo.MediaBuyer.name AS [Media Buyer], dbo.AdManager.name AS [Ad Manager], 
@@ -2174,7 +2174,8 @@ SELECT     COALESCE (dbo.Publisher.name, dbo.Affiliate.name) AS Publisher, dbo.A
                       AS [Cost USD]
 FROM         dbo.Item INNER JOIN
                       dbo.Affiliate ON dbo.Item.affid = dbo.Affiliate.affid LEFT OUTER JOIN
-                      dbo.Publisher ON dbo.Item.affid = dbo.Publisher.affid INNER JOIN
+                      dbo.Publisher ON dbo.Item.affid = dbo.Publisher.affid LEFT OUTER JOIN
+                      dbo.NetTermType ON dbo.Affiliate.net_term_type_id = dbo.NetTermType.id INNER JOIN
                       dbo.Campaign ON dbo.Item.pid = dbo.Campaign.pid INNER JOIN
                       dbo.Advertiser ON dbo.Campaign.advertiser_id = dbo.Advertiser.id INNER JOIN
                       dbo.Currency ON dbo.Item.revenue_currency_id = dbo.Currency.id INNER JOIN
@@ -2186,7 +2187,7 @@ FROM         dbo.Item INNER JOIN
                       dbo.ItemAccountingStatus ON dbo.Item.item_accounting_status_id = dbo.ItemAccountingStatus.id INNER JOIN
                       dbo.UnitType ON dbo.Item.unit_type_id = dbo.UnitType.id INNER JOIN
                       dbo.AccountManagerAccessList ON dbo.AccountManager.name = dbo.AccountManagerAccessList.name
-GROUP BY COALESCE (dbo.Publisher.name, dbo.Affiliate.name), dbo.Affiliate.name, dbo.Advertiser.name, dbo.Campaign.pid, dbo.Campaign.campaign_name, 
+GROUP BY COALESCE (dbo.Publisher.name, dbo.Affiliate.name), dbo.Affiliate.name, dbo.NetTermType.name, dbo.Advertiser.name, dbo.Campaign.pid, dbo.Campaign.campaign_name, 
                       dbo.Currency.name, Currency_1.name, Currency_2.name, dbo.Item.revenue_per_unit, dbo.Item.cost_per_unit, dbo.MediaBuyer.name, dbo.AdManager.name, 
                       dbo.AccountManager.name, dbo.ItemAccountingStatus.name, dbo.UnitType.name
 GO

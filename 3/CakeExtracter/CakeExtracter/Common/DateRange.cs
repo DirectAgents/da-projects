@@ -21,7 +21,12 @@ namespace CakeExtracter.Common
 
         public override string ToString()
         {
-            return string.Format("{0} to {1}", FromDate.ToShortDateString(), ToDate.ToShortDateString());
+            return $"{FromDate.ToShortDateString()} to {ToDate.ToShortDateString()}";
+        }
+
+        public bool IsInRange(DateTime date)
+        {
+            return date >= FromDate && date <= ToDate;
         }
 
         //public DateRange(DateTime fromDate, DateTime toDate, Func<DateTime, DateTime> step)
