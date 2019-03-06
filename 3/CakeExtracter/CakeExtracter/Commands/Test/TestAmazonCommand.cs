@@ -29,8 +29,8 @@ namespace CakeExtracter.Commands.Test
         public TestAmazonCommand()
         {
             IsCommand("TestAmazonCommand");
-            typeRepository = new TypeRepository();
-            strategyRepository = new StrategyRepository();
+            typeRepository = new TypeRepository(StorageCollection.TypeStorage);
+            strategyRepository = new StrategyRepository(StorageCollection.StrategyWithEidStorage);
         }
 
         //NOTE: Need to add "[STAThread]" to Main method in CakeExtracter.ConsoleApplication

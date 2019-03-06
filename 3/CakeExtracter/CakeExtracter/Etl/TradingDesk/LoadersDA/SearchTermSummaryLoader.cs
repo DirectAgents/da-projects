@@ -6,36 +6,37 @@ using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using CakeExtracter.Common;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     internal class SearchTermSummaryLoader : Loader<SearchTermSummary>
     {
-        public readonly int AccountId;
-        public static EntityIdStorage<SearchTerm> SearchTermStorage;
+        public static EntityIdStorage<SearchTerm> DefaultSearchTermStorage = StorageCollection.SearchTermStorage;
 
-        private readonly TDStrategySummaryLoader strategyLoader;
-        private readonly TDAdSetSummaryLoader adSetLoader;
-        private readonly KeywordSummaryLoader keywordLoader;
+        public readonly int AccountId;
+
         private readonly EntityIdStorage<Strategy> strategyStorage;
         private readonly EntityIdStorage<AdSet> adSetStorage;
         private readonly EntityIdStorage<Keyword> keywordStorage;
+        private readonly EntityIdStorage<SearchTerm> searchTermStorage;
+        private readonly TDStrategySummaryLoader strategyLoader;
+        private readonly TDAdSetSummaryLoader adSetLoader;
+        private readonly KeywordSummaryLoader keywordLoader;
         private readonly SummaryMetricLoader metricLoader;
 
-        static SearchTermSummaryLoader()
+        public SearchTermSummaryLoader(int accountId = -1, EntityIdStorage<SearchTerm> searchTermStorage = null,
+            EntityIdStorage<Keyword> keywordStorage = null, EntityIdStorage<AdSet> adSetStorage = null,
+            EntityIdStorage<Strategy> strategyStorage = null)
         {
-            SearchTermStorage = new EntityIdStorage<SearchTerm>(x => x.Id, x => $"{x.AccountId} {x.Name} {x.KeywordId}");
-        }
-
-        public SearchTermSummaryLoader(int accountId = -1)
-        {
+            this.strategyStorage = strategyStorage ?? TDStrategySummaryLoader.DefaultStrategyStorage;
+            this.adSetStorage = adSetStorage ?? TDAdSetSummaryLoader.DefaultAdSetStorage;
+            this.keywordStorage = keywordStorage ?? KeywordSummaryLoader.DefaultKeywordStorage;
+            this.searchTermStorage = searchTermStorage ?? DefaultSearchTermStorage;
             AccountId = accountId;
-            strategyLoader = new TDStrategySummaryLoader(accountId);
-            adSetLoader = new TDAdSetSummaryLoader(accountId);
-            keywordLoader = new KeywordSummaryLoader(accountId);
-            strategyStorage = TDStrategySummaryLoader.StrategyStorage;
-            adSetStorage = TDAdSetSummaryLoader.AdSetStorage;
-            keywordStorage = KeywordSummaryLoader.KeywordStorage;
+            strategyLoader = new TDStrategySummaryLoader(accountId, this.strategyStorage);
+            adSetLoader = new TDAdSetSummaryLoader(accountId, this.adSetStorage, this.strategyStorage);
+            keywordLoader = new KeywordSummaryLoader(accountId, this.keywordStorage, this.adSetStorage, this.strategyStorage);
             metricLoader = new SummaryMetricLoader();
         }
 
@@ -73,12 +74,12 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             foreach (var item in items)
             {
-                if (!SearchTermStorage.IsEntityInStorage(item.SearchTerm))
+                if (!searchTermStorage.IsEntityInStorage(item.SearchTerm))
                 {
                     continue;
                 }
 
-                item.SearchTermId = SearchTermStorage.GetEntityIdFromStorage(item.SearchTerm);
+                item.SearchTermId = searchTermStorage.GetEntityIdFromStorage(item.SearchTerm);
                 item.SearchTerm = null;
             }
         }
@@ -164,7 +165,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 foreach (var terms in items)
                 {
-                    if (SearchTermStorage.IsEntityInStorage(terms))
+                    if (searchTermStorage.IsEntityInStorage(terms))
                     {
                         continue;
                     }
@@ -176,7 +177,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         {
                             var termsInDb = AddSearchTerm(db, terms);
                             Logger.Info(AccountId, "Saved new SearchTerm: {0} ({1}), KeywordId={2}", termsInDb.Name, termsInDb.Id, termsInDb.KeywordId);
-                            SearchTermStorage.AddEntityIdToStorage(termsInDb);
+                            searchTermStorage.AddEntityIdToStorage(termsInDb);
                         }
                         else
                         {
@@ -189,7 +190,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                                     Logger.Warn(AccountId, "Multiple entities in db ({0})", numUpdates);
                                 }
                             }
-                            SearchTermStorage.AddEntityIdToStorage(termsInDbList.First());
+                            searchTermStorage.AddEntityIdToStorage(termsInDbList.First());
                         }
                     });
                 }

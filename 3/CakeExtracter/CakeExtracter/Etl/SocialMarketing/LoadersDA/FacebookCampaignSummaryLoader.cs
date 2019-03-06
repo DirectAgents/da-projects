@@ -11,20 +11,16 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 {
     public class FacebookCampaignSummaryLoader : Loader<FBSummary>
     {
-        private static readonly EntityIdStorage<ActionType> ActionTypeStorage;
         private readonly bool loadActions;
+        private readonly EntityIdStorage<ActionType> actionTypeStorage;
         private readonly FacebookAdSetSummaryLoader fbAdSetLoader;
         private readonly TDStrategySummaryLoader strategySummaryLoader;
-
-        static FacebookCampaignSummaryLoader()
-        {
-            ActionTypeStorage = FacebookAdSetSummaryLoader.ActionTypeStorage;
-        }
 
         public FacebookCampaignSummaryLoader(int accountId, bool loadActions = false)
             : base(accountId)
         {
             BatchSize = FacebookUtility.RowsReturnedAtATime; //FB API only returns 25 rows at a time
+            actionTypeStorage = FacebookAdSetSummaryLoader.DefaultActionTypeStorage;
             strategySummaryLoader = new TDStrategySummaryLoader(accountId);
             fbAdSetLoader = new FacebookAdSetSummaryLoader(accountId);
             this.loadActions = loadActions;
@@ -101,7 +97,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                     var addedStrategyActions = new List<StrategyAction>();
                     foreach (var fbAction in fbActions)
                     {
-                        var actionTypeId = ActionTypeStorage.GetEntityIdFromStorage(fbAction.ActionType);
+                        var actionTypeId = actionTypeStorage.GetEntityIdFromStorage(fbAction.ActionType);
                         var actionsOfType = existingActions.Where(x => x.ActionTypeId == actionTypeId); // should be one at most
                         if (!actionsOfType.Any())
                         {
@@ -137,7 +133,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
         private void RemoveStrategyActions(ClientPortalProgContext db, LoadingProgress progress,
                 IEnumerable<StrategyAction> existingActions, IEnumerable<FBAction> fbActions)
         {
-            var actionTypeIds = fbActions.Select(x => ActionTypeStorage.GetEntityIdFromStorage(x.ActionType))
+            var actionTypeIds = fbActions.Select(x => actionTypeStorage.GetEntityIdFromStorage(x.ActionType))
                 .ToArray();
             //Delete actions that no longer have stats for the date/adset
             var actionsForRemoving = existingActions.Where(x => !actionTypeIds.Contains(x.ActionTypeId)).ToList();

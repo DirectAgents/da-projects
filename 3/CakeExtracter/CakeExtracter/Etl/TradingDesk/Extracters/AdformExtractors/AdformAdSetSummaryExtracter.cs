@@ -11,9 +11,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 {
     public class AdformAdSetSummaryExtractor : AdformApiBaseExtractor<AdSetSummary>
     {
-        public AdformAdSetSummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account)
+        private readonly bool byOrder;
+
+        public AdformAdSetSummaryExtractor(AdformUtility adformUtility, DateRange dateRange, ExtAccount account,
+            bool byOrder)
             : base(adformUtility, dateRange, account)
-        { }
+        {
+            this.byOrder = byOrder;
+        }
 
         protected override void Extract()
         {
@@ -23,6 +28,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             {
                 var settings = GetBaseSettings();
                 settings.Dimensions.Add(Dimension.LineItem);
+                settings.Dimensions.Add(byOrder ? Dimension.Order : Dimension.Campaign);
                 var parms = AfUtility.CreateReportParams(settings);
                 foreach (var reportData in AfUtility.GetReportDataWithPaging(parms))
                 {
@@ -40,14 +46,14 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 
         private IEnumerable<AdSetSummary> EnumerateRows(ReportData reportData)
         {
-            var adformTransformer = new AdformTransformer(reportData, byLineItem: true);
+            var adformTransformer = new AdformTransformer(reportData, byLineItem: true, byCampaign: !byOrder, byOrder: byOrder);
             var afSums = adformTransformer.EnumerateAdformSummaries();
             var liDateGroups = afSums.GroupBy(x => new { x.LineItem, x.Date });
             foreach (var liDateGroup in liDateGroups)
             {
                 var sum = new AdSetSummary
                 {
-                    //StrategyName = ?
+                    StrategyName = byOrder ? liDateGroup.First().Order : liDateGroup.First().Campaign,
                     AdSetName = liDateGroup.Key.LineItem,
                     Date = liDateGroup.Key.Date,
                     Cost = liDateGroup.Sum(x => x.Cost),

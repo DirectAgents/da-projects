@@ -6,32 +6,32 @@ using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using CakeExtracter.Common;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     internal class KeywordSummaryLoader : Loader<KeywordSummary>
     {
-        public readonly int AccountId;
-        public static EntityIdStorage<Keyword> KeywordStorage;
+        public static EntityIdStorage<Keyword> DefaultKeywordStorage = StorageCollection.KeywordStorage;
 
-        private readonly TDStrategySummaryLoader strategyLoader;
-        private readonly TDAdSetSummaryLoader adSetLoader;
+        public readonly int AccountId;
+
         private readonly EntityIdStorage<Strategy> strategyStorage;
         private readonly EntityIdStorage<AdSet> adSetStorage;
+        private readonly EntityIdStorage<Keyword> keywordStorage;
+        private readonly TDStrategySummaryLoader strategyLoader;
+        private readonly TDAdSetSummaryLoader adSetLoader;
         private readonly SummaryMetricLoader metricLoader;
 
-        static KeywordSummaryLoader()
+        public KeywordSummaryLoader(int accountId = -1, EntityIdStorage<Keyword> keywordStorage = null,
+            EntityIdStorage<AdSet> adSetStorage = null, EntityIdStorage<Strategy> strategyStorage = null)
         {
-            KeywordStorage = new EntityIdStorage<Keyword>(x => x.Id, x => $"{x.AccountId} {x.AdSetId} {x.StrategyId} {x.Name} {x.ExternalId}", x => $"{x.AccountId} {x.Name} {x.ExternalId}");
-        }
-
-        public KeywordSummaryLoader(int accountId = -1)
-        {
+            this.strategyStorage = strategyStorage ?? TDStrategySummaryLoader.DefaultStrategyStorage;
+            this.adSetStorage = adSetStorage ?? TDAdSetSummaryLoader.DefaultAdSetStorage;
+            this.keywordStorage = keywordStorage ?? DefaultKeywordStorage;
             AccountId = accountId;
-            strategyLoader = new TDStrategySummaryLoader(accountId);
-            adSetLoader = new TDAdSetSummaryLoader(accountId);
-            strategyStorage = TDStrategySummaryLoader.StrategyStorage;
-            adSetStorage = TDAdSetSummaryLoader.AdSetStorage;
+            strategyLoader = new TDStrategySummaryLoader(accountId, this.strategyStorage);
+            adSetLoader = new TDAdSetSummaryLoader(accountId, this.adSetStorage, this.strategyStorage);
             metricLoader = new SummaryMetricLoader();
         }
 
@@ -63,11 +63,11 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             foreach (var item in items)
             {
-                if (!KeywordStorage.IsEntityInStorage(item.Keyword))
+                if (!keywordStorage.IsEntityInStorage(item.Keyword))
                 {
                     continue;
                 }
-                item.KeywordId = KeywordStorage.GetEntityIdFromStorage(item.Keyword);
+                item.KeywordId = keywordStorage.GetEntityIdFromStorage(item.Keyword);
                 item.Keyword = null;
             }
         }
@@ -147,7 +147,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 foreach (var keyword in items)
                 {
-                    if (KeywordStorage.IsEntityInStorage(keyword))
+                    if (keywordStorage.IsEntityInStorage(keyword))
                     {
                         continue;
                     }
@@ -159,7 +159,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                         {
                             var keywordInDb = AddKeyword(db, keyword);
                             Logger.Info(AccountId, "Saved new Keyword: {0} ({1}), ExternalId={2}", keywordInDb.Name, keywordInDb.Id, keywordInDb.ExternalId);
-                            KeywordStorage.AddEntityIdToStorage(keywordInDb);
+                            keywordStorage.AddEntityIdToStorage(keywordInDb);
                         }
                         else
                         {
@@ -172,7 +172,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                                     Logger.Warn(AccountId, "Multiple entities in db ({0})", numUpdates);
                                 }
                             }
-                            KeywordStorage.AddEntityIdToStorage(keywordsInDbList.First());
+                            keywordStorage.AddEntityIdToStorage(keywordsInDbList.First());
                         }
                     });
                 }

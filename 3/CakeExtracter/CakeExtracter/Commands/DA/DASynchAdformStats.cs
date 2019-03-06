@@ -5,9 +5,9 @@ using System.Linq;
 using Adform;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors;
 using CakeExtracter.Etl.TradingDesk.LoadersDA;
+using CakeExtracter.Etl.TradingDesk.LoadersDA.AdformLoaders;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
@@ -74,19 +74,21 @@ namespace CakeExtracter.Commands
             SetupAdformUtility();
             var accounts = GetAccounts();
             var accountIdsForOrders = ConfigurationHelper.ExtractEnumerableFromConfig("Adform_OrderInsteadOfCampaign");
+            var trackingIdsOfAccounts = ConfigurationHelper.ExtractDictionaryFromConfigValue("Adform_AccountsWithSpecificTracking", "Adform_AccountsTrackingIds");
 
             foreach (var account in accounts)
             {
                 Logger.Info("Commencing ETL for Adform account ({0}) {1}", account.Id, account.Name);
-                adformUtility.SetWhichAlt(account.ExternalId);
+                SetupAdformUtilityForAccount(account, trackingIdsOfAccounts);
+                var orderInsteadOfCampaign = accountIdsForOrders.Contains(account.ExternalId);
                 try
                 {
                     if (statsType.Daily)
                         DoETL_Daily(dateRange, account);
                     if (statsType.Strategy)
-                        DoETL_Strategy(dateRange, account, accountIdsForOrders.Contains(account.ExternalId));
+                        DoETL_Strategy(dateRange, account, orderInsteadOfCampaign);
                     if (statsType.AdSet)
-                        DoETL_AdSet(dateRange, account);
+                        DoETL_AdSet(dateRange, account, orderInsteadOfCampaign);
 
                     if (statsType.Creative && !statsType.All) // don't include when getting "all" statstypes
                         DoETL_Creative(dateRange, account);
@@ -104,6 +106,13 @@ namespace CakeExtracter.Commands
         {
             adformUtility = new AdformUtility(m => Logger.Info(m), m => Logger.Warn(m));
             GetTokens();
+        }
+
+        private void SetupAdformUtilityForAccount(ExtAccount account, Dictionary<string, string> trackingIdsOfAccounts)
+        {
+            var eid = account.ExternalId;
+            adformUtility.SetWhichAlt(eid);
+            adformUtility.TrackingId = trackingIdsOfAccounts.ContainsKey(eid) ? trackingIdsOfAccounts[eid] : null;
         }
 
         private void GetTokens()
@@ -136,10 +145,10 @@ namespace CakeExtracter.Commands
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private void DoETL_AdSet(DateRange dateRange, ExtAccount account)
+        private void DoETL_AdSet(DateRange dateRange, ExtAccount account, bool byOrder)
         {
-            var extractor = new AdformAdSetSummaryExtractor(adformUtility, dateRange, account);
-            var loader = new TDAdSetSummaryLoader(account.Id);
+            var extractor = new AdformAdSetSummaryExtractor(adformUtility, dateRange, account, byOrder);
+            var loader = new AdformLineItemSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 

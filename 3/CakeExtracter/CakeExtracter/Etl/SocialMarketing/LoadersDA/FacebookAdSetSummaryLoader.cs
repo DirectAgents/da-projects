@@ -6,24 +6,23 @@ using FacebookAPI;
 using FacebookAPI.Entities;
 using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Common;
 
 namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
 {
     public class FacebookAdSetSummaryLoader : Loader<FBSummary>
     {
-        public static EntityIdStorage<ActionType> ActionTypeStorage;
-        private readonly bool loadActions;
-        private readonly TDAdSetSummaryLoader adSetSummaryLoader;
+        public static EntityIdStorage<ActionType> DefaultActionTypeStorage = StorageCollection.ActionTypeStorage;
 
-        static FacebookAdSetSummaryLoader()
-        {
-            ActionTypeStorage = new EntityIdStorage<ActionType>(x => x.Id, x => x.Code);
-        }
+        private readonly bool loadActions;
+        private readonly EntityIdStorage<ActionType> actionTypeStorage;
+        private readonly TDAdSetSummaryLoader adSetSummaryLoader;
 
         public FacebookAdSetSummaryLoader(int accountId, bool loadActions = false)
             : base(accountId)
         {
             BatchSize = FacebookUtility.RowsReturnedAtATime; //FB API only returns 25 rows at a time
+            actionTypeStorage = DefaultActionTypeStorage;
             adSetSummaryLoader = new TDAdSetSummaryLoader(accountId);
             this.loadActions = loadActions;
         }
@@ -81,7 +80,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             {
                 foreach (var actionTypeCode in actionTypeCodes)
                 {
-                    if (ActionTypeStorage.IsEntityInStorage(actionTypeCode))
+                    if (actionTypeStorage.IsEntityInStorage(actionTypeCode))
                     {
                         continue;
                     }
@@ -93,12 +92,12 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                         {
                             var actionType = AddActionType(db, actionTypeCode);
                             Logger.Info(accountId, "Saved new ActionType: {0}", actionType.Code);
-                            ActionTypeStorage.AddEntityIdToStorage(actionType);
+                            actionTypeStorage.AddEntityIdToStorage(actionType);
                         }
                         else
                         {
                             var actionType = actionTypesInDb.First();
-                            ActionTypeStorage.AddEntityIdToStorage(actionType);
+                            actionTypeStorage.AddEntityIdToStorage(actionType);
                         }
                     });
                 }
@@ -149,7 +148,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
                     var addedAdSetActions = new List<AdSetAction>();
                     foreach (var fbAction in fbActions)
                     {
-                        var actionTypeId = ActionTypeStorage.GetEntityIdFromStorage(fbAction.ActionType);
+                        var actionTypeId = actionTypeStorage.GetEntityIdFromStorage(fbAction.ActionType);
                         var actionsOfType =
                             existingActions.Where(x => x.ActionTypeId == actionTypeId); // should be one at most
                         if (!actionsOfType.Any())
@@ -186,7 +185,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
         private void RemoveAdSetActions(ClientPortalProgContext db, LoadingProgress progress,
             IEnumerable<AdSetAction> existingActions, IEnumerable<FBAction> fbActions)
         {
-            var actionTypeIds = fbActions.Select(x => ActionTypeStorage.GetEntityIdFromStorage(x.ActionType))
+            var actionTypeIds = fbActions.Select(x => actionTypeStorage.GetEntityIdFromStorage(x.ActionType))
                 .ToArray();
             //Delete actions that no longer have stats for the date/adset
             var actionsForRemoving = existingActions.Where(x => !actionTypeIds.Contains(x.ActionTypeId)).ToList();

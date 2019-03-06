@@ -4,6 +4,7 @@ using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Common;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
 {
@@ -24,7 +25,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
         /// </summary>
         static AmazonSummaryMetricLoader()
         {
-            MetricTypeStorage = new EntityIdStorage<MetricType>(x => x.Id, x => $"{x.Name} {x.DaysInterval}");
+            MetricTypeStorage = StorageCollection.MetricTypeStorage;
         }
 
         /// <summary>

@@ -14,24 +14,20 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class TDStrategySummaryLoader : Loader<StrategySummary>
     {
+        public static EntityIdStorage<Strategy> DefaultStrategyStorage = StorageCollection.StrategyWithEidStorage;
+
         // Note accountId is only used in AddUpdateDependentStrategies() (i.e. not by AdrollCampaignSummaryLoader)
         public readonly int AccountId;
-        public static readonly EntityIdStorage<Strategy> StrategyStorage;
         private readonly SummaryMetricLoader metricLoader;
         private readonly ISimpleRepository<EntityType> typeRepository;
         private readonly ISimpleRepository<Strategy> strategyRepository;
 
-        static TDStrategySummaryLoader()
-        {
-            StrategyStorage = new StrategyRepository().IdStorage;
-        }
-
-        public TDStrategySummaryLoader(int accountId = -1, ISimpleRepository<Strategy> strategyRepository = null)
+        public TDStrategySummaryLoader(int accountId = -1, EntityIdStorage<Strategy> strategyStorage = null)
         {
             AccountId = accountId;
             metricLoader = new SummaryMetricLoader();
-            typeRepository = new TypeRepository();
-            this.strategyRepository = strategyRepository ?? new StrategyRepository();
+            typeRepository = new TypeRepository(StorageCollection.TypeStorage);
+            strategyRepository = new StrategyRepository(strategyStorage ?? DefaultStrategyStorage);
         }
 
         protected override int Load(List<StrategySummary> items)

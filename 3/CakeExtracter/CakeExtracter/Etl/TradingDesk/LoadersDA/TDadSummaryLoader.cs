@@ -14,26 +14,25 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
     public class TDadSummaryLoader : Loader<TDadSummary>
     {
-        public readonly int AccountId; // only used in AddUpdateDependentTDads()
-        public static EntityIdStorage<TDad> TDadStorage;
+        public static EntityIdStorage<TDad> DefaultAdStorage = StorageCollection.TDadStorage;
 
-        private readonly TDAdSetSummaryLoader adSetLoader;
+        public readonly int AccountId; // only used in AddUpdateDependentTDads()
+
+        private readonly EntityIdStorage<TDad> adStorage;
         private readonly EntityIdStorage<AdSet> adSetStorage;
+        private readonly TDAdSetSummaryLoader adSetLoader;
         private readonly SummaryMetricLoader metricLoader;
         private readonly ISimpleRepository<EntityType> typeRepository;
 
-        static TDadSummaryLoader()
+        public TDadSummaryLoader(int accountId = -1, EntityIdStorage<TDad> adStorage = null,
+            EntityIdStorage<AdSet> adSetStorage = null, EntityIdStorage<Strategy> strategyStorage = null)
         {
-            TDadStorage = new EntityIdStorage<TDad>(x => x.Id, x => $"{x.AccountId} {x.AdSetId} {x.Name} {x.ExternalId}", x => $"{x.AccountId} {x.Name} {x.ExternalId}");
-        }
-
-        public TDadSummaryLoader(int accountId = -1)
-        {
+            this.adSetStorage = adSetStorage ?? TDAdSetSummaryLoader.DefaultAdSetStorage;
+            this.adStorage = adStorage ?? DefaultAdStorage;
             AccountId = accountId;
-            adSetLoader = new TDAdSetSummaryLoader(accountId);
-            adSetStorage = TDAdSetSummaryLoader.AdSetStorage;
+            typeRepository = new TypeRepository(StorageCollection.TypeStorage);
+            adSetLoader = new TDAdSetSummaryLoader(accountId, adSetStorage, strategyStorage);
             metricLoader = new SummaryMetricLoader();
-            typeRepository = new TypeRepository();
         }
 
         protected override int Load(List<TDadSummary> items)
@@ -63,12 +62,12 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             foreach (var item in items)
             {
-                if (!TDadStorage.IsEntityInStorage(item.TDad))
+                if (!adStorage.IsEntityInStorage(item.TDad))
                 {
                     continue;
                 }
 
-                item.TDadId = TDadStorage.GetEntityIdFromStorage(item.TDad);
+                item.TDadId = adStorage.GetEntityIdFromStorage(item.TDad);
                 item.TDad = null;
                 // otherwise it will get skipped; no TDad to use for the foreign key
             }
@@ -141,7 +140,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 AddDependentExternalIdTypes(db, extIds);
                 foreach (var tdAd in items)
                 {
-                    if (TDadStorage.IsEntityInStorage(tdAd))
+                    if (adStorage.IsEntityInStorage(tdAd))
                     {
                         continue; // already encountered this TDad
                     }
@@ -154,7 +153,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                             // TDad doesn't exist in the db; so create it and put an entry in the lookup
                             var tdAdInDb = AddTDad(db, tdAd);
                             Logger.Info(AccountId, "Saved new TDad: {0} ({1}), ExternalId={2}", tdAdInDb.Name, tdAdInDb.Id, tdAdInDb.ExternalId);
-                            TDadStorage.AddEntityIdToStorage(tdAdInDb);
+                            adStorage.AddEntityIdToStorage(tdAdInDb);
                         }
                         else
                         {
@@ -169,7 +168,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                                     Logger.Warn(AccountId, "Multiple entities in db ({0})", numUpdates);
                                 }
                             }
-                            TDadStorage.AddEntityIdToStorage(tdAdsInDbList.First());
+                            adStorage.AddEntityIdToStorage(tdAdsInDbList.First());
                         }
                     });
                 }
