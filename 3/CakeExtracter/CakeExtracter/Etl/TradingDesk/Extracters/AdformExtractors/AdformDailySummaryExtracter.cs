@@ -53,8 +53,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
 
         private IEnumerable<DailySummary> EnumerateRows(ReportData basicStatsReportData, ReportData convStatsReportData)
         {
-            var rowConverter = new AdformRowConverter(basicStatsReportData, includeConvMetrics: false);
-            var daysumDict = rowConverter.EnumerateDailySummaries().ToDictionary(x => x.Date);
+            var dayStatsTransformer = new AdformTransformer(basicStatsReportData, basicStatsOnly: true);
+            var daySumDict = dayStatsTransformer.EnumerateAdformSummaries().ToDictionary(x => x.Date);
 
             var convStatsTransformer = new AdformTransformer(convStatsReportData, convStatsOnly: true);
             var convSums = convStatsTransformer.EnumerateAdformSummaries();
@@ -64,28 +64,24 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             // then go through daysums that didn't have a convsumGroup
             foreach (var csGroup in convsumGroups)
             {
-                DailySummary daysum;
-                if (daysumDict.ContainsKey(csGroup.Key))
-                    daysum = daysumDict[csGroup.Key];
-                else
-                    daysum = new DailySummary
-                    {
-                        Date = csGroup.Key
-                    };
-                var clickThroughs = csGroup.Where(x => x.AdInteractionType == "Click");
-                daysum.PostClickConv = clickThroughs.Sum(x => x.Conversions);
-                daysum.PostClickRev = clickThroughs.Sum(x => x.Sales);
+                var daysum = new DailySummary {Date = csGroup.Key};
+                if (daySumDict.ContainsKey(csGroup.Key))
+                {
+                    SetBaseStats(daysum, daySumDict[csGroup.Key]);
+                }
 
-                var viewThroughs = csGroup.Where(x => x.AdInteractionType == "Impression");
-                daysum.PostViewConv = viewThroughs.Sum(x => x.Conversions);
-                daysum.PostViewRev = viewThroughs.Sum(x => x.Sales);
-
+                SetConversionStats(daysum, csGroup, csGroup.Key);
                 yield return daysum;
             }
+
             var convsumDates = convsumGroups.Select(x => x.Key).ToArray();
-            var remainingDaySums = daysumDict.Values.Where(ds => !convsumDates.Contains(ds.Date));
-            foreach (var daysum in remainingDaySums) // the daily summaries that didn't have any conversion summaries
+            var remainingDaySums = daySumDict.Values.Where(ds => !convsumDates.Contains(ds.Date));
+            foreach (var adfsum in remainingDaySums) // the daily summaries that didn't have any conversion summaries
+            {
+                var daysum = new DailySummary {Date = adfsum.Date};
+                SetBaseStats(daysum, adfsum);
                 yield return daysum;
+            }
         }
     }
 }

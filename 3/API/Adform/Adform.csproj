@@ -47,14 +47,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdformUtility.cs" />
+    <Compile Include="Entities\ReportEntities\MetricMetadata.cs" />
     <Compile Include="Entities\ReportSettings.cs" />
     <Compile Include="Entities\RequestEntities\CreateJobResponse.cs" />
     <Compile Include="Entities\ReportEntities\Dates.cs" />
     <Compile Include="Entities\RequestEntities\GetTokenResponse.cs" />
-    <Compile Include="Entities\RequestEntities\Paging.cs" />
+    <Compile Include="Entities\ReportEntities\Paging.cs" />
     <Compile Include="Entities\ReportEntities\ReportData.cs" />
     <Compile Include="Entities\ReportEntities\ReportParams.cs" />
     <Compile Include="Entities\ReportEntities\ReportResponse.cs" />
+    <Compile Include="Enums\AdInteractionType.cs" />
+    <Compile Include="Enums\ConversionMetric.cs" />
     <Compile Include="Enums\Dimension.cs" />
     <Compile Include="Entities\AdformSummary.cs" />
     <Compile Include="Helpers\AdformApiHelper.cs" />
