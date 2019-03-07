@@ -27,11 +27,11 @@ namespace CakeExtractor.SeleniumApplication.Synchers
         /// <param name="accountId">The account identifier.</param>
         public void SyncData(int accountId)
         {
-            Logger.Info("Started sync vcd analytic table with normal tables", accountId);
+            Logger.Info(accountId, "Started sync vcd analytic table with normal tables");
             const string syncScriptPathConfigName = "VcdSyncScriptPath";
             var scriptPath = ConfigurationManager.AppSettings[syncScriptPathConfigName];
             sqlScriptExecutor.ExecuteScriptWithParams(scriptPath, new string[] { accountId.ToString() });
-            Logger.Info("Finished sync vcd analytic table with normal tables", accountId);
+            Logger.Info(accountId, "Finished sync vcd analytic table with normal tables");
         }
     }
 }
