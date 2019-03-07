@@ -58,8 +58,8 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD.MetricTypesLoader
             {
                 var accountRelatedVendorEntityIds = accountRelatedVendorEntities.Select(e => e.Id).ToList();
                 var allVendorSummariesDbSet = dbContext.Set<TSummaryMetricEntity>();
-                var existingAccountDailySummaries = allVendorSummariesDbSet
-                    .Where(csm => csm.Date == date && accountRelatedVendorEntityIds.Contains(csm.EntityId)).ToList();
+                var existingAccountDailySummaries = allVendorSummariesDbSet.Where(csm => csm.Date == date).ToList()
+                    .Where(csm => accountRelatedVendorEntityIds.Contains(csm.EntityId)).ToList();
                 var actualAccountDailySummaries =
                     GetActualDailySummariesFromReportEntities(reportShippingEntities, accountRelatedVendorEntities,
                         account, date);
