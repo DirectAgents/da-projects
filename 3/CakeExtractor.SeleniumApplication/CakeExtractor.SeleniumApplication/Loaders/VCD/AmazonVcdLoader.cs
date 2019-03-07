@@ -49,7 +49,6 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
                     Logger.Error(extAccount.Id, new Exception($"Could not load data for date {item.Date}. Details: {e.Message}", e));
                 }
             }
-
             return items.Count;
         }
 

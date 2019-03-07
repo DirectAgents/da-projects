@@ -26,11 +26,11 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.AnalyticTablesSy
         /// <param name="accountId">The account identifier.</param>
         public void SyncAsinLevelForAccount(int accountId)
         {
-            Logger.Info("Started syncing asin analytic table with normal tables", accountId);
+            Logger.Info(accountId, "Started syncing asin analytic table with normal tables");
             const string syncScriptPathConfigName = "AmazonAmsAsinSyncScriptPath";
             var scriptPath = ConfigurationManager.AppSettings[syncScriptPathConfigName];
             sqlScriptExecutor.ExecuteScriptWithParams(scriptPath, new string[] { accountId.ToString() });
-            Logger.Info("Finished syncing asin analytic table with normal tables", accountId);
+            Logger.Info(accountId, "Finished syncing asin analytic table with normal tables");
         }
     }
 }
