@@ -34,6 +34,7 @@ namespace CakeExtracter.Commands.Test
         {
             var adformUtility = new AdformUtility();
             adformUtility.GetDimensions();
+            adformUtility.GetMetrics();
         }
 
         public void Test2()
