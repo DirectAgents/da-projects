@@ -489,7 +489,8 @@
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiAdExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiAdSetExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiCampaignSummaryExtractor.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonDailyStrategyFromDataBaseSummaryExtractor.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonCampaignMetadataExtractor.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonDatabaseKeywordsToDailySummaryExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiDailySummaryExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiKeywordExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiSearchTermExtractor.cs" />
@@ -500,7 +501,8 @@
     <Compile Include="Etl\TradingDesk\Extracters\AdrollSiteStatsCsvExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\CPCExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\CriteoExtracters.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\DatabaseStrategyToDailySummaryExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\DataBaseSourceExtractors\DatabaseKeywordsToDailySummaryExtractor.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\DataBaseSourceExtractors\DatabaseStrategyToDailySummaryExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmCreativeCloudStorageExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DBMCreativeExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\SummaryCsvExtracters\DbmStrategyCsvExtractor.cs" />

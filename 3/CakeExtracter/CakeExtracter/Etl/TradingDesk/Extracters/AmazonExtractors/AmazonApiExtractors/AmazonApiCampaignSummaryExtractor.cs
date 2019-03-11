@@ -18,6 +18,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
     //Campaign / Strategy
     public class AmazonApiCampaignSummaryExtractor : BaseAmazonExtractor<StrategySummary>
     {
+        private AmazonCampaignMetadataExtractor campaignMetadataExtractor;
+
         private readonly string[] campaignTypesFromApi =
         {
             AmazonApiHelper.GetCampaignTypeName(CampaignType.SponsoredProducts),
@@ -26,15 +28,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
 
         public AmazonApiCampaignSummaryExtractor(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, bool clearBeforeLoad, string campaignFilter = null, string campaignFilterOut = null)
             : base(amazonUtility, dateRange, account, clearBeforeLoad, campaignFilter, campaignFilterOut)
-        { }
-
-        public IEnumerable<AmazonCampaign> LoadCampaignsFromAmazonApi()
         {
-            var spCampaigns = _amazonUtility.GetCampaigns(CampaignType.SponsoredProducts, clientId);
-            var sbCampaigns = _amazonUtility.GetCampaigns(CampaignType.SponsoredBrands, clientId);
-            var campaigns = spCampaigns.Concat(sbCampaigns);
-            var filteredCampaigns = FilterByCampaigns(campaigns, x => x.Name);
-            return filteredCampaigns.ToList();
+            campaignMetadataExtractor = new AmazonCampaignMetadataExtractor(amazonUtility);
         }
 
         public IEnumerable<AmazonDailySummary> ExtractSummaries(DateTime date)
@@ -49,28 +44,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         {
             Logger.Info(accountId, "Extracting StrategySummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 clientId, dateRange.FromDate, dateRange.ToDate);
-
-            var campaigns = LoadCampaigns();
+            var campaigns = campaignMetadataExtractor.LoadCampaignsMetadata(accountId, clientId);
             if (campaigns != null)
             {
                 Extract(campaigns);
             }
-
             End();
-        }
-
-        private IEnumerable<AmazonCampaign> LoadCampaigns()
-        {
-            try
-            {
-                var campaigns = LoadCampaignsFromAmazonApi();
-                return campaigns;
-            }
-            catch (Exception e)
-            {
-                Logger.Error(accountId, e);
-                return null;
-            }
         }
 
         private void Extract(IEnumerable<AmazonCampaign> campaigns)

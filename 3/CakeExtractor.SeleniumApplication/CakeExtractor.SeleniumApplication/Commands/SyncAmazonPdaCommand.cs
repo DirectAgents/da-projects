@@ -107,7 +107,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
         private static void DoEtlDailyFromStrategyInDatabase(ExtAccount account, DateRange dateRange)
         {
-            var extractor = new DatabaseStrategyToDailySummaryExtracter(dateRange, account.Id);
+            var extractor = new DatabaseStrategyToDailySummaryExtractor(dateRange, account.Id);
             var loader = new AmazonDailySummaryLoader(account.Id);
             StartEtl(extractor, loader);
         }

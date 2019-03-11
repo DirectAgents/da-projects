@@ -78,7 +78,8 @@ namespace CakeExtracter.Bootstrappers
                         {
                             Name = s.StrategyName,
                             ExternalId = s.StrategyEid,
-                            Type = new EntityType {Name = s.StrategyType}
+                            Type = new EntityType {Name = s.StrategyType},
+                            TargetingType = new EntityType {Name = s.StrategyTargetingType }
                         })
                     )
                     .ForMember(d => d.AdSet, opt => opt.MapFrom(s => new AdSet
