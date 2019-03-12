@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.Configuration;
 using BingAds;
 using CakeExtracter.Common;
 
@@ -14,20 +15,22 @@ namespace CakeExtracter.Commands.Test
 
         public TestBingCommand()
         {
-            IsCommand("testBing");
+            IsCommand("testBing", "The command for refreshing of token (Bing API)");
         }
-
-        //NOTE: Need to add "[STAThread]" to Main method in CakeExtracter.ConsoleApplication
 
         public override int Execute(string[] remainingArguments)
         {
-            var username = "dacoursehero"; //"leo.directagents@gmail.com";
-            var password = "Agentdan"; //"Agentdan1";
-            var clientId = "16227075"; // Customer ID ?
+            //NOTE: Need to fill user name and password in config
+            var username = ConfigurationManager.AppSettings["BingApiUsername"];
+            var password = ConfigurationManager.AppSettings["BingApiPassword"];
+            var clientId = ConfigurationManager.AppSettings["BingClientId"];
+
+            Console.WriteLine($"Bing API User name: {username}, Bing client Id: {clientId}");
 
             var bingAuth = new BingAuth(username, password, clientId);
             var tokens = bingAuth.GetInitialTokens();
 
+            Console.WriteLine($"Result Bing refresh token (need to add in config): {tokens.RefreshToken}");
             return 0;
         }
     }

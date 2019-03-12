@@ -496,7 +496,7 @@
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\AmazonApiExtractors\AmazonApiSearchTermExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonExtractors\BaseAmazonExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AmazonTransformers.cs" />
-    <Compile Include="Etl\TradingDesk\Extracters\AdformTransformers.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\AdformExtractors\AdformTransformers.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdRollAdExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollSiteStatsCsvExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\CPCExtracter.cs" />

@@ -15,7 +15,13 @@ namespace Adform
         public string Banner { get; set; }
 
         public string AdInteractionType { get; set; }
-        public int Conversions { get; set; }
-        public decimal Sales { get; set; }
+        public int ConversionsAll { get; set; }
+        public int ConversionsConvType1 { get; set; }
+        public int ConversionsConvType2 { get; set; }
+        public int ConversionsConvType3 { get; set; }
+        public decimal SalesAll { get; set; }
+        public decimal SalesConvType1 { get; set; }
+        public decimal SalesConvType2 { get; set; }
+        public decimal SalesConvType3 { get; set; }
     }
 }
