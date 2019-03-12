@@ -17,6 +17,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters
         protected override void AddPropertiesMaps(CsvClassMap classMap, Type classType, ColumnMapping colMap)
         {
             base.AddPropertiesMaps(classMap, classType, colMap);
+            CheckAddPropertyMap(classMap, classType, "StrategyName", colMap.StrategyName);
+            CheckAddPropertyMap(classMap, classType, "StrategyEid", colMap.StrategyEid);
             CheckAddPropertyMap(classMap, classType, "AdSetName", colMap.AdSetName);
             CheckAddPropertyMap(classMap, classType, "AdSetEid", colMap.AdSetEid);
             CheckAddPropertyMap(classMap, classType, "TDadName", colMap.TDadName);
@@ -59,6 +61,16 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters
             return GetIdIfSame(stats, s => s.AdSetEid);
         }
 
+        private string GetStrategyEidIfSame(IEnumerable<TDadSummary> stats)
+        {
+            return GetIdIfSame(stats, s => s.StrategyEid);
+        }
+
+        private string GetStrategyNameIfSame(IEnumerable<TDadSummary> stats)
+        {
+            return GetIdIfSame(stats, s => s.StrategyName);
+        }
+
         private TDadSummary InitSummary(IEnumerable<TDadSummary> sums, DateTime date, string tdAdEid, string tdAdName)
         {
             var sum = new TDadSummary
@@ -68,6 +80,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.SummaryCsvExtracters
                 TDadName = tdAdName,
                 AdSetEid = GetAdSetEidIfSame(sums),
                 AdSetName = GetAdSetNameIfSame(sums),
+                StrategyEid = GetStrategyEidIfSame(sums),
+                StrategyName = GetStrategyNameIfSame(sums)
                 //,Width = group.First().Width
             };
             sum.SetStats(sums);
