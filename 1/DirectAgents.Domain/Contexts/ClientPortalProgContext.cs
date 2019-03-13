@@ -87,7 +87,7 @@ namespace DirectAgents.Domain.Contexts
 
             //TD CJ
             modelBuilder.Entity<CjAdvertiserCommission>().ToTable("CjAdvertiserCommission", tdSchema);
-            modelBuilder.Entity<CjAdvertiserCommissionItem>().ToTable("CjAdvertiserCommissionItem", tdSchema);
+            modelBuilder.Entity<CjCommissionItem>().ToTable("CjCommissionItem", tdSchema);
 
             //TD DSP
             modelBuilder.Entity<DspAdvertiser>().ToTable("DspAdvertiser", tdSchema);
@@ -288,7 +288,7 @@ namespace DirectAgents.Domain.Contexts
 
         //TD CJ
         public DbSet<CjAdvertiserCommission> CjAdvertiserCommissions { get; set; }
-        public DbSet<CjAdvertiserCommissionItem> CjAdvertiserCommissionItems { get; set; }
+        public DbSet<CjCommissionItem> CjAdvertiserCommissionItems { get; set; }
 
         // AdRoll
         public DbSet<Advertisable> Advertisables { get; set; }
@@ -307,8 +307,8 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<CjAdvertiserCommission>().Property(t => t.OrderDiscountUsd).HasPrecision(18, 6);
             modelBuilder.Entity<CjAdvertiserCommission>().Property(t => t.SaleAmountUsd).HasPrecision(18, 6);
 
-            modelBuilder.Entity<CjAdvertiserCommissionItem>().Property(t => t.PerItemSaleAmountUsd).HasPrecision(18, 6);
-            modelBuilder.Entity<CjAdvertiserCommissionItem>().Property(t => t.TotalCommissionUsd).HasPrecision(18, 6);
+            modelBuilder.Entity<CjCommissionItem>().Property(t => t.PerItemSaleAmountUsd).HasPrecision(18, 6);
+            modelBuilder.Entity<CjCommissionItem>().Property(t => t.TotalCommissionUsd).HasPrecision(18, 6);
         }
 
         private void SetupDailyMetricModelValues<TDailyMetricValues>(DbModelBuilder modelBuilder, string entityColumnName)
