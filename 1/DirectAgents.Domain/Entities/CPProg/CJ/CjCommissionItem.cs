@@ -5,7 +5,7 @@ namespace DirectAgents.Domain.Entities.CPProg.CJ
     /// <summary>
     /// Commision Junction item db related entity 
     /// </summary>
-    public class CjAdvertiserCommissionItem
+    public class CjCommissionItem
     {
         /// <summary>
         /// Gets or sets the db identifier.

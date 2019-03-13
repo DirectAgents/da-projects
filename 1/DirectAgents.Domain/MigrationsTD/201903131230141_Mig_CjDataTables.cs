@@ -8,7 +8,7 @@ namespace DirectAgents.Domain.MigrationsTD
         public override void Up()
         {
             CreateTable(
-                "td.CjAdvertiserCommissionItem",
+                "td.CjCommissionItem",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
@@ -83,12 +83,12 @@ namespace DirectAgents.Domain.MigrationsTD
         
         public override void Down()
         {
-            DropForeignKey("td.CjAdvertiserCommissionItem", "CommissionId", "td.CjAdvertiserCommission");
+            DropForeignKey("td.CjCommissionItem", "CommissionId", "td.CjAdvertiserCommission");
             DropForeignKey("td.CjAdvertiserCommission", "AccountId", "td.Account");
             DropIndex("td.CjAdvertiserCommission", new[] { "AccountId" });
-            DropIndex("td.CjAdvertiserCommissionItem", new[] { "CommissionId" });
+            DropIndex("td.CjCommissionItem", new[] { "CommissionId" });
             DropTable("td.CjAdvertiserCommission");
-            DropTable("td.CjAdvertiserCommissionItem");
+            DropTable("td.CjCommissionItem");
         }
     }
 }
