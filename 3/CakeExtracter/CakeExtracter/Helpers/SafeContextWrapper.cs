@@ -133,6 +133,19 @@ namespace CakeExtracter.Helpers
             }
         }
 
+        public static void TryMakeTransactionWithLock<T>(Action<T> transactionAction, object contextLocker, string level)
+           where T : DbContext, new()
+        {
+            try
+            {
+                TryToMakeTransactionManyTimes(false, contextLocker, transactionAction);
+            }
+            catch (Exception exception)
+            {
+                LogEndOfRetrying(exception, level);
+            }
+        }
+
         private static int TrySaveChanges<T>(object contextLocker, Action<T> changeContextAction)
             where T : DbContext, new()
         {
@@ -162,7 +175,7 @@ namespace CakeExtracter.Helpers
             return numChanges;
         }
         
-        private static void TryToMakeTransactionManyTimes<T>(bool needToWait, object contextLocker, Action<T> transactionAction)
+        public static void TryToMakeTransactionManyTimes<T>(bool needToWait, object contextLocker, Action<T> transactionAction)
             where T : DbContext, new()
         {
             TryToMakeActionManyTimes(needToWait, () =>
@@ -177,7 +190,7 @@ namespace CakeExtracter.Helpers
             });
         }
 
-        private static void TryToMakeTransactionManyTimes<T>(bool needToWait, Action<T> transactionAction)
+        public static void TryToMakeTransactionManyTimes<T>(bool needToWait, Action<T> transactionAction)
             where T : DbContext, new()
         {
             TryToMakeActionManyTimes(needToWait, () =>
