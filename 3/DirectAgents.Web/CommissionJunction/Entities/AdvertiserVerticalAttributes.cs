@@ -1,4 +1,4 @@
-﻿namespace CommissionJunction.Entities.ResponseEntities
+﻿namespace CommissionJunction.Entities
 {
     /// <summary>
     /// A record of advertiser vertical attributes that the advertiser may have supplied as part of a commissionable event.

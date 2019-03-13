@@ -1,4 +1,4 @@
-﻿namespace CommissionJunction.Entities.ResponseEntities
+﻿namespace CommissionJunction.Entities
 {
     /// <summary>
     /// A record of an item that was purchased as part of a commissionable event.

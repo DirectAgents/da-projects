@@ -1,12 +1,12 @@
 ﻿using System;
 using CakeExtracter.Common;
-using CommissionJunction.Entities.ResponseEntities;
 using CommissionJunction.Utilities;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.CJ;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors
 {
-    internal class CommissionJunctionAdvertiserExtractor : Extracter<AdvertiserCommission>
+    internal class CommissionJunctionAdvertiserExtractor : Extracter<CjAdvertiserCommission>
     {
         private readonly CjUtility utility;
         private readonly DateRange dateRange;
@@ -24,12 +24,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors
             Logger.Info(account.Id, "Extracting Commissions from Commission Junction API for ({0}) from {1:d} to {2:d}",
                 account.ExternalId, dateRange.FromDate, dateRange.ToDate);
 
-            foreach (var date in dateRange.Dates)
+            var commissionsEnumerable = utility.GetAdvertiserCommissions(dateRange.FromDate, dateRange.ToDate, account.ExternalId);
+            foreach (var  commission in commissionsEnumerable)
             {
                 try
                 {
-                    var items = utility.GetAdvertiserCommissions(date, account.ExternalId);
-                    Add(items);
+                    Add(new CjAdvertiserCommission());
                 }
                 catch (Exception e)
                 {

@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using CommissionJunction.Entities;
 using CommissionJunction.Entities.RequestEntities;
 using CommissionJunction.Entities.ResponseEntities;
 using Polly;
@@ -19,17 +20,20 @@ namespace CommissionJunction.Utilities
         private const int MaxCommissionsNumberForSingleReport = 10000;
         private const int MaxConcurrentConnectionsNumber = 120;
 
-        private const int NumAlts = 10; // including the default (0)
-
         private const string AuthorizationHeader = "Authorization";
         private const string JsonContentType = "application/json";
         private const string HttpPostMethod = "POST";
         private const string HttpGetMethod = "GET";
-        private const int RequestTimeoutInMilliseconds = 600000; // 10 min = 1000 ms * 60 s * 10 min
+
+        private const int NumAlts = 10; // including the default (0)
 
         private static readonly Semaphore RequestLocker = new Semaphore(MaxConcurrentConnectionsNumber, MaxConcurrentConnectionsNumber);
         private static readonly string[] AccessToken = new string[NumAlts];
         private static readonly string[] AltAccountIDs = new string[NumAlts];
+
+        private static int requestTimeoutInMilliseconds;
+        private static int waitTimeInSeconds;
+        private static int waitAttemptsNumber;
 
         private readonly CjLogger logger;
 
@@ -37,7 +41,8 @@ namespace CommissionJunction.Utilities
 
         static CjUtility()
         {
-            Setup();
+            InitializeAccessTokens();
+            InitializeVariablesFromConfig();
         }
 
         public CjUtility(Action<string> logInfo, Action<string> logError)
@@ -59,14 +64,14 @@ namespace CommissionJunction.Utilities
             }
         }
 
-        public IEnumerable<AdvertiserCommission> GetAdvertiserCommissions(DateTime dateTime, string accountId)
+        public IEnumerable<AdvertiserCommission> GetAdvertiserCommissions(DateTime fromDateTime, DateTime toDateTime, string accountId)
         {
-            var query = GetAdvertiserCommissionsQueryForOneDay(dateTime, accountId);
-            var items = GetQueryData<AdvertiserCommission>(query);
+            var query = GetAdvertiserCommissionsQueryForOneDay(fromDateTime, toDateTime, accountId);
+            var items = GetQueryData(query);
             return items;
         }
 
-        private static void Setup()
+        private static void InitializeAccessTokens()
         {
             AccessToken[0] = ConfigurationManager.AppSettings["CJAccessToken"];
             for (var i = 1; i < NumAlts; i++)
@@ -74,6 +79,13 @@ namespace CommissionJunction.Utilities
                 AltAccountIDs[i] = PlaceLeadingAndTrailingCommas(ConfigurationManager.AppSettings["CJ_Alt" + i]);
                 AccessToken[i] = ConfigurationManager.AppSettings["CJAccessToken_Alt" + i];
             }
+        }
+
+        private static void InitializeVariablesFromConfig()
+        {
+            requestTimeoutInMilliseconds = int.Parse(ConfigurationManager.AppSettings["CJRequestTimeoutInMilliseconds"]);
+            waitTimeInSeconds = int.Parse(ConfigurationManager.AppSettings["CJWaitTimeInSeconds"]);
+            waitAttemptsNumber = int.Parse(ConfigurationManager.AppSettings["CJWaitAttemptsNumber"]);
         }
 
         private static string PlaceLeadingAndTrailingCommas(string idString)
@@ -93,19 +105,19 @@ namespace CommissionJunction.Utilities
             return symbol == ',' ? string.Empty : ",";
         }
 
-        private string GetAdvertiserCommissionsQueryForOneDay(DateTime dateTime, string accountId)
+        private string GetAdvertiserCommissionsQueryForOneDay(DateTime fromDateTime, DateTime toDateTime, string accountId)
         {
-            var startDayTime = dateTime.ToString(DateFormat);
-            var endDayTime = dateTime.AddMinutes(10)/*.AddDays(1).AddSeconds(-1)*/.ToString(DateFormat);
+            var startDayTime = fromDateTime.ToString(DateFormat);
+            var endDayTime = toDateTime.AddDays(1).ToString(DateFormat);
             var query = CjQueries.GetAdvertiserCommissionsQuery(accountId, startDayTime, endDayTime);
             return query;
         }
 
-        private List<T> GetQueryData<T>(string query)
+        private IEnumerable<AdvertiserCommission> GetQueryData(string query)
         {
             var request = CreateQueryRequest(query);
-            var response = GetQueryResponseData<T>(request);
-            var data = response.Records.ToList();
+            var response = GetResponseData<CjAdvertiserCommissionsResponse>(request);
+            var data = response.AdvertiserCommissions.Records.ToList();
             return data;
         }
 
@@ -117,11 +129,12 @@ namespace CommissionJunction.Utilities
             return request;
         }
 
-        private CjQueryResponse<T> GetQueryResponseData<T>(IRestRequest request)
+        private T GetResponseData<T>(IRestRequest request)
+            where T: class
         {
             try
             {
-                var response = ProcessRequestManyTimes<CjResponse<CjQueryResponse<T>>>(request, true);
+                var response = ProcessRequestManyTimes<CjResponse<T>>(request, true);
                 return response.Data.Data;
             }
             catch (Exception e)
@@ -158,13 +171,13 @@ namespace CommissionJunction.Utilities
         }
 
         private IRestResponse<T> ProcessRequestManyTimes<T>(IRestRequest restRequest, bool isPostMethod)
-            where T: new()
+            where T : new()
         {
             var response = Policy
                 .Handle<Exception>()
-                .OrResult<IRestResponse<T>>(resp => !resp.IsSuccessful)
-                .WaitAndRetry(5, retryNumber => TimeSpan.FromMinutes(1), (exception, timeSpan, retryCount, context) =>
-                    logger.LogWaiting("Retry one more time, wait {0} seconds.", timeSpan, retryCount, exception))
+                .OrResult<IRestResponse<T>>(resp => resp.StatusCode != HttpStatusCode.OK)
+                .WaitAndRetry(waitAttemptsNumber, retryNumber => TimeSpan.FromSeconds(waitTimeInSeconds), (exception, timeSpan, retryCount, context) =>
+                        logger.LogWaiting("Retry one more time, wait {0} seconds.", timeSpan, retryCount, exception))
                 .Execute(() => ProcessRequest<T>(restRequest, isPostMethod));
             return response;
         }
@@ -172,7 +185,7 @@ namespace CommissionJunction.Utilities
         private IRestResponse<T> ProcessRequest<T>(IRestRequest restRequest, bool isPostMethod)
             where T : new()
         {
-            var restClient = new RestClient(GraphQlApiUrl) {Timeout = RequestTimeoutInMilliseconds};
+            var restClient = new RestClient(GraphQlApiUrl) {Timeout = requestTimeoutInMilliseconds};
             RequestLocker.WaitOne();
             var response = GetRestResponse<T>(restClient, restRequest, isPostMethod);
             RequestLocker.Release();

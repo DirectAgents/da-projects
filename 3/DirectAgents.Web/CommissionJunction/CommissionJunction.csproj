@@ -57,11 +57,11 @@
     <Compile Include="Utilities\CjLogger.cs" />
     <Compile Include="Utilities\CjQueries.cs" />
     <Compile Include="Utilities\CjUtility.cs" />
-    <Compile Include="Entities\ResponseEntities\AdvertiserCommission.cs" />
+    <Compile Include="Entities\AdvertiserCommission.cs" />
     <Compile Include="Entities\ResponseEntities\CjQueryResponse.cs" />
-    <Compile Include="Entities\ResponseEntities\AdvertiserVerticalAttributes.cs" />
+    <Compile Include="Entities\AdvertiserVerticalAttributes.cs" />
     <Compile Include="Entities\ResponseEntities\CjResponse.cs" />
-    <Compile Include="Entities\ResponseEntities\Item.cs" />
+    <Compile Include="Entities\Item.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

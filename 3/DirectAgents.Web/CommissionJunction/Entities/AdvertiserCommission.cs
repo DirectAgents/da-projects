@@ -1,4 +1,6 @@
-﻿namespace CommissionJunction.Entities.ResponseEntities
+﻿using System.Collections.Generic;
+
+namespace CommissionJunction.Entities
 {
     /// <summary>
     /// A record of an advertiser commission event, potentially including items purchased and custom attributes supplied by the advertiser.
@@ -88,7 +90,7 @@
         /// <summary>
         /// Event date for the commission in UTC time zone. An ISO 8601 datetime, rendered in JSON as a string.
         /// </summary>
-        public int EventDate { get; set; }
+        public string EventDate { get; set; }
 
         /// <summary>
         /// The associated browser that the transaction initiated in.
@@ -113,7 +115,7 @@
         /// <summary>
         /// The items associated with this commissionable action.
         /// </summary>
-        public Item[] Items { get; set; }
+        public List<Item> Items { get; set; }
 
         /// <summary>
         /// Advertiser defined, indicates if the customer is new or existing to the advertiser (Advertiser only attribute)
@@ -143,7 +145,7 @@
         /// <summary>
         /// Date on which the commission is posted. An ISO 8601 datetime, rendered in JSON as a string.
         /// </summary>
-        public int PostingDate { get; set; }
+        public string PostingDate { get; set; }
 
         /// <summary>
         /// CID of the publisher for this commission

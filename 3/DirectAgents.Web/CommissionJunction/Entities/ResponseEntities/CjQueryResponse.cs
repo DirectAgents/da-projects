@@ -1,4 +1,6 @@
-﻿namespace CommissionJunction.Entities.ResponseEntities
+﻿using System.Collections.Generic;
+
+namespace CommissionJunction.Entities.ResponseEntities
 {
     /// <summary>
     /// The result of a query request to the API. More info - https://developers.cj.com/graphql/reference/Commission%20Detail
@@ -29,6 +31,6 @@
         /// <summary>
         /// The commission records returned by the query.
         /// </summary>
-        public T[] Records { get; set; }
+        public List<T> Records { get; set; }
     }
 }
