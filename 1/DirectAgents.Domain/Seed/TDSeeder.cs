@@ -41,6 +41,7 @@ namespace DirectAgents.Domain.Seed
             AddPlatformIfNotExist("zem", "Zemanta");
             AddPlatformIfNotExist(Platform.Code_AraAmazon, "AraAmazon");
             AddPlatformIfNotExist(Platform.Code_DspAmazon, "DspAmazon");
+            AddPlatformIfNotExist(Platform.Code_CJ, "Commission Junction");
         }
 
         public void SeedNetworks()
@@ -53,30 +54,34 @@ namespace DirectAgents.Domain.Seed
 
         public void AddPlatformIfNotExist(string code, string name)
         {
-            if (!context.Platforms.Any(p => p.Code == code))
+            if (context.Platforms.Any(p => p.Code == code))
             {
-                var platform = new Platform
-                {
-                    Code = code,
-                    Name = name
-                };
-                context.Platforms.Add(platform);
-                context.SaveChanges();
+                return;
             }
-        }
-        public void AddNetworkIfNotExist(int id, string name)
-        {
-            if (!context.Networks.Any(x => x.Id == id))
+
+            var platform = new Platform
             {
-                var network = new Network
-                {
-                    Id = id,
-                    Name = name
-                };
-                context.Networks.Add(network);
-                context.SaveChanges();
-            }
+                Code = code,
+                Name = name
+            };
+            context.Platforms.Add(platform);
+            context.SaveChanges();
         }
 
+        public void AddNetworkIfNotExist(int id, string name)
+        {
+            if (context.Networks.Any(x => x.Id == id))
+            {
+                return;
+            }
+
+            var network = new Network
+            {
+                Id = id,
+                Name = name
+            };
+            context.Networks.Add(network);
+            context.SaveChanges();
+        }
     }
 }
