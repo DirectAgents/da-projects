@@ -50,6 +50,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlSqcriptsExecution", "Sql
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeExtractor.SqlScriptsExecution.Core", "CakeExtractor.SqlScriptsExecution.Core\CakeExtractor.SqlScriptsExecution.Core.csproj", "{32405EDF-7257-4A90-89FA-148EAC75E183}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommissionJunction", "CommissionJunction\CommissionJunction.csproj", "{0038B6B4-357A-4721-99BC-7659AD00DD3A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -136,6 +138,10 @@ Global
 		{32405EDF-7257-4A90-89FA-148EAC75E183}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32405EDF-7257-4A90-89FA-148EAC75E183}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32405EDF-7257-4A90-89FA-148EAC75E183}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0038B6B4-357A-4721-99BC-7659AD00DD3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0038B6B4-357A-4721-99BC-7659AD00DD3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0038B6B4-357A-4721-99BC-7659AD00DD3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0038B6B4-357A-4721-99BC-7659AD00DD3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -151,9 +157,10 @@ Global
 		{5C59F9FE-A478-4701-BB84-17E7D0E5E012} = {9CADCD2F-2E1D-4D0D-BA87-D9A94D3F8CB7}
 		{6B2AF18D-6435-4B42-A13B-A2092D861369} = {98947E7D-8262-43B6-B746-B074C30DA582}
 		{32405EDF-7257-4A90-89FA-148EAC75E183} = {98947E7D-8262-43B6-B746-B074C30DA582}
+		{0038B6B4-357A-4721-99BC-7659AD00DD3A} = {9CADCD2F-2E1D-4D0D-BA87-D9A94D3F8CB7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45
 		SolutionGuid = {6B7C6F6C-1C50-4207-B5CC-52B64CEFF119}
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45
 	EndGlobalSection
 EndGlobal
