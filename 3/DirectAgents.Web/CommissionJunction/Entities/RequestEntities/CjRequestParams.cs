@@ -8,6 +8,6 @@
         /// <summary>
         /// GraphQL query
         /// </summary>
-        public string Query { get; set; }
+        public string query { get; set; }
     }
 }

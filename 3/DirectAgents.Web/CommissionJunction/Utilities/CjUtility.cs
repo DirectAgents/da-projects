@@ -112,7 +112,7 @@ namespace CommissionJunction.Utilities
         private IRestRequest CreateQueryRequest(string query)
         {
             var request = CreateRestRequest();
-            var requestBody = new CjRequestParams { Query = query };
+            var requestBody = new CjRequestParams { query = query };
             request.AddJsonBody(requestBody);
             return request;
         }
