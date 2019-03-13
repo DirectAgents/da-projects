@@ -8,11 +8,11 @@ namespace DirectAgents.Domain.MigrationsTD
         public override void Up()
         {
             CreateTable(
-                "td.CjCommissionItem",
+                "td.CjAdvertiserCommissionItem",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        CommissionId = c.Int(),
+                        CommissionId = c.Int(nullable: false),
                         DiscountUsd = c.String(),
                         ItemListId = c.String(),
                         PerItemSaleAmountUsd = c.Decimal(nullable: false, precision: 18, scale: 6),
@@ -21,7 +21,7 @@ namespace DirectAgents.Domain.MigrationsTD
                         TotalCommissionUsd = c.Decimal(nullable: false, precision: 18, scale: 6),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("td.CjAdvertiserCommission", t => t.CommissionId)
+                .ForeignKey("td.CjAdvertiserCommission", t => t.CommissionId, cascadeDelete: true)
                 .Index(t => t.CommissionId);
             
             CreateTable(
@@ -46,7 +46,7 @@ namespace DirectAgents.Domain.MigrationsTD
                         ConcludingDeviceType = c.String(),
                         Country = c.String(),
                         Coupon = c.String(),
-                        EventDate = c.Int(nullable: false),
+                        EventDate = c.DateTime(nullable: false),
                         InitiatingBrowser = c.String(),
                         InitiatingDeviceName = c.String(),
                         InitiatingDeviceType = c.String(),
@@ -56,7 +56,7 @@ namespace DirectAgents.Domain.MigrationsTD
                         OrderId = c.String(),
                         Original = c.Boolean(nullable: false),
                         OriginalActionId = c.String(),
-                        PostingDate = c.Int(nullable: false),
+                        PostingDate = c.DateTime(nullable: false),
                         PublisherId = c.String(),
                         PublisherName = c.String(),
                         ReviewedStatus = c.String(),
@@ -83,12 +83,12 @@ namespace DirectAgents.Domain.MigrationsTD
         
         public override void Down()
         {
-            DropForeignKey("td.CjCommissionItem", "CommissionId", "td.CjAdvertiserCommission");
+            DropForeignKey("td.CjAdvertiserCommissionItem", "CommissionId", "td.CjAdvertiserCommission");
             DropForeignKey("td.CjAdvertiserCommission", "AccountId", "td.Account");
             DropIndex("td.CjAdvertiserCommission", new[] { "AccountId" });
-            DropIndex("td.CjCommissionItem", new[] { "CommissionId" });
+            DropIndex("td.CjAdvertiserCommissionItem", new[] { "CommissionId" });
             DropTable("td.CjAdvertiserCommission");
-            DropTable("td.CjCommissionItem");
+            DropTable("td.CjAdvertiserCommissionItem");
         }
     }
 }

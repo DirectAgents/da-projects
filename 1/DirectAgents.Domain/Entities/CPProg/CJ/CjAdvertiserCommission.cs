@@ -1,4 +1,5 @@
-﻿using DirectAgents.Domain.Entities.CPProg;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DirectAgents.Domain.Entities.CPProg.CJ
@@ -23,6 +24,11 @@ namespace DirectAgents.Domain.Entities.CPProg.CJ
         /// </summary>
         [ForeignKey("AccountId")]
         public virtual ExtAccount ExtAccount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the metrics.
+        /// </summary>
+        public virtual List<CjAdvertiserCommissionItem> Items { get; set; }
 
         /// <summary>
         /// Status of the commission. Possible values: closed, extended, locked, new.
@@ -105,9 +111,9 @@ namespace DirectAgents.Domain.Entities.CPProg.CJ
         public string Coupon { get; set; }
 
         /// <summary>
-        /// Event date for the commission in UTC time zone. An ISO 8601 datetime, rendered in JSON as a string.
+        /// Event date for the commission.
         /// </summary>
-        public int EventDate { get; set; }
+        public DateTime EventDate { get; set; }
 
         /// <summary>
         /// The associated browser that the transaction initiated in.
@@ -155,9 +161,9 @@ namespace DirectAgents.Domain.Entities.CPProg.CJ
         public string OriginalActionId { get; set; }
 
         /// <summary>
-        /// Date on which the commission is posted. An ISO 8601 datetime, rendered in JSON as a string.
+        /// Date on which the commission is posted. 
         /// </summary>
-        public int PostingDate { get; set; }
+        public DateTime PostingDate { get; set; }
 
         /// <summary>
         /// CID of the publisher for this commission

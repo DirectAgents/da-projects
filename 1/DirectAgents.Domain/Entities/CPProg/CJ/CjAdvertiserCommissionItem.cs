@@ -5,7 +5,7 @@ namespace DirectAgents.Domain.Entities.CPProg.CJ
     /// <summary>
     /// Commision Junction item db related entity 
     /// </summary>
-    public class CjCommissionItem
+    public class CjAdvertiserCommissionItem
     {
         /// <summary>
         /// Gets or sets the db identifier.
@@ -15,7 +15,7 @@ namespace DirectAgents.Domain.Entities.CPProg.CJ
         /// <summary>
         /// Gets or sets the commision identifier. Foregn key to AdvertiserCommissions Table
         /// </summary>
-        public int? CommissionId { get; set; }
+        public int CommissionId { get; set; }
 
         /// <summary>
         /// Commision entity from AdvertiserCommissions Table mapped by CommissionId 
