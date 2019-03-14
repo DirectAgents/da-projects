@@ -4,7 +4,6 @@ using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Threading;
-using System.Threading.Tasks;
 using CommissionJunction.Entities;
 using CommissionJunction.Entities.RequestEntities;
 using CommissionJunction.Entities.ResponseEntities;

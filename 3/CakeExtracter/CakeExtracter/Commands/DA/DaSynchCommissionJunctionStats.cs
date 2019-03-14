@@ -92,8 +92,9 @@ namespace CakeExtracter.Commands.DA
 
         private void DoEtls(CjUtility utility, DateRange dateRange, ExtAccount account)
         {
-            var extractor = new CommissionJunctionAdvertiserExtractor(utility, dateRange, account);
-            var loader = new CommissionJunctionAdvertiserLoader();
+            var cleaner = new CommissionJunctionAdvertiserCleaner();
+            var extractor = new CommissionJunctionAdvertiserExtractor(utility, cleaner, dateRange, account);
+            var loader = new CommissionJunctionAdvertiserLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
