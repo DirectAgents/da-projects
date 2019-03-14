@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Linq;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.CommissionJunctionLoaders;
 using CommissionJunction.Enums;
 using CommissionJunction.Utilities;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.CJ;
-using System.Data.SqlTypes;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors
 {
@@ -34,13 +32,20 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors
         {
             Logger.Info(account.Id, "Extracting Commissions from Commission Junction API for ({0}) from {1:d} to {2:d} (date range type - {3})",
                 account.ExternalId, dateRange.FromDate, dateRange.ToDate, dateRangeType);
-            cleaner.CleanCommissionJunctionInfo(account.Id, dateRange.FromDate, dateRange.ToDate); 
-            var commissionsEnumerable = utility.GetAdvertiserCommissions(dateRangeType, dateRange.FromDate, dateRange.ToDate.AddDays(1), account.ExternalId);
+            Extract(dateRange.FromDate, dateRange.ToDate);
+            End();
+        }
+
+        private void Extract(DateTime fromDate, DateTime toDate)
+        {
+            var isCleaned = false;
+            var commissionsEnumerable = utility.GetAdvertiserCommissions(dateRangeType, fromDate, toDate.AddDays(1), account.ExternalId);
             foreach (var commissions in commissionsEnumerable)
             {
                 try
                 {
-                    var items = mapper.MapCommissionJunctionInfoToDbEntities(commissions.ToList(), account.Id);
+                    CleanDataIfNeed(fromDate, toDate, ref isCleaned);
+                    var items = mapper.MapCommissionJunctionInfoToDbEntities(commissions, account.Id);
                     Add(items);
                 }
                 catch (Exception e)
@@ -48,7 +53,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors
                     Logger.Error(account.Id, e);
                 }
             }
-            End();
+        }
+
+        private void CleanDataIfNeed(DateTime fromDate, DateTime toDate, ref bool isCleaned)
+        {
+            if (isCleaned)
+            {
+                return;
+            }
+
+            cleaner.CleanCommissionJunctionInfo(account.Id, fromDate, toDate);
+            isCleaned = true;
         }
     }
 }
