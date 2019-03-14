@@ -9,7 +9,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.CommissionJunctionLoaders
     /// <summary>
     /// Commission junction advertiser loader.
     /// </summary>
-    /// <seealso cref="CakeExtracter.Etl.Loader{DirectAgents.Domain.Entities.CPProg.CJ.CjAdvertiserCommission}" />
+    /// <seealso cref="Etl.Loader{CjAdvertiserCommission}" />
     internal class CommissionJunctionAdvertiserLoader : Loader<CjAdvertiserCommission>
     {
         private static object CjLocker = new object();
@@ -31,7 +31,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.CommissionJunctionLoaders
         {
             try
             {
-                SafeContextWrapper.TryMakeTransactionWithLock<ClientPortalProgContext>((dbContext) =>
+                SafeContextWrapper.TryMakeTransactionWithLock<ClientPortalProgContext>(dbContext =>
                 {
                     dbContext.BulkInsert(items, options => options.IncludeGraph = true); // includes loading child(CjAdvertiserCommissionItem) items.
                 }, CjLocker, "BulkInserting");

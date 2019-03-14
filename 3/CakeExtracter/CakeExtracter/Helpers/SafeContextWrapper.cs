@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -90,34 +89,6 @@ namespace CakeExtracter.Helpers
             }
 
             return 0;
-        }
-
-        public static void TryBulkInsert<T, TItem>(object contextLocker, List<TItem> items)
-            where T : DbContext, new()
-            where TItem: class
-        {
-            try
-            {
-                TryToMakeTransactionManyTimes(false, contextLocker, (T db) => db.BulkInsert(items));
-            }
-            catch (Exception exception)
-            {
-                LogEndOfRetrying(exception, "BulkInsert");
-            }
-        }
-
-        public static void TryBulkInsert<T, TItem>(List<TItem> items)
-            where T : DbContext, new()
-            where TItem : class
-        {
-            try
-            {
-                TryToMakeTransactionManyTimes(false, (T db) => db.BulkInsert(items));
-            }
-            catch (Exception exception)
-            {
-                LogEndOfRetrying(exception, "BulkInsert");
-            }
         }
 
         public static void TryMakeTransaction<T>(Action<T> transactionAction, string level)
