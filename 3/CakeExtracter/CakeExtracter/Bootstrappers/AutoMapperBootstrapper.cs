@@ -2,7 +2,9 @@
 using System.ComponentModel.Composition;
 using AutoMapper;
 using ClientPortal.Data.Contexts;
+using CommissionJunction.Entities;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.CJ;
 
 namespace CakeExtracter.Bootstrappers
 {
@@ -117,6 +119,8 @@ namespace CakeExtracter.Bootstrappers
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.Conv, DirectAgents.Domain.Entities.CPProg.Conv>();
                 cfg.CreateMap<DirectAgents.Domain.Entities.AdRoll.AdDailySummary, DirectAgents.Domain.Entities.AdRoll.AdDailySummary>();
                 cfg.CreateMap<DirectAgents.Domain.Entities.DBM.CreativeDailySummary, DirectAgents.Domain.Entities.DBM.CreativeDailySummary>();
+                cfg.CreateMap<AdvertiserCommission, CjAdvertiserCommission>();
+                cfg.CreateMap<CommissionJunction.Entities.Item, CjAdvertiserCommissionItem>();
             });
         }
 

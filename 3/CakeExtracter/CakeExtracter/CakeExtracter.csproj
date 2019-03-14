@@ -677,6 +677,7 @@
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\BaseAmazonLevelLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\CommissionJunctionLoaders\CommissionJunctionAdvertiserLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\CommissionJunctionLoaders\CommissionJunctionAdvertiserCleaner.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\CommissionJunctionLoaders\CommissionJunctionAdvertiserMapper.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\DbmConvLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\Interfaces\IDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\Interfaces\ISummaryMetricLoader.cs" />
