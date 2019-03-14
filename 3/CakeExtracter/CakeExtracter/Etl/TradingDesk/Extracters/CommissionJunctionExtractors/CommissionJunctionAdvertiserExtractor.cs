@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using CakeExtracter.Common;
+using CommissionJunction.Entities;
 using CommissionJunction.Utilities;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.CJ;
@@ -25,11 +27,12 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors
                 account.ExternalId, dateRange.FromDate, dateRange.ToDate);
 
             var commissionsEnumerable = utility.GetAdvertiserCommissions(dateRange.FromDate, dateRange.ToDate, account.ExternalId);
-            foreach (var  commission in commissionsEnumerable)
+            foreach (var  commissions in commissionsEnumerable)
             {
                 try
                 {
-                    Add(new CjAdvertiserCommission());
+                    var items = commissions.Select(TransformCommission).ToList();
+                    Add(items);
                 }
                 catch (Exception e)
                 {
@@ -38,6 +41,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors
             }
 
             End();
+        }
+
+        private CjAdvertiserCommission TransformCommission(AdvertiserCommission commission)
+        {
+            return null;
         }
     }
 }

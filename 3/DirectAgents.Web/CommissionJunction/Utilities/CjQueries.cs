@@ -1,8 +1,16 @@
-﻿namespace CommissionJunction.Utilities
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace CommissionJunction.Utilities
 {
     internal class CjQueries
     {
-        private const string AdvertiserCommissionsFiltersTemplate = "forAdvertisers: [\"{0}\"], sincePostingDate: \"{1}\", beforePostingDate: \"{2}\"";
+        private const string ForAdvertisersFilterTemplate = "forAdvertisers: [\"{0}\"]";
+        private const string SincePostingDateFilterTemplate = "sincePostingDate: \"{0}\"";
+        private const string BeforePostingDateFilterTemplate = "beforePostingDate: \"{0}\"";
+        private const string SinceCommissionIdFilterTemplate = "sinceCommissionId: \"{0}\"";
+
+        private const string FiltersDelimiter = ",";
 
         private const string AdvertiserCommissionsQueryTemplate = @"
         {{
@@ -70,15 +78,27 @@
           }}
         }}";
 
-        public static string GetAdvertiserCommissionsQuery(string advertiserId, string sinceDateTime, string beforeDateTime)
+        public static string GetAdvertiserCommissionsQuery(string advertiserId, string sinceDateTime, string beforeDateTime, string sinceCommissionId = null)
         {
-            var filters = string.Format(AdvertiserCommissionsFiltersTemplate, advertiserId, sinceDateTime, beforeDateTime);
-            return MergeQueryAndFilters(AdvertiserCommissionsQueryTemplate, filters);
+            var filters = GetFormattedFilters(
+                new List<string> {ForAdvertisersFilterTemplate, SincePostingDateFilterTemplate, BeforePostingDateFilterTemplate},
+                new List<object> {advertiserId, sinceDateTime, beforeDateTime}, 
+                sinceCommissionId);
+            var query = string.Format(AdvertiserCommissionsQueryTemplate, filters);
+            return query;
         }
 
-        private static string MergeQueryAndFilters(string query, string filters)
+        private static string GetFormattedFilters(List<string> filterNames, List<object> filterValues, string sinceCommissionId = null)
         {
-            return string.Format(query, filters);
+            if (!string.IsNullOrEmpty(sinceCommissionId))
+            {
+                filterNames.Add(SinceCommissionIdFilterTemplate);
+                filterValues.Add(sinceCommissionId);
+            }
+
+            var filters = filterNames.Select((filterName, i) => string.Format(filterName, filterValues[i])).ToList();
+            var filter = string.Join(FiltersDelimiter, filters);
+            return filter;
         }
     }
 }

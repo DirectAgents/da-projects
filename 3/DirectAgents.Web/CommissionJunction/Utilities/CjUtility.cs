@@ -4,9 +4,11 @@ using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using CommissionJunction.Entities;
 using CommissionJunction.Entities.RequestEntities;
 using CommissionJunction.Entities.ResponseEntities;
+using CommissionJunction.Exceptions;
 using Polly;
 using RestSharp;
 
@@ -45,9 +47,9 @@ namespace CommissionJunction.Utilities
             InitializeVariablesFromConfig();
         }
 
-        public CjUtility(Action<string> logInfo, Action<string> logError)
+        public CjUtility(Action<string> logInfo, Action<Exception> logError, Action<string> logWarning)
         {
-            logger = new CjLogger(logInfo, logError);
+            logger = new CjLogger(logInfo, logError, logWarning);
         }
 
         // for alternative credentials...
@@ -64,11 +66,10 @@ namespace CommissionJunction.Utilities
             }
         }
 
-        public IEnumerable<AdvertiserCommission> GetAdvertiserCommissions(DateTime fromDateTime, DateTime toDateTime, string accountId)
+        public IEnumerable<List<AdvertiserCommission>> GetAdvertiserCommissions(DateTime fromDateTime, DateTime toDateTime, string accountId)
         {
-            var query = GetAdvertiserCommissionsQueryForOneDay(fromDateTime, toDateTime, accountId);
-            var items = GetQueryData(query);
-            return items;
+            return GetItemsForAllDateRanges(fromDateTime, toDateTime, accountId,
+                (startTime, endTime) => GetAdvertiserCommissionsData(startTime, endTime, accountId));
         }
 
         private static void InitializeAccessTokens()
@@ -105,20 +106,56 @@ namespace CommissionJunction.Utilities
             return symbol == ',' ? string.Empty : ",";
         }
 
-        private string GetAdvertiserCommissionsQueryForOneDay(DateTime fromDateTime, DateTime toDateTime, string accountId)
+        public IEnumerable<List<T>> GetItemsForAllDateRanges<T>(DateTime fromDateTime, DateTime toDateTime,
+            string accountId, Func<string, string, IEnumerable<List<T>>> getItemsFunc)
         {
-            var startDayTime = fromDateTime.ToString(DateFormat);
-            var endDayTime = toDateTime.AddDays(1).ToString(DateFormat);
-            var query = CjQueries.GetAdvertiserCommissionsQuery(accountId, startDayTime, endDayTime);
-            return query;
+            while (fromDateTime < toDateTime)
+            {
+                var nextDateRangeStartTime = fromDateTime.AddDays(MaxDaysNumberForSingleReport);
+                var endTime = toDateTime < nextDateRangeStartTime ? toDateTime : nextDateRangeStartTime;
+                var items = GetItems(fromDateTime, endTime.AddSeconds(-1), accountId, getItemsFunc);
+                foreach (var itemsEnumerable in items)
+                {
+                    yield return itemsEnumerable;
+                }
+                fromDateTime = endTime;
+            }
         }
 
-        private IEnumerable<AdvertiserCommission> GetQueryData(string query)
+        public IEnumerable<List<T>> GetItems<T>(DateTime fromDateTime, DateTime toDateTime, string accountId,
+            Func<string, string, IEnumerable<List<T>>> getItemsFunc)
+        {
+            try
+            {
+                return getItemsFunc(fromDateTime.ToString(DateFormat), toDateTime.ToString(DateFormat));
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(new SkippedCommissionsException(fromDateTime, toDateTime, accountId, exception));
+                return new List<List<T>>();
+            }
+        }
+
+        private IEnumerable<List<AdvertiserCommission>> GetAdvertiserCommissionsData(string startTime, string endTime, string accountId)
+        {
+            logger.LogInfo($"Get Advertiser Commissions from API: {startTime} - {endTime}");
+            var query = CjQueries.GetAdvertiserCommissionsQuery(accountId, startTime, endTime);
+            var responseData = GetAdvertiserCommissionsData(query);
+            yield return responseData.Records;
+
+            while (!responseData.PayloadComplete)
+            {
+                query = CjQueries.GetAdvertiserCommissionsQuery(accountId, startTime, endTime, responseData.MaxCommissionId);
+                responseData = GetAdvertiserCommissionsData(query);
+                yield return responseData.Records;
+            }
+        }
+
+        private CjQueryResponse<AdvertiserCommission> GetAdvertiserCommissionsData(string query)
         {
             var request = CreateQueryRequest(query);
             var response = GetResponseData<CjAdvertiserCommissionsResponse>(request);
-            var data = response.AdvertiserCommissions.Records.ToList();
-            return data;
+            return response.AdvertiserCommissions;
         }
 
         private IRestRequest CreateQueryRequest(string query)
@@ -139,7 +176,7 @@ namespace CommissionJunction.Utilities
             }
             catch (Exception e)
             {
-                logger.LogError(e.Message);
+                logger.LogWarning(e.Message);
                 return null;
             }
         }
@@ -177,7 +214,7 @@ namespace CommissionJunction.Utilities
                 .Handle<Exception>()
                 .OrResult<IRestResponse<T>>(resp => resp.StatusCode != HttpStatusCode.OK)
                 .WaitAndRetry(waitAttemptsNumber, retryNumber => TimeSpan.FromSeconds(waitTimeInSeconds), (exception, timeSpan, retryCount, context) =>
-                        logger.LogWaiting("Retry one more time, wait {0} seconds.", timeSpan, retryCount, exception))
+                    logger.LogWaiting("Retry one more time, wait {0} seconds.", timeSpan, retryCount, exception))
                 .Execute(() => ProcessRequest<T>(restRequest, isPostMethod));
             return response;
         }

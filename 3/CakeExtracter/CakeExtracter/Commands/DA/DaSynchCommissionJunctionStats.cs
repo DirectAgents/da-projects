@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Threading.Tasks;
-using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.CommissionJunctionLoaders;
@@ -85,7 +84,8 @@ namespace CakeExtracter.Commands.DA
 
         private CjUtility CreateUtility(ExtAccount account)
         {
-            var utility = new CjUtility(message => Logger.Info(account.Id, message), message => Logger.Error(account.Id, new Exception(message)));
+            var utility = new CjUtility(message => Logger.Info(account.Id, message),
+                exc => Logger.Error(account.Id, exc), message => Logger.Warn(account.Id, message));
             utility.SetWhichAlt(account.ExternalId);
             return utility;
         }

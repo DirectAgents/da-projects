@@ -9,12 +9,14 @@ namespace CommissionJunction.Utilities
         private const string LoggerPrefix = "[Commission Junction]";
 
         private readonly Action<string> logInfo;
-        private readonly Action<string> logError;
+        private readonly Action<Exception> logError;
+        private readonly Action<string> logWarning;
 
-        public CjLogger(Action<string> logInfo, Action<string> logError)
+        public CjLogger(Action<string> logInfo, Action<Exception> logError, Action<string> logWarning)
         {
             this.logInfo = logInfo;
             this.logError = logError;
+            this.logWarning = logWarning;
         }
 
         public void LogInfo(string message)
@@ -30,7 +32,19 @@ namespace CommissionJunction.Utilities
             }
         }
 
-        public void LogError(string message)
+        public void LogError(Exception exception)
+        {
+            if (logError == null)
+            {
+                Console.WriteLine(exception);
+            }
+            else
+            {
+                logError(exception);
+            }
+        }
+
+        public void LogWarning(string message)
         {
             var updatedMessage = GetMessageInCorrectFormat(message);
             if (logError == null)
@@ -39,7 +53,7 @@ namespace CommissionJunction.Utilities
             }
             else
             {
-                logError(updatedMessage);
+                logWarning(updatedMessage);
             }
         }
 
