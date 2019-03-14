@@ -381,14 +381,13 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             }
             catch (Exception e)
             {
-                if (e.InnerException != null &&
-                    e.InnerException.Message.Contains("Invalid object name 'dbo.CurrencyConversion'"))
+                if (e.InnerException is System.Data.SqlClient.SqlException)
                 {
                     Logger.Warn("Table 'dbo.CurrencyConversion' does not exist in database");
                     return currencyConversions;
                 }
 
-                throw;
+                throw new Exception("Could not get a list of currency conversions.", e);
             }
         }
     }
