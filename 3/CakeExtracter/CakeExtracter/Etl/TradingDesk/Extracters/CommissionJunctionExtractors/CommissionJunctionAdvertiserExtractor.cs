@@ -34,9 +34,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors
         {
             Logger.Info(account.Id, "Extracting Commissions from Commission Junction API for ({0}) from {1:d} to {2:d} (date range type - {3})",
                 account.ExternalId, dateRange.FromDate, dateRange.ToDate, dateRangeType);
-            //TODO: Invoke when it's right place with correct params
-            cleaner.CleanCommissionJunctionInfo(account.Id, (DateTime)SqlDateTime.MinValue, (DateTime)SqlDateTime.MaxValue); 
-            var commissionsEnumerable = utility.GetAdvertiserCommissions(dateRangeType, dateRange.FromDate, dateRange.ToDate, account.ExternalId);
+            cleaner.CleanCommissionJunctionInfo(account.Id, dateRange.FromDate, dateRange.ToDate); 
+            var commissionsEnumerable = utility.GetAdvertiserCommissions(dateRangeType, dateRange.FromDate, dateRange.ToDate.AddDays(1), account.ExternalId);
             foreach (var commissions in commissionsEnumerable)
             {
                 try

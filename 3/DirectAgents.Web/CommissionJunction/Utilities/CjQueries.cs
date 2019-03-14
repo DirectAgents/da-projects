@@ -8,7 +8,7 @@ namespace CommissionJunction.Utilities
 {
     internal class CjQueries
     {
-        private const string ForAdvertisersFilterTemplate = "forAdvertisers: [\"{0}\"]";
+        private const string ForAdvertisersFilterTemplate = "forAdvertisers: [\"{0}\"]"; //required filter for Advertiser Commissions queries
         private const string SincePostingDateFilterTemplate = "sincePostingDate: \"{0}\"";
         private const string BeforePostingDateFilterTemplate = "beforePostingDate: \"{0}\"";
         private const string SinceEventDateFilterTemplate = "sinceEventDate: \"{0}\"";

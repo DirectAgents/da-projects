@@ -4,8 +4,8 @@ namespace CommissionJunction.Exceptions
 {
     internal class SkippedCommissionsException :Exception
     {
-        public SkippedCommissionsException(DateTime startTime, DateTime endTime, string accountId, Exception exception) : base(
-            $"Commissions were not extracted from the API for the following arguments: accountExternalId = {accountId}, startTime = {startTime}, endTime = {endTime}, exception - {exception.Message}")
+        public SkippedCommissionsException(string sinceTime, string beforeTime, string accountId, Exception exception) : base(
+            $"Commissions were not extracted from the API for the following arguments: accountExternalId = {accountId}, sinceTime = {sinceTime}, beforeTime = {beforeTime}, exception - {exception.Message}")
         {
         }
     }
