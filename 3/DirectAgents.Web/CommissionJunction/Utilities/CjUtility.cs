@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using CommissionJunction.Entities;
 using CommissionJunction.Entities.QueryParams;
 using CommissionJunction.Entities.RequestEntities;
@@ -81,7 +82,15 @@ namespace CommissionJunction.Utilities
             }
         }
 
-        public IEnumerable<List<AdvertiserCommission>> GetAdvertiserCommissions(DateRangeType dateRangeType,
+        /// <summary>
+        /// Get Advertiser commissions from the API.
+        /// </summary>
+        /// <param name="dateRangeType">Enum to determine the type of date filters used for API requests.</param>
+        /// <param name="sinceDateTime">Since date</param>
+        /// <param name="beforeDateTime">Before date</param>
+        /// <param name="accountId">Advertiser id</param>
+        /// <returns>Advertiser commissions</returns>
+        public List<AdvertiserCommission> GetAdvertiserCommissions(DateRangeType dateRangeType,
             DateTime sinceDateTime, DateTime beforeDateTime, string accountId)
         {
             return GetItemsForAllDateRanges(sinceDateTime, beforeDateTime, accountId,
@@ -122,61 +131,69 @@ namespace CommissionJunction.Utilities
             return symbol == ',' ? string.Empty : ",";
         }
 
-        public IEnumerable<List<T>> GetItemsForAllDateRanges<T>(DateTime sinceDate, DateTime beforeDate,
-            string accountId, Func<string, string, IEnumerable<List<T>>> getItemsFunc)
+        public List<T> GetItemsForAllDateRanges<T>(DateTime sinceDate, DateTime beforeDate,
+            string accountId, Func<string, string, List<T>> getItemsFunc)
         {
+            var allItems = new List<T>();
+            var tasks = new List<Task>();
             while (sinceDate < beforeDate)
             {
                 var nextDateRangeStartTime = sinceDate.AddDays(MaxDaysNumberForSingleReport);
                 var endTime = beforeDate < nextDateRangeStartTime ? beforeDate : nextDateRangeStartTime;
-                var items = getItemsFunc(sinceDate.ToString(DateFormat), endTime.ToString(DateFormat));
-                foreach (var itemsEnumerable in items)
-                {
-                    yield return itemsEnumerable;
-                }
+                var startTime = sinceDate;
+                var task = Task.Factory
+                    .StartNew(() => getItemsFunc(startTime.ToString(DateFormat), endTime.ToString(DateFormat)))
+                    .ContinueWith(x => allItems.AddRange(x.Result));
+                tasks.Add(task);
                 sinceDate = endTime;
             }
+
+            Task.WaitAll(tasks.ToArray());
+            return allItems;
         }
 
-        private IEnumerable<List<AdvertiserCommission>> GetAdvertiserCommissionsData(DateRangeType dataRangeType,
+        private List<AdvertiserCommission> GetAdvertiserCommissionsData(DateRangeType dataRangeType,
             string sinceTime, string beforeTime, string accountId)
         {
-            logger.LogInfo($"Get Advertiser Commissions from API (since {sinceTime}, before {beforeTime})");
-            var queryParams = new AdvertiserCommissionQueryParams {AdvertiserId = accountId, SinceDateTime = sinceTime, BeforeDateTime = beforeTime};
-            var responseData = GetAdvertiserCommissionsData(queryParams, dataRangeType);
-            if (responseData != null)
+            try
             {
-                yield return responseData.Records;
+                logger.LogInfo($"Get Advertiser Commissions from API (since {sinceTime}, before {beforeTime})");
+                var queryParams = new AdvertiserCommissionQueryParams {AdvertiserId = accountId, SinceDateTime = sinceTime, BeforeDateTime = beforeTime};
+                return GetAllCommissions(queryParams, dataRangeType, GetAdvertiserCommissionsData);
             }
-
-            while (responseData != null && !responseData.PayloadComplete)
+            catch (Exception exception)
             {
-                queryParams.SinceCommissionId = responseData.MaxCommissionId;
-                responseData = GetAdvertiserCommissionsData(queryParams, dataRangeType);
-                if (responseData != null)
-                {
-                    yield return responseData.Records;
-                }
+                var exc = new SkippedCommissionsException(sinceTime, beforeTime, accountId, exception);
+                logger.LogError(exc);
+                return new List<AdvertiserCommission>();
             }
         }
 
         private CjQueryResponse<AdvertiserCommission> GetAdvertiserCommissionsData(AdvertiserCommissionQueryParams queryParams, DateRangeType dataRangeType)
         {
-            try
+            var query = CjQueries.GetAdvertiserCommissionsQuery(queryParams, dataRangeType);
+            var request = CreateQueryRequest(query);
+            var response = GetResponseData<CjAdvertiserCommissionsResponse>(request);
+            var responseData = response.AdvertiserCommissions;
+            logger.LogInfo($"Extracted {responseData.Count} items (payloadCompleted = {responseData.PayloadComplete}, limit = {responseData.Limit})");
+            return responseData;
+        }
+
+        private List<T> GetAllCommissions<T, TQueryParams>(TQueryParams queryParams, DateRangeType dataRangeType,
+            Func<TQueryParams, DateRangeType, CjQueryResponse<T>> getCommissionsFunc)
+            where TQueryParams : BaseQueryParams
+        {
+            var items = new List<T>();
+            var responseData = getCommissionsFunc(queryParams, dataRangeType);
+            items.AddRange(responseData.Records);
+            while (!responseData.PayloadComplete)
             {
-                var query = CjQueries.GetAdvertiserCommissionsQuery(queryParams, dataRangeType);
-                var request = CreateQueryRequest(query);
-                var response = GetResponseData<CjAdvertiserCommissionsResponse>(request);
-                var responseData = response.AdvertiserCommissions;
-                logger.LogInfo($"Extracted {responseData.Count} items (payloadCompleted = {responseData.PayloadComplete}, limit = {responseData.Limit})");
-                return responseData;
+                queryParams.SinceCommissionId = responseData.MaxCommissionId;
+                responseData = getCommissionsFunc(queryParams, dataRangeType);
+                items.AddRange(responseData.Records);
             }
-            catch (Exception exception)
-            {
-                var exc = new SkippedCommissionsException(queryParams.SinceDateTime, queryParams.BeforeDateTime, queryParams.AdvertiserId, exception);
-                logger.LogError(exc);
-                return null;
-            }
+
+            return items;
         }
 
         private IRestRequest CreateQueryRequest(string query)

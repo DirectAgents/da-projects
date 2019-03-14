@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\QueryParams\AdvertiserCommissionQueryParams.cs" />
+    <Compile Include="Entities\QueryParams\BaseQueryParams.cs" />
     <Compile Include="Entities\RequestEntities\CjRequestParams.cs" />
     <Compile Include="Entities\ResponseEntities\CjAdvertiserCommissionsResponse.cs" />
     <Compile Include="Enums\DateRangeType.cs" />

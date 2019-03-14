@@ -52,32 +52,17 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors
 
         private void Extract(DateTime fromDate, DateTime toDate)
         {
-            var isCleaned = false;
-            var commissionsEnumerable = utility.GetAdvertiserCommissions(dateRangeType, fromDate, toDate.AddDays(1), account.ExternalId);
-            foreach (var commissions in commissionsEnumerable)
+            try
             {
-                try
-                {
-                    CleanDataIfNeed(fromDate, toDate, ref isCleaned);
-                    var items = mapper.MapCommissionJunctionInfoToDbEntities(commissions, account.Id);
-                    Add(items);
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(account.Id, e);
-                }
+                var commissions = utility.GetAdvertiserCommissions(dateRangeType, fromDate, toDate.AddDays(1), account.ExternalId);
+                var items = mapper.MapCommissionJunctionInfoToDbEntities(commissions, account.Id);
+                cleaner.CleanCommissionJunctionInfo(account.Id, fromDate, toDate);
+                Add(items);
             }
-        }
-
-        private void CleanDataIfNeed(DateTime fromDate, DateTime toDate, ref bool isCleaned)
-        {
-            if (isCleaned)
+            catch (Exception e)
             {
-                return;
+                Logger.Error(account.Id, e);
             }
-
-            cleaner.CleanCommissionJunctionInfo(account.Id, fromDate, toDate);
-            isCleaned = true;
         }
     }
 }
