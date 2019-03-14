@@ -6,6 +6,9 @@ using CommissionJunction.Enums;
 
 namespace CommissionJunction.Utilities
 {
+    /// <summary>
+    /// The class defines methods for receiving queries to execute API Commission Junction requests.
+    /// </summary>
     internal class CjQueries
     {
         private const string ForAdvertisersFilterTemplate = "forAdvertisers: [\"{0}\"]"; //required filter for Advertiser Commissions queries
@@ -85,6 +88,12 @@ namespace CommissionJunction.Utilities
           }}
         }}";
 
+        /// <summary>
+        /// Returns a prepared query with certain filters as a string.
+        /// </summary>
+        /// <param name="queryParams">A model that contains values ​​that should be in a returned query. <see cref="AdvertiserCommissionQueryParams"/></param>
+        /// <param name="dateRangeType">Date range filter type <see cref="DateRangeType"/></param>
+        /// <returns>Advertiser Commissions query</returns>
         public static string GetAdvertiserCommissionsQuery(AdvertiserCommissionQueryParams queryParams, DateRangeType dateRangeType)
         {
             var filters = GetFormattedFilters(

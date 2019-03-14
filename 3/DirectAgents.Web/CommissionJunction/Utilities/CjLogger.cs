@@ -4,6 +4,9 @@ using RestSharp;
 
 namespace CommissionJunction.Utilities
 {
+    /// <summary>
+    /// The logger of Commission Junction utility
+    /// </summary>
     internal class CjLogger
     {
         private const string LoggerPrefix = "[Commission Junction]";
@@ -12,6 +15,12 @@ namespace CommissionJunction.Utilities
         private readonly Action<Exception> logError;
         private readonly Action<string> logWarning;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logInfo"></param>
+        /// <param name="logError"></param>
+        /// <param name="logWarning"></param>
         public CjLogger(Action<string> logInfo, Action<Exception> logError, Action<string> logWarning)
         {
             this.logInfo = logInfo;
@@ -19,6 +28,10 @@ namespace CommissionJunction.Utilities
             this.logWarning = logWarning;
         }
 
+        /// <summary>
+        /// Log a message as info.
+        /// </summary>
+        /// <param name="message">Message for logging</param>
         public void LogInfo(string message)
         {
             var updatedMessage = GetMessageInCorrectFormat(message);
@@ -32,6 +45,10 @@ namespace CommissionJunction.Utilities
             }
         }
 
+        /// <summary>
+        /// Log an exception.
+        /// </summary>
+        /// <param name="exception">Exception for logging</param>
         public void LogError(Exception exception)
         {
             if (logError == null)
@@ -44,6 +61,10 @@ namespace CommissionJunction.Utilities
             }
         }
 
+        /// <summary>
+        /// Log a message as warning.
+        /// </summary>
+        /// <param name="message">Message for logging</param>
         public void LogWarning(string message)
         {
             var updatedMessage = GetMessageInCorrectFormat(message);
@@ -57,6 +78,14 @@ namespace CommissionJunction.Utilities
             }
         }
 
+        /// <summary>
+        /// Log a message about waiting.
+        /// </summary>
+        /// <typeparam name="T">Type of expected results</typeparam>
+        /// <param name="formattedMessageWithoutTime">Message template for logging</param>
+        /// <param name="timeSpan">Timeout</param>
+        /// <param name="retryNumber">Number of attempt</param>
+        /// <param name="response">The captured Polly's outcome</param>
         public void LogWaiting<T>(string formattedMessageWithoutTime, TimeSpan timeSpan, int retryNumber, DelegateResult<IRestResponse<T>> response)
         {
             var waitDetails = response.Exception == null ? response.Result.Content : response.Exception.Message;

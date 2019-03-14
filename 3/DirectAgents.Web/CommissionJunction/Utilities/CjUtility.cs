@@ -15,6 +15,9 @@ using RestSharp;
 
 namespace CommissionJunction.Utilities
 {
+    /// <summary>
+    /// Commission Junction utility to send API requests
+    /// </summary>
     public class CjUtility
     {
         private const string GraphQlApiUrl = "https://commissions.api.cj.com/query";
@@ -39,6 +42,9 @@ namespace CommissionJunction.Utilities
 
         private readonly CjLogger logger;
 
+        /// <summary>
+        /// Number of an alt account number to use specific access values ​​for Api (for alternate credentials)
+        /// </summary>
         public int WhichAlt { get; set; } // default: 0
 
         static CjUtility()
@@ -47,12 +53,21 @@ namespace CommissionJunction.Utilities
             InitializeVariablesFromConfig();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CjUtility"/> class.
+        /// </summary>
+        /// <param name="logInfo">Action that logs infos</param>
+        /// <param name="logError">Action that logs errors</param>
+        /// <param name="logWarning">Action that logs warnings</param>
         public CjUtility(Action<string> logInfo, Action<Exception> logError, Action<string> logWarning)
         {
             logger = new CjLogger(logInfo, logError, logWarning);
         }
 
-        // for alternative credentials...
+        /// <summary>
+        /// Set an alt account number to use specific access values ​​for Api (for alternate credentials)
+        /// </summary>
+        /// <param name="accountId">Account external id</param>
         public void SetWhichAlt(string accountId)
         {
             WhichAlt = 0; //default
