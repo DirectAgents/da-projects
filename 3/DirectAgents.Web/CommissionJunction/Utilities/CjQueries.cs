@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using CommissionJunction.Entities.QueryParams;
+using CommissionJunction.Enums;
 
 namespace CommissionJunction.Utilities
 {
@@ -8,6 +11,10 @@ namespace CommissionJunction.Utilities
         private const string ForAdvertisersFilterTemplate = "forAdvertisers: [\"{0}\"]";
         private const string SincePostingDateFilterTemplate = "sincePostingDate: \"{0}\"";
         private const string BeforePostingDateFilterTemplate = "beforePostingDate: \"{0}\"";
+        private const string SinceEventDateFilterTemplate = "sinceEventDate: \"{0}\"";
+        private const string BeforeEventDateFilterTemplate = "beforeLockingDate: \"{0}\"";
+        private const string SinceLockingDateFilterTemplate = "sinceLockingDate: \"{0}\"";
+        private const string BeforeLockingDateFilterTemplate = "beforeEventDate: \"{0}\"";
         private const string SinceCommissionIdFilterTemplate = "sinceCommissionId: \"{0}\"";
 
         private const string FiltersDelimiter = ",";
@@ -78,12 +85,12 @@ namespace CommissionJunction.Utilities
           }}
         }}";
 
-        public static string GetAdvertiserCommissionsQuery(string advertiserId, string sinceDateTime, string beforeDateTime, string sinceCommissionId = null)
+        public static string GetAdvertiserCommissionsQuery(AdvertiserCommissionQueryParams queryParams, DateRangeType dateRangeType)
         {
             var filters = GetFormattedFilters(
-                new List<string> {ForAdvertisersFilterTemplate, SincePostingDateFilterTemplate, BeforePostingDateFilterTemplate},
-                new List<object> {advertiserId, sinceDateTime, beforeDateTime}, 
-                sinceCommissionId);
+                new List<string> {ForAdvertisersFilterTemplate, GetSinceDateFilterTemplate(dateRangeType),GetBeforeDateFilterTemplate(dateRangeType)},
+                new List<object> {queryParams.AdvertiserId, queryParams.SinceDateTime, queryParams.BeforeDateTime},
+                queryParams.SinceCommissionId);
             var query = string.Format(AdvertiserCommissionsQueryTemplate, filters);
             return query;
         }
@@ -99,6 +106,36 @@ namespace CommissionJunction.Utilities
             var filters = filterNames.Select((filterName, i) => string.Format(filterName, filterValues[i])).ToList();
             var filter = string.Join(FiltersDelimiter, filters);
             return filter;
+        }
+
+        private static string GetSinceDateFilterTemplate(DateRangeType dateRangeType)
+        {
+            switch (dateRangeType)
+            {
+                case DateRangeType.Posting:
+                    return SincePostingDateFilterTemplate;
+                case DateRangeType.Locking:
+                    return SinceLockingDateFilterTemplate;
+                case DateRangeType.Event:
+                    return SinceEventDateFilterTemplate;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(dateRangeType), dateRangeType, null);
+            }
+        }
+
+        private static string GetBeforeDateFilterTemplate(DateRangeType dateRangeType)
+        {
+            switch (dateRangeType)
+            {
+                case DateRangeType.Posting:
+                    return BeforePostingDateFilterTemplate;
+                case DateRangeType.Locking:
+                    return BeforeLockingDateFilterTemplate;
+                case DateRangeType.Event:
+                    return BeforeEventDateFilterTemplate;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(dateRangeType), dateRangeType, null);
+            }
         }
     }
 }

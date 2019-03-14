@@ -5,8 +5,10 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using CommissionJunction.Entities;
+using CommissionJunction.Entities.QueryParams;
 using CommissionJunction.Entities.RequestEntities;
 using CommissionJunction.Entities.ResponseEntities;
+using CommissionJunction.Enums;
 using CommissionJunction.Exceptions;
 using Polly;
 using RestSharp;
@@ -65,10 +67,11 @@ namespace CommissionJunction.Utilities
             }
         }
 
-        public IEnumerable<List<AdvertiserCommission>> GetAdvertiserCommissions(DateTime fromDateTime, DateTime toDateTime, string accountId)
+        public IEnumerable<List<AdvertiserCommission>> GetAdvertiserCommissions(DateRangeType dateRangeType,
+            DateTime fromDateTime, DateTime toDateTime, string accountId)
         {
             return GetItemsForAllDateRanges(fromDateTime, toDateTime, accountId,
-                (startTime, endTime) => GetAdvertiserCommissionsData(startTime, endTime, accountId));
+                (startTime, endTime) => GetAdvertiserCommissionsData(dateRangeType, startTime, endTime, accountId));
         }
 
         private static void InitializeAccessTokens()
@@ -112,7 +115,7 @@ namespace CommissionJunction.Utilities
             {
                 var nextDateRangeStartTime = fromDateTime.AddDays(MaxDaysNumberForSingleReport);
                 var endTime = toDateTime < nextDateRangeStartTime ? toDateTime : nextDateRangeStartTime;
-                var items = GetItems(fromDateTime, endTime.AddSeconds(-1), accountId, getItemsFunc);
+                var items = GetItems(fromDateTime, endTime, accountId, getItemsFunc);
                 foreach (var itemsEnumerable in items)
                 {
                     yield return itemsEnumerable;
@@ -135,16 +138,19 @@ namespace CommissionJunction.Utilities
             }
         }
 
-        private IEnumerable<List<AdvertiserCommission>> GetAdvertiserCommissionsData(string startTime, string endTime, string accountId)
+        private IEnumerable<List<AdvertiserCommission>> GetAdvertiserCommissionsData(DateRangeType dataRangeType,
+            string startTime, string endTime, string accountId)
         {
             logger.LogInfo($"Get Advertiser Commissions from API: {startTime} - {endTime}");
-            var query = CjQueries.GetAdvertiserCommissionsQuery(accountId, startTime, endTime);
+            var queryParams = new AdvertiserCommissionQueryParams {AdvertiserId = accountId, SinceDateTime = startTime, BeforeDateTime = endTime};
+            var query = CjQueries.GetAdvertiserCommissionsQuery(queryParams, dataRangeType);
             var responseData = GetAdvertiserCommissionsData(query);
             yield return responseData.Records;
 
             while (!responseData.PayloadComplete)
             {
-                query = CjQueries.GetAdvertiserCommissionsQuery(accountId, startTime, endTime, responseData.MaxCommissionId);
+                queryParams.SinceCommissionId = responseData.MaxCommissionId;
+                query = CjQueries.GetAdvertiserCommissionsQuery(queryParams, dataRangeType);
                 responseData = GetAdvertiserCommissionsData(query);
                 yield return responseData.Records;
             }

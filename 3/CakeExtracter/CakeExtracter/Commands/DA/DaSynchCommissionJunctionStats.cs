@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Threading.Tasks;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.CommissionJunctionLoaders;
 using CakeExtracter.Helpers;
+using CommissionJunction.Enums;
 using CommissionJunction.Utilities;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
@@ -17,6 +19,9 @@ namespace CakeExtracter.Commands.DA
     public class DaSynchCommissionJunctionStats : ConsoleCommand
     {
         private const int DefaultDaysAgo = 31;
+
+        private IEnumerable<string> lockingDateRangeAccountsExternalIds;
+        private IEnumerable<string> postingDateRangeAccountsExternalIds;
 
         /// <summary>
         /// Command argument: Account ID in the database for which the command will be executed (default = all)
@@ -69,6 +74,7 @@ namespace CakeExtracter.Commands.DA
         /// <returns>Execution code</returns>
         public override int Execute(string[] remainingArguments)
         {
+            SetConfigurationVariables();
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Commission Junction ETL. DateRange {0}.", dateRange);
             var accounts = GetAccounts();
@@ -76,10 +82,17 @@ namespace CakeExtracter.Commands.DA
             {
                 Logger.Info(account.Id, "Commencing ETL for Commission Junction account ({0}) {1}", account.Id, account.Name);
                 var utility = CreateUtility(account);
-                DoEtls(utility, dateRange, account);
+                var dateRangeType = GetDateRangeType(account);
+                DoEtls(utility, dateRangeType, dateRange, account);
                 Logger.Info(account.Id, "Finished ETL for Commission Junction account ({0}) {1}", account.Id, account.Name);
             });
             return 0;
+        }
+
+        private void SetConfigurationVariables()
+        {
+            lockingDateRangeAccountsExternalIds = ConfigurationHelper.ExtractEnumerableFromConfig("CJLockingDateRangeAccountsExternalIds");
+            postingDateRangeAccountsExternalIds = ConfigurationHelper.ExtractEnumerableFromConfig("CJPostingDateRangeAccountsExternalIds");
         }
 
         private CjUtility CreateUtility(ExtAccount account)
@@ -90,10 +103,19 @@ namespace CakeExtracter.Commands.DA
             return utility;
         }
 
-        private void DoEtls(CjUtility utility, DateRange dateRange, ExtAccount account)
+        private DateRangeType GetDateRangeType(ExtAccount account)
+        {
+            return lockingDateRangeAccountsExternalIds.Contains(account.ExternalId)
+                ? DateRangeType.Locking
+                : postingDateRangeAccountsExternalIds.Contains(account.ExternalId)
+                    ? DateRangeType.Posting
+                    : DateRangeType.Event;
+        }
+
+        private void DoEtls(CjUtility utility, DateRangeType dateRangeType, DateRange dateRange, ExtAccount account)
         {
             var cleaner = new CommissionJunctionAdvertiserCleaner();
-            var extractor = new CommissionJunctionAdvertiserExtractor(utility, cleaner, dateRange, account);
+            var extractor = new CommissionJunctionAdvertiserExtractor(utility, cleaner, dateRangeType, dateRange, account);
             var loader = new CommissionJunctionAdvertiserLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }

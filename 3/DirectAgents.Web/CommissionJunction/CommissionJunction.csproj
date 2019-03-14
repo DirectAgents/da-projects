@@ -52,8 +52,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\QueryParams\AdvertiserCommissionQueryParams.cs" />
     <Compile Include="Entities\RequestEntities\CjRequestParams.cs" />
     <Compile Include="Entities\ResponseEntities\CjAdvertiserCommissionsResponse.cs" />
+    <Compile Include="Enums\DateRangeType.cs" />
     <Compile Include="Exceptions\SkippedCommissionsException.cs" />
     <Compile Include="Utilities\CjLogger.cs" />
     <Compile Include="Utilities\CjQueries.cs" />
