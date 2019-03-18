@@ -1,12 +1,38 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CakeExtracter.Etl.Kochava.Models
+namespace DirectAgents.Domain.Entities.CPProg.Kochava
 {
     /// <summary>
-    /// Report entity for kochava report
+    /// Kochava report db entity.
     /// </summary>
-    internal class KochavaReportData
+    public class KochavaItem
     {
+        /// <summary>
+        /// Gets or sets the identifier.
+        /// </summary>
+        /// <value>
+        /// The identifier.
+        /// </value>
+        public int Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ext account.
+        /// </summary>
+        /// <value>
+        /// The ext account.
+        /// </value>
+        [ForeignKey("AccountId")]
+        public virtual ExtAccount ExtAccount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the account identifier.
+        /// </summary>
+        /// <value>
+        /// The account identifier.
+        /// </value>
+        public int AccountId { get; set; }
+
         /// <summary>
         /// Gets or sets the name of the application.
         /// </summary>
@@ -45,7 +71,7 @@ namespace CakeExtracter.Etl.Kochava.Models
         /// <value>
         /// The campaignid.
         /// </value>
-        public string Campaignid { get; set; }
+        public string CampaignId { get; set; }
 
         /// <summary>
         /// Gets or sets the creative identifier.
@@ -86,5 +112,13 @@ namespace CakeExtracter.Etl.Kochava.Models
         /// The device identifier.
         /// </value>
         public string DeviceId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the country code.
+        /// </summary>
+        /// <value>
+        /// The country code.
+        /// </value>
+        public string CountryCode { get; set; }
     }
 }

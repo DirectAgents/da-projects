@@ -428,6 +428,9 @@
     <Compile Include="Commands\Test\TestYAMCommand.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Common\ArchiveExctractors\Contract\IArchiveExtractor.cs" />
+    <Compile Include="Common\ArchiveExctractors\GzipArchiveExtractor.cs" />
+    <Compile Include="Common\ArchiveExctractors\ZipArchiveExtractor.cs" />
     <Compile Include="Common\Compare.cs" />
     <Compile Include="Common\SqlScriptsExecutor.cs" />
     <Compile Include="Common\StorageCollection.cs" />
@@ -472,8 +475,11 @@
     <Compile Include="Etl\Kochava\Configuration\KochavaAccountsProvider.cs" />
     <Compile Include="Etl\Kochava\Configuration\KochavaConfigurationProvider.cs" />
     <Compile Include="Etl\Kochava\Extractors\KochavaExtractor.cs" />
+    <Compile Include="Etl\Kochava\Extractors\Parsers\KochavaReportParser.cs" />
+    <Compile Include="Etl\Kochava\Extractors\Parsers\ParsingConverters\KochavaReportEntityRowMap.cs" />
+    <Compile Include="Etl\Kochava\Loaders\KochavaCleaner.cs" />
     <Compile Include="Etl\Kochava\Loaders\KochavaLoader.cs" />
-    <Compile Include="Etl\Kochava\Models\KochavaReportData.cs" />
+    <Compile Include="Etl\Kochava\Models\KochavaReportItem.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\AppleApiExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingConvSummaryExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingDailyNonShoppingSummaryExtractor.cs" />

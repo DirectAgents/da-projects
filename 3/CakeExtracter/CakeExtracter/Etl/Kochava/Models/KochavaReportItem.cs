@@ -1,28 +1,12 @@
 ﻿using System;
 
-namespace DirectAgents.Domain.Entities.CPProg.Kochava
+namespace CakeExtracter.Etl.Kochava.Models
 {
     /// <summary>
-    /// Kochava report db entity.
+    /// Report entity for kochava report
     /// </summary>
-    public class KochavaData
+    public class KochavaReportItem
     {
-        /// <summary>
-        /// Gets or sets the identifier.
-        /// </summary>
-        /// <value>
-        /// The identifier.
-        /// </value>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the account identifier.
-        /// </summary>
-        /// <value>
-        /// The account identifier.
-        /// </value>
-        public int AccountId { get; set; }
-
         /// <summary>
         /// Gets or sets the name of the application.
         /// </summary>
@@ -61,7 +45,7 @@ namespace DirectAgents.Domain.Entities.CPProg.Kochava
         /// <value>
         /// The campaignid.
         /// </value>
-        public string Campaignid { get; set; }
+        public string CampaignId { get; set; }
 
         /// <summary>
         /// Gets or sets the creative identifier.
@@ -102,5 +86,13 @@ namespace DirectAgents.Domain.Entities.CPProg.Kochava
         /// The device identifier.
         /// </value>
         public string DeviceId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the country code.
+        /// </summary>
+        /// <value>
+        /// The country code.
+        /// </value>
+        public string CountryCode { get; set; }
     }
 }

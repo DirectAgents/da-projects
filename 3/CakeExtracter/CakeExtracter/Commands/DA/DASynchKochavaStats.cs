@@ -1,8 +1,10 @@
-﻿using CakeExtracter.Common;
+﻿using Amazon;
+using CakeExtracter.Common;
+using CakeExtracter.Common.ArchiveExtractors;
 using CakeExtracter.Etl;
-using CakeExtracter.Etl.DSP.Configuration;
 using CakeExtracter.Etl.Kochava.Configuration;
 using CakeExtracter.Etl.Kochava.Extractors;
+using CakeExtracter.Etl.Kochava.Extractors.Parsers;
 using CakeExtracter.Etl.Kochava.Loaders;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
@@ -25,25 +27,33 @@ namespace CakeExtracter.Commands.DA
             IsCommand("dASynchKochavaStats", "Synch Kochava Stats");
             HasOption<int>("a|accountId=", "Account Id (default = all)", c => AccountId = c);
             configurationProvider = new KochavaConfigurationProvider();
-            extractor = new KochavaExtractor(configurationProvider);
-            loader = new KochavaLoader();
+            var awsFilesDownloader = new AwsFilesDownloader(configurationProvider.GetAwsAccessToken(),
+                configurationProvider.GetAwsSecretValue(), m => Logger.Info(m), (ex) => Logger.Error(ex));
+            extractor = new KochavaExtractor(configurationProvider, new KochavaReportParser(), awsFilesDownloader, new ZipArchiveExtractor());
+
+            loader = new KochavaLoader(new KochavaCleaner());
             accountsProvider = new CommandsExecutionAccountsProvider(new PlatformAccountRepository());
         }
 
         public override int Execute(string[] remainingArguments)
         {
-            var accounts = accountsProvider.GetAccountsToProcess(Platform.Code_DspAmazon, AccountId);
+            var accounts = accountsProvider.GetAccountsToProcess(Platform.Code_Kochava, AccountId);
+            accounts.ForEach(account =>
+            {
+                ProcessDailyEtlForAccount(account);
+            });
             return 0;
         }
 
         public void ProcessDailyEtlForAccount(ExtAccount account)
         {
             var acccountData = extractor.ExtractLatestAccountData(account);
+            loader.LoadData(acccountData, account);
         }
 
         public override void ResetProperties()
         {
-            throw new System.NotImplementedException();
+            AccountId = null;
         }
     }
 }

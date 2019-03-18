@@ -19,6 +19,7 @@ namespace CakeExtracter.Etl
         /// <param name="accountsRepository">The accounts repository.</param>
         public CommandsExecutionAccountsProvider(PlatformAccountRepository accountsRepository)
         {
+            this.accountsRepository = accountsRepository;
         }
 
         /// <summary>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Amazon;
+using CakeExtracter.Common.ArchiveExtractors;
+using CakeExtracter.Common.ArchiveExtractors.Contract;
 using CakeExtracter.Etl.DSP.Configuration;
 using CakeExtracter.Etl.DSP.Extractors.Composer;
 using CakeExtracter.Etl.DSP.Extractors.Parser;
@@ -16,6 +18,9 @@ namespace CakeExtracter.Etl.DSP.Extractors
         private readonly AwsFilesDownloader awsFilesDownloader;
         private readonly DspReportCsvParser reportsParser;
         private readonly DspReportDataComposer reportComposer;
+        private readonly IArchiveExtractor reportArchiveExtractor;
+
+        private const string DspReportDefaultBucketName = "amazonselfservicedsp";
 
         /// <summary>Initializes a new instance of the <see cref="AmazonDspExtractor"/> class.</summary>
         /// <param name="configurationProvider">The configuration provider.</param>
@@ -26,6 +31,7 @@ namespace CakeExtracter.Etl.DSP.Extractors
                 configurationProvider.GetAwsSecretValue(), m => Logger.Info(m), (ex) => Logger.Error(ex));
             reportsParser = new DspReportCsvParser();
             reportComposer = new DspReportDataComposer();
+            reportArchiveExtractor = new GzipArchiveExtractor();
         }
 
         /// <summary>Extracts the daily data.</summary>
@@ -35,9 +41,10 @@ namespace CakeExtracter.Etl.DSP.Extractors
         public List<AmazonDspAccountReportData> ExtractDailyData(List<ExtAccount> accounts)
         {
             var reportName = configurationProvider.GetDspReportName();
-            var reportTextContent = awsFilesDownloader.GetLatestFileContentByFilePrefix(reportName);
-            if (!string.IsNullOrEmpty(reportTextContent))
+            var reportContentStream = awsFilesDownloader.GetLatestFileContentByFilePrefix(reportName, DspReportDefaultBucketName);
+            if (reportContentStream != null)
             {
+                var reportTextContent = reportArchiveExtractor.TryUnzipStream(reportContentStream);
                 Logger.Info("DSP. All Data Report downloaded. Size {0}", reportTextContent.Length);
                 var reportCreativeEntries = reportsParser.GetReportCreatives(reportTextContent);
                 var accountsReportData = reportComposer.ComposeReportData(reportCreativeEntries, accounts);

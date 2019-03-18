@@ -181,7 +181,7 @@
     <Compile Include="Entities\CPProg\DSP\SummaryMetrics\DspOrderMetricValues.cs" />
     <Compile Include="Entities\CPProg\DSP\SummaryMetrics\DspCreativeDailyMetricValues.cs" />
     <Compile Include="Entities\CPProg\Base\BaseDailyMetricValues.cs" />
-    <Compile Include="Entities\CPProg\Kochava\KochavaData.cs" />
+    <Compile Include="Entities\CPProg\Kochava\KochavaItem.cs" />
     <Compile Include="Entities\CPProg\Summaries\AdSetSummary.cs" />
     <Compile Include="Entities\CPProg\SummaryMetrics\AdSetSummaryMetric.cs" />
     <Compile Include="Entities\CPProg\SummaryMetrics\DailySummaryMetric.cs" />
