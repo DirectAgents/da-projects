@@ -148,6 +148,11 @@ namespace CommissionJunction.Entities
         public string PostingDate { get; set; }
 
         /// <summary>
+        /// Publisher commission amount in USD
+        /// </summary>
+        public decimal PubCommissionAmountUsd { get; set; }
+
+        /// <summary>
         /// CID of the publisher for this commission
         /// </summary>
         public string PublisherId { get; set; }

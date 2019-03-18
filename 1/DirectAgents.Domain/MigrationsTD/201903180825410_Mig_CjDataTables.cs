@@ -57,6 +57,7 @@ namespace DirectAgents.Domain.MigrationsTD
                         Original = c.Boolean(nullable: false),
                         OriginalActionId = c.String(),
                         PostingDate = c.DateTime(nullable: false),
+                        PubCommissionAmountUsd = c.Decimal(nullable: false, precision: 18, scale: 2),
                         PublisherId = c.String(),
                         PublisherName = c.String(),
                         ReviewedStatus = c.String(),

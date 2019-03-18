@@ -51,6 +51,7 @@ namespace CommissionJunction.Utilities
               orderId
               original
               originalActionId
+              pubCommissionAmountUsd
               publisherId
               publisherName
               saleAmountUsd
