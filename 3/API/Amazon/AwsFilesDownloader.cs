@@ -11,7 +11,7 @@ namespace Amazon
 {
     public class AwsFilesDownloader
     {
-        private readonly string amazoneReportBucketName = "amazonselfservicedsp";
+        private readonly string amazonReportBucketName = "amazonselfservicedsp";
 
         private readonly string awsAccessKey;
 
@@ -70,7 +70,7 @@ namespace Amazon
         {
             GetObjectRequest request = new GetObjectRequest
             {
-                BucketName = this.amazoneReportBucketName,
+                BucketName = this.amazonReportBucketName,
                 Key = reportObject.Key
             };
             using (GetObjectResponse response = client.GetObject(request))
@@ -87,7 +87,7 @@ namespace Amazon
         {
             var getObjectsRequest = new ListObjectsV2Request
             {
-                BucketName = this.amazoneReportBucketName
+                BucketName = this.amazonReportBucketName
             };
             ListObjectsV2Response objectListResponse = client.ListObjectsV2(getObjectsRequest);
             return objectListResponse.S3Objects;

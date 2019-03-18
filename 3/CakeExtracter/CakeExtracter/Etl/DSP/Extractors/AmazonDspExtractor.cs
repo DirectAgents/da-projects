@@ -32,7 +32,7 @@ namespace CakeExtracter.Etl.DSP.Extractors
         /// <param name="accounts">The accounts.</param>
         /// <returns></returns>
         /// <exception cref="Exception">Can't compose report data. DSP report content is null or empty</exception>
-        public List<AmazonDspAccauntReportData> ExtractDailyData(List<ExtAccount> accounts)
+        public List<AmazonDspAccountReportData> ExtractDailyData(List<ExtAccount> accounts)
         {
             var reportName = configurationProvider.GetDspReportName();
             var reportTextContent = awsFilesDownloader.GetLatestFileContentByFilePrefix(reportName);

@@ -18,7 +18,7 @@ namespace CakeExtracter.Etl.DSP.Loaders
         /// <summary>Loads the dsp data.</summary>
         /// <param name="accountsReportData">The accounts report data.
         /// (included data for all advertisers for all dates)</param>
-        public void LoadData(List<AmazonDspAccauntReportData> accountsReportData)
+        public void LoadData(List<AmazonDspAccountReportData> accountsReportData)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace CakeExtracter.Etl.DSP.Loaders
             }
         }
 
-        private void LoadAccountData(AmazonDspAccauntReportData accountReportData)
+        private void LoadAccountData(AmazonDspAccountReportData accountReportData)
         {
             LoadAdvertisersData(accountReportData.Account, accountReportData.DailyDataCollection);
             LoadOrdersData(accountReportData.Account, accountReportData.DailyDataCollection);
