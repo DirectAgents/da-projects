@@ -15,9 +15,9 @@ namespace CommissionJunction.Utilities
         private const string SincePostingDateFilterTemplate = "sincePostingDate: \"{0}\"";
         private const string BeforePostingDateFilterTemplate = "beforePostingDate: \"{0}\"";
         private const string SinceEventDateFilterTemplate = "sinceEventDate: \"{0}\"";
-        private const string BeforeEventDateFilterTemplate = "beforeLockingDate: \"{0}\"";
+        private const string BeforeEventDateFilterTemplate = "beforeEventDate: \"{0}\"";
         private const string SinceLockingDateFilterTemplate = "sinceLockingDate: \"{0}\"";
-        private const string BeforeLockingDateFilterTemplate = "beforeEventDate: \"{0}\"";
+        private const string BeforeLockingDateFilterTemplate = "beforeLockingDate: \"{0}\"";
         private const string SinceCommissionIdFilterTemplate = "sinceCommissionId: \"{0}\"";
 
         private const string FiltersDelimiter = ",";
