@@ -9,21 +9,28 @@ using CakeExtracter.Helpers;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
 {
-    //The daily extracter will load data based on date range and sum up the total of all campaigns
-    public class AmazonDailyStrategyFromDataBaseSummaryExtractor : DatabaseStrategyToDailySummaryExtracter
+    /// <summary>
+    /// Daily data extractor for amazon job based on database keywords data.
+    /// </summary>
+    /// <seealso cref="CakeExtracter.Etl.TradingDesk.Extracters.DatabaseKeywordsToDailySummaryExtracter" />
+    public class AmazonDatabaseKeywordsToDailySummaryExtracter : DatabaseKeywordsToDailySummaryExtractor
     {
-        public AmazonDailyStrategyFromDataBaseSummaryExtractor(DateRange dateRange, int accountId)
+        public AmazonDatabaseKeywordsToDailySummaryExtracter(DateRange dateRange, int accountId)
             :base(dateRange, accountId)
         {
         }
 
+        /// <summary>
+        /// The derived class implements this method, which calls Add() for each item
+        /// extracted and then calls End() when complete.
+        /// </summary>
         protected override void Extract()
         {
             RemoveOldData(dateRange);
             IEnumerable<DailySummary> items = null;
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => {
-                items = EnumerateRows();
-            }, accountId, AmazonJobLevels.account, AmazonJobOperations.cleanExistingData);
+                items = GetDailySummaryDataFromDataBase();
+            }, accountId, AmazonJobLevels.account, AmazonJobOperations.reportExtracting);
             Add(items);
             End();
         }
