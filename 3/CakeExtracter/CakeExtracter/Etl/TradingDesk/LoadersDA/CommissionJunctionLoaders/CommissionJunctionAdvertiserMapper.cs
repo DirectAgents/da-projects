@@ -15,12 +15,17 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.CommissionJunctionLoaders
         /// </summary>
         /// <param name="reportCommissions">The report commissions.</param>
         /// <returns></returns>
-        public List<CjAdvertiserCommission> MapCommissionJunctionInfoToDbEntities(List<AdvertiserCommission> reportCommissions, int accountId)
+        public List<CjAdvertiserCommission> MapCommissionJunctionInfoToDbEntities(
+            List<AdvertiserCommission> reportCommissions, int accountId)
         {
             var dbCommissions = reportCommissions.Select(rCommission =>
             {
                 var dbCommission = new CjAdvertiserCommission();
-                AutoMapper.Mapper.Map(rCommission, dbCommission);
+                AutoMapper.Mapper.Map(rCommission, dbCommission, opt => opt.AfterMap((rCom, dbCom) =>
+                {
+                    dbCom.EventDate = dbCom.EventDate.ToUniversalTime();
+                    dbCom.PostingDate = dbCom.PostingDate.ToUniversalTime();
+                }));
                 dbCommission.AccountId = accountId;
                 return dbCommission;
             });
