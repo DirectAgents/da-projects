@@ -56,7 +56,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors
             {
                 var commissions = utility.GetAdvertiserCommissions(dateRangeType, fromDate, toDate.AddDays(1), account.ExternalId);
                 var items = mapper.MapCommissionJunctionInfoToDbEntities(commissions, account.Id);
-                cleaner.CleanCommissionJunctionInfo(account.Id, fromDate, toDate);
+                cleaner.CleanCommissionJunctionInfo(account.Id, dateRangeType, fromDate, toDate);
                 Add(items);
             }
             catch (Exception e)
