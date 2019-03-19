@@ -28,7 +28,7 @@ namespace CakeExtracter.Etl.Kochava.Configuration
         /// Gets the aws access s3 token for accessing report files.
         /// </summary>
         /// <returns>Aws access token.</returns>
-        public string GetAwsAccessToken()
+        public virtual string GetAwsAccessToken()
         {
             return ConfigurationManager.AppSettings[AwsAccessKeyConfigurationKey];
         }
@@ -37,7 +37,7 @@ namespace CakeExtracter.Etl.Kochava.Configuration
         /// Gets the aws s3 secret value for accessing report files.
         /// </summary>
         /// <returns>Aws secret value.</returns>
-        public string GetAwsSecretValue()
+        public virtual string GetAwsSecretValue()
         {
             return ConfigurationManager.AppSettings[AwsAccessSecretConfigurationKey];
         }
@@ -46,7 +46,7 @@ namespace CakeExtracter.Etl.Kochava.Configuration
         /// Gets the name of the aws s3 bucket from configuration.
         /// </summary>
         /// <returns>Name of aws s3 bucket.</returns>
-        public string GetAwsBucketName()
+        public virtual string GetAwsBucketName()
         {
             return ConfigurationManager.AppSettings[AwsBucketNameConfigurationKey];
         }
@@ -55,7 +55,7 @@ namespace CakeExtracter.Etl.Kochava.Configuration
         /// Gets the report period in days from configuration.
         /// </summary>
         /// <returns>Report period in days.</returns>
-        public int GetReportPeriodInDays()
+        public virtual int GetReportPeriodInDays()
         {
             try
             {

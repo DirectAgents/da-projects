@@ -1,22 +1,37 @@
 ﻿using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.CPProg.Kochava;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CakeExtracter.Etl.Kochava.Loaders
 {
     /// <summary>
-    /// Kochava cleaner.
+    /// Performes operations with kochava items in database.
     /// </summary>
-    public class KochavaCleaner
+    public class KochavaItemsDbService
     {
         /// <summary>
-        /// Cleans the kochava data for date range and account.
+        /// Bulk inserts kochava items into db table.
+        /// </summary>
+        /// <param name="accountId">The account identifier.</param>
+        /// <param name="dbEntries">The database entries.</param>
+        public virtual void BulkInsertItems(int accountId, List<KochavaItem> dbEntries)
+        {
+            SafeContextWrapper.TryMakeTransaction<ClientPortalProgContext>((dbContext) =>
+            {
+                dbContext.BulkInsert(dbEntries);
+            }, "BulkInserting");
+        }
+
+        /// <summary>
+        /// Bulk deletes items from kochava db table.
         /// </summary>
         /// <param name="accountId">The account identifier.</param>
         /// <param name="fromDate">From date.</param>
         /// <param name="toDate">To date.</param>
-        public void CleanKochavaDataForDateRange(int accountId, DateTime fromDate, DateTime toDate)
+        public virtual void BulkDeleteItems(int accountId, DateTime fromDate, DateTime toDate)
         {
             Logger.Info(accountId, "The cleaning of Kochava Items for account ({0}) has begun - {1} - {2}", accountId, fromDate, toDate);
             SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>

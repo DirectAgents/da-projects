@@ -39,7 +39,7 @@ namespace CakeExtracter.Commands.DA
                 configurationProvider.GetAwsSecretValue(), m => Logger.Info(m), (ex) => Logger.Error(ex));
             extractor = new KochavaExtractor(configurationProvider, new KochavaReportParser(), awsFilesDownloader, new ZipArchiveExtractor());
 
-            loader = new KochavaLoader(configurationProvider, new KochavaCleaner());
+            loader = new KochavaLoader(configurationProvider, new KochavaItemsDbService());
             accountsProvider = new CommandsExecutionAccountsProvider(new PlatformAccountRepository());
         }
 

@@ -476,7 +476,7 @@
     <Compile Include="Etl\Kochava\Extractors\KochavaExtractor.cs" />
     <Compile Include="Etl\Kochava\Extractors\Parsers\KochavaReportParser.cs" />
     <Compile Include="Etl\Kochava\Extractors\Parsers\ParsingConverters\KochavaReportEntityRowMap.cs" />
-    <Compile Include="Etl\Kochava\Loaders\KochavaCleaner.cs" />
+    <Compile Include="Etl\Kochava\Loaders\KochavaItemsDbService.cs" />
     <Compile Include="Etl\Kochava\Loaders\KochavaLoader.cs" />
     <Compile Include="Etl\Kochava\Models\KochavaReportItem.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\AppleApiExtracter.cs" />

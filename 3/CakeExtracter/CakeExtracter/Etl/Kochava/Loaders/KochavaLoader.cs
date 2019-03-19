@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using CakeExtracter.Etl.Kochava.Configuration;
 using CakeExtracter.Etl.Kochava.Models;
-using CakeExtracter.Helpers;
-using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.Kochava;
 using System;
@@ -17,7 +15,7 @@ namespace CakeExtracter.Etl.Kochava.Loaders
     /// </summary>
     public class KochavaLoader
     {
-        private readonly KochavaCleaner kochavaCleaner;
+        private readonly KochavaItemsDbService kochavaDbService;
 
         private readonly KochavaConfigurationProvider configurationProvider;
 
@@ -26,10 +24,10 @@ namespace CakeExtracter.Etl.Kochava.Loaders
         /// </summary>
         /// <param name="configurationProvider">The configuration provider.</param>
         /// <param name="kochavaCleaner">The kochava cleaner.</param>
-        public KochavaLoader(KochavaConfigurationProvider configurationProvider, KochavaCleaner kochavaCleaner)
+        public KochavaLoader(KochavaConfigurationProvider configurationProvider, KochavaItemsDbService kochavaDbService)
         {
             this.configurationProvider = configurationProvider;
-            this.kochavaCleaner = kochavaCleaner;
+            this.kochavaDbService = kochavaDbService;
         }
 
         /// <summary>
@@ -43,10 +41,7 @@ namespace CakeExtracter.Etl.Kochava.Loaders
                 CleanKochavaDataForReportingDateRange(account);
                 Logger.Info(account.Id, $"Started Loading Kochava Items. Items count = {accountReportData.Count}");
                 var dbEntries = GetKochavaDbItems(account, accountReportData);
-                SafeContextWrapper.TryMakeTransaction<ClientPortalProgContext>((dbContext) =>
-                {
-                    dbContext.BulkInsert(dbEntries);
-                }, "BulkInserting");
+                kochavaDbService.BulkInsertItems(account.Id, dbEntries);
                 Logger.Info(account.Id, $"Finished Loading Kochava Items. Items count = {accountReportData.Count}");
             }
             catch (Exception ex)
@@ -61,7 +56,7 @@ namespace CakeExtracter.Etl.Kochava.Loaders
             var reportPeriodDaysCount = configurationProvider.GetReportPeriodInDays();
             var fromDate = DateTime.Now.Date.AddDays(-reportPeriodDaysCount);
             var toDate = DateTime.Now.Date;
-            kochavaCleaner.CleanKochavaDataForDateRange(account.Id, (DateTime)SqlDateTime.MinValue, (DateTime)SqlDateTime.MaxValue);
+            kochavaDbService.BulkDeleteItems(account.Id, fromDate, toDate);
         }
 
         private List<KochavaItem> GetKochavaDbItems(ExtAccount account, List<KochavaReportItem> accountReportData)
