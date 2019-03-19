@@ -8,10 +8,15 @@ using CakeExtracter.Etl.Kochava.Extractors.Parsers;
 using CakeExtracter.Etl.Kochava.Loaders;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
+using System;
 using System.ComponentModel.Composition;
 
 namespace CakeExtracter.Commands.DA
 {
+    /// <summary>
+    /// Command for Kochava ETL Job
+    /// </summary>
+    /// <seealso cref="CakeExtracter.Common.ConsoleCommand" />
     [Export(typeof(ConsoleCommand))]
     public class DASynchKochavaStats : ConsoleCommand
     {
@@ -22,6 +27,9 @@ namespace CakeExtracter.Commands.DA
 
         private int? AccountId { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DASynchKochavaStats"/> class.
+        /// </summary>
         public DASynchKochavaStats()
         {
             IsCommand("dASynchKochavaStats", "Synch Kochava Stats");
@@ -31,26 +39,62 @@ namespace CakeExtracter.Commands.DA
                 configurationProvider.GetAwsSecretValue(), m => Logger.Info(m), (ex) => Logger.Error(ex));
             extractor = new KochavaExtractor(configurationProvider, new KochavaReportParser(), awsFilesDownloader, new ZipArchiveExtractor());
 
-            loader = new KochavaLoader(new KochavaCleaner());
+            loader = new KochavaLoader(configurationProvider, new KochavaCleaner());
             accountsProvider = new CommandsExecutionAccountsProvider(new PlatformAccountRepository());
         }
 
+        /// <summary>
+        /// Executes the specified remaining arguments.
+        /// </summary>
+        /// <param name="remainingArguments">The remaining arguments.</param>
+        /// <returns></returns>
         public override int Execute(string[] remainingArguments)
         {
             var accounts = accountsProvider.GetAccountsToProcess(Platform.Code_Kochava, AccountId);
-            accounts.ForEach(account =>
+            if (accounts != null && accounts.Count > 0)
             {
-                ProcessDailyEtlForAccount(account);
-            });
+                accounts.ForEach(account =>
+                {
+                    ProcessDailyEtlForAccount(account);
+                });
+            }
+            else
+            {
+                Logger.Warn("No Kochava accounts were found to process");
+            }
             return 0;
         }
 
+        /// <summary>
+        /// Processes the daily etl for account.
+        /// </summary>
+        /// <param name="account">The account.</param>
         public void ProcessDailyEtlForAccount(ExtAccount account)
         {
-            var acccountData = extractor.ExtractLatestAccountData(account);
-            loader.LoadData(acccountData, account);
+            try
+            {
+                Logger.Info(account.Id, $"Started processing Kochava ETL for account - {account.Id}");
+                var accountData = extractor.ExtractLatestAccountData(account);
+                if (accountData != null && accountData.Count > 0)
+                {
+                    loader.LoadData(accountData, account);
+                }
+                else
+                {
+                    Logger.Warn(account.Id, $"Loading skipped because no data was extracted.");
+                }
+                Logger.Info(account.Id, $"Finished processing Kochava ETL for account - {account.Id}");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(account.Id, ex);
+                Logger.Warn(account.Id, "Account processing skipped due to the exception");
+            }
         }
 
+        /// <summary>
+        /// Resets the properties.
+        /// </summary>
         public override void ResetProperties()
         {
             AccountId = null;

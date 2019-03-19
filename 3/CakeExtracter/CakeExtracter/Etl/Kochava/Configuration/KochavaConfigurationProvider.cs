@@ -5,13 +5,17 @@ namespace CakeExtracter.Etl.Kochava.Configuration
     /// <summary>
     /// Kochava job configuration provider
     /// </summary>
-    internal class KochavaConfigurationProvider
+    public class KochavaConfigurationProvider
     {
         private const string AwsAccessKeyConfigurationKey = "KochavaAwsAccessKey";
 
         private const string AwsAccessSecretConfigurationKey = "KochavaAwsAccessSecret";
 
         private const string AwsBucketNameConfigurationKey = "KochavaAwsBucketName";
+
+        private const string KochavaReportPeriodConfigurationKey = "KochavaReportPeriod";
+
+        private const int DefaultReportPeriod = 10;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KochavaConfigurationProvider"/> class.
@@ -23,7 +27,7 @@ namespace CakeExtracter.Etl.Kochava.Configuration
         /// <summary>
         /// Gets the aws access s3 token for accessing report files.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Aws access token.</returns>
         public string GetAwsAccessToken()
         {
             return ConfigurationManager.AppSettings[AwsAccessKeyConfigurationKey];
@@ -32,19 +36,37 @@ namespace CakeExtracter.Etl.Kochava.Configuration
         /// <summary>
         /// Gets the aws s3 secret value for accessing report files.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Aws secret value.</returns>
         public string GetAwsSecretValue()
         {
             return ConfigurationManager.AppSettings[AwsAccessSecretConfigurationKey];
         }
 
         /// <summary>
-        /// Gets the name of the aws s3 bucket.
+        /// Gets the name of the aws s3 bucket from configuration.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Name of aws s3 bucket.</returns>
         public string GetAwsBucketName()
         {
             return ConfigurationManager.AppSettings[AwsBucketNameConfigurationKey];
+        }
+
+        /// <summary>
+        /// Gets the report period in days from configuration.
+        /// </summary>
+        /// <returns>Report period in days.</returns>
+        public int GetReportPeriodInDays()
+        {
+            try
+            {
+                var reportPeriod = int.Parse(ConfigurationManager.AppSettings[KochavaReportPeriodConfigurationKey]);
+                return reportPeriod;
+            }
+            catch
+            {
+                Logger.Warn($"Error occured while retreiving report period. Default value {DefaultReportPeriod} will be used by default.");
+                return DefaultReportPeriod;
+            }
         }
     }
 }

@@ -472,7 +472,6 @@
     <Compile Include="Etl\DSP\Models\ReportEntities\ReportLineItem.cs" />
     <Compile Include="Etl\DSP\Models\ReportEntities\DspReportEntity.cs" />
     <Compile Include="Etl\DSP\Models\ReportEntities\ReportOrder.cs" />
-    <Compile Include="Etl\Kochava\Configuration\KochavaAccountsProvider.cs" />
     <Compile Include="Etl\Kochava\Configuration\KochavaConfigurationProvider.cs" />
     <Compile Include="Etl\Kochava\Extractors\KochavaExtractor.cs" />
     <Compile Include="Etl\Kochava\Extractors\Parsers\KochavaReportParser.cs" />
