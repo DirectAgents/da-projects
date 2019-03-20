@@ -83,7 +83,7 @@
         }
         if (pGauge.Children != null)
         {
-            foreach (var gauge in pGauge.Children.OrderBy(s => s.ExtAccount.Name).ThenBy(s => s.ExtAccount.Id))
+            foreach (var gauge in pGauge.Children)
             {
                 <tr>
                     <td>@gauge.ExtAccount.Platform.Name</td>

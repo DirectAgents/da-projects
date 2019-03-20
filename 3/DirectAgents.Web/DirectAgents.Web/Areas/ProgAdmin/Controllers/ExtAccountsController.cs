@@ -26,7 +26,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         public ActionResult Index(string platform, int? campId)
         {
             var extAccounts = cpProgRepo.ExtAccounts(platformCode: platform, campId: campId)
-                .OrderBy(a => a.Platform.Name).ThenBy(a => a.Name);
+                .OrderBy(a => a.Platform.Name).ThenBy(a => a.Disabled).ThenBy(a => a.Name);
 
             Session["platformCode"] = platform;
             Session["campId"] = campId.ToString();
@@ -47,28 +47,17 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         // For each account, shows a "gauge" of what stats are loaded
         public ActionResult IndexGauge(string platform, int? campId, bool recent = false, bool extended = false)
         {
-            var plat = cpProgRepo.Platform(platform);
-            int? platId = (plat == null) ? (int?)null : plat.Id;
+            var platId = cpProgRepo.Platform(platform)?.Id;
 
             // "recent" means only include accounts with stats for this month
-            DateTime? minDate = recent ? DateTime.Today.FirstDayOfMonth(-1) : (DateTime?)null;
+            var minDate = recent ? DateTime.Today.FirstDayOfMonth(-1) : (DateTime?) null;
             var statsGauges = cpProgRepo.StatsGaugesByAccount(platformId: platId, campId: campId, minDate: minDate, extended: extended);
+
             if (recent)
                 statsGauges = statsGauges.Where(x => x.HasStats());
 
             //Group by platform
-            var platformGroups = statsGauges.GroupBy(s => s.ExtAccount.Platform).OrderBy(g => g.Key.Name);
-            List<TDStatsGauge> platformGauges = new List<TDStatsGauge>();
-            foreach (var platGroup in platformGroups)
-            {
-                var pGauge = new TDStatsGauge
-                {
-                    Platform = platGroup.Key,
-                    Children = platGroup.ToList()
-                };
-                pGauge.SetFrom(platGroup); // ?SetFrom(pGauge.Children) ...same thing?
-                platformGauges.Add(pGauge);
-            }
+            var platformGauges = GetStatsGaugeListGroupedByPlatform(statsGauges);
 
             var model = new StatsGaugeVM
             {
@@ -157,7 +146,38 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             ViewBag.Networks = cpProgRepo.Networks().OrderBy(n => n.Name);
         }
 
-        // --- Maintenance ---
+        /// <summary>
+        /// The method returns a list of stats gauges grouped by platform, ordered by the value "Disabled" of ext account
+        /// </summary>
+        /// <param name="statsGauges"></param>
+        /// <returns></returns>
+        private static IEnumerable<TDStatsGauge> GetStatsGaugeListGroupedByPlatform(IEnumerable<TDStatsGauge> statsGauges) 
+        {
+            var platformGroups = statsGauges.GroupBy(s => s.ExtAccount.Platform);
+
+            return platformGroups.Select(GetStatsGauge).ToList();
+        }
+
+        /// <summary>
+        /// The method returns a stats gauge for platform
+        /// </summary>
+        /// <param name="platformGroup"></param>
+        /// <returns></returns>
+        private static TDStatsGauge GetStatsGauge(IGrouping<Platform, TDStatsGauge> platformGroup)
+        {
+            var pGauge = new TDStatsGauge
+            {
+                Platform = platformGroup.Key,
+                Children = platformGroup
+                    .OrderBy(gauge => gauge.ExtAccount.Disabled)
+                    .ThenBy(gauge => gauge.ExtAccount.Name)
+                    .ToList()
+            };
+            pGauge.SetFrom(platformGroup); // ?SetFrom(pGauge.Children) ...same thing?
+            return pGauge;
+        }
+
+        #region Maintenance
 
         // json data for Maintenance Grid
         public JsonResult IndexData(string platform)
@@ -342,7 +362,9 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             return statsType;
         }
 
-        // --- Strats, AdSets, etc
+        #endregion
+
+        #region Strats, AdSets, etc
 
         public ActionResult Strategies(int? id, int? strategyId, OrderBy sort = OrderBy.StrategyName)
         {
@@ -425,8 +447,10 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             return View(termList);
         }
 
-        // --- Stats Uploading ---
-
+        #endregion
+        
+        #region Stats Uploading
+        
         public ActionResult UploadStats(int id)
         {
             var extAcct = cpProgRepo.ExtAccount(id);
@@ -437,6 +461,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 
             return View(extAcct);
         }
+
         public ActionResult UploadFile(int id, HttpPostedFileBase file, string statsType, string statsDate)
         {
             DateTime? statsDateNullable = null;
@@ -468,5 +493,7 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 
             return null;
         }
-	}
+
+        #endregion
+    }
 }
