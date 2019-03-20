@@ -181,6 +181,7 @@
     <Compile Include="Entities\CPProg\DSP\SummaryMetrics\DspOrderMetricValues.cs" />
     <Compile Include="Entities\CPProg\DSP\SummaryMetrics\DspCreativeDailyMetricValues.cs" />
     <Compile Include="Entities\CPProg\Base\BaseDailyMetricValues.cs" />
+    <Compile Include="Entities\CPProg\Kochava\KochavaItem.cs" />
     <Compile Include="Entities\CPProg\Summaries\AdSetSummary.cs" />
     <Compile Include="Entities\CPProg\SummaryMetrics\AdSetSummaryMetric.cs" />
     <Compile Include="Entities\CPProg\SummaryMetrics\DailySummaryMetric.cs" />
@@ -629,6 +630,10 @@
     <Compile Include="MigrationsTD\201901311354011_Mig_DspDataTables2.Designer.cs">
       <DependentUpon>201901311354011_Mig_DspDataTables2.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsTD\201903190855512_Mig_KochavaTables.cs" />
+    <Compile Include="MigrationsTD\201903190855512_Mig_KochavaTables.Designer.cs">
+      <DependentUpon>201903190855512_Mig_KochavaTables.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.Designer.cs">
@@ -1006,6 +1011,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201901311354011_Mig_DspDataTables2.resx">
       <DependentUpon>201901311354011_Mig_DspDataTables2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201903190855512_Mig_KochavaTables.resx">
+      <DependentUpon>201903190855512_Mig_KochavaTables.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

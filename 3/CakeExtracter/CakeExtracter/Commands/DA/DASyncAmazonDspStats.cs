@@ -1,8 +1,10 @@
 ﻿using CakeExtracter.Common;
+using CakeExtracter.Etl;
 using CakeExtracter.Etl.DSP.Configuration;
 using CakeExtracter.Etl.DSP.Extractors;
 using CakeExtracter.Etl.DSP.Loaders;
 using CakeExtracter.Etl.DSP.Models;
+using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
 using System;
 using System.Collections.Generic;
@@ -17,7 +19,7 @@ namespace CakeExtracter.Commands.DA
         private readonly AmazonDspExtractor extractor;
         private readonly AmazonDspConfigurationProvider configurationProvider;
         private readonly AmazonDspDataLoader loader;
-        private readonly AmazonDspAccountsProvider accountsProvider;
+        private readonly CommandsExecutionAccountsProvider accountsProvider;
 
         private int? AccountId { get; set; }
 
@@ -30,7 +32,7 @@ namespace CakeExtracter.Commands.DA
             configurationProvider = new AmazonDspConfigurationProvider();
             extractor = new AmazonDspExtractor(configurationProvider);
             loader = new AmazonDspDataLoader();
-            accountsProvider = new AmazonDspAccountsProvider();
+            accountsProvider = new CommandsExecutionAccountsProvider(new PlatformAccountRepository());
         }
 
         /// <summary>Resets command properties.</summary>
@@ -52,7 +54,7 @@ namespace CakeExtracter.Commands.DA
         {
             try
             {
-                var accounts = accountsProvider.GetAccountsToProcess(AccountId);
+                var accounts = accountsProvider.GetAccountsToProcess(Platform.Code_DspAmazon,  AccountId);
                 var reportData = ProcessDailyDataExtraction(accounts);
                 if (reportData != null)
                 {
@@ -69,7 +71,7 @@ namespace CakeExtracter.Commands.DA
             }
         }
 
-        private List<AmazonDspAccauntReportData> ProcessDailyDataExtraction(List<ExtAccount> accounts)
+        private List<AmazonDspAccountReportData> ProcessDailyDataExtraction(List<ExtAccount> accounts)
         {
             try
             {

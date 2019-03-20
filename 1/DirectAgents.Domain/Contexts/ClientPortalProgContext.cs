@@ -9,6 +9,7 @@ using DirectAgents.Domain.Entities.CPProg.Vendor;
 using DirectAgents.Domain.Entities.CPProg.Vendor.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.DSP;
 using DirectAgents.Domain.Entities.CPProg.DSP.SummaryMetrics;
+using DirectAgents.Domain.Entities.CPProg.Kochava;
 
 namespace DirectAgents.Domain.Contexts
 {
@@ -93,7 +94,10 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<DspOrderMetricValues>().ToTable("DspOrderMetricValues", tdSchema);
             modelBuilder.Entity<DspLineDailyMetricValues>().ToTable("DspLineDailyMetricValues", tdSchema);
             modelBuilder.Entity<DspCreativeDailyMetricValues>().ToTable("DspCreativeDailyMetricValues", tdSchema);
-            
+
+            //Kochava
+            modelBuilder.Entity<KochavaItem>().ToTable("KochavaItem", tdSchema);
+
             modelBuilder.Entity<Campaign>().Property(c => c.BaseFee).HasPrecision(14, 2);
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MgmtFeePct).HasPrecision(10, 5).HasColumnName("MgmtFeePct");
@@ -195,7 +199,7 @@ namespace DirectAgents.Domain.Contexts
             SetupDailyMetricModelValues<DspOrderMetricValues>(modelBuilder, "OrderId");
             SetupDailyMetricModelValues<DspLineDailyMetricValues>(modelBuilder, "LineItemId");
             SetupDailyMetricModelValues<DspCreativeDailyMetricValues>(modelBuilder, "CreativeId");
-            
+
             // AdRoll
             modelBuilder.Entity<Advertisable>().ToTable("Advertisable", adrollSchema);
             modelBuilder.Entity<Ad>().ToTable("Ad", adrollSchema);
@@ -277,6 +281,9 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<DspOrderMetricValues> DspOrdersMetricValues { get; set; }
         public DbSet<DspLineDailyMetricValues> DspLineItemsMetricValues { get; set; }
         public DbSet<DspCreativeDailyMetricValues> DspCreativesMetricValues { get; set; }
+
+        //TD
+        public DbSet<KochavaItem> KochavaItems { get; set; }
 
         // AdRoll
         public DbSet<Advertisable> Advertisables { get; set; }

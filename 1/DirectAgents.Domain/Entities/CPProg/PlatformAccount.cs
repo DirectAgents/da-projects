@@ -32,6 +32,7 @@ namespace DirectAgents.Domain.Entities.CPProg
         public const string Code_YAM = "yam";
         public const string Code_AraAmazon = "araamzn";
         public const string Code_DspAmazon = "dspamzn";
+        public const string Code_Kochava = "kochava";
 
         public static IEnumerable<string> Codes_Syncable()
         {
