@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using CakeExtracter.Commands;
@@ -17,15 +18,13 @@ namespace DirectAgents.Web.Areas.SearchAdmin.Controllers
 
         public ActionResult Index(int? spId, string channel)
         {
-            var searchAccounts = cpSearchRepo.SearchAccounts(spId: spId, channel: channel)
-                .OrderBy(x => x.SearchProfileId).ToList();
+            var searchAccounts = GetAllOrderedSearchAccounts(spId: spId, channel: channel);
             return View(searchAccounts);
         }
 
         public ActionResult IndexGauge(int? spId, string channel)
         {
-            var searchAccounts = cpSearchRepo.SearchAccounts(spId: spId, channel: channel, includeGauges: true)
-                .OrderBy(x => x.SearchProfileId).ToList();
+            var searchAccounts = GetAllOrderedSearchAccounts(spId: spId, channel: channel, includeGauges: true);
             return View(searchAccounts);
         }
 
@@ -86,6 +85,62 @@ namespace DirectAgents.Web.Areas.SearchAdmin.Controllers
                 return Content("SearchProfileId not set.");
             else
                 return RedirectToAction("IndexGauge", new { spId = searchAccount.SearchProfileId.Value });
+        }
+
+        /// <summary>
+        /// The method returns all search accounts by the required parameters.
+        /// Order: accounts that have not null/empty value of account code, ordered by search profile, then by channel, then by name.
+        /// Further accounts that have null/empty value of account code, ordered by search profile, then by channel, then by name.
+        /// </summary>
+        /// <param name="spId">Search profile Id</param>
+        /// <param name="channel">Channel</param>
+        /// <param name="includeGauges">Show stats gauge for account or not</param>
+        /// <returns></returns>
+        private List<SearchAccount> GetAllOrderedSearchAccounts(int? spId = null, string channel = null, bool includeGauges = false)
+        {
+            var allSearchAccounts = cpSearchRepo.SearchAccounts(spId: spId, channel: channel, includeGauges: includeGauges).ToList();
+
+            var enabledOrderedSearchAccounts = GetEnabledSearchAccounts(allSearchAccounts);
+            var disabledSearchAccounts = GetDisabledSearchAccounts(allSearchAccounts);
+
+            return enabledOrderedSearchAccounts
+                .Concat(disabledSearchAccounts)
+                .ToList();
+        }
+
+        /// <summary>
+        /// The method returns enabled search accounts (have not null/empty value of account code).
+        /// Ordered by search profile, then by channel, then by name
+        /// </summary>
+        /// <param name="allSearchAccounts"></param>
+        /// <returns></returns>
+        private static IEnumerable<SearchAccount> GetEnabledSearchAccounts(IEnumerable<SearchAccount> allSearchAccounts)
+        {
+            var enabledOrderedSearchAccounts = allSearchAccounts
+                .Where(account => !string.IsNullOrEmpty(account.AccountCode))
+                .OrderBy(account => account.SearchProfileId)
+                .ThenBy(account => account.Channel)
+                .ThenBy(account => account.Name)
+                .ToList();
+            return enabledOrderedSearchAccounts;
+        }
+
+        /// <summary>
+        /// The method returns disabled search accounts (have null/empty value of account code).
+        /// Ordered by search profile, then by channel, then by name
+        /// </summary>
+        /// <param name="allSearchAccounts"></param>
+        /// <returns></returns>
+        private static IEnumerable<SearchAccount> GetDisabledSearchAccounts(
+            IEnumerable<SearchAccount> allSearchAccounts)
+        {
+            var disabledOrderedSearchAccounts = allSearchAccounts
+                .Where(account => string.IsNullOrEmpty(account.AccountCode))
+                .OrderBy(account => account.SearchProfileId)
+                .ThenBy(account => account.Channel)
+                .ThenBy(account => account.Name)
+                .ToList();
+            return disabledOrderedSearchAccounts;
         }
     }
 }
