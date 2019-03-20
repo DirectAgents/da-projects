@@ -67,7 +67,20 @@ namespace CakeExtracter.Bootstrappers
                     .ForMember(d => d.Name, opt => opt.MapFrom(s => s.TDadName))
                     .ForMember(d => d.ExternalId, opt => opt.MapFrom(s => s.TDadEid))
                     .ForMember(d => d.ExternalIds, opt => opt.MapFrom(s => s.ExternalIds))
-                    .ForMember(d => d.AdSet, opt => opt.MapFrom(s => new AdSet { Name = s.AdSetName, ExternalId = s.AdSetEid }));
+                    .ForMember(d => d.AdSet,
+                        opt => opt.MapFrom(s =>
+                            new AdSet
+                            {
+                                Name = s.AdSetName,
+                                ExternalId = s.AdSetEid,
+                                Strategy = new Strategy
+                                {
+                                    Name = s.StrategyName,
+                                    ExternalId = s.StrategyEid,
+                                    Type = new EntityType { Name = s.StrategyType },
+                                    TargetingType = new EntityType { Name = s.StrategyTargetingType },
+                                }
+                            }));
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SummaryMetric, DirectAgents.Domain.Entities.CPProg.TDadSummaryMetric>()
                     .ForMember(s => s.TDad, map => map.AllowNull());
 
@@ -80,7 +93,8 @@ namespace CakeExtracter.Bootstrappers
                     {
                         Name = s.StrategyName,
                         ExternalId = s.StrategyEid,
-                        Type = new EntityType { Name = s.StrategyType }
+                        Type = new EntityType { Name = s.StrategyType },
+                        TargetingType = new EntityType { Name = s.StrategyTargetingType }
                     })
                     )
                     .ForMember(d => d.AdSet, opt => opt.MapFrom(s => new AdSet

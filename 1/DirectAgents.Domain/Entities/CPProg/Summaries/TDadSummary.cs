@@ -19,14 +19,31 @@ namespace DirectAgents.Domain.Entities.CPProg
 
         [NotMapped]
         public string TDadName { get; set; }
+
         [NotMapped]
         public string TDadEid { get; set; } // external id
+
+        [NotMapped]
+        public string StrategyName { get; set; }
+
+        [NotMapped]
+        public string StrategyEid { get; set; }
+
         [NotMapped]
         public string AdSetName { get; set; }
+
         [NotMapped]
         public string AdSetEid { get; set; }
+
         [NotMapped]
         public IEnumerable<TDadExternalId> ExternalIds { get; set; }
+
+        [NotMapped]
+        public string StrategyType { get; set; }
+
+        [NotMapped]
+        public string StrategyTargetingType { get; set; }
+
         [NotMapped]
         public int Width { get; set; }
     }

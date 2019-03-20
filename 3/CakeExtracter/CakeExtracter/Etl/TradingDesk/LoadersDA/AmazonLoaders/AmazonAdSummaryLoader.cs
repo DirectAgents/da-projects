@@ -26,6 +26,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
         protected override void EnsureRelatedItems(List<TDadSummary> tDadSummaryItems)
         {
             summaryItemsLoader.PrepareData(tDadSummaryItems);
+            summaryItemsLoader.AddUpdateDependentStratagies(tDadSummaryItems);
             summaryItemsLoader.AddUpdateDependentAdSets(tDadSummaryItems);
             summaryItemsLoader.AddUpdateDependentTDads(tDadSummaryItems);
             summaryItemsLoader.AssignTDadIdToItems(tDadSummaryItems);

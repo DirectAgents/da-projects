@@ -185,6 +185,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             {
                 if (strategyStorage.IsEntityInStorage(item.Keyword.Strategy))
                 {
+                    item.Keyword.AdSet.StrategyId = strategyStorage.GetEntityIdFromStorage(item.Keyword.Strategy);
                     item.Keyword.StrategyId = strategyStorage.GetEntityIdFromStorage(item.Keyword.Strategy);
                 }
                 item.Keyword.Strategy = null;

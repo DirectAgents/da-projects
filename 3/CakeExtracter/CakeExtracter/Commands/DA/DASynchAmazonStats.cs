@@ -89,15 +89,11 @@ namespace CakeExtracter.Commands
                     {
                         DoETL_Daily(dateRange, account, amazonUtility);
                     }
-                    if (statsType.Strategy)
+                    if (statsType.Strategy && !statsType.All)
                     {
                         DoETL_Strategy(dateRange, account, amazonUtility);
                     }
-                    if (statsType.Daily && FromDatabase)
-                    {
-                        DoETL_DailyFromStrategyInDatabase(dateRange, account); // need to update strat stats first
-                    }
-                    if (statsType.AdSet)
+                    if (statsType.AdSet && !statsType.All)
                     {
                         DoETL_AdSet(dateRange, account, amazonUtility);
                     }
@@ -108,6 +104,10 @@ namespace CakeExtracter.Commands
                     if (statsType.Keyword)
                     {
                         DoETL_Keyword(dateRange, account, amazonUtility);
+                    }
+                    if (statsType.Daily && FromDatabase)
+                    {
+                        DoETL_DailyFromKeywordsDatabaseData(dateRange, account); // need to update keywords stats first
                     }
                     if (statsType.SearchTerm && !statsType.All)
                     {
@@ -159,11 +159,11 @@ namespace CakeExtracter.Commands
             }, account.Id, AmazonJobLevels.account, AmazonJobOperations.total);
         }
 
-        private void DoETL_DailyFromStrategyInDatabase(DateRange dateRange, ExtAccount account)
+        private void DoETL_DailyFromKeywordsDatabaseData(DateRange dateRange, ExtAccount account)
         {
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
             {
-                var extractor = new AmazonDailyStrategyFromDataBaseSummaryExtractor(dateRange, account.Id);
+                var extractor = new AmazonDatabaseKeywordsToDailySummaryExtracter(dateRange, account.Id);
                 var loader = new AmazonDailySummaryLoader(account.Id);
                 CommandHelper.DoEtl(extractor, loader);
             }, account.Id, AmazonJobLevels.account, AmazonJobOperations.total);
