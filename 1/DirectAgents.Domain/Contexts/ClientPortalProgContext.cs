@@ -98,7 +98,6 @@ namespace DirectAgents.Domain.Contexts
             //Kochava
             modelBuilder.Entity<KochavaItem>().ToTable("KochavaItem", tdSchema);
 
-
             modelBuilder.Entity<Campaign>().Property(c => c.BaseFee).HasPrecision(14, 2);
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MgmtFeePct).HasPrecision(10, 5).HasColumnName("MgmtFeePct");
