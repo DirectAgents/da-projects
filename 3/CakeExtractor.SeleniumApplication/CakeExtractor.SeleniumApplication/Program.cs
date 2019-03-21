@@ -26,24 +26,21 @@ namespace CakeExtractor.SeleniumApplication
 
         private static BaseAmazonSeleniumCommand GetCommandFromCmdLineParams(string[] args)
         {
-            var comamndsConfig = args.Length > 0 ? args[0] : null;
-            var command = CommandsProvider.GetExecutionCommand(comamndsConfig);
+            var commandsConfig = args.Length > 0 ? args[0] : null;
+            var command = CommandsProvider.GetExecutionCommand(commandsConfig);
             return command;
         }
 
-        private static int GetExecutionProfileNumberFromCmdLineParams(string[] args)
+        private static int? GetExecutionProfileNumberFromCmdLineParams(string[] args)
         {
-            const int defaultExecutionProfileNumber = 1;
             var executionProfileNumberConfigValue = args.Length >= 2 ? args[1] : null;
-            try
+            if (int.TryParse(executionProfileNumberConfigValue, out var configProfileNumber))
             {
-                var configProfileNumber = int.Parse(executionProfileNumberConfigValue);
                 return configProfileNumber;
             }
-            catch
+            else
             {
-                CakeExtracter.Logger.Warn($"Execution profile number not specified of specified incorrectly. {defaultExecutionProfileNumber} will be used as profile number");
-                return defaultExecutionProfileNumber;
+                return null;
             }
         }
 

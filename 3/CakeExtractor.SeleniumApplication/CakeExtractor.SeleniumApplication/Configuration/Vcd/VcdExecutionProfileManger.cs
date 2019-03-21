@@ -10,7 +10,7 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
     /// </summary>
     public class VcdExecutionProfileManger
     {
-        private int? executionProfileNumber;
+        private int executionProfileNumber;
 
         private VcdExecutionProfileConfiguration profileConfiguration;
 
@@ -27,7 +27,7 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
         public static VcdExecutionProfileManger Current = new VcdExecutionProfileManger();
 
         /// <summary>
-        /// Point for accesssing profile configuration.
+        /// Point for accessing profile configuration.
         /// </summary>
         public VcdExecutionProfileConfiguration ProfileConfiguration
         {
@@ -45,28 +45,28 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
         /// Define execution profile number. Extract configuration for execution profile.
         /// </summary>
         /// <param name="profileNumber"></param>
-        public void SetExecutionProfileNumber(int profileNumber)
+        public void SetExecutionProfileNumber(int? profileNumber)
         {
-            if (executionProfileNumber.HasValue)
+            if (!profileNumber.HasValue)
             {
-                throw new Exception("Execution profile number can be defined only one time");
+                const int defaultExecutionProfileNumber = 1;
+                CakeExtracter.Logger.Warn(
+                    $"Execution profile number not specified or specified incorrectly. {defaultExecutionProfileNumber} will be used as profile number");
+                profileNumber = defaultExecutionProfileNumber;
             }
-            else
+
+            executionProfileNumber = (int) profileNumber;
+            try
             {
-                executionProfileNumber = profileNumber;
-                try
-                {
-                    profileConfiguration = ExtractExecutionProfileConfigureationByNumber(profileNumber);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Error occured while extracting profile number configuration. Check Execution profiles configs.", ex);
-                }
-                
+                profileConfiguration = ExtractExecutionProfileConfigurationByNumber(executionProfileNumber);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occured while extracting profile number configuration. Check Execution profiles configs.", ex);
             }
         }
 
-        private VcdExecutionProfileConfiguration ExtractExecutionProfileConfigureationByNumber(int profileNumber)
+        private VcdExecutionProfileConfiguration ExtractExecutionProfileConfigurationByNumber(int profileNumber)
         {
             var profileConfigFilePath = $"./VcdExecutionProfiles/Profile_{profileNumber}.json";
             var configFileContentJson = File.ReadAllText(profileConfigFilePath);
