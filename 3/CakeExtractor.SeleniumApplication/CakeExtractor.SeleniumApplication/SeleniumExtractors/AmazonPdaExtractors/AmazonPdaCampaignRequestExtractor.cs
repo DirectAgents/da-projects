@@ -37,17 +37,16 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             {
                 var sums = ExtractSummaries();
                 var items = TransformSummaries(sums);
-
-                if (items.Any())
-                {
-                    RemoveOldData(dateRange.FromDate, dateRange.ToDate);
-                }
-
+                RemoveOldData(dateRange.FromDate, dateRange.ToDate);
                 Add(items);
             }
             catch (AccountDoesNotHaveProfileException ex)
             {
                 Logger.Warn(accountId, ex.Message);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(new Exception("Could not extract CampaignSummaries (PDA).", e));
             }
             End();
         }
