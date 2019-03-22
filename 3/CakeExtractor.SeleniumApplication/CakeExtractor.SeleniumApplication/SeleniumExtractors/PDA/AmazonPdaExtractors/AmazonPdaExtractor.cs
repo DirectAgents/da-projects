@@ -363,16 +363,6 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             return campNameWebElementList?.Select(pageActions.GetCampaignUrl) ?? new List<string> {""};
         }
 
-        private static void LogWaiting(TimeSpan timeSpan, int? retryCount)
-        {
-            var message = $"Waiting {timeSpan} before setting URLs";
-            if (retryCount.HasValue)
-            {
-                message += $" (number of retrying - {retryCount})";
-            }
-            Logger.Info(message);
-        }
-
         private static void GoToPortalMainPage()
         {
             pageActions.NavigateToUrl(campaignsUrl, AmazonPdaPageObjects.FilterByButton);
@@ -395,6 +385,16 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
                     i => pauseBetweenAttempts,
                     (exception, timeSpan, retryCount, context) => LogWaiting(timeSpan, retryCount))
                 .Execute(SetAvailableProfiles);
+        }
+
+        private static void LogWaiting(TimeSpan timeSpan, int? retryCount)
+        {
+            var message = $"Waiting {timeSpan} before setting URLs";
+            if (retryCount.HasValue)
+            {
+                message += $" (number of retrying - {retryCount})";
+            }
+            Logger.Info(message);
         }
     }
 }
