@@ -17,6 +17,7 @@ using CakeExtractor.SeleniumApplication.PageActions.AmazonPda;
 using CakeExtractor.SeleniumApplication.Utilities;
 using DirectAgents.Domain.Entities.CPProg;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
+using Polly;
 using FileManager = CakeExtractor.SeleniumApplication.Helpers.FileManager;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors
@@ -60,18 +61,15 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             LoginWithoutCookie(authorizationModel);
         }
 
+        /// <summary>
+        /// The method sets the URLs for the available profiles on main page of portal
+        /// </summary>
         public static void SetAvailableProfileUrls()
         {
             try
             {
-                pageActions.NavigateToUrl(campaignsUrl, AmazonPdaPageObjects.FilterByButton);
-                if (!pageActions.IsElementPresent(AmazonPdaPageObjects.FilterByButton) &&
-                    pageActions.IsElementPresent(AmazonPdaPageObjects.LoginPassInput))
-                {
-                    // need to repeat the password
-                    pageActions.LoginByPassword(authorizationModel.Password, AmazonPdaPageObjects.FilterByButton);
-                }
-                RetryUtility.Retry(5, 3000, new[] { typeof(Exception) }, SetAvailableProfiles);
+                GoToPortalMainPage();
+                TrySetAvailableProfiles();
             }
             catch (Exception e)
             {
@@ -137,17 +135,11 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             }
         }
 
-        /// <summary>
-        /// The method sets the URLs for the available profiles
-        /// returns TRUE if successful or FALSE if setting not possible
-        /// </summary>
-        /// <returns></returns>
-        private static bool SetAvailableProfiles()
+        private static void SetAvailableProfiles()
         {
             availableProfileUrls = pageActions.GetAvailableProfileUrls();
             Logger.Info("The following profiles were found for the current account:");
             availableProfileUrls.ForEach(x => Logger.Info($"{x.Key} - {x.Value}"));
-            return true;
         }
 
         public void Extract(Action<List<string>> extractAction)
@@ -369,6 +361,40 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
                 AmazonPdaPageObjects.CampaignsNameContainer, AmazonPdaPageObjects.CampaignsNamesList);
             Logger.Info(account.Id, "[{0}] web elements received", campNameWebElementList?.Count ?? 0);
             return campNameWebElementList?.Select(pageActions.GetCampaignUrl) ?? new List<string> {""};
+        }
+
+        private static void LogWaiting(TimeSpan timeSpan, int? retryCount)
+        {
+            var message = $"Waiting {timeSpan} before setting URLs";
+            if (retryCount.HasValue)
+            {
+                message += $" (number of retrying - {retryCount})";
+            }
+            Logger.Info(message);
+        }
+
+        private static void GoToPortalMainPage()
+        {
+            pageActions.NavigateToUrl(campaignsUrl, AmazonPdaPageObjects.FilterByButton);
+            if (!pageActions.IsElementPresent(AmazonPdaPageObjects.FilterByButton) &&
+                pageActions.IsElementPresent(AmazonPdaPageObjects.LoginPassInput))
+            {
+                // need to repeat the password
+                pageActions.LoginByPassword(authorizationModel.Password, AmazonPdaPageObjects.FilterByButton);
+            }
+        }
+
+        private static void TrySetAvailableProfiles()
+        {
+            const int maxRetryAttempts = 5;
+            var pauseBetweenAttempts = TimeSpan.FromSeconds(3);
+            Policy
+                .Handle<Exception>()
+                .WaitAndRetry(
+                    maxRetryAttempts,
+                    i => pauseBetweenAttempts,
+                    (exception, timeSpan, retryCount, context) => LogWaiting(timeSpan, retryCount))
+                .Execute(SetAvailableProfiles);
         }
     }
 }
