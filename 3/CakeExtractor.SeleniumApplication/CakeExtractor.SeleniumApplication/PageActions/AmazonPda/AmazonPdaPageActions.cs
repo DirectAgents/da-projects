@@ -19,7 +19,7 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         public Dictionary<string, string> GetAvailableProfileUrls()
         {
             WaitElementClickable(AmazonPdaPageObjects.CurrentProfileButton, timeout);
-            ClickElement(AmazonPdaPageObjects.CurrentProfileButton);
+            MoveToElementAndClick(AmazonPdaPageObjects.CurrentProfileButton);
             WaitElementClickable(AmazonPdaPageObjects.ProfilesMenu, timeout);
             var menuContainers = GetChildrenElements(AmazonPdaPageObjects.ProfilesMenu, AmazonPdaPageObjects.ProfilesMenuItemContainer);
             var menuItems = menuContainers.Select(x => GetChildElement(x, AmazonPdaPageObjects.ProfilesMenuItem));

@@ -64,18 +64,22 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
         {
             try
             {
-                pageActions.NavigateToUrl(campaignsUrl, AmazonPdaPageObjects.FilterByButton);
-                if (!pageActions.IsElementPresent(AmazonPdaPageObjects.FilterByButton) &&
-                    pageActions.IsElementPresent(AmazonPdaPageObjects.LoginPassInput))
+                var setProfiles = false;
+                do
                 {
-                    // need to repeat the password
-                    pageActions.LoginByPassword(authorizationModel.Password, AmazonPdaPageObjects.FilterByButton);
-                }
-                SetAvailableProfiles();
+                    pageActions.NavigateToUrl(campaignsUrl, AmazonPdaPageObjects.FilterByButton);
+                    if (!pageActions.IsElementPresent(AmazonPdaPageObjects.FilterByButton) &&
+                        pageActions.IsElementPresent(AmazonPdaPageObjects.LoginPassInput))
+                    {
+                        // need to repeat the password
+                        pageActions.LoginByPassword(authorizationModel.Password, AmazonPdaPageObjects.FilterByButton);
+                    }
+                    setProfiles = SetAvailableProfiles();
+                } while (!setProfiles);
             }
             catch (Exception e)
             {
-                throw new Exception($"Could not to get profile URLs: {e.Message}", e);
+                throw new Exception($"Could not to get the profile URLs: {e.Message}", e);
             }
         }
 
@@ -137,11 +141,25 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             }
         }
 
-        private static void SetAvailableProfiles()
+        /// <summary>
+        /// The method sets the URLs for the available profiles and
+        /// returns TRUE if successful or FALSE if setting not possible
+        /// </summary>
+        /// <returns></returns>
+        private static bool SetAvailableProfiles()
         {
-            availableProfileUrls = pageActions.GetAvailableProfileUrls();
-            Logger.Info("The following profiles were found for the current account:");
-            availableProfileUrls.ForEach(x => Logger.Info($"{x.Key} - {x.Value}"));
+            try
+            {
+                availableProfileUrls = pageActions.GetAvailableProfileUrls();
+                Logger.Info("The following profiles were found for the current account:");
+                availableProfileUrls.ForEach(x => Logger.Info($"{x.Key} - {x.Value}"));
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Warn($"Could not to set the URLs for the available profiles. Will try again...{e.Message}");
+                return false;
+            }
         }
 
         public void Extract(Action<List<string>> extractAction)
