@@ -186,7 +186,7 @@ namespace Amazon.Helpers
                     EntitesType.AdGroups, new[] {CampaignIdMetric, AdGroupNameMetric}
                 },
                 {
-                    EntitesType.ProductAds, new[] {AdGroupIdMetric, AdGroupNameMetric, AsinMetric}
+                    EntitesType.ProductAds, new[] { CampaignIdMetric, AdGroupIdMetric, AdGroupNameMetric, AsinMetric}
                 },
                 {
                     EntitesType.Keywords, new[] {CampaignIdMetric, AdGroupIdMetric, AdGroupNameMetric, KeywordTextMetric}

@@ -205,53 +205,34 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             }
         }
 
-        public static void SetCurrencyMultipliers(List<Dictionary<string, string>> items, Dictionary<string, Dictionary<DateTime, decimal>> currMults)
+        public static void SetCurrencyMultipliers(List<Dictionary<string, string>> items,
+            Dictionary<string, Dictionary<DateTime, decimal>> currencyMultipliers)
         {
             if (!items.Any() || !items[0].Keys.Contains("currency"))
                 return;
 
             var currencyTuples1 = items.Where(i => i["currency"] != "USD")
-                                       .Select(i => Tuple.Create(i["currency"], DateTime.Parse(i["day"].Replace('-', '/')))).Distinct();
-            var currencyTuples = currencyTuples1.Select(t => Tuple.Create(t.Item1, new DateTime(t.Item2.Year, t.Item2.Month, 1))).Distinct().ToList();
+                .Select(i => Tuple.Create(i["currency"], DateTime.Parse(i["day"].Replace('-', '/')))).Distinct();
+            var currencyTuples = currencyTuples1
+                .Select(t => Tuple.Create(t.Item1, new DateTime(t.Item2.Year, t.Item2.Month, 1))).Distinct().ToList();
             var currencyGroups = currencyTuples.GroupBy(ct => ct.Item1); // group by currency code
 
-            foreach (var cg in currencyGroups) // (foreach currency code)
+            foreach (var currencyGroup in currencyGroups) // (foreach currency code)
             {
-                if (currMults.ContainsKey(cg.Key))
-                { // See if dictionary values are already set
-                    var monthsWithoutMultiplier = cg.Where(t => !currMults[cg.Key].ContainsKey(t.Item2));
+                if (currencyMultipliers.ContainsKey(currencyGroup.Key))
+                {
+                    // See if dictionary values are already set
+                    var monthsWithoutMultiplier =
+                        currencyGroup.Where(t => !currencyMultipliers[currencyGroup.Key].ContainsKey(t.Item2));
                     if (!monthsWithoutMultiplier.Any())
                         continue; // they're all there already
                 }
                 else
                 {
-                    currMults.Add(cg.Key, new Dictionary<DateTime, decimal>());
+                    currencyMultipliers.Add(currencyGroup.Key, new Dictionary<DateTime, decimal>());
                 }
-                var singleCurrencyMultipliers = currMults[cg.Key];
 
-                using (var db = new ClientPortalContext())
-                {
-                    var currConversions = db.CurrencyConversions.Where(c => c.Currency.Code == cg.Key).OrderBy(c => c.Date).ToList();
-                    if (!currConversions.Any())
-                        continue;
-
-                    DateTime earliestConvDate = currConversions.First().Date;
-                    foreach (var currTuple in cg) // (foreach month)
-                    {
-                        if (singleCurrencyMultipliers.ContainsKey(currTuple.Item2))
-                            continue;
-
-                        if (currTuple.Item2 < earliestConvDate)
-                        { // Use the oldest CurrencyConversion
-                            singleCurrencyMultipliers.Add(currTuple.Item2, currConversions.First().ToUSDmultiplier);
-                        }
-                        else
-                        { // Use the most recent CurrencyConversion that's <= the currTuple's date
-                            var currConv = currConversions.Where(c => c.Date <= currTuple.Item2).OrderBy(c => c.Date).Last();
-                            singleCurrencyMultipliers.Add(currTuple.Item2, currConv.ToUSDmultiplier);
-                        }
-                    }
-                }
+                SetCurrencyMultiplier(currencyGroup, currencyMultipliers);
             }
         }
 
@@ -346,6 +327,67 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         db.SaveChanges();
                     }
                 }
+            }
+        }
+
+        private static void SetCurrencyMultiplier(IGrouping<string, Tuple<string, DateTime>> currencyGroup,
+            Dictionary<string, Dictionary<DateTime, decimal>> currencyMultipliers)
+        {
+            try
+            {
+                var singleCurrencyMultipliers = currencyMultipliers[currencyGroup.Key];
+                using (var db = new ClientPortalContext())
+                {
+                    var currConversions = GetCurrencyConversions(currencyGroup.Key, db);
+
+                    if (!currConversions.Any())
+                        return;
+
+                    var earliestConvDate = currConversions.First().Date;
+                    foreach (var currTuple in currencyGroup) // (foreach month)
+                    {
+                        if (singleCurrencyMultipliers.ContainsKey(currTuple.Item2))
+                            continue;
+
+                        if (currTuple.Item2 < earliestConvDate)
+                        {
+                            // Use the oldest CurrencyConversion
+                            singleCurrencyMultipliers.Add(currTuple.Item2, currConversions.First().ToUSDmultiplier);
+                        }
+                        else
+                        {
+                            // Use the most recent CurrencyConversion that's <= the currTuple's date
+                            var currConv = currConversions.Where(c => c.Date <= currTuple.Item2)
+                                .OrderBy(c => c.Date).Last();
+                            singleCurrencyMultipliers.Add(currTuple.Item2, currConv.ToUSDmultiplier);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(new Exception($"Could not set currency multiplier [{currencyGroup.Key}]", e));
+            }
+        }
+
+        private static List<CurrencyConversion> GetCurrencyConversions(string currencyGroupKey, ClientPortalContext db)
+        {
+            var currencyConversions = new List<CurrencyConversion>();
+            try
+            {
+                currencyConversions = db.CurrencyConversions.Where(c => c.Currency.Code == currencyGroupKey)
+                    .OrderBy(c => c.Date).ToList();
+                return currencyConversions;
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException is System.Data.SqlClient.SqlException)
+                {
+                    Logger.Warn("Table 'dbo.CurrencyConversion' does not exist in database");
+                    return currencyConversions;
+                }
+
+                throw new Exception("Could not get a list of currency conversions.", e);
             }
         }
     }

@@ -26,15 +26,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             //TODO: Do X days at a time...?
             try
             {
-                var settings = GetBaseSettings();
-                settings.Dimensions.Add(byOrder ? Dimension.Order : Dimension.Campaign);
-                var parms = AfUtility.CreateReportParams(settings);
-                foreach (var reportData in AfUtility.GetReportDataWithPaging(parms))
-                {
-                    var sums = EnumerateRows(reportData);
-                    sums = AdjustItems(sums);
-                    Add(sums);
-                }
+                var data = ExtractData();
+                var sums = GroupSummaries(data);
+                Add(sums);
             }
             catch (Exception ex)
             {
@@ -43,29 +37,40 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             End();
         }
 
-        private IEnumerable<StrategySummary> EnumerateRows(ReportData reportData)
+        private IEnumerable<AdformSummary> ExtractData()
         {
-            var adformTransformer = new AdformTransformer(reportData, byCampaign: !byOrder, byOrder: byOrder);
-            var afSums = adformTransformer.EnumerateAdformSummaries();
-            var campDateGroups = afSums.GroupBy(x => new { x.Campaign, x.Order, x.Date });
+            var settings = GetBaseSettings();
+            settings.Dimensions.Add(byOrder ? Dimension.Order : Dimension.Campaign);
+            var parms = AfUtility.CreateReportParams(settings);
+            var allReportData = AfUtility.GetReportDataWithPaging(parms);
+            var adFormSums = allReportData.SelectMany(TransformReportData).ToList();
+            return adFormSums;
+        }
+
+        private IEnumerable<AdformSummary> TransformReportData(ReportData reportData)
+        {
+            var adFormTransformer = new AdformTransformer(reportData, byCampaign: !byOrder, byOrder: byOrder);
+            var afSums = adFormTransformer.EnumerateAdformSummaries();
+            return afSums;
+        }
+
+        private IEnumerable<StrategySummary> GroupSummaries(IEnumerable<AdformSummary> adFormSums)
+        {
+            var sums = EnumerateRows(adFormSums);
+            var resultSums = AdjustItems(sums);
+            return resultSums;
+        }
+
+        private IEnumerable<StrategySummary> EnumerateRows(IEnumerable<AdformSummary> afSums)
+        {
+            var campDateGroups = afSums.GroupBy(x => new {x.Campaign, x.Order, x.Date});
             foreach (var campDateGroup in campDateGroups)
             {
                 var sum = new StrategySummary
                 {
-                    StrategyName = byOrder ? campDateGroup.Key.Order : campDateGroup.Key.Campaign,
-                    Date = campDateGroup.Key.Date,
-                    Cost = campDateGroup.Sum(x => x.Cost),
-                    Impressions = campDateGroup.Sum(x => x.Impressions),
-                    Clicks = campDateGroup.Sum(x => x.Clicks)
+                    StrategyName = byOrder ? campDateGroup.Key.Order : campDateGroup.Key.Campaign
                 };
-                var clickThroughs = campDateGroup.Where(x => x.AdInteractionType == "Click");
-                sum.PostClickConv = clickThroughs.Sum(x => x.Conversions);
-                sum.PostClickRev = clickThroughs.Sum(x => x.Sales);
-
-                var viewThroughs = campDateGroup.Where(x => x.AdInteractionType == "Impression");
-                sum.PostViewConv = viewThroughs.Sum(x => x.Conversions);
-                sum.PostViewRev = viewThroughs.Sum(x => x.Sales);
-
+                SetStats(sum, campDateGroup, campDateGroup.Key.Date);
                 yield return sum;
             }
         }

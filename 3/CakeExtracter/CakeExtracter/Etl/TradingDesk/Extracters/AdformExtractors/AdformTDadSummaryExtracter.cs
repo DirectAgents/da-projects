@@ -21,15 +21,9 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             //TODO: Do X days at a time...?
             try
             {
-                var settings = GetBaseSettings();
-                settings.Dimensions.Add(Dimension.Banner);
-                var parms = AfUtility.CreateReportParams(settings);
-                foreach (var reportData in AfUtility.GetReportDataWithPaging(parms))
-                {
-                    var sums = EnumerateRows(reportData);
-                    sums = AdjustItems(sums);
-                    Add(sums);
-                }
+                var data = ExtractData();
+                var sums = GroupSummaries(data);
+                Add(sums);
             }
             catch (Exception ex)
             {
@@ -37,29 +31,41 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
             }
             End();
         }
-        private IEnumerable<TDadSummary> EnumerateRows(ReportData reportData)
+
+        private IEnumerable<AdformSummary> ExtractData()
         {
-            var adformTransformer = new AdformTransformer(reportData, byBanner: true);
-            var afSums = adformTransformer.EnumerateAdformSummaries();
+            var settings = GetBaseSettings();
+            settings.Dimensions.Add(Dimension.Banner);
+            var parms = AfUtility.CreateReportParams(settings);
+            var allReportData = AfUtility.GetReportDataWithPaging(parms);
+            var adFormSums = allReportData.SelectMany(TransformReportData).ToList();
+            return adFormSums;
+        }
+
+        private IEnumerable<AdformSummary> TransformReportData(ReportData reportData)
+        {
+            var adFormTransformer = new AdformTransformer(reportData, byBanner: true);
+            var afSums = adFormTransformer.EnumerateAdformSummaries();
+            return afSums;
+        }
+
+        private IEnumerable<TDadSummary> GroupSummaries(IEnumerable<AdformSummary> adFormSums)
+        {
+            var sums = EnumerateRows(adFormSums);
+            var resultSums = AdjustItems(sums);
+            return resultSums;
+        }
+
+        private IEnumerable<TDadSummary> EnumerateRows(IEnumerable<AdformSummary> afSums)
+        {
             var bannerDateGroups = afSums.GroupBy(x => new { x.Banner, x.Date });
             foreach (var bdGroup in bannerDateGroups)
             {
                 var sum = new TDadSummary
                 {
-                    TDadName = bdGroup.Key.Banner,
-                    Date = bdGroup.Key.Date,
-                    Cost = bdGroup.Sum(x => x.Cost),
-                    Impressions = bdGroup.Sum(x => x.Impressions),
-                    Clicks = bdGroup.Sum(x => x.Clicks)
+                    TDadName = bdGroup.Key.Banner
                 };
-                var clickThroughs = bdGroup.Where(x => x.AdInteractionType == "Click");
-                sum.PostClickConv = clickThroughs.Sum(x => x.Conversions);
-                //sum.PostClickRev = clickThroughs.Sum(x => x.Sales);
-
-                var viewThroughs = bdGroup.Where(x => x.AdInteractionType == "Impression");
-                sum.PostViewConv = viewThroughs.Sum(x => x.Conversions);
-                //sum.PostViewRev = viewThroughs.Sum(x => x.Sales);
-
+                SetStats(sum, bdGroup, bdGroup.Key.Date);
                 yield return sum;
             }
         }

@@ -10,6 +10,7 @@ using DirectAgents.Domain.Entities.CPProg.Vendor.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.DSP;
 using DirectAgents.Domain.Entities.CPProg.DSP.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.CJ;
+using DirectAgents.Domain.Entities.CPProg.Kochava;
 
 namespace DirectAgents.Domain.Contexts
 {
@@ -98,6 +99,9 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<DspOrderMetricValues>().ToTable("DspOrderMetricValues", tdSchema);
             modelBuilder.Entity<DspLineDailyMetricValues>().ToTable("DspLineDailyMetricValues", tdSchema);
             modelBuilder.Entity<DspCreativeDailyMetricValues>().ToTable("DspCreativeDailyMetricValues", tdSchema);
+
+            //Kochava
+            modelBuilder.Entity<KochavaItem>().ToTable("KochavaItem", tdSchema);
 
             modelBuilder.Entity<Campaign>().Property(c => c.BaseFee).HasPrecision(14, 2);
             modelBuilder.Entity<Campaign>().Property(c => c.DefaultBudgetInfo.MediaSpend).HasPrecision(14, 2).HasColumnName("MediaSpend");
@@ -289,6 +293,9 @@ namespace DirectAgents.Domain.Contexts
         //TD CJ
         public DbSet<CjAdvertiserCommission> CjAdvertiserCommissions { get; set; }
         public DbSet<CjAdvertiserCommissionItem> CjAdvertiserCommissionItems { get; set; }
+
+        //TD
+        public DbSet<KochavaItem> KochavaItems { get; set; }
 
         // AdRoll
         public DbSet<Advertisable> Advertisables { get; set; }

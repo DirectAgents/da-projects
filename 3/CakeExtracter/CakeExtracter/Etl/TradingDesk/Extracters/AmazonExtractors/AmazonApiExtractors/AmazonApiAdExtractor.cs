@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Amazon;
+using Amazon.Entities;
 using Amazon.Entities.Summaries;
 using Amazon.Enums;
 using CakeExtracter.Common;
@@ -16,45 +17,57 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
     // Ad (ProductAd)
     public class AmazonApiAdExtrator : BaseAmazonExtractor<TDadSummary>
     {
-        //NOTE: We can only get ad stats for SponsoredProduct campaigns, for these reasons:
+        private readonly AmazonCampaignMetadataExtractor campaignMetadataExtractor;
 
+        //NOTE: We can only get ad stats for SponsoredProduct campaigns, for these reasons:
         public AmazonApiAdExtrator(AmazonUtility amazonUtility, DateRange dateRange, ExtAccount account, bool clearBeforeLoad, string campaignFilter = null, string campaignFilterOut = null)
             : base(amazonUtility, dateRange, account, clearBeforeLoad, campaignFilter, campaignFilterOut)
-        { }
+        {
+            campaignMetadataExtractor = new AmazonCampaignMetadataExtractor(amazonUtility);
+        }
 
         protected override void Extract()
         {
             Logger.Info(accountId, "Extracting TDadSummaries from Amazon API for ({0}) from {1:d} to {2:d}",
                 clientId, dateRange.FromDate, dateRange.ToDate);
-
+            var campaignsData = GetCampaignInfo();
             foreach (var date in dateRange.Dates)
             {
                 try
                 {
-                    Extract(date);
+                    Extract(date, campaignsData);
                 }
                 catch (Exception e)
                 {
                     Logger.Error(accountId, e);
                 }
             }
-
             End();
         }
 
-        private void Extract(DateTime date)
+        private void Extract(DateTime date, List<AmazonCampaign> campaignInfo)
         {
             IEnumerable<TDadSummary> items = null;
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => {
                 var productAdSums = ExtractProductAdSummaries(date);
                 var asinSums = ExtractAsinSummaries(date);
-                items = TransformSummaries(productAdSums, asinSums, date);
+                items = TransformSummaries(productAdSums, asinSums, date, campaignInfo);
             }, accountId, AmazonJobLevels.creative, AmazonJobOperations.reportExtracting);
             if (ClearBeforeLoad)
             {
                 RemoveOldData(date);
             }
             Add(items);
+        }
+
+        private List<AmazonCampaign> GetCampaignInfo()
+        {
+            List<AmazonCampaign> campaignsData = null;
+            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
+            {
+                campaignsData = campaignMetadataExtractor.LoadCampaignsMetadata(accountId, clientId).ToList();
+            }, accountId, AmazonJobLevels.creative, AmazonJobOperations.loadCampaignMetadata);
+            return campaignsData;
         }
 
         private IEnumerable<AmazonAdDailySummary> ExtractProductAdSummaries(DateTime date)
@@ -71,33 +84,39 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         }
 
         private IEnumerable<TDadSummary> TransformSummaries(IEnumerable<AmazonAdDailySummary> adStats,
-            IEnumerable<AmazonAsinSummaries> asinStats, DateTime date)
+            IEnumerable<AmazonAsinSummaries> asinStats, DateTime date, List<AmazonCampaign> campaignInfo)
         {
-            var summaries = adStats.Select(stat => CreateSummary(stat, asinStats, date));
+            var summaries = adStats.Select(stat => CreateSummary(stat, asinStats, date, campaignInfo));
             var notEmptySummaries = summaries.Where(x => x != null && !x.AllZeros()).ToList();
             return notEmptySummaries;
         }
 
-        private TDadSummary CreateSummary(AmazonAdDailySummary adStat, IEnumerable<AmazonAsinSummaries> asinStats, DateTime date)
+        private TDadSummary CreateSummary(AmazonAdDailySummary adStat, IEnumerable<AmazonAsinSummaries> asinStats, 
+            DateTime date, List<AmazonCampaign> campaignInfo)
         {
             var asinStatsForProduct = asinStats.Where(x => x.Asin == adStat.Asin && x.AdGroupId == adStat.AdGroupId).ToList();
             if (!asinStatsForProduct.Any() && adStat.AllZeros())
             {
                 return null;
             }
-            var sum = CreateSummary(adStat, date);
+            var relatedCampaign = campaignInfo.FirstOrDefault(c => c.CampaignId == adStat.CampaignId);
+            var sum = CreateSummary(adStat, date, relatedCampaign);
             AddAsinMetrics(sum, asinStatsForProduct);
             return sum;
         }
 
-        private TDadSummary CreateSummary(AmazonAdDailySummary adSum, DateTime date)
+        private TDadSummary CreateSummary(AmazonAdDailySummary adSum, DateTime date, AmazonCampaign relatedCampaign)
         {
             var sum = new TDadSummary
             {
                 TDadEid = adSum.AdId,
                 TDadName = adSum.AdGroupName,
                 AdSetEid = adSum.AdGroupId,
-                AdSetName = adSum.AdGroupName
+                AdSetName = adSum.AdGroupName,
+                StrategyEid = adSum.CampaignId,
+                StrategyName = adSum.CampaignName,
+                StrategyType = adSum.CampaignType,
+                StrategyTargetingType = relatedCampaign!=null ? relatedCampaign.TargetingType : null
             };
             var externalIds = new List<TDadExternalId>();
             AddAdExternalId(externalIds, ProductAdIdType.ASIN, adSum.Asin);

@@ -42,6 +42,7 @@ namespace DirectAgents.Domain.Seed
             AddPlatformIfNotExist(Platform.Code_AraAmazon, "AraAmazon");
             AddPlatformIfNotExist(Platform.Code_DspAmazon, "DspAmazon");
             AddPlatformIfNotExist(Platform.Code_CJ, "Commission Junction");
+            AddPlatformIfNotExist(Platform.Code_Kochava, "Kochava");
         }
 
         public void SeedNetworks()

@@ -9,16 +9,23 @@ namespace Adform.Helpers
 {
     internal class AdformApiHelper
     {
+        public const string CostMetric = "cost";
+        public const string ImpressionsMetric = "impressions";
+        public const string ClicksMetric = "clicks";
+        public const string ConversionsMetric = "conversions";
+        public const string SalesMetric = "sales";
+
+        public const string SpecsConversionType = "conversionType";
+
+        public const string ConversionTypeAll = "allConversionTypes";
+        public const string ConversionType1 = "conversionType1";
+        public const string ConversionType2 = "conversionType2";
+        public const string ConversionType3 = "conversionType3";
+
         private const string DateFormat = "yyyy'-'M'-'d";
         private const string RtbName = "Real Time Bidding";
 
-        private const string CostMetric = "cost";
-        private const string ImpressionsMetric = "impressions";
-        private const string ClicksMetric = "clicks";
-        private const string ConversionsMetric = "conversions";
-        private const string SalesMetric = "sales";
-
-        private static readonly Dictionary<Dimension, string> Dimensions = new Dictionary<Dimension, string>
+        public static readonly Dictionary<Dimension, string> Dimensions = new Dictionary<Dimension, string>
         {
             {Dimension.Date, "date"},
             {Dimension.Campaign, "campaign"},
@@ -28,6 +35,12 @@ namespace Adform.Helpers
             {Dimension.Media, "media"},
             {Dimension.AdInteractionType, "adInteractionType"} // Click, Impression, etc.
         };
+
+        private static readonly string[] BasicMetrics = {CostMetric, ImpressionsMetric, ClicksMetric};
+
+        private static readonly string[] ConversionMetrics = {ConversionsMetric, SalesMetric };
+
+        private static readonly string[] ConversionTypes = {ConversionTypeAll, ConversionType1, ConversionType2, ConversionType3};
 
         public static ExpandoObject GetFilters(ReportSettings settings)
         {
@@ -51,18 +64,19 @@ namespace Adform.Helpers
             return filter;
         }
 
-        public static string[] GetMetrics(ReportSettings settings)
+        public static MetricMetadata[] GetMetrics(ReportSettings settings)
         {
-            var metrics = new List<string>();
+            var metrics = new List<MetricMetadata>();
             if (settings.BasicMetrics)
             {
-                metrics.AddRange(new[] {CostMetric, ImpressionsMetric, ClicksMetric});
-
+                var basicMetrics = BasicMetrics.Select(GetBasicMetric);
+                metrics.AddRange(basicMetrics);
             }
 
             if (settings.ConvMetrics)
             {
-                metrics.AddRange(new[] {ConversionsMetric, SalesMetric});
+                var convMetrics = ConversionMetrics.SelectMany(GetConversionMetrics);
+                metrics.AddRange(convMetrics);
             }
 
             return metrics.ToArray();
@@ -76,6 +90,26 @@ namespace Adform.Helpers
                 : settings.Dimensions.Concat(defaultDimensions);
             var strDimensions = dimensions.Select(x => Dimensions[x]).ToArray();
             return strDimensions;
+        }
+
+        private static MetricMetadata GetBasicMetric(string metricName)
+        {
+            return new MetricMetadata
+            {
+                metric = metricName
+            };
+        }
+
+        private static IEnumerable<MetricMetadata> GetConversionMetrics(string metricName)
+        {
+            return ConversionTypes.Select(convType => new MetricMetadata
+            {
+                metric = metricName,
+                specs = new
+                {
+                    conversionType = convType
+                }
+            });
         }
     }
 }

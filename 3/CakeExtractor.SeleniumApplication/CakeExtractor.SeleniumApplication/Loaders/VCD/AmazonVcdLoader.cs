@@ -46,7 +46,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
                 }
                 catch (Exception e)
                 {
-                    Logger.Error(extAccount.Id, new Exception($"Could not load data for date {item.Date}. Details: {e.Message}", e));
+                    Logger.Error(extAccount.Id, new Exception($"Could not load data for date {item.Date}. Details: {e}", e));
                 }
             }
             return items.Count;

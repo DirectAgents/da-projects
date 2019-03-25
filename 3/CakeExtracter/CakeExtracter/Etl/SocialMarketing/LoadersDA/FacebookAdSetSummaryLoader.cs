@@ -1,4 +1,5 @@
-﻿using CakeExtracter.Etl.TradingDesk.LoadersDA;
+﻿using System;
+using CakeExtracter.Etl.TradingDesk.LoadersDA;
 using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
@@ -128,52 +129,12 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             {
                 // The items and adsetSummaries have a 1-to-1 correspondence because of how the latter were instantiated above
                 var itemEnumerator = items.GetEnumerator();
-                var asEnumerator = adSetSummaries.GetEnumerator();
+                var adSetEnumerator = adSetSummaries.GetEnumerator();
                 while (itemEnumerator.MoveNext())
                 {
-                    asEnumerator.MoveNext();
-                    if (itemEnumerator.Current.Actions == null)
-                    {
-                        continue;
-                    }
+                    adSetEnumerator.MoveNext();
 
-                    var date = itemEnumerator.Current.Date;
-                    var adSetId = asEnumerator.Current.AdSetId;
-                    var fbActions = itemEnumerator.Current.Actions.Values;
-
-                    var existingActions = db.AdSetActions.Where(x => x.Date == date && x.AdSetId == adSetId);
-                    RemoveAdSetActions(db, progress, existingActions, fbActions);
-
-                    //Add/update the rest
-                    var addedAdSetActions = new List<AdSetAction>();
-                    foreach (var fbAction in fbActions)
-                    {
-                        var actionTypeId = actionTypeStorage.GetEntityIdFromStorage(fbAction.ActionType);
-                        var actionsOfType =
-                            existingActions.Where(x => x.ActionTypeId == actionTypeId); // should be one at most
-                        if (!actionsOfType.Any())
-                        {
-                            var adSetAction = new AdSetAction
-                            {
-                                Date = date,
-                                AdSetId = adSetId,
-                                ActionTypeId = actionTypeId
-                            };
-                            SetAdSetActionMetrics(adSetAction, fbAction);
-                            addedAdSetActions.Add(adSetAction);
-                            progress.AddedCount++;
-                        }
-                        else
-                        {
-                            foreach (var adSetAction in actionsOfType) // should be just one, but just in case
-                            {
-                                SetAdSetActionMetrics(adSetAction, fbAction);
-                                progress.UpdatedCount++;
-                            }
-                        }
-                    }
-
-                    db.AdSetActions.AddRange(addedAdSetActions);
+                    UpsertAdSetActionSummaries(itemEnumerator.Current, adSetEnumerator.Current.AdSetId, db, progress);
                 } // loop through items
 
                 SafeContextWrapper.TrySaveChanges(db);
@@ -182,6 +143,125 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
             Logger.Info(accountId, "Saved AdSetActions ({0} updates, {1} additions, {2} deletions)", progress.UpdatedCount, progress.AddedCount, progress.DeletedCount);
         }
 
+        /// <summary>
+        /// The method updates summaries of adSet actions
+        /// </summary>
+        /// <param name="fbAdSetSummary"></param>
+        /// <param name="adSetId"></param>
+        /// <param name="db"></param>
+        /// <param name="progress"></param>
+        private void UpsertAdSetActionSummaries(FBSummary fbAdSetSummary, int adSetId, ClientPortalProgContext db, LoadingProgress progress)
+        {
+            if (fbAdSetSummary.Actions == null)
+            {
+                return;
+            }
+
+            var fbActionSummaries = fbAdSetSummary.Actions.Values;
+            var existingActions = GetExistingAdSetActions(fbAdSetSummary.Date, adSetId, db);
+
+            RemoveAdSetActions(db, progress, existingActions, fbActionSummaries);
+            AddUpdateActionSummaries(fbAdSetSummary.Date, adSetId, fbActionSummaries, existingActions, db, progress);
+        }
+
+        /// <summary>
+        /// The method adds / updates summaries of adSet actions
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="adSetId"></param>
+        /// <param name="fbActionSummaries"></param>
+        /// <param name="existingActions"></param>
+        /// <param name="db"></param>
+        /// <param name="progress"></param>
+        private void AddUpdateActionSummaries(DateTime date, int adSetId,
+            IEnumerable<FBAction> fbActionSummaries, List<AdSetAction> existingActions, ClientPortalProgContext db,
+            LoadingProgress progress)
+        {
+            var addedAdSetActions = new List<AdSetAction>();
+            foreach (var fbActionSummary in fbActionSummaries)
+            {
+                var actionTypeId = actionTypeStorage.GetEntityIdFromStorage(fbActionSummary.ActionType);
+                var actionsOfType =
+                    existingActions.Where(x => x.ActionTypeId == actionTypeId).ToList(); // should be one at most
+                if (!actionsOfType.Any())
+                {
+                    var adSetAction = AddActionSummary(date, adSetId, actionTypeId, fbActionSummary);
+                    addedAdSetActions.Add(adSetAction);
+                    progress.AddedCount++;
+                }
+                else
+                {
+                    progress.UpdatedCount += UpdateActionSummary(actionsOfType, fbActionSummary);
+                }
+            }
+            db.AdSetActions.AddRange(addedAdSetActions);
+        }
+
+        /// <summary>
+        /// The method updates adSet action summary. Returns a count of updating actions
+        /// </summary>
+        /// <param name="actionsOfType"></param>
+        /// <param name="fbActionSummary"></param>
+        /// <returns>Count of updating actions</returns>
+        private int UpdateActionSummary(IEnumerable<AdSetAction> actionsOfType, FBAction fbActionSummary)
+        {
+            var updatedCount = 0;
+            foreach (var adSetAction in actionsOfType) // should be just one, but just in case
+            {
+                SetAdSetActionMetrics(adSetAction, fbActionSummary);
+                updatedCount++;
+            }
+
+            return updatedCount;
+        }
+
+        /// <summary>
+        /// The method adds adSet action summary. Returns added adSet action
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="adSetId"></param>
+        /// <param name="actionTypeId"></param>
+        /// <param name="actionSummary"></param>
+        /// <returns>Added adSet action</returns>
+        private AdSetAction AddActionSummary(DateTime date, int adSetId, int actionTypeId, FBAction actionSummary)
+        {
+            var adSetAction = new AdSetAction
+            {
+                Date = date,
+                AdSetId = adSetId,
+                ActionTypeId = actionTypeId
+            };
+            SetAdSetActionMetrics(adSetAction, actionSummary);
+            return adSetAction;
+        }
+
+        /// <summary>
+        /// The method returns a list of existing adSet actions (including those saved in the DB and not yet saved, but added to the save queue)
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="adSetId"></param>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        private List<AdSetAction> GetExistingAdSetActions(DateTime date, int adSetId, ClientPortalProgContext db)
+        {
+            var savedInDbActions = db.AdSetActions.Where(x => x.Date == date && x.AdSetId == adSetId).ToList();
+            if (savedInDbActions.Any())
+            {
+                return savedInDbActions;
+            }
+
+            var notSavedInDbActions = db.AdSetActions.Local
+                .Where(action => action.Date == date && action.AdSetId == adSetId).ToList();
+            return notSavedInDbActions;
+        }
+
+        /// <summary>
+        /// The method removes existing adSet actions
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="progress"></param>
+        /// <param name="existingActions"></param>
+        /// <param name="fbActions"></param>
         private void RemoveAdSetActions(ClientPortalProgContext db, LoadingProgress progress,
             IEnumerable<AdSetAction> existingActions, IEnumerable<FBAction> fbActions)
         {

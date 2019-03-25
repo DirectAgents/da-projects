@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Amazon.Enums;
+using Amazon.Helpers;
 using CakeExtracter;
 using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors;
@@ -8,12 +10,19 @@ using CakeExtractor.SeleniumApplication.Enums;
 using CakeExtractor.SeleniumApplication.Exceptions;
 using CakeExtractor.SeleniumApplication.Models.ConsoleManagerUtilityModels;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Contexts;
+using CakeExtracter.Helpers;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors
 {
     internal class AmazonPdaCampaignRequestExtractor : BaseAmazonExtractor<StrategySummary>
     {
         public readonly AmazonPdaExtractor PdaExtractor;
+
+        private readonly string[] campaignTypesFromApi =
+        {
+            AmazonApiHelper.GetCampaignTypeName(CampaignType.ProductDisplay)
+        };
 
         public AmazonPdaCampaignRequestExtractor(ExtAccount account, DateRange dateRange) : base(null, dateRange, account)
         {
@@ -28,11 +37,16 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             {
                 var sums = ExtractSummaries();
                 var items = TransformSummaries(sums);
+                RemoveOldData(dateRange.FromDate, dateRange.ToDate);
                 Add(items);
             }
             catch (AccountDoesNotHaveProfileException ex)
             {
                 Logger.Warn(accountId, ex.Message);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(new Exception("Could not extract CampaignSummaries (PDA).", e));
             }
             End();
         }
@@ -89,6 +103,27 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
         private void AddMetric(List<SummaryMetric> metrics, AmazonCmApiMetrics type, DateTime date, decimal metricValue)
         {
             AddMetric(metrics, type.ToString(), date, metricValue);
+        }
+
+        private void RemoveOldData(DateTime fromDate, DateTime toDate)
+        {
+            Logger.Info(accountId, $"The cleaning of StrategySummaries for account ({accountId}) has begun - from {fromDate} to {toDate}.");
+
+            SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) =>
+            {
+                db.StrategySummaryMetrics.Where(x =>
+                    x.Date >= fromDate && 
+                    x.Date <= toDate && 
+                    x.Strategy.AccountId == accountId &&
+                    campaignTypesFromApi.Contains(x.Strategy.Type.Name)).DeleteFromQuery();
+                db.StrategySummaries.Where(x =>
+                    x.Date >= fromDate && 
+                    x.Date <= toDate && 
+                    x.Strategy.AccountId == accountId &&
+                    campaignTypesFromApi.Contains(x.Strategy.Type.Name)).DeleteFromQuery();
+            }, "DeleteFromQuery");
+
+            Logger.Info(accountId, $"The cleaning of StrategySummaries for account ({accountId}) is over - from {fromDate} to {toDate}.");
         }
     }
 }
