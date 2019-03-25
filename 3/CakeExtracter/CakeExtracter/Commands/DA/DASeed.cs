@@ -3,7 +3,7 @@ using CakeExtracter.Common;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Seed;
 
-namespace CakeExtracter.Commands
+namespace CakeExtracter.Commands.DA
 {
     [Export(typeof(ConsoleCommand))]
     public class DASeed : ConsoleCommand
@@ -12,21 +12,27 @@ namespace CakeExtracter.Commands
 
         public override void ResetProperties()
         {
-            this.Type = null;
+            Type = null;
         }
 
         public DASeed()
         {
             IsCommand("daSeed", "Seed the database");
-            HasOption("t|type=", "What type of seeding to do", c => this.Type = c);
+            HasOption("t|type=", "What type of seeding to do", c => Type = c);
         }
 
         public override int Execute(string[] remainingArguments)
         {
-            if (this.Type.ToUpper() == "DA")
-                DoDASeed();
-            if (this.Type.ToUpper() == "TD")
-                DoTDSeed();
+            switch (Type.ToUpper())
+            {
+                case "DA":
+                    DoDASeed();
+                    break;
+                case "TD":
+                    DoTDSeed();
+                    break;
+            }
+
             return 0;
         }
 

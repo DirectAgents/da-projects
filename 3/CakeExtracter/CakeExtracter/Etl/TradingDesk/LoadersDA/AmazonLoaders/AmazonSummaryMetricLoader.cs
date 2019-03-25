@@ -44,7 +44,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders
             AddDependentMetricTypes(summaryMetrics);
             AssignMetricTypeIdToItems(summaryMetrics);
             var summaryMetricsItemsToInsert = CastSummaryMetricsToChildClass(summaryMetrics);
-            SafeContextWrapper.TryBulkInsert<ClientPortalProgContext, TSummaryMetric>(summaryMetricsItemsToInsert);
+            SafeContextWrapper.TryMakeTransaction((ClientPortalProgContext db) => db.BulkInsert(summaryMetricsItemsToInsert), "BulkInsert");
         }
 
         private void AssignMetricTypeIdToItems(IEnumerable<SummaryMetric> items)

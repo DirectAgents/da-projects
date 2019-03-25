@@ -170,6 +170,8 @@
     <Compile Include="Entities\Cake\Role.cs" />
     <Compile Include="Entities\Cake\Vertical.cs" />
     <Compile Include="Entities\CPProg\Actions.cs" />
+    <Compile Include="Entities\CPProg\CJ\CjAdvertiserCommission.cs" />
+    <Compile Include="Entities\CPProg\CJ\CjAdvertiserCommissionItem.cs" />
     <Compile Include="Entities\CPProg\DSP\DspAdvertiser.cs" />
     <Compile Include="Entities\CPProg\DSP\DspDbEntity.cs" />
     <Compile Include="Entities\CPProg\DSP\DspCreative.cs" />
@@ -630,6 +632,10 @@
     <Compile Include="MigrationsTD\201901311354011_Mig_DspDataTables2.Designer.cs">
       <DependentUpon>201901311354011_Mig_DspDataTables2.cs</DependentUpon>
     </Compile>
+    <Compile Include="MigrationsTD\201903180825410_Mig_CjDataTables.cs" />
+    <Compile Include="MigrationsTD\201903180825410_Mig_CjDataTables.Designer.cs">
+      <DependentUpon>201903180825410_Mig_CjDataTables.cs</DependentUpon>
+    </Compile>
     <Compile Include="MigrationsTD\201903190855512_Mig_KochavaTables.cs" />
     <Compile Include="MigrationsTD\201903190855512_Mig_KochavaTables.Designer.cs">
       <DependentUpon>201903190855512_Mig_KochavaTables.cs</DependentUpon>
@@ -1011,6 +1017,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201901311354011_Mig_DspDataTables2.resx">
       <DependentUpon>201901311354011_Mig_DspDataTables2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201903180825410_Mig_CjDataTables.resx">
+      <DependentUpon>201903180825410_Mig_CjDataTables.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201903190855512_Mig_KochavaTables.resx">
       <DependentUpon>201903190855512_Mig_KochavaTables.cs</DependentUpon>
