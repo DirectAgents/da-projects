@@ -10,7 +10,7 @@
         <th style="text-align:right">spId</th>
         <th style="text-align:right">Id</th>
         <th></th>
-        <th>Name</th>
+        <th colspan="2">Search Account Name (X = disabled)</th>
         <th>Channel</th>
         <th>AccountCode</th>
         <th>ExternalId</th>
@@ -19,17 +19,18 @@
     </tr>
     @foreach (var sa in Model)
     {
-        <tr>
-            <td style="text-align:right">@sa.SearchProfileId</td>
-            <td style="text-align:right">@sa.SearchAccountId</td>
-            <td>@Html.ActionLink("edit", "Edit", new { id = sa.SearchAccountId })</td>
-            <td>@sa.Name</td>
-            <td>@sa.Channel</td>
-            <td>@sa.AccountCode</td>
-            <td>@sa.ExternalId</td>
-            <td style="text-align:center">@sa.MinSynchDate.ToShortDateString()</td>
-            <td>@sa.RevPerOrder</td>
-        </tr>
+    <tr>
+        <td style="text-align:right">@sa.SearchProfileId</td>
+        <td style="text-align:right">@sa.SearchAccountId</td>
+        <td>@Html.ActionLink("edit", "Edit", new { id = sa.SearchAccountId })</td>
+        <td>@sa.Name</td>
+        <td>@(string.IsNullOrEmpty(sa.AccountCode) ? "X" : "")</td>
+        <td>@sa.Channel</td>
+        <td>@sa.AccountCode</td>
+        <td>@sa.ExternalId</td>
+        <td style="text-align:center">@sa.MinSynchDate.ToShortDateString()</td>
+        <td>@sa.RevPerOrder</td>
+    </tr>
     }
 </table>
 <br />
