@@ -1,12 +1,12 @@
 ﻿@model IEnumerable<DirectAgents.Domain.Entities.CPSearch.SearchAccount>
 @{
-    string spId = Request.Params["spid"];
-    bool oneProfile = !String.IsNullOrWhiteSpace(spId);
-    string channel = Request.Params["channel"];
-    bool oneChannel = !String.IsNullOrWhiteSpace(channel);
+    var spId = Request.Params["spid"];
+    var oneProfile = !string.IsNullOrWhiteSpace(spId);
+    var channel = Request.Params["channel"];
+    var oneChannel = !string.IsNullOrWhiteSpace(channel);
     var searchAccountSelectList = new SelectList(Model, "SearchAccountId", "DisplayName1");
-    DateTime default_to = DateTime.Today.AddDays(-1);
-    DateTime default_from = (default_to.Day == 1 ? default_to.AddMonths(-1) : new DateTime(default_to.Year, default_to.Month, 1));
+    var defaultTo = DateTime.Today.AddDays(-1);
+    var defaultFrom = (defaultTo.Day == 1 ? defaultTo.AddMonths(-1) : new DateTime(defaultTo.Year, defaultTo.Month, 1));
 }
 
 <h2>StatsGauge - SearchAccounts</h2>
@@ -24,23 +24,45 @@
     </tr>
     @foreach (var sa in Model)
     {
-    <tr>
-        <td style="text-align:right">@sa.SearchProfileId</td>
-        <td style="text-align:right">@sa.SearchAccountId</td>
-        <td>@sa.Name</td>
-        <td>@(string.IsNullOrEmpty(sa.AccountCode) ? "X" : "")</td>
-        <td>@sa.Channel</td>
-        <td style="text-align:center">@sa.MinDaySum.ToShortDateString() - @sa.MaxDaySum.ToShortDateString()</td>
-        <td style="text-align:center">@sa.MinConvSum.ToShortDateString() - @sa.MaxConvSum.ToShortDateString()</td>
-        <td style="text-align:center">@sa.MinCallSum.ToShortDateString() - @sa.MaxCallSum.ToShortDateString()</td>
-        <td style="text-align:center">@Html.ActionLink("view", "IndexGauge", "SearchCampaigns", new { saId = @sa.SearchAccountId }, null)</td>
-    </tr>
+        <tr>
+            <td style="text-align: right">@sa.SearchProfileId</td>
+            <td style="text-align: right">@sa.SearchAccountId</td>
+            <td>@sa.Name</td>
+            <td>@(string.IsNullOrEmpty(sa.AccountCode) ? "X" : "")</td>
+            <td>@sa.Channel</td>
+            @if (sa.MaxDaySum == defaultTo)
+            {
+                <td style="text-align: center; background-color: lightgreen">@sa.MinDaySum.ToShortDateString() - @sa.MaxDaySum.ToShortDateString()</td>
+            }
+            else
+            {
+                <td style="text-align: center">@sa.MinDaySum.ToShortDateString() - @sa.MaxDaySum.ToShortDateString()</td>
+            }
+            @if (sa.MaxConvSum == defaultTo)
+            {
+                <td style="text-align: center; background-color: lightgreen">@sa.MinConvSum.ToShortDateString() - @sa.MaxConvSum.ToShortDateString()</td>
+            }
+            else
+            {
+                <td style="text-align: center">@sa.MinConvSum.ToShortDateString() - @sa.MaxConvSum.ToShortDateString()</td>
+            }
+            @if (sa.MaxCallSum == defaultTo)
+            {
+                <td style="text-align: center; background-color: lightgreen">@sa.MinCallSum.ToShortDateString() - @sa.MaxCallSum.ToShortDateString()</td>
+            }
+            else
+            {
+                <td style="text-align: center">@sa.MinCallSum.ToShortDateString() - @sa.MaxCallSum.ToShortDateString()</td>
+            }
+            <td style="text-align: center">@Html.ActionLink("view", "IndexGauge", "SearchCampaigns", new {saId = @sa.SearchAccountId}, null)</td>
+        </tr>
     }
 </table>
 @if (oneProfile)
 {
-    <text>&nbsp;</text>@Html.ActionLink("View All by Campaign", "IndexGauge", "SearchCampaigns", new { spId = @spId, channel = channel }, null)
-    <br />
+    <text>&nbsp;</text>
+    @Html.ActionLink("View All by Campaign", "IndexGauge", "SearchCampaigns", new {spId = @spId, channel = channel}, null)
+    <br/>
 }
 
 @if (oneChannel)
@@ -53,41 +75,42 @@
     @Html.ActionLink("Criteo", "IndexGauge", new { channel = "criteo", spId = @spId })
 }
 else if (oneProfile)
-{ // (and channel not specified)
+{
+    // (and channel not specified)
     <h4>Re-Sync Stats</h4>
-    using (Html.BeginForm("Sync", "SearchAccounts", FormMethod.Post, new { id = "formSync" }))
+    using (Html.BeginForm("Sync", "SearchAccounts", FormMethod.Post, new {id = "formSync"}))
     {
-    @Html.ValidationSummary()
-    @Html.Hidden("spId", spId)
-    <table>
-        <tr>
-            <td>@Html.Label("", "Account:")</td>
-            <td>@Html.DropDownList("id", searchAccountSelectList)</td>
-        </tr>
-        <tr>
-            <td>@Html.Label("", "From:")</td>
-            <td><input type="text" id="sync_from" name="from" value="@default_from.ToShortDateString()" /></td>
-        </tr>
-        <tr>
-            <td>@Html.Label("", "To:")</td>
-            <td><input type="text" id="sync_to" name="to" value="@default_to.ToShortDateString()" /></td>
-        </tr>
-    </table>
-    <text>(Not currently available for Criteo)</text>
-    <br />
-    <div id="divSyncButton">
-        <input type="submit" value="Sync" onclick="DoSync()" />
-        <br /><br />
-        Go to:
-        @Html.ActionLink("SearchAccounts(Edit)", "Index", new { spId = @spId }) |
-        @Html.ActionLink("Generate Spreadsheet", "GenerateSpreadsheet", "Old", new { spId = @spId }, null)
-        <br /><br />
-        @Html.ActionLink("Back to SearchProfiles", "Index", "SearchProfiles")
-    </div>
-    <div id="divSyncMessage"></div>
+        @Html.ValidationSummary()
+        @Html.Hidden("spId", spId)
+        <table>
+            <tr>
+                <td>@Html.Label("", "Account:")</td>
+                <td>@Html.DropDownList("id", searchAccountSelectList)</td>
+            </tr>
+            <tr>
+                <td>@Html.Label("", "From:")</td>
+                <td><input type="text" id="sync_from" name="from" value="@defaultFrom.ToShortDateString()"/></td>
+            </tr>
+            <tr>
+                <td>@Html.Label("", "To:")</td>
+                <td><input type="text" id="sync_to" name="to" value="@defaultTo.ToShortDateString()"/></td>
+            </tr>
+        </table>
+        <text>(Not currently available for Criteo)</text>
+        <br/>
+        <div id="divSyncButton">
+            <input type="submit" value="Sync" onclick="DoSync()"/>
+            <br/><br/>
+            Go to:
+            @Html.ActionLink("SearchAccounts(Edit)", "Index", new {spId = @spId}) |
+            @Html.ActionLink("Generate Spreadsheet", "GenerateSpreadsheet", "Old", new {spId = @spId}, null)
+            <br/><br/>
+            @Html.ActionLink("Back to SearchProfiles", "Index", "SearchProfiles")
+        </div>
+        <div id="divSyncMessage"></div>
     }
     <script>
-        $(function () {
+        $(function() {
             $('#sync_from').kendoDatePicker({ footer: ' ' });
             $('#sync_to').kendoDatePicker({ footer: ' ' });
         });
