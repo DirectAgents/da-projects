@@ -149,20 +149,19 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
         /// <summary>
         /// The method returns a list of stats gauges grouped by platform, ordered by the value "Disabled" of ext account
         /// </summary>
-        /// <param name="statsGauges"></param>
-        /// <returns></returns>
+        /// <param name="statsGauges">Not sorted, not grouped list of stats gauges</param>
+        /// <returns>Sorted and grouped list of stats gauges</returns>
         private static IEnumerable<TDStatsGauge> GetStatsGaugeListGroupedByPlatform(IEnumerable<TDStatsGauge> statsGauges) 
         {
             var platformGroups = statsGauges.GroupBy(s => s.ExtAccount.Platform);
-
             return platformGroups.Select(GetStatsGauge).ToList();
         }
 
         /// <summary>
-        /// The method returns a stats gauge for platform
+        /// The method returns a stats gauge for a platform
         /// </summary>
-        /// <param name="platformGroup"></param>
-        /// <returns></returns>
+        /// <param name="platformGroup">A platform group</param>
+        /// <returns>Item of a stats gauge for a platform</returns>
         private static TDStatsGauge GetStatsGauge(IGrouping<Platform, TDStatsGauge> platformGroup)
         {
             var pGauge = new TDStatsGauge

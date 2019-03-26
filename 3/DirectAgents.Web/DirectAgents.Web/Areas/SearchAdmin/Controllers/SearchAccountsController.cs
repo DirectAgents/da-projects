@@ -95,7 +95,7 @@ namespace DirectAgents.Web.Areas.SearchAdmin.Controllers
         /// <param name="spId">Search profile Id</param>
         /// <param name="channel">Channel</param>
         /// <param name="includeGauges">Show stats gauge for account or not</param>
-        /// <returns></returns>
+        /// <returns>Sorted list of all search accounts</returns>
         private List<SearchAccount> GetAllOrderedSearchAccounts(int? spId = null, string channel = null, bool includeGauges = false)
         {
             var allSearchAccounts = cpSearchRepo.SearchAccounts(spId: spId, channel: channel, includeGauges: includeGauges).ToList();
@@ -112,8 +112,8 @@ namespace DirectAgents.Web.Areas.SearchAdmin.Controllers
         /// The method returns enabled search accounts (have not null/empty value of account code).
         /// Ordered by search profile, then by channel, then by name
         /// </summary>
-        /// <param name="allSearchAccounts"></param>
-        /// <returns></returns>
+        /// <param name="allSearchAccounts">Not sorted list of all search accounts</param>
+        /// <returns>Sorted list of enabled search accounts</returns>
         private static IEnumerable<SearchAccount> GetEnabledSearchAccounts(IEnumerable<SearchAccount> allSearchAccounts)
         {
             var enabledOrderedSearchAccounts = allSearchAccounts
@@ -129,8 +129,8 @@ namespace DirectAgents.Web.Areas.SearchAdmin.Controllers
         /// The method returns disabled search accounts (have null/empty value of account code).
         /// Ordered by search profile, then by channel, then by name
         /// </summary>
-        /// <param name="allSearchAccounts"></param>
-        /// <returns></returns>
+        /// <param name="allSearchAccounts">Not sorted list of all search accounts</param>
+        /// <returns>Sorted list of disabled search accounts</returns>
         private static IEnumerable<SearchAccount> GetDisabledSearchAccounts(
             IEnumerable<SearchAccount> allSearchAccounts)
         {
