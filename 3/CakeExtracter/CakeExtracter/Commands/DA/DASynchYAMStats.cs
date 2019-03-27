@@ -82,7 +82,7 @@ namespace CakeExtracter.Commands
             foreach (var account in accounts)
             {
                 Logger.Info(account.Id, "Commencing ETL for YAM account ({0}) {1}", account.Id, account.Name);
-                var yamUtility = new YAMUtility(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m));
+                var yamUtility = new YAMUtility(m => Logger.Info(account.Id, m), m => Logger.Error(account.Id, new Exception(m)));
                 yamUtility.SetWhichAlt(account.ExternalId);
 
                 AddEnabledEtl(statsType.Daily, account, () => DoETL_Daily(dateRange, account, yamUtility));

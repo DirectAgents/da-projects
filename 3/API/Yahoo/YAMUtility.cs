@@ -264,7 +264,7 @@ namespace Yahoo
             if (getReportResponse != null && getReportResponse.status != null && getReportResponse.status.ToUpper() == "SUCCESS")
                 return getReportResponse.url;
 
-            LogInfo("Failed to obtain report URL");
+            LogError("Failed to obtain report URL");
             return null;
         }
         private GetReportResponse GetReportStatus(string reportId)
