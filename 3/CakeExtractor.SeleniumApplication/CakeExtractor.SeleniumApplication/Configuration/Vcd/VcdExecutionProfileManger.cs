@@ -42,7 +42,7 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
         }
 
         /// <summary>
-        /// Define execution profile number. Extract configuration for execution profile.
+        /// Defines execution profile number. Extracts configuration for execution profile.
         /// </summary>
         /// <param name="profileNumber"></param>
         public void SetExecutionProfileNumber(int? profileNumber)
