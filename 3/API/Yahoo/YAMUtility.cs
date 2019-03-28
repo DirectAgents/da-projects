@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using Polly;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Deserializers;
@@ -104,34 +105,35 @@ namespace Yahoo
             _LogInfo = logInfo;
             _LogError = logError;
         }
+
         private void Setup()
         {
             ClientID[0] = ConfigurationManager.AppSettings["YahooClientID"];
             ClientSecret[0] = ConfigurationManager.AppSettings["YahooClientSecret"];
             ApplicationAccessCode[0] = ConfigurationManager.AppSettings["YahooApplicationAccessCode"]; // aka Auth Code
-            for (int i = 1; i < NumAlts; i++)
+            for (var i = 1; i < NumAlts; i++)
             {
                 AltAccountIDs[i] = PlaceLeadingAndTrailingCommas(ConfigurationManager.AppSettings["Yahoo_Alt" + i]);
                 ClientID[i] = ConfigurationManager.AppSettings["YahooClientID_Alt" + i];
                 ClientSecret[i] = ConfigurationManager.AppSettings["YahooClientSecret_Alt" + i];
-                ApplicationAccessCode[i] = ConfigurationManager.AppSettings["YahooApplicationAccessCode_Alt" + i]; // aka Auth Code
+                ApplicationAccessCode[i] =
+                    ConfigurationManager.AppSettings["YahooApplicationAccessCode_Alt" + i]; // aka Auth Code
             }
+
             AuthBaseUrl = ConfigurationManager.AppSettings["YahooAuthBaseUrl"];
             YAMBaseUrl = ConfigurationManager.AppSettings["YAMBaseUrl"];
-            int tmpInt;
 
             var numTries_GetReportStatus_String = ConfigurationManager.AppSettings["YAM_NumTries_GetReportStatus"];
-            if (int.TryParse(numTries_GetReportStatus_String, out tmpInt))
-                this.NumTries_GetReportStatus = tmpInt;
-            else
-                this.NumTries_GetReportStatus = NUMTRIES_GETREPORTSTATUS_DEFAULT;
+            NumTries_GetReportStatus = int.TryParse(numTries_GetReportStatus_String, out var tmpInt)
+                ? tmpInt
+                : NUMTRIES_GETREPORTSTATUS_DEFAULT;
 
             var waitTime_Seconds_String = ConfigurationManager.AppSettings["YAM_WaitTime_Seconds"];
-            if (int.TryParse(waitTime_Seconds_String, out tmpInt))
-                this.WaitTime_Seconds = tmpInt;
-            else
-                this.WaitTime_Seconds = WAITTIME_SECONDS_DEFAULT;
+            WaitTime_Seconds = int.TryParse(waitTime_Seconds_String, out tmpInt) 
+                ? tmpInt 
+                : WAITTIME_SECONDS_DEFAULT;
         }
+
         private string PlaceLeadingAndTrailingCommas(string idString)
         {
             if (string.IsNullOrEmpty(idString))
@@ -235,10 +237,15 @@ namespace Yahoo
 
         // ---
 
-        // Keeps checking until the report is ready, then returns the location(url) of the CSV
+        /// <summary>
+        /// The method gets a report status and waits until the report is ready.
+        /// Returns the location (URL) of the CSV
+        /// </summary>
+        /// <param name="customerReportId">Customer report Id</param>
+        /// <returns>Report URL (may be null)</returns>
         private string WaitForReportUrl(string customerReportId)
         {
-            if (String.IsNullOrWhiteSpace(customerReportId))
+            if (string.IsNullOrWhiteSpace(customerReportId))
             {
                 LogError("Missing Report Id");
                 return null;
@@ -247,13 +254,13 @@ namespace Yahoo
 
             GetReportResponse getReportResponse = null;
             var waitTime = new TimeSpan(0, 0, WaitTime_Seconds);
-            for (int i = 0; i < this.NumTries_GetReportStatus; i++)
+            for (var i = 0; i < this.NumTries_GetReportStatus; i++)
             {
-                LogInfo(String.Format("Will check if the report is ready in {0:N0} seconds...", waitTime.TotalSeconds));
+                LogInfo($"Will check if the report is ready in {waitTime.TotalSeconds:N0} seconds...");
                 Thread.Sleep(waitTime);
 
                 getReportResponse = GetReportStatus(customerReportId);
-                if (getReportResponse != null && getReportResponse.status != null)
+                if (getReportResponse?.status != null)
                 {
                     if (getReportResponse.status.ToUpper() == "SUCCESS" || getReportResponse.status.ToUpper() == "FAILED")
                         break;
@@ -261,12 +268,15 @@ namespace Yahoo
                 LogInfo("The report is not yet ready for download.");
             }
 
-            if (getReportResponse != null && getReportResponse.status != null && getReportResponse.status.ToUpper() == "SUCCESS")
+            if (getReportResponse?.status != null && getReportResponse.status.ToUpper() == "SUCCESS")
+            {
                 return getReportResponse.url;
+            }
 
             LogError("Failed to obtain report URL");
             return null;
         }
+
         private GetReportResponse GetReportStatus(string reportId)
         {
             var request = new RestRequest("extreport/" + reportId);
@@ -274,37 +284,55 @@ namespace Yahoo
             return response?.Data;
         }
 
-        // returns the url of the csv, or null if there was a problem
-        public string GenerateReport(ReportPayload payload)
+        /// <summary>
+        /// The common method that generates a statistics report (for different dimensions).
+        /// Returns the report URL that can be used to download the generated report.
+        /// </summary>
+        /// <param name="fromDate">Start date</param>
+        /// <param name="toDate">End date</param>
+        /// <param name="accountId">Account Id (may be null)</param>
+        /// <param name="byAdvertiser">Flag for Advertiser dimension (may be null)</param>
+        /// <param name="byCampaign">Flag for Campaign dimension (may be null)</param>
+        /// <param name="byLine">Flag for Line dimension (may be null)</param>
+        /// <param name="byAd">Flag for Ad dimension (may be null)</param>
+        /// <param name="byCreative">Flag for Creative dimension (may be null)</param>
+        /// <param name="byPixel">Flag for Pixel dimension (may be null)</param>
+        /// <param name="byPixelParameter">Flag for Pixel Parameter dimension (may be null)</param>
+        /// <returns>URL of report location</returns>
+        public string TryGenerateReport(DateTime fromDate, DateTime toDate, int? accountId = null,
+            bool byAdvertiser = false, bool byCampaign = false, bool byLine = false, bool byAd = false,
+            bool byCreative = false, bool byPixel = false, bool byPixelParameter = false)
         {
-            CreateReportResponse createReportResponse = null;
-            bool okay = false;
-            int retries = NUMTRIES_REQUESTREPORT; // includes the initial attempt
-            while (!okay && retries > 0)
-            {
-                bool firstTry = (retries == NUMTRIES_REQUESTREPORT);
-                createReportResponse = RequestReport(payload, logResponse: !firstTry);
-                retries--;
+            var payload = CreateReportRequestPayload(fromDate, toDate, accountId, byAdvertiser, byCampaign, byLine,
+                byAd, byCreative, byPixel, byPixelParameter);
 
-                if (createReportResponse != null && createReportResponse.status != null && createReportResponse.status.ToUpper() == "SUBMITTED")
-                    okay = true;
-                else
-                {
-                    var message = "Invalid createReportResponse" + (retries > 0 ? ". Will retry" : "");
-                    if (createReportResponse != null)
-                        message = message + String.Format(". status: [{0}] customerReportId: [{1}]", createReportResponse.status, createReportResponse.customerReportId);
-                    LogError(message);
-                    if (retries > 0)
-                        Thread.Sleep(new TimeSpan(0, 0, WaitTime_Seconds));
-                }
-            }
-            if (!okay)
-                return null;
-
-            return WaitForReportUrl(createReportResponse.customerReportId);
+            const int maxRetryAttempts = NUMTRIES_REQUESTREPORT;
+            var reportUrl = Policy
+                .Handle<Exception>()
+                .OrResult<string>(string.IsNullOrEmpty)
+                .Retry(maxRetryAttempts,
+                    (exception, retryCount, context) =>
+                        LogInfo(
+                            $"Could not get a report URL. Try regenerate a report (number of retrying - {retryCount})"))
+                .Execute(() => GenerateReport(payload));
+            return reportUrl;
         }
 
-        public ReportPayload CreateReportRequestPayload(DateTime startDate, DateTime endDate, int? accountId = null, bool byAdvertiser = false, bool byCampaign = false, bool byLine = false, bool byAd = false, bool byCreative = false, bool byPixel = false, bool byPixelParameter = false)
+        /// <summary>
+        /// The method returns the URL of the CSV, or null if there was a problem
+        /// </summary>
+        /// <param name="payload">Report payload</param>
+        /// <returns>URL of report location (may be null)</returns>
+        private string GenerateReport(ReportPayload payload)
+        {
+            var reportResponse = TryRequestReport(payload);
+            var reportUrl = WaitForReportUrl(reportResponse.customerReportId);
+            return reportUrl;
+        }
+
+        private ReportPayload CreateReportRequestPayload(DateTime startDate, DateTime endDate, int? accountId = null,
+            bool byAdvertiser = false, bool byCampaign = false, bool byLine = false, bool byAd = false,
+            bool byCreative = false, bool byPixel = false, bool byPixelParameter = false)
         {
             //This produced an InvalidTimeZoneException so we're just going with the system timezone, relying on it to be Eastern(daylight savings adjusted)
             //var offset = TimeZoneInfo.FindSystemTimeZoneById(@"Eastern Standard Time\Dynamic DST").BaseUtcOffset;
@@ -315,7 +343,8 @@ namespace Yahoo
             if (accountId.HasValue)
                 accountList.Add(accountId.Value);
 
-            var dimensionList = GetDimensions(byAdvertiser, byCampaign, byLine, byAd, byCreative, byPixel, byPixelParameter);
+            var dimensionList = GetDimensions(byAdvertiser, byCampaign, byLine, byAd, byCreative, byPixel,
+                byPixelParameter);
             var metricList = GetMetrics(byPixelParameter);
 
             var reportOption = new ReportOption
@@ -406,6 +435,37 @@ namespace Yahoo
             }
             timesOfRequestPerMinute.Enqueue(DateTime.Now);
         }
-    }
 
+        /// <summary>
+        /// The method requests a report and wait until a status of response will be "SUBMITTED"
+        /// </summary>
+        /// <param name="payload">Report settings</param>
+        /// <returns>CreateReportResponse that contains a customer report Id</returns>
+        private CreateReportResponse TryRequestReport(ReportPayload payload)
+        {
+            CreateReportResponse createReportResponse = null;
+            var okay = false;
+            var retries = NUMTRIES_REQUESTREPORT; // includes the initial attempt
+            while (!okay && retries > 0)
+            {
+                var firstTry = (retries == NUMTRIES_REQUESTREPORT);
+                createReportResponse = RequestReport(payload, logResponse: !firstTry);
+                retries--;
+
+                if (createReportResponse?.status != null && createReportResponse.status.ToUpper() == "SUBMITTED")
+                    okay = true;
+                else
+                {
+                    var message = "Invalid createReportResponse" + (retries > 0 ? ". Will retry" : "");
+                    if (createReportResponse != null)
+                        message = message +
+                                  $". status: [{createReportResponse.status}] customerReportId: [{createReportResponse.customerReportId}]";
+                    LogError(message);
+                    if (retries > 0)
+                        Thread.Sleep(new TimeSpan(0, 0, WaitTime_Seconds));
+                }
+            }
+            return !okay ? null : createReportResponse;
+        }
+    }
 }
