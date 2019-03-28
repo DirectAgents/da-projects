@@ -104,7 +104,7 @@ namespace CakeExtracter.Commands
 
         private void DoETL_Daily(DateRange dateRange, ExtAccount account)
         {
-            var extractor = new DatabaseStrategyToDailySummaryExtracter(dateRange, account.Id);
+            var extractor = new DatabaseStrategyToDailySummaryExtractor(dateRange, account.Id);
             var loader = new TDDailySummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }

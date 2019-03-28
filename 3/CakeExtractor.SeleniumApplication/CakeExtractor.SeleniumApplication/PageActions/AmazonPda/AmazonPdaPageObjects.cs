@@ -50,8 +50,8 @@ namespace CakeExtractor.SeleniumApplication.PageActions.AmazonPda
         public static By DownloadingLoader = By.XPath(".//div[contains(@class,'loading-small')][contains(@class,'submitting')]");
 
         // Campaign profiles menu
-        public static By CurrentProfileButton = By.CssSelector("div#brandDropDown");
-        public static By ProfilesMenu = By.CssSelector("div#dropDownBrandNameContainer");
+        public static By CurrentProfileButton = By.CssSelector("#brandDropDown");
+        public static By ProfilesMenu = By.CssSelector("#dropDownBrandNameContainer");
         public static By ProfilesMenuItemContainer = By.CssSelector("div.dropDownBrandName");
         public static By ProfilesMenuItem = By.CssSelector("span > a");
     }

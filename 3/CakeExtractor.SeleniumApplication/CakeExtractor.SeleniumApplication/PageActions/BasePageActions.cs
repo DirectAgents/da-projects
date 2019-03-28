@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using CakeExtracter;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 
 namespace CakeExtractor.SeleniumApplication.PageActions
@@ -187,6 +188,20 @@ namespace CakeExtractor.SeleniumApplication.PageActions
             catch (Exception e)
             {
                 throw new Exception($"Could not click on the element [{byElement}]: {e.Message}", e);
+            }
+        }
+
+        protected void MoveToElementAndClick(By byElement)
+        {
+            try
+            {
+                var element = Driver.FindElement(byElement);
+                var actions = new Actions(Driver);
+                actions.MoveToElement(element).Click().Perform();
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Could not move to element and click [{byElement}]: {e.Message}", e);
             }
         }
 

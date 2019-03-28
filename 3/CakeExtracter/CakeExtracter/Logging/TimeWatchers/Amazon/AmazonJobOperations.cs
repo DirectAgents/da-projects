@@ -13,6 +13,8 @@
 
         public const string loadSummaryItemsData = "Load Summary Items Data";
 
+        public const string loadCampaignMetadata = "Campaign metadata extracting.";
+
         public const string loadSummaryMetricItemsData = "Load Summary Metric Items Data";
 
         public const string total = "Total";

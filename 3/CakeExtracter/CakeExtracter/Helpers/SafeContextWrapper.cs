@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -92,40 +91,25 @@ namespace CakeExtracter.Helpers
             return 0;
         }
 
-        public static void TryBulkInsert<T, TItem>(object contextLocker, List<TItem> items)
-            where T : DbContext, new()
-            where TItem: class
-        {
-            try
-            {
-                TryToMakeTransactionManyTimes(false, contextLocker, (T db) => db.BulkInsert(items));
-            }
-            catch (Exception exception)
-            {
-                LogEndOfRetrying(exception, "BulkInsert");
-            }
-        }
-
-        public static void TryBulkInsert<T, TItem>(List<TItem> items)
-            where T : DbContext, new()
-            where TItem : class
-        {
-            try
-            {
-                TryToMakeTransactionManyTimes(false, (T db) => db.BulkInsert(items));
-            }
-            catch (Exception exception)
-            {
-                LogEndOfRetrying(exception, "BulkInsert");
-            }
-        }
-
         public static void TryMakeTransaction<T>(Action<T> transactionAction, string level)
             where T : DbContext, new()
         {
             try
             {
                 TryToMakeTransactionManyTimes(false, transactionAction);
+            }
+            catch (Exception exception)
+            {
+                LogEndOfRetrying(exception, level);
+            }
+        }
+
+        public static void TryMakeTransactionWithLock<T>(Action<T> transactionAction, object contextLocker, string level)
+           where T : DbContext, new()
+        {
+            try
+            {
+                TryToMakeTransactionManyTimes(false, contextLocker, transactionAction);
             }
             catch (Exception exception)
             {
@@ -162,7 +146,7 @@ namespace CakeExtracter.Helpers
             return numChanges;
         }
         
-        private static void TryToMakeTransactionManyTimes<T>(bool needToWait, object contextLocker, Action<T> transactionAction)
+        public static void TryToMakeTransactionManyTimes<T>(bool needToWait, object contextLocker, Action<T> transactionAction)
             where T : DbContext, new()
         {
             TryToMakeActionManyTimes(needToWait, () =>
@@ -177,7 +161,7 @@ namespace CakeExtracter.Helpers
             });
         }
 
-        private static void TryToMakeTransactionManyTimes<T>(bool needToWait, Action<T> transactionAction)
+        public static void TryToMakeTransactionManyTimes<T>(bool needToWait, Action<T> transactionAction)
             where T : DbContext, new()
         {
             TryToMakeActionManyTimes(needToWait, () =>

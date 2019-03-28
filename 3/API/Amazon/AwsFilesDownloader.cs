@@ -4,15 +4,15 @@ using Amazon.S3.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 
 namespace Amazon
 {
+    /// <summary>
+    /// Aws s3 bucket content downloading helper.
+    /// </summary>
     public class AwsFilesDownloader
     {
-        private readonly string amazoneReportBucketName = "amazonselfservicedsp";
-
         private readonly string awsAccessKey;
 
         private readonly string awsSecretKey;
@@ -23,6 +23,13 @@ namespace Amazon
 
         private readonly Action<Exception> logError;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AwsFilesDownloader"/> class.
+        /// </summary>
+        /// <param name="accessKey">The access key.</param>
+        /// <param name="secretKey">The secret key.</param>
+        /// <param name="logInfo">The log information.</param>
+        /// <param name="logError">The log error.</param>
         public AwsFilesDownloader(string accessKey, string secretKey, Action<string> logInfo, Action<Exception> logError)
         {
             awsAccessKey = accessKey;
@@ -35,100 +42,61 @@ namespace Amazon
         /// <summary>
         /// Gets report texts from CSV reports in the bucket.
         /// </summary>
-        /// <param name="date">Date to pull the reports.</param>
-        /// <returns>The list of CSV contents from reports.</returns>
-        public string GetLatestFileContentByFilePrefix(string filePrefix)
+        /// <param name="filePrefix">The file prefix.</param>
+        /// <param name="bucketName">Name of the bucket.</param>
+        /// <returns></returns>
+        public Stream GetLatestFileContentByFilePrefix(string filePrefix, string bucketName)
         {
             try
             {
-                IList<S3Object> allObjects = GetAllObjects();
+                IList<S3Object> allObjects = GetAllObjects(bucketName);
                 var reportsObjects = allObjects.Where(report => report.Key.StartsWith(filePrefix));
                 var latestReport = reportsObjects.OrderByDescending(r => r.LastModified).FirstOrDefault();
                 if (latestReport == null)
                 {
                     logInfo("No files with prefix was foud");
-                    return string.Empty;
+                    return null;
                 }
                 else
                 {
-                    return GetObjectContent(latestReport);
+                    return GetObjectContent(latestReport, bucketName);
                 }
             }
             catch (AmazonS3Exception amazonS3Exception)
             {
                 logError(new Exception("S3 error occurred while downloading latest report", amazonS3Exception));
-                return string.Empty;
+                return null;
             }
             catch (Exception e)
             {
                 logError(e);
-                return string.Empty;
+                return null;
             }
         }
 
-        private string GetObjectContent(S3Object reportObject)
+        private Stream GetObjectContent(S3Object reportObject, string bucketName)
         {
             GetObjectRequest request = new GetObjectRequest
             {
-                BucketName = this.amazoneReportBucketName,
+                BucketName = bucketName,
                 Key = reportObject.Key
             };
-            using (GetObjectResponse response = client.GetObject(request))
-            {
-                 return GetS3ObjectContent(response);
-            }
+            GetObjectResponse response = client.GetObject(request);
+            return response.ResponseStream;
         }
 
         /// <summary>
         /// Gets a list of S3 Objects from the configured bucket.
         /// </summary>
         /// <returns>A list of S3 objects.</returns>
-        private IList<S3Object> GetAllObjects()
+        private IList<S3Object> GetAllObjects(string bucketName)
         {
             var getObjectsRequest = new ListObjectsV2Request
             {
-                BucketName = this.amazoneReportBucketName
+                BucketName = bucketName
             };
             ListObjectsV2Response objectListResponse = client.ListObjectsV2(getObjectsRequest);
             return objectListResponse.S3Objects;
-        }
-
-        /// <summary>
-        /// Gets the text content of the S3 object from the response.
-        /// </summary>
-        /// <param name="response">Response of AWS S3 service.</param>
-        /// <returns>A text content of S3 object.</returns>
-        private string GetS3ObjectContent(GetObjectResponse response)
-        {
-            using (Stream responseStream = response.ResponseStream)
-            {
-                return this.TryUnzipStream(responseStream);
-            }
-        }
-
-        /// <summary>
-        /// Tries to unzip the expected stream if possible.
-        /// If the stream is an incorrect zip, the empty string is returned.
-        /// </summary>
-        /// <param name="stream">Stream to unzip.</param>
-        /// <returns>Unzipped string contents of the stream.</returns>
-        private string TryUnzipStream(Stream stream)
-        {
-            try
-            {
-                using (GZipStream gzip = new GZipStream(stream, CompressionMode.Decompress))
-                {
-                    using (StreamReader reader = new StreamReader(gzip))
-                    {
-                        return reader.ReadToEnd();
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                logError( new Exception("Unzipping error occured. Exception: " + e.ToString(), e));
-                return string.Empty;
-            }
         }
 
         /// <summary>

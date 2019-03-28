@@ -6,10 +6,10 @@
     public abstract class BaseAmazonSeleniumCommand
     {
         /// <summary>
-        /// Do comamnds environment preparation steps.
+        /// Do commands environment preparation steps.
         /// </summary>
         /// <param name="executionProfileNumber">The execution profile number.</param>
-        public abstract void PrepareCommandEnvironment(int executionProfileNumber);
+        public abstract void PrepareCommandEnvironment(int? executionProfileNumber);
 
         /// <summary>
         /// Starts the command execution.

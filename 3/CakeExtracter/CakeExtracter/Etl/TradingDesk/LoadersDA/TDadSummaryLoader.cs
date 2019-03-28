@@ -20,6 +20,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         private readonly EntityIdStorage<TDad> adStorage;
         private readonly EntityIdStorage<AdSet> adSetStorage;
+        private readonly EntityIdStorage<Strategy> strategyStorage;
+
+        private readonly TDStrategySummaryLoader strategyLoader;
         private readonly TDAdSetSummaryLoader adSetLoader;
         private readonly SummaryMetricLoader metricLoader;
         private readonly ISimpleRepository<EntityType> typeRepository;
@@ -27,10 +30,13 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         public TDadSummaryLoader(int accountId = -1, EntityIdStorage<TDad> adStorage = null,
             EntityIdStorage<AdSet> adSetStorage = null, EntityIdStorage<Strategy> strategyStorage = null)
         {
+            this.strategyStorage = strategyStorage ?? TDStrategySummaryLoader.DefaultStrategyStorage;
             this.adSetStorage = adSetStorage ?? TDAdSetSummaryLoader.DefaultAdSetStorage;
             this.adStorage = adStorage ?? DefaultAdStorage;
             AccountId = accountId;
             typeRepository = new TypeRepository(StorageCollection.TypeStorage);
+
+            strategyLoader = new TDStrategySummaryLoader(accountId, this.strategyStorage);
             adSetLoader = new TDAdSetSummaryLoader(accountId, adSetStorage, strategyStorage);
             metricLoader = new SummaryMetricLoader();
         }
@@ -108,6 +114,13 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             return progress.ItemCount;
         }
 
+        public void AddUpdateDependentStratagies(List<TDadSummary> items)
+        {
+            var stratagies = items.Select(x => x.TDad?.AdSet?.Strategy).Where(x => x != null).ToList();
+            strategyLoader.AddUpdateDependentStrategies(stratagies);
+            AssignStrategyIdToItems(items);
+        }
+
         public void AddUpdateDependentAdSets(List<TDadSummary> items)
         {
             var adSets = items.Select(x => x.TDad.AdSet).ToList();
@@ -171,6 +184,21 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                             adStorage.AddEntityIdToStorage(tdAdsInDbList.First());
                         }
                     });
+                }
+            }
+        }
+
+        private void AssignStrategyIdToItems(IEnumerable<TDadSummary> items)
+        {
+            foreach (var item in items)
+            {
+                if (item.TDad?.AdSet?.Strategy != null)
+                {
+                    if (strategyStorage.IsEntityInStorage(item.TDad.AdSet.Strategy))
+                    {
+                        item.TDad.AdSet.StrategyId = strategyStorage.GetEntityIdFromStorage(item.TDad?.AdSet?.Strategy);
+                    }
+                    item.TDad.AdSet.Strategy = null;
                 }
             }
         }

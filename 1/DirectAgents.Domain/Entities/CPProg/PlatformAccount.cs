@@ -32,19 +32,22 @@ namespace DirectAgents.Domain.Entities.CPProg
         public const string Code_YAM = "yam";
         public const string Code_AraAmazon = "araamzn";
         public const string Code_DspAmazon = "dspamzn";
+        public const string Code_CJ = "cj";
+        public const string Code_Kochava = "kochava";
 
         public static IEnumerable<string> Codes_Syncable()
         {
-            return new string[] { Code_Adform, Code_AdRoll, Code_Amazon, Code_Criteo, Code_FB, Code_YAM };
-        }
-        public static IEnumerable<string> Codes_Social()
-        {
-            return new string[] { Code_FB, Code_Twitter, Code_Instagram };
+            return new[] { Code_Adform, Code_AdRoll, Code_Amazon, Code_Criteo, Code_FB, Code_YAM };
         }
 
-        public static int GetId(DirectAgents.Domain.Contexts.ClientPortalProgContext db, string platCode)
+        public static IEnumerable<string> Codes_Social()
         {
-            return db.Platforms.Where(p => p.Code == platCode).First().Id;
+            return new[] { Code_FB, Code_Twitter, Code_Instagram };
+        }
+
+        public static int GetId(ClientPortalProgContext db, string platCode)
+        {
+            return db.Platforms.First(p => p.Code == platCode).Id;
         }
 
         public static string[] GetPlatformTokens(string platformCode)
@@ -53,13 +56,14 @@ namespace DirectAgents.Domain.Entities.CPProg
             using (var db = new ClientPortalProgContext())
             {
                 var platform = db.Platforms.Single(x => x.Code == platformCode);
-                if (platform != null && platform.Tokens != null)
+                if (platform?.Tokens != null)
                 {
-                    tokens = platform.Tokens.Split(new string[] { Platform.TOKEN_DELIMITER }, StringSplitOptions.None);
+                    tokens = platform.Tokens.Split(new[] { TOKEN_DELIMITER }, StringSplitOptions.None);
                 }
             }
-            return (tokens != null) ? tokens : new string[] { };
+            return tokens ?? new string[] { };
         }
+
         public static void SavePlatformTokens(string platformCode, params string[] tokens)
         {
             using (var db = new ClientPortalProgContext())
@@ -67,7 +71,7 @@ namespace DirectAgents.Domain.Entities.CPProg
                 var platform = db.Platforms.Single(x => x.Code == platformCode);
                 if (platform != null)
                 {
-                    platform.Tokens = String.Join(Platform.TOKEN_DELIMITER, tokens);
+                    platform.Tokens = string.Join(TOKEN_DELIMITER, tokens);
                     db.SaveChanges();
                 }
             }
@@ -79,6 +83,7 @@ namespace DirectAgents.Domain.Entities.CPProg
         public int Id { get; set; }
         public virtual Platform Platform { get; set; }
     }
+
     public class ColumnMapping : ColumnMappingStats
     {
         public string StrategyName { get; set; }
@@ -124,6 +129,7 @@ namespace DirectAgents.Domain.Entities.CPProg
             return mapping;
         }
     }
+
     public class ColumnMappingStats
     {
         // the values are the names of the columns these properties are mapped to (in DailySummary)
@@ -182,7 +188,7 @@ namespace DirectAgents.Domain.Entities.CPProg
 
         public bool HasAnyFilter()
         {
-            return !String.IsNullOrEmpty(Filter); // || !String.IsNullOrEmpty(FilterOut);
+            return !string.IsNullOrEmpty(Filter); // || !String.IsNullOrEmpty(FilterOut);
         }
 
         [NotMapped]
@@ -190,24 +196,20 @@ namespace DirectAgents.Domain.Entities.CPProg
         {
             get
             {
-                int tempId;
-                if (int.TryParse(ExternalId, out tempId))
+                if (int.TryParse(ExternalId, out var tempId))
+                {
                     return tempId;
-                else
-                    return null;
+                }
+
+                return null;
             }
         }
 
         [NotMapped]
-        public string DisplayName1
-        {
-            get { return "(" + Platform.Name + ") " + Name + " [" + ExternalId + "]"; }
-        }
+        public string DisplayName1 => $"({Platform.Name}) {Name} [{ExternalId}]";
+
         [NotMapped]
-        public string DisplayName2
-        {
-            get { return Id + ". " + Name + " [" + ExternalId + "]"; }
-        }
+        public string DisplayName2 => $"{Id}. {Name} [{ExternalId}]";
     }
     
     public class EntityType
@@ -264,7 +266,11 @@ namespace DirectAgents.Domain.Entities.CPProg
         {
             get
             {
-                if (IsUrlShortened) return Url.Substring(0, URLMAX - 3) + "...";
+                if (IsUrlShortened)
+                {
+                    return Url.Substring(0, URLMAX - 3) + "...";
+                }
+
                 return Url;
             }
         }

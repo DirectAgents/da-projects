@@ -1,8 +1,12 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using AutoMapper;
+using CakeExtracter.Etl.Kochava.Models;
 using ClientPortal.Data.Contexts;
+using CommissionJunction.Entities;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.CJ;
+using DirectAgents.Domain.Entities.CPProg.Kochava;
 
 namespace CakeExtracter.Bootstrappers
 {
@@ -39,8 +43,8 @@ namespace CakeExtracter.Bootstrappers
                     .ForMember(d => d.Id, opt => opt.MapFrom(s => s.StrategyId))
                     .ForMember(d => d.Name, opt => opt.MapFrom(s => s.StrategyName))
                     .ForMember(d => d.ExternalId, opt => opt.MapFrom(s => s.StrategyEid))
-                    .ForMember(d => d.TargetingType, opt => opt.MapFrom(s => new EntityType {Name = s.StrategyTargetingType}))
-                    .ForMember(d => d.Type, opt => opt.MapFrom(s => new EntityType {Name = s.StrategyType}));
+                    .ForMember(d => d.TargetingType, opt => opt.MapFrom(s => new EntityType { Name = s.StrategyTargetingType }))
+                    .ForMember(d => d.Type, opt => opt.MapFrom(s => new EntityType { Name = s.StrategyType }));
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SummaryMetric, DirectAgents.Domain.Entities.CPProg.StrategySummaryMetric>()
                     .ForMember(s => s.Strategy, map => map.AllowNull());
 
@@ -50,11 +54,11 @@ namespace CakeExtracter.Bootstrappers
                     .ForMember(d => d.Name, opt => opt.MapFrom(s => s.AdSetName))
                     .ForMember(d => d.ExternalId, opt => opt.MapFrom(s => s.AdSetEid))
                     .ForMember(d => d.Strategy, opt => opt.MapFrom(s => new Strategy
-                        {
-                            Name = s.StrategyName,
-                            ExternalId = s.StrategyEid,
-                            Type = new EntityType {Name = s.StrategyType}
-                        })
+                    {
+                        Name = s.StrategyName,
+                        ExternalId = s.StrategyEid,
+                        Type = new EntityType { Name = s.StrategyType }
+                    })
                     );
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SummaryMetric, DirectAgents.Domain.Entities.CPProg.AdSetSummaryMetric>()
                     .ForMember(s => s.AdSet, map => map.AllowNull());
@@ -65,7 +69,20 @@ namespace CakeExtracter.Bootstrappers
                     .ForMember(d => d.Name, opt => opt.MapFrom(s => s.TDadName))
                     .ForMember(d => d.ExternalId, opt => opt.MapFrom(s => s.TDadEid))
                     .ForMember(d => d.ExternalIds, opt => opt.MapFrom(s => s.ExternalIds))
-                    .ForMember(d => d.AdSet, opt => opt.MapFrom(s => new AdSet { Name = s.AdSetName, ExternalId = s.AdSetEid }));
+                    .ForMember(d => d.AdSet,
+                        opt => opt.MapFrom(s =>
+                            new AdSet
+                            {
+                                Name = s.AdSetName,
+                                ExternalId = s.AdSetEid,
+                                Strategy = new Strategy
+                                {
+                                    Name = s.StrategyName,
+                                    ExternalId = s.StrategyEid,
+                                    Type = new EntityType { Name = s.StrategyType },
+                                    TargetingType = new EntityType { Name = s.StrategyTargetingType },
+                                }
+                            }));
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.SummaryMetric, DirectAgents.Domain.Entities.CPProg.TDadSummaryMetric>()
                     .ForMember(s => s.TDad, map => map.AllowNull());
 
@@ -75,11 +92,12 @@ namespace CakeExtracter.Bootstrappers
                     .ForMember(d => d.Name, opt => opt.MapFrom(s => s.KeywordName))
                     .ForMember(d => d.ExternalId, opt => opt.MapFrom(s => s.KeywordEid))
                     .ForMember(d => d.Strategy, opt => opt.MapFrom(s => new Strategy
-                        {
-                            Name = s.StrategyName,
-                            ExternalId = s.StrategyEid,
-                            Type = new EntityType {Name = s.StrategyType}
-                        })
+                    {
+                        Name = s.StrategyName,
+                        ExternalId = s.StrategyEid,
+                        Type = new EntityType { Name = s.StrategyType },
+                        TargetingType = new EntityType { Name = s.StrategyTargetingType }
+                    })
                     )
                     .ForMember(d => d.AdSet, opt => opt.MapFrom(s => new AdSet
                     {
@@ -98,11 +116,11 @@ namespace CakeExtracter.Bootstrappers
                     .ForMember(d => d.Name, opt => opt.MapFrom(s => s.KeywordName))
                     .ForMember(d => d.ExternalId, opt => opt.MapFrom(s => s.KeywordEid))
                     .ForMember(d => d.Strategy, opt => opt.MapFrom(s => new Strategy
-                        {
-                            Name = s.StrategyName,
-                            ExternalId = s.StrategyEid,
-                            Type = new EntityType {Name = s.StrategyType}
-                        })
+                    {
+                        Name = s.StrategyName,
+                        ExternalId = s.StrategyEid,
+                        Type = new EntityType { Name = s.StrategyType }
+                    })
                     )
                     .ForMember(d => d.AdSet, opt => opt.MapFrom(s => new AdSet
                     {
@@ -117,6 +135,9 @@ namespace CakeExtracter.Bootstrappers
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.Conv, DirectAgents.Domain.Entities.CPProg.Conv>();
                 cfg.CreateMap<DirectAgents.Domain.Entities.AdRoll.AdDailySummary, DirectAgents.Domain.Entities.AdRoll.AdDailySummary>();
                 cfg.CreateMap<DirectAgents.Domain.Entities.DBM.CreativeDailySummary, DirectAgents.Domain.Entities.DBM.CreativeDailySummary>();
+                cfg.CreateMap<AdvertiserCommission, CjAdvertiserCommission>();
+                cfg.CreateMap<CommissionJunction.Entities.Item, CjAdvertiserCommissionItem>();
+                cfg.CreateMap<KochavaReportItem, KochavaItem>();
             });
         }
 
