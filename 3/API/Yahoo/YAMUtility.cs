@@ -17,9 +17,7 @@ namespace Yahoo
         private static readonly object RequestLock = new object();
         private static readonly object AccessTokenLock = new object();
 
-        //TODO: make this a default / config setting
-        private const int NUMTRIES_REQUESTREPORT = 12; // 240 sec (4 min)
-
+        private const int NUMTRIES_REQUESTREPORT_DEFAULT = 12; // 240 sec (4 min)
         private const int NUMTRIES_GETREPORTSTATUS_DEFAULT = 24; // 480 sec (8 min)
         private const int WAITTIME_SECONDS_DEFAULT = 20;
 
@@ -33,8 +31,9 @@ namespace Yahoo
         private string[] ApplicationAccessCode = new string[NumAlts];
         private string YAMBaseUrl { get; set; }
         private int NumTries_GetReportStatus { get; set; }
+        private int NumTries_RequestReport { get; set; }
         private int WaitTime_Seconds { get; set; }
-
+        
         private const int REQUEST_PER_MINUTE_LIMIT = 5;
         private const int SECOND_INTERVAL_FOR_LIMIT = 63; // 1 min + 3 sec for errors
         private static readonly ConcurrentQueue<DateTime> timesOfRequestPerMinute = new ConcurrentQueue<DateTime>();
@@ -119,18 +118,19 @@ namespace Yahoo
                 ApplicationAccessCode[i] =
                     ConfigurationManager.AppSettings["YahooApplicationAccessCode_Alt" + i]; // aka Auth Code
             }
-
             AuthBaseUrl = ConfigurationManager.AppSettings["YahooAuthBaseUrl"];
             YAMBaseUrl = ConfigurationManager.AppSettings["YAMBaseUrl"];
 
-            var numTries_GetReportStatus_String = ConfigurationManager.AppSettings["YAM_NumTries_GetReportStatus"];
-            NumTries_GetReportStatus = int.TryParse(numTries_GetReportStatus_String, out var tmpInt)
+            this.NumTries_GetReportStatus = int.TryParse(ConfigurationManager.AppSettings["YAM_NumTries_GetReportStatus"]
+                , out var tmpInt)
                 ? tmpInt
                 : NUMTRIES_GETREPORTSTATUS_DEFAULT;
-
-            var waitTime_Seconds_String = ConfigurationManager.AppSettings["YAM_WaitTime_Seconds"];
-            WaitTime_Seconds = int.TryParse(waitTime_Seconds_String, out tmpInt) 
-                ? tmpInt 
+            this.NumTries_RequestReport = int.TryParse(ConfigurationManager.AppSettings["YAM_NumTries_RequestReport"],
+                out tmpInt)
+                ? tmpInt
+                : NUMTRIES_REQUESTREPORT_DEFAULT;
+            this.WaitTime_Seconds = int.TryParse(ConfigurationManager.AppSettings["YAM_WaitTime_Seconds"], out tmpInt)
+                ? tmpInt
                 : WAITTIME_SECONDS_DEFAULT;
         }
 
@@ -253,7 +253,7 @@ namespace Yahoo
             LogInfo("YAM Report ID: " + customerReportId);
 
             GetReportResponse getReportResponse = null;
-            var waitTime = new TimeSpan(0, 0, WaitTime_Seconds);
+            var waitTime = new TimeSpan(0, 0, this.WaitTime_Seconds);
             for (var i = 0; i < this.NumTries_GetReportStatus; i++)
             {
                 LogInfo($"Will check if the report is ready in {waitTime.TotalSeconds:N0} seconds...");
@@ -306,7 +306,7 @@ namespace Yahoo
             var payload = CreateReportRequestPayload(fromDate, toDate, accountId, byAdvertiser, byCampaign, byLine,
                 byAd, byCreative, byPixel, byPixelParameter);
 
-            const int maxRetryAttempts = NUMTRIES_REQUESTREPORT;
+            var maxRetryAttempts = this.NumTries_RequestReport;
             var reportUrl = Policy
                 .Handle<Exception>()
                 .OrResult<string>(string.IsNullOrEmpty)
@@ -445,10 +445,10 @@ namespace Yahoo
         {
             CreateReportResponse createReportResponse = null;
             var okay = false;
-            var retries = NUMTRIES_REQUESTREPORT; // includes the initial attempt
+            var retries = this.NumTries_RequestReport; // includes the initial attempt
             while (!okay && retries > 0)
             {
-                var firstTry = (retries == NUMTRIES_REQUESTREPORT);
+                var firstTry = (retries == this.NumTries_RequestReport);
                 createReportResponse = RequestReport(payload, logResponse: !firstTry);
                 retries--;
 
@@ -462,7 +462,7 @@ namespace Yahoo
                                   $". status: [{createReportResponse.status}] customerReportId: [{createReportResponse.customerReportId}]";
                     LogError(message);
                     if (retries > 0)
-                        Thread.Sleep(new TimeSpan(0, 0, WaitTime_Seconds));
+                        Thread.Sleep(new TimeSpan(0, 0, this.WaitTime_Seconds));
                 }
             }
             return !okay ? null : createReportResponse;
