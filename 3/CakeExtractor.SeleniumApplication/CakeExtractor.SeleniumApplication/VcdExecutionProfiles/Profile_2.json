@@ -2,7 +2,7 @@
   "SignInUrl": "https://advertising.amazon.com/sign-in",
   "LoginEmail": "amazonaccess@directagents.com ",
   "LoginPassword": "",
-  "AccountIds": [ 1445 ],
+  "AccountIds": [ 1445, 1452 ],
   "CookiesDirectory": "VcdCookies2",
   "StartDate": "",
   "EndDate": "",
