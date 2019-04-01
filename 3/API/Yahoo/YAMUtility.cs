@@ -250,29 +250,28 @@ namespace Yahoo
                 LogError("Missing Report Id");
                 return null;
             }
-            LogInfo("YAM Report ID: " + customerReportId);
+            LogInfo($"YAM Report ID: {customerReportId}");
 
-            GetReportResponse getReportResponse = null;
-            var waitTime = new TimeSpan(0, 0, this.WaitTime_Seconds);
-            for (var i = 0; i < this.NumTries_GetReportStatus; i++)
-            {
-                LogInfo($"Will check if the report is ready in {waitTime.TotalSeconds:N0} seconds...");
-                Thread.Sleep(waitTime);
-
-                getReportResponse = GetReportStatus(customerReportId);
-                if (getReportResponse?.status != null)
-                {
-                    if (getReportResponse.status.ToUpper() == "SUCCESS" || getReportResponse.status.ToUpper() == "FAILED")
-                        break;
-                }
-                LogInfo("The report is not yet ready for download.");
-            }
-
-            if (getReportResponse?.status != null && getReportResponse.status.ToUpper() == "SUCCESS")
+            var maxRetryAttempts = this.NumTries_GetReportStatus;
+            var pauseBetweenAttempts = new TimeSpan(0, 0, this.WaitTime_Seconds);
+            var getReportResponse = Policy
+                .Handle<Exception>()
+                .OrResult<GetReportResponse>(response =>
+                    response?.status == null)
+                .OrResult(response => 
+                    response.status.ToUpper() != "SUCCESS" && 
+                    response.status.ToUpper() != "FAILED")
+                .WaitAndRetry(maxRetryAttempts,
+                    i => pauseBetweenAttempts,
+                    (exception, timeSpan, retryCount, context) =>
+                        LogWaiting($"Will check if the report is ready in {timeSpan.TotalSeconds:N0} seconds...",
+                            retryCount))
+                .Execute(() => GetReportStatus(customerReportId));
+                
+            if (getReportResponse.status.ToUpper() == "SUCCESS")
             {
                 return getReportResponse.url;
             }
-
             LogError("Failed to obtain report URL");
             return null;
         }
@@ -412,9 +411,10 @@ namespace Yahoo
             request.AddJsonBody(payload);
 
             var response = ProcessRequest<CreateReportResponse>(request, postNotGet: true);
-
             if (response == null)
+            {
                 return null;
+            }
             if (logResponse)
             {
                 //LogInfo("ResponseStatus: " + response.ResponseStatus.ToString());
@@ -435,37 +435,36 @@ namespace Yahoo
             }
             timesOfRequestPerMinute.Enqueue(DateTime.Now);
         }
-
+        
         /// <summary>
-        /// The method requests a report and wait until a status of response will be "SUBMITTED"
+        /// The method requests a report and waits until a status of response will be "SUBMITTED"
         /// </summary>
         /// <param name="payload">Report settings</param>
         /// <returns>CreateReportResponse that contains a customer report Id</returns>
         private CreateReportResponse TryRequestReport(ReportPayload payload)
         {
-            CreateReportResponse createReportResponse = null;
-            var okay = false;
-            var retries = this.NumTries_RequestReport; // includes the initial attempt
-            while (!okay && retries > 0)
-            {
-                var firstTry = (retries == this.NumTries_RequestReport);
-                createReportResponse = RequestReport(payload, logResponse: !firstTry);
-                retries--;
+            var maxRetryAttempts = this.NumTries_RequestReport;
+            var pauseBetweenAttempts = new TimeSpan(0, 0, this.WaitTime_Seconds);
+            var createReportResponse = Policy
+                .Handle<Exception>()
+                .OrResult<CreateReportResponse>(response => response?.status == null)
+                .OrResult(response => response.status.ToUpper() != "SUBMITTED")
+                .WaitAndRetry(
+                    maxRetryAttempts,
+                    i => pauseBetweenAttempts,
+                    (exception, timeSpan, retryCount, context) =>
+                        LogWaiting($"Invalid createReportResponse. Will retry. Waiting {timeSpan} ...", retryCount))
+                .Execute(() => RequestReport(payload));
+            return createReportResponse;
+        }
 
-                if (createReportResponse?.status != null && createReportResponse.status.ToUpper() == "SUBMITTED")
-                    okay = true;
-                else
-                {
-                    var message = "Invalid createReportResponse" + (retries > 0 ? ". Will retry" : "");
-                    if (createReportResponse != null)
-                        message = message +
-                                  $". status: [{createReportResponse.status}] customerReportId: [{createReportResponse.customerReportId}]";
-                    LogError(message);
-                    if (retries > 0)
-                        Thread.Sleep(new TimeSpan(0, 0, this.WaitTime_Seconds));
-                }
+        private void LogWaiting(string baseMessage, int? retryCount)
+        {
+            if (retryCount.HasValue)
+            {
+                baseMessage += $" (number of retrying - {retryCount})";
             }
-            return !okay ? null : createReportResponse;
+            LogInfo(baseMessage);
         }
     }
 }
