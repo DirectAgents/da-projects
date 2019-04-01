@@ -75,6 +75,7 @@ namespace CakeExtracter.Commands
         public override int Execute(string[] remainingArguments)
         {
             var statsType = new StatsTypeAgg(StatsType);
+            return 0;
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Amazon ETL. DateRange {0}.", dateRange);
             var accounts = GetAccounts();

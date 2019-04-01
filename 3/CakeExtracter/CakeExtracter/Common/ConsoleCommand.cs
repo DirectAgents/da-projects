@@ -35,6 +35,7 @@ namespace CakeExtracter.Common
 
             using (new LogElapsedTime("for " + commandName))
             {
+                LogJobExecutionStartingInHistory();
                 var retCode = Execute(remainingArguments);
                 return retCode;
             }
@@ -66,7 +67,8 @@ namespace CakeExtracter.Common
         private void LogJobExecutionStartingInHistory()
         {
             string commandName = this.GetType().Name;
-            //JobExecutionManagmentContainer.ExecutionHistoryWriter.InitCurrentExecutionHistoryItem()
+            var args = CommandLineUtils.GetCurrentCommandLineParams();
+            JobExecutionManagmentContainer.ExecutionHistoryWriter.InitCurrentExecutionHistoryItem(commandName, args);
         }
 
         private void LogJobExecutionFinishTimeInHistory()
