@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CakeExtracter.Common.ExecutionHistory.Models
+namespace DirectAgents.Domain.Entities.Administration.JobExecutionHistory
 {
     /// <summary>
     /// Entity for job information history item. One item per one job execution.
@@ -78,5 +78,13 @@ namespace CakeExtracter.Common.ExecutionHistory.Models
         /// The errors.
         /// </value>
         public string Errors { get; set; }
+
+        /// <summary>
+        /// Message from launcher.
+        /// </summary>
+        /// <value>
+        /// The launch message.
+        /// </value>
+        public string LaunchMessage { get; set; }
     }
 }

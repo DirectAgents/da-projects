@@ -1,44 +1,39 @@
-﻿using CakeExtracter.Common.ExecutionHistory.Constants;
-using CakeExtracter.Common.ExecutionHistory.Models;
+﻿using DirectAgents.Domain.Entities.Administration.JobExecutionHistory;
 using System;
 
 namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
 {
+    /// <summary>
+    /// Job execution history writer. Clent for commands to manage execution history.
+    /// </summary>
     public class JobExecutionHistoryWriter
     {
-        private JobExecutionHistoryItem jobExecutionHistoryitem;
+        private JobExecutionHistoryItem scopeJobExecutionHistoryitem;
+
+        private IJobExecutionHistoryItemService jobExecutionHistoryItemService;
 
         /// <summary>
         /// Hidden singleton constructor.
         /// </summary>
-        private JobExecutionHistoryWriter()
+        public JobExecutionHistoryWriter(IJobExecutionHistoryItemService jobExecutionHistoryItemService)
         {
+            this.jobExecutionHistoryItemService = jobExecutionHistoryItemService;
         }
-
-        /// <summary>
-        /// Access point for singleton object.
-        /// </summary>
-        public static JobExecutionHistoryWriter Current = new JobExecutionHistoryWriter();
 
         /// <summary>
         /// Inits job execution history item.
         /// </summary>
         /// <param name="profileNumber">The profile number.</param>
         /// <exception cref="System.Exception">Error occured while extracting profile number configuration. Check Execution profiles configs.</exception>
-        public void InitCurrentExecutionHistoryItem(string comamndName)
+        public void InitCurrentExecutionHistoryItem(string commandName, string[] arguments)
         {
-            if (jobExecutionHistoryitem != null)
+            if (scopeJobExecutionHistoryitem != null)
             {
                 throw new Exception("Job execution history item already initialised. Can't be created twice in scope of one command execution");
             }
             else
             {
-                jobExecutionHistoryitem = new JobExecutionHistoryItem
-                {
-                    Status = JobStatuses.Processing,
-                    CommandName = comamndName,
-                    StartDate = DateTime.UtcNow
-                };
+                scopeJobExecutionHistoryitem = jobExecutionHistoryItemService.CreateJobExecutionHistoryItem(commandName, arguments);
             }
         }
     }

@@ -151,6 +151,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Entities\AB\Wraps.cs" />
+    <Compile Include="Entities\Administration\JobExecutionHistory\JobExecutionHistoryItem.cs" />
     <Compile Include="Entities\AdRoll\Ad.cs" />
     <Compile Include="Entities\AdRoll\AdDailySummary.cs" />
     <Compile Include="Entities\AdRoll\Advertisable.cs" />
@@ -632,13 +633,9 @@
     <Compile Include="MigrationsTD\201901311354011_Mig_DspDataTables2.Designer.cs">
       <DependentUpon>201901311354011_Mig_DspDataTables2.cs</DependentUpon>
     </Compile>
-    <Compile Include="MigrationsTD\201903180825410_Mig_CjDataTables.cs" />
-    <Compile Include="MigrationsTD\201903180825410_Mig_CjDataTables.Designer.cs">
-      <DependentUpon>201903180825410_Mig_CjDataTables.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MigrationsTD\201903190855512_Mig_KochavaTables.cs" />
-    <Compile Include="MigrationsTD\201903190855512_Mig_KochavaTables.Designer.cs">
-      <DependentUpon>201903190855512_Mig_KochavaTables.cs</DependentUpon>
+    <Compile Include="MigrationsTD\201904010957315_Mig_ExecutionHistory.cs" />
+    <Compile Include="MigrationsTD\201904010957315_Mig_ExecutionHistory.Designer.cs">
+      <DependentUpon>201904010957315_Mig_ExecutionHistory.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
@@ -1018,11 +1015,8 @@
     <EmbeddedResource Include="MigrationsTD\201901311354011_Mig_DspDataTables2.resx">
       <DependentUpon>201901311354011_Mig_DspDataTables2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsTD\201903180825410_Mig_CjDataTables.resx">
-      <DependentUpon>201903180825410_Mig_CjDataTables.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsTD\201903190855512_Mig_KochavaTables.resx">
-      <DependentUpon>201903190855512_Mig_KochavaTables.cs</DependentUpon>
+    <EmbeddedResource Include="MigrationsTD\201904010957315_Mig_ExecutionHistory.resx">
+      <DependentUpon>201904010957315_Mig_ExecutionHistory.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

@@ -434,8 +434,13 @@
     <Compile Include="Common\ArchiveExctractors\ZipArchiveExtractor.cs" />
     <Compile Include="Common\Compare.cs" />
     <Compile Include="Common\ExecutionHistory\Constants\JobStatuses.cs" />
+    <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\IJobExecutionHistoryWriter.cs" />
+    <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\JobExecutionManagmentContainer.cs" />
+    <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\Services\JobExecutionHistoryItemService.cs" />
     <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\JobExecutionHistoryWriter.cs" />
-    <Compile Include="Common\ExecutionHistory\Models\JobExecutionHistoryItem.cs" />
+    <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\Services\IJobExecutionHistoryItemService.cs" />
+    <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\Repositories\IJobExecutionHistoryItemRepository.cs" />
+    <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\Repositories\JobExecutionHistoryItemRepository.cs" />
     <Compile Include="Common\SqlScriptsExecutor.cs" />
     <Compile Include="Common\StorageCollection.cs" />
     <Compile Include="Common\TextUtils.cs" />
@@ -886,6 +891,8 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Common\ExecutionHistory\Models\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

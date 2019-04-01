@@ -11,6 +11,7 @@ using DirectAgents.Domain.Entities.CPProg.DSP;
 using DirectAgents.Domain.Entities.CPProg.DSP.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.CJ;
 using DirectAgents.Domain.Entities.CPProg.Kochava;
+using DirectAgents.Domain.Entities.Administration.JobExecutionHistory;
 
 namespace DirectAgents.Domain.Contexts
 {
@@ -19,6 +20,7 @@ namespace DirectAgents.Domain.Contexts
         const string adrollSchema = "adr";
         const string dbmSchema = "dbm";
         const string tdSchema = "td";
+        const string admSchema = "adm";
 
         public ClientPortalProgContext()
         {
@@ -34,6 +36,9 @@ namespace DirectAgents.Domain.Contexts
             //modelBuilder.HasDefaultSchema(tdSchema); //can't do this b/c __MigrationHistory table is under dbo schema
 
             modelBuilder.Entity<Employee>().ToTable("Employee", "dbo");
+
+            // Adm
+            modelBuilder.Entity<JobExecutionHistoryItem>().ToTable("JobExecutionHistory", admSchema);
 
             // TD
             modelBuilder.Entity<Advertiser>().ToTable("Advertiser", tdSchema);
@@ -228,6 +233,9 @@ namespace DirectAgents.Domain.Contexts
         }
 
         public DbSet<Employee> Employees { get; set; }
+
+        // Adm
+        public DbSet<JobExecutionHistoryItem> JobExecutionHistoryItems { get; set; }
 
         // TD
         public DbSet<Advertiser> Advertisers { get; set; }

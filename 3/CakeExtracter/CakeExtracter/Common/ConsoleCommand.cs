@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace CakeExtracter.Common
@@ -60,6 +61,17 @@ namespace CakeExtracter.Common
                 return true;
             }
             return false;
+        }
+
+        private void LogJobExecutionStartingInHistory()
+        {
+            string commandName = this.GetType().Name;
+            //JobExecutionManagmentContainer.ExecutionHistoryWriter.InitCurrentExecutionHistoryItem()
+        }
+
+        private void LogJobExecutionFinishTimeInHistory()
+        {
+
         }
     }
 }
