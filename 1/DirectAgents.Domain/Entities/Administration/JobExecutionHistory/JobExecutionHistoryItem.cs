@@ -21,7 +21,7 @@ namespace DirectAgents.Domain.Entities.Administration.JobExecutionHistory
         /// <value>
         /// The start date.
         /// </value>
-        public DateTime StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
 
         /// <summary>
         /// Job execution end date.
@@ -29,7 +29,7 @@ namespace DirectAgents.Domain.Entities.Administration.JobExecutionHistory
         /// <value>
         /// The end date.
         /// </value>
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the command.
@@ -85,6 +85,6 @@ namespace DirectAgents.Domain.Entities.Administration.JobExecutionHistory
         /// <value>
         /// The launch message.
         /// </value>
-        public string LaunchMessage { get; set; }
+        public string LaunchData { get; set; }
     }
 }

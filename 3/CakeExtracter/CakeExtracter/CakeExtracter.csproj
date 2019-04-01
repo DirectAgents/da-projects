@@ -432,6 +432,7 @@
     <Compile Include="Common\ArchiveExctractors\Contract\IArchiveExtractor.cs" />
     <Compile Include="Common\ArchiveExctractors\GzipArchiveExtractor.cs" />
     <Compile Include="Common\ArchiveExctractors\ZipArchiveExtractor.cs" />
+    <Compile Include="Common\CommandLineUtils.cs" />
     <Compile Include="Common\Compare.cs" />
     <Compile Include="Common\ExecutionHistory\Constants\JobStatuses.cs" />
     <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\IJobExecutionHistoryWriter.cs" />
