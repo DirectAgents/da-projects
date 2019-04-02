@@ -87,7 +87,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
 
         private VcdReportData TryExtractDailyData(DateTime date, int accountId, string accountName)
         {
-            const int maxRetryAttempts = 3;
+            var maxRetryAttempts = VcdExecutionProfileManger.Current.ProfileConfiguration.ExtractDailyDataAttemptCount;
             var data = Policy
                 .Handle<Exception>()
                 .Retry(maxRetryAttempts, (exception, retryCount, context) => Logger.Warn(accountId,

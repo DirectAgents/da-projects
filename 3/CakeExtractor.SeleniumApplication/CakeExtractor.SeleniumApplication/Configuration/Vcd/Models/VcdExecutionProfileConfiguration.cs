@@ -31,5 +31,7 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Models
         public int ReportDownloadingAttemptCount { get; set; }
 
         public int MaxDelayBetweenReportDownloadingInSeconds { get; set; }
+
+        public int ExtractDailyDataAttemptCount { get; set; }
     }
 }

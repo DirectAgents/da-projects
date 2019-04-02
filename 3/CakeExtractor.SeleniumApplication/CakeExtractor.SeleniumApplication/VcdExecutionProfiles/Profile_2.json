@@ -10,5 +10,6 @@
   "ReportDownloadingStartedDelayInSeconds": 10,
   "MinDelayBetweenReportDownloadingInSeconds": 30,
   "ReportDownloadingAttemptCount": 10,
-  "MaxDelayBetweenReportDownloadingInSeconds": 100
+  "MaxDelayBetweenReportDownloadingInSeconds": 100,
+  "ExtractDailyDataAttemptCount": 5
 }
