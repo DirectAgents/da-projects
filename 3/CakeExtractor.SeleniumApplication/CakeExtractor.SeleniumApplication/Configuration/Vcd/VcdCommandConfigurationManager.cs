@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using CakeExtractor.SeleniumApplication.Properties;
 using CakeExtracter.Common;
 using CakeExtracter.Helpers;
 using System.Linq;
