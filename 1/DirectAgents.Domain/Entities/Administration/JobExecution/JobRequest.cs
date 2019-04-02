@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
 
 namespace DirectAgents.Domain.Entities.Administration.JobExecution
@@ -30,6 +31,7 @@ namespace DirectAgents.Domain.Entities.Administration.JobExecution
         /// <value>
         /// The name of the command.
         /// </value>
+        [Required]
         public string CommandName { get; set; }
 
         /// <summary>

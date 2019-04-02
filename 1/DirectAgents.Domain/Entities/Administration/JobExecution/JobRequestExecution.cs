@@ -22,7 +22,7 @@ namespace DirectAgents.Domain.Entities.Administration.JobExecution
         /// <value>
         /// The request identifier.
         /// </value>
-        public int? JobRequestId { get; set; }
+        public int JobRequestId { get; set; }
 
         /// <summary>
         /// Job execution start time.

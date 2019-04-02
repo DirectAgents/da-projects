@@ -13,7 +13,7 @@ namespace DirectAgents.Domain.MigrationsTD
                     {
                         Id = c.Int(nullable: false, identity: true),
                         ParentJobRequestId = c.Int(),
-                        CommandName = c.String(),
+                        CommandName = c.String(nullable: false),
                         CommandExecutionArguments = c.String(),
                         ScheduledTime = c.DateTime(),
                         AttemptNumber = c.Int(nullable: false),
@@ -28,7 +28,7 @@ namespace DirectAgents.Domain.MigrationsTD
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        JobRequestId = c.Int(),
+                        JobRequestId = c.Int(nullable: false),
                         StartTime = c.DateTime(),
                         EndTime = c.DateTime(),
                         Status = c.Int(nullable: false),
@@ -37,31 +37,13 @@ namespace DirectAgents.Domain.MigrationsTD
                         CurrentState = c.String(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("adm.JobRequest", t => t.JobRequestId)
+                .ForeignKey("adm.JobRequest", t => t.JobRequestId, cascadeDelete: true)
                 .Index(t => t.JobRequestId);
             
-            DropTable("adm.JobExecutionHistory");
         }
         
         public override void Down()
         {
-            CreateTable(
-                "adm.JobExecutionHistory",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        StartDate = c.DateTime(),
-                        EndDate = c.DateTime(),
-                        CommandName = c.String(),
-                        ExecutionArguments = c.String(),
-                        Status = c.String(),
-                        CurrentState = c.String(),
-                        Warnings = c.String(),
-                        Errors = c.String(),
-                        LaunchData = c.String(),
-                    })
-                .PrimaryKey(t => t.Id);
-            
             DropForeignKey("adm.JobRequestExecution", "JobRequestId", "adm.JobRequest");
             DropForeignKey("adm.JobRequest", "ParentJobRequestId", "adm.JobRequest");
             DropIndex("adm.JobRequestExecution", new[] { "JobRequestId" });
