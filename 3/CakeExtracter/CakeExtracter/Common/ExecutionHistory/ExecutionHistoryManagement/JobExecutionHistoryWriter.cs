@@ -6,7 +6,7 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
     /// <summary>
     /// Job execution history writer. Clent for commands to manage execution history.
     /// </summary>
-    public class JobExecutionHistoryWriter
+    public class JobExecutionHistoryWriter : IJobExecutionHistoryWriter
     {
         private JobExecutionHistoryItem scopeJobExecutionHistoryitem;
 
@@ -34,6 +34,40 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
             else
             {
                 scopeJobExecutionHistoryitem = jobExecutionHistoryItemService.CreateJobExecutionHistoryItem(commandName, arguments);
+            }
+        }
+
+        public void LogErrorInHistory()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LogWarningInHistory()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetCurrentTaskFailedStatus()
+        {
+            if (scopeJobExecutionHistoryitem != null)
+            {
+                jobExecutionHistoryItemService.SetExecutionHistoryItemFailedState(scopeJobExecutionHistoryitem);
+            }
+            else
+            {
+                throw new Exception("Job execution history is not initialised yet.");
+            }
+        }
+
+        public void SetCurrentTaskFinishTime()
+        {
+            if (scopeJobExecutionHistoryitem != null)
+            {
+                jobExecutionHistoryItemService.SetExecutionHistoryItemFinishedState(scopeJobExecutionHistoryitem);
+            }
+            else
+            {
+                throw new Exception("Job execution history is not initialised yet.");
             }
         }
     }

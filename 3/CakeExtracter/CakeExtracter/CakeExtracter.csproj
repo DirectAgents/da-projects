@@ -437,6 +437,8 @@
     <Compile Include="Common\ExecutionHistory\Constants\JobStatuses.cs" />
     <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\IJobExecutionHistoryWriter.cs" />
     <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\JobExecutionManagmentContainer.cs" />
+    <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\Models\AccountLogData.cs" />
+    <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\Models\JobExecutionLogData.cs" />
     <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\Services\JobExecutionHistoryItemService.cs" />
     <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\JobExecutionHistoryWriter.cs" />
     <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\Services\IJobExecutionHistoryItemService.cs" />

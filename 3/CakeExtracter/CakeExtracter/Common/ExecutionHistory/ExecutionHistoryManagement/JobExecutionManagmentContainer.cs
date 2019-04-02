@@ -2,9 +2,9 @@
 {
     public static class JobExecutionManagmentContainer
     {
-        private static JobExecutionHistoryWriter executionHistoryWriter;
+        private static IJobExecutionHistoryWriter executionHistoryWriter;
 
-        public static JobExecutionHistoryWriter ExecutionHistoryWriter
+        public static IJobExecutionHistoryWriter ExecutionHistoryWriter
         {
             get
             {

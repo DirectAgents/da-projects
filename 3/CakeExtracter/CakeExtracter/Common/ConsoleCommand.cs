@@ -36,8 +36,16 @@ namespace CakeExtracter.Common
             using (new LogElapsedTime("for " + commandName))
             {
                 LogJobExecutionStartingInHistory();
-                var retCode = Execute(remainingArguments);
-                return retCode;
+                try
+                {
+                    var retCode = Execute(remainingArguments);
+                    LogJobExecutionFinishTimeInHistory();
+                }
+                catch
+                {
+                    LogJobExecutionFailedState();
+                    return 1;
+                }
             }
         }
 
@@ -73,7 +81,12 @@ namespace CakeExtracter.Common
 
         private void LogJobExecutionFinishTimeInHistory()
         {
+            JobExecutionManagmentContainer.ExecutionHistoryWriter.SetCurrentTaskFinishTime();
+        }
 
+        private void LogJobExecutionFailedState()
+        {
+            JobExecutionManagmentContainer.ExecutionHistoryWriter.SetCurrentTaskFailedStatus();
         }
     }
 }
