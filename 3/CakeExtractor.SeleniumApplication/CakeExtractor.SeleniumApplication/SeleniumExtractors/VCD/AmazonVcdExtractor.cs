@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using CakeExtracter.Common;
 using CakeExtracter.Etl;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading;
+using Polly;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
 {
@@ -74,7 +75,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
             try
             {
                 Logger.Info(accId, $"Amazon VCD, ETL for {date} started. Account {accName} - {accId}");
-                var data = ExtractDailyData(date, AccountInfo);
+                var data = TryExtractDailyData(date, accId, accName);
                 Add(data);
             }
             catch (Exception e)
@@ -82,6 +83,18 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
                 var exception = new Exception($"Error occured while extracting data for {accName} ({accId}) account on {date} date.", e);
                 Logger.Error(accId, exception);
             }
+        }
+
+        private VcdReportData TryExtractDailyData(DateTime date, int accountId, string accountName)
+        {
+            const int maxRetryAttempts = 3;
+            var data = Policy
+                .Handle<Exception>()
+                .Retry(maxRetryAttempts, (exception, retryCount, context) => Logger.Warn(accountId,
+                    $"Could not extract for {date} started. Account {accountName} - {accountId}. " +
+                    $"Try extracting data again (number of retrying - {retryCount}, max attempts - {maxRetryAttempts})"))
+                .Execute(() => ExtractDailyData(date, AccountInfo));
+            return data;
         }
 
         private VcdReportData ExtractDailyData(DateTime reportDay, AccountInfo accountInfo)
