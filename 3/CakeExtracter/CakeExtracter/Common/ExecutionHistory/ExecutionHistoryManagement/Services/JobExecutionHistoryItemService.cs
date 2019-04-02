@@ -1,6 +1,6 @@
-﻿using CakeExtracter.Common.ExecutionHistory.Constants;
-using DirectAgents.Domain.Entities.Administration.JobExecutionHistory;
-using System;
+﻿using System;
+using DirectAgents.Domain.Entities.Administration.JobExecution;
+using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
 
 namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
 {
@@ -17,14 +17,20 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
             this.jobExecutionHistoryRepository = jobExecutionHistoryRepository;
         }
 
-        public JobExecutionHistoryItem CreateJobExecutionHistoryItem(string commandName, string[] argumentsString)
+        public JobRequestExecution CreateJobExecutionHistoryItem(string commandName, string[] argumentsString)
         {
-            var jobExecutionHistoryitem = new JobExecutionHistoryItem
+
+            var jobExecutionHistoryitem = new JobRequestExecution
             {
-                Status = JobStatuses.Processing,
-                ExecutionArguments = "test stuff",
-                CommandName = commandName,
-                StartDate = DateTime.UtcNow
+                Status = JobExecutionStatus.Processing,
+                JobRequest = new JobRequest
+                {
+                    AttemptNumber = 1,
+                    CommandExecutionArguments = "test stuff",
+                    CommandName = commandName,
+                    Status = JobRequestStatus.Processing
+                },
+                StartTime = DateTime.UtcNow
             };
             jobExecutionHistoryRepository.AddItem(jobExecutionHistoryitem);
             return jobExecutionHistoryitem;

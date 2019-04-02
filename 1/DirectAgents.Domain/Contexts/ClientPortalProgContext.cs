@@ -2,6 +2,7 @@
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using DirectAgents.Domain.Entities;
+using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.DBM;
 using DirectAgents.Domain.Entities.CPProg;
@@ -11,7 +12,6 @@ using DirectAgents.Domain.Entities.CPProg.DSP;
 using DirectAgents.Domain.Entities.CPProg.DSP.SummaryMetrics;
 using DirectAgents.Domain.Entities.CPProg.CJ;
 using DirectAgents.Domain.Entities.CPProg.Kochava;
-using DirectAgents.Domain.Entities.Administration.JobExecutionHistory;
 
 namespace DirectAgents.Domain.Contexts
 {
@@ -38,7 +38,8 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<Employee>().ToTable("Employee", "dbo");
 
             // Adm
-            modelBuilder.Entity<JobExecutionHistoryItem>().ToTable("JobExecutionHistory", admSchema);
+            modelBuilder.Entity<JobRequestExecution>().ToTable("JobRequestExecution", admSchema);
+            modelBuilder.Entity<JobRequest>().ToTable("JobRequest", admSchema);
 
             // TD
             modelBuilder.Entity<Advertiser>().ToTable("Advertiser", tdSchema);
@@ -235,7 +236,8 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<Employee> Employees { get; set; }
 
         // Adm
-        public DbSet<JobExecutionHistoryItem> JobExecutionHistoryItems { get; set; }
+        public DbSet<JobRequestExecution> JobRequestExecutions { get; set; }
+        public DbSet<JobRequest> JobExecutionRequests { get; set; }
 
         // TD
         public DbSet<Advertiser> Advertisers { get; set; }

@@ -434,7 +434,6 @@
     <Compile Include="Common\ArchiveExctractors\ZipArchiveExtractor.cs" />
     <Compile Include="Common\CommandLineUtils.cs" />
     <Compile Include="Common\Compare.cs" />
-    <Compile Include="Common\ExecutionHistory\Constants\JobStatuses.cs" />
     <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\IJobExecutionHistoryWriter.cs" />
     <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\JobExecutionManagmentContainer.cs" />
     <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\Services\JobExecutionHistoryItemService.cs" />

@@ -151,7 +151,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Entities\AB\Wraps.cs" />
-    <Compile Include="Entities\Administration\JobExecutionHistory\JobExecutionHistoryItem.cs" />
+    <Compile Include="Entities\Administration\JobExecution\Enums\JobRequestStatus.cs" />
+    <Compile Include="Entities\Administration\JobExecution\JobRequestExecution.cs" />
+    <Compile Include="Entities\Administration\JobExecution\JobRequest.cs" />
+    <Compile Include="Entities\Administration\JobExecution\Enums\JobExecutionStatus.cs" />
     <Compile Include="Entities\AdRoll\Ad.cs" />
     <Compile Include="Entities\AdRoll\AdDailySummary.cs" />
     <Compile Include="Entities\AdRoll\Advertisable.cs" />
@@ -633,9 +636,9 @@
     <Compile Include="MigrationsTD\201901311354011_Mig_DspDataTables2.Designer.cs">
       <DependentUpon>201901311354011_Mig_DspDataTables2.cs</DependentUpon>
     </Compile>
-    <Compile Include="MigrationsTD\201904011502192_Mig_ExecutionHistory.cs" />
-    <Compile Include="MigrationsTD\201904011502192_Mig_ExecutionHistory.Designer.cs">
-      <DependentUpon>201904011502192_Mig_ExecutionHistory.cs</DependentUpon>
+    <Compile Include="MigrationsTD\201904021628446_Mig_JobExecution.cs" />
+    <Compile Include="MigrationsTD\201904021628446_Mig_JobExecution.Designer.cs">
+      <DependentUpon>201904021628446_Mig_JobExecution.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
@@ -1015,8 +1018,8 @@
     <EmbeddedResource Include="MigrationsTD\201901311354011_Mig_DspDataTables2.resx">
       <DependentUpon>201901311354011_Mig_DspDataTables2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsTD\201904011502192_Mig_ExecutionHistory.resx">
-      <DependentUpon>201904011502192_Mig_ExecutionHistory.cs</DependentUpon>
+    <EmbeddedResource Include="MigrationsTD\201904021628446_Mig_JobExecution.resx">
+      <DependentUpon>201904021628446_Mig_JobExecution.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

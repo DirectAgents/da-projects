@@ -1,11 +1,11 @@
-﻿using DirectAgents.Domain.Entities.Administration.JobExecutionHistory;
+﻿using DirectAgents.Domain.Entities.Administration.JobExecution;
 
 namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
 {
     public interface IJobExecutionHistoryItemRepository
     {
-        void UpdateItem(JobExecutionHistoryItem jobExecutionHistoryItem);
+        void UpdateItem(JobRequestExecution jobRequestExecution);
 
-        JobExecutionHistoryItem AddItem(JobExecutionHistoryItem JobExecutionHistoryItem);
+        JobRequestExecution AddItem(JobRequestExecution JobRequestExecution);
     }
 }

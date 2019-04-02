@@ -7,13 +7,13 @@ namespace DirectAgents.Domain.MigrationsTD
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Mig_ExecutionHistory : IMigrationMetadata
+    public sealed partial class Mig_JobExecution : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Mig_ExecutionHistory));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Mig_JobExecution));
         
         string IMigrationMetadata.Id
         {
-            get { return "201904011502192_Mig_ExecutionHistory"; }
+            get { return "201904021628446_Mig_JobExecution"; }
         }
         
         string IMigrationMetadata.Source

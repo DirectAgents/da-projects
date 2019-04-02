@@ -1,5 +1,5 @@
-﻿using DirectAgents.Domain.Entities.Administration.JobExecutionHistory;
-using System;
+﻿using System;
+using DirectAgents.Domain.Entities.Administration.JobExecution;
 
 namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
 {
@@ -8,7 +8,7 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
     /// </summary>
     public class JobExecutionHistoryWriter
     {
-        private JobExecutionHistoryItem scopeJobExecutionHistoryitem;
+        private JobRequestExecution scopeJobRequestExecution;
 
         private IJobExecutionHistoryItemService jobExecutionHistoryItemService;
 
@@ -27,13 +27,13 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
         /// <exception cref="System.Exception">Error occured while extracting profile number configuration. Check Execution profiles configs.</exception>
         public void InitCurrentExecutionHistoryItem(string commandName, string[] arguments)
         {
-            if (scopeJobExecutionHistoryitem != null)
+            if (scopeJobRequestExecution != null)
             {
                 throw new Exception("Job execution history item already initialised. Can't be created twice in scope of one command execution");
             }
             else
             {
-                scopeJobExecutionHistoryitem = jobExecutionHistoryItemService.CreateJobExecutionHistoryItem(commandName, arguments);
+                scopeJobRequestExecution = jobExecutionHistoryItemService.CreateJobExecutionHistoryItem(commandName, arguments);
             }
         }
     }
