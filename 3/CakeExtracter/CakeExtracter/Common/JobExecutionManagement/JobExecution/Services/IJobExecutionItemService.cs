@@ -1,10 +1,10 @@
 ﻿using DirectAgents.Domain.Entities.Administration.JobExecution;
 
-namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
+namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
 {
     public interface IJobExecutionItemService
     {
-        JobRequestExecution CreateJobRequestExecutionItem(string comamndName, string[] argumentsString);
+        JobRequestExecution CreateJobExecutionItem(JobRequest jobRequest);
 
         void SetJobExecutionItemFinishedState(JobRequestExecution executionHistoryItem);
 

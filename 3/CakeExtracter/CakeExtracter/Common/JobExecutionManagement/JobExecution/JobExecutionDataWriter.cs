@@ -1,7 +1,7 @@
 ﻿using System;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 
-namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
+namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
 {
     /// <summary>
     /// Job execution history writer. Clent for commands to manage execution history.
@@ -10,14 +10,14 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
     {
         private JobRequestExecution jobRequestExecutionData;
 
-        private IJobExecutionItemService jobExecutionHistoryItemService;
+        private IJobExecutionItemService jobExecutionItemService;
 
         /// <summary>
         /// Hidden singleton constructor.
         /// </summary>
         public JobExecutionDataWriter(IJobExecutionItemService jobExecutionHistoryItemService)
         {
-            this.jobExecutionHistoryItemService = jobExecutionHistoryItemService;
+            this.jobExecutionItemService = jobExecutionHistoryItemService;
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
         /// </summary>
         /// <param name="profileNumber">The profile number.</param>
         /// <exception cref="System.Exception">Error occured while extracting profile number configuration. Check Execution profiles configs.</exception>
-        public void InitCurrentExecutionHistoryItem(string commandName, string[] arguments)
+        public void InitCurrentExecutionHistoryItem(JobRequest jobRequest)
         {
             if (jobRequestExecutionData != null)
             {
@@ -33,7 +33,7 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
             }
             else
             {
-                jobRequestExecutionData = jobExecutionHistoryItemService.CreateJobRequestExecutionItem(commandName, arguments);
+                jobRequestExecutionData = jobExecutionItemService.CreateJobExecutionItem(jobRequest);
             }
         }
 
@@ -49,11 +49,12 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
 
         public void SetCurrentTaskFailedStatus()
         {
+            jobExecutionItemService.SetJobExecutionItemFailedState(jobRequestExecutionData);
         }
 
-        public void SetCurrentTaskFinishTime()
+        public void SetCurrentTaskFinishedStatus()
         {
-
+            jobExecutionItemService.SetJobExecutionItemFinishedState(jobRequestExecutionData);
         }
     }
 }

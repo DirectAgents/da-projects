@@ -3,9 +3,9 @@ using DirectAgents.Domain.Contexts;
 using System.Linq;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 
-namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
+namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
 {
-    public class JobExecutionHistoryItemRepository : IJobExecutionHistoryItemRepository
+    public class JobExecutionItemRepository : IJobExecutionItemRepository
     {
         private static object ExecutionHistoryLocker = new object();
 

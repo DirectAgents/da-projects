@@ -1,8 +1,8 @@
 ﻿using DirectAgents.Domain.Entities.Administration.JobExecution;
 
-namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
+namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
 {
-    public interface IJobExecutionHistoryItemRepository
+    public interface IJobExecutionItemRepository
     {
         void UpdateItem(JobRequestExecution jobRequestExecution);
 

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement.Models
+namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Models
 {
     public class JobExecutionLogData
     {

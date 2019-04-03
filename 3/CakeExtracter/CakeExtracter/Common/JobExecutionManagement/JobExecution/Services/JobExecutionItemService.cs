@@ -3,7 +3,7 @@ using System.Linq;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
 
-namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
+namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
 {
     /// <summary>
     /// Job execution history management service.
@@ -11,25 +11,19 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
     /// <seealso cref="IJobExecutionHistoryItemService" />
     public class JobExecutionItemService : IJobExecutionItemService
     {
-        IJobExecutionHistoryItemRepository jobExecutionHistoryRepository;
+        IJobExecutionItemRepository jobExecutionHistoryRepository;
 
-        public JobExecutionItemService(IJobExecutionHistoryItemRepository jobExecutionHistoryRepository)
+        public JobExecutionItemService(IJobExecutionItemRepository jobExecutionHistoryRepository)
         {
             this.jobExecutionHistoryRepository = jobExecutionHistoryRepository;
         }
 
-        public JobRequestExecution CreateJobRequestExecutionItem(string commandName, string[] arguments)
+        public JobRequestExecution CreateJobExecutionItem(JobRequest jobRequest)
         {
             var jobRequestExecutionItem = new JobRequestExecution
             {
                 Status = JobExecutionStatus.Processing,
-                JobRequest = new JobRequest
-                {
-                    AttemptNumber = 1,
-                    CommandExecutionArguments = "test stuff",
-                    CommandName = commandName,
-                    Status = JobRequestStatus.Processing
-                },
+                JobRequestId = 2,//TODO rid of job request  hardcode value
                 StartTime = DateTime.UtcNow
             };
             jobExecutionHistoryRepository.AddItem(jobRequestExecutionItem);
