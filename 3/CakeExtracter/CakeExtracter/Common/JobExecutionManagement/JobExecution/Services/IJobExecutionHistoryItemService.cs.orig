@@ -1,9 +1,10 @@
-﻿using DirectAgents.Domain.Entities.Administration.JobExecutionHistory;
+﻿using DirectAgents.Domain.Entities.Administration.JobExecution;
 
 namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
 {
     public interface IJobExecutionHistoryItemService
     {
+<<<<<<< HEAD
         JobExecutionHistoryItem CreateJobExecutionHistoryItem(string comamndName, string[] arguments);
 
         void SetExecutionHistoryItemFinishedState(JobExecutionHistoryItem executionHistoryItem);
@@ -13,5 +14,8 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
         void AddWarningToHistoryItem(JobExecutionHistoryItem executionHistoryItem);
 
         void AddErrorToHistoryitem(JobExecutionHistoryItem executionHistoryItem);
+=======
+        JobRequestExecution CreateJobExecutionHistoryItem(string comamndName, string[] argumentsString);
+>>>>>>> origin/job-execution-retrying
     }
 }

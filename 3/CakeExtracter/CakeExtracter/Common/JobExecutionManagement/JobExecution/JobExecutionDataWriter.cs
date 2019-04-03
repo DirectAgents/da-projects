@@ -1,21 +1,21 @@
-﻿using DirectAgents.Domain.Entities.Administration.JobExecutionHistory;
-using System;
+﻿using System;
+using DirectAgents.Domain.Entities.Administration.JobExecution;
 
 namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
 {
     /// <summary>
     /// Job execution history writer. Clent for commands to manage execution history.
     /// </summary>
-    public class JobExecutionHistoryWriter : IJobExecutionHistoryWriter
+    public class JobExecutionDataWriter : IJobExecutionDataWriter
     {
-        private JobExecutionHistoryItem scopeJobExecutionHistoryitem;
+        private JobRequestExecution jobRequestExecutionData;
 
         private IJobExecutionHistoryItemService jobExecutionHistoryItemService;
 
         /// <summary>
         /// Hidden singleton constructor.
         /// </summary>
-        public JobExecutionHistoryWriter(IJobExecutionHistoryItemService jobExecutionHistoryItemService)
+        public JobExecutionDataWriter(IJobExecutionHistoryItemService jobExecutionHistoryItemService)
         {
             this.jobExecutionHistoryItemService = jobExecutionHistoryItemService;
         }
@@ -27,13 +27,13 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
         /// <exception cref="System.Exception">Error occured while extracting profile number configuration. Check Execution profiles configs.</exception>
         public void InitCurrentExecutionHistoryItem(string commandName, string[] arguments)
         {
-            if (scopeJobExecutionHistoryitem != null)
+            if (jobRequestExecutionData != null)
             {
                 throw new Exception("Job execution history item already initialised. Can't be created twice in scope of one command execution");
             }
             else
             {
-                scopeJobExecutionHistoryitem = jobExecutionHistoryItemService.CreateJobExecutionHistoryItem(commandName, arguments);
+                jobRequestExecutionData = jobExecutionHistoryItemService.CreateJobExecutionHistoryItem(commandName, arguments);
             }
         }
 
@@ -49,26 +49,11 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
 
         public void SetCurrentTaskFailedStatus()
         {
-            if (scopeJobExecutionHistoryitem != null)
-            {
-                jobExecutionHistoryItemService.SetExecutionHistoryItemFailedState(scopeJobExecutionHistoryitem);
-            }
-            else
-            {
-                throw new Exception("Job execution history is not initialised yet.");
-            }
         }
 
         public void SetCurrentTaskFinishTime()
         {
-            if (scopeJobExecutionHistoryitem != null)
-            {
-                jobExecutionHistoryItemService.SetExecutionHistoryItemFinishedState(scopeJobExecutionHistoryitem);
-            }
-            else
-            {
-                throw new Exception("Job execution history is not initialised yet.");
-            }
+
         }
     }
 }

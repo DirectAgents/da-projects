@@ -434,16 +434,14 @@
     <Compile Include="Common\ArchiveExctractors\ZipArchiveExtractor.cs" />
     <Compile Include="Common\CommandLineUtils.cs" />
     <Compile Include="Common\Compare.cs" />
-    <Compile Include="Common\ExecutionHistory\Constants\JobStatuses.cs" />
-    <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\IJobExecutionHistoryWriter.cs" />
-    <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\JobExecutionManagmentContainer.cs" />
-    <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\Models\AccountLogData.cs" />
-    <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\Models\JobExecutionLogData.cs" />
-    <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\Services\JobExecutionHistoryItemService.cs" />
-    <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\JobExecutionHistoryWriter.cs" />
-    <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\Services\IJobExecutionHistoryItemService.cs" />
-    <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\Repositories\IJobExecutionHistoryItemRepository.cs" />
-    <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\Repositories\JobExecutionHistoryItemRepository.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\IJobExecutionDataWriter.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Models\AccountLogData.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Models\JobExecutionLogData.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Services\JobExecutionHistoryItemService.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\JobExecutionDataWriter.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Services\IJobExecutionHistoryItemService.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Repositories\IJobExecutionHistoryItemRepository.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Repositories\JobExecutionHistoryItemRepository.cs" />
     <Compile Include="Common\SqlScriptsExecutor.cs" />
     <Compile Include="Common\StorageCollection.cs" />
     <Compile Include="Common\TextUtils.cs" />
@@ -894,8 +892,6 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Common\ExecutionHistory\Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

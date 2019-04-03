@@ -1,7 +1,7 @@
 ﻿using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
-using DirectAgents.Domain.Entities.Administration.JobExecutionHistory;
 using System.Linq;
+using DirectAgents.Domain.Entities.Administration.JobExecution;
 
 namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
 {
@@ -9,11 +9,11 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
     {
         private static object ExecutionHistoryLocker = new object();
 
-        public void UpdateItem(JobExecutionHistoryItem itemToUpdate)
+        public void UpdateItem(JobRequestExecution itemToUpdate)
         {
             SafeContextWrapper.TryMakeTransactionWithLock<ClientPortalProgContext>(dbContext =>
             {
-                var historyItem = dbContext.JobExecutionHistoryItems.SingleOrDefault(item => item.Id == itemToUpdate.Id);
+                var historyItem = dbContext.JobRequestExecutions.SingleOrDefault(item => item.Id == itemToUpdate.Id);
                 if (historyItem != null)
                 {
                     dbContext.Entry(historyItem).CurrentValues.SetValues(itemToUpdate);
@@ -22,14 +22,14 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
             }, ExecutionHistoryLocker, "Updating History Item");
         }
 
-        public JobExecutionHistoryItem AddItem(JobExecutionHistoryItem jobExecutionHistoryItem)
+        public JobRequestExecution AddItem(JobRequestExecution jobRequestExecution)
         {
             SafeContextWrapper.TryMakeTransactionWithLock<ClientPortalProgContext>(dbContext =>
             {
-               dbContext.JobExecutionHistoryItems.Add(jobExecutionHistoryItem);
+               dbContext.JobRequestExecutions.Add(jobRequestExecution);
                 dbContext.SaveChanges();
             }, ExecutionHistoryLocker, "Inserting History item.");
-            return jobExecutionHistoryItem;
+            return jobRequestExecution;
         }
     }
 }

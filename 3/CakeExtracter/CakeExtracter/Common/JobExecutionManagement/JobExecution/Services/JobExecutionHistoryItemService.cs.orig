@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 ﻿using CakeExtracter.Common.ExecutionHistory.Constants;
 using DirectAgents.Domain.Entities.Administration.JobExecutionHistory;
 using System;
 using System.Linq;
+=======
+﻿using System;
+using DirectAgents.Domain.Entities.Administration.JobExecution;
+using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
+>>>>>>> origin/job-execution-retrying
 
 namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
 {
@@ -18,6 +24,7 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
             this.jobExecutionHistoryRepository = jobExecutionHistoryRepository;
         }
 
+<<<<<<< HEAD
         public void AddErrorToHistoryitem(JobExecutionHistoryItem executionHistoryItem)
         {
             throw new NotImplementedException();
@@ -29,13 +36,29 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
         }
 
         public JobExecutionHistoryItem CreateJobExecutionHistoryItem(string commandName, string[] arguments)
+=======
+        public JobRequestExecution CreateJobExecutionHistoryItem(string commandName, string[] argumentsString)
+>>>>>>> origin/job-execution-retrying
         {
-            var jobExecutionHistoryitem = new JobExecutionHistoryItem
+
+            var jobExecutionHistoryitem = new JobRequestExecution
             {
+<<<<<<< HEAD
                 Status = JobStatuses.Processing,
                 ExecutionArguments = GetCommandArgumentsString(arguments),
                 CommandName = commandName,
                 StartDate = DateTime.UtcNow
+=======
+                Status = JobExecutionStatus.Processing,
+                JobRequest = new JobRequest
+                {
+                    AttemptNumber = 1,
+                    CommandExecutionArguments = "test stuff",
+                    CommandName = commandName,
+                    Status = JobRequestStatus.Processing
+                },
+                StartTime = DateTime.UtcNow
+>>>>>>> origin/job-execution-retrying
             };
             jobExecutionHistoryRepository.AddItem(jobExecutionHistoryitem);
             return jobExecutionHistoryitem;

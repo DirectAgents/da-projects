@@ -3,7 +3,7 @@
     /// <summary>
     /// Job execution history writer. Clent for commands to manage execution history.
     /// </summary>
-    public interface IJobExecutionHistoryWriter
+    public interface IJobExecutionDataWriter
     {
         /// <summary>
         /// Inits job execution history item.
