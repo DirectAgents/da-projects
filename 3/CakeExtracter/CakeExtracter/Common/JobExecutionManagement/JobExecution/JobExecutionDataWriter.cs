@@ -10,12 +10,12 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
     {
         private JobRequestExecution jobRequestExecutionData;
 
-        private IJobExecutionHistoryItemService jobExecutionHistoryItemService;
+        private IJobExecutionItemService jobExecutionHistoryItemService;
 
         /// <summary>
         /// Hidden singleton constructor.
         /// </summary>
-        public JobExecutionDataWriter(IJobExecutionHistoryItemService jobExecutionHistoryItemService)
+        public JobExecutionDataWriter(IJobExecutionItemService jobExecutionHistoryItemService)
         {
             this.jobExecutionHistoryItemService = jobExecutionHistoryItemService;
         }
@@ -33,7 +33,7 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
             }
             else
             {
-                jobRequestExecutionData = jobExecutionHistoryItemService.CreateJobExecutionHistoryItem(commandName, arguments);
+                jobRequestExecutionData = jobExecutionHistoryItemService.CreateJobRequestExecutionItem(commandName, arguments);
             }
         }
 

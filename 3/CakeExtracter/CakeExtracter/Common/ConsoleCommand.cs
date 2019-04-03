@@ -1,5 +1,4 @@
-﻿using CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 
 namespace CakeExtracter.Common
@@ -40,6 +39,7 @@ namespace CakeExtracter.Common
                 {
                     var retCode = Execute(remainingArguments);
                     LogJobExecutionFinishTimeInHistory();
+                    return retCode;
                 }
                 catch
                 {
@@ -76,17 +76,17 @@ namespace CakeExtracter.Common
         {
             string commandName = this.GetType().Name;
             var args = CommandLineUtils.GetCurrentCommandLineParams();
-            JobExecutionManagmentContainer.ExecutionHistoryWriter.InitCurrentExecutionHistoryItem(commandName, args);
+            //JobExecutionManagmentContainer.ExecutionHistoryWriter.InitCurrentExecutionHistoryItem(commandName, args);
         }
 
         private void LogJobExecutionFinishTimeInHistory()
         {
-            JobExecutionManagmentContainer.ExecutionHistoryWriter.SetCurrentTaskFinishTime();
+            //JobExecutionManagmentContainer.ExecutionHistoryWriter.SetCurrentTaskFinishTime();
         }
 
         private void LogJobExecutionFailedState()
         {
-            JobExecutionManagmentContainer.ExecutionHistoryWriter.SetCurrentTaskFailedStatus();
+            //JobExecutionManagmentContainer.ExecutionHistoryWriter.SetCurrentTaskFailedStatus();
         }
     }
 }

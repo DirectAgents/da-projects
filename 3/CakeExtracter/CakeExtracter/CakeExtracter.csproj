@@ -437,9 +437,9 @@
     <Compile Include="Common\JobExecutionManagement\JobExecution\IJobExecutionDataWriter.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Models\AccountLogData.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Models\JobExecutionLogData.cs" />
-    <Compile Include="Common\JobExecutionManagement\JobExecution\Services\JobExecutionHistoryItemService.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Services\JobExecutionItemService.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\JobExecutionDataWriter.cs" />
-    <Compile Include="Common\JobExecutionManagement\JobExecution\Services\IJobExecutionHistoryItemService.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Services\IJobExecutionItemService.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Repositories\IJobExecutionHistoryItemRepository.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Repositories\JobExecutionHistoryItemRepository.cs" />
     <Compile Include="Common\SqlScriptsExecutor.cs" />

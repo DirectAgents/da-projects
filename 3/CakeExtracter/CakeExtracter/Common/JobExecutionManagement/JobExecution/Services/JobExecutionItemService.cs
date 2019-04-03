@@ -9,26 +9,16 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
     /// Job execution history management service.
     /// </summary>
     /// <seealso cref="IJobExecutionHistoryItemService" />
-    public class JobExecutionHistoryItemService : IJobExecutionHistoryItemService
+    public class JobExecutionItemService : IJobExecutionItemService
     {
         IJobExecutionHistoryItemRepository jobExecutionHistoryRepository;
 
-        public JobExecutionHistoryItemService(IJobExecutionHistoryItemRepository jobExecutionHistoryRepository)
+        public JobExecutionItemService(IJobExecutionHistoryItemRepository jobExecutionHistoryRepository)
         {
             this.jobExecutionHistoryRepository = jobExecutionHistoryRepository;
         }
 
-        public JobRequestExecution CreateJobExecutionHistoryItem(string commandName, string[] argumentsString)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddWarningToHistoryItem(JobRequestExecution executionHistoryItem)
-        {
-            throw new NotImplementedException();
-        }
-
-        public JobRequestExecution CreateJobExecutionHistoryItem(string commandName, string[] arguments)
+        public JobRequestExecution CreateJobRequestExecutionItem(string commandName, string[] arguments)
         {
             var jobRequestExecutionItem = new JobRequestExecution
             {
@@ -46,14 +36,14 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
             return jobRequestExecutionItem;
         }
 
-        public void SetExecutionHistoryItemFailedState(JobRequestExecution executionHistoryItem)
+        public void SetJobExecutionItemFailedState(JobRequestExecution executionHistoryItem)
         {
             executionHistoryItem.Status = JobExecutionStatus.Failed;
             executionHistoryItem.EndTime = DateTime.UtcNow;
             jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
         }
 
-        public void SetExecutionHistoryItemFinishedState(JobRequestExecution executionHistoryItem)
+        public void SetJobExecutionItemFinishedState(JobRequestExecution executionHistoryItem)
         {
             executionHistoryItem.Status = JobExecutionStatus.Completed;
             executionHistoryItem.EndTime = DateTime.UtcNow;
@@ -64,6 +54,16 @@ namespace CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement
         {
             arguments = arguments.Skip(1).ToArray(); // first item is .exe file path
             return string.Join(" ", arguments);
+        }
+
+        public void AddErrorToJobExecutionItem(JobRequestExecution executionHistoryItem)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddWarningToJobExecutionItem(JobRequestExecution executionHistoryItem)
+        {
+            throw new NotImplementedException();
         }
     }
 }
