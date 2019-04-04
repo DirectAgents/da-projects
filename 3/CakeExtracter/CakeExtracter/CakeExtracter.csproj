@@ -443,6 +443,7 @@
     <Compile Include="Common\JobExecutionManagement\JobExecution\Services\IJobExecutionItemService.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Repositories\IJobExecutionItemRepository.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Repositories\JobExecutionItemRepository.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Utils\ExecutionLoggingUtils.cs" />
     <Compile Include="Common\SqlScriptsExecutor.cs" />
     <Compile Include="Common\StorageCollection.cs" />
     <Compile Include="Common\TextUtils.cs" />
@@ -756,6 +757,7 @@
     <Compile Include="Logging\TimeWatchers\Amazon\AmazonTimeTracker.cs" />
     <Compile Include="Logging\TimeWatchers\Amazon\Models\AmazonAccountTrackingData.cs" />
     <Compile Include="Logging\TimeWatchers\Amazon\Models\AmazonLevelTrackingData.cs" />
+    <Compile Include="Logging\Utils\LoggerUtils.cs" />
     <Compile Include="Mef\Composer.cs" />
     <Compile Include="MetricNames.cs" />
     <Compile Include="Logging\EnterpriseLibrary\ConsoleCustomTraceListener.cs" />

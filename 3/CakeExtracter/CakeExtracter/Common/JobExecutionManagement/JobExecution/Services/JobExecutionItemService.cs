@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
 
@@ -44,20 +44,49 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
             jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
         }
 
-        private string GetCommandArgumentsString(string[] arguments)
+        public void AddErrorToJobExecutionItem(JobRequestExecution executionHistoryItem, string message, int? accountId = null)
         {
-            arguments = arguments.Skip(1).ToArray(); // first item is .exe file path
-            return string.Join(" ", arguments);
+            if (accountId.HasValue)
+            {
+                executionHistoryItem.Errors = 
+                    ExecutionLoggingUtils.AddAccountMessageToLogData(executionHistoryItem.Errors, message, accountId.Value);
+            }
+            else
+            {
+                executionHistoryItem.Errors =
+                    ExecutionLoggingUtils.AddCommonMessageToLogData(executionHistoryItem.Errors, message);
+            }
+            jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
         }
 
-        public void AddErrorToJobExecutionItem(JobRequestExecution executionHistoryItem)
+        public void AddWarningToJobExecutionItem(JobRequestExecution executionHistoryItem, string message, int? accountId = null)
         {
-            throw new NotImplementedException();
+            if (accountId.HasValue)
+            {
+                executionHistoryItem.Warnings =
+                    ExecutionLoggingUtils.AddAccountMessageToLogData(executionHistoryItem.Warnings, message, accountId.Value);
+            }
+            else
+            {
+                executionHistoryItem.Warnings =
+                    ExecutionLoggingUtils.AddCommonMessageToLogData(executionHistoryItem.Warnings, message);
+            }
+            jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
         }
 
-        public void AddWarningToJobExecutionItem(JobRequestExecution executionHistoryItem)
+        public void AddStateMessage(JobRequestExecution executionHistoryItem, string message, int? accountId = null)
         {
-            throw new NotImplementedException();
+            if (accountId.HasValue)
+            {
+                executionHistoryItem.CurrentState =
+                    ExecutionLoggingUtils.SetSingleAccountMessageInLogData(executionHistoryItem.Errors, message, accountId.Value);
+            }
+            else
+            {
+                executionHistoryItem.CurrentState =
+                    ExecutionLoggingUtils.SetSingleCommonMessageInLogData(executionHistoryItem.Errors, message);
+            }
+            jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
         }
     }
 }

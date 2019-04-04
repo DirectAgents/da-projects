@@ -20,18 +20,25 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
         void SetCurrentTaskFinishedStatus();
 
         /// <summary>
-        /// Sets the current task failed status.
+        /// Sets the current task failed status in job execution history.
         /// </summary>
         void SetCurrentTaskFailedStatus();
 
         /// <summary>
-        /// Logs the error in history.
+        /// Logs the error in job execution history.
         /// </summary>
-        void LogErrorInHistory();
+        void LogErrorInHistory(string message, int? accountId = null);
 
         /// <summary>
-        /// Logs the warning in history.
+        /// Logs the warning in job execution history.
         /// </summary>
-        void LogWarningInHistory();
+        void LogWarningInHistory(string message, int? accountId = null);
+
+        /// <summary>
+        /// Sets the state in job execution history.
+        /// </summary>
+        /// <param name="stateMesasge">The state mesasge.</param>
+        /// <param name="accountId">The account identifier.</param>
+        void SetStateInHistory(string stateMesasge, int? accountId = null);
     }
 }

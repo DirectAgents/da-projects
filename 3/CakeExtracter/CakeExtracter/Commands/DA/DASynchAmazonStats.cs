@@ -75,13 +75,21 @@ namespace CakeExtracter.Commands
         public override int Execute(string[] remainingArguments)
         {
             var statsType = new StatsTypeAgg(StatsType);
-            return 0;
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Amazon ETL. DateRange {0}.", dateRange);
             var accounts = GetAccounts();
             AmazonUtility.TokenSets = GetTokens();
             Parallel.ForEach(accounts, account =>
             {
+                try
+                {
+                    throw new Exception("bla bla bla exception");
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(account.Id, ex);
+                }
+                return;
                 Logger.Info(account.Id, "Commencing ETL for Amazon account ({0}) {1}", account.Id, account.Name);
                 var amazonUtility = CreateUtility(account);
                 try

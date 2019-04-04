@@ -8,6 +8,7 @@ using CakeExtracter.Mef;
 
 namespace CakeExtracter
 {
+    using CakeExtracter.Common.JobExecutionManagement;
     using CakeExtracter.Logging.Loggers;
 
     class Program
@@ -31,6 +32,7 @@ namespace CakeExtracter
 
         private int Run(string[] args)
         {
+            CommandExecutionContext.InitContext();
             return ManyConsole.ConsoleCommandDispatcher.DispatchCommand(Commands, args, Console.Out);
         }
 

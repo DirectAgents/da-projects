@@ -4,7 +4,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Models
 {
     public class JobExecutionLogData
     {
-        public string CommonData;
+        public List<string> CommonMessages;
 
         public List<AccountLogData> AccountsData;
     }

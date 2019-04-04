@@ -1,5 +1,4 @@
 ﻿using CakeExtracter.Common.JobExecutionManagement;
-using CakeExtracter.Common.JobExecutionManagement.JobExecution;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using System.Collections.Generic;
 using System.Reflection;
@@ -9,8 +8,6 @@ namespace CakeExtracter.Common
     public abstract class ConsoleCommand : ManyConsole.ConsoleCommand
     {
         private List<ConsoleCommand> commandsToRunBeforeThisCommand = new List<ConsoleCommand>();
-
-        protected CommandExecutionContext commandExecutionContext;
 
         protected void RunBefore(ConsoleCommand consoleCommand)
         {
@@ -24,7 +21,6 @@ namespace CakeExtracter.Common
 
         public override int Run(string[] remainingArguments)
         {
-            InitCommandExecutionContext();
             string commandName = this.GetType().Name;
             if (this.commandsToRunBeforeThisCommand.Count > 0)
             {
@@ -81,30 +77,18 @@ namespace CakeExtracter.Common
         private void LogJobExecutionStartingInHistory()
         {
             var jobRequest = GetCurrentJobRequest();
-            commandExecutionContext.executionDataWriter.InitCurrentExecutionHistoryItem(jobRequest);
+            CommandExecutionContext.Current.JobDataWriter.InitCurrentExecutionHistoryItem(jobRequest);
         }
 
         private void LogJobExecutionFinishTimeInHistory()
         {
-            commandExecutionContext.executionDataWriter.SetCurrentTaskFinishedStatus();
+            CommandExecutionContext.Current.JobDataWriter.SetCurrentTaskFinishedStatus();
         }
 
         private void LogJobExecutionFailedState()
         {
-            commandExecutionContext.executionDataWriter.SetCurrentTaskFailedStatus();
+            CommandExecutionContext.Current.JobDataWriter.SetCurrentTaskFailedStatus();
         }
-
-        private void InitCommandExecutionContext()
-        {
-            var executionItemRepository = new JobExecutionItemRepository();
-            var executionItemService = new JobExecutionItemService(executionItemRepository);
-            var executionDataWriter = new JobExecutionDataWriter(executionItemService);
-            commandExecutionContext = new CommandExecutionContext
-            {
-                executionDataWriter = executionDataWriter
-            };
-        }
-
 
         private JobRequest GetCurrentJobRequest()
         {

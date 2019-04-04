@@ -10,8 +10,10 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
 
         void SetJobExecutionItemFailedState(JobRequestExecution executionHistoryItem);
 
-        void AddWarningToJobExecutionItem(JobRequestExecution executionHistoryItem);
+        void AddWarningToJobExecutionItem(JobRequestExecution executionHistoryItem, string message, int? accountId = null);
 
-        void AddErrorToJobExecutionItem(JobRequestExecution executionHistoryItem);
+        void AddErrorToJobExecutionItem(JobRequestExecution executionHistoryItem, string message, int? accountId = null);
+
+        void AddStateMessage(JobRequestExecution executionHistoryItem, string message, int? accountId = null);
     }
 }

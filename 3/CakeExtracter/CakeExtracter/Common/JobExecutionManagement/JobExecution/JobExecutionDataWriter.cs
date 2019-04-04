@@ -8,16 +8,16 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
     /// </summary>
     public class JobExecutionDataWriter : IJobExecutionDataWriter
     {
-        private JobRequestExecution jobRequestExecutionData;
+        private JobRequestExecution jobRequestExecutionItem;
 
         private IJobExecutionItemService jobExecutionItemService;
 
         /// <summary>
         /// Hidden singleton constructor.
         /// </summary>
-        public JobExecutionDataWriter(IJobExecutionItemService jobExecutionHistoryItemService)
+        public JobExecutionDataWriter(IJobExecutionItemService jobExecutionItemService)
         {
-            this.jobExecutionItemService = jobExecutionHistoryItemService;
+            this.jobExecutionItemService = jobExecutionItemService;
         }
 
         /// <summary>
@@ -27,34 +27,75 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
         /// <exception cref="System.Exception">Error occured while extracting profile number configuration. Check Execution profiles configs.</exception>
         public void InitCurrentExecutionHistoryItem(JobRequest jobRequest)
         {
-            if (jobRequestExecutionData != null)
+            if (jobRequestExecutionItem != null)
             {
                 throw new Exception("Job execution history item already initialised. Can't be created twice in scope of one command execution");
             }
             else
             {
-                jobRequestExecutionData = jobExecutionItemService.CreateJobExecutionItem(jobRequest);
+                jobRequestExecutionItem = jobExecutionItemService.CreateJobExecutionItem(jobRequest);
             }
         }
 
-        public void LogErrorInHistory()
+        /// <summary>
+        /// Logs the error in job execution history.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="accountId"></param>
+        public void LogErrorInHistory(string message, int? accountId = null)
         {
-            throw new NotImplementedException();
+            if (jobRequestExecutionItem != null)
+            {
+                jobExecutionItemService.AddErrorToJobExecutionItem(jobRequestExecutionItem, message, accountId);
+            }
         }
 
-        public void LogWarningInHistory()
+        /// <summary>
+        /// Logs the warning in job execution history history.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="accountId"></param>
+        public void LogWarningInHistory(string message, int? accountId = null)
         {
-            throw new NotImplementedException();
+            if (jobRequestExecutionItem != null)
+            {
+                jobExecutionItemService.AddWarningToJobExecutionItem(jobRequestExecutionItem, message, accountId);
+            }
         }
 
+        /// <summary>
+        /// Sets the state in job execution history history.
+        /// </summary>
+        /// <param name="stateMesasge">The state mesasge.</param>
+        /// <param name="accountId">The account identifier.</param>
+        public void SetStateInHistory(string stateMesasge, int? accountId = null)
+        {
+            if (jobRequestExecutionItem != null)
+            {
+                jobExecutionItemService.AddStateMessage(jobRequestExecutionItem, stateMesasge, accountId);
+            }
+        }
+
+        /// <summary>
+        /// Sets the current task failed status in job execution history.
+        /// </summary>
         public void SetCurrentTaskFailedStatus()
         {
-            jobExecutionItemService.SetJobExecutionItemFailedState(jobRequestExecutionData);
+            if (jobRequestExecutionItem != null)
+            {
+                jobExecutionItemService.SetJobExecutionItemFailedState(jobRequestExecutionItem);
+            }
         }
 
+        /// <summary>
+        /// Sets the current task finish time. Set status to completed.
+        /// </summary>
         public void SetCurrentTaskFinishedStatus()
         {
-            jobExecutionItemService.SetJobExecutionItemFinishedState(jobRequestExecutionData);
+            if (jobRequestExecutionItem != null)
+            {
+                jobExecutionItemService.SetJobExecutionItemFinishedState(jobRequestExecutionItem);
+            }
         }
     }
 }

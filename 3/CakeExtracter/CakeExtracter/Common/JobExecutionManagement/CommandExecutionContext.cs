@@ -1,14 +1,36 @@
 ﻿using CakeExtracter.Common.JobExecutionManagement.JobExecution;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CakeExtracter.Common.JobExecutionManagement
 {
     public class CommandExecutionContext
     {
-        public JobExecutionDataWriter executionDataWriter;
+        public JobExecutionDataWriter JobDataWriter
+        {
+            get;
+            private set;
+        }
+
+        private CommandExecutionContext()
+        {
+            var executionItemRepository = new JobExecutionItemRepository();
+            var executionItemService = new JobExecutionItemService(executionItemRepository);
+            this.JobDataWriter = new JobExecutionDataWriter(executionItemService);
+        }
+
+        public static CommandExecutionContext Current;
+        
+        public static void InitContext()
+        {
+            if (Current != null)
+            {
+                throw new Exception("Execution context already initialised.");
+            }
+            else
+            {
+                Current = new CommandExecutionContext();
+            }
+            
+        }
     }
 }
