@@ -1,9 +1,8 @@
 ﻿using System;
-using CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement;
+using CakeExtracter.Common.JobExecutionManagement;
+using DirectAgents.Domain.Entities.Administration.JobExecution;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using CakeExtracter.Common.ReflectionExtensions;
 
 namespace CakeExtracter.Common
 {
@@ -48,8 +47,17 @@ namespace CakeExtracter.Common
             using (new LogElapsedTime("for " + commandName))
             {
                 LogJobExecutionStartingInHistory();
-                var retCode = Execute(remainingArguments);
-                return retCode;
+                try
+                {
+                    var retCode = Execute(remainingArguments);
+                    LogJobExecutionFinishTimeInHistory();
+                    return retCode;
+                }
+                catch
+                {
+                    LogJobExecutionFailedState();
+                    return 1;
+                }
             }
         }
 
@@ -78,14 +86,24 @@ namespace CakeExtracter.Common
 
         private void LogJobExecutionStartingInHistory()
         {
-            string commandName = this.GetType().Name;
-            var args = CommandLineUtils.GetCurrentCommandLineParams();
-            JobExecutionManagmentContainer.ExecutionHistoryWriter.InitCurrentExecutionHistoryItem(commandName, args);
+            var jobRequest = GetCurrentJobRequest();
+            CommandExecutionContext.Current.JobDataWriter.InitCurrentExecutionHistoryItem(jobRequest);
         }
 
         private void LogJobExecutionFinishTimeInHistory()
         {
+            CommandExecutionContext.Current.JobDataWriter.SetCurrentTaskFinishedStatus();
+        }
 
+        private void LogJobExecutionFailedState()
+        {
+            CommandExecutionContext.Current.JobDataWriter.SetCurrentTaskFailedStatus();
+        }
+
+        private JobRequest GetCurrentJobRequest()
+        {
+            //ToDO: Implement initialization JobRequets from cmd params or creating job request for main job.
+            return null;
         }
 
         public object Clone()

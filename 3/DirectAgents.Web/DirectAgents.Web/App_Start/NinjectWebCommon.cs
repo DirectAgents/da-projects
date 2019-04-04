@@ -5,6 +5,7 @@ namespace DirectAgents.Web.App_Start
 {
     using System;
     using System.Web;
+    using CakeExtracter.Common.JobExecutionManagement.JobExecution;
     using DirectAgents.Domain.Abstract;
     using DirectAgents.Domain.Concrete;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
@@ -72,6 +73,9 @@ namespace DirectAgents.Web.App_Start
             kernel.Bind<IRevTrackRepository>().To<RevTrackRepository>();
             kernel.Bind<IABRepository>().To<ABRepository>();
             kernel.Bind<ISuperRepository>().To<SuperRepository>();
+
+            kernel.Bind<IJobExecutionItemRepository>().To<JobExecutionItemRepository>();
+            kernel.Bind<IJobExecutionItemService>().To<JobExecutionItemService>();
 
             kernel.Bind<ClientPortal.Data.Contracts.IClientPortalRepository>().To<ClientPortal.Data.Services.ClientPortalRepository>();
         }        

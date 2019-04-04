@@ -5,11 +5,11 @@ using System.Linq;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Mef;
+using CakeExtracter.Common.JobExecutionManagement;
+using CakeExtracter.Logging.Loggers;
 
 namespace CakeExtracter
 {
-    using CakeExtracter.Logging.Loggers;
-
     class Program
     {
         private readonly Composer<Program> composer;
@@ -31,6 +31,7 @@ namespace CakeExtracter
 
         private int Run(string[] args)
         {
+            CommandExecutionContext.InitContext();
             return ManyConsole.ConsoleCommandDispatcher.DispatchCommand(Commands, args, Console.Out);
         }
 

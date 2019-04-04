@@ -4,7 +4,6 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using CakeExtracter.Common;
-using CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement;
 using CakeExtracter.Common.JobRequests;
 using CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.CommissionJunctionLoaders;
