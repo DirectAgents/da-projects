@@ -5,6 +5,7 @@ using DirectAgents.Domain.Entities.Administration.JobExecution;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System;
+using System.Data.Entity;
 
 namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
 {
@@ -40,7 +41,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
             var result = new List<JobRequestExecution>();
             SafeContextWrapper.TryMakeTransactionWithLock<ClientPortalProgContext>(dbContext =>
             {
-                result = dbContext.JobRequestExecutions.Where(whereCondition).ToList();
+                result = dbContext.JobRequestExecutions.Where(whereCondition).Include(jobExecutionItem => jobExecutionItem.JobRequest).ToList();
             }, ExecutionHistoryLocker, "Inserting History item.");
             return result;
         }
