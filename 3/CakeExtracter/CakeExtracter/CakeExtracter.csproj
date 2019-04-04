@@ -436,6 +436,7 @@
     <Compile Include="Common\Compare.cs" />
     <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\IJobExecutionHistoryWriter.cs" />
     <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\JobExecutionManagmentContainer.cs" />
+    <Compile Include="Common\JobRequests\JobExecutionRequestManager.cs" />
     <Compile Include="Common\JobRequests\Repositories\JobRequestRepository.cs" />
     <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\Services\JobExecutionHistoryItemService.cs" />
     <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\JobExecutionHistoryWriter.cs" />

@@ -1,12 +1,24 @@
-﻿using CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement;
+﻿using System;
+using CakeExtracter.Common.ExecutionHistory.ExecutionHistoryManagement;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using CakeExtracter.Common.ReflectionExtensions;
 
 namespace CakeExtracter.Common
 {
-    public abstract class ConsoleCommand : ManyConsole.ConsoleCommand
+    public abstract class ConsoleCommand : ManyConsole.ConsoleCommand, ICloneable
     {
         private List<ConsoleCommand> commandsToRunBeforeThisCommand = new List<ConsoleCommand>();
+
+        public const string RequestIdArgumentName = "jobRequestId";
+
+        public int? RequestId { get; set; }
+
+        protected ConsoleCommand()
+        {
+            HasOption<int>($"{RequestIdArgumentName}=", "Job Request Id (default = null)", c => RequestId = c);
+        }
 
         protected void RunBefore(ConsoleCommand consoleCommand)
         {
@@ -74,6 +86,11 @@ namespace CakeExtracter.Common
         private void LogJobExecutionFinishTimeInHistory()
         {
 
+        }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
         }
     }
 }
