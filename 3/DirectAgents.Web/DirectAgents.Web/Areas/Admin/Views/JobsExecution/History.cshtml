@@ -1,20 +1,8 @@
 ﻿@using MVCGrid.Web
 
 
-<h2>History</h2>
+<h2>Job Execution History</h2>
 
 @Html.MVCGrid("UsageExample")
 
-<script>
-    function dataLoadedCallback() {
-        $(".json-cell").each(function () {
-            var cellContent = $(this).text();
-            if (cellContent) {
-                var contentObj = JSON.parse(cellContent);
-                var buitifiedJsonText = JSON.stringify(contentObj, null, 4);
-                $(this).html("<code style='white-space:pre'>" + buitifiedJsonText + "</code>");
-            }
-        })
-    }
-    dataLoadedCallback();
-</script>
+<script src="~/Content/scripts/jobHistory.js"></script>

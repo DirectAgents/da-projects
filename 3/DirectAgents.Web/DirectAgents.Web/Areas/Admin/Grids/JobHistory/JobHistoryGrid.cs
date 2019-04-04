@@ -1,14 +1,15 @@
-﻿using CakeExtracter.Common.JobExecutionManagement.JobExecution;
-using DirectAgents.Domain.Entities.Administration.JobExecution;
+﻿using DirectAgents.Domain.Entities.Administration.JobExecution;
+using DirectAgents.Web.Areas.Admin.Grids.JobHistory;
 using MVCGrid.Models;
 using MVCGrid.Web;
-using Ninject;
 using System.Web.Mvc;
 
 namespace DirectAgents.Web.Areas.Admin.Grids
 {
-    public static class JobHistoryGrid 
+    public static class JobHistoryGrid
     {
+        private const int JobHistoryPageSize = 20;
+
         public static void AddGridConfiguration()
         {
             MVCGridDefinitionTable.Add("UsageExample", new MVCGridBuilder<JobRequestExecution>()
@@ -18,7 +19,7 @@ namespace DirectAgents.Web.Areas.Admin.Grids
                     // Add your columns here
                     cols.Add().WithColumnName("StartTime")
                         .WithHeaderText("StartTime")
-                        .WithValueExpression(i => i.StartTime.ToString()); 
+                        .WithValueExpression(i => i.StartTime.ToString());
                     cols.Add().WithColumnName("EndTime")
                         .WithHeaderText("EndTime")
                         .WithValueExpression((i, c) => i.EndTime.ToString());
@@ -36,21 +37,18 @@ namespace DirectAgents.Web.Areas.Admin.Grids
                         .WithValueExpression((i, c) => i.CurrentState).WithCellCssClassExpression(i => "json-cell");
                     cols.Add().WithColumnName("Errors")
                        .WithHeaderText("Erorrs")
-                       .WithValueExpression((i, c) => i.Errors).WithCellCssClassExpression(i=>"json-cell");
+                       .WithValueExpression((i, c) => i.Errors).WithCellCssClassExpression(i => "json-cell");
                     cols.Add().WithColumnName("Warnings")
                        .WithHeaderText("Warnings")
                        .WithValueExpression((i, c) => i.Warnings).WithCellCssClassExpression(i => "json-cell");
                 })
                 .WithClientSideLoadingCompleteFunctionName("dataLoadedCallback")
+                .WithPaging(true, JobHistoryPageSize)
                 .WithRetrieveDataMethod((context) =>
                 {
-                    var jobExecutionService = DependencyResolver.Current.GetService<IJobExecutionItemService>();
-                    var items = jobExecutionService.GetJobExecutionHistoryItems();
-                    return new QueryResult<JobRequestExecution>()
-                    {
-                        Items = items,
-                        TotalRecords = 10 // if paging is enabled, return the total number of records of all pages
-                    };
+                    QueryOptions options = context.QueryOptions;
+                    var dataProvider = DependencyResolver.Current.GetService<IJobHistoryDataProvider>();
+                    return dataProvider.GetQueryResult(options);
                 })
             );
         }
