@@ -1,4 +1,4 @@
-﻿using CakeExtracter.Common.JobRequests.Repositories;
+﻿using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
 using CakeExtracter.SimpleRepositories.BasicRepositories.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using Google.Apis.Storage.v1.Data;

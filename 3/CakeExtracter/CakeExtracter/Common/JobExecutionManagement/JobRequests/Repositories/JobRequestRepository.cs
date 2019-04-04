@@ -1,9 +1,8 @@
 ﻿using CakeExtracter.SimpleRepositories.BasicRepositories;
-using CakeExtracter.SimpleRepositories.BasicRepositories.Interfaces;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 
-namespace CakeExtracter.Common.JobRequests.Repositories
+namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories
 {
     /// <inheritdoc />
     /// <summary>

@@ -31,7 +31,6 @@ namespace CakeExtracter
 
         private int Run(string[] args)
         {
-            CommandExecutionContext.InitContext();
             return ManyConsole.ConsoleCommandDispatcher.DispatchCommand(Commands, args, Console.Out);
         }
 

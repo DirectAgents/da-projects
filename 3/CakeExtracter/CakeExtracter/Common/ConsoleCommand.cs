@@ -1,6 +1,5 @@
 ﻿using System;
 using CakeExtracter.Common.JobExecutionManagement;
-using DirectAgents.Domain.Entities.Administration.JobExecution;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -8,9 +7,9 @@ namespace CakeExtracter.Common
 {
     public abstract class ConsoleCommand : ManyConsole.ConsoleCommand, ICloneable
     {
-        private List<ConsoleCommand> commandsToRunBeforeThisCommand = new List<ConsoleCommand>();
-
         public const string RequestIdArgumentName = "jobRequestId";
+
+        private readonly List<ConsoleCommand> commandsToRunBeforeThisCommand = new List<ConsoleCommand>();
 
         public int? RequestId { get; set; }
 
@@ -19,20 +18,15 @@ namespace CakeExtracter.Common
             HasOption<int>($"{RequestIdArgumentName}=", "Job Request Id (default = null)", c => RequestId = c);
         }
 
-        protected void RunBefore(ConsoleCommand consoleCommand)
-        {
-            this.commandsToRunBeforeThisCommand.Add(consoleCommand);
-        }
-
         public int Run()
         {
-            return this.Run(null);
+            return Run(null);
         }
 
         public override int Run(string[] remainingArguments)
         {
-            string commandName = this.GetType().Name;
-            if (this.commandsToRunBeforeThisCommand.Count > 0)
+            var commandName = GetType().Name;
+            if (commandsToRunBeforeThisCommand.Count > 0)
             {
                 Logger.Info("{0} has prerequisites..", commandName);
                 foreach (var consoleCommand in this.commandsToRunBeforeThisCommand)
@@ -46,18 +40,7 @@ namespace CakeExtracter.Common
 
             using (new LogElapsedTime("for " + commandName))
             {
-                LogJobExecutionStartingInHistory();
-                try
-                {
-                    var retCode = Execute(remainingArguments);
-                    LogJobExecutionFinishTimeInHistory();
-                    return retCode;
-                }
-                catch
-                {
-                    LogJobExecutionFailedState();
-                    return 1;
-                }
+                return ExecuteJobWithContext(remainingArguments);
             }
         }
 
@@ -70,45 +53,46 @@ namespace CakeExtracter.Common
 
         public virtual IEnumerable<PropertyInfo> GetArgumentProperties()
         {
-            return this.GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
+            return GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
         }
 
         public virtual bool TrySetProperty(string propertyName, object propertyValue)
         {
-            var property = this.GetType().GetProperty(propertyName);
-            if (property != null)
+            var property = GetType().GetProperty(propertyName);
+            if (property == null)
             {
-                property.SetValue(this, propertyValue);
-                return true;
+                return false;
             }
-            return false;
-        }
 
-        private void LogJobExecutionStartingInHistory()
-        {
-            var jobRequest = GetCurrentJobRequest();
-            CommandExecutionContext.Current.JobDataWriter.InitCurrentExecutionHistoryItem(jobRequest);
-        }
-
-        private void LogJobExecutionFinishTimeInHistory()
-        {
-            CommandExecutionContext.Current.JobDataWriter.SetCurrentTaskFinishedStatus();
-        }
-
-        private void LogJobExecutionFailedState()
-        {
-            CommandExecutionContext.Current.JobDataWriter.SetCurrentTaskFailedStatus();
-        }
-
-        private JobRequest GetCurrentJobRequest()
-        {
-            //ToDO: Implement initialization JobRequets from cmd params or creating job request for main job.
-            return null;
+            property.SetValue(this, propertyValue);
+            return true;
         }
 
         public object Clone()
         {
             return MemberwiseClone();
+        }
+
+        protected void RunBefore(ConsoleCommand consoleCommand)
+        {
+            commandsToRunBeforeThisCommand.Add(consoleCommand);
+        }
+
+        private int ExecuteJobWithContext(string[] remainingArguments)
+        {
+            CommandExecutionContext.InitContext(this, RequestId);
+            CommandExecutionContext.Current.StartRequestExecution();
+            try
+            {
+                var retCode = Execute(remainingArguments);
+                CommandExecutionContext.Current.CompleteRequestExecution();
+                return retCode;
+            }
+            catch
+            {
+                CommandExecutionContext.Current.FailRequestExecution();
+                return 1;
+            }
         }
     }
 }

@@ -4,7 +4,6 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using CakeExtracter.Common;
-using CakeExtracter.Common.JobRequests;
 using CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.CommissionJunctionLoaders;
 using CakeExtracter.Helpers;
@@ -76,13 +75,6 @@ namespace CakeExtracter.Commands.DA
         public override int Execute(string[] remainingArguments)
         {
             SetConfigurationVariables();
-
-            var requestManager = new JobExecutionRequestManager<DaSynchCommissionJunctionStats>(this);
-            var newCommand = requestManager.SourceCommand;
-            newCommand.StartDate = StartDate.Value.AddDays(-1);
-            requestManager.AddJobRequest(newCommand);
-
-
             var dateRange = CommandHelper.GetDateRange(StartDate, EndDate, DaysAgoToStart, DefaultDaysAgo);
             Logger.Info("Commission Junction ETL. DateRange {0}.", dateRange);
             var accounts = GetAccounts();
