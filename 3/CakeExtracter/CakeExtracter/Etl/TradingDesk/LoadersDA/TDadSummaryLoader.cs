@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using CakeExtracter.Common;
-using CakeExtracter.SimpleRepositories;
-using CakeExtracter.SimpleRepositories.Interfaces;
+using CakeExtracter.SimpleRepositories.RepositoriesWithStorage;
+using CakeExtracter.SimpleRepositories.RepositoriesWithStorage.Interfaces;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
@@ -25,7 +25,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         private readonly TDStrategySummaryLoader strategyLoader;
         private readonly TDAdSetSummaryLoader adSetLoader;
         private readonly SummaryMetricLoader metricLoader;
-        private readonly ISimpleRepository<EntityType> typeRepository;
+        private readonly IRepositoryWithStorage<EntityType, ClientPortalProgContext> typeRepositoryWithStorage;
 
         public TDadSummaryLoader(int accountId = -1, EntityIdStorage<TDad> adStorage = null,
             EntityIdStorage<AdSet> adSetStorage = null, EntityIdStorage<Strategy> strategyStorage = null)
@@ -34,7 +34,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             this.adSetStorage = adSetStorage ?? TDAdSetSummaryLoader.DefaultAdSetStorage;
             this.adStorage = adStorage ?? DefaultAdStorage;
             AccountId = accountId;
-            typeRepository = new TypeRepository(StorageCollection.TypeStorage);
+            typeRepositoryWithStorage = new TypeRepositoryWithStorage(StorageCollection.TypeStorage);
 
             strategyLoader = new TDStrategySummaryLoader(accountId, this.strategyStorage);
             adSetLoader = new TDAdSetSummaryLoader(accountId, adSetStorage, strategyStorage);
@@ -218,7 +218,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         private void AddDependentExternalIdTypes(ClientPortalProgContext db, IEnumerable<TDadExternalId> externalIds)
         {
             var notStoredTypes = externalIds.Select(x => x.Type).Where(x => x?.Name != null).DistinctBy(x => x.Name).ToList();
-            typeRepository.AddItems(db, notStoredTypes);
+            typeRepositoryWithStorage.AddItems(db, notStoredTypes);
             AssignTypeIdToExternalIds(externalIds);
         }
 
@@ -226,9 +226,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             foreach (var id in externalIds)
             {
-                if (typeRepository.IdStorage.IsEntityInStorage(id.Type))
+                if (typeRepositoryWithStorage.IdStorage.IsEntityInStorage(id.Type))
                 {
-                    id.TypeId = typeRepository.IdStorage.GetEntityIdFromStorage(id.Type);
+                    id.TypeId = typeRepositoryWithStorage.IdStorage.GetEntityIdFromStorage(id.Type);
                     id.Type = null;
                 }
             }

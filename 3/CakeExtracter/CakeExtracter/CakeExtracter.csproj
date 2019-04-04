@@ -436,6 +436,7 @@
     <Compile Include="Common\Compare.cs" />
     <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\IJobExecutionHistoryWriter.cs" />
     <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\JobExecutionManagmentContainer.cs" />
+    <Compile Include="Common\JobRequests\Repositories\JobRequestRepository.cs" />
     <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\Services\JobExecutionHistoryItemService.cs" />
     <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\JobExecutionHistoryWriter.cs" />
     <Compile Include="Common\ExecutionHistory\ExecutionHistoryManagement\Services\IJobExecutionHistoryItemService.cs" />
@@ -775,9 +776,12 @@
       <DependentUpon>SearchReportRuntimeTextTemplate.tt</DependentUpon>
     </Compile>
     <Compile Include="Reports\SimpleReportManager.cs" />
-    <Compile Include="SimpleRepositories\Interfaces\ISimpleRepository.cs" />
-    <Compile Include="SimpleRepositories\StrategyRepository.cs" />
-    <Compile Include="SimpleRepositories\TypeRepository.cs" />
+    <Compile Include="SimpleRepositories\BasicRepositories\BasicDatabaseRepository.cs" />
+    <Compile Include="SimpleRepositories\BasicRepositories\Interfaces\IBasicRepository.cs" />
+    <Compile Include="SimpleRepositories\RepositoriesContainer.cs" />
+    <Compile Include="SimpleRepositories\RepositoriesWithStorage\Interfaces\IRepositoryWithStorage.cs" />
+    <Compile Include="SimpleRepositories\RepositoriesWithStorage\StrategyRepositoryWithStorage.cs" />
+    <Compile Include="SimpleRepositories\RepositoriesWithStorage\TypeRepositoryWithStorage.cs" />
     <Compile Include="Data\UsersContext.cs" />
     <Compile Include="Common\RetryUtility.cs" />
   </ItemGroup>
