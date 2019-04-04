@@ -1,4 +1,5 @@
 ﻿using DirectAgents.Domain.Entities.Administration.JobExecution;
+using System.Collections.Generic;
 
 namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
 {
@@ -15,5 +16,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
         void AddErrorToJobExecutionItem(JobRequestExecution executionHistoryItem, string message, int? accountId = null);
 
         void AddStateMessage(JobRequestExecution executionHistoryItem, string message, int? accountId = null);
+
+        List<JobRequestExecution> GetJobExecutionHistoryItems();
     }
 }

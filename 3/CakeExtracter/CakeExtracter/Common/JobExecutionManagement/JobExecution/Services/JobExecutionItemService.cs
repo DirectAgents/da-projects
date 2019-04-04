@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
@@ -87,6 +88,11 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
                     ExecutionLoggingUtils.SetSingleCommonMessageInLogData(executionHistoryItem.Errors, message);
             }
             jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
+        }
+
+        public List<JobRequestExecution> GetJobExecutionHistoryItems()
+        {
+            return jobExecutionHistoryRepository.GetAll(x=>true);
         }
     }
 }

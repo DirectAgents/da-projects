@@ -2,6 +2,9 @@
 using DirectAgents.Domain.Contexts;
 using System.Linq;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System;
 
 namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
 {
@@ -30,6 +33,16 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
                 dbContext.SaveChanges();
             }, ExecutionHistoryLocker, "Inserting History item.");
             return jobRequestExecution;
+        }
+
+        public List<JobRequestExecution> GetAll(Expression<Func<JobRequestExecution, bool>> whereCondition)
+        {
+            var result = new List<JobRequestExecution>();
+            SafeContextWrapper.TryMakeTransactionWithLock<ClientPortalProgContext>(dbContext =>
+            {
+                result = dbContext.JobRequestExecutions.Where(whereCondition).ToList();
+            }, ExecutionHistoryLocker, "Inserting History item.");
+            return result;
         }
     }
 }

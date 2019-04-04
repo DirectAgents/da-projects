@@ -81,15 +81,6 @@ namespace CakeExtracter.Commands
             AmazonUtility.TokenSets = GetTokens();
             Parallel.ForEach(accounts, account =>
             {
-                try
-                {
-                    throw new Exception("bla bla bla exception");
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(account.Id, ex);
-                }
-                return;
                 Logger.Info(account.Id, "Commencing ETL for Amazon account ({0}) {1}", account.Id, account.Name);
                 var amazonUtility = CreateUtility(account);
                 try
