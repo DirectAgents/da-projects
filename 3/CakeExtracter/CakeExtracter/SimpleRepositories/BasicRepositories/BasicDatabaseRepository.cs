@@ -60,6 +60,15 @@ namespace CakeExtracter.SimpleRepositories.BasicRepositories
         }
 
         /// <inheritdoc />
+        public List<T> GetItems(Func<T, bool> predicate)
+        {
+            List<T> items = null;
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => items = GetItems(dbContext, predicate).ToList(), locker,
+                $"Getting {typeof(T).Name} database items");
+            return items;
+        }
+
+        /// <inheritdoc />
         public void AddItem(T item)
         {
             SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => AddItem(dbContext, item), locker,
@@ -88,6 +97,11 @@ namespace CakeExtracter.SimpleRepositories.BasicRepositories
         private T GetFirstItem(TContext dbContext, Func<T, bool> predicate)
         {
             return dbContext.Set<T>().FirstOrDefault(predicate);
+        }
+
+        private IEnumerable<T> GetItems(TContext dbContext, Func<T, bool> predicate)
+        {
+            return dbContext.Set<T>().Where(predicate);
         }
 
         private void AddItem(TContext dbContext, T item)

@@ -7,6 +7,7 @@ using CakeExtracter.SimpleRepositories;
 using CakeExtracter.SimpleRepositories.BasicRepositories.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
+using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
 namespace CakeExtracter.Common.JobExecutionManagement.JobRequests
 {
@@ -47,37 +48,40 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests
         {
             var broadCommands = command.GetUniqueBroadCommands(scheduledCommands);
             var jobRequests = broadCommands.Select(x => CreateJobRequest(x.Command, x.ScheduledTime, parentRequest.Id)).ToList();
-            ReplaceChildRequestsLikeParent(jobRequests, parentRequest);
+            ProcessEndOfRequest(jobRequests, parentRequest);
             requestRepository.AddItems(jobRequests);
-            jobRequests.ForEach(x => Logger.Info(
-                $"Schedule the new request ({x.Id}, {x.ScheduledTime}): {x.CommandName} {x.CommandExecutionArguments}"));
+            jobRequests.ForEach(x => LogInfoAboutRequest("Schedule the new request", x));
         }
 
-        public void ExecuteJobRequest(JobRequest request)
+        public void ExecuteScheduledInPastJobRequests(int maxNumberOfJobRequests)
         {
-            UpdateRequest(request, JobRequestStatus.Processing);
-            RunRequestInNewProcess(request);
-            UpdateRequest(request, JobRequestStatus.Completed);
+            var now = DateTime.Now;
+            var requestsToRun = requestRepository.GetItems(x => x.Status == JobRequestStatus.Scheduled && x.ScheduledTime <= now);
+            var failedRequests = requestsToRun.Where(x => x.AttemptNumber == maxNumberOfJobRequests).ToList();
+            failedRequests.ForEach(x => UpdateRequest(x, JobRequestStatus.Failed));
+            requestsToRun.Where(x => x.Status == JobRequestStatus.Scheduled).ForEach(RunRequestInNewProcess);
         }
 
         private void RunRequestInNewProcess(JobRequest request)
         {
+            LogInfoAboutRequest("Run the job request", request);
             var arguments = CommandArgumentsConverter.GetJobArgumentsAsArgumentsForConsole(request);
             ProcessManager.RestartApplicationInNewProcess(arguments);
         }
 
-        private void ReplaceChildRequestsLikeParent(List<JobRequest> jobRequests, JobRequest parentRequest)
+        private void ProcessEndOfRequest(List<JobRequest> newRequests, JobRequest endedRequest)
         {
-            var childRequestAsParent = jobRequests.FirstOrDefault(x =>
-                x.CommandName == parentRequest.CommandName &&
-                x.CommandExecutionArguments == parentRequest.CommandExecutionArguments);
+            var childRequestAsParent = newRequests.FirstOrDefault(x =>
+                x.CommandName == endedRequest.CommandName &&
+                x.CommandExecutionArguments == endedRequest.CommandExecutionArguments);
             if (childRequestAsParent == null)
             {
+                UpdateRequest(endedRequest, JobRequestStatus.Completed);
                 return;
             }
 
-            RescheduleRequest(parentRequest, childRequestAsParent.ScheduledTime);
-            jobRequests.Remove(childRequestAsParent);
+            RescheduleRequest(endedRequest, childRequestAsParent.ScheduledTime);
+            newRequests.Remove(childRequestAsParent);
         }
 
         private JobRequest AddNotInheritedRequest(ConsoleCommand command)
@@ -103,9 +107,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests
         private void RescheduleRequest(JobRequest request, DateTime? scheduledTime)
         {
             UpdateRequest(request, JobRequestStatus.Scheduled, scheduledTime);
-            var info = $"Reschedule the current request ({request.Id}, {request.ScheduledTime}): " +
-                       $"{request.CommandName} {request.CommandExecutionArguments}";
-            Logger.Info(info);
+            LogInfoAboutRequest("Reschedule the current request", request);
         }
 
         private void UpdateRequest(JobRequest request, JobRequestStatus status, DateTime? scheduledTime)
@@ -123,6 +125,13 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests
 
             request.Status = status;
             requestRepository.UpdateItem(request);
+        }
+
+        private void LogInfoAboutRequest(string message, JobRequest request)
+        {
+            var arguments = CommandArgumentsConverter.GetJobArgumentsAsArgumentsForConsole(request);
+            var info = $"{message} ({request.Id}, {request.ScheduledTime}): \"{request.CommandName} {arguments}\"";
+            Logger.Info(info);
         }
     }
 }

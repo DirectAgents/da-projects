@@ -22,7 +22,8 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
             var startInfo = new ProcessStartInfo
             {
                 FileName = exeLocation,
-                Arguments = exeArguments
+                Arguments = exeArguments,
+                WindowStyle = ProcessWindowStyle.Hidden
             };
             Process.Start(startInfo);
         }

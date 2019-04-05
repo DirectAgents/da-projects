@@ -6,10 +6,10 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
 {
     internal static class CommandArgumentsConverter
     {
-        private const string ArgumentsSeparator = "   ;   ";
         private const string ArgumentsSeparatorForConsole = " ";
         private const string ArgumentsPrefix = "-";
         private const string ArgumentNameAndValueSeparator = " ";
+        private const string ArgumentStringValueSeparator = "\"";
 
         public static string GetCommandArgumentsAsLine(ConsoleCommand command)
         {
@@ -26,17 +26,21 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
         {
             var requestArgument = GetArgument(ConsoleCommand.RequestIdArgumentName, request.Id);
             var arguments = JoinArguments(request.CommandName, request.CommandExecutionArguments, requestArgument);
-            var argumentsForConsole = arguments.Replace(ArgumentsSeparator, ArgumentsSeparatorForConsole);
-            return argumentsForConsole;
+            return arguments;
         }
 
         private static string JoinArguments(params string[] arguments)
         {
-            return string.Join(ArgumentsSeparator, arguments);
+            return string.Join(ArgumentsSeparatorForConsole, arguments);
         }
 
         private static string GetArgument(string argName, object argValue)
         {
+            if (argValue is string || argValue is DateTime)
+            {
+                argValue = ArgumentStringValueSeparator + argValue + ArgumentStringValueSeparator;
+            }
+
             return argValue != null
                 ? $"{ArgumentsPrefix}{argName}{ArgumentNameAndValueSeparator}{argValue}"
                 : string.Empty;
