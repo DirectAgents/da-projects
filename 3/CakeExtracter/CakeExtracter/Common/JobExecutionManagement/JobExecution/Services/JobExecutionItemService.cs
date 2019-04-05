@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
@@ -14,11 +13,22 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
     {
         IJobExecutionItemRepository jobExecutionHistoryRepository;
 
+        private object executionItemHistoryLockObject = new object();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JobExecutionItemService"/> class.
+        /// </summary>
+        /// <param name="jobExecutionHistoryRepository">The job execution history repository.</param>
         public JobExecutionItemService(IJobExecutionItemRepository jobExecutionHistoryRepository)
         {
             this.jobExecutionHistoryRepository = jobExecutionHistoryRepository;
         }
 
+        /// <summary>
+        /// Creates the job execution item.
+        /// </summary>
+        /// <param name="jobRequest">The job request to create.</param>
+        /// <returns></returns>
         public JobRequestExecution CreateJobExecutionItem(JobRequest jobRequest)
         {
             var jobRequestExecutionItem = new JobRequestExecution
@@ -31,6 +41,10 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
             return jobRequestExecutionItem;
         }
 
+        /// <summary>
+        /// Sets the state of the job execution item failed.
+        /// </summary>
+        /// <param name="executionHistoryItem">The execution history item.</param>
         public void SetJobExecutionItemFailedState(JobRequestExecution executionHistoryItem)
         {
             executionHistoryItem.Status = JobExecutionStatus.Failed;
@@ -38,6 +52,10 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
             jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
         }
 
+        /// <summary>
+        /// Sets the state of the job execution item finished.
+        /// </summary>
+        /// <param name="executionHistoryItem">The execution history item.</param>
         public void SetJobExecutionItemFinishedState(JobRequestExecution executionHistoryItem)
         {
             executionHistoryItem.Status = JobExecutionStatus.Completed;
@@ -45,54 +63,76 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
             jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
         }
 
+        /// <summary>
+        /// Adds the error to job execution item.
+        /// </summary>
+        /// <param name="executionHistoryItem">The execution history item.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="accountId">The account identifier.</param>
         public void AddErrorToJobExecutionItem(JobRequestExecution executionHistoryItem, string message, int? accountId = null)
         {
-            if (accountId.HasValue)
+            lock (executionItemHistoryLockObject)
             {
-                executionHistoryItem.Errors = 
-                    ExecutionLoggingUtils.AddAccountMessageToLogData(executionHistoryItem.Errors, message, accountId.Value);
+                if (accountId.HasValue)
+                {
+                    executionHistoryItem.Errors =
+                        ExecutionLoggingUtils.AddAccountMessageToLogData(executionHistoryItem.Errors, message, accountId.Value);
+                }
+                else
+                {
+                    executionHistoryItem.Errors =
+                        ExecutionLoggingUtils.AddCommonMessageToLogData(executionHistoryItem.Errors, message);
+                }
+                jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
             }
-            else
-            {
-                executionHistoryItem.Errors =
-                    ExecutionLoggingUtils.AddCommonMessageToLogData(executionHistoryItem.Errors, message);
-            }
-            jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
         }
 
+        /// <summary>
+        /// Adds the warning to job execution item.
+        /// </summary>
+        /// <param name="executionHistoryItem">The execution history item.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="accountId">The account identifier.</param>
         public void AddWarningToJobExecutionItem(JobRequestExecution executionHistoryItem, string message, int? accountId = null)
         {
-            if (accountId.HasValue)
+            lock (executionItemHistoryLockObject)
             {
-                executionHistoryItem.Warnings =
-                    ExecutionLoggingUtils.AddAccountMessageToLogData(executionHistoryItem.Warnings, message, accountId.Value);
+                if (accountId.HasValue)
+                {
+                    executionHistoryItem.Warnings =
+                        ExecutionLoggingUtils.AddAccountMessageToLogData(executionHistoryItem.Warnings, message, accountId.Value);
+                }
+                else
+                {
+                    executionHistoryItem.Warnings =
+                        ExecutionLoggingUtils.AddCommonMessageToLogData(executionHistoryItem.Warnings, message);
+                }
+                jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
             }
-            else
-            {
-                executionHistoryItem.Warnings =
-                    ExecutionLoggingUtils.AddCommonMessageToLogData(executionHistoryItem.Warnings, message);
-            }
-            jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
         }
 
+        /// <summary>
+        /// Adds the state message.
+        /// </summary>
+        /// <param name="executionHistoryItem">The execution history item.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="accountId">The account identifier.</param>
         public void AddStateMessage(JobRequestExecution executionHistoryItem, string message, int? accountId = null)
         {
-            if (accountId.HasValue)
+            lock (executionItemHistoryLockObject)
             {
-                executionHistoryItem.CurrentState =
-                    ExecutionLoggingUtils.SetSingleAccountMessageInLogData(executionHistoryItem.Errors, message, accountId.Value);
+                if (accountId.HasValue)
+                {
+                    executionHistoryItem.CurrentState =
+                        ExecutionLoggingUtils.SetSingleAccountMessageInLogData(executionHistoryItem.CurrentState, message, accountId.Value);
+                }
+                else
+                {
+                    executionHistoryItem.CurrentState =
+                        ExecutionLoggingUtils.SetSingleCommonMessageInLogData(executionHistoryItem.CurrentState, message);
+                }
+                jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
             }
-            else
-            {
-                executionHistoryItem.CurrentState =
-                    ExecutionLoggingUtils.SetSingleCommonMessageInLogData(executionHistoryItem.Errors, message);
-            }
-            jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
-        }
-
-        public List<JobRequestExecution> GetJobExecutionHistoryItems()
-        {
-            return jobExecutionHistoryRepository.GetAll(x=>true);
         }
     }
 }

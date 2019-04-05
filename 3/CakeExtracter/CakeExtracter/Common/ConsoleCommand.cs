@@ -35,9 +35,7 @@ namespace CakeExtracter.Common
                 }
                 Logger.Info("Completed prerequisites for {0}", commandName);
             }
-
             Logger.Info("Executing command: {0}", commandName);
-
             using (new LogElapsedTime("for " + commandName))
             {
                 return ExecuteJobWithContext(remainingArguments);

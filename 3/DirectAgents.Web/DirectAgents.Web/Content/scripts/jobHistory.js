@@ -4,7 +4,7 @@
         if (cellContent) {
             var contentObj = JSON.parse(cellContent);
             var buitifiedJsonText = JSON.stringify(contentObj, null, 4);
-            $(this).html("<code class='json-code'>" + buitifiedJsonText + "</code>");
+            $(this).html("<div class='json-block'><code class='json-code'>" + buitifiedJsonText + "</code></div>");
         }
     });
 }

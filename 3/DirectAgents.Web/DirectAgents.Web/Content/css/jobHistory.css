@@ -2,19 +2,25 @@
     white-space: pre
 }
 
-td.json-cell.state > code {
+td.json-cell.state > div.json-block > code {
     color: #005f13;
     background-color: #e5fbea;
 }
 
-td.json-cell.warnings > code {
+td.json-cell.warnings > div.json-block > code {
     color: #6b6409;
     background-color: #f9f5c3;
 }
 
-td.json-cell.errors > code {
+td.json-cell.errors > div.json-block > code {
     color: #710a0a;
     background-color: #fbebeb;
+}
+
+td.json-cell > div.json-block {
+    width: 350px;
+    height: 200px;
+    overflow: auto;
 }
 
 span.filter-label {

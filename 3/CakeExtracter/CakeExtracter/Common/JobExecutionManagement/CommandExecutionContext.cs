@@ -30,7 +30,6 @@ namespace CakeExtracter.Common.JobExecutionManagement
             {
                 throw new Exception("Execution context already initialized.");
             }
-
             Current = new CommandExecutionContext(command, currentRequestId);
         }
 

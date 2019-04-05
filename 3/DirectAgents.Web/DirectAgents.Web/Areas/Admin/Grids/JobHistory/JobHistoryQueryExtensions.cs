@@ -6,8 +6,17 @@ using System.Linq;
 
 namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
 {
+    /// <summary>
+    /// job history qury extensions for applying paging and filtering.
+    /// </summary>
     public static class JobHistoryQueryExtensions
     {
+        /// <summary>
+        /// Applies the command name filter.
+        /// </summary>
+        /// <param name="source">The source query object.</param>
+        /// <param name="options">The grid options.</param>
+        /// <returns></returns>
         public static IQueryable<JobRequestExecution> ApplyCommandNameFilter(this IQueryable<JobRequestExecution> source, QueryOptions options)
         {
             const string commandNameFilterKey = "CommandName";
@@ -19,6 +28,12 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
             return source;
         }
 
+        /// <summary>
+        /// Applies the parent job identifier filter.
+        /// </summary>
+        /// <param name="source">The source query object.</param>
+        /// <param name="options">The grid options.</param>
+        /// <returns></returns>
         public static IQueryable<JobRequestExecution> ApplyParentJobIdFilter(this IQueryable<JobRequestExecution> source, QueryOptions options)
         {
             const string parentJobFilterKey = "ParentJobId";
@@ -35,6 +50,12 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
             return source;
         }
 
+        /// <summary>
+        /// Applies the status filter.
+        /// </summary>
+        /// <param name="source">The source query object.</param>
+        /// <param name="options">The grid options.</param>
+        /// <returns></returns>
         public static IQueryable<JobRequestExecution> ApplyStatusFilter(this IQueryable<JobRequestExecution> source, QueryOptions options)
         {
             const string statusFilterKey = "Status";
@@ -50,6 +71,12 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
             return source;
         }
 
+        /// <summary>
+        /// Applies the start date filter.
+        /// </summary>
+        /// <param name="source">The source query object.</param>
+        /// <param name="options">The grid options.</param>
+        /// <returns></returns>
         public static IQueryable<JobRequestExecution> ApplyStartDateFilter(this IQueryable<JobRequestExecution> source, QueryOptions options)
         {
             const string startDateFilterKey = "StartTime";
@@ -64,12 +91,24 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
             return source;
         }
 
+        /// <summary>
+        /// Applies the start time sorting.
+        /// </summary>
+        /// <param name="source">The source query object.</param>
+        /// <param name="options">The grid options.</param>
+        /// <returns></returns>
         public static IQueryable<JobRequestExecution> ApplyStartTimeSorting(this IQueryable<JobRequestExecution> source, QueryOptions options)
         {
             source = source.OrderByDescending(p => p.StartTime);
             return source;
         }
 
+        /// <summary>
+        /// Applies the paging.
+        /// </summary>
+        /// <param name="source">The source query object.</param>
+        /// <param name="options">The grid options.</param>
+        /// <returns></returns>
         public static IQueryable<JobRequestExecution> ApplyPaging(this IQueryable<JobRequestExecution> source, QueryOptions options)
         {
             if (options.GetLimitOffset().HasValue)
@@ -78,6 +117,5 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
             }
             return source;
         }
-
     }
 }
