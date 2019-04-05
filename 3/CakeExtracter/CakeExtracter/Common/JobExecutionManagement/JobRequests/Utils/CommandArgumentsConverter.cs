@@ -1,7 +1,6 @@
-﻿using System.Linq;
-using System.Reflection;
+﻿using System;
+using System.Linq;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
-using Mono.Options;
 
 namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
 {
@@ -16,8 +15,10 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
         {
             var argOptions = command.GetActualOptions();
             argOptions.Remove(ConsoleCommand.RequestIdArgumentName);
-            var argValueProperties = command.GetArgumentProperties().ToArray();
-            return argOptions.Select((t, i) => GetArgument(command, t, argValueProperties[i]))
+            var argNames = argOptions.Select(x => x.GetNames().First()).ToArray();
+            var argValues = command.GetArgumentProperties().Select(x => x.GetValue(command)).ToArray();
+            Array.Sort(argNames, argValues);
+            return argNames.Select((x, i) => GetArgument(x, argValues[i]))
                 .Aggregate(string.Empty, (s, s1) => JoinArguments(s, s1));
         }
 
@@ -34,21 +35,11 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
             return string.Join(ArgumentsSeparator, arguments);
         }
 
-        private static string GetArgument(ConsoleCommand command, Option argOption, PropertyInfo argValueProperty)
-        {
-            var argValue = argValueProperty.GetValue(command);
-            if (argValue == null)
-            {
-                return null;
-            }
-
-            var argName = argOption.GetNames().First();
-            return GetArgument(argName, argValue);
-        }
-
         private static string GetArgument(string argName, object argValue)
         {
-            return $"{ArgumentsPrefix}{argName}{ArgumentNameAndValueSeparator}{argValue}";
+            return argValue != null
+                ? $"{ArgumentsPrefix}{argName}{ArgumentNameAndValueSeparator}{argValue}"
+                : string.Empty;
         }
     }
 }

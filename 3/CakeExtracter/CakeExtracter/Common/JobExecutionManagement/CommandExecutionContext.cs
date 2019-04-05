@@ -1,5 +1,5 @@
-﻿using CakeExtracter.Common.JobExecutionManagement.JobExecution;
-using System;
+﻿using System;
+using CakeExtracter.Common.JobExecutionManagement.JobExecution;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 
@@ -16,23 +16,23 @@ namespace CakeExtracter.Common.JobExecutionManagement
 
         public JobExecutionRequestManager JobRequestManager { get; }
 
-        private CommandExecutionContext(ConsoleCommand command, int? currentRequestId)
+        private CommandExecutionContext(ConsoleCommand command)
         {
             var executionItemRepository = new JobExecutionItemRepository();
             var executionItemService = new JobExecutionItemService(executionItemRepository);
             JobDataWriter = new JobExecutionDataWriter(executionItemService);
-            JobRequestManager = new JobExecutionRequestManager(command);
-            InitCurrentJobRequest(command, currentRequestId);
+            JobRequestManager = new JobExecutionRequestManager();
+            InitCurrentJobRequest(command);
         }
 
-        public static void InitContext(ConsoleCommand command, int? currentRequestId)
+        public static void InitContext(ConsoleCommand command)
         {
             if (Current != null)
             {
                 throw new Exception("Execution context already initialized.");
             }
 
-            Current = new CommandExecutionContext(command, currentRequestId);
+            Current = new CommandExecutionContext(command);
         }
 
         public void StartRequestExecution()
@@ -50,15 +50,14 @@ namespace CakeExtracter.Common.JobExecutionManagement
         public void FailRequestExecution()
         {
             JobDataWriter.SetCurrentTaskFailedStatus();
-            JobRequestManager.CreateRequestsForScheduledCommands(currentCommand, currentJobRequest);
+            var scheduledTime = DateTime.Now.AddMinutes(currentCommand.IntervalBetweenUnsuccessfulAndNewRequestInMinutes);
+            JobRequestManager.RescheduleRequest(currentJobRequest, scheduledTime);
         }
 
-        private void InitCurrentJobRequest(ConsoleCommand command, int? currentRequestId)
+        private void InitCurrentJobRequest(ConsoleCommand command)
         {
             currentCommand = command;
-            currentJobRequest = currentRequestId.HasValue
-                ? JobRequestManager.GetJobRequest(currentRequestId.Value)
-                : JobRequestManager.AddJobRequest(command);
+            currentJobRequest = JobRequestManager.GetJobRequest(currentCommand);
         }
     }
 }

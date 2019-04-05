@@ -12,7 +12,7 @@ namespace CakeExtracter.Common
 
         private readonly List<ConsoleCommand> commandsToRunBeforeThisCommand = new List<ConsoleCommand>();
 
-        protected virtual int IntervalBetweenUnsuccessfulAndNewRequestInMinutes { get; set; } = 0;
+        public virtual int IntervalBetweenUnsuccessfulAndNewRequestInMinutes { get; set; } = 0;
 
         public int? RequestId { get; set; }
 
@@ -96,7 +96,7 @@ namespace CakeExtracter.Common
 
         private int ExecuteJobWithContext(string[] remainingArguments)
         {
-            CommandExecutionContext.InitContext(this, RequestId);
+            CommandExecutionContext.InitContext(this);
             CommandExecutionContext.Current.StartRequestExecution();
             try
             {
