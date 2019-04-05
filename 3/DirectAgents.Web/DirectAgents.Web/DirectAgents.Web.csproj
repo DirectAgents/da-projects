@@ -238,6 +238,7 @@
     <Compile Include="Areas\Admin\Grids\JobHistory\IJobHistoryDataProvider.cs" />
     <Compile Include="Areas\Admin\Grids\JobHistory\JobHistoryDataProvider.cs" />
     <Compile Include="Areas\Admin\Grids\JobHistory\JobHistoryGrid.cs" />
+    <Compile Include="Areas\Admin\Grids\JobHistory\JobHistoryQueryExtensions.cs" />
     <Compile Include="Areas\Cake\CakeAreaRegistration.cs" />
     <Compile Include="Areas\Cake\Controllers\AdvertisersController.cs" />
     <Compile Include="Areas\Cake\Controllers\CampsController.cs" />
@@ -309,6 +310,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="Areas\ProgAdmin\Views\Shared\_LayoutTD.cshtml" />
+    <Content Include="Content\css\jobHistory.css" />
     <Content Include="Content\DA.css" />
     <Content Include="Content\kendo\2014.1.416\Black\editor.png" />
     <Content Include="Content\kendo\2014.1.416\Black\imagebrowser.png" />

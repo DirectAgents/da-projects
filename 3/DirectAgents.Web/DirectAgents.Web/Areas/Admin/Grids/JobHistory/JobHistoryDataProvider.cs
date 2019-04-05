@@ -13,13 +13,14 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
             using (var db = new ClientPortalProgContext())
             {
                 var result = new QueryResult<JobRequestExecution>();
-                var query = db.JobRequestExecutions.AsQueryable().Include(ex=>ex.JobRequest);
+                IQueryable<JobRequestExecution> query = db.JobRequestExecutions.AsQueryable().Include(ex=>ex.JobRequest);
+                query = query.ApplyStatusFilter(options)
+                    .ApplyParentJobIdFilter(options)
+                    .ApplyStartTimeSorting(options)
+                    .ApplyStartDateFilter(options)
+                    .ApplyCommandNameFilter(options)
+                    .ApplyPaging(options);
                 result.TotalRecords = query.Count();
-                query = query.OrderByDescending(p => p.StartTime);
-                if (options.GetLimitOffset().HasValue)
-                {
-                    query = query.Skip(options.GetLimitOffset().Value).Take(options.GetLimitRowcount().Value);
-                }
                 result.Items = query.ToList();
                 return result;
             }

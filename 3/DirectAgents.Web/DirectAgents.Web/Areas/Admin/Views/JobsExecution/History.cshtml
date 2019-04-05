@@ -1,8 +1,39 @@
 ﻿@using MVCGrid.Web
 
+<link href="~/Content/css/jobHistory.css" rel="stylesheet" />
 
 <h2>Job Execution History</h2>
 
-@Html.MVCGrid("UsageExample")
+<div class="well">
+    <div class="form-inline">
+        <div class="form-group">
+            <span class="filter-label">Date:</span>
+            <input type="text" class="form-control"
+                   data-mvcgrid-type="filter" data-mvcgrid-option="StartTime" />
+        </div>
+        <div class="form-group">
+            <span class="filter-label">CommandName:</span>
+            <input type="text" class="form-control"
+                   data-mvcgrid-type="filter" data-mvcgrid-option="CommandName" />
+        </div>
+        <div class="form-group">
+            <span class="filter-label">ParentJobId:</span>
+            <input type="number" class="form-control"
+                   data-mvcgrid-type="filter" data-mvcgrid-option="ParentJobId" />
+        </div>
+        <div class="form-group">
+            <span class="filter-label">Status:</span>
+            <select class="form-control" data-mvcgrid-type="filter" data-mvcgrid-option="Status">
+                <option value=""></option>
+                <option value="0">Processing</option>
+                <option value="1">Completed</option>
+                <option value="2">Failed</option>
+            </select>
+        </div>
+        <button type="button" class="btn btn-default" data-mvcgrid-apply-filter="click">Apply</button>
+    </div>
+</div>
+
+@Html.MVCGrid("JobHistory")
 
 <script src="~/Content/scripts/jobHistory.js"></script>

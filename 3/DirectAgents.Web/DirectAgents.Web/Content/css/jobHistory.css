@@ -1,0 +1,24 @@
+﻿code.json-code {
+    white-space: pre
+}
+
+td.json-cell.state > code {
+    color: #005f13;
+    background-color: #e5fbea;
+}
+
+td.json-cell.warnings > code {
+    color: #6b6409;
+    background-color: #f9f5c3;
+}
+
+td.json-cell.errors > code {
+    color: #710a0a;
+    background-color: #fbebeb;
+}
+
+span.filter-label {
+    font-size: 15px;
+    margin-right: 5px;
+    margin-left: 10px;
+}
