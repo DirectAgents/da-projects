@@ -10,6 +10,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         public static CommandExecutionContext Current;
 
         private JobRequest currentJobRequest;
+        private ConsoleCommand currentCommand;
 
         public JobExecutionDataWriter JobDataWriter { get; }
 
@@ -43,15 +44,18 @@ namespace CakeExtracter.Common.JobExecutionManagement
         public void CompleteRequestExecution()
         {
             JobDataWriter.SetCurrentTaskFinishedStatus();
+            JobRequestManager.CreateRequestsForScheduledCommands(currentCommand, currentJobRequest);
         }
 
         public void FailRequestExecution()
         {
             JobDataWriter.SetCurrentTaskFailedStatus();
+            JobRequestManager.CreateRequestsForScheduledCommands(currentCommand, currentJobRequest);
         }
 
         private void InitCurrentJobRequest(ConsoleCommand command, int? currentRequestId)
         {
+            currentCommand = command;
             currentJobRequest = currentRequestId.HasValue
                 ? JobRequestManager.GetJobRequest(currentRequestId.Value)
                 : JobRequestManager.AddJobRequest(command);

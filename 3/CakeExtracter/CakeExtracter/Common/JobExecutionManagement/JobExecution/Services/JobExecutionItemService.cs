@@ -24,7 +24,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
             var jobRequestExecutionItem = new JobRequestExecution
             {
                 Status = JobExecutionStatus.Processing,
-                JobRequestId = 2,//TODO rid of job request  hardcode value
+                JobRequestId = jobRequest.Id,
                 StartTime = DateTime.UtcNow
             };
             jobExecutionHistoryRepository.AddItem(jobRequestExecutionItem);

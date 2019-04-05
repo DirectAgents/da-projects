@@ -444,7 +444,9 @@
     <Compile Include="Common\JobExecutionManagement\JobExecution\Repositories\IJobExecutionItemRepository.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Repositories\JobExecutionItemRepository.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Utils\ExecutionLoggingUtils.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Exceptions\FailedEtlException.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\JobExecutionRequestManager.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Models\CommandWithSchedule.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Repositories\JobRequestRepository.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\CommandArgumentsConverter.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\ProcessManager.cs" />

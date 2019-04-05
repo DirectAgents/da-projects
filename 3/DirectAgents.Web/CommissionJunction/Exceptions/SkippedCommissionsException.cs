@@ -6,9 +6,16 @@ namespace CommissionJunction.Exceptions
     /// <summary>
     /// Exception for failed commission requests for a specific date range and account.
     /// </summary>
-    internal class SkippedCommissionsException :Exception
+    public class SkippedCommissionsException :Exception
     {
         private const string ExceptionMessage = "Commissions were not extracted from the API for the following arguments: ";
+        private const string DateFormat = "yyyy-MM-ddTHH:mm:ssZ";
+
+        public DateTime StartDate { get; set; }
+
+        public DateTime EndDate { get; set; }
+
+        public string AccountId { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -18,9 +25,13 @@ namespace CommissionJunction.Exceptions
         /// <param name="beforeTime">Commissions dates are less than this param.</param>
         /// <param name="accountId">Account id</param>
         /// <param name="exception">Source exception</param>
-        public SkippedCommissionsException(string sinceTime, string beforeTime, string accountId, Exception exception) : base(
-             ExceptionMessage + $"accountExternalId = {accountId}, sinceTime = {sinceTime}, beforeTime = {beforeTime}, exception - {exception.Message}")
+        public SkippedCommissionsException(DateTime sinceTime, DateTime beforeTime, string accountId, Exception exception) : base(
+            ExceptionMessage + $"accountExternalId = {accountId}, sinceTime = {sinceTime.ToString(DateFormat)}, " +
+            $"beforeTime = {beforeTime.ToString(DateFormat)}, exception - {exception.Message}")
         {
+            StartDate = sinceTime;
+            EndDate = beforeTime.AddDays(-1);
+            AccountId = accountId;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.CommissionJunctionLoaders;
 using CommissionJunction.Enums;
 using CommissionJunction.Utilities;
@@ -20,6 +21,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors
         private readonly CommissionJunctionAdvertiserCleaner cleaner;
         private readonly CommissionJunctionAdvertiserMapper mapper;
 
+        public event Action<FailedEtlException> ProcessFailedExtraction;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CommissionJunctionAdvertiserExtractor"/> class.
         /// </summary>
@@ -37,6 +40,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors
             this.account = account;
             this.cleaner = cleaner;
             mapper = new CommissionJunctionAdvertiserMapper();
+            ProcessFailedExtraction += exception => Logger.Error(account.Id, exception);
         }
 
         /// <summary>
@@ -61,7 +65,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors
             }
             catch (Exception e)
             {
-                Logger.Error(account.Id, e);
+                var exception = new FailedEtlException(fromDate, toDate, account.Id, e);
+                ProcessFailedExtraction?.Invoke(exception);
             }
         }
     }

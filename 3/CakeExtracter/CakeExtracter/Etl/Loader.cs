@@ -11,11 +11,14 @@ namespace CakeExtracter.Etl
 
         protected readonly int accountId;
 
-        public int BatchSize { get; set; }
         public int LoadedCount;
         public int ExtractedCount;
 
+        public event Action<Exception> ProcessEtlFailedWithoutInformation;
+
         private Extracter<T> extractor;
+
+        public int BatchSize { get; set; }
 
         protected Loader()
         {
@@ -27,6 +30,11 @@ namespace CakeExtracter.Etl
         {
             this.accountId = accountId;
             BatchSize = batchSize;
+            ProcessEtlFailedWithoutInformation += e =>
+            {
+                var exc = new Exception($"Exception in loader: {e}", e);
+                Logger.Error(exc);
+            };
         }
 
        public Thread Start(Extracter<T> source)
@@ -66,7 +74,7 @@ namespace CakeExtracter.Etl
             }
             catch (Exception e)
             {
-                Logger.Error(new Exception($"Exception in loader: {e}", e));
+                ProcessEtlFailedWithoutInformation?.Invoke(e);
             }
         }
 

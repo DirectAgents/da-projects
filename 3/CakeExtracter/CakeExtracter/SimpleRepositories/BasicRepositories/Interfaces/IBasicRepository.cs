@@ -1,4 +1,7 @@
-﻿namespace CakeExtracter.SimpleRepositories.BasicRepositories.Interfaces
+﻿using System;
+using System.Collections.Generic;
+
+namespace CakeExtracter.SimpleRepositories.BasicRepositories.Interfaces
 {
     /// <summary>
     /// The interface describes the behavior for working with certain entities of a repository.
@@ -13,12 +16,15 @@
         /// <returns>The item.</returns>
         T GetItem(int id);
 
+        T GetFirstItem(Func<T, bool> predicate);
+
         /// <summary>
         /// Adds a new entity to the repository.
         /// </summary>
         /// <param name="item">The entity to add.</param>
-        /// <returns>Added repository entity.</returns>
-        T AddItem(T item);
+        void AddItem(T item);
+
+        void AddItems(IEnumerable<T> items);
 
         /// <summary>
         /// Updates a repository entity.
