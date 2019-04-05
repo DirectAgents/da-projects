@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CakeExtracter.Bootstrappers;
+using CakeExtracter.Common;
 using CakeExtracter.Logging.Loggers;
-using CakeExtractor.SeleniumApplication.Commands;
+using CakeExtracter.Mef;
 using CakeExtractor.SeleniumApplication.Jobs;
 using Microsoft.Practices.EnterpriseLibrary.Common.Configuration;
 using Microsoft.Practices.EnterpriseLibrary.Logging;
@@ -12,41 +15,32 @@ namespace CakeExtractor.SeleniumApplication
 {
     internal class Program
     {
+        private readonly Composer<Program> composer;
+
+        [ImportMany]
+        private IEnumerable<IBootstrapper> bootstrappers;
+
+        [ImportMany]
+        private IEnumerable<ConsoleCommand> Commands;
+
+        private Program(string[] args)
+        {
+            composer = new Composer<Program>(this);
+            composer.Compose();
+            bootstrappers.ToList().ForEach(c => c.Run());
+            InitializeLogging(args[0]);
+        }
+
         static void Main(string[] args)
         {
-            InitializeEnterpriseLibrary();
-            InitializeLogging(args[0]);
             AutoMapperBootstrapper.CheckRunSetup();
-            var command = GetCommandFromCmdLineParams(args);
-            var executionProfileNumber = GetExecutionProfileNumberFromCmdLineParams(args);
-            command.PrepareCommandEnvironment(executionProfileNumber);
-            ScheduleJobsForCommand(command).Wait();
+            ScheduleJobsForCommandFromArgs(args).Wait();
             AlwaysSleep();
         }
 
-        private static BaseAmazonSeleniumCommand GetCommandFromCmdLineParams(string[] args)
+        private static async Task ScheduleJobsForCommandFromArgs(string[] args)
         {
-            var commandsConfig = args.Length > 0 ? args[0] : null;
-            var command = CommandsProvider.GetExecutionCommand(commandsConfig);
-            return command;
-        }
-
-        private static int? GetExecutionProfileNumberFromCmdLineParams(string[] args)
-        {
-            var executionProfileNumberConfigValue = args.Length >= 2 ? args[1] : null;
-            if (int.TryParse(executionProfileNumberConfigValue, out var configProfileNumber))
-            {
-                return configProfileNumber;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        private static async Task ScheduleJobsForCommand(BaseAmazonSeleniumCommand command)
-        {
-            await AmazonSeleniumCommandsJobScheduler.ConfigureJobSchedule(new List<BaseAmazonSeleniumCommand> { command });
+            await AmazonSeleniumCommandsJobScheduler.ConfigureJobSchedule(args, null);
         }
 
         private static void AlwaysSleep()
@@ -66,6 +60,7 @@ namespace CakeExtractor.SeleniumApplication
 
         private static void InitializeLogging(string jobName)
         {
+            InitializeEnterpriseLibrary();
             CakeExtracter.Logger.Instance = new EnterpriseLibraryLogger(jobName);
         }
     }

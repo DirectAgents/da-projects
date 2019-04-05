@@ -36,16 +36,23 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
             this.configurationManager = configurationManager;
             this.pageActions = pageActions;
             this.authorizationModel = authorizationModel;
-        }
-
-        public void PrepareExtractor()
-        {
             CreateApplicationFolders();
             reportDownloader = new VcdReportDownloader(pageActions, authorizationModel);
             reportParser = new VcdReportCSVParser();
             reportComposer = new VcdReportComposer();
             userInfoExtractor = new UserInfoExtracter();
+        }
+
+        public static bool IsInitialised
+        {
+            get;
+            private set;
+        }
+
+        public void PrepareExtractor()
+        {
             AmazonVcdLoginHelper.LoginToAmazonPortal(authorizationModel, pageActions);
+            IsInitialised = true;
         }
 
         public UserInfo ExtractAccountsInfo()

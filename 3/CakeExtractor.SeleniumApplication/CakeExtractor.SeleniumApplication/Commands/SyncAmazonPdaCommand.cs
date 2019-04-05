@@ -14,38 +14,42 @@ using Platform = DirectAgents.Domain.Entities.CPProg.Platform;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
-    internal class SyncAmazonPdaCommand : BaseAmazonSeleniumCommand
+    internal class SyncAmazonPdaCommand : ConsoleCommand
     {
         private readonly PdaCommandConfigurationManager configurationManager;
         
-        public SyncAmazonPdaCommand()
+        public SyncAmazonPdaCommand() : base()
         {
             configurationManager = new PdaCommandConfigurationManager();
         }
 
-        public override string CommandName => "SyncAmazonPdaCommand";
-
-        public override void PrepareCommandEnvironment(int? executionProfileNumber)
+        public override void ResetProperties()
         {
-            AmazonPdaExtractor.PrepareExtractor();
         }
 
-        public override void Run()
+        public override int Execute(string[] remainingArguments)
+        {
+            if (!AmazonPdaExtractor.IsInitialised)
+            {
+                AmazonPdaExtractor.PrepareExtractor();
+            }
+            RunEtl();
+            return 0;
+        }
+
+        private void RunEtl()
         {
             var statsType = new StatsTypeAgg(configurationManager.GetStatsTypeString());
             var dateRange = GetDateRange();
             var fromDatabase = configurationManager.GetFromDatabaseFlag();
             var fromRequest = configurationManager.GetFromRequestFlag();
-
             Logger.Info("Amazon ETL (PDA Campaigns). DateRange: {0}.", dateRange);
             AmazonPdaExtractor.SetAvailableProfileUrls();
-            
             var accounts = GetAccounts(configurationManager.GetAccountId(), configurationManager.GetDisabledOnlyFlag());
             foreach (var account in accounts)
             {
                 DoEtls(account, dateRange, statsType, fromDatabase, fromRequest);
             }
-
             Logger.Info("Amazon ETL (PDA Campaigns) has been finished.");
         }
 

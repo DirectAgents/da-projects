@@ -14,33 +14,48 @@ using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
-    internal class SyncAmazonVcdCommand : BaseAmazonSeleniumCommand
+    internal class SyncAmazonVcdCommand : ConsoleCommand
     {
+        public int ProfileNumber { get; set; }
+
         private AmazonVcdExtractor extractor;
         private VcdCommandConfigurationManager configurationManager;
         private VcdAccountsDataProvider accountsDataProvider;
-        private AmazonVcdPageActions pageActions;
         private AuthorizationModel authorizationModel;
+
+        private static AmazonVcdPageActions pageActions = new AmazonVcdPageActions();
 
         public SyncAmazonVcdCommand()
         {
+            HasOption<int>("p|profileNumber=", "Profile Number", c => ProfileNumber = c);
         }
 
-        public override string CommandName => "SyncAmazonVcdCommand";
-
-        public override void PrepareCommandEnvironment(int? executionProfileNumber)
+        public override void ResetProperties()
         {
-            VcdExecutionProfileManger.Current.SetExecutionProfileNumber(executionProfileNumber);
+            ProfileNumber = 0;
+        }
+
+        public override int Execute(string[] remainingArguments)
+        {
+            VcdExecutionProfileManger.Current.SetExecutionProfileNumber(ProfileNumber);
             InitializeAuthorizationModel();
             configurationManager = new VcdCommandConfigurationManager();
-            pageActions = new AmazonVcdPageActions();
             extractor = new AmazonVcdExtractor(configurationManager, pageActions, authorizationModel);
             accountsDataProvider = new VcdAccountsDataProvider();
-            extractor.PrepareExtractor();
+            if (pageActions == null)
+            {
+                pageActions = new AmazonVcdPageActions();
+            }
+            if (AmazonVcdExtractor.IsInitialised)
+            {
+                extractor.PrepareExtractor();
+            }
             AmazonVcdLoader.PrepareLoader();
+            return 0;
         }
 
-        public override void Run()
+
+        public void RunEtl()
         {
             pageActions.RefreshSalesDiagnosticPage(authorizationModel);
             var dateRanges = configurationManager.GetDateRangesToProcess();
