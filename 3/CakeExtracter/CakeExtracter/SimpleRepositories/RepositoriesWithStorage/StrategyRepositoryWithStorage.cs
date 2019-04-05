@@ -1,24 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using CakeExtracter.Helpers;
-using CakeExtracter.SimpleRepositories.Interfaces;
+using CakeExtracter.SimpleRepositories.RepositoriesWithStorage.Interfaces;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 
-namespace CakeExtracter.SimpleRepositories
+namespace CakeExtracter.SimpleRepositories.RepositoriesWithStorage
 {
-    class StrategyRepository : ISimpleRepository<Strategy>
+    /// <inheritdoc />
+    /// <summary>
+    /// The repository for working with Strategy objects in the database.
+    /// </summary>
+    internal class StrategyRepositoryWithStorage : IRepositoryWithStorage<Strategy, ClientPortalProgContext>
     {
-        public StrategyRepository(EntityIdStorage<Strategy> storage)
+        /// <summary>
+        /// Initializes a new instance of <see cref="StrategyRepositoryWithStorage"/>.
+        /// </summary>
+        /// <param name="storage">The storage for entity IDs.</param>
+        public StrategyRepositoryWithStorage(EntityIdStorage<Strategy> storage)
         {
             IdStorage = storage;
         }
 
+        /// <inheritdoc />
         public EntityIdStorage<Strategy> IdStorage { get; }
 
-        public List<Strategy> GetItems<TContext>(TContext db, Strategy itemToCompare) where TContext : DbContext, new()
+        /// <inheritdoc />
+        public List<Strategy> GetItems(ClientPortalProgContext db, Strategy itemToCompare)
         {
             IEnumerable<Strategy> strategiesInDb;
             if (string.IsNullOrWhiteSpace(itemToCompare.ExternalId))
@@ -34,7 +43,8 @@ namespace CakeExtracter.SimpleRepositories
             return strategiesInDb.ToList();
         }
 
-        public Strategy AddItem<TContext>(TContext db, Strategy sourceItem) where TContext : DbContext, new()
+        /// <inheritdoc />
+        public Strategy AddItem(ClientPortalProgContext db, Strategy sourceItem)
         {
             db.Set<Strategy>().Add(sourceItem);
             var numChanges = SafeContextWrapper.TrySaveChanges(db);
@@ -47,8 +57,8 @@ namespace CakeExtracter.SimpleRepositories
             return sourceItem;
         }
 
-        public int UpdateItem<TContext>(TContext db, Strategy sourceItem, Strategy targetItemInDb)
-            where TContext : DbContext, new()
+        /// <inheritdoc />
+        public int UpdateItem(ClientPortalProgContext db, Strategy sourceItem, Strategy targetItemInDb)
         {
             UpdateStrategy(sourceItem, targetItemInDb);
             var numChanges = SafeContextWrapper.TrySaveChanges(db);
@@ -56,6 +66,7 @@ namespace CakeExtracter.SimpleRepositories
             return numChanges;
         }
 
+        /// <inheritdoc />
         public void AddItems(IEnumerable<Strategy> items)
         {
             using (var db = new ClientPortalProgContext())
@@ -64,7 +75,8 @@ namespace CakeExtracter.SimpleRepositories
             }
         }
 
-        public void AddItems<TContext>(TContext db, IEnumerable<Strategy> items) where TContext : DbContext, new()
+        /// <inheritdoc />
+        public void AddItems(ClientPortalProgContext db, IEnumerable<Strategy> items)
         {
             throw new NotImplementedException();
         }

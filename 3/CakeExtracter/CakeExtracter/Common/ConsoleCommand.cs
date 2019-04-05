@@ -1,28 +1,32 @@
-﻿using CakeExtracter.Common.JobExecutionManagement;
-using DirectAgents.Domain.Entities.Administration.JobExecution;
+﻿using System;
+using CakeExtracter.Common.JobExecutionManagement;
 using System.Collections.Generic;
 using System.Reflection;
 
 namespace CakeExtracter.Common
 {
-    public abstract class ConsoleCommand : ManyConsole.ConsoleCommand
+    public abstract class ConsoleCommand : ManyConsole.ConsoleCommand, ICloneable
     {
-        private List<ConsoleCommand> commandsToRunBeforeThisCommand = new List<ConsoleCommand>();
+        public const string RequestIdArgumentName = "jobRequestId";
 
-        protected void RunBefore(ConsoleCommand consoleCommand)
+        private readonly List<ConsoleCommand> commandsToRunBeforeThisCommand = new List<ConsoleCommand>();
+
+        public int? RequestId { get; set; }
+
+        protected ConsoleCommand()
         {
-            this.commandsToRunBeforeThisCommand.Add(consoleCommand);
+            HasOption<int>($"{RequestIdArgumentName}=", "Job Request Id (default = null)", c => RequestId = c);
         }
 
         public int Run()
         {
-            return this.Run(null);
+            return Run(null);
         }
 
         public override int Run(string[] remainingArguments)
         {
-            string commandName = this.GetType().Name;
-            if (this.commandsToRunBeforeThisCommand.Count > 0)
+            var commandName = GetType().Name;
+            if (commandsToRunBeforeThisCommand.Count > 0)
             {
                 Logger.Info("{0} has prerequisites..", commandName);
                 foreach (var consoleCommand in this.commandsToRunBeforeThisCommand)
@@ -36,18 +40,7 @@ namespace CakeExtracter.Common
 
             using (new LogElapsedTime("for " + commandName))
             {
-                LogJobExecutionStartingInHistory();
-                try
-                {
-                    var retCode = Execute(remainingArguments);
-                    LogJobExecutionFinishTimeInHistory();
-                    return retCode;
-                }
-                catch
-                {
-                    LogJobExecutionFailedState();
-                    return 1;
-                }
+                return ExecuteJobWithContext(remainingArguments);
             }
         }
 
@@ -60,40 +53,46 @@ namespace CakeExtracter.Common
 
         public virtual IEnumerable<PropertyInfo> GetArgumentProperties()
         {
-            return this.GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
+            return GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
         }
 
         public virtual bool TrySetProperty(string propertyName, object propertyValue)
         {
-            var property = this.GetType().GetProperty(propertyName);
-            if (property != null)
+            var property = GetType().GetProperty(propertyName);
+            if (property == null)
             {
-                property.SetValue(this, propertyValue);
-                return true;
+                return false;
             }
-            return false;
+
+            property.SetValue(this, propertyValue);
+            return true;
         }
 
-        private void LogJobExecutionStartingInHistory()
+        public object Clone()
         {
-            var jobRequest = GetCurrentJobRequest();
-            CommandExecutionContext.Current.JobDataWriter.InitCurrentExecutionHistoryItem(jobRequest);
+            return MemberwiseClone();
         }
 
-        private void LogJobExecutionFinishTimeInHistory()
+        protected void RunBefore(ConsoleCommand consoleCommand)
         {
-            CommandExecutionContext.Current.JobDataWriter.SetCurrentTaskFinishedStatus();
+            commandsToRunBeforeThisCommand.Add(consoleCommand);
         }
 
-        private void LogJobExecutionFailedState()
+        private int ExecuteJobWithContext(string[] remainingArguments)
         {
-            CommandExecutionContext.Current.JobDataWriter.SetCurrentTaskFailedStatus();
-        }
-
-        private JobRequest GetCurrentJobRequest()
-        {
-            //ToDO: Implement initialization JobRequets from cmd params or creating job request for main job.
-            return null;
+            CommandExecutionContext.InitContext(this, RequestId);
+            CommandExecutionContext.Current.StartRequestExecution();
+            try
+            {
+                var retCode = Execute(remainingArguments);
+                CommandExecutionContext.Current.CompleteRequestExecution();
+                return retCode;
+            }
+            catch
+            {
+                CommandExecutionContext.Current.FailRequestExecution();
+                return 1;
+            }
         }
     }
 }

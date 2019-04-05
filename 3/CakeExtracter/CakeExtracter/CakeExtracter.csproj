@@ -444,6 +444,10 @@
     <Compile Include="Common\JobExecutionManagement\JobExecution\Repositories\IJobExecutionItemRepository.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Repositories\JobExecutionItemRepository.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Utils\ExecutionLoggingUtils.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\JobExecutionRequestManager.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Repositories\JobRequestRepository.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\CommandArgumentsConverter.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\ProcessManager.cs" />
     <Compile Include="Common\SqlScriptsExecutor.cs" />
     <Compile Include="Common\StorageCollection.cs" />
     <Compile Include="Common\TextUtils.cs" />
@@ -779,9 +783,12 @@
       <DependentUpon>SearchReportRuntimeTextTemplate.tt</DependentUpon>
     </Compile>
     <Compile Include="Reports\SimpleReportManager.cs" />
-    <Compile Include="SimpleRepositories\Interfaces\ISimpleRepository.cs" />
-    <Compile Include="SimpleRepositories\StrategyRepository.cs" />
-    <Compile Include="SimpleRepositories\TypeRepository.cs" />
+    <Compile Include="SimpleRepositories\BasicRepositories\BasicDatabaseRepository.cs" />
+    <Compile Include="SimpleRepositories\BasicRepositories\Interfaces\IBasicRepository.cs" />
+    <Compile Include="SimpleRepositories\RepositoriesContainer.cs" />
+    <Compile Include="SimpleRepositories\RepositoriesWithStorage\Interfaces\IRepositoryWithStorage.cs" />
+    <Compile Include="SimpleRepositories\RepositoriesWithStorage\StrategyRepositoryWithStorage.cs" />
+    <Compile Include="SimpleRepositories\RepositoriesWithStorage\TypeRepositoryWithStorage.cs" />
     <Compile Include="Data\UsersContext.cs" />
     <Compile Include="Common\RetryUtility.cs" />
   </ItemGroup>

@@ -1,29 +1,40 @@
-﻿using CakeExtracter.Helpers;
-using CakeExtracter.SimpleRepositories.Interfaces;
-using DirectAgents.Domain.Entities.CPProg;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using CakeExtracter.Helpers;
+using CakeExtracter.SimpleRepositories.RepositoriesWithStorage.Interfaces;
 using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.CPProg;
 
-namespace CakeExtracter.SimpleRepositories
+namespace CakeExtracter.SimpleRepositories.RepositoriesWithStorage
 {
-    public class TypeRepository : ISimpleRepository<EntityType>
+    /// <inheritdoc />
+    /// <summary>
+    /// The repository for working with Type objects in the database.
+    /// </summary>
+    public class TypeRepositoryWithStorage : IRepositoryWithStorage<EntityType, ClientPortalProgContext>
     {
-        public TypeRepository(EntityIdStorage<EntityType> storage)
+        /// <summary>
+        /// Initializes a new instance of <see cref="TypeRepositoryWithStorage"/>.
+        /// </summary>
+        /// <param name="storage">The storage for entity IDs.</param>
+        public TypeRepositoryWithStorage(EntityIdStorage<EntityType> storage)
         {
             IdStorage = storage;
         }
 
+        /// <inheritdoc />
         public EntityIdStorage<EntityType> IdStorage { get; }
 
-        public List<EntityType> GetItems<TContext>(TContext db, EntityType itemToCompare) where TContext : DbContext, new()
+        /// <inheritdoc />
+        public List<EntityType> GetItems(ClientPortalProgContext db, EntityType itemToCompare)
         {
             var items = db.Set<EntityType>().Where(x => x.Name == itemToCompare.Name);
             return items.ToList();
         }
 
-        public EntityType AddItem<TContext>(TContext db, EntityType sourceItem) where TContext : DbContext, new()
+        /// <inheritdoc />
+        public EntityType AddItem(ClientPortalProgContext db, EntityType sourceItem)
         {
             db.Set<EntityType>().Add(sourceItem);
             var numChanges = SafeContextWrapper.TrySaveChanges(db);
@@ -36,7 +47,8 @@ namespace CakeExtracter.SimpleRepositories
             return sourceItem;
         }
 
-        public int UpdateItem<TContext>(TContext db, EntityType sourceItem, EntityType targetItemInDb) where TContext : DbContext, new()
+        /// <inheritdoc />
+        public int UpdateItem(ClientPortalProgContext db, EntityType sourceItem, EntityType targetItemInDb)
         {
             targetItemInDb.Name = sourceItem.Name;
             var numChanges = SafeContextWrapper.TrySaveChanges(db);
@@ -48,6 +60,7 @@ namespace CakeExtracter.SimpleRepositories
             return numChanges;
         }
 
+        /// <inheritdoc />
         public void AddItems(IEnumerable<EntityType> items)
         {
             using (var db = new ClientPortalProgContext())
@@ -56,8 +69,8 @@ namespace CakeExtracter.SimpleRepositories
             }
         }
 
-        public void AddItems<TContext>(TContext db, IEnumerable<EntityType> items) 
-            where TContext : DbContext, new()
+        /// <inheritdoc />
+        public void AddItems(ClientPortalProgContext db, IEnumerable<EntityType> items)
         {
             var newTypes = new List<EntityType>();
 

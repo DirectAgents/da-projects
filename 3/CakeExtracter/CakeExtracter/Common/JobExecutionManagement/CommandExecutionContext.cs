@@ -1,36 +1,60 @@
 ﻿using CakeExtracter.Common.JobExecutionManagement.JobExecution;
 using System;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests;
+using DirectAgents.Domain.Entities.Administration.JobExecution;
 
 namespace CakeExtracter.Common.JobExecutionManagement
 {
-    public class CommandExecutionContext
+    internal class CommandExecutionContext
     {
-        public JobExecutionDataWriter JobDataWriter
-        {
-            get;
-            private set;
-        }
+        public static CommandExecutionContext Current;
 
-        private CommandExecutionContext()
+        private JobRequest currentJobRequest;
+
+        public JobExecutionDataWriter JobDataWriter { get; }
+
+        public JobExecutionRequestManager JobRequestManager { get; }
+
+        private CommandExecutionContext(ConsoleCommand command, int? currentRequestId)
         {
             var executionItemRepository = new JobExecutionItemRepository();
             var executionItemService = new JobExecutionItemService(executionItemRepository);
-            this.JobDataWriter = new JobExecutionDataWriter(executionItemService);
+            JobDataWriter = new JobExecutionDataWriter(executionItemService);
+            JobRequestManager = new JobExecutionRequestManager(command);
+            InitCurrentJobRequest(command, currentRequestId);
         }
 
-        public static CommandExecutionContext Current;
-        
-        public static void InitContext()
+        public static void InitContext(ConsoleCommand command, int? currentRequestId)
         {
             if (Current != null)
             {
-                throw new Exception("Execution context already initialised.");
+                throw new Exception("Execution context already initialized.");
             }
-            else
-            {
-                Current = new CommandExecutionContext();
-            }
-            
+
+            Current = new CommandExecutionContext(command, currentRequestId);
+        }
+
+        public void StartRequestExecution()
+        {
+            JobRequestManager.MarkJobRequestAsProcessing(currentJobRequest);
+            JobDataWriter.InitCurrentExecutionHistoryItem(currentJobRequest);
+        }
+
+        public void CompleteRequestExecution()
+        {
+            JobDataWriter.SetCurrentTaskFinishedStatus();
+        }
+
+        public void FailRequestExecution()
+        {
+            JobDataWriter.SetCurrentTaskFailedStatus();
+        }
+
+        private void InitCurrentJobRequest(ConsoleCommand command, int? currentRequestId)
+        {
+            currentJobRequest = currentRequestId.HasValue
+                ? JobRequestManager.GetJobRequest(currentRequestId.Value)
+                : JobRequestManager.AddJobRequest(command);
         }
     }
 }
