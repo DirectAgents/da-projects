@@ -60,8 +60,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            var payload = _yamUtility.CreateReportRequestPayload(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId, byPixelParameter: true);
-            var reportUrl = _yamUtility.GenerateReport(payload);
+            var reportUrl = _yamUtility.TryGenerateReport(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId,
+                byPixelParameter: true);
 
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
@@ -113,8 +113,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            var payload = _yamUtility.CreateReportRequestPayload(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId, byPixelParameter: true, byLine: true);
-            var reportUrl = _yamUtility.GenerateReport(payload);
+            var reportUrl = _yamUtility.TryGenerateReport(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId,
+                byPixelParameter: true, byLine: true);
 
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
@@ -124,6 +124,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 var items = EnumerateRows(yamRows);
                 Add(items);
             }
+
             End();
         }
 

@@ -83,8 +83,9 @@ namespace CakeExtracter.Common
                 CommandExecutionContext.Current.CompleteRequestExecution();
                 return retCode;
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.Error(ex);
                 CommandExecutionContext.Current.FailedRequestExecution();
                 return 1;
             }
