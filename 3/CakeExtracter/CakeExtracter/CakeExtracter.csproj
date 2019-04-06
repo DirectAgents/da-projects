@@ -567,8 +567,6 @@
     <Compile Include="Commands\DA\DASynchOffers.cs" />
     <Compile Include="Commands\DA\DASynchTDDailySummaries.cs" />
     <Compile Include="Commands\PrintItCommand.cs" />
-    <Compile Include="Commands\ScheduledCommand.cs" />
-    <Compile Include="Commands\ScheduledJob.cs" />
     <Compile Include="Commands\SendAutomatedReportsCommand.cs" />
     <Compile Include="Commands\SendSimpleReportsCommand.cs" />
     <Compile Include="Commands\SynchAdvertisersCommand.cs" />

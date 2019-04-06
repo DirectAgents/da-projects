@@ -11,10 +11,12 @@ using CakeExtractor.SeleniumApplication.Synchers;
 using System;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
+using System.ComponentModel.Composition;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
-    internal class SyncAmazonVcdCommand : ConsoleCommand
+    [Export(typeof(ConsoleCommand))]
+    public class SyncAmazonVcdCommand : ConsoleCommand
     {
         public int ProfileNumber { get; set; }
 
@@ -23,10 +25,11 @@ namespace CakeExtractor.SeleniumApplication.Commands
         private VcdAccountsDataProvider accountsDataProvider;
         private AuthorizationModel authorizationModel;
 
-        private static AmazonVcdPageActions pageActions = new AmazonVcdPageActions();
+        private static AmazonVcdPageActions pageActions;
 
         public SyncAmazonVcdCommand()
         {
+            IsCommand("SyncAmazonVcdCommand", "Sync VCD Stats");
             HasOption<int>("p|profileNumber=", "Profile Number", c => ProfileNumber = c);
         }
 
@@ -53,7 +56,6 @@ namespace CakeExtractor.SeleniumApplication.Commands
             AmazonVcdLoader.PrepareLoader();
             return 0;
         }
-
 
         public void RunEtl()
         {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading;
@@ -7,9 +8,8 @@ using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Logging.Loggers;
 using CakeExtracter.Mef;
+using CakeExtractor.SeleniumApplication.Commands;
 using CakeExtractor.SeleniumApplication.Jobs;
-using Microsoft.Practices.EnterpriseLibrary.Common.Configuration;
-using Microsoft.Practices.EnterpriseLibrary.Logging;
 
 namespace CakeExtractor.SeleniumApplication
 {
@@ -20,27 +20,28 @@ namespace CakeExtractor.SeleniumApplication
         [ImportMany]
         private IEnumerable<IBootstrapper> bootstrappers;
 
-        [ImportMany]
-        private IEnumerable<ConsoleCommand> Commands;
-
         private Program(string[] args)
         {
             composer = new Composer<Program>(this);
             composer.Compose();
             bootstrappers.ToList().ForEach(c => c.Run());
-            InitializeLogging(args[0]);
+            CakeExtracter.Logger.Instance = new EnterpriseLibraryLogger(args[0]);
         }
 
+        private async Task Run(string[] args)
+        {
+            await AmazonSeleniumCommandsJobScheduler.ConfigureJobSchedule(args, new List<ConsoleCommand> {
+                new SyncAmazonPdaCommand(),
+                new SyncAmazonVcdCommand()
+            });
+        }
+
+        [STAThread]
         static void Main(string[] args)
         {
-            AutoMapperBootstrapper.CheckRunSetup();
-            ScheduleJobsForCommandFromArgs(args).Wait();
+            var program = new Program(args);
+            program.Run(args).Wait();
             AlwaysSleep();
-        }
-
-        private static async Task ScheduleJobsForCommandFromArgs(string[] args)
-        {
-            await AmazonSeleniumCommandsJobScheduler.ConfigureJobSchedule(args, null);
         }
 
         private static void AlwaysSleep()
@@ -49,19 +50,6 @@ namespace CakeExtractor.SeleniumApplication
             {
                 Thread.Sleep(int.MaxValue);
             }
-        }
-
-        private static void InitializeEnterpriseLibrary()
-        {
-            var configurationSource = ConfigurationSourceFactory.Create();
-            var logWriterFactory = new LogWriterFactory(configurationSource);
-            Logger.SetLogWriter(logWriterFactory.Create());
-        }
-
-        private static void InitializeLogging(string jobName)
-        {
-            InitializeEnterpriseLibrary();
-            CakeExtracter.Logger.Instance = new EnterpriseLibraryLogger(jobName);
         }
     }
 }

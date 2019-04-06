@@ -11,15 +11,18 @@ using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
 using CakeExtractor.SeleniumApplication.Configuration.Pda;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors;
 using Platform = DirectAgents.Domain.Entities.CPProg.Platform;
+using System.ComponentModel.Composition;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
-    internal class SyncAmazonPdaCommand : ConsoleCommand
+    [Export(typeof(ConsoleCommand))]
+    public class SyncAmazonPdaCommand : ConsoleCommand
     {
         private readonly PdaCommandConfigurationManager configurationManager;
         
         public SyncAmazonPdaCommand() : base()
         {
+            IsCommand("SyncAmazonPdaCommand", "Sync Amazon PDA Stats");
             configurationManager = new PdaCommandConfigurationManager();
         }
 
