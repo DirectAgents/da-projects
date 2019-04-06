@@ -5,14 +5,13 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
 {
     internal static class ProcessManager
     {
-        public static void StartConsoleApplicationInNewProcess(string arguments)
+        public static void RestartApplicationInNewProcess(string arguments)
         {
-            var location = GetConsoleApplicationLocation();
+            var location = GetApplicationEntryFileLocation();
             StartNewProcess(location, arguments);
         }
-
-        //TODO: what to do if the entry assembly is a web application and is not a console? 
-        private static string GetConsoleApplicationLocation()
+        
+        private static string GetApplicationEntryFileLocation()
         {
             var location = Assembly.GetEntryAssembly().Location;
             return location;
@@ -23,7 +22,8 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
             var startInfo = new ProcessStartInfo
             {
                 FileName = exeLocation,
-                Arguments = exeArguments
+                Arguments = exeArguments,
+                WindowStyle = ProcessWindowStyle.Hidden
             };
             Process.Start(startInfo);
         }

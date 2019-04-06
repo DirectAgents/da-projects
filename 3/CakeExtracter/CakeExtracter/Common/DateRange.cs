@@ -29,6 +29,18 @@ namespace CakeExtracter.Common
             return date >= FromDate && date <= ToDate;
         }
 
+        public bool IsCrossDateRange(DateRange dateRange)
+        {
+            return IsInRange(dateRange.FromDate) || IsInRange(dateRange.ToDate);
+        }
+
+        public DateRange MergeDateRange(DateRange dateRange)
+        {
+            var fromDate = FromDate < dateRange.FromDate ? FromDate : dateRange.FromDate;
+            var toDate = ToDate > dateRange.ToDate ? ToDate : dateRange.ToDate;
+            return new DateRange(fromDate, toDate);
+        }
+
         //public DateRange(DateTime fromDate, DateTime toDate, Func<DateTime, DateTime> step)
         //    : this(fromDate, toDate)
         //{

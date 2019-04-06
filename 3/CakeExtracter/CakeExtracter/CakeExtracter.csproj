@@ -417,6 +417,7 @@
     <Compile Include="Commands\DA\DASynchAdrollAds.cs" />
     <Compile Include="Commands\DA\DASynchDBMStatsOld.cs" />
     <Compile Include="Commands\RT\RTSynchTest.cs" />
+    <Compile Include="Commands\ScheduledRequestsLauncherCommand.cs" />
     <Compile Include="Commands\Search\CopySearchDailySummariesCommand.cs" />
     <Compile Include="Commands\Search\SynchSearchDailySummariesAppleCommand.cs" />
     <Compile Include="Commands\Test\TestABCommand.cs" />
@@ -444,7 +445,9 @@
     <Compile Include="Common\JobExecutionManagement\JobExecution\Repositories\IJobExecutionItemRepository.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Repositories\JobExecutionItemRepository.cs" />
     <Compile Include="Common\JobExecutionManagement\JobExecution\Utils\ExecutionLoggingUtils.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Exceptions\FailedEtlException.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\JobExecutionRequestManager.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Models\CommandWithSchedule.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Repositories\JobRequestRepository.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\CommandArgumentsConverter.cs" />
     <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\ProcessManager.cs" />

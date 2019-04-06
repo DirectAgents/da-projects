@@ -5,7 +5,6 @@ using System.Linq;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
 using CakeExtracter.Mef;
-using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Logging.Loggers;
 
 namespace CakeExtracter

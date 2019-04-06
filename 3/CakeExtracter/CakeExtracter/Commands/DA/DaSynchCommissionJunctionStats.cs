@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Exceptions;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 using CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.CommissionJunctionLoaders;
 using CakeExtracter.Helpers;
 using CommissionJunction.Enums;
+using CommissionJunction.Exceptions;
 using CommissionJunction.Utilities;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
@@ -43,6 +47,8 @@ namespace CakeExtracter.Commands.DA
         /// used if StartDate not specified (default = 31)
         /// </summary>
         public int? DaysAgoToStart { get; set; }
+
+        public override int IntervalBetweenUnsuccessfulAndNewRequestInMinutes { get; set; }
 
         /// <summary>
         /// The constructor sets a command name and command arguments names, provides a description for them.
@@ -89,18 +95,25 @@ namespace CakeExtracter.Commands.DA
             return 0;
         }
 
-        private void SetConfigurationVariables()
+        public override IEnumerable<CommandWithSchedule> GetUniqueBroadCommands(
+            IEnumerable<CommandWithSchedule> commands)
         {
-            lockingDateRangeAccountsExternalIds = ConfigurationHelper.ExtractEnumerableFromConfig("CJLockingDateRangeAccountsExternalIds");
-            postingDateRangeAccountsExternalIds = ConfigurationHelper.ExtractEnumerableFromConfig("CJPostingDateRangeAccountsExternalIds");
+            var broadCommands = new List<CommandWithSchedule>();
+            var commandsGroupedByAccount = commands.GroupBy(x => (x.Command as DaSynchCommissionJunctionStats)?.AccountId);
+            foreach (var commandsGroup in commandsGroupedByAccount)
+            {
+                var accountBroadCommands = GetUniqueBroadAccountCommands(commandsGroup);
+                broadCommands.AddRange(accountBroadCommands);
+            }
+
+            return broadCommands;
         }
 
-        private CjUtility CreateUtility(ExtAccount account)
+        private void SetConfigurationVariables()
         {
-            var utility = new CjUtility(message => Logger.Info(account.Id, message),
-                exc => Logger.Error(account.Id, exc), message => Logger.Warn(account.Id, message));
-            utility.SetWhichAlt(account.ExternalId);
-            return utility;
+            IntervalBetweenUnsuccessfulAndNewRequestInMinutes = int.Parse(ConfigurationManager.AppSettings["CJIntervalBetweenRequestsInMinutes"]);
+            lockingDateRangeAccountsExternalIds = ConfigurationHelper.ExtractEnumerableFromConfig("CJLockingDateRangeAccountsExternalIds");
+            postingDateRangeAccountsExternalIds = ConfigurationHelper.ExtractEnumerableFromConfig("CJPostingDateRangeAccountsExternalIds");
         }
 
         private DateRangeType GetDateRangeType(ExtAccount account)
@@ -110,14 +123,6 @@ namespace CakeExtracter.Commands.DA
                 : postingDateRangeAccountsExternalIds.Contains(account.ExternalId)
                     ? DateRangeType.Posting
                     : DateRangeType.Event;
-        }
-
-        private void DoEtls(CjUtility utility, DateRangeType dateRangeType, DateRange dateRange, ExtAccount account)
-        {
-            var cleaner = new CommissionJunctionAdvertiserCleaner();
-            var extractor = new CommissionJunctionAdvertiserExtractor(utility, cleaner, dateRangeType, dateRange, account);
-            var loader = new CommissionJunctionAdvertiserLoader(account.Id);
-            CommandHelper.DoEtl(extractor, loader);
         }
 
         private IEnumerable<ExtAccount> GetAccounts()
@@ -130,6 +135,98 @@ namespace CakeExtracter.Commands.DA
             }
             var account = repository.GetAccount(AccountId.Value);
             return new[] { account };
+        }
+
+        private CjUtility CreateUtility(ExtAccount account)
+        {
+            var utility = new CjUtility(message => Logger.Info(account.Id, message),
+                exc => Logger.Error(account.Id, exc), message => Logger.Warn(account.Id, message));
+            utility.SetWhichAlt(account.ExternalId);
+            InitUtilityEvents(utility);
+            return utility;
+        }
+
+        private void DoEtls(CjUtility utility, DateRangeType dateRangeType, DateRange dateRange, ExtAccount account)
+        {
+            var cleaner = new CommissionJunctionAdvertiserCleaner();
+            var extractor = new CommissionJunctionAdvertiserExtractor(utility, cleaner, dateRangeType, dateRange, account);
+            var loader = new CommissionJunctionAdvertiserLoader(account.Id);
+            InitEtlEvents(extractor, loader);
+            CommandHelper.DoEtl(extractor, loader);
+        }
+
+        private void InitUtilityEvents(CjUtility utility)
+        {
+            utility.ProcessSkippedCommissions += exception =>
+                ScheduleNewJobRequest<DaSynchCommissionJunctionStats>(command =>
+                    UpdateCommandParameters(command, exception));
+        }
+
+        private void InitEtlEvents(CommissionJunctionAdvertiserExtractor extractor, CommissionJunctionAdvertiserLoader loader)
+        {
+            extractor.ProcessFailedExtraction += exception =>
+                ScheduleNewJobRequest<DaSynchCommissionJunctionStats>(command =>
+                    UpdateCommandParameters(command, exception));
+            extractor.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewJobRequest<DaSynchCommissionJunctionStats>(command =>
+                    UpdateCommandParameters(command, exception));
+            loader.ProcessEtlFailedWithoutInformation += exception =>
+                ScheduleNewJobRequest<DaSynchCommissionJunctionStats>(command =>
+                    UpdateCommandParameters(command, exception));
+        }
+
+        private void UpdateCommandParameters(DaSynchCommissionJunctionStats command, SkippedCommissionsException exception)
+        {
+            command.StartDate = exception.StartDate;
+            command.EndDate = exception.EndDate;
+            var repository = new PlatformAccountRepository();
+            var dbAccount = repository.GetAccountByExternalId(exception.AccountId, Platform.Code_CJ);
+            command.AccountId = dbAccount.Id;
+        }
+
+        private void UpdateCommandParameters(DaSynchCommissionJunctionStats command, FailedEtlException exception)
+        {
+            command.StartDate = exception.StartDate;
+            command.EndDate = exception.EndDate;
+            command.AccountId = exception.AccountId;
+        }
+
+        private void UpdateCommandParameters(DaSynchCommissionJunctionStats command, Exception exception)
+        {
+        }
+
+        private List<CommandWithSchedule> GetUniqueBroadAccountCommands(IEnumerable<CommandWithSchedule> commandsWithSchedule)
+        {
+            var accountCommands = new List<Tuple<DaSynchCommissionJunctionStats, DateRange, CommandWithSchedule>>();
+            foreach (var commandWithSchedule in commandsWithSchedule)
+            {
+                var command = (DaSynchCommissionJunctionStats) commandWithSchedule.Command;
+                var commandDateRange = CommandHelper.GetDateRange(command.StartDate, command.EndDate, command.DaysAgoToStart, DefaultDaysAgo);
+                var crossCommands = accountCommands.Where(x => commandDateRange.IsCrossDateRange(x.Item2)).ToList();
+                foreach (var crossCommand in crossCommands)
+                {
+                    commandDateRange = commandDateRange.MergeDateRange(crossCommand.Item2);
+                    commandWithSchedule.ScheduledTime =
+                        crossCommand.Item3.ScheduledTime > commandWithSchedule.ScheduledTime
+                            ? crossCommand.Item3.ScheduledTime
+                            : commandWithSchedule.ScheduledTime;
+                    accountCommands.Remove(crossCommand);
+                }
+
+                accountCommands.Add(new Tuple<DaSynchCommissionJunctionStats, DateRange, CommandWithSchedule>(command, commandDateRange, commandWithSchedule));
+            }
+
+            var broadCommands = accountCommands.Select(GetCommandWithCorrectDateRange).ToList();
+            return broadCommands;
+        }
+
+        private CommandWithSchedule GetCommandWithCorrectDateRange(Tuple<DaSynchCommissionJunctionStats, DateRange, CommandWithSchedule> setting)
+        {
+            setting.Item1.StartDate = setting.Item2.FromDate;
+            setting.Item1.EndDate = setting.Item2.ToDate;
+            setting.Item1.DaysAgoToStart = null;
+            setting.Item3.Command = setting.Item1;
+            return setting.Item3;
         }
     }
 }

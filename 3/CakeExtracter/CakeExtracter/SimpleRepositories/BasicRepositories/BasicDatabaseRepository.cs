@@ -1,4 +1,7 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 using CakeExtracter.Helpers;
 using CakeExtracter.SimpleRepositories.BasicRepositories.Interfaces;
 
@@ -48,11 +51,35 @@ namespace CakeExtracter.SimpleRepositories.BasicRepositories
         }
 
         /// <inheritdoc />
-        public T AddItem(T item)
+        public T GetFirstItem(Func<T, bool> predicate)
+        {
+            T item = null;
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => item = GetFirstItem(dbContext, predicate), locker,
+                $"Getting first {typeof(T).Name} database item");
+            return item;
+        }
+
+        /// <inheritdoc />
+        public List<T> GetItems(Func<T, bool> predicate)
+        {
+            List<T> items = null;
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => items = GetItems(dbContext, predicate).ToList(), locker,
+                $"Getting {typeof(T).Name} database items");
+            return items;
+        }
+
+        /// <inheritdoc />
+        public void AddItem(T item)
         {
             SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => AddItem(dbContext, item), locker,
                 $"Inserting {typeof(T).Name} database item.");
-            return item;
+        }
+
+        /// <inheritdoc />
+        public void AddItems(IEnumerable<T> items)
+        {
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => AddItems(dbContext, items), locker,
+                $"Inserting {typeof(T).Name} database items.");
         }
 
         /// <inheritdoc />
@@ -67,11 +94,25 @@ namespace CakeExtracter.SimpleRepositories.BasicRepositories
             return dbContext.Set<T>().Find(keys);
         }
 
-        private T AddItem(TContext dbContext, T item)
+        private T GetFirstItem(TContext dbContext, Func<T, bool> predicate)
+        {
+            return dbContext.Set<T>().FirstOrDefault(predicate);
+        }
+
+        private IEnumerable<T> GetItems(TContext dbContext, Func<T, bool> predicate)
+        {
+            return dbContext.Set<T>().Where(predicate);
+        }
+
+        private void AddItem(TContext dbContext, T item)
         {
             dbContext.Set<T>().Add(item);
             dbContext.SaveChanges();
-            return item;
+        }
+
+        private void AddItems(TContext dbContext, IEnumerable<T> items)
+        {
+            dbContext.BulkInsert(items);
         }
 
         private void UpdateItem(TContext dbContext, T itemToUpdate)

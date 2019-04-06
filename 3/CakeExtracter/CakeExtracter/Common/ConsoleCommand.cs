@@ -2,14 +2,17 @@
 using CakeExtracter.Common.JobExecutionManagement;
 using System.Collections.Generic;
 using System.Reflection;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 
 namespace CakeExtracter.Common
 {
-    public abstract class ConsoleCommand : ManyConsole.ConsoleCommand, ICloneable
+    public abstract class ConsoleCommand : ManyConsole.ConsoleCommand
     {
         public const string RequestIdArgumentName = "jobRequestId";
 
         private readonly List<ConsoleCommand> commandsToRunBeforeThisCommand = new List<ConsoleCommand>();
+
+        public virtual int IntervalBetweenUnsuccessfulAndNewRequestInMinutes { get; set; } = 0;
 
         public int? RequestId { get; set; }
 
@@ -66,9 +69,22 @@ namespace CakeExtracter.Common
             return true;
         }
 
-        public object Clone()
+        public virtual IEnumerable<CommandWithSchedule> GetUniqueBroadCommands( IEnumerable<CommandWithSchedule> commands)
         {
-            return MemberwiseClone();
+            return commands;
+        }
+
+        protected void ScheduleNewJobRequest<T>(Action<T> changeCurrentCommand)
+            where T : ConsoleCommand
+        {
+            var command = (T) MemberwiseClone();
+            changeCurrentCommand(command);
+            var scheduledCommand = new CommandWithSchedule
+            {
+                Command = command,
+                ScheduledTime = DateTime.Now.AddMinutes(IntervalBetweenUnsuccessfulAndNewRequestInMinutes)
+            };
+            CommandExecutionContext.Current.JobRequestManager.ScheduleCommand(scheduledCommand);
         }
 
         protected void RunBefore(ConsoleCommand consoleCommand)
@@ -78,7 +94,7 @@ namespace CakeExtracter.Common
 
         private int ExecuteJobWithContext(string[] remainingArguments)
         {
-            CommandExecutionContext.InitContext(this, RequestId);
+            CommandExecutionContext.InitContext(this);
             CommandExecutionContext.Current.StartRequestExecution();
             try
             {

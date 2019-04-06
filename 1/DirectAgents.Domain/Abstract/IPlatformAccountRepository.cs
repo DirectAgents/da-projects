@@ -16,6 +16,14 @@ namespace DirectAgents.Domain.Abstract
         ExtAccount GetAccount(int accountId);
 
         /// <summary>
+        /// The method returns an account from repository by External ID and platform.
+        /// </summary>
+        /// <param name="externalId">Account external ID</param>
+        /// <param name="platformCode">Code of target platform</param>
+        /// <returns>Account with filled basic properties</returns>
+        ExtAccount GetAccountByExternalId(string externalId, string platformCode);
+
+        /// <summary>
         /// The method returns an account from repository by ID
         /// </summary>
         /// <param name="accountId">Account ID to retrieve</param>
