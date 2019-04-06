@@ -54,7 +54,7 @@ namespace CakeExtractor.SeleniumApplication.Jobs
 
         private static TimeSpan GetInterval(JobScheduleModel scheduling)
         {
-            var interval = new TimeSpan(0, 0, 1, 0);
+            var interval = new TimeSpan(scheduling.DaysInterval, 0, 0, 0);
             return interval;
         }
     }

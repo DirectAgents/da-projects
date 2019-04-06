@@ -1,6 +1,8 @@
 ﻿using CakeExtracter;
 using CakeExtractor.SeleniumApplication.Configuration.Models;
+using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD;
+using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.UserInfoExtracting;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Entities.CPProg;
 using System;
@@ -31,12 +33,13 @@ namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
         /// </summary>
         /// <param name="extractor">The extractor.</param>
         /// <returns>Account info collection.</returns>
-        public List<AccountInfo> GetAccountsDataToProcess(AmazonVcdExtractor extractor)
+        public List<AccountInfo> GetAccountsDataToProcess(AmazonVcdPageActions pageActions)
         {
             try
             {
                 var dbAccounts = GetDbAccountsToProcess();
-                var pageAccountsInfo = extractor.ExtractAccountsInfo();
+                var userInfoExtractor = new UserInfoExtracter();
+                var pageAccountsInfo = userInfoExtractor.ExtractUserInfo(pageActions);
                 var accountsInfo = new List<AccountInfo>();
                 dbAccounts.ForEach(dbAccount =>
                 {
