@@ -25,12 +25,8 @@ namespace CakeExtracter.Common.JobExecutionManagement
             InitCurrentJobRequest(command);
         }
 
-        public static void InitContext(ConsoleCommand command)
+        public static void ResetContext(ConsoleCommand command)
         {
-            if (Current != null)
-            {
-                throw new Exception("Execution context already initialized.");
-            }
             Current = new CommandExecutionContext(command);
         }
 
@@ -46,7 +42,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
             JobRequestManager.CreateRequestsForScheduledCommands(currentCommand, currentJobRequest);
         }
 
-        public void FailRequestExecution()
+        public void FailedRequestExecution()
         {
             JobDataWriter.SetCurrentTaskFailedStatus();
             var scheduledTime = DateTime.Now.AddMinutes(currentCommand.IntervalBetweenUnsuccessfulAndNewRequestInMinutes);

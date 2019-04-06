@@ -41,19 +41,20 @@ namespace CakeExtractor.SeleniumApplication.Commands
         public override int Execute(string[] remainingArguments)
         {
             VcdExecutionProfileManger.Current.SetExecutionProfileNumber(ProfileNumber);
-            InitializeAuthorizationModel();
-            configurationManager = new VcdCommandConfigurationManager();
-            extractor = new AmazonVcdExtractor(configurationManager, pageActions, authorizationModel);
-            accountsDataProvider = new VcdAccountsDataProvider();
             if (pageActions == null)
             {
                 pageActions = new AmazonVcdPageActions();
             }
-            if (AmazonVcdExtractor.IsInitialised)
+            configurationManager = new VcdCommandConfigurationManager();
+            InitializeAuthorizationModel();
+            extractor = new AmazonVcdExtractor(configurationManager, pageActions, authorizationModel);
+            accountsDataProvider = new VcdAccountsDataProvider();
+            if (!AmazonVcdExtractor.IsInitialised)
             {
                 extractor.PrepareExtractor();
             }
             AmazonVcdLoader.PrepareLoader();
+            RunEtl();
             return 0;
         }
 

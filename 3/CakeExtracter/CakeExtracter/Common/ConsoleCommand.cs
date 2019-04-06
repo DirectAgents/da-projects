@@ -10,8 +10,6 @@ namespace CakeExtracter.Common
     {
         public const string RequestIdArgumentName = "jobRequestId";
 
-        private readonly List<ConsoleCommand> commandsToRunBeforeThisCommand = new List<ConsoleCommand>();
-
         public virtual int IntervalBetweenUnsuccessfulAndNewRequestInMinutes { get; set; } = 0;
 
         public int? RequestId { get; set; }
@@ -29,15 +27,6 @@ namespace CakeExtracter.Common
         public override int Run(string[] remainingArguments)
         {
             var commandName = GetType().Name;
-            if (commandsToRunBeforeThisCommand.Count > 0)
-            {
-                Logger.Info("{0} has prerequisites..", commandName);
-                foreach (var consoleCommand in this.commandsToRunBeforeThisCommand)
-                {
-                    consoleCommand.Run(null);
-                }
-                Logger.Info("Completed prerequisites for {0}", commandName);
-            }
             Logger.Info("Executing command: {0}", commandName);
             using (new LogElapsedTime("for " + commandName))
             {
@@ -45,9 +34,6 @@ namespace CakeExtracter.Common
             }
         }
 
-        //Note: I believe this is only called by the LineCommander before a command is run (because the Command object is not re-instantiated).
-        //      When a Command is first instantiated, we rely on default property values (e.g. 0 for int).
-        //TODO?: Call this from the Run() method - so it always sets the default properties
         public abstract void ResetProperties();
 
         public abstract int Execute(string[] remainingArguments);
@@ -87,14 +73,9 @@ namespace CakeExtracter.Common
             CommandExecutionContext.Current.JobRequestManager.ScheduleCommand(scheduledCommand);
         }
 
-        protected void RunBefore(ConsoleCommand consoleCommand)
-        {
-            commandsToRunBeforeThisCommand.Add(consoleCommand);
-        }
-
         private int ExecuteJobWithContext(string[] remainingArguments)
         {
-            CommandExecutionContext.InitContext(this);
+            CommandExecutionContext.ResetContext(this);
             CommandExecutionContext.Current.StartRequestExecution();
             try
             {
@@ -104,7 +85,7 @@ namespace CakeExtracter.Common
             }
             catch
             {
-                CommandExecutionContext.Current.FailRequestExecution();
+                CommandExecutionContext.Current.FailedRequestExecution();
                 return 1;
             }
         }

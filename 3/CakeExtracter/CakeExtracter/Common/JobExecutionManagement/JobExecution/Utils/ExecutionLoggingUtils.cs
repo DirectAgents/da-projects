@@ -5,8 +5,18 @@ using System.Linq;
 
 namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils
 {
+    /// <summary>
+    /// Job execution history logging utils.
+    /// </summary>
     public static class ExecutionLoggingUtils
     {
+        /// <summary>
+        /// Adds the message to log data with account specification.
+        /// </summary>
+        /// <param name="sourceMessagesText">The source messages text.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="accountId">The account identifier.</param>
+        /// <returns></returns>
         public static string AddAccountMessageToLogData(string sourceMessagesText, string message, int accountId)
         {
             var messagesObject = GetJobExecutionLogDataFromMessageText(sourceMessagesText);
@@ -15,6 +25,13 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils
             return JsonConvert.SerializeObject(messagesObject);
         }
 
+        /// <summary>
+        /// Sets the single  message in log data for account. Replace all messages with new one.
+        /// </summary>
+        /// <param name="sourceMessagesText">The source messages text.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="accountId">The account identifier.</param>
+        /// <returns></returns>
         public static string SetSingleAccountMessageInLogData(string sourceMessagesText, string message, int accountId)
         {
             var messagesObject = GetJobExecutionLogDataFromMessageText(sourceMessagesText);
@@ -23,6 +40,12 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils
             return JsonConvert.SerializeObject(messagesObject);
         }
 
+        /// <summary>
+        /// Adds the common message to log data.
+        /// </summary>
+        /// <param name="sourceMessagesText">The source messages text.</param>
+        /// <param name="message">The message.</param>
+        /// <returns></returns>
         public static string AddCommonMessageToLogData(string sourceMessagesText, string message)
         {
             var messagesObject = GetJobExecutionLogDataFromMessageText(sourceMessagesText);
@@ -30,6 +53,12 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils
             return JsonConvert.SerializeObject(messagesObject);
         }
 
+        /// <summary>
+        /// Sets the single common message in log data.
+        /// </summary>
+        /// <param name="sourceMessagesText">The source messages text.</param>
+        /// <param name="message">The message.</param>
+        /// <returns></returns>
         public static string SetSingleCommonMessageInLogData(string sourceMessagesText, string message)
         {
             var messagesObject = GetJobExecutionLogDataFromMessageText(sourceMessagesText);

@@ -3,7 +3,6 @@ using CakeExtractor.SeleniumApplication.Helpers;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonPda;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace CakeExtractor.SeleniumApplication.PageActions
