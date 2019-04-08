@@ -6,7 +6,7 @@ using System.IO;
 namespace CakeExtractor.SeleniumApplication.Configuration.Vcd
 {
     /// <summary>
-    /// Profile management singletom object. Incapsulate logic about execution profile management and it's configuration.
+    /// Profile management singleton object. Encapsulate logic about execution profile management and it's configuration.
     /// </summary>
     public class VcdExecutionProfileManger
     {

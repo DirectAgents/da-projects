@@ -34,7 +34,7 @@ namespace CakeExtractor.SeleniumApplication.Commands
             InitializeAuthorizationModel();
             configurationManager = new VcdCommandConfigurationManager();
             pageActions = new AmazonVcdPageActions();
-            extractor = new AmazonVcdExtractor(configurationManager, pageActions, authorizationModel);
+            extractor = new AmazonVcdExtractor(pageActions, authorizationModel);
             accountsDataProvider = new VcdAccountsDataProvider();
             extractor.PrepareExtractor();
             AmazonVcdLoader.PrepareLoader();
