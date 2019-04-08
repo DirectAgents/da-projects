@@ -243,12 +243,11 @@ namespace Yahoo
         /// </summary>
         /// <param name="customerReportId">Customer report Id</param>
         /// <returns>Report URL (may be null)</returns>
-        private string WaitForReportUrl(string customerReportId)
+        private string TryGetReportUrl(string customerReportId)
         {
             if (string.IsNullOrWhiteSpace(customerReportId))
             {
-                LogError("Missing Report Id");
-                return null;
+                throw new Exception("Missing Report Id");
             }
             LogInfo($"YAM Report ID: {customerReportId}");
 
@@ -267,13 +266,12 @@ namespace Yahoo
                         LogWaiting($"Will check if the report is ready in {timeSpan.TotalSeconds:N0} seconds...",
                             retryCount))
                 .Execute(() => GetReportStatus(customerReportId));
-                
-            if (getReportResponse.status.ToUpper() == "SUCCESS")
+
+            if (getReportResponse.status.ToUpper() != "SUCCESS")
             {
-                return getReportResponse.url;
-            }
-            LogError("Failed to obtain report URL");
-            return null;
+                throw new Exception("Failed to obtain report URL"); 
+            }    
+            return getReportResponse.url;
         }
 
         private GetReportResponse GetReportStatus(string reportId)
@@ -297,24 +295,35 @@ namespace Yahoo
         /// <param name="byCreative">Flag for Creative dimension (may be null)</param>
         /// <param name="byPixel">Flag for Pixel dimension (may be null)</param>
         /// <param name="byPixelParameter">Flag for Pixel Parameter dimension (may be null)</param>
-        /// <returns>URL of report location</returns>
+        /// <returns>URL of report location (may be null)</returns>
         public string TryGenerateReport(DateTime fromDate, DateTime toDate, int? accountId = null,
             bool byAdvertiser = false, bool byCampaign = false, bool byLine = false, bool byAd = false,
             bool byCreative = false, bool byPixel = false, bool byPixelParameter = false)
         {
             var payload = CreateReportRequestPayload(fromDate, toDate, accountId, byAdvertiser, byCampaign, byLine,
                 byAd, byCreative, byPixel, byPixelParameter);
-
-            var maxRetryAttempts = this.NumTries_RequestReport;
-            var reportUrl = Policy
-                .Handle<Exception>()
-                .OrResult<string>(string.IsNullOrEmpty)
-                .Retry(maxRetryAttempts,
-                    (exception, retryCount, context) =>
-                        LogInfo(
-                            $"Could not get a report URL. Try regenerate a report (number of retrying - {retryCount})"))
-                .Execute(() => GenerateReport(payload));
+            var reportUrl = TryGenerateReport(payload);
             return reportUrl;
+        }
+
+        private string TryGenerateReport(ReportPayload payload)
+        {
+            try
+            {
+                var maxRetryAttempts = this.NumTries_RequestReport;
+                var reportUrl = Policy
+                    .Handle<Exception>()
+                    .Retry(maxRetryAttempts, (exception, retryCount, context) =>
+                        LogInfo(
+                            $"Could not get a report URL: {exception.Message}. Try regenerate a report (number of retrying - {retryCount})"))
+                    .Execute(() => GenerateReport(payload));
+                return reportUrl;
+            }
+            catch (Exception e)
+            {
+                LogError($"Could not generate a report: {e.Message}");
+                return null;
+            }
         }
 
         /// <summary>
@@ -325,7 +334,7 @@ namespace Yahoo
         private string GenerateReport(ReportPayload payload)
         {
             var reportResponse = TryRequestReport(payload);
-            var reportUrl = WaitForReportUrl(reportResponse.customerReportId);
+            var reportUrl = TryGetReportUrl(reportResponse.customerReportId);
             return reportUrl;
         }
 

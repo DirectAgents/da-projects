@@ -89,7 +89,6 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 var tdExtractor = new TDDailySummaryExtracter(columnMapping, streamReader);
                 ExtractData(tdExtractor);
             }
-
             End();
         }
     }
