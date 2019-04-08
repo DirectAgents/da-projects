@@ -6,8 +6,17 @@ using System.Linq;
 
 namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
 {
+    /// <summary>
+    /// Job History Data Provider
+    /// </summary>
+    /// <seealso cref="DirectAgents.Web.Areas.Admin.Grids.JobHistory.IJobHistoryDataProvider" />
     public class JobHistoryDataProvider : IJobHistoryDataProvider
     {
+        /// <summary>
+        /// Gets the query result.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <returns></returns>
         public QueryResult<JobRequestExecution> GetQueryResult(QueryOptions options)
         {
             using (var db = new ClientPortalProgContext())

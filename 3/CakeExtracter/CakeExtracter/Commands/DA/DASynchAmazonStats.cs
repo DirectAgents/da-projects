@@ -237,7 +237,7 @@ namespace CakeExtracter.Commands
         {
             try
             {
-                CommandExecutionContext.Current.SetJobExecutionStateInHistory("Synch analytic table." ,accountId);
+                CommandExecutionContext.Current?.SetJobExecutionStateInHistory("Synch analytic table." ,accountId);
                 AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
                 {
                     var amazonAmsSyncher = new AmazonAmsAnalyticSyncher();

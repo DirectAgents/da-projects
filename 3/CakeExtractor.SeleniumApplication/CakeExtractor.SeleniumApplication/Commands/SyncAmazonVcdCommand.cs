@@ -12,6 +12,7 @@ using System;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using System.ComponentModel.Composition;
+using System.Threading;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
@@ -20,7 +21,6 @@ namespace CakeExtractor.SeleniumApplication.Commands
     {
         public int ProfileNumber { get; set; }
 
-        private AmazonVcdExtractor extractor;
         private VcdCommandConfigurationManager configurationManager;
         private VcdAccountsDataProvider accountsDataProvider;
         private AuthorizationModel authorizationModel;
@@ -47,56 +47,57 @@ namespace CakeExtractor.SeleniumApplication.Commands
             }
             configurationManager = new VcdCommandConfigurationManager();
             InitializeAuthorizationModel();
-            extractor = new AmazonVcdExtractor(pageActions, authorizationModel);
             accountsDataProvider = new VcdAccountsDataProvider();
             if (!AmazonVcdExtractor.IsInitialised)
             {
-                extractor.PrepareExtractor();
+                AmazonVcdExtractor.PrepareExtractor(pageActions,authorizationModel);
             }
             AmazonVcdLoader.PrepareLoader();
-            RunEtl();
+            RunEtls();
             return 0;
         }
 
-        public void RunEtl()
+        public void RunEtls()
         {
             pageActions.RefreshSalesDiagnosticPage(authorizationModel);
             var dateRanges = configurationManager.GetDateRangesToProcess();
-            var accountsData = accountsDataProvider.GetAccountsDataToProcess(extractor);
+            var accountsData = accountsDataProvider.GetAccountsDataToProcess(pageActions);
             dateRanges.ForEach(d => RunForDateRange(d, accountsData));
         }
 
         private void RunForDateRange(DateRange dateRange, List<AccountInfo> accountsData)
         {
-            extractor.DateRange = dateRange;
             Logger.Info($"\nAmazon VCD ETL. DateRange {dateRange}.");
             foreach (var accountData in accountsData)
             {
-                DoEtlForAccount(accountData);
+                DoEtlForAccount(accountData, dateRange);
                 SyncAccountDataToAnalyticTable(accountData.Account.Id);
             }
         }
 
-        private void DoEtlForAccount(AccountInfo accountInfo)
+        private void DoEtlForAccount(AccountInfo accountInfo, DateRange dateRange)
         {
             Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) started.");
-            PrepareExtractorForAccount(accountInfo);
+            var extractor = new AmazonVcdExtractor(pageActions, authorizationModel);
+            PrepareExtractorForAccount(extractor, accountInfo, dateRange);
             var loader = new AmazonVcdLoader(accountInfo.Account);
             CommandHelper.DoEtl(extractor, loader);
             Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) finished.");
         }
 
-        private void PrepareExtractorForAccount(AccountInfo accountInfo)
+        private void PrepareExtractorForAccount(AmazonVcdExtractor extractor, AccountInfo accountInfo, DateRange dateRange)
         {
             extractor.Initialize();
             extractor.AccountInfo = accountInfo;
             extractor.OpenAccountPage();
+            extractor.DateRange = dateRange;
         }
 
         private void SyncAccountDataToAnalyticTable(int accountId)
         {
             try
             {
+                Logger.Info(accountId, "Sync analytic table data.");
                 var vcdTablesSyncher = new VcdAnalyticTablesSyncher();
                 vcdTablesSyncher.SyncData(accountId);
             }

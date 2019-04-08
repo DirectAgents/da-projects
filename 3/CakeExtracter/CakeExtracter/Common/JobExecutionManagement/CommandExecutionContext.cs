@@ -10,7 +10,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
     /// <summary>
     /// The context of the command being executed.
     /// </summary>
-    internal class CommandExecutionContext
+    public class CommandExecutionContext
     {
         public static CommandExecutionContext Current;
         

@@ -36,7 +36,7 @@ namespace CakeExtractor.SeleniumApplication
             });
         }
 
-        [STAThread]
+        [MTAThread]
         static void Main(string[] args)
         {
             var program = new Program(args);
