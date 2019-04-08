@@ -14,6 +14,7 @@ using CakeExtracter.Common;
 using CakeExtracter.Etl;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading;
 using Polly;
+using CakeExtracter.Common.JobExecutionManagement;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
 {
@@ -23,7 +24,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
         private VcdReportDownloader reportDownloader;
         private VcdReportCSVParser reportParser;
         private VcdReportComposer reportComposer;
-        
+
         public DateRange DateRange { get; set; }
         public AccountInfo AccountInfo { get; set; }
 
@@ -66,6 +67,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
         {
             try
             {
+                CommandExecutionContext.Current.JobDataWriter.SetStateInHistory($"Date - {date.ToString()}", AccountInfo.Account.Id);
                 Logger.Info(AccountInfo.Account.Id, $"Amazon VCD, ETL for {date} started. Account {AccountInfo.Account.Name} - {AccountInfo.Account.Id}");
                 var data = TryExtractDailyData(date);
                 Add(data);

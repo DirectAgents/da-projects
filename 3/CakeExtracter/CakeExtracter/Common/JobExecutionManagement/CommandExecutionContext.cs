@@ -5,7 +5,7 @@ using DirectAgents.Domain.Entities.Administration.JobExecution;
 
 namespace CakeExtracter.Common.JobExecutionManagement
 {
-    internal class CommandExecutionContext
+    public class CommandExecutionContext
     {
         public static CommandExecutionContext Current;
 

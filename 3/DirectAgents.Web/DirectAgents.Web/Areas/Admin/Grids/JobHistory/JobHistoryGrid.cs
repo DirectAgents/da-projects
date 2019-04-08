@@ -6,10 +6,16 @@ using System.Web.Mvc;
 
 namespace DirectAgents.Web.Areas.Admin.Grids
 {
+    /// <summary>
+    /// Job History Grid Configuration
+    /// </summary>
     public static class JobHistoryGrid
     {
         private const int JobHistoryPageSize = 20;
 
+        /// <summary>
+        /// Adds the grid configuration.
+        /// </summary>
         public static void AddGridConfiguration()
         {
             MVCGridDefinitionTable.Add("JobHistory", new MVCGridBuilder<JobRequestExecution>()
