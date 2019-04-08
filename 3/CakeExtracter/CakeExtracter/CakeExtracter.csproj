@@ -405,8 +405,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Commands\DA\DASynchCampSums.cs" />
+    <Compile Include="Commands\DA\DaSynchCommissionJunctionStats.cs" />
     <Compile Include="Commands\DA\DASynchCriteoStats.cs" />
     <Compile Include="Commands\DA\DASynchDBMStats2.cs" />
+    <Compile Include="Commands\DA\DASynchKochavaStats.cs" />
     <Compile Include="Commands\DA\DASynchYAMStats.cs" />
     <Compile Include="Commands\EOMSynchCPCCommand.cs" />
     <Compile Include="Commands\DA\DASynchFacebookAdPreviews.cs" />
@@ -427,6 +429,9 @@
     <Compile Include="Commands\Test\TestYAMCommand.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Common\ArchiveExctractors\Contract\IArchiveExtractor.cs" />
+    <Compile Include="Common\ArchiveExctractors\GzipArchiveExtractor.cs" />
+    <Compile Include="Common\ArchiveExctractors\ZipArchiveExtractor.cs" />
     <Compile Include="Common\Compare.cs" />
     <Compile Include="Common\SqlScriptsExecutor.cs" />
     <Compile Include="Common\StorageCollection.cs" />
@@ -447,7 +452,7 @@
     <Compile Include="Etl\CakeMarketing\Extracters\SubIdSummariesExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\CPCLoader.cs" />
     <Compile Include="Etl\DSP\Configuration\AmazonDspConfigurationProvider.cs" />
-    <Compile Include="Etl\DSP\Configuration\AmazonDspAccountsProvider.cs" />
+    <Compile Include="Etl\CommandsExecutionAccountsProvider.cs" />
     <Compile Include="Etl\DSP\Extractors\AmazonDspExtractor.cs" />
     <Compile Include="Etl\DSP\Extractors\Composer\DspReportDataComposer.cs" />
     <Compile Include="Etl\DSP\Extractors\Parser\DspReportCsvParser.cs" />
@@ -461,13 +466,20 @@
     <Compile Include="Etl\DSP\Loaders\ReportEntriesDataLoaders\DspItemMetricManager.cs" />
     <Compile Include="Etl\DSP\Loaders\ReportEntriesDataLoaders\LineItemsDataLoader.cs" />
     <Compile Include="Etl\DSP\Loaders\ReportEntriesDataLoaders\OrdersDataLoader.cs" />
-    <Compile Include="Etl\DSP\Models\AmazonDspAccauntDailyReportData.cs" />
+    <Compile Include="Etl\DSP\Models\AmazonDspAccountDailyReportData.cs" />
     <Compile Include="Etl\DSP\Models\ReportEntities\ReportAdvertiser.cs" />
     <Compile Include="Etl\DSP\Models\AmazonDspDailyReportData.cs" />
     <Compile Include="Etl\DSP\Models\ReportEntities\ReportCreative.cs" />
     <Compile Include="Etl\DSP\Models\ReportEntities\ReportLineItem.cs" />
     <Compile Include="Etl\DSP\Models\ReportEntities\DspReportEntity.cs" />
     <Compile Include="Etl\DSP\Models\ReportEntities\ReportOrder.cs" />
+    <Compile Include="Etl\Kochava\Configuration\KochavaConfigurationProvider.cs" />
+    <Compile Include="Etl\Kochava\Extractors\KochavaExtractor.cs" />
+    <Compile Include="Etl\Kochava\Extractors\Parsers\KochavaReportParser.cs" />
+    <Compile Include="Etl\Kochava\Extractors\Parsers\ParsingConverters\KochavaReportEntityRowMap.cs" />
+    <Compile Include="Etl\Kochava\Loaders\KochavaItemsDbService.cs" />
+    <Compile Include="Etl\Kochava\Loaders\KochavaLoader.cs" />
+    <Compile Include="Etl\Kochava\Models\KochavaReportItem.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\AppleApiExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingConvSummaryExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingExtractors\BingDailyNonShoppingSummaryExtractor.cs" />
@@ -500,6 +512,7 @@
     <Compile Include="Etl\TradingDesk\Extracters\AdRollAdExtracter.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\AdrollSiteStatsCsvExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\CPCExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Extracters\CommissionJunctionExtractors\CommissionJunctionAdvertiserExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\CriteoExtracters.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DataBaseSourceExtractors\DatabaseKeywordsToDailySummaryExtractor.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DataBaseSourceExtractors\DatabaseStrategyToDailySummaryExtractor.cs" />
@@ -675,6 +688,9 @@
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AmazonSummaryMetricLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\AnalyticTablesSync\AmazonAmsAnalyticSyncher.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\AmazonLoaders\BaseAmazonLevelLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\CommissionJunctionLoaders\CommissionJunctionAdvertiserLoader.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\CommissionJunctionLoaders\CommissionJunctionAdvertiserCleaner.cs" />
+    <Compile Include="Etl\TradingDesk\LoadersDA\CommissionJunctionLoaders\CommissionJunctionAdvertiserMapper.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\DbmConvLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\Interfaces\IDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\LoadersDA\Interfaces\ISummaryMetricLoader.cs" />
@@ -855,6 +871,10 @@
     <ProjectReference Include="..\..\DirectAgents.Web\CakeExtractor.SqlScriptsExecution.Core\CakeExtractor.SqlScriptsExecution.Core.csproj">
       <Project>{32405edf-7257-4a90-89fa-148eac75e183}</Project>
       <Name>CakeExtractor.SqlScriptsExecution.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DirectAgents.Web\CommissionJunction\CommissionJunction.csproj">
+      <Project>{0038b6b4-357a-4721-99bc-7659ad00dd3a}</Project>
+      <Name>CommissionJunction</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -28,13 +28,13 @@ namespace CakeExtractor.SeleniumApplication.Commands
 
         public override string CommandName => "SyncAmazonVcdCommand";
 
-        public override void PrepareCommandEnvironment(int executionProfileNumber)
+        public override void PrepareCommandEnvironment(int? executionProfileNumber)
         {
             VcdExecutionProfileManger.Current.SetExecutionProfileNumber(executionProfileNumber);
             InitializeAuthorizationModel();
             configurationManager = new VcdCommandConfigurationManager();
             pageActions = new AmazonVcdPageActions();
-            extractor = new AmazonVcdExtractor(configurationManager, pageActions, authorizationModel);
+            extractor = new AmazonVcdExtractor(pageActions, authorizationModel);
             accountsDataProvider = new VcdAccountsDataProvider();
             extractor.PrepareExtractor();
             AmazonVcdLoader.PrepareLoader();

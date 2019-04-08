@@ -1,8 +1,12 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using AutoMapper;
+using CakeExtracter.Etl.Kochava.Models;
 using ClientPortal.Data.Contexts;
+using CommissionJunction.Entities;
 using DirectAgents.Domain.Entities.CPProg;
+using DirectAgents.Domain.Entities.CPProg.CJ;
+using DirectAgents.Domain.Entities.CPProg.Kochava;
 
 namespace CakeExtracter.Bootstrappers
 {
@@ -131,6 +135,9 @@ namespace CakeExtracter.Bootstrappers
                 cfg.CreateMap<DirectAgents.Domain.Entities.CPProg.Conv, DirectAgents.Domain.Entities.CPProg.Conv>();
                 cfg.CreateMap<DirectAgents.Domain.Entities.AdRoll.AdDailySummary, DirectAgents.Domain.Entities.AdRoll.AdDailySummary>();
                 cfg.CreateMap<DirectAgents.Domain.Entities.DBM.CreativeDailySummary, DirectAgents.Domain.Entities.DBM.CreativeDailySummary>();
+                cfg.CreateMap<AdvertiserCommission, CjAdvertiserCommission>();
+                cfg.CreateMap<CommissionJunction.Entities.Item, CjAdvertiserCommissionItem>();
+                cfg.CreateMap<KochavaReportItem, KochavaItem>();
             });
         }
 

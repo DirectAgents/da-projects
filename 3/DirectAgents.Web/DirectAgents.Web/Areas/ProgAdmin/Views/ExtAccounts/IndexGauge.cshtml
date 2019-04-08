@@ -1,12 +1,13 @@
 ﻿@model DirectAgents.Web.Areas.ProgAdmin.Models.StatsGaugeVM
 @using DirectAgents.Domain.Entities.CPProg
 @{
-    string by = "Partner";
+    var by = "Partner";
     if (Model.StatsGauges.Any(s => s.Children != null && s.Children.Any()))
     {
         by = "ExtAccount";
     }
-    bool super = Request.QueryString["super"] == "1";
+    var super = Request.QueryString["super"] == "1";
+    var yesterday = DateTime.Today.AddDays(-1);
 }
 <h2>Stats Gauge - By @by</h2>
 
@@ -56,60 +57,123 @@
     {
         if (!Model.CampaignId.HasValue) // don't show Partner summaries if filtering by campaign
         {
-            <tr style="font-weight:bold;background-color:aquamarine">
+            <tr style="font-weight: bold; background-color: aquamarine">
                 <td colspan="4">@pGauge.Platform.Name.Replace(' ', '_')&nbsp;-&nbsp;Summary:</td>
-                <td style="text-align:right">@pGauge.Daily.EarliestDisp</td>
-                <td style="text-align:right">@pGauge.Daily.LatestDisp</td>
-                <td style="text-align:right">@pGauge.Strategy.EarliestDisp</td>
-                <td style="text-align:right">@pGauge.Strategy.LatestDisp</td>
-                <td style="text-align:right">@pGauge.AdSet.EarliestDisp</td>
-                <td style="text-align:right">@pGauge.AdSet.LatestDisp</td>
-                <td style="text-align:right">@pGauge.Action.EarliestDisp</td>
-                <td style="text-align:right">@pGauge.Action.LatestDisp</td>
-                <td style="text-align:right">@pGauge.Creative.EarliestDisp</td>
-                <td style="text-align:right">@pGauge.Creative.LatestDisp</td>
-                <td style="text-align:right">@pGauge.Keyword.EarliestDisp</td>
-                <td style="text-align:right">@pGauge.Keyword.LatestDisp</td>
-                <td style="text-align:right">@pGauge.SearchTerm.EarliestDisp</td>
-                <td style="text-align:right">@pGauge.SearchTerm.LatestDisp</td>
+                <td style="text-align: right">@pGauge.Daily.EarliestDisp</td>
+                <td style="text-align: right">@pGauge.Daily.LatestDisp</td>
+                <td style="text-align: right">@pGauge.Strategy.EarliestDisp</td>
+                <td style="text-align: right">@pGauge.Strategy.LatestDisp</td>
+                <td style="text-align: right">@pGauge.AdSet.EarliestDisp</td>
+                <td style="text-align: right">@pGauge.AdSet.LatestDisp</td>
+                <td style="text-align: right">@pGauge.Action.EarliestDisp</td>
+                <td style="text-align: right">@pGauge.Action.LatestDisp</td>
+                <td style="text-align: right">@pGauge.Creative.EarliestDisp</td>
+                <td style="text-align: right">@pGauge.Creative.LatestDisp</td>
+                <td style="text-align: right">@pGauge.Keyword.EarliestDisp</td>
+                <td style="text-align: right">@pGauge.Keyword.LatestDisp</td>
+                <td style="text-align: right">@pGauge.SearchTerm.EarliestDisp</td>
+                <td style="text-align: right">@pGauge.SearchTerm.LatestDisp</td>
                 @if (Model.Extended)
                 {
-                    <td style="text-align:right">@pGauge.Site.EarliestDisp</td>
-                    <td style="text-align:right">@pGauge.Site.LatestDisp</td>
-                    <td style="text-align:right">@pGauge.Conv.EarliestDisp</td>
-                    <td style="text-align:right">@pGauge.Conv.LatestDisp</td>
+                    <td style="text-align: right">@pGauge.Site.EarliestDisp</td>
+                    <td style="text-align: right">@pGauge.Site.LatestDisp</td>
+                    <td style="text-align: right">@pGauge.Conv.EarliestDisp</td>
+                    <td style="text-align: right">@pGauge.Conv.LatestDisp</td>
                 }
             </tr>
         }
         if (pGauge.Children != null)
         {
-            foreach (var gauge in pGauge.Children.OrderBy(s => s.ExtAccount.Name).ThenBy(s => s.ExtAccount.Id))
+            foreach (var gauge in pGauge.Children)
             {
                 <tr>
                     <td>@gauge.ExtAccount.Platform.Name</td>
-                    <td style="text-align:right">@gauge.ExtAccount.Id</td>
+                    <td style="text-align: right">@gauge.ExtAccount.Id</td>
                     <td>@gauge.ExtAccount.Name</td>
-                    <td style="text-align:center">@(gauge.ExtAccount.Disabled ? "X" : "")</td>
-                    <td style="text-align:right">@gauge.Daily.EarliestDisp</td>
-                    <td style="text-align:right">@gauge.Daily.LatestDisp</td>
-                    <td style="text-align:right">@gauge.Strategy.EarliestDisp</td>
-                    <td style="text-align:right">@gauge.Strategy.LatestDisp</td>
-                    <td style="text-align:right">@gauge.AdSet.EarliestDisp</td>
-                    <td style="text-align:right">@gauge.AdSet.LatestDisp</td>
-                    <td style="text-align:right">@gauge.Action.EarliestDisp</td>
-                    <td style="text-align:right">@gauge.Action.LatestDisp</td>
-                    <td style="text-align:right">@gauge.Creative.EarliestDisp</td>
-                    <td style="text-align:right">@gauge.Creative.LatestDisp</td>
-                    <td style="text-align:right">@gauge.Keyword.EarliestDisp</td>
-                    <td style="text-align:right">@gauge.Keyword.LatestDisp</td>
-                    <td style="text-align:right">@gauge.SearchTerm.EarliestDisp</td>
-                    <td style="text-align:right">@gauge.SearchTerm.LatestDisp</td>
+                    <td style="text-align: center">@(gauge.ExtAccount.Disabled ? "X" : "")</td>
+                    <td style="text-align: right">@gauge.Daily.EarliestDisp</td>
+                    @if (gauge.Daily.Latest == yesterday)
+                    {
+                        <td style="text-align: right; background-color: lightgreen">@gauge.Daily.LatestDisp</td>
+                    }
+                    else
+                    {
+                        <td style="text-align: right">@gauge.Daily.LatestDisp</td>
+                    }
+                    <td style="text-align: right">@gauge.Strategy.EarliestDisp</td>
+                    @if (gauge.Strategy.Latest == yesterday)
+                    {
+                        <td style="text-align: right; background-color: lightgreen">@gauge.Strategy.LatestDisp</td>
+                    }
+                    else
+                    {
+                        <td style="text-align: right">@gauge.Strategy.LatestDisp</td>
+                    }
+                    <td style="text-align: right">@gauge.AdSet.EarliestDisp</td>
+                    @if (gauge.AdSet.Latest == yesterday)
+                    {
+                        <td style="text-align: right; background-color: lightgreen">@gauge.AdSet.LatestDisp</td>
+                    }
+                    else
+                    {
+                        <td style="text-align: right">@gauge.AdSet.LatestDisp</td>
+                    }
+                    <td style="text-align: right">@gauge.Action.EarliestDisp</td>
+                    @if (gauge.Action.Latest == yesterday)
+                    {
+                        <td style="text-align: right; background-color: lightgreen">@gauge.Action.LatestDisp</td>
+                    }
+                    else
+                    {
+                        <td style="text-align: right">@gauge.Action.LatestDisp</td>
+                    }
+                    <td style="text-align: right">@gauge.Creative.EarliestDisp</td>
+                    @if (gauge.Creative.Latest == yesterday)
+                    {
+                        <td style="text-align: right; background-color: lightgreen">@gauge.Creative.LatestDisp</td>
+                    }
+                    else
+                    {
+                        <td style="text-align: right">@gauge.Creative.LatestDisp</td>
+                    }
+                    <td style="text-align: right">@gauge.Keyword.EarliestDisp</td>
+                    @if (gauge.Keyword.Latest == yesterday)
+                    {
+                        <td style="text-align: right; background-color: lightgreen">@gauge.Keyword.LatestDisp</td>
+                    }
+                    else
+                    {
+                        <td style="text-align: right">@gauge.Keyword.LatestDisp</td>
+                    }
+                    <td style="text-align: right">@gauge.SearchTerm.EarliestDisp</td>
+                    @if (gauge.SearchTerm.Latest == yesterday)
+                    {
+                        <td style="text-align: right; background-color: lightgreen">@gauge.SearchTerm.LatestDisp</td>
+                    }
+                    else
+                    {
+                        <td style="text-align: right">@gauge.SearchTerm.LatestDisp</td>
+                    }
                     @if (Model.Extended)
                     {
-                        <td style="text-align:right">@gauge.Site.EarliestDisp</td>
-                        <td style="text-align:right">@gauge.Site.LatestDisp</td>
-                        <td style="text-align:right">@gauge.Conv.EarliestDisp</td>
-                        <td style="text-align:right">@gauge.Conv.LatestDisp</td>
+                        <td style="text-align: right">@gauge.Site.EarliestDisp</td>
+                        if (gauge.Site.Latest == yesterday)
+                        {
+                            <td style="text-align: right; background-color: lightgreen">@gauge.Site.LatestDisp</td>
+                        }
+                        else
+                        {
+                            <td style="text-align: right">@gauge.Site.LatestDisp</td>
+                        }
+                        <td style="text-align: right">@gauge.Conv.EarliestDisp</td>
+                        if (gauge.Conv.Latest == yesterday)
+                        {
+                            <td style="text-align: right; background-color: lightgreen">@gauge.Conv.LatestDisp</td>
+                        }
+                        else
+                        {
+                            <td style="text-align: right">@gauge.Conv.LatestDisp</td>
+                        }
                     }
                 </tr>
             }
@@ -121,26 +185,27 @@
 {
     <text>
         Filter:
-        @Html.ActionLink("Adform", "IndexGauge", new { platform = Platform.Code_Adform }) |
-        @Html.ActionLink("AdRoll", "IndexGauge", new { platform = Platform.Code_AdRoll }) |
-        @Html.ActionLink("Amazon", "IndexGauge", new { platform = Platform.Code_Amazon }) |
-        @Html.ActionLink("Criteo", "IndexGauge", new { platform = Platform.Code_Criteo }) |
-        @Html.ActionLink("DBM", "IndexGauge", new { platform = Platform.Code_DBM }) |
-        @Html.ActionLink("Facebook", "IndexGauge", new { platform = Platform.Code_FB }) |
-        @Html.ActionLink("YAM", "IndexGauge", new { platform = Platform.Code_YAM }) |
+        @Html.ActionLink("Adform", "IndexGauge", new {platform = Platform.Code_Adform}) |
+        @Html.ActionLink("AdRoll", "IndexGauge", new {platform = Platform.Code_AdRoll}) |
+        @Html.ActionLink("Amazon", "IndexGauge", new {platform = Platform.Code_Amazon}) |
+        @Html.ActionLink("Criteo", "IndexGauge", new {platform = Platform.Code_Criteo}) |
+        @Html.ActionLink("DBM", "IndexGauge", new {platform = Platform.Code_DBM}) |
+        @Html.ActionLink("Facebook", "IndexGauge", new {platform = Platform.Code_FB}) |
+        @Html.ActionLink("YAM", "IndexGauge", new {platform = Platform.Code_YAM}) |
         @Html.ActionLink("(show all)", "IndexGauge")
     </text>
-    <br /><br />
+    <br/>
+    <br/>
 }
 else if (super) //CampaignId specified
 {
     var extAcctSelectList = Model.ExtAccountSelectListItems(syncableOnly: true, includePlatforms: true);
-    var statsTypeList = new[] { "Daily", "Strategy", "AdSet+Actions (Adform/FB only)" };
-    DateTime default_to = DateTime.Today.AddDays(-1);
-    DateTime default_from = (default_to.Day == 1 ? default_to.AddMonths(-1) : new DateTime(default_to.Year, default_to.Month, 1));
+    var statsTypeList = new[] {"Daily", "Strategy", "AdSet+Actions (Adform/FB only)"};
+    var defaultTo = DateTime.Today.AddDays(-1);
+    var defaultFrom = defaultTo.Day == 1 ? defaultTo.AddMonths(-1) : new DateTime(defaultTo.Year, defaultTo.Month, 1);
 
     <h4>Re-Sync/Clear Stats</h4>
-    using (Html.BeginForm("StatsGaugeSyncClear", "ExtAccounts", FormMethod.Post, new { id = "formSync" }))
+    using (Html.BeginForm("StatsGaugeSyncClear", "ExtAccounts", FormMethod.Post, new {id = "formSync"}))
     {
         @Html.ValidationSummary()
         @Html.Hidden("campId", Model.CampaignId.Value)
@@ -155,11 +220,11 @@ else if (super) //CampaignId specified
             </tr>
             <tr>
                 <td>@Html.Label("", "From:")</td>
-                <td><input type="text" id="sync_from" name="from" value="@default_from.ToShortDateString()" /></td>
+                <td><input type="text" id="sync_from" name="from" value="@defaultFrom.ToShortDateString()"/></td>
             </tr>
             <tr>
                 <td>@Html.Label("", "To:")</td>
-                <td><input type="text" id="sync_to" name="to" value="@default_to.ToShortDateString()" /></td>
+                <td><input type="text" id="sync_to" name="to" value="@defaultTo.ToShortDateString()"/></td>
             </tr>
             <tr>
                 <td>@Html.Label("", "Clear Stats:")</td>
@@ -170,17 +235,17 @@ else if (super) //CampaignId specified
                 <td>@Html.CheckBox("sync", true)</td>
             </tr>
         </table>
-        <br />
+        <br/>
         <div id="divSyncButton">
-            <input type="submit" value="Go..." onclick="DoSync()" />
+            <input type="submit" value="Go..." onclick="DoSync()"/>
         </div>
         <div id="divSyncMessage"></div>
     }
-    <br />
+    <br/>
     <i>Note: for Amazon and Criteo, sync strategy stats before daily stats</i>
 
     <script>
-        $(function () {
+        $(function() {
             $('#sync_from').kendoDatePicker({ footer: ' ' });
             $('#sync_to').kendoDatePicker({ footer: ' ' });
         });

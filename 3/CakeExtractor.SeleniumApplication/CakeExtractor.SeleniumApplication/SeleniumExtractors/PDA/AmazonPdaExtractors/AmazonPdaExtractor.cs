@@ -17,6 +17,7 @@ using CakeExtractor.SeleniumApplication.PageActions.AmazonPda;
 using CakeExtractor.SeleniumApplication.Utilities;
 using DirectAgents.Domain.Entities.CPProg;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
+using Polly;
 using FileManager = CakeExtractor.SeleniumApplication.Helpers.FileManager;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors
@@ -60,22 +61,19 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             LoginWithoutCookie(authorizationModel);
         }
 
+        /// <summary>
+        /// The method sets the URLs for the available profiles on main page of portal
+        /// </summary>
         public static void SetAvailableProfileUrls()
         {
             try
             {
-                pageActions.NavigateToUrl(campaignsUrl, AmazonPdaPageObjects.FilterByButton);
-                if (!pageActions.IsElementPresent(AmazonPdaPageObjects.FilterByButton) &&
-                    pageActions.IsElementPresent(AmazonPdaPageObjects.LoginPassInput))
-                {
-                    // need to repeat the password
-                    pageActions.LoginByPassword(authorizationModel.Password, AmazonPdaPageObjects.FilterByButton);
-                }
-                SetAvailableProfiles();
+                GoToPortalMainPage();
+                TrySetAvailableProfiles();
             }
             catch (Exception e)
             {
-                throw new Exception($"Could not to get profile URLs: {e.Message}", e);
+                throw new Exception($"Could not to get the profile URLs: {e.Message}", e);
             }
         }
 
@@ -363,6 +361,40 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
                 AmazonPdaPageObjects.CampaignsNameContainer, AmazonPdaPageObjects.CampaignsNamesList);
             Logger.Info(account.Id, "[{0}] web elements received", campNameWebElementList?.Count ?? 0);
             return campNameWebElementList?.Select(pageActions.GetCampaignUrl) ?? new List<string> {""};
+        }
+
+        private static void GoToPortalMainPage()
+        {
+            pageActions.NavigateToUrl(campaignsUrl, AmazonPdaPageObjects.FilterByButton);
+            if (!pageActions.IsElementPresent(AmazonPdaPageObjects.FilterByButton) &&
+                pageActions.IsElementPresent(AmazonPdaPageObjects.LoginPassInput))
+            {
+                // need to repeat the password
+                pageActions.LoginByPassword(authorizationModel.Password, AmazonPdaPageObjects.FilterByButton);
+            }
+        }
+
+        private static void TrySetAvailableProfiles()
+        {
+            const int maxRetryAttempts = 5;
+            var pauseBetweenAttempts = TimeSpan.FromSeconds(3);
+            Policy
+                .Handle<Exception>()
+                .WaitAndRetry(
+                    maxRetryAttempts,
+                    i => pauseBetweenAttempts,
+                    (exception, timeSpan, retryCount, context) => LogWaiting(timeSpan, retryCount))
+                .Execute(SetAvailableProfiles);
+        }
+
+        private static void LogWaiting(TimeSpan timeSpan, int? retryCount)
+        {
+            var message = $"Waiting {timeSpan} before setting URLs";
+            if (retryCount.HasValue)
+            {
+                message += $" (number of retrying - {retryCount})";
+            }
+            Logger.Info(message);
         }
     }
 }

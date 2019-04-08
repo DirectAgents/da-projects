@@ -13,12 +13,12 @@ namespace CakeExtracter.Etl.DSP.Extractors.Composer
         /// <param name="reportEntries">The report entries.</param>
         /// <param name="accounts">The accounts.</param>
         /// <returns></returns>
-        public List<AmazonDspAccauntReportData> ComposeReportData(List<CreativeReportRow> reportEntries, List<ExtAccount> accounts)
+        public List<AmazonDspAccountReportData> ComposeReportData(List<CreativeReportRow> reportEntries, List<ExtAccount> accounts)
         {
             var accountsData = reportEntries.GroupBy(re => re.AdvertiserName, (key, gr) =>
              {
                  var relatedAccount = accounts.FirstOrDefault(ac => ac.Name == key);
-                 return relatedAccount != null ? new AmazonDspAccauntReportData
+                 return relatedAccount != null ? new AmazonDspAccountReportData
                  {
                      Account = relatedAccount,
                      DailyDataCollection = GetAccountReportData(gr)

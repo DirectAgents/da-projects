@@ -82,9 +82,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            var payload = _yamUtility.CreateReportRequestPayload(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId);
-            var reportUrl = _yamUtility.GenerateReport(payload);
-
+            var reportUrl = _yamUtility.TryGenerateReport(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId);
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
                 var streamReader = TDDailySummaryExtracter.CreateStreamReaderFromUrl(reportUrl);
@@ -105,8 +103,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            var payload = _yamUtility.CreateReportRequestPayload(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId, byLine: true);
-            var reportUrl = _yamUtility.GenerateReport(payload);
+            var reportUrl = _yamUtility.TryGenerateReport(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId,
+                byLine: true);
 
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
@@ -114,6 +112,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 var tdExtractor = new TDStrategySummaryExtracter(columnMapping, streamReader);
                 ExtractData(tdExtractor);
             }
+
             End();
         }
     }
@@ -127,8 +126,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            var payload = _yamUtility.CreateReportRequestPayload(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId, byCampaign: true, byLine: true);
-            var reportUrl = _yamUtility.GenerateReport(payload);
+            var reportUrl = _yamUtility.TryGenerateReport(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId,
+                byCampaign: true, byLine: true);
 
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
@@ -136,6 +135,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 var tdExtractor = new TDAdSetSummaryExtracter(columnMapping, streamReader);
                 ExtractData(tdExtractor);
             }
+
             End();
         }
     }
@@ -149,8 +149,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            var payload = _yamUtility.CreateReportRequestPayload(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId, byCampaign: true, byAd: true);
-            var reportUrl = _yamUtility.GenerateReport(payload);
+            var reportUrl = _yamUtility.TryGenerateReport(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId,
+                byCampaign: true, byAd: true);
 
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
@@ -158,6 +158,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 var tdExtractor = new TDadSummaryExtracter(columnMapping, streamReader);
                 ExtractData(tdExtractor);
             }
+
             End();
         }
     }
@@ -171,8 +172,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            var payload = _yamUtility.CreateReportRequestPayload(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId, byCreative: true, byLine: true, byCampaign: true);
-            var reportUrl = _yamUtility.GenerateReport(payload);
+            var reportUrl = _yamUtility.TryGenerateReport(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId,
+                byCreative: true, byLine: true, byCampaign: true);
 
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
@@ -180,6 +181,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 var tdExtractor = new KeywordSummaryExtracter(columnMapping, streamReader);
                 ExtractData(tdExtractor);
             }
+
             End();
         }
     }
@@ -193,8 +195,8 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         protected override void Extract()
         {
-            var payload = _yamUtility.CreateReportRequestPayload(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId, byPixel: true);
-            var reportUrl = _yamUtility.GenerateReport(payload);
+            var reportUrl = _yamUtility.TryGenerateReport(dateRange.FromDate, dateRange.ToDate, this.yamAdvertiserId,
+                byPixel: true);
 
             if (!string.IsNullOrWhiteSpace(reportUrl))
             {
@@ -202,6 +204,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
                 var tdExtractor = new SearchTermSummaryExtracter(columnMapping, streamReader);
                 ExtractData(tdExtractor);
             }
+
             End();
         }
     }
