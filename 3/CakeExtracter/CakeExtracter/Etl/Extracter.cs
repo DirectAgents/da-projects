@@ -87,7 +87,7 @@ namespace CakeExtracter.Etl
             Add(new List<T> { item });
         }
 
-        public void ExtractWithCatch()
+        private void ExtractWithCatch()
         {
             try
             {
