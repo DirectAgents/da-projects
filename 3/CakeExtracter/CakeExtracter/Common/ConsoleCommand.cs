@@ -6,14 +6,26 @@ using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 
 namespace CakeExtracter.Common
 {
+    /// <summary>
+    /// The base class for a console command.
+    /// </summary>
     public abstract class ConsoleCommand : ManyConsole.ConsoleCommand
     {
         public const string RequestIdArgumentName = "jobRequestId";
 
+        /// <summary>
+        /// The interval between the unsuccessful and the new request in minutes for the child requests of this command.
+        /// </summary>
         public virtual int IntervalBetweenUnsuccessfulAndNewRequestInMinutes { get; set; } = 0;
 
+        /// <summary>
+        /// Command argument: The identifier for the job request that initiates this command run.
+        /// </summary>
         public int? RequestId { get; set; }
 
+        /// <summary>
+        /// The constructor sets base command arguments names and provides a description for them.
+        /// </summary>
         protected ConsoleCommand()
         {
             HasOption<int>($"{RequestIdArgumentName}=", "Job Request Id (default = null)", c => RequestId = c);
@@ -34,8 +46,16 @@ namespace CakeExtracter.Common
             }
         }
 
+        /// <summary>
+        /// The method resets command arguments to defaults.
+        /// </summary>
         public abstract void ResetProperties();
 
+        /// <summary>
+        /// The method runs the current command based on the command arguments.
+        /// </summary>
+        /// <param name="remainingArguments"></param>
+        /// <returns>Execution code</returns>
         public abstract int Execute(string[] remainingArguments);
 
         public virtual IEnumerable<PropertyInfo> GetArgumentProperties()
@@ -55,22 +75,27 @@ namespace CakeExtracter.Common
             return true;
         }
 
-        public virtual IEnumerable<CommandWithSchedule> GetUniqueBroadCommands( IEnumerable<CommandWithSchedule> commands)
+        /// <summary>
+        /// Filters scheduled commands and returns only those commands that will not return duplicate data.
+        /// </summary>
+        /// <param name="commands">The source scheduled commands.</param>
+        /// <returns>The broad commands to extract unique data.</returns>
+        public virtual IEnumerable<CommandWithSchedule> GetUniqueBroadCommands(IEnumerable<CommandWithSchedule> commands)
         {
             return commands;
         }
 
-        protected void ScheduleNewJobRequest<T>(Action<T> changeCurrentCommand)
+        /// <summary>
+        /// Schedules a new command that should become scheduled job requests.
+        /// </summary>
+        /// <typeparam name="T">The type of the current command.</typeparam>
+        /// <param name="changeCurrentCommand">The action that updates a clone of the current command to save the updated clone as a job request.</param>
+        protected void ScheduleNewCommandLaunch<T>(Action<T> changeCurrentCommand)
             where T : ConsoleCommand
         {
             var command = (T) MemberwiseClone();
             changeCurrentCommand(command);
-            var scheduledCommand = new CommandWithSchedule
-            {
-                Command = command,
-                ScheduledTime = DateTime.Now.AddMinutes(IntervalBetweenUnsuccessfulAndNewRequestInMinutes)
-            };
-            CommandExecutionContext.Current.JobRequestManager.ScheduleCommand(scheduledCommand);
+            CommandExecutionContext.Current.ScheduleCommandLaunch(command);
         }
 
         private int ExecuteJobWithContext(string[] remainingArguments)

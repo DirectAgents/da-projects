@@ -40,7 +40,7 @@ namespace CakeExtracter
         public static void Warn(string format, params object[] args)
         {
             Instance.Warn(format, args);
-            CommandExecutionContext.Current?.JobDataWriter?.LogWarningInHistory(LoggerUtils.GetLogMessage(format, args));
+            CommandExecutionContext.Current?.LogWarningInHistory(LoggerUtils.GetLogMessage(format, args));
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace CakeExtracter
         public static void Error(Exception exception)
         {
             Instance.Error(exception);
-            CommandExecutionContext.Current?.JobDataWriter?.LogErrorInHistory(exception.GetAllExceptionMessages());
+            CommandExecutionContext.Current?.LogErrorInHistory(exception.GetAllExceptionMessages());
         }
 
         /// <summary>
@@ -82,12 +82,12 @@ namespace CakeExtracter
             if (LogToOneFile || accountId < 0)
             {
                 Instance.Warn(format, args);
-                CommandExecutionContext.Current?.JobDataWriter?.LogWarningInHistory(LoggerUtils.GetLogMessage(format, args));
+                CommandExecutionContext.Current?.LogWarningInHistory(LoggerUtils.GetLogMessage(format, args));
             }
             else
             {
                 Instance.Warn(accountId, format, args);
-                CommandExecutionContext.Current?.JobDataWriter?.LogWarningInHistory(LoggerUtils.GetLogMessage(format, args), accountId);
+                CommandExecutionContext.Current?.LogWarningInHistory(LoggerUtils.GetLogMessage(format, args), accountId);
             }
         }
 
@@ -101,12 +101,12 @@ namespace CakeExtracter
             if (LogToOneFile || accountId < 0)
             {
                 Instance.Error(exception);
-                CommandExecutionContext.Current?.JobDataWriter?.LogErrorInHistory(exception.GetAllExceptionMessages());
+                CommandExecutionContext.Current?.LogErrorInHistory(exception.GetAllExceptionMessages());
             }
             else
             {
                 Instance.Error(accountId, exception);
-                CommandExecutionContext.Current?.JobDataWriter?.LogErrorInHistory(exception.GetAllExceptionMessages(), accountId);
+                CommandExecutionContext.Current?.LogErrorInHistory(exception.GetAllExceptionMessages(), accountId);
             }
         }
     }

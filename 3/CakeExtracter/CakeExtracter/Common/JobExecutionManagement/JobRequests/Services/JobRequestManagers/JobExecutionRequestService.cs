@@ -2,26 +2,35 @@
 using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestManagers.Interfaces;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils;
-using CakeExtracter.SimpleRepositories;
-using CakeExtracter.SimpleRepositories.BasicRepositories.Interfaces;
+using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
-namespace CakeExtracter.Common.JobExecutionManagement.JobRequests
+namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRequestManagers
 {
-    public class JobExecutionRequestManager
+    /// <inheritdoc />
+    /// <summary>
+    /// The service for work with job request items.
+    /// </summary>
+    public class JobExecutionRequestService : IJobExecutionRequestService
     {
+        private readonly IBaseRepository<JobRequest> requestRepository;
         private readonly Queue<CommandWithSchedule> scheduledCommands;
-        private readonly IBasicRepository<JobRequest> requestRepository;
 
-        public JobExecutionRequestManager()
+        /// <summary>
+        /// Initializes a new instance of <see cref="JobExecutionRequestService"/>
+        /// </summary>
+        /// <param name="jobRequestRepository">The repository for job requests.</param>
+        public JobExecutionRequestService(IBaseRepository<JobRequest> jobRequestRepository)
         {
             scheduledCommands = new Queue<CommandWithSchedule>();
-            requestRepository = RepositoriesContainer.GetJobRequestRepository();
+            requestRepository = jobRequestRepository;
         }
 
+        /// <inheritdoc />
         public JobRequest GetJobRequest(ConsoleCommand command)
         {
             return command.RequestId.HasValue
@@ -29,30 +38,41 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests
                 : AddNotInheritedRequest(command);
         }
 
-        public void ScheduleCommand(CommandWithSchedule commandWithSchedule)
-        {
-            scheduledCommands.Enqueue(commandWithSchedule);
-        }
-
-        public void MarkJobRequestAsProcessing(JobRequest request)
+        /// <inheritdoc />
+        public void SetJobRequestAsProcessing(JobRequest request)
         {
             UpdateRequest(request, JobRequestStatus.Processing);
         }
 
-        public void RescheduleRequest(JobRequest request, DateTime scheduledTime)
+        /// <inheritdoc />
+        public void ScheduleCommandLaunch(ConsoleCommand command)
         {
-            RescheduleRequest(request, (DateTime?) scheduledTime);
+            var scheduledCommand = new CommandWithSchedule
+            {
+                Command = command,
+                ScheduledTime = GetScheduledTime(command)
+            };
+            scheduledCommands.Enqueue(scheduledCommand);
         }
 
-        public void CreateRequestsForScheduledCommands(ConsoleCommand command, JobRequest parentRequest)
+        /// <inheritdoc />
+        public void RescheduleRequest(JobRequest request, ConsoleCommand sourceCommand)
         {
-            var broadCommands = command.GetUniqueBroadCommands(scheduledCommands);
-            var jobRequests = broadCommands.Select(x => CreateJobRequest(x.Command, x.ScheduledTime, parentRequest.Id)).ToList();
-            ProcessEndOfRequest(jobRequests, parentRequest);
+            var scheduledTime = GetScheduledTime(sourceCommand);
+            RescheduleRequest(request, scheduledTime);
+        }
+
+        /// <inheritdoc />
+        public void CreateRequestsForScheduledCommands(ConsoleCommand sourceCommand, JobRequest sourceRequest)
+        {
+            var broadCommands = sourceCommand.GetUniqueBroadCommands(scheduledCommands);
+            var jobRequests = broadCommands.Select(x => CreateJobRequest(x.Command, x.ScheduledTime, sourceRequest.Id)).ToList();
+            ProcessEndOfRequest(jobRequests, sourceRequest);
             requestRepository.AddItems(jobRequests);
             jobRequests.ForEach(x => LogInfoAboutRequest("Schedule the new request", x));
         }
 
+        /// <inheritdoc />
         public void ExecuteScheduledInPastJobRequests(int maxNumberOfJobRequests)
         {
             var now = DateTime.Now;
@@ -60,13 +80,6 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests
             var failedRequests = requestsToRun.Where(x => x.AttemptNumber == maxNumberOfJobRequests).ToList();
             failedRequests.ForEach(x => UpdateRequest(x, JobRequestStatus.Failed));
             requestsToRun.Where(x => x.Status == JobRequestStatus.Scheduled).ForEach(RunRequestInNewProcess);
-        }
-
-        private void RunRequestInNewProcess(JobRequest request)
-        {
-            LogInfoAboutRequest("Run the job request", request);
-            var arguments = CommandArgumentsConverter.GetJobArgumentsAsArgumentsForConsole(request);
-            ProcessManager.RestartApplicationInNewProcess(arguments);
         }
 
         private void ProcessEndOfRequest(List<JobRequest> newRequests, JobRequest endedRequest)
@@ -82,6 +95,13 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests
 
             RescheduleRequest(endedRequest, childRequestAsParent.ScheduledTime);
             newRequests.Remove(childRequestAsParent);
+        }
+
+        private void RunRequestInNewProcess(JobRequest request)
+        {
+            LogInfoAboutRequest("Run the job request", request);
+            var arguments = CommandArgumentsConverter.GetJobArgumentsAsArgumentsForConsole(request);
+            ProcessManager.RestartApplicationInNewProcess(arguments);
         }
 
         private JobRequest AddNotInheritedRequest(ConsoleCommand command)
@@ -125,6 +145,11 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests
 
             request.Status = status;
             requestRepository.UpdateItem(request);
+        }
+
+        private DateTime GetScheduledTime(ConsoleCommand command)
+        {
+            return DateTime.Now.AddMinutes(command.IntervalBetweenUnsuccessfulAndNewRequestInMinutes);
         }
 
         private void LogInfoAboutRequest(string message, JobRequest request)

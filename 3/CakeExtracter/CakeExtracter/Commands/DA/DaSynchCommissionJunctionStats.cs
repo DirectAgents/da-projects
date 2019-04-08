@@ -18,7 +18,8 @@ using DirectAgents.Domain.Entities.CPProg;
 
 namespace CakeExtracter.Commands.DA
 {
-    ///The class represents a command that is used to retrieve statistics from the Commission Junction portal
+    /// <inheritdoc />
+    /// The class represents a command that is used to retrieve statistics from the Commission Junction portal
     [Export(typeof(ConsoleCommand))]
     public class DaSynchCommissionJunctionStats : ConsoleCommand
     {
@@ -48,8 +49,10 @@ namespace CakeExtracter.Commands.DA
         /// </summary>
         public int? DaysAgoToStart { get; set; }
 
+        /// <inheritdoc />
         public override int IntervalBetweenUnsuccessfulAndNewRequestInMinutes { get; set; }
 
+        /// <inheritdoc />
         /// <summary>
         /// The constructor sets a command name and command arguments names, provides a description for them.
         /// </summary>
@@ -62,6 +65,7 @@ namespace CakeExtracter.Commands.DA
             HasOption<int>("d|daysAgo=", $"Days Ago to start, if startDate not specified (default = {DefaultDaysAgo})", c => DaysAgoToStart = c);
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// The method resets command arguments to defaults
         /// </summary>
@@ -73,6 +77,7 @@ namespace CakeExtracter.Commands.DA
             DaysAgoToStart = null;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// The method runs the current command and extract and save statistics from the Commission Junction portal based on the command arguments.
         /// </summary>
@@ -95,6 +100,7 @@ namespace CakeExtracter.Commands.DA
             return 0;
         }
 
+        /// <inheritdoc />
         public override IEnumerable<CommandWithSchedule> GetUniqueBroadCommands(
             IEnumerable<CommandWithSchedule> commands)
         {
@@ -158,20 +164,20 @@ namespace CakeExtracter.Commands.DA
         private void InitUtilityEvents(CjUtility utility)
         {
             utility.ProcessSkippedCommissions += exception =>
-                ScheduleNewJobRequest<DaSynchCommissionJunctionStats>(command =>
+                ScheduleNewCommandLaunch<DaSynchCommissionJunctionStats>(command =>
                     UpdateCommandParameters(command, exception));
         }
 
         private void InitEtlEvents(CommissionJunctionAdvertiserExtractor extractor, CommissionJunctionAdvertiserLoader loader)
         {
             extractor.ProcessFailedExtraction += exception =>
-                ScheduleNewJobRequest<DaSynchCommissionJunctionStats>(command =>
+                ScheduleNewCommandLaunch<DaSynchCommissionJunctionStats>(command =>
                     UpdateCommandParameters(command, exception));
             extractor.ProcessEtlFailedWithoutInformation += exception =>
-                ScheduleNewJobRequest<DaSynchCommissionJunctionStats>(command =>
+                ScheduleNewCommandLaunch<DaSynchCommissionJunctionStats>(command =>
                     UpdateCommandParameters(command, exception));
             loader.ProcessEtlFailedWithoutInformation += exception =>
-                ScheduleNewJobRequest<DaSynchCommissionJunctionStats>(command =>
+                ScheduleNewCommandLaunch<DaSynchCommissionJunctionStats>(command =>
                     UpdateCommandParameters(command, exception));
         }
 

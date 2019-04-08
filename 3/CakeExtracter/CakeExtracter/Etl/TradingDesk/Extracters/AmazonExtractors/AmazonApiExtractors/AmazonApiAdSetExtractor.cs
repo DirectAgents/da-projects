@@ -41,7 +41,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
 
         private void Extract(DateTime date)
         {
-            CommandExecutionContext.Current?.JobDataWriter?.SetStateInHistory($"Adset Level- {date.ToString()}", accountId);
+            CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"Adset Level- {date.ToString()}", accountId);
             IEnumerable<AdSetSummary> items = null;
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
             {

@@ -1,4 +1,4 @@
-﻿using CakeExtracter.SimpleRepositories.BasicRepositories;
+﻿using CakeExtracter.SimpleRepositories.BaseRepositories;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 
@@ -8,19 +8,15 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories
     /// <summary>
     /// The repository for working with Job Request objects in the database.
     /// </summary>
-    internal class JobRequestRepository : BasicDatabaseRepository<JobRequest, ClientPortalProgContext>
+    internal class JobRequestRepository : BaseDatabaseRepository<JobRequest, ClientPortalProgContext>
     {
-        /// <inheritdoc />
-        public override string EntityName => "Job Request";
+        private static readonly object RequestLocker = new object();
 
         /// <inheritdoc />
-        /// <summary>
-        /// Initializes a new instance of <see cref="JobRequestRepository"/>
-        /// </summary>
-        /// <param name="locker">The object to lock work with Job Request entities in a database.</param>
-        public JobRequestRepository(object locker) : base(locker)
-        {
-        }
+        protected override object Locker { get; set; } = RequestLocker;
+
+        /// <inheritdoc />
+        public override string EntityName => "Job Request";
 
         /// <inheritdoc />
         public override object[] GetKeys(JobRequest item)

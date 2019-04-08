@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CakeExtracter.SimpleRepositories.BasicRepositories.Interfaces
+namespace CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces
 {
     /// <summary>
     /// The interface describes the behavior for working with certain entities of a repository.
     /// </summary>
     /// <typeparam name="T">The type of repository entity.</typeparam>
-    public interface IBasicRepository<T>
+    public interface IBaseRepository<T>
     {
         /// <summary>
         /// Receives an item by ID from the repository.

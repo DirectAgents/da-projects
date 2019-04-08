@@ -1,6 +1,6 @@
 ﻿using DirectAgents.Domain.Entities.Administration.JobExecution;
 
-namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
+namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
 {
     /// <summary>
     /// Service for work with job execution items.
