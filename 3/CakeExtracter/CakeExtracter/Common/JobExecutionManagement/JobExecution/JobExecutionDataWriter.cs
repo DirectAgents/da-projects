@@ -27,13 +27,20 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
         /// <exception cref="System.Exception">Error occured while extracting profile number configuration. Check Execution profiles configs.</exception>
         public void InitCurrentExecutionHistoryItem(JobRequest jobRequest)
         {
-            if (jobRequestExecutionItem != null)
+            try
             {
-                throw new Exception("Job execution history item already initialised. Can't be created twice in scope of one command execution");
+                if (jobRequestExecutionItem != null)
+                {
+                    throw new Exception("Job execution history item already initialised. Can't be created twice in scope of one command execution");
+                }
+                else
+                {
+                    jobRequestExecutionItem = jobExecutionItemService.CreateJobExecutionItem(jobRequest);
+                }
             }
-            else
+            catch
             {
-                jobRequestExecutionItem = jobExecutionItemService.CreateJobExecutionItem(jobRequest);
+                //History operations should not fail and log errors in order to not call circular logging.
             }
         }
 
@@ -44,9 +51,16 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
         /// <param name="accountId"></param>
         public void LogErrorInHistory(string message, int? accountId = null)
         {
-            if (jobRequestExecutionItem != null)
+            try
             {
-                jobExecutionItemService.AddErrorToJobExecutionItem(jobRequestExecutionItem, message, accountId);
+                if (jobRequestExecutionItem != null)
+                {
+                    jobExecutionItemService.AddErrorToJobExecutionItem(jobRequestExecutionItem, message, accountId);
+                }
+            }
+            catch
+            {
+                //History operations should not fail and log errors in order to not call circular logging.
             }
         }
 
@@ -57,9 +71,16 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
         /// <param name="accountId"></param>
         public void LogWarningInHistory(string message, int? accountId = null)
         {
-            if (jobRequestExecutionItem != null)
+            try
             {
-                jobExecutionItemService.AddWarningToJobExecutionItem(jobRequestExecutionItem, message, accountId);
+                if (jobRequestExecutionItem != null)
+                {
+                    jobExecutionItemService.AddWarningToJobExecutionItem(jobRequestExecutionItem, message, accountId);
+                }
+            }
+            catch
+            {
+                //History operations should not fail and log errors in order to not call circular logging.
             }
         }
 
@@ -70,9 +91,16 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
         /// <param name="accountId">The account identifier.</param>
         public void SetStateInHistory(string stateMesasge, int? accountId = null)
         {
-            if (jobRequestExecutionItem != null)
+            try
             {
-                jobExecutionItemService.AddStateMessage(jobRequestExecutionItem, stateMesasge, accountId);
+                if (jobRequestExecutionItem != null)
+                {
+                    jobExecutionItemService.AddStateMessage(jobRequestExecutionItem, stateMesasge, accountId);
+                }
+            }
+            catch
+            {
+                //History operations should not fail and log errors in order to not call circular logging.
             }
         }
 
@@ -81,9 +109,16 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
         /// </summary>
         public void SetCurrentTaskFailedStatus()
         {
-            if (jobRequestExecutionItem != null)
+            try
             {
-                jobExecutionItemService.SetJobExecutionItemFailedState(jobRequestExecutionItem);
+                if (jobRequestExecutionItem != null)
+                {
+                    jobExecutionItemService.SetJobExecutionItemFailedState(jobRequestExecutionItem);
+                }
+            }
+            catch
+            {
+                //History operations should not fail and log errors in order to not call circular logging.
             }
         }
 
@@ -92,9 +127,16 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
         /// </summary>
         public void SetCurrentTaskFinishedStatus()
         {
-            if (jobRequestExecutionItem != null)
+            try
             {
-                jobExecutionItemService.SetJobExecutionItemFinishedState(jobRequestExecutionItem);
+                if (jobRequestExecutionItem != null)
+                {
+                    jobExecutionItemService.SetJobExecutionItemFinishedState(jobRequestExecutionItem);
+                }
+            }
+            catch
+            {
+                //History operations should not fail and log errors in order to not call circular logging.
             }
         }
     }
