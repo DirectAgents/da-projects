@@ -48,7 +48,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
 
         private void Extract(DateTime date, List<AmazonCampaign> campaignInfo)
         {
-            CommandExecutionContext.Current?.JobDataWriter?.SetStateInHistory($"Ad Level - {date.ToString()}", accountId);
+            CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"Ad Level - {date.ToString()}", accountId);
             IEnumerable<TDadSummary> items = null;
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => {
                 var productAdSums = ExtractProductAdSummaries(date);

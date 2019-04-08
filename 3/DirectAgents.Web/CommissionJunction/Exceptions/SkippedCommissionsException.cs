@@ -11,11 +11,20 @@ namespace CommissionJunction.Exceptions
         private const string ExceptionMessage = "Commissions were not extracted from the API for the following arguments: ";
         private const string DateFormat = "yyyy-MM-ddTHH:mm:ssZ";
 
+        /// <summary>
+        /// Account ID in Commission Junction portal for which statistics was extracted.
+        /// </summary>
+        public string AccountId { get; set; }
+
+        /// <summary>
+        /// Start date from which statistics was extracted.
+        /// </summary>
         public DateTime StartDate { get; set; }
 
+        /// <summary>
+        /// End date to which statistics was extracted.
+        /// </summary>
         public DateTime EndDate { get; set; }
-
-        public string AccountId { get; set; }
 
         /// <inheritdoc />
         /// <summary>

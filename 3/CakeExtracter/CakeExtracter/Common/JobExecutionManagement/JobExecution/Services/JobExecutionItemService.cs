@@ -3,17 +3,18 @@ using CakeExtracter.Common.JobExecutionManagement.JobExecution.Utils;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
 
-namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
+namespace CakeExtracter.Common.JobExecutionManagement.JobExecution.Services
 {
+    /// <inheritdoc />
     /// <summary>
     /// Job execution history management service.
     /// </summary>
     /// <seealso cref="IJobExecutionHistoryItemService" />
     public class JobExecutionItemService : IJobExecutionItemService
     {
-        private IJobExecutionItemRepository jobExecutionHistoryRepository;
+        private readonly IJobExecutionItemRepository jobExecutionHistoryRepository;
 
-        private object executionItemHistoryLockObject = new object();
+        private readonly object executionItemHistoryLockObject = new object();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="JobExecutionItemService"/> class.
@@ -73,16 +74,9 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
         {
             lock (executionItemHistoryLockObject)
             {
-                if (accountId.HasValue)
-                {
-                    executionHistoryItem.Errors =
-                        ExecutionLoggingUtils.AddAccountMessageToLogData(executionHistoryItem.Errors, message, accountId.Value);
-                }
-                else
-                {
-                    executionHistoryItem.Errors =
-                        ExecutionLoggingUtils.AddCommonMessageToLogData(executionHistoryItem.Errors, message);
-                }
+                executionHistoryItem.Errors = accountId.HasValue
+                    ? ExecutionLoggingUtils.AddAccountMessageToLogData(executionHistoryItem.Errors, message, accountId.Value)
+                    : ExecutionLoggingUtils.AddCommonMessageToLogData(executionHistoryItem.Errors, message);
                 jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
             }
         }
@@ -97,16 +91,9 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
         {
             lock (executionItemHistoryLockObject)
             {
-                if (accountId.HasValue)
-                {
-                    executionHistoryItem.Warnings =
-                        ExecutionLoggingUtils.AddAccountMessageToLogData(executionHistoryItem.Warnings, message, accountId.Value);
-                }
-                else
-                {
-                    executionHistoryItem.Warnings =
-                        ExecutionLoggingUtils.AddCommonMessageToLogData(executionHistoryItem.Warnings, message);
-                }
+                executionHistoryItem.Warnings = accountId.HasValue
+                    ? ExecutionLoggingUtils.AddAccountMessageToLogData(executionHistoryItem.Warnings, message, accountId.Value)
+                    : ExecutionLoggingUtils.AddCommonMessageToLogData(executionHistoryItem.Warnings, message);
                 jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
             }
         }
@@ -121,16 +108,9 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
         {
             lock (executionItemHistoryLockObject)
             {
-                if (accountId.HasValue)
-                {
-                    executionHistoryItem.CurrentState =
-                        ExecutionLoggingUtils.SetSingleAccountMessageInLogData(executionHistoryItem.CurrentState, message, accountId.Value);
-                }
-                else
-                {
-                    executionHistoryItem.CurrentState =
-                        ExecutionLoggingUtils.SetSingleCommonMessageInLogData(executionHistoryItem.CurrentState, message);
-                }
+                executionHistoryItem.CurrentState = accountId.HasValue
+                    ? ExecutionLoggingUtils.SetSingleAccountMessageInLogData(executionHistoryItem.CurrentState, message, accountId.Value)
+                    : ExecutionLoggingUtils.SetSingleCommonMessageInLogData(executionHistoryItem.CurrentState, message);
                 jobExecutionHistoryRepository.UpdateItem(executionHistoryItem);
             }
         }

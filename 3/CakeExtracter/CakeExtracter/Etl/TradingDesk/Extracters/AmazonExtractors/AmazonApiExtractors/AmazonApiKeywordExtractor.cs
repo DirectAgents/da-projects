@@ -63,7 +63,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
 
         private void ExtractDaily(DateTime date, List<AmazonCampaign> campaignsData)
         {
-            CommandExecutionContext.Current?.JobDataWriter?.SetStateInHistory($"Keywords Level- {date.ToString()}", accountId);
+            CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"Keywords Level- {date.ToString()}", accountId);
             IEnumerable<KeywordSummary> items = null;
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
             {

@@ -3,31 +3,24 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using CakeExtracter.Helpers;
-using CakeExtracter.SimpleRepositories.BasicRepositories.Interfaces;
+using CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces;
 
-namespace CakeExtracter.SimpleRepositories.BasicRepositories
+namespace CakeExtracter.SimpleRepositories.BaseRepositories
 {
     /// <inheritdoc />
     /// <summary>
-    /// The basic abstract generic class for implementing the common methods of the IBasicRepository interface for a database.
+    /// The basic abstract generic class for implementing the common methods of the IBaseRepository interface for a database.
     /// </summary>
     /// <typeparam name="T">The type of repository entity.</typeparam>
     /// <typeparam name="TContext">The context of repository.</typeparam>
-    internal abstract class BasicDatabaseRepository<T, TContext> : IBasicRepository<T> 
+    internal abstract class BaseDatabaseRepository<T, TContext> : IBaseRepository<T> 
         where T: class
         where TContext : DbContext, new()
     {
-        private readonly object locker;
-
-        /// <inheritdoc />
         /// <summary>
-        /// Initializes a new instance.
+        /// The object to lock work with entities in a database.
         /// </summary>
-        /// <param name="locker">The object to lock work with entities in a database.</param>
-        protected BasicDatabaseRepository(object locker)
-        {
-            this.locker = locker;
-        }
+        protected virtual object Locker { get; set; } = new object();
 
         /// <summary>
         /// The string name of the entity for which the repository is used.
@@ -45,7 +38,7 @@ namespace CakeExtracter.SimpleRepositories.BasicRepositories
         public T GetItem(int id)
         {
             T item = null;
-            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => item = GetItem(dbContext, id), locker,
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => item = GetItem(dbContext, id), Locker,
                 $"Getting {typeof(T).Name} database item");
             return item;
         }
@@ -54,7 +47,7 @@ namespace CakeExtracter.SimpleRepositories.BasicRepositories
         public T GetFirstItem(Func<T, bool> predicate)
         {
             T item = null;
-            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => item = GetFirstItem(dbContext, predicate), locker,
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => item = GetFirstItem(dbContext, predicate), Locker,
                 $"Getting first {typeof(T).Name} database item");
             return item;
         }
@@ -63,7 +56,7 @@ namespace CakeExtracter.SimpleRepositories.BasicRepositories
         public List<T> GetItems(Func<T, bool> predicate)
         {
             List<T> items = null;
-            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => items = GetItems(dbContext, predicate).ToList(), locker,
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => items = GetItems(dbContext, predicate), Locker,
                 $"Getting {typeof(T).Name} database items");
             return items;
         }
@@ -71,22 +64,22 @@ namespace CakeExtracter.SimpleRepositories.BasicRepositories
         /// <inheritdoc />
         public void AddItem(T item)
         {
-            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => AddItem(dbContext, item), locker,
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => AddItem(dbContext, item), Locker,
                 $"Inserting {typeof(T).Name} database item.");
         }
 
         /// <inheritdoc />
         public void AddItems(IEnumerable<T> items)
         {
-            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => AddItems(dbContext, items), locker,
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => AddItems(dbContext, items), Locker,
                 $"Inserting {typeof(T).Name} database items.");
         }
 
         /// <inheritdoc />
         public void UpdateItem(T itemToUpdate)
         {
-            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => UpdateItem(dbContext, itemToUpdate),
-                locker, $"Updating {typeof(T).Name} database item");
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => UpdateItem(dbContext, itemToUpdate), Locker,
+                $"Updating {typeof(T).Name} database item");
         }
 
         private T GetItem(TContext dbContext, params object[] keys)
@@ -99,9 +92,9 @@ namespace CakeExtracter.SimpleRepositories.BasicRepositories
             return dbContext.Set<T>().FirstOrDefault(predicate);
         }
 
-        private IEnumerable<T> GetItems(TContext dbContext, Func<T, bool> predicate)
+        private List<T> GetItems(TContext dbContext, Func<T, bool> predicate)
         {
-            return dbContext.Set<T>().Where(predicate);
+            return dbContext.Set<T>().Where(predicate).ToList();
         }
 
         private void AddItem(TContext dbContext, T item)

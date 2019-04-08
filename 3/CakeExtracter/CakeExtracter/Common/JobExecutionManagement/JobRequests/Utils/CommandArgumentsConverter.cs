@@ -4,6 +4,9 @@ using DirectAgents.Domain.Entities.Administration.JobExecution;
 
 namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
 {
+    /// <summary>
+    /// The utility that helps convert command and request arguments to console arguments and vice versa.
+    /// </summary>
     internal static class CommandArgumentsConverter
     {
         private const string ArgumentsSeparatorForConsole = " ";
@@ -11,6 +14,11 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
         private const string ArgumentNameAndValueSeparator = " ";
         private const string ArgumentStringValueSeparator = "\"";
 
+        /// <summary>
+        /// Converts arguments of a console command object to use to launch it from the console.
+        /// </summary>
+        /// <param name="command">The command to convert.</param>
+        /// <returns>Command arguments to run from console.</returns>
         public static string GetCommandArgumentsAsLine(ConsoleCommand command)
         {
             var argOptions = command.GetActualOptions();
@@ -22,6 +30,11 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
                 .Aggregate(string.Empty, (s, s1) => JoinArguments(s, s1));
         }
 
+        /// <summary>
+        /// Converts a job request object to use to run its command from the console.
+        /// </summary>
+        /// <param name="request">The job request to convert.</param>
+        /// <returns>Job request arguments to run from console.</returns>
         public static string GetJobArgumentsAsArgumentsForConsole(JobRequest request)
         {
             var requestArgument = GetArgument(ConsoleCommand.RequestIdArgumentName, request.Id);

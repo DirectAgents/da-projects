@@ -67,7 +67,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
         {
             try
             {
-                CommandExecutionContext.Current.JobDataWriter.SetStateInHistory($"Date - {date.ToString()}", AccountInfo.Account.Id);
+                CommandExecutionContext.Current.SetJobExecutionStateInHistory($"Date - {date.ToString()}", AccountInfo.Account.Id);
                 Logger.Info(AccountInfo.Account.Id, $"Amazon VCD, ETL for {date} started. Account {AccountInfo.Account.Name} - {AccountInfo.Account.Id}");
                 var data = TryExtractDailyData(date);
                 Add(data);
