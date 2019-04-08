@@ -1,4 +1,5 @@
-﻿using CakeExtracter.Common;
+﻿using System;
+using CakeExtracter.Common;
 using CakeExtracter.Logging.TimeWatchers;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
 using DirectAgents.Domain.Contexts;
@@ -26,12 +27,18 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         /// </summary>
         protected override void Extract()
         {
-            RemoveOldData(dateRange);
-            IEnumerable<DailySummary> items = null;
-            AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => {
-                items = GetDailySummaryDataFromDataBase();
-            }, accountId, AmazonJobLevels.account, AmazonJobOperations.reportExtracting);
-            Add(items);
+            try
+            {
+                RemoveOldData(dateRange);
+                IEnumerable<DailySummary> items = null;
+                AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => { items = GetDailySummaryDataFromDataBase(); },
+                    accountId, AmazonJobLevels.account, AmazonJobOperations.reportExtracting);
+                Add(items);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(accountId, e);
+            }
             End();
         }
 
