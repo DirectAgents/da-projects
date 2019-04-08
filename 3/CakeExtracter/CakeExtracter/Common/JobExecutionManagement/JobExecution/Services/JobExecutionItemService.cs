@@ -11,7 +11,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobExecution
     /// <seealso cref="IJobExecutionHistoryItemService" />
     public class JobExecutionItemService : IJobExecutionItemService
     {
-        IJobExecutionItemRepository jobExecutionHistoryRepository;
+        private IJobExecutionItemRepository jobExecutionHistoryRepository;
 
         private object executionItemHistoryLockObject = new object();
 
