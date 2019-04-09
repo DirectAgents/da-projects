@@ -1,6 +1,7 @@
 ﻿using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
 using MVCGrid.Models;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 
@@ -12,6 +13,11 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
     /// <seealso cref="DirectAgents.Web.Areas.Admin.Grids.JobHistory.IJobHistoryDataProvider" />
     public class JobHistoryDataProvider : IJobHistoryDataProvider
     {
+        private readonly List<string> HistoryItemJobsBlackList = new List<string>
+        {
+            "ScheduledRequestsLauncherCommand"
+        };
+
         /// <summary>
         /// Gets the query result.
         /// </summary>
@@ -27,7 +33,7 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
                     .ApplyParentJobIdFilter(options)
                     .ApplyStartTimeSorting(options)
                     .ApplyStartDateFilter(options)
-                    .ApplyCommandNameFilter(options);
+                    .ApplyCommandNameFilter(options, HistoryItemJobsBlackList);
                 result.TotalRecords = query.Count();
                 query = query.ApplyPaging(options);
                 result.Items = query.ToList();

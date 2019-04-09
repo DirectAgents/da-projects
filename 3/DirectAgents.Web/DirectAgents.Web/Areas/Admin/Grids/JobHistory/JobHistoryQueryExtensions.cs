@@ -2,6 +2,7 @@
 using DirectAgents.Domain.Entities.Administration.JobExecution.Enums;
 using MVCGrid.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
@@ -17,14 +18,33 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
         /// <param name="source">The source query object.</param>
         /// <param name="options">The grid options.</param>
         /// <returns></returns>
-        public static IQueryable<JobRequestExecution> ApplyCommandNameFilter(this IQueryable<JobRequestExecution> source, QueryOptions options)
+        public static IQueryable<JobRequestExecution> ApplyCommandNameFilter(this IQueryable<JobRequestExecution> source, QueryOptions options,
+            List<string> historyItemJobsBlackList)
         {
             const string commandNameFilterKey = "CommandName";
             if (options.Filters.ContainsKey(commandNameFilterKey))
             {
                 var filterValue = options.Filters[commandNameFilterKey];
-                source = source.Where(jeXecution => jeXecution.JobRequest.CommandName.StartsWith(filterValue));
+                source = source.Where(jExecution => jExecution.JobRequest.CommandName.StartsWith(filterValue));
             }
+            else
+            {
+                source = source.Where(jExecution => !historyItemJobsBlackList.Contains(jExecution.JobRequest.CommandName));
+            }
+            return source;
+        }
+
+        /// <summary>
+        /// Applies the commands black list filter.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="options">The options.</param>
+        /// <param name="historyItemJobsBlackList">The history item jobs black list.</param>
+        /// <returns></returns>
+        public static IQueryable<JobRequestExecution> ApplyCommandsBlackListFilter(this IQueryable<JobRequestExecution> source, QueryOptions options,
+            List<string> historyItemJobsBlackList)
+        {
+            
             return source;
         }
 
@@ -43,8 +63,8 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
                 if (int.TryParse(options.Filters[parentJobFilterKey], out filterJobIdValue))
                 {
                     source = filterJobIdValue > 0 ?
-                        source.Where(jeXecution => jeXecution.JobRequest.ParentJobRequestId == filterJobIdValue):
-                        source.Where(jeXecution => jeXecution.JobRequest.ParentJobRequestId == null);
+                        source.Where(jExecution => jExecution.JobRequest.ParentJobRequestId == filterJobIdValue):
+                        source.Where(jExecution => jExecution.JobRequest.ParentJobRequestId == null);
                 }
             }
             return source;
@@ -65,7 +85,7 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
                 if (int.TryParse(options.Filters[statusFilterKey], out statusValue))
                 {
                     var status = (JobExecutionStatus)statusValue;
-                    source = source.Where(jeXecution => jeXecution.Status == status);
+                    source = source.Where(jExecution => jExecution.Status == status);
                 }
             }
             return source;
@@ -85,7 +105,7 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
                 DateTime dateFilterValue = new DateTime();
                 if (DateTime.TryParse(options.Filters[startDateFilterKey], out dateFilterValue))
                 {
-                    source = source.Where(jeXecution => jeXecution.StartTime.Value.Day == dateFilterValue.Day);
+                    source = source.Where(jExecution => jExecution.StartTime.Value.Day == dateFilterValue.Day);
                 }
             }
             return source;
