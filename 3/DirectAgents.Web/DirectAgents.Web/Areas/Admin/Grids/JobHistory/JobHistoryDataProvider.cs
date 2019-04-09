@@ -27,9 +27,9 @@ namespace DirectAgents.Web.Areas.Admin.Grids.JobHistory
                     .ApplyParentJobIdFilter(options)
                     .ApplyStartTimeSorting(options)
                     .ApplyStartDateFilter(options)
-                    .ApplyCommandNameFilter(options)
-                    .ApplyPaging(options);
+                    .ApplyCommandNameFilter(options);
                 result.TotalRecords = query.Count();
+                query = query.ApplyPaging(options);
                 result.Items = query.ToList();
                 return result;
             }
