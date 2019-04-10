@@ -184,28 +184,34 @@
 @if (!Model.CampaignId.HasValue)
 {
     <text>
-        Filter:
-        @Html.ActionLink("Adform", "IndexGauge", new {platform = Platform.Code_Adform}) |
-        @Html.ActionLink("AdRoll", "IndexGauge", new {platform = Platform.Code_AdRoll}) |
-        @Html.ActionLink("Amazon", "IndexGauge", new {platform = Platform.Code_Amazon}) |
-        @Html.ActionLink("Criteo", "IndexGauge", new {platform = Platform.Code_Criteo}) |
-        @Html.ActionLink("DBM", "IndexGauge", new {platform = Platform.Code_DBM}) |
-        @Html.ActionLink("Facebook", "IndexGauge", new {platform = Platform.Code_FB}) |
-        @Html.ActionLink("YAM", "IndexGauge", new {platform = Platform.Code_YAM}) |
+        Filter: <br/>
+        @Html.ActionLink("Adform", "IndexGauge", new { platform = Platform.Code_Adform }) |
+        @Html.ActionLink("AdRoll", "IndexGauge", new { platform = Platform.Code_AdRoll }) |
+        @Html.ActionLink("Amazon", "IndexGauge", new { platform = Platform.Code_Amazon }) |
+        @Html.ActionLink("Criteo", "IndexGauge", new { platform = Platform.Code_Criteo }) |
+        @Html.ActionLink("DBM", "IndexGauge", new { platform = Platform.Code_DBM }) |
+        @Html.ActionLink("Facebook", "IndexGauge", new { platform = Platform.Code_FB }) |
+        @Html.ActionLink("YAM", "IndexGauge", new { platform = Platform.Code_YAM })
+        <br />
+        @Html.ActionLink("Ara Amazon", "IndexSpecialPlatformStats", new { platform = Platform.Code_AraAmazon }) |
+        @Html.ActionLink("Commission Junction", "IndexSpecialPlatformStats", new { platform = Platform.Code_CJ }) |
+        @Html.ActionLink("DSP", "IndexSpecialPlatformStats", new { platform = Platform.Code_DspAmazon }) |
+        @Html.ActionLink("Kochava", "IndexSpecialPlatformStats", new { platform = Platform.Code_Kochava })
+        <br />
         @Html.ActionLink("(show all)", "IndexGauge")
     </text>
-    <br/>
-    <br/>
+    <br />
+    <br />
 }
 else if (super) //CampaignId specified
 {
     var extAcctSelectList = Model.ExtAccountSelectListItems(syncableOnly: true, includePlatforms: true);
-    var statsTypeList = new[] {"Daily", "Strategy", "AdSet+Actions (Adform/FB only)"};
+    var statsTypeList = new[] { "Daily", "Strategy", "AdSet+Actions (Adform/FB only)" };
     var defaultTo = DateTime.Today.AddDays(-1);
     var defaultFrom = defaultTo.Day == 1 ? defaultTo.AddMonths(-1) : new DateTime(defaultTo.Year, defaultTo.Month, 1);
 
     <h4>Re-Sync/Clear Stats</h4>
-    using (Html.BeginForm("StatsGaugeSyncClear", "ExtAccounts", FormMethod.Post, new {id = "formSync"}))
+    using (Html.BeginForm("StatsGaugeSyncClear", "ExtAccounts", FormMethod.Post, new { id = "formSync" }))
     {
         @Html.ValidationSummary()
         @Html.Hidden("campId", Model.CampaignId.Value)
@@ -220,11 +226,11 @@ else if (super) //CampaignId specified
             </tr>
             <tr>
                 <td>@Html.Label("", "From:")</td>
-                <td><input type="text" id="sync_from" name="from" value="@defaultFrom.ToShortDateString()"/></td>
+                <td><input type="text" id="sync_from" name="from" value="@defaultFrom.ToShortDateString()" /></td>
             </tr>
             <tr>
                 <td>@Html.Label("", "To:")</td>
-                <td><input type="text" id="sync_to" name="to" value="@defaultTo.ToShortDateString()"/></td>
+                <td><input type="text" id="sync_to" name="to" value="@defaultTo.ToShortDateString()" /></td>
             </tr>
             <tr>
                 <td>@Html.Label("", "Clear Stats:")</td>
@@ -235,17 +241,17 @@ else if (super) //CampaignId specified
                 <td>@Html.CheckBox("sync", true)</td>
             </tr>
         </table>
-        <br/>
+        <br />
         <div id="divSyncButton">
-            <input type="submit" value="Go..." onclick="DoSync()"/>
+            <input type="submit" value="Go..." onclick="DoSync()" />
         </div>
         <div id="divSyncMessage"></div>
     }
-    <br/>
+    <br />
     <i>Note: for Amazon and Criteo, sync strategy stats before daily stats</i>
 
     <script>
-        $(function() {
+        $(function () {
             $('#sync_from').kendoDatePicker({ footer: ' ' });
             $('#sync_to').kendoDatePicker({ footer: ' ' });
         });

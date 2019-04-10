@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DirectAgents.Domain.Abstract;
-using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.CPSearch;
 
 namespace DirectAgents.Domain.Concrete
