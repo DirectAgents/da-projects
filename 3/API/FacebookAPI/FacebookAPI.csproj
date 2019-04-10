@@ -44,14 +44,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\AdDataEntities\AdData.cs" />
+    <Compile Include="Entities\AdDataEntities\AdSet.cs" />
+    <Compile Include="Entities\AdDataEntities\Creative.cs" />
+    <Compile Include="Entities\AdDataEntities\Campaign.cs" />
     <Compile Include="Entities\FBAdPreview.cs" />
     <Compile Include="Entities\FBSummary.cs" />
     <Compile Include="Enums\Attribution.cs" />
     <Compile Include="Enums\AttributionWindow.cs" />
     <Compile Include="Enums\ConversionActionType.cs" />
     <Compile Include="Enums\PlatformFilter.cs" />
+    <Compile Include="AdDataProvider.cs" />
     <Compile Include="FacebookUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\FacebookRequestUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

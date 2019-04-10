@@ -7,6 +7,7 @@ using System.Threading;
 using Facebook;
 using FacebookAPI.Entities;
 using FacebookAPI.Enums;
+using FacebookAPI.Utils;
 
 namespace FacebookAPI
 {
@@ -165,43 +166,7 @@ namespace FacebookAPI
         {
             return GetFBSummariesLoop(accountId, start, end, byCampaign: true);
         }
-        public IEnumerable<FBSummary> GetDailyCampaignStats2(string accountId, DateTime start, DateTime end)
-        {
-            int daysPerCall = DaysPerCall_Override ?? DaysPerCall_Campaign;
-            while (start <= end)
-            {
-                var tempEnd = start.AddDays(daysPerCall - 1);
-                if (tempEnd > end)
-                    tempEnd = end;
-                var clientParms = GetClientAndParms(accountId, start, tempEnd, byCampaign: true);
-                var fbSummaries = GetFBSummaries(clientParms);
-
-                //NOTE: Forgot why this grouping was done (instead of using GetFBSummariesLoop).
-                //      Apparently there could be two campaigns with the same name and we want to display them as one.
-
-                var groups = fbSummaries.GroupBy(s => new { s.Date, s.CampaignName });
-                foreach (var group in groups)
-                {
-                    var fbSum = new FBSummary
-                    {
-                        Date = group.Key.Date,
-                        CampaignName = group.Key.CampaignName,
-                        Spend = group.Sum(g => g.Spend),
-                        Impressions = group.Sum(g => g.Impressions),
-                        LinkClicks = group.Sum(g => g.LinkClicks),
-                        AllClicks = group.Sum(g => g.AllClicks),
-                        //UniqueClicks = group.Sum(g => g.UniqueClicks),
-                        //TotalActions = group.Sum(g => g.TotalActions),
-                        Conversions_click = group.Sum(g => g.Conversions_click),
-                        Conversions_view = group.Sum(g => g.Conversions_view),
-                        ConVal_click = group.Sum(g => g.ConVal_click),
-                        ConVal_view = group.Sum(g => g.ConVal_view)
-                    };
-                    yield return fbSum;
-                }
-                start = start.AddDays(daysPerCall);
-            }
-        }
+        
         public IEnumerable<FBSummary> GetDailyAdSetStats(string accountId, DateTime start, DateTime end)
         {
             return GetFBSummariesLoop(accountId, start, end, byCampaign: true, byAdSet: true, getArchived: true);
@@ -251,6 +216,7 @@ namespace FacebookAPI
                 }
             }
         }
+
         public static IEnumerable<FBSummary> RemoveIds(IEnumerable<FBSummary> fbSummaries)
         {
             foreach (var fbSum in fbSummaries)
@@ -328,7 +294,7 @@ namespace FacebookAPI
             if (byAd)
             {
                 levelVal = "ad";
-                fieldsVal += ",ad_id,ad_name";
+                fieldsVal += ",ad_id,ad_name,creative{image_url,title,body,thumbnail_url,name,id}";
             }
 
             var filterList = new List<Filter>();
@@ -346,16 +312,13 @@ namespace FacebookAPI
 
             var parameters = new
             {
-                //filtering = new[] { new { field = "campaign.name", @operator = "EQUAL", value = "DA | Mobile App Installs (Android)" } },
-                //metadata = 1,
                 filtering = filterList.ToArray(),
                 level = levelVal,
                 fields = fieldsVal,
                 action_breakdowns = "action_type", //,action_reaction
                 action_attribution_windows = clickAttribution + "," + viewAttribution, // e.g. "28d_click,1d_view",
-                time_range = new { since = DateString(start), until = DateString(end) },
+                time_range = new { since = FacebookRequestUtils.GetDateString(start), until = FacebookRequestUtils.GetDateString(end) },
                 time_increment = 1,
-                //after = afterVal
             };
 
             string by = byCampaign ? " by Campaign" : "";
@@ -383,7 +346,6 @@ namespace FacebookAPI
                     runId = clientParms.GetRunId();
                     tryNumber = 0; // mark as call succeeded (no exception)
                 }
-                //catch (FacebookOAuthException ex)
                 catch (Exception ex)
                 {
                     LogError(ex.Message);
@@ -686,33 +648,7 @@ namespace FacebookAPI
             });
         }
 
-        public void Test()
-        {
-            //string path = "v2.5/me/adaccounts";
-            //string path = "v2.5/act_101672655?fields=insights{impressions}";
-
-            //string path = "v2.5/act_101672655";
-            //dynamic obj = client.Get(path, new { fields = "insights{impressions}" });
-            //string path = "v2.5/act_101672655/insights";
-            //dynamic obj = client.Get(path, new { fields = "impressions", date_preset = "last_7_days" });
-            //dynamic obj = client.Get(path, new { fields = "impressions", time_range = new { since = "2015-11-10", until = "2015-11-12" } });
-            //var acctId = "act_10153287675738628"; // Crackle
-            var acctId = "act_101672655"; // Zeel consumer
-            var path = acctId + "/insights";
-            //var fullpath = "v" + ApiVersion + "/" + path;
-            var fbClient = CreateFBClient();
-            dynamic obj = fbClient.Get(path, new {
-                metadata = 1,
-                fields = "impressions,unique_clicks,total_actions,spend",
-                time_range = new { since = "2015-10-1", until = "2015-10-3" },
-                time_increment = 1
-            });
-        }
-
-        public static string DateString(DateTime dateTime)
-        {
-            return dateTime.ToString("yyyy-M-d");
-        }
+        
 
         private class ClientAndParms
         {
@@ -722,6 +658,7 @@ namespace FacebookAPI
             public string logMessage;
 
             private string runId;
+
             public string GetRunId(int waitMillisecs = 0)
             {
                 if (String.IsNullOrWhiteSpace(runId))

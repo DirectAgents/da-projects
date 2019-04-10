@@ -120,9 +120,14 @@ namespace CakeExtracter.Commands
 
             var statsType = new StatsTypeAgg(StatsType);
 
-            var accounts = GetAccounts();
+            var accounts = GetAccounts().Take(1);
             Parallel.ForEach(accounts, (account) =>
             {
+                var adCreativeProvider = new AdDataProvider();
+               
+                //var adsInfo = adCreativeProvider.GetAdsCreativesForAccount(account.ExternalId, dateRange.FromDate, dateRange.ToDate);
+                //return;
+
                 var acctDateRange = new DateRange(dateRange.FromDate, dateRange.ToDate);
                 if (account.Campaign != null) // check/adjust daterange - if acct assigned to a campaign/advertiser
                 {
@@ -177,18 +182,21 @@ namespace CakeExtracter.Commands
             CommandHelper.DoEtl(extractor, loader);
             return extractor.Added;
         }
+
         private void DoETL_Strategy(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
             var extractor = new FacebookCampaignSummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
             var loader = new FacebookCampaignSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
+
         private void DoETL_AdSet(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
             var extractor = new FacebookAdSetSummaryExtracter(dateRange, account, fbUtility, includeAllActions: true);
             var loader = new FacebookAdSetSummaryLoader(account.Id, loadActions: true);
             CommandHelper.DoEtl(extractor, loader);
         }
+
         private void DoETL_Creative(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
         {
             var extractor = new FacebookAdSummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
