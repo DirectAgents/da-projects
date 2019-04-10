@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.ComponentModel.Composition;
 using System.Configuration;
 using CakeExtracter.Common;
 using CakeExtracter.Common.JobExecutionManagement.JobRequests.Repositories;
@@ -12,6 +13,7 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     internal class ScheduledRequestsLauncherCommand : ConsoleCommand
     {
+        /// <inheritdoc />
         /// <summary>
         /// The constructor sets a command name and command arguments names, provides a description for them.
         /// </summary>
@@ -31,11 +33,18 @@ namespace CakeExtracter.Commands
         /// </summary>
         public override int Execute(string[] remainingArguments)
         {
-            var maxNumberOfJobRequests = int.Parse(ConfigurationManager.AppSettings["MaxNumberOfRequestsToRunWithUniqueArguments"]);
+            var maxNumberOfJobRequests = int.Parse(ConfigurationManager.AppSettings["JEM_MaxNumberOfRequestsToRunWithUniqueArguments"]);
+            var maxNumberOfRunningRequests = int.Parse(ConfigurationManager.AppSettings["JEM_MaxNumberOfRunningRequests"]);
+            var requestService = CreateRequestService();
+            requestService.ExecuteScheduledInPastJobRequests(maxNumberOfJobRequests, maxNumberOfRunningRequests);
+            return 0;
+        }
+
+        private JobExecutionRequestService CreateRequestService()
+        {
             var requestRepository = new JobRequestRepository();
             var requestService = new JobExecutionRequestService(requestRepository);
-            requestService.ExecuteScheduledInPastJobRequests(maxNumberOfJobRequests);
-            return 0;
+            return requestService;
         }
     }
 }

@@ -72,10 +72,7 @@ namespace CakeExtracter.Common.JobExecutionManagement
         /// <param name="command">The command for a new job request.</param>
         public void ScheduleCommandLaunch(ConsoleCommand command)
         {
-            if (!command.NoNeedToCreateRepeatRequests)
-            {
-                jobExecutionRequestService.ScheduleCommandLaunch(command);
-            }
+            jobExecutionRequestService.ScheduleCommandLaunch(command);
         }
 
         /// <summary>

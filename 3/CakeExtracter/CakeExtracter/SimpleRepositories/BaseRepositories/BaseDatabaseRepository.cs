@@ -82,6 +82,13 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories
                 $"Updating {typeof(T).Name} database item");
         }
 
+        /// <inheritdoc />
+        public void UpdateItems(IEnumerable<T> itemsToUpdate)
+        {
+            SafeContextWrapper.TryMakeTransactionWithLock<TContext>(dbContext => UpdateItems(dbContext, itemsToUpdate), Locker,
+                $"Updating {typeof(T).Name} database items");
+        }
+
         private T GetItem(TContext dbContext, params object[] keys)
         {
             return dbContext.Set<T>().Find(keys);
@@ -114,6 +121,11 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories
             var dbItem = GetItem(dbContext, itemKeys);
             dbContext.Entry(dbItem).CurrentValues.SetValues(itemToUpdate);
             dbContext.SaveChanges();
+        }
+
+        private void UpdateItems(TContext dbContext, IEnumerable<T> itemsToUpdate)
+        {
+            dbContext.BulkUpdate(itemsToUpdate);
         }
     }
 }
