@@ -649,10 +649,6 @@
     <Compile Include="MigrationsTD\201904021651556_Mig_JobExecution.Designer.cs">
       <DependentUpon>201904021651556_Mig_JobExecution.cs</DependentUpon>
     </Compile>
-    <Compile Include="MigrationsTD\201904051148552_Mig_VcdAnalyticTable.cs" />
-    <Compile Include="MigrationsTD\201904051148552_Mig_VcdAnalyticTable.Designer.cs">
-      <DependentUpon>201904051148552_Mig_VcdAnalyticTable.cs</DependentUpon>
-    </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.Designer.cs">
@@ -1033,9 +1029,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201904021651556_Mig_JobExecution.resx">
       <DependentUpon>201904021651556_Mig_JobExecution.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsTD\201904051148552_Mig_VcdAnalyticTable.resx">
-      <DependentUpon>201904051148552_Mig_VcdAnalyticTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>
