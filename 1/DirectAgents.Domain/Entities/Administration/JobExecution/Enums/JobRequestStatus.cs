@@ -10,5 +10,6 @@
         Completed = 2,
         Failed = 3,
         StartedByAnotherRequest = 4,
+        Aborted = 5
     }
 }

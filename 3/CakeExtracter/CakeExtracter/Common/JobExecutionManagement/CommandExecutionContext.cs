@@ -67,6 +67,14 @@ namespace CakeExtracter.Common.JobExecutionManagement
         }
 
         /// <summary>
+        /// Closes the current context.
+        /// </summary>
+        public void CloseContext()
+        {
+            jobExecutionRequestService.EndRequest(currentJobRequest);
+        }
+
+        /// <summary>
         /// Adds a command to the commands that should become scheduled job requests.
         /// </summary>
         /// <param name="command">The command for a new job request.</param>
