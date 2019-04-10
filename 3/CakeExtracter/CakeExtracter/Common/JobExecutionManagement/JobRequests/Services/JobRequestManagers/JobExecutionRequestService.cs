@@ -85,6 +85,18 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
             requestsToRun.ForEach(RunRequestInNewProcess);
         }
 
+        /// <inheritdoc />
+        public void EndRequest(JobRequest request)
+        {
+            if (request.Status != JobRequestStatus.Processing)
+            {
+                return;
+            }
+
+            UpdateRequest(request, JobRequestStatus.Aborted);
+            LogErrorAboutRequest("The request is aborted", request);
+        }
+
         private List<JobRequest> GetRequestsToRun(int maxNumberOfJobRequests, int maxNumberOfRunningRequests)
         {
             var scheduledValidRequests = GetScheduledValidJobRequests(maxNumberOfJobRequests);
@@ -245,9 +257,21 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
 
         private void LogInfoAboutRequest(string message, JobRequest request)
         {
+            var info = GetMessageAboutJobRequest(message, request);
+            Logger.Info(info);
+        }
+
+        private void LogErrorAboutRequest(string message, JobRequest request)
+        {
+            var info = GetMessageAboutJobRequest(message, request);
+            Logger.Error(new Exception(info));
+        }
+
+        private string GetMessageAboutJobRequest(string message, JobRequest request)
+        {
             var arguments = CommandArgumentsConverter.GetJobArgumentsAsArgumentsForConsole(request);
             var info = $"{message} ({request.Id}, {request.ScheduledTime}): \"{request.CommandName} {arguments}\"";
-            Logger.Info(info);
+            return info;
         }
     }
 }
