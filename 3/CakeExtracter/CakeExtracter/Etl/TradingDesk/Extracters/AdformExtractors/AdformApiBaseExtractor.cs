@@ -68,7 +68,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AdformExtractors
                 if (firstOfMonth >= specialConversionStart)
                 {
                     var pbi = account.Campaign.PlatformBudgetInfoFor(firstOfMonth, account.PlatformId, useParentValsIfNone: true);
-                    MonthlyCostMultipliers[firstOfMonth] = pbi.MediaSpendToRevMultiplier * pbi.RevToCostMultiplier;
+                    if (pbi.CostGoesThruDA())
+                    {
+                        MonthlyCostMultipliers[firstOfMonth] = pbi.MediaSpendToRevMultiplier * pbi.RevToCostMultiplier;
+                    }
+                    // If cost doesn't go through DA, that means "DACost" is 0. In that case don't set a multiplier so the cost won't get adjusted.
                 }
                 firstOfMonth = firstOfMonth.AddMonths(1);
             }
