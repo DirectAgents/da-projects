@@ -2,6 +2,8 @@
 {
     internal static class JobConstants
     {
-        public const string CommandsJobContextValue = "JobCommands";
+        public const string CommandLineArgs = "args";
+
+        public const string AllCommands = "allCommands";
     }
 }

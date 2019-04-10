@@ -5,8 +5,10 @@ namespace DirectAgents.Web.App_Start
 {
     using System;
     using System.Web;
+    using CakeExtracter.Common.JobExecutionManagement.JobExecution;
     using DirectAgents.Domain.Abstract;
     using DirectAgents.Domain.Concrete;
+    using DirectAgents.Web.Areas.Admin.Grids.JobHistory;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
     using Ninject;
     using Ninject.Web.Common;
@@ -73,6 +75,7 @@ namespace DirectAgents.Web.App_Start
             kernel.Bind<IABRepository>().To<ABRepository>();
             kernel.Bind<ISuperRepository>().To<SuperRepository>();
 
+            kernel.Bind<IJobHistoryDataProvider>().To<JobHistoryDataProvider>();
             kernel.Bind<ClientPortal.Data.Contracts.IClientPortalRepository>().To<ClientPortal.Data.Services.ClientPortalRepository>();
         }        
     }

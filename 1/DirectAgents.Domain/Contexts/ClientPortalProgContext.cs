@@ -2,6 +2,7 @@
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using DirectAgents.Domain.Entities;
+using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.DBM;
 using DirectAgents.Domain.Entities.CPProg;
@@ -19,6 +20,7 @@ namespace DirectAgents.Domain.Contexts
         const string adrollSchema = "adr";
         const string dbmSchema = "dbm";
         const string tdSchema = "td";
+        const string admSchema = "adm";
 
         public ClientPortalProgContext()
         {
@@ -34,6 +36,10 @@ namespace DirectAgents.Domain.Contexts
             //modelBuilder.HasDefaultSchema(tdSchema); //can't do this b/c __MigrationHistory table is under dbo schema
 
             modelBuilder.Entity<Employee>().ToTable("Employee", "dbo");
+
+            // Adm
+            modelBuilder.Entity<JobRequestExecution>().ToTable("JobRequestExecution", admSchema);
+            modelBuilder.Entity<JobRequest>().ToTable("JobRequest", admSchema);
 
             // TD
             modelBuilder.Entity<Advertiser>().ToTable("Advertiser", tdSchema);
@@ -228,6 +234,10 @@ namespace DirectAgents.Domain.Contexts
         }
 
         public DbSet<Employee> Employees { get; set; }
+
+        // Adm
+        public DbSet<JobRequestExecution> JobRequestExecutions { get; set; }
+        public DbSet<JobRequest> JobExecutionRequests { get; set; }
 
         // TD
         public DbSet<Advertiser> Advertisers { get; set; }

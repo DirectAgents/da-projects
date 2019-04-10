@@ -11,74 +11,93 @@ using CakeExtractor.SeleniumApplication.Synchers;
 using System;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
+using System.ComponentModel.Composition;
+using System.Threading;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
-    internal class SyncAmazonVcdCommand : BaseAmazonSeleniumCommand
+    [Export(typeof(ConsoleCommand))]
+    public class SyncAmazonVcdCommand : ConsoleCommand
     {
-        private AmazonVcdExtractor extractor;
+        public int ProfileNumber { get; set; }
+
         private VcdCommandConfigurationManager configurationManager;
         private VcdAccountsDataProvider accountsDataProvider;
-        private AmazonVcdPageActions pageActions;
         private AuthorizationModel authorizationModel;
+
+        private static AmazonVcdPageActions pageActions;
 
         public SyncAmazonVcdCommand()
         {
+            IsCommand("SyncAmazonVcdCommand", "Sync VCD Stats");
+            HasOption<int>("p|profileNumber=", "Profile Number", c => ProfileNumber = c);
         }
 
-        public override string CommandName => "SyncAmazonVcdCommand";
-
-        public override void PrepareCommandEnvironment(int? executionProfileNumber)
+        public override void ResetProperties()
         {
-            VcdExecutionProfileManger.Current.SetExecutionProfileNumber(executionProfileNumber);
-            InitializeAuthorizationModel();
-            configurationManager = new VcdCommandConfigurationManager();
-            pageActions = new AmazonVcdPageActions();
-            extractor = new AmazonVcdExtractor(pageActions, authorizationModel);
-            accountsDataProvider = new VcdAccountsDataProvider();
-            extractor.PrepareExtractor();
-            AmazonVcdLoader.PrepareLoader();
+            ProfileNumber = 0;
         }
 
-        public override void Run()
+        public override int Execute(string[] remainingArguments)
+        {
+            VcdExecutionProfileManger.Current.SetExecutionProfileNumber(ProfileNumber);
+            if (pageActions == null)
+            {
+                pageActions = new AmazonVcdPageActions();
+            }
+            configurationManager = new VcdCommandConfigurationManager();
+            InitializeAuthorizationModel();
+            accountsDataProvider = new VcdAccountsDataProvider();
+            if (!AmazonVcdExtractor.IsInitialised)
+            {
+                AmazonVcdExtractor.PrepareExtractor(pageActions,authorizationModel);
+            }
+            AmazonVcdLoader.PrepareLoader();
+            RunEtls();
+            return 0;
+        }
+
+        public void RunEtls()
         {
             pageActions.RefreshSalesDiagnosticPage(authorizationModel);
             var dateRanges = configurationManager.GetDateRangesToProcess();
-            var accountsData = accountsDataProvider.GetAccountsDataToProcess(extractor);
+            var accountsData = accountsDataProvider.GetAccountsDataToProcess(pageActions);
             dateRanges.ForEach(d => RunForDateRange(d, accountsData));
         }
 
         private void RunForDateRange(DateRange dateRange, List<AccountInfo> accountsData)
         {
-            extractor.DateRange = dateRange;
             Logger.Info($"\nAmazon VCD ETL. DateRange {dateRange}.");
             foreach (var accountData in accountsData)
             {
-                DoEtlForAccount(accountData);
+                DoEtlForAccount(accountData, dateRange);
                 SyncAccountDataToAnalyticTable(accountData.Account.Id);
             }
         }
 
-        private void DoEtlForAccount(AccountInfo accountInfo)
+        private void DoEtlForAccount(AccountInfo accountInfo, DateRange dateRange)
         {
             Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) started.");
-            PrepareExtractorForAccount(accountInfo);
+            var extractor = new AmazonVcdExtractor(pageActions, authorizationModel);
+            PrepareExtractorForAccount(extractor, accountInfo, dateRange);
             var loader = new AmazonVcdLoader(accountInfo.Account);
             CommandHelper.DoEtl(extractor, loader);
             Logger.Info(accountInfo.Account.Id, $"Amazon VCD, ETL for account {accountInfo.Account.Name} ({accountInfo.Account.Id}) finished.");
         }
 
-        private void PrepareExtractorForAccount(AccountInfo accountInfo)
+        private void PrepareExtractorForAccount(AmazonVcdExtractor extractor, AccountInfo accountInfo, DateRange dateRange)
         {
             extractor.Initialize();
             extractor.AccountInfo = accountInfo;
             extractor.OpenAccountPage();
+            extractor.DateRange = dateRange;
         }
 
         private void SyncAccountDataToAnalyticTable(int accountId)
         {
             try
             {
+                Logger.Info(accountId, "Sync analytic table data.");
                 var vcdTablesSyncher = new VcdAnalyticTablesSyncher();
                 vcdTablesSyncher.SyncData(accountId);
             }
