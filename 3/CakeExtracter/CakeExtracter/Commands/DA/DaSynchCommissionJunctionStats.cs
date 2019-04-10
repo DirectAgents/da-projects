@@ -50,9 +50,6 @@ namespace CakeExtracter.Commands.DA
         public int? DaysAgoToStart { get; set; }
 
         /// <inheritdoc />
-        public override int IntervalBetweenUnsuccessfulAndNewRequestInMinutes { get; set; }
-
-        /// <inheritdoc />
         /// <summary>
         /// The constructor sets a command name and command arguments names, provides a description for them.
         /// </summary>

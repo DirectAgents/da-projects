@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using DirectAgents.Domain.Entities.Administration.JobExecution;
+using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
 namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
 {
@@ -14,6 +15,12 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
         private const string ArgumentNameAndValueSeparator = " ";
         private const string ArgumentStringValueSeparator = "\"";
 
+        private static readonly string[] MissingCommandArguments =
+        {
+            ConsoleCommand.RequestIdArgumentName,
+            ConsoleCommand.NoNeedToCreateRepeatRequestsArgumentName
+        };
+
         /// <summary>
         /// Converts arguments of a console command object to use to launch it from the console.
         /// </summary>
@@ -21,10 +28,8 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
         /// <returns>Command arguments to run from console.</returns>
         public static string GetCommandArgumentsAsLine(ConsoleCommand command)
         {
-            var argOptions = command.GetActualOptions();
-            argOptions.Remove(ConsoleCommand.RequestIdArgumentName);
-            var argNames = argOptions.Select(x => x.GetNames().First()).ToArray();
-            var argValues = command.GetArgumentProperties().Select(x => x.GetValue(command)).ToArray();
+            var argNames = GetCommandArgumentNames(command);
+            var argValues = GetCommandArgumentValues(command);
             Array.Sort(argNames, argValues);
             return argNames.Select((x, i) => GetArgument(x, argValues[i]))
                 .Aggregate(string.Empty, (s, s1) => JoinArguments(s, s1));
@@ -40,6 +45,21 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Utils
             var requestArgument = GetArgument(ConsoleCommand.RequestIdArgumentName, request.Id);
             var arguments = JoinArguments(request.CommandName, request.CommandExecutionArguments, requestArgument);
             return arguments;
+        }
+
+        private static string[] GetCommandArgumentNames(ConsoleCommand command)
+        {
+            var argOptions = command.GetActualOptions();
+            // You must remove all command arguments that are needed only for job requests and are common to all commands.
+            MissingCommandArguments.ForEach(x => argOptions.Remove(x));
+            var argNames = argOptions.Select(x => x.GetNames().First());
+            return argNames.ToArray();
+        }
+
+        private static object[] GetCommandArgumentValues(ConsoleCommand command)
+        {
+            var argValues = command.GetArgumentProperties().Select(x => x.GetValue(command));
+            return argValues.ToArray();
         }
 
         private static string JoinArguments(params string[] arguments)
