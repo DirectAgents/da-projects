@@ -44,6 +44,7 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         /// Runs all past job requests, if available.
         /// </summary>
         /// <param name="maxNumberOfJobRequests">The maximum number of attempts for each request.</param>
-        void ExecuteScheduledInPastJobRequests(int maxNumberOfJobRequests);
+        /// <param name="maxNumberOfRunningRequests">The maximum number of processes that execute job requests.</param>
+        void ExecuteScheduledInPastJobRequests(int maxNumberOfJobRequests, int maxNumberOfRunningRequests);
     }
 }

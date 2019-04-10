@@ -47,5 +47,11 @@ namespace CakeExtracter.SimpleRepositories.BaseRepositories.Interfaces
         /// </summary>
         /// <param name="itemToUpdate">The repository entity that was updated.</param>
         void UpdateItem(T itemToUpdate);
+
+        /// <summary>
+        /// Updates repository entities.
+        /// </summary>
+        /// <param name="itemsToUpdate">The repository entities that was updated.</param>
+        void UpdateItems(IEnumerable<T> itemsToUpdate);
     }
 }

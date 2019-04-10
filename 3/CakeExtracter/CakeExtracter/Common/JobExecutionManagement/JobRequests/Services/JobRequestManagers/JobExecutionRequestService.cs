@@ -47,6 +47,11 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         /// <inheritdoc />
         public void ScheduleCommandLaunch(ConsoleCommand command)
         {
+            if (command.NoNeedToCreateRepeatRequests)
+            {
+                return;
+            }
+
             var scheduledCommand = new CommandWithSchedule
             {
                 Command = command,
@@ -73,13 +78,83 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
         }
 
         /// <inheritdoc />
-        public void ExecuteScheduledInPastJobRequests(int maxNumberOfJobRequests)
+        public void ExecuteScheduledInPastJobRequests(int maxNumberOfJobRequests, int maxNumberOfRunningRequests)
+        {
+            var requestsToRun = GetRequestsToRun(maxNumberOfJobRequests, maxNumberOfRunningRequests);
+            Logger.Info($"{requestsToRun.Count} requests will be launched.");
+            requestsToRun.ForEach(RunRequestInNewProcess);
+        }
+
+        private List<JobRequest> GetRequestsToRun(int maxNumberOfJobRequests, int maxNumberOfRunningRequests)
+        {
+            var scheduledValidRequests = GetScheduledValidJobRequests(maxNumberOfJobRequests);
+            var distinctScheduledValidRequests = GetDistinctJobRequests(scheduledValidRequests);
+            var runningRequests = GetRunningJobRequests();
+            var distinctScheduledNotRunningRequests =
+                GetJobRequestsOfNotRunningJobs(distinctScheduledValidRequests, runningRequests);
+            var requestsToRun = GetRightAmountOfJobRequestsToRun(distinctScheduledNotRunningRequests, runningRequests,
+                maxNumberOfRunningRequests);
+            return requestsToRun;
+        }
+
+        private List<JobRequest> GetScheduledValidJobRequests(int maxNumberOfJobRequests)
         {
             var now = DateTime.Now;
-            var requestsToRun = requestRepository.GetItems(x => x.Status == JobRequestStatus.Scheduled && x.ScheduledTime <= now);
-            var failedRequests = requestsToRun.Where(x => x.AttemptNumber == maxNumberOfJobRequests).ToList();
-            failedRequests.ForEach(x => UpdateRequest(x, JobRequestStatus.Failed));
-            requestsToRun.Where(x => x.Status == JobRequestStatus.Scheduled).ForEach(RunRequestInNewProcess);
+            var scheduledInPastRequests = requestRepository.GetItems(x => x.Status == JobRequestStatus.Scheduled && x.ScheduledTime <= now);
+            var failedRequests = FailOverdueRequests(scheduledInPastRequests, maxNumberOfJobRequests);
+            var validRequests = scheduledInPastRequests.Except(failedRequests).ToList();
+            return validRequests;
+        }
+
+        private List<JobRequest> FailOverdueRequests(List<JobRequest> requests, int maxNumberOfJobRequests)
+        {
+            var failedRequests = requests.Where(x => x.AttemptNumber == maxNumberOfJobRequests).ToList();
+            UpdateRequests(failedRequests, JobRequestStatus.Failed);
+            failedRequests.ForEach(x => LogInfoAboutRequest("Fail the request", x));
+            return failedRequests;
+        }
+
+        private List<JobRequest> GetDistinctJobRequests(List<JobRequest> requests)
+        {
+            var distinctLastRequests = requests.GroupBy(GetJobKey)
+                .Select(x => x.OrderByDescending(y => y.ScheduledTime).First()).ToList();
+            var duplicatedRequests = requests.Except(distinctLastRequests).ToList();
+            UpdateRequests(duplicatedRequests, JobRequestStatus.StartedByAnotherRequest);
+            duplicatedRequests.ForEach(x => LogInfoAboutRequest("Replace the request with another", x));
+            return distinctLastRequests;
+        }
+
+        private List<JobRequest> GetRunningJobRequests()
+        {
+            var runningRequests = requestRepository.GetItems(x => x.Status == JobRequestStatus.Processing);
+            Logger.Info($"Currently {runningRequests.Count} job requests are processing.");
+            return runningRequests;
+        }
+
+        private List<JobRequest> GetJobRequestsOfNotRunningJobs(List<JobRequest> requests, List<JobRequest> runningRequests)
+        {
+            var runningJobs = runningRequests.Select(GetJobKey).ToList();
+            var requestsOfNotRunningJobs = requests.Where(x => !runningJobs.Contains(GetJobKey(x))).ToList();
+            return requestsOfNotRunningJobs;
+        }
+
+        private List<JobRequest> GetRightAmountOfJobRequestsToRun(List<JobRequest> requests,
+            List<JobRequest> runningRequests, int maxNumberOfRunningRequests)
+        {
+            var maxNumberOfRequestsToRun = maxNumberOfRunningRequests - runningRequests.Count;
+            var requestsToRun = new List<JobRequest>();
+            var groupedByCommandRequests = requests.GroupBy(x => x.CommandName).ToList();
+            for (var i = 0; requestsToRun.Count < maxNumberOfRequestsToRun && requestsToRun.Count < requests.Count;
+                i = i == groupedByCommandRequests.Count - 1 ? 0 : i + 1)
+            {
+                var request = groupedByCommandRequests[i].FirstOrDefault(x => !requestsToRun.Contains(x));
+                if (request != null)
+                {
+                    requestsToRun.Add(request);
+                }
+            }
+
+            return requestsToRun;
         }
 
         private void ProcessEndOfRequest(List<JobRequest> newRequests, JobRequest endedRequest)
@@ -138,18 +213,34 @@ namespace CakeExtracter.Common.JobExecutionManagement.JobRequests.Services.JobRe
 
         private void UpdateRequest(JobRequest request, JobRequestStatus status)
         {
+            UpdateRequestProperties(request, status);
+            requestRepository.UpdateItem(request);
+        }
+
+        private void UpdateRequests(IEnumerable<JobRequest> requests, JobRequestStatus status)
+        {
+            requests.ForEach(x => UpdateRequestProperties(x, status));
+            requestRepository.UpdateItems(requests);
+        }
+
+        private void UpdateRequestProperties(JobRequest request, JobRequestStatus status)
+        {
             if (status == JobRequestStatus.Processing)
             {
                 request.AttemptNumber++;
             }
 
             request.Status = status;
-            requestRepository.UpdateItem(request);
         }
 
         private DateTime GetScheduledTime(ConsoleCommand command)
         {
             return DateTime.Now.AddMinutes(command.IntervalBetweenUnsuccessfulAndNewRequestInMinutes);
+        }
+
+        private string GetJobKey(JobRequest request)
+        {
+            return request.CommandName + request.CommandExecutionArguments;
         }
 
         private void LogInfoAboutRequest(string message, JobRequest request)

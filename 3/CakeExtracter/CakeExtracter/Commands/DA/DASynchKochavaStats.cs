@@ -25,7 +25,7 @@ namespace CakeExtracter.Commands.DA
         private readonly KochavaLoader loader;
         private readonly CommandsExecutionAccountsProvider accountsProvider;
 
-        private int? AccountId { get; set; }
+        public int? AccountId { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DASynchKochavaStats"/> class.

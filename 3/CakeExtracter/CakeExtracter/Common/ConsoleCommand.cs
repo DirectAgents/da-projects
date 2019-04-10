@@ -12,11 +12,12 @@ namespace CakeExtracter.Common
     public abstract class ConsoleCommand : ManyConsole.ConsoleCommand
     {
         public const string RequestIdArgumentName = "jobRequestId";
+        public const string NoNeedToCreateRepeatRequestsArgumentName = "noRepeatedRequests";
 
         /// <summary>
         /// The interval between the unsuccessful and the new request in minutes for the child requests of this command.
         /// </summary>
-        public virtual int IntervalBetweenUnsuccessfulAndNewRequestInMinutes { get; set; } = 0;
+        public int IntervalBetweenUnsuccessfulAndNewRequestInMinutes= 0;
 
         /// <summary>
         /// Command argument: The identifier for the job request that initiates this command run.
@@ -24,11 +25,17 @@ namespace CakeExtracter.Common
         public int? RequestId { get; set; }
 
         /// <summary>
+        /// Command argument: The flag that indicates that there is no need to create repeated requests.
+        /// </summary>
+        public bool NoNeedToCreateRepeatRequests { get; set; }
+
+        /// <summary>
         /// The constructor sets base command arguments names and provides a description for them.
         /// </summary>
         protected ConsoleCommand()
         {
             HasOption<int>($"{RequestIdArgumentName}=", "Job Request Id (default = null)", c => RequestId = c);
+            HasOption<bool>($"{NoNeedToCreateRepeatRequestsArgumentName}=", "No need to create repeated requests. (default = false)", c => NoNeedToCreateRepeatRequests = c);
         }
 
         public int Run()
