@@ -12,7 +12,7 @@ namespace DirectAgents.Domain.Concrete
     public partial class CPProgRepository : ICPProgRepository, IDisposable
     {
         private ClientPortalProgContext context;
-
+        
         public CPProgRepository(ClientPortalProgContext context)
         {
             this.context = context;

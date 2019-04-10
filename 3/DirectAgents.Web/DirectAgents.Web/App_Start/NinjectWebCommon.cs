@@ -9,6 +9,8 @@ namespace DirectAgents.Web.App_Start
     using DirectAgents.Domain.Abstract;
     using DirectAgents.Domain.Concrete;
     using DirectAgents.Web.Areas.Admin.Grids.JobHistory;
+    using DirectAgents.Domain.SpecialPlatformProviders.Contracts;
+    using DirectAgents.Domain.SpecialPlatformProviders.Implementation;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
     using Ninject;
     using Ninject.Web.Common;
@@ -74,9 +76,15 @@ namespace DirectAgents.Web.App_Start
             kernel.Bind<IRevTrackRepository>().To<RevTrackRepository>();
             kernel.Bind<IABRepository>().To<ABRepository>();
             kernel.Bind<ISuperRepository>().To<SuperRepository>();
+            kernel.Bind<ISpecialPlatformRepository>().To<SpecialPlatformRepository>();
 
             kernel.Bind<IJobHistoryDataProvider>().To<JobHistoryDataProvider>();
             kernel.Bind<ClientPortal.Data.Contracts.IClientPortalRepository>().To<ClientPortal.Data.Services.ClientPortalRepository>();
-        }        
+
+            kernel.Bind<SpecialPlatformProvider>().To<DspProvider>();
+            kernel.Bind<SpecialPlatformProvider>().To<VcdProvider>();
+            kernel.Bind<SpecialPlatformProvider>().To<KochavaProvider>();
+            kernel.Bind<SpecialPlatformProvider>().To<CommissionJunctionProvider>();
+        }
     }
 }

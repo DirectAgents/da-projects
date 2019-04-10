@@ -271,6 +271,7 @@
     <Compile Include="Areas\ProgAdmin\Models\DashboardVM.cs" />
     <Compile Include="Areas\ProgAdmin\Models\ExtraItemsVM.cs" />
     <Compile Include="Areas\ProgAdmin\Models\ReportingVM.cs" />
+    <Compile Include="Areas\ProgAdmin\Models\SpecialPlatformSummariesVm.cs" />
     <Compile Include="Areas\ProgAdmin\Models\StatsGaugeVM.cs" />
     <Compile Include="Areas\ProgAdmin\Models\TDStatsVM.cs" />
     <Compile Include="Areas\ProgAdmin\ProgAdminAreaRegistration.cs" />
@@ -1192,6 +1193,7 @@
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_LayoutAdmin.cshtml" />
     <Content Include="Areas\Admin\Views\web.config" />
+    <Content Include="Areas\ProgAdmin\Views\ExtAccounts\IndexSpecialPlatformStats.cshtml" />
     <None Include="Properties\PublishProfiles\dagents_vm_staging.pubxml" />
     <Content Include="Views\Shared\EditorTemplates\DayOfWeek.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
