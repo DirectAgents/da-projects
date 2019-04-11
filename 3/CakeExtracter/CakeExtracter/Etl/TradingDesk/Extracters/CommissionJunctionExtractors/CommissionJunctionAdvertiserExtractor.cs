@@ -92,6 +92,11 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.CommissionJunctionExtractors
 
         private void CleanCommissions()
         {
+            if (datesForCleaning.Count == 0)
+            {
+                return;
+            }
+
             var fromDateIndex = 0;
             var toDateIndex = fromDateIndex;
             for (var i = fromDateIndex + 1; i < datesForCleaning.Count; i++)
