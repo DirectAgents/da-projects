@@ -6,6 +6,7 @@ using Amazon.Entities;
 using Amazon.Entities.Summaries;
 using Amazon.Enums;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Helpers;
 using CakeExtracter.Logging.TimeWatchers;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
@@ -47,6 +48,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
 
         private void Extract(DateTime date, List<AmazonCampaign> campaignInfo)
         {
+            CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"Ad Level - {date.ToString()}", accountId);
             IEnumerable<TDadSummary> items = null;
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() => {
                 var productAdSums = ExtractProductAdSummaries(date);

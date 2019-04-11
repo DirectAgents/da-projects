@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using CakeExtracter.Common;
-using CakeExtracter.SimpleRepositories;
-using CakeExtracter.SimpleRepositories.Interfaces;
+using CakeExtracter.SimpleRepositories.RepositoriesWithStorage;
+using CakeExtracter.SimpleRepositories.RepositoriesWithStorage.Interfaces;
 
 namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 {
@@ -19,15 +19,15 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         // Note accountId is only used in AddUpdateDependentStrategies() (i.e. not by AdrollCampaignSummaryLoader)
         public readonly int AccountId;
         private readonly SummaryMetricLoader metricLoader;
-        private readonly ISimpleRepository<EntityType> typeRepository;
-        private readonly ISimpleRepository<Strategy> strategyRepository;
+        private readonly IRepositoryWithStorage<EntityType, ClientPortalProgContext> typeRepositoryWithStorage;
+        private readonly IRepositoryWithStorage<Strategy, ClientPortalProgContext> strategyRepositoryWithStorage;
 
         public TDStrategySummaryLoader(int accountId = -1, EntityIdStorage<Strategy> strategyStorage = null)
         {
             AccountId = accountId;
             metricLoader = new SummaryMetricLoader();
-            typeRepository = new TypeRepository(StorageCollection.TypeStorage);
-            strategyRepository = new StrategyRepository(strategyStorage ?? DefaultStrategyStorage);
+            typeRepositoryWithStorage = new TypeRepositoryWithStorage(StorageCollection.TypeStorage);
+            strategyRepositoryWithStorage = new StrategyRepositoryWithStorage(strategyStorage ?? DefaultStrategyStorage);
         }
 
         protected override int Load(List<StrategySummary> items)
@@ -58,9 +58,9 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             foreach (var item in items)
             {
-                if (strategyRepository.IdStorage.IsEntityInStorage(item.Strategy))
+                if (strategyRepositoryWithStorage.IdStorage.IsEntityInStorage(item.Strategy))
                 {
-                    item.StrategyId = strategyRepository.IdStorage.GetEntityIdFromStorage(item.Strategy);
+                    item.StrategyId = strategyRepositoryWithStorage.IdStorage.GetEntityIdFromStorage(item.Strategy);
                     item.Strategy = null;
                     // otherwise it will get skipped; no strategy to use for the foreign key
                 }
@@ -128,14 +128,14 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
                 AddDependentStrategyTypes(db, strategies);
                 foreach (var strategyProps in strategies)
                 {
-                    if (strategyRepository.IdStorage.IsEntityInStorage(strategyProps))
+                    if (strategyRepositoryWithStorage.IdStorage.IsEntityInStorage(strategyProps))
                     {
                         continue; // already encountered this strategy
                     }
 
                     SafeContextWrapper.Lock(SafeContextWrapper.StrategyLocker, () =>
                     {
-                        var strategiesInDbList = strategyRepository.GetItems(db, strategyProps);
+                        var strategiesInDbList = strategyRepositoryWithStorage.GetItems(db, strategyProps);
                         if (!strategiesInDbList.Any())
                         {
                             TryToAddStrategy(db, strategyProps);
@@ -156,7 +156,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
             var targetingTypes = strategies.Select(x => x.TargetingType);
             var types = strategies.Select(x => x.Type).Concat(targetingTypes);
             var notStoredTypes = types.Where(x => x?.Name != null).DistinctBy(x => x.Name).ToList();
-            typeRepository.AddItems(db, notStoredTypes);
+            typeRepositoryWithStorage.AddItems(db, notStoredTypes);
             AssignTypeIdToStrategies(strategies);
         }
 
@@ -164,14 +164,14 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
         {
             foreach (var strategy in strategies)
             {
-                if (typeRepository.IdStorage.IsEntityInStorage(strategy.TargetingType))
+                if (typeRepositoryWithStorage.IdStorage.IsEntityInStorage(strategy.TargetingType))
                 {
-                    strategy.TargetingTypeId = typeRepository.IdStorage.GetEntityIdFromStorage(strategy.TargetingType);
+                    strategy.TargetingTypeId = typeRepositoryWithStorage.IdStorage.GetEntityIdFromStorage(strategy.TargetingType);
                 }
 
-                if (typeRepository.IdStorage.IsEntityInStorage(strategy.Type))
+                if (typeRepositoryWithStorage.IdStorage.IsEntityInStorage(strategy.Type))
                 {
-                    strategy.TypeId = typeRepository.IdStorage.GetEntityIdFromStorage(strategy.Type);
+                    strategy.TypeId = typeRepositoryWithStorage.IdStorage.GetEntityIdFromStorage(strategy.Type);
                 }
 
                 strategy.Type = null;
@@ -254,7 +254,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         private void TryToAddStrategy(ClientPortalProgContext db, Strategy strategyProps)
         {
-            var strategy = strategyRepository.AddItem(db, strategyProps);
+            var strategy = strategyRepositoryWithStorage.AddItem(db, strategyProps);
             if (strategy == null)
             {
                 return;
@@ -273,7 +273,7 @@ namespace CakeExtracter.Etl.TradingDesk.LoadersDA
 
         private void TryToUpdateStrategy(ClientPortalProgContext db, Strategy strategy, Strategy strategyProps)
         {
-            var numUpdates = strategyRepository.UpdateItem(db, strategyProps, strategy);
+            var numUpdates = strategyRepositoryWithStorage.UpdateItem(db, strategyProps, strategy);
             if (numUpdates <= 0)
             {
                 return;

@@ -38,6 +38,7 @@ namespace CakeExtractor.SeleniumApplication.Loaders.VCD
 
         protected override int Load(List<VcdReportData> items)
         {
+            return 1;
             foreach (var item in items)
             {
                 try

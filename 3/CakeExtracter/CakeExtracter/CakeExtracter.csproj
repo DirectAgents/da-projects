@@ -417,6 +417,7 @@
     <Compile Include="Commands\DA\DASynchAdrollAds.cs" />
     <Compile Include="Commands\DA\DASynchDBMStatsOld.cs" />
     <Compile Include="Commands\RT\RTSynchTest.cs" />
+    <Compile Include="Commands\ScheduledRequestsLauncherCommand.cs" />
     <Compile Include="Commands\Search\CopySearchDailySummariesCommand.cs" />
     <Compile Include="Commands\Search\SynchSearchDailySummariesAppleCommand.cs" />
     <Compile Include="Commands\Test\TestABCommand.cs" />
@@ -432,7 +433,23 @@
     <Compile Include="Common\ArchiveExctractors\Contract\IArchiveExtractor.cs" />
     <Compile Include="Common\ArchiveExctractors\GzipArchiveExtractor.cs" />
     <Compile Include="Common\ArchiveExctractors\ZipArchiveExtractor.cs" />
+    <Compile Include="Common\CommandLineUtils.cs" />
     <Compile Include="Common\Compare.cs" />
+    <Compile Include="Common\JobExecutionManagement\CommandExecutionContext.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Models\AccountLogData.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Models\JobExecutionLogData.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Services\JobExecutionItemService.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Services\IJobExecutionItemService.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Repositories\IJobExecutionItemRepository.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Repositories\JobExecutionItemRepository.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobExecution\Utils\ExecutionLoggingUtils.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Exceptions\FailedEtlException.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestManagers\Interfaces\IJobExecutionRequestService.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Services\JobRequestManagers\JobExecutionRequestService.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Models\CommandWithSchedule.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Repositories\JobRequestRepository.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\CommandArgumentsConverter.cs" />
+    <Compile Include="Common\JobExecutionManagement\JobRequests\Utils\ProcessManager.cs" />
     <Compile Include="Common\SqlScriptsExecutor.cs" />
     <Compile Include="Common\StorageCollection.cs" />
     <Compile Include="Common\TextUtils.cs" />
@@ -551,9 +568,6 @@
     <Compile Include="Commands\DA\DASynchOfferDailySummaries.cs" />
     <Compile Include="Commands\DA\DASynchOffers.cs" />
     <Compile Include="Commands\DA\DASynchTDDailySummaries.cs" />
-    <Compile Include="Commands\PrintItCommand.cs" />
-    <Compile Include="Commands\ScheduledCommand.cs" />
-    <Compile Include="Commands\ScheduledJob.cs" />
     <Compile Include="Commands\SendAutomatedReportsCommand.cs" />
     <Compile Include="Commands\SendSimpleReportsCommand.cs" />
     <Compile Include="Commands\SynchAdvertisersCommand.cs" />
@@ -746,6 +760,7 @@
     <Compile Include="Logging\TimeWatchers\Amazon\AmazonTimeTracker.cs" />
     <Compile Include="Logging\TimeWatchers\Amazon\Models\AmazonAccountTrackingData.cs" />
     <Compile Include="Logging\TimeWatchers\Amazon\Models\AmazonLevelTrackingData.cs" />
+    <Compile Include="Logging\Utils\LoggerUtils.cs" />
     <Compile Include="Mef\Composer.cs" />
     <Compile Include="MetricNames.cs" />
     <Compile Include="Logging\EnterpriseLibrary\ConsoleCustomTraceListener.cs" />
@@ -767,9 +782,11 @@
       <DependentUpon>SearchReportRuntimeTextTemplate.tt</DependentUpon>
     </Compile>
     <Compile Include="Reports\SimpleReportManager.cs" />
-    <Compile Include="SimpleRepositories\Interfaces\ISimpleRepository.cs" />
-    <Compile Include="SimpleRepositories\StrategyRepository.cs" />
-    <Compile Include="SimpleRepositories\TypeRepository.cs" />
+    <Compile Include="SimpleRepositories\BaseRepositories\BaseDatabaseRepository.cs" />
+    <Compile Include="SimpleRepositories\BaseRepositories\Interfaces\IBaseRepository.cs" />
+    <Compile Include="SimpleRepositories\RepositoriesWithStorage\Interfaces\IRepositoryWithStorage.cs" />
+    <Compile Include="SimpleRepositories\RepositoriesWithStorage\StrategyRepositoryWithStorage.cs" />
+    <Compile Include="SimpleRepositories\RepositoriesWithStorage\TypeRepositoryWithStorage.cs" />
     <Compile Include="Data\UsersContext.cs" />
     <Compile Include="Common\RetryUtility.cs" />
   </ItemGroup>

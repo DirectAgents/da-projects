@@ -8,8 +8,8 @@ using Amazon.Entities;
 using Amazon.Enums;
 using Amazon.Helpers;
 using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors;
-using CakeExtracter.SimpleRepositories;
-using CakeExtracter.SimpleRepositories.Interfaces;
+using CakeExtracter.SimpleRepositories.RepositoriesWithStorage;
+using CakeExtracter.SimpleRepositories.RepositoriesWithStorage.Interfaces;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.CPProg;
 
@@ -18,8 +18,8 @@ namespace CakeExtracter.Commands.Test
     [Export(typeof(ConsoleCommand))]
     public class TestAmazonCommand : ConsoleCommand
     {
-        private readonly ISimpleRepository<EntityType> typeRepository;
-        private readonly ISimpleRepository<Strategy> strategyRepository;
+        private readonly IRepositoryWithStorage<EntityType, ClientPortalProgContext> typeRepositoryWithStorage;
+        private readonly IRepositoryWithStorage<Strategy, ClientPortalProgContext> strategyRepositoryWithStorage;
 
         public override void ResetProperties()
         {
@@ -29,8 +29,8 @@ namespace CakeExtracter.Commands.Test
         public TestAmazonCommand()
         {
             IsCommand("TestAmazonCommand");
-            typeRepository = new TypeRepository(StorageCollection.TypeStorage);
-            strategyRepository = new StrategyRepository(StorageCollection.StrategyWithEidStorage);
+            typeRepositoryWithStorage = new TypeRepositoryWithStorage(StorageCollection.TypeStorage);
+            strategyRepositoryWithStorage = new StrategyRepositoryWithStorage(StorageCollection.StrategyWithEidStorage);
         }
 
         //NOTE: Need to add "[STAThread]" to Main method in CakeExtracter.ConsoleApplication
@@ -68,7 +68,7 @@ namespace CakeExtracter.Commands.Test
                 new EntityType {Name = AmazonApiHelper.GetCampaignTypeName(CampaignType.SponsoredProducts)},
                 new EntityType {Name = AmazonApiHelper.GetCampaignTypeName(CampaignType.SponsoredBrands)}
             };
-            typeRepository.AddItems(types);
+            typeRepositoryWithStorage.AddItems(types);
         }
 
         private List<ExtAccount> GetAmazonAccounts()
@@ -110,7 +110,7 @@ namespace CakeExtracter.Commands.Test
                 AccountId = account.Id,
                 ExternalId = campaign.CampaignId,
                 Name = campaign.Name,
-                TypeId = typeRepository.IdStorage.GetEntityIdFromStorage(strategyType)
+                TypeId = typeRepositoryWithStorage.IdStorage.GetEntityIdFromStorage(strategyType)
             };
             return strategy;
         }
@@ -121,7 +121,7 @@ namespace CakeExtracter.Commands.Test
             {
                 foreach (var strategy in strategies)
                 {
-                    var itemsInDb = strategyRepository.GetItems(db, strategy);
+                    var itemsInDb = strategyRepositoryWithStorage.GetItems(db, strategy);
                     itemsInDb.ForEach(x => TryToUpdateStrategy(db, account, strategy, x));
                 }
             }
@@ -129,7 +129,7 @@ namespace CakeExtracter.Commands.Test
 
         private void TryToUpdateStrategy(ClientPortalProgContext db, ExtAccount account, Strategy strategyProps, Strategy strategy)
         {
-            var numUpdates = strategyRepository.UpdateItem(db, strategyProps, strategy);
+            var numUpdates = strategyRepositoryWithStorage.UpdateItem(db, strategyProps, strategy);
             if (numUpdates <= 0)
             {
                 return;

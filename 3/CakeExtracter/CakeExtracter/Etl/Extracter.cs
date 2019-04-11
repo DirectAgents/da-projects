@@ -7,17 +7,24 @@ namespace CakeExtracter.Etl
 {
     public abstract class Extracter<T> : IDisposable
     {
+        private const int DefaultCollectionBoundedCapacity = 5000;
+
         private readonly object locker = new object();
         private readonly int collectionBoundedCapacity;
 
         private BlockingCollection<T> items;
         private int added;
 
-        private const int DefaultCollectionBoundedCapacity = 5000;
+        public event Action<Exception> ProcessEtlFailedWithoutInformation;
 
         protected Extracter(int collectionBoundedCapacity = DefaultCollectionBoundedCapacity)
         {
             this.collectionBoundedCapacity = collectionBoundedCapacity;
+            ProcessEtlFailedWithoutInformation += e =>
+            {
+                var exc = new Exception($"Exception in extractor: {e}", e);
+                Logger.Error(exc);
+            };
             Initialize();
         }
 
@@ -88,7 +95,7 @@ namespace CakeExtracter.Etl
             }
             catch (Exception e)
             {
-                Logger.Error(new Exception($"Exception in extractor: {e}", e));
+                ProcessEtlFailedWithoutInformation?.Invoke(e);
             }
         }
 

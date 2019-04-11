@@ -1,65 +1,126 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using CakeExtracter.Common.JobExecutionManagement;
+using System.Collections.Generic;
 using System.Reflection;
+using CakeExtracter.Common.JobExecutionManagement.JobRequests.Models;
 
 namespace CakeExtracter.Common
 {
+    /// <summary>
+    /// The base class for a console command.
+    /// </summary>
     public abstract class ConsoleCommand : ManyConsole.ConsoleCommand
     {
-        private List<ConsoleCommand> commandsToRunBeforeThisCommand = new List<ConsoleCommand>();
+        public const string RequestIdArgumentName = "jobRequestId";
+        public const string NoNeedToCreateRepeatRequestsArgumentName = "noRepeatedRequests";
 
-        protected void RunBefore(ConsoleCommand consoleCommand)
+        /// <summary>
+        /// The interval between the unsuccessful and the new request in minutes for the child requests of this command.
+        /// </summary>
+        public int IntervalBetweenUnsuccessfulAndNewRequestInMinutes= 0;
+
+        /// <summary>
+        /// Command argument: The identifier for the job request that initiates this command run.
+        /// </summary>
+        public int? RequestId { get; set; }
+
+        /// <summary>
+        /// Command argument: The flag that indicates that there is no need to create repeated requests.
+        /// </summary>
+        public bool NoNeedToCreateRepeatRequests { get; set; }
+
+        /// <summary>
+        /// The constructor sets base command arguments names and provides a description for them.
+        /// </summary>
+        protected ConsoleCommand()
         {
-            this.commandsToRunBeforeThisCommand.Add(consoleCommand);
+            HasOption<int>($"{RequestIdArgumentName}=", "Job Request Id (default = null)", c => RequestId = c);
+            HasOption<bool>($"{NoNeedToCreateRepeatRequestsArgumentName}=", "No need to create repeated requests. (default = false)", c => NoNeedToCreateRepeatRequests = c);
         }
 
         public int Run()
         {
-            return this.Run(null);
+            return Run(null);
         }
 
         public override int Run(string[] remainingArguments)
         {
-            string commandName = this.GetType().Name;
-            if (this.commandsToRunBeforeThisCommand.Count > 0)
-            {
-                Logger.Info("{0} has prerequisites..", commandName);
-                foreach (var consoleCommand in this.commandsToRunBeforeThisCommand)
-                {
-                    consoleCommand.Run(null);
-                }
-                Logger.Info("Completed prerequisites for {0}", commandName);
-            }
-
+            var commandName = GetType().Name;
             Logger.Info("Executing command: {0}", commandName);
-
             using (new LogElapsedTime("for " + commandName))
             {
-                var retCode = Execute(remainingArguments);
-                return retCode;
+                return ExecuteJobWithContext(remainingArguments);
             }
         }
 
-        //Note: I believe this is only called by the LineCommander before a command is run (because the Command object is not re-instantiated).
-        //      When a Command is first instantiated, we rely on default property values (e.g. 0 for int).
-        //TODO?: Call this from the Run() method - so it always sets the default properties
+        /// <summary>
+        /// The method resets command arguments to defaults.
+        /// </summary>
         public abstract void ResetProperties();
 
+        /// <summary>
+        /// The method runs the current command based on the command arguments.
+        /// </summary>
+        /// <param name="remainingArguments"></param>
+        /// <returns>Execution code</returns>
         public abstract int Execute(string[] remainingArguments);
 
         public virtual IEnumerable<PropertyInfo> GetArgumentProperties()
         {
-            return this.GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
+            return GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
         }
 
         public virtual bool TrySetProperty(string propertyName, object propertyValue)
         {
-            var property = this.GetType().GetProperty(propertyName);
-            if (property != null)
+            var property = GetType().GetProperty(propertyName);
+            if (property == null)
             {
-                property.SetValue(this, propertyValue);
-                return true;
+                return false;
             }
-            return false;
+
+            property.SetValue(this, propertyValue);
+            return true;
+        }
+
+        /// <summary>
+        /// Filters scheduled commands and returns only those commands that will not return duplicate data.
+        /// </summary>
+        /// <param name="commands">The source scheduled commands.</param>
+        /// <returns>The broad commands to extract unique data.</returns>
+        public virtual IEnumerable<CommandWithSchedule> GetUniqueBroadCommands(IEnumerable<CommandWithSchedule> commands)
+        {
+            return commands;
+        }
+
+        /// <summary>
+        /// Schedules a new command that should become scheduled job requests.
+        /// </summary>
+        /// <typeparam name="T">The type of the current command.</typeparam>
+        /// <param name="changeCurrentCommand">The action that updates a clone of the current command to save the updated clone as a job request.</param>
+        protected void ScheduleNewCommandLaunch<T>(Action<T> changeCurrentCommand)
+            where T : ConsoleCommand
+        {
+            var command = (T) MemberwiseClone();
+            changeCurrentCommand(command);
+            CommandExecutionContext.Current.ScheduleCommandLaunch(command);
+        }
+
+        private int ExecuteJobWithContext(string[] remainingArguments)
+        {
+            CommandExecutionContext.ResetContext(this);
+            CommandExecutionContext.Current.StartRequestExecution();
+            try
+            {
+                var retCode = Execute(remainingArguments);
+                CommandExecutionContext.Current.CompleteRequestExecution();
+                return retCode;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                CommandExecutionContext.Current.FailedRequestExecution();
+                return 1;
+            }
         }
     }
 }

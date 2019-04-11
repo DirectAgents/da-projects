@@ -34,7 +34,13 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
         private static Dictionary<string, string> availableProfileUrls;
 
         private readonly ExtAccount account;
-        
+
+        public static bool IsInitialised
+        {
+            get;
+            private set;
+        }
+
         static AmazonPdaExtractor()
         {
             Initialize();
@@ -59,6 +65,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtracto
             }
             Logger.Warn("Login into the portal without using cookies. Please enter an authorization code!");
             LoginWithoutCookie(authorizationModel);
+            IsInitialised = true;
         }
 
         /// <summary>

@@ -4,12 +4,12 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Mef;
+using CakeExtracter.Logging.Loggers;
 
 namespace CakeExtracter
 {
-    using CakeExtracter.Logging.Loggers;
-
     class Program
     {
         private readonly Composer<Program> composer;
@@ -39,8 +39,14 @@ namespace CakeExtracter
         public static int Main(string[] args)
         {
             var program = new Program(args);
+            AppDomain.CurrentDomain.ProcessExit += ProcessExit;
             var result = program.Run(args);
             return result;
+        }
+
+        private static void ProcessExit(object sender, EventArgs e)
+        {
+            CommandExecutionContext.Current?.CloseContext();
         }
     }
 }

@@ -94,6 +94,7 @@
     <Compile Include="Abstract\IPlatformAccountRepository.cs" />
     <Compile Include="Abstract\IRevTrackRepository.cs" />
     <Compile Include="Abstract\ISecurityRepository.cs" />
+    <Compile Include="Abstract\ISpecialPlatformRepository.cs" />
     <Compile Include="Abstract\ISuperRepository.cs" />
     <Compile Include="Abstract\ITDRepository.cs" />
     <Compile Include="Abstract\TopCampaignBy.cs" />
@@ -112,6 +113,12 @@
     <Compile Include="Concrete\PlatformAccountRepository.cs" />
     <Compile Include="Concrete\RevTrackRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
+    <Compile Include="Concrete\SpecialPlatformRepository.cs" />
+    <Compile Include="SpecialPlatformProviders\Implementation\CommissionJunctionProvider.cs" />
+    <Compile Include="SpecialPlatformProviders\Implementation\DspProvider.cs" />
+    <Compile Include="SpecialPlatformProviders\Implementation\KochavaProvider.cs" />
+    <Compile Include="SpecialPlatformProviders\Contracts\SpecialPlatformProvider.cs" />
+    <Compile Include="SpecialPlatformProviders\Implementation\VcdProvider.cs" />
     <Compile Include="Concrete\SuperRepository.cs" />
     <Compile Include="Concrete\TDRepository.cs" />
     <Compile Include="Contexts\ABContext.cs" />
@@ -126,6 +133,7 @@
     <Compile Include="DTO\ProgClientStats.cs" />
     <Compile Include="DTO\ProgMediaStat.cs" />
     <Compile Include="DTO\RTLineItem.cs" />
+    <Compile Include="DTO\SpecialPlatformSummary.cs" />
     <Compile Include="DTO\TDCampStats.cs" />
     <Compile Include="DTO\TDLineItem.cs" />
     <Compile Include="DTO\TDStat.cs" />
@@ -151,6 +159,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Entities\AB\Wraps.cs" />
+    <Compile Include="Entities\Administration\JobExecution\Enums\JobRequestStatus.cs" />
+    <Compile Include="Entities\Administration\JobExecution\JobRequestExecution.cs" />
+    <Compile Include="Entities\Administration\JobExecution\JobRequest.cs" />
+    <Compile Include="Entities\Administration\JobExecution\Enums\JobExecutionStatus.cs" />
     <Compile Include="Entities\AdRoll\Ad.cs" />
     <Compile Include="Entities\AdRoll\AdDailySummary.cs" />
     <Compile Include="Entities\AdRoll\Advertisable.cs" />
@@ -210,6 +222,7 @@
     <Compile Include="Entities\CPProg\Vendor\SummaryMetrics\VendorCategorySummaryMetric.cs" />
     <Compile Include="Entities\CPProg\Vendor\SummaryMetrics\VendorProductSummaryMetric.cs" />
     <Compile Include="Entities\CPProg\Vendor\SummaryMetrics\VendorSubcategorySummaryMetric.cs" />
+    <Compile Include="Entities\CPProg\Vendor\VcdAnalyticItem.cs" />
     <Compile Include="Entities\CPProg\Vendor\VendorBrand.cs" />
     <Compile Include="Entities\CPProg\Vendor\VendorCategory.cs" />
     <Compile Include="Entities\CPProg\Vendor\VendorParentProduct.cs" />
@@ -632,13 +645,9 @@
     <Compile Include="MigrationsTD\201901311354011_Mig_DspDataTables2.Designer.cs">
       <DependentUpon>201901311354011_Mig_DspDataTables2.cs</DependentUpon>
     </Compile>
-    <Compile Include="MigrationsTD\201903180825410_Mig_CjDataTables.cs" />
-    <Compile Include="MigrationsTD\201903180825410_Mig_CjDataTables.Designer.cs">
-      <DependentUpon>201903180825410_Mig_CjDataTables.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MigrationsTD\201903190855512_Mig_KochavaTables.cs" />
-    <Compile Include="MigrationsTD\201903190855512_Mig_KochavaTables.Designer.cs">
-      <DependentUpon>201903190855512_Mig_KochavaTables.cs</DependentUpon>
+    <Compile Include="MigrationsTD\201904021651556_Mig_JobExecution.cs" />
+    <Compile Include="MigrationsTD\201904021651556_Mig_JobExecution.Designer.cs">
+      <DependentUpon>201904021651556_Mig_JobExecution.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsTD\Configuration.cs" />
     <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
@@ -1018,11 +1027,8 @@
     <EmbeddedResource Include="MigrationsTD\201901311354011_Mig_DspDataTables2.resx">
       <DependentUpon>201901311354011_Mig_DspDataTables2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsTD\201903180825410_Mig_CjDataTables.resx">
-      <DependentUpon>201903180825410_Mig_CjDataTables.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MigrationsTD\201903190855512_Mig_KochavaTables.resx">
-      <DependentUpon>201903190855512_Mig_KochavaTables.cs</DependentUpon>
+    <EmbeddedResource Include="MigrationsTD\201904021651556_Mig_JobExecution.resx">
+      <DependentUpon>201904021651556_Mig_JobExecution.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>
