@@ -21,7 +21,7 @@ namespace CakeExtracter.Commands.DA
         private readonly AmazonDspDataLoader loader;
         private readonly CommandsExecutionAccountsProvider accountsProvider;
 
-        private int? AccountId { get; set; }
+        public int? AccountId { get; set; }
 
         /// <summary>Initializes a new instance of the <see cref="DASyncAmazonDspStats"/> class.
         /// Initialises cmd params values.</summary>
