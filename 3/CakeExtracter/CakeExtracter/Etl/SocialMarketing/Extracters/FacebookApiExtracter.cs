@@ -9,12 +9,12 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
 {
     public abstract class FacebookApiExtracter<T> : Extracter<T>
     {
-        protected readonly FacebookUtility _fbUtility;
+        protected readonly FacebookInsightsDataProvider _fbUtility;
         protected readonly DateRange? dateRange;
         protected readonly int accountId;   // in our db
         protected readonly string fbAccountId; // fb account: aka "ad account"
 
-        public FacebookApiExtracter(FacebookUtility fbUtility, DateRange? dateRange, ExtAccount account, bool includeAllActions = false)
+        public FacebookApiExtracter(FacebookInsightsDataProvider fbUtility, DateRange? dateRange, ExtAccount account, bool includeAllActions = false)
         {
             this._fbUtility = fbUtility;
             this._fbUtility.IncludeAllActions = includeAllActions;
@@ -26,7 +26,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
 
     public class FacebookDailySummaryExtracter : FacebookApiExtracter<FBSummary>
     {
-        public FacebookDailySummaryExtracter(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility, bool includeAllActions = false)
+        public FacebookDailySummaryExtracter(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility, bool includeAllActions = false)
             : base(fbUtility, dateRange, account, includeAllActions)
         { }
 
@@ -49,7 +49,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
 
     public class FacebookCampaignSummaryExtracter : FacebookApiExtracter<FBSummary>
     {
-        public FacebookCampaignSummaryExtracter(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility, bool includeAllActions = false)
+        public FacebookCampaignSummaryExtracter(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility, bool includeAllActions = false)
             : base(fbUtility, dateRange, account, includeAllActions)
         { }
 
@@ -72,7 +72,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
 
     public class FacebookAdSetSummaryExtracter : FacebookApiExtracter<FBSummary>
     {
-        public FacebookAdSetSummaryExtracter(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility, bool includeAllActions = false)
+        public FacebookAdSetSummaryExtracter(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility, bool includeAllActions = false)
             : base(fbUtility, dateRange, account, includeAllActions)
         { }
 
@@ -95,7 +95,7 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
 
     public class FacebookAdSummaryExtracter : FacebookApiExtracter<FBSummary>
     {
-        public FacebookAdSummaryExtracter(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility, bool includeAllActions = false)
+        public FacebookAdSummaryExtracter(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility, bool includeAllActions = false)
             : base(fbUtility, dateRange, account, includeAllActions)
         { }
 
@@ -116,23 +116,27 @@ namespace CakeExtracter.Etl.SocialMarketing.Extracters
         }
     }
 
-    public class FacebookAdPreviewExtracter : FacebookApiExtracter<FBAdPreview>
+    public class FacebookAdPreviewExtracter : Extracter<FBAdPreview>
     {
-        protected IEnumerable<string> fbAdIds;
+        private IEnumerable<string> fbAdIds;
 
-        public FacebookAdPreviewExtracter(ExtAccount account, IEnumerable<string> fbAdIds, FacebookUtility fbUtility)
-            : base(fbUtility, null, account)
+        private FacebbokAdPreviewDataProvider adPreviewDataProvider;
+
+        private readonly int accountId;
+
+        public FacebookAdPreviewExtracter(ExtAccount account, IEnumerable<string> fbAdIds, FacebbokAdPreviewDataProvider adPreviewDataProvider)
         {
             this.fbAdIds = fbAdIds;
+            accountId = account.Id;
+            this.adPreviewDataProvider = adPreviewDataProvider;
         }
 
         protected override void Extract()
         {
-            Logger.Info(accountId, "Extracting Ad Previews from Facebook API for ({0})", this.fbAccountId);
-            //var fbAds = _fbUtility.GetAdPreviews("act_" + fbAccountId, fbAdIds);
+            Logger.Info(accountId, "Extracting Ad Previews from Facebook API for ({0})", this.accountId);
             try
             {
-                var fbAds = _fbUtility.GetAdPreviews(fbAdIds);
+                var fbAds = adPreviewDataProvider.GetAdPreviews(fbAdIds);
                 Add(fbAds);
             }
             catch (Exception ex)

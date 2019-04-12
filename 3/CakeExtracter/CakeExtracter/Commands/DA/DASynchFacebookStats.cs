@@ -123,7 +123,7 @@ namespace CakeExtracter.Commands
             var accounts = GetAccounts().Take(1);
             Parallel.ForEach(accounts, (account) =>
             {
-                var adCreativeProvider = new AdDataProvider();
+                //var adCreativeProvider = new FacebookAdMetadataProvider();
                
                 //var adsInfo = adCreativeProvider.GetAdsCreativesForAccount(account.ExternalId, dateRange.FromDate, dateRange.ToDate);
                 //return;
@@ -175,7 +175,7 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
-        private int DoETL_Daily(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
+        private int DoETL_Daily(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
         {
             var extractor = new FacebookDailySummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
             var loader = new FacebookDailySummaryLoader(account.Id);
@@ -183,21 +183,21 @@ namespace CakeExtracter.Commands
             return extractor.Added;
         }
 
-        private void DoETL_Strategy(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
+        private void DoETL_Strategy(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
         {
             var extractor = new FacebookCampaignSummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
             var loader = new FacebookCampaignSummaryLoader(account.Id);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private void DoETL_AdSet(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
+        private void DoETL_AdSet(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
         {
             var extractor = new FacebookAdSetSummaryExtracter(dateRange, account, fbUtility, includeAllActions: true);
             var loader = new FacebookAdSetSummaryLoader(account.Id, loadActions: true);
             CommandHelper.DoEtl(extractor, loader);
         }
 
-        private void DoETL_Creative(DateRange dateRange, ExtAccount account, FacebookUtility fbUtility)
+        private void DoETL_Creative(DateRange dateRange, ExtAccount account, FacebookInsightsDataProvider fbUtility)
         {
             var extractor = new FacebookAdSummaryExtracter(dateRange, account, fbUtility, includeAllActions: false);
             var loader = new FacebookAdSummaryLoader(account.Id);
@@ -228,10 +228,10 @@ namespace CakeExtracter.Commands
             }
         }
 
-        private FacebookUtility CreateUtility(ExtAccount account)
+        private FacebookInsightsDataProvider CreateUtility(ExtAccount account)
         {
             var accountId = account.ExternalId;
-            var fbUtility = new FacebookUtility(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m))
+            var fbUtility = new FacebookInsightsDataProvider(m => Logger.Info(account.Id, m), m => Logger.Warn(account.Id, m))
             {
                 DaysPerCall_Override = DaysPerCall
             };
@@ -241,7 +241,7 @@ namespace CakeExtracter.Commands
             return fbUtility;
         }
 
-        private void SetUtilityFilters(FacebookUtility fbUtility, ExtAccount account)
+        private void SetUtilityFilters(FacebookInsightsDataProvider fbUtility, ExtAccount account)
         {
             if (account.Network != null)
             {
@@ -251,7 +251,7 @@ namespace CakeExtracter.Commands
             fbUtility.SetCampaignFilter(account.Filter);
         }
 
-        private void SetUtilityPlatformFilters(FacebookUtility fbUtility, string networkName)
+        private void SetUtilityPlatformFilters(FacebookInsightsDataProvider fbUtility, string networkName)
         {
             var network = Regex.Replace(networkName, @"\s+", "").ToUpper();
             foreach (var filter in networkFilters)
@@ -263,7 +263,7 @@ namespace CakeExtracter.Commands
             }
         }
 
-        private void SetUtilityConversionType(FacebookUtility fbUtility, string accountId)
+        private void SetUtilityConversionType(FacebookInsightsDataProvider fbUtility, string accountId)
         {
             foreach (var configName in configNamesForAccountsOfActionType)
             {
@@ -275,13 +275,13 @@ namespace CakeExtracter.Commands
             }
         }
 
-        private void SetUtilityAttributionWindows(FacebookUtility fbUtility, string accountId)
+        private void SetUtilityAttributionWindows(FacebookInsightsDataProvider fbUtility, string accountId)
         {
             SetUtilityClickAttributionWindows(fbUtility, accountId);
             SetUtilityViewAttributionWindows(fbUtility, accountId);
         }
 
-        private void SetUtilityClickAttributionWindows(FacebookUtility fbUtility, string accountId)
+        private void SetUtilityClickAttributionWindows(FacebookInsightsDataProvider fbUtility, string accountId)
         {
             var window = GetWindow(accountId, Attribution.Click, ClickWindow);
             if (window != 0)
@@ -290,7 +290,7 @@ namespace CakeExtracter.Commands
             }
         }
 
-        private void SetUtilityViewAttributionWindows(FacebookUtility fbUtility, string accountId)
+        private void SetUtilityViewAttributionWindows(FacebookInsightsDataProvider fbUtility, string accountId)
         {
             var window = GetWindow(accountId, Attribution.View, ViewWindow);
             if (window != 0)

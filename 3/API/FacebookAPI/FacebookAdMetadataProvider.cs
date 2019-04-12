@@ -4,21 +4,23 @@ using FacebookAPI.Entities.AdDataEntities;
 using FacebookAPI.Utils;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 
 namespace FacebookAPI
 {
-    public class AdDataProvider
+    public class FacebookAdMetadataProvider : BaseFacebookDataProvider
     {
-        private string AccessToken { get; set; }
-        private string ApiVersion { get; set; }
-
-        public AdDataProvider()
+        public FacebookAdMetadataProvider(Action<string> logInfo, Action<string> logError)
+           : base(logInfo, logError)
         {
-            AccessToken = ConfigurationManager.AppSettings["FacebookToken"];
-            ApiVersion = ConfigurationManager.AppSettings["FacebookApiVersion"];
         }
 
+        /// <summary>
+        /// Gets the ads creatives data for account.
+        /// </summary>
+        /// <param name="accountId">The account identifier. In format "act_{ExternalId}"</param>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <returns></returns>
         public List<AdData> GetAdsCreativesForAccount(string accountId, DateTime start, DateTime end)
         {
             bool moreData;
@@ -30,7 +32,7 @@ namespace FacebookAPI
                 time_range = new { since = FacebookRequestUtils.GetDateString(start), until = FacebookRequestUtils.GetDateString(end) },
             };
             var fbClient = new FacebookClient(AccessToken) { Version = "v" + ApiVersion };
-            var path = $"act_{accountId}/ads";
+            var path = $"{accountId}/ads";
             do
             {
                 dynamic result = fbClient.Get(path, parameters);

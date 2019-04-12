@@ -44,6 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\InsigthsFacebookSummaryConverter.cs" />
+    <Compile Include="FacebbokAdPreviewDataProvider.cs" />
+    <Compile Include="Api\ClientAndParams.cs" />
+    <Compile Include="Api\Filter.cs" />
+    <Compile Include="BaseFacebookDataProvider.cs" />
     <Compile Include="Entities\AdDataEntities\AdData.cs" />
     <Compile Include="Entities\AdDataEntities\AdSet.cs" />
     <Compile Include="Entities\AdDataEntities\Creative.cs" />
@@ -54,14 +59,15 @@
     <Compile Include="Enums\AttributionWindow.cs" />
     <Compile Include="Enums\ConversionActionType.cs" />
     <Compile Include="Enums\PlatformFilter.cs" />
-    <Compile Include="AdDataProvider.cs" />
-    <Compile Include="FacebookUtility.cs" />
+    <Compile Include="FacebookAdMetadataProvider.cs" />
+    <Compile Include="FacebookInsightsDataProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\FacebookRequestUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

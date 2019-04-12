@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Configuration;
 using System.Linq;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
@@ -44,23 +42,24 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            var fbUtility = new FacebookUtility(m => Logger.Info(m), m => Logger.Warn(m));
+            var fbUtility = new FacebookInsightsDataProvider(m => Logger.Info(m), m => Logger.Warn(m));
+            var fbAdPreviewDataProvider = new FacebbokAdPreviewDataProvider(m => Logger.Info(m), m => Logger.Warn(m));
 
             var accounts = GetAccounts();
             foreach (var acct in accounts)
             {
-                DoETL_AdPreview(acct, fbUtility);
+                DoETL_AdPreview(acct, fbAdPreviewDataProvider);
             }
 
             return 0;
         }
 
-        public void DoETL_AdPreview(ExtAccount account, FacebookUtility fbUtility)
+        public void DoETL_AdPreview(ExtAccount account, FacebbokAdPreviewDataProvider adPreviewDataProvider)
         {
             var fbIds = GetAdFBIds(account.Id);
             if (fbIds.Count() > 0)
             {
-                var extracter = new FacebookAdPreviewExtracter(account, GetAdFBIds(account.Id), fbUtility);
+                var extracter = new FacebookAdPreviewExtracter(account, GetAdFBIds(account.Id), adPreviewDataProvider);
                 var loader = new FacebookAdPreviewLoader(account.Id);
                 var extracterThread = extracter.Start();
                 var loaderThread = loader.Start(extracter);
@@ -92,6 +91,5 @@ namespace CakeExtracter.Commands
                 return fbIds.ToList();
             }
         }
-
     }
 }

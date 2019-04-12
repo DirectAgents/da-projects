@@ -22,7 +22,7 @@ namespace CakeExtracter.Etl.SocialMarketing.LoadersDA
         public FacebookAdSetSummaryLoader(int accountId, bool loadActions = false)
             : base(accountId)
         {
-            BatchSize = FacebookUtility.RowsReturnedAtATime; //FB API only returns 25 rows at a time
+            BatchSize = FacebookInsightsDataProvider.RowsReturnedAtATime; //FB API only returns 25 rows at a time
             actionTypeStorage = DefaultActionTypeStorage;
             adSetSummaryLoader = new TDAdSetSummaryLoader(accountId);
             this.loadActions = loadActions;
