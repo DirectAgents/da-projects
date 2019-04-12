@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.CPProg;
@@ -12,22 +13,25 @@ namespace DirectAgents.Domain.SpecialPlatformProviders.Implementation
         {
         }
 
-        public override IQueryable<SpecialPlatformSummary> GetDatesRangeByAccounts(ClientPortalProgContext context)
+        public override IEnumerable<SpecialPlatformSummary> GetDatesRangeByAccounts(ClientPortalProgContext context)
         {
-            var kochavaAccounts = GetAccountsByPlatform(context);
-            var kochavaSummaries = kochavaAccounts.Select(account => new SpecialPlatformSummary
-            {
-                Account = account,
-                EarliestDate = context.KochavaItems
-                    .Where(x => x.AccountId == account.Id)
-                    .Select(x => x.Date)
-                    .Min(),
-                LatestDate = context.KochavaItems
-                    .Where(x => x.AccountId == account.Id)
-                    .Select(x => x.Date)
-                    .Max()
-            });
+            var dbSummaries = GetDbSummariesGroupedByAccountId(context);
+            var kochavaSummaries = GetSummariesGroupedByAccount(dbSummaries);
+            AssignExtAccountForSummaries(kochavaSummaries, context);
             return kochavaSummaries;
+        }
+
+        private static IQueryable<SpecialPlatformSummaryDb> GetDbSummariesGroupedByAccountId(
+            ClientPortalProgContext context)
+        {
+            return context.KochavaItems
+                .GroupBy(x => x.AccountId)
+                .Select(x => new SpecialPlatformSummaryDb
+                {
+                    AccountId = x.Key,
+                    EarliestDate = x.Min(z => z.Date),
+                    LatestDate = x.Max(z => z.Date)
+                });
         }
     }
 }
