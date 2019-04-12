@@ -12,7 +12,6 @@ using System;
 using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using System.ComponentModel.Composition;
-using System.Threading;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
