@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.CPProg;
@@ -12,22 +13,24 @@ namespace DirectAgents.Domain.SpecialPlatformProviders.Implementation
         {
         }
 
-        public override IQueryable<SpecialPlatformSummary> GetDatesRangeByAccounts(ClientPortalProgContext context)
+        public override IEnumerable<SpecialPlatformSummary> GetDatesRangeByAccounts(ClientPortalProgContext context)
         {
-            var cjAccounts = GetAccountsByPlatform(context);
-            var cjSummaries = cjAccounts.Select(account => new SpecialPlatformSummary
-            {
-                Account = account,
-                EarliestDate = context.CjAdvertiserCommissions
-                    .Where(x => x.AccountId == account.Id)
-                    .Select(x => x.EventDate)
-                    .Min(),
-                LatestDate = context.CjAdvertiserCommissions
-                    .Where(x => x.AccountId == account.Id)
-                    .Select(x => x.EventDate)
-                    .Max()
-            });
+            var cjSummaries = GetSummariesGroupedByAccountId(context).ToList();
+            AssignExtAccountForSummaries(cjSummaries, context);
             return cjSummaries;
+        }
+
+        private static IEnumerable<SpecialPlatformSummary> GetSummariesGroupedByAccountId(
+            ClientPortalProgContext context)
+        {
+            return context.CjAdvertiserCommissions
+                .GroupBy(x => x.AccountId)
+                .Select(x => new SpecialPlatformSummary
+                {
+                    AccountId = x.Key,
+                    EarliestDate = x.Min(z => z.EventDate),
+                    LatestDate = x.Max(z => z.EventDate)
+                });
         }
     }
 }
