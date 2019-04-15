@@ -23,6 +23,16 @@ namespace DirectAgents.Domain.Concrete
         }
 
         /// <inheritdoc />
+        public ExtAccount GetAccountByExternalId(string externalId, string platformCode)
+        {
+            using (var db = new ClientPortalProgContext())
+            {
+                return db.ExtAccounts.FirstOrDefault(x =>
+                    x.Platform.Code == platformCode && x.ExternalId == externalId);
+            }
+        }
+
+        /// <inheritdoc />
         public ExtAccount GetAccountWithColumnMapping(int accountId)
         {
             using (var db = new ClientPortalProgContext())

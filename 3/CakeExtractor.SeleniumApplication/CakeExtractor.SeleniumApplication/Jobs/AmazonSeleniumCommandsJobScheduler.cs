@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CakeExtracter;
-using CakeExtractor.SeleniumApplication.Commands;
+using CakeExtracter.Common;
 using CakeExtractor.SeleniumApplication.Models.CommonHelperModels;
 using Quartz;
 using Quartz.Impl;
@@ -11,7 +11,7 @@ namespace CakeExtractor.SeleniumApplication.Jobs
 {
     internal class AmazonSeleniumCommandsJobScheduler
     {
-        public static async Task ConfigureJobSchedule(List<BaseAmazonSeleniumCommand> commands)
+        public static async Task ConfigureJobSchedule(string[] args, IEnumerable<ConsoleCommand> Commands)
         {
             var firstRunTime = Properties.Settings.Default.StartExtractionDateTime != DateTime.MinValue ?
                 Properties.Settings.Default.StartExtractionDateTime :
@@ -23,7 +23,8 @@ namespace CakeExtractor.SeleniumApplication.Jobs
             };
             Logger.Info("Next run time {0}", firstRunTime);
             var scheduler = await StdSchedulerFactory.GetDefaultScheduler();
-            scheduler.Context.Put(JobConstants.CommandsJobContextValue, commands);
+            scheduler.Context.Put(JobConstants.CommandLineArgs, args);
+            scheduler.Context.Put(JobConstants.AllCommands, Commands);
             await scheduler.Start();
 
             var job = JobBuilder.Create<AmazonSeleniumCommandsJob>().Build();

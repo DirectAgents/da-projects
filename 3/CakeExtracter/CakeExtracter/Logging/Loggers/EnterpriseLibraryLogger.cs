@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using CakeExtracter.Extensions;
+using CakeExtracter.Logging.Utils;
 using Microsoft.Practices.EnterpriseLibrary.Logging;
 
 namespace CakeExtracter.Logging.Loggers
@@ -23,7 +24,7 @@ namespace CakeExtracter.Logging.Loggers
         {
             var logEntry = new LogEntry
             {
-                Message = GetLogMessage(format, args),
+                Message = LoggerUtils.GetLogMessage(format, args),
                 Severity = severity,
             };
             logEntry.ExtendedProperties["JobName"] = jobName;
@@ -76,18 +77,6 @@ namespace CakeExtracter.Logging.Loggers
             var entry = LogEntry(TraceEventType.Verbose, format, args);
             entry.ExtendedProperties.Add("AccountId", accountId);
             Write(entry);
-        }
-
-        private string GetLogMessage(string format, params object[] args)
-        {
-            try
-            {
-                return string.Format(format, args);
-            }
-            catch
-            {
-                return format;
-            }
         }
     }
 }

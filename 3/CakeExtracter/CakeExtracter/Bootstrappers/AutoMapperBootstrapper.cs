@@ -7,6 +7,7 @@ using CommissionJunction.Entities;
 using DirectAgents.Domain.Entities.CPProg;
 using DirectAgents.Domain.Entities.CPProg.CJ;
 using DirectAgents.Domain.Entities.CPProg.Kochava;
+using DirectAgents.Domain.Entities.CPProg.Vendor;
 
 namespace CakeExtracter.Bootstrappers
 {
@@ -138,6 +139,7 @@ namespace CakeExtracter.Bootstrappers
                 cfg.CreateMap<AdvertiserCommission, CjAdvertiserCommission>();
                 cfg.CreateMap<CommissionJunction.Entities.Item, CjAdvertiserCommissionItem>();
                 cfg.CreateMap<KochavaReportItem, KochavaItem>();
+                cfg.CreateMap<VcdAnalyticItem, VcdAnalyticItem>();
             });
         }
 

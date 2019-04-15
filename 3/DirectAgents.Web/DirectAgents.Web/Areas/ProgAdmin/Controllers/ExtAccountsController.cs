@@ -15,12 +15,14 @@ using DirectAgents.Web.Constants;
 
 namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
 {
-    public class ExtAccountsController : DirectAgents.Web.Controllers.ControllerBase
+    public class ExtAccountsController : Web.Controllers.ControllerBase
     {
-        public ExtAccountsController(ICPProgRepository cpProgRepository, ITDRepository tdRepository)
+        public ExtAccountsController(ICPProgRepository cpProgRepository, ITDRepository tdRepository, 
+            ISpecialPlatformRepository specialPlatformRepository)
         {
             this.cpProgRepo = cpProgRepository;
             this.tdRepo = tdRepository;
+            this.specialPlatformRepo = specialPlatformRepository;
         }
 
         public ActionResult Index(string platform, int? campId)
@@ -44,15 +46,22 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             return View("IndexGauge", model);
         }
 
+        public ActionResult IndexSpecialPlatformStats(string platform)
+        {
+            var stats = specialPlatformRepo.GetSpecialPlatformStats(platform);
+            var model = GetSpecialPlatformStatsGroupedByPlatform(stats);
+            return View("IndexSpecialPlatformStats", model);
+        }
+
         // For each account, shows a "gauge" of what stats are loaded
         public ActionResult IndexGauge(string platform, int? campId, bool recent = false, bool extended = false)
         {
-            var platId = cpProgRepo.Platform(platform)?.Id;
+            var platformId = cpProgRepo.Platform(platform)?.Id;
 
             // "recent" means only include accounts with stats for this month
             var minDate = recent ? DateTime.Today.FirstDayOfMonth(-1) : (DateTime?) null;
-            var statsGauges = cpProgRepo.StatsGaugesByAccount(platformId: platId, campId: campId, minDate: minDate, extended: extended);
-
+            var statsGauges = cpProgRepo.StatsGaugesByAccount(platformId: platformId, campId: campId, minDate: minDate, extended: extended);
+            
             if (recent)
                 statsGauges = statsGauges.Where(x => x.HasStats());
 
@@ -174,6 +183,25 @@ namespace DirectAgents.Web.Areas.ProgAdmin.Controllers
             };
             pGauge.SetFrom(platformGroup); // ?SetFrom(pGauge.Children) ...same thing?
             return pGauge;
+        }
+
+        private static IEnumerable<SpecialPlatformSummariesVM> GetSpecialPlatformStatsGroupedByPlatform(
+            IEnumerable<SpecialPlatformSummary> stats)
+        {
+            var platformGroups = stats.GroupBy(s => s.Account.Platform);
+            return platformGroups.Select(GetSpecialPlatformSummaries);
+        }
+
+        private static SpecialPlatformSummariesVM GetSpecialPlatformSummaries(
+            IGrouping<Platform, SpecialPlatformSummary> platformGroup)
+        {
+            return new SpecialPlatformSummariesVM
+            {
+                Platform = platformGroup.Key,
+                SpecialPlatformSummaries = platformGroup
+                    .OrderBy(x => x.Account.Disabled)
+                    .ThenBy(x => x.Account.Name)
+            };
         }
 
         #region Maintenance

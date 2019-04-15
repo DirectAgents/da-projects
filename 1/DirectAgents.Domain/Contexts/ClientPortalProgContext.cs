@@ -2,6 +2,7 @@
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using DirectAgents.Domain.Entities;
+using DirectAgents.Domain.Entities.Administration.JobExecution;
 using DirectAgents.Domain.Entities.AdRoll;
 using DirectAgents.Domain.Entities.DBM;
 using DirectAgents.Domain.Entities.CPProg;
@@ -19,6 +20,7 @@ namespace DirectAgents.Domain.Contexts
         const string adrollSchema = "adr";
         const string dbmSchema = "dbm";
         const string tdSchema = "td";
+        const string admSchema = "adm";
 
         public ClientPortalProgContext()
         {
@@ -34,6 +36,10 @@ namespace DirectAgents.Domain.Contexts
             //modelBuilder.HasDefaultSchema(tdSchema); //can't do this b/c __MigrationHistory table is under dbo schema
 
             modelBuilder.Entity<Employee>().ToTable("Employee", "dbo");
+
+            // Adm
+            modelBuilder.Entity<JobRequestExecution>().ToTable("JobRequestExecution", admSchema);
+            modelBuilder.Entity<JobRequest>().ToTable("JobRequest", admSchema);
 
             // TD
             modelBuilder.Entity<Advertiser>().ToTable("Advertiser", tdSchema);
@@ -85,6 +91,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<VendorSubcategorySummaryMetric>().ToTable("VSubcategorySummaryMetric", tdSchema);
             modelBuilder.Entity<VendorBrandSummaryMetric>().ToTable("VBrandSummaryMetric", tdSchema);
             modelBuilder.Entity<VendorParentProductSummaryMetric>().ToTable("VParentProductSummaryMetric", tdSchema);
+            modelBuilder.Entity<VcdAnalyticItem>().ToTable("VcdAnalytic", tdSchema);
 
             //TD CJ
             modelBuilder.Entity<CjAdvertiserCommission>().ToTable("CjAdvertiserCommission", tdSchema);
@@ -198,6 +205,7 @@ namespace DirectAgents.Domain.Contexts
             SetupSummaryMetricModel<VendorCategorySummaryMetric>(modelBuilder, "CategoryId");
             SetupSummaryMetricModel<VendorBrandSummaryMetric>(modelBuilder, "BrandId");
             SetupSummaryMetricModel<VendorParentProductSummaryMetric>(modelBuilder, "ParentProductId");
+            SetupVcdAnalyticModelValues(modelBuilder);
 
             //TD DSP
             SetupDailyMetricModelValues<DspAdvertiserDailyMetricValues>(modelBuilder, "AdvertiserId");
@@ -228,6 +236,10 @@ namespace DirectAgents.Domain.Contexts
         }
 
         public DbSet<Employee> Employees { get; set; }
+
+        // Adm
+        public DbSet<JobRequestExecution> JobRequestExecutions { get; set; }
+        public DbSet<JobRequest> JobExecutionRequests { get; set; }
 
         // TD
         public DbSet<Advertiser> Advertisers { get; set; }
@@ -279,6 +291,7 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<VendorSubcategorySummaryMetric> VendorSubcategorySummaryMetrics { get; set; }
         public DbSet<VendorBrandSummaryMetric> VendorBrandSummaryMetrics { get; set; }
         public DbSet<VendorParentProductSummaryMetric> VendorParentProductSummaryMetrics { get; set; }
+        public DbSet<VcdAnalyticItem> VcdAnalytic { get; set; }
 
         //TD DSP
         public DbSet<DspAdvertiser> DspAdvertisers { get; set; }
@@ -294,7 +307,7 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<CjAdvertiserCommission> CjAdvertiserCommissions { get; set; }
         public DbSet<CjAdvertiserCommissionItem> CjAdvertiserCommissionItems { get; set; }
 
-        //TD
+        // Kochava
         public DbSet<KochavaItem> KochavaItems { get; set; }
 
         // AdRoll
@@ -321,6 +334,17 @@ namespace DirectAgents.Domain.Contexts
                 .HasMany(g => g.Items)
                 .WithRequired(s => s.Commission)
                 .WillCascadeOnDelete();
+        }
+
+        private static void SetupVcdAnalyticModelValues(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.ShippedRevenue).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.ShippedUnits).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.OrderedUnits).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.ShippedCOGS).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.FreeReplacements).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.CustomerReturns).HasPrecision(18, 6);
+            modelBuilder.Entity<VcdAnalyticItem>().Property(t => t.OrderedRevenue).HasPrecision(18, 6);
         }
 
         private void SetupDailyMetricModelValues<TDailyMetricValues>(DbModelBuilder modelBuilder, string entityColumnName)

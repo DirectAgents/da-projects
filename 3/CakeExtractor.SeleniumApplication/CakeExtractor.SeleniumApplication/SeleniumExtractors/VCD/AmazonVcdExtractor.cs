@@ -8,48 +8,45 @@ using CakeExtractor.SeleniumApplication.PageActions.AmazonVcd;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.Models;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDataComposer;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportParsing;
-using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.UserInfoExtracting;
-using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.UserInfoExtracting.Models;
 using System;
 using System.Collections.Generic;
 using CakeExtracter.Common;
 using CakeExtracter.Etl;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD.VcdExtractionHelpers.ReportDownloading;
 using Polly;
+using CakeExtracter.Common.JobExecutionManagement;
 
 namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
 {
     internal class AmazonVcdExtractor : Extracter<VcdReportData>
     {
-        private AuthorizationModel authorizationModel;
         private AmazonVcdPageActions pageActions;
         private VcdReportDownloader reportDownloader;
         private VcdReportCSVParser reportParser;
         private VcdReportComposer reportComposer;
-        private UserInfoExtracter userInfoExtractor;
-        
+
         public DateRange DateRange { get; set; }
         public AccountInfo AccountInfo { get; set; }
 
         public AmazonVcdExtractor(AmazonVcdPageActions pageActions, AuthorizationModel authorizationModel)
         {
             this.pageActions = pageActions;
-            this.authorizationModel = authorizationModel;
-        }
-
-        public void PrepareExtractor()
-        {
-            CreateApplicationFolders();
             reportDownloader = new VcdReportDownloader(pageActions, authorizationModel);
             reportParser = new VcdReportCSVParser();
             reportComposer = new VcdReportComposer();
-            userInfoExtractor = new UserInfoExtracter();
-            AmazonVcdLoginHelper.LoginToAmazonPortal(authorizationModel, pageActions);
         }
 
-        public UserInfo ExtractAccountsInfo()
+        public static bool IsInitialised
         {
-            return userInfoExtractor.ExtractUserInfo(pageActions);
+            get;
+            private set;
+        }
+
+        public static void PrepareExtractor(AmazonVcdPageActions pageActions, AuthorizationModel authorizationModel)
+        {
+            CreateApplicationFolders(authorizationModel);
+            AmazonVcdLoginHelper.LoginToAmazonPortal(authorizationModel, pageActions);
+            IsInitialised = true;
         }
 
         public void OpenAccountPage()
@@ -70,6 +67,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
         {
             try
             {
+                CommandExecutionContext.Current.SetJobExecutionStateInHistory($"Date - {date.ToString()}", AccountInfo.Account.Id);
                 Logger.Info(AccountInfo.Account.Id, $"Amazon VCD, ETL for {date} started. Account {AccountInfo.Account.Name} - {AccountInfo.Account.Id}");
                 var data = TryExtractDailyData(date);
                 Add(data);
@@ -139,7 +137,7 @@ namespace CakeExtractor.SeleniumApplication.SeleniumExtractors.VCD
                 reportParser.ParseOrderedRevenueReportData);
         }
 
-        private void CreateApplicationFolders()
+        private static void CreateApplicationFolders(AuthorizationModel authorizationModel)
         {
             FileManager.CreateDirectoryIfNotExist(authorizationModel.CookiesDir);
         }

@@ -11,41 +11,48 @@ using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
 using CakeExtractor.SeleniumApplication.Configuration.Pda;
 using CakeExtractor.SeleniumApplication.SeleniumExtractors.AmazonPdaExtractors;
 using Platform = DirectAgents.Domain.Entities.CPProg.Platform;
+using System.ComponentModel.Composition;
 
 namespace CakeExtractor.SeleniumApplication.Commands
 {
-    internal class SyncAmazonPdaCommand : BaseAmazonSeleniumCommand
+    [Export(typeof(ConsoleCommand))]
+    public class SyncAmazonPdaCommand : ConsoleCommand
     {
         private readonly PdaCommandConfigurationManager configurationManager;
         
-        public SyncAmazonPdaCommand()
+        public SyncAmazonPdaCommand() : base()
         {
+            IsCommand("SyncAmazonPdaCommand", "Sync Amazon PDA Stats");
             configurationManager = new PdaCommandConfigurationManager();
         }
 
-        public override string CommandName => "SyncAmazonPdaCommand";
-
-        public override void PrepareCommandEnvironment(int? executionProfileNumber)
+        public override void ResetProperties()
         {
-            AmazonPdaExtractor.PrepareExtractor();
         }
 
-        public override void Run()
+        public override int Execute(string[] remainingArguments)
+        {
+            if (!AmazonPdaExtractor.IsInitialised)
+            {
+                AmazonPdaExtractor.PrepareExtractor();
+            }
+            RunEtl();
+            return 0;
+        }
+
+        private void RunEtl()
         {
             var statsType = new StatsTypeAgg(configurationManager.GetStatsTypeString());
             var dateRange = GetDateRange();
             var fromDatabase = configurationManager.GetFromDatabaseFlag();
             var fromRequest = configurationManager.GetFromRequestFlag();
-
             Logger.Info("Amazon ETL (PDA Campaigns). DateRange: {0}.", dateRange);
             AmazonPdaExtractor.SetAvailableProfileUrls();
-            
             var accounts = GetAccounts(configurationManager.GetAccountId(), configurationManager.GetDisabledOnlyFlag());
             foreach (var account in accounts)
             {
                 DoEtls(account, dateRange, statsType, fromDatabase, fromRequest);
             }
-
             Logger.Info("Amazon ETL (PDA Campaigns) has been finished.");
         }
 

@@ -1,6 +1,7 @@
 ﻿using Amazon;
 using CakeExtracter.Bootstrappers;
 using CakeExtracter.Common;
+using CakeExtracter.Common.JobExecutionManagement;
 using CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders;
 using CakeExtracter.Etl.TradingDesk.LoadersDA.AmazonLoaders.AnalyticTablesSync;
@@ -236,6 +237,7 @@ namespace CakeExtracter.Commands
         {
             try
             {
+                CommandExecutionContext.Current?.SetJobExecutionStateInHistory("Synch analytic table." ,accountId);
                 AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
                 {
                     var amazonAmsSyncher = new AmazonAmsAnalyticSyncher();

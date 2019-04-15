@@ -1506,6 +1506,5 @@ group by PlatformAlias,StrategyName,StrategyId,ShowClickAndViewConv order by Pla
                 item.Campaign = context.Campaigns.Find(item.CampaignId);
             }
         }
-
     }
 }

@@ -11,6 +11,7 @@ using DirectAgents.Domain.Contexts;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
 using CakeExtracter.Logging.TimeWatchers;
 using Amazon.Entities;
+using CakeExtracter.Common.JobExecutionManagement;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
 {
@@ -62,6 +63,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
 
         private void ExtractDaily(DateTime date, List<AmazonCampaign> campaignsData)
         {
+            CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"Keywords Level- {date.ToString()}", accountId);
             IEnumerable<KeywordSummary> items = null;
             AmazonTimeTracker.Instance.ExecuteWithTimeTracking(() =>
             {

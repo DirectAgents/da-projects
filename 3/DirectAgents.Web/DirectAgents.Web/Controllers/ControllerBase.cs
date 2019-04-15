@@ -17,27 +17,22 @@ namespace DirectAgents.Web.Controllers
         protected IRevTrackRepository rtRepo;
         protected IABRepository abRepo;
         protected ISecurityRepository securityRepo;
-
+        protected ISpecialPlatformRepository specialPlatformRepo;
+        
         protected ClientPortal.Data.Contracts.IClientPortalRepository cpRepo;
 
         // TODO: Make SecurityRepo disposable and dispose here:
 
         protected override void Dispose(bool disposing)
         {
-            if (daRepo != null)
-                daRepo.Dispose();
-            if (cpProgRepo != null)
-                cpProgRepo.Dispose();
-            if (cpSearchRepo != null)
-                cpSearchRepo.Dispose();
-            if (tdRepo != null)
-                tdRepo.Dispose();
-            if (rtRepo != null)
-                rtRepo.Dispose();
-            if (abRepo != null)
-                abRepo.Dispose();
-            if (cpRepo != null)
-                cpRepo.Dispose();
+            daRepo?.Dispose();
+            cpProgRepo?.Dispose();
+            cpSearchRepo?.Dispose();
+            tdRepo?.Dispose();
+            rtRepo?.Dispose();
+            abRepo?.Dispose();
+            cpRepo?.Dispose();
+            specialPlatformRepo?.Dispose();
             base.Dispose(disposing);
         }
 

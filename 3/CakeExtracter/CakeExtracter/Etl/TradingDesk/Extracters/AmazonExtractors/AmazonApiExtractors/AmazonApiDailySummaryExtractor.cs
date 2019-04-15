@@ -10,6 +10,7 @@ using CakeExtracter.Helpers;
 using DirectAgents.Domain.Contexts;
 using CakeExtracter.Logging.TimeWatchers;
 using CakeExtracter.Logging.TimeWatchers.Amazon;
+using CakeExtracter.Common.JobExecutionManagement;
 
 namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExtractors
 {
@@ -24,7 +25,7 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters.AmazonExtractors.AmazonApiExt
         {
             Logger.Info(accountId, "Extracting DailySummaries from Amazon API for ({0}) from {1:d} to {2:d}", clientId,
                 dateRange.FromDate, dateRange.ToDate);
-
+            CommandExecutionContext.Current?.SetJobExecutionStateInHistory($"Daily level", accountId);
             foreach (var date in dateRange.Dates)
             {
                 try
