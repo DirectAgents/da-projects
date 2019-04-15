@@ -17,25 +17,14 @@ namespace DirectAgents.Domain.SpecialPlatformProviders.Contracts
 
         public abstract IEnumerable<SpecialPlatformSummary> GetDatesRangeByAccounts(ClientPortalProgContext context);
         
-        protected ExtAccount GetAccountById(ClientPortalProgContext context, int? id)
-        {
-            return context.ExtAccounts.FirstOrDefault(a => a.Id == id);
-        }
-
         protected void AssignExtAccountForSummaries(List<SpecialPlatformSummary> summaries, ClientPortalProgContext context)
         {
             summaries.ForEach(summary => summary.Account = GetAccountById(context, summary.AccountId));
         }
 
-        protected List<SpecialPlatformSummary> GetSummariesGroupedByAccount(
-            IQueryable<SpecialPlatformSummaryDb> dbSummaries)
+        private static ExtAccount GetAccountById(ClientPortalProgContext context, int? id)
         {
-            return dbSummaries.Select(summary => new SpecialPlatformSummary
-            {
-                AccountId = summary.AccountId,
-                EarliestDate = summary.EarliestDate,
-                LatestDate = summary.LatestDate
-            }).ToList();
+            return context.ExtAccounts.FirstOrDefault(a => a.Id == id);
         }
     }
 }

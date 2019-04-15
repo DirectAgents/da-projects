@@ -15,18 +15,17 @@ namespace DirectAgents.Domain.SpecialPlatformProviders.Implementation
 
         public override IEnumerable<SpecialPlatformSummary> GetDatesRangeByAccounts(ClientPortalProgContext context)
         {
-            var dbSummaries = GetDbSummariesGroupedByAccountId(context);
-            var vcdSummaries = GetSummariesGroupedByAccount(dbSummaries);
+            var vcdSummaries = GetSummariesGroupedByAccountId(context).ToList();
             AssignExtAccountForSummaries(vcdSummaries, context);
-            return vcdSummaries;   
+            return vcdSummaries;
         }
 
-        private static IQueryable<SpecialPlatformSummaryDb> GetDbSummariesGroupedByAccountId(
+        private static IEnumerable<SpecialPlatformSummary> GetSummariesGroupedByAccountId(
             ClientPortalProgContext context)
         {
             return context.VcdAnalytic
                 .GroupBy(x => x.AccountId)
-                .Select(x => new SpecialPlatformSummaryDb
+                .Select(x => new SpecialPlatformSummary
                 {
                     AccountId = x.Key,
                     EarliestDate = x.Min(z => z.Date),

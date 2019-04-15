@@ -10,11 +10,4 @@ namespace DirectAgents.Domain.DTO
         public DateTime? EarliestDate { get; set; }
         public DateTime? LatestDate { get; set; }
     }
-
-    public class SpecialPlatformSummaryDb
-    {
-        public int? AccountId { get; set; }
-        public DateTime EarliestDate { get; set; }
-        public DateTime LatestDate { get; set; }
-    }
 }

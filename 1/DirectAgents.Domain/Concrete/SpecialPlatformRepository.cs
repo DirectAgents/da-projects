@@ -27,7 +27,6 @@ namespace DirectAgents.Domain.Concrete
             {
                 return GetAllSummaries(this.SpecialPlatformProviders);
             }
-
             var currentJob = GetCurrentJob(this.SpecialPlatformProviders, platformCode);
             return currentJob.GetDatesRangeByAccounts(context);
         }
