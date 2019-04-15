@@ -1,12 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DirectAgents.Domain.Entities.CPProg.Facebook.Ad
 {
-    class FbAdSummary
+    public class FbAdSummary
     {
+        public DateTime Date { get; set; }
+
+        public int AdId { get; set; }
+
+        [ForeignKey("AdId")]
+        public virtual FbAd Ad { get; set; }
+
+        public int Impressions { get; set; }
+
+        public int Clicks { get; set; }
+
+        public int AllClicks { get; set; }
+
+        public int PostClickConv { get; set; }
+
+        public int PostViewConv { get; set; }
+
+        public decimal Cost { get; set; }
     }
 }
