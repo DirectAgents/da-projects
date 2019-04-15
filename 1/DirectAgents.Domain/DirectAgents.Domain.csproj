@@ -114,6 +114,10 @@
     <Compile Include="Concrete\RevTrackRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Concrete\SpecialPlatformRepository.cs" />
+    <Compile Include="MigrationsTD\201904151116227_FacebookCreativeExpansion.cs" />
+    <Compile Include="MigrationsTD\201904151116227_FacebookCreativeExpansion.Designer.cs">
+      <DependentUpon>201904151116227_FacebookCreativeExpansion.cs</DependentUpon>
+    </Compile>
     <Compile Include="SpecialPlatformProviders\Implementation\CommissionJunctionProvider.cs" />
     <Compile Include="SpecialPlatformProviders\Implementation\DspProvider.cs" />
     <Compile Include="SpecialPlatformProviders\Implementation\KochavaProvider.cs" />
@@ -196,7 +200,7 @@
     <Compile Include="Entities\CPProg\DSP\SummaryMetrics\DspCreativeDailyMetricValues.cs" />
     <Compile Include="Entities\CPProg\Base\BaseDailyMetricValues.cs" />
     <Compile Include="Entities\CPProg\Facebook\AdSet\FbAdSet.cs" />
-    <Compile Include="Entities\CPProg\Facebook\AdSet\FbAdsetAction.cs" />
+    <Compile Include="Entities\CPProg\Facebook\AdSet\FbAdSetAction.cs" />
     <Compile Include="Entities\CPProg\Facebook\AdSet\FbAdSetSummary.cs" />
     <Compile Include="Entities\CPProg\Facebook\Ad\FbAd.cs" />
     <Compile Include="Entities\CPProg\Facebook\Ad\FbAdAction.cs" />
@@ -1041,6 +1045,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MigrationsTD\201904021651556_Mig_JobExecution.resx">
       <DependentUpon>201904021651556_Mig_JobExecution.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MigrationsTD\201904151116227_FacebookCreativeExpansion.resx">
+      <DependentUpon>201904151116227_FacebookCreativeExpansion.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
       <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>

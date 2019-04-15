@@ -1,8 +1,12 @@
-﻿using DirectAgents.Domain.Entities.CPProg.Facebook.Campaign;
+﻿using DirectAgents.Domain.Entities.CPProg.Facebook.AdSet;
+using DirectAgents.Domain.Entities.CPProg.Facebook.Campaign;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DirectAgents.Domain.Entities.CPProg.Facebook.Ad
 {
+    /// <summary>
+    /// Facebook Ad database entity.
+    /// </summary>
     public class FbAd
     {
         /// <summary>
@@ -78,7 +82,7 @@ namespace DirectAgents.Domain.Entities.CPProg.Facebook.Ad
         /// The ad set.
         /// </value>
         [ForeignKey("AdSetId")]
-        public virtual FbCampaign AdSet { get; set; }
+        public virtual FbAdSet AdSet { get; set; }
 
         /// <summary>
         /// Gets or sets the creative identifier.

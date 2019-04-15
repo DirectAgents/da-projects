@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DirectAgents.Domain.Entities.CPProg.Facebook.Ad
 {
+    /// <summary>
+    /// Facebook Ad Summary
+    /// </summary>
     public class FbAdSummary
     {
         public DateTime Date { get; set; }
